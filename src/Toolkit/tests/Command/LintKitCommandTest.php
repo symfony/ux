@@ -24,7 +24,7 @@ class LintKitCommandTest extends KernelTestCase
         $this->consoleCommand('ux:toolkit:lint-kit shadcn')
             ->execute()
             ->assertSuccessful()
-            ->assertOutputContains('The kit "Shadcn" is valid, it has 46 components')
+            ->assertOutputContains('The kit "Shadcn UI" is valid, it has 46 components')
         ;
     }
 }

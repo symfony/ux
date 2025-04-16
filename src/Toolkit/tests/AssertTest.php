@@ -33,8 +33,8 @@ class AssertTest extends TestCase
         yield ['1-my-kit'];
         yield ['my-kit-1'];
         yield ['my-kit-1-with-dashes'];
-        yield ['Shadcn-UI'];
-        yield ['Shadcn-UI-1'];
+        yield ['Shadcn UI'];
+        yield ['Shadcn UI-1'];
         // Single character
         yield ['a'];
         yield ['1'];
@@ -47,6 +47,7 @@ class AssertTest extends TestCase
         yield ['a-b-c'];
         yield ['a1-b2-c3'];
         yield ['A1-B2-C3'];
+        yield ['my_kit'];
     }
 
     /**
@@ -71,7 +72,6 @@ class AssertTest extends TestCase
         // Ending with hyphen
         yield ['my-kit-'];
         // Invalid characters
-        yield ['my_kit'];
         yield ['my.kit'];
         yield ['my@kit'];
         // Too long (64 chars)

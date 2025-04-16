@@ -22,7 +22,7 @@ final readonly class Assert
      */
     public static function kitName(string $name): void
     {
-        if (1 !== preg_match('/^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/', $name)) {
+        if (1 !== preg_match('/^[a-zA-Z0-9](?:[a-zA-Z0-9-_ ]{0,61}[a-zA-Z0-9])?$/', $name)) {
             throw new \InvalidArgumentException(\sprintf('Invalid kit name "%s".', $name));
         }
     }

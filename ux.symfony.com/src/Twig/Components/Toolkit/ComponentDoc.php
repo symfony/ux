@@ -11,7 +11,7 @@
 
 namespace App\Twig\Components\Toolkit;
 
-use App\Enum\ToolkitKit;
+use App\Enum\ToolkitKitId;
 use App\Util\SourceCleaner;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -25,7 +25,7 @@ use function Symfony\Component\String\s;
 #[AsTwigComponent]
 class ComponentDoc
 {
-    public ToolkitKit $kit;
+    public ToolkitKitId $kitId;
     public Component $component;
 
     public function __construct(
@@ -57,7 +57,7 @@ class ComponentDoc
         $installationCode = SourceCleaner::processTerminalLines(<<<SHELL
 symfony console ux:toolkit:install-component {$this->component->name}
 # or if you already use another kit
-symfony console ux:toolkit:install-component {$this->component->name} --kit {$this->kit->value}
+symfony console ux:toolkit:install-component {$this->component->name} --kit {$this->kitId->value}
 SHELL
         );
 
@@ -93,7 +93,7 @@ SHELL
             $options = json_decode($matches['options'], true, flags: \JSON_THROW_ON_ERROR);
 
             if ($options['preview'] ?? false) {
-                $options['kit'] = $this->kit->value;
+                $options['kit'] = $this->kitId->value;
             }
 
             return \sprintf('```%s %s'."\n", $lang, json_encode($options, \JSON_THROW_ON_ERROR));

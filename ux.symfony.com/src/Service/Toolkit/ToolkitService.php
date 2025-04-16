@@ -11,7 +11,7 @@
 
 namespace App\Service\Toolkit;
 
-use App\Enum\ToolkitKit;
+use App\Enum\ToolkitKitId;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\UX\Toolkit\Component\Component;
 use Symfony\UX\Toolkit\Kit\Kit;
@@ -25,26 +25,13 @@ class ToolkitService
     ) {
     }
 
-    /**
-     * @return Component[]
-     */
-    public function getDocumentableComponents(ToolkitKit $kit): array
-    {
-        return array_filter($this->getKit($kit)->getComponents(), fn (Component $component) => $component->doc);
-    }
-
-    public function getComponent(ToolkitKit $kit, string $component): ?Component
-    {
-        return $this->getKit($kit)->getComponent($component);
-    }
-
-    public function getKit(ToolkitKit $kit): Kit
+    public function getKit(ToolkitKitId $kit): Kit
     {
         return $this->getKits()[$kit->value] ?? throw new \InvalidArgumentException(\sprintf('Kit "%s" not found', $kit->value));
     }
 
     /**
-     * @return array<ToolkitKit,Kit>
+     * @return array<ToolkitKitId,Kit>
      */
     public function getKits(): array
     {
@@ -52,11 +39,19 @@ class ToolkitService
 
         if (null === $kits) {
             $kits = [];
-            foreach (ToolkitKit::cases() as $kit) {
+            foreach (ToolkitKitId::cases() as $kit) {
                 $kits[$kit->value] = $this->registryFactory->getForKit($kit->value)->getKit($kit->value);
             }
         }
 
         return $kits;
+    }
+
+    /**
+     * @return Component[]
+     */
+    public function getDocumentableComponents(Kit $kit): array
+    {
+        return array_filter($kit->getComponents(), fn (Component $component) => $component->doc);
     }
 }

@@ -62,14 +62,16 @@ tree templates/components
         </p>
 
         <div class="mt-5 shadow-blur shadow-blur--rainbow shadow-blur--opacity-20" style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));">
-            {% for kit in kits %}
+            {% for kit_id, kit in kits %}
                 <div class="PackageBox">
-                    <div class="PackageBox_logo">
-                        <twig:ux:icon name="{{ kit.icon }}" alt="{{ kit.humanName }}" style="color: #fff; width: 50%; height: 50%;" />
-                    </div>
+                    {% if kit.uxIcon %}
+                        <div class="PackageBox_logo">
+                            <twig:ux:icon name="{{ kit.uxIcon }}" alt="{{ kit.name }}" style="color: #fff; width: 50%; height: 50%;" />
+                        </div>
+                    {% endif %}
                     <div class="PackageBox_content">
                         <h2 class="PackageBox_title">
-                            <a href="{{ path('app_toolkit_kit', {kit: kit.value}) }}" class="PackageBox_link">{{ kit.humanName }}</a>
+                            <a href="{{ path('app_toolkit_kit', {kitId: kit_id}) }}" class="PackageBox_link">{{ kit.name }}</a>
                         </h2>
 
                         <div class="PackageBox_description">

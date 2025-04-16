@@ -1,18 +1,20 @@
 {% extends 'base.html.twig' %}
 
+{% set title = 'Component ' ~ component.name ~ ' - ' ~ kit.name ~ ' Kit' %}
+{% set description = "Documentation of component #{component.name}, from the UX Toolkit #{kit.name}, #{kit.description}." %}
 {% set meta = {
-    title: 'Component ' ~ component.name ~ ' - ' ~ kit.humanName ~ ' Kit',
-    description: kit.descriptionForComponent(component.name),
+    title,
+    description,
     canonical: url('app_icons'),
     social: {
-        title: 'Component ' ~ component.name ~ ' - ' ~ kit.humanName ~ ' Kit',
-        description: kit.descriptionForComponent(component.name),
+        title,
+        description,
         image: {
             url: absolute_url(asset(package.getSocialImage('1200x675'))),
             type: 'image/png',
             width: 1200,
             height: 675,
-            alt: package.humanName ~ ' - Kit ' ~ kit.humanName,
+            alt: package.humanName ~ ' - Kit ' ~ kit.name,
         },
     }
 } %}
@@ -28,12 +30,12 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ path('app_toolkit') }}">UX Toolkit</a></li>
                     <li class="breadcrumb-item"><a href="{{ path('app_toolkit', {'_fragment': 'kits'}) }}">Kits</a></li>
-                    <li class="breadcrumb-item"><a href="{{ path('app_toolkit_kit', {kit: kit.value}) }}">{{ kit.humanName }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_toolkit_kit', {kitId: kit_id.value}) }}">{{ kit.name }}</a></li>
                     <li class="breadcrumb-item active" aria-current="page">{{ component.name }}</li>
                 </ol>
             </nav>
 
-            <twig:Toolkit:ComponentDoc kit="{{ kit }}" component="{{ component }}" />
+            <twig:Toolkit:ComponentDoc kitId="{{ kit_id }}" component="{{ component }}" />
         </div>
     </div>
 {% endblock %}

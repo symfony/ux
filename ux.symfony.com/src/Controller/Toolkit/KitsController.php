@@ -11,7 +11,7 @@
 
 namespace App\Controller\Toolkit;
 
-use App\Enum\ToolkitKit;
+use App\Enum\ToolkitKitId;
 use App\Service\Toolkit\ToolkitService;
 use App\Service\UxPackageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,27 +20,23 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class KitsController extends AbstractController
 {
-    public function __construct(
-        private ToolkitService $toolkitService,
-        private UxPackageRepository $uxPackageRepository,
-    ) {
-    }
-
     #[Route('/toolkit/kits')]
     public function listKits(): Response
     {
         return $this->redirectToRoute('app_toolkit', ['_fragment' => 'kits']);
     }
 
-    #[Route('/toolkit/kits/{kit}', name: 'app_toolkit_kit')]
-    public function showKit(ToolkitKit $kit): Response
+    #[Route('/toolkit/kits/{kitId}', name: 'app_toolkit_kit')]
+    public function showKit(ToolkitKitId $kitId, ToolkitService $toolkitService, UxPackageRepository $uxPackageRepository): Response
     {
-        $package = $this->uxPackageRepository->find('toolkit');
+        $kit = $toolkitService->getKit($kitId);
+        $package = $uxPackageRepository->find('toolkit');
 
         return $this->render('toolkit/kit.html.twig', [
             'package' => $package,
             'kit' => $kit,
-            'components' => $this->toolkitService->getDocumentableComponents($kit),
+            'kit_id' => $kitId,
+            'components' => $toolkitService->getDocumentableComponents($kit),
         ]);
     }
 }

@@ -28,6 +28,6 @@ final class LocalRegistryTest extends KernelTestCase
         $kit = $localRegistry->getKit('shadcn');
 
         $this->assertInstanceOf(Kit::class, $kit);
-        $this->assertSame('Shadcn', $kit->name);
+        $this->assertSame('Shadcn UI', $kit->name);
     }
 }

@@ -11,7 +11,6 @@
 
 namespace App\Controller;
 
-use App\Enum\ToolkitKit;
 use App\Service\LiveDemoRepository;
 use App\Service\Toolkit\ToolkitService;
 use App\Service\UxPackageRepository;
@@ -67,12 +66,11 @@ final class SitemapController extends AbstractController
         }
 
         // Toolkit kits
-        foreach ($this->toolkitService->getKits() as $kitName => $kit) {
-            yield $this->generateAbsoluteUrl('app_toolkit_kit', ['kit' => $kitName]);
+        foreach ($this->toolkitService->getKits() as $kitId => $kit) {
+            yield $this->generateAbsoluteUrl('app_toolkit_kit', ['kitId' => $kitId]);
 
-            $toolkitKit = ToolkitKit::from($kitName);
-            foreach ($this->toolkitService->getDocumentableComponents($toolkitKit) as $component) {
-                yield $this->generateAbsoluteUrl('app_toolkit_component', ['kit' => $kitName, 'componentName' => $component->name]);
+            foreach ($this->toolkitService->getDocumentableComponents($kit) as $component) {
+                yield $this->generateAbsoluteUrl('app_toolkit_component', ['kitId' => $kitId, 'componentName' => $component->name]);
             }
         }
     }

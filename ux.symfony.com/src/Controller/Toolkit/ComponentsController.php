@@ -11,7 +11,7 @@
 
 namespace App\Controller\Toolkit;
 
-use App\Enum\ToolkitKit;
+use App\Enum\ToolkitKitId;
 use App\Service\Toolkit\ToolkitService;
 use App\Service\UxPackageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,7 +39,7 @@ class ComponentsController extends AbstractController
     }
 
     #[Route('/toolkit/kits/{kit}/components/')]
-    public function listComponents(ToolkitKit $kit): Response
+    public function listComponents(ToolkitKitId $kit): Response
     {
         // TODO: implementing listing in the future :D
 
@@ -48,10 +48,11 @@ class ComponentsController extends AbstractController
         ], Response::HTTP_FOUND);
     }
 
-    #[Route('/toolkit/kits/{kit}/components/{componentName}', name: 'app_toolkit_component')]
-    public function showComponent(ToolkitKit $kit, string $componentName): Response
+    #[Route('/toolkit/kits/{kitId}/components/{componentName}', name: 'app_toolkit_component')]
+    public function showComponent(ToolkitKitId $kitId, string $componentName): Response
     {
-        if (null === $component = $this->toolkitService->getComponent($kit, $componentName)) {
+        $kit = $this->toolkitService->getKit($kitId);
+        if (null === $component = $kit->getComponent($componentName)) {
             throw $this->createNotFoundException(\sprintf('Component "%s" not found', $componentName));
         }
 
@@ -59,8 +60,9 @@ class ComponentsController extends AbstractController
 
         return $this->render('toolkit/component.html.twig', [
             'package' => $package,
-            'kit' => $kit,
             'components' => $this->toolkitService->getDocumentableComponents($kit),
+            'kit' => $kit,
+            'kit_id' => $kitId,
             'component' => $component,
         ]);
     }
@@ -68,7 +70,7 @@ class ComponentsController extends AbstractController
     #[Route('/toolkit/component_preview', name: 'app_toolkit_component_preview')]
     public function previewComponent(
         Request $request,
-        #[MapQueryParameter] ToolkitKit $toolkitKit,
+        #[MapQueryParameter] ToolkitKitId $kitId,
         #[MapQueryParameter] string $code,
         #[MapQueryParameter] string $height,
         UriSigner $uriSigner,
@@ -84,7 +86,7 @@ class ComponentsController extends AbstractController
 
         $profiler?->disable();
 
-        $kit = $this->toolkitService->getKit($toolkitKit);
+        $kit = $this->toolkitService->getKit($kitId);
 
         $twig->setLoader(new ChainLoader([
             new FilesystemLoader($kit->path.\DIRECTORY_SEPARATOR.'templates'.\DIRECTORY_SEPARATOR.'components'),
@@ -120,7 +122,7 @@ class ComponentsController extends AbstractController
         <meta charset="utf-8">
         <title>Preview</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        {{ importmap('toolkit-{$toolkitKit->value}') }}
+        {{ importmap('toolkit-{$kitId->value}') }}
     </head>
     <body class="flex min-h-[{$height}] w-full justify-center p-5 items-center">{$code}</body>
 </html>

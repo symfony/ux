@@ -14,7 +14,6 @@ namespace Symfony\UX\Toolkit\Tests\Kit;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\Toolkit\Dependency\ComponentDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
-use Symfony\UX\Toolkit\Dependency\Version;
 use Symfony\UX\Toolkit\Kit\KitFactory;
 
 final class KitFactoryTest extends KernelTestCase

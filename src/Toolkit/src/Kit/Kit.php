@@ -36,6 +36,9 @@ final class Kit
         public readonly string $homepage,
         public readonly array $authors,
         public readonly string $license,
+        public readonly ?string $description = null,
+        public readonly ?string $uxIcon = null,
+        public ?string $installAsMarkdown = null,
         private array $components = [],
     ) {
         Assert::kitName($this->name);

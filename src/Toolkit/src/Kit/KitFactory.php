@@ -54,11 +54,13 @@ final readonly class KitFactory
         $manifest = json_decode($this->filesystem->readFile($manifestPath), true, flags: \JSON_THROW_ON_ERROR);
 
         $kit = new Kit(
-            $absolutePath,
-            $manifest['name'] ?? throw new \InvalidArgumentException('Manifest file is missing "name" key.'),
-            $manifest['homepage'] ?? throw new \InvalidArgumentException('Manifest file is missing "homepage" key.'),
-            $manifest['authors'] ?? throw new \InvalidArgumentException('Manifest file is missing "authors" key.'),
-            $manifest['license'] ?? throw new \InvalidArgumentException('Manifest file is missing "license" key.'),
+            path: $absolutePath,
+            name: $manifest['name'] ?? throw new \InvalidArgumentException('Manifest file is missing "name" key.'),
+            homepage: $manifest['homepage'] ?? throw new \InvalidArgumentException('Manifest file is missing "homepage" key.'),
+            authors: $manifest['authors'] ?? throw new \InvalidArgumentException('Manifest file is missing "authors" key.'),
+            license: $manifest['license'] ?? throw new \InvalidArgumentException('Manifest file is missing "license" key.'),
+            description: $manifest['description'] ?? null,
+            uxIcon: $manifest['ux-icon'] ?? null,
         );
 
         $this->synchronizeKit($kit);
@@ -69,6 +71,7 @@ final readonly class KitFactory
     private function synchronizeKit(Kit $kit): void
     {
         $this->synchronizeKitComponents($kit);
+        $this->synchronizeKitDocumentation($kit);
     }
 
     private function synchronizeKitComponents(Kit $kit): void
@@ -86,7 +89,6 @@ final readonly class KitFactory
             $relativePathNameToKit = $file->getRelativePathname();
             $relativePathName = str_replace($componentsPath.\DIRECTORY_SEPARATOR, '', $relativePathNameToKit);
             $componentName = $this->extractComponentName($relativePathName);
-            $docPath = Path::join($kit->path, 'docs', 'components', $componentName.'.md');
             $component = new Component(
                 name: $componentName,
                 files: [new File(
@@ -94,7 +96,6 @@ final readonly class KitFactory
                     relativePathNameToKit: $relativePathNameToKit,
                     relativePathName: $relativePathName,
                 )],
-                doc: $this->filesystem->exists($docPath) ? new Doc($this->filesystem->readFile($docPath)) : null,
             );
 
             $kit->addComponent($component);
@@ -106,5 +107,22 @@ final readonly class KitFactory
     private static function extractComponentName(string $pathnameRelativeToKit): string
     {
         return str_replace(['.html.twig', '/'], ['', ':'], $pathnameRelativeToKit);
+    }
+
+    private function synchronizeKitDocumentation(Kit $kit): void
+    {
+        // Read INSTALL.md if exists
+        $fileInstall = Path::join($kit->path, 'INSTALL.md');
+        if ($this->filesystem->exists($fileInstall)) {
+            $kit->installAsMarkdown = $this->filesystem->readFile($fileInstall);
+        }
+
+        // Iterate over Component and find their documentation
+        foreach ($kit->getComponents() as $component) {
+            $docPath = Path::join($kit->path, 'docs', 'components', $component->name.'.md');
+            if ($this->filesystem->exists($docPath)) {
+                $component->doc = new Doc($this->filesystem->readFile($docPath));
+            }
+        }
     }
 }

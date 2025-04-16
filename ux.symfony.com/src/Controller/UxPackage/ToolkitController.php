@@ -11,7 +11,8 @@
 
 namespace App\Controller\UxPackage;
 
-use App\Enum\ToolkitKit;
+use App\Enum\ToolkitKitId;
+use App\Service\Toolkit\ToolkitService;
 use App\Service\UxPackageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,12 +23,15 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class ToolkitController extends AbstractController
 {
     #[Route('/toolkit', name: 'app_toolkit')]
-    public function index(UxPackageRepository $packageRepository, UriSigner $uriSigner): Response
-    {
+    public function index(
+        UxPackageRepository $packageRepository,
+        UriSigner $uriSigner,
+        ToolkitService $toolkitService,
+    ): Response {
         $package = $packageRepository->find('toolkit');
         $demoPreviewHeight = '400px';
         $demoPreviewUrl = $uriSigner->sign($this->generateUrl('app_toolkit_component_preview', [
-            'toolkitKit' => ToolkitKit::Shadcn->value,
+            'kitId' => ToolkitKitId::Shadcn->value,
             'code' => <<<'TWIG'
                 <twig:Card>
                     <twig:Card:Header>
@@ -51,7 +55,7 @@ class ToolkitController extends AbstractController
 
         return $this->render('ux_packages/toolkit.html.twig', [
             'package' => $package,
-            'kits' => ToolkitKit::cases(),
+            'kits' => $toolkitService->getKits(),
             'demoPreviewUrl' => $demoPreviewUrl,
             'demoPreviewHeight' => $demoPreviewHeight,
         ]);

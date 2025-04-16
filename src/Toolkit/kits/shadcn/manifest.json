@@ -1,6 +1,8 @@
 {
-    "name": "Shadcn",
+    "name": "Shadcn UI",
+    "description": "Component based on the Shadcn UI library, one of the most popular design systems in JavaScript world.",
     "license": "MIT",
     "homepage": "https://ux.symfony.com/components",
-    "authors": ["Shadcn", "Symfony Community"]
+    "authors": ["Shadcn", "Symfony Community"],
+    "ux-icon": "simple-icons:shadcnui"
 }

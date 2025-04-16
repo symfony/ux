@@ -48,7 +48,7 @@ final readonly class CodeBlockRenderer implements NodeRendererInterface
 
         if ($preview && $kit) {
             $previewUrl = $this->uriSigner->sign($this->urlGenerator->generate('app_toolkit_component_preview', [
-                'toolkitKit' => $kit,
+                'kitId' => $kit,
                 'code' => $code,
                 'height' => $height,
             ], UrlGeneratorInterface::ABSOLUTE_URL));
