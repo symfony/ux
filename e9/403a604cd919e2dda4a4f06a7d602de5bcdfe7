@@ -1,0 +1,42 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-03-06T19:21:03Z
+
+Your composer.json change is not needed here, so let's avoid adding a new dependency for this single check :)
+
+```php
+<?php
+
+use Not\Installed\TranslatableInterface;
+
+if ('aa' instanceof TranslatableInterface) {
+    echo 'yep';
+} else {
+    echo 'nope';
+}
+```
+
+--> "nope" and no error/warning  (see https://3v4l.org/4nHHd )
+
+(on contrary to something like this where an error would occur)
+
+```php
+<?php
+
+use Not\Installed\TranslatableInterface;
+
+// This would trigger a Fatal Error Interface "Not\Installed\TranslatableInterface" not found
+$foo = new class implements TranslatableInterface {};
+```
+
+---------------------------------------------------------------------------
+
+by stehled at 2025-03-07T09:08:17Z
+
+I've committed the suggestion, thank you for this comment, I've learned something new :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-03-08T02:12:11Z
+
+Thank you @stehled !
