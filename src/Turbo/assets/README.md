@@ -14,6 +14,8 @@ composer require symfony/ux-turbo:2.23.0
 npm add @symfony/ux-turbo@2.23.0
 ```
 
+**Tip:** Your `package.json` file will be automatically modified by [Flex](https://github.com/symfony/flex) when installing or upgrading a PHP package. To prevent this behavior, ensure to **use at least Flex 1.22.0 or 2.5.0**, and run `composer config extra.symfony.flex.synchronize_package_json false`.
+
 ## Resources
 
 -   [Documentation](https://symfony.com/bundles/ux-turbo/current/index.html)
