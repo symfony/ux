@@ -1,0 +1,69 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-03-28T19:28:43Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Bartheyrman22/ux/tree/patch-1/src/Autocomplete/assets/dist"><b>Autocomplete</b></a></td></tr><tr>
+                <td><a href="https://github.com/Bartheyrman22/ux/blob/patch-1/src/Autocomplete/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>16.68 kB</code>
+                    / <code>3.96 kB</code>
+                </td><td>
+                    <code>16.7 kB</code><sup>0%</sup>
+                    / <code>3.96 kB</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Bartheyrman22 at 2025-03-28T19:31:58Z
+
+Should I worry about the 3 failed checks?
+Thanks in advance!
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-03-30T06:34:36Z
+
+> In Firefox, the code in the controller.js is not executed properly.
+
+Hello @Bartheyrman22 ... do you have a simple reproducer we can test to see what happens here ?
+
+---------------------------------------------------------------------------
+
+by Bartheyrman22 at 2025-04-09T12:45:27Z
+
+> > In Firefox, the code in the controller.js is not executed properly.
+>
+> Hello @Bartheyrman22 ... do you have a simple reproducer we can test to see what happens here ?
+
+I believe it is visible as soon as you debug in Firefox-debugger.
+But I can try making a reproducer, is there a template to start from?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-04-10T00:02:16Z
+
+You _can_ start from the template i started ... it's not much more than a fresh install of symfony webapp + CSS .. but it's already a starting point :)
+
+You'll still need to install ux-autocomplete and add a new form to show the problem
+
+(probably composer update to start 😅 )
+
+https://github.com/smnandre/ux-reproducer
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-04-10T00:03:01Z
+
+> Should I worry about the 3 failed checks? Thanks in advance!
+
+I don't think so... Twig/Live are 🔴  for another reason... and I just opened a PR to fix the JS files false-positive :)
