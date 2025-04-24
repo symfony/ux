@@ -63,11 +63,11 @@ trait LiveCollectionTrait
         $formConfig = $this->getForm()->get($name)->getConfig();
         $orderPropertyPath = $formConfig->getOption('order_property_path');
 
-        if ($orderPropertyPath !== null) {
+        if (null !== $orderPropertyPath) {
             // Swap positions using the specified order property
             $prevItemOrder = $propertyAccessor->getValue($data[$index - 1], $orderPropertyPath);
             $currentItemOrder = $propertyAccessor->getValue($data[$index], $orderPropertyPath);
-            
+
             $propertyAccessor->setValue($data[$index], $orderPropertyPath, $prevItemOrder);
             $propertyAccessor->setValue($data[$index - 1], $orderPropertyPath, $currentItemOrder);
         } else {
@@ -93,11 +93,11 @@ trait LiveCollectionTrait
         $formConfig = $this->getForm()->get($name)->getConfig();
         $orderPropertyPath = $formConfig->getOption('order_property_path');
 
-        if ($orderPropertyPath !== null) {
+        if (null !== $orderPropertyPath) {
             // Swap positions using the specified order property
             $nextItemOrder = $propertyAccessor->getValue($data[$index + 1], $orderPropertyPath);
             $currentItemOrder = $propertyAccessor->getValue($data[$index], $orderPropertyPath);
-            
+
             $propertyAccessor->setValue($data[$index], $orderPropertyPath, $nextItemOrder);
             $propertyAccessor->setValue($data[$index + 1], $orderPropertyPath, $currentItemOrder);
         } else {
