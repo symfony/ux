@@ -35,11 +35,11 @@ final class LiveCollectionType extends AbstractType
             $prototype = $builder->create('delete', $options['button_delete_type'], $options['button_delete_options']);
             $builder->setAttribute('button_delete_prototype', $prototype->getForm());
         }
-
+        
         if ($options['allow_sort']) {
             $moveUpPrototype = $builder->create('move_up', $options['button_move_up_type'], $options['button_move_up_options']);
             $builder->setAttribute('button_move_up_prototype', $moveUpPrototype->getForm());
-
+            
             $moveDownPrototype = $builder->create('move_down', $options['button_move_down_type'], $options['button_move_down_options']);
             $builder->setAttribute('button_move_down_prototype', $moveDownPrototype->getForm());
         }
@@ -100,7 +100,7 @@ final class LiveCollectionType extends AbstractType
                 array_splice($entryView->vars['button_delete']->vars['block_prefixes'], 1, 0, 'live_collection_button_delete');
             }
         }
-
+        
         // Add move up and move down buttons
         if ($form->getConfig()->hasAttribute('button_move_up_prototype')) {
             $prototype = $form->getConfig()->getAttribute('button_move_up_prototype');
@@ -124,7 +124,7 @@ final class LiveCollectionType extends AbstractType
                 array_splice($entryView->vars['button_move_up']->vars['block_prefixes'], 1, 0, 'live_collection_button_move_up');
             }
         }
-
+        
         if ($form->getConfig()->hasAttribute('button_move_down_prototype')) {
             $prototype = $form->getConfig()->getAttribute('button_move_down_prototype');
 
@@ -166,7 +166,8 @@ final class LiveCollectionType extends AbstractType
             'button_move_down_options' => [],
             'allow_add' => true,
             'allow_delete' => true,
-            'allow_sort' => true,
+            'allow_sort' => false,
+            'order_property_path' => null,
             'by_reference' => false,
         ]);
     }

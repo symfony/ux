@@ -60,10 +60,22 @@ trait LiveCollectionTrait
             return;
         }
 
-        // Swap the current item with the one above it
-        $temp = $data[$index - 1];
-        $data[$index - 1] = $data[$index];
-        $data[$index] = $temp;
+        $formConfig = $this->getForm()->get($name)->getConfig();
+        $orderPropertyPath = $formConfig->getOption('order_property_path');
+
+        if ($orderPropertyPath !== null) {
+            // Swap positions using the specified order property
+            $prevItemOrder = $propertyAccessor->getValue($data[$index - 1], $orderPropertyPath);
+            $currentItemOrder = $propertyAccessor->getValue($data[$index], $orderPropertyPath);
+            
+            $propertyAccessor->setValue($data[$index], $orderPropertyPath, $prevItemOrder);
+            $propertyAccessor->setValue($data[$index - 1], $orderPropertyPath, $currentItemOrder);
+        } else {
+            // Legacy behavior - simple array swap (with warning about limitations)
+            $temp = $data[$index - 1];
+            $data[$index - 1] = $data[$index];
+            $data[$index] = $temp;
+        }
 
         $propertyAccessor->setValue($this->formValues, $propertyPath, $data);
     }
@@ -78,10 +90,22 @@ trait LiveCollectionTrait
             return;
         }
 
-        // Swap the current item with the one below it
-        $temp = $data[$index + 1];
-        $data[$index + 1] = $data[$index];
-        $data[$index] = $temp;
+        $formConfig = $this->getForm()->get($name)->getConfig();
+        $orderPropertyPath = $formConfig->getOption('order_property_path');
+
+        if ($orderPropertyPath !== null) {
+            // Swap positions using the specified order property
+            $nextItemOrder = $propertyAccessor->getValue($data[$index + 1], $orderPropertyPath);
+            $currentItemOrder = $propertyAccessor->getValue($data[$index], $orderPropertyPath);
+            
+            $propertyAccessor->setValue($data[$index], $orderPropertyPath, $nextItemOrder);
+            $propertyAccessor->setValue($data[$index + 1], $orderPropertyPath, $currentItemOrder);
+        } else {
+            // Legacy behavior - simple array swap (with warning about limitations)
+            $temp = $data[$index + 1];
+            $data[$index + 1] = $data[$index];
+            $data[$index] = $temp;
+        }
 
         $propertyAccessor->setValue($this->formValues, $propertyPath, $data);
     }
