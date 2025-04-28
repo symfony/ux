@@ -56,17 +56,17 @@ export default class extends Controller {
         this.inputTarget.value = '';
         this.inputTarget.style.display = 'block';
         this.placeholderTarget.style.display = 'block';
+        this.previewTarget.innerHTML = '';
         this.previewTarget.style.display = 'none';
-        this.previewImageTarget.style.display = 'none';
-        this.previewImageTarget.style.backgroundImage = 'none';
-        this.previewFilenameTarget.textContent = '';
+        this.element.classList.remove('dropzone-on-drag-enter');
 
         this.dispatchEvent('clear');
     }
 
     onInputChange(event: any) {
-        const file = event.target.files[0];
-        if (typeof file === 'undefined') {
+        const files = event.target.files;
+        if (files.length === 0) {
+            this.previewClearButtonTarget.style.display = 'none';
             return;
         }
 
@@ -74,30 +74,57 @@ export default class extends Controller {
         this.inputTarget.style.display = 'none';
         this.placeholderTarget.style.display = 'none';
 
-        // Show the filename in preview
-        this.previewFilenameTarget.textContent = file.name;
-        this.previewTarget.style.display = 'flex';
+        // Clear previous previews
+        this.previewTarget.innerHTML = '';
 
-        // If the file is an image, load it and display it as preview
-        this.previewImageTarget.style.display = 'none';
-        if (file.type && file.type.indexOf('image') !== -1) {
-            this._populateImagePreview(file);
+        for (const file of files) {
+            // Create a container for each file preview
+            const filePreviewContainer = document.createElement('div');
+            filePreviewContainer.classList.add('dropzone-preview-file');
+
+            // Create a filename preview element
+            const fileNameElement = document.createElement('span');
+            fileNameElement.textContent = file.name;
+            filePreviewContainer.appendChild(fileNameElement);
+
+            // Create an image preview element if the file is an image, else a default svg file icon
+            if (file.type) {
+                const imagePreviewElement = document.createElement('div');
+
+                if (file.type.indexOf('image') !== -1) {
+                    imagePreviewElement.classList.add('dropzone-preview-image');
+                    this._populateImagePreview(file, imagePreviewElement);
+                } else {
+                    const noPreviewSvg =
+                        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M14 11a3 3 0 0 1-3-3V4H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-8zm-2-3a2 2 0 0 0 2 2h3.59L12 4.41zM7 3h5l7 7v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3"/></svg>';
+                    imagePreviewElement.innerHTML = noPreviewSvg;
+
+                    imagePreviewElement.classList.add('dropzone-no-preview');
+                }
+
+                filePreviewContainer.appendChild(imagePreviewElement);
+            }
+
+            // Append the file preview container to the main preview target
+            this.previewTarget.appendChild(filePreviewContainer);
+
+            this.dispatchEvent('change', file);
         }
 
-        this.dispatchEvent('change', file);
+        // Show the preview container
+        this.previewTarget.style.display = 'grid';
     }
 
-    _populateImagePreview(file: Blob) {
+    _populateImagePreview(file: Blob, imagePreviewElement: HTMLElement) {
         if (typeof FileReader === 'undefined') {
             // FileReader API not available, skip
             return;
         }
 
         const reader = new FileReader();
-
         reader.addEventListener('load', (event: any) => {
-            this.previewImageTarget.style.display = 'block';
-            this.previewImageTarget.style.backgroundImage = `url("${event.target.result}")`;
+            imagePreviewElement.style.backgroundImage = `url("${event.target.result}")`;
+            imagePreviewElement.style.display = 'block';
         });
 
         reader.readAsDataURL(file);
@@ -107,6 +134,8 @@ export default class extends Controller {
         this.inputTarget.style.display = 'block';
         this.placeholderTarget.style.display = 'block';
         this.previewTarget.style.display = 'none';
+        this.element.classList.add('dropzone-on-drag-enter');
+        this.element.classList.remove('dropzone-on-drag-leave');
     }
 
     onDragLeave(event: any) {
@@ -117,6 +146,8 @@ export default class extends Controller {
             this.inputTarget.style.display = 'none';
             this.placeholderTarget.style.display = 'none';
             this.previewTarget.style.display = 'block';
+            this.element.classList.remove('dropzone-on-drag-enter');
+            this.element.classList.add('dropzone-on-drag-leave');
         }
     }
 

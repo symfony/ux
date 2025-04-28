@@ -12,7 +12,7 @@ export default class extends Controller {
     disconnect(): void;
     clear(): void;
     onInputChange(event: any): void;
-    _populateImagePreview(file: Blob): void;
+    _populateImagePreview(file: Blob, imagePreviewElement: HTMLElement): void;
     onDragEnter(): void;
     onDragLeave(event: any): void;
     private dispatchEvent;

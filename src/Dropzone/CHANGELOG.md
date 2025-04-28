@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.24
+
+-   Preview works with muliple files 
+
 ## 2.20
 
 -   Enable file replacement via "drag-and-drop"
