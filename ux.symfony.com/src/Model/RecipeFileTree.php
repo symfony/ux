@@ -27,7 +27,6 @@ class RecipeFileTree
             ->addDirectory('assets/styles')
             ->addFile('assets/styles/app.css', 'Your main CSS file')
             ->addFile('package.json', 'Holds your node dependencies, most importantly Stimulus & Webpack Encore.')
-            ->addFile('webpack.config.js', 'Configuration file for Webpack Encore: the tool that processes and combines all of your CSS and JS files.')
         ;
     }
 
