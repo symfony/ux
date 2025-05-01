@@ -9,17 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Toolkit\Tests\Kit;
+namespace Symfony\UX\Toolkit\Tests\Installer;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\UX\Toolkit\Component\ComponentInstaller;
-use Symfony\UX\Toolkit\Dependency\ComponentDependency;
-use Symfony\UX\Toolkit\Exception\ComponentAlreadyExistsException;
+use Symfony\UX\Toolkit\Installer\Installer;
 use Symfony\UX\Toolkit\Kit\Kit;
 
-final class ComponentInstallerTest extends KernelTestCase
+final class InstallerTest extends KernelTestCase
 {
     private Filesystem $filesystem;
     private string $tmpDir;
@@ -37,7 +35,7 @@ final class ComponentInstallerTest extends KernelTestCase
 
     public function testCanInstallComponent(): void
     {
-        $componentInstaller = new ComponentInstaller(self::getContainer()->get('filesystem'));
+        $componentInstaller = new Installer(self::getContainer()->get('filesystem'), fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
         $kit = $this->createKit('shadcn');
 
         $this->assertFileDoesNotExist($this->tmpDir.'/Button.html.twig');
@@ -45,46 +43,49 @@ final class ComponentInstallerTest extends KernelTestCase
         $component = $kit->getComponent('Button');
         $this->assertNotNull($component);
 
-        $componentInstaller->install($kit, $component, $this->tmpDir);
+        $componentInstaller->installComponent($kit, $component, $this->tmpDir, false);
 
         $this->assertFileExists($this->tmpDir.'/Button.html.twig');
         $this->assertSame($this->filesystem->readFile($this->tmpDir.'/Button.html.twig'), $this->filesystem->readFile(\sprintf('%s/templates/components/Button.html.twig', $kit->path)));
     }
 
-    public function testShouldFailIfComponentAlreadyExists(): void
+    public function testShouldAskIfFileAlreadyExists(): void
     {
-        $componentInstaller = new ComponentInstaller(self::getContainer()->get('filesystem'));
+        $askedCount = 0;
+        $componentInstaller = new Installer(self::getContainer()->get('filesystem'), function () use (&$askedCount) {
+            ++$askedCount;
+
+            return true;
+        });
         $kit = $this->createKit('shadcn');
 
         $component = $kit->getComponent('Button');
         $this->assertNotNull($component);
 
-        $componentInstaller->install($kit, $component, $this->tmpDir);
+        $componentInstaller->installComponent($kit, $component, $this->tmpDir, false);
 
+        $this->assertSame(0, $askedCount);
         $this->assertFileExists($this->tmpDir.'/Button.html.twig');
         $this->assertSame($this->filesystem->readFile($this->tmpDir.'/Button.html.twig'), $this->filesystem->readFile(\sprintf('%s/templates/components/Button.html.twig', $kit->path)));
 
-        $this->expectException(ComponentAlreadyExistsException::class);
-        $this->expectExceptionMessage('The component "Button" already exists.');
-
-        $componentInstaller->install($kit, $component, $this->tmpDir);
+        $componentInstaller->installComponent($kit, $component, $this->tmpDir, false);
+        $this->assertSame(1, $askedCount);
     }
 
     public function testCanInstallComponentIfForced(): void
     {
-        $componentInstaller = new ComponentInstaller(self::getContainer()->get('filesystem'));
+        $componentInstaller = new Installer(self::getContainer()->get('filesystem'), fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
         $kit = $this->createKit('shadcn');
 
         $component = $kit->getComponent('Button');
         $this->assertNotNull($component);
 
-        $componentInstaller->install($kit, $component, $this->tmpDir);
+        $componentInstaller->installComponent($kit, $component, $this->tmpDir, false);
 
         $this->assertFileExists($this->tmpDir.'/Button.html.twig');
         $this->assertSame($this->filesystem->readFile($this->tmpDir.'/Button.html.twig'), $this->filesystem->readFile(\sprintf('%s/templates/components/Button.html.twig', $kit->path)));
 
-        // No exception should be thrown, the file should be overwritten
-        $componentInstaller->install($kit, $component, $this->tmpDir, true);
+        $componentInstaller->installComponent($kit, $component, $this->tmpDir, true);
 
         $this->assertFileExists($this->tmpDir.'/Button.html.twig');
         $this->assertSame($this->filesystem->readFile($this->tmpDir.'/Button.html.twig'), $this->filesystem->readFile(\sprintf('%s/templates/components/Button.html.twig', $kit->path)));
@@ -92,7 +93,7 @@ final class ComponentInstallerTest extends KernelTestCase
 
     public function testCanInstallComponentAndItsComponentDependencies(): void
     {
-        $componentInstaller = new ComponentInstaller(self::getContainer()->get('filesystem'));
+        $componentInstaller = new Installer(self::getContainer()->get('filesystem'), fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
         $kit = $this->createKit('shadcn');
 
         $expectedFiles = [
@@ -104,25 +105,17 @@ final class ComponentInstallerTest extends KernelTestCase
             'Table/Head.html.twig' => $this->tmpDir.'/Table/Head.html.twig',
             'Table/Header.html.twig' => $this->tmpDir.'/Table/Header.html.twig',
             'Table/Row.html.twig' => $this->tmpDir.'/Table/Row.html.twig',
+            'Button.html.twig' => $this->tmpDir.'/Button.html.twig',
+            'Input.html.twig' => $this->tmpDir.'/Input.html.twig',
         ];
 
         foreach ($expectedFiles as $expectedFile) {
             $this->assertFileDoesNotExist($expectedFile);
         }
 
-        $component = $kit->getComponent('Table');
-        $this->assertNotNull($component);
-
-        // Install the component and its dependencies
-        $componentInstaller->install($kit, $component, $this->tmpDir);
-        foreach ($component->getDependencies() as $dependency) {
-            if ($dependency instanceof ComponentDependency) {
-                $dependencyComponent = $kit->getComponent($dependency->name);
-                $this->assertNotNull($dependencyComponent);
-
-                $componentInstaller->install($kit, $dependencyComponent, $this->tmpDir);
-            }
-        }
+        $componentInstaller->installComponent($kit, $kit->getComponent('Table'), $this->tmpDir, false);
+        $componentInstaller->installComponent($kit, $kit->getComponent('Button'), $this->tmpDir, false);
+        $componentInstaller->installComponent($kit, $kit->getComponent('Input'), $this->tmpDir, false);
 
         foreach ($expectedFiles as $fileName => $expectedFile) {
             $this->assertFileExists($expectedFile);
@@ -132,6 +125,6 @@ final class ComponentInstallerTest extends KernelTestCase
 
     private function createKit(string $kitName): Kit
     {
-        return self::getContainer()->get('ux_toolkit.kit.factory')->createKitFromAbsolutePath(Path::join(__DIR__, '../../kits', $kitName));
+        return self::getContainer()->get('ux_toolkit.kit.kit_factory')->createKitFromAbsolutePath(Path::join(__DIR__, '../../kits', $kitName));
     }
 }

@@ -9,12 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Toolkit\Component;
+namespace Symfony\UX\Toolkit\Asset;
 
 use Symfony\UX\Toolkit\Assert;
 use Symfony\UX\Toolkit\Dependency\ComponentDependency;
 use Symfony\UX\Toolkit\Dependency\Dependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
+use Symfony\UX\Toolkit\Dependency\StimulusControllerDependency;
 use Symfony\UX\Toolkit\File\Doc;
 use Symfony\UX\Toolkit\File\File;
 
@@ -56,6 +57,10 @@ final class Component
             }
 
             if ($existingDependency instanceof ComponentDependency && $existingDependency->name === $dependency->name) {
+                return;
+            }
+
+            if ($existingDependency instanceof StimulusControllerDependency && $existingDependency->name === $dependency->name) {
                 return;
             }
         }

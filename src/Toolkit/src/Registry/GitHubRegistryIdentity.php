@@ -17,7 +17,7 @@ namespace Symfony\UX\Toolkit\Registry;
  * @author Jean-François Lépine
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final readonly class GitHubRegistryIdentity
+final class GitHubRegistryIdentity
 {
     /**
      * @param non-empty-string $authorName
@@ -25,9 +25,9 @@ final readonly class GitHubRegistryIdentity
      * @param non-empty-string $version
      */
     private function __construct(
-        public string $authorName,
-        public string $repositoryName,
-        public string $version,
+        public readonly string $authorName,
+        public readonly string $repositoryName,
+        public readonly string $version,
     ) {
     }
 

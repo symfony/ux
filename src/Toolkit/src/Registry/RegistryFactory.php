@@ -19,10 +19,10 @@ use Psr\Container\ContainerInterface;
  * @author Jean-François Lépine
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final readonly class RegistryFactory
+final class RegistryFactory
 {
     public function __construct(
-        private ContainerInterface $registries,
+        private readonly ContainerInterface $registries,
     ) {
     }
 

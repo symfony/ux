@@ -20,7 +20,7 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\Service\ServiceLocatorTrait;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 use Symfony\UX\Toolkit\Command\DebugKitCommand;
-use Symfony\UX\Toolkit\Dependency\DependenciesResolver;
+use Symfony\UX\Toolkit\Kit\KitSynchronizer;
 use Symfony\UX\Toolkit\Kit\KitFactory;
 use Symfony\UX\Toolkit\Registry\GitHubRegistry;
 use Symfony\UX\Toolkit\Registry\LocalRegistry;
@@ -46,7 +46,7 @@ if (!class_exists(Application::class)) {
 }
 
 $filesystem = new Filesystem();
-$kitFactory = new KitFactory($filesystem, new DependenciesResolver($filesystem));
+$kitFactory = new KitFactory($filesystem, new KitSynchronizer($filesystem));
 $registryFactory = new RegistryFactory(new class([
     Type::Local->value => fn () => new LocalRegistry($kitFactory, $filesystem, getcwd() ?? throw new \RuntimeException('The current working directory could not be determined.')),
     Type::GitHub->value => fn () => new GitHubRegistry($kitFactory, $filesystem, class_exists(HttpClient::class) ? HttpClient::create() : null),

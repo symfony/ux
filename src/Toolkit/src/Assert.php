@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\Toolkit;
 
-final readonly class Assert
+final class Assert
 {
     /**
      * Assert that the kit name is valid (ex: "Shadcn", "Tailwind", "Bootstrap", etc.).
@@ -52,7 +52,14 @@ final readonly class Assert
     {
         // Taken from https://github.com/composer/composer/blob/main/res/composer-schema.json
         if (1 !== preg_match('/^[a-z0-9]([_.-]?[a-z0-9]+)*\/[a-z0-9](([_.]|-{1,2})?[a-z0-9]+)*$/', $name)) {
-            throw new \InvalidArgumentException(\sprintf('Invalid package name "%s".', $name));
+            throw new \InvalidArgumentException(\sprintf('Invalid PHP package name "%s".', $name));
+        }
+    }
+
+    public static function stimulusControllerName(string $name): void
+    {
+        if (1 !== preg_match('/^[a-z][a-z0-9-]*[a-z0-9]$/', $name)) {
+            throw new \InvalidArgumentException(\sprintf('Invalid Stimulus controller name "%s".', $name));
         }
     }
 }

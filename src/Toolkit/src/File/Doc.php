@@ -16,13 +16,13 @@ namespace Symfony\UX\Toolkit\File;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final readonly class Doc
+final class Doc
 {
     /**
      * @param non-empty-string $markdownContent
      */
     public function __construct(
-        public string $markdownContent,
+        public readonly string $markdownContent,
     ) {
     }
 }

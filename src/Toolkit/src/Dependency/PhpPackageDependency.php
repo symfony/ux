@@ -20,14 +20,14 @@ use Symfony\UX\Toolkit\Assert;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final readonly class PhpPackageDependency implements Dependency
+final class PhpPackageDependency implements Dependency
 {
     /**
      * @param non-empty-string $name
      */
     public function __construct(
-        public string $name,
-        public ?Version $constraintVersion = null,
+        public readonly string $name,
+        public readonly ?Version $constraintVersion = null,
     ) {
         Assert::phpPackageName($name);
     }

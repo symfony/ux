@@ -57,10 +57,10 @@ final class Kernel extends BaseKernel
         ]);
 
         $container->services()
-            ->alias('ux_toolkit.kit.factory', '.ux_toolkit.kit.factory')
+            ->alias('ux_toolkit.kit.kit_factory', '.ux_toolkit.kit.kit_factory')
                 ->public()
 
-            ->alias('ux_toolkit.kit.dependencies_resolver', '.ux_toolkit.dependency.dependencies_resolver')
+            ->alias('ux_toolkit.kit.kit_synchronizer', '.ux_toolkit.kit.kit_synchronizer')
                 ->public()
 
             ->alias('ux_toolkit.registry.factory', '.ux_toolkit.registry.factory')

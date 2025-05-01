@@ -50,14 +50,16 @@ class InstallComponentCommandTest extends KernelTestCase
             $this->assertFileDoesNotExist($expectedFile);
         }
 
-        $this->consoleCommand('ux:toolkit:install-component Table --destination='.$this->tmpDir)
+        $testCommand = $this->consoleCommand('ux:toolkit:install-component Table --destination='.$this->tmpDir)
             ->execute()
             ->assertSuccessful()
-            ->assertOutputContains('The component "Table" has been installed.')
+            ->assertOutputContains('Installing component Table...')
+            ->assertOutputContains('[OK] The component has been installed.')
         ;
 
-        // Files should be created,
+        // Files should be created
         foreach ($expectedFiles as $fileName => $expectedFile) {
+            $testCommand->assertOutputContains($fileName);
             $this->assertFileExists($expectedFile);
             $this->assertEquals(file_get_contents(__DIR__.'/../../kits/shadcn/templates/components/'.$fileName), file_get_contents($expectedFile));
         }
@@ -96,7 +98,7 @@ class InstallComponentCommandTest extends KernelTestCase
             ->assertOutputContains('The component "Unknown" does not exist.');
     }
 
-    public function testShouldFailWhenComponentFileAlreadyExistsInNonInteractiveMode(): void
+    public function testShouldWarnWhenComponentFileAlreadyExistsInNonInteractiveMode(): void
     {
         $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
         mkdir($destination);
@@ -109,7 +111,7 @@ class InstallComponentCommandTest extends KernelTestCase
         $this->consoleCommand('ux:toolkit:install-component Badge --destination='.$destination)
             ->execute()
             ->assertFaulty()
-            ->assertOutputContains('The component "Badge" already exists.')
+            ->assertOutputContains('[WARNING] The component has not been installed.')
         ;
     }
 }

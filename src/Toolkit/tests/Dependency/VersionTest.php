@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Toolkit\Tests\Kit\Dependency;
+namespace Symfony\UX\Toolkit\Tests\Dependency;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Toolkit\Dependency\Version;

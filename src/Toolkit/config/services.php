@@ -13,11 +13,9 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Symfony\UX\Toolkit\Command\DebugKitCommand;
 use Symfony\UX\Toolkit\Command\InstallComponentCommand;
-use Symfony\UX\Toolkit\Command\InstallKitCommand;
 use Symfony\UX\Toolkit\Command\LintKitCommand;
-use Symfony\UX\Toolkit\Component\ComponentInstaller;
-use Symfony\UX\Toolkit\Dependency\DependenciesResolver;
 use Symfony\UX\Toolkit\Kit\KitFactory;
+use Symfony\UX\Toolkit\Kit\KitSynchronizer;
 use Symfony\UX\Toolkit\Registry\GitHubRegistry;
 use Symfony\UX\Toolkit\Registry\LocalRegistry;
 use Symfony\UX\Toolkit\Registry\RegistryFactory;
@@ -40,15 +38,7 @@ return static function (ContainerConfigurator $container): void {
             ->args([
                 param('ux_toolkit.kit'),
                 service('.ux_toolkit.registry.factory'),
-                service('.ux_toolkit.component.component_installer'),
-            ])
-            ->tag('console.command')
-
-        ->set('.ux_toolkit.command.install_kit', InstallKitCommand::class)
-            ->args([
-                param('ux_toolkit.kit'),
-                service('.ux_toolkit.registry.factory'),
-                service('.ux_toolkit.component.component_installer'),
+                service('filesystem'),
             ])
             ->tag('console.command')
 
@@ -84,30 +74,15 @@ return static function (ContainerConfigurator $container): void {
 
         // Kit
 
-        ->set('.ux_toolkit.kit.factory', KitFactory::class)
-            ->args([
-                service('filesystem'),
-                service('.ux_toolkit.dependency.dependencies_resolver'),
-            ])
-
         ->set('.ux_toolkit.kit.kit_factory', KitFactory::class)
             ->args([
                 service('filesystem'),
-                service('.ux_toolkit.dependency.dependencies_resolver'),
+                service('.ux_toolkit.kit.kit_synchronizer'),
             ])
 
-        // Component
-        ->set('.ux_toolkit.component.component_installer', ComponentInstaller::class)
+        ->set('.ux_toolkit.kit.kit_synchronizer', KitSynchronizer::class)
             ->args([
                 service('filesystem'),
             ])
-
-        // Dependency
-
-        ->set('.ux_toolkit.dependency.dependencies_resolver', DependenciesResolver::class)
-            ->args([
-                service('filesystem'),
-            ])
-
     ;
 };

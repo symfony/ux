@@ -78,20 +78,12 @@ jobs:
                     dependency-version: 'highest'
                   - php-version: '8.4'
                     dependency-version: 'highest'
-                  - php-version: '8.2'
-                    minimum-stability: stable
-                    component: Toolkit
-                  - php-version: '8.2'
-                    minimum-stability: dev
-                    component: Toolkit
                 component: ${{ fromJson(needs.tests-php-components.outputs.components )}}
                 exclude:
                   - php-version: '8.1'
                     minimum-stability: 'dev'
                   - php-version: '8.3'
                     minimum-stability: 'dev'
-                  - component: Toolkit # does not support PHP 8.1
-                    php-version: '8.1'
                   - component: Swup  # has no tests
                   - component: Turbo # has its own workflow (test-turbo.yml)
                   - component: Typed  # has no tests

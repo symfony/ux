@@ -13,7 +13,7 @@ namespace App\Service\Toolkit;
 
 use App\Enum\ToolkitKitId;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\UX\Toolkit\Component\Component;
+use Symfony\UX\Toolkit\Asset\Component;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Registry\RegistryFactory;
 

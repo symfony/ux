@@ -56,7 +56,7 @@ final class GitHubRegistryTest extends KernelTestCase
         });
 
         $githubRegistry = new GitHubRegistry(
-            self::getContainer()->get('ux_toolkit.kit.factory'),
+            self::getContainer()->get('ux_toolkit.kit.kit_factory'),
             $this->filesystem,
             $httpClient,
         );
@@ -74,7 +74,7 @@ final class GitHubRegistryTest extends KernelTestCase
     public function testShouldThrowExceptionIfKitNotFound(): void
     {
         $githubRegistry = new GitHubRegistry(
-            self::getContainer()->get('ux_toolkit.kit.factory'),
+            self::getContainer()->get('ux_toolkit.kit.kit_factory'),
             $this->filesystem,
             new MockHttpClient(fn () => new MockResponse(
                 'Not found',

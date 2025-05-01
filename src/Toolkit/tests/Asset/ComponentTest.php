@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Toolkit\Tests\Kit;
+namespace Symfony\UX\Toolkit\Tests\Asset;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\UX\Toolkit\Component\Component;
+use Symfony\UX\Toolkit\Asset\Component;
 use Symfony\UX\Toolkit\Dependency\ComponentDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\Dependency\Version;

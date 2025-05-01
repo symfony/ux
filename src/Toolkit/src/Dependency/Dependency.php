@@ -18,7 +18,6 @@ namespace Symfony\UX\Toolkit\Dependency;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-interface Dependency
+interface Dependency extends \Stringable
 {
-    public function __toString(): string;
 }

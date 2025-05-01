@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\Toolkit\Command;
 
-use Composer\InstalledVersions;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,12 +18,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\UX\Toolkit\Component\Component;
-use Symfony\UX\Toolkit\Component\ComponentInstaller;
-use Symfony\UX\Toolkit\Dependency\ComponentDependency;
-use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
-use Symfony\UX\Toolkit\Exception\ComponentAlreadyExistsException;
+use Symfony\UX\Toolkit\Asset\Component;
+use Symfony\UX\Toolkit\File\File;
+use Symfony\UX\Toolkit\Installer\Installer;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Registry\RegistryFactory;
 
@@ -46,7 +44,7 @@ class InstallComponentCommand extends Command
     public function __construct(
         private readonly string $kitName,
         private readonly RegistryFactory $registryFactory,
-        private readonly ComponentInstaller $componentInstaller,
+        private readonly Filesystem $filesystem,
     ) {
         parent::__construct();
     }
@@ -87,7 +85,6 @@ EOF
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         $this->io = new SymfonyStyle($input, $output);
-        $this->isInteractive = $input->isInteractive();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -123,29 +120,23 @@ EOF
             }
         }
 
-        // Install the component and dependencies
-        $destination = $input->getOption('destination');
+        $this->io->text(\sprintf('Installing component <info>%s</>...', $component->name));
 
-        if (!$this->installComponent($kit, $component, $destination)) {
-            return Command::FAILURE;
+        $installer = new Installer($this->filesystem, fn (string $question) => $this->io->confirm($question, $input->isInteractive()));
+        $installationReport = $installer->installComponent($kit, $component, $destinationPath = $input->getOption('destination'), $input->getOption('force'));
+
+        if ([] === $installationReport->newFiles) {
+            $this->io->warning('The component has not been installed.');
+
+            return Command::SUCCESS;
         }
 
-        // Iterate over the component's dependencies
-        $phpDependenciesToInstall = [];
-        foreach ($component->getDependencies() as $dependency) {
-            if ($dependency instanceof ComponentDependency) {
-                if (!$this->installComponent($kit, $kit->getComponent($dependency->name), $destination)) {
-                    return Command::FAILURE;
-                }
-            } elseif ($dependency instanceof PhpPackageDependency && !InstalledVersions::isInstalled($dependency->name)) {
-                $phpDependenciesToInstall[] = $dependency;
-            }
-        }
+        $this->io->success('The component has been installed.');
+        $this->io->writeln('The following file(s) have been added to your project:');
+        $this->io->listing(array_map(fn (File $file) => Path::join($destinationPath, $file->relativePathName), $installationReport->newFiles));
 
-        $this->io->success(\sprintf('The component "%s" has been installed.', $component->name));
-
-        if ([] !== $phpDependenciesToInstall) {
-            $this->io->writeln(\sprintf('Run <info>composer require %s</info> to install the required PHP dependencies.', implode(' ', $phpDependenciesToInstall)));
+        if ([] !== $installationReport->suggestedPhpPackages) {
+            $this->io->writeln(\sprintf('Run <info>composer require %s</> to install the required PHP dependencies.', implode(' ', $installationReport->suggestedPhpPackages)));
             $this->io->newLine();
         }
 
@@ -167,34 +158,5 @@ EOF
         }
 
         return $alternative;
-    }
-
-    private function installComponent(Kit $kit, Component $component, string $destination, bool $force = false): bool
-    {
-        try {
-            $this->io->text(\sprintf('<info>Installing component "%s"...</>', $component->name));
-
-            $this->componentInstaller->install($kit, $component, $destination);
-        } catch (ComponentAlreadyExistsException) {
-            if ($force) {
-                $this->componentInstaller->install($kit, $component, $destination, true);
-
-                return true;
-            }
-
-            $this->io->warning(\sprintf('The component "%s" already exists.', $component->name));
-
-            if ($this->isInteractive) {
-                if ($this->io->confirm('Do you want to overwrite it?')) {
-                    $this->componentInstaller->install($kit, $component, $destination, true);
-
-                    return true;
-                }
-            } else {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

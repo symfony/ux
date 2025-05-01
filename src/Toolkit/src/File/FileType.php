@@ -19,11 +19,13 @@ namespace Symfony\UX\Toolkit\File;
 enum FileType: string
 {
     case Twig = 'twig';
+    case StimulusController = 'stimulus_controller';
 
     public function getLabel(): string
     {
         return match ($this) {
             self::Twig => 'Twig',
+            self::StimulusController => 'Stimulus Controller',
         };
     }
 }

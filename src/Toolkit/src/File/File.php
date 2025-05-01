@@ -18,7 +18,7 @@ use Symfony\Component\Filesystem\Path;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final readonly class File
+final class File implements \Stringable
 {
     /**
      * @param non-empty-string $relativePathNameToKit relative path from the kit root directory, example "templates/components/Table/Body.html.twig"
@@ -27,9 +27,9 @@ final readonly class File
      * @throws \InvalidArgumentException
      */
     public function __construct(
-        public FileType $type,
-        public string $relativePathNameToKit,
-        public string $relativePathName,
+        public readonly FileType $type,
+        public readonly string $relativePathNameToKit,
+        public readonly string $relativePathName,
     ) {
         if (!Path::isRelative($relativePathNameToKit)) {
             throw new \InvalidArgumentException(\sprintf('The path to the kit "%s" must be relative.', $relativePathNameToKit));

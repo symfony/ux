@@ -18,7 +18,7 @@ namespace Symfony\UX\Toolkit\Dependency;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final readonly class Version
+final class Version implements \Stringable
 {
     /**
      * @param int<0, max> $major
@@ -26,9 +26,9 @@ final readonly class Version
      * @param int<0, max> $patch
      */
     public function __construct(
-        public int $major,
-        public int $minor,
-        public int $patch,
+        public readonly int $major,
+        public readonly int $minor,
+        public readonly int $patch,
     ) {
     }
 

@@ -22,7 +22,7 @@ use Symfony\UX\Toolkit\Kit\KitFactory;
  * @author Jean-François Lépine
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final readonly class LocalRegistry implements Registry
+final class LocalRegistry implements Registry
 {
     public static function supports(string $kitName): bool
     {
@@ -30,9 +30,9 @@ final readonly class LocalRegistry implements Registry
     }
 
     public function __construct(
-        private KitFactory $kitFactory,
-        private Filesystem $filesystem,
-        private string $projectDir,
+        private readonly KitFactory $kitFactory,
+        private readonly Filesystem $filesystem,
+        private readonly string $projectDir,
     ) {
     }
 

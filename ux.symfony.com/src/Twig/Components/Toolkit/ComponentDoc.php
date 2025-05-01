@@ -16,7 +16,7 @@ use App\Util\SourceCleaner;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\String\AbstractString;
-use Symfony\UX\Toolkit\Component\Component;
+use Symfony\UX\Toolkit\Asset\Component;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Tempest\Highlight\Highlighter;
 

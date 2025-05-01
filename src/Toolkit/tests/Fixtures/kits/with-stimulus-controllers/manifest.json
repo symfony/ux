@@ -1,0 +1,7 @@
+{
+    "name": "With Stimulus Controllers",
+    "description": "Kit used as a test fixture.",
+    "license": "MIT",
+    "homepage": "https://ux.symfony.com/",
+    "authors": ["Symfony UX Community"]
+}

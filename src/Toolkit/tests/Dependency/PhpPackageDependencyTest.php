@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Toolkit\Tests\Kit\Dependency;
+namespace Symfony\UX\Toolkit\Tests\Dependency;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
@@ -32,7 +32,7 @@ final class PhpPackageDependencyTest extends TestCase
     public function testShouldFailIfPackageNameIsInvalid(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid package name "/foo".');
+        $this->expectExceptionMessage('Invalid PHP package name "/foo".');
 
         new PhpPackageDependency('/foo');
     }

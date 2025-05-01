@@ -20,7 +20,7 @@ final class LocalRegistryTest extends KernelTestCase
     public function testCanGetKit(): void
     {
         $localRegistry = new LocalRegistry(
-            self::getContainer()->get('ux_toolkit.kit.factory'),
+            self::getContainer()->get('ux_toolkit.kit.kit_factory'),
             self::getContainer()->get('filesystem'),
             self::getContainer()->getParameter('kernel.project_dir'),
         );
