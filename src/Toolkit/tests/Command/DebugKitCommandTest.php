@@ -21,7 +21,7 @@ class DebugKitCommandTest extends KernelTestCase
     public function testShouldBeAbleToDebug(): void
     {
         $this->bootKernel();
-        $this->consoleCommand('ux:toolkit:debug-kit shadcn')
+        $this->consoleCommand(\sprintf('ux:toolkit:debug-kit %s', __DIR__.'/../../kits/shadcn'))
             ->execute()
             ->assertSuccessful()
             // Kit details

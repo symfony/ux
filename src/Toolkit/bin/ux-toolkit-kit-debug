@@ -47,14 +47,8 @@ if (!class_exists(Application::class)) {
 
 $filesystem = new Filesystem();
 $kitFactory = new KitFactory($filesystem, new KitSynchronizer($filesystem));
-$registryFactory = new RegistryFactory(new class([
-    Type::Local->value => fn () => new LocalRegistry($kitFactory, $filesystem, getcwd() ?? throw new \RuntimeException('The current working directory could not be determined.')),
-    Type::GitHub->value => fn () => new GitHubRegistry($kitFactory, $filesystem, class_exists(HttpClient::class) ? HttpClient::create() : null),
-]) implements ServiceProviderInterface {
-    use ServiceLocatorTrait;
-});
 
-(new Application())->add($command = new DebugKitCommand($registryFactory))
+(new Application())->add($command = new DebugKitCommand($kitFactory))
     ->getApplication()
     ->setDefaultCommand($command->getName(), true)
     ->run()

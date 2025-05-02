@@ -24,7 +24,7 @@ final class PhpPackageDependencyTest extends TestCase
         $this->assertNull($dependency->constraintVersion);
         $this->assertSame('twig/html-extra', (string) $dependency);
 
-        $dependency = new PhpPackageDependency('twig/html-extra', new Version(3, 2, 1));
+        $dependency = new PhpPackageDependency('twig/html-extra', new Version('3.2.1'));
         $this->assertSame('twig/html-extra', $dependency->name);
         $this->assertSame('twig/html-extra:^3.2.1', (string) $dependency);
     }

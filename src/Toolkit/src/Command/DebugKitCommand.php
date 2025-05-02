@@ -19,7 +19,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\UX\Toolkit\Registry\RegistryFactory;
+use Symfony\Component\Filesystem\Path;
+use Symfony\UX\Toolkit\Kit\KitFactory;
 
 /**
  * @author Jean-François Lépine
@@ -29,13 +30,13 @@ use Symfony\UX\Toolkit\Registry\RegistryFactory;
  */
 #[AsCommand(
     name: 'ux:toolkit:debug-kit',
-    description: 'Debug a kit, dump the dependencies.',
+    description: 'Debug a local Kit.',
     hidden: true,
 )]
 class DebugKitCommand extends Command
 {
     public function __construct(
-        private readonly RegistryFactory $registryFactory,
+        private readonly KitFactory $kitFactory,
     ) {
         parent::__construct();
     }
@@ -43,19 +44,14 @@ class DebugKitCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('kit', InputArgument::REQUIRED, 'The kit name, can be a local kit (e.g.: "shadcn") or a GitHub kit (e.g.: "https://github.com/user/repository@kit-name").')
+            ->addArgument('kit-path', InputArgument::OPTIONAL, 'The path to the kit to debug', '.')
             ->setHelp(<<<'EOF'
-The kit name can be a local kit (e.g.: "shadcn") or a GitHub kit (e.g.: "https://github.com/user/repository@kit-name").
+To debug a Kit in the current directory:
+    <info>php %command.full_name%</info>
 
-To debug a local kit:
-
-  <info>php %command.full_name% shadcn</info>
-
-To debug a GitHub kit:
-
-  <info>php %command.full_name% https://github.com/user/repository@kit-name</info>
-  <info>php %command.full_name% https://github.com/user/repository@kit-name@v1.0.0</info>
-
+Or in another directory:
+    <info>php %command.full_name% ./kits/shadcn</info>
+    <info>php %command.full_name% /path/to/my-kit</info>
 EOF
             );
     }
@@ -64,9 +60,9 @@ EOF
     {
         $io = new SymfonyStyle($input, $output);
 
-        $kitName = $input->getArgument('kit');
-        $registry = $this->registryFactory->getForKit($kitName);
-        $kit = $registry->getKit($kitName);
+        $kitPath = $input->getArgument('kit-path');
+        $kitPath = Path::makeAbsolute($kitPath, getcwd());
+        $kit = $this->kitFactory->createKitFromAbsolutePath($kitPath);
 
         $io->title(\sprintf('Kit "%s"', $kit->name));
 

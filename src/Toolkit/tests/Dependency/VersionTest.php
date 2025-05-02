@@ -18,21 +18,18 @@ final class VersionTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $version = new Version(1, 2, 3);
+        $version = new Version('1.2.3');
 
-        $this->assertSame(1, $version->major);
-        $this->assertSame(2, $version->minor);
-        $this->assertSame(3, $version->patch);
         $this->assertSame('1.2.3', (string) $version);
     }
 
     public function testCanBeCompared(): void
     {
-        $this->assertTrue((new Version(1, 2, 3))->isHigherThan(new Version(1, 2, 2)));
-        $this->assertFalse((new Version(1, 2, 3))->isHigherThan(new Version(1, 2, 4)));
-        $this->assertTrue((new Version(1, 2, 3))->isHigherThan(new Version(1, 1, 99)));
-        $this->assertFalse((new Version(1, 2, 3))->isHigherThan(new Version(1, 2, 3)));
-        $this->assertTrue((new Version(1, 2, 3))->isHigherThan(new Version(0, 99, 99)));
-        $this->assertFalse((new Version(1, 2, 3))->isHigherThan(new Version(2, 0, 0)));
+        $this->assertTrue((new Version('1.2.3'))->isHigherThan(new Version('1.2.2')));
+        $this->assertFalse((new Version('1.2.3'))->isHigherThan(new Version('1.2.4')));
+        $this->assertTrue((new Version('1.2.3'))->isHigherThan(new Version('1.1.99')));
+        $this->assertFalse((new Version('1.2.3'))->isHigherThan(new Version('1.2.3')));
+        $this->assertTrue((new Version('1.2.3'))->isHigherThan(new Version('0.99.99')));
+        $this->assertFalse((new Version('1.2.3'))->isHigherThan(new Version('2.0.0')));
     }
 }

@@ -106,7 +106,7 @@ final class KitSynchronizer
             if (FileType::Twig === $file->type) {
                 if (str_contains($fileContent, 'html_cva')) {
                     $component->addDependency(new PhpPackageDependency('twig/extra-bundle'));
-                    $component->addDependency(new PhpPackageDependency('twig/html-extra', new Version(3, 12, 0)));
+                    $component->addDependency(new PhpPackageDependency('twig/html-extra', new Version('3.12.0')));
                 }
 
                 if (str_contains($fileContent, 'tailwind_merge')) {

@@ -13,7 +13,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Symfony\UX\Toolkit\Command\DebugKitCommand;
 use Symfony\UX\Toolkit\Command\InstallComponentCommand;
-use Symfony\UX\Toolkit\Command\LintKitCommand;
 use Symfony\UX\Toolkit\Kit\KitFactory;
 use Symfony\UX\Toolkit\Kit\KitSynchronizer;
 use Symfony\UX\Toolkit\Registry\GitHubRegistry;
@@ -30,27 +29,21 @@ return static function (ContainerConfigurator $container): void {
 
         ->set('.ux_toolkit.command.debug_kit', DebugKitCommand::class)
             ->args([
-                service('.ux_toolkit.registry.factory'),
+                service('.ux_toolkit.kit.kit_factory'),
             ])
             ->tag('console.command')
 
         ->set('.ux_toolkit.command.install', InstallComponentCommand::class)
             ->args([
                 param('ux_toolkit.kit'),
-                service('.ux_toolkit.registry.factory'),
+                service('.ux_toolkit.registry.registry_factory'),
                 service('filesystem'),
-            ])
-            ->tag('console.command')
-
-        ->set('.ux_toolkit.command.lint_kit', LintKitCommand::class)
-            ->args([
-                service('.ux_toolkit.registry.factory'),
             ])
             ->tag('console.command')
 
         // Registry
 
-        ->set('.ux_toolkit.registry.factory', RegistryFactory::class)
+        ->set('.ux_toolkit.registry.registry_factory', RegistryFactory::class)
             ->args([
                 service_locator([
                     Type::Local->value => service('.ux_toolkit.registry.local'),

@@ -25,5 +25,5 @@ services:
     Tempest\Highlight\Highlighter:
         tags: ['twig.runtime']
 
-    ux_toolkit.registry.factory:
-        alias: '.ux_toolkit.registry.factory'
+    ux_toolkit.registry.registry_factory:
+        alias: '.ux_toolkit.registry.registry_factory'

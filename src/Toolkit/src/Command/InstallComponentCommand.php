@@ -34,7 +34,7 @@ use Symfony\UX\Toolkit\Registry\RegistryFactory;
  */
 #[AsCommand(
     name: 'ux:toolkit:install-component',
-    description: 'This command will install a new UX Component in your project',
+    description: 'Install a new UX Component (e.g. Alert) in your project',
 )]
 class InstallComponentCommand extends Command
 {
@@ -52,7 +52,7 @@ class InstallComponentCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('component', InputArgument::REQUIRED, 'The component name (Ex: Button)')
+            ->addArgument('component', InputArgument::OPTIONAL, 'The component name (Ex: Button)')
             ->addOption(
                 'destination',
                 'd',
@@ -76,8 +76,8 @@ To install a component from an official UX Toolkit kit, use the <info>--kit</inf
 
 To install a component from an external GitHub kit, use the <info>--kit</info> option:
 
-<info>php %command.full_name% Button --kit=https://github.com/user/repository@kit</info>
-<info>php %command.full_name% Button --kit=https://github.com/user/repository@kit:branch</info>
+<info>php %command.full_name% Button --kit=https://github.com/user/my-kit</info>
+<info>php %command.full_name% Button --kit=https://github.com/user/my-kit:branch</info>
 EOF
             );
     }
@@ -95,8 +95,12 @@ EOF
         $registry = $this->registryFactory->getForKit($kitName);
         $kit = $registry->getKit($kitName);
 
-        // Get the component name from the argument, or suggest alternatives if it doesn't exist
-        if (null === $component = $kit->getComponent($componentName = $input->getArgument('component'))) {
+        if (null === $componentName = $input->getArgument('component')) {
+            // Ask for the component name if not provided
+            $componentName = $io->choice('Which component do you want to install?', array_map(fn (Component $component) => $component->name, $this->getAvailableComponents($kit)));
+            $component = $kit->getComponent($componentName);
+        } elseif (null === $component = $kit->getComponent($componentName)) {
+            // Suggest alternatives if component does not exist
             $message = \sprintf('The component "%s" does not exist.', $componentName);
 
             $alternativeComponents = $this->getAlternativeComponents($kit, $componentName);
@@ -120,7 +124,7 @@ EOF
             }
         }
 
-        $this->io->text(\sprintf('Installing component <info>%s</>...', $component->name));
+        $io->writeln(\sprintf('Installing component <info>%s</> from the <info>%s</> kit...', $component->name, $kitName));
 
         $installer = new Installer($this->filesystem, fn (string $question) => $this->io->confirm($question, $input->isInteractive()));
         $installationReport = $installer->installComponent($kit, $component, $destinationPath = $input->getOption('destination'), $input->getOption('force'));
@@ -144,7 +148,25 @@ EOF
     }
 
     /**
-     * Get alternative components that are similar to the given component name.
+     * @return list<Component>
+     */
+    private function getAvailableComponents(Kit $kit): array
+    {
+        $availableComponents = [];
+
+        foreach ($kit->getComponents() as $component) {
+            if (str_contains($component->name, ':')) {
+                continue;
+            }
+
+            $availableComponents[] = $component;
+        }
+
+        return $availableComponents;
+    }
+
+    /**
+     * @return list<Component>
      */
     private function getAlternativeComponents(Kit $kit, string $componentName): array
     {

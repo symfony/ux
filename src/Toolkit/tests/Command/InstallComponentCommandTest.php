@@ -53,7 +53,7 @@ class InstallComponentCommandTest extends KernelTestCase
         $testCommand = $this->consoleCommand('ux:toolkit:install-component Table --destination='.$this->tmpDir)
             ->execute()
             ->assertSuccessful()
-            ->assertOutputContains('Installing component Table...')
+            ->assertOutputContains('Installing component Table from the shadcn kit...')
             ->assertOutputContains('[OK] The component has been installed.')
         ;
 

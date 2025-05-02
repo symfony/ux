@@ -20,7 +20,7 @@ use Symfony\UX\Toolkit\Registry\RegistryFactory;
 class ToolkitService
 {
     public function __construct(
-        #[Autowire(service: 'ux_toolkit.registry.factory')]
+        #[Autowire(service: 'ux_toolkit.registry.registry_factory')]
         private RegistryFactory $registryFactory,
     ) {
     }

@@ -49,7 +49,6 @@
   },
   "bin": [
     "bin/ux-toolkit-kit-create",
-    "bin/ux-toolkit-kit-lint",
     "bin/ux-toolkit-kit-debug"
   ],
   "autoload": {

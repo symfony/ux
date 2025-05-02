@@ -60,7 +60,7 @@ final class ComponentTest extends TestCase
 
         $component->addDependency($dependency1 = new ComponentDependency('Icon'));
         $component->addDependency($dependency2 = new ComponentDependency('Label'));
-        $component->addDependency($dependency3 = new PhpPackageDependency('symfony/twig-component', new Version(2, 24, 0)));
+        $component->addDependency($dependency3 = new PhpPackageDependency('symfony/twig-component', new Version('2.24.0')));
 
         self::assertCount(3, $component->getDependencies());
         self::assertEquals([$dependency1, $dependency2, $dependency3], $component->getDependencies());
@@ -75,7 +75,7 @@ final class ComponentTest extends TestCase
         $component->addDependency($dependency1 = new ComponentDependency('Icon'));
         $component->addDependency($dependency2 = new ComponentDependency('Label'));
         $component->addDependency($dependency3 = new ComponentDependency('Icon'));
-        $component->addDependency($dependency4 = new PhpPackageDependency('symfony/twig-component', new Version(2, 24, 0)));
+        $component->addDependency($dependency4 = new PhpPackageDependency('symfony/twig-component', new Version('2.24.0')));
 
         self::assertCount(3, $component->getDependencies());
         self::assertEquals([$dependency1, $dependency2, $dependency4], $component->getDependencies());
@@ -89,12 +89,12 @@ final class ComponentTest extends TestCase
 
         $component->addDependency($dependency1 = new ComponentDependency('Icon'));
         $component->addDependency($dependency2 = new ComponentDependency('Label'));
-        $component->addDependency($dependency3 = new PhpPackageDependency('symfony/twig-component', new Version(2, 24, 0)));
+        $component->addDependency($dependency3 = new PhpPackageDependency('symfony/twig-component', new Version('2.24.0')));
 
         self::assertCount(3, $component->getDependencies());
         self::assertEquals([$dependency1, $dependency2, $dependency3], $component->getDependencies());
 
-        $component->addDependency($dependency4 = new PhpPackageDependency('symfony/twig-component', new Version(2, 25, 0)));
+        $component->addDependency($dependency4 = new PhpPackageDependency('symfony/twig-component', new Version('2.25.0')));
 
         self::assertCount(3, $component->getDependencies());
         self::assertEquals([$dependency1, $dependency2, $dependency4], $component->getDependencies());
@@ -108,12 +108,12 @@ final class ComponentTest extends TestCase
 
         $component->addDependency($dependency1 = new ComponentDependency('Icon'));
         $component->addDependency($dependency2 = new ComponentDependency('Label'));
-        $component->addDependency($dependency3 = new PhpPackageDependency('symfony/twig-component', new Version(2, 24, 0)));
+        $component->addDependency($dependency3 = new PhpPackageDependency('symfony/twig-component', new Version('2.24.0')));
 
         self::assertCount(3, $component->getDependencies());
         self::assertEquals([$dependency1, $dependency2, $dependency3], $component->getDependencies());
 
-        $component->addDependency(new PhpPackageDependency('symfony/twig-component', new Version(2, 23, 0)));
+        $component->addDependency(new PhpPackageDependency('symfony/twig-component', new Version('2.23.0')));
 
         self::assertCount(3, $component->getDependencies());
         self::assertEquals([$dependency1, $dependency2, $dependency3], $component->getDependencies());

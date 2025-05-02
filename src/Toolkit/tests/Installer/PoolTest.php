@@ -67,12 +67,12 @@ final class PoolTest extends TestCase
     {
         $pool = new Pool();
 
-        $pool->addPhpPackageDependency(new PhpPackageDependency('twig/html-extra', new Version(3, 11, 0)));
+        $pool->addPhpPackageDependency(new PhpPackageDependency('twig/html-extra', new Version('3.11.0')));
 
         $this->assertCount(1, $pool->getPhpPackageDependencies());
         $this->assertEquals('twig/html-extra:^3.11.0', (string) $pool->getPhpPackageDependencies()['twig/html-extra']);
 
-        $pool->addPhpPackageDependency(new PhpPackageDependency('twig/html-extra', new Version(3, 12, 0)));
+        $pool->addPhpPackageDependency(new PhpPackageDependency('twig/html-extra', new Version('3.12.0')));
 
         $this->assertCount(1, $pool->getPhpPackageDependencies());
         $this->assertEquals('twig/html-extra:^3.12.0', (string) $pool->getPhpPackageDependencies()['twig/html-extra']);

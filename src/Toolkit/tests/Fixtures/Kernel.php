@@ -63,7 +63,7 @@ final class Kernel extends BaseKernel
             ->alias('ux_toolkit.kit.kit_synchronizer', '.ux_toolkit.kit.kit_synchronizer')
                 ->public()
 
-            ->alias('ux_toolkit.registry.factory', '.ux_toolkit.registry.factory')
+            ->alias('ux_toolkit.registry.registry_factory', '.ux_toolkit.registry.registry_factory')
                 ->public()
         ;
     }

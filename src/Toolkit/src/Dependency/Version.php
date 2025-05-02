@@ -12,7 +12,7 @@
 namespace Symfony\UX\Toolkit\Dependency;
 
 /**
- * Represents a version number, following a simplified version of the SemVer specification.
+ * Represents a version number, following the SemVer specification.
  *
  * @internal
  *
@@ -21,26 +21,20 @@ namespace Symfony\UX\Toolkit\Dependency;
 final class Version implements \Stringable
 {
     /**
-     * @param int<0, max> $major
-     * @param int<0, max> $minor
-     * @param int<0, max> $patch
+     * @param non-empty-string
      */
     public function __construct(
-        public readonly int $major,
-        public readonly int $minor,
-        public readonly int $patch,
+        public readonly string $value,
     ) {
     }
 
     public function isHigherThan(self $version): bool
     {
-        return $this->major > $version->major
-            || ($this->major === $version->major && $this->minor > $version->minor)
-            || ($this->major === $version->major && $this->minor === $version->minor && $this->patch > $version->patch);
+        return version_compare($this->value, $version->value, '>');
     }
 
     public function __toString(): string
     {
-        return \sprintf('%d.%d.%d', $this->major, $this->minor, $this->patch);
+        return $this->value;
     }
 }
