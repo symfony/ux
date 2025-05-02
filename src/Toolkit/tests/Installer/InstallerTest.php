@@ -46,7 +46,7 @@ final class InstallerTest extends KernelTestCase
         $componentInstaller->installComponent($kit, $component, $this->tmpDir, false);
 
         $this->assertFileExists($this->tmpDir.'/Button.html.twig');
-        $this->assertSame($this->filesystem->readFile($this->tmpDir.'/Button.html.twig'), $this->filesystem->readFile(\sprintf('%s/templates/components/Button.html.twig', $kit->path)));
+        $this->assertSame(file_get_contents($this->tmpDir.'/Button.html.twig'), file_get_contents(\sprintf('%s/templates/components/Button.html.twig', $kit->path)));
     }
 
     public function testShouldAskIfFileAlreadyExists(): void
@@ -66,7 +66,7 @@ final class InstallerTest extends KernelTestCase
 
         $this->assertSame(0, $askedCount);
         $this->assertFileExists($this->tmpDir.'/Button.html.twig');
-        $this->assertSame($this->filesystem->readFile($this->tmpDir.'/Button.html.twig'), $this->filesystem->readFile(\sprintf('%s/templates/components/Button.html.twig', $kit->path)));
+        $this->assertSame(file_get_contents($this->tmpDir.'/Button.html.twig'), file_get_contents(\sprintf('%s/templates/components/Button.html.twig', $kit->path)));
 
         $componentInstaller->installComponent($kit, $component, $this->tmpDir, false);
         $this->assertSame(1, $askedCount);
@@ -83,12 +83,12 @@ final class InstallerTest extends KernelTestCase
         $componentInstaller->installComponent($kit, $component, $this->tmpDir, false);
 
         $this->assertFileExists($this->tmpDir.'/Button.html.twig');
-        $this->assertSame($this->filesystem->readFile($this->tmpDir.'/Button.html.twig'), $this->filesystem->readFile(\sprintf('%s/templates/components/Button.html.twig', $kit->path)));
+        $this->assertSame(file_get_contents($this->tmpDir.'/Button.html.twig'), file_get_contents(\sprintf('%s/templates/components/Button.html.twig', $kit->path)));
 
         $componentInstaller->installComponent($kit, $component, $this->tmpDir, true);
 
         $this->assertFileExists($this->tmpDir.'/Button.html.twig');
-        $this->assertSame($this->filesystem->readFile($this->tmpDir.'/Button.html.twig'), $this->filesystem->readFile(\sprintf('%s/templates/components/Button.html.twig', $kit->path)));
+        $this->assertSame(file_get_contents($this->tmpDir.'/Button.html.twig'), file_get_contents(\sprintf('%s/templates/components/Button.html.twig', $kit->path)));
     }
 
     public function testCanInstallComponentAndItsComponentDependencies(): void
@@ -119,7 +119,7 @@ final class InstallerTest extends KernelTestCase
 
         foreach ($expectedFiles as $fileName => $expectedFile) {
             $this->assertFileExists($expectedFile);
-            $this->assertSame($this->filesystem->readFile($expectedFile), $this->filesystem->readFile(\sprintf('%s/templates/components/%s', $kit->path, $fileName)));
+            $this->assertSame(file_get_contents($expectedFile), file_get_contents(\sprintf('%s/templates/components/%s', $kit->path, $fileName)));
         }
     }
 

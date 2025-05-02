@@ -101,7 +101,11 @@ final class KitSynchronizer
 
         // Find dependencies based on file content
         foreach ($component->files as $file) {
-            $fileContent = $this->filesystem->readFile(Path::join($kit->path, $file->relativePathNameToKit));
+            if (!$this->filesystem->exists($filePath = Path::join($kit->path, $file->relativePathNameToKit))) {
+                throw new \RuntimeException(\sprintf('File "%s" not found', $filePath));
+            }
+
+            $fileContent = file_get_contents($filePath);
 
             if (FileType::Twig === $file->type) {
                 if (str_contains($fileContent, 'html_cva')) {
@@ -174,14 +178,14 @@ final class KitSynchronizer
         // Read INSTALL.md if exists
         $fileInstall = Path::join($kit->path, 'INSTALL.md');
         if ($this->filesystem->exists($fileInstall)) {
-            $kit->installAsMarkdown = $this->filesystem->readFile($fileInstall);
+            $kit->installAsMarkdown = file_get_contents($fileInstall);
         }
 
         // Iterate over Component and find their documentation
         foreach ($kit->getComponents() as $component) {
             $docPath = Path::join($kit->path, 'docs', 'components', $component->name.'.md');
             if ($this->filesystem->exists($docPath)) {
-                $component->doc = new Doc($this->filesystem->readFile($docPath));
+                $component->doc = new Doc(file_get_contents($docPath));
             }
         }
     }

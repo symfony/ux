@@ -45,7 +45,7 @@ final class KitFactory
             throw new \InvalidArgumentException(\sprintf('File "%s" not found.', $manifestPath));
         }
 
-        $manifest = json_decode($this->filesystem->readFile($manifestPath), true, flags: \JSON_THROW_ON_ERROR);
+        $manifest = json_decode(file_get_contents($manifestPath), true, flags: \JSON_THROW_ON_ERROR);
 
         $kit = new Kit(
             path: $absolutePath,
