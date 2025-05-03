@@ -55,12 +55,11 @@ class ComponentDoc
     private function insertInstallation(AbstractString $markdownContent): AbstractString
     {
         $installationCode = SourceCleaner::processTerminalLines(<<<SHELL
-symfony console ux:toolkit:install-component {$this->component->name}
-# or if you already use another kit
-symfony console ux:toolkit:install-component {$this->component->name} --kit {$this->kitId->value}
+bin/console ux:toolkit:install-component {$this->component->name} --kit {$this->kitId->value}
 SHELL
         );
 
+        // TODO: Provide tabs showing automatic and manual installation
         return $markdownContent->replace(
             '<!-- Placeholder: Installation -->',
             <<<HTML

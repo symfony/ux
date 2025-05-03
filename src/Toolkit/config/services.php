@@ -35,7 +35,6 @@ return static function (ContainerConfigurator $container): void {
 
         ->set('.ux_toolkit.command.install', InstallComponentCommand::class)
             ->args([
-                param('ux_toolkit.kit'),
                 service('.ux_toolkit.registry.registry_factory'),
                 service('filesystem'),
             ])
@@ -55,7 +54,6 @@ return static function (ContainerConfigurator $container): void {
             ->args([
                 service('.ux_toolkit.kit.kit_factory'),
                 service('filesystem'),
-                param('kernel.project_dir'),
             ])
 
         ->set('.ux_toolkit.registry.github', GitHubRegistry::class)

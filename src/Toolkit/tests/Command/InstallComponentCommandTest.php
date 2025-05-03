@@ -53,7 +53,7 @@ class InstallComponentCommandTest extends KernelTestCase
         $testCommand = $this->consoleCommand('ux:toolkit:install-component Table --destination='.$this->tmpDir)
             ->execute()
             ->assertSuccessful()
-            ->assertOutputContains('Installing component Table from the shadcn kit...')
+            ->assertOutputContains('Installing component Table from the Shadcn UI kit...')
             ->assertOutputContains('[OK] The component has been installed.')
         ;
 
@@ -65,16 +65,16 @@ class InstallComponentCommandTest extends KernelTestCase
         }
     }
 
-    public function testShouldFailAndSuggestAlternativeComponents(): void
+    public function testShouldFailAndSuggestAlternativeComponentsWhenKitIsExplicit(): void
     {
         $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
         mkdir($destination);
 
         $this->bootKernel();
-        $this->consoleCommand('ux:toolkit:install-component Table: --destination='.$destination)
+        $this->consoleCommand('ux:toolkit:install-component Table: --kit=shadcn --destination='.$destination)
             ->execute()
             ->assertFaulty()
-            ->assertOutputContains('[WARNING] The component "Table:" does not exist.')
+            ->assertOutputContains('[WARNING] The component "Table:" does not exist')
             ->assertOutputContains('Possible alternatives: ')
             ->assertOutputContains('"Table:Body"')
             ->assertOutputContains('"Table:Caption"')
@@ -95,7 +95,7 @@ class InstallComponentCommandTest extends KernelTestCase
         $this->consoleCommand('ux:toolkit:install-component Unknown --destination='.$destination)
             ->execute()
             ->assertFaulty()
-            ->assertOutputContains('The component "Unknown" does not exist.');
+            ->assertOutputContains('The component "Unknown" does not exist');
     }
 
     public function testShouldWarnWhenComponentFileAlreadyExistsInNonInteractiveMode(): void

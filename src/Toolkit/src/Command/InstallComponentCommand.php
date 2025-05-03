@@ -24,6 +24,7 @@ use Symfony\UX\Toolkit\Asset\Component;
 use Symfony\UX\Toolkit\File\File;
 use Symfony\UX\Toolkit\Installer\Installer;
 use Symfony\UX\Toolkit\Kit\Kit;
+use Symfony\UX\Toolkit\Registry\LocalRegistry;
 use Symfony\UX\Toolkit\Registry\RegistryFactory;
 
 /**
@@ -42,7 +43,6 @@ class InstallComponentCommand extends Command
     private bool $isInteractive;
 
     public function __construct(
-        private readonly string $kitName,
         private readonly RegistryFactory $registryFactory,
         private readonly Filesystem $filesystem,
     ) {
@@ -53,6 +53,7 @@ class InstallComponentCommand extends Command
     {
         $this
             ->addArgument('component', InputArgument::OPTIONAL, 'The component name (Ex: Button)')
+            ->addOption('kit', 'k', InputOption::VALUE_OPTIONAL, 'The kit name (Ex: shadcn, or github.com/user/my-ux-toolkit-kit)')
             ->addOption(
                 'destination',
                 'd',
@@ -61,7 +62,6 @@ class InstallComponentCommand extends Command
                 Path::join('templates', 'components')
             )
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the component installation, even if the component already exists')
-            ->addOption('kit', 'k', InputOption::VALUE_OPTIONAL, 'Override the kit name', $this->kitName)
             ->setHelp(
                 <<<EOF
 The <info>%command.name%</info> command will install a new UX Component in your project.
@@ -92,10 +92,48 @@ EOF
         $io = new SymfonyStyle($input, $output);
 
         $kitName = $input->getOption('kit');
-        $registry = $this->registryFactory->getForKit($kitName);
-        $kit = $registry->getKit($kitName);
+        $componentName = $input->getArgument('component');
 
-        if (null === $componentName = $input->getArgument('component')) {
+        // If the kit name is not explicitly provided, we need to suggest one
+        if (null === $kitName) {
+            /** @var list<Kit> $availableKits */
+            $availableKits = [];
+            $availableKitNames = LocalRegistry::getAvailableKitsName();
+            foreach ($availableKitNames as $availableKitName) {
+                $kit = $this->registryFactory->getForKit($availableKitName)->getKit($availableKitName);
+
+                if (null === $componentName) {
+                    $availableKits[] = $kit;
+                } elseif (null !== $kit->getComponent($componentName)) {
+                    $availableKits[] = $kit;
+                }
+            }
+            // If more than one kit is available, we ask the user which one to use
+            if (($availableKitsCount = \count($availableKits)) > 1) {
+                $kitName = $io->choice(null === $componentName ? 'Which kit do you want to use?' : \sprintf('The component "%s" exists in multiple kits. Which one do you want to use?', $componentName), array_map(fn (Kit $kit) => $kit->name, $availableKits));
+
+                foreach ($availableKits as $availableKit) {
+                    if ($availableKit->name === $kitName) {
+                        $kit = $availableKit;
+                        break;
+                    }
+                }
+            } elseif (1 === $availableKitsCount) {
+                $kit = $availableKits[0];
+            } else {
+                $io->error(null === $componentName
+                    ? 'It seems that no local kits are available and it should not happens. Please open an issue on https://github.com/symfony/ux to report this.'
+                    : sprintf("The component \"%s\" does not exist in any local kits.\n\nYou can try to run one of the following commands to interactively install components:\n%s\n\nOr you can try one of the community kits https://github.com/search?q=topic:ux-toolkit&type=repositories", $componentName, implode("\n", array_map(fn (string $availableKitName) => sprintf('$ bin/console %s --kit %s', $this->getName(), $availableKitName), $availableKitNames)))
+                );
+
+                return Command::FAILURE;
+            }
+        } else {
+            $registry = $this->registryFactory->getForKit($kitName);
+            $kit = $registry->getKit($kitName);
+        }
+
+        if (null === $componentName) {
             // Ask for the component name if not provided
             $componentName = $io->choice('Which component do you want to install?', array_map(fn (Component $component) => $component->name, $this->getAvailableComponents($kit)));
             $component = $kit->getComponent($componentName);
@@ -124,7 +162,7 @@ EOF
             }
         }
 
-        $io->writeln(\sprintf('Installing component <info>%s</> from the <info>%s</> kit...', $component->name, $kitName));
+        $io->writeln(\sprintf('Installing component <info>%s</> from the <info>%s</> kit...', $component->name, $kit->name));
 
         $installer = new Installer($this->filesystem, fn (string $question) => $this->io->confirm($question, $input->isInteractive()));
         $installationReport = $installer->installComponent($kit, $component, $destinationPath = $input->getOption('destination'), $input->getOption('force'));

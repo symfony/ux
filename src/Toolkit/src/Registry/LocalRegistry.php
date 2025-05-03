@@ -13,6 +13,7 @@ namespace Symfony\UX\Toolkit\Registry;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Finder\Finder;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Kit\KitFactory;
 
@@ -24,6 +25,8 @@ use Symfony\UX\Toolkit\Kit\KitFactory;
  */
 final class LocalRegistry implements Registry
 {
+    private static string $kitsDir = __DIR__.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'kits';
+
     public static function supports(string $kitName): bool
     {
         return 1 === preg_match('/^[a-zA-Z0-9_-]+$/', $kitName);
@@ -32,25 +35,34 @@ final class LocalRegistry implements Registry
     public function __construct(
         private readonly KitFactory $kitFactory,
         private readonly Filesystem $filesystem,
-        private readonly string $projectDir,
     ) {
     }
 
     public function getKit(string $kitName): Kit
     {
-        $possibleKitDirs = [
-            // Local kit
-            Path::join($this->projectDir, 'kits', $kitName),
-            // From vendor
-            Path::join($this->projectDir, 'vendor', 'symfony', 'ux-toolkit', 'kits', $kitName),
-        ];
-
-        foreach ($possibleKitDirs as $kitDir) {
-            if ($this->filesystem->exists($kitDir)) {
-                return $this->kitFactory->createKitFromAbsolutePath($kitDir);
-            }
+        $kitDir = Path::join(self::$kitsDir, $kitName);
+        if ($this->filesystem->exists($kitDir)) {
+            return $this->kitFactory->createKitFromAbsolutePath($kitDir);
         }
 
         throw new \RuntimeException(\sprintf('Unable to find the kit "%s" in the following directories: "%s"', $kitName, implode('", "', $possibleKitDirs)));
+    }
+
+    /**
+     * @return array<string>
+     */
+    public static function getAvailableKitsName(): array
+    {
+        $availableKitsName = [];
+        $finder = (new Finder())->directories()->in(self::$kitsDir)->depth(0);
+
+        foreach ($finder as $directory) {
+            $kitName = $directory->getRelativePathname();
+            if (self::supports($kitName)) {
+                $availableKitsName[] = $kitName;
+            }
+        }
+
+        return $availableKitsName;
     }
 }

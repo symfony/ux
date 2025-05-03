@@ -22,6 +22,5 @@ class UXToolkitBundleTest extends KernelTestCase
         $container = self::$kernel->getContainer();
 
         $this->assertInstanceOf(UXToolkitBundle::class, $container->get('kernel')->getBundles()['UXToolkitBundle']);
-        $this->assertEquals('shadcn', $container->getParameter('ux_toolkit.kit'));
     }
 }
