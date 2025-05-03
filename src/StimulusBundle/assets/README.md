@@ -2,9 +2,10 @@
 
 JavaScript assets of the [symfony/stimulus-bundle](https://packagist.org/packages/symfony/stimulus-bundle) PHP package.
 
-This package is private and is not intended to be published on npm or installed.
+## Installation
 
-If you're looking for a npm package to integrate Stimulus in your Symfony application, you may be looking for the [`@symfony/stimulus-bridge`](https://www.npmjs.com/package/@symfony/stimulus-bridge) package.
+Due to compatibility issues with JSDelivr causing the package not to work as expected, the package is not yet released on NPM.
+Read more at [symfony/ux#2708](https://github.com/symfony/ux/issues/2708).
 
 ## Resources
 
