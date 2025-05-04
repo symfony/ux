@@ -1,0 +1,896 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-01-31T08:02:28Z
+
+Let's get to work!  👏
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2025-02-02T18:13:44Z
+
+Wow, that's a awesome PR! 👏
+I like it!
+
+---------------------------------------------------------------------------
+
+by ker0x at 2025-02-05T10:45:55Z
+
+I really like the component idea, but is there any particular reason to store components source code in a json file rather than going through stubs files?
+
+I'm afraid it's going to be hard to maintain because you'll have to remember to explicitly include line breaks, indentation and proper escaping!
+
+Wouldn't it be better to have the code directly in `{Component].html.twig` files, so as to benefit from the autocompletion features of the IDE/text editor and reference it in the json?
+
+Unless json are automatically generated 🤔?
+
+---------------------------------------------------------------------------
+
+by Halleck45 at 2025-02-05T11:58:12Z
+
+> Unless json are automatically generated 🤔?
+
+@ker0x yes, all JSON files are automatically generated from the ` html.twig` files :) .
+
+Relying on JSON files may evolve, but for now, it is the simplest and most sustainable solution we've found. It allows for easy discoverability of components, and generating the files is very straightforward. That being said, if we find a way to eliminate the need for them entirely, this approach may change.
+
+---------------------------------------------------------------------------
+
+by ker0x at 2025-02-05T12:50:11Z
+
+@Halleck45 Thanks for the clarification!
+
+ I hadn't seen the .`html.twig` files, so I thought that the code for each component had to be written manually in the json files, hence my concerns!
+
+But if they're automatically generated, then I don't see any problem in using this format 👍
+
+---------------------------------------------------------------------------
+
+by nfacciolo at 2025-02-07T09:25:18Z
+
+Are you planning to make a component accessible like this: `<twig:Action:Button></twig:Action:Button>` ?
+
+Do you need any help? I can offer some time to contribute to this awesome PR.
+
+Thanks for your work!
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2025-02-07T09:26:37Z
+
+This looks very interesting. Thanks!
+
+A quick question: how can third-party bundles (e.g. SonataAdmin or EasyAdmin) install and use these UI components to build their interfaces?
+
+---------------------------------------------------------------------------
+
+by Halleck45 at 2025-02-07T13:12:12Z
+
+> Are you planning to make a component accessible like this: `<twig:Action:Button></twig:Action:Button>` ?
+>
+> Do you need any help? I can offer some time to contribute to this awesome PR.
+>
+> Thanks for your work!
+
+@nfacciolo For now, yes (or rather <twig:Button> simply). In the future, the syntax might eventually evolve to <Button> on its own, but that's something to discuss, think about, etc., in another PR.
+
+Yes, help is very welcome, that would be great! We need to adjust quite a few things, but there are tons of components left to build and a lot of documentation to write. The easiest way is probably to connect on the [Symfony Slack](https://symfony-devs.slack.com/messages).
+
+> A quick question: how can third-party bundles (e.g. SonataAdmin or EasyAdmin) install and use these UI components to build their interfaces?
+
+@javiereguiluz Hi! I'm not sure I fully understand the question. As it stands, the components will be freely available for everyone to use and will be 100% customizable. Any Symfony project will be able to integrate them.
+
+Was that the intent of your question?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2025-02-07T14:16:28Z
+
+@Halleck45 let me explain what I mean.
+
+You said that using elements from this UI toolkit will be as easy as:
+
+(1) Run this command `symfony console ux:toolkit:install Button`
+(2) If needed, tweak, change the downloaded component to make it yours
+
+OK. Now, I'm developing a third-party bundle (e.g. EasyAdmin) that has a lot of UI features and I want to use this button from UX toolkit.
+
+So, I run the command `symfony console ux:toolkit:install Button` ... and I see an error, because I cannot run any commands because this is not a full Symfony application.
+
+-----
+
+In those cases, can third-party bundles just copy+paste some files manually from the UX repository to use those components or does this need more configuration + wiring? Thanks
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-02-09T07:48:52Z
+
+Hey @javiereguiluz, indeed the command `symfony console ux:toolkit:install` is _reserved_ to Symfony applications.
+
+But we will also provide a manual installation (copy/paste) for each components, that will be visible on ux.symfony.com.
+
+---------------------------------------------------------------------------
+
+by sblondeau at 2025-02-11T21:00:19Z
+
+Hi @Halleck45
+Great work ! This is very interesting :-) One question, it will be tightly coupled to Tailwind if I understand correctly?
+How could we use another css library or our own CSS classes ? We should have to adapt all the CSS classes in the html_cva ?
+Thanks for clarification :-)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-02-14T13:59:18Z
+
+Yes it wil be tightly coupled to Tailwind (since we re-use examples from Shadcn). Thanks to the "pull" system we are implementing (like Shadcn does), the code you download will be **yours** and so open to fully customization. If you want to drop Tailwind for something else, you can, and yes CVA will make things easier on this point.
+
+Also, surely in the future, we may propose other "themes" that can be based on another CSS framework, like Bootstrap for example.
+
+---------------------------------------------------------------------------
+
+by tibobaldwin at 2025-02-16T15:09:23Z
+
+I'm curious to see some components like dialog or dropdown 😊.
+
+---------------------------------------------------------------------------
+
+by daFish at 2025-03-05T07:53:32Z
+
+Thanks @Halleck45 for this change. I tested some of the components (simple copy & paste) and saw that there needs to be additional configuration for Tailwind. There are currently no defined theme variables for things like `destructive`. Do you plan to add documentation for this?
+
+---------------------------------------------------------------------------
+
+by Halleck45 at 2025-03-07T06:23:29Z
+
+> Thanks @Halleck45 for this change. I tested some of the components (simple copy & paste) and saw that there needs to be additional configuration for Tailwind. There are currently no defined theme variables for things like destructive. Do you plan to add documentation for this?
+
+Hi ! We are planning two things:
+
+- Documentation first (I pushed an update to the documentation with information on this).
+- Eventually, removing external packages so that everything is managed by UX.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-13T08:33:32Z
+
+Hey! I just started a code review, let's begin with "visual" review first:
+1. On Packages page, there is no icon for the Toolkit yet, I believe this is on purpose? :
+![Capture d’écran 2025-03-13 à 09 28 26](https://github.com/user-attachments/assets/dbda856b-bc51-41bb-8372-abcda521463b)
+2. The "copy" button color is wrong
+3. Badge examples do not work
+![Capture d’écran 2025-03-13 à 09 29 48](https://github.com/user-attachments/assets/8e2cc659-2462-4c6f-ad28-0b60f1eddd4e)
+
+Let's see the code next
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-03-14T03:29:56Z
+
+A lot of cool things here! Just let's isolate the new section on the website from the rest, of the work on the website I started will be impossible to finish 😅
+
+When do you think we should split the PR (maybe never, genuine question here) ?
+
+---------------------------------------------------------------------------
+
+by kbond at 2025-03-18T15:15:19Z
+
+Man, thanks for getting this going @Halleck45! @weaverryan and I have been talking about/hacking on this idea for years. Him and I are going to take a deep look at this today/tomorrow but at first glance, this is almost exactly what we were thinking!
+
+I'm curious, what about components that are backed by an `#[AsTwigComponent]` service? Any thoughts on how we can include this?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2025-03-18T19:32:24Z
+
+This is making my dreams com true 😍 . Thank you @Halleck45, @smnandre & @Kocal from the bottom of my heart.
+
+We've been discussing and discussing the details for years. Love that we're following shadcn & coupling to tailwind: we need to be super opinionated, but not try to get everything correct immediately, our design allows for pain-free iteration. If something needs to be more generic, plenty of time to do that later.
+
+> Handle local components (i.e.: `ux:toolkit:install Button`)
+
+Sorry: what do we mean by "local" components? Does this look for a `Button` component defined by the toolkit in `vendor/`? Or `Button` defined by a bundle somewhere? Or does it hit ux.symfony.com to fetch the JSON manifest for `Button`?
+
+> The symfony/ux-toolkit package will not be responsible for installing the CSS required for the components to function. It remains the developer's responsibility to manage their assets.
+
+But we'd recommend installing `symfonycasts/tailwind-bundle`, correct?
+
+>  Do not hard depend on https://github.com/tales-from-a-dev/twig-tailwind-extra, but dev dependency, and document that the user needs to install tales-from-a-dev/twig-tailwind-extra if it wants to fully use our component
+
+Ok, what's next?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-18T22:13:11Z
+
+> > Handle local components (i.e.: `ux:toolkit:install Button`)
+>
+> Sorry: what do we mean by "local" components? Does this look for a `Button` component defined by the toolkit in `vendor/`? Or `Button` defined by a bundle somewhere? Or does it hit ux.symfony.com to fetch the JSON manifest for `Button`?
+
+It means components present in `vendor/symfony/ux-toolkit`, which should be installed/enabled only in dev environment.
+
+> > The symfony/ux-toolkit package will not be responsible for installing the CSS required for the components to function. It remains the developer's responsibility to manage their assets.
+>
+> But we'd recommend installing `symfonycasts/tailwind-bundle`, correct?
+
+This is something we can do yes, like a small paragraph with a link and it's should be enough.
+
+> > Do not hard depend on [tales-from-a-dev/twig-tailwind-extra](https://github.com/tales-from-a-dev/twig-tailwind-extra?rgh-link-date=2025-03-18T19%3A32%3A24Z), but dev dependency, and document that the user needs to install tales-from-a-dev/twig-tailwind-extra if it wants to fully use our component
+>
+> Ok, what's next?
+
+Well:
+- either we should merge this PR and continue to iterate by adding more components, and then release UX 2.24
+- either we release UX 2.24, merge this PR and continue to iterate by adding more components
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2025-03-19T16:24:55Z
+
+Folks, I appreciate a lot what you are doing here ... and I sincerely like this idea a lot. However, and sorry for being a party pooper, I think the way it's implemented is not great (@Halleck45 this has nothing to do with your specific implementation; that's great).
+
+The current proposal is this:
+
+* You want to use some widget from UX toolkit
+* Run some command to download the widget
+* The downloaded code/files are yours, so you can modify them
+
+Sounds easy, but I think it's flawed:
+
+* You are downloading a static copy of the widget at the moment of installing it
+* You won't receive any updates of bug fixes for it ever
+* You'll need to manually reapply those updates or download it again
+
+I think this could create "tech debt" in projects rather than helping them.
+
+When you download a PHP package or a npm package, you don't download a static copy of some code. The downloaded dependencies are easy to update with composer and npm commands.
+
+I'd like UX Toolkit to be a versioned package that I can upgrade continuously to get all the new features and bug fixes.
+
+Again, I'm sorry 🙏 and I like this idea a lot.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2025-03-19T17:28:19Z
+
+Hi!
+
+Trying to test this:
+
+- I'm confused by themes. What are these?
+- When I installed the `Button` component, it talked to Github via the `GithubRepository`. Why? I assumed it would read the components locally from the `ux-toolkit` vendor I already have installed
+
+> You are downloading a static copy of the widget at the moment of installing it
+> You won't receive any updates of bug fixes for it ever
+> You'll need to manually reapply those updates or download it again
+
+All true, BUT:
+
+A) This is a well-used patten with shadcn, flowbite, etc
+B) There is nothing preventing us later from implementing an update command like we have for Flex. That did not ship with Flex originally. The only thing we would need to do is record which version of a component i installed (like `symfony.lock`)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2025-03-21T20:08:47Z
+
+@Halleck45 when you have time to answer my questions above, I’ll review further. Just nudging T this excellent work along!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-22T15:39:05Z
+
+> Hi!
+>
+> Trying to test this:
+>
+> * I'm confused by themes. What are these?
+
+@weaverryan we want to provide different themes for a single component, like Shadcn, maybe Bootstrap, and why maybe Bulma, etc. in the future. UX Toolkit is not about one single graphic style, it's about providing a lot of components that can be used in any project.
+
+> * When I installed the `Button` component, it talked to Github via the `GithubRepository`. Why? I assumed it would read the components locally from the `ux-toolkit` vendor I already have installed
+
+@weaverryan Indeed it should not happen, IIRC GitHub should only be requested when the component matches a certain pattern.
+
+> > You are downloading a static copy of the widget at the moment of installing it
+> > You won't receive any updates of bug fixes for it ever
+> > You'll need to manually reapply those updates or download it again
+>
+> All true, BUT:
+>
+> A) This is a well-used patten with shadcn, flowbite, etc
+> B) There is nothing preventing us later from implementing an update command like we have for Flex. That did not ship with Flex originally. The only thing we would need to do is record which version of a component i installed (like `symfony.lock`)
+
+@javiereguiluz I can understand your "fears", Ryan is right about the pattern, shadcn use it, flowbite us it, Tailwind UI (Tailwind Plus) use it, DaisyUI use it, etc. This is something really common in the "UI libraries" world.
+
+Also, note that IIRC, Jean-François already implemented existing templates check when installing a component.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2025-03-26T16:29:46Z
+
+From @javiereguiluz
+
+> I'd like UX Toolkit to be a versioned package that I can upgrade continuously to get all the new features and bug fixes.
+
+Maybe we can have both:
+
+1) A bundle advertises that it has a component. For example the core ux-toolkit would probably come with `Button`. That component immediately becomes available: no `ux:toolkit:install button` needed
+2) If/once a user wants to customize, they run:
+
+```
+symfony console ux:toolkit:publish Button
+
+> The Button component was copied from ux-toolkit into templates/components/Button.html.twig.
+> Customize this file to make it perfect!
+```
+
+One cool side effect is that another lib (EasyAdmin as an example) could depend on `ux-toolkit` and be guaranteed that a `Button` component exists (and the user could customize this globally). I think that's very exciting!
+
+If we provide variants for components like `Button`, the user may not need to customize the template.
+
+> @weaverryan we want to provide different themes for a single component, like Shadcn, maybe Bootstrap, and why maybe Bulma, etc. in the future. UX Toolkit is not about one single graphic style, it's about providing a lot of components that can be used in any project.
+
+I'm not going to die on this hill, but this initiative is complex enough already. I say:
+
+* remove themes
+* Use shadcn
+
+We can always add themes later. This is consistent with Livewire's UI kit Flux: https://fluxui.dev/: they give you one excellent-looking component by default, but no choices.
+
+> UX Toolkit is not about one single graphic style, it's about providing a lot of components that can be used in any project.
+
+Agreed! And the fastest way to get a lot of component's to users is to be opinionated. The code is owned by the user: it's their job to make it unique not ours
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2025-03-26T16:58:02Z
+
+The EasyAdmin bundle itself is an example of how this could work. We've added a few components to it already. We use them to build our own interface, but folks can use them in their own apps too just by typing `<twig:ea:...>`. There's nothing to install. And bugs and new features come automatically whenever you upgrade the bundle version. I still think this is the only reasonable way of a design system to work.
+
+So, this toolkit could be a bundle with all the components ready to use. Again, nothing to install and all bugs/features are applied automatically when upgrading it.
+
+I'm not an expert in the projects you mentioned (shadcn, flowbite, etc.) but e.g. I've used Tailwind UI/Pro and I don't like it at all. I love Tailwind itself ... but this design system where you copy+paste things is flawed and only creates tech debt in the project.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-26T21:14:43Z
+
+> So, this toolkit could be a bundle with all the components ready to use. Again, nothing to install and all bugs/features are applied automatically when upgrading it.
+
+How do you let the user fully-stylize components, without creating an over-engineered solution?
+
+It works in EasyAdmin because it's a design system with final and ready-to-use components, but here we want to give the developers the ability to customize both styles and DOM if they want. The components we provide becomes their components.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2025-03-27T08:15:20Z
+
+About fully-stylize the components, I'd provide both individual and a combined CSS file with lots of CSS properties7variables for easy customization.
+
+This is how it would work:
+
+* Install the toolkit: `composer require symfony/ux-toolkit-bundle`
+* Use some of the provided widgets in your templates: `<twig:ux:Button primary block>Save changes</twig:ux:Button>` (or `... type="primary" block="{{ yes }}"`)
+* Add the needed styles:
+  ```twig
+    {# BEFORE #}
+    {% block importmap %}
+        {{ importmap(['app']) }}
+    {% endblock %}
+
+    {# AFTER #}
+    {% block importmap %}
+        {{ importmap(['app', 'ux-button']) }}
+    {% endblock %}
+  ```
+
+That's it.
+
+If you build the entire UI with the UX Toolkit widgets, adding each individual CSS style is very boring. So, we provide a CSS file with ALL the styles. You only have to do this once in some template:
+
+  ```twig
+    {% block importmap %}
+        {{ importmap(['app', 'ux-toolkit']) }}
+    {% endblock %}
+  ```
+
+-----
+
+Regarding how do we let folks change the DOM / HTML structure of the widgets. We don't. This is a design system toolkit. You have a few widgets and each of them provides a bunch of configurable options and also some CSS styles with a ton of configurable properties.
+
+If you want to change a lot of things in the HTML structure of the UX toolkit ... you are NOT using the UX Toolkit; you are using your own thing. We should not care about that use case.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-27T08:31:19Z
+
+I'm sorry but I don't think this is a good DX for everyone, and it will be a pain for us to maintain it (should we support EVERY use-cases wanted by users? can we do some breaking changes in minor versions?), and so without any added-value.
+
+People using this kind of _library_, like Tailwind UI, Shadcn, Flowbite etc... do not care about "technical debt", and that's perfectly fine, why can't we do this with the UX Toolkit?
+
+Two/three months ago we strongly brainstormed about UX Toolkit with Jean-François and Simon, and we are conviced that's the DX we want to offer to UX users.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2025-03-27T09:13:39Z
+
+> should we support EVERY use-cases wanted by users?
+
+No. Symfony doesn't support everything. Tailwind doesn't support everything. Shadcn doesn't support everything. No piece of software supports everything.
+
+We'd treat any customer request as we do in Symfony: if it makes sense and it's general enough, do it; otherwise, close as "won't fix".
+
+-----
+
+To make this truly flexible, we'd need to do two things:
+
+**(1)** Make sure all the main pieces of the design depend on CSS properties/variables: corner radius, vertical and horizontal margins and paddings, colors, etc.
+
+This tool gives an overview of the things (mostly colors) you must make configurable to make this truly flexible: https://tweakcn.com/editor/theme
+
+**(2)** Provide enough features to make widgets flexible enough. For that, we can take inspiration from Bootstrap (I know the UX toolkit is only for Tailwind). For example, the button widget is one of the most complex because it has a lot of options. Take a look at https://getbootstrap.com/docs/5.3/components/buttons/ for inspiration and you can find the minimum set of options that you need to provide for the widget to be useful:
+
+* Variants based on status (danger, success, etc.)
+* Design variants: disabled, outline, block, etc.
+* Size variants (xl, m, s, xs, etc.)
+* etc.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2025-03-27T12:30:54Z
+
+> 2) Provide enough features to make widgets flexible enough. For that, we can take inspiration from Bootstrap (I know the UX toolkit is only for Tailwind). For example, the button widget is one of the most complex because it has a lot of options. Take a look at https://getbootstrap.com/docs/5.3/components/buttons/ for inspiration and you can find the minimum set of options that you need to provide for the widget to be useful:
+
+This is definitely a good idea: easy for users and minimizes needing to customize.
+
+To be direct: if we can't customize the DOM, we will not use the toolkit. We also (including our frontend dev) don't want to write css, let alone find and override css variables.
+
+My proposal above - where the components live in the bundle and enjoy upgrades, but via a command you could opt into copying the component in your code - is going to be the best solution
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2025-03-27T12:34:14Z
+
+> if we can't customize the DOM, we will not use the toolkit.
+
+Me too ... if this doesn't work as I explained earlier, I won't be able to use this.
+
+Maybe the problem is the naming of this project. To me, "toolkit" means that it's something ready to use "as is" .... but folks keep commenting about _"making many changes in the DOM, styles, etc."_, so this sounds more like a framework to me, where you need to do some work to have it ready.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2025-03-27T13:58:13Z
+
+Folks, I just read the docs of Flux, which is similar to this but for Laravel apps, and this is what they do:
+
+1) By default, it works like I described above
+2) Optionally, you can publish the components to "own them", which is the behavior proposed here
+
+See https://fluxui.dev/docs/customization#publishing-components
+
+So, couldn't we do something similar in this project? Thanks!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-27T15:22:44Z
+
+I don't know, guys, quite honestly, I'm starting to get a bit annoyed when I see where all these discussions are leading us... :/
+
+I know that's the spirit of open-source and Symfony, debating together etc., but still...
+
+We're this close to having a near-perfect system for Symfony developers and UX maintainers. With UX Toolkit (or whatever it's called), a **development** dependency, via a simple and naive approach similar to Shadcn, and a little more advanced than Tailwind UI, Flowbite, Pines UI, (etc....), to allow developers to retrieve ready-to-use and fully customizable components.
+
+That's what made the above-mentioned libraries so successful, so why should re-invent the wheel and create an ultra-complex system to manage component updates (surely already customized) to "manage technical debt" when, in reality, nobody really cares?
+
+No, the UX Toolkit isn't coupled with Tailwind, we are open to other frameworks.
+
+With all due respect Javier, I don't understand why we're talking about EasyAdmin here either. If you want to offer Twig components for your users, you can do so in EasyAdmin and it will remain in the EA system design.
+
+The toolkit it just a tool to download/copy some ready-to-use components crafted/adapted by the UX Team or community, and offer an good customization experience for the developer.
+
+In absolute terms, we wouldn't even need the toolkit. We could just offer documentation on ux.symfony.com, on a dedicated page, with a "copy code" button for each component offered, and it would be exactly the same.
+
+Please, keeping things simple, for everyone 🙏
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2025-03-27T16:04:07Z
+
+> Folks, I just read the docs of Flux, which is similar to this but for Laravel apps, and this is what they do:
+
+> By default, it works like I described above
+Optionally, you can publish the components to "own them", which is the behavior proposed here
+
+@javiereguiluz i proposed this above. I think this is the way. I say let's move forward. To summarize:
+
+* when you install a bundle that provides a component, you can use it immediately and the code stays in the bundle: nothing is copied to the user's app.
+* we provide a command to "publish" a component. This copies the component into the user's app and the user now owns it
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2025-03-27T19:22:13Z
+
+I think we have enough consensus:
+
+1. Components are available immediately after installing a bundle: no command needed. But a publish command is available to copy into your app.
+1. Kill themes (at least for now, we can revisit later): these will slow progress a lot and the concept adds a lot of complexity to the code (I have a hard time following the code tbh).
+
+@Halleck45 are you able to make these changes? Or @Kocal?
+
+Thanks everyone! I feel like we're getting close to unlocked, then we can iterate on the details. Very exciting!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-27T19:36:17Z
+
+Thanks @weaverryan 🫶
+
+I think @Halleck45 is pretty busy with his new work and many other things, and I don't have so much news about him :/
+
+I have some free time that I can use here, my plans are:
+- as mentioned before, remove theme things
+- handle as much as code reviews possible
+- merge
+- continue to iterate on Toolkit, maybe re-tweak some internal things, implement more components, see for JS/PHP dependencies cc UX recipes @kbond, finalize the documentation, with many PRs
+
+---------------------------------------------------------------------------
+
+by skmedix at 2025-03-27T20:26:34Z
+
+@javiereguiluz For me, UX Toolkit will be like a maker bundle (which is a good thing). In maker bundle, if I create a login/registration form, etc., It's kind of a skeleton that I can build on. The maker bundle sometimes changes the way things are generated, and I don't expect it to apply those changes to my code like recipes, nor would I expect it here, since I see the "toolkit" as a different use case. I expect to install/generate code into my project, now it lives in “userland” and all changes are now on me.
+
+If this were an “official ux component library” like fluxui, then yes, I would expect ready-made components that I don't have full control over, except for global variables, etc. But in this case, I would expect the components to update themselves, since they most likely won't live in my project, but will be imported from this ux component library. If I really needed to customize a component more than I could, I would copy it into my project and make the necessary changes. However, I don't think that is the purpose of this project.
+
+If you guys decide to create a component library in the future, that's great too! But right now it would be a shame to drag out this PR even further.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2025-03-27T22:49:25Z
+
+Yay! Momentum! Looks like this is ready for review again @Kocal?
+
+As a reminder don't rebase at this point: I want to see the commits as it's easier to review. We can rebase later 🫶
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-27T23:07:10Z
+
+@weaverryan nope, I've just rebased the PR on 2.x branch, now I'm starting to address the review comments.
+
+By the way, the theme system is thighly implemented in the code and it would be hard to remove it to re-add it later,
+I suggest to keep it, but it will require some adjustements (after a quick code review, it looks like "theme" and "package" terms are used for the same thing).
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2025-03-27T23:16:11Z
+
+Ok, I'll give it another look and see how it feels once you've had a chance to make some changes - just let me know!
+
+---------------------------------------------------------------------------
+
+by Halleck45 at 2025-03-28T05:31:04Z
+
+> I think @Halleck45 is pretty busy with his new work and many other things, and I don't have so much news about him :/
+
+Sorry about that, I've finally got a bit of breathing room again.
+
+Wow, the discussions really moved forward all of a sudden! Thank you! It’s great to see that this PR sparked such a rich discussion — it means the time spent was worthwhile 🙏
+
+I hope I didn’t miss any messages. To bounce back on what was said:
+
+> after a quick code review, it looks like "theme" and "package" terms are used for the same thing
+
+Yes, that’s more of a leftover than a deliberate decision — simplifying makes sense. However, I do think it’s important to keep the possibility for a theme (or template, whatever we call it) to come from somewhere other than Symfony, and to be downloadable from multiple sources.
+
+> @weaverryan nope, I've just rebased the PR on 2.x branch, now I'm starting to address the review comments.
+
+Thanks @Kocal ! Really sorry for the delay — I’m available this evening if you want to chat.
+
+> symfony console ux:toolkit:publish Button
+
+The idea of "publishing" a component is really interesting — it does seem like a good solution for the user.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-03-28T06:54:36Z
+
+So guys IF you need anything from me i'll have a look at minor things tomorrow
+
+> >  we pwe provide a command to "publish" a component. This copies the component into the user's app and the user now owns itrovide a command to "publish" a component. This copies the component into the user's app and the user now owns it
+
+Not sure if the word 'publish" comes from this comment of something you guys already played with, but i ver y strongly advocates we use words like install / publish / update / for anything but what they are generally used for.
+
+`ux:kot:publish ` would publish on the website, on packagist ok.... to make it ... public :)
+
+---
+
+AS i echooed  a small discussion we had around Vienna: if you dont' want to lose time on it, no problem let's change the name and be done 😆
+
+But these thing are _not_ something we can (and should) so let's deal with problems before we make them :)
+
+---------------------------------------------------------------------------
+
+by 1ed at 2025-03-29T08:28:59Z
+
+Maybe interesting here https://x.com/shadcn/status/1905688710894481498?s=46
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-29T09:00:45Z
+
+> Maybe interesting here [x.com/shadcn/status/1905688710894481498?s=46](https://x.com/shadcn/status/1905688710894481498?s=46)
+
+> flat JSON file
+
+Funny, two days ago I started rewriting our registry system for a “flat” version, what a coincidence :D
+
+About tokens, CSS vars, Tailwind layers (...), IMO it is too early to think about it. Let's keep focusing on UI components and later introduce "snippets" (like what @kbond and @weaverryan brainstormed)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2025-03-29T13:57:43Z
+
+💯 one step at a time so that we can actually take those steps
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-30T16:28:20Z
+
+Quick updates on what I've commited these 3 last days, but not pushed yet because I didn't finish:
+- ✅ The documentation `docs/index.rst` was improved, it's still missing the "Create your own theme (kit)" section
+- ✅ The component `Grid` and its children have been removed
+- ✅ The UX Toolkit can now be used with `symfony/*:^6.4` packages
+- ✅ The `UXToolkitBundle` name was fixed (`s/Ux/UX/`), and I have merged `Dependency/*` to the `UXToolkitBundle` (by extending the `AbstractBundle`, like we did for UX Map)
+- ✅ The theme `default` has been renamed to `shadcn`
+- ✅ The directory `templates` has been renamed to `themes`
+- ✅ The initial system of `Registry`, `ComponentRepository`, etc... was entirely reworked:
+    - No more `registry/` compiled folder, just a small `manifest.json` containing 3/4 metadata, and Twig files
+    - No more `RegistryItem`, now distinct DTOs like `Component` and ~~`Example`~~ `Doc` have been introduced, as well with `Dependency` (`PhpPackageDependency` and `ComponentDependency`) and `File` (only `twig` for now, but it can be extended in the future, ex. for Stimulus Controllers "recipes" cc @kbond 🙂)
+```
+.
+└── kits/
+    └── shadcn/
+	    └── templates/
+	    │   ├── components/
+	    │   │   ├── Table/
+	    │   │   │   └── Row.html.twig
+	    │   │   └── Table.html.twig
+        ├── docs/
+        │   └── components/
+        │       ├── Alert.twig
+        │       └── Table.twig
+        └── manifest.json
+```
+- ✅ The examples were reworked too, it has been moved from `components/examples` to `docs/components`, and now contains one "story" file (similar to Storybook) per components, it is inspired by [@kbond's POC](https://github.com/symfony/ux/compare/2.x...kbond:ux:site/recipes)  Example:
+```twig
+{% block meta %}
+title: Avatar
+description: The Avatar component displays a user's profile picture or a fallback representation when no image is available.
+{% endblock %}
+
+{% block examples %}
+## Avatar with Image
+
+\```twig
+<twig:Avatar>
+    <twig:Avatar:Image src="https://github.com/symfony.png" alt="@symfony" />
+</twig:Avatar>
+\```
+
+## Avatar with Fallback
+
+\```twig
+<twig:Avatar>
+    <twig:Avatar:Fallback>JF</twig:Avatar:Fallback>
+</twig:Avatar>
+\```
+{% endblock %}
+```
+- ✅ Added composer bin `ux-toolkit-theme-create`, `ux-toolkit-theme-lint` and `ux-toolkit-theme-debug`, so it can be used by users working on their own kit
+- ✅ The component installation command was reworked too
+- ✅ I still need to adapt existing tests and add more for new files and behaviors
+- ⏳ I still need to adapt the ux.symfony.com website, due to all previous changes
+
+Also, after some discussions with Simon this afternoon:
+- ✅ The term `theme` will change to `kit`. It makes really more sense, the `theme` term suggest that user can switch from a theme to another, like a theme in your code editor, which is not the behavior we want
+- ✅ ~~Introduce `Component::isChild()` or something equivalent, in order to describe that `Table:Row` is not same kind of component than "high-level" component like `Table` or `Button`~~ Not needed in fact, checking on `$component->doc` will be enough for ux.symfony.com
+- ✅ Hide commands `ux:toolkit:debug-theme` and `ux:toolkit:lint-theme` in Symfony apps
+- ✅ In introduced Value objects, add more check about data (e.g. a theme name, a component name, ...)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2025-04-01T23:52:05Z
+
+Great stuff @Kocal! When it's ready for a review, please let me know!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-04-02T07:40:12Z
+
+@weaverryan sure!
+I still have the UX Toolkit integration on ux.symfony.com to adapt and rework (find a clean solution to render those components without conflicting with existing ones), and also rework the PR description (should not be very long).
+
+If you still want to review right now, please ignore the `ux.symfony.com` directory 🙏🏻
+Here some info:
+- everything described from https://github.com/symfony/ux/pull/2539#issuecomment-2764636058
+- The `Registry` is either a `LocalRegistry` (format: `shadcn`) or `GitHubRegistry` (format: `github.com/User/Repo@Kit`)
+- A `Kit` is a `manifest.json` with a bunch of `Component` and documentation files
+- A `Component` consist of a name, a list of `File`, an optional `Doc` object (with a title, description, and a list of tags), and a list of `Dependency`
+- A `Dependency` can be a `PhpPackageDependency` (with a name and a version), or a `ComponentDependency` (with a name)
+- To initialize a `Kit` from a kit name, you must use the `RegistryFactory::getForKit()` method, which will return the right `Registry` instance, and then call `Registry::getKit()` with the kit name.
+- We provide 3 composer bin commands, for people who want to develop their own kits (in their own GitHub repository):
+    - `php bin/console ux-toolkit-kit-create` to create a kit
+    - `php bin/console ux-toolkit-kit-debug` to debug a kit
+    - `php bin/console ux-toolkit-kit-lint` to lint a kit
+- We provide 2 Symfony commands, available in Symfony apps:
+    - `ux:toolkit:install-kit` to install a whole kit (and its dependencies) in the current Symfony app. **I'm not sure about keeping this command**
+    - `ux:toolkit:install-component` to install a component (and its dependencies) in the current Symfony app
+- The install command is smart enough to suggest you PHP dependencies to install, if not already installed, when you install a kit or a component.
+- The install command is also smart enough to not install a component twice if it's already installed (it asks you to confirm the action), it also suggest similar components name if you made a typo.
+
+---
+
+_Typically, this is what I should explain in the PR description_
+
+---------------------------------------------------------------------------
+
+by kbond at 2025-04-02T17:39:36Z
+
+> A Dependency can be a PhpPackageDependency (with a name and a version), or a ComponentDependency (with a name)
+
+Nice, so we can easily add a `JsPackageDependency` later
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-04-02T17:44:37Z
+
+Exactly!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-04-06T18:48:09Z
+
+A few updates:
+- :white_check_mark: The examples system has been reworked and looks more and more like Stories from Storybook, e.g. `examples/components/Alert.md`:
+```md
+# Alert
+
+The Alert component is used to display important messages or notifications to users, with support for different styles and variants.
+
+## Examples
+
+### Basic Alert
+
+\```twig
+<twig:Alert>
+    This is an alert message.
+</twig:Alert>
+\```
+
+### Alert with Custom Class
+
+\```twig
+<twig:Alert class="bg-red-100 text-red-800">
+    This is a custom styled alert.
+</twig:Alert>
+\```
+
+```
+
+- ✅   The website is now able to render the examples, and convert "```twig" to highlighted code block + preview (with an iframe for styles isolation, secured by a signature) (that's still ugly, but step by step :D) :
+
+https://github.com/user-attachments/assets/3d86da2b-2ae2-43bd-aa07-9dd34999d856
+
+Next! Implement more and more components from Shadcn and enhance examples.
+
+---------------------------------------------------------------------------
+
+by kbond at 2025-04-07T14:25:34Z
+
+> The website is now able to render the examples, and convert "```twig" to highlighted code block + preview (with an iframe for styles isolation, secured by a signature)
+
+Super clever, I love it!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-04-13T18:44:44Z
+
+Aaaaaand, here we go, after several weeks of work, this PR is now ready for review 🎉
+
+Some highlight changes since the last update:
+- The files `kits/*/docs/components/*.md` were reworked (again) in order to be more easier to use and a predictable
+- Some logic of `ComponentDoc` component has been moved to a dedicated LeagueMarkdown Extension, it makes things cleaner and more easier to re-use later
+- All components and their examples were rewritten/adapted, ensuring _best-practices_ and accessibility ✨
+- A beautiful loader is now displayed when the iframe (for the code preview) is loading
+- Toolkit has now a logo and OpenGraph images, and the sitemap has been updated too (thanks @smnandre)
+- A CI job has been added, ensuring templates from `src/Toolkit/kits` are "clean"
+
+Also, please be gentle with the shortcuts and hacks used for the website, it was... necessary 🙉 🙈
+
+For the next PRs:
+- I would like to add a "Copy" button for each highlighted code
+- Rework the `ToolkitKit` thing and its usage
+- Add component's manual installation steps
+
+---
+
+![127 0 0 1_8000_toolkit (1)](https://github.com/user-attachments/assets/018858b6-3f48-4fb5-bbb2-c643802db963)
+
+https://github.com/user-attachments/assets/605cccb5-32e5-4f2b-b251-00b318435881
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-04-13T21:51:51Z
+
+Amazing job guys! If i find time i'll review what I can without bothering you too much tomorrow or tuesday, but don"t wait for it, it may also never come :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-04-15T21:07:56Z
+
+Following internal discussions, I've just removed `tales-from-a-dev/twig-tailwind-extra` dev-dependency (that we didn't really use in tests) in order to pin PHP minimal support to 8.1
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-04-16T19:12:40Z
+
+Sorry for the rebase, but I had some conflicts after merging #2695
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-02T08:21:23Z
+
+To resume the last two commits:
+- Add full PHP 8.1 support
+- Add StimulusController & dependency support
+- Rewrite and simplify the Installation process, before if was working a bit my miracle, now it's more clever (thanks to the Pool system)
+- Add/improve tests
+- Remove "lint kit" command, it wasn't really useful since the "debug kit" command exists
+- The "debug kit" DX has been improved, now only local paths are allowed (and so, only local kits are supported)
+- The "install component" command has been improved. If no component are specified, we interactively ask to the user which component should be installed
+- The `Version` ValueObject now only takes a string version (e.g.: `1.2.3`) instead of major/minor/patches integers. We use `version_compare` too
+
+https://github.com/user-attachments/assets/552a1746-a094-4367-94b9-9b2a5828c690
+
+When files already exists:
+
+https://github.com/user-attachments/assets/e1da74f7-0325-472b-959b-2d1599951d5f
+
+<img width="1098" alt="image" src="https://github.com/user-attachments/assets/a60648b4-9400-4bad-a0c7-5f22530b7c32" />
+
+---------------------------------------------------------------------------
+
+by mahono at 2025-05-02T14:26:13Z
+
+Is it possible to also provide PHP classes in a kit/component for Twig/LiveComponents?
+
+I think it would even be great to be able to provide simple service classes additionally, if a component needs it.
+
+---------------------------------------------------------------------------
+
+by kbond at 2025-05-02T14:43:20Z
+
+> Is it possible to also provide PHP classes in a kit/component for Twig/LiveComponents?
+
+Not yet but that will be a feature we add very quickly!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-03T07:11:12Z
+
+New commit added:
+- Remove the DependencyInjection configuration & `ux_toolkit.kit` parameter, as it does not make really sense
+- When installing a component, automatically select the first kit containing this component, or ask to the user which kit he wants to use:
+
+https://github.com/user-attachments/assets/45063cad-5886-4c3e-84f7-81155dfd26c1
+
+https://github.com/user-attachments/assets/41f72168-6eab-4edc-bb01-6229c5e34fca
+
+- And if the component does not exist in any kit:
+<img width="1103" alt="image" src="https://github.com/user-attachments/assets/8bf64747-f0ff-4cbf-a081-417ffb88f70d" />
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-03T23:13:31Z
+
+LGTM
+
+(and after i'll have a couple of changes to suggest, but nothing important nor urgent)
