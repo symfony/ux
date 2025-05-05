@@ -3778,8 +3778,19 @@ uses Symfony's test client to render and make requests to your components::
             // emit live events
             $testComponent
                 ->emit('increaseEvent')
-                ->emit('increaseEvent', ['amount' => 2]) // emit a live event with arguments
+                ->emit('increaseEvent', ['amount' => 2, 'unit' => 'kg']) // emit a live event with arguments
             ;
+
+            // Assert that the event was emitted
+            $this->assertComponentEmitEvent($testComponent->render(), 'increaseEvent')
+                // optionally, you can assert that the event was emitted with specific data...
+                ->withData(['amount' => 2, 'unit' => 'kg'])
+                // ... or only with a subset of data
+                ->withDataSubset(['amount' => 2])
+            ;
+
+            // Assert that an event was not emitted
+            $this->assertComponentNotEmitEvent($testComponent->render(), 'decreaseEvent');
 
             // set live props
             $testComponent

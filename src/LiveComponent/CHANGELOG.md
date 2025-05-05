@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## 2.27.0
+
+-  Add events assertions in `InteractsWithLiveComponents`:
+```php
+$testComponent = $this->createLiveComponent(name: 'MyComponent');
+
+$renderedComponent = $testComponent->render();
+
+// Assert that the component did emit an event named 'event'
+$this->assertComponentEmitEvent($render, 'event')
+    // optionally, you can assert that the event was emitted with specific data...
+    ->withData(['arg1' => 'foo', 'arg2' => 'bar'])
+    // ... or only with a subset of data
+    ->withDataSubset(['arg1' => 'foo']);
+
+// Assert that the component did not emit an event named 'another-event'
+$this->assertComponentNotEmitEvent($render, 'another-event');
+```
+
 ## 2.26.0
 
 -   `LiveProp`: Pass the property name as second parameter of the `modifier` callable
