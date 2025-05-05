@@ -1,13 +1,13 @@
-.CodePreview_Tabs {
+.Toolkit_Tabs {
 }
 
-.CodePreview_TabHead {
+.Toolkit_TabHead {
   display: flex;
   flex-direction: row;
   margin-bottom: 1rem
 }
 
-.CodePreview_TabControl {
+.Toolkit_TabControl {
   border-bottom: 3px solid transparent;
   color: var(--bs-primary-color);
   padding: 0 1rem;
@@ -18,24 +18,24 @@
   margin-bottom: -1px;
 }
 
-.CodePreview_TabControl.active {
+.Toolkit_TabControl.active {
   border-color: var(--bs-secondary-color);
 }
 
-.CodePreview_TabPanel {
+.Toolkit_TabPanel {
     position: relative;
 }
 
-.CodePreview_TabPanel:not(.active) {
+.Toolkit_TabPanel:not(.active) {
   display: none;
 }
 
-.CodePreview_TabPanel:has(.CodePreview_Preview) {
+.Toolkit_TabPanel:has(.Toolkit_Preview) {
     border: 1px solid var(--bs-border-color);
     border-radius: .75rem
 }
 
-.CodePreview_Loader {
+.Toolkit_Loader {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -48,7 +48,7 @@
     }
 }
 
-.CodePreview_Preview {
+.Toolkit_Preview {
     width: 100%;
     transition: opacity .250s linear;
     border-radius: .75rem;

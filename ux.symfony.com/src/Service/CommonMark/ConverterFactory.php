@@ -12,6 +12,7 @@
 namespace App\Service\CommonMark;
 
 use App\Service\CommonMark\Extension\CodeBlockRenderer\CodeBlockRenderer;
+use App\Service\Toolkit\ToolkitService;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
@@ -28,8 +29,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 final class ConverterFactory
 {
     public function __construct(
-        private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly UriSigner $uriSigner,
+        private readonly ToolkitService $toolkitService,
     ) {
     }
 
@@ -57,7 +57,7 @@ final class ConverterFactory
             ->addExtension(new ExternalLinkExtension())
             ->addExtension(new MentionExtension())
             ->addExtension(new FrontMatterExtension())
-            ->addRenderer(FencedCode::class, new CodeBlockRenderer($this->urlGenerator, $this->uriSigner))
+            ->addRenderer(FencedCode::class, new CodeBlockRenderer($this->toolkitService))
         ;
 
         return $converter;
