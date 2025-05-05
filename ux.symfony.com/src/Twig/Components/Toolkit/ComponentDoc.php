@@ -12,6 +12,7 @@
 namespace App\Twig\Components\Toolkit;
 
 use App\Enum\ToolkitKitId;
+use App\Service\Toolkit\ToolkitService;
 use App\Util\SourceCleaner;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -28,12 +29,7 @@ class ComponentDoc
     public ToolkitKitId $kitId;
     public Component $component;
 
-    public function __construct(
-        private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly UriSigner $uriSigner,
-        private readonly Highlighter $highlighter,
-        private readonly \Twig\Environment $twig,
-    ) {
+    public function __construct(private readonly ToolkitService $toolkitService) {
     }
 
     public function getContent(): string
@@ -54,23 +50,9 @@ class ComponentDoc
 
     private function insertInstallation(AbstractString $markdownContent): AbstractString
     {
-        $installationCode = SourceCleaner::processTerminalLines(<<<SHELL
-bin/console ux:toolkit:install-component {$this->component->name} --kit {$this->kitId->value}
-SHELL
-        );
-
-        // TODO: Provide tabs showing automatic and manual installation
         return $markdownContent->replace(
             '<!-- Placeholder: Installation -->',
-            <<<HTML
-            <div class="Terminal terminal-code" style="margin-bottom: 1rem;">
-                <div class="Terminal_body">
-                    <div class="Terminal_content">
-                        <pre><code class="language-shell">{$installationCode}</code></pre>
-                    </div>
-                </div>
-            </div>
-            HTML
+            $this->toolkitService->renderInstallationSteps($this->kitId, $this->component)
         );
     }
 
@@ -85,6 +67,9 @@ SHELL
         );
     }
 
+    /**
+     * Iterate over code blocks, and add the option "kit" if the option "preview" exists.
+     */
     private function adaptPreviewableCodeBlocks(AbstractString $markdownContent): AbstractString
     {
         return $markdownContent->replaceMatches('/```(?P<lang>[a-z]+) +(?P<options>\{.+?\})\n/', function (array $matches) {

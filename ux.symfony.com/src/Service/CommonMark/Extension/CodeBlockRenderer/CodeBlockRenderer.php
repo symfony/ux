@@ -62,9 +62,7 @@ final readonly class CodeBlockRenderer implements NodeRendererInterface
         return <<<HTML
             <div class="Terminal terminal-code" style="margin-bottom: 1rem;">
                 <div class="Terminal_body">
-                    <div class="Terminal_content" style="max-height: 450px;">
-                        {$output}
-                    </div>
+                    <div class="Terminal_content" style="max-height: 450px;">{$output}</div>
                 </div>
             </div>
         HTML;
