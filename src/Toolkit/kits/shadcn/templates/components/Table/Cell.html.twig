@@ -1,6 +1,6 @@
 <td
     class="{{ 'p-4 align-middle [&:has([role=checkbox])]:pr-0 ' ~ attributes.render('class')|tailwind_merge }}"
-    {{ attributes.defaults({}).without('class') }}
+    {{ attributes }}
 >
     {%- block content %}{% endblock -%}
 </td>

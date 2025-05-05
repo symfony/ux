@@ -1,6 +1,6 @@
 <span
     class="{{ 'relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full ' ~ attributes.render('class')|tailwind_merge }}"
-    {{ attributes.defaults({}).without('class') }}
+    {{ attributes }}
 >
     {%- block content %}{% endblock -%}
 </span>

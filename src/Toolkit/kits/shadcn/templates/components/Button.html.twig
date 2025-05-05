@@ -21,7 +21,7 @@
 
 <{{ as }}
     class="{{ style.apply({variant, outline, size}, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.defaults({}).without('class') }}
+    {{ attributes }}
 >
     {%- block content %}{% endblock -%}
 </{{ as }}>
