@@ -6,6 +6,7 @@
     border-radius: .75rem;
     position: relative;
     font-size: 12px;
+    display: grid; // Ensure the Terminal overflow its parent if "pre" contains a very-long-line of the same highlighted element (e.g.: a long string)
 }
 
 .Terminal_light {
@@ -162,6 +163,7 @@
         overflow: visible;
     }
     scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, .8) transparent;
     pre {
         background: none;
     }
@@ -170,15 +172,15 @@
     }
 }
 
-@media screen and (min-width: 768px) {
-    .Terminal_content::-webkit-scrollbar {
-        display: none;
-    }
-    .Terminal_content {
-        --webkit-scrollbar-width: none;
-        scrollbar-width: none;
-    }
-}
+// @media screen and (min-width: 768px) {
+//     .Terminal_content::-webkit-scrollbar {
+//         display: none;
+//     }
+//     .Terminal_content {
+//         --webkit-scrollbar-width: none;
+//         scrollbar-width: none;
+//     }
+// }
 
 .Terminal_expand {
     position: absolute;
