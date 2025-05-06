@@ -19,8 +19,6 @@ use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
 use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
 use League\CommonMark\Extension\Mention\MentionExtension;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
-use Symfony\Component\HttpFoundation\UriSigner;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>

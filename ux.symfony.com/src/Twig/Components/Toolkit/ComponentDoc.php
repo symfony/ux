@@ -13,13 +13,9 @@ namespace App\Twig\Components\Toolkit;
 
 use App\Enum\ToolkitKitId;
 use App\Service\Toolkit\ToolkitService;
-use App\Util\SourceCleaner;
-use Symfony\Component\HttpFoundation\UriSigner;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\String\AbstractString;
 use Symfony\UX\Toolkit\Asset\Component;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Tempest\Highlight\Highlighter;
 
 use function Symfony\Component\String\s;
 
@@ -29,7 +25,8 @@ class ComponentDoc
     public ToolkitKitId $kitId;
     public Component $component;
 
-    public function __construct(private readonly ToolkitService $toolkitService) {
+    public function __construct(private readonly ToolkitService $toolkitService)
+    {
     }
 
     public function getContent(): string

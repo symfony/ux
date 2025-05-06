@@ -23,7 +23,7 @@ use Tempest\Highlight\WebTheme;
 final readonly class CodeBlockRenderer implements NodeRendererInterface
 {
     public function __construct(
-         private ToolkitService $toolkitService,
+        private ToolkitService $toolkitService,
     ) {
     }
 
@@ -40,7 +40,7 @@ final readonly class CodeBlockRenderer implements NodeRendererInterface
         $kitId = ToolkitKitId::tryFrom($options['kit'] ?? null);
         $preview = $options['preview'] ?? false;
 
-        $output = $this->highlightCode($code = $node->getLiteral(), $language);
+        $output = $this->highlightCode($language, $code = $node->getLiteral());
 
         if ($kitId && $preview) {
             $output = $this->toolkitService->renderComponentPreviewCodeTabs($kitId, $code, $output, $options['height'] ?? '150px');
@@ -49,7 +49,7 @@ final readonly class CodeBlockRenderer implements NodeRendererInterface
         return $output;
     }
 
-    private function highlightCode(string $code, string $language): string
+    public static function highlightCode(string $language, string $code, string $style = 'margin-bottom: 1rem'): string
     {
         $highlighter = new Highlighter();
 
@@ -60,7 +60,7 @@ final readonly class CodeBlockRenderer implements NodeRendererInterface
             : '<pre data-lang="'.$language.'" class="notranslate">'.$parsed.'</pre>';
 
         return <<<HTML
-            <div class="Terminal terminal-code" style="margin-bottom: 1rem;">
+            <div class="Terminal terminal-code" style="$style">
                 <div class="Terminal_body">
                     <div class="Terminal_content" style="max-height: 450px;">{$output}</div>
                 </div>
