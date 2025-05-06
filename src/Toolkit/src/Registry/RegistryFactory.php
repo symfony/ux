@@ -29,7 +29,7 @@ final class RegistryFactory
     /**
      * @throws \InvalidArgumentException
      */
-    public function getForKit(string $kit): Registry
+    public function getForKit(string $kit): RegistryInterface
     {
         $type = match (true) {
             GitHubRegistry::supports($kit) => Type::GitHub,

@@ -18,6 +18,6 @@ namespace Symfony\UX\Toolkit\Dependency;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-interface Dependency extends \Stringable
+interface DependencyInterface extends \Stringable
 {
 }

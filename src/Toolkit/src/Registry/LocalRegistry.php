@@ -23,7 +23,7 @@ use Symfony\UX\Toolkit\Kit\KitFactory;
  * @author Jean-François Lépine
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final class LocalRegistry implements Registry
+final class LocalRegistry implements RegistryInterface
 {
     private static string $kitsDir = __DIR__.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'kits';
 

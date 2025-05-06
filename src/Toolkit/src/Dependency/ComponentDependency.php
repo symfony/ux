@@ -20,7 +20,7 @@ use Symfony\UX\Toolkit\Assert;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final class ComponentDependency implements Dependency
+final class ComponentDependency implements DependencyInterface
 {
     /**
      * @param non-empty-string $name The name of the component, e.g. "Table" or "Table:Body"

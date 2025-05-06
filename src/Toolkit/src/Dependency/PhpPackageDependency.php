@@ -20,7 +20,7 @@ use Symfony\UX\Toolkit\Assert;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final class PhpPackageDependency implements Dependency
+final class PhpPackageDependency implements DependencyInterface
 {
     /**
      * @param non-empty-string $name

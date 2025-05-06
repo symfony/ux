@@ -13,7 +13,7 @@ namespace Symfony\UX\Toolkit\Asset;
 
 use Symfony\UX\Toolkit\Assert;
 use Symfony\UX\Toolkit\Dependency\ComponentDependency;
-use Symfony\UX\Toolkit\Dependency\Dependency;
+use Symfony\UX\Toolkit\Dependency\DependencyInterface;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\Dependency\StimulusControllerDependency;
 use Symfony\UX\Toolkit\File\Doc;
@@ -43,7 +43,7 @@ final class Component
         }
     }
 
-    public function addDependency(Dependency $dependency): void
+    public function addDependency(DependencyInterface $dependency): void
     {
         foreach ($this->dependencies as $i => $existingDependency) {
             if ($existingDependency instanceof PhpPackageDependency && $existingDependency->name === $dependency->name) {
@@ -69,7 +69,7 @@ final class Component
     }
 
     /**
-     * @return list<Dependency>
+     * @return list<DependencyInterface>
      */
     public function getDependencies(): array
     {

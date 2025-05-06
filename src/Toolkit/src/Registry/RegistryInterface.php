@@ -19,7 +19,7 @@ use Symfony\UX\Toolkit\Kit\Kit;
  * @author Jean-François Lépine
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-interface Registry
+interface RegistryInterface
 {
     public static function supports(string $kitName): bool;
 

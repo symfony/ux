@@ -20,7 +20,7 @@ use Symfony\UX\Toolkit\Assert;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final class StimulusControllerDependency implements Dependency
+final class StimulusControllerDependency implements DependencyInterface
 {
     /**
      * @param non-empty-string $name

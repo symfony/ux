@@ -24,7 +24,7 @@ use Symfony\UX\Toolkit\Kit\KitFactory;
  * @author Jean-François Lépine
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final class GitHubRegistry implements Registry
+final class GitHubRegistry implements RegistryInterface
 {
     public function __construct(
         private readonly KitFactory $kitFactory,
