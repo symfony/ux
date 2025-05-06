@@ -45,6 +45,10 @@ final class Kernel extends BaseKernel
             'property_access' => true,
             'http_client' => true,
             'handle_all_throwables' => true,
+
+            ...(self::VERSION_ID >= 70300 ? [
+                'property_info' => ['with_constructor_extractor' => false],
+            ] : []),
         ]);
 
         $container->extension('twig', [
