@@ -1,7 +1,7 @@
 {
     "name": "@symfony/stimulus-bundle",
     "description": "Integration of @hotwired/stimulus into Symfony",
-    "private": "true",
+    "private": true,
     "license": "MIT",
     "version": "2.24.0",
     "keywords": [
