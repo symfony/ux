@@ -19,6 +19,7 @@ use Twig\Extension\CoreExtension;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Node;
 use Twig\Node\NodeOutputInterface;
+use Twig\Template;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -154,16 +155,29 @@ final class ComponentNode extends Node implements NodeOutputInterface
         if ($useYield) {
             $compiler->write('yield from ');
         }
-        $compiler
-            ->write('$this->loadTemplate(')
-            ->string($this->getAttribute('embedded_template'))
-            ->raw(', ')
-            ->repr($this->getTemplateName())
-            ->raw(', ')
-            ->repr($this->getTemplateLine())
-            ->raw(', ')
-            ->string($this->getAttribute('embedded_index'))
-            ->raw(')');
+
+        // Support for Twig ^3.21
+        if (method_exists(Template::class, 'load')) {
+            $compiler
+               ->write('$this->load(')
+               ->string($this->getAttribute('embedded_template'))
+               ->raw(', ')
+               ->repr($this->getTemplateLine())
+               ->raw(', ')
+               ->string($this->getAttribute('embedded_index'))
+               ->raw(')');
+        } else {
+            $compiler
+                ->write('$this->loadTemplate(')
+                ->string($this->getAttribute('embedded_template'))
+                ->raw(', ')
+                ->repr($this->getTemplateName())
+                ->raw(', ')
+                ->repr($this->getTemplateLine())
+                ->raw(', ')
+                ->string($this->getAttribute('embedded_index'))
+                ->raw(')');
+        }
 
         if ($useYield) {
             $compiler->raw('->unwrap()->yield(');
