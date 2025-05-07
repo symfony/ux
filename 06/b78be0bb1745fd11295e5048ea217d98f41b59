@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-07T08:14:22Z
+
+I don't understand why it's failing (https://github.com/symfony/ux/actions/runs/14850628341/job/41693406801?pr=2714), but we now have a lot of:
+> 1) Symfony\UX\Toolkit\Tests\Command\DebugKitCommandTest::testShouldBeAbleToDebug
+Symfony\Component\Config\Definition\Exception\InvalidConfigurationException: Unrecognized option "with_constructor_extractor" under "framework". Available options are "annotations", "asset_mapper", "assets", "cache", "csrf_protection", "default_locale", "disallow_search_engine_index", "enabled_locales", "error_controller", "esi", "exceptions", "form", "fragments", "handle_all_throwables", "html_sanitizer", "http_cache", "http_client", "http_method_override", "ide", "json_streamer", "lock", "mailer", "messenger", "notifier", "php_errors", "profiler", "property_access", "property_info", "rate_limiter", "remote-event", "request", "router", "scheduler", "secret", "secrets", "semaphore", "serializer", "session", "set_content_language_from_locale", "set_locale_from_accept_language", "ssi", "test", "translator", "trust_x_sendfile_type_header", "trusted_headers", "trusted_hosts", "trusted_proxies", "type_info", "uid", "validation", "web_link", "webhook", "workflows".
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-07T11:42:05Z
+
+omg 🤦
+
+I forgot a level of nesting here
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-07T14:58:23Z
+
+Perfect, thanks \o/
+
+Note, 8.4 checks are failing because https://github.com/symfony/symfony/pull/60365 I think, I will open a PR on Symfony
