@@ -1,0 +1,19 @@
+<!--
+- Kit: Shadcn UI
+- Component: Switch
+- Code:
+```twig
+<div class="flex items-center space-x-2">
+    <twig:Switch id="airplane-mode" />
+    <twig:Label for="airplane-mode">Airplane Mode</twig:Label>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex items-center space-x-2">
+    <label class="relative inline-flex items-center cursor-pointer ">
+    <input type="checkbox" class="sr-only peer absolute inset-0 w-full h-full cursor-pointer" id="airplane-mode">
+    <div class="pointer-events-none w-11 h-6 bg-input rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary peer-disabled:opacity-50 peer-disabled:cursor-not-allowed"></div>
+</label>
+
+    <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="airplane-mode">Airplane Mode</label>
+</div>

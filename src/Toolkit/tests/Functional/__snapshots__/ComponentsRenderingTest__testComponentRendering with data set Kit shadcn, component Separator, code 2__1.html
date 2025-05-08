@@ -1,0 +1,45 @@
+<!--
+- Kit: Shadcn UI
+- Component: Separator
+- Code:
+```twig
+<div>
+    <div class="space-y-1">
+        <h4 class="text-sm font-medium leading-none">Symfony UX</h4>
+        <p class="text-sm text-muted-foreground">
+            Symfony UX initiative: a JavaScript ecosystem for Symfony
+        </p>
+    </div>
+    <twig:Separator class="my-4" />
+    <div class="flex h-5 items-center space-x-4 text-sm">
+        <div>Blog</div>
+        <twig:Separator orientation="vertical" />
+        <div>Docs</div>
+        <twig:Separator orientation="vertical" />
+        <div>Source</div>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div>
+    <div class="space-y-1">
+        <h4 class="text-sm font-medium leading-none">Symfony UX</h4>
+        <p class="text-sm text-muted-foreground">
+            Symfony UX initiative: a JavaScript ecosystem for Symfony
+        </p>
+    </div>
+    <div class="shrink-0 bg-border h-[1px] w-full my-4" role="none">
+</div>
+
+    <div class="flex h-5 items-center space-x-4 text-sm">
+        <div>Blog</div>
+        <div class="shrink-0 bg-border h-full w-[1px]" role="none">
+</div>
+
+        <div>Docs</div>
+        <div class="shrink-0 bg-border h-full w-[1px]" role="none">
+</div>
+
+        <div>Source</div>
+    </div>
+</div>

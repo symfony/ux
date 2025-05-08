@@ -1,0 +1,85 @@
+<!--
+- Kit: Shadcn UI
+- Component: Card
+- Code:
+```twig
+{% set notifications = [
+  { title: "Your call has been confirmed.", description: "1 hour ago"},
+  { title: "You have a new message!",  description: "1 hour ago"},
+  { title: "Your subscription is expiring soon!", description: "2 hours ago" },
+] %}
+<twig:Card class="w-[350px]">
+    <twig:Card:Header>
+        <twig:Card:Title>Notifications</twig:Card:Title>
+        <twig:Card:Description>You have 3 unread messages.</twig:Card:Description>
+    </twig:Card:Header>
+    <twig:Card:Content>
+        {%- for notification in notifications -%}
+            <div class="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0">
+                <span class="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500"></span>
+                <div class="space-y-1">
+                    <p class="text-sm font-medium leading-none">
+                        {{ notification.title }}
+                    </p>
+                    <p class="text-sm text-muted-foreground">
+                        {{ notification.description }}
+                    </p>
+                </div>
+            </div>  
+        {%- endfor -%}
+    </twig:Card:Content>
+    <twig:Card:Footer>
+        <twig:Button class="w-full">
+            <twig:ux:icon name="lucide:check" /> 
+            Mark all as read
+        </twig:Button>
+    </twig:Card:Footer>
+</twig:Card>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="rounded-lg border bg-card text-card-foreground shadow-sm w-[350px]">
+<div class="flex flex-col space-y-1.5 p-6 ">
+<div class="text-2xl font-semibold leading-none tracking-tight ">Notifications</div>
+        <div class="text-sm text-muted-foreground ">You have 3 unread messages.</div>
+    </div>
+    <div class="p-6 pt-0 ">
+<div class="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0">
+                <span class="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500"></span>
+                <div class="space-y-1">
+                    <p class="text-sm font-medium leading-none">
+                        Your call has been confirmed.
+                    </p>
+                    <p class="text-sm text-muted-foreground">
+                        1 hour ago
+                    </p>
+                </div>
+            </div>
+<div class="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0">
+                <span class="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500"></span>
+                <div class="space-y-1">
+                    <p class="text-sm font-medium leading-none">
+                        You have a new message!
+                    </p>
+                    <p class="text-sm text-muted-foreground">
+                        1 hour ago
+                    </p>
+                </div>
+            </div>
+<div class="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0">
+                <span class="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500"></span>
+                <div class="space-y-1">
+                    <p class="text-sm font-medium leading-none">
+                        Your subscription is expiring soon!
+                    </p>
+                    <p class="text-sm text-muted-foreground">
+                        2 hours ago
+                    </p>
+                </div>
+            </div>
+</div>
+    <div class="flex items-center p-6 pt-0 ">
+<button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"><svg xmlns="https://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg> 
+            Mark all as read
+        </button>
+    </div>
+</div>

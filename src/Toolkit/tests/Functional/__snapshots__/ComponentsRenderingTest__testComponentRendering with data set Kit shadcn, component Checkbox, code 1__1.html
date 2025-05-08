@@ -1,0 +1,20 @@
+<!--
+- Kit: Shadcn UI
+- Component: Checkbox
+- Code:
+```twig
+<div class="flex items-center space-x-2">
+    <twig:Checkbox id="terms" />
+    <label for="terms" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+        Accept terms and conditions
+    </label>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex items-center space-x-2">
+    <input type="checkbox" class="peer size-4 inline-block align-middle accent-primary " id="terms">
+
+    <label for="terms" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+        Accept terms and conditions
+    </label>
+</div>

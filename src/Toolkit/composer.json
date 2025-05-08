@@ -45,7 +45,9 @@
     "symfony/http-client": "6.4|^7.0",
     "symfony/stopwatch": "^6.4|^7.0",
     "symfony/phpunit-bridge": "^6.4|^7.0",
-    "vincentlanglet/twig-cs-fixer": "^3.5"
+    "vincentlanglet/twig-cs-fixer": "^3.5",
+    "spatie/phpunit-snapshot-assertions": "^4.2.17",
+    "symfony/ux-icons": "^2.18"
   },
   "bin": [
     "bin/ux-toolkit-kit-create",

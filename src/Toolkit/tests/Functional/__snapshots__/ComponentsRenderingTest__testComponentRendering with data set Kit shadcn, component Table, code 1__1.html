@@ -1,0 +1,65 @@
+<!--
+- Kit: Shadcn UI
+- Component: Table
+- Code:
+```twig
+{%- set invoices = [
+  { invoice: "INV001", paymentStatus: "Paid", totalAmount: "$250.00", paymentMethod: "Credit Card" },
+  { invoice: "INV002", paymentStatus: "Pending", totalAmount: "$150.00", paymentMethod: "PayPal" },
+  { invoice: "INV003", paymentStatus: "Unpaid", totalAmount: "$350.00", paymentMethod: "Bank Transfer" },
+] -%}
+<twig:Table>
+    <twig:Table:Caption>A list of your recent invoices.</twig:Table:Caption>
+    <twig:Table:Header>
+        <twig:Table:Row>
+            <twig:Table:Head class="w-[100px]">Invoice</twig:Table:Head>
+            <twig:Table:Head>Status</twig:Table:Head>
+            <twig:Table:Head>Method</twig:Table:Head>
+            <twig:Table:Head class="text-right">Amount</twig:Table:Head>
+        </twig:Table:Row>
+    </twig:Table:Header>
+    <twig:Table:Body>
+        {% for invoice in invoices %}
+            <twig:Table:Row>
+                <twig:Table:Cell class="font-medium">{{ invoice.invoice }}</twig:Table:Cell>
+                <twig:Table:Cell>{{ invoice.paymentStatus }}</twig:Table:Cell>
+                <twig:Table:Cell>{{ invoice.paymentMethod }}</twig:Table:Cell>
+                <twig:Table:Cell class="text-right">{{ invoice.totalAmount }}</twig:Table:Cell>
+            </twig:Table:Row>
+        {% endfor %}
+    </twig:Table:Body>
+</twig:Table>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="relative w-full overflow-auto">
+    <table class="w-full caption-bottom text-sm ">
+<caption class="mt-4 text-sm text-muted-foreground ">A list of your recent invoices.</caption>
+    <thead class="[&amp;_tr]:border-b ">
+<tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted ">
+<th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-[100px]">Invoice</th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 ">Status</th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 ">Method</th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 text-right">Amount</th>
+        </tr>
+    </thead>
+    <tbody class="[&amp;_tr:last-child]:border-0 ">            <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted ">
+<td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">INV001</td>
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 ">Paid</td>
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 ">Credit Card</td>
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">$250.00</td>
+            </tr>
+                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted ">
+<td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">INV002</td>
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 ">Pending</td>
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 ">PayPal</td>
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">$150.00</td>
+            </tr>
+                    <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted ">
+<td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">INV003</td>
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 ">Unpaid</td>
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 ">Bank Transfer</td>
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">$350.00</td>
+            </tr>
+            </tbody>
+</table>
+</div>

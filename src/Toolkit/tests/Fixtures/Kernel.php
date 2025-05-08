@@ -16,8 +16,11 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Symfony\UX\Icons\UXIconsBundle;
 use Symfony\UX\Toolkit\UXToolkitBundle;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
+use TalesFromADev\Twig\Extra\Tailwind\Bridge\Symfony\Bundle\TalesFromADevTwigExtraTailwindBundle;
+use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
 
 final class Kernel extends BaseKernel
 {
@@ -25,12 +28,22 @@ final class Kernel extends BaseKernel
 
     public function registerBundles(): iterable
     {
-        return [
+        $bundles = [
             new FrameworkBundle(),
             new TwigBundle(),
             new TwigComponentBundle(),
+            new TwigExtraBundle(),
+            new UXIconsBundle(),
             new UXToolkitBundle(),
         ];
+
+        if (class_exists(TalesFromADevTwigExtraTailwindBundle::class)) {
+            $bundles[] = new TalesFromADevTwigExtraTailwindBundle();
+        } elseif (\PHP_VERSION_ID >= 80200) {
+            throw new \RuntimeException('The dependency "tales-from-a-dev/twig-tailwind-extra" must be installed when using PHP 8.2+.');
+        }
+
+        return $bundles;
     }
 
     protected function configureContainer(ContainerConfigurator $container): void
@@ -68,6 +81,9 @@ final class Kernel extends BaseKernel
                 ->public()
 
             ->alias('ux_toolkit.registry.registry_factory', '.ux_toolkit.registry.registry_factory')
+                ->public()
+
+            ->alias('ux_toolkit.registry.local', '.ux_toolkit.registry.local')
                 ->public()
         ;
     }

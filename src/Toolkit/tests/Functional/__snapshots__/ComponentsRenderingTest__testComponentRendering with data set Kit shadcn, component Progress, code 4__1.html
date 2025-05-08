@@ -1,0 +1,36 @@
+<!--
+- Kit: Shadcn UI
+- Component: Progress
+- Code:
+```twig
+<div class="flex flex-col gap-1.5 w-sm">
+    <twig:Progress value="0" />
+    <twig:Progress value="25" />
+    <twig:Progress value="50" />
+    <twig:Progress value="75" />
+    <twig:Progress value="100" />
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex flex-col gap-1.5 w-sm">
+    <div class="relative h-4 w-full overflow-hidden rounded-full bg-secondary " role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div class="h-full w-full flex-1 bg-primary transition-all" style="transform: translateX(-100%)"></div>
+</div>
+
+    <div class="relative h-4 w-full overflow-hidden rounded-full bg-secondary " role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25">
+    <div class="h-full w-full flex-1 bg-primary transition-all" style="transform: translateX(-75%)"></div>
+</div>
+
+    <div class="relative h-4 w-full overflow-hidden rounded-full bg-secondary " role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+    <div class="h-full w-full flex-1 bg-primary transition-all" style="transform: translateX(-50%)"></div>
+</div>
+
+    <div class="relative h-4 w-full overflow-hidden rounded-full bg-secondary " role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75">
+    <div class="h-full w-full flex-1 bg-primary transition-all" style="transform: translateX(-25%)"></div>
+</div>
+
+    <div class="relative h-4 w-full overflow-hidden rounded-full bg-secondary " role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+    <div class="h-full w-full flex-1 bg-primary transition-all" style="transform: translateX(-0%)"></div>
+</div>
+
+</div>

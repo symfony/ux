@@ -1,0 +1,33 @@
+<!--
+- Kit: Shadcn UI
+- Component: Card
+- Code:
+```twig
+<twig:Card class="w-[350px]">
+    <twig:Card:Header>
+        <twig:Card:Title>Card Title</twig:Card:Title>
+        <twig:Card:Description>Card Description</twig:Card:Description>
+    </twig:Card:Header>
+    <twig:Card:Content>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
+    </twig:Card:Content>
+    <twig:Card:Footer class="justify-between">
+        <twig:Button variant="outline">Cancel</twig:Button>
+        <twig:Button>Action</twig:Button>
+    </twig:Card:Footer>
+</twig:Card>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="rounded-lg border bg-card text-card-foreground shadow-sm w-[350px]">
+<div class="flex flex-col space-y-1.5 p-6 ">
+<div class="text-2xl font-semibold leading-none tracking-tight ">Card Title</div>
+        <div class="text-sm text-muted-foreground ">Card Description</div>
+    </div>
+    <div class="p-6 pt-0 ">
+<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
+    </div>
+    <div class="flex items-center p-6 pt-0 justify-between">
+<button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">Cancel</button>
+        <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">Action</button>
+    </div>
+</div>

@@ -37,12 +37,12 @@ class KitContextRunnerTest extends KernelTestCase
             $this->assertNotEquals($initialTwigLoader, $twig->getLoader(), 'The Twig loader must be different in this current kit-aware context.');
             $this->assertNotEquals($initialComponentFactoryState, $this->extractComponentFactoryState($componentFactory), 'The ComponentFactory state must be different in this current kit-aware context.');
 
-            $template = $twig->createTemplate('<twig:Alert>Hello world</twig:Alert>');
+            $template = $twig->createTemplate('<twig:AspectRatio ratio="{{ 16 / 9 }}">Hello world</twig:AspectRatio>');
             $renderedTemplate = $template->render();
 
             $this->assertNotEmpty($renderedTemplate);
             $this->assertStringContainsString('Hello world', $renderedTemplate);
-            $this->assertStringContainsString('class="', $renderedTemplate);
+            $this->assertStringContainsString('style="aspect-ratio:', $renderedTemplate);
         });
         $this->assertTrue($executed, \sprintf('The callback passed to %s::runForKit() has not been executed.', KitContextRunner::class));
 

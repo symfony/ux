@@ -1,0 +1,24 @@
+<!--
+- Kit: Shadcn UI
+- Component: Skeleton
+- Code:
+```twig
+<div class="space-y-3">
+    <twig:Skeleton class="h-[125px] w-[250px] rounded-lg" />
+    <div class="space-y-2">
+        <twig:Skeleton class="h-4 w-[250px]" />
+        <twig:Skeleton class="h-4 w-[200px]" />
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="space-y-3">
+    <div class="animate-pulse rounded-full bg-muted h-[125px] w-[250px] rounded-lg"></div>
+
+    <div class="space-y-2">
+        <div class="animate-pulse rounded-full bg-muted h-4 w-[250px]"></div>
+
+        <div class="animate-pulse rounded-full bg-muted h-4 w-[200px]"></div>
+
+    </div>
+</div>

@@ -1,0 +1,21 @@
+<!--
+- Kit: Shadcn UI
+- Component: Avatar
+- Code:
+```twig
+<div class="flex gap-1">
+    <twig:Avatar>
+        <twig:Avatar:Text>FP</twig:Avatar:Text>
+    </twig:Avatar>
+    <twig:Avatar>
+        <twig:Avatar:Text class="bg-red-500 text-red-50">FP</twig:Avatar:Text>
+    </twig:Avatar>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex gap-1">
+    <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full "><span class="flex h-full w-full items-center justify-center rounded-full bg-muted ">FP</span>
+    </span>
+    <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full "><span class="flex h-full w-full items-center justify-center rounded-full bg-muted bg-red-500 text-red-50">FP</span>
+    </span>
+</div>
