@@ -23,12 +23,7 @@ use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\UX\Toolkit\File\FileType;
-use Symfony\UX\Toolkit\Kit\Kit;
-use Symfony\UX\TwigComponent\ComponentFactory;
-use Symfony\UX\TwigComponent\ComponentTemplateFinderInterface;
-use Twig\Loader\ChainLoader;
-use Twig\Loader\FilesystemLoader;
+use Symfony\UX\Toolkit\Kit\KitContextRunner;
 
 class ComponentsController extends AbstractController
 {
@@ -75,8 +70,8 @@ class ComponentsController extends AbstractController
         #[MapQueryParameter] string $height,
         UriSigner $uriSigner,
         \Twig\Environment $twig,
-        #[Autowire(service: 'ux.twig_component.component_factory')]
-        ComponentFactory $componentFactory,
+        #[Autowire(service: 'ux_toolkit.kit.kit_context_runner')]
+        KitContextRunner $kitContextRunner,
         #[Autowire(service: 'profiler')]
         ?Profiler $profiler,
     ): Response {
@@ -87,34 +82,6 @@ class ComponentsController extends AbstractController
         $profiler?->disable();
 
         $kit = $this->toolkitService->getKit($kitId);
-
-        $twig->setLoader(new ChainLoader([
-            new FilesystemLoader($kit->path.\DIRECTORY_SEPARATOR.'templates'.\DIRECTORY_SEPARATOR.'components'),
-            $twig->getLoader(),
-        ]));
-
-        $this->tweakComponentFactory(
-            $componentFactory,
-            new class($kit) implements ComponentTemplateFinderInterface {
-                public function __construct(
-                    private readonly Kit $kit,
-                ) {
-                }
-
-                public function findAnonymousComponentTemplate(string $name): ?string
-                {
-                    if ($component = $this->kit->getComponent($name)) {
-                        foreach ($component->files as $file) {
-                            if (FileType::Twig === $file->type) {
-                                return $file->relativePathName;
-                            }
-                        }
-                    }
-
-                    return null;
-                }
-            }
-        );
 
         $template = $twig->createTemplate(<<<HTML
 <html lang="en">
@@ -129,24 +96,9 @@ class ComponentsController extends AbstractController
 HTML);
 
         return new Response(
-            $twig->render($template),
+            $kitContextRunner->runForKit($kit, fn() => $twig->render($template)),
             Response::HTTP_OK,
             ['X-Robots-Tag' => 'noindex, nofollow']
         );
-    }
-
-    /**
-     * Tweak the ComponentFactory to render anonymous components from the Toolkit kit.
-     * TODO: In the future, we should implement multiple directories for anonymous components.
-     */
-    private function tweakComponentFactory(ComponentFactory $componentFactory, ComponentTemplateFinderInterface $componentTemplateFinder): void
-    {
-        $refl = new \ReflectionClass($componentFactory);
-
-        $propertyConfig = $refl->getProperty('config');
-        $propertyConfig->setValue($componentFactory, []);
-
-        $propertyComponentTemplateFinder = $refl->getProperty('componentTemplateFinder');
-        $propertyComponentTemplateFinder->setValue($componentFactory, $componentTemplateFinder);
     }
 }

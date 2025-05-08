@@ -13,6 +13,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Symfony\UX\Toolkit\Command\DebugKitCommand;
 use Symfony\UX\Toolkit\Command\InstallComponentCommand;
+use Symfony\UX\Toolkit\Kit\KitContextRunner;
 use Symfony\UX\Toolkit\Kit\KitFactory;
 use Symfony\UX\Toolkit\Kit\KitSynchronizer;
 use Symfony\UX\Toolkit\Registry\GitHubRegistry;
@@ -74,6 +75,13 @@ return static function (ContainerConfigurator $container): void {
         ->set('.ux_toolkit.kit.kit_synchronizer', KitSynchronizer::class)
             ->args([
                 service('filesystem'),
+            ])
+
+        ->set('ux_toolkit.kit.kit_context_runner', KitContextRunner::class)
+            ->public()
+            ->args([
+                service('twig'),
+                service('ux.twig_component.component_factory'),
             ])
     ;
 };
