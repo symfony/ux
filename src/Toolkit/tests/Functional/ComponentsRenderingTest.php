@@ -61,16 +61,7 @@ class ComponentsRenderingTest extends WebTestCase
 
         $kit = $this->instantiateKit($kitName);
         $template = $twig->createTemplate($code);
-
-        try {
-            $renderedCode = $kitContextRunner->runForKit($kit, fn () => $template->render());
-        } catch (\Twig\Error\SyntaxError $e) {
-            if (\PHP_VERSION < 80200 && str_contains($e->getMessage(), 'Unknown "tailwind_merge" filter')) {
-                $this->markTestSkipped('Filter "tailwind_merge" is not supported on PHP <8.2.');
-            }
-
-            throw $e;
-        }
+        $renderedCode = $kitContextRunner->runForKit($kit, fn () => $template->render());
 
         $this->assertCodeRenderedMatchesHtmlSnapshot($kit, $kit->getComponent($componentName), $code, $renderedCode);
     }

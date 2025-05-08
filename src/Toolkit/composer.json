@@ -48,7 +48,8 @@
     "vincentlanglet/twig-cs-fixer": "^3.5",
     "spatie/phpunit-snapshot-assertions": "^4.2.17",
     "phpunit/phpunit": "^9.6.22",
-    "symfony/ux-icons": "^2.18"
+    "symfony/ux-icons": "^2.18",
+    "tales-from-a-dev/twig-tailwind-extra": "^0.4.0"
   },
   "bin": [
     "bin/ux-toolkit-kit-create",

@@ -28,22 +28,15 @@ final class Kernel extends BaseKernel
 
     public function registerBundles(): iterable
     {
-        $bundles = [
+        return [
             new FrameworkBundle(),
             new TwigBundle(),
             new TwigComponentBundle(),
             new TwigExtraBundle(),
             new UXIconsBundle(),
+            new TalesFromADevTwigExtraTailwindBundle(),
             new UXToolkitBundle(),
         ];
-
-        if (class_exists(TalesFromADevTwigExtraTailwindBundle::class)) {
-            $bundles[] = new TalesFromADevTwigExtraTailwindBundle();
-        } elseif (\PHP_VERSION_ID >= 80200) {
-            throw new \RuntimeException('The dependency "tales-from-a-dev/twig-tailwind-extra" must be installed when using PHP 8.2+.');
-        }
-
-        return $bundles;
     }
 
     protected function configureContainer(ContainerConfigurator $container): void

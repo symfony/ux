@@ -116,12 +116,6 @@ jobs:
                 working-directory: "src/${{ matrix.component }}"
                 dependency-versions: ${{ matrix.dependency-version }}
 
-            - name: Install specific packages for Toolkit when PHP >=8.2
-              if: ${{ matrix.component == 'Toolkit' && matrix.php-version != '8.1' }}
-              run:
-                composer require --dev tales-from-a-dev/twig-tailwind-extra
-              working-directory: "src/${{ matrix.component }}"
-
             - name: ${{ matrix.component }} Tests
               working-directory: "src/${{ matrix.component }}"
               run: vendor/bin/simple-phpunit
