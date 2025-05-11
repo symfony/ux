@@ -16,6 +16,7 @@ use Symfony\UX\Toolkit\Dependency\ComponentDependency;
 use Symfony\UX\Toolkit\Dependency\DependencyInterface;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\Dependency\StimulusControllerDependency;
+use Symfony\UX\Toolkit\File\ComponentMeta;
 use Symfony\UX\Toolkit\File\Doc;
 use Symfony\UX\Toolkit\File\File;
 
@@ -34,12 +35,17 @@ final class Component
         public readonly string $name,
         public readonly array $files,
         public ?Doc $doc = null,
+        public ?ComponentMeta $meta = null,
         private array $dependencies = [],
     ) {
         Assert::componentName($name);
 
         if ([] === $files) {
             throw new \InvalidArgumentException(\sprintf('The component "%s" must have at least one file.', $name));
+        }
+
+        foreach ($this->meta?->dependencies ?? [] as $dependency) {
+            $this->addDependency($dependency);
         }
     }
 
@@ -74,5 +80,16 @@ final class Component
     public function getDependencies(): array
     {
         return $this->dependencies;
+    }
+
+    public function hasDependency(DependencyInterface $dependency): bool
+    {
+        foreach ($this->dependencies as $existingDependency) {
+            if ($existingDependency->isEquivalentTo($dependency)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

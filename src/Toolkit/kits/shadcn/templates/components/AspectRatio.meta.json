@@ -1,0 +1,9 @@
+{
+    "$schema": "../../../../schemas/component.json",
+    "dependencies": [
+        {
+            "type": "php",
+            "package": "twig/extra-bundle"
+        }
+    ]
+}

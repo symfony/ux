@@ -32,9 +32,9 @@ class DebugKitCommandTest extends KernelTestCase
             ->assertOutputContains(<<<'EOF'
 +--------------+----------------------- Component: "Avatar" --------------------------------------+
 | File(s)      | templates/components/Avatar.html.twig (Twig)                                     |
-| Dependencies | Avatar:Image                                                                     |
+| Dependencies | tales-from-a-dev/twig-tailwind-extra                                             |
+|              | Avatar:Image                                                                     |
 |              | Avatar:Text                                                                      |
-|              | tales-from-a-dev/twig-tailwind-extra                                             |
 +--------------+----------------------------------------------------------------------------------+
 EOF
             );

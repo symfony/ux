@@ -1,0 +1,13 @@
+{
+    "$schema": "../../../../../schemas/component.json",
+    "dependencies": [
+        {
+            "type": "php",
+            "package": "symfony/ux-icons"
+        },
+        {
+            "type": "php",
+            "package": "tales-from-a-dev/twig-tailwind-extra"
+        }
+    ]
+}

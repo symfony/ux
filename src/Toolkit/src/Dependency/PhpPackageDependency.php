@@ -32,6 +32,15 @@ final class PhpPackageDependency implements DependencyInterface
         Assert::phpPackageName($name);
     }
 
+    public function isEquivalentTo(DependencyInterface $dependency): bool
+    {
+        if (!$dependency instanceof self) {
+            return false;
+        }
+
+        return $this->name === $dependency->name;
+    }
+
     public function isHigherThan(self $dependency): bool
     {
         if (null === $this->constraintVersion || null === $dependency->constraintVersion) {

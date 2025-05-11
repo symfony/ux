@@ -20,4 +20,5 @@ namespace Symfony\UX\Toolkit\Dependency;
  */
 interface DependencyInterface extends \Stringable
 {
+    public function isEquivalentTo(self $dependency): bool;
 }

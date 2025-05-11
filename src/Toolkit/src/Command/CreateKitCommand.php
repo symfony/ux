@@ -101,7 +101,7 @@ class CreateKitCommand extends Command
 </button>
 TWIG
         );
-        $this->filesystem->dumpFile('docs/components/Button.md', <<<TWIG
+        $this->filesystem->dumpFile('docs/components/Button.md', <<<MARKDOWN
 # Button
 
 The Button component is a versatile component that allows you to create clickable buttons with various styles and states.
@@ -136,8 +136,12 @@ $ bin/console ux:toolkit:install-component Button --kit github.com/user/my-ux-to
 <twig:Button variant="secondary">Secondary</twig:Button>
 ```
 
-TWIG
+MARKDOWN
         );
+        $this->filesystem->dumpFile('docs/components/Button.meta.json', json_encode([
+            '$schema' => '../vendor/symfony/ux-toolkit/schemas/component.schema.json',
+            'dependencies' => (object) [],
+        ], \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
 
         $io->success('Your kit has been scaffolded, enjoy!');
 
