@@ -51,7 +51,6 @@ final class KitFactory
             path: $absolutePath,
             name: $manifest['name'] ?? throw new \InvalidArgumentException('Manifest file is missing "name" key.'),
             homepage: $manifest['homepage'] ?? throw new \InvalidArgumentException('Manifest file is missing "homepage" key.'),
-            authors: $manifest['authors'] ?? throw new \InvalidArgumentException('Manifest file is missing "authors" key.'),
             license: $manifest['license'] ?? throw new \InvalidArgumentException('Manifest file is missing "license" key.'),
             description: $manifest['description'] ?? null,
             uxIcon: $manifest['ux-icon'] ?? null,

@@ -65,17 +65,6 @@ class CreateKitCommand extends Command
         });
         $kitHomepage = $io->askQuestion($question);
 
-        // Get the kit author name
-        $question = new Question("What's the name of the author?");
-        $question->setValidator(function (?string $value) {
-            if (empty($value)) {
-                throw new \Exception('The author name cannot be empty.');
-            }
-
-            return $value;
-        });
-        $kitAuthorName = $io->askQuestion($question);
-
         // Get the kit license
         $question = new Question('What is the license of your kit?');
         $question->setValidator(function (string $value) {
@@ -91,7 +80,6 @@ class CreateKitCommand extends Command
         $this->filesystem->dumpFile('manifest.json', json_encode([
             'name' => $kitName,
             'homepage' => $kitHomepage,
-            'authors' => [$kitAuthorName],
             'license' => $kitLicense,
         ], \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
         $this->filesystem->dumpFile('templates/components/Button.html.twig', <<<TWIG

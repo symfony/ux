@@ -2,6 +2,5 @@
     "name": "With Circular Components Dependencies",
     "description": "Kit used as a test fixture.",
     "license": "MIT",
-    "homepage": "https://ux.symfony.com/",
-    "authors": ["Symfony UX Community"]
+    "homepage": "https://ux.symfony.com/"
 }

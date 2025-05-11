@@ -69,7 +69,6 @@ EOF
         $io->definitionList(
             ['Name' => $kit->name],
             ['Homepage' => $kit->homepage],
-            ['Authors' => implode(', ', $kit->authors)],
             ['License' => $kit->license],
             new TableSeparator(),
             ['Path' => $kit->path],

@@ -24,19 +24,17 @@ use Symfony\UX\Toolkit\Asset\StimulusController;
 final class Kit
 {
     /**
-     * @param non-empty-string                               $path
-     * @param non-empty-string                               $name
-     * @param non-empty-string|null                          $homepage
-     * @param list<array{name: string, email?: string}>|null $authors
-     * @param non-empty-string|null                          $license
-     * @param list<Component>                                $components
-     * @param list<StimulusController>                       $stimulusControllers
+     * @param non-empty-string         $path
+     * @param non-empty-string         $name
+     * @param non-empty-string|null    $homepage
+     * @param non-empty-string|null    $license
+     * @param list<Component>          $components
+     * @param list<StimulusController> $stimulusControllers
      */
     public function __construct(
         public readonly string $path,
         public readonly string $name,
         public readonly ?string $homepage = null,
-        public readonly array $authors = [],
         public readonly ?string $license = null,
         public readonly ?string $description = null,
         public readonly ?string $uxIcon = null,

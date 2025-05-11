@@ -27,7 +27,6 @@ class DebugKitCommandTest extends KernelTestCase
             // Kit details
             ->assertOutputContains('Name       Shadcn')
             ->assertOutputContains('Homepage   https://ux.symfony.com/components')
-            ->assertOutputContains('Authors    Shadcn, Symfony Community')
             ->assertOutputContains('License    MIT')
             // A component details
             ->assertOutputContains(<<<'EOF'
