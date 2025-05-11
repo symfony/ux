@@ -1,6 +1,6 @@
 # Label
 
-A component for labeling form elements and other content.
+A text element that identifies form controls and other content.
 
 ```twig {"preview":true}
 <div class="flex items-center space-x-2">

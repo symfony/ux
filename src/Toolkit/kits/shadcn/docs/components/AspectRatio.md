@@ -1,11 +1,11 @@
 # AspectRatio
 
-The AspectRatio component is a component that allows you to display an element with a specific aspect ratio.
+A container that maintains a specific width-to-height ratio for its content.
 
 ```twig {"preview":true,"height":"400px"}
 <twig:AspectRatio ratio="1 / 1" class="max-w-[300px]">
-    <img 
-        src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&amp;dpr=2&amp;q=80" 
+    <img
+        src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&amp;dpr=2&amp;q=80"
         alt="Landscape photograph by Tobias Tullius"
         class="h-full w-full rounded-md object-cover"
     />
@@ -26,8 +26,8 @@ The AspectRatio component is a component that allows you to display an element w
 
 ```twig {"preview":true,"height":"400px"}
 <twig:AspectRatio ratio="1 / 1" class="max-w-[350px]">
-    <img 
-        src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&amp;dpr=2&amp;q=80" 
+    <img
+        src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&amp;dpr=2&amp;q=80"
         alt="Landscape photograph by Tobias Tullius"
         class="h-full w-full rounded-md object-cover"
     />
@@ -38,8 +38,8 @@ The AspectRatio component is a component that allows you to display an element w
 
 ```twig {"preview":true,"height":"400px"}
 <twig:AspectRatio ratio="16 / 9" class="max-w-[350px]">
-    <img 
-        src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&amp;dpr=2&amp;q=80" 
+    <img
+        src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&amp;dpr=2&amp;q=80"
         alt="Landscape photograph by Tobias Tullius"
         class="h-full w-full rounded-md object-cover"
     />

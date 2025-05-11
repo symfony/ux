@@ -1,6 +1,6 @@
 # Badge
 
-A component for displaying short pieces of information, such as counts, labels, or status indicators.
+A small element that displays status, counts, or labels with optional icons.
 
 ```twig {"preview":true}
 <twig:Badge>Badge</twig:Badge>
@@ -53,4 +53,4 @@ A component for displaying short pieces of information, such as counts, labels, 
     <twig:ux:icon name="lucide:check" class="mr-1 h-3 w-3" />
     Verified
 </twig:Badge>
-``` 
+```

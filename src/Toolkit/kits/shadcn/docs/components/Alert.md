@@ -1,6 +1,6 @@
 # Alert
 
-Displays a callout for user attention.
+A notification component that displays important messages with an icon, title, and description.
 
 ```twig {"preview":true}
 <twig:Alert class="max-w-lg">
@@ -44,4 +44,4 @@ Displays a callout for user attention.
         Your session has expired. Please log in again.
     </twig:Alert:Description>
 </twig:Alert>
-``` 
+```

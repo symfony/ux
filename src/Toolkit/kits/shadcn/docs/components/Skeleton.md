@@ -1,6 +1,6 @@
 # Skeleton
 
-A component for displaying a loading state with a placeholder animation.
+A placeholder element that displays a loading state with an animated background.
 
 ```twig {"preview":true}
 <div class="flex items-center space-x-4">

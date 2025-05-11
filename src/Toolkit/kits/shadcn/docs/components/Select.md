@@ -1,6 +1,6 @@
 # Select
 
-A form component for selecting an option from a dropdown list.
+A dropdown control that allows users to choose from a list of options.
 
 ```twig {"preview":true}
 <twig:Select class="max-w-sm">

@@ -1,6 +1,6 @@
 # Avatar
 
-A component for displaying user profile images with a fallback for when the image is not available.
+A circular element that displays a user's profile image or initials as a fallback.
 
 ```twig {"preview":true}
 <twig:Avatar>
@@ -53,4 +53,4 @@ A component for displaying user profile images with a fallback for when the imag
         <twig:Avatar:Text class="bg-red-500 text-red-50">FP</twig:Avatar:Text>
     </twig:Avatar>
 </div>
-``` 
+```

@@ -1,6 +1,6 @@
 # Textarea
 
-A multi-line text input component for longer text content.
+A form control for entering multiple lines of text.
 
 ```twig {"preview":true}
 <twig:Textarea placeholder="Type your message here." class="max-w-sm" />

@@ -1,6 +1,6 @@
 # Breadcrumb
 
-A navigation component that displays the current page's location within a website's hierarchy.
+A navigation element that shows the current page's location in the site hierarchy with clickable links.
 
 ```twig {"preview":true}
 <twig:Breadcrumb>

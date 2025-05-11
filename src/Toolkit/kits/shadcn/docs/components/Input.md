@@ -1,6 +1,6 @@
 # Input
 
-A form input component for text, email, password, and other input types.
+A form control that allows users to enter text, numbers, or select files.
 
 ```twig {"preview":true}
 <twig:Input type="email" placeholder="Email" class="max-w-sm" />

@@ -1,6 +1,6 @@
 # Switch
 
-A toggle switch component for boolean input.
+A toggle control that switches between on and off states.
 
 ```twig {"preview":true}
 <div class="flex items-center space-x-2">

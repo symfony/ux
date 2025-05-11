@@ -1,6 +1,6 @@
 # Separator
 
-A component for creating visual separators between content.
+A visual divider that creates space between content elements, available in horizontal and vertical orientations.
 
 ```twig {"preview":true}
 <div class="max-w-sm">

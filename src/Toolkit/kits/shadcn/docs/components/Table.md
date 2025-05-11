@@ -1,6 +1,6 @@
 # Table
 
-A component for displaying structured data in rows and columns with support for headers, captions, and customizable styling.
+A structured grid element that organizes data into rows and columns, supporting headers, captions, and footers.
 
 ```twig {"preview":true,"height":"400px"}
 {%- set invoices = [
@@ -80,4 +80,4 @@ A component for displaying structured data in rows and columns with support for 
         </twig:Table:Row>
     </twig:Table:Footer>
 </twig:Table>
-``` 
+```

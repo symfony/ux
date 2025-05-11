@@ -1,6 +1,6 @@
 # Progress
 
-A component for displaying progress of a task or operation.
+A visual indicator that shows the completion status of a task or operation.
 
 ```twig {"preview":true}
 <twig:Progress value="33" />

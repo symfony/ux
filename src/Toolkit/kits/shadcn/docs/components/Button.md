@@ -1,6 +1,6 @@
 # Button
 
-A button component that can be used to trigger actions or events.
+A clickable element that triggers actions or events, supporting various styles and states.
 
 ```twig {"preview":true}
 <twig:Button>
@@ -30,37 +30,37 @@ A button component that can be used to trigger actions or events.
 
 ```twig {"preview":true}
 <twig:Button>Button</twig:Button>
-``` 
+```
 
 ### Secondary
 
 ```twig {"preview":true}
 <twig:Button variant="outline">Outline</twig:Button>
-``` 
+```
 
 ### Destructive
 
 ```twig {"preview":true}
 <twig:Button variant="destructive">Destructive</twig:Button>
-``` 
+```
 
 ### Outline
 
 ```twig {"preview":true}
 <twig:Button variant="outline">Outline</twig:Button>
-``` 
+```
 
 ### Ghost
 
 ```twig {"preview":true}
 <twig:Button variant="ghost">Ghost</twig:Button>
-``` 
+```
 
 ### Link
 
 ```twig {"preview":true}
 <twig:Button variant="link">Link</twig:Button>
-``` 
+```
 
 ### Icon
 
@@ -68,7 +68,7 @@ A button component that can be used to trigger actions or events.
 <twig:Button variant="outline" size="icon">
     <twig:ux:icon name="lucide:chevron-right" />
 </twig:Button>
-``` 
+```
 
 ### With Icon
 
@@ -76,7 +76,7 @@ A button component that can be used to trigger actions or events.
 <twig:Button>
     <twig:ux:icon name="lucide:mail" /> Login with Email
 </twig:Button>
-``` 
+```
 
 ### Loading
 
@@ -84,4 +84,4 @@ A button component that can be used to trigger actions or events.
 <twig:Button disabled>
     <twig:ux:icon name="lucide:loader-2" class="animate-spin" /> Please wait
 </twig:Button>
-``` 
+```

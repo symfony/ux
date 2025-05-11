@@ -1,6 +1,6 @@
 # Card
 
-A container component for displaying content in a clear, structured format with optional header, content, and footer sections.
+A container that groups related content and actions into a box with optional header, content, and footer sections.
 
 ```twig {"preview":true,"height":"300px"}
 <twig:Card class="w-[350px]">
@@ -71,14 +71,14 @@ A container component for displaying content in a clear, structured format with 
                         {{ notification.description }}
                     </p>
                 </div>
-            </div>  
+            </div>
         {%- endfor -%}
     </twig:Card:Content>
     <twig:Card:Footer>
         <twig:Button class="w-full">
-            <twig:ux:icon name="lucide:check" /> 
+            <twig:ux:icon name="lucide:check" />
             Mark all as read
         </twig:Button>
     </twig:Card:Footer>
 </twig:Card>
-``` 
+```

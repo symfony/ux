@@ -1,6 +1,6 @@
 # Pagination
 
-A component for navigating through paginated content with page numbers and navigation controls.
+A navigation component that displays page numbers and controls for moving between pages.
 
 ```twig {"preview":true}
 <twig:Pagination>
