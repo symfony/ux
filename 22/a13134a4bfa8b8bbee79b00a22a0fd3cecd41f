@@ -1,0 +1,43 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-04-24T18:30:16Z
+
+I'm not sure here... as always by fear to make newcomers make mistake ... once this is enabled, installing packages will not work anymore, and then no documentation would help :|
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-04-25T13:14:26Z
+
+> I'm not sure here... as always by fear to make newcomers make mistake ... once this is enabled, installing packages will not work anymore, and then no documentation would help :|
+
+I see what you mean, but remember our UX npm packages are reserved for **advanced users** only, not newcomers.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-04-26T02:18:05Z
+
+The problem is want to avoid is someone having no idea locally why they cannot install an UX package anymore.
+
+I do believe this is something we should address asap..
+
+In the meantime i understand the need, so can we just add a warning ? Something like "Please be aware NONE of your installed paclages NOR the next you would install .... " (or something like that) ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-04-26T09:26:13Z
+
+> The problem is want to avoid is someone having no idea locally why they cannot install an UX package anymore.
+
+A warning is displayed to the user when `synchronize_package_json` is false: https://github.com/symfony/flex/blob/8ce1acd9842abe0e9b4c4a0bd3f259859516c018/src/Flex.php#L506
+
+It should be enough no?
+
+> In the meantime i understand the need, so can we just add a warning ? Something like "Please be aware NONE of your installed paclages NOR the next you would install .... " (or something like that) ?
+
+I will rewrite the paragraph to be more explicit about that
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-04-26T09:38:31Z
+
+PR updated
