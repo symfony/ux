@@ -43,10 +43,10 @@ class CreateKitCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         // Get the kit name
-        $question = new Question('What is the name of your kit?');
+        $question = new Question("What's the name of your kit?");
         $question->setValidator(function (?string $value) {
             if (empty($value)) {
-                throw new \RuntimeException('Kit name cannot be empty');
+                throw new \RuntimeException('Kit name cannot be empty.');
             }
             Assert::kitName($value);
 
@@ -55,10 +55,10 @@ class CreateKitCommand extends Command
         $kitName = $io->askQuestion($question);
 
         // Get the kit homepage
-        $question = new Question('What is the homepage of your kit?');
+        $question = new Question("What's the Homepage URL of your kit?");
         $question->setValidator(function (?string $value) {
             if (empty($value) || !filter_var($value, \FILTER_VALIDATE_URL)) {
-                throw new \Exception('The homepage must be a valid URL');
+                throw new \Exception('The homepage URL must be valid.');
             }
 
             return $value;
@@ -66,10 +66,10 @@ class CreateKitCommand extends Command
         $kitHomepage = $io->askQuestion($question);
 
         // Get the kit author name
-        $question = new Question('What is the author name of your kit?');
+        $question = new Question("What's the name of the author?");
         $question->setValidator(function (?string $value) {
             if (empty($value)) {
-                throw new \Exception('The author name cannot be empty');
+                throw new \Exception('The author name cannot be empty.');
             }
 
             return $value;
@@ -80,7 +80,7 @@ class CreateKitCommand extends Command
         $question = new Question('What is the license of your kit?');
         $question->setValidator(function (string $value) {
             if (empty($value)) {
-                throw new \Exception('The license cannot be empty');
+                throw new \Exception('The license cannot be empty.');
             }
 
             return $value;
@@ -107,20 +107,31 @@ class CreateKitCommand extends Command
 ) -%}
 
 <button class="{{ style.apply({ variant }, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.defaults({}).without('class') }}
+    {{ attributes }}
 >
     {%- block content %}{% endblock -%}
 </button>
 TWIG
         );
-        $this->filesystem->dumpFile('docs/components/Button.twig', <<<TWIG
-{% block meta %}
-title: Button
-description: The Button component is a versatile component that allows you to create clickable buttons with various styles and states.
-{% endblock %}
+        $this->filesystem->dumpFile('docs/components/Button.md', <<<TWIG
+# Button
 
-{% block examples %}
-# Basic Button
+The Button component is a versatile component that allows you to create clickable buttons with various styles and states.
+
+## Installation
+
+Ensure the Symfony UX Toolkit is installed in your Symfony app:
+
+```shell
+$ composer require --dev symfony/ux-toolkit
+```
+
+Then, run the following command to install the component and its dependencies:
+```shell
+$ bin/console ux:toolkit:install-component Button --kit github.com/user/my-ux-toolkit-kit
+```
+
+## Usage
 
 ```twig
 <twig:Button>
@@ -128,17 +139,19 @@ description: The Button component is a versatile component that allows you to cr
 </twig:Button>
 ```
 
-# Button with Variants
+## Examples
+
+### Button with Variants
 
 ```twig
 <twig:Button variant="default">Default</twig:Button>
 <twig:Button variant="secondary">Secondary</twig:Button>
 ```
-{% endblock %}
+
 TWIG
         );
 
-        $io->success('Perfect, you can now start building your kit!');
+        $io->success('Your kit has been scaffolded, enjoy!');
 
         return self::SUCCESS;
     }
