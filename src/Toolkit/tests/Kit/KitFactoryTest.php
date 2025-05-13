@@ -69,7 +69,7 @@ final class KitFactoryTest extends KernelTestCase
         $this->assertStringContainsString(<<<'EOF'
 # Table
 
-A component for displaying structured data in rows and columns with support for headers, captions, and customizable styling.
+A structured grid element that organizes data into rows and columns, supporting headers, captions, and footers.
 EOF
             , $table->doc->markdownContent);
     }
