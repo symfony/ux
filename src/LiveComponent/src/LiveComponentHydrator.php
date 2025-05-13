@@ -282,6 +282,10 @@ final class LiveComponentHydrator
                 throw new \LogicException(\sprintf('The "%s::%s" object should be hydrated with the Serializer, but no type could be guessed.', $parentObject::class, $propMetadata->getName()));
             }
 
+            if (null === $value && $propMetadata->allowsNull()) {
+                return null;
+            }
+
             return $this->serializer->denormalize($value, $type, 'json', $propMetadata->serializationContext());
         }
 
