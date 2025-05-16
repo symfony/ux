@@ -3503,7 +3503,7 @@ when the component re-renders.
 
 The system doesn't handle every edge case, so here are some things to keep in mind:
 
-* If JavaScript changes an attribute on an element, that change is **preserved**.
+* If JavaScript changes an attribute on a child element, that change is **preserved**.
 * If JavaScript adds a new element, that element is **preserved**.
 * If JavaScript removes an element that was originally rendered by the component,
   that change will be **lost**: the element will be re-added during the next re-render.
