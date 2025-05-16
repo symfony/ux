@@ -1,0 +1,38 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-06T04:33:40Z
+
+Are failing checks for LiveComponent https://github.com/symfony/ux/actions/runs/14850493570/job/41693042531?pr=2713 are related to your changes?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-06T06:58:04Z
+
+They are, but because they are hardcoded values.. that is dependending on internal code in TwigComponent.
+
+Let's try to fix this later this week and we will merge this MR then.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-15T21:13:03Z
+
+I wasn't able to locally reproduce the errors from CI https://github.com/symfony/ux/actions/runs/15055025384/job/42318841525?pr=2713
+```
+1) Symfony\UX\LiveComponent\Tests\Integration\EventListener\DataModelPropsSubscriberTest::testDataModelPropsAreAvailableInEmbeddedComponents
+Twig\Error\RuntimeError: An exception has been thrown during the rendering of a template ("Call to undefined method __TwigTemplate_18a043059dae08abfc5bc95f85ec1668::load()").
+
+/home/runner/work/ux/ux/src/LiveComponent/tests/Fixtures/templates/components/parent_component_data_model.html.twig:1
+/home/runner/work/ux/ux/src/LiveComponent/vendor/twig/twig/src/Template.php:354
+/home/runner/work/ux/ux/src/LiveComponent/vendor/twig/twig/src/Template.php:369
+/home/runner/work/ux/ux/src/TwigComponent/src/ComponentRenderer.php:77
+/home/runner/work/ux/ux/src/TwigComponent/src/ComponentRenderer.php:56
+/home/runner/work/ux/ux/src/LiveComponent/tests/Integration/EventListener/DataModelPropsSubscriberTest.php:52
+```
+
+I've changed the condition to `method_exists` and tests are passing again https://github.com/symfony/ux/actions/runs/15055235144/job/42319532430?pr=2713
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-16T00:15:27Z
+
+Let's not force-push / squash on previous commits when working on same PR, because that's hard to review then 😅
