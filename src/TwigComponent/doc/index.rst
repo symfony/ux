@@ -7,8 +7,8 @@ making it easier to render and re-use small template "units" - like an
 
 Every component consists of (1) a class::
 
-    // src/Twig/Components/Alert.php
-    namespace App\Twig\Components;
+    // src/Twig/Component/Alert.php
+    namespace App\Twig\Component;
 
     use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
@@ -79,8 +79,8 @@ Let's create a reusable "alert" element that we can use to show success
 or error messages across our site. Step 1 is to create a component class
 and give it the ``AsTwigComponent`` attribute::
 
-    // src/Twig/Components/Alert.php
-    namespace App\Twig\Components;
+    // src/Twig/Component/Alert.php
+    namespace App\Twig\Component;
 
     use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
@@ -166,7 +166,7 @@ public property for each:
 
 .. code-block:: diff
 
-      // src/Twig/Components/Alert.php
+      // src/Twig/Component/Alert.php
       // ...
 
       #[AsTwigComponent]
@@ -265,7 +265,7 @@ You can control the template used via the ``AsTwigComponent`` attribute:
 
 .. code-block:: diff
 
-      // src/Twig/Components/Alert.php
+      // src/Twig/Component/Alert.php
       // ...
 
     - #[AsTwigComponent]
@@ -396,8 +396,8 @@ How? Components are *services*, which means autowiring works like
 normal. This example assumes you have a ``Product`` Doctrine entity and
 ``ProductRepository``::
 
-    // src/Twig/Components/FeaturedProducts.php
-    namespace App\Twig\Components;
+    // src/Twig/Component/FeaturedProducts.php
+    namespace App\Twig\Component;
 
     use App\Repository\ProductRepository;
     use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -457,7 +457,7 @@ The mount() Method
 For more control over how your "props" are handled, you can create a method
 called ``mount()``::
 
-    // src/Twig/Components/Alert.php
+    // src/Twig/Component/Alert.php
     // ...
 
     #[AsTwigComponent]
@@ -497,7 +497,7 @@ PreMount Hook
 If you need to modify/validate data before it's *mounted* on the
 component use a ``PreMount`` hook::
 
-    // src/Twig/Components/Alert.php
+    // src/Twig/Component/Alert.php
     use Symfony\Component\OptionsResolver\OptionsResolver;
     use Symfony\UX\TwigComponent\Attribute\PreMount;
     // ...
@@ -557,7 +557,7 @@ PostMount Hook
 After a component is instantiated and its data mounted, you can run extra
 code via the ``PostMount`` hook::
 
-    // src/Twig/Components/Alert.php
+    // src/Twig/Component/Alert.php
     use Symfony\UX\TwigComponent\Attribute\PostMount;
     // ...
 
@@ -580,7 +580,7 @@ will contain any props passed to the component that have *not* yet been processe
 ``mount()`` method). You can handle these props, remove them from the ``$data``
 and return the array::
 
-    // src/Twig/Components/Alert.php
+    // src/Twig/Component/Alert.php
     #[AsTwigComponent]
     class Alert
     {

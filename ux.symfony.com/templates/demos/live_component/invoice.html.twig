@@ -1,7 +1,7 @@
 {% extends 'demos/live_demo.html.twig' %}
 
 {% block code_block_full %}
-    <twig:Code:CodeWithExplanationRow filename="src/Twig/Components/InvoiceCreator.php" sticky class="pt-5">
+    <twig:Code:CodeWithExplanationRow filename="src/Twig/Component/InvoiceCreator.php" sticky class="pt-5">
 ## Main Component
 
 This main component keeps track of the `Invoice` (which may be new) and
@@ -30,7 +30,7 @@ data: `productId`, `quantity`, and `isEditing`. It also passes a `key`,
 which is needed so LiveComponents can track which row is which.
     </twig:Code:CodeWithExplanationRow>
 
-    <twig:Code:CodeWithExplanationRow filename="src/Twig/Components/InvoiceCreatorLineItem.php" sticky class="pt-5">
+    <twig:Code:CodeWithExplanationRow filename="src/Twig/Component/InvoiceCreatorLineItem.php" sticky class="pt-5">
 ## Child Component
 
 The child component for each "line item". This handles validating, saving,

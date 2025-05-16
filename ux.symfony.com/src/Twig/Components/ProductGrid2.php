@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Twig\Components;
+namespace App\Twig\Component;
 
 use App\Service\EmojiCollection;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;

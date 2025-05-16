@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Tests\Twig\Components;
+namespace App\Tests\Twig\Component;
 
-use App\Twig\Components\ChangelogItem;
+use App\Twig\Component\ChangelogItem;
 use PHPUnit\Framework\TestCase;
 
 class ChangelogItemTest extends TestCase

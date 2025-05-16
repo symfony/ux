@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Twig\Components;
+namespace App\Twig\Component;
 
 use App\Entity\Food;
 use App\Repository\FoodRepository;

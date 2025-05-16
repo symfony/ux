@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block code_block_full %}
-    <twig:Code:CodeWithExplanationRow filename="src/Twig/Components/NewProductForm.php" sticky>
+    <twig:Code:CodeWithExplanationRow filename="src/Twig/Component/NewProductForm.php" sticky>
 ## New Product Form
 
 Live component with a form, `ValidatableComponentTrait` and a
@@ -31,7 +31,7 @@ and `data-bs-target="#new-category-modal"`.
     </twig:Code:CodeWithExplanationRow>
 
     <twig:Code:CodeWithExplanationRow
-        filename="src/Twig/Components/NewCategoryForm.php" sticky
+        filename="src/Twig/Component/NewCategoryForm.php" sticky
     >
 ## New Category Form
 
@@ -45,7 +45,7 @@ the new `Category` to the database and then does two important things:
     </twig:Code:CodeWithExplanationRow>
 
     <twig:Code:TabbedCodeBlocks :files="[
-        'src/Twig/Components/BootstrapModal.php',
+        'src/Twig/Component/BootstrapModal.php',
         'templates/components/BootstrapModal.html.twig',
         'assets/controllers/bootstrap-modal-controller.js',
     ]" />

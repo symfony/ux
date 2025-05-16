@@ -586,7 +586,7 @@ and implement the method ``instantiateMap`` to return a ``Map`` instance.
 
 You can interact with the Map by using ``LiveAction`` attribute::
 
-    namespace App\Twig\Components;
+    namespace App\Twig\Component;
 
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\Attribute\LiveAction;
