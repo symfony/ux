@@ -1,72 +1,270 @@
-.dropzone-container {
+/* Legacy styles */
+.dropzone-container:not(.dropzone-block, .dropzone-inline) {
     position: relative;
     display: flex;
     min-height: 100px;
     border: 2px dashed #bbb;
     align-items: center;
     padding: 20px 10px;
+
+    .dropzone-input {
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 1;
+    }
+
+    .dropzone-preview {
+        display: flex;
+        align-items: center;
+        max-width: 100%;
+    }
+
+    .dropzone-preview-image {
+        flex-basis: 0;
+        min-width: 50px;
+        max-width: 50px;
+        height: 50px;
+        margin-right: 10px;
+        background-size: contain;
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+    }
+
+    .dropzone-preview-filename {
+        word-wrap: anywhere;
+    }
+
+    .dropzone-preview-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 1;
+        border: none;
+        margin: 0;
+        padding: 0;
+        width: auto;
+        overflow: visible;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        line-height: normal;
+        -webkit-font-smoothing: inherit;
+        -moz-osx-font-smoothing: inherit;
+        -webkit-appearance: none;
+        appearance: inherit;
+    }
+
+    .dropzone-preview-button::before {
+        content: '×';
+        padding: 3px 7px;
+        cursor: pointer;
+    }
+
+    .dropzone-placeholder {
+        flex-grow: 1;
+        text-align: center;
+        color: #999;
+    }    
 }
 
-.dropzone-input {
-    position: absolute;
-    display: block;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
-    z-index: 1;
+/* Block/inline styles */
+.dropzone-container.dropzone-block,
+.dropzone-container.dropzone-inline
+{
+    position: relative;
+    border: 2px dashed #bbb;
+
+    &.dropzone-active {
+        outline: 5px auto Highlight;
+        outline: 5px auto -webkit-focus-ring-color;
+    }
+
+    .dropzone-placeholder {
+        display: block;
+        text-align: center;
+        align-content: center;
+        color: #999;
+        min-height: 100px;
+        cursor: pointer;
+        z-index:1;
+    }
+
+    .dropzone-placeholder:focus-within {
+        outline: 5px auto Highlight;
+        outline: 5px auto -webkit-focus-ring-color;
+    }
+
+    .dropzone-preview {
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 15px 15px 15px 20px;
+        border-top: 1px solid #eee;
+    }
+
+    .dropzone-preview:hover {
+        background-color: #f9f9f9;
+    }
+
+    .dropzone-preview>div:first-child {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+    }
+
+    .dropzone-preview-image {
+        min-width: 50px;
+        max-width: 50px;
+        height: 50px;
+        margin-right: 10px;
+        background-size: contain;
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+    }
+
+    .dropzone-preview-meta {
+        flex-grow: 1;
+    }
+
+    .dropzone-preview-filename {
+        word-wrap: anywhere;
+        font-size: small;
+        margin: 0 0 5px 0;
+        color: #101828;
+        font-weight: bold;
+    }
+
+    .dropzone-preview-file-size {
+        font-size: small;
+        margin: 0;
+        color: #6a7282;
+    }
+
+    .dropzone-preview-button {
+        border: none;
+        margin: 0;
+        padding: 5px;
+        width: auto;
+        overflow: visible;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        line-height: 0;
+        -webkit-font-smoothing: inherit;
+        -moz-osx-font-smoothing: inherit;
+        -webkit-appearance: none;
+        appearance: inherit;
+        cursor: pointer;
+        color: #99a1af;
+    }
+
+    .dropzone-preview:hover .dropzone-preview-button,
+    .dropzone-preview-button:focus {
+        color: #101828;
+    }
 }
 
-.dropzone-preview {
-    display: flex;
-    align-items: center;
-    max-width: 100%;
+.dropzone-container.dropzone-inline
+{
+    &.highlighted {
+        outline: 5px auto Highlight;
+        outline: 5px auto -webkit-focus-ring-color;
+    }
+
+    .dropzone-preview-container {
+        display:flex;
+        flex-wrap: wrap;
+        padding: 10px;
+        border-top: 1px solid #eee;
+    }
+
+    .dropzone-preview {
+        position: relative;
+        padding: 20px;
+        border: none;
+        flex-shrink: 0;        
+        flex-direction: column;
+    }
+
+    .dropzone-preview-image {
+        margin:0 0 5px 0;
+    }
+
+    .dropzone-preview-filename {
+        margin: 0 0 5px 0;
+        text-align: center;
+    }
+
+    .dropzone-preview-file-size {
+        text-align: center;
+    }
+
+    .dropzone-preview-button {
+        position: absolute;
+        top: 0;
+        right: 0;              
+    }
+
+    .dropzone-preview:not(:hover) .dropzone-preview-button:not(:focus) {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+    }
 }
 
-.dropzone-preview-image {
-    flex-basis: 0;
-    min-width: 50px;
-    max-width: 50px;
-    height: 50px;
-    margin-right: 10px;
-    background-size: contain;
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
+.dropzone-container.dropzone-block,
+.dropzone-container.dropzone-inline
+{
+    /* Visible to screen readers only */
+    .dropzone-input,
+    &.dropzone-placeholder-hidden .dropzone-placeholder {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+    }
+
+    .dropzone-preview-image-hidden,
+    &.dropzone-preview-container-hidden .dropzone-preview-container {
+        display: none;
+    }
+
 }
 
-.dropzone-preview-filename {
-    word-wrap: anywhere;
+.dropzone-container.dropzone-placeholder-hidden {
+    
+    &.dropzone-block {
+        .dropzone-preview:first-of-type {
+            border-style: none;
+        }
+    }
+
+    &.dropzone-inline {
+        .dropzone-preview-container {
+            border-style: none;
+        }
+    }
 }
 
-.dropzone-preview-button {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 1;
-    border: none;
-    margin: 0;
-    padding: 0;
-    width: auto;
-    overflow: visible;
-    background: transparent;
-    color: inherit;
-    font: inherit;
-    line-height: normal;
-    -webkit-font-smoothing: inherit;
-    -moz-osx-font-smoothing: inherit;
-    -webkit-appearance: none;
-}
-
-.dropzone-preview-button::before {
-    content: '×';
-    padding: 3px 7px;
-    cursor: pointer;
-}
-
-.dropzone-placeholder {
-    flex-grow: 1;
-    text-align: center;
-    color: #999;
+.dropzone-container.dropzone-preview-can-open-file-picker {
+    .dropzone-preview-container {
+        cursor:pointer;
+    }
 }

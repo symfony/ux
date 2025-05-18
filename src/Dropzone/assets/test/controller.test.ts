@@ -11,6 +11,7 @@ import { Application, Controller } from '@hotwired/stimulus';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import user from '@testing-library/user-event';
+import { vi } from 'vitest';
 import DropzoneController from '../src/controller';
 
 // Controller used to check the actual controller was properly booted
@@ -32,6 +33,29 @@ describe('DropzoneController', () => {
     let container: HTMLElement;
 
     beforeEach(() => {
+        // HACK: Mock `DataTransfer` class until supported by jsdom or use `createDataTransfer`
+        // util function after upgrading `@testing-library/user-event` package
+        // https://github.com/jsdom/jsdom/issues/1568
+        // https://github.com/testing-library/user-event/issues/1245
+        global.DataTransfer = vi.fn(function () {
+            this.input = document.createElement('input');
+            this.input.type = 'file';
+            this.data = [];
+
+            Object.defineProperty(this, 'files', {
+                get: () => {
+                    user.upload(this.input, this.data);
+                    return this.input.files;
+                },
+            });
+
+            this.items = () => {
+                this.add = (file: File) => {
+                    this.data.push(file);
+                };
+            };
+        });
+
         container = mountDOM(`
             <div class="dropzone-container" data-controller="check dropzone" data-testid="container"> 
                 <input type="file"
@@ -89,10 +113,12 @@ describe('DropzoneController', () => {
             dispatched = true;
         });
 
-        // Manually show preview
-        getByTestId(container, 'input').style.display = 'none';
-        getByTestId(container, 'placeholder').style.display = 'none';
-        getByTestId(container, 'preview').style.display = 'block';
+        // Select the file
+        const input = getByTestId(container, 'input');
+        const file = new File(['hello'], 'hello.png', { type: 'image/png' });
+
+        user.upload(input, file);
+        expect(input.files[0]).toStrictEqual(file);
 
         // Click the clear button
         getByTestId(container, 'button').click();
@@ -151,6 +177,6 @@ describe('DropzoneController', () => {
         // Check that the input and placeholder are hidden, and preview shown
         await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'none' }));
         await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'none' }));
-        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'block' }));
+        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'flex' }));
     });
 });
