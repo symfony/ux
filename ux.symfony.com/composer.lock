@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4c63747018e3269a9e8d6adcd246355b",
+    "content-hash": "d57fd3354e90bad61f9b84a3d11a6510",
     "packages": [
         {
             "name": "composer/semver",
@@ -10042,6 +10042,63 @@
                 }
             ],
             "time": "2025-01-29T07:06:14+00:00"
+        },
+        {
+            "name": "zenstruck/commonmark-extensions",
+            "version": "1.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zenstruck/commonmark-extensions.git",
+                "reference": "ab5aac33b2394304dd8892b83c3ef339ba443777"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zenstruck/commonmark-extensions/zipball/ab5aac33b2394304dd8892b83c3ef339ba443777",
+                "reference": "ab5aac33b2394304dd8892b83c3ef339ba443777",
+                "shasum": ""
+            },
+            "require": {
+                "league/commonmark": "^2.4",
+                "php": ">=8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.4",
+                "phpunit/phpunit": "^9.6.0",
+                "symfony/phpunit-bridge": "^6.1|^7.0",
+                "symfony/var-dumper": "^5.4|^6.0|^7.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zenstruck\\CommonMark\\Extension\\": [
+                        "src/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kevin Bond",
+                    "email": "kevinbond@gmail.com"
+                }
+            ],
+            "description": "A collection of CommonMark extensions.",
+            "homepage": "https://github.com/zenstruck/commonmark-extensions",
+            "support": {
+                "issues": "https://github.com/zenstruck/commonmark-extensions/issues",
+                "source": "https://github.com/zenstruck/commonmark-extensions/tree/1.x"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/kbond",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-04-16T19:02:21+00:00"
         }
     ],
     "packages-dev": [
@@ -12894,7 +12951,8 @@
         "symfony/ux-turbo": 20,
         "symfony/ux-twig-component": 20,
         "symfony/ux-typed": 20,
-        "symfony/ux-vue": 20
+        "symfony/ux-vue": 20,
+        "zenstruck/commonmark-extensions": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
@@ -12903,6 +12961,6 @@
         "ext-ctype": "*",
         "ext-iconv": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }

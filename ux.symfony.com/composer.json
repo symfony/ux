@@ -65,7 +65,8 @@
         "twig/intl-extra": "^3.17",
         "twig/markdown-extra": "^3.17",
         "twig/string-extra": "^3.17",
-        "twig/twig": "^3.17"
+        "twig/twig": "^3.17",
+        "zenstruck/commonmark-extensions": "1.x-dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.6.21",

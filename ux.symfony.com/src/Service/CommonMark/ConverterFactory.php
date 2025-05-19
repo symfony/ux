@@ -19,6 +19,7 @@ use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
 use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
 use League\CommonMark\Extension\Mention\MentionExtension;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
+use Zenstruck\CommonMark\Extension\GitHub\AdmonitionExtension;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -55,6 +56,7 @@ final class ConverterFactory
             ->addExtension(new ExternalLinkExtension())
             ->addExtension(new MentionExtension())
             ->addExtension(new FrontMatterExtension())
+            ->addExtension(new AdmonitionExtension())
             ->addRenderer(FencedCode::class, new CodeBlockRenderer($this->toolkitService))
         ;
 

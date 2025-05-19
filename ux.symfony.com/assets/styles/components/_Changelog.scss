@@ -19,6 +19,12 @@
   border-right: 1px solid var(--bs-secondary-bg);
 }
 
+.Changelog blockquote {
+  color: grey;
+  border-left: grey 3px solid;
+  padding-left: .75rem;
+}
+
 .ChangelogItem {
   display: grid;
   gap: 4rem;
