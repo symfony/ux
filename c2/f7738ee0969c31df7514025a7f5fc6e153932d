@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-19T11:18:45Z
+
+(remaining fabbot failures unrelated / false positives)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-19T11:20:06Z
+
+LiveComponent dev / 8.4 failures caused by TypeInfo deprecation / unrelated to this PR
+
+<img width="878" alt="Capture d’écran 2025-05-19 à 13 19 14" src="https://github.com/user-attachments/assets/db3a5171-8377-4fc7-a908-9440a88d02be" />
