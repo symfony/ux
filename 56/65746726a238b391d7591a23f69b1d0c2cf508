@@ -1,0 +1,91 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-14T06:27:20Z
+
+Okay I believe we are one something nice:
+<img width="1783" alt="image" src="https://github.com/user-attachments/assets/7f4d406a-0496-44ea-b7c0-d030a2122a4e" />
+
+Some notes:
+1. the `--prefer-lowest` has a **tons** of deprecations 😬
+2. `dev` jobs fail because of TwigComponent requiring an old version of WebpackEncoreBundle, :
+```
++ cd src/TwigComponent
++ composer config minimum-stability dev --ansi
++ composer update --no-progress --no-interaction --ansi
+Loading composer repositories with package information
+Restricting packages listed in "symfony/symfony" to "7.*"
+Updating dependencies
+Your requirements could not be resolved to an installable set of packages.
+
+  Problem 1
+    - Root composer.json requires symfony/webpack-encore-bundle ^1.15 -> satisfiable by symfony/webpack-encore-bundle[v1.15.0, ..., v1.17.2].
+    - symfony/webpack-encore-bundle[v1.15.0, ..., v1.17.2] require symfony/asset ^4.4 || ^5.0 || ^6.0 -> found symfony/asset[v4.4.0-BETA1, ..., 4.4.x-dev, v5.0.0-BETA1, ..., 5.4.x-dev, v6.0.0-BETA1, ..., 6.4.x-dev] but these were not loaded, likely because it conflicts with another require.
+
+Error: Your requirements could not be resolved to an installable set of packages.
+```
+and also because deprecations from `symfony/property-info:^7.3`:
+```
+Remaining direct deprecation notices (3079)
+
+  778x: Since symfony/property-info 7.3: The "Symfony\Component\PropertyInfo\PropertyInfoExtractor::getTypes()" method is deprecated, use "Symfony\Component\PropertyInfo\PropertyInfoExtractor::getType()" instead.
+    158x in QueryStringPropsExtractorTest::testExtract from Symfony\UX\LiveComponent\Tests\Functional\Util
+    131x in LiveComponentHydratorTest::testCanDehydrateAndHydrateComponentWithTestCases from Symfony\UX\LiveComponent\Tests\Integration
+    102x in LiveComponentHydratorTest::testCoerceFalseyValuesForScalarTypes from Symfony\UX\LiveComponent\Tests\Integration
+    30x in LiveComponentHydratorTest::testCoerceTruthyValuesForScalarTypes from Symfony\UX\LiveComponent\Tests\Integration
+    20x in ComponentWithFormTest::testHandleCheckboxChanges from Symfony\UX\LiveComponent\Tests\Functional\Form
+    ...
+
+  778x: Since symfony/property-info 7.3: The "Symfony\Component\PropertyInfo\Extractor\PhpStanExtractor::getTypes()" method is deprecated, use "Symfony\Component\PropertyInfo\Extractor\PhpStanExtractor::getType()" instead.
+    158x in QueryStringPropsExtractorTest::testExtract from Symfony\UX\LiveComponent\Tests\Functional\Util
+    131x in LiveComponentHydratorTest::testCanDehydrateAndHydrateComponentWithTestCases from Symfony\UX\LiveComponent\Tests\Integration
+    102x in LiveComponentHydratorTest::testCoerceFalseyValuesForScalarTypes from Symfony\UX\LiveComponent\Tests\Integration
+    30x in LiveComponentHydratorTest::testCoerceTruthyValuesForScalarTypes from Symfony\UX\LiveComponent\Tests\Integration
+    20x in ComponentWithFormTest::testHandleCheckboxChanges from Symfony\UX\LiveComponent\Tests\Functional\Form
+    ...
+
+  761x: Since symfony/property-info 7.3: The "Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor::getTypes()" method is deprecated, use "Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor::getType()" instead.
+    158x in QueryStringPropsExtractorTest::testExtract from Symfony\UX\LiveComponent\Tests\Functional\Util
+    114x in LiveComponentHydratorTest::testCanDehydrateAndHydrateComponentWithTestCases from Symfony\UX\LiveComponent\Tests\Integration
+    102x in LiveComponentHydratorTest::testCoerceFalseyValuesForScalarTypes from Symfony\UX\LiveComponent\Tests\Integration
+    30x in LiveComponentHydratorTest::testCoerceTruthyValuesForScalarTypes from Symfony\UX\LiveComponent\Tests\Integration
+    20x in ComponentWithFormTest::testHandleCheckboxChanges from Symfony\UX\LiveComponent\Tests\Functional\Form
+    ...
+
+  761x: Since symfony/property-info 7.3: The "Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor::getTypes()" method is deprecated, use "Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor::getType()" instead.
+    158x in QueryStringPropsExtractorTest::testExtract from Symfony\UX\LiveComponent\Tests\Functional\Util
+    114x in LiveComponentHydratorTest::testCanDehydrateAndHydrateComponentWithTestCases from Symfony\UX\LiveComponent\Tests\Integration
+    102x in LiveComponentHydratorTest::testCoerceFalseyValuesForScalarTypes from Symfony\UX\LiveComponent\Tests\Integration
+    30x in LiveComponentHydratorTest::testCoerceTruthyValuesForScalarTypes from Symfony\UX\LiveComponent\Tests\Integration
+    20x in ComponentWithFormTest::testHandleCheckboxChanges from Symfony\UX\LiveComponent\Tests\Functional\Form
+    ...
+
+  1x: Since symfony/property-info 7.3: The "Symfony\Component\PropertyInfo\Type" class is deprecated. Use "Symfony\Component\TypeInfo\Type" class from "symfony/type-info" instead.
+    1x in BatchActionControllerTest::testCanBatchActions from Symfony\UX\LiveComponent\Tests\Functional\Controller
+
+Remaining indirect deprecation notices (1059)
+```
+3. other jobs are failing due to the `Twig\Template::loadTemplate()` deprecation, that will be fixed by #2713
+
+-----
+
+BRB taking the ✈️ :D
+
+---------------------------------------------------------------------------
+
+by stof at 2025-05-20T07:31:08Z
+
+> 1. the `--prefer-lowest` has a **tons** of deprecations
+
+this job should be running with deprecations allowed (lowest deps might not have solved all deprecations)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-20T07:39:58Z
+
+Thanks for the advice, will try it asap :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-22T02:39:08Z
+
+🙇
