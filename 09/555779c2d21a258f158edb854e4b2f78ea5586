@@ -1,0 +1,34 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-03T23:00:08Z
+
+Thanks for pointing that! I 100% agree for the confusion, but... we try to make examples that do have some sense and avoid the foo bars when possible.
+
+Maybe one of these:
+* a cart controller (classic example) with add action and productId ?
+* an alert with close ?
+* a notification with link and action ?
+
+WDYT ?
+
+---------------------------------------------------------------------------
+
+by welcoMattic at 2025-05-04T13:54:41Z
+
+@smnandre I would agree for advanced or "demo" examples (ones on ux.symfony.com). But on pure text documentation, I personally prefer to have easy to understand and dead simple examples like "Hello World". It's totally personal, if you prefer more advanced and real life example, I'm ok with that.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-04T16:15:58Z
+
+In fact, with its unusual syntax for some, Stimulus isn’t always easy to grasp.
+
+The first examples here should be self-explanatory for most people, and I do believe we need to clearly emphasize what action, target, and controller mean.
+
+If I read this, with the value name, I’m pretty sure it could lead to confusion:
+
+```twig
+<div {{ stimulus_controller('hello', { 'name': 'World', 'data': [1, 2, 3, 4] }) }}>
+```
+
+That said, your original point is totally valid.  I’ll send you another suggestion later today.
