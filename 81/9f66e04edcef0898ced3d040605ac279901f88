@@ -1,0 +1,68 @@
+---------------------------------------------------------------------------
+
+by teklakct at 2024-07-24T19:39:52Z
+
+Alternatively function `importAllReactComponents` may omit every module without default export. Something like this
+
+```diff
+    const importAllReactComponents = (r: __WebpackModuleApi.RequireContext) => {
+-        r.keys().forEach((key) => (reactControllers[key] = r(key).default));
++        r.keys().forEach((key) => {
++            if (r(key).default !== undefined) {
++                reactControllers[key] = r(key).default;
++            }
++        });
+    };
+```
+
+However, with these changes, it will be more difficult to determine if a module or default export is missing.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-27T20:25:04Z
+
+Hi @teklakct ! Thanks for this
+
+Could you rebuild the JS dist files ? (that's the reason of the CI failure)
+
+From the root of the monorepo: `yarn run build`
+
+(you may need to rebase before)
+
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-03-08T23:08:36Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/teklakct/ux/tree/feature/resolve_react_error_message/src/React/assets/dist"><b>React</b></a></td></tr><tr>
+                <td><a href="https://github.com/teklakct/ux/blob/feature/resolve_react_error_message/src/React/assets/dist/register_controller.js"><code>register_controller.js</code></a></td>
+            <td>
+                    <code>827 B</code>
+                    / <code>398 B</code>
+                </td><td>
+                    <code>1.03 kB</code><sup>+28% 📈</sup>
+                    / <code>466 B</code><sup>+17% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by teklakct at 2025-03-08T23:20:25Z
+
+@smnandre sorry for the delay. I must have missed the notification earlier.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-03-09T02:02:19Z
+
+@teklakct don't be :) I also lost tracking of this PR to be honest!
+
+Seems good to me !
