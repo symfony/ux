@@ -43,11 +43,18 @@ final class BatchActionController
         // sub-requests are not rendered, so a directive returned by one of them has to be
         // carried up to the final render. The last one wins.
         $liveResponse = null;
+        $routeParams = $request->attributes->get('_route_params', []);
+        $routeAttributes = [
+            ...$routeParams,
+            '_route' => $request->attributes->get('_route'),
+            '_route_params' => $routeParams,
+        ];
 
         foreach ($actions as $action) {
             $name = $action['name'] ?? throw new BadRequestHttpException('Invalid JSON.');
 
             $subRequest = $request->duplicate(attributes: [
+                ...$routeAttributes,
                 '_controller' => [$serviceId, $name],
                 '_component_action_args' => $action['args'] ?? [],
                 '_mounted_component' => $_mounted_component,
