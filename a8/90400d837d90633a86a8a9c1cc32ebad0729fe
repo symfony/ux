@@ -1,0 +1,107 @@
+---------------------------------------------------------------------------
+
+by carsonbot at 2025-05-22T09:52:06Z
+
+It looks like you unchecked the "Allow edits from maintainer" box. That is fine, but please note that if you have multiple commits, you'll need to squash your commits into one before this can be merged. Or, you can check the "Allow edits from maintainers" box and the maintainer can squash for you.
+
+Cheers!
+
+Carsonbot
+
+---------------------------------------------------------------------------
+
+by dannyvw at 2025-05-24T08:05:00Z
+
+> Thanks for your contribution!
+>
+> Is it possible to have some preview of what it renders? Because I don't see anything on Leaflet website :/ Also, does it work with Google Maps?
+
+@Kocal It is the example under “Additionally, you can pass a multi-dimensional array to represent a MultiPolygon shape.” with the outer ring and hole.
+
+Google Maps https://developers.google.com/maps/documentation/javascript/shapes#polygon_hole
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-24T08:16:45Z
+
+I meant a visual preview, with a map screenshot :D But that's fine, the Google Maps demo and tweaking Leaflet page helped me to understand what's a multipolygon:
+![image](https://github.com/user-attachments/assets/0d0c5559-8052-4498-80f3-a315d269533e)
+
+So, to move forward, there are still modifications to do:
+1. Improve the CHANGELOG, by quickly explaining what's a MultiPolygon with a small code example
+2. Change the documentation too, to show how to create a MultiPolygon
+3. Types for methods `Polygon::__construct()`, `Polygon::toArray()` and `Polygon::fromArray()` must be updated
+4. Types for `PolygonDefinition` TypeScript type must also been updated
+
+Feel free to ask if you need help, thanks! :)
+
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-05-24T09:30:51Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/insiders/ux/tree/multipolygon/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/insiders/ux/blob/multipolygon/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>4.95 kB</code>
+                    / <code>1.15 kB</code>
+                </td><td>
+                    <code>4.97 kB</code><sup>0%</sup>
+                    / <code>1.16 kB</code><sup>+1% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by dannyvw at 2025-05-24T09:34:30Z
+
+@Kocal I pushed some changes. Is this fine or should I do something more?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-24T18:30:14Z
+
+That's much better, thanks!  :)
+
+Except the documentation/changelog things, that's great, I will try to find some time tonight to test your PR and some minor changes
+
+---------------------------------------------------------------------------
+
+by dannyvw at 2025-05-25T12:21:06Z
+
+@Kocal Let me know if I need to change something :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-26T18:03:41Z
+
+As mentioned in https://github.com/symfony/ux/pull/2762#issuecomment-2900603178, can you please check the checkbox to allow maintainers to edit your PR's code? It would makes things much easier to work on.
+
+Thanks 🙏🏻
+
+---------------------------------------------------------------------------
+
+by dannyvw at 2025-05-26T19:12:28Z
+
+@Kocal I don’t see that option. I think this is because the fork is in a organisation?
+
+I have added you to the repo.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-26T20:15:31Z
+
+Yeah you are supposed to see this:
+![image](https://github.com/user-attachments/assets/183eadb0-fefd-4d98-8679-87eed6cf7433)
+
+Maybe that's the fault of the organization thing, yes... I don't really know 😅
+
+Thanks for the invitation tho, that's better than nothing :)
