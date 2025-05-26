@@ -1,0 +1,54 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-23T16:46:39Z
+
+Interesting, because PHP-CS-Fixer changed:
+```
+namespace Symfony\UX\LiveComponent\Tests\Integration;
+
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address;
+
+// ...
+
+/**
+ * @var \Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address[]
+ */
+#[LiveProp(writable: true, useSerializerForHydration: true)]
+```
+
+for:
+```
+namespace Symfony\UX\LiveComponent\Tests\Integration;
+
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address;
+
+// ...
+
+/**
+ * @var Address[]
+ */
+#[LiveProp(writable: true, useSerializerForHydration: true)]
+```
+
+The following error now happens:
+```
+1) Symfony\UX\LiveComponent\Tests\Integration\LiveComponentHydratorTest::testCanDehydrateAndHydrateComponentWithTestCases with data set "Array with DTOs: fully writable allows anything to change" (Closure Object (...))
+Symfony\Component\Serializer\Exception\NotNormalizableValueException: Could not denormalize object of type "\Address[]", no supporting normalizer found.
+
+/home/runner/work/ux/ux/src/LiveComponent/vendor/symfony/serializer/Serializer.php:222
+/home/runner/work/ux/ux/src/LiveComponent/src/LiveComponentHydrator.php:292
+/home/runner/work/ux/ux/src/LiveComponent/src/LiveComponentHydrator.php:169
+/home/runner/work/ux/ux/src/LiveComponent/tests/Integration/LiveComponentHydratorTest.php:128
+/home/runner/work/ux/ux/src/LiveComponent/tests/Integration/LiveComponentHydratorTest.php:157
+```
+
+That's weird, I would expect `Address` from the PHPDoc to be resolved to `\Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address`. Maybe that's because of the anonymous class?
+
+**EDIT:** yes that's because of anonymous classes:
+<img width="1391" alt="image" src="https://github.com/user-attachments/assets/acacf2a9-d992-4830-bdff-1553adb4c2f9" />
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-24T17:18:21Z
+
+Thanks for the review @smnandre 🙏🏻 it should be better now!
