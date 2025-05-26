@@ -1,0 +1,24 @@
+---------------------------------------------------------------------------
+
+by kbond at 2025-05-23T11:46:41Z
+
+Turbo tests still erroring?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-23T12:18:52Z
+
+> Turbo tests still erroring?
+
+I did the fix in the wrong file 🤦🏻
+<img width="1073" alt="image" src="https://github.com/user-attachments/assets/833d00ea-df34-44cd-adc9-a1fa9981e63b" />
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-23T12:23:42Z
+
+However, sometimes we still have this flakky test:
+<img width="1529" alt="image" src="https://github.com/user-attachments/assets/9c1a1ade-270f-4822-a609-35abd364684f" />
+
+It looks like it only happens on lowest deps, I will try to increase the version constraints of panther / webdriver
+**EDIT:** didn't help :(
