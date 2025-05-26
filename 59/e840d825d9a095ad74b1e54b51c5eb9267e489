@@ -1,0 +1,28 @@
+---------------------------------------------------------------------------
+
+by carsonbot at 2025-05-25T12:30:18Z
+
+It looks like you unchecked the "Allow edits from maintainer" box. That is fine, but please note that if you have multiple commits, you'll need to squash your commits into one before this can be merged. Or, you can check the "Allow edits from maintainers" box and the maintainer can squash for you.
+
+Cheers!
+
+Carsonbot
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-26T06:33:55Z
+
+IIRC I did it on purpose, because it broke the Map CI, even if not used (the snapshot things is only used by Map Bridges tests).
+
+As you can see, the job https://github.com/symfony/ux/actions/runs/15237882111/job/42854187001?pr=2773 is now failing:
+```
+Call to undefined method PHPUnit\TextUI\TestRunner::run()
+```
+
+Can you try adding `"phpunit/phpunit": "^9.6.22"` to Map's `composer.json` ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-26T10:15:27Z
+
+Cool, it's working
