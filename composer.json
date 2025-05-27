@@ -18,6 +18,5 @@
     },
     "scripts": {
         "packages-normalize": "php .github/get-ux-packages.php | jq -r '.[] | .path' | while read -r path; do composer normalize \"$path/composer.json\" --no-check-lock; done",
-        "packages-normalize-check": "php .github/get-ux-packages.php | jq -r '.[] | .path' | while read -r path; do composer normalize \"$path/composer.json\" --no-check-lock --dry-run || echo \"\\033[41mFile $path is not normalized.\\033[0m\n\\033[41mPlease run \"composer packages-normalize\" in Symfony UX root repository.\\033[0m\n\" && exit 1; done"
     }
 }
