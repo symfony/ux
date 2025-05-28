@@ -33,7 +33,10 @@ You can use the `LeafletOptions` class to configure your `Map`::
 
 ```php
 use Symfony\UX\Map\Bridge\Leaflet\LeafletOptions;
+use Symfony\UX\Map\Bridge\Leaflet\Option\AttributionControlOptions;
+use Symfony\UX\Map\Bridge\Leaflet\Option\ControlPosition;
 use Symfony\UX\Map\Bridge\Leaflet\Option\TileLayer;
+use Symfony\UX\Map\Bridge\Leaflet\Option\ZoomControlOptions;
 use Symfony\UX\Map\Point;
 use Symfony\UX\Map\Map;
 
@@ -50,6 +53,10 @@ $leafletOptions = (new LeafletOptions())
             'maxZoom' => 10,
         ]
     ))
+    ->attributionControl(false)
+    ->attributionControlOptions(new AttributionControlOptions(ControlPosition::BOTTOM_LEFT))
+    ->zoomControl(false)
+    ->zoomControlOptions(new ZoomControlOptions(ControlPosition::TOP_LEFT))
 ;
 
 // Add the custom options to the map

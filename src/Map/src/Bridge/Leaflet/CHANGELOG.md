@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.27
+
+-  Add `attributionControl` and `attributionControlOptions` to `LeafletOptions`,
+   to configure [attribution control](https://leafletjs.com/reference.html#map-attributioncontrol) and its options
+-  Add `zoomControl` and `zoomControlOptions` to `LeafletOptions`,
+   to configure [zoom control](https://leafletjs.com/reference.html#map-zoomcontrol) and its options
+
 ## 2.26
 
 -  Using `new LeafletOptions(tileLayer: false)` will now disable the default `TileLayer`.

@@ -2,8 +2,19 @@ import AbstractMapController from '@symfony/ux-map';
 import type { Icon, InfoWindowWithoutPositionDefinition, MarkerDefinition, Point, PolygonDefinition, PolylineDefinition } from '@symfony/ux-map';
 import 'leaflet/dist/leaflet.min.css';
 import * as L from 'leaflet';
-import type { MapOptions as LeafletMapOptions, MarkerOptions, PolylineOptions as PolygonOptions, PolylineOptions, PopupOptions } from 'leaflet';
-type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom'> & {
+import type { ControlPosition, MapOptions as LeafletMapOptions, MarkerOptions, PolylineOptions as PolygonOptions, PolylineOptions, PopupOptions } from 'leaflet';
+type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom' | 'attributionControl' | 'zoomControl'> & {
+    attributionControlOptions?: {
+        position: ControlPosition;
+        prefix: string | false;
+    };
+    zoomControlOptions?: {
+        position: ControlPosition;
+        zoomInText: string;
+        zoomInTitle: string;
+        zoomOutText: string;
+        zoomOutTitle: string;
+    };
     tileLayer: {
         url: string;
         attribution: string;

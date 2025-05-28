@@ -27,6 +27,17 @@ class LeafletOptionsTest extends TestCase
                 'attribution' => '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
                 'options' => [],
             ],
+            'attributionControlOptions' => [
+                'position' => 'bottomright',
+                'prefix' => 'Leaflet',
+            ],
+            'zoomControlOptions' => [
+                'position' => 'topleft',
+                'zoomInText' => '<span aria-hidden="true">+</span>',
+                'zoomInTitle' => 'Zoom in',
+                'zoomOutText' => '<span aria-hidden="true">&#x2212;</span>',
+                'zoomOutTitle' => 'Zoom out',
+            ],
         ], $leafletOptions->toArray());
 
         self::assertEquals($leafletOptions, LeafletOptions::fromArray($leafletOptions->toArray()));
@@ -58,6 +69,17 @@ class LeafletOptionsTest extends TestCase
                     'zoomOffset' => 0,
                 ],
             ],
+            'attributionControlOptions' => [
+                'position' => 'bottomright',
+                'prefix' => 'Leaflet',
+            ],
+            'zoomControlOptions' => [
+                'position' => 'topleft',
+                'zoomInText' => '<span aria-hidden="true">+</span>',
+                'zoomInTitle' => 'Zoom in',
+                'zoomOutText' => '<span aria-hidden="true">&#x2212;</span>',
+                'zoomOutTitle' => 'Zoom out',
+            ],
         ], $leafletOptions->toArray());
 
         self::assertEquals($leafletOptions, LeafletOptions::fromArray($leafletOptions->toArray()));
@@ -69,6 +91,35 @@ class LeafletOptionsTest extends TestCase
 
         self::assertSame([
             'tileLayer' => false,
+            'attributionControlOptions' => [
+                'position' => 'bottomright',
+                'prefix' => 'Leaflet',
+            ],
+            'zoomControlOptions' => [
+                'position' => 'topleft',
+                'zoomInText' => '<span aria-hidden="true">+</span>',
+                'zoomInTitle' => 'Zoom in',
+                'zoomOutText' => '<span aria-hidden="true">&#x2212;</span>',
+                'zoomOutTitle' => 'Zoom out',
+            ],
+        ], $leafletOptions->toArray());
+
+        self::assertEquals($leafletOptions, LeafletOptions::fromArray($leafletOptions->toArray()));
+    }
+
+    public function testWithoutControls(): void
+    {
+        $leafletOptions = new LeafletOptions(
+            attributionControl: false,
+            zoomControl: false,
+        );
+
+        self::assertSame([
+            'tileLayer' => [
+                'url' => 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                'attribution' => '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                'options' => [],
+            ],
         ], $leafletOptions->toArray());
 
         self::assertEquals($leafletOptions, LeafletOptions::fromArray($leafletOptions->toArray()));
