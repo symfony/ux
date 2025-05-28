@@ -87,7 +87,7 @@ export default class extends Controller
 
     _onMarkerBeforeCreate(event) {
         // You can access the marker definition and the Leaflet object
-        // Note: `definition.rawOptions` is the raw options object that will be passed to the `L.marker` constructor. 
+        // Note: `definition.rawOptions` is the raw options object that will be passed to the `L.marker` constructor.
         const { definition, L } = event.detail;
 
         // Use a custom icon for the marker
@@ -101,12 +101,26 @@ export default class extends Controller
           shadowAnchor: [4, 62],  // the same for the shadow
           popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
         })
-  
+
         definition.rawOptions = {
           icon: redIcon,
         }
     }
 }
+```
+
+### Disable the default tile layer
+
+If you need to use a custom tiles layer rendering engine that is not compatible with the `L.tileLayer().addTo(map)` method
+(e.g. e.g.: [Esri/esri-leaflet-vector](https://github.com/Esri/esri-leaflet-vector)), you can disable the default tile layer by passing `tileLayer: false` to the `LeafletOptions`:
+
+```php
+use Symfony\UX\Map\Bridge\Leaflet\LeafletOptions;
+
+$leafletOptions = new LeafletOptions(tileLayer: false);
+// or
+$leafletOptions = (new LeafletOptions())
+    ->tileLayer(false);
 ```
 
 ## Known issues
@@ -124,10 +138,10 @@ webpack compiled with 1 error
  ELIFECYCLE  Command failed with exit code 1.
 ```
 
-That's because the Leaflet's Stimulus controller references the `leaflet/dist/leaflet.min.css` file, 
+That's because the Leaflet's Stimulus controller references the `leaflet/dist/leaflet.min.css` file,
 which exists on [jsDelivr](https://www.jsdelivr.com/package/npm/leaflet) (used by the Symfony AssetMapper component),
 but does not in the [`leaflet` npm package](https://www.npmjs.com/package/leaflet).
-The correct path is `leaflet/dist/leaflet.css`, but it is not possible to fix it because it would break compatibility 
+The correct path is `leaflet/dist/leaflet.css`, but it is not possible to fix it because it would break compatibility
 with the Symfony AssetMapper component.
 
 As a workaround, you can configure Webpack Encore to add an alias for the `leaflet/dist/leaflet.min.css` file:

@@ -8,7 +8,7 @@ type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom'> & {
         url: string;
         attribution: string;
         options: Record<string, unknown>;
-    };
+    } | false;
 };
 export default class extends AbstractMapController<MapOptions, L.Map, MarkerOptions, L.Marker, PopupOptions, L.Popup, PolygonOptions, L.Polygon, PolylineOptions, L.Polyline> {
     map: L.Map;

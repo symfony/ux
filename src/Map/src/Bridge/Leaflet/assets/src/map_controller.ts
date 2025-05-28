@@ -19,7 +19,7 @@ import type {
 } from 'leaflet';
 
 type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom'> & {
-    tileLayer: { url: string; attribution: string; options: Record<string, unknown> };
+    tileLayer: { url: string; attribution: string; options: Record<string, unknown> } | false;
 };
 
 export default class extends AbstractMapController<
@@ -81,10 +81,12 @@ export default class extends AbstractMapController<
             zoom: zoom === null ? undefined : zoom,
         });
 
-        L.tileLayer(options.tileLayer.url, {
-            attribution: options.tileLayer.attribution,
-            ...options.tileLayer.options,
-        }).addTo(map);
+        if (options.tileLayer) {
+            L.tileLayer(options.tileLayer.url, {
+                attribution: options.tileLayer.attribution,
+                ...options.tileLayer.options,
+            }).addTo(map);
+        }
 
         return map;
     }
