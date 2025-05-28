@@ -1,0 +1,44 @@
+name: Validate Packages
+
+on:
+    push:
+        paths:
+            - 'src/**/composer.json'
+    pull_request:
+        paths:
+            - 'src/**/composer.json'
+            - 'src/**/package.json'
+
+jobs:
+    validate-packages:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.1'
+
+            - name: Install PHP root dependencies
+              run: composer install
+
+            - run: npm i -g corepack && corepack enable
+
+            - uses: actions/setup-node@v4
+              with:
+                  cache: 'yarn'
+
+            - name: Install Node.js root dependencies
+              run: yarn install --immutable
+
+            - name: Verify packages
+              run: |
+                  php .github/get-ux-packages.php | jq -r '.[] | .path' | while read -r pkg_path; do
+                    composer normalize "$pkg_path/composer.json" --no-check-lock --dry-run || echo "\033[41mFile $pkg_path is not normalized.\033[0m\033[41mPlease run "composer packages-normalize" in Symfony UX root repository.\033[0m" && exit 1;
+                    node <<EOF
+                        const normalizeData = require('normalize-package-data')
+                        const packageData = require("$pkg_path/package.json")
+                        normalizeData(packageData, true)
+                        EOF
+                done
