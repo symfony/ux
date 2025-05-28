@@ -145,10 +145,12 @@ class map_controller extends default_1 {
             center: center === null ? undefined : center,
             zoom: zoom === null ? undefined : zoom,
         });
-        L.tileLayer(options.tileLayer.url, {
-            attribution: options.tileLayer.attribution,
-            ...options.tileLayer.options,
-        }).addTo(map);
+        if (options.tileLayer) {
+            L.tileLayer(options.tileLayer.url, {
+                attribution: options.tileLayer.attribution,
+                ...options.tileLayer.options,
+            }).addTo(map);
+        }
         return map;
     }
     doCreateMarker({ definition }) {

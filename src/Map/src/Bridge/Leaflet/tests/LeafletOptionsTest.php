@@ -62,4 +62,15 @@ class LeafletOptionsTest extends TestCase
 
         self::assertEquals($leafletOptions, LeafletOptions::fromArray($leafletOptions->toArray()));
     }
+
+    public function testWithTileLayerFalse(): void
+    {
+        $leafletOptions = new LeafletOptions(tileLayer: false);
+
+        self::assertSame([
+            'tileLayer' => false,
+        ], $leafletOptions->toArray());
+
+        self::assertEquals($leafletOptions, LeafletOptions::fromArray($leafletOptions->toArray()));
+    }
 }
