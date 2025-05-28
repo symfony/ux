@@ -456,7 +456,12 @@ of the following attributes: ``aria-label``, ``aria-labelledby`` or ``title``.
 Performance
 -----------
 
-The UX Icons component is designed to be fast. The following are some of
+When including the same icon multiple times on one page, the same string (SVG content)
+is inserted repeatedly in the HTML source. However, since most icons are small (just a few
+hundred bytes), this overhead is negligible in most cases (especiall wthen proper
+transfer encoding like e.g. gzip is enabled).
+
+On the server side, the UX Icons component is designed to be fast. The following are some of
 the optimizations made to ensure the best performance possible.
 
 Caching
