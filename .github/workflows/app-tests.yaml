@@ -45,19 +45,15 @@ jobs:
         - uses: shivammathur/setup-php@v2
 
         - name: Install root dependencies
-          uses: ramsey/composer-install@v3
-          with:
-            working-directory: ${{ github.workspace }}
+          run: composer install
 
         - name: Build root packages
           run: php .github/build-packages.php
-          working-directory: ${{ github.workspace }}
 
         # We always install PHP deps because we of the UX Translator, which requires `var/translations` to exists
-        - uses: ramsey/composer-install@v3
-          with:
-            dependency-versions: 'highest'
-            working-directory: test_apps/encore-app
+        - name: Install App dependenies
+          run: composer update
+          working-directory: test_apps/encore-app
 
         - if: matrix.ux-packages-source == 'php-vendor'
           name: Refresh dependencies from vendor/
