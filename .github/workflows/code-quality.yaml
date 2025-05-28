@@ -81,3 +81,15 @@ jobs:
                   source .github/workflows/.utils.sh
 
                   echo "$PACKAGES" | xargs -n1 | parallel -j +3 "_run_task {} '(cd src/{} && $COMPOSER_MIN_STAB && $COMPOSER_UP && $PHPUNIT_INSTALL && $PHPSTAN)'"
+
+    normalize-package-php:
+        name: Normalize PHP Packages
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.1'
+            - run: composer install --no-progress --no-interaction --ansi
+            - run: composer packages-normalize-check
