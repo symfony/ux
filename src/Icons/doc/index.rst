@@ -59,29 +59,37 @@ refers to the icons located in the ``header`` directory.
 Loading Icons
 -------------
 
+To include an icon in your template, two syntaxes are available.
+
+.. tip::
+
+    To use the HTML syntax, you need the ``symfony/ux-twig-component`` package:
+
+    .. code-block:: terminal
+
+        $ composer require symfony/ux-twig-component
+
+
 .. code-block:: twig
 
-    {# includes the contents of the 'assets/icons/user-profile.svg' file in the template #}
+    {# Includes the contents of 'assets/icons/user-profile.svg' in the template: #}
     {{ ux_icon('user-profile') }}
+    {# Same in alternative HTML syntax: #}
+    <twig:ux:icon name="user-profile" />
 
-    {# icons stored in subdirectories must use the 'subdirectory_name:file_name' syntax
-       (e.g. this includes 'assets/icons/admin/user-profile.svg') #}
+    {# Includes 'assets/icons/admin/user-profile.svg': #}
     {{ ux_icon('admin:user-profile') }}
+    <twig:ux:icon name="admin:user-profile" />
 
-    {# this downloads the 'user-solid.svg' icon from the 'Flowbite' icon set via ux.symfony.com
-       and embeds the downloaded SVG contents in the template #}
+    {# Adding a CSS class or other attribute to the `<svg>` element: #}
+    {{ ux_icon('user-profile', {class: 'w-4', 'aria-hidden': 'true' }) }}
+    <twig:ux:icon name="user-profile" class="w-4" aria-hidden="true" />
+
+    {# Download the 'user-solid.svg' icon from the 'Flowbite' icon set via ux.symfony.com: #}
     {{ ux_icon('flowbite:user-solid') }}
+    <twig:ux:icon name="flowbite:user-solid" />
 
-The ``ux_icon()`` function defines a second optional argument where you can
-define the HTML attributes added to the ``<svg>`` element:
-
-.. code-block:: html+twig
-
-    {{ ux_icon('user-profile', {class: 'w-4 h-4'}) }}
-    {# renders <svg class="w-4 h-4"> ... </svg> #}
-
-    {{ ux_icon('user-profile', {height: '16px', width: '16px', 'aria-hidden': true}) }}
-    {# renders <svg height="16" width="16" aria-hidden="true"> ... </svg> #}
+You can set default attributes for all icons in your `Configuration`_.
 
 
 Icon Sets
@@ -169,34 +177,6 @@ icons in the "Tabler Icons" set, use the following command:
 
      Page 1/3. Continue? (yes/no) [yes]:
      >
-
-HTML Syntax
-~~~~~~~~~~~
-
-In addition to the ``ux_icon()`` function explained in the previous sections,
-this package also supports an alternative HTML syntax based on the ``<twig:ux:icon>``
-tag:
-
-.. code-block:: html
-
-    <!-- renders "user-profile.svg" -->
-    <twig:ux:icon name="user-profile" class="w-4 h-4" />
-    <!-- renders "admin/user-profile.svg" -->
-    <twig:ux:icon name="admin:user-profile" class="w-4 h-4" />
-    <!-- renders 'user-solid.svg' icon from 'Flowbite' icon set via ux.symfony.com -->
-    <twig:ux:icon name="flowbite:user-solid" />
-
-    <!-- you can also add any HTML attributes -->
-    <twig:ux:icon name="user-profile" height="16" width="16" aria-hidden="true" />
-
-.. tip::
-
-    To use the HTML syntax, the ``symfony/ux-twig-component`` package must be
-    installed in your project:
-
-    .. code-block:: terminal
-
-        $ composer require symfony/ux-twig-component
 
 Downloading Icons
 -----------------
@@ -317,45 +297,6 @@ Rendering Icons
     {# this downloads the 'user-solid.svg' icon from the 'Flowbite' icon set via ux.symfony.com
        and embeds the downloaded SVG contents in the template #}
     {{ ux_icon('flowbite:user-solid') }}
-
-HTML Syntax
-~~~~~~~~~~~
-
-.. code-block:: html+twig
-
-    <twig:ux:icon name="user-profile" />
-
-    {# Renders "user-profile.svg" #}
-    <twig:ux:icon name="user-profile" class="w-4 h-4" />
-
-    {# Renders "sub-dir/user-profile.svg" (sub-directory) #}
-    <twig:ux:icon name="sub-dir:user-profile" class="w-4 h-4" />
-
-    {# Renders "flowbite:user-solid" from ux.symfony.com #}
-    <twig:ux:icon name="flowbite:user-solid" />
-
-Default Attributes
-~~~~~~~~~~~~~~~~~~
-
-You can set default attributes for all icons in your configuration. These attributes will be
-added to all icons unless overridden by the second argument of the ``ux_icon`` function.
-
-.. code-block:: yaml
-
-    # config/packages/ux_icons.yaml
-    ux_icons:
-        default_icon_attributes:
-            fill: currentColor
-
-Now, all icons will have the ``fill`` attribute set to ``currentColor`` by default.
-
-.. code-block:: twig
-
-    # renders "user-profile.svg" with fill="currentColor"
-    {{ ux_icon('user-profile') }}
-
-    # renders "user-profile.svg" with fill="red"
-    {{ ux_icon('user-profile', {fill: 'red'}) }}
 
 Icon Aliases
 ~~~~~~~~~~~~
