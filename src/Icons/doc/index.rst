@@ -3,9 +3,9 @@ Symfony UX Icons
 
 The ``symfony/ux-icons`` package offers simple and intuitive ways to render
 SVG icons in your Symfony application. It provides a Twig function to include
-any local or remote icons from your templates.
+both local and remote icons in your templates.
 
-UX Icons gives you a direct access to over 200,000 vector icons from popular
+UX Icons gives you direct access to over 200,000 vector icons from popular
 icon sets such as FontAwesome, Bootstrap Icons, Tabler Icons, Google Material
 Design Icons, etc.
 
@@ -16,14 +16,8 @@ Installation
 
     $ composer require symfony/ux-icons
 
-HTTP Client for On-Demand Icons
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-If you plan to use provided icon sets, make sure that you have the HTTP client installed:
-
-.. code-block:: terminal
-
-    $ composer require symfony/http-client
+    # To use provided on-demand icon sets, you also need HTTP client:
+    $ composer require symfony/http-client    
 
 SVG Icons
 ---------
@@ -39,7 +33,7 @@ your own.
 Icon Names
 ~~~~~~~~~~
 
-Icons are referenced using an unique identifier that follows one of the following syntaxes:
+Icons are referenced using a unique identifier using one of the following syntaxes:
 
 * ``prefix:name``  (e.g. ``mdi:check``, ``bi:check``, ``editor:align-left``)
 * ``name`` only (e.g. ``check``, ``close``, ``menu``)
@@ -50,7 +44,7 @@ The icon ``name`` is the same as the file name without the file extension (e.g. 
 
     The name must match a standard ``slug`` format: ``[a-z0-9-]+(-[a-z0-9])+``.
 
-Depending on your configuration, the ``prefix`` can be the name of an icon set, a directory
+Depending on your `configuration`_, the ``prefix`` can be the name of an icon set, a directory
 where the icon is located, or a combination of both.
 
 For example, the ``bi`` prefix refers to the Bootstrap Icons set, while the ``header`` prefix
@@ -547,7 +541,7 @@ returning the HTML output.
 Configuration
 -------------
 
-The UX Icons integrates seamlessly in Symfony applications. All these options are configured under
+The UX Icons component integrates seamlessly in Symfony applications. All these options are configured under
 the ``ux_icons`` key in your application configuration.
 
 .. code-block:: yaml
