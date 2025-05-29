@@ -70,7 +70,7 @@ To include an icon in your template, two syntaxes are available.
         $ composer require symfony/ux-twig-component
 
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# Includes the contents of 'assets/icons/user-profile.svg' in the template: #}
     {{ ux_icon('user-profile') }}
