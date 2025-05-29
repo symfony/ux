@@ -48,7 +48,7 @@ The icon ``name`` is the same as the file name without the file extension (e.g. 
 
 .. caution::
 
-    The name must match a standard ``slug`` format: ``[a-z0-9-]+(-[0-9a-z])+``.
+    The name must match a standard ``slug`` format: ``[a-z0-9-]+(-[a-z0-9])+``.
 
 Depending on your configuration, the ``prefix`` can be the name of an icon set, a directory
 where the icon is located, or a combination of both.
@@ -237,7 +237,7 @@ site *on-demand*:
    fetched (and cached).
 
 That's all. This works by using the `Iconify`_ API (to which `ux.symfony.com/icons`_
-is a frontend for) to fetch the icon and render it in place. This icon is then cached
+is a frontend) to fetch the icon and render it in place. This icon is then cached
 for future requests for the same icon.
 
 .. note::
@@ -291,7 +291,7 @@ the report to overwrite existing icons by using the ``--force`` option:
     The process to find icons to lock in your Twig templates is imperfect. It
     looks for any string that matches the pattern ``something:something`` so
     it's probable there will be false positives. This command should not be used
-    to audit the icons in your templates in an automated way. Add ``-v`` see
+    to audit the icons in your templates in an automated way. Add ``-v`` to see
     *potential* invalid icons:
 
     .. code-block:: terminal
