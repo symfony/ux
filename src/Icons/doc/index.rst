@@ -175,7 +175,7 @@ HTML Syntax
 
 In addition to the ``ux_icon()`` function explained in the previous sections,
 this package also supports an alternative HTML syntax based on the ``<twig:ux:icon>``
-tag if the ``symfony/ux-twig-component`` package is installed:
+tag:
 
 .. code-block:: html
 
@@ -192,7 +192,11 @@ tag if the ``symfony/ux-twig-component`` package is installed:
 .. tip::
 
     To use the HTML syntax, the ``symfony/ux-twig-component`` package must be
-    installed in your project.
+    installed in your project:
+
+    .. code-block:: terminal
+
+        $ composer require symfony/ux-twig-component
 
 Downloading Icons
 -----------------
@@ -329,10 +333,6 @@ HTML Syntax
 
     {# Renders "flowbite:user-solid" from ux.symfony.com #}
     <twig:ux:icon name="flowbite:user-solid" />
-
-.. note::
-
-    ``symfony/ux-twig-component`` is required to use the HTML syntax.
 
 Default Attributes
 ~~~~~~~~~~~~~~~~~~
