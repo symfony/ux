@@ -550,23 +550,6 @@ Configuration
 The UX Icons integrates seamlessly in Symfony applications. All these options are configured under
 the ``ux_icons`` key in your application configuration.
 
-.. code-block:: yaml
-
-    # config/packages/ux_icons.yaml
-    ux_icons:
-        {# ... #}
-
-Debugging Configuration
-~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: terminal
-
-    # Displays the default config values
-    $ php bin/console config:dump-reference ux_icons
-
-    # Displays the actual config values used by your application
-    $ php bin/console debug:config ux_icons
-
 Full Configuration
 ~~~~~~~~~~~~~~~~~~
 
@@ -599,6 +582,17 @@ Full Configuration
 
         # Whether to ignore errors when an icon is not found
         ignore_not_found: false
+
+Debugging Configuration
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: terminal
+
+    # Displays the default config values
+    $ php bin/console config:dump-reference ux_icons
+
+    # Displays the actual config values used by your application
+    $ php bin/console debug:config ux_icons
 
 Learn more
 ----------
