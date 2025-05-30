@@ -31,6 +31,15 @@ final class StimulusControllerDependency implements DependencyInterface
         Assert::stimulusControllerName($this->name);
     }
 
+    public function isEquivalentTo(DependencyInterface $dependency): bool
+    {
+        if (!$dependency instanceof self) {
+            return false;
+        }
+
+        return $this->name === $dependency->name;
+    }
+
     public function __toString(): string
     {
         return $this->name;

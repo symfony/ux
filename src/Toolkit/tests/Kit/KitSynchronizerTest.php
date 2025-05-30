@@ -42,11 +42,12 @@ final class KitSynchronizerTest extends KernelTestCase
 
         $this->assertEquals([
             new PhpPackageDependency('twig/extra-bundle'),
-            new PhpPackageDependency('twig/html-extra', new Version('3.12.0')),
+            new PhpPackageDependency('twig/html-extra', new Version('^3.12.0')),
             new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra'),
         ], $kit->getComponent('Button')->getDependencies());
 
         $this->assertEquals([
+            new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra'),
             new ComponentDependency('Table:Body'),
             new ComponentDependency('Table:Caption'),
             new ComponentDependency('Table:Cell'),
@@ -54,7 +55,6 @@ final class KitSynchronizerTest extends KernelTestCase
             new ComponentDependency('Table:Head'),
             new ComponentDependency('Table:Header'),
             new ComponentDependency('Table:Row'),
-            new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra'),
         ], $kit->getComponent('Table')->getDependencies());
     }
 

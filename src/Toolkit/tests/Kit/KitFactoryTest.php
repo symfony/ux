@@ -56,6 +56,7 @@ final class KitFactoryTest extends KernelTestCase
         $this->assertNotNull($table);
         $this->assertNotEmpty($table->files);
         $this->assertEquals([
+            new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra'),
             new ComponentDependency('Table:Body'),
             new ComponentDependency('Table:Caption'),
             new ComponentDependency('Table:Cell'),
@@ -63,7 +64,6 @@ final class KitFactoryTest extends KernelTestCase
             new ComponentDependency('Table:Head'),
             new ComponentDependency('Table:Header'),
             new ComponentDependency('Table:Row'),
-            new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra'),
         ], $table->getDependencies());
         $this->assertNotNull($table->doc);
         $this->assertStringContainsString(<<<'EOF'

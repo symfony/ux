@@ -19,7 +19,7 @@ use Symfony\UX\Toolkit\Asset\StimulusController;
 use Symfony\UX\Toolkit\Dependency\ComponentDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\Dependency\StimulusControllerDependency;
-use Symfony\UX\Toolkit\Dependency\Version;
+use Symfony\UX\Toolkit\File\ComponentMeta;
 use Symfony\UX\Toolkit\File\Doc;
 use Symfony\UX\Toolkit\File\File;
 use Symfony\UX\Toolkit\File\FileType;
@@ -40,6 +40,11 @@ final class KitSynchronizer
      * @see https://regex101.com/r/inIBID/1
      */
     private const RE_STIMULUS_CONTROLLER_REFERENCES = '/data-controller=(["\'])(?P<controllersName>.+?)\1/';
+
+    private const UX_COMPONENTS_PACKAGES = [
+        'ux:icon' => 'symfony/ux-icons',
+        'ux:map' => 'symfony/ux-map',
+    ];
 
     public function __construct(
         private readonly Filesystem $filesystem,
@@ -68,6 +73,17 @@ final class KitSynchronizer
             $relativePathNameToKit = $file->getRelativePathname();
             $relativePathName = str_replace($componentsPath.\DIRECTORY_SEPARATOR, '', $relativePathNameToKit);
             $componentName = $this->extractComponentName($relativePathName);
+
+            $meta = null;
+            if ($this->filesystem->exists($metaJsonFile = Path::join($file->getPath(), str_replace('.html.twig', '.meta.json', $file->getBasename())))) {
+                $metaJson = file_get_contents($metaJsonFile) ?: throw new \RuntimeException(sprintf('Unable to get contents from file "%s".', $metaJsonFile));
+                try {
+                    $meta = ComponentMeta::fromJson($metaJson);
+                } catch (\Throwable $e) {
+                    throw new \RuntimeException(sprintf('Unable to parse component "%s" meta from JSON file "%s".', $componentName, $metaJsonFile), previous: $e);
+                }
+            }
+
             $component = new Component(
                 name: $componentName,
                 files: [new File(
@@ -75,6 +91,7 @@ final class KitSynchronizer
                     relativePathNameToKit: $relativePathNameToKit,
                     relativePathName: $relativePathName,
                 )],
+                meta: $meta,
             );
 
             $kit->addComponent($component);
@@ -108,26 +125,17 @@ final class KitSynchronizer
             $fileContent = file_get_contents($filePath);
 
             if (FileType::Twig === $file->type) {
-                if (str_contains($fileContent, 'html_cva')) {
-                    $component->addDependency(new PhpPackageDependency('twig/extra-bundle'));
-                    $component->addDependency(new PhpPackageDependency('twig/html-extra', new Version('3.12.0')));
-                }
-
-                if (str_contains($fileContent, 'tailwind_merge')) {
-                    $component->addDependency(new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra'));
-                }
-
                 if (str_contains($fileContent, '<twig:') && preg_match_all(self::RE_TWIG_COMPONENT_REFERENCES, $fileContent, $matches)) {
                     foreach ($matches[1] as $componentReferenceName) {
                         if ($componentReferenceName === $component->name) {
                             continue;
                         }
 
-                        if ('ux:icon' === strtolower($componentReferenceName)) {
-                            $component->addDependency(new PhpPackageDependency('symfony/ux-icons'));
-                        } elseif ('ux:map' === strtolower($componentReferenceName)) {
-                            $component->addDependency(new PhpPackageDependency('symfony/ux-map'));
-                        } elseif (null === $componentReference = $kit->getComponent($componentReferenceName)) {
+                        if (null !== $package = self::UX_COMPONENTS_PACKAGES[strtolower($componentReferenceName)] ?? null) {
+                            if (!$component->hasDependency(new PhpPackageDependency($package))) {
+                                throw new \RuntimeException(\sprintf('Component "%s" uses "%s" UX Twig component, but the composer package "%s" is not listed as a dependency in meta file.', $component->name, $componentReferenceName, $package));
+                            }
+                        } else if (null === $componentReference = $kit->getComponent($componentReferenceName)) {
                             throw new \RuntimeException(\sprintf('Component "%s" not found in component "%s" (file "%s")', $componentReferenceName, $component->name, $file->relativePathNameToKit));
                         } else {
                             $component->addDependency(new ComponentDependency($componentReference->name));
