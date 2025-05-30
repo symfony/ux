@@ -1,0 +1,105 @@
+---------------------------------------------------------------------------
+
+by mtarld at 2025-02-26T17:28:20Z
+
+Actually, didn't notice that PHP 8.1 is still supported by Symfony UX.
+Unfortunately, it'll prevent `symfony/type-info` to be installed in that version.
+
+---------------------------------------------------------------------------
+
+by mtarld at 2025-02-26T18:25:36Z
+
+Anyway, I think we must wait for the bump of PHP in `composer.json` (ie: `symfony/ux-live-component:^3.0`).
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-02-26T18:26:04Z
+
+Added milestone [3.x](https://github.com/symfony/ux/milestone/1)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-27T08:13:17Z
+
+@mtarld Sorry to bring this up again, but are we sure it's not possible at all to ship this PR for 2.x?
+Like, if we remove the `symfony/type-info` from require-dev, and tweak the CI to install it when PHP >=8.2?
+
+---------------------------------------------------------------------------
+
+by mtarld at 2025-05-27T08:28:29Z
+
+The UX LiveComponent is requiring a too low PHP version (lower than TypeInfo), which means that a `composer install` in low deps will fail. Therefore we can't have `symfony/type-info` in the `composer.json` file.
+
+As discussed with @Kocal , the solution for 2.x will be:
+- Telling in the documentation to run `composer require symfony/type-info` in order to kill the deprecation (if they're using a lower version than 7.3, it won't be any deprecation).
+- Do the same in the CI.
+- Make sure that the code work for either PropertyInfo and TypeInfo.
+
+Then for 3.x:
+- Remove the BC layer for PropertyInfo's Type
+- Bump the minimum PHP version
+- Require `symfony/type-info` in `composer.json`
+
+I'll update the PR in that way ASAP :slightly_smiling_face:
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-28T00:53:11Z
+
+> Do the same in the CI.
+
+I'd like to keep the CI testing the actual behaviour users would have with 8.1 🤷
+
+@mtarld poke me if you want some hand there :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-28T06:29:31Z
+
+> I'd like to keep the CI testing the actual behaviour users would have with 8.1 🤷
+
+It won't change for 8.1, since symfony/type-info is not installable, but it will change for higher jobs
+
+---------------------------------------------------------------------------
+
+by mtarld at 2025-05-28T09:55:17Z
+
+Status: Needs Work
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-29T10:08:29Z
+
+I rebased the PR but didn't squash my commits (if it can ease reviews), CI is full green (we can ignore fabbot).
+
+After reviews, we can merge this PR for UX **2.x** instead of **3.x**, since the initial PR changed from "only use TypeInfo" to "use TypeInfo when possible" 🎉
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-30T01:02:39Z
+
+Wow so nice!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-30T06:23:57Z
+
+I've just pushed a new commit for documentation, about upgrading `symfony/property-info:^7.1` to get rid of deprecations
+
+EDIT: reverted, in fact it does not makes sense (the deprecation will be removed simply by upgrading the LiveComponent package).
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-30T08:09:06Z
+
+After discussing with @mtarld, we've just increased `symfony/type-info` conflict to `<7.2`:
+- the previous conflict was wrong
+- a lot of breaking changes happened in TypeInfo 7.2 (since 7.1 was experimental)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-30T18:32:36Z
+
+🙇
+
+Not enough time to make a deep review, but a huge thanks to you guys. 👏
