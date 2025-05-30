@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by ThomasLandauer at 2025-05-29T22:37:55Z
+
+Sorry, but I'm starting to lose the overview here. I now brought back the "component"in this sentence:
+> The ``<twig:ux:icon>`` component does not support embedded content.
+
+=> But in fact this entire paragraph needs to be removed, as per what you're saying at https://github.com/symfony/ux/issues/2796#issuecomment-2920631290
+But I can't do that right now - need to see how the page looks like after all my changes... ;-)
+
+And reduce the text to:
+
+> Due to internal optimizations, there is no real speed difference between the Twig and the HTML syntax.
