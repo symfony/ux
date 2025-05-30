@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by ThomasLandauer at 2025-05-29T16:32:33Z
+
+Question: What's the purpose of the "Icon Set" table at https://symfony.com/bundles/ux-icons/current/index.html#icon-sets ?
+The message that there are **many** icons available is already included at the very top (second paragraph):
+> UX Icons gives you a direct access to over **200,000** vector icons from popular icon sets such as **FontAwesome, Bootstrap Icons, Tabler Icons, Google Material Design Icons,** etc.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-29T21:02:25Z
+
+"many icons available" is not the same information than "what is the prefix for the most commonly used icon set"
+
+:)
+
+---------------------------------------------------------------------------
+
+by ThomasLandauer at 2025-05-29T22:54:48Z
+
+OK, so the purpose of the table is to show some prefixes?
+What I find confusing is that from the 200,000 icons, you're listing only a small fraction (~34,000) in the table. This creates the impression that the table is incomplete. On the other hand, having a *complete* table is certainly a maintenance nightmare.
+So where do people get the prefixes for the other sets?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-30T01:10:41Z
+
+> So where do people get the prefixes for the other sets?
+
+<img width="870" alt="image" src="https://github.com/user-attachments/assets/800152d3-7fbe-4a41-84a7-15689556527a" />
