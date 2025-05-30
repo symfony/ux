@@ -71,7 +71,12 @@ jobs:
               run: |
                 source .github/workflows/.utils.sh
 
-                echo "$PACKAGES" | xargs -n1 | parallel -j +3 "_run_task {} '(cd src/{} && $COMPOSER_MIN_STAB && $COMPOSER_UP && $PHPUNIT)'"
+                echo "$PACKAGES" | xargs -n1 | parallel -j +3 "_run_task {} \
+                  '(cd src/{} \
+                  && $COMPOSER_MIN_STAB \
+                  && $COMPOSER_UP \
+                  && if [ {} = LiveComponent ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
+                  && $PHPUNIT)'"
 
     js:
         runs-on: ubuntu-latest

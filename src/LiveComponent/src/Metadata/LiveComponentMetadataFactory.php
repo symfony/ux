@@ -12,7 +12,10 @@
 namespace Symfony\UX\LiveComponent\Metadata;
 
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\PropertyInfo\Type as LegacyType;
+use Symfony\Component\TypeInfo\Type\IntersectionType;
+use Symfony\Component\TypeInfo\Type\NullableType;
+use Symfony\Component\TypeInfo\Type\UnionType;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\TwigComponent\ComponentFactory;
@@ -48,7 +51,7 @@ class LiveComponentMetadataFactory implements ResetInterface
     }
 
     /**
-     * @return LivePropMetadata[]
+     * @return list<LivePropMetadata|LegacyLivePropMetadata>
      *
      * @internal
      */
@@ -72,43 +75,54 @@ class LiveComponentMetadataFactory implements ResetInterface
         return array_values($metadatas);
     }
 
-    public function createLivePropMetadata(string $className, string $propertyName, \ReflectionProperty $property, LiveProp $liveProp): LivePropMetadata
+    public function createLivePropMetadata(string $className, string $propertyName, \ReflectionProperty $property, LiveProp $liveProp): LivePropMetadata|LegacyLivePropMetadata
     {
-        $type = $property->getType();
-        if ($type instanceof \ReflectionUnionType || $type instanceof \ReflectionIntersectionType) {
-            throw new \LogicException(\sprintf('Union or intersection types are not supported for LiveProps. You may want to change the type of property %s in %s.', $property->getName(), $property->getDeclaringClass()->getName()));
-        }
+        // BC layer when "symfony/type-info" is not available
+        if (!method_exists($this->propertyTypeExtractor, 'getType')) {
+            $type = $property->getType();
+            if ($type instanceof \ReflectionUnionType || $type instanceof \ReflectionIntersectionType) {
+                throw new \LogicException(\sprintf('Union or intersection types are not supported for LiveProps. You may want to change the type of property %s in %s.', $property->getName(), $property->getDeclaringClass()->getName()));
+            }
 
-        $infoTypes = $this->propertyTypeExtractor->getTypes($className, $propertyName) ?? [];
+            $infoTypes = $this->propertyTypeExtractor->getTypes($className, $propertyName) ?? [];
 
-        $collectionValueType = null;
-        foreach ($infoTypes as $infoType) {
-            if ($infoType->isCollection()) {
-                foreach ($infoType->getCollectionValueTypes() as $valueType) {
-                    $collectionValueType = $valueType;
-                    break;
+            $collectionValueType = null;
+            foreach ($infoTypes as $infoType) {
+                if ($infoType->isCollection()) {
+                    foreach ($infoType->getCollectionValueTypes() as $valueType) {
+                        $collectionValueType = $valueType;
+                        break;
+                    }
                 }
             }
-        }
 
-        if (null === $type && null === $collectionValueType && isset($infoTypes[0])) {
-            $infoType = Type::BUILTIN_TYPE_OBJECT === $infoTypes[0]->getBuiltinType() ? $infoTypes[0]->getClassName() : $infoTypes[0]->getBuiltinType();
-            $isTypeBuiltIn = null === $infoTypes[0]->getClassName();
-            $isTypeNullable = $infoTypes[0]->isNullable();
+            if (null === $type && null === $collectionValueType && isset($infoTypes[0])) {
+                $infoType = LegacyType::BUILTIN_TYPE_OBJECT === $infoTypes[0]->getBuiltinType() ? $infoTypes[0]->getClassName() : $infoTypes[0]->getBuiltinType();
+                $isTypeBuiltIn = null === $infoTypes[0]->getClassName();
+                $isTypeNullable = $infoTypes[0]->isNullable();
+            } else {
+                $infoType = $type?->getName();
+                $isTypeBuiltIn = $type?->isBuiltin() ?? false;
+                $isTypeNullable = $type?->allowsNull() ?? true;
+            }
+
+            return new LegacyLivePropMetadata(
+                $property->getName(),
+                $liveProp,
+                $infoType,
+                $isTypeBuiltIn,
+                $isTypeNullable,
+                $collectionValueType
+            );
         } else {
-            $infoType = $type?->getName();
-            $isTypeBuiltIn = $type?->isBuiltin() ?? false;
-            $isTypeNullable = $type?->allowsNull() ?? true;
-        }
+            $type = $this->propertyTypeExtractor->getType($className, $property->getName());
 
-        return new LivePropMetadata(
-            $property->getName(),
-            $liveProp,
-            $infoType,
-            $isTypeBuiltIn,
-            $isTypeNullable,
-            $collectionValueType
-        );
+            if ($type instanceof UnionType && !$type instanceof NullableType || $type instanceof IntersectionType) {
+                throw new \LogicException(\sprintf('Union or intersection types are not supported for LiveProps. You may want to change the type of property "%s" in "%s".', $propertyName, $className));
+            }
+
+            return new LivePropMetadata($property->getName(), $liveProp, $type);
+        }
     }
 
     /**

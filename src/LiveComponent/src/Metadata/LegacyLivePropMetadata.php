@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Metadata;
 
-use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\PropertyInfo\Type;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
 /**
@@ -19,12 +19,15 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
  *
  * @internal
  */
-final class LivePropMetadata
+final class LegacyLivePropMetadata
 {
     public function __construct(
         private string $name,
         private LiveProp $liveProp,
-        private ?Type $type,
+        private ?string $typeName,
+        private bool $isBuiltIn,
+        private bool $allowsNull,
+        private ?Type $collectionValueType,
     ) {
     }
 
@@ -33,9 +36,19 @@ final class LivePropMetadata
         return $this->name;
     }
 
-    public function getType(): ?Type
+    public function getType(): ?string
     {
-        return $this->type;
+        return $this->typeName;
+    }
+
+    public function isBuiltIn(): bool
+    {
+        return $this->isBuiltIn;
+    }
+
+    public function allowsNull(): bool
+    {
+        return $this->allowsNull;
     }
 
     public function urlMapping(): ?UrlMapping
@@ -84,6 +97,11 @@ final class LivePropMetadata
     public function serializationContext(): array
     {
         return $this->liveProp->serializationContext();
+    }
+
+    public function collectionValueType(): ?Type
+    {
+        return $this->collectionValueType;
     }
 
     public function getFormat(): ?string

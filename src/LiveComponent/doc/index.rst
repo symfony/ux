@@ -484,6 +484,17 @@ library. Make sure it is installed in you application:
 
     $ composer require phpdocumentor/reflection-docblock
 
+.. versionadded:: 2.26
+
+    Support for `Symfony TypeInfo`_ component was added in LiveComponents 2.26.
+
+To get rid of deprecations about ``PropertyInfoExtractor::getTypes()`` from the `Symfony PropertyInfo`_ component,
+ensure to upgrade ``symfony/property-info`` to at least 7.1, which requires **PHP 8.2**::
+
+.. code-block:: terminal
+
+    $ composer require symfony/property-info:^7.1
+
 Writable Object Properties or Array Keys
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -3900,3 +3911,5 @@ promise. However, any internal implementation in the JavaScript files
 .. _`setting the locale in the request`: https://symfony.com/doc/current/translation.html#translation-locale
 .. _`Stimulus action parameter`: https://stimulus.hotwired.dev/reference/actions#action-parameters
 .. _`@symfony/ux-live-component npm package`: https://www.npmjs.com/package/@symfony/ux-live-component
+.. _`Symfony TypeInfo`: https://symfony.com/doc/current/components/type_info.html
+.. _`Symfony PropertyInfo`: https://symfony.com/doc/current/components/property_info.html
