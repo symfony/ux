@@ -272,7 +272,7 @@ the ``assets/icons/`` directory. You can think of importing an icon as *locking 
 Locking On-Demand Icons
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-You can *lock* (import) all the `*on-demand* <Icons On-Demand>`_ icons you're using in your project by
+You can *lock* (import) all the *on-demand* icons you're using in your project by
 running the following command:
 
 .. code-block:: terminal
