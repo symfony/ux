@@ -191,7 +191,7 @@ tag if the ``symfony/ux-twig-component`` package is installed:
 
 .. tip::
 
-    To use the HTML syntax, the ``symfony/ux-twig-component`` package must be
+    To use the HTML syntax, the `symfony/ux-twig-component`_ package must be
     installed in your project.
 
 Downloading Icons
@@ -532,7 +532,7 @@ returning the HTML output.
 
 .. warning::
 
-    The <twig:ux:icon> component does not support embedded content.
+    The ``<twig:ux:icon>`` component does not support embedded content.
 
     .. code-block:: html+twig
 
@@ -610,6 +610,7 @@ Learn more
 .. _`ux.symfony.com/icons`: https://ux.symfony.com/icons
 .. _`Iconify`: https://iconify.design
 .. _`symfony/asset-mapper`: https://symfony.com/doc/current/frontend/asset_mapper.html
+.. _`symfony/ux-twig-component`: https://symfony.com/bundles/ux-twig-component/current/index.html
 .. _`W3C guide about SVG icon accessibility`: https://design-system.w3.org/styles/svg-icons.html#svg-accessibility
 .. _`Bootstrap Icons`: https://icons.getbootstrap.com/
 .. _`Boxicons`: https://boxicons.com/
