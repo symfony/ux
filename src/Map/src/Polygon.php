@@ -21,7 +21,7 @@ use Symfony\UX\Map\Exception\InvalidArgumentException;
 final class Polygon implements Element
 {
     /**
-     * @param array<Point>|array<array<Point>> $points A list of point representing the polygon, or a list of paths (each path is an array of points) representing a polygon with holes.
+     * @param array<Point>|array<array<Point>> $points a list of point representing the polygon, or a list of paths (each path is an array of points) representing a polygon with holes
      * @param array<string, mixed>             $extra  Extra data, can be used by the developer to store additional information and use them later JavaScript side
      */
     public function __construct(
@@ -76,7 +76,7 @@ final class Polygon implements Element
 
         $polygon['points'] = isset($polygon['points'][0]['lat'], $polygon['points'][0]['lng'])
             ? array_map(Point::fromArray(...), $polygon['points'])
-            : array_map(fn(array $points) => array_map(Point::fromArray(...), $points), $polygon['points']);
+            : array_map(fn (array $points) => array_map(Point::fromArray(...), $points), $polygon['points']);
 
         if (isset($polygon['infoWindow'])) {
             $polygon['infoWindow'] = InfoWindow::fromArray($polygon['infoWindow']);
