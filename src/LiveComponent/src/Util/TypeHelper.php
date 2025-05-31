@@ -58,11 +58,11 @@ final class TypeHelper
             foreach ($value as $key => $itemValue) {
                 $valueType = $type->getShape()[$key]['type'] ?? false;
 
-                if ($valueType && !TypeHelper::accepts($valueType, $itemValue)) {
+                if ($valueType && !self::accepts($valueType, $itemValue)) {
                     return false;
                 }
 
-                if (!$valueType && ($type->isSealed() || !TypeHelper::accepts($type->getExtraKeyType(), $key) || !TypeHelper::accepts($type->getExtraValueType(), $itemValue))) {
+                if (!$valueType && ($type->isSealed() || !self::accepts($type->getExtraKeyType(), $key) || !self::accepts($type->getExtraValueType(), $itemValue))) {
                     return false;
                 }
             }
@@ -73,6 +73,7 @@ final class TypeHelper
         // Also supports EnumType and BackedEnumType
         if ($type instanceof Type\ObjectType) {
             $className = $type->getClassName();
+
             return $value instanceof $className;
         }
 
@@ -110,7 +111,7 @@ final class TypeHelper
             if (is_iterable($value)) {
                 foreach ($value as $k => $v) {
                     // key or value do not match
-                    if (!TypeHelper::accepts($keyType, $k) || !TypeHelper::accepts($valueType, $v)) {
+                    if (!self::accepts($keyType, $k) || !self::accepts($valueType, $v)) {
                         return false;
                     }
                 }

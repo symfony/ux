@@ -29,6 +29,17 @@ jobs:
             - run: yarn --immutable
             - run: yarn ci
 
+    coding-style-php:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v4
+            -   uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.1'
+            -   run: composer install
+            -   name: php-cs-fixer
+                run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
+
     phpstan:
         name: PHPStan
         runs-on: ubuntu-latest

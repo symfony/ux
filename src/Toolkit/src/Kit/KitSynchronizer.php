@@ -75,11 +75,11 @@ final class KitSynchronizer
 
             $meta = null;
             if ($this->filesystem->exists($metaJsonFile = Path::join($file->getPath(), str_replace('.html.twig', '.meta.json', $file->getBasename())))) {
-                $metaJson = file_get_contents($metaJsonFile) ?: throw new \RuntimeException(sprintf('Unable to get contents from file "%s".', $metaJsonFile));
+                $metaJson = file_get_contents($metaJsonFile) ?: throw new \RuntimeException(\sprintf('Unable to get contents from file "%s".', $metaJsonFile));
                 try {
                     $meta = ComponentMeta::fromJson($metaJson);
                 } catch (\Throwable $e) {
-                    throw new \RuntimeException(sprintf('Unable to parse component "%s" meta from JSON file "%s".', $componentName, $metaJsonFile), previous: $e);
+                    throw new \RuntimeException(\sprintf('Unable to parse component "%s" meta from JSON file "%s".', $componentName, $metaJsonFile), previous: $e);
                 }
             }
 
@@ -132,7 +132,7 @@ final class KitSynchronizer
                         if (!$component->hasDependency(new PhpPackageDependency($package))) {
                             throw new \RuntimeException(\sprintf('Component "%s" uses "%s" UX Twig component, but the composer package "%s" is not listed as a dependency in meta file.', $component->name, $componentReferenceName, $package));
                         }
-                    } else if (null === $componentReference = $kit->getComponent($componentReferenceName)) {
+                    } elseif (null === $componentReference = $kit->getComponent($componentReferenceName)) {
                         throw new \RuntimeException(\sprintf('Component "%s" not found in component "%s" (file "%s")', $componentReferenceName, $component->name, $file->relativePathNameToKit));
                     } else {
                         $component->addDependency(new ComponentDependency($componentReference->name));
