@@ -53,7 +53,6 @@ final class KitFactory
             homepage: $manifest['homepage'] ?? throw new \InvalidArgumentException('Manifest file is missing "homepage" key.'),
             license: $manifest['license'] ?? throw new \InvalidArgumentException('Manifest file is missing "license" key.'),
             description: $manifest['description'] ?? null,
-            uxIcon: $manifest['ux-icon'] ?? null,
         );
 
         $this->kitSynchronizer->synchronize($kit);
