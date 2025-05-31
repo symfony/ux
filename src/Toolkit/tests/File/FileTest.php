@@ -13,7 +13,6 @@ namespace Symfony\UX\Toolkit\Tests\File;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Toolkit\File\File;
-use Symfony\UX\Toolkit\File\FileType;
 
 final class FileTest extends TestCase
 {

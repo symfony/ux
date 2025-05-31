@@ -17,7 +17,6 @@ use Symfony\UX\Toolkit\Dependency\ComponentDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\Dependency\Version;
 use Symfony\UX\Toolkit\File\File;
-use Symfony\UX\Toolkit\File\FileType;
 
 final class ComponentTest extends TestCase
 {

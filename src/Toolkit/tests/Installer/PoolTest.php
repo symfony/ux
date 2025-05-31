@@ -17,7 +17,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\Dependency\Version;
 use Symfony\UX\Toolkit\File\File;
-use Symfony\UX\Toolkit\File\FileType;
 use Symfony\UX\Toolkit\Installer\Pool;
 
 final class PoolTest extends TestCase

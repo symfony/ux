@@ -12,7 +12,6 @@
 namespace Symfony\UX\Toolkit\Kit;
 
 use Symfony\Component\Filesystem\Path;
-use Symfony\UX\Toolkit\File\FileType;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentTemplateFinderInterface;
 use Twig\Loader\ChainLoader;

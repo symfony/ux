@@ -14,7 +14,6 @@ namespace Symfony\UX\Toolkit\Tests\Kit;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Toolkit\Asset\Component;
 use Symfony\UX\Toolkit\File\File;
-use Symfony\UX\Toolkit\File\FileType;
 use Symfony\UX\Toolkit\Kit\Kit;
 
 final class KitTest extends TestCase
