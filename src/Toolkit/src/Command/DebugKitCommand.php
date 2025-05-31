@@ -84,7 +84,7 @@ EOF
                     'Dependencies',
                 ])
                 ->addRow([
-                    implode("\n", $component->files),
+                    $component->file,
                     implode("\n", $component->getDependencies()),
                 ])
                 ->setColumnWidth(1, 80)

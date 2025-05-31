@@ -29,20 +29,15 @@ final class Component
 {
     /**
      * @param non-empty-string $name
-     * @param list<File>       $files
      */
     public function __construct(
         public readonly string $name,
-        public readonly array $files,
+        public readonly File $file,
         public ?Doc $doc = null,
         public ?ComponentMeta $meta = null,
         private array $dependencies = [],
     ) {
         Assert::componentName($name);
-
-        if ([] === $files) {
-            throw new \InvalidArgumentException(\sprintf('The component "%s" must have at least one file.', $name));
-        }
 
         foreach ($this->meta?->dependencies ?? [] as $dependency) {
             $this->addDependency($dependency);

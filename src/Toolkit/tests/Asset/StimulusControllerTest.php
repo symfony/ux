@@ -16,15 +16,12 @@ namespace Symfony\UX\Toolkit\Tests\Asset;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Toolkit\Asset\StimulusController;
 use Symfony\UX\Toolkit\File\File;
-use Symfony\UX\Toolkit\File\FileType;
 
 final class StimulusControllerTest extends TestCase
 {
     public function testCanBeInstantiated(): void
     {
-        $stimulusController = new StimulusController('clipboard', [
-            new File('assets/controllers/clipboard_controller.js', 'clipboard_controller.js'),
-        ]);
+        $stimulusController = new StimulusController('clipboard', new File('assets/controllers/clipboard_controller.js', 'clipboard_controller.js'));
 
         $this->assertSame('clipboard', $stimulusController->name);
     }
@@ -34,14 +31,6 @@ final class StimulusControllerTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid Stimulus controller name "invalid_controller".');
 
-        new StimulusController('invalid_controller', [new File('assets/controllers/invalid_controller.js', 'invalid_controller.js')]);
-    }
-
-    public function testShouldFailIfStimulusControllerHasNoFiles(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Stimulus controller "clipboard" has no files.');
-
-        new StimulusController('clipboard', []);
+        new StimulusController('invalid_controller', new File('assets/controllers/invalid_controller.js', 'invalid_controller.js'));
     }
 }

@@ -23,16 +23,11 @@ class StimulusController
 {
     /**
      * @param non-empty-string $name
-     * @param list<File>       $files
      */
     public function __construct(
         public readonly string $name,
-        public readonly array $files,
+        public readonly File $file,
     ) {
         Assert::stimulusControllerName($this->name);
-
-        if ([] === $files) {
-            throw new \InvalidArgumentException(\sprintf('Stimulus controller "%s" has no files.', $name));
-        }
     }
 }

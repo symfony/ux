@@ -17,7 +17,6 @@ use Symfony\UX\Toolkit\Dependency\ComponentDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\Dependency\StimulusControllerDependency;
 use Symfony\UX\Toolkit\File\File;
-use Symfony\UX\Toolkit\File\FileType;
 use Symfony\UX\Toolkit\Kit\KitFactory;
 
 final class KitFactoryTest extends KernelTestCase
@@ -54,7 +53,6 @@ final class KitFactoryTest extends KernelTestCase
         $table = $kit->getComponent('Table');
 
         $this->assertNotNull($table);
-        $this->assertNotEmpty($table->files);
         $this->assertEquals([
             new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra'),
             new ComponentDependency('Table:Body'),
@@ -85,10 +83,10 @@ EOF
         // Assert Stimulus Controllers are registered in the Kit
         $this->assertNotEmpty($kit->getStimulusControllers());
         $this->assertEquals([
-            $clipboard = new StimulusController('clipboard', [new File('assets/controllers/clipboard_controller.js', 'clipboard_controller.js')]),
-            $datePicker = new StimulusController('date-picker', [new File('assets/controllers/date_picker_controller.js', 'date_picker_controller.js')]),
-            $localTime = new StimulusController('local-time', [new File('assets/controllers/local-time-controller.js', 'local-time-controller.js')]),
-            $usersListItem = new StimulusController('users--list-item', [new File('assets/controllers/users/list_item_controller.js', 'users/list_item_controller.js')]),
+            $clipboard = new StimulusController('clipboard', new File('assets/controllers/clipboard_controller.js', 'clipboard_controller.js')),
+            $datePicker = new StimulusController('date-picker', new File('assets/controllers/date_picker_controller.js', 'date_picker_controller.js')),
+            $localTime = new StimulusController('local-time', new File('assets/controllers/local-time-controller.js', 'local-time-controller.js')),
+            $usersListItem = new StimulusController('users--list-item', new File('assets/controllers/users/list_item_controller.js', 'users/list_item_controller.js')),
         ], $kit->getStimulusControllers());
         $this->assertEquals($clipboard, $kit->getStimulusController('clipboard'));
         $this->assertEquals($datePicker, $kit->getStimulusController('date-picker'));

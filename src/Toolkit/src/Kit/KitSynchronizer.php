@@ -22,7 +22,6 @@ use Symfony\UX\Toolkit\Dependency\StimulusControllerDependency;
 use Symfony\UX\Toolkit\File\ComponentMeta;
 use Symfony\UX\Toolkit\File\Doc;
 use Symfony\UX\Toolkit\File\File;
-use Symfony\UX\Toolkit\File\FileType;
 
 /**
  * @internal
@@ -86,10 +85,10 @@ final class KitSynchronizer
 
             $component = new Component(
                 name: $componentName,
-                files: [new File(
+                file: new File(
                     relativePathNameToKit: $relativePathNameToKit,
                     relativePathName: $relativePathName,
-                )],
+                ),
                 meta: $meta,
             );
 
@@ -116,36 +115,34 @@ final class KitSynchronizer
         }
 
         // Find dependencies based on file content
-        foreach ($component->files as $file) {
-            if (!$this->filesystem->exists($filePath = Path::join($kit->path, $file->relativePathNameToKit))) {
-                throw new \RuntimeException(\sprintf('File "%s" not found', $filePath));
-            }
+        if (!$this->filesystem->exists($filePath = Path::join($kit->path, $component->file->relativePathNameToKit))) {
+            throw new \RuntimeException(\sprintf('File "%s" not found', $filePath));
+        }
 
-            $fileContent = file_get_contents($filePath);
+        $fileContent = file_get_contents($filePath);
 
-            if (str_contains($fileContent, '<twig:') && preg_match_all(self::RE_TWIG_COMPONENT_REFERENCES, $fileContent, $matches)) {
-                foreach ($matches[1] as $componentReferenceName) {
-                    if ($componentReferenceName === $component->name) {
-                        continue;
+        if (str_contains($fileContent, '<twig:') && preg_match_all(self::RE_TWIG_COMPONENT_REFERENCES, $fileContent, $matches)) {
+            foreach ($matches[1] as $componentReferenceName) {
+                if ($componentReferenceName === $component->name) {
+                    continue;
+                }
+
+                if (null !== $package = self::UX_COMPONENTS_PACKAGES[strtolower($componentReferenceName)] ?? null) {
+                    if (!$component->hasDependency(new PhpPackageDependency($package))) {
+                        throw new \RuntimeException(\sprintf('Component "%s" uses "%s" UX Twig component, but the composer package "%s" is not listed as a dependency in meta file.', $component->name, $componentReferenceName, $package));
                     }
-
-                    if (null !== $package = self::UX_COMPONENTS_PACKAGES[strtolower($componentReferenceName)] ?? null) {
-                        if (!$component->hasDependency(new PhpPackageDependency($package))) {
-                            throw new \RuntimeException(\sprintf('Component "%s" uses "%s" UX Twig component, but the composer package "%s" is not listed as a dependency in meta file.', $component->name, $componentReferenceName, $package));
-                        }
-                    } else if (null === $componentReference = $kit->getComponent($componentReferenceName)) {
-                        throw new \RuntimeException(\sprintf('Component "%s" not found in component "%s" (file "%s")', $componentReferenceName, $component->name, $file->relativePathNameToKit));
-                    } else {
-                        $component->addDependency(new ComponentDependency($componentReference->name));
-                    }
+                } else if (null === $componentReference = $kit->getComponent($componentReferenceName)) {
+                    throw new \RuntimeException(\sprintf('Component "%s" not found in component "%s" (file "%s")', $componentReferenceName, $component->name, $component->file->relativePathNameToKit));
+                } else {
+                    $component->addDependency(new ComponentDependency($componentReference->name));
                 }
             }
+        }
 
-            if (str_contains($fileContent, 'data-controller=') && preg_match_all(self::RE_STIMULUS_CONTROLLER_REFERENCES, $fileContent, $matches)) {
-                $controllersName = array_filter(array_map(fn (string $name) => trim($name), explode(' ', $matches['controllersName'][0])));
-                foreach ($controllersName as $controllerReferenceName) {
-                    $component->addDependency(new StimulusControllerDependency($controllerReferenceName));
-                }
+        if (str_contains($fileContent, 'data-controller=') && preg_match_all(self::RE_STIMULUS_CONTROLLER_REFERENCES, $fileContent, $matches)) {
+            $controllersName = array_filter(array_map(fn (string $name) => trim($name), explode(' ', $matches['controllersName'][0])));
+            foreach ($controllersName as $controllerReferenceName) {
+                $component->addDependency(new StimulusControllerDependency($controllerReferenceName));
             }
         }
     }
@@ -167,10 +164,10 @@ final class KitSynchronizer
             $controllerName = $this->extractStimulusControllerName($relativePathName);
             $controller = new StimulusController(
                 name: $controllerName,
-                files: [new File(
+                file: new File(
                     relativePathNameToKit: $relativePathNameToKit,
                     relativePathName: $relativePathName,
-                )],
+                ),
             );
 
             $kit->addStimulusController($controller);

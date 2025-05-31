@@ -39,9 +39,7 @@ final class PoolResolver
 
             $visitedComponents->attach($currentComponent);
 
-            foreach ($currentComponent->files as $file) {
-                $pool->addFile($file);
-            }
+            $pool->addFile($currentComponent->file);
 
             foreach ($currentComponent->getDependencies() as $dependency) {
                 if ($dependency instanceof ComponentDependency) {
@@ -53,11 +51,9 @@ final class PoolResolver
                         throw new \RuntimeException(\sprintf('Stimulus controller "%s" not found.', $dependency->name));
                     }
 
-                    foreach ($stimulusController->files as $file) {
-                        $pool->addFile($file);
-                    }
+                    $pool->addFile($stimulusController->file);
                 } else {
-                    throw new \RuntimeException(\sprintf('Unknown dependency type: %s', $dependency::class));
+                    throw new \RuntimeException(\sprintf('Unknown dependency type: "%s"', $dependency::class));
                 }
             }
         }
