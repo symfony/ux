@@ -85,10 +85,10 @@ EOF
         // Assert Stimulus Controllers are registered in the Kit
         $this->assertNotEmpty($kit->getStimulusControllers());
         $this->assertEquals([
-            $clipboard = new StimulusController('clipboard', [new File(FileType::StimulusController, 'assets/controllers/clipboard_controller.js', 'clipboard_controller.js')]),
-            $datePicker = new StimulusController('date-picker', [new File(FileType::StimulusController, 'assets/controllers/date_picker_controller.js', 'date_picker_controller.js')]),
-            $localTime = new StimulusController('local-time', [new File(FileType::StimulusController, 'assets/controllers/local-time-controller.js', 'local-time-controller.js')]),
-            $usersListItem = new StimulusController('users--list-item', [new File(FileType::StimulusController, 'assets/controllers/users/list_item_controller.js', 'users/list_item_controller.js')]),
+            $clipboard = new StimulusController('clipboard', [new File('assets/controllers/clipboard_controller.js', 'clipboard_controller.js')]),
+            $datePicker = new StimulusController('date-picker', [new File('assets/controllers/date_picker_controller.js', 'date_picker_controller.js')]),
+            $localTime = new StimulusController('local-time', [new File('assets/controllers/local-time-controller.js', 'local-time-controller.js')]),
+            $usersListItem = new StimulusController('users--list-item', [new File('assets/controllers/users/list_item_controller.js', 'users/list_item_controller.js')]),
         ], $kit->getStimulusControllers());
         $this->assertEquals($clipboard, $kit->getStimulusController('clipboard'));
         $this->assertEquals($datePicker, $kit->getStimulusController('date-picker'));

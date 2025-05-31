@@ -28,8 +28,8 @@ final class PoolTest extends TestCase
 
         $this->assertCount(0, $pool->getFiles());
 
-        $pool->addFile(new File(FileType::Twig, 'path/to/file.html.twig', 'file.html.twig'));
-        $pool->addFile(new File(FileType::Twig, 'path/to/another-file.html.twig', 'another-file.html.twig'));
+        $pool->addFile(new File('path/to/file.html.twig', 'file.html.twig'));
+        $pool->addFile(new File('path/to/another-file.html.twig', 'another-file.html.twig'));
 
         $this->assertCount(2, $pool->getFiles());
     }
@@ -38,8 +38,8 @@ final class PoolTest extends TestCase
     {
         $pool = new Pool();
 
-        $pool->addFile(new File(FileType::Twig, 'path/to/file.html.twig', 'file.html.twig'));
-        $pool->addFile(new File(FileType::Twig, 'path/to/file.html.twig', 'file.html.twig'));
+        $pool->addFile(new File('path/to/file.html.twig', 'file.html.twig'));
+        $pool->addFile(new File('path/to/file.html.twig', 'file.html.twig'));
 
         $this->assertCount(1, $pool->getFiles());
     }

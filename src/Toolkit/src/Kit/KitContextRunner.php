@@ -95,9 +95,7 @@ final class KitContextRunner
                 }
 
                 foreach ($component->files as $file) {
-                    if (FileType::Twig === $file->type) {
-                        return $file->relativePathName;
-                    }
+                    return $file->relativePathName;
                 }
 
                 throw new \LogicException(\sprintf('No Twig files found for component "%s" in kit "%s", it should not happens.', $name, $this->kit->name));

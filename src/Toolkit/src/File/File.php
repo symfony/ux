@@ -27,7 +27,6 @@ final class File implements \Stringable
      * @throws \InvalidArgumentException
      */
     public function __construct(
-        public readonly FileType $type,
         public readonly string $relativePathNameToKit,
         public readonly string $relativePathName,
     ) {
@@ -46,6 +45,6 @@ final class File implements \Stringable
 
     public function __toString(): string
     {
-        return \sprintf('%s (%s)', $this->relativePathNameToKit, $this->type->getLabel());
+        return $this->relativePathNameToKit;
     }
 }
