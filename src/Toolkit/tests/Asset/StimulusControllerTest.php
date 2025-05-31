@@ -16,7 +16,6 @@ namespace Symfony\UX\Toolkit\Tests\Asset;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Toolkit\Asset\StimulusController;
 use Symfony\UX\Toolkit\File\File;
-use Symfony\UX\Toolkit\File\FileType;
 
 final class StimulusControllerTest extends TestCase
 {

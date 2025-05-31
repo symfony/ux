@@ -17,7 +17,6 @@ use Symfony\UX\Toolkit\Dependency\ComponentDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\Dependency\StimulusControllerDependency;
 use Symfony\UX\Toolkit\File\File;
-use Symfony\UX\Toolkit\File\FileType;
 use Symfony\UX\Toolkit\Kit\KitFactory;
 
 final class KitFactoryTest extends KernelTestCase

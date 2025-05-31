@@ -22,7 +22,6 @@ use Symfony\UX\Toolkit\Dependency\StimulusControllerDependency;
 use Symfony\UX\Toolkit\File\ComponentMeta;
 use Symfony\UX\Toolkit\File\Doc;
 use Symfony\UX\Toolkit\File\File;
-use Symfony\UX\Toolkit\File\FileType;
 
 /**
  * @internal
