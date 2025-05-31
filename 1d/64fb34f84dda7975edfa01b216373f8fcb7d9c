@@ -1,0 +1,24 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-05-31T13:58:15Z
+
+> Once merged, I'll disable the webhook?
+
+Mmmmh... I don't know, these checks can still be pretty useful (when they are correctly ran):
+![image](https://github.com/user-attachments/assets/1a5da2ca-8a68-4f67-b825-35bda77d51f1)
+
+Can we keep both PHP-CS-Fixer and Fabbot?
+
+---------------------------------------------------------------------------
+
+by kbond at 2025-05-31T14:17:02Z
+
+Yeah no rush to remove it.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-31T14:43:06Z
+
+100% 👍
+
+ ... and i'm thinking we should either find a way to exclude false positives in fabbot... or find a way to adapt our code to get green results when it runs
