@@ -24,7 +24,7 @@ final class ComponentTest extends TestCase
     public function testCanBeInstantiated(): void
     {
         $component = new Component('Button', [
-            new File(FileType::Twig, 'templates/components/Button/Button.html.twig', 'Button.html.twig'),
+            new File('templates/components/Button/Button.html.twig', 'Button.html.twig'),
         ]);
 
         $this->assertSame('Button', $component->name);
@@ -40,7 +40,7 @@ final class ComponentTest extends TestCase
         $this->expectExceptionMessage('Invalid component name "foobar".');
 
         new Component('foobar', [
-            new File(FileType::Twig, 'templates/components/Button/Button.html.twig', 'Button.html.twig'),
+            new File('templates/components/Button/Button.html.twig', 'Button.html.twig'),
         ]);
     }
 
@@ -55,7 +55,7 @@ final class ComponentTest extends TestCase
     public function testCanAddAndGetDependencies(): void
     {
         $component = new Component('Button', [
-            new File(FileType::Twig, 'templates/components/Button/Button.html.twig', 'Button.html.twig'),
+            new File('templates/components/Button/Button.html.twig', 'Button.html.twig'),
         ]);
 
         $component->addDependency($dependency1 = new ComponentDependency('Icon'));
@@ -69,7 +69,7 @@ final class ComponentTest extends TestCase
     public function testShouldNotAddDuplicateComponentDependencies(): void
     {
         $component = new Component('Button', [
-            new File(FileType::Twig, 'templates/components/Button/Button.html.twig', 'Button.html.twig'),
+            new File('templates/components/Button/Button.html.twig', 'Button.html.twig'),
         ]);
 
         $component->addDependency($dependency1 = new ComponentDependency('Icon'));
@@ -84,7 +84,7 @@ final class ComponentTest extends TestCase
     public function testShouldReplacePhpPackageDependencyIfVersionIsHigher(): void
     {
         $component = new Component('Button', [
-            new File(FileType::Twig, 'templates/components/Button/Button.html.twig', 'Button.html.twig'),
+            new File('templates/components/Button/Button.html.twig', 'Button.html.twig'),
         ]);
 
         $component->addDependency($dependency1 = new ComponentDependency('Icon'));
@@ -103,7 +103,7 @@ final class ComponentTest extends TestCase
     public function testShouldNotReplacePhpPackageDependencyIfVersionIsLower(): void
     {
         $component = new Component('Button', [
-            new File(FileType::Twig, 'templates/components/Button/Button.html.twig', 'Button.html.twig'),
+            new File('templates/components/Button/Button.html.twig', 'Button.html.twig'),
         ]);
 
         $component->addDependency($dependency1 = new ComponentDependency('Icon'));

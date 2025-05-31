@@ -23,7 +23,7 @@ final class StimulusControllerTest extends TestCase
     public function testCanBeInstantiated(): void
     {
         $stimulusController = new StimulusController('clipboard', [
-            new File(FileType::StimulusController, 'assets/controllers/clipboard_controller.js', 'clipboard_controller.js'),
+            new File('assets/controllers/clipboard_controller.js', 'clipboard_controller.js'),
         ]);
 
         $this->assertSame('clipboard', $stimulusController->name);
@@ -34,7 +34,7 @@ final class StimulusControllerTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid Stimulus controller name "invalid_controller".');
 
-        new StimulusController('invalid_controller', [new File(FileType::StimulusController, 'assets/controllers/invalid_controller.js', 'invalid_controller.js')]);
+        new StimulusController('invalid_controller', [new File('assets/controllers/invalid_controller.js', 'invalid_controller.js')]);
     }
 
     public function testShouldFailIfStimulusControllerHasNoFiles(): void

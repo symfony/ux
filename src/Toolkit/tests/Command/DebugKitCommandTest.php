@@ -28,13 +28,27 @@ class DebugKitCommandTest extends KernelTestCase
             ->assertOutputContains('Name       Shadcn')
             ->assertOutputContains('Homepage   https://ux.symfony.com/components')
             ->assertOutputContains('License    MIT')
-            // A component details
+            // Components details
             ->assertOutputContains(<<<'EOF'
 +--------------+----------------------- Component: "Avatar" --------------------------------------+
-| File(s)      | templates/components/Avatar.html.twig (Twig)                                     |
+| File(s)      | templates/components/Avatar.html.twig                                            |
 | Dependencies | tales-from-a-dev/twig-tailwind-extra                                             |
 |              | Avatar:Image                                                                     |
 |              | Avatar:Text                                                                      |
++--------------+----------------------------------------------------------------------------------+
+EOF
+            )
+            ->assertOutputContains(<<<'EOF'
++--------------+----------------------- Component: "Table" ---------------------------------------+
+| File(s)      | templates/components/Table.html.twig                                             |
+| Dependencies | tales-from-a-dev/twig-tailwind-extra                                             |
+|              | Table:Body                                                                       |
+|              | Table:Caption                                                                    |
+|              | Table:Cell                                                                       |
+|              | Table:Footer                                                                     |
+|              | Table:Head                                                                       |
+|              | Table:Header                                                                     |
+|              | Table:Row                                                                        |
 +--------------+----------------------------------------------------------------------------------+
 EOF
             );

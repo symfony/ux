@@ -22,7 +22,7 @@ final class FileTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('The path to the kit "%s" must be relative.', __FILE__.'/templates/components/Button.html.twig'));
 
-        new File(FileType::Twig, __FILE__.'/templates/components/Button.html.twig', __FILE__.'Button.html.twig');
+        new File(__FILE__.'/templates/components/Button.html.twig', __FILE__.'Button.html.twig');
     }
 
     public function testShouldFailIfPathNameIsNotRelative(): void
@@ -30,7 +30,7 @@ final class FileTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('The path name "%s" must be relative.', __FILE__.'Button.html.twig'));
 
-        new File(FileType::Twig, 'templates/components/Button.html.twig', __FILE__.'Button.html.twig');
+        new File('templates/components/Button.html.twig', __FILE__.'Button.html.twig');
     }
 
     public function testShouldFailIfPathNameIsNotASubpathOfPathToKit(): void
@@ -38,26 +38,24 @@ final class FileTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('The relative path name "%s" must be a subpath of the relative path to the kit "%s".', 'foo/bar/Button.html.twig', 'templates/components/Button.html.twig'));
 
-        new File(FileType::Twig, 'templates/components/Button.html.twig', 'foo/bar/Button.html.twig');
+        new File('templates/components/Button.html.twig', 'foo/bar/Button.html.twig');
     }
 
     public function testCanInstantiateFile(): void
     {
-        $file = new File(FileType::Twig, 'templates/components/Button.html.twig', 'Button.html.twig');
+        $file = new File('templates/components/Button.html.twig', 'Button.html.twig');
 
-        $this->assertSame(FileType::Twig, $file->type);
         $this->assertSame('templates/components/Button.html.twig', $file->relativePathNameToKit);
         $this->assertSame('Button.html.twig', $file->relativePathName);
-        $this->assertSame('templates/components/Button.html.twig (Twig)', (string) $file);
+        $this->assertSame('templates/components/Button.html.twig', (string) $file);
     }
 
     public function testCanInstantiateFileWithSubComponent(): void
     {
-        $file = new File(FileType::Twig, 'templates/components/Table/Body.html.twig', 'Table/Body.html.twig');
+        $file = new File('templates/components/Table/Body.html.twig', 'Table/Body.html.twig');
 
-        $this->assertSame(FileType::Twig, $file->type);
         $this->assertSame('templates/components/Table/Body.html.twig', $file->relativePathNameToKit);
         $this->assertSame('Table/Body.html.twig', $file->relativePathName);
-        $this->assertSame('templates/components/Table/Body.html.twig (Twig)', (string) $file);
+        $this->assertSame('templates/components/Table/Body.html.twig', (string) $file);
     }
 }
