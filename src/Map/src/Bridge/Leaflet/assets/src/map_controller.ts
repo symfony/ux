@@ -20,6 +20,7 @@ import type {
 
 type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom'> & {
     tileLayer: { url: string; attribution: string; options: Record<string, unknown> } | false;
+    extra?: Record<string, unknown>;
 };
 
 export default class extends AbstractMapController<
@@ -77,6 +78,7 @@ export default class extends AbstractMapController<
     }: { center: Point | null; zoom: number | null; options: MapOptions }): L.Map {
         const map = L.map(this.element, {
             ...options,
+            ...options.extra,
             center: center === null ? undefined : center,
             zoom: zoom === null ? undefined : zoom,
         });

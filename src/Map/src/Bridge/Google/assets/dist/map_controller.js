@@ -160,6 +160,7 @@ class map_controller extends default_1 {
         options.fullscreenControl = typeof options.fullscreenControlOptions !== 'undefined';
         return new _google.maps.Map(this.element, {
             ...options,
+            ...options.extra,
             center,
             zoom,
         });

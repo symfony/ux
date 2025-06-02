@@ -24,12 +24,20 @@ final class LeafletOptions implements MapOptionsInterface
             url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         ),
+        private array $extra = [],
     ) {
     }
 
     public function tileLayer(TileLayer|false $tileLayer): self
     {
         $this->tileLayer = $tileLayer;
+
+        return $this;
+    }
+
+    public function extra(array $extra): self
+    {
+        $this->extra = $extra;
 
         return $this;
     }
@@ -41,6 +49,7 @@ final class LeafletOptions implements MapOptionsInterface
     {
         return new self(
             tileLayer: $array['tileLayer'] ? TileLayer::fromArray($array['tileLayer']) : false,
+            extra: $array['extra'] ?? []
         );
     }
 
@@ -51,6 +60,7 @@ final class LeafletOptions implements MapOptionsInterface
     {
         return [
             'tileLayer' => $this->tileLayer ? $this->tileLayer->toArray() : false,
+            'extra' => $this->extra,
         ];
     }
 }

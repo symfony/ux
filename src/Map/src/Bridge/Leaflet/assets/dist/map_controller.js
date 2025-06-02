@@ -142,6 +142,7 @@ class map_controller extends default_1 {
     doCreateMap({ center, zoom, options, }) {
         const map = L.map(this.element, {
             ...options,
+            ...options.extra,
             center: center === null ? undefined : center,
             zoom: zoom === null ? undefined : zoom,
         });

@@ -36,6 +36,7 @@ final class GoogleOptions implements MapOptionsInterface
         private StreetViewControlOptions $streetViewControlOptions = new StreetViewControlOptions(),
         private bool $fullscreenControl = true,
         private FullscreenControlOptions $fullscreenControlOptions = new FullscreenControlOptions(),
+        private array $extra = [],
     ) {
     }
 
@@ -132,6 +133,13 @@ final class GoogleOptions implements MapOptionsInterface
         return $this;
     }
 
+    public function extra(array $extra): self
+    {
+        $this->extra = $extra;
+
+        return $this;
+    }
+
     /**
      * @internal
      */
@@ -174,6 +182,7 @@ final class GoogleOptions implements MapOptionsInterface
             'gestureHandling' => $this->gestureHandling->value,
             'backgroundColor' => $this->backgroundColor,
             'disableDoubleClickZoom' => $this->disableDoubleClickZoom,
+            'extra' => $this->extra,
         ];
 
         if ($this->zoomControl) {

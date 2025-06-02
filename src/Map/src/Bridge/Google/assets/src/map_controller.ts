@@ -33,7 +33,9 @@ type MapOptions = Pick<
     | 'streetViewControlOptions'
     | 'fullscreenControl'
     | 'fullscreenControlOptions'
->;
+> & {
+    extra?: Record<string, unknown>;
+};
 
 let _google: typeof google;
 
@@ -135,6 +137,7 @@ export default class extends AbstractMapController<
 
         return new _google.maps.Map(this.element, {
             ...options,
+            ...options.extra,
             center,
             zoom,
         });
