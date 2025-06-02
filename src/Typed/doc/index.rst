@@ -1,6 +1,13 @@
 Symfony UX Typed
 ================
 
+.. warning::
+
+    **Deprecated: This package has been deprecated in 2.x and will be removed in the next major version.**
+
+    To keep the same functionality in your Symfony application, please follow the migration steps
+    from the `Symfony UX Typed README.md`_.
+
 Symfony UX Typed is a Symfony bundle integrating `Typed`_ in
 Symfony applications. It is part of `the Symfony UX initiative`_.
 
@@ -156,3 +163,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`typed library`: https://github.com/mattboldt/typed.js/blob/master/README.md
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`@symfony/ux-typed npm package`: https://www.npmjs.com/package/@symfony/ux-typed
+.. _`Symfony UX Typed README.md`: https://github.com/symfony/ux/tree/2.x/src/Typed
