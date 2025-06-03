@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.27.0
+
+-   Deprecate the package
+
 ## 2.13.2
 
 -   Revert "Change JavaScript package to `type: module`"
