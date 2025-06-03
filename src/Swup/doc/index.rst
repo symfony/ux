@@ -1,6 +1,13 @@
 Symfony UX Swup
 ===============
 
+.. warning::
+
+    **Deprecated: This package has been deprecated in 2.x and will be removed in the next major version.**
+
+    To keep the same functionality in your Symfony application, please follow the migration steps
+    from the `Symfony UX Swup README.md`_.
+
 Symfony UX Swup is a Symfony bundle integrating `Swup`_ in
 Symfony applications. It is part of `the Symfony UX initiative`_.
 
@@ -207,3 +214,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Swup Options`: https://swup.js.org/options
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`@symfony/ux-swup npm package`: https://www.npmjs.com/package/@symfony/ux-swup
+.. _`Symfony UX Swup README.md`: https://github.com/symfony/ux/tree/2.x/src/Swup/README.md
