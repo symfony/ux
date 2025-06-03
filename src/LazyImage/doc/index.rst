@@ -7,6 +7,10 @@ Symfony UX LazyImage
     `modern techniques to improve image loading performance`_ natively supported
     by all major browsers.
 
+.. warning::
+
+    **Deprecated: This package has been deprecated in 2.x and will be removed in the next major version.**
+
 Symfony UX LazyImage is a Symfony bundle providing utilities to improve
 image loading performance. It is part of `the Symfony UX initiative`_.
 

@@ -14,6 +14,8 @@ namespace Symfony\UX\LazyImage\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
+trigger_deprecation('symfony/ux-lazy-image', '2.27.0', 'The package is deprecated and will be removed in 3.0.');
+
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
  *

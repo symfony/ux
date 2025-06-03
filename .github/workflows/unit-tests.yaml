@@ -51,7 +51,14 @@ jobs:
                   [ 'lowest' = '${{ matrix.dependency-version }}' ] && export SYMFONY_DEPRECATIONS_HELPER=weak
 
                   # Swup and Typed have no tests, Turbo has its own workflow file
-                  PACKAGES=$(find src/ -mindepth 2 -type f -name composer.json -not -path "*/vendor/*" -printf '%h\n' | sed 's/^src\///' | grep -Ev "Swup|Turbo|Typed" | sort |  tr '\n' ' ')
+                  EXCLUDED_PACKAGES="Typed|Swup|Turbo"
+
+                  # Exclude deprecated packages when testing against lowest dependencies
+                  if [ "${{ matrix.dependency-version }}" = "lowest" ]; then
+                    EXCLUDED_PACKAGES="$EXCLUDED_PACKAGES|LazyImage"
+                  fi
+
+                  PACKAGES=$(find src/ -mindepth 2 -type f -name composer.json -not -path "*/vendor/*" -printf '%h\n' | sed 's/^src\///' | grep -Ev "$EXCLUDED_PACKAGES" | sort |  tr '\n' ' ')
                   echo "Packages: $PACKAGES"
                   echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
 

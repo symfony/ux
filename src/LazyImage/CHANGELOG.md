@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.27.0
+
+-   Deprecate the package
+
 ## 2.17.0
 
 -   Add support for `intervention/image` 3.0+

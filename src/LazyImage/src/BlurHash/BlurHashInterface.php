@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\LazyImage\BlurHash;
 
+trigger_deprecation('symfony/ux-lazy-image', '2.27.0', 'The package is deprecated and will be removed in 3.0.');
+
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
  */
