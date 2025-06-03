@@ -18,6 +18,8 @@ use Intervention\Image\ImageManagerStatic;
 use kornrunner\Blurhash\Blurhash as BlurhashEncoder;
 use Symfony\Contracts\Cache\CacheInterface;
 
+trigger_deprecation('symfony/ux-lazy-image', '2.27.0', 'The package is deprecated and will be removed in 3.0.');
+
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
  *

@@ -14,6 +14,8 @@ namespace Symfony\UX\LazyImage\Twig;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
+trigger_deprecation('symfony/ux-lazy-image', '2.27.0', 'The package is deprecated and will be removed in 3.0.');
+
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
  *
