@@ -1,5 +1,9 @@
 name: Functional Tests
 
+defaults:
+  run:
+    shell: bash
+
 on:
     push:
         paths:
@@ -12,7 +16,7 @@ on:
 
 jobs:
     turbo-tests:
-        runs-on: ubuntu-latest
+        runs-on: ${{ matrix.os || 'ubuntu-latest' }}
         strategy:
            fail-fast: false
            matrix:
@@ -20,6 +24,7 @@ jobs:
                dependency-version: ['']
                symfony-version: ['']
                minimum-stability: ['stable']
+               os: ['']
                include:
                    # dev packages (probably not needed to have multiple such jobs)
                    -   minimum-stability: 'dev'
@@ -30,7 +35,6 @@ jobs:
                    # LTS version of Symfony
                    -   php-version: '8.1'
                        symfony-version: '6.4.*'
-
         env:
             SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=5.4' }}
         services:
