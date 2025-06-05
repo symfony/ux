@@ -2,7 +2,7 @@
     "name": "@symfony/ux-svelte",
     "description": "Integration of Svelte in Symfony",
     "license": "MIT",
-    "version": "2.25.2",
+    "version": "2.26.0",
     "keywords": [
         "symfony-ux"
     ],
