@@ -341,7 +341,6 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
             }
             return query.length >= 3;
         },
-        maxOptions: null,
         optgroupField: 'group_by',
         score: (search) => (item) => 1,
         render: {

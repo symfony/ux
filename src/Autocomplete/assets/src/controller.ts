@@ -292,6 +292,7 @@ export default class extends Controller {
 
                 return query.length >= 3;
             },
+            maxOptions: null,
             optgroupField: 'group_by',
             // avoid extra filtering after results are returned
             score: (search: string) => (item: any) => 1,
