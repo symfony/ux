@@ -57,7 +57,7 @@
     },
     "conflict": {
         "symfony/config": "<5.4.0",
-        "symfony/type-info": "<7.1",
+        "symfony/type-info": "<7.2",
         "symfony/property-info": "~7.0.0"
     },
     "config": {
