@@ -3,7 +3,7 @@
     "description": "Integration of @hotwired/stimulus into Symfony",
     "private": true,
     "license": "MIT",
-    "version": "2.26.0",
+    "version": "2.26.1",
     "keywords": [
         "symfony-ux"
     ],

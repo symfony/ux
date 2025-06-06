@@ -2,7 +2,7 @@
     "name": "@symfony/ux-turbo",
     "description": "Hotwire Turbo integration for Symfony",
     "license": "MIT",
-    "version": "2.26.0",
+    "version": "2.26.1",
     "keywords": [
         "symfony-ux",
         "turbo",
