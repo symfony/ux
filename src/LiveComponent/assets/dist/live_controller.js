@@ -2798,7 +2798,7 @@ function fromQueryString(search) {
     const entries = search.split('&').map((i) => i.split('='));
     const data = {};
     entries.forEach(([key, value]) => {
-        value = decodeURIComponent(value.replace(/\+/g, '%20'));
+        value = decodeURIComponent(String(value || '').replace(/\+/g, '%20'));
         if (!key.includes('[')) {
             data[key] = value;
         }
