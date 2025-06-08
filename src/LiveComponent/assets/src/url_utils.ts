@@ -104,7 +104,7 @@ function fromQueryString(search: string) {
     const data: any = {};
 
     entries.forEach(([key, value]) => {
-        value = decodeURIComponent(value.replace(/\+/g, '%20'));
+        value = decodeURIComponent(String(value || '').replace(/\+/g, '%20'));
 
         if (!key.includes('[')) {
             data[key] = value;

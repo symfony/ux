@@ -115,6 +115,32 @@ describe('url_utils', () => {
                 expect(urlUtils.search).toEqual('');
             });
         });
+
+        describe('fromQueryString', () => {
+            const urlUtils: UrlUtils = new UrlUtils(window.location.href);
+
+            beforeEach(() => {
+                // Reset search before each test
+                urlUtils.search = '';
+            });
+
+            it('parses a query string with value', () => {
+                urlUtils.search = '?param1=value1';
+                expect(urlUtils.get('param1')).toEqual('value1');
+            });
+
+            it('parses a query string with empty value', () => {
+                urlUtils.search = '?param1=&param2=value2';
+                expect(urlUtils.get('param1')).toEqual('');
+                expect(urlUtils.get('param2')).toEqual('value2');
+            });
+
+            it('parses a query string without equal sign', () => {
+                urlUtils.search = '?param1&param2=value2';
+                expect(urlUtils.get('param1')).toEqual('');
+                expect(urlUtils.get('param2')).toEqual('value2');
+            });
+        });
     });
 
     describe('HistoryStrategy', () => {
