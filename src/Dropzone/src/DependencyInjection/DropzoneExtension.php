@@ -25,7 +25,7 @@ use Symfony\UX\Dropzone\Form\DropzoneType;
  */
 class DropzoneExtension extends Extension implements PrependExtensionInterface
 {
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         // Register the Dropzone form theme if TwigBundle is available
         $bundles = $container->getParameter('kernel.bundles');

@@ -47,7 +47,7 @@ class BlurHashTest extends TestCase
     public function testWithCustomGetImageContent(): void
     {
         $kernel = new class('test', true) extends TwigAppKernel {
-            public function registerContainerConfiguration(LoaderInterface $loader)
+            public function registerContainerConfiguration(LoaderInterface $loader): void
             {
                 parent::registerContainerConfiguration($loader);
 
@@ -99,7 +99,7 @@ class BlurHashTest extends TestCase
     public function testEnsureCacheIsUsedWhenConfigured()
     {
         $kernel = new class('test', true) extends TwigAppKernel {
-            public function registerContainerConfiguration(LoaderInterface $loader)
+            public function registerContainerConfiguration(LoaderInterface $loader): void
             {
                 parent::registerContainerConfiguration($loader);
 
@@ -154,7 +154,7 @@ class BlurHashTest extends TestCase
     public function testCreateDataUriThumbnailWithCache()
     {
         $kernel = new class('test', true) extends TwigAppKernel {
-            public function registerContainerConfiguration(LoaderInterface $loader)
+            public function registerContainerConfiguration(LoaderInterface $loader): void
             {
                 parent::registerContainerConfiguration($loader);
 

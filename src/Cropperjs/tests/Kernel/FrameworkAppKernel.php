@@ -31,7 +31,7 @@ class FrameworkAppKernel extends Kernel
         return [new FrameworkBundle(), new CropperjsBundle()];
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) {
             $frameworkConfig = [
