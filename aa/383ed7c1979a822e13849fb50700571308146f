@@ -1,0 +1,78 @@
+---------------------------------------------------------------------------
+
+by norkunas at 2025-06-05T03:44:03Z
+
+Should this use `kernel.reset`, or you think it will be a small cache and never releasing memory in worker mode will be imperceptible?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-06-05T07:00:23Z
+
+> Should this use `kernel.reset`, or you think it will be a small cache and never releasing memory in worker mode will be imperceptible?
+
+Oh, that's a good point, I didn't think about it.
+
+I think we are safe here, given this reproducer:
+```php
+<?php
+$componentsCount = 100;
+$cache = [];
+
+echo sprintf('Memory usage before: %d MiB', memory_get_peak_usage(true) / 1024 / 1024 ) . PHP_EOL;
+
+for ($i = 0; $i < $componentsCount; $i++) {
+    $cache['\App\Twig\Components\ComponentA' . $i] = $i % 2;
+}
+echo sprintf('Memory usage after: %d MiB', memory_get_peak_usage(true) / 1024 / 1024 ) . PHP_EOL;
+
+```
+1. If you have 100 components (something more realistic) or 1000 components, the memory does not change:
+```
+Memory usage before: 2 MiB
+Memory usage after: 2 MiB
+```
+
+2. With 10k components, +2 MiB:
+```
+Memory usage before: 2 MiB
+Memory usage after: 4 MiB
+```
+
+3. And with 100k components (???), only 13 MiB:
+```
+Memory usage before: 2 MiB
+Memory usage after: 13 MiB
+```
+
+The memory usage is not an issue.
+
+And `[] !== (new \ReflectionClass($classname))->getAttributes(AsLiveComponent::class)` will **always** return the exact result between requests (unless you modify your components files without redeploying your app 😅) so that's a win-win, the runtime cache is persisted during a request and also for next requests (when using FrankenPHP worker's mode, Swoole, etc...)!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-06-05T07:21:46Z
+
+I went for another solution, where we can completely shortcut `isLiveComponent()` call, by storing the static cache in `getCurrentLiveComponent()`.
+
+It gives better results, https://blackfire.io/profiles/compare/8bbc8e11-fbad-4853-bb08-9cbdcb857e50/graph:
+<img width="1158" alt="image" src="https://github.com/user-attachments/assets/1f11a8c7-90d7-41c8-aa93-c3caf2fb00fa" />
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-06-07T21:33:18Z
+
+We've been using maps of component names -> stuff in various places for some time now, and they've helped winning major optimizations, while I have not received nor read any downsides.
+
+But more importantly ...
+
+The class is used here, not the name. That means all the anonymous components in a given project count as one.
+
+Finally, I've never heard of a project with a thousand TwigComponent classes for now... and i'm pretty sure there would be a lot of other problems before 😶
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-06-07T21:33:48Z
+
+TL;DR; maybe let's see if there is some problem here and we will adapt accordingly :)
+
+(i'm talking about the kernel.reset here, not this PR that is a wonderful "little change-big effect" illustration of @Kocal's work  ❤️ )
