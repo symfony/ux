@@ -29,7 +29,7 @@ class EmptyAppKernel extends Kernel
         return [new DropzoneBundle()];
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
     }
 }

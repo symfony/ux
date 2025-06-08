@@ -34,7 +34,7 @@ class TwigAppKernel extends Kernel
         return [new FrameworkBundle(), new TwigBundle(), new CropperjsBundle()];
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) {
             $frameworkConfig = [
