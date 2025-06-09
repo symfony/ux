@@ -1,0 +1,38 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-30T01:44:37Z
+
+I really don’t want to clutter the installation instructions for users who just want to display icons.
+
+That’s in line with how many Symfony docs are written:
+
+- https://symfony.com/doc/current/templates.html
+- https://symfony.com/doc/current/validation.html
+- https://symfony.com/doc/current/notifier.html
+- https://symfony.com/doc/current/forms.html
+
+This first install block needs to stay short and intuitive. Adding lines that aren't strictly necessary for most users just adds noise.
+
+That said, I’m totally open to making the rest better..  (optional dependencies and/or how we explain the HTML syntax)
+
+My personal take would be to have a separate “HTML Syntax” section with a code sample and a composer require, and then point to it when relevant. Same thing for the HTTP client.
+
+But placing all of that right after “install” and before showing how it actually works still feels too soon to me.
+
+---------------------------------------------------------------------------
+
+by ThomasLandauer at 2025-06-01T10:18:17Z
+
+I see that you have strong opinions.
+
+So just take what you think is useful, and close/delete the rest.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-06-02T00:43:32Z
+
+We're always open to improvements
+
+Recent suggestions felt a bit mixed --some very valid points, others less aligned with concrete user needs or going against points we've already covered.
+
+Thanks again for your time and input!
