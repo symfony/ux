@@ -1,0 +1,59 @@
+---------------------------------------------------------------------------
+
+by carsonbot at 2025-05-29T09:54:28Z
+
+It looks like you unchecked the "Allow edits from maintainer" box. That is fine, but please note that if you have multiple commits, you'll need to squash your commits into one before this can be merged. Or, you can check the "Allow edits from maintainers" box and the maintainer can squash for you.
+
+Cheers!
+
+Carsonbot
+
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-05-29T09:54:51Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/insiders/ux/tree/leaflet-options/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/insiders/ux/blob/leaflet-options/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>2.04 kB</code>
+                    / <code>672 B</code>
+                </td><td>
+                    <code>2.38 kB</code><sup>+17% 📈</sup>
+                    / <code>734 B</code><sup>+9% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/insiders/ux/blob/leaflet-options/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>9.71 kB</code>
+                    / <code>2.59 kB</code>
+                </td><td>
+                    <code>10.09 kB</code><sup>+4% 📈</sup>
+                    / <code>2.65 kB</code><sup>+2% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by dannyvw at 2025-06-05T12:52:10Z
+
+@Kocal Do you perhaps have time to check this?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-06-05T20:53:53Z
+
+This week-end :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-06-10T19:02:17Z
+
+I added the other options of `ZoomControlOptions`
