@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.27
+
+-   The `fitBoundsToMarkers` option is not overridden anymore when using the `Map` LiveComponent, but now respects the value you defined.
+    You may encounter unwanted behavior when adding/removing elements to the map.
+    To use the previous behavior, you must call `$this->getMap()->fitBoundsToMarkers(false)` in your LiveComponent's live actions
+
 ## 2.26
 
 -  Add support for creating `Polygon` with holes, by passing an array of `array<Point>` as `points` parameter to the `Polygon` constructor, e.g.:

@@ -628,7 +628,7 @@ You can interact with the Map by using ``LiveAction`` attribute::
         {
             return (new Map())
                 ->center(new Point(48.8566, 2.3522))
-                ->zoom(7)
+                ->fitBoundsToMarkers()
                 ->addMarker(new Marker(position: new Point(48.8566, 2.3522), title: 'Paris', infoWindow: new InfoWindow('Paris')))
                 ->addMarker(new Marker(position: new Point(45.75, 4.85), title: 'Lyon', infoWindow: new InfoWindow('Lyon')))
             ;
@@ -654,6 +654,9 @@ You can retrieve the map instance using the ``getMap()`` method, and change the 
 
             // Change the map zoom
             $this->getMap()->zoom(6);
+
+            // To prevent the Map from automatically fitting the bounds to the markers after adding a new element, disable the option `fitBoundsToMarkers`:
+            $this->getMap()->fitBoundsToMarkers(false);
 
             // Add a new marker
             $this->getMap()->addMarker(new Marker(position: new Point(43.2965, 5.3698), title: 'Marseille', infoWindow: new InfoWindow('Marseille')));

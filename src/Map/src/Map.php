@@ -167,18 +167,12 @@ final class Map
      */
     public static function fromArray(array $map): self
     {
-        $map['fitBoundsToMarkers'] = true;
-
         if (isset($map['options'])) {
             $map['options'] = [] === $map['options'] ? null : MapOptionsNormalizer::denormalize($map['options']);
         }
 
         if (isset($map['center'])) {
             $map['center'] = Point::fromArray($map['center']);
-        }
-
-        if (isset($map['zoom']) || isset($map['center'])) {
-            $map['fitBoundsToMarkers'] = false;
         }
 
         $map['markers'] ??= [];
