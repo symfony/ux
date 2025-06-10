@@ -144,12 +144,20 @@ class map_controller extends default_1 {
             ...options,
             center: center === null ? undefined : center,
             zoom: zoom === null ? undefined : zoom,
+            attributionControl: false,
+            zoomControl: false,
         });
         if (options.tileLayer) {
             L.tileLayer(options.tileLayer.url, {
                 attribution: options.tileLayer.attribution,
                 ...options.tileLayer.options,
             }).addTo(map);
+        }
+        if (typeof options.attributionControlOptions !== 'undefined') {
+            L.control.attribution({ ...options.attributionControlOptions }).addTo(map);
+        }
+        if (typeof options.zoomControlOptions !== 'undefined') {
+            L.control.zoom({ ...options.zoomControlOptions }).addTo(map);
         }
         return map;
     }

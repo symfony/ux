@@ -10,6 +10,7 @@ import type {
 import 'leaflet/dist/leaflet.min.css';
 import * as L from 'leaflet';
 import type {
+    ControlPosition,
     LatLngBoundsExpression,
     MapOptions as LeafletMapOptions,
     MarkerOptions,
@@ -18,7 +19,15 @@ import type {
     PopupOptions,
 } from 'leaflet';
 
-type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom'> & {
+type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom' | 'attributionControl' | 'zoomControl'> & {
+    attributionControlOptions?: { position: ControlPosition; prefix: string | false };
+    zoomControlOptions?: {
+        position: ControlPosition;
+        zoomInText: string;
+        zoomInTitle: string;
+        zoomOutText: string;
+        zoomOutTitle: string;
+    };
     tileLayer: { url: string; attribution: string; options: Record<string, unknown> } | false;
 };
 
@@ -79,6 +88,8 @@ export default class extends AbstractMapController<
             ...options,
             center: center === null ? undefined : center,
             zoom: zoom === null ? undefined : zoom,
+            attributionControl: false,
+            zoomControl: false,
         });
 
         if (options.tileLayer) {
@@ -86,6 +97,14 @@ export default class extends AbstractMapController<
                 attribution: options.tileLayer.attribution,
                 ...options.tileLayer.options,
             }).addTo(map);
+        }
+
+        if (typeof options.attributionControlOptions !== 'undefined') {
+            L.control.attribution({ ...options.attributionControlOptions }).addTo(map);
+        }
+
+        if (typeof options.zoomControlOptions !== 'undefined') {
+            L.control.zoom({ ...options.zoomControlOptions }).addTo(map);
         }
 
         return map;
