@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Integration\Hydration;
 
-
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\LiveComponent\Hydration\DoctrineEntityHydrationExtension;
@@ -60,9 +59,9 @@ class DoctrineEntityHydrationExtensionTest extends KernelTestCase
         /** @var DoctrineEntityHydrationExtension $extension */
         $extension = self::getContainer()->get('ux.live_component.doctrine_entity_hydration_extension');
 
-        self::assertTrue($extension->supports(AliasedEntityInterface::class),'AliasedEntityInterface should be supported');
-        self::assertTrue($extension->supports(AliasedEntity::class),'AliasedEntity should be supported');
-        self::assertFalse($extension->supports('UnknownClass'),'UnknownClass should not be supported');
+        self::assertTrue($extension->supports(AliasedEntityInterface::class), 'AliasedEntityInterface should be supported');
+        self::assertTrue($extension->supports(AliasedEntity::class), 'AliasedEntity should be supported');
+        self::assertFalse($extension->supports('UnknownClass'), 'UnknownClass should not be supported');
     }
 
     public function testHydrationFromInterface(): void
@@ -81,7 +80,7 @@ class DoctrineEntityHydrationExtensionTest extends KernelTestCase
 
         $entityFromDehydratation = $extension->hydrate($dehydratedData, AliasedEntityInterface::class);
 
-        self::assertSame($existingEntity, $entityFromDehydratation,'instance should be the same');
-        self::assertNull($extension->hydrate(null, AliasedEntityInterface::class),'should return null if null is passed');
+        self::assertSame($existingEntity, $entityFromDehydratation, 'instance should be the same');
+        self::assertNull($extension->hydrate(null, AliasedEntityInterface::class), 'should return null if null is passed');
     }
 }

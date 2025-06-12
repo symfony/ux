@@ -28,8 +28,7 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
      */
     public function __construct(
         private iterable $managerRegistries,
-    )
-    {
+    ) {
     }
 
     public function supports(string $className): bool
