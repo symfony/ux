@@ -82,7 +82,7 @@ class DoctrineEntityHydrationExtensionTest extends KernelTestCase
 
         $entityFromDehydratation = $extension->hydrate($dehydratedData, AliasedEntityInterface::class);
 
-        self::assertSame($existingEntity, $entityFromDehydratation,"instance should be the same");
-        self::assertNull($extension->hydrate(null, AliasedEntityInterface::class),"should return null if null is passed");
+        self::assertSame($existingEntity, $entityFromDehydratation,'instance should be the same');
+        self::assertNull($extension->hydrate(null, AliasedEntityInterface::class),'should return null if null is passed');
     }
 }

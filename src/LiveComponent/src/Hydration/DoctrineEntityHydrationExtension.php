@@ -106,7 +106,7 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
                     // It is good to check for a specific exception ?
                     // eg: \Doctrine\Persistence\Mapping\MappingException
                     // Maybe not needed, because it does not failed even when the class does not exist at all
-                    throw $e;
+//                    throw $e;
                 }
 
             }
