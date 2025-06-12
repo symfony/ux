@@ -13,8 +13,8 @@ namespace Symfony\UX\LiveComponent\Hydration;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\Mapping\MappingException;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * Handles hydration of Doctrine entities.
