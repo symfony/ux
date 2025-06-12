@@ -11,12 +11,9 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Integration\Hydration;
 
-use Doctrine\ORM\EntityManager;
+
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\ResolveTargetEntityListener;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\UX\LiveComponent\Hydration\DoctrineEntityHydrationExtension;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\AliasedEntity;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\AliasedEntityInterface;
@@ -75,19 +72,17 @@ class DoctrineEntityHydrationExtensionTest extends KernelTestCase
         $extension = self::getContainer()->get('ux.live_component.doctrine_entity_hydration_extension');
         $em = self::getContainer()->get(EntityManagerInterface::class);
 
-        $a = new AliasedEntity();
-        $a->name = 'foo';
+        $existingEntity = new AliasedEntity();
+        $existingEntity->name = 'foo';
 
-        $em->persist($a);
+        $em->persist($existingEntity);
         $em->flush();
 
-        $dehydratedData = $extension->dehydrate($a);
+        $dehydratedData = $extension->dehydrate($existingEntity);
 
-        $a2 = $extension->hydrate($dehydratedData, AliasedEntityInterface::class);
+        $entityFromDehydratation = $extension->hydrate($dehydratedData, AliasedEntityInterface::class);
 
-        self::assertSame($a, $a2,"instance should be the same");
+        self::assertSame($existingEntity, $entityFromDehydratation,"instance should be the same");
         self::assertNull($extension->hydrate(null, AliasedEntityInterface::class),"should return null if null is passed");
-
-
     }
 }
