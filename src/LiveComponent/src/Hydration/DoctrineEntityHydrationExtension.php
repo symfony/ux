@@ -14,6 +14,7 @@ namespace Symfony\UX\LiveComponent\Hydration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\Mapping\MappingException;
 
 /**
  * Handles hydration of Doctrine entities.
@@ -27,7 +28,8 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
      */
     public function __construct(
         private iterable $managerRegistries,
-    ) {
+    )
+    {
     }
 
     public function supports(string $className): bool
@@ -61,11 +63,10 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
         $id = $this
             ->objectManagerFor($class = $object::class)
             ->getClassMetadata($class)
-            ->getIdentifierValues($object)
-        ;
+            ->getIdentifierValues($object);
 
         // Dehydrate ID values in case they are other entities
-        $id = array_map(fn ($id) => \is_object($id) && $this->supports($id::class) ? $this->dehydrate($id) : $id, $id);
+        $id = array_map(fn($id) => \is_object($id) && $this->supports($id::class) ? $this->dehydrate($id) : $id, $id);
 
         switch (\count($id)) {
             case 0:
@@ -81,21 +82,34 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
 
     private function objectManagerFor(string $class): ?ObjectManager
     {
-        if (!interface_exist($class) && !class_exists($class)) {
+        if (!interface_exists($class) && !class_exists($class)) {
             return null;
         }
 
         // todo cache/warmup an array of classes that are "doctrine objects"
         foreach ($this->managerRegistries as $registry) {
-             foreach($registry->getManagers() as $om) {
-                // this way, it resolves the interface
-                if ($om->getClassMetadata($class)) {
-                    return self::ensureManagedObject($om, $class);
-                }
-            }
+
+            // The doctrine registry does not resolve aliased interface
             // if ($om = $registry->getManagerForClass($class)) {
             //    return self::ensureManagedObject($om, $class);
             // }
+
+            foreach ($registry->getManagers() as $om) {
+                // But we can resolve nicely by trying to ask each manager to get the metadata
+                try {
+                    if ($om->getClassMetadata($class) !== null) {
+                        return self::ensureManagedObject($om, $class);
+                    }
+
+                } catch (MappingException $e) {
+                    // I did not find a nice way to check if it is because the class is really unknown
+                    // It is good to check for a specific exception ?
+                    // eg: \Doctrine\Persistence\Mapping\MappingException
+                    // Maybe not needed, because it does not failed even when the class does not exist at all
+                    throw $e;
+                }
+
+            }
         }
 
         return null;

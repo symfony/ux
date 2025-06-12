@@ -29,6 +29,8 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\UX\LiveComponent\LiveComponentBundle;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component1;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\AliasedEntity;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\AliasedEntityInterface;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Serializer\Entity2Normalizer;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Serializer\MoneyNormalizer;
 use Symfony\UX\StimulusBundle\StimulusBundle;
@@ -170,6 +172,8 @@ final class Kernel extends BaseKernel
                         'alias' => 'XML',
                     ],
                 ],
+                'resolve_target_entities' => [
+                    AliasedEntityInterface::class => AliasedEntity::class],
             ],
         ];
 
