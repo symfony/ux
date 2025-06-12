@@ -55,15 +55,14 @@ class DoctrineEntityHydrationExtensionTest extends KernelTestCase
         self::assertSame($foreignKeyIdEntity, $extension->hydrate($dehydrated, ForeignKeyIdEntity::class));
     }
 
-
     public function testSupportInterface(): void
     {
         /** @var DoctrineEntityHydrationExtension $extension */
         $extension = self::getContainer()->get('ux.live_component.doctrine_entity_hydration_extension');
 
-        self::assertTrue($extension->supports(AliasedEntityInterface::class),"AliasedEntityInterface should be supported");
-        self::assertTrue($extension->supports(AliasedEntity::class),"AliasedEntity should be supported");
-        self::assertFalse($extension->supports('UnknownClass'),"UnknownClass should not be supported");
+        self::assertTrue($extension->supports(AliasedEntityInterface::class),'AliasedEntityInterface should be supported');
+        self::assertTrue($extension->supports(AliasedEntity::class),'AliasedEntity should be supported');
+        self::assertFalse($extension->supports('UnknownClass'),'UnknownClass should not be supported');
     }
 
     public function testHydrationFromInterface(): void
