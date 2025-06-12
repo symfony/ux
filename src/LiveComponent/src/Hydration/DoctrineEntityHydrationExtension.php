@@ -82,7 +82,7 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
 
     private function objectManagerFor(string $class): ?ObjectManager
     {
-        if (!interface_exists($class) && !class_exists($class)) {
+        if (!class_exists($class) && !interface_exists($class)) {
             return null;
         }
 
