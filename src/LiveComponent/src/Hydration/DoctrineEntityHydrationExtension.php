@@ -81,15 +81,21 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
 
     private function objectManagerFor(string $class): ?ObjectManager
     {
-        if (!class_exists($class)) {
+        if (!interface_exist($class) && !class_exists($class)) {
             return null;
         }
 
         // todo cache/warmup an array of classes that are "doctrine objects"
         foreach ($this->managerRegistries as $registry) {
-            if ($om = $registry->getManagerForClass($class)) {
-                return self::ensureManagedObject($om, $class);
+             foreach($registry->getManagers() as $om) {
+                // this way, it resolves the interface
+                if ($om->getClassMetadata($class)) {
+                    return self::ensureManagedObject($om, $class);
+                }
             }
+            // if ($om = $registry->getManagerForClass($class)) {
+            //    return self::ensureManagedObject($om, $class);
+            // }
         }
 
         return null;
