@@ -81,28 +81,42 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
 
     private function objectManagerFor(string $class): ?ObjectManager
     {
-        if (!class_exists($class) && !interface_exists($class)) {
+        if (class_exists($class)) {
+            // Keep the standard way for a class
+            // todo cache/warmup an array of classes that are "doctrine objects"
+            foreach ($this->managerRegistries as $registry) {
+                 if ($om = $registry->getManagerForClass($class)) {
+                    return self::ensureManagedObject($om, $class);
+                 }
+            }
             return null;
         }
 
-        // todo cache/warmup an array of classes that are "doctrine objects"
-        foreach ($this->managerRegistries as $registry) {
-            // The doctrine registry does not resolve aliased interface
-            // if ($om = $registry->getManagerForClass($class)) {
-            //    return self::ensureManagedObject($om, $class);
-            // }
-            foreach ($registry->getManagers() as $om) {
-                // But we can resolve nicely by trying to ask each manager to get the metadata
-                try {
-                    if (null !== $om->getClassMetadata($class)) {
-                        return self::ensureManagedObject($om, $class);
+        if (interface_exists($class)) {
+            // special handler for interfaces
+            // For use cases : @see https://symfony.com/doc/current/doctrine/resolve_target_entity.html
+            // As today, getManagerForClass don't resolve nicely aliased interfaces
+            // The workaround is to enum over each object manager and trying to get metadata
+            // The metadata are indeed, resolved nicely
+            // Fore more details :
+            // @see \Doctrine\ORM\Tools\ResolveTargetEntityListener
+
+            // todo cache/warmup an array of interfaces that are resolved "doctrine objects"
+            foreach ($this->managerRegistries as $registry) {
+                foreach ($registry->getManagers() as $om) {
+                    // the getClassMetaData can indeed throw an exception
+                    // so, we
+                    try {
+                        if (null !== $om->getClassMetadata($class)) {
+                            return self::ensureManagedObject($om, $class);
+                        }
+                    } catch (MappingException $e) {
+                        // I did not find a nice way to check if it is because the class is really unknown
+                        // It is good to check for a specific exception ?
+                        // eg: \Doctrine\Persistence\Mapping\MappingException
+                        // @see \Doctrine\Persistence\Mapping\AbstractClassMetadataFactory::getMetadataFor
+                        // throw $e;
                     }
-                } catch (MappingException $e) {
-                    // I did not find a nice way to check if it is because the class is really unknown
-                    // It is good to check for a specific exception ?
-                    // eg: \Doctrine\Persistence\Mapping\MappingException
-                    // Maybe not needed, because it does not failed even when the class does not exist at all
-                    // throw $e;
                 }
             }
         }
