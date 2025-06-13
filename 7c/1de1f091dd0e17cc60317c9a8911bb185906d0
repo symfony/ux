@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by klausi85 at 2025-06-13T11:18:36Z
+
+> Thanks for the fix!
+>
+> Can you update `ComponentAttributesTest` test to prevent any regressions on this?
+
+Sorry missed that part, I will do that asap.
