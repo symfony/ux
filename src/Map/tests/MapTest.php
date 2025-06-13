@@ -12,6 +12,7 @@
 namespace Symfony\UX\Map\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\UX\Map\Circle;
 use Symfony\UX\Map\Exception\InvalidArgumentException;
 use Symfony\UX\Map\InfoWindow;
 use Symfony\UX\Map\Map;
@@ -68,6 +69,7 @@ class MapTest extends TestCase
             'markers' => [],
             'polygons' => [],
             'polylines' => [],
+            'circles' => [],
         ], $array);
     }
 
@@ -88,6 +90,7 @@ class MapTest extends TestCase
             'markers' => [],
             'polygons' => [],
             'polylines' => [],
+            'circles' => [],
         ], $array);
     }
 
@@ -158,6 +161,30 @@ class MapTest extends TestCase
                 infoWindow: new InfoWindow(
                     headerContent: '<b>Polyline 2</b>',
                     content: 'A polyline around Lyon with some additional info.',
+                    position: new Point(45.764, 4.8357),
+                    opened: true,
+                    autoClose: true,
+                ),
+            ))
+            ->addCircle(new Circle(
+                center: new Point(48.8566, 2.3522),
+                radius: 500,
+                title: 'Circle around Paris',
+                infoWindow: new InfoWindow(
+                    headerContent: '<b>Circle around Paris</b>',
+                    content: 'A circle with a radius of 500 meters around Paris.',
+                    position: new Point(48.8566, 2.3522),
+                    opened: true,
+                    autoClose: true,
+                ),
+            ))
+            ->addCircle(new Circle(
+                center: new Point(45.764, 4.8357),
+                radius: 300,
+                title: 'Circle around Lyon',
+                infoWindow: new InfoWindow(
+                    headerContent: '<b>Circle around Lyon</b>',
+                    content: 'A circle with a radius of 300 meters around Lyon.',
                     position: new Point(45.764, 4.8357),
                     opened: true,
                     autoClose: true,
@@ -274,6 +301,38 @@ class MapTest extends TestCase
                     'infoWindow' => [
                         'headerContent' => '<b>Polyline 2</b>',
                         'content' => 'A polyline around Lyon with some additional info.',
+                        'position' => ['lat' => 45.764, 'lng' => 4.8357],
+                        'opened' => true,
+                        'autoClose' => true,
+                        'extra' => [],
+                    ],
+                    'extra' => [],
+                    'id' => null,
+                ],
+            ],
+            'circles' => [
+                [
+                    'center' => ['lat' => 48.8566, 'lng' => 2.3522],
+                    'radius' => 500,
+                    'title' => 'Circle around Paris',
+                    'infoWindow' => [
+                        'headerContent' => '<b>Circle around Paris</b>',
+                        'content' => 'A circle with a radius of 500 meters around Paris.',
+                        'position' => ['lat' => 48.8566, 'lng' => 2.3522],
+                        'opened' => true,
+                        'autoClose' => true,
+                        'extra' => [],
+                    ],
+                    'extra' => [],
+                    'id' => null,
+                ],
+                [
+                    'center' => ['lat' => 45.764, 'lng' => 4.8357],
+                    'radius' => 300,
+                    'title' => 'Circle around Lyon',
+                    'infoWindow' => [
+                        'headerContent' => '<b>Circle around Lyon</b>',
+                        'content' => 'A circle with a radius of 300 meters around Lyon.',
                         'position' => ['lat' => 45.764, 'lng' => 4.8357],
                         'opened' => true,
                         'autoClose' => true,

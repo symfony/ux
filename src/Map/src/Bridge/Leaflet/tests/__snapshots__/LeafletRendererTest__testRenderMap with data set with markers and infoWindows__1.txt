@@ -10,4 +10,5 @@
   data-symfony--ux-leaflet-map--map-markers-value="[{&quot;position&quot;:{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522},&quot;title&quot;:&quot;Paris&quot;,&quot;infoWindow&quot;:null,&quot;icon&quot;:null,&quot;extra&quot;:[],&quot;id&quot;:&quot;marker1&quot;,&quot;@id&quot;:&quot;872feba9ebf3905d&quot;},{&quot;position&quot;:{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522},&quot;title&quot;:&quot;Lyon&quot;,&quot;infoWindow&quot;:{&quot;headerContent&quot;:null,&quot;content&quot;:&quot;Lyon&quot;,&quot;position&quot;:null,&quot;opened&quot;:false,&quot;autoClose&quot;:true,&quot;extra&quot;:[]},&quot;icon&quot;:null,&quot;extra&quot;:[],&quot;id&quot;:null,&quot;@id&quot;:&quot;bce206d73dc5c164&quot;}]"
   data-symfony--ux-leaflet-map--map-polygons-value="[]"
   data-symfony--ux-leaflet-map--map-polylines-value="[]"
+  data-symfony--ux-leaflet-map--map-circles-value="[]"
 ></div>

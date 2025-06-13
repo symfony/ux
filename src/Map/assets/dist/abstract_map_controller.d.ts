@@ -48,6 +48,14 @@ export type PolylineDefinition<PolylineOptions, InfoWindowOptions> = WithIdentif
     rawOptions?: PolylineOptions;
     extra: Record<string, unknown>;
 }>;
+export type CircleDefinition<CircleOptions, InfoWindowOptions> = WithIdentifier<{
+    infoWindow?: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
+    center: Point;
+    radius: number;
+    title: string | null;
+    rawOptions?: CircleOptions;
+    extra: Record<string, unknown>;
+}>;
 export type InfoWindowDefinition<InfoWindowOptions> = {
     headerContent: string | null;
     content: string | null;
@@ -58,7 +66,7 @@ export type InfoWindowDefinition<InfoWindowOptions> = {
     extra: Record<string, unknown>;
 };
 export type InfoWindowWithoutPositionDefinition<InfoWindowOptions> = Omit<InfoWindowDefinition<InfoWindowOptions>, 'position'>;
-export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindowOptions, InfoWindow, PolygonOptions, Polygon, PolylineOptions, Polyline> extends Controller<HTMLElement> {
+export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindowOptions, InfoWindow, PolygonOptions, Polygon, PolylineOptions, Polyline, CircleOptions, Circle> extends Controller<HTMLElement> {
     static values: {
         providerOptions: ObjectConstructor;
         center: ObjectConstructor;
@@ -67,6 +75,7 @@ export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindow
         markers: ArrayConstructor;
         polygons: ArrayConstructor;
         polylines: ArrayConstructor;
+        circles: ArrayConstructor;
         options: ObjectConstructor;
     };
     centerValue: Point | null;
@@ -75,6 +84,7 @@ export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindow
     markersValue: Array<MarkerDefinition<MarkerOptions, InfoWindowOptions>>;
     polygonsValue: Array<PolygonDefinition<PolygonOptions, InfoWindowOptions>>;
     polylinesValue: Array<PolylineDefinition<PolylineOptions, InfoWindowOptions>>;
+    circlesValue: Array<CircleDefinition<CircleOptions, InfoWindowOptions>>;
     optionsValue: MapOptions;
     hasCenterValue: boolean;
     hasZoomValue: boolean;
@@ -82,27 +92,31 @@ export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindow
     hasMarkersValue: boolean;
     hasPolygonsValue: boolean;
     hasPolylinesValue: boolean;
+    hasCirclesValue: boolean;
     hasOptionsValue: boolean;
     protected map: Map;
     protected markers: globalThis.Map<string, Marker>;
     protected polygons: globalThis.Map<string, Polygon>;
     protected polylines: globalThis.Map<string, Polyline>;
+    protected circles: globalThis.Map<string, Circle>;
     protected infoWindows: Array<InfoWindow>;
     private isConnected;
     private createMarker;
     private createPolygon;
     private createPolyline;
+    private createCircle;
     protected abstract dispatchEvent(name: string, payload: Record<string, unknown>): void;
     connect(): void;
     createInfoWindow({ definition, element, }: {
         definition: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
-        element: Marker | Polygon | Polyline;
+        element: Marker | Polygon | Polyline | Circle;
     }): InfoWindow;
     abstract centerValueChanged(): void;
     abstract zoomValueChanged(): void;
     markersValueChanged(): void;
     polygonsValueChanged(): void;
     polylinesValueChanged(): void;
+    circlesValueChanged(): void;
     protected abstract doCreateMap({ center, zoom, options, }: {
         center: Point | null;
         zoom: number | null;
@@ -121,9 +135,13 @@ export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindow
         definition: PolylineDefinition<PolylineOptions, InfoWindowOptions>;
     }): Polyline;
     protected abstract doRemovePolyline(polyline: Polyline): void;
+    protected abstract doCreateCircle({ definition, }: {
+        definition: CircleDefinition<CircleOptions, InfoWindowOptions>;
+    }): Circle;
+    protected abstract doRemoveCircle(circle: Circle): void;
     protected abstract doCreateInfoWindow({ definition, element, }: {
         definition: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
-        element: Marker | Polygon | Polyline;
+        element: Marker | Polygon | Polyline | Circle;
     }): InfoWindow;
     protected abstract doCreateIcon({ definition, element, }: {
         definition: Icon;

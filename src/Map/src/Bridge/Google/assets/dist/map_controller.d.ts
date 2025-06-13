@@ -1,8 +1,8 @@
 import type { LoaderOptions } from '@googlemaps/js-api-loader';
 import AbstractMapController from '@symfony/ux-map';
-import type { Icon, InfoWindowWithoutPositionDefinition, MarkerDefinition, Point, PolygonDefinition, PolylineDefinition } from '@symfony/ux-map';
+import type { CircleDefinition, Icon, InfoWindowWithoutPositionDefinition, MarkerDefinition, Point, PolygonDefinition, PolylineDefinition } from '@symfony/ux-map';
 type MapOptions = Pick<google.maps.MapOptions, 'mapId' | 'gestureHandling' | 'backgroundColor' | 'disableDoubleClickZoom' | 'zoomControl' | 'zoomControlOptions' | 'mapTypeControl' | 'mapTypeControlOptions' | 'streetViewControl' | 'streetViewControlOptions' | 'fullscreenControl' | 'fullscreenControlOptions'>;
-export default class extends AbstractMapController<MapOptions, google.maps.Map, google.maps.marker.AdvancedMarkerElementOptions, google.maps.marker.AdvancedMarkerElement, google.maps.InfoWindowOptions, google.maps.InfoWindow, google.maps.PolygonOptions, google.maps.Polygon, google.maps.PolylineOptions, google.maps.Polyline> {
+export default class extends AbstractMapController<MapOptions, google.maps.Map, google.maps.marker.AdvancedMarkerElementOptions, google.maps.marker.AdvancedMarkerElement, google.maps.InfoWindowOptions, google.maps.InfoWindow, google.maps.PolygonOptions, google.maps.Polygon, google.maps.PolylineOptions, google.maps.Polyline, google.maps.CircleOptions, google.maps.Circle> {
     providerOptionsValue: Pick<LoaderOptions, 'apiKey' | 'id' | 'language' | 'region' | 'nonce' | 'retries' | 'url' | 'version' | 'libraries'>;
     map: google.maps.Map;
     parser: DOMParser;
@@ -27,6 +27,10 @@ export default class extends AbstractMapController<MapOptions, google.maps.Map, 
         definition: PolylineDefinition<google.maps.PolylineOptions, google.maps.InfoWindowOptions>;
     }): google.maps.Polyline;
     protected doRemovePolyline(polyline: google.maps.Polyline): void;
+    protected doCreateCircle({ definition, }: {
+        definition: CircleDefinition<google.maps.CircleOptions, google.maps.InfoWindowOptions>;
+    }): google.maps.Circle;
+    protected doRemoveCircle(circle: google.maps.Circle): void;
     protected doCreateInfoWindow({ definition, element, }: {
         definition: InfoWindowWithoutPositionDefinition<google.maps.InfoWindowOptions>;
         element: google.maps.marker.AdvancedMarkerElement | google.maps.Polygon | google.maps.Polyline;

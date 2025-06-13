@@ -13,6 +13,7 @@ class default_1 extends Controller {
         this.markers = new Map();
         this.polygons = new Map();
         this.polylines = new Map();
+        this.circles = new Map();
         this.infoWindows = [];
         this.isConnected = false;
     }
@@ -22,6 +23,7 @@ class default_1 extends Controller {
         this.createMarker = this.createDrawingFactory('marker', this.markers, this.doCreateMarker.bind(this));
         this.createPolygon = this.createDrawingFactory('polygon', this.polygons, this.doCreatePolygon.bind(this));
         this.createPolyline = this.createDrawingFactory('polyline', this.polylines, this.doCreatePolyline.bind(this));
+        this.createCircle = this.createDrawingFactory('circle', this.circles, this.doCreateCircle.bind(this));
         this.map = this.doCreateMap({
             center: this.hasCenterValue ? this.centerValue : null,
             zoom: this.hasZoomValue ? this.zoomValue : null,
@@ -30,6 +32,7 @@ class default_1 extends Controller {
         this.markersValue.forEach((definition) => this.createMarker({ definition }));
         this.polygonsValue.forEach((definition) => this.createPolygon({ definition }));
         this.polylinesValue.forEach((definition) => this.createPolyline({ definition }));
+        this.circlesValue.forEach((definition) => this.createCircle({ definition }));
         if (this.fitBoundsToMarkersValue) {
             this.doFitBoundsToMarkers();
         }
@@ -38,6 +41,7 @@ class default_1 extends Controller {
             markers: [...this.markers.values()],
             polygons: [...this.polygons.values()],
             polylines: [...this.polylines.values()],
+            circles: [...this.circles.values()],
             infoWindows: this.infoWindows,
         });
         this.isConnected = true;
@@ -69,6 +73,12 @@ class default_1 extends Controller {
             return;
         }
         this.onDrawChanged(this.polylines, this.polylinesValue, this.createPolyline, this.doRemovePolyline);
+    }
+    circlesValueChanged() {
+        if (!this.isConnected) {
+            return;
+        }
+        this.onDrawChanged(this.circles, this.circlesValue, this.createCircle, this.doRemoveCircle);
     }
     createDrawingFactory(type, draws, factory) {
         const eventBefore = `${type}:before-create`;
@@ -106,6 +116,7 @@ default_1.values = {
     markers: Array,
     polygons: Array,
     polylines: Array,
+    circles: Array,
     options: Object,
 };
 
@@ -202,6 +213,20 @@ class map_controller extends default_1 {
     }
     doRemovePolyline(polyline) {
         polyline.remove();
+    }
+    doCreateCircle({ definition }) {
+        const { '@id': _id, center, radius, title, infoWindow, rawOptions = {} } = definition;
+        const circle = L.circle(center, { radius, ...rawOptions }).addTo(this.map);
+        if (title) {
+            circle.bindPopup(title);
+        }
+        if (infoWindow) {
+            this.createInfoWindow({ definition: infoWindow, element: circle });
+        }
+        return circle;
+    }
+    doRemoveCircle(circle) {
+        circle.remove();
     }
     doCreateInfoWindow({ definition, element, }) {
         const { headerContent, content, rawOptions = {}, ...otherOptions } = definition;

@@ -10,4 +10,5 @@
   data-symfony--ux-google-map--map-markers-value="[{&quot;position&quot;:{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522},&quot;title&quot;:&quot;Paris&quot;,&quot;infoWindow&quot;:null,&quot;icon&quot;:null,&quot;extra&quot;:[],&quot;id&quot;:&quot;marker1&quot;,&quot;@id&quot;:&quot;872feba9ebf3905d&quot;},{&quot;position&quot;:{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522},&quot;title&quot;:&quot;Lyon&quot;,&quot;infoWindow&quot;:{&quot;headerContent&quot;:null,&quot;content&quot;:&quot;Lyon&quot;,&quot;position&quot;:null,&quot;opened&quot;:false,&quot;autoClose&quot;:true,&quot;extra&quot;:[]},&quot;icon&quot;:null,&quot;extra&quot;:[],&quot;id&quot;:&quot;marker2&quot;,&quot;@id&quot;:&quot;6028bf5e41f644ab&quot;}]"
   data-symfony--ux-google-map--map-polygons-value="[]"
   data-symfony--ux-google-map--map-polylines-value="[]"
+  data-symfony--ux-google-map--map-circles-value="[]"
 ></div>

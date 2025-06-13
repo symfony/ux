@@ -1,7 +1,7 @@
 <!-- This HTML has been prettified for testing purposes, and may not represent the actual HTML output.
      Run "php vendor/bin/phpunit -d --update-snapshots" to update the snapshot. -->
 <div
-  data-controller="my-custom-controller symfony--ux-leaflet-map--map"
+  data-controller="symfony--ux-leaflet-map--map"
   data-symfony--ux-leaflet-map--map-provider-options-value="{}"
   data-symfony--ux-leaflet-map--map-center-value="{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522}"
   data-symfony--ux-leaflet-map--map-zoom-value="12"
@@ -10,6 +10,5 @@
   data-symfony--ux-leaflet-map--map-markers-value="[]"
   data-symfony--ux-leaflet-map--map-polygons-value="[]"
   data-symfony--ux-leaflet-map--map-polylines-value="[]"
-  data-symfony--ux-leaflet-map--map-circles-value="[]"
-  class="map"
+  data-symfony--ux-leaflet-map--map-circles-value="[{&quot;center&quot;:{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522},&quot;radius&quot;:1000000,&quot;title&quot;:&quot;Paris&quot;,&quot;infoWindow&quot;:null,&quot;extra&quot;:[],&quot;id&quot;:&quot;circle1&quot;},{&quot;center&quot;:{&quot;lat&quot;:1.1,&quot;lng&quot;:2.2},&quot;radius&quot;:500,&quot;title&quot;:null,&quot;infoWindow&quot;:{&quot;headerContent&quot;:null,&quot;content&quot;:&quot;Circle&quot;,&quot;position&quot;:null,&quot;opened&quot;:false,&quot;autoClose&quot;:true,&quot;extra&quot;:[]},&quot;extra&quot;:[],&quot;id&quot;:&quot;circle2&quot;}]"
 ></div>

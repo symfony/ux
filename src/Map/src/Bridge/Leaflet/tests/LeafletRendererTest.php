@@ -13,6 +13,7 @@ namespace Symfony\UX\Map\Bridge\Leaflet\Tests;
 
 use Symfony\UX\Icons\IconRendererInterface;
 use Symfony\UX\Map\Bridge\Leaflet\Renderer\LeafletRenderer;
+use Symfony\UX\Map\Circle;
 use Symfony\UX\Map\Icon\Icon;
 use Symfony\UX\Map\Icon\UxIconRenderer;
 use Symfony\UX\Map\InfoWindow;
@@ -94,6 +95,15 @@ class LeafletRendererTest extends RendererTestCase
                 ->zoom(12)
                 ->addPolyline(new Polyline(points: [new Point(48.8566, 2.3522), new Point(48.8566, 2.3522), new Point(48.8566, 2.3522)], id: 'polyline1'))
                 ->addPolyline(new Polyline(points: [new Point(1.1, 2.2), new Point(3.3, 4.4), new Point(5.5, 6.6)], infoWindow: new InfoWindow(content: 'Polyline'), id: 'polyline2')),
+        ];
+
+        yield 'with circles and infoWindows' => [
+            'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
+            'map' => (new Map())
+                ->center(new Point(48.8566, 2.3522))
+                ->zoom(12)
+                ->addCircle(new Circle(center: new Point(48.8566, 2.3522), radius: 1000000, title: 'Paris', id: 'circle1'))
+                ->addCircle(new Circle(center: new Point(1.1, 2.2), radius: 500, infoWindow: new InfoWindow(content: 'Circle'), id: 'circle2')),
         ];
 
         yield 'markers with icons' => [
