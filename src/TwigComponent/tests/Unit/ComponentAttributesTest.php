@@ -324,6 +324,7 @@ final class ComponentAttributesTest extends TestCase
         yield ['@click'];
         // Alpine.js
         yield ['x-on:click'];
+        yield ['@input.debounce.500ms'];
     }
 
     public function testThrowsTypeErrorWithoutEscaperRuntime(): void

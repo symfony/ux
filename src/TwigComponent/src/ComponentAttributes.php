@@ -80,7 +80,7 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
             //      xml:*, xmlns:*,
             // - special syntax names (Vue.js, Svelte, Alpine.js, ...)
             //      v-*, x-*, @*, :*
-            if (!ctype_alpha(str_replace(['-', '_', ':', '@', '.'], '', $key))) {
+            if (!ctype_alnum(str_replace(['-', '_', ':', '@', '.'], '', $key))) {
                 $key = (string) $this->escaper->escape($key, 'html_attr');
             }
 
