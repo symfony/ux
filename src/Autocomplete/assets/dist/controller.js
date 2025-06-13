@@ -29,7 +29,7 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
     return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
 };
 
-var _default_1_instances, _default_1_getCommonConfig, _default_1_createAutocomplete, _default_1_createAutocompleteWithHtmlContents, _default_1_createAutocompleteWithRemoteData, _default_1_stripTags, _default_1_mergeObjects, _default_1_createTomSelect;
+var _default_1_instances, _default_1_getCommonConfig, _default_1_createAutocomplete, _default_1_createAutocompleteWithHtmlContents, _default_1_createAutocompleteWithRemoteData, _default_1_stripTags, _default_1_mergeConfigs, _default_1_normalizePluginsToHash, _default_1_createTomSelect;
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
@@ -37,6 +37,20 @@ class default_1 extends Controller {
         this.isObserving = false;
         this.hasLoadedChoicesPreviously = false;
         this.originalOptions = [];
+        _default_1_normalizePluginsToHash.set(this, (plugins) => {
+            if (Array.isArray(plugins)) {
+                return plugins.reduce((acc, plugin) => {
+                    if (typeof plugin === 'string') {
+                        acc[plugin] = {};
+                    }
+                    if (typeof plugin === 'object' && plugin.name) {
+                        acc[plugin.name] = plugin.options || {};
+                    }
+                    return acc;
+                }, {});
+            }
+            return plugins;
+        });
     }
     initialize() {
         if (!this.mutationObserver) {
@@ -223,7 +237,7 @@ class default_1 extends Controller {
             [...originalOptionsSet].every((option) => newOptionsSet.has(option)));
     }
 }
-_default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _default_1_getCommonConfig() {
+_default_1_normalizePluginsToHash = new WeakMap(), _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _default_1_getCommonConfig() {
     const plugins = {};
     const isMultiple = !this.selectElement || this.selectElement.multiple;
     if (!this.formElement.disabled && !isMultiple) {
@@ -288,16 +302,16 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
     if (!this.selectElement && !this.urlValue) {
         config.shouldLoad = () => false;
     }
-    return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeObjects).call(this, config, this.tomSelectOptionsValue);
+    return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeConfigs).call(this, config, this.tomSelectOptionsValue);
 }, _default_1_createAutocomplete = function _default_1_createAutocomplete() {
-    const config = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeObjects).call(this, __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_getCommonConfig).call(this), {
+    const config = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeConfigs).call(this, __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_getCommonConfig).call(this), {
         maxOptions: this.getMaxOptions(),
     });
     return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createTomSelect).call(this, config);
 }, _default_1_createAutocompleteWithHtmlContents = function _default_1_createAutocompleteWithHtmlContents() {
     const commonConfig = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_getCommonConfig).call(this);
     const labelField = commonConfig.labelField ?? 'text';
-    const config = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeObjects).call(this, commonConfig, {
+    const config = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeConfigs).call(this, commonConfig, {
         maxOptions: this.getMaxOptions(),
         score: (search) => {
             const scoringFunction = this.tomSelect.getScoreFunction(search);
@@ -314,7 +328,7 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
 }, _default_1_createAutocompleteWithRemoteData = function _default_1_createAutocompleteWithRemoteData(autocompleteEndpointUrl, minCharacterLength) {
     const commonConfig = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_getCommonConfig).call(this);
     const labelField = commonConfig.labelField ?? 'text';
-    const config = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeObjects).call(this, commonConfig, {
+    const config = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeConfigs).call(this, commonConfig, {
         firstUrl: (query) => {
             const separator = autocompleteEndpointUrl.includes('?') ? '&' : '?';
             return `${autocompleteEndpointUrl}${separator}query=${encodeURIComponent(query)}`;
@@ -364,8 +378,15 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
     return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createTomSelect).call(this, config);
 }, _default_1_stripTags = function _default_1_stripTags(string) {
     return string.replace(/(<([^>]+)>)/gi, '');
-}, _default_1_mergeObjects = function _default_1_mergeObjects(object1, object2) {
-    return { ...object1, ...object2 };
+}, _default_1_mergeConfigs = function _default_1_mergeConfigs(config1, config2) {
+    return {
+        ...config1,
+        ...config2,
+        plugins: {
+            ...__classPrivateFieldGet(this, _default_1_normalizePluginsToHash, "f").call(this, config1.plugins || {}),
+            ...__classPrivateFieldGet(this, _default_1_normalizePluginsToHash, "f").call(this, config2.plugins || {}),
+        },
+    };
 }, _default_1_createTomSelect = function _default_1_createTomSelect(options) {
     const preConnectPayload = { options };
     this.dispatchEvent('pre-connect', preConnectPayload);
