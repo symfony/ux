@@ -288,9 +288,9 @@ Alternatively, you can use the ``<twig:ux:map />`` component.
 .. code-block:: html+twig
 
     <twig:ux:map
-        center="[51.5074, 0.1278]"
+        :center="[51.5074, 0.1278]"
         zoom="3"
-        markers='[
+        :markers='[
             {"position": [51.5074, 0.1278], "title": "London"},
             {"position": [48.8566, 2.3522], "title": "Paris"},
             {
