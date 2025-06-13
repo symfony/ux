@@ -11,6 +11,7 @@ import type { LoaderOptions } from '@googlemaps/js-api-loader';
 import { Loader } from '@googlemaps/js-api-loader';
 import AbstractMapController, { IconTypes } from '@symfony/ux-map';
 import type {
+    CircleDefinition,
     Icon,
     InfoWindowWithoutPositionDefinition,
     MarkerDefinition,
@@ -49,7 +50,9 @@ export default class extends AbstractMapController<
     google.maps.PolygonOptions,
     google.maps.Polygon,
     google.maps.PolylineOptions,
-    google.maps.Polyline
+    google.maps.Polyline,
+    google.maps.CircleOptions,
+    google.maps.Circle
 > {
     declare providerOptionsValue: Pick<
         LoaderOptions,
@@ -224,6 +227,35 @@ export default class extends AbstractMapController<
 
     protected doRemovePolyline(polyline: google.maps.Polyline): void {
         polyline.setMap(null);
+    }
+
+    protected doCreateCircle({
+        definition,
+    }: {
+        definition: CircleDefinition<google.maps.CircleOptions, google.maps.InfoWindowOptions>;
+    }): google.maps.Circle {
+        const { '@id': _id, center, radius, title, infoWindow, rawOptions = {} } = definition;
+
+        const circle = new _google.maps.Circle({
+            ...rawOptions,
+            center,
+            radius,
+            map: this.map,
+        });
+
+        if (title) {
+            circle.set('title', title);
+        }
+
+        if (infoWindow) {
+            this.createInfoWindow({ definition: infoWindow, element: circle });
+        }
+
+        return circle;
+    }
+
+    protected doRemoveCircle(circle: google.maps.Circle): void {
+        circle.setMap(null);
     }
 
     protected doCreateInfoWindow({

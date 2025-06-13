@@ -208,21 +208,37 @@ You can add Polylines, which represents a path made by a series of ``Point`` ins
         ),
     ));
 
+Add Circles
+~~~~~~~~~~~
+
+You can add Circles, which represents a circular area defined by a center point and a radius (in meters)::
+
+    $map->addCircle(new Circle(
+        center: new Point(48.8566, 2.3522),
+        radius: 5_000, // 5km
+        title: 'Paris',
+        infoWindow: new InfoWindow(
+            content: 'A 5km radius circle centered on Paris',
+        ),
+    ));
+
 Remove elements from Map
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-It is possible to remove elements like ``Marker``, ``Polygon`` and ``Polyline`` instances by using ``Map::remove*()`` methods.
+It is possible to remove elements like ``Marker``, ``Polygon``, ``Polyline`` and ``Circle`` instances by using ``Map::remove*()`` methods.
 It's useful when :ref:`using a Map inside a Live Component <map-live-component>`::
 
     // Add elements
     $map->addMarker($marker = new Marker(/* ... */));
     $map->addPolygon($polygon = new Polygon(/* ... */));
     $map->addPolyline($polyline = new Polyline(/* ... */));
+    $map->addCircle($circle = new Circle(/* ... */));
 
     // And later, remove those elements
     $map->removeMarker($marker);
     $map->removePolygon($polygon);
     $map->removePolyline($polyline);
+    $map->removeCircle($circle);
 
 If you haven't stored the element instance, you can still remove them by passing the identifier string::
 

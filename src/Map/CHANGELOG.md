@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2.28
+
+-   Add support for creating `Circle` by passing a `Point` and a radius (in meters) to the `Circle` constructor, e.g.:
+```php
+$map->addCircle(new Circle(
+    center: new Point(48.856613, 2.352222), // Paris
+    radius: 5_000 // 5km
+));
+```
 ## 2.27
 
 -   The `fitBoundsToMarkers` option is not overridden anymore when using the `Map` LiveComponent, but now respects the value you defined.

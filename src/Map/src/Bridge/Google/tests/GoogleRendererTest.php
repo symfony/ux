@@ -14,6 +14,7 @@ namespace Symfony\UX\Map\Bridge\Google\Tests;
 use Symfony\UX\Icons\IconRendererInterface;
 use Symfony\UX\Map\Bridge\Google\GoogleOptions;
 use Symfony\UX\Map\Bridge\Google\Renderer\GoogleRenderer;
+use Symfony\UX\Map\Circle;
 use Symfony\UX\Map\Icon\Icon;
 use Symfony\UX\Map\Icon\UxIconRenderer;
 use Symfony\UX\Map\InfoWindow;
@@ -99,6 +100,15 @@ class GoogleRendererTest extends RendererTestCase
                 ->zoom(12)
                 ->addPolyline(new Polyline(points: [new Point(48.8566, 2.3522), new Point(48.8566, 2.3522), new Point(48.8566, 2.3522)]))
                 ->addPolyline(new Polyline(points: [new Point(1.1, 2.2), new Point(3.3, 4.4), new Point(5.5, 6.6)], infoWindow: new InfoWindow(content: 'Polygon'))),
+        ];
+
+        yield 'with circles and infoWindows' => [
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'map' => (new Map())
+                ->center(new Point(48.8566, 2.3522))
+                ->zoom(12)
+                ->addCircle(new Circle(center: new Point(48.8566, 2.3522), radius: 500, infoWindow: new InfoWindow(content: 'Circle')))
+                ->addCircle(new Circle(center: new Point(1.1, 2.2), radius: 1000, infoWindow: new InfoWindow(content: 'Circle'))),
         ];
 
         yield 'with controls enabled' => [

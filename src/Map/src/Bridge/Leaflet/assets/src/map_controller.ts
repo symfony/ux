@@ -1,5 +1,6 @@
 import AbstractMapController, { IconTypes } from '@symfony/ux-map';
 import type {
+    CircleDefinition,
     Icon,
     InfoWindowWithoutPositionDefinition,
     MarkerDefinition,
@@ -10,6 +11,7 @@ import type {
 import 'leaflet/dist/leaflet.min.css';
 import * as L from 'leaflet';
 import type {
+    CircleOptions,
     ControlPosition,
     LatLngBoundsExpression,
     MapOptions as LeafletMapOptions,
@@ -41,7 +43,9 @@ export default class extends AbstractMapController<
     PolygonOptions,
     L.Polygon,
     PolylineOptions,
-    L.Polyline
+    L.Polyline,
+    CircleOptions,
+    L.Circle
 > {
     declare map: L.Map;
 
@@ -176,12 +180,32 @@ export default class extends AbstractMapController<
         polyline.remove();
     }
 
+    protected doCreateCircle({ definition }: { definition: CircleDefinition<CircleOptions, PopupOptions> }): L.Circle {
+        const { '@id': _id, center, radius, title, infoWindow, rawOptions = {} } = definition;
+
+        const circle = L.circle(center, { radius, ...rawOptions }).addTo(this.map);
+
+        if (title) {
+            circle.bindPopup(title);
+        }
+
+        if (infoWindow) {
+            this.createInfoWindow({ definition: infoWindow, element: circle });
+        }
+
+        return circle;
+    }
+
+    protected doRemoveCircle(circle: L.Circle): void {
+        circle.remove();
+    }
+
     protected doCreateInfoWindow({
         definition,
         element,
     }: {
         definition: InfoWindowWithoutPositionDefinition<PopupOptions>;
-        element: L.Marker | L.Polygon | L.Polyline;
+        element: L.Marker | L.Polygon | L.Polyline | L.Circle;
     }): L.Popup {
         const { headerContent, content, rawOptions = {}, ...otherOptions } = definition;
 

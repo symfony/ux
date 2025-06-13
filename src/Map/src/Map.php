@@ -23,11 +23,13 @@ final class Map
     private Markers $markers;
     private Polygons $polygons;
     private Polylines $polylines;
+    private Circles $circles;
 
     /**
      * @param Marker[]   $markers
      * @param Polygon[]  $polygons
      * @param Polyline[] $polylines
+     * @param Circle[]   $circles
      */
     public function __construct(
         private readonly ?string $rendererName = null,
@@ -38,10 +40,12 @@ final class Map
         array $markers = [],
         array $polygons = [],
         array $polylines = [],
+        array $circles = [],
     ) {
         $this->markers = new Markers($markers);
         $this->polygons = new Polygons($polygons);
         $this->polylines = new Polylines($polylines);
+        $this->circles = new Circles($circles);
     }
 
     public function getRendererName(): ?string
@@ -129,6 +133,20 @@ final class Map
         return $this;
     }
 
+    public function addCircle(Circle $circle): self
+    {
+        $this->circles->add($circle);
+
+        return $this;
+    }
+
+    public function removeCircle(Circle|string $circleOrId): self
+    {
+        $this->circles->remove($circleOrId);
+
+        return $this;
+    }
+
     public function toArray(): array
     {
         if (!$this->fitBoundsToMarkers) {
@@ -149,6 +167,7 @@ final class Map
             'markers' => $this->markers->toArray(),
             'polygons' => $this->polygons->toArray(),
             'polylines' => $this->polylines->toArray(),
+            'circles' => $this->circles->toArray(),
         ];
     }
 
@@ -159,6 +178,7 @@ final class Map
      *     markers?: list<array>,
      *     polygons?: list<array>,
      *     polylines?: list<array>,
+     *     circles?: list<array>,
      *     fitBoundsToMarkers?: bool,
      *     options?: array<string, mixed>,
      * } $map
@@ -192,6 +212,12 @@ final class Map
             throw new InvalidArgumentException('The "polylines" parameter must be an array.');
         }
         $map['polylines'] = array_map(Polyline::fromArray(...), $map['polylines']);
+
+        $map['circles'] ??= [];
+        if (!\is_array($map['circles'])) {
+            throw new InvalidArgumentException('The "circles" parameter must be an array.');
+        }
+        $map['circles'] = array_map(Circle::fromArray(...), $map['circles']);
 
         return new self(...$map);
     }

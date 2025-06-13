@@ -10,5 +10,6 @@
   data-symfony--ux-google-map--map-markers-value="[]"
   data-symfony--ux-google-map--map-polygons-value="[]"
   data-symfony--ux-google-map--map-polylines-value="[]"
+  data-symfony--ux-google-map--map-circles-value="[]"
   class="map"
 ></div>
