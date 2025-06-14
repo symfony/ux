@@ -86,9 +86,10 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
             // todo cache/warmup an array of classes that are "doctrine objects"
             foreach ($this->managerRegistries as $registry) {
                 if ($om = $registry->getManagerForClass($class)) {
-                   return self::ensureManagedObject($om, $class);
+                    return self::ensureManagedObject($om, $class);
                 }
             }
+
             return null;
         }
 
