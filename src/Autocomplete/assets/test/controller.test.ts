@@ -138,6 +138,67 @@ describe('AutocompleteController', () => {
         expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=foo');
     });
 
+    it('connect with ajax URL on a select element, even when the user define custom TomSelect plugins', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                data-testid="main-element"
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+                data-autocomplete-tom-select-options-value="{&quot;plugins&quot;:[&quot;input_autogrow&quot;]}"
+            ></select>
+        `);
+
+        // initial Ajax request on focus
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: [
+                    {
+                        value: 3,
+                        text: 'salad',
+                    },
+                ],
+            })
+        );
+
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: [
+                    {
+                        value: 1,
+                        text: 'pizza',
+                    },
+                    {
+                        value: 2,
+                        text: 'popcorn',
+                    },
+                ],
+            })
+        );
+
+        const controlInput = tomSelect.control_input;
+
+        // wait for the initial Ajax request to finish
+        userEvent.click(controlInput);
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(1);
+        });
+
+        // typing was not properly triggering, for some reason
+        //userEvent.type(controlInput, 'foo');
+        controlInput.value = 'foo';
+        controlInput.dispatchEvent(new Event('input'));
+
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(2);
+        });
+
+        expect(fetchMock.requests().length).toEqual(2);
+        expect(fetchMock.requests()[0].url).toEqual('/path/to/autocomplete?query=');
+        expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=foo');
+    });
+
     it('resets when ajax URL attribute on a select element changes', async () => {
         const { container, tomSelect } = await startAutocompleteTest(`
             <label for="the-select">Items</label>

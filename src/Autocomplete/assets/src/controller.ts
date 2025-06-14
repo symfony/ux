@@ -214,11 +214,11 @@ export default class extends Controller {
             config.shouldLoad = () => false;
         }
 
-        return this.#mergeObjects(config, this.tomSelectOptionsValue);
+        return this.#mergeConfigs(config, this.tomSelectOptionsValue);
     }
 
     #createAutocomplete(): TomSelect {
-        const config = this.#mergeObjects(this.#getCommonConfig(), {
+        const config = this.#mergeConfigs(this.#getCommonConfig(), {
             maxOptions: this.getMaxOptions(),
         });
 
@@ -229,7 +229,7 @@ export default class extends Controller {
         const commonConfig = this.#getCommonConfig();
         const labelField = commonConfig.labelField ?? 'text';
 
-        const config = this.#mergeObjects(commonConfig, {
+        const config = this.#mergeConfigs(commonConfig, {
             maxOptions: this.getMaxOptions(),
             score: (search: string) => {
                 const scoringFunction = this.tomSelect.getScoreFunction(search);
@@ -251,7 +251,7 @@ export default class extends Controller {
         const commonConfig = this.#getCommonConfig();
         const labelField = commonConfig.labelField ?? 'text';
 
-        const config: RecursivePartial<TomSettings> = this.#mergeObjects(commonConfig, {
+        const config: RecursivePartial<TomSettings> = this.#mergeConfigs(commonConfig, {
             firstUrl: (query: string) => {
                 const separator = autocompleteEndpointUrl.includes('?') ? '&' : '?';
 
@@ -325,9 +325,38 @@ export default class extends Controller {
         return string.replace(/(<([^>]+)>)/gi, '');
     }
 
-    #mergeObjects(object1: any, object2: any): any {
-        return { ...object1, ...object2 };
+    #mergeConfigs(config1: any, config2: any): any {
+        return {
+            ...config1,
+            ...config2,
+            // Plugins from both configs should be merged together.
+            plugins: {
+                ...this.#normalizePluginsToHash(config1.plugins || {}),
+                ...this.#normalizePluginsToHash(config2.plugins || {}),
+            },
+        };
     }
+
+    /**
+     * Normalizes the plugins to a hash, so that we can merge them easily.
+     */
+    #normalizePluginsToHash = (plugins: TomSettings['plugins']): TPluginHash => {
+        if (Array.isArray(plugins)) {
+            return plugins.reduce((acc, plugin) => {
+                if (typeof plugin === 'string') {
+                    acc[plugin] = {};
+                }
+
+                if (typeof plugin === 'object' && plugin.name) {
+                    acc[plugin.name] = plugin.options || {};
+                }
+
+                return acc;
+            }, {} as TPluginHash);
+        }
+
+        return plugins;
+    };
 
     /**
      * Returns the element, but only if it's a select element.
