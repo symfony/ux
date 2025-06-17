@@ -7,6 +7,7 @@ import type {
     Point,
     PolygonDefinition,
     PolylineDefinition,
+    RectangleDefinition,
 } from '@symfony/ux-map';
 import 'leaflet/dist/leaflet.min.css';
 import * as L from 'leaflet';
@@ -19,6 +20,7 @@ import type {
     PolylineOptions as PolygonOptions,
     PolylineOptions,
     PopupOptions,
+    PolylineOptions as RectangleOptions,
 } from 'leaflet';
 
 type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom' | 'attributionControl' | 'zoomControl'> & {
@@ -45,7 +47,9 @@ export default class extends AbstractMapController<
     PolylineOptions,
     L.Polyline,
     CircleOptions,
-    L.Circle
+    L.Circle,
+    RectangleOptions,
+    L.Rectangle
 > {
     declare map: L.Map;
 
@@ -200,12 +204,40 @@ export default class extends AbstractMapController<
         circle.remove();
     }
 
+    protected doCreateRectangle({
+        definition,
+    }: { definition: RectangleDefinition<RectangleOptions, PopupOptions> }): L.Rectangle {
+        const { '@id': _id, bounds, title, infoWindow, rawOptions = {} } = definition;
+
+        const rectangle = L.rectangle(
+            [
+                [bounds.southWest.lat, bounds.southWest.lng],
+                [bounds.northEast.lat, bounds.northEast.lng],
+            ],
+            { ...rawOptions }
+        ).addTo(this.map);
+
+        if (title) {
+            rectangle.bindPopup(title);
+        }
+
+        if (infoWindow) {
+            this.createInfoWindow({ definition: infoWindow, element: rectangle });
+        }
+
+        return rectangle;
+    }
+
+    protected doRemoveRectangle(rectangle: L.Rectangle): void {
+        rectangle.remove();
+    }
+
     protected doCreateInfoWindow({
         definition,
         element,
     }: {
         definition: InfoWindowWithoutPositionDefinition<PopupOptions>;
-        element: L.Marker | L.Polygon | L.Polyline | L.Circle;
+        element: L.Marker | L.Polygon | L.Polyline | L.Circle | L.Rectangle;
     }): L.Popup {
         const { headerContent, content, rawOptions = {}, ...otherOptions } = definition;
 

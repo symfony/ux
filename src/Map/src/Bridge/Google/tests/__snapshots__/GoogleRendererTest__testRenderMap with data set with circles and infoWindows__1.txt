@@ -11,4 +11,5 @@
   data-symfony--ux-google-map--map-polygons-value="[]"
   data-symfony--ux-google-map--map-polylines-value="[]"
   data-symfony--ux-google-map--map-circles-value="[{&quot;center&quot;:{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522},&quot;radius&quot;:500,&quot;title&quot;:null,&quot;infoWindow&quot;:{&quot;headerContent&quot;:null,&quot;content&quot;:&quot;Circle&quot;,&quot;position&quot;:null,&quot;opened&quot;:false,&quot;autoClose&quot;:true,&quot;extra&quot;:[]},&quot;extra&quot;:[],&quot;id&quot;:null},{&quot;center&quot;:{&quot;lat&quot;:1.1,&quot;lng&quot;:2.2},&quot;radius&quot;:1000,&quot;title&quot;:null,&quot;infoWindow&quot;:{&quot;headerContent&quot;:null,&quot;content&quot;:&quot;Circle&quot;,&quot;position&quot;:null,&quot;opened&quot;:false,&quot;autoClose&quot;:true,&quot;extra&quot;:[]},&quot;extra&quot;:[],&quot;id&quot;:null}]"
+  data-symfony--ux-google-map--map-rectangles-value="[]"
 ></div>

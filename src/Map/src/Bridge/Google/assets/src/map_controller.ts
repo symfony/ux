@@ -18,6 +18,7 @@ import type {
     Point,
     PolygonDefinition,
     PolylineDefinition,
+    RectangleDefinition,
 } from '@symfony/ux-map';
 
 type MapOptions = Pick<
@@ -57,7 +58,9 @@ export default class extends AbstractMapController<
     google.maps.PolylineOptions,
     google.maps.Polyline,
     google.maps.CircleOptions,
-    google.maps.Circle
+    google.maps.Circle,
+    google.maps.RectangleOptions,
+    google.maps.Rectangle
 > {
     declare providerOptionsValue: Pick<
         LoaderOptions,
@@ -273,6 +276,34 @@ export default class extends AbstractMapController<
 
     protected doRemoveCircle(circle: google.maps.Circle): void {
         circle.setMap(null);
+    }
+
+    protected doCreateRectangle({
+        definition,
+    }: {
+        definition: RectangleDefinition<google.maps.RectangleOptions, google.maps.InfoWindowOptions>;
+    }): google.maps.Rectangle {
+        const { bounds, title, infoWindow, rawOptions = {} } = definition;
+
+        const rectangle = new _google.maps.Rectangle({
+            ...rawOptions,
+            bounds: new _google.maps.LatLngBounds(bounds.southWest, bounds.northEast),
+            map: this.map,
+        });
+
+        if (title) {
+            rectangle.set('title', title);
+        }
+
+        if (infoWindow) {
+            this.createInfoWindow({ definition: infoWindow, element: rectangle });
+        }
+
+        return rectangle;
+    }
+
+    protected doRemoveRectangle(rectangle: google.maps.Rectangle): void {
+        rectangle.setMap(null);
     }
 
     protected doCreateInfoWindow({

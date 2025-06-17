@@ -23,6 +23,7 @@ use Symfony\UX\Map\Marker;
 use Symfony\UX\Map\Point;
 use Symfony\UX\Map\Polygon;
 use Symfony\UX\Map\Polyline;
+use Symfony\UX\Map\Rectangle;
 use Symfony\UX\Map\Test\RendererTestCase;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 
@@ -109,6 +110,15 @@ class GoogleRendererTest extends RendererTestCase
                 ->zoom(12)
                 ->addCircle(new Circle(center: new Point(48.8566, 2.3522), radius: 500, infoWindow: new InfoWindow(content: 'Circle')))
                 ->addCircle(new Circle(center: new Point(1.1, 2.2), radius: 1000, infoWindow: new InfoWindow(content: 'Circle'))),
+        ];
+
+        yield 'with rectangles and infoWindows' => [
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'map' => (new Map())
+                ->center(new Point(48.8566, 2.3522))
+                ->zoom(12)
+                ->addRectangle(new Rectangle(southWest: new Point(48.8566, 2.3522), northEast: new Point(48.8566, 2.3522), infoWindow: new InfoWindow(content: 'Rectangle')))
+                ->addRectangle(new Rectangle(southWest: new Point(1.1, 2.2), northEast: new Point(3.3, 4.4), infoWindow: new InfoWindow(content: 'Rectangle'))),
         ];
 
         yield 'with controls enabled' => [

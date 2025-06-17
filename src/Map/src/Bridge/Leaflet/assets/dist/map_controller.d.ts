@@ -1,8 +1,8 @@
 import AbstractMapController from '@symfony/ux-map';
-import type { CircleDefinition, Icon, InfoWindowWithoutPositionDefinition, MarkerDefinition, Point, PolygonDefinition, PolylineDefinition } from '@symfony/ux-map';
+import type { CircleDefinition, Icon, InfoWindowWithoutPositionDefinition, MarkerDefinition, Point, PolygonDefinition, PolylineDefinition, RectangleDefinition } from '@symfony/ux-map';
 import 'leaflet/dist/leaflet.min.css';
 import * as L from 'leaflet';
-import type { CircleOptions, ControlPosition, MapOptions as LeafletMapOptions, MarkerOptions, PolylineOptions as PolygonOptions, PolylineOptions, PopupOptions } from 'leaflet';
+import type { CircleOptions, ControlPosition, MapOptions as LeafletMapOptions, MarkerOptions, PolylineOptions as PolygonOptions, PolylineOptions, PopupOptions, PolylineOptions as RectangleOptions } from 'leaflet';
 type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom' | 'attributionControl' | 'zoomControl'> & {
     attributionControlOptions?: {
         position: ControlPosition;
@@ -21,7 +21,7 @@ type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom' | 'attributionContro
         options: Record<string, unknown>;
     } | false;
 };
-export default class extends AbstractMapController<MapOptions, L.Map, MarkerOptions, L.Marker, PopupOptions, L.Popup, PolygonOptions, L.Polygon, PolylineOptions, L.Polyline, CircleOptions, L.Circle> {
+export default class extends AbstractMapController<MapOptions, L.Map, MarkerOptions, L.Marker, PopupOptions, L.Popup, PolygonOptions, L.Polygon, PolylineOptions, L.Polyline, CircleOptions, L.Circle, RectangleOptions, L.Rectangle> {
     map: L.Map;
     connect(): void;
     centerValueChanged(): void;
@@ -48,9 +48,13 @@ export default class extends AbstractMapController<MapOptions, L.Map, MarkerOpti
         definition: CircleDefinition<CircleOptions, PopupOptions>;
     }): L.Circle;
     protected doRemoveCircle(circle: L.Circle): void;
+    protected doCreateRectangle({ definition, }: {
+        definition: RectangleDefinition<RectangleOptions, PopupOptions>;
+    }): L.Rectangle;
+    protected doRemoveRectangle(rectangle: L.Rectangle): void;
     protected doCreateInfoWindow({ definition, element, }: {
         definition: InfoWindowWithoutPositionDefinition<PopupOptions>;
-        element: L.Marker | L.Polygon | L.Polyline | L.Circle;
+        element: L.Marker | L.Polygon | L.Polyline | L.Circle | L.Rectangle;
     }): L.Popup;
     protected doCreateIcon({ definition, element, }: {
         definition: Icon;

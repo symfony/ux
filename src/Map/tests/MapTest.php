@@ -20,6 +20,7 @@ use Symfony\UX\Map\Marker;
 use Symfony\UX\Map\Point;
 use Symfony\UX\Map\Polygon;
 use Symfony\UX\Map\Polyline;
+use Symfony\UX\Map\Rectangle;
 
 class MapTest extends TestCase
 {
@@ -70,6 +71,7 @@ class MapTest extends TestCase
             'polygons' => [],
             'polylines' => [],
             'circles' => [],
+            'rectangles' => [],
         ], $array);
     }
 
@@ -91,6 +93,7 @@ class MapTest extends TestCase
             'polygons' => [],
             'polylines' => [],
             'circles' => [],
+            'rectangles' => [],
         ], $array);
     }
 
@@ -185,6 +188,30 @@ class MapTest extends TestCase
                 infoWindow: new InfoWindow(
                     headerContent: '<b>Circle around Lyon</b>',
                     content: 'A circle with a radius of 300 meters around Lyon.',
+                    position: new Point(45.764, 4.8357),
+                    opened: true,
+                    autoClose: true,
+                ),
+            ))
+            ->addRectangle(new Rectangle(
+                southWest: new Point(48.853, 2.3499),
+                northEast: new Point(48.8566, 2.3522),
+                title: 'Rectangle around Paris',
+                infoWindow: new InfoWindow(
+                    headerContent: '<b>Rectangle around Paris</b>',
+                    content: 'A rectangle around Paris.',
+                    position: new Point(48.8566, 2.3522),
+                    opened: true,
+                    autoClose: true,
+                ),
+            ))
+            ->addRectangle(new Rectangle(
+                southWest: new Point(45.75, 4.85),
+                northEast: new Point(45.77, 4.82),
+                title: 'Rectangle around Lyon',
+                infoWindow: new InfoWindow(
+                    headerContent: '<b>Rectangle around Lyon</b>',
+                    content: 'A rectangle around Lyon.',
                     position: new Point(45.764, 4.8357),
                     opened: true,
                     autoClose: true,
@@ -333,6 +360,42 @@ class MapTest extends TestCase
                     'infoWindow' => [
                         'headerContent' => '<b>Circle around Lyon</b>',
                         'content' => 'A circle with a radius of 300 meters around Lyon.',
+                        'position' => ['lat' => 45.764, 'lng' => 4.8357],
+                        'opened' => true,
+                        'autoClose' => true,
+                        'extra' => [],
+                    ],
+                    'extra' => [],
+                    'id' => null,
+                ],
+            ],
+            'rectangles' => [
+                [
+                    'bounds' => [
+                        'southWest' => ['lat' => 48.853, 'lng' => 2.3499],
+                        'northEast' => ['lat' => 48.8566, 'lng' => 2.3522],
+                    ],
+                    'title' => 'Rectangle around Paris',
+                    'infoWindow' => [
+                        'headerContent' => '<b>Rectangle around Paris</b>',
+                        'content' => 'A rectangle around Paris.',
+                        'position' => ['lat' => 48.8566, 'lng' => 2.3522],
+                        'opened' => true,
+                        'autoClose' => true,
+                        'extra' => [],
+                    ],
+                    'extra' => [],
+                    'id' => null,
+                ],
+                [
+                    'bounds' => [
+                        'southWest' => ['lat' => 45.75, 'lng' => 4.85],
+                        'northEast' => ['lat' => 45.77, 'lng' => 4.82],
+                    ],
+                    'title' => 'Rectangle around Lyon',
+                    'infoWindow' => [
+                        'headerContent' => '<b>Rectangle around Lyon</b>',
+                        'content' => 'A rectangle around Lyon.',
                         'position' => ['lat' => 45.764, 'lng' => 4.8357],
                         'opened' => true,
                         'autoClose' => true,
