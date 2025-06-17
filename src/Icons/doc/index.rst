@@ -17,7 +17,7 @@ Installation
     $ composer require symfony/ux-icons
 
     # To use provided on-demand icon sets, you also need HTTP client:
-    $ composer require symfony/http-client    
+    $ composer require symfony/http-client
 
 SVG Icons
 ---------
@@ -77,6 +77,38 @@ define the HTML attributes added to the ``<svg>`` element:
     {{ ux_icon('user-profile', {height: '16px', width: '16px', 'aria-hidden': true}) }}
     {# renders <svg height="16" width="16" aria-hidden="true"> ... </svg> #}
 
+Icon Sizes
+~~~~~~~~~~
+
+.. note::
+
+    ``<svg>`` elements will be dynamically sized by the browser.
+    For icons, we therefore recommend to explicitly set the size.
+
+To align icons naturally with surrounding text and inherit font sizing, use ``em``
+units. This works well for buttons, links, or inline text. Defining the height alone
+ is sufficient—the width will scale proportionally:
+
+.. code-block:: html+twig
+
+    {# Twig function #}
+    {{ ux_icon('user-profile', {style: 'height: 1em;'}) }}
+
+    {# HTML syntax #}
+    <twig:ux:icon name="profile" style="height: 1em;" />
+
+If your project uses a CSS framework like Tailwind or Bootstrap, prefer their
+sizing utilities for consistency and theming:
+
+.. code-block:: html+twig
+
+    {# Twig function #}
+    {{ ux_icon('bi:chat', {class: 'size-4'}) }}
+
+    {# HTML syntax #}
+    <twig:ux:icon name="bi:chat" class="size-4" />
+
+To keep your design consistent and easily adjustable, consider defining a :ref:default attribute <icons_default_attributes>. This allows you to control the size of all your icons from a single place.
 
 Icon Sets
 ~~~~~~~~~
@@ -327,6 +359,8 @@ HTML Syntax
 .. note::
 
     ``symfony/ux-twig-component`` is required to use the HTML syntax.
+
+.. _icons_default_attributes:
 
 Default Attributes
 ~~~~~~~~~~~~~~~~~~
