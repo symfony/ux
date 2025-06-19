@@ -738,6 +738,8 @@ There is also a non-HTML syntax that can be used:
         {% block footer %}... footer content{% endblock %}
     {% endcomponent %}
 
+.. _embedded-components-context:
+
 Context / Variables Inside of Blocks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -801,10 +803,7 @@ When overriding the ``alert_message`` block, you have access to the ``message`` 
         </twig:block>
     </twig:SuccessAlert>
 
-.. versionadded:: 2.13
-
-    The ability to refer to the scope of higher components via the ``outerScope``
-    variable was added in 2.13.
+.. _embedded-components-outerScope:
 
 As mentioned before, variables from lower components are merged with those from
 upper components. When you need access to some properties or functions from higher
@@ -825,6 +824,11 @@ components, that can be done via the ``outerScope...`` variable:
         {{ outerScope.this.someProp }} {# references a "someProp" prop from SuccessAlert #}
     {% endcomponent %}
 
+.. versionadded:: 2.13
+
+    The ability to refer to the scope of higher components via the ``outerScope``
+    variable was added in 2.13.
+
 You can keep referring to components higher up as well. Just add another ``outerScope``.
 Remember though that the ``outerScope`` reference only starts once you're INSIDE the (embedded) component.
 
@@ -841,6 +845,8 @@ Remember though that the ``outerScope`` reference only starts once you're INSIDE
             {% endcomponent %}
         {% endblock %}
     {% endcomponent %}
+
+.. _embedded-components-outerBlocks:
 
 Inheritance & Forwarding "Outer Blocks"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1563,9 +1569,33 @@ listen to ``PreMountEvent`` or ``PostMountEvent``.
 Nested Components
 -----------------
 
-It's totally possible to include components as part of the contents of another
-component. When you do this, all components render independently. The only
-caveat is that you cannot mix the Twig syntax and the :ref:`HTML syntax <component_html_syntax>`
+It's possible to include components inside another component:
+
+.. code-block:: html+twig
+
+    <twig:SomeComponent>
+        {% for i in 1..10 %}
+            <twig:AnotherComponent>
+                {{ i }}
+            </twig:AnotherComponent>
+        {% endfor %}
+    </twig:SomeComponent>
+
+When you do this, each component is rendered independently, but there are some
+important caveats:
+
+#. As :ref:`explained above <embedded-components-context>`, the variables of a
+   component are merged with the variables of its parent component. Variables
+   with the same name (e.g. ``this`` or ``computed``) are overridden by the
+   inner component;
+#. The original parent component variables are available via the special
+   :ref:`outerScope variable <embedded-components-outerScope>`, so you can, for
+   example, call ``outerScope.this.someFunction()``;
+#. The contents of blocks defined in parent components are available via the
+   special :ref:`outerBlocks variable <embedded-components-outerBlocks>`, so you
+   can call ``block(outerBlocks.someBlockName)``.
+
+Finally, you cannot mix the Twig syntax and the :ref:`HTML syntax <component_html_syntax>`
 when using nested components:
 
 .. code-block:: html+twig
@@ -1599,8 +1629,9 @@ when using nested components:
         {% endblock %}
     {% endcomponent %}
 
-If you're using `Live Components`_, then there *are* some guidelines related to
-how the re-rendering of parent and child components works. Read `Live Nested Components`_.
+If you're using `Live Components`_, there *are* additional guidelines related
+to how parent and child components are re-rendered. See `Live Nested Components`_
+for details.
 
 Configuration
 -------------
