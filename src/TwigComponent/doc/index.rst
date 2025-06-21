@@ -447,15 +447,24 @@ need to populate, you can render it with:
 Mounting Data
 -------------
 
-Most of the time, you will create public properties and then pass values
-to those as "props" when rendering. But there are several hooks in case
-you need to do something more complex.
+Most of the time, you will create public properties and pass values to them
+as "props" when rendering the component. However, there are several hooks
+available when you need to perform more complex logic.
 
 The mount() Method
 ~~~~~~~~~~~~~~~~~~
 
-For more control over how your "props" are handled, you can create a method
-called ``mount()``::
+The ``mount()`` method gives you more control over how your "props" are handled.
+It is called once, immediately after the component is instantiated, **but before**
+the component system assigns the props you passed when rendering.
+
+For example, if you call your component like this:
+
+.. code-block:: html+twig
+
+    <twig:Alert type="error" message="..."/>
+
+The following code won't work as expected::
 
     // src/Twig/Components/Alert.php
     // ...
@@ -466,30 +475,60 @@ called ``mount()``::
         public string $message;
         public string $type = 'success';
 
-        public function mount(bool $isSuccess = true): void
+        public function mount(): void
         {
-            $this->type = $isSuccess ? 'success' : 'danger';
+            {# ❌ this won't work: at this point $type still has its default value.
+                   Passed values are not yet available in props. #}
+            if ('error' === $this->type) {
+                // ...
+            }
         }
 
         // ...
     }
 
-The ``mount()`` method is called just one time: immediately after your
-component is instantiated. Because the method has an ``$isSuccess``
-argument, if we pass an ``isSuccess`` prop when rendering, it will be
-passed to ``mount()``.
+Inside ``mount()``, each prop has only its *default* value (or ``null`` if it is
+untyped and has no default). If you need a prop's value, declare a parameter in
+``mount()`` whose name matches the prop instead of reading the public property::
+
+    public function mount(string $type): void
+    {
+        {# ✅ this works as expected: the $type argument in PHP has the value
+               passed to the 'type' prop in the Twig template #}
+        if ('error' === $type) {
+            // ...
+        }
+    }
+
+If a prop name (e.g. ``type``) matches an argument name in ``mount()``,
+its value will be passed only to the method. The component system **will not**
+set it on a public property or use it in the component's ``attributes``.
+
+``mount()`` can also receive props **even when no matching public property
+exists**. For example, pass an ``isError`` prop instead of ``type``:
 
 .. code-block:: html+twig
 
-    <twig:Alert
-        isSuccess="{{ false }}"
-        message="Danger Will Robinson!"
-    />
+    <twig:Alert isError="{{ true }}" message="..."/>
 
-If a prop name (e.g. ``isSuccess``) matches an argument name in ``mount()``,
-the prop will be passed as that argument and the component system will
-**not** try to set it directly on a property or use it for the component
-``attributes``.
+Define a ``$isError`` argument to capture the prop and initialize other
+properties using that value::
+
+    #[AsTwigComponent]
+    class Alert
+    {
+        public string $message;
+        public string $type = 'success';
+
+        public function mount(bool $isError = false): void
+        {
+            if ($isError) {
+                $this->type = 'danger';
+            }
+        }
+
+        // ...
+    }
 
 PreMount Hook
 ~~~~~~~~~~~~~
