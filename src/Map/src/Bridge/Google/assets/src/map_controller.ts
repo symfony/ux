@@ -38,6 +38,11 @@ type MapOptions = Pick<
 
 let _google: typeof google;
 
+// Loading the Google Maps API is an asynchronous operation, so we need to track the loading state to prevent race conditions.
+let _loading = false;
+let _loaded = false;
+let _onLoadedCallbacks: Array<() => void> = [];
+
 const parser = new DOMParser();
 
 export default class extends AbstractMapController<
@@ -64,39 +69,51 @@ export default class extends AbstractMapController<
     public parser: DOMParser;
 
     async connect() {
-        if (!_google) {
-            _google = { maps: {} as typeof google.maps };
+        const onLoaded = () => super.connect();
 
-            let { libraries = [], ...loaderOptions } = this.providerOptionsValue;
-
-            const loader = new Loader(loaderOptions);
-
-            // We could have used `loader.load()` to correctly load libraries, but this method is deprecated in favor of `loader.importLibrary()`.
-            // But `loader.importLibrary()` is not a 1-1 replacement for `loader.load()`, we need to re-build the `google.maps` object ourselves,
-            // see https://github.com/googlemaps/js-api-loader/issues/837 for more information.
-            libraries = ['core', ...libraries.filter((library) => library !== 'core')]; // Ensure 'core' is loaded first
-            const librariesImplementations = await Promise.all(
-                libraries.map((library) => loader.importLibrary(library))
-            );
-            librariesImplementations.map((libraryImplementation, index) => {
-                if (typeof libraryImplementation !== 'object' || libraryImplementation === null) {
-                    return;
-                }
-
-                const library = libraries[index];
-
-                // The following libraries are in a sub-namespace
-                if (['marker', 'places', 'geometry', 'journeySharing', 'drawing', 'visualization'].includes(library)) {
-                    // @ts-ignore
-                    _google.maps[library] = libraryImplementation as any;
-                } else {
-                    _google.maps = { ..._google.maps, ...libraryImplementation };
-                }
-            });
+        if (_loaded) {
+            onLoaded();
+            return;
         }
 
-        super.connect();
-        this.parser = new DOMParser();
+        if (_loading) {
+            _onLoadedCallbacks.push(onLoaded);
+            return;
+        }
+
+        _loading = true;
+        _google = { maps: {} as typeof google.maps };
+
+        let { libraries = [], ...loaderOptions } = this.providerOptionsValue;
+
+        const loader = new Loader(loaderOptions);
+
+        // We could have used `loader.load()` to correctly load libraries, but this method is deprecated in favor of `loader.importLibrary()`.
+        // But `loader.importLibrary()` is not a 1-1 replacement for `loader.load()`, we need to re-build the `google.maps` object ourselves,
+        // see https://github.com/googlemaps/js-api-loader/issues/837 for more information.
+        libraries = ['core', ...libraries.filter((library) => library !== 'core')]; // Ensure 'core' is loaded first
+        const librariesImplementations = await Promise.all(libraries.map((library) => loader.importLibrary(library)));
+        librariesImplementations.map((libraryImplementation, index) => {
+            if (typeof libraryImplementation !== 'object' || libraryImplementation === null) {
+                return;
+            }
+
+            const library = libraries[index];
+
+            // The following libraries are in a sub-namespace
+            if (['marker', 'places', 'geometry', 'journeySharing', 'drawing', 'visualization'].includes(library)) {
+                // @ts-ignore
+                _google.maps[library] = libraryImplementation as any;
+            } else {
+                _google.maps = { ..._google.maps, ...libraryImplementation };
+            }
+        });
+
+        _loading = false;
+        _loaded = true;
+        onLoaded();
+        _onLoadedCallbacks.forEach((callback) => callback());
+        _onLoadedCallbacks = [];
     }
 
     public centerValueChanged(): void {

@@ -120,30 +120,44 @@ default_1.values = {
 };
 
 let _google;
+let _loading = false;
+let _loaded = false;
+let _onLoadedCallbacks = [];
 const parser = new DOMParser();
 class map_controller extends default_1 {
     async connect() {
-        if (!_google) {
-            _google = { maps: {} };
-            let { libraries = [], ...loaderOptions } = this.providerOptionsValue;
-            const loader = new Loader(loaderOptions);
-            libraries = ['core', ...libraries.filter((library) => library !== 'core')];
-            const librariesImplementations = await Promise.all(libraries.map((library) => loader.importLibrary(library)));
-            librariesImplementations.map((libraryImplementation, index) => {
-                if (typeof libraryImplementation !== 'object' || libraryImplementation === null) {
-                    return;
-                }
-                const library = libraries[index];
-                if (['marker', 'places', 'geometry', 'journeySharing', 'drawing', 'visualization'].includes(library)) {
-                    _google.maps[library] = libraryImplementation;
-                }
-                else {
-                    _google.maps = { ..._google.maps, ...libraryImplementation };
-                }
-            });
+        const onLoaded = () => super.connect();
+        if (_loaded) {
+            onLoaded();
+            return;
         }
-        super.connect();
-        this.parser = new DOMParser();
+        if (_loading) {
+            _onLoadedCallbacks.push(onLoaded);
+            return;
+        }
+        _loading = true;
+        _google = { maps: {} };
+        let { libraries = [], ...loaderOptions } = this.providerOptionsValue;
+        const loader = new Loader(loaderOptions);
+        libraries = ['core', ...libraries.filter((library) => library !== 'core')];
+        const librariesImplementations = await Promise.all(libraries.map((library) => loader.importLibrary(library)));
+        librariesImplementations.map((libraryImplementation, index) => {
+            if (typeof libraryImplementation !== 'object' || libraryImplementation === null) {
+                return;
+            }
+            const library = libraries[index];
+            if (['marker', 'places', 'geometry', 'journeySharing', 'drawing', 'visualization'].includes(library)) {
+                _google.maps[library] = libraryImplementation;
+            }
+            else {
+                _google.maps = { ..._google.maps, ...libraryImplementation };
+            }
+        });
+        _loading = false;
+        _loaded = true;
+        onLoaded();
+        _onLoadedCallbacks.forEach((callback) => callback());
+        _onLoadedCallbacks = [];
     }
     centerValueChanged() {
         if (this.map && this.hasCenterValue && this.centerValue) {
