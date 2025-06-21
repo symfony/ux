@@ -46,17 +46,18 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php-version: [ '8.1', '8.2', '8.3', '8.4']
+                php-version: ['8.1']
                 dependency-version: ['']
                 symfony-version: ['']
                 minimum-stability: ['stable']
                 include:
+                    # dev packages (probably not needed to have multiple such jobs)
+                    - minimum-stability: 'dev'
+                      php-version: 8.4
                     # lowest deps
-                    -   php-version: '8.1'
-                        dependency-version: 'lowest'
+                    - dependency-version: 'lowest'
                     # LTS version of Symfony
-                    -   php-version: '8.1'
-                        symfony-version: '6.4.*'
+                    - symfony-version: '6.4.*'
         steps:
             -   name: Checkout
                 uses: actions/checkout@v4
@@ -78,7 +79,7 @@ jobs:
             -   name: Setup PHP
                 uses: shivammathur/setup-php@v2
                 with:
-                    php-version: ${{ matrix.php-version }}
+                    php-version: 8.1
                     tools: flex
 
             - name: Install root dependencies
