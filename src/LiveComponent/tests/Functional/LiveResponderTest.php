@@ -35,7 +35,7 @@ final class LiveResponderTest extends KernelTestCase
             ])
             ->assertSuccessful()
             ->assertSee('Event: event1')
-            ->assertSee('Data: {"foo":"bar"}');
+            ->assertSee('Data: {"foo":"bar","bar":"foo"}');
     }
 
     public function testComponentCanDispatchBrowserEvents(): void

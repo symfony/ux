@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Functional\Test;
 
+use PHPUnit\Framework\AssertionFailedError;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\InMemoryUser;
@@ -216,5 +217,77 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $testComponent = $this->createLiveComponent('localized_route');
         $testComponent->setRouteLocale('de');
         $this->assertStringContainsString('Locale: de', $testComponent->render());
+    }
+
+    public function testAssertComponentEmitEvent(): void
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatEmits');
+
+        $this->assertComponentEmitEvent($testComponent, 'event1')
+            ->withData([
+                'foo' => 'bar',
+                'bar' => 'foo',
+            ]);
+    }
+
+    public function testAssertComponentEmitEventFails(): void
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatEmits');
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('The event "event1" data is different than expected.');
+        $this->assertComponentEmitEvent($testComponent, 'event1')->withData([
+            'foo' => 'bar',
+        ]);
+    }
+
+    public function testComponentEmitsExpectedPartialEventData(): void
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatEmits');
+
+        $this->assertComponentEmitEvent($testComponent, 'event1')
+            ->withDataSubset(['foo' => 'bar'])
+            ->withDataSubset(['bar' => 'foo'])
+        ;
+    }
+
+    public function testComponentDoesNotEmitUnexpectedEvent(): void
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatEmits');
+
+        $this->assertComponentNotEmitEvent($testComponent, 'event2');
+    }
+
+    public function testComponentDoesNotEmitUnexpectedEventFails(): void
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatEmits');
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('The component "component_with_emit" did emit event "event1".');
+        $this->assertComponentNotEmitEvent($testComponent, 'event1');
+    }
+
+    public function testComponentEmitsEventWithIncorrectDataFails(): void
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatEmits');
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('The event "event1" data is different than expected.');
+        $this->assertComponentEmitEvent($testComponent, 'event1')->withData([
+            'foo' => 'bar',
+            'foo2' => 'bar2',
+        ]);
     }
 }

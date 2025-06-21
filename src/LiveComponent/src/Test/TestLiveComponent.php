@@ -229,4 +229,39 @@ final class TestLiveComponent
 
         return $result;
     }
+
+    /**
+     * @return ?array{data: array<string, int|float|string|bool|null>, event: non-empty-string}
+     */
+    public function getEmittedEvent(RenderedComponent $render, string $eventName): ?array
+    {
+        $events = $this->getEmittedEvents($render);
+
+        foreach ($events as $event) {
+            if ($event['event'] === $eventName) {
+                return $event;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<array{data: array<string, int|float|string|bool|null>, event: non-empty-string}>
+     */
+    public function getEmittedEvents(RenderedComponent $render): array
+    {
+        $emit = $render->crawler()->filter('[data-live-name-value]')->attr('data-live-events-to-emit-value');
+
+        if (null === $emit) {
+            return [];
+        }
+
+        return json_decode($emit, associative: true, flags: \JSON_THROW_ON_ERROR);
+    }
+
+    public function getName(): string
+    {
+        return $this->metadata->getName();
+    }
 }
