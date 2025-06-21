@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Autocomplete\Tests\Fixtures;
 
+use Composer\InstalledVersions;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\ORM\Mapping\AssociationMapping;
 use Fixtures\Form\CategoryWithCallbackAsCustomValue;
@@ -104,7 +105,7 @@ final class Kernel extends BaseKernel
             'auto_refresh_proxies' => false,
         ]);
 
-        $config = [
+        $doctrineConfig = [
             'dbal' => ['url' => '%env(resolve:DATABASE_URL)%'],
             'orm' => [
                 'auto_generate_proxy_classes' => true,
@@ -122,11 +123,17 @@ final class Kernel extends BaseKernel
         ];
         if (class_exists(AssociationMapping::class)) {
             // Doctrine ORM >= 3.0
-            $config['orm']['controller_resolver'] = [
+            $doctrineConfig['orm']['controller_resolver'] = [
                 'auto_mapping' => true,
             ];
         }
-        $c->extension('doctrine', $config);
+        if (null !== $doctrineBundleVersion = InstalledVersions::getVersion('doctrine/doctrine-bundle')) {
+            if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=')) {
+                $doctrineConfig['orm']['enable_native_lazy_objects'] = true;
+            }
+        }
+
+        $c->extension('doctrine', $doctrineConfig);
 
         $c->extension('security', [
             'password_hashers' => [
