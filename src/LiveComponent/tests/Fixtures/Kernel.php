@@ -186,6 +186,9 @@ final class Kernel extends BaseKernel
             if (version_compare($doctrineBundleVersion, '2.12.0', '>=')) {
                 $doctrineConfig['orm']['controller_resolver']['auto_mapping'] = false;
             }
+            if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=')) {
+                $doctrineConfig['orm']['enable_native_lazy_objects'] = true;
+            }
         }
 
         $c->extension('doctrine', $doctrineConfig);
