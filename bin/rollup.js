@@ -72,8 +72,9 @@ const moveTypescriptDeclarationsPlugin = (packageRoot) => ({
 /**
  * @param {String} packageRoot
  * @param {Array<String>} inputFiles
+ * @param {Boolean} isWatch
  */
-function getRollupConfiguration({ packageRoot, inputFiles }) {
+function getRollupConfiguration({ packageRoot, inputFiles, isWatch }) {
     const packagePath = path.join(packageRoot, 'package.json');
     const packageData = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
     const peerDependencies = [
@@ -108,7 +109,7 @@ function getRollupConfiguration({ packageRoot, inputFiles }) {
             typescript({
                 filterRoot: '.',
                 tsconfig: path.join(__dirname, '..', 'tsconfig.json'),
-                noEmitOnError: true,
+                noEmitOnError: !isWatch,
                 include: [
                     'src/**/*.ts',
                     // TODO: Remove for the next major release

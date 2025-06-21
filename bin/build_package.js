@@ -22,6 +22,7 @@ const args = parseArgs({
 
 async function main() {
     const packageRoot = path.resolve(process.cwd(), args.positionals[0]);
+    const isWatch = args.values.watch || false;
 
     if (!fs.existsSync(packageRoot)) {
         console.error(`The package directory "${packageRoot}" does not exist.`);
@@ -86,9 +87,9 @@ async function main() {
         process.exit(1);
     }
 
-    const rollupConfig = getRollupConfiguration({ packageRoot, inputFiles: inputScriptFiles });
+    const rollupConfig = getRollupConfiguration({ packageRoot, inputFiles: inputScriptFiles, isWatch });
 
-    if (args.values.watch) {
+    if (isWatch) {
         console.log(
             `Watching for JavaScript${inputStyleFile ? ' and CSS' : ''} files modifications in "${srcDir}" directory...`
         );
@@ -103,9 +104,13 @@ async function main() {
         }
 
         const watcher = rollup.watch(rollupConfig);
-        watcher.on('event', ({ result }) => {
-            if (result) {
-                result.close();
+        watcher.on('event', (event) => {
+            if (event.code === 'ERROR') {
+                console.error('Error during build:', event.error);
+            }
+
+            if (event.result) {
+                event.result.close();
             }
         });
         watcher.on('change', async (id, { event }) => {
