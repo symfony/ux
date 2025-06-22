@@ -11,5 +11,6 @@
   data-symfony--ux-leaflet-map--map-polygons-value="[]"
   data-symfony--ux-leaflet-map--map-polylines-value="[]"
   data-symfony--ux-leaflet-map--map-circles-value="[]"
+  data-symfony--ux-leaflet-map--map-rectangles-value="[]"
   class="map"
 ></div>

@@ -14,6 +14,7 @@ namespace Symfony\UX\Map\Test;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Spatie\Snapshots\MatchesSnapshots;
+use Symfony\UX\Map\Elements;
 use Symfony\UX\Map\Map;
 use Symfony\UX\Map\Renderer\RendererInterface;
 
@@ -38,6 +39,7 @@ abstract class RendererTestCase extends TestCase
         $rendered = $renderer->renderMap($map, $attributes);
         $rendered = $this->prettify($rendered);
 
+        $this->assertElementsHaveComputedId($rendered);
         $this->assertMatchesSnapshot($rendered);
     }
 
@@ -49,5 +51,46 @@ abstract class RendererTestCase extends TestCase
      Run "php vendor/bin/phpunit -d --update-snapshots" to update the snapshot. -->'."\n".$html;
 
         return $html;
+    }
+
+    private function assertElementsHaveComputedId(string $html): void
+    {
+        // Extract the `Elements` properties from the Map class
+        static $elementsProperties = null;
+        if (null === $elementsProperties) {
+            $elementsProperties = [];
+            $reflMap = new \ReflectionClass(Map::class);
+
+            foreach ($reflMap->getProperties() as $prop) {
+                if (is_a($prop->getType()->getName(), Elements::class, true)) {
+                    $elementsProperties[] = $prop->getName();
+                }
+            }
+        }
+
+        // Parse the rendered HTML and extract `data-<element>-value` attributes
+        /** @var array<string, string> $htmlAttributes */
+        $htmlAttributes = [];
+        foreach ($elementsProperties as $property) {
+            $matchesResult = preg_match(\sprintf('/data-symfony--ux-[a-z-]+-map-%s-value="([^"]+)"/', preg_quote($property, '/')), $html, $matches);
+            if (false === $matchesResult) {
+                throw new \LogicException(\sprintf('Failed to parse the rendered HTML for property "%s".', $property));
+            } elseif (0 === $matchesResult) {
+                throw new \LogicException(\sprintf('It looks like the property "%s" is missing from "Map::toArray()" normalization.', $property));
+            } else {
+                $htmlAttributes[$property] = $matches[1];
+            }
+        }
+
+        // Check that each property has a computed "@id" attribute
+        foreach ($htmlAttributes as $property => $value) {
+            if ('[]' === $value) {
+                continue;
+            }
+
+            if (!str_contains($value, '@id') || str_contains($value, '&quot;@id&quot;:null')) {
+                throw new \LogicException(\sprintf('It looks like the "AbstractRendered::getMapAttributes()" has not been updated to compute "@id" attribute of "%s" property.', $property));
+            }
+        }
     }
 }

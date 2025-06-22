@@ -98,6 +98,24 @@ export type CircleDefinition<CircleOptions, InfoWindowOptions> = WithIdentifier<
     extra: Record<string, unknown>;
 }>;
 
+export type RectangleDefinition<RectangleOptions, InfoWindowOptions> = WithIdentifier<{
+    infoWindow?: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
+    southWest: Point;
+    northEast: Point;
+    title: string | null;
+    /**
+     * Raw options passed to the rectangle constructor, specific to the map provider (e.g.: `L.rectangle()` for Leaflet).
+     */
+    rawOptions?: RectangleOptions;
+    /**
+     * Extra data defined by the developer.
+     * They are not directly used by the Stimulus controller, but they can be used by the developer with event listeners:
+     *    - `ux:map:rectangle:before-create`
+     *    - `ux:map:rectangle:after-create`
+     */
+    extra: Record<string, unknown>;
+}>;
+
 export type InfoWindowDefinition<InfoWindowOptions> = {
     headerContent: string | null;
     content: string | null;
@@ -136,6 +154,8 @@ export default abstract class<
     Polyline,
     CircleOptions,
     Circle,
+    RectangleOptions,
+    Rectangle,
 > extends Controller<HTMLElement> {
     static values = {
         providerOptions: Object,
@@ -146,6 +166,7 @@ export default abstract class<
         polygons: Array,
         polylines: Array,
         circles: Array,
+        rectangles: Array,
         options: Object,
     };
 
@@ -156,6 +177,7 @@ export default abstract class<
     declare polygonsValue: Array<PolygonDefinition<PolygonOptions, InfoWindowOptions>>;
     declare polylinesValue: Array<PolylineDefinition<PolylineOptions, InfoWindowOptions>>;
     declare circlesValue: Array<CircleDefinition<CircleOptions, InfoWindowOptions>>;
+    declare rectanglesValue: Array<RectangleDefinition<RectangleOptions, InfoWindowOptions>>;
     declare optionsValue: MapOptions;
 
     declare hasCenterValue: boolean;
@@ -165,6 +187,7 @@ export default abstract class<
     declare hasPolygonsValue: boolean;
     declare hasPolylinesValue: boolean;
     declare hasCirclesValue: boolean;
+    declare hasRectanglesValue: boolean;
     declare hasOptionsValue: boolean;
 
     protected map: Map;
@@ -172,6 +195,7 @@ export default abstract class<
     protected polygons = new Map<Identifier, Polygon>();
     protected polylines = new Map<Identifier, Polyline>();
     protected circles = new Map<Identifier, Circle>();
+    protected rectangles = new Map<Identifier, Rectangle>();
     protected infoWindows: Array<InfoWindow> = [];
 
     private isConnected = false;
@@ -187,6 +211,9 @@ export default abstract class<
     private createCircle: ({
         definition,
     }: { definition: CircleDefinition<CircleOptions, InfoWindowOptions> }) => Circle;
+    private createRectangle: ({
+        definition,
+    }: { definition: RectangleDefinition<RectangleOptions, InfoWindowOptions> }) => Rectangle;
 
     protected abstract dispatchEvent(name: string, payload: Record<string, unknown>): void;
 
@@ -199,6 +226,11 @@ export default abstract class<
         this.createPolygon = this.createDrawingFactory('polygon', this.polygons, this.doCreatePolygon.bind(this));
         this.createPolyline = this.createDrawingFactory('polyline', this.polylines, this.doCreatePolyline.bind(this));
         this.createCircle = this.createDrawingFactory('circle', this.circles, this.doCreateCircle.bind(this));
+        this.createRectangle = this.createDrawingFactory(
+            'rectangle',
+            this.rectangles,
+            this.doCreateRectangle.bind(this)
+        );
 
         this.map = this.doCreateMap({
             center: this.hasCenterValue ? this.centerValue : null,
@@ -209,6 +241,7 @@ export default abstract class<
         this.polygonsValue.forEach((definition) => this.createPolygon({ definition }));
         this.polylinesValue.forEach((definition) => this.createPolyline({ definition }));
         this.circlesValue.forEach((definition) => this.createCircle({ definition }));
+        this.rectanglesValue.forEach((definition) => this.createRectangle({ definition }));
 
         if (this.fitBoundsToMarkersValue) {
             this.doFitBoundsToMarkers();
@@ -220,6 +253,7 @@ export default abstract class<
             polygons: [...this.polygons.values()],
             polylines: [...this.polylines.values()],
             circles: [...this.circles.values()],
+            rectangles: [...this.rectangles.values()],
             infoWindows: this.infoWindows,
         });
 
@@ -232,7 +266,7 @@ export default abstract class<
         element,
     }: {
         definition: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
-        element: Marker | Polygon | Polyline | Circle;
+        element: Marker | Polygon | Polyline | Circle | Rectangle;
     }): InfoWindow {
         this.dispatchEvent('info-window:before-create', { definition, element });
         const infoWindow = this.doCreateInfoWindow({ definition, element });
@@ -286,6 +320,14 @@ export default abstract class<
         this.onDrawChanged(this.circles, this.circlesValue, this.createCircle, this.doRemoveCircle);
     }
 
+    public rectanglesValueChanged(): void {
+        if (!this.isConnected) {
+            return;
+        }
+
+        this.onDrawChanged(this.rectangles, this.rectanglesValue, this.createRectangle, this.doRemoveRectangle);
+    }
+
     //endregion
 
     //region Abstract factory methods to be implemented by the concrete classes, they are specific to the map provider
@@ -331,12 +373,20 @@ export default abstract class<
 
     protected abstract doRemoveCircle(circle: Circle): void;
 
+    protected abstract doCreateRectangle({
+        definition,
+    }: {
+        definition: RectangleDefinition<RectangleOptions, InfoWindowOptions>;
+    }): Rectangle;
+
+    protected abstract doRemoveRectangle(rectangle: Rectangle): void;
+
     protected abstract doCreateInfoWindow({
         definition,
         element,
     }: {
         definition: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
-        element: Marker | Polygon | Polyline | Circle;
+        element: Marker | Polygon | Polyline | Circle | Rectangle;
     }): InfoWindow;
     protected abstract doCreateIcon({
         definition,
@@ -369,15 +419,21 @@ export default abstract class<
         draws: typeof this.circles,
         factory: typeof this.doCreateCircle
     ): typeof this.doCreateCircle;
+    private createDrawingFactory(
+        type: 'rectangle',
+        draws: typeof this.rectangles,
+        factory: typeof this.doCreateRectangle
+    ): typeof this.doCreateRectangle;
     private createDrawingFactory<
         Factory extends
             | typeof this.doCreateMarker
             | typeof this.doCreatePolygon
             | typeof this.doCreatePolyline
-            | typeof this.doCreateCircle,
+            | typeof this.doCreateCircle
+            | typeof this.doCreateRectangle,
         Draw extends ReturnType<Factory>,
     >(
-        type: 'marker' | 'polygon' | 'polyline' | 'circle',
+        type: 'marker' | 'polygon' | 'polyline' | 'circle' | 'rectangle',
         draws: globalThis.Map<WithIdentifier<any>, Draw>,
         factory: Factory
     ): Factory {
@@ -420,6 +476,12 @@ export default abstract class<
         newDrawDefinitions: typeof this.circlesValue,
         factory: typeof this.createCircle,
         remover: typeof this.doRemoveCircle
+    ): void;
+    private onDrawChanged(
+        draws: typeof this.rectangles,
+        newDrawDefinitions: typeof this.rectanglesValue,
+        factory: typeof this.createRectangle,
+        remover: typeof this.doRemoveRectangle
     ): void;
     private onDrawChanged<Draw, DrawDefinition extends WithIdentifier<Record<string, unknown>>>(
         draws: globalThis.Map<WithIdentifier<any>, Draw>,

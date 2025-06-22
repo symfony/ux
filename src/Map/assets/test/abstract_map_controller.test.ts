@@ -53,6 +53,15 @@ class MyMapController extends AbstractMapController {
         return circle;
     }
 
+    doCreateRectangle({ definition }) {
+        const rectangle = { rectangle: 'rectangle', title: definition.title };
+
+        if (definition.infoWindow) {
+            this.createInfoWindow({ definition: definition.infoWindow, element: rectangle });
+        }
+        return rectangle;
+    }
+
     doCreateInfoWindow({ definition, element }) {
         if (element.marker) {
             return { infoWindow: 'infoWindow', headerContent: definition.headerContent, marker: element.title };
@@ -65,6 +74,9 @@ class MyMapController extends AbstractMapController {
         }
         if (element.circle) {
             return { infoWindow: 'infoWindow', headerContent: definition.headerContent, circle: element.title };
+        }
+        if (element.rectangle) {
+            return { infoWindow: 'infoWindow', headerContent: definition.headerContent, rectangle: element.title };
         }
     }
 
@@ -96,6 +108,7 @@ describe('AbstractMapController', () => {
                 data-map-polygons-value="[{&quot;points&quot;:[{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522},{&quot;lat&quot;:45.75,&quot;lng&quot;:4.85},{&quot;lat&quot;:43.6047,&quot;lng&quot;:1.4442}],&quot;title&quot;:null,&quot;infoWindow&quot;:null,&quot;extra&quot;:[],&quot;@id&quot;:&quot;228ae6f5c1b17cfd&quot;},{&quot;points&quot;:[{&quot;lat&quot;:1.4442,&quot;lng&quot;:43.6047},{&quot;lat&quot;:4.85,&quot;lng&quot;:45.75},{&quot;lat&quot;:2.3522,&quot;lng&quot;:48.8566}],&quot;title&quot;:null,&quot;infoWindow&quot;:{&quot;headerContent&quot;:&quot;Polygon&quot;,&quot;content&quot;:null,&quot;position&quot;:null,&quot;opened&quot;:false,&quot;autoClose&quot;:true,&quot;extra&quot;:{&quot;foo&quot;:&quot;bar&quot;}},&quot;extra&quot;:{&quot;fillColor&quot;:&quot;#ff0000&quot;},&quot;@id&quot;:&quot;9874334e4e8caa16&quot;}]"
                 data-map-polylines-value="[{&quot;points&quot;:[{&quot;lat&quot;:48.1173,&quot;lng&quot;:-1.6778},{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522},{&quot;lat&quot;:48.2082,&quot;lng&quot;:16.3738}],&quot;title&quot;:null,&quot;infoWindow&quot;:{&quot;headerContent&quot;:&quot;Polyline&quot;,&quot;content&quot;:null,&quot;position&quot;:null,&quot;opened&quot;:false,&quot;autoClose&quot;:true,&quot;extra&quot;:{&quot;foo&quot;:&quot;bar&quot;}},&quot;extra&quot;:{&quot;strokeColor&quot;:&quot;#ff0000&quot;},&quot;@id&quot;:&quot;0fa955da866c7720&quot;}]"
                 data-map-circles-value="[{&quot;center&quot;:{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522},&quot;title&quot;:null,&quot;infoWindow&quot;:{&quot;headerContent&quot;:&quot;Circle&quot;,&quot;content&quot;:null,&quot;position&quot;:null,&quot;opened&quot;:false,&quot;autoClose&quot;:true,&quot;extra&quot;:{&quot;foo&quot;:&quot;bar&quot;}},&quot;extra&quot;:{&quot;color&quot;:&quot;#ff0000&quot;, &quot;radii&quot;:1000},&quot;@id&quot;:&quot;7c3e1a9b5f2d4e81&quot;}]"
+                data-map-rectangles-value="[{&quot;bounds&quot;:{&quot;northEast&quot;:{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522},&quot;southWest&quot;:{&quot;lat&quot;:45.75,&quot;lng&quot;:4.85}},&quot;title&quot;:null,&quot;infoWindow&quot;:{&quot;headerContent&quot;:&quot;Rectangle&quot;,&quot;content&quot;:null,&quot;position&quot;:null,&quot;opened&quot;:false,&quot;autoClose&quot;:true,&quot;extra&quot;:{&quot;foo&quot;:&quot;bar&quot;}},&quot;extra&quot;:{&quot;color&quot;:&quot;#ff0000&quot;, &quot;width&quot;:1000},&quot;@id&quot;:&quot;e6b3acef1325fb52&quot;}]"
                 style="height: 600px"
             ></div>
         `);
@@ -105,7 +118,7 @@ describe('AbstractMapController', () => {
         clearDOM();
     });
 
-    it('connect and create map, marker, polygon, polyline, circle and info window', async () => {
+    it('connect and create map, marker, polygon, polyline, circle, rectangle and info window', async () => {
         const div = getByTestId(container, 'map');
         expect(div).not.toHaveClass('connected');
 
@@ -129,6 +142,7 @@ describe('AbstractMapController', () => {
         );
         expect(controller.polylines).toEqual(new Map([['0fa955da866c7720', { polyline: 'polyline', title: null }]]));
         expect(controller.circles).toEqual(new Map([['7c3e1a9b5f2d4e81', { circle: 'circle', title: null }]]));
+        expect(controller.rectangles).toEqual(new Map([['e6b3acef1325fb52', { rectangle: 'rectangle', title: null }]]));
         expect(controller.infoWindows).toEqual([
             {
                 headerContent: 'Paris',
@@ -159,6 +173,11 @@ describe('AbstractMapController', () => {
                 headerContent: 'Circle',
                 infoWindow: 'infoWindow',
                 circle: null,
+            },
+            {
+                headerContent: 'Rectangle',
+                infoWindow: 'infoWindow',
+                rectangle: null,
             },
         ]);
     });

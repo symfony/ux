@@ -222,6 +222,20 @@ You can add Circles, which represents a circular area defined by a center point 
         ),
     ));
 
+Add Rectangles
+~~~~~~~~~~~~~~
+
+You can add Rectangles, which represents a rectangular area defined by two corner points::
+
+    $map->addRectangle(new Rectangle(
+        southWest: new Point(48.8566, 2.3522), // Paris
+        northEast: new Point(50.6292, 3.0573), // Lille
+        title: 'Paris to Lille',
+        infoWindow: new InfoWindow(
+            content: 'A rectangle from Paris to Lille',
+        ),
+    ));
+
 Remove elements from Map
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

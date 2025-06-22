@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2.29
+
+-   Add support for creating `Rectangle` by passing two `Point` instances to the `Rectangle` constructor, e.g.:
+```php
+$map->addRectangle(new Rectangle(
+    southWest: new Point(48.856613, 2.352222), // Paris
+    northEast: new Point(48.51238 2.21080) // Gare de Lyon (Paris)
+));
+```
+
 ## 2.28
 
 -   Add support for creating `Circle` by passing a `Point` and a radius (in meters) to the `Circle` constructor, e.g.:

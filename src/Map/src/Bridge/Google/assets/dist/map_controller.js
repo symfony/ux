@@ -13,6 +13,7 @@ class default_1 extends Controller {
         this.polygons = new Map();
         this.polylines = new Map();
         this.circles = new Map();
+        this.rectangles = new Map();
         this.infoWindows = [];
         this.isConnected = false;
     }
@@ -23,6 +24,7 @@ class default_1 extends Controller {
         this.createPolygon = this.createDrawingFactory('polygon', this.polygons, this.doCreatePolygon.bind(this));
         this.createPolyline = this.createDrawingFactory('polyline', this.polylines, this.doCreatePolyline.bind(this));
         this.createCircle = this.createDrawingFactory('circle', this.circles, this.doCreateCircle.bind(this));
+        this.createRectangle = this.createDrawingFactory('rectangle', this.rectangles, this.doCreateRectangle.bind(this));
         this.map = this.doCreateMap({
             center: this.hasCenterValue ? this.centerValue : null,
             zoom: this.hasZoomValue ? this.zoomValue : null,
@@ -32,6 +34,7 @@ class default_1 extends Controller {
         this.polygonsValue.forEach((definition) => this.createPolygon({ definition }));
         this.polylinesValue.forEach((definition) => this.createPolyline({ definition }));
         this.circlesValue.forEach((definition) => this.createCircle({ definition }));
+        this.rectanglesValue.forEach((definition) => this.createRectangle({ definition }));
         if (this.fitBoundsToMarkersValue) {
             this.doFitBoundsToMarkers();
         }
@@ -41,6 +44,7 @@ class default_1 extends Controller {
             polygons: [...this.polygons.values()],
             polylines: [...this.polylines.values()],
             circles: [...this.circles.values()],
+            rectangles: [...this.rectangles.values()],
             infoWindows: this.infoWindows,
         });
         this.isConnected = true;
@@ -79,6 +83,12 @@ class default_1 extends Controller {
         }
         this.onDrawChanged(this.circles, this.circlesValue, this.createCircle, this.doRemoveCircle);
     }
+    rectanglesValueChanged() {
+        if (!this.isConnected) {
+            return;
+        }
+        this.onDrawChanged(this.rectangles, this.rectanglesValue, this.createRectangle, this.doRemoveRectangle);
+    }
     createDrawingFactory(type, draws, factory) {
         const eventBefore = `${type}:before-create`;
         const eventAfter = `${type}:after-create`;
@@ -116,6 +126,7 @@ default_1.values = {
     polygons: Array,
     polylines: Array,
     circles: Array,
+    rectangles: Array,
     options: Object,
 };
 
@@ -263,6 +274,24 @@ class map_controller extends default_1 {
     }
     doRemoveCircle(circle) {
         circle.setMap(null);
+    }
+    doCreateRectangle({ definition, }) {
+        const { northEast, southWest, title, infoWindow, rawOptions = {} } = definition;
+        const rectangle = new _google.maps.Rectangle({
+            ...rawOptions,
+            bounds: new _google.maps.LatLngBounds(southWest, northEast),
+            map: this.map,
+        });
+        if (title) {
+            rectangle.set('title', title);
+        }
+        if (infoWindow) {
+            this.createInfoWindow({ definition: infoWindow, element: rectangle });
+        }
+        return rectangle;
+    }
+    doRemoveRectangle(rectangle) {
+        rectangle.setMap(null);
     }
     doCreateInfoWindow({ definition, element, }) {
         const { headerContent, content, extra, rawOptions = {}, ...otherOptions } = definition;

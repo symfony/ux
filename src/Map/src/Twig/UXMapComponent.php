@@ -11,10 +11,12 @@
 
 namespace Symfony\UX\Map\Twig;
 
+use Symfony\UX\Map\Circle;
 use Symfony\UX\Map\Marker;
 use Symfony\UX\Map\Point;
 use Symfony\UX\Map\Polygon;
 use Symfony\UX\Map\Polyline;
+use Symfony\UX\Map\Rectangle;
 
 /**
  * @author Simon André <smn.andre@gmail.com>
@@ -41,4 +43,14 @@ final class UXMapComponent
      * @var Polyline[]
      */
     public array $polylines;
+
+    /**
+     * @var Circle[]
+     */
+    public array $circles;
+
+    /**
+     * @var Rectangle[]
+     */
+    public array $rectangles;
 }

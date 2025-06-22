@@ -36,17 +36,18 @@ describe('GoogleMapsController', () => {
 
     beforeEach(() => {
         container = mountDOM(`
-          <div 
+          <div
               data-testid="map"
-              data-controller="check symfony--ux-google-map--map" 
-              data-symfony--ux-google-map--map-provider-options-value="{&quot;version&quot;:&quot;weekly&quot;,&quot;libraries&quot;:[&quot;maps&quot;,&quot;marker&quot;],&quot;apiKey&quot;:&quot;&quot;}" 
-              data-symfony--ux-google-map--map-center-value="{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522}" 
-              data-symfony--ux-google-map--map-zoom-value="7" 
-              data-symfony--ux-google-map--map-fit-bounds-to-markers-value="false" 
-              data-symfony--ux-google-map--map-options-value="{&quot;mapId&quot;:null,&quot;gestureHandling&quot;:&quot;auto&quot;,&quot;backgroundColor&quot;:null,&quot;disableDoubleClickZoom&quot;:false,&quot;zoomControlOptions&quot;:{&quot;position&quot;:22},&quot;mapTypeControlOptions&quot;:{&quot;mapTypeIds&quot;:[],&quot;position&quot;:14,&quot;style&quot;:0},&quot;streetViewControlOptions&quot;:{&quot;position&quot;:22},&quot;fullscreenControlOptions&quot;:{&quot;position&quot;:20},&quot;@provider&quot;:&quot;google&quot;}" 
-              data-symfony--ux-google-map--map-markers-value="[]" 
-              data-symfony--ux-google-map--map-polygons-value="[]" 
-              data-symfony--ux-google-map--map-polylines-value="[]" 
+              data-controller="check symfony--ux-google-map--map"
+              data-symfony--ux-google-map--map-provider-options-value="{&quot;version&quot;:&quot;weekly&quot;,&quot;libraries&quot;:[&quot;maps&quot;,&quot;marker&quot;],&quot;apiKey&quot;:&quot;&quot;}"
+              data-symfony--ux-google-map--map-center-value="{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522}"
+              data-symfony--ux-google-map--map-zoom-value="7"
+              data-symfony--ux-google-map--map-fit-bounds-to-markers-value="false"
+              data-symfony--ux-google-map--map-options-value="{&quot;mapId&quot;:null,&quot;gestureHandling&quot;:&quot;auto&quot;,&quot;backgroundColor&quot;:null,&quot;disableDoubleClickZoom&quot;:false,&quot;zoomControlOptions&quot;:{&quot;position&quot;:22},&quot;mapTypeControlOptions&quot;:{&quot;mapTypeIds&quot;:[],&quot;position&quot;:14,&quot;style&quot;:0},&quot;streetViewControlOptions&quot;:{&quot;position&quot;:22},&quot;fullscreenControlOptions&quot;:{&quot;position&quot;:20},&quot;@provider&quot;:&quot;google&quot;}"
+              data-symfony--ux-google-map--map-markers-value="[]"
+              data-symfony--ux-google-map--map-polygons-value="[]"
+              data-symfony--ux-google-map--map-polylines-value="[]"
+              data-symfony--ux-google-map--map-rectangle-value="[]"
               style="height: 600px"
           ></div>
         `);

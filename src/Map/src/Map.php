@@ -24,12 +24,14 @@ final class Map
     private Polygons $polygons;
     private Polylines $polylines;
     private Circles $circles;
+    private Rectangles $rectangles;
 
     /**
-     * @param Marker[]   $markers
-     * @param Polygon[]  $polygons
-     * @param Polyline[] $polylines
-     * @param Circle[]   $circles
+     * @param Marker[]     $markers
+     * @param Polygon[]    $polygons
+     * @param Polyline[]   $polylines
+     * @param Circle[]     $circles
+     * @param Rectangles[] $rectangles
      */
     public function __construct(
         private readonly ?string $rendererName = null,
@@ -41,11 +43,13 @@ final class Map
         array $polygons = [],
         array $polylines = [],
         array $circles = [],
+        array $rectangles = [],
     ) {
         $this->markers = new Markers($markers);
         $this->polygons = new Polygons($polygons);
         $this->polylines = new Polylines($polylines);
         $this->circles = new Circles($circles);
+        $this->rectangles = new Rectangles($rectangles);
     }
 
     public function getRendererName(): ?string
@@ -147,6 +151,20 @@ final class Map
         return $this;
     }
 
+    public function addRectangle(Rectangle $rectangle): self
+    {
+        $this->rectangles->add($rectangle);
+
+        return $this;
+    }
+
+    public function removeRectangle(Rectangle|string $rectangleOrId): self
+    {
+        $this->rectangles->remove($rectangleOrId);
+
+        return $this;
+    }
+
     public function toArray(): array
     {
         if (!$this->fitBoundsToMarkers) {
@@ -168,6 +186,7 @@ final class Map
             'polygons' => $this->polygons->toArray(),
             'polylines' => $this->polylines->toArray(),
             'circles' => $this->circles->toArray(),
+            'rectangles' => $this->rectangles->toArray(),
         ];
     }
 
@@ -179,6 +198,7 @@ final class Map
      *     polygons?: list<array>,
      *     polylines?: list<array>,
      *     circles?: list<array>,
+     *     rectangles?: list<array>,
      *     fitBoundsToMarkers?: bool,
      *     options?: array<string, mixed>,
      * } $map
@@ -218,6 +238,12 @@ final class Map
             throw new InvalidArgumentException('The "circles" parameter must be an array.');
         }
         $map['circles'] = array_map(Circle::fromArray(...), $map['circles']);
+
+        $map['rectangles'] ??= [];
+        if (!\is_array($map['rectangles'])) {
+            throw new InvalidArgumentException('The "rectangles" parameter must be an array.');
+        }
+        $map['rectangles'] = array_map(Rectangle::fromArray(...), $map['rectangles']);
 
         return new self(...$map);
     }
