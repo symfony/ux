@@ -1,0 +1,63 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-06-17T11:14:35Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Valmonzo/ux/tree/feat/add-rectangle-support-for-map/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/Valmonzo/ux/blob/feat/add-rectangle-support-for-map/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>5.75 kB</code>
+                    / <code>1.25 kB</code>
+                </td><td>
+                    <code>6.6 kB</code><sup>+15% 📈</sup>
+                    / <code>1.35 kB</code><sup>+8% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Valmonzo/ux/blob/feat/add-rectangle-support-for-map/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>4.48 kB</code>
+                    / <code>1.14 kB</code>
+                </td><td>
+                    <code>5.01 kB</code><sup>+12% 📈</sup>
+                    / <code>1.2 kB</code><sup>+6% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Valmonzo/ux/tree/feat/add-rectangle-support-for-map/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Valmonzo/ux/blob/feat/add-rectangle-support-for-map/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>3.03 kB</code>
+                    / <code>866 B</code>
+                </td><td>
+                    <code>3.35 kB</code><sup>+11% 📈</sup>
+                    / <code>909 B</code><sup>+5% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Valmonzo/ux/blob/feat/add-rectangle-support-for-map/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>12.54 kB</code>
+                    / <code>2.72 kB</code>
+                </td><td>
+                    <code>13.67 kB</code><sup>+9% 📈</sup>
+                    / <code>2.86 kB</code><sup>+5% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Valmonzo/ux/tree/feat/add-rectangle-support-for-map/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Valmonzo/ux/blob/feat/add-rectangle-support-for-map/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>2.63 kB</code>
+                    / <code>781 B</code>
+                </td><td>
+                    <code>2.93 kB</code><sup>+12% 📈</sup>
+                    / <code>829 B</code><sup>+6% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Valmonzo/ux/blob/feat/add-rectangle-support-for-map/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>11.06 kB</code>
+                    / <code>2.77 kB</code>
+                </td><td>
+                    <code>12.18 kB</code><sup>+10% 📈</sup>
+                    / <code>2.92 kB</code><sup>+6% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
