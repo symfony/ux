@@ -189,7 +189,7 @@ class map_controller extends default_1 {
             },
         });
     }
-    doCreateMap({ center, zoom, options, }) {
+    doCreateMap({ center, zoom, options }) {
         options.zoomControl = typeof options.zoomControlOptions !== 'undefined';
         options.mapTypeControl = typeof options.mapTypeControlOptions !== 'undefined';
         options.streetViewControl = typeof options.streetViewControlOptions !== 'undefined';
@@ -256,7 +256,7 @@ class map_controller extends default_1 {
     doRemovePolyline(polyline) {
         polyline.setMap(null);
     }
-    doCreateCircle({ definition, }) {
+    doCreateCircle({ definition }) {
         const { '@id': _id, center, radius, title, infoWindow, rawOptions = {} } = definition;
         const circle = new _google.maps.Circle({
             ...rawOptions,
@@ -355,7 +355,7 @@ class map_controller extends default_1 {
         }
         return content;
     }
-    doCreateIcon({ definition, element, }) {
+    doCreateIcon({ definition, element }) {
         const { type, width, height } = definition;
         if (type === IconTypes.Svg) {
             element.content = parser.parseFromString(definition.html, 'image/svg+xml').documentElement;

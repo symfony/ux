@@ -11,7 +11,8 @@
             "!**/vendor",
             "!**/package.json",
             "!**/node_modules",
-            "!**/var"
+            "!**/var",
+            "!**/dist"
         ]
     },
     "linter": {
@@ -62,6 +63,12 @@
                         "useConst": "off"
                     }
                 }
+            }
+        },
+        {
+            "includes": ["src/Map/**/*map_controller.ts"],
+            "formatter": {
+                "lineWidth": 160
             }
         }
     ]

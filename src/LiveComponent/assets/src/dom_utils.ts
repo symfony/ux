@@ -1,8 +1,8 @@
 import type Component from './Component';
 import type ValueStore from './Component/ValueStore';
 import { type Directive, parseDirectives } from './Directive/directives_parser';
-import getElementAsTagText from './Util/getElementAsTagText';
 import { normalizeModelName } from './string_utils';
+import getElementAsTagText from './Util/getElementAsTagText';
 
 /**
  * Return the "value" of any given element.

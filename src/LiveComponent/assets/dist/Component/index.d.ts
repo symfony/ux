@@ -2,8 +2,8 @@ import type { BackendInterface } from '../Backend/Backend';
 import type BackendRequest from '../Backend/BackendRequest';
 import BackendResponse from '../Backend/BackendResponse';
 import type { ElementDriver } from './ElementDriver';
-import ValueStore from './ValueStore';
 import type { PluginInterface } from './plugins/PluginInterface';
+import ValueStore from './ValueStore';
 type MaybePromise<T = void> = T | Promise<T>;
 export type ComponentHooks = {
     connect: (component: Component) => MaybePromise;

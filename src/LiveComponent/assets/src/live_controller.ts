@@ -13,8 +13,8 @@ import SetValueOntoModelFieldsPlugin from './Component/plugins/SetValueOntoModel
 import ValidatedFieldsPlugin from './Component/plugins/ValidatedFieldsPlugin';
 import { type DirectiveModifier, parseDirectives } from './Directive/directives_parser';
 import getModelBinding from './Directive/get_model_binding';
-import getElementAsTagText from './Util/getElementAsTagText';
 import { elementBelongsToThisComponent, getModelDirectiveFromElement, getValueFromElement } from './dom_utils';
+import getElementAsTagText from './Util/getElementAsTagText';
 
 export { Component };
 export { getComponent } from './ComponentRegistry';

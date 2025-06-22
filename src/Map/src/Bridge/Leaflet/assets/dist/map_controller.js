@@ -161,7 +161,7 @@ class map_controller extends default_1 {
             },
         });
     }
-    doCreateMap({ center, zoom, options, }) {
+    doCreateMap({ center, zoom, options }) {
         const map = L.map(this.element, {
             ...options,
             center: center === null ? undefined : center,
@@ -197,7 +197,7 @@ class map_controller extends default_1 {
     doRemoveMarker(marker) {
         marker.remove();
     }
-    doCreatePolygon({ definition, }) {
+    doCreatePolygon({ definition }) {
         const { '@id': _id, points, title, infoWindow, rawOptions = {} } = definition;
         const polygon = L.polygon(points, { ...rawOptions }).addTo(this.map);
         if (title) {
@@ -211,7 +211,7 @@ class map_controller extends default_1 {
     doRemovePolygon(polygon) {
         polygon.remove();
     }
-    doCreatePolyline({ definition, }) {
+    doCreatePolyline({ definition }) {
         const { '@id': _id, points, title, infoWindow, rawOptions = {} } = definition;
         const polyline = L.polyline(points, { ...rawOptions }).addTo(this.map);
         if (title) {
@@ -239,7 +239,7 @@ class map_controller extends default_1 {
     doRemoveCircle(circle) {
         circle.remove();
     }
-    doCreateRectangle({ definition, }) {
+    doCreateRectangle({ definition }) {
         const { '@id': _id, southWest, northEast, title, infoWindow, rawOptions = {} } = definition;
         const rectangle = L.rectangle([
             [southWest.lat, southWest.lng],
@@ -268,7 +268,7 @@ class map_controller extends default_1 {
         }
         return popup;
     }
-    doCreateIcon({ definition, element, }) {
+    doCreateIcon({ definition, element }) {
         const { type, width, height } = definition;
         let icon;
         if (type === IconTypes.Svg) {

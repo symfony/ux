@@ -131,29 +131,29 @@ export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindow
     polylinesValueChanged(): void;
     circlesValueChanged(): void;
     rectanglesValueChanged(): void;
-    protected abstract doCreateMap({ center, zoom, options, }: {
+    protected abstract doCreateMap({ center, zoom, options }: {
         center: Point | null;
         zoom: number | null;
         options: MapOptions;
     }): Map;
     protected abstract doFitBoundsToMarkers(): void;
-    protected abstract doCreateMarker({ definition, }: {
+    protected abstract doCreateMarker({ definition }: {
         definition: MarkerDefinition<MarkerOptions, InfoWindowOptions>;
     }): Marker;
     protected abstract doRemoveMarker(marker: Marker): void;
-    protected abstract doCreatePolygon({ definition, }: {
+    protected abstract doCreatePolygon({ definition }: {
         definition: PolygonDefinition<PolygonOptions, InfoWindowOptions>;
     }): Polygon;
     protected abstract doRemovePolygon(polygon: Polygon): void;
-    protected abstract doCreatePolyline({ definition, }: {
+    protected abstract doCreatePolyline({ definition }: {
         definition: PolylineDefinition<PolylineOptions, InfoWindowOptions>;
     }): Polyline;
     protected abstract doRemovePolyline(polyline: Polyline): void;
-    protected abstract doCreateCircle({ definition, }: {
+    protected abstract doCreateCircle({ definition }: {
         definition: CircleDefinition<CircleOptions, InfoWindowOptions>;
     }): Circle;
     protected abstract doRemoveCircle(circle: Circle): void;
-    protected abstract doCreateRectangle({ definition, }: {
+    protected abstract doCreateRectangle({ definition }: {
         definition: RectangleDefinition<RectangleOptions, InfoWindowOptions>;
     }): Rectangle;
     protected abstract doRemoveRectangle(rectangle: Rectangle): void;
@@ -161,7 +161,7 @@ export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindow
         definition: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
         element: Marker | Polygon | Polyline | Circle | Rectangle;
     }): InfoWindow;
-    protected abstract doCreateIcon({ definition, element, }: {
+    protected abstract doCreateIcon({ definition, element }: {
         definition: Icon;
         element: Marker;
     }): void;

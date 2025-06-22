@@ -9,7 +9,6 @@
 
 import type { LoaderOptions } from '@googlemaps/js-api-loader';
 import { Loader } from '@googlemaps/js-api-loader';
-import AbstractMapController, { IconTypes } from '@symfony/ux-map';
 import type {
     CircleDefinition,
     Icon,
@@ -20,6 +19,7 @@ import type {
     PolylineDefinition,
     RectangleDefinition,
 } from '@symfony/ux-map';
+import AbstractMapController, { IconTypes } from '@symfony/ux-map';
 
 type MapOptions = Pick<
     google.maps.MapOptions,
@@ -62,10 +62,7 @@ export default class extends AbstractMapController<
     google.maps.RectangleOptions,
     google.maps.Rectangle
 > {
-    declare providerOptionsValue: Pick<
-        LoaderOptions,
-        'apiKey' | 'id' | 'language' | 'region' | 'nonce' | 'retries' | 'url' | 'version' | 'libraries'
-    >;
+    declare providerOptionsValue: Pick<LoaderOptions, 'apiKey' | 'id' | 'language' | 'region' | 'nonce' | 'retries' | 'url' | 'version' | 'libraries'>;
 
     declare map: google.maps.Map;
 
@@ -141,15 +138,7 @@ export default class extends AbstractMapController<
         });
     }
 
-    protected doCreateMap({
-        center,
-        zoom,
-        options,
-    }: {
-        center: Point | null;
-        zoom: number | null;
-        options: MapOptions;
-    }): google.maps.Map {
+    protected doCreateMap({ center, zoom, options }: { center: Point | null; zoom: number | null; options: MapOptions }): google.maps.Map {
         // We assume the following control options are enabled if their options are set
         options.zoomControl = typeof options.zoomControlOptions !== 'undefined';
         options.mapTypeControl = typeof options.mapTypeControlOptions !== 'undefined';
@@ -249,11 +238,7 @@ export default class extends AbstractMapController<
         polyline.setMap(null);
     }
 
-    protected doCreateCircle({
-        definition,
-    }: {
-        definition: CircleDefinition<google.maps.CircleOptions, google.maps.InfoWindowOptions>;
-    }): google.maps.Circle {
+    protected doCreateCircle({ definition }: { definition: CircleDefinition<google.maps.CircleOptions, google.maps.InfoWindowOptions> }): google.maps.Circle {
         const { '@id': _id, center, radius, title, infoWindow, rawOptions = {} } = definition;
 
         const circle = new _google.maps.Circle({
@@ -387,13 +372,7 @@ export default class extends AbstractMapController<
         return content;
     }
 
-    protected doCreateIcon({
-        definition,
-        element,
-    }: {
-        definition: Icon;
-        element: google.maps.marker.AdvancedMarkerElement;
-    }): void {
+    protected doCreateIcon({ definition, element }: { definition: Icon; element: google.maps.marker.AdvancedMarkerElement }): void {
         const { type, width, height } = definition;
 
         if (type === IconTypes.Svg) {

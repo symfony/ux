@@ -1,4 +1,3 @@
-import AbstractMapController, { IconTypes } from '@symfony/ux-map';
 import type {
     CircleDefinition,
     Icon,
@@ -9,8 +8,8 @@ import type {
     PolylineDefinition,
     RectangleDefinition,
 } from '@symfony/ux-map';
+import AbstractMapController, { IconTypes } from '@symfony/ux-map';
 import 'leaflet/dist/leaflet.min.css';
-import * as L from 'leaflet';
 import type {
     CircleOptions,
     ControlPosition,
@@ -22,6 +21,7 @@ import type {
     PopupOptions,
     PolylineOptions as RectangleOptions,
 } from 'leaflet';
+import * as L from 'leaflet';
 
 type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom' | 'attributionControl' | 'zoomControl'> & {
     attributionControlOptions?: { position: ControlPosition; prefix: string | false };
@@ -87,11 +87,7 @@ export default class extends AbstractMapController<
         });
     }
 
-    protected doCreateMap({
-        center,
-        zoom,
-        options,
-    }: { center: Point | null; zoom: number | null; options: MapOptions }): L.Map {
+    protected doCreateMap({ center, zoom, options }: { center: Point | null; zoom: number | null; options: MapOptions }): L.Map {
         const map = L.map(this.element, {
             ...options,
             center: center === null ? undefined : center,
@@ -121,9 +117,7 @@ export default class extends AbstractMapController<
     protected doCreateMarker({ definition }: { definition: MarkerDefinition<MarkerOptions, PopupOptions> }): L.Marker {
         const { '@id': _id, position, title, infoWindow, icon, extra, rawOptions = {}, ...otherOptions } = definition;
 
-        const marker = L.marker(position, { title: title || undefined, ...otherOptions, ...rawOptions }).addTo(
-            this.map
-        );
+        const marker = L.marker(position, { title: title || undefined, ...otherOptions, ...rawOptions }).addTo(this.map);
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: marker });
@@ -140,9 +134,7 @@ export default class extends AbstractMapController<
         marker.remove();
     }
 
-    protected doCreatePolygon({
-        definition,
-    }: { definition: PolygonDefinition<PolygonOptions, PopupOptions> }): L.Polygon {
+    protected doCreatePolygon({ definition }: { definition: PolygonDefinition<PolygonOptions, PopupOptions> }): L.Polygon {
         const { '@id': _id, points, title, infoWindow, rawOptions = {} } = definition;
 
         const polygon = L.polygon(points, { ...rawOptions }).addTo(this.map);
@@ -162,9 +154,7 @@ export default class extends AbstractMapController<
         polygon.remove();
     }
 
-    protected doCreatePolyline({
-        definition,
-    }: { definition: PolylineDefinition<PolylineOptions, PopupOptions> }): L.Polyline {
+    protected doCreatePolyline({ definition }: { definition: PolylineDefinition<PolylineOptions, PopupOptions> }): L.Polyline {
         const { '@id': _id, points, title, infoWindow, rawOptions = {} } = definition;
 
         const polyline = L.polyline(points, { ...rawOptions }).addTo(this.map);
@@ -204,9 +194,7 @@ export default class extends AbstractMapController<
         circle.remove();
     }
 
-    protected doCreateRectangle({
-        definition,
-    }: { definition: RectangleDefinition<RectangleOptions, PopupOptions> }): L.Rectangle {
+    protected doCreateRectangle({ definition }: { definition: RectangleDefinition<RectangleOptions, PopupOptions> }): L.Rectangle {
         const { '@id': _id, southWest, northEast, title, infoWindow, rawOptions = {} } = definition;
 
         const rectangle = L.rectangle(
@@ -255,13 +243,7 @@ export default class extends AbstractMapController<
         return popup;
     }
 
-    protected doCreateIcon({
-        definition,
-        element,
-    }: {
-        definition: Icon;
-        element: L.Marker;
-    }): void {
+    protected doCreateIcon({ definition, element }: { definition: Icon; element: L.Marker }): void {
         const { type, width, height } = definition;
 
         let icon: L.DivIcon | L.Icon;

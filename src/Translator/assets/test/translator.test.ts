@@ -1,7 +1,7 @@
 import {
+    getLocale,
     type Message,
     type NoParametersType,
-    getLocale,
     setLocale,
     setLocaleFallbacks,
     throwWhenNotFound,
