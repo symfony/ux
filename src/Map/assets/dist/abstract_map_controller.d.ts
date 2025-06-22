@@ -26,55 +26,54 @@ export type Icon = {
     type: typeof IconTypes.Svg;
     html: string;
 });
-export type MarkerDefinition<MarkerOptions, InfoWindowOptions> = WithIdentifier<{
+export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     position: Point;
     title: string | null;
-    infoWindow?: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
+    infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     icon?: Icon;
-    rawOptions?: MarkerOptions;
+    rawOptions?: BridgeMarkerOptions;
     extra: Record<string, unknown>;
 }>;
-export type PolygonDefinition<PolygonOptions, InfoWindowOptions> = WithIdentifier<{
-    infoWindow?: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
+export type PolygonDefinition<PolygonOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+    infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     points: Array<Point> | Array<Array<Point>>;
     title: string | null;
     rawOptions?: PolygonOptions;
     extra: Record<string, unknown>;
 }>;
-export type PolylineDefinition<PolylineOptions, InfoWindowOptions> = WithIdentifier<{
-    infoWindow?: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
+export type PolylineDefinition<PolylineOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+    infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     points: Array<Point>;
     title: string | null;
     rawOptions?: PolylineOptions;
     extra: Record<string, unknown>;
 }>;
-export type CircleDefinition<CircleOptions, InfoWindowOptions> = WithIdentifier<{
-    infoWindow?: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
+export type CircleDefinition<CircleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+    infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     center: Point;
     radius: number;
     title: string | null;
     rawOptions?: CircleOptions;
     extra: Record<string, unknown>;
 }>;
-export type RectangleDefinition<RectangleOptions, InfoWindowOptions> = WithIdentifier<{
-    infoWindow?: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
+export type RectangleDefinition<RectangleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+    infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     southWest: Point;
     northEast: Point;
     title: string | null;
     rawOptions?: RectangleOptions;
     extra: Record<string, unknown>;
 }>;
-export type InfoWindowDefinition<InfoWindowOptions> = {
+export type InfoWindowDefinition<BridgeInfoWindowOptions> = {
     headerContent: string | null;
     content: string | null;
     position: Point;
     opened: boolean;
     autoClose: boolean;
-    rawOptions?: InfoWindowOptions;
+    rawOptions?: BridgeInfoWindowOptions;
     extra: Record<string, unknown>;
 };
-export type InfoWindowWithoutPositionDefinition<InfoWindowOptions> = Omit<InfoWindowDefinition<InfoWindowOptions>, 'position'>;
-export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindowOptions, InfoWindow, PolygonOptions, Polygon, PolylineOptions, Polyline, CircleOptions, Circle, RectangleOptions, Rectangle> extends Controller<HTMLElement> {
+export default abstract class<MapOptions, BridgeMap, BridgeMarkerOptions, BridgeMarker, BridgeInfoWindowOptions, BridgeInfoWindow, BridgePolygonOptions, BridgePolygon, BridgePolylineOptions, BridgePolyline, BridgeCircleOptions, BridgeCircle, BridgeRectangleOptions, BridgeRectangle> extends Controller<HTMLElement> {
     static values: {
         providerOptions: ObjectConstructor;
         center: ObjectConstructor;
@@ -90,11 +89,11 @@ export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindow
     centerValue: Point | null;
     zoomValue: number | null;
     fitBoundsToMarkersValue: boolean;
-    markersValue: Array<MarkerDefinition<MarkerOptions, InfoWindowOptions>>;
-    polygonsValue: Array<PolygonDefinition<PolygonOptions, InfoWindowOptions>>;
-    polylinesValue: Array<PolylineDefinition<PolylineOptions, InfoWindowOptions>>;
-    circlesValue: Array<CircleDefinition<CircleOptions, InfoWindowOptions>>;
-    rectanglesValue: Array<RectangleDefinition<RectangleOptions, InfoWindowOptions>>;
+    markersValue: Array<MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions>>;
+    polygonsValue: Array<PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions>>;
+    polylinesValue: Array<PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions>>;
+    circlesValue: Array<CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions>>;
+    rectanglesValue: Array<RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions>>;
     optionsValue: MapOptions;
     hasCenterValue: boolean;
     hasZoomValue: boolean;
@@ -105,13 +104,13 @@ export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindow
     hasCirclesValue: boolean;
     hasRectanglesValue: boolean;
     hasOptionsValue: boolean;
-    protected map: Map;
-    protected markers: globalThis.Map<string, Marker>;
-    protected polygons: globalThis.Map<string, Polygon>;
-    protected polylines: globalThis.Map<string, Polyline>;
-    protected circles: globalThis.Map<string, Circle>;
-    protected rectangles: globalThis.Map<string, Rectangle>;
-    protected infoWindows: Array<InfoWindow>;
+    protected map: BridgeMap;
+    protected markers: Map<string, BridgeMarker>;
+    protected polygons: Map<string, BridgePolygon>;
+    protected polylines: Map<string, BridgePolyline>;
+    protected circles: Map<string, BridgeCircle>;
+    protected rectangles: Map<string, BridgeRectangle>;
+    protected infoWindows: Array<BridgeInfoWindow>;
     private isConnected;
     private createMarker;
     private createPolygon;
@@ -121,9 +120,9 @@ export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindow
     protected abstract dispatchEvent(name: string, payload: Record<string, unknown>): void;
     connect(): void;
     createInfoWindow({ definition, element, }: {
-        definition: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
-        element: Marker | Polygon | Polyline | Circle | Rectangle;
-    }): InfoWindow;
+        definition: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
+        element: BridgeMarker | BridgePolygon | BridgePolyline | BridgeCircle | BridgeRectangle;
+    }): BridgeInfoWindow;
     abstract centerValueChanged(): void;
     abstract zoomValueChanged(): void;
     markersValueChanged(): void;
@@ -135,35 +134,35 @@ export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindow
         center: Point | null;
         zoom: number | null;
         options: MapOptions;
-    }): Map;
+    }): BridgeMap;
     protected abstract doFitBoundsToMarkers(): void;
     protected abstract doCreateMarker({ definition }: {
-        definition: MarkerDefinition<MarkerOptions, InfoWindowOptions>;
-    }): Marker;
-    protected abstract doRemoveMarker(marker: Marker): void;
+        definition: MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions>;
+    }): BridgeMarker;
+    protected abstract doRemoveMarker(marker: BridgeMarker): void;
     protected abstract doCreatePolygon({ definition }: {
-        definition: PolygonDefinition<PolygonOptions, InfoWindowOptions>;
-    }): Polygon;
-    protected abstract doRemovePolygon(polygon: Polygon): void;
+        definition: PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions>;
+    }): BridgePolygon;
+    protected abstract doRemovePolygon(polygon: BridgePolygon): void;
     protected abstract doCreatePolyline({ definition }: {
-        definition: PolylineDefinition<PolylineOptions, InfoWindowOptions>;
-    }): Polyline;
-    protected abstract doRemovePolyline(polyline: Polyline): void;
+        definition: PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions>;
+    }): BridgePolyline;
+    protected abstract doRemovePolyline(polyline: BridgePolyline): void;
     protected abstract doCreateCircle({ definition }: {
-        definition: CircleDefinition<CircleOptions, InfoWindowOptions>;
-    }): Circle;
-    protected abstract doRemoveCircle(circle: Circle): void;
+        definition: CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions>;
+    }): BridgeCircle;
+    protected abstract doRemoveCircle(circle: BridgeCircle): void;
     protected abstract doCreateRectangle({ definition }: {
-        definition: RectangleDefinition<RectangleOptions, InfoWindowOptions>;
-    }): Rectangle;
-    protected abstract doRemoveRectangle(rectangle: Rectangle): void;
+        definition: RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions>;
+    }): BridgeRectangle;
+    protected abstract doRemoveRectangle(rectangle: BridgeRectangle): void;
     protected abstract doCreateInfoWindow({ definition, element, }: {
-        definition: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
-        element: Marker | Polygon | Polyline | Circle | Rectangle;
-    }): InfoWindow;
+        definition: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
+        element: BridgeMarker | BridgePolygon | BridgePolyline | BridgeCircle | BridgeRectangle;
+    }): BridgeInfoWindow;
     protected abstract doCreateIcon({ definition, element }: {
         definition: Icon;
-        element: Marker;
+        element: BridgeMarker;
     }): void;
     private createDrawingFactory;
     private onDrawChanged;

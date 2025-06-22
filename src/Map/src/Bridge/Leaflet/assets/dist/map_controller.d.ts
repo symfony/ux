@@ -1,4 +1,4 @@
-import type { CircleDefinition, Icon, InfoWindowWithoutPositionDefinition, MarkerDefinition, Point, PolygonDefinition, PolylineDefinition, RectangleDefinition } from '@symfony/ux-map';
+import type { CircleDefinition, Icon, InfoWindowDefinition, MarkerDefinition, Point, PolygonDefinition, PolylineDefinition, RectangleDefinition } from '@symfony/ux-map';
 import AbstractMapController from '@symfony/ux-map';
 import 'leaflet/dist/leaflet.min.css';
 import type { CircleOptions, ControlPosition, MapOptions as LeafletMapOptions, MarkerOptions, PolylineOptions as PolygonOptions, PolylineOptions, PopupOptions, PolylineOptions as RectangleOptions } from 'leaflet';
@@ -53,7 +53,7 @@ export default class extends AbstractMapController<MapOptions, L.Map, MarkerOpti
     }): L.Rectangle;
     protected doRemoveRectangle(rectangle: L.Rectangle): void;
     protected doCreateInfoWindow({ definition, element, }: {
-        definition: InfoWindowWithoutPositionDefinition<PopupOptions>;
+        definition: Omit<InfoWindowDefinition<PopupOptions>, 'position'>;
         element: L.Marker | L.Polygon | L.Polyline | L.Circle | L.Rectangle;
     }): L.Popup;
     protected doCreateIcon({ definition, element }: {

@@ -12,7 +12,7 @@ import { Loader } from '@googlemaps/js-api-loader';
 import type {
     CircleDefinition,
     Icon,
-    InfoWindowWithoutPositionDefinition,
+    InfoWindowDefinition,
     MarkerDefinition,
     Point,
     PolygonDefinition,
@@ -295,7 +295,7 @@ export default class extends AbstractMapController<
         definition,
         element,
     }: {
-        definition: InfoWindowWithoutPositionDefinition<google.maps.InfoWindowOptions>;
+        definition: Omit<InfoWindowDefinition<google.maps.InfoWindowOptions>, 'position'>;
         element: google.maps.marker.AdvancedMarkerElement | google.maps.Polygon | google.maps.Polyline | google.maps.Circle | google.maps.Rectangle;
     }): google.maps.InfoWindow {
         const { headerContent, content, opened, autoClose, rawOptions = {} } = definition;

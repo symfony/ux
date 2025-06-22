@@ -1,7 +1,16 @@
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 import type {
     CircleDefinition,
     Icon,
-    InfoWindowWithoutPositionDefinition,
+    InfoWindowDefinition,
     MarkerDefinition,
     Point,
     PolygonDefinition,
@@ -224,7 +233,7 @@ export default class extends AbstractMapController<
         definition,
         element,
     }: {
-        definition: InfoWindowWithoutPositionDefinition<PopupOptions>;
+        definition: Omit<InfoWindowDefinition<PopupOptions>, 'position'>;
         element: L.Marker | L.Polygon | L.Polyline | L.Circle | L.Rectangle;
     }): L.Popup {
         const { headerContent, content, rawOptions = {}, ...otherOptions } = definition;
