@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## 2.27
+
+-   Fix `InfoWindow` compatibility with new `Circle` and `Rectangle` supported elements.
+
+    This fix led to a refactoring that can impact the `InfoWindow` position when used with `Polygon` or `Polyline`,
+    because their shapes are too complex.
+    Instead, listen to the `ux:map:info-window:before-create` event to set the position manually.
+    ```js
+    this.element.addEventListener('ux:map:info-window:before-create', (event) => {
+        const { google, element, definition } = event.detail;
+
+        if (element instanceof google.maps.Polygon) {
+            // Set the position to the center of the polygon
+            const bounds = new google.maps.LatLngBounds();
+
+            element.getPath().forEach((latLng) => bounds.extend(latLng));
+            definition.infoWindow.rawOptions.position = bounds.getCenter();
+        }
+    });
+    ```
+
 ## 2.25
 
 -  Downgrade PHP requirement from 8.3 to 8.1
