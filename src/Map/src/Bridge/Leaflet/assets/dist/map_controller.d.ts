@@ -1,8 +1,8 @@
-import AbstractMapController from '@symfony/ux-map';
 import type { CircleDefinition, Icon, InfoWindowWithoutPositionDefinition, MarkerDefinition, Point, PolygonDefinition, PolylineDefinition, RectangleDefinition } from '@symfony/ux-map';
+import AbstractMapController from '@symfony/ux-map';
 import 'leaflet/dist/leaflet.min.css';
-import * as L from 'leaflet';
 import type { CircleOptions, ControlPosition, MapOptions as LeafletMapOptions, MarkerOptions, PolylineOptions as PolygonOptions, PolylineOptions, PopupOptions, PolylineOptions as RectangleOptions } from 'leaflet';
+import * as L from 'leaflet';
 type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom' | 'attributionControl' | 'zoomControl'> & {
     attributionControlOptions?: {
         position: ControlPosition;
@@ -27,7 +27,7 @@ export default class extends AbstractMapController<MapOptions, L.Map, MarkerOpti
     centerValueChanged(): void;
     zoomValueChanged(): void;
     protected dispatchEvent(name: string, payload?: Record<string, unknown>): void;
-    protected doCreateMap({ center, zoom, options, }: {
+    protected doCreateMap({ center, zoom, options }: {
         center: Point | null;
         zoom: number | null;
         options: MapOptions;
@@ -36,11 +36,11 @@ export default class extends AbstractMapController<MapOptions, L.Map, MarkerOpti
         definition: MarkerDefinition<MarkerOptions, PopupOptions>;
     }): L.Marker;
     protected doRemoveMarker(marker: L.Marker): void;
-    protected doCreatePolygon({ definition, }: {
+    protected doCreatePolygon({ definition }: {
         definition: PolygonDefinition<PolygonOptions, PopupOptions>;
     }): L.Polygon;
     protected doRemovePolygon(polygon: L.Polygon): void;
-    protected doCreatePolyline({ definition, }: {
+    protected doCreatePolyline({ definition }: {
         definition: PolylineDefinition<PolylineOptions, PopupOptions>;
     }): L.Polyline;
     protected doRemovePolyline(polyline: L.Polyline): void;
@@ -48,7 +48,7 @@ export default class extends AbstractMapController<MapOptions, L.Map, MarkerOpti
         definition: CircleDefinition<CircleOptions, PopupOptions>;
     }): L.Circle;
     protected doRemoveCircle(circle: L.Circle): void;
-    protected doCreateRectangle({ definition, }: {
+    protected doCreateRectangle({ definition }: {
         definition: RectangleDefinition<RectangleOptions, PopupOptions>;
     }): L.Rectangle;
     protected doRemoveRectangle(rectangle: L.Rectangle): void;
@@ -56,7 +56,7 @@ export default class extends AbstractMapController<MapOptions, L.Map, MarkerOpti
         definition: InfoWindowWithoutPositionDefinition<PopupOptions>;
         element: L.Marker | L.Polygon | L.Polyline | L.Circle | L.Rectangle;
     }): L.Popup;
-    protected doCreateIcon({ definition, element, }: {
+    protected doCreateIcon({ definition, element }: {
         definition: Icon;
         element: L.Marker;
     }): void;

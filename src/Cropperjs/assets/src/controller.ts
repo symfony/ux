@@ -9,6 +9,7 @@
 
 import { Controller } from '@hotwired/stimulus';
 import Cropper from 'cropperjs';
+
 import CropEvent = Cropper.CropEvent;
 
 export default class CropperController extends Controller {

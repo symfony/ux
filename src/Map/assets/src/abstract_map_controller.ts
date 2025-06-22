@@ -136,10 +136,7 @@ export type InfoWindowDefinition<InfoWindowOptions> = {
     extra: Record<string, unknown>;
 };
 
-export type InfoWindowWithoutPositionDefinition<InfoWindowOptions> = Omit<
-    InfoWindowDefinition<InfoWindowOptions>,
-    'position'
->;
+export type InfoWindowWithoutPositionDefinition<InfoWindowOptions> = Omit<InfoWindowDefinition<InfoWindowOptions>, 'position'>;
 
 export default abstract class<
     MapOptions,
@@ -199,21 +196,11 @@ export default abstract class<
     protected infoWindows: Array<InfoWindow> = [];
 
     private isConnected = false;
-    private createMarker: ({
-        definition,
-    }: { definition: MarkerDefinition<MarkerOptions, InfoWindowOptions> }) => Marker;
-    private createPolygon: ({
-        definition,
-    }: { definition: PolygonDefinition<PolygonOptions, InfoWindowOptions> }) => Polygon;
-    private createPolyline: ({
-        definition,
-    }: { definition: PolylineDefinition<PolylineOptions, InfoWindowOptions> }) => Polyline;
-    private createCircle: ({
-        definition,
-    }: { definition: CircleDefinition<CircleOptions, InfoWindowOptions> }) => Circle;
-    private createRectangle: ({
-        definition,
-    }: { definition: RectangleDefinition<RectangleOptions, InfoWindowOptions> }) => Rectangle;
+    private createMarker: ({ definition }: { definition: MarkerDefinition<MarkerOptions, InfoWindowOptions> }) => Marker;
+    private createPolygon: ({ definition }: { definition: PolygonDefinition<PolygonOptions, InfoWindowOptions> }) => Polygon;
+    private createPolyline: ({ definition }: { definition: PolylineDefinition<PolylineOptions, InfoWindowOptions> }) => Polyline;
+    private createCircle: ({ definition }: { definition: CircleDefinition<CircleOptions, InfoWindowOptions> }) => Circle;
+    private createRectangle: ({ definition }: { definition: RectangleDefinition<RectangleOptions, InfoWindowOptions> }) => Rectangle;
 
     protected abstract dispatchEvent(name: string, payload: Record<string, unknown>): void;
 
@@ -226,11 +213,7 @@ export default abstract class<
         this.createPolygon = this.createDrawingFactory('polygon', this.polygons, this.doCreatePolygon.bind(this));
         this.createPolyline = this.createDrawingFactory('polyline', this.polylines, this.doCreatePolyline.bind(this));
         this.createCircle = this.createDrawingFactory('circle', this.circles, this.doCreateCircle.bind(this));
-        this.createRectangle = this.createDrawingFactory(
-            'rectangle',
-            this.rectangles,
-            this.doCreateRectangle.bind(this)
-        );
+        this.createRectangle = this.createDrawingFactory('rectangle', this.rectangles, this.doCreateRectangle.bind(this));
 
         this.map = this.doCreateMap({
             center: this.hasCenterValue ? this.centerValue : null,
@@ -331,53 +314,27 @@ export default abstract class<
     //endregion
 
     //region Abstract factory methods to be implemented by the concrete classes, they are specific to the map provider
-    protected abstract doCreateMap({
-        center,
-        zoom,
-        options,
-    }: {
-        center: Point | null;
-        zoom: number | null;
-        options: MapOptions;
-    }): Map;
+    protected abstract doCreateMap({ center, zoom, options }: { center: Point | null; zoom: number | null; options: MapOptions }): Map;
 
     protected abstract doFitBoundsToMarkers(): void;
 
-    protected abstract doCreateMarker({
-        definition,
-    }: { definition: MarkerDefinition<MarkerOptions, InfoWindowOptions> }): Marker;
+    protected abstract doCreateMarker({ definition }: { definition: MarkerDefinition<MarkerOptions, InfoWindowOptions> }): Marker;
 
     protected abstract doRemoveMarker(marker: Marker): void;
 
-    protected abstract doCreatePolygon({
-        definition,
-    }: {
-        definition: PolygonDefinition<PolygonOptions, InfoWindowOptions>;
-    }): Polygon;
+    protected abstract doCreatePolygon({ definition }: { definition: PolygonDefinition<PolygonOptions, InfoWindowOptions> }): Polygon;
 
     protected abstract doRemovePolygon(polygon: Polygon): void;
 
-    protected abstract doCreatePolyline({
-        definition,
-    }: {
-        definition: PolylineDefinition<PolylineOptions, InfoWindowOptions>;
-    }): Polyline;
+    protected abstract doCreatePolyline({ definition }: { definition: PolylineDefinition<PolylineOptions, InfoWindowOptions> }): Polyline;
 
     protected abstract doRemovePolyline(polyline: Polyline): void;
 
-    protected abstract doCreateCircle({
-        definition,
-    }: {
-        definition: CircleDefinition<CircleOptions, InfoWindowOptions>;
-    }): Circle;
+    protected abstract doCreateCircle({ definition }: { definition: CircleDefinition<CircleOptions, InfoWindowOptions> }): Circle;
 
     protected abstract doRemoveCircle(circle: Circle): void;
 
-    protected abstract doCreateRectangle({
-        definition,
-    }: {
-        definition: RectangleDefinition<RectangleOptions, InfoWindowOptions>;
-    }): Rectangle;
+    protected abstract doCreateRectangle({ definition }: { definition: RectangleDefinition<RectangleOptions, InfoWindowOptions> }): Rectangle;
 
     protected abstract doRemoveRectangle(rectangle: Rectangle): void;
 
@@ -388,42 +345,16 @@ export default abstract class<
         definition: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
         element: Marker | Polygon | Polyline | Circle | Rectangle;
     }): InfoWindow;
-    protected abstract doCreateIcon({
-        definition,
-        element,
-    }: {
-        definition: Icon;
-        element: Marker;
-    }): void;
+    protected abstract doCreateIcon({ definition, element }: { definition: Icon; element: Marker }): void;
 
     //endregion
 
     //region Private APIs
-    private createDrawingFactory(
-        type: 'marker',
-        draws: typeof this.markers,
-        factory: typeof this.doCreateMarker
-    ): typeof this.doCreateMarker;
-    private createDrawingFactory(
-        type: 'polygon',
-        draws: typeof this.polygons,
-        factory: typeof this.doCreatePolygon
-    ): typeof this.doCreatePolygon;
-    private createDrawingFactory(
-        type: 'polyline',
-        draws: typeof this.polylines,
-        factory: typeof this.doCreatePolyline
-    ): typeof this.doCreatePolyline;
-    private createDrawingFactory(
-        type: 'circle',
-        draws: typeof this.circles,
-        factory: typeof this.doCreateCircle
-    ): typeof this.doCreateCircle;
-    private createDrawingFactory(
-        type: 'rectangle',
-        draws: typeof this.rectangles,
-        factory: typeof this.doCreateRectangle
-    ): typeof this.doCreateRectangle;
+    private createDrawingFactory(type: 'marker', draws: typeof this.markers, factory: typeof this.doCreateMarker): typeof this.doCreateMarker;
+    private createDrawingFactory(type: 'polygon', draws: typeof this.polygons, factory: typeof this.doCreatePolygon): typeof this.doCreatePolygon;
+    private createDrawingFactory(type: 'polyline', draws: typeof this.polylines, factory: typeof this.doCreatePolyline): typeof this.doCreatePolyline;
+    private createDrawingFactory(type: 'circle', draws: typeof this.circles, factory: typeof this.doCreateCircle): typeof this.doCreateCircle;
+    private createDrawingFactory(type: 'rectangle', draws: typeof this.rectangles, factory: typeof this.doCreateRectangle): typeof this.doCreateRectangle;
     private createDrawingFactory<
         Factory extends
             | typeof this.doCreateMarker
@@ -432,11 +363,7 @@ export default abstract class<
             | typeof this.doCreateCircle
             | typeof this.doCreateRectangle,
         Draw extends ReturnType<Factory>,
-    >(
-        type: 'marker' | 'polygon' | 'polyline' | 'circle' | 'rectangle',
-        draws: globalThis.Map<WithIdentifier<any>, Draw>,
-        factory: Factory
-    ): Factory {
+    >(type: 'marker' | 'polygon' | 'polyline' | 'circle' | 'rectangle', draws: globalThis.Map<WithIdentifier<any>, Draw>, factory: Factory): Factory {
         const eventBefore = `${type}:before-create`;
         const eventAfter = `${type}:after-create`;
 

@@ -195,347 +195,6 @@ const findParent = (currentComponent) => {
     return null;
 };
 
-class HookManager {
-    constructor() {
-        this.hooks = new Map();
-    }
-    register(hookName, callback) {
-        const hooks = this.hooks.get(hookName) || [];
-        hooks.push(callback);
-        this.hooks.set(hookName, hooks);
-    }
-    unregister(hookName, callback) {
-        const hooks = this.hooks.get(hookName) || [];
-        const index = hooks.indexOf(callback);
-        if (index === -1) {
-            return;
-        }
-        hooks.splice(index, 1);
-        this.hooks.set(hookName, hooks);
-    }
-    triggerHook(hookName, ...args) {
-        const hooks = this.hooks.get(hookName) || [];
-        hooks.forEach((callback) => callback(...args));
-    }
-}
-
-class ChangingItemsTracker {
-    constructor() {
-        this.changedItems = new Map();
-        this.removedItems = new Map();
-    }
-    setItem(itemName, newValue, previousValue) {
-        if (this.removedItems.has(itemName)) {
-            const removedRecord = this.removedItems.get(itemName);
-            this.removedItems.delete(itemName);
-            if (removedRecord.original === newValue) {
-                return;
-            }
-        }
-        if (this.changedItems.has(itemName)) {
-            const originalRecord = this.changedItems.get(itemName);
-            if (originalRecord.original === newValue) {
-                this.changedItems.delete(itemName);
-                return;
-            }
-            this.changedItems.set(itemName, { original: originalRecord.original, new: newValue });
-            return;
-        }
-        this.changedItems.set(itemName, { original: previousValue, new: newValue });
-    }
-    removeItem(itemName, currentValue) {
-        let trueOriginalValue = currentValue;
-        if (this.changedItems.has(itemName)) {
-            const originalRecord = this.changedItems.get(itemName);
-            trueOriginalValue = originalRecord.original;
-            this.changedItems.delete(itemName);
-            if (trueOriginalValue === null) {
-                return;
-            }
-        }
-        if (!this.removedItems.has(itemName)) {
-            this.removedItems.set(itemName, { original: trueOriginalValue });
-        }
-    }
-    getChangedItems() {
-        return Array.from(this.changedItems, ([name, { new: value }]) => ({ name, value }));
-    }
-    getRemovedItems() {
-        return Array.from(this.removedItems.keys());
-    }
-    isEmpty() {
-        return this.changedItems.size === 0 && this.removedItems.size === 0;
-    }
-}
-
-class ElementChanges {
-    constructor() {
-        this.addedClasses = new Set();
-        this.removedClasses = new Set();
-        this.styleChanges = new ChangingItemsTracker();
-        this.attributeChanges = new ChangingItemsTracker();
-    }
-    addClass(className) {
-        if (!this.removedClasses.delete(className)) {
-            this.addedClasses.add(className);
-        }
-    }
-    removeClass(className) {
-        if (!this.addedClasses.delete(className)) {
-            this.removedClasses.add(className);
-        }
-    }
-    addStyle(styleName, newValue, originalValue) {
-        this.styleChanges.setItem(styleName, newValue, originalValue);
-    }
-    removeStyle(styleName, originalValue) {
-        this.styleChanges.removeItem(styleName, originalValue);
-    }
-    addAttribute(attributeName, newValue, originalValue) {
-        this.attributeChanges.setItem(attributeName, newValue, originalValue);
-    }
-    removeAttribute(attributeName, originalValue) {
-        this.attributeChanges.removeItem(attributeName, originalValue);
-    }
-    getAddedClasses() {
-        return [...this.addedClasses];
-    }
-    getRemovedClasses() {
-        return [...this.removedClasses];
-    }
-    getChangedStyles() {
-        return this.styleChanges.getChangedItems();
-    }
-    getRemovedStyles() {
-        return this.styleChanges.getRemovedItems();
-    }
-    getChangedAttributes() {
-        return this.attributeChanges.getChangedItems();
-    }
-    getRemovedAttributes() {
-        return this.attributeChanges.getRemovedItems();
-    }
-    applyToElement(element) {
-        element.classList.add(...this.addedClasses);
-        element.classList.remove(...this.removedClasses);
-        this.styleChanges.getChangedItems().forEach((change) => {
-            element.style.setProperty(change.name, change.value);
-            return;
-        });
-        this.styleChanges.getRemovedItems().forEach((styleName) => {
-            element.style.removeProperty(styleName);
-        });
-        this.attributeChanges.getChangedItems().forEach((change) => {
-            element.setAttribute(change.name, change.value);
-        });
-        this.attributeChanges.getRemovedItems().forEach((attributeName) => {
-            element.removeAttribute(attributeName);
-        });
-    }
-    isEmpty() {
-        return (this.addedClasses.size === 0 &&
-            this.removedClasses.size === 0 &&
-            this.styleChanges.isEmpty() &&
-            this.attributeChanges.isEmpty());
-    }
-}
-
-class ExternalMutationTracker {
-    constructor(element, shouldTrackChangeCallback) {
-        this.changedElements = new WeakMap();
-        this.changedElementsCount = 0;
-        this.addedElements = [];
-        this.removedElements = [];
-        this.isStarted = false;
-        this.element = element;
-        this.shouldTrackChangeCallback = shouldTrackChangeCallback;
-        this.mutationObserver = new MutationObserver(this.onMutations.bind(this));
-    }
-    start() {
-        if (this.isStarted) {
-            return;
-        }
-        this.mutationObserver.observe(this.element, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-            attributeOldValue: true,
-        });
-        this.isStarted = true;
-    }
-    stop() {
-        if (this.isStarted) {
-            this.mutationObserver.disconnect();
-            this.isStarted = false;
-        }
-    }
-    getChangedElement(element) {
-        return this.changedElements.has(element) ? this.changedElements.get(element) : null;
-    }
-    getAddedElements() {
-        return this.addedElements;
-    }
-    wasElementAdded(element) {
-        return this.addedElements.includes(element);
-    }
-    handlePendingChanges() {
-        this.onMutations(this.mutationObserver.takeRecords());
-    }
-    onMutations(mutations) {
-        const handledAttributeMutations = new WeakMap();
-        for (const mutation of mutations) {
-            const element = mutation.target;
-            if (!this.shouldTrackChangeCallback(element)) {
-                continue;
-            }
-            if (this.isElementAddedByTranslation(element)) {
-                continue;
-            }
-            let isChangeInAddedElement = false;
-            for (const addedElement of this.addedElements) {
-                if (addedElement.contains(element)) {
-                    isChangeInAddedElement = true;
-                    break;
-                }
-            }
-            if (isChangeInAddedElement) {
-                continue;
-            }
-            switch (mutation.type) {
-                case 'childList':
-                    this.handleChildListMutation(mutation);
-                    break;
-                case 'attributes':
-                    if (!handledAttributeMutations.has(element)) {
-                        handledAttributeMutations.set(element, []);
-                    }
-                    if (!handledAttributeMutations.get(element).includes(mutation.attributeName)) {
-                        this.handleAttributeMutation(mutation);
-                        handledAttributeMutations.set(element, [
-                            ...handledAttributeMutations.get(element),
-                            mutation.attributeName,
-                        ]);
-                    }
-                    break;
-            }
-        }
-    }
-    handleChildListMutation(mutation) {
-        mutation.addedNodes.forEach((node) => {
-            if (!(node instanceof Element)) {
-                return;
-            }
-            if (this.removedElements.includes(node)) {
-                this.removedElements.splice(this.removedElements.indexOf(node), 1);
-                return;
-            }
-            if (this.isElementAddedByTranslation(node)) {
-                return;
-            }
-            this.addedElements.push(node);
-        });
-        mutation.removedNodes.forEach((node) => {
-            if (!(node instanceof Element)) {
-                return;
-            }
-            if (this.addedElements.includes(node)) {
-                this.addedElements.splice(this.addedElements.indexOf(node), 1);
-                return;
-            }
-            this.removedElements.push(node);
-        });
-    }
-    handleAttributeMutation(mutation) {
-        const element = mutation.target;
-        if (!this.changedElements.has(element)) {
-            this.changedElements.set(element, new ElementChanges());
-            this.changedElementsCount++;
-        }
-        const changedElement = this.changedElements.get(element);
-        switch (mutation.attributeName) {
-            case 'class':
-                this.handleClassAttributeMutation(mutation, changedElement);
-                break;
-            case 'style':
-                this.handleStyleAttributeMutation(mutation, changedElement);
-                break;
-            default:
-                this.handleGenericAttributeMutation(mutation, changedElement);
-        }
-        if (changedElement.isEmpty()) {
-            this.changedElements.delete(element);
-            this.changedElementsCount--;
-        }
-    }
-    handleClassAttributeMutation(mutation, elementChanges) {
-        const element = mutation.target;
-        const previousValue = mutation.oldValue || '';
-        const previousValues = previousValue.match(/(\S+)/gu) || [];
-        const newValues = [].slice.call(element.classList);
-        const addedValues = newValues.filter((value) => !previousValues.includes(value));
-        const removedValues = previousValues.filter((value) => !newValues.includes(value));
-        addedValues.forEach((value) => {
-            elementChanges.addClass(value);
-        });
-        removedValues.forEach((value) => {
-            elementChanges.removeClass(value);
-        });
-    }
-    handleStyleAttributeMutation(mutation, elementChanges) {
-        const element = mutation.target;
-        const previousValue = mutation.oldValue || '';
-        const previousStyles = this.extractStyles(previousValue);
-        const newValue = element.getAttribute('style') || '';
-        const newStyles = this.extractStyles(newValue);
-        const addedOrChangedStyles = Object.keys(newStyles).filter((key) => previousStyles[key] === undefined || previousStyles[key] !== newStyles[key]);
-        const removedStyles = Object.keys(previousStyles).filter((key) => !newStyles[key]);
-        addedOrChangedStyles.forEach((style) => {
-            elementChanges.addStyle(style, newStyles[style], previousStyles[style] === undefined ? null : previousStyles[style]);
-        });
-        removedStyles.forEach((style) => {
-            elementChanges.removeStyle(style, previousStyles[style]);
-        });
-    }
-    handleGenericAttributeMutation(mutation, elementChanges) {
-        const attributeName = mutation.attributeName;
-        const element = mutation.target;
-        let oldValue = mutation.oldValue;
-        let newValue = element.getAttribute(attributeName);
-        if (oldValue === attributeName) {
-            oldValue = '';
-        }
-        if (newValue === attributeName) {
-            newValue = '';
-        }
-        if (!element.hasAttribute(attributeName)) {
-            if (oldValue === null) {
-                return;
-            }
-            elementChanges.removeAttribute(attributeName, mutation.oldValue);
-            return;
-        }
-        if (newValue === oldValue) {
-            return;
-        }
-        elementChanges.addAttribute(attributeName, element.getAttribute(attributeName), mutation.oldValue);
-    }
-    extractStyles(styles) {
-        const styleObject = {};
-        styles.split(';').forEach((style) => {
-            const parts = style.split(':');
-            if (parts.length === 1) {
-                return;
-            }
-            const property = parts[0].trim();
-            styleObject[property] = parts.slice(1).join(':').trim();
-        });
-        return styleObject;
-    }
-    isElementAddedByTranslation(element) {
-        return element.tagName === 'FONT' && element.getAttribute('style') === 'vertical-align: inherit;';
-    }
-}
-
 function parseDirectives(content) {
     const directives = [];
     if (!content) {
@@ -816,6 +475,30 @@ const getMultipleCheckboxValue = (element, currentValues) => {
     return finalValues;
 };
 const inputValue = (element) => element.dataset.value ? element.dataset.value : element.value;
+
+class HookManager {
+    constructor() {
+        this.hooks = new Map();
+    }
+    register(hookName, callback) {
+        const hooks = this.hooks.get(hookName) || [];
+        hooks.push(callback);
+        this.hooks.set(hookName, hooks);
+    }
+    unregister(hookName, callback) {
+        const hooks = this.hooks.get(hookName) || [];
+        const index = hooks.indexOf(callback);
+        if (index === -1) {
+            return;
+        }
+        hooks.splice(index, 1);
+        this.hooks.set(hookName, hooks);
+    }
+    triggerHook(hookName, ...args) {
+        const hooks = this.hooks.get(hookName) || [];
+        hooks.forEach((callback) => callback(...args));
+    }
+}
 
 // base IIFE to define idiomorph
 var Idiomorph = (function () {
@@ -1788,6 +1471,323 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
         }
         newElement.replaceWith(originalElement);
     });
+}
+
+class ChangingItemsTracker {
+    constructor() {
+        this.changedItems = new Map();
+        this.removedItems = new Map();
+    }
+    setItem(itemName, newValue, previousValue) {
+        if (this.removedItems.has(itemName)) {
+            const removedRecord = this.removedItems.get(itemName);
+            this.removedItems.delete(itemName);
+            if (removedRecord.original === newValue) {
+                return;
+            }
+        }
+        if (this.changedItems.has(itemName)) {
+            const originalRecord = this.changedItems.get(itemName);
+            if (originalRecord.original === newValue) {
+                this.changedItems.delete(itemName);
+                return;
+            }
+            this.changedItems.set(itemName, { original: originalRecord.original, new: newValue });
+            return;
+        }
+        this.changedItems.set(itemName, { original: previousValue, new: newValue });
+    }
+    removeItem(itemName, currentValue) {
+        let trueOriginalValue = currentValue;
+        if (this.changedItems.has(itemName)) {
+            const originalRecord = this.changedItems.get(itemName);
+            trueOriginalValue = originalRecord.original;
+            this.changedItems.delete(itemName);
+            if (trueOriginalValue === null) {
+                return;
+            }
+        }
+        if (!this.removedItems.has(itemName)) {
+            this.removedItems.set(itemName, { original: trueOriginalValue });
+        }
+    }
+    getChangedItems() {
+        return Array.from(this.changedItems, ([name, { new: value }]) => ({ name, value }));
+    }
+    getRemovedItems() {
+        return Array.from(this.removedItems.keys());
+    }
+    isEmpty() {
+        return this.changedItems.size === 0 && this.removedItems.size === 0;
+    }
+}
+
+class ElementChanges {
+    constructor() {
+        this.addedClasses = new Set();
+        this.removedClasses = new Set();
+        this.styleChanges = new ChangingItemsTracker();
+        this.attributeChanges = new ChangingItemsTracker();
+    }
+    addClass(className) {
+        if (!this.removedClasses.delete(className)) {
+            this.addedClasses.add(className);
+        }
+    }
+    removeClass(className) {
+        if (!this.addedClasses.delete(className)) {
+            this.removedClasses.add(className);
+        }
+    }
+    addStyle(styleName, newValue, originalValue) {
+        this.styleChanges.setItem(styleName, newValue, originalValue);
+    }
+    removeStyle(styleName, originalValue) {
+        this.styleChanges.removeItem(styleName, originalValue);
+    }
+    addAttribute(attributeName, newValue, originalValue) {
+        this.attributeChanges.setItem(attributeName, newValue, originalValue);
+    }
+    removeAttribute(attributeName, originalValue) {
+        this.attributeChanges.removeItem(attributeName, originalValue);
+    }
+    getAddedClasses() {
+        return [...this.addedClasses];
+    }
+    getRemovedClasses() {
+        return [...this.removedClasses];
+    }
+    getChangedStyles() {
+        return this.styleChanges.getChangedItems();
+    }
+    getRemovedStyles() {
+        return this.styleChanges.getRemovedItems();
+    }
+    getChangedAttributes() {
+        return this.attributeChanges.getChangedItems();
+    }
+    getRemovedAttributes() {
+        return this.attributeChanges.getRemovedItems();
+    }
+    applyToElement(element) {
+        element.classList.add(...this.addedClasses);
+        element.classList.remove(...this.removedClasses);
+        this.styleChanges.getChangedItems().forEach((change) => {
+            element.style.setProperty(change.name, change.value);
+            return;
+        });
+        this.styleChanges.getRemovedItems().forEach((styleName) => {
+            element.style.removeProperty(styleName);
+        });
+        this.attributeChanges.getChangedItems().forEach((change) => {
+            element.setAttribute(change.name, change.value);
+        });
+        this.attributeChanges.getRemovedItems().forEach((attributeName) => {
+            element.removeAttribute(attributeName);
+        });
+    }
+    isEmpty() {
+        return (this.addedClasses.size === 0 &&
+            this.removedClasses.size === 0 &&
+            this.styleChanges.isEmpty() &&
+            this.attributeChanges.isEmpty());
+    }
+}
+
+class ExternalMutationTracker {
+    constructor(element, shouldTrackChangeCallback) {
+        this.changedElements = new WeakMap();
+        this.changedElementsCount = 0;
+        this.addedElements = [];
+        this.removedElements = [];
+        this.isStarted = false;
+        this.element = element;
+        this.shouldTrackChangeCallback = shouldTrackChangeCallback;
+        this.mutationObserver = new MutationObserver(this.onMutations.bind(this));
+    }
+    start() {
+        if (this.isStarted) {
+            return;
+        }
+        this.mutationObserver.observe(this.element, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeOldValue: true,
+        });
+        this.isStarted = true;
+    }
+    stop() {
+        if (this.isStarted) {
+            this.mutationObserver.disconnect();
+            this.isStarted = false;
+        }
+    }
+    getChangedElement(element) {
+        return this.changedElements.has(element) ? this.changedElements.get(element) : null;
+    }
+    getAddedElements() {
+        return this.addedElements;
+    }
+    wasElementAdded(element) {
+        return this.addedElements.includes(element);
+    }
+    handlePendingChanges() {
+        this.onMutations(this.mutationObserver.takeRecords());
+    }
+    onMutations(mutations) {
+        const handledAttributeMutations = new WeakMap();
+        for (const mutation of mutations) {
+            const element = mutation.target;
+            if (!this.shouldTrackChangeCallback(element)) {
+                continue;
+            }
+            if (this.isElementAddedByTranslation(element)) {
+                continue;
+            }
+            let isChangeInAddedElement = false;
+            for (const addedElement of this.addedElements) {
+                if (addedElement.contains(element)) {
+                    isChangeInAddedElement = true;
+                    break;
+                }
+            }
+            if (isChangeInAddedElement) {
+                continue;
+            }
+            switch (mutation.type) {
+                case 'childList':
+                    this.handleChildListMutation(mutation);
+                    break;
+                case 'attributes':
+                    if (!handledAttributeMutations.has(element)) {
+                        handledAttributeMutations.set(element, []);
+                    }
+                    if (!handledAttributeMutations.get(element).includes(mutation.attributeName)) {
+                        this.handleAttributeMutation(mutation);
+                        handledAttributeMutations.set(element, [
+                            ...handledAttributeMutations.get(element),
+                            mutation.attributeName,
+                        ]);
+                    }
+                    break;
+            }
+        }
+    }
+    handleChildListMutation(mutation) {
+        mutation.addedNodes.forEach((node) => {
+            if (!(node instanceof Element)) {
+                return;
+            }
+            if (this.removedElements.includes(node)) {
+                this.removedElements.splice(this.removedElements.indexOf(node), 1);
+                return;
+            }
+            if (this.isElementAddedByTranslation(node)) {
+                return;
+            }
+            this.addedElements.push(node);
+        });
+        mutation.removedNodes.forEach((node) => {
+            if (!(node instanceof Element)) {
+                return;
+            }
+            if (this.addedElements.includes(node)) {
+                this.addedElements.splice(this.addedElements.indexOf(node), 1);
+                return;
+            }
+            this.removedElements.push(node);
+        });
+    }
+    handleAttributeMutation(mutation) {
+        const element = mutation.target;
+        if (!this.changedElements.has(element)) {
+            this.changedElements.set(element, new ElementChanges());
+            this.changedElementsCount++;
+        }
+        const changedElement = this.changedElements.get(element);
+        switch (mutation.attributeName) {
+            case 'class':
+                this.handleClassAttributeMutation(mutation, changedElement);
+                break;
+            case 'style':
+                this.handleStyleAttributeMutation(mutation, changedElement);
+                break;
+            default:
+                this.handleGenericAttributeMutation(mutation, changedElement);
+        }
+        if (changedElement.isEmpty()) {
+            this.changedElements.delete(element);
+            this.changedElementsCount--;
+        }
+    }
+    handleClassAttributeMutation(mutation, elementChanges) {
+        const element = mutation.target;
+        const previousValue = mutation.oldValue || '';
+        const previousValues = previousValue.match(/(\S+)/gu) || [];
+        const newValues = [].slice.call(element.classList);
+        const addedValues = newValues.filter((value) => !previousValues.includes(value));
+        const removedValues = previousValues.filter((value) => !newValues.includes(value));
+        addedValues.forEach((value) => {
+            elementChanges.addClass(value);
+        });
+        removedValues.forEach((value) => {
+            elementChanges.removeClass(value);
+        });
+    }
+    handleStyleAttributeMutation(mutation, elementChanges) {
+        const element = mutation.target;
+        const previousValue = mutation.oldValue || '';
+        const previousStyles = this.extractStyles(previousValue);
+        const newValue = element.getAttribute('style') || '';
+        const newStyles = this.extractStyles(newValue);
+        const addedOrChangedStyles = Object.keys(newStyles).filter((key) => previousStyles[key] === undefined || previousStyles[key] !== newStyles[key]);
+        const removedStyles = Object.keys(previousStyles).filter((key) => !newStyles[key]);
+        addedOrChangedStyles.forEach((style) => {
+            elementChanges.addStyle(style, newStyles[style], previousStyles[style] === undefined ? null : previousStyles[style]);
+        });
+        removedStyles.forEach((style) => {
+            elementChanges.removeStyle(style, previousStyles[style]);
+        });
+    }
+    handleGenericAttributeMutation(mutation, elementChanges) {
+        const attributeName = mutation.attributeName;
+        const element = mutation.target;
+        let oldValue = mutation.oldValue;
+        let newValue = element.getAttribute(attributeName);
+        if (oldValue === attributeName) {
+            oldValue = '';
+        }
+        if (newValue === attributeName) {
+            newValue = '';
+        }
+        if (!element.hasAttribute(attributeName)) {
+            if (oldValue === null) {
+                return;
+            }
+            elementChanges.removeAttribute(attributeName, mutation.oldValue);
+            return;
+        }
+        if (newValue === oldValue) {
+            return;
+        }
+        elementChanges.addAttribute(attributeName, element.getAttribute(attributeName), mutation.oldValue);
+    }
+    extractStyles(styles) {
+        const styleObject = {};
+        styles.split(';').forEach((style) => {
+            const parts = style.split(':');
+            if (parts.length === 1) {
+                return;
+            }
+            const property = parts[0].trim();
+            styleObject[property] = parts.slice(1).join(':').trim();
+        });
+        return styleObject;
+    }
+    isElementAddedByTranslation(element) {
+        return element.tagName === 'FONT' && element.getAttribute('style') === 'vertical-align: inherit;';
+    }
 }
 
 class UnsyncedInputsTracker {

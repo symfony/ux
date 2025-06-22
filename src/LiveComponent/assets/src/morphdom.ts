@@ -1,8 +1,8 @@
 // @ts-ignore
 import { Idiomorph } from 'idiomorph/dist/idiomorph.esm.js';
-import type ExternalMutationTracker from './Rendering/ExternalMutationTracker';
 import { cloneHTMLElement, getModelDirectiveFromElement, setValueOnElement } from './dom_utils';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
+import type ExternalMutationTracker from './Rendering/ExternalMutationTracker';
 
 const syncAttributes = (fromEl: Element, toEl: Element): void => {
     for (let i = 0; i < fromEl.attributes.length; i++) {

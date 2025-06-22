@@ -1,6 +1,6 @@
 import type { LoaderOptions } from '@googlemaps/js-api-loader';
-import AbstractMapController from '@symfony/ux-map';
 import type { CircleDefinition, Icon, InfoWindowWithoutPositionDefinition, MarkerDefinition, Point, PolygonDefinition, PolylineDefinition, RectangleDefinition } from '@symfony/ux-map';
+import AbstractMapController from '@symfony/ux-map';
 type MapOptions = Pick<google.maps.MapOptions, 'mapId' | 'gestureHandling' | 'backgroundColor' | 'disableDoubleClickZoom' | 'zoomControl' | 'zoomControlOptions' | 'mapTypeControl' | 'mapTypeControlOptions' | 'streetViewControl' | 'streetViewControlOptions' | 'fullscreenControl' | 'fullscreenControlOptions'>;
 export default class extends AbstractMapController<MapOptions, google.maps.Map, google.maps.marker.AdvancedMarkerElementOptions, google.maps.marker.AdvancedMarkerElement, google.maps.InfoWindowOptions, google.maps.InfoWindow, google.maps.PolygonOptions, google.maps.Polygon, google.maps.PolylineOptions, google.maps.Polyline, google.maps.CircleOptions, google.maps.Circle, google.maps.RectangleOptions, google.maps.Rectangle> {
     providerOptionsValue: Pick<LoaderOptions, 'apiKey' | 'id' | 'language' | 'region' | 'nonce' | 'retries' | 'url' | 'version' | 'libraries'>;
@@ -10,7 +10,7 @@ export default class extends AbstractMapController<MapOptions, google.maps.Map, 
     centerValueChanged(): void;
     zoomValueChanged(): void;
     protected dispatchEvent(name: string, payload?: Record<string, unknown>): void;
-    protected doCreateMap({ center, zoom, options, }: {
+    protected doCreateMap({ center, zoom, options }: {
         center: Point | null;
         zoom: number | null;
         options: MapOptions;
@@ -27,7 +27,7 @@ export default class extends AbstractMapController<MapOptions, google.maps.Map, 
         definition: PolylineDefinition<google.maps.PolylineOptions, google.maps.InfoWindowOptions>;
     }): google.maps.Polyline;
     protected doRemovePolyline(polyline: google.maps.Polyline): void;
-    protected doCreateCircle({ definition, }: {
+    protected doCreateCircle({ definition }: {
         definition: CircleDefinition<google.maps.CircleOptions, google.maps.InfoWindowOptions>;
     }): google.maps.Circle;
     protected doRemoveCircle(circle: google.maps.Circle): void;
@@ -41,7 +41,7 @@ export default class extends AbstractMapController<MapOptions, google.maps.Map, 
     }): google.maps.InfoWindow;
     protected doFitBoundsToMarkers(): void;
     private createTextOrElement;
-    protected doCreateIcon({ definition, element, }: {
+    protected doCreateIcon({ definition, element }: {
         definition: Icon;
         element: google.maps.marker.AdvancedMarkerElement;
     }): void;

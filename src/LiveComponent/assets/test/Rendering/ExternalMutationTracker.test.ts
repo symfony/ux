@@ -1,5 +1,5 @@
-import ExternalMutationTracker from '../../src/Rendering/ExternalMutationTracker';
 import { htmlToElement } from '../../src/dom_utils';
+import ExternalMutationTracker from '../../src/Rendering/ExternalMutationTracker';
 
 const mountElement = (html: string): HTMLElement => {
     const element = htmlToElement(html);

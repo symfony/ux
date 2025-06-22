@@ -8,8 +8,9 @@
  */
 
 import { registerVueControllerComponents } from '../src/register_controller';
-import Goodbye from './fixtures-lazy/Goodbye.vue';
 import Hello from './fixtures/Hello.vue';
+import Goodbye from './fixtures-lazy/Goodbye.vue';
+
 import RequireContext = __WebpackModuleApi.RequireContext;
 
 const createFakeFixturesContext = (lazyDir: boolean): RequireContext => {

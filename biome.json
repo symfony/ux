@@ -1,21 +1,19 @@
 {
     "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
     "files": {
-        "include": [
-            "*.json",
-            "*.md",
-            "bin/*.js",
-            "test/*.js",
-            "src/*/*.json",
-            "src/*/*/md",
-            "src/*/assets/src/**",
-            "src/*/assets/test/**",
-            "src/*/src/Bridge/*.json",
-            "src/*/src/Bridge/*.md",
-            "src/*/src/Bridge/*/assets/src/**",
-            "src/*/src/Bridge/*/assets/test/**"
-        ],
-        "ignore": ["**/composer.json", "**/vendor", "**/package.json", "**/node_modules", "**/var"]
+        "includes": [
+            "**/*.json",
+            "**/*.md",
+            "**/bin/**/*.js",
+            "**/src/**/assets/src/**",
+            "**/src/**/assets/test/**",
+            "!**/composer.json",
+            "!**/vendor",
+            "!**/package.json",
+            "!**/node_modules",
+            "!**/var",
+            "!**/dist"
+        ]
     },
     "linter": {
         "rules": {
@@ -28,7 +26,16 @@
                 "noForEach": "off"
             },
             "style": {
-                "noParameterAssign": "off"
+                "noParameterAssign": "off",
+                "useAsConstAssertion": "error",
+                "useDefaultParameterLast": "error",
+                "useEnumInitializers": "error",
+                "useSelfClosingElements": "error",
+                "useSingleVarDeclarator": "error",
+                "noUnusedTemplateLiteral": "error",
+                "useNumberNamespace": "error",
+                "noInferrableTypes": "error",
+                "noUselessElse": "error"
             },
             "performance": {
                 "noDelete": "off"
@@ -49,13 +56,19 @@
     },
     "overrides": [
         {
-            "include": ["*.svelte"],
+            "includes": ["**/*.svelte"],
             "linter": {
                 "rules": {
                     "style": {
                         "useConst": "off"
                     }
                 }
+            }
+        },
+        {
+            "includes": ["src/Map/**/*map_controller.ts"],
+            "formatter": {
+                "lineWidth": 160
             }
         }
     ]
