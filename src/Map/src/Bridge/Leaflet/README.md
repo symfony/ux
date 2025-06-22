@@ -94,7 +94,7 @@ export default class extends Controller
 
     _onMarkerBeforeCreate(event) {
         // You can access the marker definition and the Leaflet object
-        // Note: `definition.rawOptions` is the raw options object that will be passed to the `L.marker` constructor.
+        // Note: `definition.bridgeOptions` is the raw options object that will be passed to the `L.marker` constructor.
         const { definition, L } = event.detail;
 
         // Use a custom icon for the marker
@@ -109,7 +109,7 @@ export default class extends Controller
           popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
         })
 
-        definition.rawOptions = {
+        definition.bridgeOptions = {
           icon: redIcon,
         }
     }

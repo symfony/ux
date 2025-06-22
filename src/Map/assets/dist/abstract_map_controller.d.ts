@@ -32,36 +32,41 @@ export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = Wit
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     icon?: Icon;
     rawOptions?: BridgeMarkerOptions;
+    bridgeOptions?: BridgeMarkerOptions;
     extra: Record<string, unknown>;
 }>;
-export type PolygonDefinition<PolygonOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+export type PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     points: Array<Point> | Array<Array<Point>>;
     title: string | null;
-    rawOptions?: PolygonOptions;
+    rawOptions?: BridgePolygonOptions;
+    bridgeOptions?: BridgePolygonOptions;
     extra: Record<string, unknown>;
 }>;
-export type PolylineDefinition<PolylineOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+export type PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     points: Array<Point>;
     title: string | null;
-    rawOptions?: PolylineOptions;
+    rawOptions?: BridgePolylineOptions;
+    bridgeOptions?: BridgePolylineOptions;
     extra: Record<string, unknown>;
 }>;
-export type CircleDefinition<CircleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+export type CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     center: Point;
     radius: number;
     title: string | null;
-    rawOptions?: CircleOptions;
+    rawOptions?: BridgeCircleOptions;
+    bridgeOptions?: BridgeCircleOptions;
     extra: Record<string, unknown>;
 }>;
-export type RectangleDefinition<RectangleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+export type RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     southWest: Point;
     northEast: Point;
     title: string | null;
-    rawOptions?: RectangleOptions;
+    rawOptions?: BridgeRectangleOptions;
+    bridgeOptions?: BridgeRectangleOptions;
     extra: Record<string, unknown>;
 }>;
 export type InfoWindowDefinition<BridgeInfoWindowOptions> = {
@@ -71,6 +76,7 @@ export type InfoWindowDefinition<BridgeInfoWindowOptions> = {
     opened: boolean;
     autoClose: boolean;
     rawOptions?: BridgeInfoWindowOptions;
+    bridgeOptions?: BridgeInfoWindowOptions;
     extra: Record<string, unknown>;
 };
 export default abstract class<MapOptions, BridgeMap, BridgeMarkerOptions, BridgeMarker, BridgeInfoWindowOptions, BridgeInfoWindow, BridgePolygonOptions, BridgePolygon, BridgePolylineOptions, BridgePolyline, BridgeCircleOptions, BridgeCircle, BridgeRectangleOptions, BridgeRectangle> extends Controller<HTMLElement> {

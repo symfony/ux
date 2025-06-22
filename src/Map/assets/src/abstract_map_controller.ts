@@ -43,9 +43,15 @@ export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = Wit
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     icon?: Icon;
     /**
+     * @deprecated Use "bridgeOptions" instead.
      * Raw options passed to the marker constructor, specific to the map provider (e.g.: `L.marker()` for Leaflet).
      */
     rawOptions?: BridgeMarkerOptions;
+    /**
+     * Additional options passed to the Marker constructor.
+     * These options are specific to the Map Bridge, and can be defined through `ux:map:marker:before-create` event.
+     */
+    bridgeOptions?: BridgeMarkerOptions;
     /**
      * Extra data defined by the developer.
      * They are not directly used by the Stimulus controller, but they can be used by the developer with event listeners:
@@ -55,14 +61,20 @@ export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = Wit
     extra: Record<string, unknown>;
 }>;
 
-export type PolygonDefinition<PolygonOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+export type PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     points: Array<Point> | Array<Array<Point>>;
     title: string | null;
     /**
-     * Raw options passed to the marker constructor, specific to the map provider (e.g.: `L.marker()` for Leaflet).
+     * @deprecated Use "bridgeOptions" instead.
+     * Raw options passed to the polygon constructor, specific to the map provider (e.g.: `L.polygon()` for Leaflet).
      */
-    rawOptions?: PolygonOptions;
+    rawOptions?: BridgePolygonOptions;
+    /**
+     * Additional options passed to the Polygon constructor.
+     * These options are specific to the Map Bridge, and can be defined through `ux:map:polygon:before-create` event.
+     */
+    bridgeOptions?: BridgePolygonOptions;
     /**
      * Extra data defined by the developer.
      * They are not directly used by the Stimulus controller, but they can be used by the developer with event listeners:
@@ -72,14 +84,20 @@ export type PolygonDefinition<PolygonOptions, BridgeInfoWindowOptions> = WithIde
     extra: Record<string, unknown>;
 }>;
 
-export type PolylineDefinition<PolylineOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+export type PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     points: Array<Point>;
     title: string | null;
     /**
-     * Raw options passed to the marker constructor, specific to the map provider (e.g.: `L.marker()` for Leaflet).
+     * @deprecated Use "bridgeOptions" instead.
+     * Raw options passed to the polyline constructor, specific to the map provider (e.g.: `L.polyline()` for Leaflet).
      */
-    rawOptions?: PolylineOptions;
+    rawOptions?: BridgePolylineOptions;
+    /**
+     * Additional options passed to the Polyline constructor.
+     * These options are specific to the Map Bridge, and can be defined through `ux:map:polyline:before-create` event.
+     */
+    bridgeOptions?: BridgePolylineOptions;
     /**
      * Extra data defined by the developer.
      * They are not directly used by the Stimulus controller, but they can be used by the developer with event listeners:
@@ -89,15 +107,21 @@ export type PolylineDefinition<PolylineOptions, BridgeInfoWindowOptions> = WithI
     extra: Record<string, unknown>;
 }>;
 
-export type CircleDefinition<CircleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+export type CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     center: Point;
     radius: number;
     title: string | null;
     /**
+     * @deprecated Use "bridgeOptions" instead.
      * Raw options passed to the circle constructor, specific to the map provider (e.g.: `L.circle()` for Leaflet).
      */
-    rawOptions?: CircleOptions;
+    rawOptions?: BridgeCircleOptions;
+    /**
+     * Additional options passed to the Circle constructor.
+     * These options are specific to the Map Bridge, and can be defined through `ux:map:circle:before-create` event.
+     */
+    bridgeOptions?: BridgeCircleOptions;
     /**
      * Extra data defined by the developer.
      * They are not directly used by the Stimulus controller, but they can be used by the developer with event listeners:
@@ -107,15 +131,21 @@ export type CircleDefinition<CircleOptions, BridgeInfoWindowOptions> = WithIdent
     extra: Record<string, unknown>;
 }>;
 
-export type RectangleDefinition<RectangleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+export type RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     southWest: Point;
     northEast: Point;
     title: string | null;
     /**
+     * @deprecated Use "bridgeOptions" instead.
      * Raw options passed to the rectangle constructor, specific to the map provider (e.g.: `L.rectangle()` for Leaflet).
      */
-    rawOptions?: RectangleOptions;
+    rawOptions?: BridgeRectangleOptions;
+    /**
+     * Additional options passed to the Rectangle constructor.
+     * These options are specific to the Map Bridge, and can be defined through `ux:map:rectangle:before-create` event.
+     */
+    bridgeOptions?: BridgeRectangleOptions;
     /**
      * Extra data defined by the developer.
      * They are not directly used by the Stimulus controller, but they can be used by the developer with event listeners:
@@ -132,10 +162,15 @@ export type InfoWindowDefinition<BridgeInfoWindowOptions> = {
     opened: boolean;
     autoClose: boolean;
     /**
-     * Raw options passed to the info window constructor,
-     * specific to the map provider (e.g.: `google.maps.InfoWindow()` for Google Maps).
+     * @deprecated Use "bridgeOptions" instead.
+     * Raw options passed to the info window constructor, specific to the map provider (e.g.: `google.maps.InfoWindow()` for Google Maps).
      */
     rawOptions?: BridgeInfoWindowOptions;
+    /**
+     * Additional options passed to the InfoWindow constructor.
+     * These options are specific to the Map Bridge, and can be defined through `ux:map:info-window:before-create` event.
+     */
+    bridgeOptions?: BridgeInfoWindowOptions;
     /**
      * Extra data defined by the developer.
      * They are not directly used by the Stimulus controller, but they can be used by the developer with event listeners:
@@ -378,6 +413,14 @@ export default abstract class<
         // 'Factory' could be instantiated with an arbitrary type which could be unrelated to '({ definition }: { definition: WithIdentifier<any>; }) => Draw'
         return ({ definition }: { definition: WithIdentifier<any> }) => {
             this.dispatchEvent(eventBefore, { definition });
+
+            if (typeof definition.rawOptions !== 'undefined') {
+                console.warn(
+                    `[Symfony UX Map] The event "${eventBefore}" added a deprecated "rawOptions" property to the definition, it will be removed in a next major version, replace it with "bridgeOptions" instead.`,
+                    definition
+                );
+            }
+
             const drawing = factory({ definition }) as Draw;
             this.dispatchEvent(eventAfter, { [type]: drawing, definition });
 

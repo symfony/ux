@@ -16,7 +16,7 @@
             const bounds = new google.maps.LatLngBounds();
 
             element.getPath().forEach((latLng) => bounds.extend(latLng));
-            definition.infoWindow.rawOptions.position = bounds.getCenter();
+            definition.infoWindow.bridgeOptions.position = bounds.getCenter();
         }
     });
     ```
