@@ -108,6 +108,14 @@ abstract class AbstractRenderer implements RendererInterface
             $attrs['polylines'][$key]['@id'] = $computeId($polyline);
         }
 
+        foreach ($attrs['circles'] as $key => $circle) {
+            $attrs['circles'][$key]['@id'] = $computeId($circle);
+        }
+
+        foreach ($attrs['rectangles'] as $key => $rectangle) {
+            $attrs['rectangles'][$key]['@id'] = $computeId($rectangle);
+        }
+
         return $attrs;
     }
 }
