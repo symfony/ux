@@ -37,7 +37,7 @@ export default class extends AbstractMapController<MapOptions, google.maps.Map, 
     protected doRemoveRectangle(rectangle: google.maps.Rectangle): void;
     protected doCreateInfoWindow({ definition, element, }: {
         definition: InfoWindowWithoutPositionDefinition<google.maps.InfoWindowOptions>;
-        element: google.maps.marker.AdvancedMarkerElement | google.maps.Polygon | google.maps.Polyline;
+        element: google.maps.marker.AdvancedMarkerElement | google.maps.Polygon | google.maps.Polyline | google.maps.Circle | google.maps.Rectangle;
     }): google.maps.InfoWindow;
     protected doFitBoundsToMarkers(): void;
     private createTextOrElement;

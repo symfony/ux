@@ -296,45 +296,53 @@ export default class extends AbstractMapController<
         element,
     }: {
         definition: InfoWindowWithoutPositionDefinition<google.maps.InfoWindowOptions>;
-        element: google.maps.marker.AdvancedMarkerElement | google.maps.Polygon | google.maps.Polyline;
+        element: google.maps.marker.AdvancedMarkerElement | google.maps.Polygon | google.maps.Polyline | google.maps.Circle | google.maps.Rectangle;
     }): google.maps.InfoWindow {
-        const { headerContent, content, extra, rawOptions = {}, ...otherOptions } = definition;
+        const { headerContent, content, opened, autoClose, rawOptions = {} } = definition;
 
-        const infoWindow = new _google.maps.InfoWindow({
+        let position: google.maps.LatLng | null = null;
+        if (element instanceof google.maps.Circle) {
+            position = element.getCenter();
+        } else if (element instanceof google.maps.Rectangle) {
+            position = element.getBounds()?.getCenter() || null;
+        } else if (element instanceof google.maps.Polygon || element instanceof google.maps.Polyline) {
+            // Note: We do not compute the center of Polygons or Polylines here, since shapes can be complex.
+            // Instead, listen to the `ux:map:polygon:before-create` or `ux:map:polyline:before-create` events to set the position manually.
+            // ```js
+            // const bounds = new google.maps.LatLngBounds();
+            // element.getPath().forEach((latLng) => bounds.extend(latLng));
+            // event.definition.infoWindow.rawOptions.position = bounds.getCenter();
+            // ```
+        }
+
+        const infoWindowOptions: google.maps.InfoWindowOptions = {
             headerContent: this.createTextOrElement(headerContent),
             content: this.createTextOrElement(content),
-            ...otherOptions,
+            position,
             ...rawOptions,
+        };
+
+        const infoWindow = new _google.maps.InfoWindow(infoWindowOptions);
+
+        element.addListener('click', (event: google.maps.MapMouseEvent) => {
+            if (autoClose) {
+                this.closeInfoWindowsExcept(infoWindow);
+            }
+
+            // Don't override the position if it was already set (e.g. through "rawOptions")
+            if (infoWindowOptions.position === null) {
+                infoWindow.setPosition(event.latLng);
+            }
+
+            infoWindow.open({ map: this.map, anchor: element });
         });
 
-        if (element instanceof google.maps.marker.AdvancedMarkerElement) {
-            element.addListener('click', () => {
-                if (definition.autoClose) {
-                    this.closeInfoWindowsExcept(infoWindow);
-                }
-                infoWindow.open({ map: this.map, anchor: element });
-            });
-
-            if (definition.opened) {
-                infoWindow.open({ map: this.map, anchor: element });
+        if (opened) {
+            if (autoClose) {
+                this.closeInfoWindowsExcept(infoWindow);
             }
-        } else if (element instanceof google.maps.Polygon) {
-            element.addListener('click', (event: any) => {
-                if (definition.autoClose) {
-                    this.closeInfoWindowsExcept(infoWindow);
-                }
-                infoWindow.setPosition(event.latLng);
-                infoWindow.open(this.map);
-            });
 
-            if (definition.opened) {
-                const bounds = new google.maps.LatLngBounds();
-                element.getPath().forEach((point: google.maps.LatLng) => {
-                    bounds.extend(point);
-                });
-                infoWindow.setPosition(bounds.getCenter());
-                infoWindow.open({ map: this.map, anchor: element });
-            }
+            infoWindow.open({ map: this.map, anchor: element });
         }
 
         return infoWindow;
