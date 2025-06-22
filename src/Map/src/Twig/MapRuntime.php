@@ -11,11 +11,13 @@
 
 namespace Symfony\UX\Map\Twig;
 
+use Symfony\UX\Map\Circle;
 use Symfony\UX\Map\Map;
 use Symfony\UX\Map\Marker;
 use Symfony\UX\Map\Point;
 use Symfony\UX\Map\Polygon;
 use Symfony\UX\Map\Polyline;
+use Symfony\UX\Map\Rectangle;
 use Symfony\UX\Map\Renderer\RendererInterface;
 use Twig\Extension\RuntimeExtensionInterface;
 
@@ -36,19 +38,23 @@ final class MapRuntime implements RuntimeExtensionInterface
      * @param array<string, mixed> $markers
      * @param array<string, mixed> $polygons
      * @param array<string, mixed> $polylines
+     * @param array<string, mixed> $circles
+     * @param array<string, mixed> $rectangles
      */
     public function renderMap(
         ?Map $map = null,
         array $attributes = [],
+        ?array $center = null,
+        ?float $zoom = null,
         ?array $markers = null,
         ?array $polygons = null,
         ?array $polylines = null,
-        ?array $center = null,
-        ?float $zoom = null,
+        ?array $circles = null,
+        ?array $rectangles = null,
     ): string {
         if ($map instanceof Map) {
-            if (null !== $center || null !== $zoom || $markers) {
-                throw new \InvalidArgumentException('You cannot set "center", "markers" or "zoom" on an existing Map.');
+            if (null !== $center || null !== $zoom || $markers || $polygons || $polylines || $circles || $rectangles) {
+                throw new \InvalidArgumentException('It is not allowed to pass both a Map object and other parameters (like "center", "zoom", "markers", etc...) to the "renderMap" method. Please use either a Map object or the individual parameters.');
             }
 
             return $this->renderer->renderMap($map, $attributes);
@@ -64,6 +70,12 @@ final class MapRuntime implements RuntimeExtensionInterface
         foreach ($polylines ?? [] as $polyline) {
             $map->addPolyline(Polyline::fromArray($polyline));
         }
+        foreach ($circles ?? [] as $circle) {
+            $map->addCircle(Circle::fromArray($circle));
+        }
+        foreach ($rectangles ?? [] as $rectangle) {
+            $map->addRectangle(Rectangle::fromArray($rectangle));
+        }
         if (null !== $center) {
             $map->center(Point::fromArray($center));
         }
@@ -76,7 +88,7 @@ final class MapRuntime implements RuntimeExtensionInterface
 
     public function render(array $args = []): string
     {
-        $map = array_intersect_key($args, ['map' => 0, 'markers' => 1, 'polygons' => 2, 'polylines' => 3, 'center' => 4, 'zoom' => 5]);
+        $map = array_intersect_key($args, array_flip(['map', 'center', 'zoom', 'markers', 'polygons', 'polylines', 'circles', 'rectangles']));
         $attributes = array_diff_key($args, $map);
 
         return $this->renderMap(...$map, attributes: $attributes);
