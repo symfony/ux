@@ -1,0 +1,39 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-06-22T21:35:04Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/map-refactor-options-types/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-refactor-options-types/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>6.59 kB</code>
+                    / <code>1.35 kB</code>
+                </td><td>
+                    <code>6.9 kB</code><sup>+5% 📈</sup>
+                    / <code>1.35 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/map-refactor-options-types/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-refactor-options-types/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>3.39 kB</code>
+                    / <code>915 B</code>
+                </td><td>
+                    <code>3.38 kB</code><sup>0%</sup>
+                    / <code>917 B</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/map-refactor-options-types/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-refactor-options-types/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>2.92 kB</code>
+                    / <code>830 B</code>
+                </td><td>
+                    <code>2.91 kB</code><sup>0%</sup>
+                    / <code>831 B</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
