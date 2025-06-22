@@ -207,12 +207,12 @@ export default class extends AbstractMapController<
     protected doCreateRectangle({
         definition,
     }: { definition: RectangleDefinition<RectangleOptions, PopupOptions> }): L.Rectangle {
-        const { '@id': _id, bounds, title, infoWindow, rawOptions = {} } = definition;
+        const { '@id': _id, southWest, northEast, title, infoWindow, rawOptions = {} } = definition;
 
         const rectangle = L.rectangle(
             [
-                [bounds.southWest.lat, bounds.southWest.lng],
-                [bounds.northEast.lat, bounds.northEast.lng],
+                [southWest.lat, southWest.lng],
+                [northEast.lat, northEast.lng],
             ],
             { ...rawOptions }
         ).addTo(this.map);

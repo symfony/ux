@@ -58,10 +58,8 @@ export type CircleDefinition<CircleOptions, InfoWindowOptions> = WithIdentifier<
 }>;
 export type RectangleDefinition<RectangleOptions, InfoWindowOptions> = WithIdentifier<{
     infoWindow?: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
-    bounds: {
-        northEast: Point;
-        southWest: Point;
-    };
+    southWest: Point;
+    northEast: Point;
     title: string | null;
     rawOptions?: RectangleOptions;
     extra: Record<string, unknown>;

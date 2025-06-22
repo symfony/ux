@@ -276,10 +276,10 @@ class map_controller extends default_1 {
         circle.setMap(null);
     }
     doCreateRectangle({ definition, }) {
-        const { bounds, title, infoWindow, rawOptions = {} } = definition;
+        const { northEast, southWest, title, infoWindow, rawOptions = {} } = definition;
         const rectangle = new _google.maps.Rectangle({
             ...rawOptions,
-            bounds: new _google.maps.LatLngBounds(bounds.southWest, bounds.northEast),
+            bounds: new _google.maps.LatLngBounds(southWest, northEast),
             map: this.map,
         });
         if (title) {

@@ -371,10 +371,8 @@ class MapTest extends TestCase
             ],
             'rectangles' => [
                 [
-                    'bounds' => [
-                        'southWest' => ['lat' => 48.853, 'lng' => 2.3499],
-                        'northEast' => ['lat' => 48.8566, 'lng' => 2.3522],
-                    ],
+                    'southWest' => ['lat' => 48.853, 'lng' => 2.3499],
+                    'northEast' => ['lat' => 48.8566, 'lng' => 2.3522],
                     'title' => 'Rectangle around Paris',
                     'infoWindow' => [
                         'headerContent' => '<b>Rectangle around Paris</b>',
@@ -388,10 +386,8 @@ class MapTest extends TestCase
                     'id' => null,
                 ],
                 [
-                    'bounds' => [
-                        'southWest' => ['lat' => 45.75, 'lng' => 4.85],
-                        'northEast' => ['lat' => 45.77, 'lng' => 4.82],
-                    ],
+                    'southWest' => ['lat' => 45.75, 'lng' => 4.85],
+                    'northEast' => ['lat' => 45.77, 'lng' => 4.82],
                     'title' => 'Rectangle around Lyon',
                     'infoWindow' => [
                         'headerContent' => '<b>Rectangle around Lyon</b>',

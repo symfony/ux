@@ -240,10 +240,10 @@ class map_controller extends default_1 {
         circle.remove();
     }
     doCreateRectangle({ definition, }) {
-        const { '@id': _id, bounds, title, infoWindow, rawOptions = {} } = definition;
+        const { '@id': _id, southWest, northEast, title, infoWindow, rawOptions = {} } = definition;
         const rectangle = L.rectangle([
-            [bounds.southWest.lat, bounds.southWest.lng],
-            [bounds.northEast.lat, bounds.northEast.lng],
+            [southWest.lat, southWest.lng],
+            [northEast.lat, northEast.lng],
         ], { ...rawOptions }).addTo(this.map);
         if (title) {
             rectangle.bindPopup(title);

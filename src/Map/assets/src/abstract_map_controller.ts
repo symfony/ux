@@ -100,7 +100,8 @@ export type CircleDefinition<CircleOptions, InfoWindowOptions> = WithIdentifier<
 
 export type RectangleDefinition<RectangleOptions, InfoWindowOptions> = WithIdentifier<{
     infoWindow?: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
-    bounds: { northEast: Point; southWest: Point };
+    southWest: Point;
+    northEast: Point;
     title: string | null;
     /**
      * Raw options passed to the rectangle constructor, specific to the map provider (e.g.: `L.rectangle()` for Leaflet).

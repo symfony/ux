@@ -30,10 +30,8 @@ class RectangleTest extends TestCase
 
         $array = $rectangle->toArray();
         self::assertSame([
-            'bounds' => [
-                'southWest' => ['lat' => 1.0, 'lng' => 2.0],
-                'northEast' => ['lat' => 3.0, 'lng' => 4.0],
-            ],
+            'southWest' => ['lat' => 1.0, 'lng' => 2.0],
+            'northEast' => ['lat' => 3.0, 'lng' => 4.0],
             'title' => 'Test Rectangle',
             'infoWindow' => $infoWindow->toArray(),
             'extra' => ['foo' => 'bar'],
@@ -56,10 +54,8 @@ class RectangleTest extends TestCase
 
         $array = $rectangle->toArray();
         self::assertSame([
-            'bounds' => [
-                'southWest' => ['lat' => 1.0, 'lng' => 2.0],
-                'northEast' => ['lat' => 3.0, 'lng' => 4.0],
-            ],
+            'southWest' => ['lat' => 1.0, 'lng' => 2.0],
+            'northEast' => ['lat' => 3.0, 'lng' => 4.0],
             'title' => 'Test Rectangle',
             'infoWindow' => [
                 'headerContent' => null,
@@ -77,6 +73,7 @@ class RectangleTest extends TestCase
     public function testFromArrayThrowsExceptionIfSouthWestMissing()
     {
         $this->expectException(InvalidArgumentException::class);
+
         Rectangle::fromArray([
             'northEast' => ['lat' => 3.0, 'lng' => 4.0],
         ]);
@@ -85,6 +82,7 @@ class RectangleTest extends TestCase
     public function testFromArrayThrowsExceptionIfNorthEastMissing()
     {
         $this->expectException(InvalidArgumentException::class);
+
         Rectangle::fromArray([
             'southWest' => ['lat' => 1.0, 'lng' => 2.0],
         ]);

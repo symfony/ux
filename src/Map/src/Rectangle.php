@@ -34,7 +34,8 @@ final class Rectangle implements Element
      * Convert the rectangle to an array representation.
      *
      * @return array{
-     *     bounds: array{southWest: array{lat: float, lng: float}, northEast: array{lat: float, lng: float}},
+     *     southWest: array{lat: float, lng: float},
+     *     northEast: array{lat: float, lng: float},
      *     title: string|null,
      *     infoWindow: array<string, mixed>|null,
      *     extra: array,
@@ -44,10 +45,8 @@ final class Rectangle implements Element
     public function toArray(): array
     {
         return [
-            'bounds' => [
-                'southWest' => $this->southWest->toArray(),
-                'northEast' => $this->northEast->toArray(),
-            ],
+            'southWest' => $this->southWest->toArray(),
+            'northEast' => $this->northEast->toArray(),
             'title' => $this->title,
             'infoWindow' => $this->infoWindow?->toArray(),
             'extra' => $this->extra,
@@ -57,8 +56,8 @@ final class Rectangle implements Element
 
     /**
      * @param array{
-     *     southWest: array{lat: float, lng: float},
-     *     northEast: array{lat: float, lng: float},
+     *     southWest?: array{lat: float, lng: float},
+     *     northEast?: array{lat: float, lng: float},
      *     title?: string|null,
      *     infoWindow?: array<string, mixed>|null,
      *     extra?: array,
@@ -69,11 +68,16 @@ final class Rectangle implements Element
      */
     public static function fromArray(array $rectangle): self
     {
-        if (!isset($rectangle['southWest'], $rectangle['northEast'])) {
-            throw new InvalidArgumentException('The points "southWest" and "northEast" are required.');
+        if (!isset($rectangle['southWest'])) {
+            throw new InvalidArgumentException('The "southWest" point is required to create a Rectangle.');
         }
 
         $rectangle['southWest'] = Point::fromArray($rectangle['southWest']);
+
+        if (!isset($rectangle['northEast'])) {
+            throw new InvalidArgumentException('The "northEast" point is required to create a Rectangle.');
+        }
+
         $rectangle['northEast'] = Point::fromArray($rectangle['northEast']);
 
         if (isset($rectangle['infoWindow'])) {
