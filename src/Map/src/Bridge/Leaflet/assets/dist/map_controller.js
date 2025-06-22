@@ -95,6 +95,9 @@ class default_1 extends Controller {
         const eventAfter = `${type}:after-create`;
         return ({ definition }) => {
             this.dispatchEvent(eventBefore, { definition });
+            if (typeof definition.rawOptions !== 'undefined') {
+                console.warn(`[Symfony UX Map] The event "${eventBefore}" added a deprecated "rawOptions" property to the definition, it will be removed in a next major version, replace it with "bridgeOptions" instead.`, definition);
+            }
             const drawing = factory({ definition });
             this.dispatchEvent(eventAfter, { [type]: drawing, definition });
             draws.set(definition['@id'], drawing);
@@ -184,8 +187,13 @@ class map_controller extends default_1 {
         return map;
     }
     doCreateMarker({ definition }) {
-        const { '@id': _id, position, title, infoWindow, icon, extra, rawOptions = {}, ...otherOptions } = definition;
-        const marker = L.marker(position, { title: title || undefined, ...otherOptions, ...rawOptions }).addTo(this.map);
+        const { '@id': _id, position, title, infoWindow, icon, rawOptions = {}, bridgeOptions = {} } = definition;
+        const marker = L.marker(position, {
+            title: title || undefined,
+            ...rawOptions,
+            ...bridgeOptions,
+            riseOnHover: true,
+        }).addTo(this.map);
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: marker });
         }
@@ -198,8 +206,8 @@ class map_controller extends default_1 {
         marker.remove();
     }
     doCreatePolygon({ definition }) {
-        const { '@id': _id, points, title, infoWindow, rawOptions = {} } = definition;
-        const polygon = L.polygon(points, { ...rawOptions }).addTo(this.map);
+        const { '@id': _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
+        const polygon = L.polygon(points, { ...rawOptions, ...bridgeOptions }).addTo(this.map);
         if (title) {
             polygon.bindPopup(title);
         }
@@ -212,8 +220,8 @@ class map_controller extends default_1 {
         polygon.remove();
     }
     doCreatePolyline({ definition }) {
-        const { '@id': _id, points, title, infoWindow, rawOptions = {} } = definition;
-        const polyline = L.polyline(points, { ...rawOptions }).addTo(this.map);
+        const { '@id': _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
+        const polyline = L.polyline(points, { ...rawOptions, ...bridgeOptions }).addTo(this.map);
         if (title) {
             polyline.bindPopup(title);
         }
@@ -226,8 +234,8 @@ class map_controller extends default_1 {
         polyline.remove();
     }
     doCreateCircle({ definition }) {
-        const { '@id': _id, center, radius, title, infoWindow, rawOptions = {} } = definition;
-        const circle = L.circle(center, { radius, ...rawOptions }).addTo(this.map);
+        const { '@id': _id, center, radius, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
+        const circle = L.circle(center, { radius, ...rawOptions, ...bridgeOptions }).addTo(this.map);
         if (title) {
             circle.bindPopup(title);
         }
@@ -240,11 +248,11 @@ class map_controller extends default_1 {
         circle.remove();
     }
     doCreateRectangle({ definition }) {
-        const { '@id': _id, southWest, northEast, title, infoWindow, rawOptions = {} } = definition;
+        const { '@id': _id, southWest, northEast, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
         const rectangle = L.rectangle([
             [southWest.lat, southWest.lng],
             [northEast.lat, northEast.lng],
-        ], { ...rawOptions }).addTo(this.map);
+        ], { ...rawOptions, ...bridgeOptions }).addTo(this.map);
         if (title) {
             rectangle.bindPopup(title);
         }
@@ -257,15 +265,23 @@ class map_controller extends default_1 {
         rectangle.remove();
     }
     doCreateInfoWindow({ definition, element, }) {
-        const { headerContent, content, rawOptions = {}, ...otherOptions } = definition;
-        element.bindPopup([headerContent, content].filter((x) => x).join('<br>'), { ...otherOptions, ...rawOptions });
-        if (definition.opened) {
+        const { headerContent, content, opened, autoClose, rawOptions = {}, bridgeOptions = {} } = definition;
+        element.bindPopup([headerContent, content].filter((x) => x).join('<br>'), { ...rawOptions, ...bridgeOptions });
+        if (opened) {
+            if (autoClose) {
+                this.closePopups();
+            }
             element.openPopup();
         }
         const popup = element.getPopup();
         if (!popup) {
             throw new Error('Unable to get the Popup associated with the element.');
         }
+        popup.on('click', () => {
+            if (autoClose) {
+                this.closePopups({ except: popup });
+            }
+        });
         return popup;
     }
     doCreateIcon({ definition, element }) {
@@ -307,6 +323,14 @@ class map_controller extends default_1 {
             bounds.push([position.lat, position.lng]);
         });
         this.map.fitBounds(bounds);
+    }
+    closePopups(options = {}) {
+        this.infoWindows.forEach((popup) => {
+            if (options.except && popup === options.except) {
+                return;
+            }
+            popup.close();
+        });
     }
 }
 

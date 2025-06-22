@@ -124,9 +124,14 @@ export default class extends AbstractMapController<
     }
 
     protected doCreateMarker({ definition }: { definition: MarkerDefinition<MarkerOptions, PopupOptions> }): L.Marker {
-        const { '@id': _id, position, title, infoWindow, icon, extra, rawOptions = {}, ...otherOptions } = definition;
+        const { '@id': _id, position, title, infoWindow, icon, rawOptions = {}, bridgeOptions = {} } = definition;
 
-        const marker = L.marker(position, { title: title || undefined, ...otherOptions, ...rawOptions }).addTo(this.map);
+        const marker = L.marker(position, {
+            title: title || undefined,
+            ...rawOptions,
+            ...bridgeOptions,
+            riseOnHover: true,
+        }).addTo(this.map);
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: marker });
@@ -144,9 +149,9 @@ export default class extends AbstractMapController<
     }
 
     protected doCreatePolygon({ definition }: { definition: PolygonDefinition<PolygonOptions, PopupOptions> }): L.Polygon {
-        const { '@id': _id, points, title, infoWindow, rawOptions = {} } = definition;
+        const { '@id': _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
 
-        const polygon = L.polygon(points, { ...rawOptions }).addTo(this.map);
+        const polygon = L.polygon(points, { ...rawOptions, ...bridgeOptions }).addTo(this.map);
 
         if (title) {
             polygon.bindPopup(title);
@@ -164,9 +169,9 @@ export default class extends AbstractMapController<
     }
 
     protected doCreatePolyline({ definition }: { definition: PolylineDefinition<PolylineOptions, PopupOptions> }): L.Polyline {
-        const { '@id': _id, points, title, infoWindow, rawOptions = {} } = definition;
+        const { '@id': _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
 
-        const polyline = L.polyline(points, { ...rawOptions }).addTo(this.map);
+        const polyline = L.polyline(points, { ...rawOptions, ...bridgeOptions }).addTo(this.map);
 
         if (title) {
             polyline.bindPopup(title);
@@ -184,9 +189,9 @@ export default class extends AbstractMapController<
     }
 
     protected doCreateCircle({ definition }: { definition: CircleDefinition<CircleOptions, PopupOptions> }): L.Circle {
-        const { '@id': _id, center, radius, title, infoWindow, rawOptions = {} } = definition;
+        const { '@id': _id, center, radius, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
 
-        const circle = L.circle(center, { radius, ...rawOptions }).addTo(this.map);
+        const circle = L.circle(center, { radius, ...rawOptions, ...bridgeOptions }).addTo(this.map);
 
         if (title) {
             circle.bindPopup(title);
@@ -204,14 +209,14 @@ export default class extends AbstractMapController<
     }
 
     protected doCreateRectangle({ definition }: { definition: RectangleDefinition<RectangleOptions, PopupOptions> }): L.Rectangle {
-        const { '@id': _id, southWest, northEast, title, infoWindow, rawOptions = {} } = definition;
+        const { '@id': _id, southWest, northEast, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
 
         const rectangle = L.rectangle(
             [
                 [southWest.lat, southWest.lng],
                 [northEast.lat, northEast.lng],
             ],
-            { ...rawOptions }
+            { ...rawOptions, ...bridgeOptions }
         ).addTo(this.map);
 
         if (title) {
@@ -236,11 +241,15 @@ export default class extends AbstractMapController<
         definition: Omit<InfoWindowDefinition<PopupOptions>, 'position'>;
         element: L.Marker | L.Polygon | L.Polyline | L.Circle | L.Rectangle;
     }): L.Popup {
-        const { headerContent, content, rawOptions = {}, ...otherOptions } = definition;
+        const { headerContent, content, opened, autoClose, rawOptions = {}, bridgeOptions = {} } = definition;
 
-        element.bindPopup([headerContent, content].filter((x) => x).join('<br>'), { ...otherOptions, ...rawOptions });
+        element.bindPopup([headerContent, content].filter((x) => x).join('<br>'), { ...rawOptions, ...bridgeOptions });
 
-        if (definition.opened) {
+        if (opened) {
+            if (autoClose) {
+                this.closePopups();
+            }
+
             element.openPopup();
         }
 
@@ -248,6 +257,12 @@ export default class extends AbstractMapController<
         if (!popup) {
             throw new Error('Unable to get the Popup associated with the element.');
         }
+
+        popup.on('click', () => {
+            if (autoClose) {
+                this.closePopups({ except: popup });
+            }
+        });
 
         return popup;
     }
@@ -291,5 +306,14 @@ export default class extends AbstractMapController<
             bounds.push([position.lat, position.lng]);
         });
         this.map.fitBounds(bounds);
+    }
+
+    private closePopups(options: { except?: L.Popup } = {}): void {
+        this.infoWindows.forEach((popup) => {
+            if (options.except && popup === options.except) {
+                return;
+            }
+            popup.close();
+        });
     }
 }

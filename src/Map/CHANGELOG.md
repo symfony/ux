@@ -1,6 +1,18 @@
 # CHANGELOG
 
-## 2.29
+## 2.27
+
+-   The `fitBoundsToMarkers` option is not overridden anymore when using the `Map` LiveComponent, but now respects the value you defined.
+    You may encounter unwanted behavior when adding/removing elements to the map.
+    To use the previous behavior, you must call `$this->getMap()->fitBoundsToMarkers(false)` in your LiveComponent's live actions
+
+-   Add support for creating `Circle` by passing a `Point` and a radius (in meters) to the `Circle` constructor, e.g.:
+```php
+$map->addCircle(new Circle(
+    center: new Point(48.856613, 2.352222), // Paris
+    radius: 5_000 // 5km
+));
+```
 
 -   Add support for creating `Rectangle` by passing two `Point` instances to the `Rectangle` constructor, e.g.:
 ```php
@@ -10,20 +22,7 @@ $map->addRectangle(new Rectangle(
 ));
 ```
 
-## 2.28
-
--   Add support for creating `Circle` by passing a `Point` and a radius (in meters) to the `Circle` constructor, e.g.:
-```php
-$map->addCircle(new Circle(
-    center: new Point(48.856613, 2.352222), // Paris
-    radius: 5_000 // 5km
-));
-```
-## 2.27
-
--   The `fitBoundsToMarkers` option is not overridden anymore when using the `Map` LiveComponent, but now respects the value you defined.
-    You may encounter unwanted behavior when adding/removing elements to the map.
-    To use the previous behavior, you must call `$this->getMap()->fitBoundsToMarkers(false)` in your LiveComponent's live actions
+-   Deprecate property `rawOptions` from `ux:map:*:before-create` events, in favor of `bridgeOptions` instead.
 
 ## 2.26
 

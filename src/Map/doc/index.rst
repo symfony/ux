@@ -501,7 +501,13 @@ maps and their elements. However, you might occasionally find this
 abstraction limiting and need to configure low-level options directly.
 
 Fortunately, you can customize these low-level options through the UX Map
-events ``ux:map:*:before-create`` using the special ``rawOptions`` property:
+events ``ux:map:*:before-create`` using the special ``bridgeOptions`` property:
+
+.. deprecated:: 2.27
+
+    The ``rawOptions`` property was deprecated in UX Map 2.27, and will be removed in 3.0.
+    Use ``bridgeOptions`` instead, which better reflect the purpose of these options (options that are
+    specific to the renderer bridge).
 
 .. code-block:: javascript
 
@@ -519,13 +525,13 @@ events ``ux:map:*:before-create`` using the special ``rawOptions`` property:
 
         _onMarkerBeforeCreate(event) {
             // When using Google Maps, to configure a `google.maps.AdvancedMarkerElement`
-            event.detail.definition.rawOptions = {
+            event.detail.definition.bridgeOptions = {
                 gmpDraggable: true,
                 // ...
             };
 
             // When using Leaflet, to configure a `L.Marker` instance
-            event.detail.definition.rawOptions = {
+            event.detail.definition.bridgeOptions = {
                 riseOnHover: true,
                 // ...
             };
@@ -533,13 +539,13 @@ events ``ux:map:*:before-create`` using the special ``rawOptions`` property:
 
         _onInfoWindowBeforeCreate(event) {
             // When using Google Maps, to configure a `google.maps.InfoWindow` instance
-            event.detail.definition.rawOptions = {
+            event.detail.definition.bridgeOptions = {
                 maxWidth: 200,
                 // ...
             };
 
             // When using Leaflet, to configure a `L.Popup` instance
-            event.detail.definition.rawOptions = {
+            event.detail.definition.bridgeOptions = {
                 direction: 'left',
                 // ...
             };
@@ -547,13 +553,13 @@ events ``ux:map:*:before-create`` using the special ``rawOptions`` property:
 
         _onPolygonBeforeCreate(event) {
             // When using Google Maps, to configure a `google.maps.Polygon`
-            event.detail.definition.rawOptions = {
+            event.detail.definition.bridgeOptions = {
                 strokeColor: 'red',
                 // ...
             };
 
             // When using Leaflet, to configure a `L.Polygon`
-            event.detail.definition.rawOptions = {
+            event.detail.definition.bridgeOptions = {
                 color: 'red',
                 // ...
             };
@@ -561,13 +567,13 @@ events ``ux:map:*:before-create`` using the special ``rawOptions`` property:
 
         _onPolylineBeforeCreate(event) {
             // When using Google Maps, to configure a `google.maps.Polyline`
-            event.detail.definition.rawOptions = {
+            event.detail.definition.bridgeOptions = {
                 strokeColor: 'red',
                 // ...
             };
 
             // When using Leaflet, to configure a `L.Polyline`
-            event.detail.definition.rawOptions = {
+            event.detail.definition.bridgeOptions = {
                 color: 'red',
                 // ...
             };

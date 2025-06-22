@@ -94,6 +94,9 @@ class default_1 extends Controller {
         const eventAfter = `${type}:after-create`;
         return ({ definition }) => {
             this.dispatchEvent(eventBefore, { definition });
+            if (typeof definition.rawOptions !== 'undefined') {
+                console.warn(`[Symfony UX Map] The event "${eventBefore}" added a deprecated "rawOptions" property to the definition, it will be removed in a next major version, replace it with "bridgeOptions" instead.`, definition);
+            }
             const drawing = factory({ definition });
             this.dispatchEvent(eventAfter, { [type]: drawing, definition });
             draws.set(definition['@id'], drawing);
@@ -201,13 +204,13 @@ class map_controller extends default_1 {
         });
     }
     doCreateMarker({ definition, }) {
-        const { '@id': _id, position, title, infoWindow, icon, extra, rawOptions = {}, ...otherOptions } = definition;
+        const { '@id': _id, position, title, infoWindow, icon, rawOptions = {}, bridgeOptions = {} } = definition;
         const marker = new _google.maps.marker.AdvancedMarkerElement({
             position,
             title,
-            ...otherOptions,
-            ...rawOptions,
             map: this.map,
+            ...rawOptions,
+            ...bridgeOptions,
         });
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: marker });
@@ -221,11 +224,12 @@ class map_controller extends default_1 {
         marker.map = null;
     }
     doCreatePolygon({ definition, }) {
-        const { '@id': _id, points, title, infoWindow, rawOptions = {} } = definition;
+        const { '@id': _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
         const polygon = new _google.maps.Polygon({
-            ...rawOptions,
             paths: points,
             map: this.map,
+            ...rawOptions,
+            ...bridgeOptions,
         });
         if (title) {
             polygon.set('title', title);
@@ -239,11 +243,12 @@ class map_controller extends default_1 {
         polygon.setMap(null);
     }
     doCreatePolyline({ definition, }) {
-        const { '@id': _id, points, title, infoWindow, rawOptions = {} } = definition;
+        const { '@id': _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
         const polyline = new _google.maps.Polyline({
-            ...rawOptions,
             path: points,
             map: this.map,
+            ...rawOptions,
+            ...bridgeOptions,
         });
         if (title) {
             polyline.set('title', title);
@@ -257,12 +262,13 @@ class map_controller extends default_1 {
         polyline.setMap(null);
     }
     doCreateCircle({ definition }) {
-        const { '@id': _id, center, radius, title, infoWindow, rawOptions = {} } = definition;
+        const { '@id': _id, center, radius, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
         const circle = new _google.maps.Circle({
-            ...rawOptions,
             center,
             radius,
             map: this.map,
+            ...rawOptions,
+            ...bridgeOptions,
         });
         if (title) {
             circle.set('title', title);
@@ -276,11 +282,12 @@ class map_controller extends default_1 {
         circle.setMap(null);
     }
     doCreateRectangle({ definition, }) {
-        const { northEast, southWest, title, infoWindow, rawOptions = {} } = definition;
+        const { northEast, southWest, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
         const rectangle = new _google.maps.Rectangle({
-            ...rawOptions,
             bounds: new _google.maps.LatLngBounds(southWest, northEast),
             map: this.map,
+            ...rawOptions,
+            ...bridgeOptions,
         });
         if (title) {
             rectangle.set('title', title);
@@ -294,7 +301,7 @@ class map_controller extends default_1 {
         rectangle.setMap(null);
     }
     doCreateInfoWindow({ definition, element, }) {
-        const { headerContent, content, opened, autoClose, rawOptions = {} } = definition;
+        const { headerContent, content, opened, autoClose, rawOptions = {}, bridgeOptions = {} } = definition;
         let position = null;
         if (element instanceof google.maps.Circle) {
             position = element.getCenter();
@@ -308,6 +315,7 @@ class map_controller extends default_1 {
             content: this.createTextOrElement(content),
             position,
             ...rawOptions,
+            ...bridgeOptions,
         };
         const infoWindow = new _google.maps.InfoWindow(infoWindowOptions);
         element.addListener('click', (event) => {

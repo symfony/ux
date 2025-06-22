@@ -69,8 +69,8 @@ $map = (new Map())
 $googleOptions = (new GoogleOptions())
     // You can skip this option if you configure "ux_map.google_maps.default_map_id"
     // in your "config/packages/ux_map.yaml".
-    ->mapId('YOUR_MAP_ID') 
-    
+    ->mapId('YOUR_MAP_ID')
+
     ->gestureHandling(GestureHandling::GREEDY)
     ->backgroundColor('#f00')
     ->doubleClickZoom(true)
@@ -133,24 +133,24 @@ export default class extends Controller
 
     _onMarkerBeforeCreate(event) {
         // You can access the marker definition and the google object
-        // Note: `definition.rawOptions` is the raw options object that will be passed to the `google.maps.Marker` constructor. 
+        // Note: `definition.bridgeOptions` is the raw options object that will be passed to the `google.maps.Marker` constructor.
         const { definition, google } = event.detail;
 
-        // 1. To use a custom image for the marker 
+        // 1. To use a custom image for the marker
         const beachFlagImg = document.createElement("img");
         // Note: instead of using a hardcoded URL, you can use the `extra` parameter from `new Marker()` (PHP) and access it here with `definition.extra`.
         beachFlagImg.src = "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
-        definition.rawOptions =  { 
+        definition.bridgeOptions =  {
             content: beachFlagImg
         }
-      
+
         // 2. To use a custom glyph for the marker
         const pinElement = new google.maps.marker.PinElement({
-            // Note: instead of using a hardcoded URL, you can use the `extra` parameter from `new Marker()` (PHP) and access it here with `definition.extra`. 
-            glyph: new URL('https://maps.gstatic.com/mapfiles/place_api/icons/v2/museum_pinlet.svg'), 
+            // Note: instead of using a hardcoded URL, you can use the `extra` parameter from `new Marker()` (PHP) and access it here with `definition.extra`.
+            glyph: new URL('https://maps.gstatic.com/mapfiles/place_api/icons/v2/museum_pinlet.svg'),
             glyphColor: "white",
         });
-        definition.rawOptions = {
+        definition.bridgeOptions = {
             content: pinElement.element,
         }
     }

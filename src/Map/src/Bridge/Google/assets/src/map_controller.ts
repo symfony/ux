@@ -157,14 +157,14 @@ export default class extends AbstractMapController<
     }: {
         definition: MarkerDefinition<google.maps.marker.AdvancedMarkerElementOptions, google.maps.InfoWindowOptions>;
     }): google.maps.marker.AdvancedMarkerElement {
-        const { '@id': _id, position, title, infoWindow, icon, extra, rawOptions = {}, ...otherOptions } = definition;
+        const { '@id': _id, position, title, infoWindow, icon, rawOptions = {}, bridgeOptions = {} } = definition;
 
         const marker = new _google.maps.marker.AdvancedMarkerElement({
             position,
             title,
-            ...otherOptions,
-            ...rawOptions,
             map: this.map,
+            ...rawOptions,
+            ...bridgeOptions,
         });
 
         if (infoWindow) {
@@ -187,12 +187,13 @@ export default class extends AbstractMapController<
     }: {
         definition: PolygonDefinition<google.maps.PolygonOptions, google.maps.InfoWindowOptions>;
     }): google.maps.Polygon {
-        const { '@id': _id, points, title, infoWindow, rawOptions = {} } = definition;
+        const { '@id': _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
 
         const polygon = new _google.maps.Polygon({
-            ...rawOptions,
             paths: points,
             map: this.map,
+            ...rawOptions,
+            ...bridgeOptions,
         });
 
         if (title) {
@@ -215,12 +216,13 @@ export default class extends AbstractMapController<
     }: {
         definition: PolylineDefinition<google.maps.PolylineOptions, google.maps.InfoWindowOptions>;
     }): google.maps.Polyline {
-        const { '@id': _id, points, title, infoWindow, rawOptions = {} } = definition;
+        const { '@id': _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
 
         const polyline = new _google.maps.Polyline({
-            ...rawOptions,
             path: points,
             map: this.map,
+            ...rawOptions,
+            ...bridgeOptions,
         });
 
         if (title) {
@@ -239,13 +241,14 @@ export default class extends AbstractMapController<
     }
 
     protected doCreateCircle({ definition }: { definition: CircleDefinition<google.maps.CircleOptions, google.maps.InfoWindowOptions> }): google.maps.Circle {
-        const { '@id': _id, center, radius, title, infoWindow, rawOptions = {} } = definition;
+        const { '@id': _id, center, radius, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
 
         const circle = new _google.maps.Circle({
-            ...rawOptions,
             center,
             radius,
             map: this.map,
+            ...rawOptions,
+            ...bridgeOptions,
         });
 
         if (title) {
@@ -268,12 +271,13 @@ export default class extends AbstractMapController<
     }: {
         definition: RectangleDefinition<google.maps.RectangleOptions, google.maps.InfoWindowOptions>;
     }): google.maps.Rectangle {
-        const { northEast, southWest, title, infoWindow, rawOptions = {} } = definition;
+        const { northEast, southWest, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
 
         const rectangle = new _google.maps.Rectangle({
-            ...rawOptions,
             bounds: new _google.maps.LatLngBounds(southWest, northEast),
             map: this.map,
+            ...rawOptions,
+            ...bridgeOptions,
         });
 
         if (title) {
@@ -298,7 +302,7 @@ export default class extends AbstractMapController<
         definition: Omit<InfoWindowDefinition<google.maps.InfoWindowOptions>, 'position'>;
         element: google.maps.marker.AdvancedMarkerElement | google.maps.Polygon | google.maps.Polyline | google.maps.Circle | google.maps.Rectangle;
     }): google.maps.InfoWindow {
-        const { headerContent, content, opened, autoClose, rawOptions = {} } = definition;
+        const { headerContent, content, opened, autoClose, rawOptions = {}, bridgeOptions = {} } = definition;
 
         let position: google.maps.LatLng | null = null;
         if (element instanceof google.maps.Circle) {
@@ -311,7 +315,7 @@ export default class extends AbstractMapController<
             // ```js
             // const bounds = new google.maps.LatLngBounds();
             // element.getPath().forEach((latLng) => bounds.extend(latLng));
-            // event.definition.infoWindow.rawOptions.position = bounds.getCenter();
+            // event.definition.infoWindow.bridgeOptions.position = bounds.getCenter();
             // ```
         }
 
@@ -320,6 +324,7 @@ export default class extends AbstractMapController<
             content: this.createTextOrElement(content),
             position,
             ...rawOptions,
+            ...bridgeOptions,
         };
 
         const infoWindow = new _google.maps.InfoWindow(infoWindowOptions);

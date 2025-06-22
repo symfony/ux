@@ -61,5 +61,6 @@ export default class extends AbstractMapController<MapOptions, L.Map, MarkerOpti
         element: L.Marker;
     }): void;
     protected doFitBoundsToMarkers(): void;
+    private closePopups;
 }
 export {};
