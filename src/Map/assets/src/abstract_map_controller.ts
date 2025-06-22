@@ -1,3 +1,12 @@
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 import { Controller } from '@hotwired/stimulus';
 
 export type Point = { lat: number; lng: number };
@@ -31,7 +40,7 @@ export type Icon = {
 export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     position: Point;
     title: string | null;
-    infoWindow?: InfoWindowWithoutPositionDefinition<BridgeInfoWindowOptions>;
+    infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     icon?: Icon;
     /**
      * Raw options passed to the marker constructor, specific to the map provider (e.g.: `L.marker()` for Leaflet).
@@ -47,7 +56,7 @@ export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = Wit
 }>;
 
 export type PolygonDefinition<PolygonOptions, BridgeInfoWindowOptions> = WithIdentifier<{
-    infoWindow?: InfoWindowWithoutPositionDefinition<BridgeInfoWindowOptions>;
+    infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     points: Array<Point> | Array<Array<Point>>;
     title: string | null;
     /**
@@ -64,7 +73,7 @@ export type PolygonDefinition<PolygonOptions, BridgeInfoWindowOptions> = WithIde
 }>;
 
 export type PolylineDefinition<PolylineOptions, BridgeInfoWindowOptions> = WithIdentifier<{
-    infoWindow?: InfoWindowWithoutPositionDefinition<BridgeInfoWindowOptions>;
+    infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     points: Array<Point>;
     title: string | null;
     /**
@@ -81,7 +90,7 @@ export type PolylineDefinition<PolylineOptions, BridgeInfoWindowOptions> = WithI
 }>;
 
 export type CircleDefinition<CircleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
-    infoWindow?: InfoWindowWithoutPositionDefinition<BridgeInfoWindowOptions>;
+    infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     center: Point;
     radius: number;
     title: string | null;
@@ -99,7 +108,7 @@ export type CircleDefinition<CircleOptions, BridgeInfoWindowOptions> = WithIdent
 }>;
 
 export type RectangleDefinition<RectangleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
-    infoWindow?: InfoWindowWithoutPositionDefinition<BridgeInfoWindowOptions>;
+    infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     southWest: Point;
     northEast: Point;
     title: string | null;
@@ -135,8 +144,6 @@ export type InfoWindowDefinition<BridgeInfoWindowOptions> = {
      */
     extra: Record<string, unknown>;
 };
-
-export type InfoWindowWithoutPositionDefinition<BridgeInfoWindowOptions> = Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
 
 export default abstract class<
     MapOptions, // Normalized `*Options` PHP class from Bridge (to not be confused with the JS Map class options)
@@ -248,7 +255,7 @@ export default abstract class<
         definition,
         element,
     }: {
-        definition: InfoWindowWithoutPositionDefinition<BridgeInfoWindowOptions>;
+        definition: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
         element: BridgeMarker | BridgePolygon | BridgePolyline | BridgeCircle | BridgeRectangle;
     }): BridgeInfoWindow {
         this.dispatchEvent('info-window:before-create', { definition, element });
@@ -342,7 +349,7 @@ export default abstract class<
         definition,
         element,
     }: {
-        definition: InfoWindowWithoutPositionDefinition<BridgeInfoWindowOptions>;
+        definition: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
         element: BridgeMarker | BridgePolygon | BridgePolyline | BridgeCircle | BridgeRectangle;
     }): BridgeInfoWindow;
     protected abstract doCreateIcon({ definition, element }: { definition: Icon; element: BridgeMarker }): void;

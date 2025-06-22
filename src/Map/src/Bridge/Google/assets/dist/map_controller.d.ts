@@ -1,5 +1,5 @@
 import type { LoaderOptions } from '@googlemaps/js-api-loader';
-import type { CircleDefinition, Icon, InfoWindowWithoutPositionDefinition, MarkerDefinition, Point, PolygonDefinition, PolylineDefinition, RectangleDefinition } from '@symfony/ux-map';
+import type { CircleDefinition, Icon, InfoWindowDefinition, MarkerDefinition, Point, PolygonDefinition, PolylineDefinition, RectangleDefinition } from '@symfony/ux-map';
 import AbstractMapController from '@symfony/ux-map';
 type MapOptions = Pick<google.maps.MapOptions, 'mapId' | 'gestureHandling' | 'backgroundColor' | 'disableDoubleClickZoom' | 'zoomControl' | 'zoomControlOptions' | 'mapTypeControl' | 'mapTypeControlOptions' | 'streetViewControl' | 'streetViewControlOptions' | 'fullscreenControl' | 'fullscreenControlOptions'>;
 export default class extends AbstractMapController<MapOptions, google.maps.Map, google.maps.marker.AdvancedMarkerElementOptions, google.maps.marker.AdvancedMarkerElement, google.maps.InfoWindowOptions, google.maps.InfoWindow, google.maps.PolygonOptions, google.maps.Polygon, google.maps.PolylineOptions, google.maps.Polyline, google.maps.CircleOptions, google.maps.Circle, google.maps.RectangleOptions, google.maps.Rectangle> {
@@ -36,7 +36,7 @@ export default class extends AbstractMapController<MapOptions, google.maps.Map, 
     }): google.maps.Rectangle;
     protected doRemoveRectangle(rectangle: google.maps.Rectangle): void;
     protected doCreateInfoWindow({ definition, element, }: {
-        definition: InfoWindowWithoutPositionDefinition<google.maps.InfoWindowOptions>;
+        definition: Omit<InfoWindowDefinition<google.maps.InfoWindowOptions>, 'position'>;
         element: google.maps.marker.AdvancedMarkerElement | google.maps.Polygon | google.maps.Polyline | google.maps.Circle | google.maps.Rectangle;
     }): google.maps.InfoWindow;
     protected doFitBoundsToMarkers(): void;
