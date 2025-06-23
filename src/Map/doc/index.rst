@@ -362,6 +362,10 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
             this.element.addEventListener('ux:map:polygon:after-create', this._onPolygonAfterCreate);
             this.element.addEventListener('ux:map:polyline:before-create', this._onPolylineBeforeCreate);
             this.element.addEventListener('ux:map:polyline:after-create', this._onPolylineAfterCreate);
+            this.element.addEventListener('ux:map:circle:before-create', this._onCircleBeforeCreate);
+            this.element.addEventListener('ux:map:circle:after-create', this._onCircleAfterCreate);
+            this.element.addEventListener('ux:map:rectangle:before-create', this._onRectangleBeforeCreate);
+            this.element.addEventListener('ux:map:rectangle:after-create', this._onRectangleAfterCreate);
         }
 
         disconnect() {
@@ -376,6 +380,10 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
             this.element.removeEventListener('ux:map:polygon:after-create', this._onPolygonAfterCreate);
             this.element.removeEventListener('ux:map:polyline:before-create', this._onPolylineBeforeCreate);
             this.element.removeEventListener('ux:map:polyline:after-create', this._onPolylineAfterCreate);
+            this.element.removeEventListener('ux:map:circle:before-create', this._onCircleBeforeCreate);
+            this.element.removeEventListener('ux:map:circle:after-create', this._onCircleAfterCreate);
+            this.element.removeEventListener('ux:map:rectangle:before-create', this._onRectangleBeforeCreate);
+            this.element.removeEventListener('ux:map:rectangle:after-create', this._onRectangleAfterCreate);
         }
 
         /**
@@ -386,6 +394,7 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
             // You can read or write the zoom level
             console.log(event.detail.zoom);
 
+            // You can read or write the center of the map
             console.log(event.detail.center);
 
             // You can read or write map options, specific to the Bridge, it represents the normalized `*Options` PHP class (e.g. `GoogleOptions`, `LeafletOptions`)
@@ -454,6 +463,10 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
             console.log(event.detail.polygon);
             // ... or a polyline
             console.log(event.detail.polyline);
+            // ... or a circle
+            console.log(event.detail.circle);
+            // ... or a rectangle
+            console.log(event.detail.rectangle);
         }
 
         /**
@@ -490,6 +503,26 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
         _onPolylineAfterCreate(event) {
             // The polyline instance
             console.log(event.detail.polyline);
+        }
+
+        _onCircleBeforeCreate(event) {
+            console.log(event.detail.definition);
+            // { title: 'My circle', center: { lat: 48.8566, lng: 2.3522 }, radius: 1000, ... }
+        }
+
+        _onCircleAfterCreate(event) {
+            // The circle instance
+            console.log(event.detail.circle);
+        }
+
+        _onRectangleBeforeCreate(event) {
+            console.log(event.detail.definition);
+            // { title: 'My rectangle', southWest: { lat: 48.8566, lng: 2.3522 }, northEast: { lat: 45.7640, lng: 4.8357 }, ... }
+        }
+
+        _onRectangleAfterCreate(event) {
+            // The rectangle instance
+            console.log(event.detail.rectangle);
         }
     }
 
@@ -533,6 +566,17 @@ events ``ux:map:*:before-create`` using the special ``bridgeOptions`` property:
             this.element.addEventListener('ux:map:info-window:before-create', this._onInfoWindowBeforeCreate);
             this.element.addEventListener('ux:map:polygon:before-create', this._onPolygonBeforeCreate);
             this.element.addEventListener('ux:map:polyline:before-create', this._onPolylineBeforeCreate);
+            this.element.addEventListener('ux:map:circle:before-create', this._onCircleBeforeCreate);
+            this.element.addEventListener('ux:map:rectangle:before-create', this._onRectangleBeforeCreate);
+        }
+
+        disconnect() {
+            this.element.removeEventListener('ux:map:marker:before-create', this._onMarkerBeforeCreate);
+            this.element.removeEventListener('ux:map:info-window:before-create', this._onInfoWindowBeforeCreate);
+            this.element.removeEventListener('ux:map:polygon:before-create', this._onPolygonBeforeCreate);
+            this.element.removeEventListener('ux:map:polyline:before-create', this._onPolylineBeforeCreate);
+            this.element.removeEventListener('ux:map:circle:before-create', this._onCircleBeforeCreate);
+            this.element.removeEventListener('ux:map:rectangle:before-create', this._onRectangleBeforeCreate);
         }
 
         _onMarkerBeforeCreate(event) {
@@ -590,6 +634,34 @@ events ``ux:map:*:before-create`` using the special ``bridgeOptions`` property:
                 // ...
             };
         }
+
+        _onCircleBeforeCreate(event) {
+            // When using Google Maps, to configure a `google.maps.Circle`
+            event.detail.definition.bridgeOptions = {
+                strokeColor: 'red',
+                // ...
+            };
+
+            // When using Leaflet, to configure a `L.Circle`
+            event.detail.definition.bridgeOptions = {
+                color: 'red',
+                // ...
+            };
+        }
+
+        _onRectangleBeforeCreate(event) {
+            // When using Google Maps, to configure a `google.maps.Rectangle`
+            event.detail.definition.bridgeOptions = {
+                strokeColor: 'red',
+                // ...
+            };
+
+            // When using Leaflet, to configure a `L.Rectangle`
+            event.detail.definition.bridgeOptions = {
+                color: 'red',
+                // ...
+            };
+        }
     }
 
 Advanced: Passing extra data from PHP to the Stimulus controller
@@ -603,7 +675,7 @@ These additional data points are defined and used exclusively by you; UX Map
 only forwards them to the Stimulus controller.
 
 To pass extra data from PHP to the Stimulus controller, you must use the ``extra`` property
-available in ``Marker``, ``InfoWindow``, ``Polygon`` and ``Polyline`` instances::
+available in ``Marker``, ``InfoWindow``, ``Polygon``, ``Polyline``, ``Circle`` and ``Rectangle`` instances::
 
     $map->addMarker(new Marker(
         position: new Point(48.822248, 2.337338),
