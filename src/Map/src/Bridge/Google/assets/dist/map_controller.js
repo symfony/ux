@@ -18,18 +18,18 @@ class default_1 extends Controller {
         this.isConnected = false;
     }
     connect() {
-        const options = this.optionsValue;
-        this.dispatchEvent('pre-connect', { options });
+        const mapDefinition = {
+            center: this.hasCenterValue ? this.centerValue : null,
+            zoom: this.hasZoomValue ? this.zoomValue : null,
+            options: this.optionsValue,
+        };
+        this.dispatchEvent('pre-connect', mapDefinition);
         this.createMarker = this.createDrawingFactory('marker', this.markers, this.doCreateMarker.bind(this));
         this.createPolygon = this.createDrawingFactory('polygon', this.polygons, this.doCreatePolygon.bind(this));
         this.createPolyline = this.createDrawingFactory('polyline', this.polylines, this.doCreatePolyline.bind(this));
         this.createCircle = this.createDrawingFactory('circle', this.circles, this.doCreateCircle.bind(this));
         this.createRectangle = this.createDrawingFactory('rectangle', this.rectangles, this.doCreateRectangle.bind(this));
-        this.map = this.doCreateMap({
-            center: this.hasCenterValue ? this.centerValue : null,
-            zoom: this.hasZoomValue ? this.zoomValue : null,
-            options,
-        });
+        this.map = this.doCreateMap({ definition: mapDefinition });
         this.markersValue.forEach((definition) => this.createMarker({ definition }));
         this.polygonsValue.forEach((definition) => this.createPolygon({ definition }));
         this.polylinesValue.forEach((definition) => this.createPolyline({ definition }));
@@ -184,23 +184,23 @@ class map_controller extends default_1 {
         }
     }
     dispatchEvent(name, payload = {}) {
+        payload.google = _google;
         this.dispatch(name, {
             prefix: 'ux:map',
-            detail: {
-                ...payload,
-                google: _google,
-            },
+            detail: payload,
         });
     }
-    doCreateMap({ center, zoom, options }) {
+    doCreateMap({ definition }) {
+        const { center, zoom, options, bridgeOptions = {} } = definition;
         options.zoomControl = typeof options.zoomControlOptions !== 'undefined';
         options.mapTypeControl = typeof options.mapTypeControlOptions !== 'undefined';
         options.streetViewControl = typeof options.streetViewControlOptions !== 'undefined';
         options.fullscreenControl = typeof options.fullscreenControlOptions !== 'undefined';
         return new _google.maps.Map(this.element, {
-            ...options,
             center,
             zoom,
+            ...options,
+            ...bridgeOptions,
         });
     }
     doCreateMarker({ definition, }) {

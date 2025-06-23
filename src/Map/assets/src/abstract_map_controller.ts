@@ -37,6 +37,17 @@ export type Icon = {
       }
 );
 
+export type MapDefinition<MapOptions, BridgeMapOptions> = {
+    center: Point | null;
+    zoom: number | null;
+    options: MapOptions;
+    /**
+     * Additional options passed to the Map constructor.
+     * These options are specific to the Map Bridge, and can be defined through `ux:map:pre-connect` event.
+     */
+    bridgeOptions?: BridgeMapOptions;
+};
+
 export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     position: Point;
     title: string | null;
@@ -182,6 +193,7 @@ export type InfoWindowDefinition<BridgeInfoWindowOptions> = {
 
 export default abstract class<
     MapOptions, // Normalized `*Options` PHP class from Bridge (to not be confused with the JS Map class options)
+    BridgeMapOptions, // The options for the JavaScript Map class from Bridge
     BridgeMap, // The JavaScript Map class from Bridge (e.g.: `L.Map` for Leaflet, `google.maps.Map` for Google Maps)
     BridgeMarkerOptions, // The options for the JavaScript Marker class from Bridge
     BridgeMarker, // The JavaScript Marker class from Bridge
@@ -247,9 +259,12 @@ export default abstract class<
     protected abstract dispatchEvent(name: string, payload: Record<string, unknown>): void;
 
     connect() {
-        const options = this.optionsValue;
-
-        this.dispatchEvent('pre-connect', { options });
+        const mapDefinition: MapDefinition<MapOptions, BridgeMapOptions> = {
+            center: this.hasCenterValue ? this.centerValue : null,
+            zoom: this.hasZoomValue ? this.zoomValue : null,
+            options: this.optionsValue,
+        };
+        this.dispatchEvent('pre-connect', mapDefinition);
 
         this.createMarker = this.createDrawingFactory('marker', this.markers, this.doCreateMarker.bind(this));
         this.createPolygon = this.createDrawingFactory('polygon', this.polygons, this.doCreatePolygon.bind(this));
@@ -257,11 +272,7 @@ export default abstract class<
         this.createCircle = this.createDrawingFactory('circle', this.circles, this.doCreateCircle.bind(this));
         this.createRectangle = this.createDrawingFactory('rectangle', this.rectangles, this.doCreateRectangle.bind(this));
 
-        this.map = this.doCreateMap({
-            center: this.hasCenterValue ? this.centerValue : null,
-            zoom: this.hasZoomValue ? this.zoomValue : null,
-            options,
-        });
+        this.map = this.doCreateMap({ definition: mapDefinition });
         this.markersValue.forEach((definition) => this.createMarker({ definition }));
         this.polygonsValue.forEach((definition) => this.createPolygon({ definition }));
         this.polylinesValue.forEach((definition) => this.createPolyline({ definition }));
@@ -356,7 +367,7 @@ export default abstract class<
     //endregion
 
     //region Abstract factory methods to be implemented by the concrete classes, they are specific to the map provider
-    protected abstract doCreateMap({ center, zoom, options }: { center: Point | null; zoom: number | null; options: MapOptions }): BridgeMap;
+    protected abstract doCreateMap({ definition }: { definition: MapDefinition<MapOptions, BridgeMapOptions> }): BridgeMap;
 
     protected abstract doFitBoundsToMarkers(): void;
 

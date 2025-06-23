@@ -12,8 +12,8 @@ class MyMapController extends AbstractMapController {
         });
     }
 
-    doCreateMap({ center, zoom, options }) {
-        return { map: 'map', center, zoom, options };
+    doCreateMap({ definition }) {
+        return { map: 'map', center: definition.center, zoom: definition.zoom, options: definition.options };
     }
 
     doCreateMarker({ definition }) {

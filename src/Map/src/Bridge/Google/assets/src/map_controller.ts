@@ -13,8 +13,8 @@ import type {
     CircleDefinition,
     Icon,
     InfoWindowDefinition,
+    MapDefinition,
     MarkerDefinition,
-    Point,
     PolygonDefinition,
     PolylineDefinition,
     RectangleDefinition,
@@ -48,6 +48,7 @@ const parser = new DOMParser();
 
 export default class extends AbstractMapController<
     MapOptions,
+    google.maps.MapOptions,
     google.maps.Map,
     google.maps.marker.AdvancedMarkerElementOptions,
     google.maps.marker.AdvancedMarkerElement,
@@ -65,8 +66,6 @@ export default class extends AbstractMapController<
     declare providerOptionsValue: Pick<LoaderOptions, 'apiKey' | 'id' | 'language' | 'region' | 'nonce' | 'retries' | 'url' | 'version' | 'libraries'>;
 
     declare map: google.maps.Map;
-
-    public parser: DOMParser;
 
     async connect() {
         const onLoaded = () => super.connect();
@@ -129,16 +128,16 @@ export default class extends AbstractMapController<
     }
 
     protected dispatchEvent(name: string, payload: Record<string, unknown> = {}): void {
+        payload.google = _google;
         this.dispatch(name, {
             prefix: 'ux:map',
-            detail: {
-                ...payload,
-                google: _google,
-            },
+            detail: payload,
         });
     }
 
-    protected doCreateMap({ center, zoom, options }: { center: Point | null; zoom: number | null; options: MapOptions }): google.maps.Map {
+    protected doCreateMap({ definition }: { definition: MapDefinition<MapOptions, google.maps.MapOptions> }): google.maps.Map {
+        const { center, zoom, options, bridgeOptions = {} } = definition;
+
         // We assume the following control options are enabled if their options are set
         options.zoomControl = typeof options.zoomControlOptions !== 'undefined';
         options.mapTypeControl = typeof options.mapTypeControlOptions !== 'undefined';
@@ -146,9 +145,10 @@ export default class extends AbstractMapController<
         options.fullscreenControl = typeof options.fullscreenControlOptions !== 'undefined';
 
         return new _google.maps.Map(this.element, {
-            ...options,
             center,
             zoom,
+            ...options,
+            ...bridgeOptions,
         });
     }
 
