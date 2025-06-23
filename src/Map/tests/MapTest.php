@@ -72,6 +72,7 @@ class MapTest extends TestCase
             'polylines' => [],
             'circles' => [],
             'rectangles' => [],
+            'extra' => null,
         ], $array);
     }
 
@@ -94,6 +95,7 @@ class MapTest extends TestCase
             'polylines' => [],
             'circles' => [],
             'rectangles' => [],
+            'extra' => null,
         ], $array);
     }
 
@@ -217,6 +219,11 @@ class MapTest extends TestCase
                     autoClose: true,
                 ),
             ))
+            ->extra([
+                'foo' => 'bar',
+                'bar' => true,
+                'baz' => ['qux' => 'quux'],
+            ])
         ;
 
         self::assertEquals([
@@ -400,6 +407,11 @@ class MapTest extends TestCase
                     'extra' => [],
                     'id' => null,
                 ],
+            ],
+            'extra' => [
+                'foo' => 'bar',
+                'bar' => true,
+                'baz' => ['qux' => 'quux'],
             ],
         ], $map->toArray());
     }

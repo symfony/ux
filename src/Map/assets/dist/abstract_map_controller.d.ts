@@ -7,6 +7,7 @@ export type Identifier = string;
 export type WithIdentifier<T extends Record<string, unknown>> = T & {
     '@id': Identifier;
 };
+type ExtraData = Record<string, unknown>;
 export declare const IconTypes: {
     readonly Url: "url";
     readonly Svg: "svg";
@@ -31,6 +32,7 @@ export type MapDefinition<MapOptions, BridgeMapOptions> = {
     zoom: number | null;
     options: MapOptions;
     bridgeOptions?: BridgeMapOptions;
+    extra: ExtraData;
 };
 export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     position: Point;
@@ -39,7 +41,7 @@ export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = Wit
     icon?: Icon;
     rawOptions?: BridgeMarkerOptions;
     bridgeOptions?: BridgeMarkerOptions;
-    extra: Record<string, unknown>;
+    extra: ExtraData;
 }>;
 export type PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
@@ -47,7 +49,7 @@ export type PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions> = W
     title: string | null;
     rawOptions?: BridgePolygonOptions;
     bridgeOptions?: BridgePolygonOptions;
-    extra: Record<string, unknown>;
+    extra: ExtraData;
 }>;
 export type PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
@@ -55,7 +57,7 @@ export type PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions> =
     title: string | null;
     rawOptions?: BridgePolylineOptions;
     bridgeOptions?: BridgePolylineOptions;
-    extra: Record<string, unknown>;
+    extra: ExtraData;
 }>;
 export type CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
@@ -64,7 +66,7 @@ export type CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions> = Wit
     title: string | null;
     rawOptions?: BridgeCircleOptions;
     bridgeOptions?: BridgeCircleOptions;
-    extra: Record<string, unknown>;
+    extra: ExtraData;
 }>;
 export type RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
@@ -73,7 +75,7 @@ export type RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions>
     title: string | null;
     rawOptions?: BridgeRectangleOptions;
     bridgeOptions?: BridgeRectangleOptions;
-    extra: Record<string, unknown>;
+    extra: ExtraData;
 }>;
 export type InfoWindowDefinition<BridgeInfoWindowOptions> = {
     headerContent: string | null;
@@ -83,7 +85,7 @@ export type InfoWindowDefinition<BridgeInfoWindowOptions> = {
     autoClose: boolean;
     rawOptions?: BridgeInfoWindowOptions;
     bridgeOptions?: BridgeInfoWindowOptions;
-    extra: Record<string, unknown>;
+    extra: ExtraData;
 };
 export default abstract class<MapOptions, BridgeMapOptions, BridgeMap, BridgeMarkerOptions, BridgeMarker, BridgeInfoWindowOptions, BridgeInfoWindow, BridgePolygonOptions, BridgePolygon, BridgePolylineOptions, BridgePolyline, BridgeCircleOptions, BridgeCircle, BridgeRectangleOptions, BridgeRectangle> extends Controller<HTMLElement> {
     static values: {
@@ -97,6 +99,7 @@ export default abstract class<MapOptions, BridgeMapOptions, BridgeMap, BridgeMar
         circles: ArrayConstructor;
         rectangles: ArrayConstructor;
         options: ObjectConstructor;
+        extra: ObjectConstructor;
     };
     centerValue: Point | null;
     zoomValue: number | null;
@@ -107,6 +110,7 @@ export default abstract class<MapOptions, BridgeMapOptions, BridgeMap, BridgeMar
     circlesValue: Array<CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions>>;
     rectanglesValue: Array<RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions>>;
     optionsValue: MapOptions;
+    extraValue: Record<string, unknown>;
     hasCenterValue: boolean;
     hasZoomValue: boolean;
     hasFitBoundsToMarkersValue: boolean;
@@ -116,6 +120,7 @@ export default abstract class<MapOptions, BridgeMapOptions, BridgeMap, BridgeMar
     hasCirclesValue: boolean;
     hasRectanglesValue: boolean;
     hasOptionsValue: boolean;
+    hasExtraValue: boolean;
     protected map: BridgeMap;
     protected markers: Map<string, BridgeMarker>;
     protected polygons: Map<string, BridgePolygon>;
@@ -177,3 +182,4 @@ export default abstract class<MapOptions, BridgeMapOptions, BridgeMap, BridgeMar
     private createDrawingFactory;
     private onDrawChanged;
 }
+export {};

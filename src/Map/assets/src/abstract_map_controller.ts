@@ -13,6 +13,8 @@ export type Point = { lat: number; lng: number };
 export type Identifier = string;
 export type WithIdentifier<T extends Record<string, unknown>> = T & { '@id': Identifier };
 
+type ExtraData = Record<string, unknown>;
+
 export const IconTypes = {
     Url: 'url',
     Svg: 'svg',
@@ -46,6 +48,13 @@ export type MapDefinition<MapOptions, BridgeMapOptions> = {
      * These options are specific to the Map Bridge, and can be defined through `ux:map:pre-connect` event.
      */
     bridgeOptions?: BridgeMapOptions;
+    /**
+     * Extra data defined by the developer.
+     * They are not directly used by the Stimulus controller, but they can be used by the developer with event listeners:
+     *    - `ux:map:pre-connect`
+     *    - `ux:map:connect`
+     */
+    extra: ExtraData;
 };
 
 export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = WithIdentifier<{
@@ -69,7 +78,7 @@ export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = Wit
      *    - `ux:map:marker:before-create`
      *    - `ux:map:marker:after-create`
      */
-    extra: Record<string, unknown>;
+    extra: ExtraData;
 }>;
 
 export type PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions> = WithIdentifier<{
@@ -92,7 +101,7 @@ export type PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions> = W
      *    - `ux:map:polygon:before-create`
      *    - `ux:map:polygon:after-create`
      */
-    extra: Record<string, unknown>;
+    extra: ExtraData;
 }>;
 
 export type PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions> = WithIdentifier<{
@@ -115,7 +124,7 @@ export type PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions> =
      *    - `ux:map:polyline:before-create`
      *    - `ux:map:polyline:after-create`
      */
-    extra: Record<string, unknown>;
+    extra: ExtraData;
 }>;
 
 export type CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
@@ -139,7 +148,7 @@ export type CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions> = Wit
      *    - `ux:map:circle:before-create`
      *    - `ux:map:circle:after-create`
      */
-    extra: Record<string, unknown>;
+    extra: ExtraData;
 }>;
 
 export type RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
@@ -163,7 +172,7 @@ export type RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions>
      *    - `ux:map:rectangle:before-create`
      *    - `ux:map:rectangle:after-create`
      */
-    extra: Record<string, unknown>;
+    extra: ExtraData;
 }>;
 
 export type InfoWindowDefinition<BridgeInfoWindowOptions> = {
@@ -188,7 +197,7 @@ export type InfoWindowDefinition<BridgeInfoWindowOptions> = {
      *    - `ux:map:info-window:before-create`
      *    - `ux:map:info-window:after-create`
      */
-    extra: Record<string, unknown>;
+    extra: ExtraData;
 };
 
 export default abstract class<
@@ -219,6 +228,7 @@ export default abstract class<
         circles: Array,
         rectangles: Array,
         options: Object,
+        extra: Object,
     };
 
     declare centerValue: Point | null;
@@ -230,6 +240,7 @@ export default abstract class<
     declare circlesValue: Array<CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions>>;
     declare rectanglesValue: Array<RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions>>;
     declare optionsValue: MapOptions;
+    declare extraValue: Record<string, unknown>;
 
     declare hasCenterValue: boolean;
     declare hasZoomValue: boolean;
@@ -240,6 +251,7 @@ export default abstract class<
     declare hasCirclesValue: boolean;
     declare hasRectanglesValue: boolean;
     declare hasOptionsValue: boolean;
+    declare hasExtraValue: boolean;
 
     protected map: BridgeMap;
     protected markers = new Map<Identifier, BridgeMarker>();
@@ -259,10 +271,12 @@ export default abstract class<
     protected abstract dispatchEvent(name: string, payload: Record<string, unknown>): void;
 
     connect() {
+        const extra = this.hasExtraValue ? this.extraValue : {};
         const mapDefinition: MapDefinition<MapOptions, BridgeMapOptions> = {
             center: this.hasCenterValue ? this.centerValue : null,
             zoom: this.hasZoomValue ? this.zoomValue : null,
             options: this.optionsValue,
+            extra,
         };
         this.dispatchEvent('pre-connect', mapDefinition);
 
@@ -291,6 +305,7 @@ export default abstract class<
             circles: [...this.circles.values()],
             rectangles: [...this.rectangles.values()],
             infoWindows: this.infoWindows,
+            extra,
         });
 
         this.isConnected = true;
