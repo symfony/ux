@@ -47,7 +47,8 @@ describe('GoogleMapsController', () => {
               data-symfony--ux-google-map--map-markers-value="[]"
               data-symfony--ux-google-map--map-polygons-value="[]"
               data-symfony--ux-google-map--map-polylines-value="[]"
-              data-symfony--ux-google-map--map-rectangle-value="[]"
+              data-symfony--ux-google-map--map-circles-value="[]"
+              data-symfony--ux-google-map--map-rectangles-value="[]"
               style="height: 600px"
           ></div>
         `);
