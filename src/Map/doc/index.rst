@@ -713,6 +713,39 @@ On the JavaScript side, you can access your extra data via the
         // ...
     }
 
+.. versionadded:: 2.27
+
+    The ``Map`` class now has an ``extra`` property, which can be accessed in the ``ux:map:pre-connect`` and ``ux:map:connect`` events::
+
+        $map = new Map(/* ... */, extra: [
+            'foo' => 'bar',
+        ]);
+        // or
+        $map->extra([
+            'foo' => 'bar',
+        ]);
+
+    .. code-block:: javascript
+
+        // assets/controllers/mymap_controller.js
+
+        import { Controller } from '@hotwired/stimulus';
+
+        export default class extends Controller {
+
+            // ...
+
+            _onPreConnect(event) {
+                console.log(event.detail.extra);
+                // { foo: 'bar', ... }
+            }
+
+            _onConnect(event) {
+                console.log(event.detail.extra);
+                // { foo: 'bar', ... }
+            }
+        }
+
 .. _map-live-component:
 
 Usage with Live Components

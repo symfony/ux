@@ -18,10 +18,12 @@ class default_1 extends Controller {
         this.isConnected = false;
     }
     connect() {
+        const extra = this.hasExtraValue ? this.extraValue : {};
         const mapDefinition = {
             center: this.hasCenterValue ? this.centerValue : null,
             zoom: this.hasZoomValue ? this.zoomValue : null,
             options: this.optionsValue,
+            extra,
         };
         this.dispatchEvent('pre-connect', mapDefinition);
         this.createMarker = this.createDrawingFactory('marker', this.markers, this.doCreateMarker.bind(this));
@@ -46,6 +48,7 @@ class default_1 extends Controller {
             circles: [...this.circles.values()],
             rectangles: [...this.rectangles.values()],
             infoWindows: this.infoWindows,
+            extra,
         });
         this.isConnected = true;
     }
@@ -131,6 +134,7 @@ default_1.values = {
     circles: Array,
     rectangles: Array,
     options: Object,
+    extra: Object,
 };
 
 let _google;

@@ -39,6 +39,7 @@ this.element.addEventListener('ux:map:pre-connect', (event) => {
     };
 });
 ```
+-  Add `extra` data support to `Map`, which can be accessed in `ux:map:pre-connect` and `ux:map:connect` events
 
 ## 2.26
 

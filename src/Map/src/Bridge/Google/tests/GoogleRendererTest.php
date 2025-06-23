@@ -188,5 +188,16 @@ class GoogleRendererTest extends RendererTestCase
                 ->addMarker(new Marker(position: new Point(45.7640, 4.8357), title: 'Lyon', icon: Icon::ux('fa:map-marker')->width(32)->height(32)))
                 ->addMarker(new Marker(position: new Point(45.8566, 2.3522), title: 'Dijon', icon: Icon::svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">...</svg>'))),
         ];
+
+        yield 'with map extra data' => [
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'map' => (new Map())
+                ->center(new Point(48.8566, 2.3522))
+                ->zoom(12)
+                ->extra([
+                    'foo' => 'bar',
+                    'baz' => 42,
+                ]),
+        ];
     }
 }

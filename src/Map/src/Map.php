@@ -27,11 +27,14 @@ final class Map
     private Rectangles $rectangles;
 
     /**
-     * @param Marker[]     $markers
-     * @param Polygon[]    $polygons
-     * @param Polyline[]   $polylines
-     * @param Circle[]     $circles
-     * @param Rectangles[] $rectangles
+     * @param Marker[]             $markers
+     * @param Polygon[]            $polygons
+     * @param Polyline[]           $polylines
+     * @param Circle[]             $circles
+     * @param Rectangles[]         $rectangles
+     * @param array<string, mixed> $extra      Extra data forwarded to the JavaScript side. It can be used in your custom
+     *                                         Stimulus controller to benefit from greater flexibility and customization.
+     *                                         These data must be serializable to JSON. These data are not used by UX Map.
      */
     public function __construct(
         private readonly ?string $rendererName = null,
@@ -44,6 +47,7 @@ final class Map
         array $polylines = [],
         array $circles = [],
         array $rectangles = [],
+        private array $extra = [],
     ) {
         $this->markers = new Markers($markers);
         $this->polygons = new Polygons($polygons);
@@ -165,6 +169,18 @@ final class Map
         return $this;
     }
 
+    /**
+     * @param array<string, mixed> $extra Extra data forwarded to the JavaScript side. It can be used in your custom
+     *                                    Stimulus controller to benefit from greater flexibility and customization.
+     *                                    These data must be serializable to JSON. These data are not used by UX Map.
+     */
+    public function extra(array $extra): self
+    {
+        $this->extra = $extra;
+
+        return $this;
+    }
+
     public function toArray(): array
     {
         if (!$this->fitBoundsToMarkers) {
@@ -187,6 +203,9 @@ final class Map
             'polylines' => $this->polylines->toArray(),
             'circles' => $this->circles->toArray(),
             'rectangles' => $this->rectangles->toArray(),
+            // Send `null` if empty instead of `[]`, because Stimulus Controller values validation expect an Object,
+            // and sending `(object) $this->extra` mess with LiveComponent hydration checksum validation
+            'extra' => [] === $this->extra ? null : $this->extra,
         ];
     }
 
@@ -201,6 +220,7 @@ final class Map
      *     rectangles?: list<array>,
      *     fitBoundsToMarkers?: bool,
      *     options?: array<string, mixed>,
+     *     extra?: array<string, mixed>,
      * } $map
      *
      * @internal
@@ -244,6 +264,8 @@ final class Map
             throw new InvalidArgumentException('The "rectangles" parameter must be an array.');
         }
         $map['rectangles'] = array_map(Rectangle::fromArray(...), $map['rectangles']);
+
+        $map['extra'] ??= [];
 
         return new self(...$map);
     }

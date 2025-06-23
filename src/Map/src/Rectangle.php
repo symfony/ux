@@ -20,6 +20,11 @@ use Symfony\UX\Map\Exception\InvalidArgumentException;
  */
 final class Rectangle implements Element
 {
+    /**
+     * @param array<string, mixed> $extra Extra data forwarded to the JavaScript side. It can be used in your custom
+     *                                    Stimulus controller to benefit from greater flexibility and customization.
+     *                                    These data must be serializable to JSON. These data are not used by UX Map.
+     */
     public function __construct(
         public readonly Point $southWest,
         public readonly Point $northEast,
