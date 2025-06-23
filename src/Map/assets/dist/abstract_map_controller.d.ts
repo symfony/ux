@@ -26,6 +26,12 @@ export type Icon = {
     type: typeof IconTypes.Svg;
     html: string;
 });
+export type MapDefinition<MapOptions, BridgeMapOptions> = {
+    center: Point | null;
+    zoom: number | null;
+    options: MapOptions;
+    bridgeOptions?: BridgeMapOptions;
+};
 export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     position: Point;
     title: string | null;
@@ -79,7 +85,7 @@ export type InfoWindowDefinition<BridgeInfoWindowOptions> = {
     bridgeOptions?: BridgeInfoWindowOptions;
     extra: Record<string, unknown>;
 };
-export default abstract class<MapOptions, BridgeMap, BridgeMarkerOptions, BridgeMarker, BridgeInfoWindowOptions, BridgeInfoWindow, BridgePolygonOptions, BridgePolygon, BridgePolylineOptions, BridgePolyline, BridgeCircleOptions, BridgeCircle, BridgeRectangleOptions, BridgeRectangle> extends Controller<HTMLElement> {
+export default abstract class<MapOptions, BridgeMapOptions, BridgeMap, BridgeMarkerOptions, BridgeMarker, BridgeInfoWindowOptions, BridgeInfoWindow, BridgePolygonOptions, BridgePolygon, BridgePolylineOptions, BridgePolyline, BridgeCircleOptions, BridgeCircle, BridgeRectangleOptions, BridgeRectangle> extends Controller<HTMLElement> {
     static values: {
         providerOptions: ObjectConstructor;
         center: ObjectConstructor;
@@ -136,10 +142,8 @@ export default abstract class<MapOptions, BridgeMap, BridgeMarkerOptions, Bridge
     polylinesValueChanged(): void;
     circlesValueChanged(): void;
     rectanglesValueChanged(): void;
-    protected abstract doCreateMap({ center, zoom, options }: {
-        center: Point | null;
-        zoom: number | null;
-        options: MapOptions;
+    protected abstract doCreateMap({ definition }: {
+        definition: MapDefinition<MapOptions, BridgeMapOptions>;
     }): BridgeMap;
     protected abstract doFitBoundsToMarkers(): void;
     protected abstract doCreateMarker({ definition }: {

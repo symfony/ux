@@ -1,9 +1,9 @@
-import type { CircleDefinition, Icon, InfoWindowDefinition, MarkerDefinition, Point, PolygonDefinition, PolylineDefinition, RectangleDefinition } from '@symfony/ux-map';
+import type { CircleDefinition, Icon, InfoWindowDefinition, MapDefinition, MarkerDefinition, PolygonDefinition, PolylineDefinition, RectangleDefinition } from '@symfony/ux-map';
 import AbstractMapController from '@symfony/ux-map';
 import 'leaflet/dist/leaflet.min.css';
 import type { CircleOptions, ControlPosition, MapOptions as LeafletMapOptions, MarkerOptions, PolylineOptions as PolygonOptions, PolylineOptions, PopupOptions, PolylineOptions as RectangleOptions } from 'leaflet';
 import * as L from 'leaflet';
-type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom' | 'attributionControl' | 'zoomControl'> & {
+type MapOptions = Pick<LeafletMapOptions, 'attributionControl' | 'zoomControl'> & {
     attributionControlOptions?: {
         position: ControlPosition;
         prefix: string | false;
@@ -21,16 +21,14 @@ type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom' | 'attributionContro
         options: Record<string, unknown>;
     } | false;
 };
-export default class extends AbstractMapController<MapOptions, L.Map, MarkerOptions, L.Marker, PopupOptions, L.Popup, PolygonOptions, L.Polygon, PolylineOptions, L.Polyline, CircleOptions, L.Circle, RectangleOptions, L.Rectangle> {
+export default class extends AbstractMapController<MapOptions, LeafletMapOptions, L.Map, MarkerOptions, L.Marker, PopupOptions, L.Popup, PolygonOptions, L.Polygon, PolylineOptions, L.Polyline, CircleOptions, L.Circle, RectangleOptions, L.Rectangle> {
     map: L.Map;
     connect(): void;
     centerValueChanged(): void;
     zoomValueChanged(): void;
     protected dispatchEvent(name: string, payload?: Record<string, unknown>): void;
-    protected doCreateMap({ center, zoom, options }: {
-        center: Point | null;
-        zoom: number | null;
-        options: MapOptions;
+    protected doCreateMap({ definition }: {
+        definition: MapDefinition<MapOptions, LeafletMapOptions>;
     }): L.Map;
     protected doCreateMarker({ definition }: {
         definition: MarkerDefinition<MarkerOptions, PopupOptions>;

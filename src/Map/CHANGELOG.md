@@ -23,6 +23,22 @@ $map->addRectangle(new Rectangle(
 ```
 
 -   Deprecate property `rawOptions` from `ux:map:*:before-create` events, in favor of `bridgeOptions` instead.
+-   Map options can now be configured and overridden through the `ux:map:pre-connect` event:
+```js
+this.element.addEventListener('ux:map:pre-connect', (event) => {
+    // Override the map center and zoom
+    event.detail.zoom = 10;
+    event.detail.center = { lat: 48.856613, lng: 2.352222 };
+
+    // Override the normalized `*Options` PHP classes (e.g. `GoogleMapOptions` or `LeafletMapOptions`)
+    console.log(event.detail.options);
+
+    // Override the options specific to the renderer bridge (e.g. `google.maps.MapOptions` or `L.MapOptions`)
+    event.detail.bridgeOptions = {
+        // ...
+    };
+});
+```
 
 ## 2.26
 

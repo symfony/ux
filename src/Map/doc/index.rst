@@ -33,7 +33,7 @@ Configuration is done in your ``config/packages/ux_map.yaml`` file:
             # without to manually configure it in each map instance (through "new GoogleOptions(mapId: 'your_map_id')").
             default_map_id: null
 
-The ``UX_MAP_DSN`` environment variable configure which renderer to use.
+The ``UX_MAP_DSN`` environment variable configure which renderer (Bridge) to use.
 
 Map renderers
 ~~~~~~~~~~~~~
@@ -383,7 +383,19 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
          * You can use this event to configure the map before it is created
          */
         _onPreConnect(event) {
+            // You can read or write the zoom level
+            console.log(event.detail.zoom);
+
+            console.log(event.detail.center);
+
+            // You can read or write map options, specific to the Bridge, it represents the normalized `*Options` PHP class (e.g. `GoogleOptions`, `LeafletOptions`)
             console.log(event.detail.options);
+
+            // Finally, you can also set Bridge-specific options that will be used when creating the map.
+            event.detail.bridgeOptions = {
+                preferCanvas: true, // e.g. for Leaflet (https://leafletjs.com/reference.html#map-prefercanvas)
+                backgroundColor: '#f0f0f0', // e.g. for Google Maps (https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions.backgroundColor)
+            }
         }
 
         /**

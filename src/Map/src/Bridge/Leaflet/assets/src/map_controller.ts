@@ -11,8 +11,8 @@ import type {
     CircleDefinition,
     Icon,
     InfoWindowDefinition,
+    MapDefinition,
     MarkerDefinition,
-    Point,
     PolygonDefinition,
     PolylineDefinition,
     RectangleDefinition,
@@ -32,7 +32,7 @@ import type {
 } from 'leaflet';
 import * as L from 'leaflet';
 
-type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom' | 'attributionControl' | 'zoomControl'> & {
+type MapOptions = Pick<LeafletMapOptions, 'attributionControl' | 'zoomControl'> & {
     attributionControlOptions?: { position: ControlPosition; prefix: string | false };
     zoomControlOptions?: {
         position: ControlPosition;
@@ -46,6 +46,7 @@ type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom' | 'attributionContro
 
 export default class extends AbstractMapController<
     MapOptions,
+    LeafletMapOptions,
     L.Map,
     MarkerOptions,
     L.Marker,
@@ -87,22 +88,23 @@ export default class extends AbstractMapController<
     }
 
     protected dispatchEvent(name: string, payload: Record<string, unknown> = {}): void {
+        payload.L = L;
         this.dispatch(name, {
             prefix: 'ux:map',
-            detail: {
-                ...payload,
-                L,
-            },
+            detail: payload,
         });
     }
 
-    protected doCreateMap({ center, zoom, options }: { center: Point | null; zoom: number | null; options: MapOptions }): L.Map {
+    protected doCreateMap({ definition }: { definition: MapDefinition<MapOptions, LeafletMapOptions> }): L.Map {
+        const { center, zoom, options, bridgeOptions = {} } = definition;
+
         const map = L.map(this.element, {
-            ...options,
             center: center === null ? undefined : center,
             zoom: zoom === null ? undefined : zoom,
             attributionControl: false,
             zoomControl: false,
+            ...options,
+            ...bridgeOptions,
         });
 
         if (options.tileLayer) {
