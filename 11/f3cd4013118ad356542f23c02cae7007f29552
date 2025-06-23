@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-06-23T12:20:52Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/map-extra/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-extra/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.35 kB</code>
+                    / <code>1.38 kB</code>
+                </td><td>
+                    <code>7.45 kB</code><sup>+1% 📈</sup>
+                    / <code>1.41 kB</code><sup>+3% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-extra/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>5.35 kB</code>
+                    / <code>1.35 kB</code>
+                </td><td>
+                    <code>5.47 kB</code><sup>+2% 📈</sup>
+                    / <code>1.38 kB</code><sup>+2% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/map-extra/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-extra/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>14.1 kB</code>
+                    / <code>3.01 kB</code>
+                </td><td>
+                    <code>14.22 kB</code><sup>+1% 📈</sup>
+                    / <code>3.04 kB</code><sup>+1% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/map-extra/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-extra/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>13.24 kB</code>
+                    / <code>3.2 kB</code>
+                </td><td>
+                    <code>13.36 kB</code><sup>+1% 📈</sup>
+                    / <code>3.22 kB</code><sup>+1% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
