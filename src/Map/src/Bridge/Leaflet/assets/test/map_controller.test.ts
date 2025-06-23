@@ -47,6 +47,7 @@ describe('LeafletController', () => {
               data-symfony--ux-leaflet-map--map-markers-value="[]"
               data-symfony--ux-leaflet-map--map-polygons-value="[]"
               data-symfony--ux-leaflet-map--map-polylines-value="[]"
+              data-symfony--ux-leaflet-map--map-circles-value="[]"
               data-symfony--ux-leaflet-map--map-rectangles-value="[]"
               style="height: 600px"
           ></div>
