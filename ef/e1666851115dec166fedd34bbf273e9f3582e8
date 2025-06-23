@@ -1,0 +1,63 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-06-23T07:34:57Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/map-pre-connect-map-options-custom/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-pre-connect-map-options-custom/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.2 kB</code>
+                    / <code>1.37 kB</code>
+                </td><td>
+                    <code>7.35 kB</code><sup>+2% 📈</sup>
+                    / <code>1.38 kB</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-pre-connect-map-options-custom/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>5.31 kB</code>
+                    / <code>1.35 kB</code>
+                </td><td>
+                    <code>5.35 kB</code><sup>+1% 📈</sup>
+                    / <code>1.35 kB</code><sup>+1% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/map-pre-connect-map-options-custom/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-pre-connect-map-options-custom/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>3.38 kB</code>
+                    / <code>917 B</code>
+                </td><td>
+                    <code>3.36 kB</code><sup>-1% 📉</sup>
+                    / <code>876 B</code><sup>-4% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-pre-connect-map-options-custom/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>14 kB</code>
+                    / <code>3 kB</code>
+                </td><td>
+                    <code>14.1 kB</code><sup>+1% 📈</sup>
+                    / <code>3.01 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/map-pre-connect-map-options-custom/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-pre-connect-map-options-custom/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>2.94 kB</code>
+                    / <code>844 B</code>
+                </td><td>
+                    <code>2.91 kB</code><sup>-1% 📉</sup>
+                    / <code>806 B</code><sup>-5% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-pre-connect-map-options-custom/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>13.15 kB</code>
+                    / <code>3.18 kB</code>
+                </td><td>
+                    <code>13.24 kB</code><sup>+1% 📈</sup>
+                    / <code>3.2 kB</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
