@@ -37,5 +37,5 @@
         "@swup/plugin/shelljs": "link:node_modules/.cache/null",
         "@swup/plugin/shelljs-live": "link:node_modules/.cache/null"
     },
-    "version": "2.26.1"
+    "version": "2.27.0"
 }
