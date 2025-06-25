@@ -87,11 +87,16 @@ jobs:
 
     js:
         runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                node-version: [ '18.x', '20.x', '22.x', '24.x' ]
         steps:
             - uses: actions/checkout@v4
             - run: npm i -g corepack && corepack enable
             - uses: actions/setup-node@v4
               with:
+                node-version: ${{ matrix.node-version }}
                 cache: 'yarn'
                 cache-dependency-path: |
                   yarn.lock
