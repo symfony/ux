@@ -15,8 +15,8 @@
     "main": "dist/register_controller.js",
     "types": "dist/register_controller.d.ts",
     "scripts": {
-        "build": "node ../../../bin/build_package.js .",
-        "watch": "node ../../../bin/build_package.js . --watch",
+        "build": "tsx ../../../bin/build_package.ts .",
+        "watch": "tsx ../../../bin/build_package.ts . --watch",
         "test": "../../../bin/test_package.sh .",
         "check": "biome check",
         "ci": "biome ci"

@@ -1,6 +1,7 @@
 {
     "private": true,
     "packageManager": "yarn@4.5.0",
+    "type": "module",
     "workspaces": [
         "src/*/assets",
         "src/*/src/Bridge/*/assets"
@@ -21,11 +22,14 @@
         "@rollup/plugin-node-resolve": "^15.3.0",
         "@rollup/plugin-typescript": "^11.1.6",
         "@symfony/stimulus-testing": "^2.0.1",
+        "@types/node": "^22.6.0",
         "@vitest/browser": "^2.1.1",
         "lightningcss": "^1.28.2",
         "playwright": "^1.47.0",
         "rollup": "^4.22.5",
+        "tinyglobby": "^0.2.14",
         "tslib": "^2.6.3",
+        "tsx": "^4.20.3",
         "typescript": "^5.5.4",
         "vitest": "^2.1.1"
     },
