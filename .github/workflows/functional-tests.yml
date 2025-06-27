@@ -56,6 +56,12 @@ jobs:
                   php-version: ${{ matrix.php-version }}
                   tools: flex
 
+            - name: Install root dependencies
+              run: composer install
+
+            - name: Build root packages
+              run: php .github/build-packages.php
+
             - name: Install dependencies with composer
               working-directory: src/Turbo
               run: |
