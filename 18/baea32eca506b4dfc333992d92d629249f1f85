@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-06-27T06:41:07Z
+
+I'm removing the `executionOrder="random"`, weird things are happening on LiveComponent tests `Cannot find a match for template "...". Cache may be corrupt`:
+```
+Testing
+...............................................................  63 / 273 ( 23%)
+..................F....F....................................... 126 / 273 ( 46%)
+............................................................... 189 / 273 ( 69%)
+............................................................... 252 / 273 ( 92%)
+.....................                                           273 / 273 (100%)
+
+Time: 00:42.025, Memory: 98.50 MB
+
+There were 2 failures:
+
+1) Symfony\UX\LiveComponent\Tests\Functional\EventListener\LiveComponentSubscriberTest::testItUseBlocksFromEmbeddedContextUsingMultipleComponentsWithNamespacedTemplate
+Expected successful status code (2xx) but got 500.
+
+/home/runner/work/ux/ux/src/LiveComponent/vendor/zenstruck/assert/src/Assert/Handler/PHPUnitHandler.php:36
+/home/runner/work/ux/ux/src/LiveComponent/vendor/zenstruck/assert/src/Assert.php:45
+/home/runner/work/ux/ux/src/LiveComponent/vendor/zenstruck/assert/src/Assert.php:65
+/home/runner/work/ux/ux/src/LiveComponent/vendor/zenstruck/browser/src/Browser/KernelBrowser.php:411
+/home/runner/work/ux/ux/src/LiveComponent/tests/Functional/EventListener/LiveComponentSubscriberTest.php:293
+
+2) Symfony\UX\LiveComponent\Tests\Functional\EventListener\LiveComponentSubscriberTest::testItUseBlocksFromEmbeddedContextUsingMultipleComponents
+Expected successful status code (2xx) but got 500.
+
+/home/runner/work/ux/ux/src/LiveComponent/vendor/zenstruck/assert/src/Assert/Handler/PHPUnitHandler.php:36
+/home/runner/work/ux/ux/src/LiveComponent/vendor/zenstruck/assert/src/Assert.php:45
+/home/runner/work/ux/ux/src/LiveComponent/vendor/zenstruck/assert/src/Assert.php:65
+/home/runner/work/ux/ux/src/LiveComponent/vendor/zenstruck/browser/src/Browser/KernelBrowser.php:411
+/home/runner/work/ux/ux/src/LiveComponent/tests/Functional/EventListener/LiveComponentSubscriberTest.php:261
+```
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-06-27T09:06:25Z
+
+I removed some of last commits, and instead only focused on the PHPUnit configs migrations but also homogenization (with what https://github.com/symfony/symfony does).
