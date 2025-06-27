@@ -247,12 +247,14 @@ It's useful when :ref:`using a Map inside a Live Component <map-live-component>`
     $map->addPolygon($polygon = new Polygon(/* ... */));
     $map->addPolyline($polyline = new Polyline(/* ... */));
     $map->addCircle($circle = new Circle(/* ... */));
+    $map->addRectangle($rectangle = new Rectangle(/* ... */));
 
     // And later, remove those elements
     $map->removeMarker($marker);
     $map->removePolygon($polygon);
     $map->removePolyline($polyline);
     $map->removeCircle($circle);
+    $map->removeRectangle($rectangle);
 
 If you haven't stored the element instance, you can still remove them by passing the identifier string::
 
@@ -261,11 +263,15 @@ If you haven't stored the element instance, you can still remove them by passing
     $map->addMarker(new Marker(id: 'my-marker', /* ... */));
     $map->addPolygon(new Polygon(id: 'my-polygon', /* ... */));
     $map->addPolyline(new Polyline(id: 'my-marker', /* ... */));
+    $map->addCircle(new Circle(id: 'my-circle', /* ... */));
+    $map->addRectangle(new Rectangle(id: 'my-rectangle', /* ... */));
 
     // And later, remove those elements
     $map->removeMarker('my-marker');
     $map->removePolygon('my-polygon');
     $map->removePolyline('my-marker');
+    $map->removeCircle('my-circle');
+    $map->removeRectangle('my-rectangle');
 
 Render a map
 ------------
@@ -417,6 +423,8 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
             console.log(event.detail.infoWindows);
             console.log(event.detail.polygons);
             console.log(event.detail.polylines);
+            console.log(event.detail.circles);
+            console.log(event.detail.rectangles);
         }
 
         /**
@@ -671,12 +679,23 @@ For greater customization and extensibility, you can pass additional data from P
 to the Stimulus controller. This can be useful when associating extra information
 with a specific marker; for example, indicating the type of location it represents.
 
-These additional data points are defined and used exclusively by you; UX Map
+These additional data are defined and used exclusively by you; UX Map
 only forwards them to the Stimulus controller.
 
-To pass extra data from PHP to the Stimulus controller, you must use the ``extra`` property
-available in ``Marker``, ``InfoWindow``, ``Polygon``, ``Polyline``, ``Circle`` and ``Rectangle`` instances::
+.. versionadded:: 2.27
 
+    The ability to pass extra data to ``Map`` class was added in UX Map 2.27.
+
+To pass extra data from PHP to the Stimulus controller, you must use the ``extra``
+property available in ``Map``, ``Marker``, ``InfoWindow``, ``Polygon``, ``Polyline``,
+``Circle`` and ``Rectangle``::
+
+
+    $map = new Map(extra: ['foo' => 'bar']);
+    // or
+    $map->extra(['foo' => 'bar']);
+
+    // And for other elements, like Marker, InfoWindow, etc.
     $map->addMarker(new Marker(
         position: new Point(48.822248, 2.337338),
         title: 'Paris - Parc Montsouris',
@@ -686,65 +705,30 @@ available in ``Marker``, ``InfoWindow``, ``Polygon``, ``Polyline``, ``Circle`` a
         ],
     ));
 
-On the JavaScript side, you can access your extra data via the
-``event.detail.definition.extra`` object, available in the
-``ux:map:*:before-create`` and ``ux:map:*:after-create`` events:
+On the JavaScript side, you can access these extra data by listening to ``ux:map:pre-connect``,
+``ux:map:connect``, ``ux:map:*:before-create``, ``ux:map:*:after-create`` events::
 
 .. code-block:: javascript
 
-    // assets/controllers/mymap_controller.js
-
-    import { Controller } from '@hotwired/stimulus';
-
-    export default class extends Controller {
-
-        // ...
-
-        _onMarkerBeforeCreate(event) {
-            console.log(event.detail.definition.extra);
-            // { type: 'Park', ...}
-        }
-
-        _onMarkerAfterCreate(event) {
-            console.log(event.detail.definition.extra);
-            // { type: 'Park', ...}
-        }
-
-        // ...
+    // Access extra data from the `Map` instance, through `event.detail.extra`
+    _onPreConnect(event) {
+        console.log(event.detail.extra);
     }
 
-.. versionadded:: 2.27
+    _onConnect(event) {
+        console.log(event.detail.extra);
+    }
 
-    The ``Map`` class now has an ``extra`` property, which can be accessed in the ``ux:map:pre-connect`` and ``ux:map:connect`` events::
+    // Access extra data from the `Marker` (and other elements) instance, through `event.detail.definition.extra`
+    _onMarkerBeforeCreate(event) {
+        console.log(event.detail.definition.extra);
+    }
 
-        $map = new Map(/* ... */, extra: [
-            'foo' => 'bar',
-        ]);
-        // or
-        $map->extra([
-            'foo' => 'bar',
-        ]);
+    _onMarkerAfterCreate(event) {
+        console.log(event.detail.definition.extra);
+    }
 
-    .. code-block:: javascript
-
-        // assets/controllers/mymap_controller.js
-
-        import { Controller } from '@hotwired/stimulus';
-
-        export default class extends Controller {
-
-            // ...
-
-            _onPreConnect(event) {
-                console.log(event.detail.extra);
-                // { foo: 'bar', ... }
-            }
-
-            _onConnect(event) {
-                console.log(event.detail.extra);
-                // { foo: 'bar', ... }
-            }
-        }
+    // etc...
 
 .. _map-live-component:
 
