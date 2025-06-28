@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-06-26T03:24:49Z
+
+Trusting you here :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-06-26T08:17:31Z
+
+I noticed using `tsx` for building UX packages slowed down the pipeline by ~17 seconds, so I'm not really sure about this PR... but maybe it can be "compensated" by replacing Rollup with Rolldown in another PR (I still have something to see with React and `react-dom/client` dependency thing)
+
+I may try to give to another chance to `node --experimental-strip-types`, or maybe use Node.js 24 for internal tools instead of 22.6. 🤷🏻
