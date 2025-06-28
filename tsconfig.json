@@ -1,27 +1,11 @@
 {
+    "//": "This tsconfig.json is used for internal tools and scripts",
     "compilerOptions": {
-        "lib": ["dom", "es2015"],
-        "module": "es2015",
+        "allowImportingTsExtensions": true,
+        "composite": true,
+        "module": "esnext",
         "moduleResolution": "node",
-        "noUnusedLocals": true,
-        "rootDir": "src",
-        "strict": true,
-        "strictPropertyInitialization": false,
-        "target": "es2021",
-        "removeComments": true,
-        "outDir": "types",
-        "baseUrl": ".",
-        "noEmit": false,
-        "declaration": false,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "jsx": "react"
+        "resolveJsonModule": true
     },
-    "exclude": ["src/*/assets/dist", "src/*/src/Bridge/*/assets/dist"],
-    "include": [
-        "src/*/assets/src",
-        "src/*/assets/test",
-        "src/*/src/Bridge/*/assets/src",
-        "src/*/src/Bridge/*/assets/test"
-    ]
+    "include": ["bin/**/*.ts"]
 }

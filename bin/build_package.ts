@@ -2,13 +2,13 @@
  * This file is used to compile the assets from an UX package.
  */
 
-const { parseArgs } = require('node:util');
-const path = require('node:path');
-const fs = require('node:fs');
-const glob = require('glob');
-const rollup = require('rollup');
-const LightningCSS = require('lightningcss');
-const { getRollupConfiguration } = require('./rollup');
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { parseArgs } from 'node:util';
+import * as LightningCSS from 'lightningcss';
+import * as rollup from 'rollup';
+import { globSync } from 'tinyglobby';
+import { getRollupConfiguration } from './rollup.ts';
 
 const args = parseArgs({
     allowPositionals: true,
@@ -34,7 +34,7 @@ async function main() {
         process.exit(1);
     }
 
-    const packageData = require(path.join(packageRoot, 'package.json'));
+    const packageData = await import(path.join(packageRoot, 'package.json'), {with: { type: 'json'}});
     const packageName = packageData.name;
     const srcDir = path.join(packageRoot, 'src');
     const distDir = path.join(packageRoot, 'dist');
@@ -51,7 +51,7 @@ async function main() {
     }
 
     const inputScriptFiles = [
-        ...glob.sync(path.join(srcDir, '*controller.ts')),
+        ...globSync(path.join(srcDir, '*controller.ts')),
         ...(['@symfony/ux-react', '@symfony/ux-vue', '@symfony/ux-svelte'].includes(packageName)
             ? [path.join(srcDir, 'loader.ts'), path.join(srcDir, 'components.ts')]
             : []),
@@ -62,12 +62,10 @@ async function main() {
 
     const inputStyleFile = packageData.config?.css_source;
     const buildCss = async () => {
-        const inputStyleFileDist = inputStyleFile
-            ? path.resolve(distDir, `${path.basename(inputStyleFile, '.css')}.min.css`)
-            : undefined;
         if (!inputStyleFile) {
             return;
         }
+        const inputStyleFileDist = path.resolve(distDir, `${path.basename(inputStyleFile, '.css')}.min.css`);
 
         console.log('Minifying CSS...');
         const css = await fs.promises.readFile(inputStyleFile, 'utf-8');
@@ -82,26 +80,33 @@ async function main() {
 
     if (inputScriptFiles.length === 0) {
         console.error(
-            `No input files found for package "${packageName}" (directory "${packageRoot}").\nEnsure you have at least a file matching the pattern "src/*_controller.ts", or manually specify input files in "${__filename}" file.`
+            `No input files found for package "${packageName}" (directory "${packageRoot}").\nEnsure you have at least a file matching the pattern "src/*_controller.ts", or manually specify input files in "${import.meta.filename}" file.`
         );
         process.exit(1);
     }
 
-    const rollupConfig = getRollupConfiguration({ packageRoot, inputFiles: inputScriptFiles, isWatch });
+    const rollupConfig = getRollupConfiguration({
+        packageRoot,
+        inputFiles: inputScriptFiles,
+        isWatch,
+        additionalPlugins: [
+            ...(isWatch && inputStyleFile
+                ? [
+                      {
+                          name: 'watcher',
+                          buildStart(this: rollup.PluginContext) {
+                              this.addWatchFile(inputStyleFile);
+                          },
+                      },
+                  ]
+                : []),
+        ],
+    });
 
     if (isWatch) {
         console.log(
             `Watching for JavaScript${inputStyleFile ? ' and CSS' : ''} files modifications in "${srcDir}" directory...`
         );
-
-        if (inputStyleFile) {
-            rollupConfig.plugins = (rollupConfig.plugins || []).concat({
-                name: 'watcher',
-                buildStart() {
-                    this.addWatchFile(inputStyleFile);
-                },
-            });
-        }
 
         const watcher = rollup.watch(rollupConfig);
         watcher.on('event', (event) => {
@@ -109,7 +114,7 @@ async function main() {
                 console.error('Error during build:', event.error);
             }
 
-            if (event.result) {
+            if ((event.code === 'BUNDLE_END' || event.code === 'ERROR') && event.result) {
                 event.result.close();
             }
         });
@@ -125,6 +130,13 @@ async function main() {
     } else {
         console.log(`Building JavaScript files from ${packageName} package...`);
         const start = Date.now();
+
+        if (typeof rollupConfig.output === 'undefined' || Array.isArray(rollupConfig.output)) {
+            console.error(
+                `The rollup configuration for package "${packageName}" does not contain a valid output configuration.`
+            );
+            process.exit(1);
+        }
 
         const bundle = await rollup.rollup(rollupConfig);
         await bundle.write(rollupConfig.output);
