@@ -1,0 +1,36 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-06-29T12:50:41Z
+
+So we only used two DOM-related methods from the `@stimulus/testing` ?
+
+(the ones you moved in the ../../../helper file)
+
+Are people using it to test their controllers ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-06-29T12:57:22Z
+
+> So we only used two DOM-related methods from the `@stimulus/testing` ?
+>
+> (the ones you moved in the ../../../helper file)
+
+Yes, and the `import '@testing-library/jest-dom';` from `test/setup.js` files
+
+> Are people using it to test their controllers ?
+
+It always had few downloads per week ([see stats](https://npmtrends.com/@symfony/stimulus-testing)), but since mid-May it started to grows to ~16k downloads per week.
+But I don't know if it's due to my changes on Symfony UX CI, or if someone else started to use the package.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-06-29T13:15:55Z
+
+So maybe we can stop using it ourselves... and see then, depending on the activity, if we deprecate it ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-06-29T13:24:08Z
+
+Let's debate on https://github.com/symfony/stimulus-testing if you want, but for me there is no point to this library, either for maintainers or users.
