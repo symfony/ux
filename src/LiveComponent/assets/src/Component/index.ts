@@ -579,7 +579,6 @@ export function proxifyComponent(component: Component): Component {
 
         set(target: Component, property: string, value: any): boolean {
             if (property in target) {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore Ignoring potentially setting private properties
                 target[property as keyof typeof target] = value;
 
