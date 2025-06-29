@@ -5,7 +5,8 @@
         "composite": true,
         "module": "esnext",
         "moduleResolution": "node",
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "types": ["vitest/globals", "@testing-library/jest-dom"]
     },
     "include": ["bin/**/*.ts"]
 }

@@ -8,8 +8,8 @@
  */
 
 import { Application, Controller } from '@hotwired/stimulus';
-import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import { getByTestId, waitFor } from '@testing-library/dom';
+import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import TypedController from '../src/controller';
 
 // Controller used to check the actual controller was properly booted
@@ -39,7 +39,7 @@ describe('TypedController', () => {
                 <head>
                     <title>Symfony UX</title>
                 </head>
-                <body>                    
+                <body>
                     <div>
                         I created this UX component because <span
                           data-testid="typed"

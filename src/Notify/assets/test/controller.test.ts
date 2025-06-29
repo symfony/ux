@@ -8,9 +8,9 @@
  */
 
 import { Application, Controller } from '@hotwired/stimulus';
-import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import { vi } from 'vitest';
+import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import NotifyController from '../src/controller';
 
 // Controller used to check the actual controller was properly booted

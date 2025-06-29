@@ -8,8 +8,8 @@
  */
 
 import { Application, Controller } from '@hotwired/stimulus';
-import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import { getByTestId, waitFor } from '@testing-library/dom';
+import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import LazyImageController from '../src/controller';
 
 // Controller used to check the actual controller was properly booted
@@ -35,7 +35,7 @@ describe('LazyImageController', () => {
 
     beforeEach(() => {
         container = mountDOM(`
-          <img 
+          <img
               src="https://symfony.com/logos/symfony_black_02.png"
               srcset="https://symfony.com/logos/symfony_black_02.png 1x, https://symfony.com/logos/symfony_black_02.png 2x"
               data-testid="img"

@@ -7,4 +7,4 @@
  * file that was distributed with this source code.
  */
 
-import '@symfony/stimulus-testing/setup';
+import '@testing-library/jest-dom';

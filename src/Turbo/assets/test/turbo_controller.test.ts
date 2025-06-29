@@ -8,8 +8,8 @@
  */
 
 import { Application } from '@hotwired/stimulus';
-import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import { getByTestId } from '@testing-library/dom';
+import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import TurboController from '../src/turbo_controller';
 
 const startStimulus = () => {
