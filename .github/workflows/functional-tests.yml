@@ -57,16 +57,22 @@ jobs:
                   tools: flex
 
             - name: Install root dependencies
-              run: composer install
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: ${{ github.workspace }}
 
             - name: Build root packages
               run: php .github/build-packages.php
 
-            - name: Install dependencies with composer
+            - name: Configure composer dependencies stability
+              run: composer config minimum-stability ${{ matrix.minimum-stability || 'stable' }}
               working-directory: src/Turbo
-              run: |
-                  composer config minimum-stability ${{ matrix.minimum-stability || 'stable' }}
-                  composer update ${{ matrix.dependency-version == 'lowest' && '--prefer-lowest' || '' }} --no-progress --no-interaction
+
+            - name: Install dependencies with composer
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: src/Turbo
+                  dependency-versions: ${{ matrix.dependency-version }}
 
             - name: Install JavaScript dependencies
               working-directory: src/Turbo/tests/app
