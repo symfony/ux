@@ -18,7 +18,6 @@ const startStimulus = () => {
     application.register('symfony--ux-turbo--mercure-turbo-stream', TurboStreamController);
 };
 
-/* eslint-disable no-undef */
 describe('TurboStreamController', () => {
     let container: HTMLElement;
 
