@@ -8,9 +8,9 @@
  */
 
 import { Application, Controller } from '@hotwired/stimulus';
-import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import { getByTestId, getByText, waitFor } from '@testing-library/dom';
 import user from '@testing-library/user-event';
+import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import TogglePasswordController from '../src/controller';
 
 // Controller used to check the actual controller was properly booted
@@ -33,7 +33,7 @@ describe('TogglePasswordController', () => {
 
     beforeEach(() => {
         container = mountDOM(`
-        <div class="toggle-password-container"> 
+        <div class="toggle-password-container">
                 <input type="password"
                 data-testid="input"
                 data-controller="check toggle-password"

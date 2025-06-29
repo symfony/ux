@@ -8,8 +8,8 @@
  */
 
 import { Application, Controller } from '@hotwired/stimulus';
-import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import { getByTestId, waitFor } from '@testing-library/dom';
+import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import VueController from '../src/render_controller';
 
 // Controller used to check the actual controller was properly booted

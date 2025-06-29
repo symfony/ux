@@ -100,7 +100,7 @@ describe('ExternalMutationTracker', () => {
         expect(changes.getChangedStyles()).toEqual([
             { name: 'display', value: 'inline' },
             { name: 'color', value: 'red' },
-            { name: 'background-image', value: 'url(https://example.com/image.png)' },
+            { name: 'background-image', value: 'url("https://example.com/image.png")' },
         ]);
         expect(changes.getRemovedStyles()).toEqual(['margin']);
     });
@@ -137,7 +137,7 @@ describe('ExternalMutationTracker', () => {
 
     it('can track class changes with whitespaces', async () => {
         const { element, tracker } = createTracker(`
-            <div 
+            <div
                 class="
                     first-class
                     second-class

@@ -8,9 +8,9 @@
  */
 
 import { Application, Controller } from '@hotwired/stimulus';
-import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import user from '@testing-library/user-event';
+import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import DropzoneController from '../src/controller';
 
 // Controller used to check the actual controller was properly booted
@@ -33,35 +33,35 @@ describe('DropzoneController', () => {
 
     beforeEach(() => {
         container = mountDOM(`
-            <div class="dropzone-container" data-controller="check dropzone" data-testid="container"> 
+            <div class="dropzone-container" data-controller="check dropzone" data-testid="container">
                 <input type="file"
                        style="display: none"
                        data-dropzone-target="input"
                        data-testid="input" />
-        
-                <div class="dropzone-placeholder" 
-                     data-dropzone-target="placeholder" 
+
+                <div class="dropzone-placeholder"
+                     data-dropzone-target="placeholder"
                      data-testid="placeholder">
                     Placeholder
                 </div>
-        
+
                 <div class="dropzone-preview"
                      data-dropzone-target="preview"
                      data-testid="preview"
                      style="display: none">
-                     
+
                     <button type="button"
                             class="dropzone-preview-button"
                             data-dropzone-target="previewClearButton"
                             data-testid="button"></button>
-        
+
                     <div class="dropzone-preview-image"
                          data-dropzone-target="previewImage"
                          data-testid="preview-image"
                          style="display: none"></div>
-        
+
                     <div class="dropzone-preview-filename"
-                         data-dropzone-target="previewFilename" 
+                         data-dropzone-target="previewFilename"
                          data-testid="preview-filename"></div>
                 </div>
             </div>
@@ -119,7 +119,7 @@ describe('DropzoneController', () => {
         const input = getByTestId(container, 'input');
         const file = new File(['hello'], 'hello.png', { type: 'image/png' });
 
-        user.upload(input, file);
+        await user.upload(input, file);
         expect(input.files[0]).toStrictEqual(file);
 
         // The dropzone should be in preview mode

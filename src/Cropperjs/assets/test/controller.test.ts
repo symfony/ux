@@ -8,8 +8,8 @@
  */
 
 import { Application, Controller } from '@hotwired/stimulus';
-import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import { getByTestId, waitFor } from '@testing-library/dom';
+import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import CropperjsController from '../src/controller';
 
 let cropper: Cropper | null = null;
@@ -44,7 +44,7 @@ describe('CropperjsController', () => {
     beforeEach(() => {
         container = mountDOM(`
             <div id="form_photo" class="cropperjs">
-                <input type="hidden" id="form_photo_options" name="form[photo][options]" 
+                <input type="hidden" id="form_photo_options" name="form[photo][options]"
                     data-testid="input"
                     data-controller="check cropperjs"
                     data-cropperjs-public-url-value="https://symfony.com/logos/symfony_black_02.png"
