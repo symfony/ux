@@ -3,7 +3,6 @@
 > [!WARNING]
 > **Deprecated**: This package has been **deprecated** in 2.x and will be removed in the next major version.
 
-We
 To keep the same functionality in your Symfony application, follow these migration steps:
 
 1. Install the `swup` library and its plugins:
