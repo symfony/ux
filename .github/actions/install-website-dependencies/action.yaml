@@ -1,0 +1,27 @@
+name: Install website dependencies
+inputs:
+  dependency-version:
+    description: 'The version of dependencies to install. Can be "locked" or "highest"'
+    default: 'locked'
+    required: false
+runs:
+  using: composite
+  steps:
+    -   name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+        shell: bash
+
+    - name: Cache website Composer dependencies
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-website-${{ inputs.dependency-version }}-${{ hashFiles('ux.symfony.com/composer.json') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-website-${{ inputs.dependency-version }}-
+
+    - name: Install website Composer dependencies
+      run: composer ${{ inputs.dependency-version == 'highest' && 'update' || 'install' }}
+      shell: bash
+      working-directory: ux.symfony.com

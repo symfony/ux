@@ -26,14 +26,14 @@ jobs:
                 working-directory: ux.symfony.com
         steps:
             -   uses: actions/checkout@v4
+
             -   uses: shivammathur/setup-php@v2
                 with:
                     php-version: '8.3'
                     tools: php-cs-fixer
-            -   name: Install dependencies
-                uses: ramsey/composer-install@v3
-                with:
-                    working-directory: ux.symfony.com
+
+            -   uses: ./.github/actions/install-website-dependencies
+
             -   name: php-cs-fixer
                 run: php-cs-fixer check --diff
 
@@ -45,13 +45,13 @@ jobs:
                 working-directory: ux.symfony.com
         steps:
             -   uses: actions/checkout@v4
+
             -   uses: shivammathur/setup-php@v2
                 with:
                     php-version: '8.3'
-            -   name: Install dependencies
-                uses: ramsey/composer-install@v3
-                with:
-                    working-directory: ux.symfony.com
+
+            -   uses: ./.github/actions/install-website-dependencies
+
             -   name: twig-cs-fixer
                 run: vendor/bin/twig-cs-fixer lint templates --report=github
 
@@ -63,24 +63,26 @@ jobs:
                 working-directory: ux.symfony.com
         steps:
             -   uses: actions/checkout@v4
+
             -   uses: shivammathur/setup-php@v2
                 with:
                     php-version: '8.3'
-            -   name: Install root dependencies
-                uses: ramsey/composer-install@v3
-                with:
-                    working-directory: ${{ github.workspace }}
+
+            -   uses: ./.github/actions/install-root-dependencies
+
             -   name: Build root packages
                 run: php .github/build-packages.php
                 working-directory: ${{ github.workspace }}
-            -   name: Install dependencies
-                uses: ramsey/composer-install@v3
+
+            -   uses: ./.github/actions/install-website-dependencies
                 with:
-                    working-directory: ux.symfony.com
                     dependency-versions: 'highest'
+
             -   name: Importmap dependencies
                 run: php bin/console importmap:install
+
             -   name: Build Sass assets
                 run: php bin/console sass:build
+
             -   name: Tests
                 run: vendor/bin/phpunit

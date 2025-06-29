@@ -68,8 +68,20 @@ jobs:
                 php-version: ${{ matrix.php-version }}
                 tools: flex
 
-            - name: Install root dependencies
-              run: composer install
+            - name: Get Composer Cache Directory
+              id: composer-cache
+              run: |
+                  echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+            - name: Cache packages dependencies
+              uses: actions/cache@v4
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-packages-${{ matrix.php-version }}-${{ matrix.dependency-version }}-${{ matrix.symfony-version }}-${{ matrix.minimum-stability }}-${{ hashFiles('src/**/composer.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-composer-packages-${{ matrix.php-version }}-
+
+            - uses: ./.github/actions/install-root-dependencies
 
             - name: Build root packages
               run: php .github/build-packages.php

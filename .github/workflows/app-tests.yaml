@@ -45,8 +45,20 @@ jobs:
 
         - uses: shivammathur/setup-php@v2
 
-        - name: Install root dependencies
-          run: composer install
+        - name: Get Composer Cache Directory
+          id: composer-cache
+          run: |
+            echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+        - name: Cache Testing apps dependencies
+          uses: actions/cache@v4
+          with:
+            path: ${{ steps.composer-cache.outputs.dir }}
+            key: ${{ runner.os }}-composer-testing-app-${{ matrix.ux-packages-source }}-${{ hashFiles('test_apps/**/composer.json') }}
+            restore-keys: |
+              ${{ runner.os }}-composer-testing-app-${{ matrix.ux-packages-source }}-
+
+        - uses: ./.github/actions/install-root-dependencies
 
         - name: Build root packages
           run: php .github/build-packages.php

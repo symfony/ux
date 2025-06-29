@@ -1,0 +1,21 @@
+name: Install root dependencies
+runs:
+  using: composite
+  steps:
+    -   name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+        shell: bash
+
+    - name: Cache root Composer dependencies
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-root-${{ hashFiles('composer.json') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-root-
+
+    - name: Install root Composer dependencies
+      run: composer install
+      shell: bash

@@ -83,8 +83,7 @@ jobs:
                     php-version: 8.1
                     tools: flex
 
-            - name: Install root dependencies
-              run: composer install
+            - uses: ./.github/actions/install-root-dependencies
 
             - name: Build root packages
               run: php .github/build-packages.php
