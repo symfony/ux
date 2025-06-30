@@ -1,0 +1,16 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-06-29T18:02:20Z
+
+I'm a bit lost and do not understand why we have soo many test jobs... but i trust you here so: 👍
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-06-29T18:35:53Z
+
+> I'm a bit lost and do not understand why we have soo many test jobs... but i trust you here so: 👍
+
+The CI has been modified during the last few months, we have:
+- unit tests (for PHP and JavaScript) which require only basic setup
+- functional tests (only Turbo) which require more advanced setup (Mercure)
+- and "app tests" that ensures UX packages (PHP and JS) can be correctly installed/used in real Symfony apps
