@@ -57,7 +57,7 @@ class VueControllerLoaderAssetCompiler implements AssetCompilerInterface
                 $controllerNameForVariable,
                 $relativeImportPath
             );
-            $componentParts[] = \sprintf('"%s": %s', $name, $controllerNameForVariable);
+            $componentParts[] = \sprintf('"%s": %s', Path::normalize($name), $controllerNameForVariable);
         }
 
         $importCode = implode("\n", $importLines);
