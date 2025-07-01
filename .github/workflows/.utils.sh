@@ -1,4 +1,7 @@
-_run_task() {
+# Create a non-exiting version of _run_task for sequential execution
+# This is used to run the tests sequentially on Windows
+# because parallel is not available on Windows.
+_run_task_sequential() {
     local ok=0
     local title="$1"
     local start=$(date -u +%s)
@@ -16,7 +19,13 @@ _run_task() {
       echo -e "\n\\e[32mOK\\e[0m $title\\n\\n::endgroup::"
     fi
 
-    exit $ok
+    return $ok
+}
+export -f _run_task_sequential
+
+_run_task() {
+    _run_task_sequential "$1" "$2"
+    exit $?
 }
 export -f _run_task
 

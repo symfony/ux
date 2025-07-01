@@ -1,5 +1,9 @@
 name: Unit Tests
 
+defaults:
+  run:
+    shell: bash
+
 on:
     push:
         paths-ignore:
@@ -18,7 +22,7 @@ concurrency:
 
 jobs:
     php:
-        runs-on: ubuntu-latest
+        runs-on: ${{ matrix.os || 'ubuntu-latest' }}
         strategy:
             fail-fast: false
             matrix:
@@ -26,6 +30,7 @@ jobs:
                 dependency-version: ['']
                 symfony-version: ['']
                 minimum-stability: ['stable']
+                os: ['']
                 include:
                     # dev packages (probably not needed to have multiple such jobs)
                     -   minimum-stability: 'dev'
@@ -36,6 +41,9 @@ jobs:
                     # LTS version of Symfony
                     -   php-version: '8.1'
                         symfony-version: '6.4.*'
+                    -   php-version: '8.1'
+                        symfony-version: '6.4.*'
+                        os: 'windows-latest'
 
         env:
             SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=5.4' }}
@@ -66,6 +74,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                 php-version: ${{ matrix.php-version }}
+                extensions: ${{ matrix.os == 'windows-latest' && 'pdo_sqlite,sqlite3,fileinfo,gd' || '' }}
                 tools: flex
 
             -   name: Get composer cache directory
@@ -89,10 +98,10 @@ jobs:
             - name: Build root packages
               run: php .github/build-packages.php
 
-            - name: Run packages tests
+            - name: Run packages tests (Unix)
+              if: matrix.os != 'windows-latest'
               run: |
                 source .github/workflows/.utils.sh
-
                 echo "$PACKAGES" | xargs -n1 | parallel -j +3 "_run_task {} \
                   '(cd src/{} \
                   && $COMPOSER_MIN_STAB \
@@ -100,6 +109,28 @@ jobs:
                   && if [ {} = LiveComponent ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
                   && $PHPUNIT)'"
 
+            - name: Run packages tests (Windows)
+              if: matrix.os == 'windows-latest'
+              run: |
+                source .github/workflows/.utils.sh
+
+                # parallel is not available on Windows, so we need to run the tests sequentially
+                FAILED_PACKAGES=""
+                for PACKAGE in $PACKAGES; do
+                  if ! PACKAGE="$PACKAGE" _run_task_sequential $PACKAGE \
+                    '(cd src/$PACKAGE \
+                    && $COMPOSER_MIN_STAB \
+                    && $COMPOSER_UP \
+                    && if [ "$PACKAGE" = "LiveComponent" ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
+                    && $PHPUNIT)'; then
+                    FAILED_PACKAGES="$FAILED_PACKAGES $PACKAGE"
+                  fi
+                done
+
+                if [ -n "$FAILED_PACKAGES" ]; then
+                  echo "The following packages failed:$FAILED_PACKAGES"
+                  exit 1
+                fi
     js:
         runs-on: ubuntu-latest
         strategy:
