@@ -1,0 +1,8 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-01T19:42:21Z
+
+Tests for the following UX Packages are failing: LiveComponent React Svelte Toolkit Vue
+
+I'm planning to fix tests for Toolkit, React, Svelte, and Vue in another PRs.
+For LiveComponent... we will see :D
