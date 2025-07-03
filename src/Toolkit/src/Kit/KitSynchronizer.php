@@ -69,8 +69,8 @@ final class KitSynchronizer
         ;
 
         foreach ($finder as $file) {
-            $relativePathNameToKit = $file->getRelativePathname();
-            $relativePathName = str_replace($componentsPath.\DIRECTORY_SEPARATOR, '', $relativePathNameToKit);
+            $relativePathNameToKit = Path::normalize($file->getRelativePathname());
+            $relativePathName = str_replace($componentsPath.'/', '', $relativePathNameToKit);
             $componentName = $this->extractComponentName($relativePathName);
 
             $meta = null;
@@ -161,8 +161,8 @@ final class KitSynchronizer
         ;
 
         foreach ($finder as $file) {
-            $relativePathNameToKit = $file->getRelativePathname();
-            $relativePathName = str_replace($controllersPath.\DIRECTORY_SEPARATOR, '', $relativePathNameToKit);
+            $relativePathNameToKit = Path::normalize($file->getRelativePathname());
+            $relativePathName = str_replace($controllersPath.'/', '', $relativePathNameToKit);
             $controllerName = $this->extractStimulusControllerName($relativePathName);
             $controller = new StimulusController(
                 name: $controllerName,

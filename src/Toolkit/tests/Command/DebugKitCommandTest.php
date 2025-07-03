@@ -12,6 +12,7 @@
 namespace Symfony\UX\Toolkit\Tests\Command;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Filesystem\Path;
 use Zenstruck\Console\Test\InteractsWithConsole;
 
 class DebugKitCommandTest extends KernelTestCase
@@ -21,7 +22,7 @@ class DebugKitCommandTest extends KernelTestCase
     public function testShouldBeAbleToDebug(): void
     {
         $this->bootKernel();
-        $this->consoleCommand(\sprintf('ux:toolkit:debug-kit %s', __DIR__.'/../../kits/shadcn'))
+        $this->consoleCommand(\sprintf('ux:toolkit:debug-kit %s', Path::join(__DIR__, '/../../kits/shadcn')))
             ->execute()
             ->assertSuccessful()
             // Kit details
@@ -29,28 +30,26 @@ class DebugKitCommandTest extends KernelTestCase
             ->assertOutputContains('Homepage   https://ux.symfony.com/components')
             ->assertOutputContains('License    MIT')
             // Components details
-            ->assertOutputContains(<<<'EOF'
-+--------------+----------------------- Component: "Avatar" --------------------------------------+
-| File(s)      | templates/components/Avatar.html.twig                                            |
-| Dependencies | tales-from-a-dev/twig-tailwind-extra                                             |
-|              | Avatar:Image                                                                     |
-|              | Avatar:Text                                                                      |
-+--------------+----------------------------------------------------------------------------------+
-EOF
-            )
-            ->assertOutputContains(<<<'EOF'
-+--------------+----------------------- Component: "Table" ---------------------------------------+
-| File(s)      | templates/components/Table.html.twig                                             |
-| Dependencies | tales-from-a-dev/twig-tailwind-extra                                             |
-|              | Table:Body                                                                       |
-|              | Table:Caption                                                                    |
-|              | Table:Cell                                                                       |
-|              | Table:Footer                                                                     |
-|              | Table:Head                                                                       |
-|              | Table:Header                                                                     |
-|              | Table:Row                                                                        |
-+--------------+----------------------------------------------------------------------------------+
-EOF
-            );
+            ->assertOutputContains(implode(\PHP_EOL, [
+                '+--------------+----------------------- Component: "Avatar" --------------------------------------+',
+                '| File(s)      | templates/components/Avatar.html.twig                                            |',
+                '| Dependencies | tales-from-a-dev/twig-tailwind-extra                                             |',
+                '|              | Avatar:Image                                                                     |',
+                '|              | Avatar:Text                                                                      |',
+                '+--------------+----------------------------------------------------------------------------------+',
+            ]))
+            ->assertOutputContains(implode(\PHP_EOL, [
+                '+--------------+----------------------- Component: "Table" ---------------------------------------+',
+                '| File(s)      | templates/components/Table.html.twig                                             |',
+                '| Dependencies | tales-from-a-dev/twig-tailwind-extra                                             |',
+                '|              | Table:Body                                                                       |',
+                '|              | Table:Caption                                                                    |',
+                '|              | Table:Cell                                                                       |',
+                '|              | Table:Footer                                                                     |',
+                '|              | Table:Head                                                                       |',
+                '|              | Table:Header                                                                     |',
+                '|              | Table:Row                                                                        |',
+                '+--------------+----------------------------------------------------------------------------------+',
+            ]));
     }
 }

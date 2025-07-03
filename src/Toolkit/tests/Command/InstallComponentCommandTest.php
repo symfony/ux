@@ -50,7 +50,7 @@ class InstallComponentCommandTest extends KernelTestCase
             $this->assertFileDoesNotExist($expectedFile);
         }
 
-        $testCommand = $this->consoleCommand('ux:toolkit:install-component Table --destination='.$this->tmpDir)
+        $testCommand = $this->consoleCommand(\sprintf('ux:toolkit:install-component Table --destination="%s"', str_replace('\\', '\\\\', $this->tmpDir)))
             ->execute()
             ->assertSuccessful()
             ->assertOutputContains('Installing component Table from the Shadcn UI kit...')
