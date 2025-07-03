@@ -21,6 +21,8 @@
     opacity: 1;
     padding: var(--space-small, .75rem) var(--space-large, 1.5rem);
     transform: translateY(50%);
+    transition-property: transform;
+    transition-duration: 0ms;
 
     p {
       margin-bottom: 0;
@@ -32,6 +34,14 @@
 
     &:hover {
       transform: translateY(50%);
+    }
+
+    @media screen and (max-width: 768px) {
+      transform: translateY(0);
+
+      &:hover {
+        transform: translateY(0);
+      }
     }
   }
 }
