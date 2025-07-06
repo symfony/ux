@@ -1,0 +1,12 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-06T19:37:01Z
+
+While merging your PR, I added `overflow: scroll` to `.TerminalCommand_input`, so we can get:
+
+https://github.com/user-attachments/assets/950f68d0-dd38-47e0-9b69-0bdf4dbad001
+
+instead of:
+<img width="431" alt="image" src="https://github.com/user-attachments/assets/680e9685-a9ba-4b79-b2bc-d631c87dcaf0" />
+
+(iPhone Pro 14 max)
