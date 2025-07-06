@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-07-02T09:13:08Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/barlito/ux/tree/live-css-update-data-loading/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/barlito/ux/blob/live-css-update-data-loading/src/LiveComponent/assets/dist/live.min.css"><code>live.min.css</code></a></td>
+            <td>
+                    <code>78 B</code>
+                    / <code>81 B</code>
+                </td><td>
+                    <code>74 B</code><sup>-5% 📉</sup>
+                    / <code>80 B</code><sup>-1% 📉</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
