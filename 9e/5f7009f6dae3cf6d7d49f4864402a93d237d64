@@ -1,0 +1,69 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-07-07T07:05:57Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/map-min-zoom-max-zoom/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-min-zoom-max-zoom/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.45 kB</code>
+                    / <code>1.41 kB</code>
+                </td><td>
+                    <code>7.78 kB</code><sup>+4% 📈</sup>
+                    / <code>1.45 kB</code><sup>+3% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-min-zoom-max-zoom/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>5.47 kB</code>
+                    / <code>1.38 kB</code>
+                </td><td>
+                    <code>5.65 kB</code><sup>+3% 📈</sup>
+                    / <code>1.42 kB</code><sup>+2% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/map-min-zoom-max-zoom/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-min-zoom-max-zoom/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>3.36 kB</code>
+                    / <code>876 B</code>
+                </td><td>
+                    <code>3.43 kB</code><sup>+2% 📈</sup>
+                    / <code>885 B</code><sup>+1% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-min-zoom-max-zoom/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>14.22 kB</code>
+                    / <code>3.04 kB</code>
+                </td><td>
+                    <code>14.8 kB</code><sup>+4% 📈</sup>
+                    / <code>3.14 kB</code><sup>+3% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/map-min-zoom-max-zoom/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-min-zoom-max-zoom/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>2.91 kB</code>
+                    / <code>806 B</code>
+                </td><td>
+                    <code>2.98 kB</code><sup>+2% 📈</sup>
+                    / <code>817 B</code><sup>+1% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-min-zoom-max-zoom/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>13.36 kB</code>
+                    / <code>3.22 kB</code>
+                </td><td>
+                    <code>14 kB</code><sup>+5% 📈</sup>
+                    / <code>3.33 kB</code><sup>+3% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-07T15:01:45Z
+
+Yes they are unrelated, we still have to fix the Windows CI due to failing tests for LiveComponent.
