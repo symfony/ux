@@ -87,6 +87,18 @@ export default class extends AbstractMapController<
         }
     }
 
+    public minZoomValueChanged(): void {
+        if (this.map && this.hasMinZoomValue && this.minZoomValue) {
+            this.map.setMinZoom(this.minZoomValue);
+        }
+    }
+
+    public maxZoomValueChanged(): void {
+        if (this.map && this.hasMaxZoomValue && this.maxZoomValue) {
+            this.map.setMaxZoom(this.maxZoomValue);
+        }
+    }
+
     protected dispatchEvent(name: string, payload: Record<string, unknown> = {}): void {
         payload.L = L;
         this.dispatch(name, {
@@ -96,11 +108,13 @@ export default class extends AbstractMapController<
     }
 
     protected doCreateMap({ definition }: { definition: MapDefinition<MapOptions, LeafletMapOptions> }): L.Map {
-        const { center, zoom, options, bridgeOptions = {} } = definition;
+        const { center, zoom, minZoom, maxZoom, options, bridgeOptions = {} } = definition;
 
         const map = L.map(this.element, {
             center: center === null ? undefined : center,
             zoom: zoom === null ? undefined : zoom,
+            minZoom: minZoom === null ? undefined : minZoom,
+            maxZoom: maxZoom === null ? undefined : maxZoom,
             attributionControl: false,
             zoomControl: false,
             ...options,

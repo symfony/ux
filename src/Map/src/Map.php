@@ -48,12 +48,15 @@ final class Map
         array $circles = [],
         array $rectangles = [],
         private array $extra = [],
+        private ?float $minZoom = null,
+        private ?float $maxZoom = null,
     ) {
         $this->markers = new Markers($markers);
         $this->polygons = new Polygons($polygons);
         $this->polylines = new Polylines($polylines);
         $this->circles = new Circles($circles);
         $this->rectangles = new Rectangles($rectangles);
+        $this->validateZooms();
     }
 
     public function getRendererName(): ?string
@@ -71,6 +74,23 @@ final class Map
     public function zoom(float $zoom): self
     {
         $this->zoom = $zoom;
+        $this->validateZooms();
+
+        return $this;
+    }
+
+    public function minZoom(float $minZoom): self
+    {
+        $this->minZoom = $minZoom;
+        $this->validateZooms();
+
+        return $this;
+    }
+
+    public function maxZoom(float $maxZoom): self
+    {
+        $this->maxZoom = $maxZoom;
+        $this->validateZooms();
 
         return $this;
     }
@@ -206,6 +226,8 @@ final class Map
             // Send `null` if empty instead of `[]`, because Stimulus Controller values validation expect an Object,
             // and sending `(object) $this->extra` mess with LiveComponent hydration checksum validation
             'extra' => [] === $this->extra ? null : $this->extra,
+            'minZoom' => $this->minZoom,
+            'maxZoom' => $this->maxZoom,
         ];
     }
 
@@ -221,6 +243,8 @@ final class Map
      *     fitBoundsToMarkers?: bool,
      *     options?: array<string, mixed>,
      *     extra?: array<string, mixed>,
+     *     minZoom?: float,
+     *     maxZoom?: float,
      * } $map
      *
      * @internal
@@ -268,5 +292,32 @@ final class Map
         $map['extra'] ??= [];
 
         return new self(...$map);
+    }
+
+    private function validateZooms(): void
+    {
+        if (null !== $this->zoom && $this->zoom < 0) {
+            throw new InvalidArgumentException('The "zoom" must be greater than or equal to 0.');
+        }
+
+        if (null !== $this->minZoom && $this->minZoom < 0) {
+            throw new InvalidArgumentException('The "minZoom" must be greater than or equal to 0.');
+        }
+
+        if (null !== $this->maxZoom && $this->maxZoom < 0) {
+            throw new InvalidArgumentException('The "maxZoom" must be greater than or equal to 0.');
+        }
+
+        if (null !== $this->minZoom && null !== $this->maxZoom && $this->minZoom > $this->maxZoom) {
+            throw new InvalidArgumentException('The "minZoom" must be less than or equal to "maxZoom".');
+        }
+
+        if (null !== $this->zoom && null !== $this->minZoom && $this->zoom < $this->minZoom) {
+            throw new InvalidArgumentException('The "zoom" must be greater than or equal to "minZoom".');
+        }
+
+        if (null !== $this->zoom && null !== $this->maxZoom && $this->zoom > $this->maxZoom) {
+            throw new InvalidArgumentException('The "zoom" must be less than or equal to "maxZoom".');
+        }
     }
 }

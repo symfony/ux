@@ -30,6 +30,8 @@ export type Icon = {
 export type MapDefinition<MapOptions, BridgeMapOptions> = {
     center: Point | null;
     zoom: number | null;
+    minZoom: number | null;
+    maxZoom: number | null;
     options: MapOptions;
     bridgeOptions?: BridgeMapOptions;
     extra: ExtraData;
@@ -92,6 +94,8 @@ export default abstract class<MapOptions, BridgeMapOptions, BridgeMap, BridgeMar
         providerOptions: ObjectConstructor;
         center: ObjectConstructor;
         zoom: NumberConstructor;
+        minZoom: NumberConstructor;
+        maxZoom: NumberConstructor;
         fitBoundsToMarkers: BooleanConstructor;
         markers: ArrayConstructor;
         polygons: ArrayConstructor;
@@ -103,6 +107,8 @@ export default abstract class<MapOptions, BridgeMapOptions, BridgeMap, BridgeMar
     };
     centerValue: Point | null;
     zoomValue: number | null;
+    minZoomValue: number | null;
+    maxZoomValue: number | null;
     fitBoundsToMarkersValue: boolean;
     markersValue: Array<MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions>>;
     polygonsValue: Array<PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions>>;
@@ -113,6 +119,8 @@ export default abstract class<MapOptions, BridgeMapOptions, BridgeMap, BridgeMar
     extraValue: Record<string, unknown>;
     hasCenterValue: boolean;
     hasZoomValue: boolean;
+    hasMinZoomValue: boolean;
+    hasMaxZoomValue: boolean;
     hasFitBoundsToMarkersValue: boolean;
     hasMarkersValue: boolean;
     hasPolygonsValue: boolean;
@@ -142,6 +150,8 @@ export default abstract class<MapOptions, BridgeMapOptions, BridgeMap, BridgeMar
     }): BridgeInfoWindow;
     abstract centerValueChanged(): void;
     abstract zoomValueChanged(): void;
+    abstract minZoomValueChanged(): void;
+    abstract maxZoomValueChanged(): void;
     markersValueChanged(): void;
     polygonsValueChanged(): void;
     polylinesValueChanged(): void;

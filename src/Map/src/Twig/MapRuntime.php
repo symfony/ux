@@ -51,9 +51,11 @@ final class MapRuntime implements RuntimeExtensionInterface
         ?array $polylines = null,
         ?array $circles = null,
         ?array $rectangles = null,
+        ?float $minZoom = null,
+        ?float $maxZoom = null,
     ): string {
         if ($map instanceof Map) {
-            if (null !== $center || null !== $zoom || $markers || $polygons || $polylines || $circles || $rectangles) {
+            if (null !== $center || null !== $zoom || $markers || $polygons || $polylines || $circles || $rectangles || $minZoom || $maxZoom) {
                 throw new \InvalidArgumentException('It is not allowed to pass both a Map object and other parameters (like "center", "zoom", "markers", etc...) to the "renderMap" method. Please use either a Map object or the individual parameters.');
             }
 
@@ -82,13 +84,19 @@ final class MapRuntime implements RuntimeExtensionInterface
         if (null !== $zoom) {
             $map->zoom($zoom);
         }
+        if (null !== $minZoom) {
+            $map->minZoom($minZoom);
+        }
+        if (null !== $maxZoom) {
+            $map->maxZoom($maxZoom);
+        }
 
         return $this->renderer->renderMap($map, $attributes);
     }
 
     public function render(array $args = []): string
     {
-        $map = array_intersect_key($args, array_flip(['map', 'center', 'zoom', 'markers', 'polygons', 'polylines', 'circles', 'rectangles']));
+        $map = array_intersect_key($args, array_flip(['map', 'center', 'zoom', 'markers', 'polygons', 'polylines', 'circles', 'rectangles', 'minZoom', 'maxZoom']));
         $attributes = array_diff_key($args, $map);
 
         return $this->renderMap(...$map, attributes: $attributes);

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.28
+
+-  Add `minZoom` and `maxZoom` options to `Map` to set the minimum and maximum zoom levels
+
 ## 2.27
 
 -   The `fitBoundsToMarkers` option is not overridden anymore when using the `Map` LiveComponent, but now respects the value you defined.

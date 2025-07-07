@@ -127,6 +127,18 @@ export default class extends AbstractMapController<
         }
     }
 
+    public minZoomValueChanged(): void {
+        if (this.map && this.hasMinZoomValue && this.minZoomValue) {
+            this.map.setOptions({ minZoom: this.minZoomValue });
+        }
+    }
+
+    public maxZoomValueChanged(): void {
+        if (this.map && this.hasMaxZoomValue && this.maxZoomValue) {
+            this.map.setOptions({ maxZoom: this.maxZoomValue });
+        }
+    }
+
     protected dispatchEvent(name: string, payload: Record<string, unknown> = {}): void {
         payload.google = _google;
         this.dispatch(name, {
@@ -136,7 +148,7 @@ export default class extends AbstractMapController<
     }
 
     protected doCreateMap({ definition }: { definition: MapDefinition<MapOptions, google.maps.MapOptions> }): google.maps.Map {
-        const { center, zoom, options, bridgeOptions = {} } = definition;
+        const { center, zoom, minZoom, maxZoom, options, bridgeOptions = {} } = definition;
 
         // We assume the following control options are enabled if their options are set
         options.zoomControl = typeof options.zoomControlOptions !== 'undefined';
@@ -147,6 +159,8 @@ export default class extends AbstractMapController<
         return new _google.maps.Map(this.element, {
             center,
             zoom,
+            minZoom,
+            maxZoom,
             ...options,
             ...bridgeOptions,
         });
