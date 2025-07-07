@@ -26,6 +26,8 @@ export default class extends AbstractMapController<MapOptions, LeafletMapOptions
     connect(): void;
     centerValueChanged(): void;
     zoomValueChanged(): void;
+    minZoomValueChanged(): void;
+    maxZoomValueChanged(): void;
     protected dispatchEvent(name: string, payload?: Record<string, unknown>): void;
     protected doCreateMap({ definition }: {
         definition: MapDefinition<MapOptions, LeafletMapOptions>;

@@ -27,6 +27,10 @@ final class UXMapComponent
 {
     public ?float $zoom;
 
+    public ?float $minZoom;
+
+    public ?float $maxZoom;
+
     public ?Point $center;
 
     /**

@@ -90,6 +90,30 @@ You can set the center and zoom of the map using the ``center()`` and ``zoom()``
         ->fitBoundsToMarkers()
     ;
 
+Min and max zooms
+~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.28
+
+    The ability to set min and max zooms was added in UX Map 2.28.
+
+You can set the minimum and maximum zoom levels of the map using the ``minZoom()`` and ``maxZoom()`` methods::
+
+    use Symfony\UX\Map\Map;
+    use Symfony\UX\Map\Point;
+
+    $map
+        ->center(new Point(46.903354, 1.888334))
+        ->zoom(6)
+        ->minZoom(3) // Set the minimum zoom level
+        ->maxZoom(10) // Set the maximum zoom level
+    ;
+
+.. warning::
+
+    Ensure ``zoom``, ``minZoom`` and ``maxZoom`` are compatible with each other (``minZoom <= zoom <= maxZoom``),
+    otherwise an exception will be thrown.
+
 Add markers
 ~~~~~~~~~~~
 

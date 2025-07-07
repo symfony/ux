@@ -21,6 +21,8 @@ class default_1 extends Controller {
         const mapDefinition = {
             center: this.hasCenterValue ? this.centerValue : null,
             zoom: this.hasZoomValue ? this.zoomValue : null,
+            minZoom: this.hasMinZoomValue ? this.minZoomValue : null,
+            maxZoom: this.hasMaxZoomValue ? this.maxZoomValue : null,
             options: this.optionsValue,
             extra,
         };
@@ -126,6 +128,8 @@ default_1.values = {
     providerOptions: Object,
     center: Object,
     zoom: Number,
+    minZoom: Number,
+    maxZoom: Number,
     fitBoundsToMarkers: Boolean,
     markers: Array,
     polygons: Array,

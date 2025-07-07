@@ -8,6 +8,8 @@ export default class extends AbstractMapController<MapOptions, google.maps.MapOp
     connect(): Promise<void>;
     centerValueChanged(): void;
     zoomValueChanged(): void;
+    minZoomValueChanged(): void;
+    maxZoomValueChanged(): void;
     protected dispatchEvent(name: string, payload?: Record<string, unknown>): void;
     protected doCreateMap({ definition }: {
         definition: MapDefinition<MapOptions, google.maps.MapOptions>;

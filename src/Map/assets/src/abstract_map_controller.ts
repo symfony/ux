@@ -42,6 +42,8 @@ export type Icon = {
 export type MapDefinition<MapOptions, BridgeMapOptions> = {
     center: Point | null;
     zoom: number | null;
+    minZoom: number | null;
+    maxZoom: number | null;
     options: MapOptions;
     /**
      * Additional options passed to the Map constructor.
@@ -221,6 +223,8 @@ export default abstract class<
         providerOptions: Object,
         center: Object,
         zoom: Number,
+        minZoom: Number,
+        maxZoom: Number,
         fitBoundsToMarkers: Boolean,
         markers: Array,
         polygons: Array,
@@ -233,6 +237,8 @@ export default abstract class<
 
     declare centerValue: Point | null;
     declare zoomValue: number | null;
+    declare minZoomValue: number | null;
+    declare maxZoomValue: number | null;
     declare fitBoundsToMarkersValue: boolean;
     declare markersValue: Array<MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions>>;
     declare polygonsValue: Array<PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions>>;
@@ -244,6 +250,8 @@ export default abstract class<
 
     declare hasCenterValue: boolean;
     declare hasZoomValue: boolean;
+    declare hasMinZoomValue: boolean;
+    declare hasMaxZoomValue: boolean;
     declare hasFitBoundsToMarkersValue: boolean;
     declare hasMarkersValue: boolean;
     declare hasPolygonsValue: boolean;
@@ -275,6 +283,8 @@ export default abstract class<
         const mapDefinition: MapDefinition<MapOptions, BridgeMapOptions> = {
             center: this.hasCenterValue ? this.centerValue : null,
             zoom: this.hasZoomValue ? this.zoomValue : null,
+            minZoom: this.hasMinZoomValue ? this.minZoomValue : null,
+            maxZoom: this.hasMaxZoomValue ? this.maxZoomValue : null,
             options: this.optionsValue,
             extra,
         };
@@ -334,6 +344,10 @@ export default abstract class<
     public abstract centerValueChanged(): void;
 
     public abstract zoomValueChanged(): void;
+
+    public abstract minZoomValueChanged(): void;
+
+    public abstract maxZoomValueChanged(): void;
 
     public markersValueChanged(): void {
         if (!this.isConnected) {

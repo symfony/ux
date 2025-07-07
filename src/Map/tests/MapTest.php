@@ -73,6 +73,8 @@ class MapTest extends TestCase
             'circles' => [],
             'rectangles' => [],
             'extra' => null,
+            'minZoom' => null,
+            'maxZoom' => null,
         ], $array);
     }
 
@@ -96,6 +98,8 @@ class MapTest extends TestCase
             'circles' => [],
             'rectangles' => [],
             'extra' => null,
+            'minZoom' => null,
+            'maxZoom' => null,
         ], $array);
     }
 
@@ -105,6 +109,8 @@ class MapTest extends TestCase
         $map
             ->center(new Point(48.8566, 2.3522))
             ->zoom(6)
+            ->minZoom(3)
+            ->maxZoom(15)
             ->fitBoundsToMarkers()
             ->options(new DummyOptions(mapId: '1a2b3c4d5e', mapType: 'roadmap'))
             ->addMarker(new Marker(
@@ -229,6 +235,8 @@ class MapTest extends TestCase
         self::assertEquals([
             'center' => ['lat' => 48.8566, 'lng' => 2.3522],
             'zoom' => 6.0,
+            'minZoom' => 3.0,
+            'maxZoom' => 15.0,
             'fitBoundsToMarkers' => true,
             'options' => [
                 '@provider' => 'dummy',
@@ -414,5 +422,21 @@ class MapTest extends TestCase
                 'baz' => ['qux' => 'quux'],
             ],
         ], $map->toArray());
+    }
+
+    /**
+     * @testWith [-1, null, null, "The \"minZoom\" must be greater than or equal to 0."]
+     *           [null, -1, null, "The \"zoom\" must be greater than or equal to 0."]
+     *           [null, null, -1, "The \"maxZoom\" must be greater than or equal to 0."]
+     *           [5, 2, null, "The \"zoom\" must be greater than or equal to \"minZoom\"."]
+     *           [null, 5, 2, "The \"zoom\" must be less than or equal to \"maxZoom\"."]
+     *           [2.1, null, 2.0, "The \"minZoom\" must be less than or equal to \"maxZoom\"."]
+     */
+    public function testZoomsValidation(?float $minZoom, ?float $zoom, ?float $maxZoom, string $expectedExceptionMessage): void
+    {
+        self::expectException(InvalidArgumentException::class);
+        self::expectExceptionMessage($expectedExceptionMessage);
+
+        new Map(zoom: $zoom, minZoom: $minZoom, maxZoom: $maxZoom);
     }
 }

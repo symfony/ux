@@ -23,6 +23,8 @@ class default_1 extends Controller {
         const mapDefinition = {
             center: this.hasCenterValue ? this.centerValue : null,
             zoom: this.hasZoomValue ? this.zoomValue : null,
+            minZoom: this.hasMinZoomValue ? this.minZoomValue : null,
+            maxZoom: this.hasMaxZoomValue ? this.maxZoomValue : null,
             options: this.optionsValue,
             extra,
         };
@@ -128,6 +130,8 @@ default_1.values = {
     providerOptions: Object,
     center: Object,
     zoom: Number,
+    minZoom: Number,
+    maxZoom: Number,
     fitBoundsToMarkers: Boolean,
     markers: Array,
     polygons: Array,
@@ -159,6 +163,16 @@ class map_controller extends default_1 {
             this.map.setZoom(this.zoomValue);
         }
     }
+    minZoomValueChanged() {
+        if (this.map && this.hasMinZoomValue && this.minZoomValue) {
+            this.map.setMinZoom(this.minZoomValue);
+        }
+    }
+    maxZoomValueChanged() {
+        if (this.map && this.hasMaxZoomValue && this.maxZoomValue) {
+            this.map.setMaxZoom(this.maxZoomValue);
+        }
+    }
     dispatchEvent(name, payload = {}) {
         payload.L = L;
         this.dispatch(name, {
@@ -167,10 +181,12 @@ class map_controller extends default_1 {
         });
     }
     doCreateMap({ definition }) {
-        const { center, zoom, options, bridgeOptions = {} } = definition;
+        const { center, zoom, minZoom, maxZoom, options, bridgeOptions = {} } = definition;
         const map = L.map(this.element, {
             center: center === null ? undefined : center,
             zoom: zoom === null ? undefined : zoom,
+            minZoom: minZoom === null ? undefined : minZoom,
+            maxZoom: maxZoom === null ? undefined : maxZoom,
             attributionControl: false,
             zoomControl: false,
             ...options,
