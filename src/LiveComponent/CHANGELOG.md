@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.28.0
+
+-   Add `keep-alive` modifier to polling plugin
+
 ## 2.27.0
 
 -  Add events assertions in `InteractsWithLiveComponents`:

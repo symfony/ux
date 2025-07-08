@@ -53,6 +53,16 @@ export default class implements PluginInterface {
                         }
 
                         break;
+                    case 'keep-alive':
+                        document.addEventListener('visibilitychange', () => {
+                            if (document.hidden) {
+                                this.pollingDirector.stopAllPolling();
+                            } else {
+                                this.pollingDirector.startAllPolling();
+                            }
+                        });
+
+                        break;
                     default:
                         console.warn(`Unknown modifier "${modifier.name}" in data-poll "${rawPollConfig}".`);
                 }
