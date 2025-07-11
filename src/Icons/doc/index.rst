@@ -481,6 +481,47 @@ of the following attributes: ``aria-label``, ``aria-labelledby`` or ``title``.
 
         <twig:ux:icon name="user-profile" aria-hidden="false" />
 
+## Accessibility: Descriptive Titles and Descriptions
+
+.. versionadded:: NEXT\_VERSION
+
+The `ux_icon()` function and the `<twig:ux:icon>` component now support accessible SVG metadata via the `title` and `desc` attributes.
+
+These are automatically injected into the `<svg>` markup as child elements, and properly referenced using `aria-labelledby` for improved screen reader support.
+
+**How it works:**
+
+When you pass a `title` and/or `desc` attribute, they are rendered inside the `<svg>` as follows:
+
+.. code-block:: html+twig
+
+```
+{{ ux_icon('bi:plus-square-dotted', {
+    width: '16px',
+    height: '16px',
+    class: 'text-success',
+    title: 'Add Stock',
+    desc: 'This icon indicates stock entry functionality.'
+}) }}
+```
+
+Renders:
+
+.. code-block:: html
+
+```
+<svg class="text-success" width="16px" height="16px" aria-labelledby="icon-title-abc icon-desc-def">
+    <title id="icon-title-abc">Add Stock</title>
+    <desc id="icon-desc-def">This icon indicates stock entry functionality.</desc>
+    <!-- inner SVG content -->
+</svg>
+```
+
+To learn more about accessible SVG elements:
+
+- `MDN: <title>`\_ — [https://developer.mozilla.org/en-US/docs/Web/SVG/Element/title](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/title)
+- `MDN: <desc>`\_ — [https://developer.mozilla.org/en-US/docs/Web/SVG/Element/desc](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/desc)
+
 Performance
 -----------
 
