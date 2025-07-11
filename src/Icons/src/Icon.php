@@ -139,27 +139,53 @@ final class Icon implements \Stringable
     public function toHtml(): string
     {
         $htmlAttributes = '';
-        foreach ($this->attributes as $name => $value) {
+        $innerSvg = $this->innerSvg;
+        $attributes = $this->attributes;
+
+        // Extract and remove title/desc attributes if present
+        $title = $attributes['title'] ?? null;
+        $desc = $attributes['desc'] ?? null;
+        unset($attributes['title'], $attributes['desc']);
+
+        // Prepare <title> and <desc> elements
+        $labelledByIds = [];
+        $a11yContent = '';
+
+        if ($title) {
+            $titleId = 'title-' . bin2hex(random_bytes(4));
+            $labelledByIds[] = $titleId;
+            $a11yContent .= sprintf('<title id="%s">%s</title>', $titleId, htmlspecialchars((string) $title, ENT_QUOTES));
+        }
+
+        if ($desc) {
+            $descId = 'desc-' . bin2hex(random_bytes(4));
+            $labelledByIds[] = $descId;
+            $a11yContent .= sprintf('<desc id="%s">%s</desc>', $descId, htmlspecialchars((string) $desc, ENT_QUOTES));
+        }
+
+        // Only add aria-labelledby if not already present and we have content
+        if ($a11yContent !== '' && !isset($attributes['aria-labelledby'])) {
+            $attributes['aria-labelledby'] = implode(' ', $labelledByIds);
+        }
+
+        // Build final attributes string
+        foreach ($attributes as $name => $value) {
             if (false === $value) {
                 continue;
             }
 
-            // Special case for aria-* attributes
-            // https://www.w3.org/TR/wai-aria-1.1/#state_prop_def
             if (true === $value && str_starts_with($name, 'aria-')) {
                 $value = 'true';
             }
 
             $htmlAttributes .= ' '.$name;
+
             if (true === $value) {
                 continue;
             }
 
-            $value = htmlspecialchars($value, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
+            $value = htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
             $htmlAttributes .= '="'.$value.'"';
-        }
-
-        return '<svg'.$htmlAttributes.'>'.$this->innerSvg.'</svg>';
     }
 
     public function getInnerSvg(): string
