@@ -493,7 +493,7 @@ These are automatically injected into the ``<svg>`` markup as child elements, an
 
 When you pass a `title` and/or `desc` attribute, they are rendered inside the `<svg>` as follows:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
 {{ ux_icon('bi:plus-square-dotted', {
     width: '16px',
