@@ -141,51 +141,66 @@ final class Icon implements \Stringable
         $htmlAttributes = '';
         $innerSvg = $this->innerSvg;
         $attributes = $this->attributes;
-
+    
         // Extract and remove title/desc attributes if present
         $title = $attributes['title'] ?? null;
         $desc = $attributes['desc'] ?? null;
         unset($attributes['title'], $attributes['desc']);
-
-        // Prepare <title> and <desc> elements
+    
         $labelledByIds = [];
         $a11yContent = '';
-
+    
+        // Check if aria-labelledby should be added automatically
+        $shouldSetLabelledBy = !isset($attributes['aria-labelledby']) && ($title || $desc);
+    
         if ($title) {
-            $titleId = 'title-' . bin2hex(random_bytes(4));
-            $labelledByIds[] = $titleId;
-            $a11yContent .= sprintf('<title id="%s">%s</title>', $titleId, htmlspecialchars((string) $title, ENT_QUOTES));
+            if ($shouldSetLabelledBy) {
+                $titleId = 'title-' . bin2hex(random_bytes(4));
+                $labelledByIds[] = $titleId;
+                $a11yContent .= sprintf('<title id="%s">%s</title>', $titleId, htmlspecialchars((string) $title, ENT_QUOTES));
+            } else {
+                $a11yContent .= sprintf('<title>%s</title>', htmlspecialchars((string) $title, ENT_QUOTES));
+            }
         }
-
+    
         if ($desc) {
-            $descId = 'desc-' . bin2hex(random_bytes(4));
-            $labelledByIds[] = $descId;
-            $a11yContent .= sprintf('<desc id="%s">%s</desc>', $descId, htmlspecialchars((string) $desc, ENT_QUOTES));
+            if ($shouldSetLabelledBy) {
+                $descId = 'desc-' . bin2hex(random_bytes(4));
+                $labelledByIds[] = $descId;
+                $a11yContent .= sprintf('<desc id="%s">%s</desc>', $descId, htmlspecialchars((string) $desc, ENT_QUOTES));
+            } else {
+                $a11yContent .= sprintf('<desc>%s</desc>', htmlspecialchars((string) $desc, ENT_QUOTES));
+            }
         }
-
-        // Only add aria-labelledby if not already present and we have content
-        if ($a11yContent !== '' && !isset($attributes['aria-labelledby'])) {
+    
+        if ($shouldSetLabelledBy) {
             $attributes['aria-labelledby'] = implode(' ', $labelledByIds);
         }
-
+    
         // Build final attributes string
         foreach ($attributes as $name => $value) {
-            if (false === $value) {
+            if ($value === false) {
                 continue;
             }
-
-            if (true === $value && str_starts_with($name, 'aria-')) {
+    
+            // Special case for aria-* attributes
+            // https://www.w3.org/TR/wai-aria-1.1/#state_prop_def
+            if ($value === true && str_starts_with($name, 'aria-')) {
                 $value = 'true';
             }
-
-            $htmlAttributes .= ' '.$name;
-
-            if (true === $value) {
+    
+            $htmlAttributes .= ' ' . $name;
+    
+            if ($value === true) {
                 continue;
             }
-
-            $value = htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-            $htmlAttributes .= '="'.$value.'"';
+    
+            $value = htmlspecialchars($value, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
+            $htmlAttributes .= '="' . $value . '"';
+        }
+    
+        // Inject <title> and <desc> before inner content
+        return '<svg' . $htmlAttributes . '>' . $a11yContent . $innerSvg . '</svg>';
     }
 
     public function getInnerSvg(): string
