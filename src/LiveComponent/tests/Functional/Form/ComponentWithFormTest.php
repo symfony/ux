@@ -15,12 +15,16 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormWithCollectionTypeComponent;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\User;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Factory\CategoryFixtureEntityFactory;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Form\BlogPostFormType;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
+
+use function Zenstruck\Foundry\Persistence\persist;
+use function Zenstruck\Foundry\Persistence\refresh;
 
 /**
  * @author Jakub Caban <kuba.iluvatar@gmail.com>
@@ -449,5 +453,39 @@ class ComponentWithFormTest extends KernelTestCase
             ])
             ->assertElementAttributeContains('form', 'data-model', 'on(change)|*')
         ;
+    }
+
+    public function testFormWithLivePropContainingAnEntityImplementingAnInterface(): void
+    {
+        $user = persist(User::class, ['username' => 'Fabien']);
+        self::assertInstanceOf(User::class, $user);
+        self::assertEquals(1, $user->id);
+        self::assertEquals('Fabien', $user->username);
+
+        $mounted = $this->mountComponent('form_with_user_interface', [
+            'user' => $user,
+        ]);
+
+        $dehydrated = $this->dehydrateComponent($mounted)->getProps();
+
+        $this->browser()
+            ->post('/_components/form_with_user_interface', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated,
+                        'updated' => [
+                            'user_form.username' => 'Nicolas',
+                            'validatedFields' => ['user_form.username'],
+                        ],
+                    ]),
+                ],
+            ])
+            ->assertStatus(200)
+            ->assertElementAttributeContains('form', 'data-model', 'on(change)|*')
+        ;
+
+        refresh($user);
+        self::assertEquals(1, $user->id);
+        self::assertEquals('Nicolas', $user->username);
     }
 }

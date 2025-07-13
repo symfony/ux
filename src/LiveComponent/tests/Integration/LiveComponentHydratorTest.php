@@ -37,6 +37,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Embeddable1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\ProductFixtureEntity;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\User;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\EmptyStringEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\IntEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\StringEnum;
@@ -331,6 +332,27 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     self::assertSame(
                         $entity1->id,
                         $object->entity1->id
+                    );
+                })
+            ;
+        }];
+
+        yield 'Persisted entity: (de)hydration works correctly to/from id, when the entity implements an interface' => [function () {
+            $user = persist(User::class, [
+                'username' => 'Fabien',
+            ]);
+            \assert($user instanceof User);
+
+            return HydrationTest::create(new class {
+                #[LiveProp]
+                public User $user;
+            })
+                ->mountWith(['user' => $user])
+                ->assertDehydratesTo(['user' => $user->id])
+                ->assertObjectAfterHydration(function (object $object) use ($user) {
+                    self::assertSame(
+                        $user->id,
+                        $object->user->id
                     );
                 })
             ;
