@@ -141,18 +141,18 @@ final class Icon implements \Stringable
         $htmlAttributes = '';
         $innerSvg = $this->innerSvg;
         $attributes = $this->attributes;
-    
+
         // Extract and remove title/desc attributes if present
         $title = $attributes['title'] ?? null;
         $desc = $attributes['desc'] ?? null;
         unset($attributes['title'], $attributes['desc']);
-    
+
         $labelledByIds = [];
         $a11yContent = '';
-    
+
         // Check if aria-labelledby should be added automatically
         $shouldSetLabelledBy = !isset($attributes['aria-labelledby']) && ($title || $desc);
-    
+
         if ($title) {
             if ($shouldSetLabelledBy) {
                 $titleId = 'title-' . bin2hex(random_bytes(4));
@@ -162,7 +162,7 @@ final class Icon implements \Stringable
                 $a11yContent .= sprintf('<title>%s</title>', htmlspecialchars((string) $title, ENT_QUOTES));
             }
         }
-    
+
         if ($desc) {
             if ($shouldSetLabelledBy) {
                 $descId = 'desc-' . bin2hex(random_bytes(4));
@@ -172,34 +172,31 @@ final class Icon implements \Stringable
                 $a11yContent .= sprintf('<desc>%s</desc>', htmlspecialchars((string) $desc, ENT_QUOTES));
             }
         }
-    
+
         if ($shouldSetLabelledBy) {
             $attributes['aria-labelledby'] = implode(' ', $labelledByIds);
         }
-    
-        // Build final attributes string
+
         foreach ($attributes as $name => $value) {
-            if ($value === false) {
+            if (false === $value) {
                 continue;
             }
-    
+
             // Special case for aria-* attributes
             // https://www.w3.org/TR/wai-aria-1.1/#state_prop_def
-            if ($value === true && str_starts_with($name, 'aria-')) {
+            if (true === $value && str_starts_with($name, 'aria-')) {
                 $value = 'true';
             }
-    
-            $htmlAttributes .= ' ' . $name;
-    
-            if ($value === true) {
+
+            $htmlAttributes .= ' '.$name;
+            if (true === $value) {
                 continue;
             }
-    
+
             $value = htmlspecialchars($value, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
-            $htmlAttributes .= '="' . $value . '"';
+            $htmlAttributes .= '="'.$value.'"';
         }
-    
-        // Inject <title> and <desc> before inner content
+
         return '<svg' . $htmlAttributes . '>' . $a11yContent . $innerSvg . '</svg>';
     }
 
