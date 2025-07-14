@@ -113,12 +113,6 @@ final class ComponentFactory implements ResetInterface
         $attributes = $data[$attributesVar] ?? [];
         unset($data[$attributesVar]);
 
-        foreach ($data as $key => $value) {
-            if ($value instanceof \Stringable) {
-                $data[$key] = (string) $value;
-            }
-        }
-
         return new MountedComponent(
             $componentMetadata->getName(),
             $component,

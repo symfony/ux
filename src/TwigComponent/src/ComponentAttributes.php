@@ -26,6 +26,11 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
     private const ALPINE_REGEX = '#^x-([a-z]+):[^:]+$#';
     private const VUE_REGEX = '#^v-([a-z]+):[^:]+$#';
 
+    private const SPREADABLE_ATTRIBUTE = '...';
+
+    /** @var array<string, string|bool> */
+    private array $attributes = [];
+
     /** @var array<string,true> */
     private array $rendered = [];
 
@@ -33,9 +38,10 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
      * @param array<string, string|bool> $attributes
      */
     public function __construct(
-        private array $attributes,
+        array $attributes,
         private readonly EscaperRuntime $escaper,
     ) {
+        $this->attributes = $this->handleAttributes($attributes);
     }
 
     public function __toString(): string
@@ -101,6 +107,31 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
     public function __clone(): void
     {
         $this->rendered = [];
+    }
+
+    private function handleAttributes(array $attributes): array
+    {
+        $spreadAttributes = $attributes[self::SPREADABLE_ATTRIBUTE] ?? null;
+
+        if (!$spreadAttributes) {
+            return $attributes;
+        }
+
+        if ($spreadAttributes instanceof StimulusAttributes) {
+            $spreadAttributes = $spreadAttributes->toArray();
+        }
+
+        if ($spreadAttributes instanceof \Traversable) {
+            $spreadAttributes = iterator_to_array($spreadAttributes);
+        }
+
+        if (!\is_array($spreadAttributes)) {
+            throw new \InvalidArgumentException(\sprintf('The "%s" attribute must be an array, "%s" given.', self::SPREADABLE_ATTRIBUTE, get_debug_type($spreadAttributes)));
+        }
+
+        unset($attributes[self::SPREADABLE_ATTRIBUTE]);
+
+        return [...$attributes, ...$spreadAttributes];
     }
 
     public function render(string $attribute): ?string

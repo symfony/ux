@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.26.0
+
+-   Add the ability to spread attributes from the `...` attribute
+
 ## 2.25.2
 
 -   Fix `ComponentAttributes` rendering when using `StimulusAttributes` as default attributes
