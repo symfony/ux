@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 2.28.0
+
+-   Add new modifiers for input validations, useful to prevent uneccessary HTTP requests:
+    - `min_length` and `max_length`: validate length from textual input elements
+    - `min_value` and `max_value`: validate value from numeral input elements
+
+```twig
+<!-- Do not trigger model update until 3 characters are typed -->
+<input data-model="min_length(3)|username" type="text" value="" />
+
+<!-- Only trigger updates when value number is between 10 and 100 -->
+<input data-model="min_value(10)|max_value(100)|quantity" type="number" value="20" />
+```
+
 ## 2.27.0
 
 -  Add events assertions in `InteractsWithLiveComponents`:

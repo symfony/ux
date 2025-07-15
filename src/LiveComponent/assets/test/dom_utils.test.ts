@@ -7,6 +7,9 @@ import {
     getModelDirectiveFromElement,
     getValueFromElement,
     htmlToElement,
+    isNumericalInputElement,
+    isTextareaElement,
+    isTextualInputElement,
     setValueOnElement,
 } from '../src/dom_utils';
 import { noopElementDriver } from './tools';
@@ -322,5 +325,94 @@ describe('cloneHTMLElement', () => {
         const clone = cloneHTMLElement(element);
 
         expect(clone.outerHTML).toEqual('<div class="foo"></div>');
+    });
+});
+
+describe('isTextualInputElement', () => {
+    describe.each([
+        ['text', true],
+        ['email', true],
+        ['password', true],
+        ['search', true],
+        ['tel', true],
+        ['url', true],
+        ['number', false],
+        ['range', false],
+        ['file', false],
+        ['date', false],
+        ['checkbox', false],
+        ['radio', false],
+        ['submit', false],
+        ['reset', false],
+        ['color', false],
+        ['datetime-local', false],
+        ['hidden', false],
+        ['image', false],
+        ['month', false],
+        ['time', false],
+        ['week', false],
+    ])('input[type="%s"] should return %s', (type, expected) => {
+        it(`returns ${expected}`, () => {
+            const input = document.createElement('input');
+            if (typeof type === 'string') {
+                input.type = type;
+            }
+            expect(isTextualInputElement(input)).toBe(expected);
+        });
+    });
+
+    it('returns false for <textarea>', () => {
+        const textarea = document.createElement('textarea');
+        expect(isTextualInputElement(textarea)).toBe(false);
+    });
+
+    it('returns false for non-input elements', () => {
+        const div = document.createElement('div');
+        expect(isTextualInputElement(div)).toBe(false);
+    });
+});
+
+describe('isTextareaElement', () => {
+    it('returns true for <textarea>', () => {
+        const textarea = document.createElement('textarea');
+        expect(isTextareaElement(textarea)).toBe(true);
+    });
+
+    it('returns false for <input>', () => {
+        const input = document.createElement('input');
+        input.type = 'text';
+        expect(isTextareaElement(input)).toBe(false);
+    });
+
+    it('returns false for other elements', () => {
+        const span = document.createElement('span');
+        expect(isTextareaElement(span)).toBe(false);
+    });
+});
+
+describe('isNumericalInputElement', () => {
+    describe.each([
+        ['number', true],
+        ['range', true],
+        ['text', false],
+        ['email', false],
+        ['checkbox', false],
+        ['submit', false],
+    ])('input[type="%s"] should return %s', (type, expected) => {
+        it(`returns ${expected}`, () => {
+            const input = document.createElement('input');
+            if (typeof type === 'string') {
+                input.type = type;
+            }
+            expect(isNumericalInputElement(input)).toBe(expected);
+        });
+    });
+
+    it('returns false for non-input elements', () => {
+        const div = document.createElement('div');
+        expect(isNumericalInputElement(div)).toBe(false);
+
+        const textarea = document.createElement('textarea');
+        expect(isNumericalInputElement(textarea)).toBe(false);
     });
 });

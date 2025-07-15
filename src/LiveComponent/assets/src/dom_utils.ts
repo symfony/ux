@@ -262,3 +262,24 @@ const getMultipleCheckboxValue = (element: HTMLInputElement, currentValues: Arra
 
 const inputValue = (element: HTMLInputElement): string =>
     element.dataset.value ? element.dataset.value : element.value;
+
+/**
+ * Checks whether the given element is a textual input (input[type=text/email/...]).
+ */
+export function isTextualInputElement(el: HTMLElement): el is HTMLInputElement {
+    return el instanceof HTMLInputElement && ['text', 'email', 'password', 'search', 'tel', 'url'].includes(el.type);
+}
+
+/**
+ * Checks whether the given element is a textarea.
+ */
+export function isTextareaElement(el: HTMLElement): el is HTMLTextAreaElement {
+    return el instanceof HTMLTextAreaElement;
+}
+
+/**
+ * Checks whether the given element is a numerical input (input[type=number] or input[type=range]).
+ */
+export function isNumericalInputElement(element: Element): element is HTMLInputElement {
+    return element instanceof HTMLInputElement && ['number', 'range'].includes(element.type);
+}

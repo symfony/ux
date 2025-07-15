@@ -8,3 +8,6 @@ export declare function getModelDirectiveFromElement(element: HTMLElement, throw
 export declare function elementBelongsToThisComponent(element: Element, component: Component): boolean;
 export declare function cloneHTMLElement(element: HTMLElement): HTMLElement;
 export declare function htmlToElement(html: string): HTMLElement;
+export declare function isTextualInputElement(el: HTMLElement): el is HTMLInputElement;
+export declare function isTextareaElement(el: HTMLElement): el is HTMLTextAreaElement;
+export declare function isNumericalInputElement(element: Element): element is HTMLInputElement;

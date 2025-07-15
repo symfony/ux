@@ -13,7 +13,14 @@ import SetValueOntoModelFieldsPlugin from './Component/plugins/SetValueOntoModel
 import ValidatedFieldsPlugin from './Component/plugins/ValidatedFieldsPlugin';
 import { type DirectiveModifier, parseDirectives } from './Directive/directives_parser';
 import getModelBinding from './Directive/get_model_binding';
-import { elementBelongsToThisComponent, getModelDirectiveFromElement, getValueFromElement } from './dom_utils';
+import {
+    elementBelongsToThisComponent,
+    getModelDirectiveFromElement,
+    getValueFromElement,
+    isNumericalInputElement,
+    isTextareaElement,
+    isTextualInputElement,
+} from './dom_utils';
 import getElementAsTagText from './Util/getElementAsTagText';
 
 export { Component };
@@ -30,6 +37,7 @@ export interface LiveController {
     element: HTMLElement;
     component: Component;
 }
+
 export default class LiveControllerDefault extends Controller<HTMLElement> implements LiveController {
     static values = {
         name: String,
@@ -428,6 +436,36 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         }
 
         const finalValue = getValueFromElement(element, this.component.valueStore);
+
+        if (isTextualInputElement(element) || isTextareaElement(element)) {
+            if (
+                modelBinding.minLength !== null &&
+                typeof finalValue === 'string' &&
+                finalValue.length < modelBinding.minLength
+            ) {
+                return;
+            }
+
+            if (
+                modelBinding.maxLength !== null &&
+                typeof finalValue === 'string' &&
+                finalValue.length > modelBinding.maxLength
+            ) {
+                return;
+            }
+        }
+
+        if (isNumericalInputElement(element)) {
+            const numericValue = Number(finalValue);
+
+            if (modelBinding.minValue !== null && numericValue < modelBinding.minValue) {
+                return;
+            }
+
+            if (modelBinding.maxValue !== null && numericValue > modelBinding.maxValue) {
+                return;
+            }
+        }
 
         this.component.set(modelBinding.modelName, finalValue, modelBinding.shouldRender, modelBinding.debounce);
     }

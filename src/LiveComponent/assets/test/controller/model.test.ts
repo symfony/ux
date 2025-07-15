@@ -25,7 +25,7 @@ describe('LiveController data-model Tests', () => {
                     data-model="name"
                     value="${data.name}"
                 >
-                
+
                 Name is: ${data.name}
             </div>
         `
@@ -56,7 +56,7 @@ describe('LiveController data-model Tests', () => {
                     data-model="norender|name"
                     value="${data.name}"
                 >
-                
+
                 Name is: ${data.name}
             </div>
         `
@@ -83,7 +83,7 @@ describe('LiveController data-model Tests', () => {
                     data-model="on(change)|name"
                     value="${data.name}"
                 >
-                
+
                 Name is: ${data.name}
                 <button>Do nothing</button>
             </div>
@@ -127,7 +127,7 @@ describe('LiveController data-model Tests', () => {
                     data-model="name"
                     data-value="Dan"
                 ><span>Change name to Dan</span></a>
-                
+
                 Name is: ${data.name}
             </div>
         `
@@ -159,7 +159,7 @@ describe('LiveController data-model Tests', () => {
                         value="${data.color}"
                     >
                 </form>
-                
+
                 Favorite color: ${data.color}
             </div>
         `
@@ -184,7 +184,7 @@ describe('LiveController data-model Tests', () => {
                         data-model="firstName"
                     >
                 </form>
-                
+
                 First name: ${data.firstName}
             </div>
         `
@@ -209,7 +209,7 @@ describe('LiveController data-model Tests', () => {
                     data-model="sport"
                     data-value="cross country"
                 >
-                
+
                 Sport: ${data.sport}
             </div>
         `
@@ -232,7 +232,7 @@ describe('LiveController data-model Tests', () => {
                 <input
                     data-model="user[name]"
                 >
-                
+
                 Name: ${data.user.name}
             </div>
         `
@@ -287,7 +287,7 @@ describe('LiveController data-model Tests', () => {
                         Checkbox 2: <input type="checkbox" name="form[check2]" value="1" ${data.form.check2 ? 'checked' : ''} />
                     </label>
                 </form>
-                
+
                 Checkbox 2 is ${data.form.check2 ? 'checked' : 'unchecked'}
             </div>
         `
@@ -326,7 +326,7 @@ describe('LiveController data-model Tests', () => {
                         Checkbox 2: <input type="checkbox" name="form[check2]" value="1" ${data.form.check2 ? 'checked' : ''} />
                     </label>
                 </form>
-                
+
                 Checkbox 1 is ${data.form.check1 ? 'checked' : 'unchecked'}
             </div>
         `
@@ -359,7 +359,7 @@ describe('LiveController data-model Tests', () => {
                         Checkbox 2: <input type="checkbox" name="form[check][]" value="bar" ${data.form.check.indexOf('bar') > -1 ? 'checked' : ''} />
                     </label>
                 </form>
-                
+
                 Checkbox 2 is ${data.form.check.indexOf('bar') > -1 ? 'checked' : 'unchecked'}
             </div>
         `
@@ -393,7 +393,7 @@ describe('LiveController data-model Tests', () => {
                         Checkbox 2: <input type="checkbox" name="check[]" value="bar" ${data.check.indexOf('bar') > -1 ? 'checked' : ''} />
                     </label>
                 </form>
-                
+
                 Checkbox 2 is ${data.check.indexOf('bar') > -1 ? 'checked' : 'unchecked'}
             </div>
         `
@@ -427,7 +427,7 @@ describe('LiveController data-model Tests', () => {
                         Checkbox 2: <input type="checkbox" name="form[check][]" value="bar" ${data.form.check.indexOf('bar') > -1 ? 'checked' : ''} />
                     </label>
                 </form>
-                
+
                 Checkbox 1 is ${data.form.check.indexOf('foo') > -1 ? 'checked' : 'unchecked'}
             </div>
         `
@@ -459,7 +459,7 @@ describe('LiveController data-model Tests', () => {
                 <label>
                     Checkbox 2: <input type="checkbox" data-model="check[]" value="bar" ${data.check.indexOf('bar') > -1 ? 'checked' : ''} />
                 </label>
-                
+
                 Checkbox 1 is ${data.check.indexOf('foo') > -1 ? 'checked' : 'unchecked'}
             </div>
         `
@@ -493,7 +493,7 @@ describe('LiveController data-model Tests', () => {
                         </select>
                     </label>
                 </form>
-                
+
                 Option 2 is ${data.form.select?.indexOf('bar') > -1 ? 'selected' : 'unselected'}
             </div>
         `
@@ -525,7 +525,7 @@ describe('LiveController data-model Tests', () => {
                         </select>
                     </label>
                 </form>
-                
+
                 Option 2 is ${data.form.select?.indexOf('bar') > -1 ? 'selected' : 'unselected'}
             </div>
         `
@@ -975,5 +975,165 @@ describe('LiveController data-model Tests', () => {
         await test.component.render();
         expect(test.element).toHaveTextContent('Food is: Popcorn');
         expect(test.element).toHaveTextContent('Rating is: 5');
+    });
+
+    it('does not update model if input value length is less than min_length', async () => {
+        const test = await createTest(
+            { username: '' },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <input data-model="min_length(3)|username" value="${data.username}" />
+                Username: ${data.username}
+            </div>
+        `
+        );
+
+        await userEvent.type(test.queryByDataModel('username'), 'ab');
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ username: '' });
+    });
+
+    it('updates model if input value length satisfies min_length', async () => {
+        const test = await createTest(
+            { username: '' },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <input data-model="min_length(3)|username" value="${data.username}" />
+                Username: ${data.username}
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall().expectUpdatedData({ username: 'abc' });
+
+        await userEvent.type(test.queryByDataModel('username'), 'abc');
+        await waitFor(() => expect(test.element).toHaveTextContent('Username: abc'));
+    });
+
+    it('does not update model if input value length exceeds max_length', async () => {
+        const test = await createTest(
+            { username: '' },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <input data-model="max_length(5)|username" value="${data.username}" />
+                Username: ${data.username}
+            </div>
+        `
+        );
+
+        await userEvent.type(test.queryByDataModel('username'), 'abcdef');
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ username: '' });
+    });
+
+    it('updates model if number input value is within min_value/max_value range', async () => {
+        const test = await createTest(
+            { age: '' },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <input data-model="min_value(18)|max_value(65)|age" type="number" />
+                Age: ${data.age}
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall().expectUpdatedData({ age: '30' });
+
+        const input = test.queryByDataModel('age');
+        await userEvent.clear(input);
+        await userEvent.type(input, '30');
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Age: 30'));
+    });
+
+    it('does not update model if number input value is less than min_value', async () => {
+        const test = await createTest(
+            { age: '' },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <input data-model="min_value(18)|age" type="number" />
+                Age: ${data.age}
+            </div>
+        `
+        );
+
+        const input = test.queryByDataModel('age');
+        await userEvent.clear(input);
+        await userEvent.type(input, '15');
+
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ age: '' });
+    });
+
+    it('does not update model if number input value exceeds max_value', async () => {
+        const test = await createTest(
+            { age: '' },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <input data-model="max_value(65)|age" type="number" />
+                Age: ${data.age}
+            </div>
+        `
+        );
+
+        const input = test.queryByDataModel('age');
+        await userEvent.clear(input);
+        await userEvent.type(input, '70');
+
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ age: '' });
+    });
+
+    it('does not update model if value is shorter than min_length or longer than max_length', async () => {
+        const test = await createTest(
+            { username: '' },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <input data-model="min_length(3)|max_length(5)|username" value="${data.username}" />
+                Username: ${data.username}
+            </div>
+        `
+        );
+
+        // too short
+        await userEvent.type(test.queryByDataModel('username'), 'ab');
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ username: '' });
+
+        // too long
+        await userEvent.clear(test.queryByDataModel('username'));
+        await userEvent.type(test.queryByDataModel('username'), 'abcdef');
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ username: '' });
+
+        // valid
+        test.expectsAjaxCall().expectUpdatedData({ username: 'abc' });
+        await userEvent.clear(test.queryByDataModel('username'));
+        await userEvent.type(test.queryByDataModel('username'), 'abc');
+        await waitFor(() => expect(test.element).toHaveTextContent('Username: abc'));
+    });
+
+    it('does not update model if number is less than min_value or greater than max_value', async () => {
+        const test = await createTest(
+            { age: '' },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <input data-model="min_value(18)|max_value(65)|age" type="number" />
+                Age: ${data.age}
+            </div>
+        `
+        );
+
+        const input = test.queryByDataModel('age');
+
+        // too low
+        await userEvent.clear(input);
+        await userEvent.type(input, '17');
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ age: '' });
+
+        // too high
+        await userEvent.clear(input);
+        await userEvent.type(input, '70');
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ age: '' });
+
+        // valid
+        test.expectsAjaxCall().expectUpdatedData({ age: '30' });
+        await userEvent.clear(input);
+        await userEvent.type(input, '30');
+        await waitFor(() => expect(test.element).toHaveTextContent('Age: 30'));
     });
 });
