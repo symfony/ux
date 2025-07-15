@@ -1,0 +1,30 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-13T16:01:17Z
+
+After some investigations, it happens because of `PhpStanExtractor` from Symfony PropertyInfo.
+
+When trying to resolve the type of `FormWithUserInterfaceComponent::$user`, it will instead resolve the type of `AbstractController::getUser()` which returns `?UserInterface`.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-13T19:01:29Z
+
+Opened https://github.com/symfony/symfony/issues/61113
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-14T06:57:21Z
+
+After more investigations, I don't think it's related to PropertyInfo itself (PropertyInfo 6.4 also returns type for `AbstractController::getUser()`) but because of the extra logic that use the native `ReflectionType` if possible:
+<img width="1265" height="1009" alt="image" src="https://github.com/user-attachments/assets/d50cb11f-74a2-4232-8ce5-b619a600a55e" />
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-15T20:16:06Z
+
+I've added some comments to improve comprehensibility.
+
+Since the PR fixed the issue from issue's author (https://github.com/symfony/ux/issues/2888#issuecomment-3068613029), and no tests are failing (either when using `PropertyTypeExtractorInterface::getTypes()` or `PropertyTypeExtractorInterface::getType()`), I'm merging.
+
+Thanks both of you :)
