@@ -191,6 +191,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->setArguments([
                 new Reference('ux.twig_component.component_factory'),
                 new Reference('property_info'),
+                new Reference('type_info.resolver', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ])
             ->addTag('kernel.reset', ['method' => 'reset'])
         ;
