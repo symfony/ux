@@ -100,7 +100,7 @@ When contributing to the documentation, please make sure to follow the Symfony
 [documentation guidelines](https://symfony.com/doc/current/contributing/documentation/index.html).
 
 To verify your changes locally, you can use the `oskarstark/doctor-rst` Docker image. Run the following
-command from the root directory of the projet:
+command from the root directory of the project:
 
 ```shell
 docker run --rm -it -e DOCS_DIR='/docs' -v ${PWD}:/docs  oskarstark/doctor-rst -vvv
