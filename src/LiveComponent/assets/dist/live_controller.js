@@ -475,6 +475,15 @@ const getMultipleCheckboxValue = (element, currentValues) => {
     return finalValues;
 };
 const inputValue = (element) => element.dataset.value ? element.dataset.value : element.value;
+function isTextualInputElement(el) {
+    return el instanceof HTMLInputElement && ['text', 'email', 'password', 'search', 'tel', 'url'].includes(el.type);
+}
+function isTextareaElement(el) {
+    return el instanceof HTMLTextAreaElement;
+}
+function isNumericalInputElement(element) {
+    return element instanceof HTMLInputElement && ['number', 'range'].includes(element.type);
+}
 
 class HookManager {
     constructor() {
@@ -2343,6 +2352,10 @@ function getModelBinding (modelDirective) {
     let shouldRender = true;
     let targetEventName = null;
     let debounce = false;
+    let minLength = null;
+    let maxLength = null;
+    let minValue = null;
+    let maxValue = null;
     modelDirective.modifiers.forEach((modifier) => {
         switch (modifier.name) {
             case 'on':
@@ -2360,6 +2373,18 @@ function getModelBinding (modelDirective) {
             case 'debounce':
                 debounce = modifier.value ? Number.parseInt(modifier.value) : true;
                 break;
+            case 'min_length':
+                minLength = modifier.value ? Number.parseInt(modifier.value) : null;
+                break;
+            case 'max_length':
+                maxLength = modifier.value ? Number.parseInt(modifier.value) : null;
+                break;
+            case 'min_value':
+                minValue = modifier.value ? Number.parseFloat(modifier.value) : null;
+                break;
+            case 'max_value':
+                maxValue = modifier.value ? Number.parseFloat(modifier.value) : null;
+                break;
             default:
                 throw new Error(`Unknown modifier "${modifier.name}" in data-model="${modelDirective.getString()}".`);
         }
@@ -2371,6 +2396,10 @@ function getModelBinding (modelDirective) {
         shouldRender,
         debounce,
         targetEventName,
+        minLength,
+        maxLength,
+        minValue,
+        maxValue,
     };
 }
 
@@ -3153,6 +3182,27 @@ class LiveControllerDefault extends Controller {
             }
         }
         const finalValue = getValueFromElement(element, this.component.valueStore);
+        if (isTextualInputElement(element) || isTextareaElement(element)) {
+            if (modelBinding.minLength !== null &&
+                typeof finalValue === 'string' &&
+                finalValue.length < modelBinding.minLength) {
+                return;
+            }
+            if (modelBinding.maxLength !== null &&
+                typeof finalValue === 'string' &&
+                finalValue.length > modelBinding.maxLength) {
+                return;
+            }
+        }
+        if (isNumericalInputElement(element)) {
+            const numericValue = Number(finalValue);
+            if (modelBinding.minValue !== null && numericValue < modelBinding.minValue) {
+                return;
+            }
+            if (modelBinding.maxValue !== null && numericValue > modelBinding.maxValue) {
+                return;
+            }
+        }
         this.component.set(modelBinding.modelName, finalValue, modelBinding.shouldRender, modelBinding.debounce);
     }
     dispatchEvent(name, detail = {}, canBubble = true, cancelable = false) {

@@ -384,6 +384,66 @@ This can be useful along with a button that triggers a render on click:
     <input data-model="norender|coupon">
     <button data-action="live#$render">Apply</button>
 
+Input Model Validation Modifiers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.28
+
+    Modifiers to validate ``<input>`` value were added in UX LiveComponent 2.28.
+
+Input model validation modifiers help to reduce unnecessary server requests and provide
+a lightweight form of frontend validation, for example:
+
+.. code-block:: html
+
+    <!-- Do not trigger model update until 3 characters are typed -->
+    <input data-model="min_length(3)|username" type="text" value="" />
+
+    <!-- Only trigger updates when value number is between 10 and 100 -->
+    <input data-model="min_value(10)|max_value(100)|quantity" type="number" value="20" />
+
+``min_length``
+..............
+
+Validate that an ``<input>`` element of type ``text``, ``email``, ``password``, ``search``, ``url``
+or a ``<textarea>`` element, has a value length not less than the specified length:
+
+.. code-block:: html
+
+    <!-- Validate the search term is at least 3 characters long-->
+    <input type="search" data-model="min_length(3)|search">
+
+``max_length``
+..............
+
+Validate that an ``<input>`` element of type ``text``, ``email``, ``password``, ``search``, ``url``
+or a ``<textarea>`` element, has a value length not higher than the specified length:
+
+.. code-block:: html
+
+    <!-- Validates that the username is not longer than 10 characters -->
+    <input type="text" data-model="max_length(10)|username">
+
+``min_value``
+.............
+
+Validate that an ``<input>`` element of type ``number`` or ``range`` has a numeric value which is not less than the specified value:
+
+.. code-block:: html
+
+    <!-- Validate that the age is not less than 18 -->
+    <input type="number" data-model="min_value(18)|age">
+
+``max_value``
+.............
+
+Validate that an ``<input>`` element of type ``number`` or ``range`` has a numeric value which is not higher than the specified value:
+
+.. code-block:: html
+
+    <!-- Validate that the year is not higher than 2025 -->
+    <input type="number" data-model="max_value(2025)|year">
+
 Forcing a Re-Render Explicitly
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
