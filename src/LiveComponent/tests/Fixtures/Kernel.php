@@ -143,9 +143,7 @@ final class Kernel extends BaseKernel
             'anonymous_template_directory' => 'components/',
         ]);
 
-        $c->extension('zenstruck_foundry', [
-            'auto_refresh_proxies' => false,
-        ]);
+        $c->extension('zenstruck_foundry', []);
 
         $doctrineConfig = [
             'dbal' => [

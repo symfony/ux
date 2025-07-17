@@ -43,7 +43,7 @@ class EntityMetadataTest extends KernelTestCase
     public function testGetIdValue(): void
     {
         $product = ProductFactory::createOne();
-        $this->assertEquals($product->getId(), $this->getMetadata()->getIdValue($product->object()));
+        $this->assertEquals($product->getId(), $this->getMetadata()->getIdValue($product));
     }
 
     public function testGetPropertyDataType(): void
