@@ -1,0 +1,73 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-07-15T12:59:52Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/xDeSwa/ux/tree/live-component-new-modifiers/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/xDeSwa/ux/blob/live-component-new-modifiers/src/LiveComponent/assets/dist/Directive/get_model_binding.d.ts"><code>Directive/get_model_binding.d.ts</code></a></td>
+            <td>
+                    <code>308 B</code>
+                    / <code>219 B</code>
+                </td><td>
+                    <code>426 B</code><sup>+38% 📈</sup>
+                    / <code>246 B</code><sup>+12% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/xDeSwa/ux/blob/live-component-new-modifiers/src/LiveComponent/assets/dist/dom_utils.d.ts"><code>dom_utils.d.ts</code></a></td>
+            <td>
+                    <code>830 B</code>
+                    / <code>317 B</code>
+                </td><td>
+                    <code>1.08 kB</code><sup>+33% 📈</sup>
+                    / <code>367 B</code><sup>+16% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/xDeSwa/ux/blob/live-component-new-modifiers/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>120.02 kB</code>
+                    / <code>23.44 kB</code>
+                </td><td>
+                    <code>121.94 kB</code><sup>+2% 📈</sup>
+                    / <code>23.76 kB</code><sup>+1% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by xDeSwa at 2025-07-16T08:53:12Z
+
+>     * `min_length(3)`
+>
+>     * `min_length(1)|max_length(10)`
+>
+>     * `min_value(1990)`
+>
+>     * `max_value(2025)`
+>
+>     * `min_value(1990)|max_value(2025)`
+>
+Your suggestion makes more sense, I'll update. thanks
+
+---------------------------------------------------------------------------
+
+by xDeSwa at 2025-07-16T13:45:49Z
+
+i think its ready
+
+---------------------------------------------------------------------------
+
+by xDeSwa at 2025-07-17T09:01:06Z
+
+@Kocal check again please
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-17T20:41:36Z
+
+I did some minor final changes, waiting the CI to be green for merging
