@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-17T07:16:09Z
+
+Not related, but we still need to find why it's happening in PHP 8.4 https://github.com/symfony/ux/actions/runs/16338540569/job/46155434915?pr=2928#step:9:1042 :
+```
+1) Symfony\UX\Autocomplete\Tests\Functional\AutocompleteFormRenderingTest::testFieldsRenderWithStimulusController
+RuntimeException: Unable to create the Doctrine Proxy directory "". in /home/runner/work/ux/ux/src/Autocomplete/vendor/symfony/doctrine-bridge/CacheWarmer/ProxyCacheWarmer.php:49
+Stack trace:
+#0 /home/runner/work/ux/ux/src/Autocomplete/vendor/symfony/http-kernel/CacheWarmer/CacheWarmerAggregate.php(96): Symfony\Bridge\Doctrine\CacheWarmer\ProxyCacheWarmer->warmUp()
+#1 /home/runner/work/ux/ux/src/Autocomplete/vendor/symfony/http-kernel/Kernel.php(546): Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate->warmUp()
+#2 /home/runner/work/ux/ux/src/Autocomplete/vendor/symfony/http-kernel/Kernel.php(744): Symfony\Component\HttpKernel\Kernel->initializeContainer()
+#3 /home/runner/work/ux/ux/src/Autocomplete/vendor/symfony/http-kernel/Kernel.php(120): Symfony\Component\HttpKernel\Kernel->preBoot()
+#4 /home/runner/work/ux/ux/src/Autocomplete/vendor/symfony/framework-bundle/Test/KernelTestCase.php(75): Symfony\Component\HttpKernel\Kernel->boot()
+#5 /home/runner/work/ux/ux/src/Autocomplete/vendor/zenstruck/foundry/src/Test/ResetDatabase.php(36): Symfony\Bundle\FrameworkBundle\Test\KernelTestCase::bootKernel()
+#6 /home/runner/work/ux/ux/src/Autocomplete/vendor/zenstruck/foundry/src/Persistence/ResetDatabase/ResetDatabaseManager.php(51): Symfony\UX\Autocomplete\Tests\Functional\AutocompleteFormRenderingTest::{closure:Zenstruck\Foundry\Test\ResetDatabase::_resetDatabaseBeforeFirstTest():36}()
+#7 /home/runner/work/ux/ux/src/Autocomplete/vendor/zenstruck/foundry/src/Test/ResetDatabase.php(35): Zenstruck\Foundry\Persistence\ResetDatabase\ResetDatabaseManager::resetBeforeFirstTest()
+#8 /home/runner/work/ux/ux/src/Autocomplete/vendor/bin/.phpunit/phpunit-9.6-0/src/Framework/TestSuite.php(629): Symfony\UX\Autocomplete\Tests\Functional\AutocompleteFormRenderingTest::_resetDatabaseBeforeFirstTest()
+#9 /home/runner/work/ux/ux/src/Autocomplete/vendor/bin/.phpunit/phpunit-9.6-0/src/Framework/TestSuite.php(685): PHPUnit\Framework\TestSuite->run()
+#10 /home/runner/work/ux/ux/src/Autocomplete/vendor/bin/.phpunit/phpunit-9.6-0/src/Framework/TestSuite.php(685): PHPUnit\Framework\TestSuite->run()
+#11 /home/runner/work/ux/ux/src/Autocomplete/vendor/bin/.phpunit/phpunit-9.6-0/src/TextUI/TestRunner.php(651): PHPUnit\Framework\TestSuite->run()
+#12 /home/runner/work/ux/ux/src/Autocomplete/vendor/bin/.phpunit/phpunit-9.6-0/src/TextUI/Command.php(146): PHPUnit\TextUI\TestRunner->run()
+#13 /home/runner/work/ux/ux/src/Autocomplete/vendor/bin/.phpunit/phpunit-9.6-0/src/TextUI/Command.php(99): PHPUnit\TextUI\Command->run()
+#14 /home/runner/work/ux/ux/src/Autocomplete/vendor/bin/.phpunit/phpunit-9.6-0/phpunit(22): PHPUnit\TextUI\Command::main()
+#15 /home/runner/work/ux/ux/src/Autocomplete/vendor/symfony/phpunit-bridge/bin/simple-phpunit.php(478): include('...')
+#16 /home/runner/work/ux/ux/src/Autocomplete/vendor/symfony/phpunit-bridge/bin/simple-phpunit(13): require('...')
+#17 /home/runner/work/ux/ux/src/Autocomplete/vendor/bin/simple-phpunit(119): include('...')
+#18 {main}
+```
+
+Surely we are missing some configuration
