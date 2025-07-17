@@ -101,9 +101,7 @@ final class Kernel extends BaseKernel
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
         ]);
 
-        $c->extension('zenstruck_foundry', [
-            'auto_refresh_proxies' => false,
-        ]);
+        $c->extension('zenstruck_foundry', []);
 
         $doctrineConfig = [
             'dbal' => ['url' => '%env(resolve:DATABASE_URL)%'],
@@ -153,10 +151,6 @@ final class Kernel extends BaseKernel
                     'http_basic' => true,
                 ],
             ],
-        ]);
-
-        $c->extension('zenstruck_foundry', [
-            'auto_refresh_proxies' => false,
         ]);
 
         $services = $c->services();

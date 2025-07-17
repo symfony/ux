@@ -48,7 +48,7 @@
         "symfony/uid": "^6.3|^7.0",
         "twig/twig": "^2.14.7|^3.0.4",
         "zenstruck/browser": "^1.1",
-        "zenstruck/foundry": "1.37.*"
+        "zenstruck/foundry": "^2.0"
     },
     "conflict": {
         "doctrine/orm": "2.9.0 || 2.9.1"

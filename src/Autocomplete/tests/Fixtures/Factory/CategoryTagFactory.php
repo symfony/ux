@@ -11,46 +11,23 @@
 
 namespace Symfony\UX\Autocomplete\Tests\Fixtures\Factory;
 
-use Doctrine\ORM\EntityRepository;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Entity\CategoryTag;
-use Zenstruck\Foundry\ModelFactory;
-use Zenstruck\Foundry\Proxy;
-use Zenstruck\Foundry\RepositoryProxy;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 /**
- * @extends ModelFactory<CategoryTag>
- *
- * @method static CategoryTag|Proxy                createOne(array $attributes = [])
- * @method static CategoryTag[]|Proxy[]            createMany(int $number, array|callable $attributes = [])
- * @method static CategoryTag|Proxy                find(object|array|mixed $criteria)
- * @method static CategoryTag|Proxy                findOrCreate(array $attributes)
- * @method static CategoryTag|Proxy                first(string $sortedField = 'id')
- * @method static CategoryTag|Proxy                last(string $sortedField = 'id')
- * @method static CategoryTag|Proxy                random(array $attributes = [])
- * @method static CategoryTag|Proxy                randomOrCreate(array $attributes = [])
- * @method static CategoryTag[]|Proxy[]            all()
- * @method static CategoryTag[]|Proxy[]            findBy(array $attributes)
- * @method static CategoryTag[]|Proxy[]            randomSet(int $number, array $attributes = [])
- * @method static CategoryTag[]|Proxy[]            randomRange(int $min, int $max, array $attributes = [])
- * @method static EntityRepository|RepositoryProxy repository()
- * @method        CategoryTag|Proxy                create(array|callable $attributes = [])
+ * @extends PersistentObjectFactory<CategoryTag>
  */
-final class CategoryTagFactory extends ModelFactory
+final class CategoryTagFactory extends PersistentObjectFactory
 {
-    protected function getDefaults(): array
+    public static function class(): string
+    {
+        return CategoryTag::class;
+    }
+
+    protected function defaults(): array
     {
         return [
             'name' => self::faker()->word(),
         ];
-    }
-
-    protected function initialize(): self
-    {
-        return $this;
-    }
-
-    protected static function getClass(): string
-    {
-        return CategoryTag::class;
     }
 }
