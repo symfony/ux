@@ -11,23 +11,19 @@
 
 namespace Symfony\UX\LiveComponent\Util;
 
-use Twig\Environment;
-
 /**
  * Helper for building an array of attributes for the live controller element.
- *
- * @experimental
  *
  * @internal
  */
 final class TwigAttributeHelperFactory
 {
-    public function __construct(private Environment $twig)
+    public function __construct()
     {
     }
 
     public function create(): LiveAttributesCollection
     {
-        return new LiveAttributesCollection($this->twig);
+        return new LiveAttributesCollection();
     }
 }

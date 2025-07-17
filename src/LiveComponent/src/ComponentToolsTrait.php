@@ -17,8 +17,6 @@ use Symfony\Contracts\Service\Attribute\Required;
  * Trait with shortcut methods useful for live components.
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 trait ComponentToolsTrait
 {
@@ -33,12 +31,12 @@ trait ComponentToolsTrait
         $this->liveResponder = $liveResponder;
     }
 
-    public function emit(string $eventName, array $data = [], string $componentName = null): void
+    public function emit(string $eventName, array $data = [], ?string $componentName = null): void
     {
         $this->liveResponder->emit($eventName, $data, $componentName);
     }
 
-    public function emitUp(string $eventName, array $data = [], string $componentName = null): void
+    public function emitUp(string $eventName, array $data = [], ?string $componentName = null): void
     {
         $this->liveResponder->emitUp($eventName, $data, $componentName);
     }

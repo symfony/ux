@@ -1,0 +1,205 @@
+<?php
+
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Symfony\UX\Toolkit\Kit;
+
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Finder\Finder;
+use Symfony\UX\Toolkit\Asset\Component;
+use Symfony\UX\Toolkit\Asset\StimulusController;
+use Symfony\UX\Toolkit\Dependency\ComponentDependency;
+use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
+use Symfony\UX\Toolkit\Dependency\StimulusControllerDependency;
+use Symfony\UX\Toolkit\File\ComponentMeta;
+use Symfony\UX\Toolkit\File\Doc;
+use Symfony\UX\Toolkit\File\File;
+
+/**
+ * @internal
+ *
+ * @author Hugo Alliaume <hugo@alliau.me>
+ */
+final class KitSynchronizer
+{
+    /**
+     * @see https://regex101.com/r/WasRGf/1
+     */
+    private const RE_TWIG_COMPONENT_REFERENCES = '/<twig:(?P<componentName>[a-zA-Z0-9:_-]+)/';
+
+    /**
+     * @see https://regex101.com/r/inIBID/1
+     */
+    private const RE_STIMULUS_CONTROLLER_REFERENCES = '/data-controller=(["\'])(?P<controllersName>.+?)\1/';
+
+    private const UX_COMPONENTS_PACKAGES = [
+        'ux:icon' => 'symfony/ux-icons',
+        'ux:map' => 'symfony/ux-map',
+    ];
+
+    public function __construct(
+        private readonly Filesystem $filesystem,
+    ) {
+    }
+
+    public function synchronize(Kit $kit): void
+    {
+        $this->synchronizeComponents($kit);
+        $this->synchronizeStimulusControllers($kit);
+        $this->synchronizeDocumentation($kit);
+    }
+
+    private function synchronizeComponents(Kit $kit): void
+    {
+        $componentsPath = Path::join('templates', 'components');
+        $finder = (new Finder())
+            ->in($kit->path)
+            ->files()
+            ->path($componentsPath)
+            ->sortByName()
+            ->name('*.html.twig')
+        ;
+
+        foreach ($finder as $file) {
+            $relativePathNameToKit = Path::normalize($file->getRelativePathname());
+            $relativePathName = str_replace($componentsPath.'/', '', $relativePathNameToKit);
+            $componentName = $this->extractComponentName($relativePathName);
+
+            $meta = null;
+            if ($this->filesystem->exists($metaJsonFile = Path::join($file->getPath(), str_replace('.html.twig', '.meta.json', $file->getBasename())))) {
+                $metaJson = file_get_contents($metaJsonFile) ?: throw new \RuntimeException(\sprintf('Unable to get contents from file "%s".', $metaJsonFile));
+                try {
+                    $meta = ComponentMeta::fromJson($metaJson);
+                } catch (\Throwable $e) {
+                    throw new \RuntimeException(\sprintf('Unable to parse component "%s" meta from JSON file "%s".', $componentName, $metaJsonFile), previous: $e);
+                }
+            }
+
+            $component = new Component(
+                name: $componentName,
+                files: [new File(
+                    relativePathNameToKit: $relativePathNameToKit,
+                    relativePathName: $relativePathName,
+                )],
+                meta: $meta,
+            );
+
+            $kit->addComponent($component);
+        }
+
+        foreach ($kit->getComponents() as $component) {
+            $this->resolveComponentDependencies($kit, $component);
+        }
+    }
+
+    private function resolveComponentDependencies(Kit $kit, Component $component): void
+    {
+        // Find dependencies based on component name
+        foreach ($kit->getComponents() as $otherComponent) {
+            if ($component->name === $otherComponent->name) {
+                continue;
+            }
+
+            // Find components with the component name as a prefix
+            if (str_starts_with($otherComponent->name, $component->name.':')) {
+                $component->addDependency(new ComponentDependency($otherComponent->name));
+            }
+        }
+
+        // Find dependencies based on file content
+        foreach ($component->files as $file) {
+            if (!$this->filesystem->exists($filePath = Path::join($kit->path, $file->relativePathNameToKit))) {
+                throw new \RuntimeException(\sprintf('File "%s" not found', $filePath));
+            }
+
+            $fileContent = file_get_contents($filePath);
+
+            if (str_contains($fileContent, '<twig:') && preg_match_all(self::RE_TWIG_COMPONENT_REFERENCES, $fileContent, $matches)) {
+                foreach ($matches[1] as $componentReferenceName) {
+                    if ($componentReferenceName === $component->name) {
+                        continue;
+                    }
+
+                    if (null !== $package = self::UX_COMPONENTS_PACKAGES[strtolower($componentReferenceName)] ?? null) {
+                        if (!$component->hasDependency(new PhpPackageDependency($package))) {
+                            throw new \RuntimeException(\sprintf('Component "%s" uses "%s" UX Twig component, but the composer package "%s" is not listed as a dependency in meta file.', $component->name, $componentReferenceName, $package));
+                        }
+                    } elseif (null === $componentReference = $kit->getComponent($componentReferenceName)) {
+                        throw new \RuntimeException(\sprintf('Component "%s" not found in component "%s" (file "%s")', $componentReferenceName, $component->name, $file->relativePathNameToKit));
+                    } else {
+                        $component->addDependency(new ComponentDependency($componentReference->name));
+                    }
+                }
+            }
+
+            if (str_contains($fileContent, 'data-controller=') && preg_match_all(self::RE_STIMULUS_CONTROLLER_REFERENCES, $fileContent, $matches)) {
+                $controllersName = array_filter(array_map(fn (string $name) => trim($name), explode(' ', $matches['controllersName'][0])));
+                foreach ($controllersName as $controllerReferenceName) {
+                    $component->addDependency(new StimulusControllerDependency($controllerReferenceName));
+                }
+            }
+        }
+    }
+
+    private function synchronizeStimulusControllers(Kit $kit): void
+    {
+        $controllersPath = Path::join('assets', 'controllers');
+        $finder = (new Finder())
+            ->in($kit->path)
+            ->files()
+            ->path($controllersPath)
+            ->sortByName()
+            ->name('*.js')
+        ;
+
+        foreach ($finder as $file) {
+            $relativePathNameToKit = Path::normalize($file->getRelativePathname());
+            $relativePathName = str_replace($controllersPath.'/', '', $relativePathNameToKit);
+            $controllerName = $this->extractStimulusControllerName($relativePathName);
+            $controller = new StimulusController(
+                name: $controllerName,
+                files: [new File(
+                    relativePathNameToKit: $relativePathNameToKit,
+                    relativePathName: $relativePathName,
+                )],
+            );
+
+            $kit->addStimulusController($controller);
+        }
+    }
+
+    private function synchronizeDocumentation(Kit $kit): void
+    {
+        // Read INSTALL.md if exists
+        $fileInstall = Path::join($kit->path, 'INSTALL.md');
+        if ($this->filesystem->exists($fileInstall)) {
+            $kit->installAsMarkdown = file_get_contents($fileInstall);
+        }
+
+        // Iterate over Component and find their documentation
+        foreach ($kit->getComponents() as $component) {
+            $docPath = Path::join($kit->path, 'docs', 'components', $component->name.'.md');
+            if ($this->filesystem->exists($docPath)) {
+                $component->doc = new Doc(file_get_contents($docPath));
+            }
+        }
+    }
+
+    private static function extractComponentName(string $pathnameRelativeToKit): string
+    {
+        return str_replace(['.html.twig', '/'], ['', ':'], $pathnameRelativeToKit);
+    }
+
+    private static function extractStimulusControllerName(string $pathnameRelativeToKit): string
+    {
+        return str_replace(['_controller.js', '-controller.js', '/', '_'], ['', '', '--', '-'], $pathnameRelativeToKit);
+    }
+}

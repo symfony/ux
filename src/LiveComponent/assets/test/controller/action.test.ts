@@ -7,25 +7,26 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-import { createTest, initComponent, shutdownTests } from '../tools';
 import { getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
+import { createTest, initComponent, shutdownTests } from '../tools';
 
 describe('LiveController Action Tests', () => {
     afterEach(() => {
         shutdownTests();
-    })
+    });
 
     it('sends an action and renders the result', async () => {
-        const test = await createTest({ comment: 'great turtles!', isSaved: false }, (data: any) => `
+        const test = await createTest(
+            { comment: 'great turtles!', isSaved: false },
+            (data: any) => `
             <div ${initComponent(data)}>
                 ${data.isSaved ? 'Comment Saved!' : ''}
 
-                <button data-action="live#action" data-action-name="save">Save</button>
+                <button data-action="live#action" data-live-action-param="save">Save</button>
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
             .expectActionCalled('save')
@@ -40,15 +41,18 @@ describe('LiveController Action Tests', () => {
     });
 
     it('immediately sends an action, includes debouncing model updates and cancels those debounce renders', async () => {
-        const test = await createTest({ comment: '', isSaved: false }, (data: any) => `
+        const test = await createTest(
+            { comment: '', isSaved: false },
+            (data: any) => `
             <div ${initComponent(data, { debounce: 10 })}>
                 <input data-model="comment" value="${data.comment}">
 
                 ${data.isSaved ? 'Comment Saved!' : ''}
 
-                <button data-action="live#action" data-action-name="save">Save</button>
+                <button data-action="live#action" data-live-action-param="save">Save</button>
             </div>
-        `);
+        `
+        );
 
         // JUST the POST request: no other GET requests
         test.expectsAjaxCall()
@@ -68,38 +72,49 @@ describe('LiveController Action Tests', () => {
         await waitFor(() => expect(test.element).toHaveTextContent('Comment Saved!'));
 
         // wait long enough for the debounced model update to happen, if it wasn't canceled
-        await (new Promise(resolve => setTimeout(resolve, 50)));
+        await new Promise((resolve) => setTimeout(resolve, 50));
     });
 
     it('Sends action with named args', async () => {
-        const test = await createTest({ isSaved: false}, (data: any) => `
-           <div ${initComponent(data)}>
-               ${data.isSaved ? 'Component Saved!' : ''}
+        const test = await createTest(
+            { isSaved: false },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                ${data.isSaved ? 'Component Saved!' : ''}
 
-               <button data-action="live#action" data-action-name="sendNamedArgs(a=1, b=2, c=3)">Send named args</button>
-           </div>
-       `);
+                <button
+                    data-action="live#action"
+                    data-live-action-param="sendNamedArgs"
+                    data-live-a-param="1"
+                    data-live-b-param="2"
+                    data-live-c-param="banana"
+                >Send named args</button>
+            </div>
+       `
+        );
 
         // ONLY a post is sent, not a re-render GET
         test.expectsAjaxCall()
-            .expectActionCalled('sendNamedArgs', {a: '1', b: '2', c: '3'})
+            .expectActionCalled('sendNamedArgs', { a: 1, b: 2, c: 'banana' })
             .serverWillChangeProps((data: any) => {
                 // server marks component as "saved"
                 data.isSaved = true;
             });
 
-       getByText(test.element, 'Send named args').click();
+        getByText(test.element, 'Send named args').click();
 
-       await waitFor(() => expect(test.element).toHaveTextContent('Component Saved!'));
+        await waitFor(() => expect(test.element).toHaveTextContent('Component Saved!'));
     });
 
     it('sends an action but allows for the model to be updated', async () => {
-       const test = await createTest({ food: '' }, (data: any) => `
+        const test = await createTest(
+            { food: '' },
+            (data: any) => `
            <div ${initComponent(data)}>
                <select
                    data-model="on(change)|food"
                    data-action="live#action"
-                   data-action-name="changeFood"
+                   data-live-action-param="changeFood"
                >
                    <option value="" ${data.food === '' ? 'selected' : ''}>Choose a food</option>
                    <option value="pizza" ${data.pizza === '' ? 'selected' : ''}>Pizza</option>
@@ -108,22 +123,23 @@ describe('LiveController Action Tests', () => {
 
                Food: ${data.food}
            </div>
-       `);
+       `
+        );
 
         // ONLY a post is sent
         // the re-render GET from "input" of the select should be avoided
         // because an action immediately happens
-        test.expectsAjaxCall()
-           .expectUpdatedData({ food: 'pizza' })
-           .expectActionCalled('changeFood');
+        test.expectsAjaxCall().expectUpdatedData({ food: 'pizza' }).expectActionCalled('changeFood');
 
         await userEvent.selectOptions(test.queryByDataModel('food'), 'pizza');
 
         await waitFor(() => expect(test.element).toHaveTextContent('Food: pizza'));
-   });
+    });
 
     it('makes model updates wait until action Ajax call finishes', async () => {
-        const test = await createTest({ comment: 'donut', isSaved: false }, (data: any) => `
+        const test = await createTest(
+            { comment: 'donut', isSaved: false },
+            (data: any) => `
             <div ${initComponent(data, { debounce: 50 })}>
                 <input data-model="comment" value="${data.comment}">
 
@@ -131,9 +147,10 @@ describe('LiveController Action Tests', () => {
 
                 <span>${data.comment}</span>
 
-                <button data-action="live#action" data-action-name="save">Save</button>
+                <button data-action="live#action" data-live-action-param="save">Save</button>
             </div>
-        `);
+        `
+        );
 
         // ONLY a post is sent, not a re-render GET
         test.expectsAjaxCall()
@@ -148,9 +165,8 @@ describe('LiveController Action Tests', () => {
         // which will take 100ms. So, don't start expecting it until nearly then
         // but after the model debounce
         setTimeout(() => {
-            test.expectsAjaxCall()
-                .expectUpdatedData({comment: 'donut holes'});
-        }, 75)
+            test.expectsAjaxCall().expectUpdatedData({ comment: 'donut holes' });
+        }, 75);
 
         // save first, then type into the box
         getByText(test.element, 'Save').click();
@@ -167,19 +183,22 @@ describe('LiveController Action Tests', () => {
     });
 
     it('batches multiple actions together', async () => {
-        const test = await createTest({ isSaved: false }, (data: any) => `
+        const test = await createTest(
+            { isSaved: false },
+            (data: any) => `
             <div ${initComponent(data)}>
                 ${data.isSaved ? 'Component Saved!' : ''}
-                <button data-action="live#action" data-action-name="debounce(10)|save">Save</button>
-                <button data-action="live#action" data-action-name="debounce(10)|sync(syncAll=1)">Sync</button>
+                <button data-action="live#action" data-live-action-param="debounce(10)|save">Save</button>
+                <button data-action="live#action" data-live-action-param="debounce(10)|sync" data-live-sync-all-param="1">Sync</button>
             </div>
-        `);
+        `
+        );
 
         // 1 request with all 3 actions
         test.expectsAjaxCall()
             // 3 actions called
             .expectActionCalled('save')
-            .expectActionCalled('sync', { syncAll: '1' })
+            .expectActionCalled('sync', { syncAll: 1 })
             .expectActionCalled('save')
             .serverWillChangeProps((data: any) => {
                 data.isSaved = true;

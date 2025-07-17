@@ -17,9 +17,11 @@ Installation
     This package works best with WebpackEncore. To use it with AssetMapper, see
     :ref:`Using with AssetMapper <using-with-asset-mapper>`.
 
-Before you start, make sure you have `StimulusBundle configured in your app`_.
+.. caution::
 
-Install this bundle using Composer and Symfony Flex:
+    Before you start, make sure you have `StimulusBundle configured in your app`_.
+
+Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -33,9 +35,9 @@ needed if you're using AssetMapper):
     $ npm install --force
     $ npm run watch
 
-    # or use yarn
-    $ yarn install --force
-    $ yarn watch
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-translator npm package`_
 
 After installing the bundle, the following file should be created, thanks to the Symfony Flex recipe:
 
@@ -63,20 +65,59 @@ After installing the bundle, the following file should be created, thanks to the
 Usage
 -----
 
-When warming up the Symfony cache, all of your translations will be dumped as JavaScript into the ``var/translations/`` directory.
+When warming up the Symfony cache, your translations will be dumped as JavaScript into the ``var/translations/`` directory.
 For a better developer experience, TypeScript types definitions are also generated aside those JavaScript files.
 
 Then, you will be able to import those JavaScript translations in your assets.
-Don't worry about your final bundle size, only the translations you use will be included in your final bundle, thanks to the [tree shaking](https://webpack.js.org/guides/tree-shaking/).
+Don't worry about your final bundle size, only the translations you use will be included in your final bundle, thanks to the `tree shaking <https://webpack.js.org/guides/tree-shaking/>`_.
+
+Configuring the dumped translations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, all your translations will be exported. You can restrict the dumped messages by either
+including or excluding translation domains in your ``config/packages/ux_translator.yaml`` file:
+
+.. code-block:: yaml
+
+    ux_translator:
+            domains: ~    # Include all the domains
+
+            domains: foo  # Include only domain 'foo'
+            domains: '!foo' # Include all domains, except 'foo'
+
+            domains: [foo, bar]   # Include only domains 'foo' and 'bar'
+            domains: ['!foo', '!bar'] # Include all domains, except 'foo' and 'bar'
+
 
 Configuring the default locale
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By default, the default locale is ``en`` (English) that you can configure through many ways (in order of priority):
 
-#. With ``setLocale('your-locale')`` from ``@symfony/ux-translator`` package
-#. Or with ``<html data-symfony-ux-translator-locale="your-locale">`` attribute
-#. Or with ``<html lang="your-locale">`` attribute
+#. With ``setLocale('de')`` or ``setLocale('de_AT')`` from ``@symfony/ux-translator`` package
+#. Or with ``<html data-symfony-ux-translator-locale="{{ app.request.locale }}">`` attribute (e.g., ``de_AT`` or ``de`` using Symfony locale format)
+#. Or with ``<html lang="{{ app.request.locale|replace({ '_': '-' }) }}">`` attribute (e.g., ``de-AT`` or ``de`` following the `W3C specification on language codes`_)
+
+Detecting missing translations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, the translator will return the translation key if the translation is missing.
+
+You can change this behavior by calling ``throwWhenNotFound(true)``:
+
+.. code-block:: diff
+
+      // assets/translator.js
+
+    - import { trans, getLocale, setLocale, setLocaleFallbacks } from '@symfony/ux-translator';
+    + import { trans, getLocale, setLocale, setLocaleFallbacks, throwWhenNotFound } from '@symfony/ux-translator';
+      import { localeFallbacks } from '../var/translations/configuration';
+
+      setLocaleFallbacks(localeFallbacks);
+    + throwWhenNotFound(true)
+
+      export { trans }
+      export * from '../var/translations';
 
 Importing and using translations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -151,6 +192,8 @@ the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`Symfony Translator`: https://symfony.com/doc/current/translation.html
-.. _`the Symfony UX initiative`: https://symfony.com/ux
+.. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
-.. _`ICU Message Format`: https://symfony.com/doc/current/translation/message_format.html
+.. _`ICU Message Format`: https://symfony.com/doc/current/reference/formats/message_format.html
+.. _`W3C specification on language codes`: https://www.w3.org/TR/html401/struct/dirlang.html#h-8.1.1
+.. _`@symfony/ux-translator npm package`: https://www.npmjs.com/package/@symfony/ux-translator

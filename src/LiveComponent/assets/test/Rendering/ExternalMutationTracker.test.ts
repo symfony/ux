@@ -1,5 +1,5 @@
-import ExternalMutationTracker from '../../src/Rendering/ExternalMutationTracker';
 import { htmlToElement } from '../../src/dom_utils';
+import ExternalMutationTracker from '../../src/Rendering/ExternalMutationTracker';
 
 const mountElement = (html: string): HTMLElement => {
     const element = htmlToElement(html);
@@ -7,15 +7,15 @@ const mountElement = (html: string): HTMLElement => {
     document.body.appendChild(element);
 
     return element;
-}
+};
 
-const createTracker = (html: string): { element: HTMLElement, tracker: ExternalMutationTracker } => {
+const createTracker = (html: string): { element: HTMLElement; tracker: ExternalMutationTracker } => {
     const element = mountElement(html);
     const tracker = new ExternalMutationTracker(element, () => true);
     tracker.start();
 
     return { element, tracker };
-}
+};
 
 /*
  * This is a hack to get around the fact that MutationObserver doesn't fire synchronously.
@@ -24,13 +24,13 @@ const shortTimeout = (): Promise<void> => {
     return new Promise((resolve) => {
         setTimeout(resolve, 10);
     });
-}
+};
 
 describe('ExternalMutationTracker', () => {
     it('can track generic attribute changes', async () => {
         const { element, tracker } = createTracker(`
             <div id="original-id" title="I'm a div!" data-changing="original">Text inside!</div>
-        `)
+        `);
 
         // change x2
         element.setAttribute('id', 'middle-id');
@@ -69,7 +69,7 @@ describe('ExternalMutationTracker', () => {
     it('can track style changes', async () => {
         const { element, tracker } = createTracker(`
             <div id="original-id" style="display: none; margin: 10px; flex-basis: auto">Text inside!</div>
-        `)
+        `);
 
         // change x2
         element.style.display = 'block';
@@ -100,7 +100,7 @@ describe('ExternalMutationTracker', () => {
         expect(changes.getChangedStyles()).toEqual([
             { name: 'display', value: 'inline' },
             { name: 'color', value: 'red' },
-            { name: 'background-image', value: 'url(https://example.com/image.png)' },
+            { name: 'background-image', value: 'url("https://example.com/image.png")' },
         ]);
         expect(changes.getRemovedStyles()).toEqual(['margin']);
     });
@@ -108,13 +108,13 @@ describe('ExternalMutationTracker', () => {
     it('can track class changes', async () => {
         const { element, tracker } = createTracker(`
             <div class="first-class second-class">Text inside!</div>
-        `)
+        `);
 
         // remove then add back
         element.classList.remove('second-class');
         element.classList.add('second-class');
         // add new (with some whitespace to be sneaky)
-        element.setAttribute('class', ` ${element.getAttribute('class')} new-class `)
+        element.setAttribute('class', ` ${element.getAttribute('class')} \n    new-class `);
         // remove
         element.classList.remove('first-class');
         // add then remove
@@ -135,6 +135,34 @@ describe('ExternalMutationTracker', () => {
         expect(changes.getRemovedClasses()).toEqual(['first-class']);
     });
 
+    it('can track class changes with whitespaces', async () => {
+        const { element, tracker } = createTracker(`
+            <div
+                class="
+                    first-class
+                    second-class
+                    third-class
+                "
+            >Text inside!</div>
+        `);
+
+        element.classList.remove('second-class');
+        element.classList.add('new-class');
+        await shortTimeout();
+
+        const changes = tracker.getChangedElement(element);
+        if (!changes) {
+            throw new Error('Expected changes to be present');
+        }
+        expect(changes.getChangedStyles()).toHaveLength(0);
+        expect(changes.getRemovedStyles()).toHaveLength(0);
+        expect(changes.getChangedAttributes()).toHaveLength(0);
+        expect(changes.getRemovedAttributes()).toHaveLength(0);
+
+        expect(changes.getAddedClasses()).toEqual(['new-class']);
+        expect(changes.getRemovedClasses()).toEqual(['second-class']);
+    });
+
     it('can track added element', async () => {
         const { element, tracker } = createTracker(`
             <div>
@@ -142,7 +170,7 @@ describe('ExternalMutationTracker', () => {
                 <span id="original-span1">the span 1</span>
                 <span id="original-span2">the span 2</span>
             </div>
-        `)
+        `);
 
         const span1 = document.getElementById('original-span1') as HTMLElement;
         const span2 = document.getElementById('original-span2') as HTMLElement;
@@ -186,7 +214,7 @@ describe('ExternalMutationTracker', () => {
         // still just 1 element added
         expect(tracker.getAddedElements()).toHaveLength(1);
         expect(tracker.changedElementsCount).toBe(1);
-        expect(tracker.getChangedElement(element)).not.toBeNull()
+        expect(tracker.getChangedElement(element)).not.toBeNull();
     });
 
     it('ignores changes based on the callback', async () => {

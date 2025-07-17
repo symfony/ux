@@ -7,26 +7,24 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-import React, { ReactElement } from 'react';
-import { createRoot } from 'react-dom/client';
 import { Controller } from '@hotwired/stimulus';
+import React, { type ReactElement } from 'react';
+import { createRoot } from 'react-dom/client';
 
 export default class extends Controller {
     declare readonly componentValue?: string;
     declare readonly propsValue?: object;
+    declare readonly permanentValue: boolean;
 
     static values = {
         component: String,
         props: Object,
+        permanent: { type: Boolean, default: false },
     };
 
     connect() {
         const props = this.propsValue ? this.propsValue : null;
-
         this.dispatchEvent('connect', { component: this.componentValue, props: props });
-
         if (!this.componentValue) {
             throw new Error('No component specified.');
         }
@@ -42,6 +40,12 @@ export default class extends Controller {
     }
 
     disconnect() {
+        if (this.permanentValue) {
+            // Prevent unmounting the component if the controller is permanent
+            // (no render is allowed after unmounting)
+            return;
+        }
+
         (this.element as any).root.unmount();
         this.dispatchEvent('unmount', {
             component: this.componentValue,

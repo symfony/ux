@@ -37,7 +37,7 @@ final class TurboExtension extends Extension implements PrependExtensionInterfac
 
         $loader = (new PhpFileLoader($container, new FileLocator(\dirname(__DIR__).'/../config')));
         $loader->load('services.php');
-        $container->getDefinition('turbo.twig.extension')->replaceArgument(1, $config['default_transport']);
+        $container->getDefinition('turbo.twig.runtime')->replaceArgument(1, $config['default_transport']);
 
         $this->registerTwig($config, $container);
         $this->registerBroadcast($config, $container, $loader);
@@ -114,7 +114,7 @@ final class TurboExtension extends Extension implements PrependExtensionInterfac
 
         // check that FrameworkBundle 6.3 or higher is installed
         $bundlesMetadata = $container->getParameter('kernel.bundles_metadata');
-        if (!isset($bundlesMetadata['FrameworkBundle'])) {
+        if (!\is_array($bundlesMetadata) || !isset($bundlesMetadata['FrameworkBundle'])) {
             return false;
         }
 

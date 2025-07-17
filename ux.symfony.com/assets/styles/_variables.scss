@@ -12,3 +12,12 @@ $n-900: #0D0D0D;
 $red: #FB4040;
 $yellow: #FBC640;
 $green: #84DE2C;
+
+$primary: #222 !default;
+
+$size-unit: calc(8px + 1.5625vw);
+
+$font-family-monospace: var(--font-family-code);
+
+$form-range-track-bg: #111315ab;
+$form-range-thumb-bg: var(--bs-secondary-color);

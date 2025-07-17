@@ -1,11 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Symfony\UX\Translator\Intl;
 
-use function Symfony\Component\String\s;
+use Symfony\Component\String\AbstractString;
 
 /**
- * @experimental
+ * @internal
  */
 final class Utils
 {
@@ -346,12 +355,12 @@ final class Utils
         return $elements;
     }
 
-    public static function matchIdentifierAtIndex(string $s, int $index): string
+    public static function matchIdentifierAtIndex(AbstractString $s, int $index): string
     {
         $match = [];
 
         while (true) {
-            $c = s($s)->codePointsAt($index)[0] ?? null;
+            $c = $s->codePointsAt($index)[0] ?? null;
             if (null === $c || self::isWhiteSpace($c) || self::isPatternSyntax($c)) {
                 break;
             }

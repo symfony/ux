@@ -24,7 +24,7 @@ use Symfony\UX\Dropzone\Tests\Kernel\TwigAppKernel;
  */
 class DropzoneBundleTest extends TestCase
 {
-    public function provideKernels()
+    public static function provideKernels()
     {
         yield 'empty' => [new EmptyAppKernel('test', true)];
         yield 'framework' => [new FrameworkAppKernel('test', true)];

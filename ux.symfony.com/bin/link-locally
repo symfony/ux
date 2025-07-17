@@ -1,33 +1,41 @@
 #!/usr/bin/env php
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 use Symfony\Component\Finder\Finder;
 
 require __DIR__.'/../vendor/autoload.php';
+
 $composerData = json_decode(file_get_contents(__DIR__.'/../composer.json'), true);
 
-$finder = new Finder();
-$finder->in(__DIR__.'/../../src')
+$packageDirectories = (new Finder())
+    ->in([
+        __DIR__.'/../../src',
+        __DIR__.'/../../src/Map/src/Bridge',
+    ])
     ->depth('== 0')
     ->directories();
 
-$repositories = [];
-foreach ($finder as $packageDirectory) {
-    $repositories[] = [
-        'type' => 'path',
-        'url' => $packageDirectory->getRealPath()
-    ];
-}
-$composerData['repositories'] = $repositories;
+$composerData['repositories'] = array_map(
+    fn ($directory) => ['type' => 'path', 'url' => $directory->getRealPath()],
+    iterator_to_array($packageDirectories),
+);
 
 foreach ($composerData['require'] as $package => $version) {
-    if (!str_starts_with($package, 'symfony/ux-')) {
-        continue;
+    if (str_starts_with($package, 'symfony/ux-') || 'symfony/stimulus-bundle' === $package) {
+        $composerData['require'][$package] = '2.x-dev';
     }
-
-    $composerData['require'][$package] = '2.x-dev';
 }
 
-file_put_contents(__DIR__.'/../composer.json', json_encode($composerData, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
-echo "composer.json updatded to point to local UX packages\n";
-echo "Run 'composer update' then 'yarn install --force'\n";
+file_put_contents(__DIR__.'/../composer.json', json_encode($composerData, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
+
+echo "composer.json updated to point to local UX packages\n\n";
+echo "Run 'composer update'\n\n";

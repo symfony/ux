@@ -18,8 +18,6 @@ use Symfony\UX\LiveComponent\LiveCollectionTrait;
 
 /**
  * @author Gábor Egyed <gabor.egyed@gmail.com>
- *
- * @experimental
  */
 final class LiveCollectionTraitTest extends TestCase
 {
@@ -43,7 +41,7 @@ final class LiveCollectionTraitTest extends TestCase
         self::assertSame($expectedFormData[$component->formName], $component->formValues);
     }
 
-    public function provideAddedItems(): iterable
+    public static function provideAddedItems(): iterable
     {
         yield 'unnamed parent form' => [
             [
@@ -131,7 +129,7 @@ final class LiveCollectionTraitTest extends TestCase
         ];
     }
 
-    public function provideRemovedItems(): iterable
+    public static function provideRemovedItems(): iterable
     {
         yield 'unnamed parent form' => [
             [

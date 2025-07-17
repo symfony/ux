@@ -1,0 +1,56 @@
+<!--
+- Kit: Shadcn UI
+- Component: Breadcrumb
+- Code:
+```twig
+<twig:Breadcrumb>
+    <twig:Breadcrumb:List>
+        <twig:Breadcrumb:Item>
+            <twig:Breadcrumb:Link href=".">Home</twig:Breadcrumb:Link>
+        </twig:Breadcrumb:Item>
+        <twig:Breadcrumb:Separator>
+            <twig:ux:icon name="lucide:slash" />
+        </twig:Breadcrumb:Separator>
+        <twig:Breadcrumb:Item>
+            <twig:Breadcrumb:Link href=".">Docs</twig:Breadcrumb:Link>
+        </twig:Breadcrumb:Item>
+        <twig:Breadcrumb:Separator>
+            <twig:ux:icon name="lucide:slash" />
+        </twig:Breadcrumb:Separator>
+        <twig:Breadcrumb:Item>
+            <twig:Breadcrumb:Link href=".">Components</twig:Breadcrumb:Link>
+        </twig:Breadcrumb:Item>
+        <twig:Breadcrumb:Separator>
+            <twig:ux:icon name="lucide:slash" />
+        </twig:Breadcrumb:Separator>
+        <twig:Breadcrumb:Item>
+            <twig:Breadcrumb:Page>Breadcrumb</twig:Breadcrumb:Page>
+        </twig:Breadcrumb:Item>
+    </twig:Breadcrumb:List>
+</twig:Breadcrumb>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<nav aria-label="Breadcrumb"><ol class="flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5 ">
+<li class="inline-flex items-center gap-1.5 ">
+<a class="transition-colors hover:text-foreground " href=".">Home</a>
+        </li>
+        <li class="[&amp;&gt;svg]:w-3.5 [&amp;&gt;svg]:h-3.5 " role="presentation" aria-hidden="true">
+<svg xmlns="https://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 2L2 22"></path></svg>
+        </li>
+        <li class="inline-flex items-center gap-1.5 ">
+<a class="transition-colors hover:text-foreground " href=".">Docs</a>
+        </li>
+        <li class="[&amp;&gt;svg]:w-3.5 [&amp;&gt;svg]:h-3.5 " role="presentation" aria-hidden="true">
+<svg xmlns="https://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 2L2 22"></path></svg>
+        </li>
+        <li class="inline-flex items-center gap-1.5 ">
+<a class="transition-colors hover:text-foreground " href=".">Components</a>
+        </li>
+        <li class="[&amp;&gt;svg]:w-3.5 [&amp;&gt;svg]:h-3.5 " role="presentation" aria-hidden="true">
+<svg xmlns="https://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 2L2 22"></path></svg>
+        </li>
+        <li class="inline-flex items-center gap-1.5 ">
+<span class="font-normal text-foreground " role="link" aria-disabled="true" aria-current="page">Breadcrumb</span>
+        </li>
+    </ol>
+</nav>

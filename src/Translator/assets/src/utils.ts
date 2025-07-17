@@ -6,7 +6,7 @@
  * @param string The string to replace in
  * @param replacePairs The pairs of characters to replace
  */
-export function strtr(string: string, replacePairs: Record<string, string | number>): string {
+export function strtr(string: string, replacePairs: Record<string, string | number | Date>): string {
     const regex: Array<string> = Object.entries(replacePairs).map(([from]) => {
         return from.replace(/([-[\]{}()*+?.\\^$|#,])/g, '\\$1');
     });

@@ -9,8 +9,6 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 namespace Symfony\UX\LiveComponent\Tests\Fixtures\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -39,7 +37,6 @@ class BlogPostFormLiveCollectionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'csrf_protection' => false,
             'data_class' => BlogPost::class,
         ]);
     }

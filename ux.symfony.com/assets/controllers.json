@@ -6,6 +6,7 @@
                 "fetch": "lazy",
                 "autoimport": {
                     "tom-select/dist/css/tom-select.default.css": false,
+                    "tom-select/dist/css/tom-select.bootstrap4.css": false,
                     "tom-select/dist/css/tom-select.bootstrap5.css": true
                 }
             }
@@ -37,6 +38,12 @@
         },
         "@symfony/ux-lazy-image": {
             "lazy-image": {
+                "enabled": true,
+                "fetch": "lazy"
+            }
+        },
+        "@symfony/ux-leaflet-map": {
+            "map": {
                 "enabled": true,
                 "fetch": "lazy"
             }
@@ -74,6 +81,15 @@
                 "fetch": "lazy"
             }
         },
+        "@symfony/ux-toggle-password": {
+            "toggle-password": {
+                "enabled": true,
+                "fetch": "lazy",
+                "autoimport": {
+                    "@symfony/ux-toggle-password/dist/style.min.css": true
+                }
+            }
+        },
         "@symfony/ux-turbo": {
             "turbo-core": {
                 "enabled": true,
@@ -87,7 +103,7 @@
         "@symfony/ux-typed": {
             "typed": {
                 "enabled": true,
-                "fetch": "eager"
+                "fetch": "lazy"
             }
         },
         "@symfony/ux-vue": {

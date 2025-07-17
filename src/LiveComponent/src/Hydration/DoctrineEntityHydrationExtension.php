@@ -15,6 +15,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * Handles hydration of Doctrine entities.
+ *
+ * @internal
+ */
 class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
 {
     /**
@@ -43,12 +48,12 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
             return null;
         }
 
-        // $data is the single identifier or array of identifiers
-        if (\is_scalar($value) || (\is_array($value) && isset($value[0]))) {
+        // $data is a single identifier or array of identifiers
+        if (\is_scalar($value) || \is_array($value)) {
             return $this->objectManagerFor($className)->find($className, $value);
         }
 
-        throw new \InvalidArgumentException(sprintf('Cannot hydrate Doctrine entity "%s". Value of type "%s" is not supported.', $className, get_debug_type($value)));
+        throw new \InvalidArgumentException(\sprintf('Cannot hydrate Doctrine entity "%s". Value of type "%s" is not supported.', $className, get_debug_type($value)));
     }
 
     public function dehydrate(object $object): mixed
@@ -58,6 +63,9 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
             ->getClassMetadata($class)
             ->getIdentifierValues($object)
         ;
+
+        // Dehydrate ID values in case they are other entities
+        $id = array_map(fn ($id) => \is_object($id) && $this->supports($id::class) ? $this->dehydrate($id) : $id, $id);
 
         switch (\count($id)) {
             case 0:

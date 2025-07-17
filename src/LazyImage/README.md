@@ -1,7 +1,17 @@
 # Symfony UX LazyImage
 
+> [!WARNING]
+> **Deprecated**: This package has been **deprecated** in 2.x and will be removed in the next major version.
+
+The package has been deprecated in favor of [modern techniques to improve image loading performance](https://web.dev/learn/images/performance-issues) natively supported
+by all major browsers (`<img loading="lazy">`).
+
+To keep using BlurHash functionality, you can use the package [kornrunner/php-blurhash](https://github.com/kornrunner/php-blurhash).
+
+---
+
 Symfony UX LazyImage is a Symfony bundle providing utilities to improve
-image loading performance. It is part of [the Symfony UX initiative](https://symfony.com/ux).
+image loading performance. It is part of [the Symfony UX initiative](https://ux.symfony.com/).
 
 It provides two key features:
 

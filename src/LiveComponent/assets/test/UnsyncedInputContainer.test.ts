@@ -36,7 +36,7 @@ describe('UnsyncedInputContainer', () => {
         container.add(element3, 'some_model3');
 
         container.markModelAsSynced('some_model2');
-        expect(container.getUnsyncedModelNames()).toEqual(['some_model3'])
+        expect(container.getUnsyncedModelNames()).toEqual(['some_model3']);
     });
 
     it('resetUnsyncedFields removes all model fields except those unsynced', () => {

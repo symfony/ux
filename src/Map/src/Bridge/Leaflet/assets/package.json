@@ -1,0 +1,56 @@
+{
+    "name": "@symfony/ux-leaflet-map",
+    "description": "Leaflet bridge for Symfony UX Map, integrate interactive maps in your Symfony applications",
+    "license": "MIT",
+    "version": "2.27.0",
+    "keywords": [
+        "symfony-ux",
+        "leaflet",
+        "map"
+    ],
+    "homepage": "https://ux.symfony.com/map",
+    "repository": "https://github.com/symfony/ux-leaflet-map",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "dist/map_controller.js",
+    "types": "dist/map_controller.d.ts",
+    "scripts": {
+        "build": "tsx ../../../../../../bin/build_package.ts .",
+        "watch": "tsx ../../../../../../bin/build_package.ts . --watch",
+        "test": "../../../../../../bin/test_package.sh .",
+        "check": "biome check",
+        "ci": "biome ci"
+    },
+    "symfony": {
+        "controllers": {
+            "map": {
+                "main": "dist/map_controller.js",
+                "webpackMode": "lazy",
+                "fetch": "lazy",
+                "enabled": true
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0",
+            "leaflet": "^1.9.4",
+            "@symfony/ux-leaflet-map": "path:%PACKAGE%/dist/map_controller.js"
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "leaflet": "^1.9.4"
+    },
+    "peerDependenciesMeta": {
+        "leaflet": {
+            "optional": false
+        }
+    },
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "@symfony/ux-map": "workspace:*",
+        "@types/leaflet": "^1.9.12",
+        "leaflet": "^1.9.4"
+    }
+}

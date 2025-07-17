@@ -1,0 +1,7 @@
+<div
+    foo="{{ attributes.render('foo') }}"
+    bar="{{ attributes.render('bar')|default('default') }}"
+    baz="default {{ attributes.render('baz') }}"
+    qux="{{ attributes.render('qux') }} default"
+    {{ attributes }}
+/>

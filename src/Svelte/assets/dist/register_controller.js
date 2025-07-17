@@ -1,7 +1,9 @@
 function registerSvelteControllerComponents(context) {
     const svelteControllers = {};
     const importAllSvelteComponents = (r) => {
-        r.keys().forEach((key) => (svelteControllers[key] = r(key).default));
+        r.keys().forEach((key) => {
+            svelteControllers[key] = r(key).default;
+        });
     };
     importAllSvelteComponents(context);
     window.resolveSvelteComponent = (name) => {

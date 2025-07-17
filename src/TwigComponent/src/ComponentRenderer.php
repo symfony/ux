@@ -11,41 +11,46 @@
 
 namespace Symfony\UX\TwigComponent;
 
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
+use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\TwigComponent\Event\PostRenderEvent;
 use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 use Twig\Environment;
-use Twig\Extension\EscaperExtension;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @internal
  */
-final class ComponentRenderer implements ComponentRendererInterface
+final class ComponentRenderer implements ComponentRendererInterface, ResetInterface
 {
-    private bool $safeClassesRegistered = false;
+    private array $templateClasses = [];
 
     public function __construct(
         private Environment $twig,
         private EventDispatcherInterface $dispatcher,
         private ComponentFactory $factory,
-        private PropertyAccessorInterface $propertyAccessor,
-        private ComponentStack $componentStack
+        private ComponentProperties $componentProperties,
+        private ComponentStack $componentStack,
     ) {
     }
 
-    public function createAndRender(string $name, array $props = []): string
+    /**
+     * Allow the render process to be short-circuited.
+     */
+    public function preCreateForRender(string $name, array $props = []): ?string
     {
         $event = new PreCreateForRenderEvent($name, $props);
         $this->dispatcher->dispatch($event);
 
-        // allow the process to be short-circuited
-        if (null !== $rendered = $event->getRenderedString()) {
-            return $rendered;
+        return $event->getRenderedString();
+    }
+
+    public function createAndRender(string $name, array $props = []): string
+    {
+        if ($preRendered = $this->preCreateForRender($name, $props)) {
+            return $preRendered;
         }
 
         return $this->render($this->factory->create($name, $props));
@@ -57,98 +62,87 @@ final class ComponentRenderer implements ComponentRendererInterface
 
         $event = $this->preRender($mounted);
 
+        $variables = $event->getVariables();
+        // see ComponentNode. When rendering an individual embedded component,
+        // *not* through its parent, we need to set the parent template.
+        if ($templateIndex = $event->getTemplateIndex()) {
+            $variables['__parent__'] = $event->getParentTemplateForEmbedded();
+        }
+
         try {
-            return $this->twig->render($event->getTemplate(), $event->getVariables());
+            return $this->twig->loadTemplate(
+                $this->templateClasses[$template = $event->getTemplate()] ??= $this->twig->getTemplateClass($template),
+                $template,
+                $templateIndex,
+            )->render($variables);
         } finally {
-            $this->componentStack->pop();
+            $mounted = $this->componentStack->pop();
 
             $event = new PostRenderEvent($mounted);
             $this->dispatcher->dispatch($event);
         }
     }
 
-    public function embeddedContext(string $name, array $props, array $context): array
+    public function startEmbeddedComponentRender(string $name, array $props, array $context, string $hostTemplateName, int $index): PreRenderEvent
     {
         $context[PreRenderEvent::EMBEDDED] = true;
 
-        $embeddedContext = $this->preRender($this->factory->create($name, $props), $context)->getVariables();
+        $mounted = $this->factory->create($name, $props);
+        $mounted->addExtraMetadata('hostTemplate', $hostTemplateName);
+        $mounted->addExtraMetadata('embeddedTemplateIndex', $index);
 
-        if (!isset($embeddedContext['outerBlocks'])) {
-            $embeddedContext['outerBlocks'] = new BlockStack();
-        }
+        $this->componentStack->push($mounted);
 
-        return $embeddedContext;
+        return $this->preRender($mounted, $context);
+    }
+
+    public function finishEmbeddedComponentRender(): void
+    {
+        $mounted = $this->componentStack->pop();
+
+        $event = new PostRenderEvent($mounted);
+        $this->dispatcher->dispatch($event);
     }
 
     private function preRender(MountedComponent $mounted, array $context = []): PreRenderEvent
     {
-        if (!$this->safeClassesRegistered) {
-            $this->twig->getExtension(EscaperExtension::class)->addSafeClass(ComponentAttributes::class, ['html']);
-
-            $this->safeClassesRegistered = true;
-        }
-
         $component = $mounted->getComponent();
         $metadata = $this->factory->metadataFor($mounted->getName());
-        $variables = array_merge(
-            // first so values can be overridden
-            $context,
 
-            // add the component as "this"
-            ['this' => $component],
+        $classProps = [];
+        if (!$metadata->isAnonymous()) {
+            $classProps = $this->componentProperties->getProperties($component, $metadata->isPublicPropsExposed());
+        }
 
-            // add computed properties proxy
-            ['computed' => new ComputedPropertiesProxy($component)],
-
-            // add attributes
-            [$metadata->getAttributesVar() => $mounted->getAttributes()],
-
-            // expose public properties and properties marked with ExposeInTemplate attribute
-            iterator_to_array($this->exposedVariables($component, $metadata->isPublicPropsExposed())),
-        );
-        $event = new PreRenderEvent($mounted, $metadata, $variables);
+        // expose public properties and properties marked with ExposeInTemplate attribute
+        $props = [...$mounted->getInputProps(), ...$classProps];
+        $event = new PreRenderEvent($mounted, $metadata, [
+            ...$context,
+            ...$props,
+            $metadata->getAttributesVar() => $mounted->getAttributes(),
+        ]);
 
         $this->dispatcher->dispatch($event);
+
+        $event->setVariables([
+            ...$event->getVariables(),
+            // add the component as "this"
+            'this' => $component,
+            'computed' => new ComputedPropertiesProxy($component),
+            'outerScope' => $context,
+            // keep this line for BC break reasons
+            '__props' => $classProps,
+            // add the context in a separate variable to keep track
+            // of what is coming from outside the component, excluding props
+            // as they override initial context values
+            '__context' => array_diff_key($context, $props),
+        ]);
 
         return $event;
     }
 
-    private function exposedVariables(object $component, bool $exposePublicProps): \Iterator
+    public function reset(): void
     {
-        if ($exposePublicProps) {
-            yield from get_object_vars($component);
-        }
-
-        $class = new \ReflectionClass($component);
-
-        foreach ($class->getProperties() as $property) {
-            if (!$attribute = $property->getAttributes(ExposeInTemplate::class)[0] ?? null) {
-                continue;
-            }
-
-            $attribute = $attribute->newInstance();
-
-            /** @var ExposeInTemplate $attribute */
-            $value = $attribute->getter ? $component->{rtrim($attribute->getter, '()')}() : $this->propertyAccessor->getValue($component, $property->name);
-
-            yield $attribute->name ?? $property->name => $value;
-        }
-
-        foreach ($class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-            if (!$attribute = $method->getAttributes(ExposeInTemplate::class)[0] ?? null) {
-                continue;
-            }
-
-            $attribute = $attribute->newInstance();
-
-            /** @var ExposeInTemplate $attribute */
-            $name = $attribute->name ?? (str_starts_with($method->name, 'get') ? lcfirst(substr($method->name, 3)) : $method->name);
-
-            if ($method->getNumberOfRequiredParameters()) {
-                throw new \LogicException(sprintf('Cannot use %s on methods with required parameters (%s::%s).', ExposeInTemplate::class, $component::class, $method->name));
-            }
-
-            yield $name => $component->{$method->name}();
-        }
+        $this->templateClasses = [];
     }
 }

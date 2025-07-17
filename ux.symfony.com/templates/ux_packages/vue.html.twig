@@ -1,13 +1,16 @@
-{% extends 'packageBase.html.twig' %}
+{% extends 'ux_packages/package.html.twig' %}
 
-{% block component_header %}
+{% block importmap %}
+    {{ importmap('app-vue') }}
+{% endblock %}
+
+{% block package_header %}
     {% component PackageHeader with {
         package: 'vue',
         eyebrowText: 'Vue.js Component Rendering'
     } %}
         {% block title_header %}
-            Render Vue.js from
-            <span class="playfair ps-2">inside Twig</span>
+            Render Vue.js from <em>inside Twig</em>
         {% endblock %}
 
         {% block sub_content %}
@@ -17,23 +20,22 @@
 {% endblock %}
 
 {% block code_block_left %}
-    <twig:CodeBlock filename="templates/ux_packages/vue.html.twig" height="350px"/>
+    <twig:CodeBlock filename="assets/vue/controllers/PackageSearch.js" height="300px" />
 {% endblock %}
 
 {% block code_block_right %}
     <twig:CodeBlock
-        filename="assets/vue/controllers/PackageSearch.js"
-        height="350px"
+        filename="templates/ux_packages/vue.html.twig"
+        height="300px"
         language="html"
+        targetTwigBlock="demo_content"
     />
 {% endblock %}
 
 {% block demo_title %}UX Vue.js{% endblock %}
 
 {% block demo_content %}
-    <div {{ vue_component('PackageSearch', {
-        packages: packagesData
-    }) }}>
-        Loading... <i class="fas fa-cog fa-spin fa-3x"></i>
+    <div {{ vue_component('PackageSearch', {packages: packagesData}) }}>
+        Loading...
     </div>
 {% endblock %}

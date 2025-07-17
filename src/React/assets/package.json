@@ -2,9 +2,25 @@
     "name": "@symfony/ux-react",
     "description": "Integration of React in Symfony",
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "2.27.0",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://ux.symfony.com/react",
+    "repository": "https://github.com/symfony/ux-react",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
     "main": "dist/register_controller.js",
     "types": "dist/register_controller.d.ts",
+    "scripts": {
+        "build": "tsx ../../../bin/build_package.ts .",
+        "watch": "tsx ../../../bin/build_package.ts . --watch",
+        "test": "../../../bin/test_package.sh .",
+        "check": "biome check",
+        "ci": "biome ci"
+    },
     "symfony": {
         "controllers": {
             "react": {
@@ -31,6 +47,7 @@
         "@types/react": "^18.0",
         "@types/react-dom": "^18.0",
         "@types/webpack-env": "^1.16",
+        "@vitejs/plugin-react": "^4.1.0",
         "react": "^18.0",
         "react-dom": "^18.0"
     }

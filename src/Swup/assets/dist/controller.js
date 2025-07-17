@@ -1,9 +1,9 @@
 import { Controller } from '@hotwired/stimulus';
-import Swup from 'swup';
 import SwupDebugPlugin from '@swup/debug-plugin';
-import SwupFormsPlugin from '@swup/forms-plugin';
 import SwupFadeTheme from '@swup/fade-theme';
+import SwupFormsPlugin from '@swup/forms-plugin';
 import SwupSlideTheme from '@swup/slide-theme';
+import Swup from 'swup';
 
 class default_1 extends Controller {
     connect() {

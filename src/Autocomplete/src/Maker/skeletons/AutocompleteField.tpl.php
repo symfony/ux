@@ -1,6 +1,5 @@
 <?php
 
-use Symfony\Bundle\MakerBundle\Str;
 use Symfony\UX\Autocomplete\Maker\MakerAutocompleteVariables;
 
 /** @var MakerAutocompleteVariables $variables */
@@ -16,24 +15,23 @@ namespace <?php echo $namespace; ?>;
 #[AsEntityAutocompleteField]
 class <?php echo $class_name; ?> extends AbstractType
 {
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'class' => <?php echo $variables->entityClassDetails->getShortName(); ?>::class,
             'placeholder' => 'Choose a <?php echo $variables->entityClassDetails->getShortName(); ?>',
-            //'choice_label' => 'name',
+            // 'choice_label' => 'name',
 
-<?php if ($variables->repositoryClassDetails) { ?>
-            'query_builder' => function(<?php echo $variables->repositoryClassDetails->getShortName(); ?> $<?php echo Str::asLowerCamelCase($variables->repositoryClassDetails->getShortName()); ?>) {
-                return $<?php echo Str::asLowerCamelCase($variables->repositoryClassDetails->getShortName()); ?>->createQueryBuilder('<?php echo Str::asLowerCamelCase($variables->entityClassDetails->getShortName()); ?>');
-            },
-<?php } ?>
-            //'security' => 'ROLE_SOMETHING',
+            // choose which fields to use in the search
+            // if not passed, *all* fields are used
+            // 'searchable_fields' => ['name'],
+
+            // 'security' => 'ROLE_SOMETHING',
         ]);
     }
 
     public function getParent(): string
     {
-        return ParentEntityAutocompleteType::class;
+        return BaseEntityAutocompleteType::class;
     }
 }

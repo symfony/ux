@@ -14,7 +14,7 @@ namespace Symfony\UX\Translator\MessageParameters\Printer;
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
  *
- * @experimental
+ * @internal
  */
 final class TypeScriptMessageParametersPrinter
 {
@@ -50,10 +50,10 @@ final class TypeScriptMessageParametersPrinter
                     $value = 'Date';
                     break;
                 default:
-                    throw new \InvalidArgumentException(sprintf('Unknown type "%s" for parameter "%s"', $parameter['type'], $parameterName));
+                    throw new \InvalidArgumentException(\sprintf('Unknown type "%s" for parameter "%s"', $parameter['type'], $parameterName));
             }
 
-            $type .= sprintf("'%s': %s, ", $parameterName, $value);
+            $type .= \sprintf("'%s': %s, ", $parameterName, $value);
         }
 
         $type = rtrim($type, ', ');

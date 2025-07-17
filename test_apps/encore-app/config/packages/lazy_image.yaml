@@ -1,0 +1,16 @@
+# lazy_image:
+    # By default, images are fetched through "file_get_contents" function, but you can use your own implementation 
+    # with an invokable service or a callable. 
+    # https://symfony.com/bundles/ux-lazy-image/current/index.html#customizing-images-fetching
+    # fetch_image_content: 'App\BlurHash\FetchImageContent'
+
+    # It is recommended to cache the generated BlurHash for performance reasons, to avoid generating it for each request.
+    # https://symfony.com/bundles/ux-lazy-image/current/index.html#performance-considerations
+    # cache: cache.lazy_image
+
+framework:
+    cache:
+        # pools:
+            # cache.lazy_image: 
+                # If possible, prefer to use a cache adapter that is not cleared between deployments, like "cache.adapter.redis"
+                # adapter: cache.app

@@ -7,18 +7,32 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
+import { registerVueControllerComponents } from '../src/register_controller';
+import Hello from './fixtures/Hello.vue';
+import Goodbye from './fixtures-lazy/Goodbye.vue';
 
-import {registerVueControllerComponents} from '../src/register_controller';
-import {createRequireContextPolyfill} from './util/require_context_poylfill';
-import Hello from './fixtures/Hello.vue'
-import Goodbye from './fixtures-lazy/Goodbye.vue'
+import RequireContext = __WebpackModuleApi.RequireContext;
 
-require.context = createRequireContextPolyfill(__dirname);
+const createFakeFixturesContext = (lazyDir: boolean): RequireContext => {
+    const files: any = {};
+
+    if (lazyDir) {
+        files['./Goodbye.vue'] = { default: Goodbye };
+    } else {
+        files['./Hello.vue'] = { default: Hello };
+    }
+
+    const context = (id: string): any => files[id];
+    context.keys = () => Object.keys(files);
+    context.resolve = (id: string) => id;
+    context.id = './fixtures';
+
+    return context;
+};
 
 describe('registerVueControllerComponents', () => {
     it('should resolve components synchronously', () => {
-        registerVueControllerComponents(require.context('./fixtures', true, /\.vue$/));
+        registerVueControllerComponents(createFakeFixturesContext(false));
         const resolveComponent = window.resolveVueComponent;
 
         expect(resolveComponent).not.toBeUndefined();
@@ -26,7 +40,7 @@ describe('registerVueControllerComponents', () => {
     });
 
     it('should resolve lazy components asynchronously', () => {
-        registerVueControllerComponents(require.context('./fixtures-lazy', true, /\.vue$/, 'lazy'));
+        registerVueControllerComponents(createFakeFixturesContext(true));
         const resolveComponent = window.resolveVueComponent;
 
         expect(resolveComponent).not.toBeUndefined();
@@ -34,9 +48,11 @@ describe('registerVueControllerComponents', () => {
     });
 
     it('errors with a bad name', () => {
-        registerVueControllerComponents(require.context('./fixtures', true, /\.vue$/));
+        registerVueControllerComponents(createFakeFixturesContext(false));
         const resolveComponent = window.resolveVueComponent;
 
-        expect(() => resolveComponent('Helloooo')).toThrow('Vue controller "Helloooo" does not exist. Possible values: Hello');
+        expect(() => resolveComponent('Helloooo')).toThrow(
+            'Vue controller "Helloooo" does not exist. Possible values: Hello'
+        );
     });
 });

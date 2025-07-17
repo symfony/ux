@@ -1,82 +1,182 @@
-@import './variables';
-@import '../../vendor/twbs/bootstrap/scss/bootstrap';
+// Bootstrap foundation
+@import "../../vendor/twbs/bootstrap/scss/functions";
 
-@import './container';
-@import './navigation';
-@import './images';
-@import './type';
-@import './terminal';
-@import './highlight';
-@import './live_demos';
+// Default variable overrides
+@import "variables";
 
-body {
-    font-family: Inter;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 26px;
-    letter-spacing: 0px;
-    color: #0A0A0A;
-}
+// $enable-cssgrid: true
+// $enable-grid-classes: true;
 
-a, a.page-link, a.page-link:hover {
-    text-decoration: none;
-    color: #0A0A0A;
-}
+// Bootstrap variables
+@import "../../vendor/twbs/bootstrap/scss/variables";
+@import "../../vendor/twbs/bootstrap/scss/variables-dark";
+
+// Remove Bootstrap variables/overrides
+$theme-colors: map-remove($theme-colors, "info", "light");
+
+// Boostrap remainder of required parts
+@import "../../vendor/twbs/bootstrap/scss/maps";
+@import "../../vendor/twbs/bootstrap/scss/mixins";
+@import "../../vendor/twbs/bootstrap/scss/utilities";
+@import "../../vendor/twbs/bootstrap/scss/root";
+
+// Remove multiple utilities with a comma-separated list
+// Margin
+$utilities: map-remove(
+    $utilities,
+    // Background
+    "bg-opacity",
+    "subtle-background-color",
+
+    // Negative margin
+    "negative-margin",
+    "negative-margin-x",
+    "negative-margin-y",
+    "negative-margin-top",
+    "negative-margin-end",
+    "negative-margin-bottom",
+    "negative-margin-start",
+    // Link
+    "link-opacity",
+    "link-offset",
+    "link-underline",
+    "link-underline-opacity",
+    // Border
+    "border",
+    "border-top",
+    "border-end",
+    "border-bottom",
+    "border-start",
+    "border-color",
+    "subtle-border-color",
+    "border-width",
+    "border-opacity",
+    // Position
+    "top",
+    "bottom",
+    "start",
+    "end",
+    "translate-middle",
+);
+
+// Layout & components
+@import "../../vendor/twbs/bootstrap/scss/reboot";
+@import "../../vendor/twbs/bootstrap/scss/type";
+@import "../../vendor/twbs/bootstrap/scss/images";
+@import "../../vendor/twbs/bootstrap/scss/containers";
+@import "../../vendor/twbs/bootstrap/scss/grid";
+@import "../../vendor/twbs/bootstrap/scss/tables";
+@import "../../vendor/twbs/bootstrap/scss/forms";
+@import "../../vendor/twbs/bootstrap/scss/buttons";
+// @import "../../vendor/twbs/bootstrap/scss/transitions";
+// @import "../../vendor/twbs/bootstrap/scss/dropdown";
+// @import "../../vendor/twbs/bootstrap/scss/button-group";
+@import "../../vendor/twbs/bootstrap/scss/nav";
+// @import "../../vendor/twbs/bootstrap/scss/navbar";
+@import "../../vendor/twbs/bootstrap/scss/card";
+// @import "../../vendor/twbs/bootstrap/scss/accordion";
+@import "../../vendor/twbs/bootstrap/scss/breadcrumb";
+// @import "../../vendor/twbs/bootstrap/scss/pagination";
+// @import "../../vendor/twbs/bootstrap/scss/badge";
+@import "../../vendor/twbs/bootstrap/scss/alert";
+// @import "../../vendor/twbs/bootstrap/scss/progress";
+// @import "../../vendor/twbs/bootstrap/scss/list-group";
+@import "../../vendor/twbs/bootstrap/scss/close";
+// @import "../../vendor/twbs/bootstrap/scss/toasts";
+@import "../../vendor/twbs/bootstrap/scss/modal";
+@import "../../vendor/twbs/bootstrap/scss/tooltip";
+// @import "../../vendor/twbs/bootstrap/scss/popover";
+// @import "../../vendor/twbs/bootstrap/scss/carousel";
+// @import "../../vendor/twbs/bootstrap/scss/spinners";
+// @import "../../vendor/twbs/bootstrap/scss/offcanvas";
+// @import "../../vendor/twbs/bootstrap/scss/placeholders";
+
+// Helpers
+@import "../../vendor/twbs/bootstrap/scss/helpers/clearfix";
+//@import "../../vendor/twbs/bootstrap/scss/helpers/color-bg";
+//@import "../../vendor/twbs/bootstrap/scss/helpers/colored-links";
+@import "../../vendor/twbs/bootstrap/scss/helpers/focus-ring";
+//@import "../../vendor/twbs/bootstrap/scss/helpers/icon-link";
+//@import "../../vendor/twbs/bootstrap/scss/helpers/ratio";
+//@import "../../vendor/twbs/bootstrap/scss/helpers/position";
+@import "../../vendor/twbs/bootstrap/scss/helpers/stacks";
+//@import "../../vendor/twbs/bootstrap/scss/helpers/visually-hidden";
+@import "../../vendor/twbs/bootstrap/scss/helpers/stretched-link";
+//@import "../../vendor/twbs/bootstrap/scss/helpers/text-truncation";
+//@import "../../vendor/twbs/bootstrap/scss/helpers/vr";
 
 
-.navbar-toggler:focus {
-    box-shadow: none;
-}
 
-.dropdown button {
-    border: none;
-    background: none;
-    display: block;
-}
-.nav-white-mode .nav-options, i.nav-white-mode {
-    color: #fff;
-}
+// Utilities
+@import "../../vendor/twbs/bootstrap/scss/utilities/api";
 
-footer {
-    height: 100px;
-}
+// Base
+@import "app/font";
+@import "app/html";
+@import "app/root";
+@import "app/typography";
 
-.hero-background {
-    background: url(../images/background_homepage.png);
-}
+// Layouts
+@import "layouts/container";
+@import "layouts/cluster";
+@import "layouts/grid";
+@import "layouts/section";
 
-#cropper-preview {
-    overflow: hidden;
-    width: 200px;
-    height: 200px;
-}
+// Components
+@import "components/Badge";
+@import "components/Banner";
+@import "components/Button";
+@import "components/Browser";
+@import "components/Changelog";
+@import "components/DataList";
+@import "components/DemoContainer";
+@import "components/DemoCard";
+@import "components/DocsLink";
+@import "components/FeatureBox";
+@import "components/FileTree";
+@import "components/Icon";
+@import "components/IconGrid";
+@import "components/IconModal";
+@import "components/IconSearch";
+@import "components/IconSetCard";
+@import "components/Pagination";
+@import "components/ProductGrid";
+@import "components/PackageHeader";
+@import "components/PackageBox";
+@import "components/PackageList";
+@import "components/SidebarNav";
+@import "components/Cookbook";
+@import "components/SupportBox";
+@import "components/Tabs";
+@import "components/Tag";
+@import "components/Terminal";
+@import "components/TerminalCommand";
+@import "components/ThemeSwitcher";
+@import "components/Toolkit_Tabs";
+@import "components/Wysiwyg";
 
-.alert-right-message {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 2;
-    padding: 1.25rem 1rem;
-    font-size: .8rem;
-}
+// Utilities
+@import "utilities/animation";
+@import "utilities/arrow";
+@import "utilities/background";
+@import "utilities/info-tooltips";
+@import "utilities/font";
+@import "utilities/shadow";
+@import "utilities/text";
 
-.page-item.active .page-link {
-    background-color: $n-700;
-    border-color: $n-700;
-}
+// Vendors customization
+@import "vendor/bootstrap";
+@import "vendor/highlight";
+@import "vendor/tom-select";
 
-.btn-expand-code {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    color: rgb(156 163 175);
-    background-color: rgb(55 65 81);
-}
-.btn-expand-code:hover, .btn-expand-code:active {
-    background-color: rgb(55 65 81) !important;
-    color: #fff !important;
-}
+// Sections
+@import "sections/header";
+@import "sections/nav";
+@import "sections/hero";
+
+@import "./container";
+@import "./images";
+
 .code-description a {
     text-decoration: underline;
 }

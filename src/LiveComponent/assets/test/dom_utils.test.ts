@@ -1,20 +1,17 @@
-import {
-    getValueFromElement,
-    cloneHTMLElement,
-    htmlToElement,
-    getModelDirectiveFromElement,
-    elementBelongsToThisComponent,
-    getElementAsTagText,
-    setValueOnElement
-} from '../src/dom_utils';
-import ValueStore from '../src/Component/ValueStore';
-import Component from '../src/Component';
 import Backend from '../src/Backend/Backend';
-import {StandardElementDriver} from '../src/Component/ElementDriver';
+import Component from '../src/Component';
+import ValueStore from '../src/Component/ValueStore';
+import {
+    cloneHTMLElement,
+    elementBelongsToThisComponent,
+    getModelDirectiveFromElement,
+    getValueFromElement,
+    htmlToElement,
+    setValueOnElement,
+} from '../src/dom_utils';
+import { noopElementDriver } from './tools';
 
-const createStore = function(props: any = {}): ValueStore {
-    return new ValueStore(props);
-}
+const createStore = (props: any = {}): ValueStore => new ValueStore(props);
 
 describe('getValueFromElement', () => {
     it('Correctly adds data from valued checked checkbox', () => {
@@ -24,14 +21,13 @@ describe('getValueFromElement', () => {
         input.dataset.model = 'foo';
         input.value = 'the_checkbox_value';
 
-        expect(getValueFromElement(input, createStore()))
-            .toEqual('the_checkbox_value');
+        expect(getValueFromElement(input, createStore())).toEqual('the_checkbox_value');
 
-        expect(getValueFromElement(input, createStore({ foo: [] })))
-            .toEqual(['the_checkbox_value']);
+        expect(getValueFromElement(input, createStore({ foo: [] }))).toEqual(['the_checkbox_value']);
 
-        expect(getValueFromElement(input, createStore({ foo: ['bar'] })))
-            .toEqual(['bar', 'the_checkbox_value']);
+        expect(getValueFromElement(input, createStore({ foo: ['bar'] }))).toEqual(['bar', 'the_checkbox_value']);
+
+        expect(getValueFromElement(input, createStore({ foo: { '1': 'bar' } }))).toEqual(['bar', 'the_checkbox_value']);
     });
 
     it('Correctly removes data from valued unchecked checkbox', () => {
@@ -41,15 +37,14 @@ describe('getValueFromElement', () => {
         input.dataset.model = 'foo';
         input.value = 'the_checkbox_value';
 
-        expect(getValueFromElement(input, createStore()))
-            .toEqual(null);
-        expect(getValueFromElement(input, createStore({ foo: ['the_checkbox_value'] })))
-            .toEqual([]);
+        expect(getValueFromElement(input, createStore())).toEqual(null);
+        expect(getValueFromElement(input, createStore({ foo: ['the_checkbox_value'] }))).toEqual([]);
         // unchecked value already was not in store
-        expect(getValueFromElement(input, createStore({ foo: ['bar'] })))
-            .toEqual(['bar']);
-        expect(getValueFromElement(input, createStore({ foo: ['bar', 'the_checkbox_value'] })))
-            .toEqual(['bar']);
+        expect(getValueFromElement(input, createStore({ foo: ['bar'] }))).toEqual(['bar']);
+        expect(getValueFromElement(input, createStore({ foo: ['bar', 'the_checkbox_value'] }))).toEqual(['bar']);
+        expect(getValueFromElement(input, createStore({ foo: { '1': 'bar', '2': 'the_checkbox_value' } }))).toEqual([
+            'bar',
+        ]);
     });
 
     it('Correctly handles boolean checkbox', () => {
@@ -58,13 +53,11 @@ describe('getValueFromElement', () => {
         input.checked = true;
         input.dataset.model = 'foo';
 
-        expect(getValueFromElement(input, createStore()))
-            .toEqual(true);
+        expect(getValueFromElement(input, createStore())).toEqual(true);
 
         input.checked = false;
 
-        expect(getValueFromElement(input, createStore()))
-            .toEqual(false);
+        expect(getValueFromElement(input, createStore())).toEqual(false);
     });
 
     it('Correctly returns for non-model checkboxes', () => {
@@ -73,12 +66,10 @@ describe('getValueFromElement', () => {
         input.checked = true;
         input.value = 'the_checkbox_value';
 
-        expect(getValueFromElement(input, createStore()))
-            .toEqual('the_checkbox_value');
+        expect(getValueFromElement(input, createStore())).toEqual('the_checkbox_value');
 
         input.checked = false;
-        expect(getValueFromElement(input, createStore()))
-            .toEqual(null);
+        expect(getValueFromElement(input, createStore())).toEqual(null);
     });
 
     it('Correctly sets data from select multiple', () => {
@@ -93,32 +84,27 @@ describe('getValueFromElement', () => {
         select.add(barOption);
 
         // nothing selected
-        expect(getValueFromElement(select, createStore()))
-            .toEqual([]);
+        expect(getValueFromElement(select, createStore())).toEqual([]);
 
         fooOption.selected = true;
-        expect(getValueFromElement(select, createStore()))
-            .toEqual(['foo']);
+        expect(getValueFromElement(select, createStore())).toEqual(['foo']);
 
         barOption.selected = true;
-        expect(getValueFromElement(select, createStore()))
-            .toEqual(['foo', 'bar']);
-    })
+        expect(getValueFromElement(select, createStore())).toEqual(['foo', 'bar']);
+    });
 
     it('Grabs data-value attribute for other elements', () => {
         const div = document.createElement('div');
         div.dataset.value = 'the_value';
 
-        expect(getValueFromElement(div, createStore()))
-            .toEqual('the_value');
+        expect(getValueFromElement(div, createStore())).toEqual('the_value');
     });
 
     it('Grabs value attribute for other elements', () => {
         const div = document.createElement('div');
         div.setAttribute('value', 'the_value_from_attribute');
 
-        expect(getValueFromElement(div, createStore()))
-            .toEqual('the_value_from_attribute');
+        expect(getValueFromElement(div, createStore())).toEqual('the_value_from_attribute');
     });
 });
 
@@ -205,7 +191,7 @@ describe('setValueOnElement', () => {
         setValueOnElement(select, ['foo']);
         expect(fooOption.selected).toBeTruthy();
         expect(barOption.selected).toBeFalsy();
-    })
+    });
 
     it('Sets value on other elements', () => {
         const input = document.createElement('input');
@@ -256,26 +242,24 @@ describe('getModelDirectiveFromInput', () => {
     it('throws error if no data-model found', () => {
         const element = htmlToElement('<input>');
 
-        expect(() => { getModelDirectiveFromElement(element) }).toThrow('Cannot determine the model name');
+        expect(() => {
+            getModelDirectiveFromElement(element);
+        }).toThrow('Cannot determine the model name');
     });
 });
 
 describe('elementBelongsToThisComponent', () => {
-    const createComponent = (html: string, childComponents: Component[] = []) => {
+    const createComponent = (html: string) => {
         const component = new Component(
             htmlToElement(html),
             'some-component',
             {},
             [],
-            () => [],
             null,
-            'some-id-' + Math.floor((Math.random() * 100)),
             new Backend(''),
-            new StandardElementDriver()
+            new noopElementDriver()
         );
-        childComponents.forEach((childComponent) => {
-            component.addChild(childComponent);
-        })
+        component.connect();
 
         return component;
     };
@@ -287,9 +271,17 @@ describe('elementBelongsToThisComponent', () => {
         expect(elementBelongsToThisComponent(targetElement, component)).toBeFalsy();
     });
 
-    it('returns true if element lives inside of controller', () => {
-        const targetElement = htmlToElement('<input name="user[firstName]">');
+    it('returns true if element lives inside of a div', () => {
+        const targetElement = htmlToElement('<input name="user[firstName]"/>');
         const component = createComponent('<div></div>');
+        component.element.appendChild(targetElement);
+
+        expect(elementBelongsToThisComponent(targetElement, component)).toBeFalsy();
+    });
+
+    it('returns true if element lives inside of live controller', () => {
+        const targetElement = htmlToElement('<input name="user[firstName]"/>');
+        const component = createComponent('<div data-controller="live" data-live-name-value="parentLabel"></div>');
         component.element.appendChild(targetElement);
 
         expect(elementBelongsToThisComponent(targetElement, component)).toBeTruthy();
@@ -300,34 +292,19 @@ describe('elementBelongsToThisComponent', () => {
         const childComponent = createComponent('<div class="child"></div>');
         childComponent.element.appendChild(targetElement);
 
-        const component = createComponent('<div class="parent"></div>', [childComponent]);
+        const component = createComponent('<div class="parent"></div>');
         component.element.appendChild(childComponent.element);
 
-        expect(elementBelongsToThisComponent(targetElement, childComponent)).toBeTruthy();
         expect(elementBelongsToThisComponent(targetElement, component)).toBeFalsy();
     });
 
     it('returns false if element *is* a child controller element', () => {
         const childComponent = createComponent('<div class="child"></div>');
 
-        const component = createComponent('<div class="parent"></div>', [childComponent]);
+        const component = createComponent('<div class="parent"></div>');
         component.element.appendChild(childComponent.element);
 
         expect(elementBelongsToThisComponent(childComponent.element, component)).toBeFalsy();
-    });
-});
-
-describe('getElementAsTagText', () => {
-    it('returns self-closing tag correctly', () => {
-        const element = htmlToElement('<input name="user[firstName]">');
-
-        expect(getElementAsTagText(element)).toEqual('<input name="user[firstName]">')
-    });
-
-    it('returns tag text without the innerHTML', () => {
-        const element = htmlToElement('<div class="foo">Name: <input name="user[firstName]"></div>');
-
-        expect(getElementAsTagText(element)).toEqual('<div class="foo">')
     });
 });
 

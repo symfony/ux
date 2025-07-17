@@ -1,5 +1,5 @@
+import { parseDirectives } from '../../src/Directive/directives_parser';
 import getModelBinding from '../../src/Directive/get_model_binding';
-import {parseDirectives} from '../../src/Directive/directives_parser';
 
 describe('get_model_binding', () => {
     it('returns correctly with simple directive', () => {

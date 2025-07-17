@@ -12,7 +12,7 @@
 namespace Symfony\UX\TwigComponent\Twig;
 
 use Symfony\UX\TwigComponent\BlockStack;
-use Symfony\UX\TwigComponent\ComponentFactory;
+use Twig\Error\SyntaxError;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
@@ -29,38 +29,32 @@ use Twig\TokenParser\AbstractTokenParser;
  */
 final class ComponentTokenParser extends AbstractTokenParser
 {
-    /** @var ComponentFactory|callable():ComponentFactory */
-    private $factory;
-
-    /**
-     * @param callable():ComponentFactory $factory
-     */
-    public function __construct(callable $factory)
-    {
-        $this->factory = $factory;
-    }
+    private array $lineAndFileCounts = [];
 
     public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
-        $parent = $this->parser->getExpressionParser()->parseExpression();
-        $componentName = $this->componentName($parent);
-        $componentMetadata = $this->factory()->metadataFor($componentName);
 
-        [$variables, $only] = $this->parseArguments();
-
-        if (null === $variables) {
-            $variables = new ArrayExpression([], $parent->getTemplateLine());
+        if (method_exists($this->parser, 'parseExpression')) {
+            // Since Twig 3.21
+            $componentName = $this->componentName($this->parser->parseExpression());
+        } else {
+            $componentName = $this->componentName($this->parser->getExpressionParser()->parseExpression());
         }
 
-        $parentToken = new Token(Token::STRING_TYPE, $componentMetadata->getTemplate(), $token->getLine());
-        $fakeParentToken = new Token(Token::STRING_TYPE, '__parent__', $token->getLine());
+        if (null === $componentName) {
+            throw new SyntaxError('Could not parse component name.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
+        }
 
-        // inject a fake parent to make the parent() function work
+        [$propsExpression, $only] = $this->parseArguments();
+
+        // Write a fake: "extends __parent__" into the "embedded" template.
+        // The `__parent__` will be passed in as a context variable.
+        $fakeParentToken = new Token(Token::NAME_TYPE, '__parent__', $token->getLine());
         $stream->injectTokens([
             new Token(Token::BLOCK_START_TYPE, '', $token->getLine()),
             new Token(Token::NAME_TYPE, 'extends', $token->getLine()),
-            $parentToken,
+            $fakeParentToken,
             new Token(Token::BLOCK_END_TYPE, '', $token->getLine()),
 
             // Add an empty block which can act as a fallback for when an outer
@@ -75,18 +69,16 @@ final class ComponentTokenParser extends AbstractTokenParser
             new Token(Token::BLOCK_END_TYPE, '', $token->getLine()),
         ]);
 
+        // create the "fake" ModuleNode template then add it to the parser
         $module = $this->parser->parse($stream, fn (Token $token) => $token->test("end{$this->getTag()}"), true);
-
-        // override the parent with the correct one
-        if ($fakeParentToken === $parentToken) {
-            $module->setNode('parent', $parent);
-        }
-
         $this->parser->embedTemplate($module);
+
+        // override the embedded index with a deterministic value, so it can be loaded in a controlled manner
+        $module->setAttribute('index', $this->generateEmbeddedTemplateIndex($stream->getSourceContext()->getName(), $token->getLine()));
 
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new ComponentNode($componentName, $module->getTemplateName(), $module->getAttribute('index'), $variables, $only, $token->getLine(), $this->getTag());
+        return new ComponentNode($componentName, $module->getTemplateName(), $module->getAttribute('index'), $propsExpression, $only, $token->getLine());
     }
 
     public function getTag(): string
@@ -94,7 +86,7 @@ final class ComponentTokenParser extends AbstractTokenParser
         return 'component';
     }
 
-    private function componentName(AbstractExpression $expression): string
+    private function componentName(AbstractExpression $expression): ?string
     {
         if ($expression instanceof ConstantExpression) { // using {% component 'name' %}
             return $expression->getAttribute('value');
@@ -104,18 +96,12 @@ final class ComponentTokenParser extends AbstractTokenParser
             return $expression->getAttribute('name');
         }
 
-        throw new \LogicException('Could not parse component name.');
+        return null;
     }
 
-    private function factory(): ComponentFactory
-    {
-        if (\is_callable($this->factory)) {
-            $this->factory = ($this->factory)();
-        }
-
-        return $this->factory;
-    }
-
+    /**
+     * @return array{ArrayExpression|null, bool}
+     */
     private function parseArguments(): array
     {
         $stream = $this->parser->getStream();
@@ -123,11 +109,15 @@ final class ComponentTokenParser extends AbstractTokenParser
         $variables = null;
 
         if ($stream->nextIf(Token::NAME_TYPE, 'with')) {
-            $variables = $this->parser->getExpressionParser()->parseExpression();
+            if (method_exists($this->parser, 'parseExpression')) {
+                // Since Twig 3.21
+                $variables = $this->parser->parseExpression();
+            } else {
+                $variables = $this->parser->getExpressionParser()->parseExpression();
+            }
         }
 
         $only = false;
-
         if ($stream->nextIf(Token::NAME_TYPE, 'only')) {
             $only = true;
         }
@@ -135,5 +125,23 @@ final class ComponentTokenParser extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
 
         return [$variables, $only];
+    }
+
+    private function generateEmbeddedTemplateIndex(string $file, int $line): int
+    {
+        $fileAndLine = \sprintf('%s-%d', $file, $line);
+        if (!isset($this->lineAndFileCounts[$fileAndLine])) {
+            $this->lineAndFileCounts[$fileAndLine] = 0;
+        }
+
+        $index = crc32($fileAndLine).++$this->lineAndFileCounts[$fileAndLine];
+
+        if (4 === \PHP_INT_SIZE) {
+            // On 32-bit PHP, the index can be negative or greater than PHP_INT_MAX
+            // we need to convert it to a positive 32-bit integer
+            $index = fmod(abs($index), \PHP_INT_MAX) + 1;
+        }
+
+        return (int) $index;
     }
 }

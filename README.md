@@ -1,5 +1,5 @@
 <p align="center"><a href="https://symfony.com" target="_blank">
-    <img src="https://symfony.com/logos/symfony_black_02.svg">
+    <img src="https://symfony.com/logos/symfony_dynamic_01.svg" alt="Symfony Logo">
 </a></p>
 
 <h3 align="center">
@@ -15,14 +15,14 @@ to build the chart in PHP. The JavaScript is handled for you automatically.
 **That's Symfony UX.**
 
 Symfony UX leverages [Stimulus](https://stimulus.hotwired.dev/) for JavaScript
-and can integrate with [Webpack Encore](https://github.com/symfony/webpack-encore)
+and can integrate with [AssetMapper](https://symfony.com/doc/current/frontend/asset_mapper.html)
+or with [Webpack Encore](https://github.com/symfony/webpack-encore)
 (with the help of [Stimulus Bridge](https://github.com/symfony/stimulus-bridge))
-or with [AssetMapper](https://symfony.com/doc/current/frontend/asset-mapper.html)
 
 ## Resources
 
 -   [Install Symfony UX](https://symfony.com/doc/current/frontend/ux.html).
--   [List of UX Packages](https://symfony.com/doc/current/frontend/ux.html#ux-packages-list).
+-   [List of UX Packages and their documentation](https://symfony.com/bundles/StimulusBundle/current/index.html#the-ux-packages).
 -   [Symfony UX Official Demo](https://ux.symfony.com).
 -   Watch the [Stimulus Screencast on SymfonyCasts](https://symfonycasts.com/screencast/stimulus).
 
@@ -31,12 +31,10 @@ or with [AssetMapper](https://symfony.com/doc/current/frontend/asset-mapper.html
 Symfony UX is an **initiative**: its aim is to build an ecosystem. To achieve this,
 we need your help: what other packages could we create in Symfony UX? What about a
 library that automatically adds an [input mask](https://imask.js.org/) to the text
-fields of your Symfony forms? Or the ability to make the `EntityType` render with
-[AJAX auto-completion](https://tarekraafat.github.io/autoComplete.js)? Anything you
-do in JavaScript could be done streamlined as a UX package.
+fields of your Symfony forms? Anything you do in JavaScript could be done
+streamlined as a UX package.
 
-We have some ideas, and we will release more packages in the coming days. The rest
-is on you: let's create an amazing ecosystem together!
+Let's create an amazing ecosystem together!
 
 ## Sponsor
 
@@ -52,18 +50,7 @@ Help Symfony by [sponsoring][3] its development!
 
 ## Contributing
 
-If you want to test your code in an existing project that uses Symfony UX packages,
-you can use the `link` utility provided in this Git repository (that you have to clone).
-This tool scans the `vendor/` directory of your project, finds Symfony UX packages it uses,
-and replaces them by symbolic links to the ones in the Git repository.
-
-```shell
-# Install required dependencies
-$ composer install
-
-# And link Symfony UX packages to your project
-$ php link /path/to/your/project
-```
+Thank you for considering contributing to Symfony UX! You can find the [contribution guide here](CONTRIBUTING.md).
 
 [1]: https://symfony.com/backers
 [2]: https://mercure.rocks

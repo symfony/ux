@@ -1,0 +1,13 @@
+{% extends 'demos/live_demo.html.twig' %}
+
+{% block code_block_full %}
+    <twig:Code:TabbedCodeBlocks :files="[
+        'src/Twig/Components/MealPlanner.php',
+        'templates/components/MealPlanner.html.twig',
+        'src/Form/MealPlannerForm.php',
+    ]" />
+{% endblock %}
+
+{% block demo_content %}
+    <twig:MealPlanner />
+{% endblock %}

@@ -2,9 +2,25 @@
     "name": "@symfony/ux-swup",
     "description": "Swup integration for Symfony",
     "license": "MIT",
-    "version": "1.1.0",
+    "version": "2.27.0",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://ux.symfony.com/swup",
+    "repository": "https://github.com/symfony/ux-swup",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
     "main": "dist/controller.js",
     "types": "dist/controller.d.ts",
+    "scripts": {
+        "build": "tsx ../../../bin/build_package.ts .",
+        "watch": "tsx ../../../bin/build_package.ts . --watch",
+        "test": "../../../bin/test_package.sh .",
+        "check": "biome check",
+        "ci": "biome ci"
+    },
     "symfony": {
         "controllers": {
             "swup": {
@@ -17,26 +33,26 @@
         "importmap": {
             "@swup/fade-theme": "^1.0",
             "@swup/slide-theme": "^1.0",
-            "@swup/forms-plugin": "^1.0||^2.0",
-            "@swup/debug-plugin": "^1.0||^2.0||^3.0",
-            "swup": "^2.0||^3.0",
+            "@swup/forms-plugin": "^2.0",
+            "@swup/debug-plugin": "^3.0",
+            "swup": "^3.0",
             "@hotwired/stimulus": "^3.0.0"
         }
     },
     "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "@swup/debug-plugin": "^3.0",
         "@swup/fade-theme": "^1.0",
+        "@swup/forms-plugin": "^2.0",
         "@swup/slide-theme": "^1.0",
-        "@swup/forms-plugin": "^1.0||^2.0",
-        "@swup/debug-plugin": "^1.0||^2.0||^3.0",
-        "swup": "^2.0||^3.0",
-        "@hotwired/stimulus": "^3.0.0"
+        "swup": "^3.0"
     },
     "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "@swup/debug-plugin": "^3.0",
         "@swup/fade-theme": "^1.0",
+        "@swup/forms-plugin": "^2.0",
         "@swup/slide-theme": "^1.0",
-        "@swup/forms-plugin": "^1.0",
-        "@swup/debug-plugin": "^1.0",
-        "swup": "^2.0",
-        "@hotwired/stimulus": "^3.0.0"
+        "swup": "^3.0"
     }
 }

@@ -23,7 +23,7 @@ use Symfony\Bridge\Doctrine\ManagerRegistry;
 class DoctrineRegistryWrapper
 {
     public function __construct(
-        private ?ManagerRegistry $registry = null
+        private ?ManagerRegistry $registry = null,
     ) {
     }
 

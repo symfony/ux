@@ -1,0 +1,103 @@
+{% extends 'ux_packages/package.html.twig' %}
+
+{% block banner %}
+    {{ include('_banner.html.twig', {color_back: '#4d61d6'}) }}
+{% endblock %}
+
+{% block package_header %}
+    {% component PackageHeader with {
+        package: 'toolkit',
+        eyebrowText: 'Quickly build your Design System',
+    } %}
+        {% block title_header %}
+            Build your Design System.
+        {% endblock %}
+
+        {% block sub_content %}
+            With Toolkit comes “Kits”, a set of ready-to-use and fully-customizable UI Twig components and more, to help you to build your Design System.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+<twig:Terminal>
+# Install the components you need...
+php bin/console ux:toolkit:install-component Card
+php bin/console ux:toolkit:install-component Button
+
+# ... and find them in your <code>templates/components</code> folder!
+tree templates/components
+> templates/components
+> ├── Button.html.twig
+> ├── Card
+> │   ├── Content.html.twig
+> │   ├── Description.html.twig
+> │   ├── Footer.html.twig
+> │   ├── Header.html.twig
+> │   └── Title.html.twig
+> └── Card.html.twig
+</twig:Terminal>
+{% endblock %}
+
+{% block code_block_right %}
+    <twig:CodeBlock
+        filename="templates/toolkit/_code_block_right.html.twig"
+        :showFilename="false"
+        height="auto"
+    />
+{% endblock %}
+
+{% block demo_title %}UX Toolkit{% endblock %}
+
+{% block demo_content %}
+    <iframe src="{{ demoPreviewUrl }}" style="width:100%; height:{{ demoPreviewHeight }};"></iframe>
+{% endblock %}
+
+{% block package_install %}
+    <div class="container-fluid container-xxl px-4 pt-4 px-md-5">
+        <h2 class="ubuntu text-center mt-5" id="kits">Kits</h2>
+        <p class="text-center">
+            Kits are a set of ready-to-use and fully-customizable UI Twig components and more, to help you to build your Design System.<br>
+            We provide a few official kits, but you can also <a href="https://symfony.com/bundles/ux-toolkit/current/index.html" rel="external" style="font-weight: 700;">create your own</a> and share it with the community!
+        </p>
+
+        <div class="mt-5 shadow-blur shadow-blur--rainbow shadow-blur--opacity-20" style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));">
+            {% for kit_id, kit in kits %}
+                <div class="PackageBox">
+                    <div class="PackageBox_logo">
+                        <twig:ux:icon name="toolkit:{{ kit_id }}" alt="{{ kit.name }}" style="color: #fff; width: 50%; height: 50%;" />
+                    </div>
+                    <div class="PackageBox_content">
+                        <h2 class="PackageBox_title">
+                            <a href="{{ path('app_toolkit_kit', {kitId: kit_id}) }}" class="PackageBox_link">{{ kit.name }}</a>
+                        </h2>
+
+                        <div class="PackageBox_description">
+                            <p>{{ kit.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="PackageBox">
+                <div class="PackageBox_logo" style="--color: #24292f;">
+                    <twig:ux:icon name="flowbite:users-group-solid" style="color: #fff; width: 50%; height: 50%;" />
+                </div>
+                <div class="PackageBox_content">
+                    <h2 class="PackageBox_title">
+                        <a href="https://github.com/search?q=topic%3Aux-toolkit&type=repositories" rel="external" class="PackageBox_link">
+                            Community Kits
+                        </a>
+                    </h2>
+
+                    <div class="PackageBox_description">
+                        <p>
+                            Crafted by the community, for the community.<br>
+                            You can find them on GitHub with the <code>ux-toolkit</code> topic.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

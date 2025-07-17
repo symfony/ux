@@ -1,0 +1,18 @@
+<{{ loadingTag }} {{ attributes }}
+    {% if 'lazy' == loading %}
+        data-action="live:appear->live#$render" loading="lazy"
+    {% else %}
+        data-action="live:connect->live#$render"
+    {% endif %}
+>
+    {% block loadingContent %}
+        {% if loadingTemplate != null %}
+            {{ include(loadingTemplate) }}
+        {% else %}
+            {% from componentTemplate import placeholder %}
+            {% if placeholder is defined %}
+                {{ placeholder(__props|default) }}
+            {% endif %}
+        {% endif %}
+    {% endblock %}
+</{{ loadingTag }}>

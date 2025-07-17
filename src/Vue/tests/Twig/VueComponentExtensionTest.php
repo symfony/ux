@@ -37,7 +37,7 @@ class VueComponentExtensionTest extends TestCase
         );
 
         $this->assertSame(
-            'data-controller="symfony--ux-vue--vue" data-symfony--ux-vue--vue-component-value="SubDir&#x2F;MyComponent" data-symfony--ux-vue--vue-props-value="&#x7B;&quot;fullName&quot;&#x3A;&quot;Titouan&#x20;Galopin&quot;&#x7D;"',
+            'data-controller="symfony--ux-vue--vue" data-symfony--ux-vue--vue-component-value="SubDir/MyComponent" data-symfony--ux-vue--vue-props-value="{&quot;fullName&quot;:&quot;Titouan Galopin&quot;}"',
             $rendered
         );
     }
@@ -53,7 +53,7 @@ class VueComponentExtensionTest extends TestCase
         $rendered = $extension->renderVueComponent('SubDir/MyComponent');
 
         $this->assertSame(
-            'data-controller="symfony--ux-vue--vue" data-symfony--ux-vue--vue-component-value="SubDir&#x2F;MyComponent"',
+            'data-controller="symfony--ux-vue--vue" data-symfony--ux-vue--vue-component-value="SubDir/MyComponent"',
             $rendered
         );
     }

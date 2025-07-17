@@ -1,5 +1,45 @@
 # CHANGELOG
 
+## 2.24.0
+
+-   Add Twig Extensions for `meta` tags
+-   Add support for authentication to the EventSource via `turbo_stream_listen`
+
+## 2.22.0
+
+-   Add `<twig:Turbo:Stream>` component
+-   Add `<twig:Turbo:Frame>` component
+-   Add support for custom actions in `TurboStream` and `TurboStreamResponse`
+-   Add support for providing multiple mercure topics to `turbo_stream_listen`
+
+## 2.21.0
+
+-   Add `Helper/TurboStream::append()` et al. methods
+-   Add `TurboStreamResponse`
+-   Add `<twig:Turbo:Stream:*>` components
+
+## 2.19.0
+
+-   Fix Doctrine proxies are not Broadcasted #3139
+
+## 2.15.0
+
+-   Add Turbo 8 support #1476
+-   Fix missing `use` statement used during broadcast #1475
+
+## 2.14.2
+
+-   Fix using old `ClassUtils` class that's not used in newer versions of Doctrine
+
+## 2.13.2
+
+-   Revert "Change JavaScript package to `type: module`"
+
+## 2.13.0
+
+-   Add Symfony 7 support.
+-   Change JavaScript package to `type: module`
+
 ## 2.9.0
 
 -   Minimum PHP version is now 8.1

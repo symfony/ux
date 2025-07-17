@@ -17,8 +17,6 @@ use Symfony\UX\LiveComponent\Attribute\LiveArg;
 
 /**
  * @author Gábor Egyed <gabor.egyed@gmail.com>
- *
- * @experimental
  */
 trait LiveCollectionTrait
 {

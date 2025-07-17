@@ -11,8 +11,6 @@
 
 namespace Symfony\UX\Autocomplete\Form;
 
-use Symfony\Component\String\UnicodeString;
-
 /**
  * All form types that want to expose autocomplete functionality should have this.
  *
@@ -37,13 +35,25 @@ class AsEntityAutocompleteField
         return $this->route;
     }
 
+    /**
+     * @internal
+     *
+     * @param class-string $class
+     */
     public static function shortName(string $class): string
     {
-        $string = new UnicodeString($class);
+        if ($pos = (int) strrpos($class, '\\')) {
+            $class = substr($class, $pos + 1);
+        }
 
-        return $string->afterLast('\\')->snake()->toString();
+        return strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $class));
     }
 
+    /**
+     * @internal
+     *
+     * @param class-string $class
+     */
     public static function getInstance(string $class): ?self
     {
         $reflectionClass = new \ReflectionClass($class);

@@ -7,11 +7,10 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Application } from '@hotwired/stimulus';
 import { getByTestId } from '@testing-library/dom';
-import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
+import { vi } from 'vitest';
+import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import TurboStreamController from '../src/turbo_stream_controller';
 
 const startStimulus = () => {
@@ -19,15 +18,14 @@ const startStimulus = () => {
     application.register('symfony--ux-turbo--mercure-turbo-stream', TurboStreamController);
 };
 
-/* eslint-disable no-undef */
 describe('TurboStreamController', () => {
-    let container;
+    let container: HTMLElement;
 
     beforeEach(() => {
-        global.EventSource = jest.fn(() => ({
-            addEventListener: jest.fn(),
-            removeEventListener: jest.fn(),
-            close: jest.fn(),
+        global.EventSource = vi.fn(() => ({
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+            close: vi.fn(),
         }));
 
         container = mountDOM(

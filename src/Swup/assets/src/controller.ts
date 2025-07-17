@@ -7,14 +7,12 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Controller } from '@hotwired/stimulus';
-import Swup from 'swup';
 import SwupDebugPlugin from '@swup/debug-plugin';
-import SwupFormsPlugin from '@swup/forms-plugin';
 import SwupFadeTheme from '@swup/fade-theme';
+import SwupFormsPlugin from '@swup/forms-plugin';
 import SwupSlideTheme from '@swup/slide-theme';
+import Swup from 'swup';
 
 export default class extends Controller {
     declare readonly animateHistoryBrowsingValue: boolean;

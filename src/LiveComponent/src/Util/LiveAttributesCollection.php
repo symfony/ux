@@ -11,12 +11,8 @@
 
 namespace Symfony\UX\LiveComponent\Util;
 
-use Twig\Environment;
-
 /**
- * An array of attributes that can eventually be returned as an escaped array.
- *
- * @experimental
+ * A collection of HTML attributes useful for LiveComponent.
  *
  * @internal
  */
@@ -24,22 +20,18 @@ final class LiveAttributesCollection
 {
     private array $attributes = [];
 
-    public function __construct(private Environment $twig)
+    public function toArray(): array
     {
-    }
-
-    public function toEscapedArray(): array
-    {
-        $escaped = [];
+        $result = [];
         foreach ($this->attributes as $key => $value) {
             if (\is_array($value)) {
                 $value = JsonUtil::encodeObject($value);
             }
 
-            $escaped[$key] = $this->escapeAttribute($value);
+            $result[$key] = $value;
         }
 
-        return $escaped;
+        return $result;
     }
 
     public function setLiveController(string $componentName): void
@@ -48,9 +40,10 @@ final class LiveAttributesCollection
         $this->attributes['data-live-name-value'] = $componentName;
     }
 
+    // TODO rename that
     public function setLiveId(string $id): void
     {
-        $this->attributes['data-live-id'] = $id;
+        $this->attributes['id'] = $id;
     }
 
     public function setFingerprint(string $fingerprint): void
@@ -61,6 +54,11 @@ final class LiveAttributesCollection
     public function setProps(array $dehydratedProps): void
     {
         $this->attributes['data-live-props-value'] = $dehydratedProps;
+    }
+
+    public function setPropsUpdatedFromParent(array $dehydratedProps): void
+    {
+        $this->attributes['data-live-props-updated-from-parent-value'] = $dehydratedProps;
     }
 
     public function getProps(): array
@@ -77,11 +75,6 @@ final class LiveAttributesCollection
         $this->attributes['data-live-url-value'] = $url;
     }
 
-    public function setCsrf(string $csrf): void
-    {
-        $this->attributes['data-live-csrf-value'] = $csrf;
-    }
-
     public function setListeners(array $listeners): void
     {
         $this->attributes['data-live-listeners-value'] = $listeners;
@@ -89,16 +82,21 @@ final class LiveAttributesCollection
 
     public function setEventsToEmit(array $events): void
     {
-        $this->attributes['data-live-emit'] = $events;
+        $this->attributes['data-live-events-to-emit-value'] = $events;
     }
 
     public function setBrowserEventsToDispatch(array $browserEventsToDispatch): void
     {
-        $this->attributes['data-live-browser-dispatch'] = $browserEventsToDispatch;
+        $this->attributes['data-live-events-to-dispatch-value'] = $browserEventsToDispatch;
     }
 
-    private function escapeAttribute(string $value): string
+    public function setRequestMethod(string $requestMethod): void
     {
-        return twig_escape_filter($this->twig, $value, 'html_attr');
+        $this->attributes['data-live-request-method-value'] = $requestMethod;
+    }
+
+    public function setQueryUrlMapping(array $queryUrlMapping): void
+    {
+        $this->attributes['data-live-query-mapping-value'] = $queryUrlMapping;
     }
 }

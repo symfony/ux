@@ -12,13 +12,13 @@
  *
  * Inspired by stimulus-loading.js from stimulus-rails.
  */
-import { Application, ControllerConstructor } from '@hotwired/stimulus';
+import { Application, type ControllerConstructor } from '@hotwired/stimulus';
 import {
+    type EagerControllersCollection,
     eagerControllers,
-    lazyControllers,
     isApplicationDebug,
-    EagerControllersCollection,
-    LazyControllersCollection,
+    type LazyControllersCollection,
+    lazyControllers,
 } from './controllers.js';
 
 const controllerAttribute = 'data-controller';
@@ -64,22 +64,40 @@ class StimulusLazyControllerHandler {
     }
 
     private lazyLoadExistingControllers(element: Element) {
-        this.queryControllerNamesWithin(element).forEach((controllerName) => this.loadLazyController(controllerName));
+        Array.from(element.querySelectorAll(`[${controllerAttribute}]`))
+            .flatMap(extractControllerNamesFrom)
+            .forEach((controllerName) => this.loadLazyController(controllerName));
     }
 
-    private async loadLazyController(name: string) {
-        if (canRegisterController(name, this.application)) {
-            if (this.lazyControllers[name] === undefined) {
-                return;
-            }
-
-            const controllerModule = await this.lazyControllers[name]();
-
-            registerController(name, controllerModule.default, this.application);
+    private loadLazyController(name: string) {
+        if (!this.lazyControllers[name]) {
+            return;
         }
+
+        // Delete the loader to avoid loading it twice
+        const controllerLoader = this.lazyControllers[name];
+        delete this.lazyControllers[name];
+
+        if (!canRegisterController(name, this.application)) {
+            return;
+        }
+
+        this.application.logDebugActivity(name, 'lazy:loading');
+
+        controllerLoader()
+            .then((controllerModule) => {
+                this.application.logDebugActivity(name, 'lazy:loaded');
+                registerController(name, controllerModule.default, this.application);
+            })
+            .catch((error) => {
+                console.error(`Error loading controller "${name}":`, error);
+            });
     }
 
     private lazyLoadNewControllers(element: Element) {
+        if (Object.keys(this.lazyControllers).length === 0) {
+            return;
+        }
         new MutationObserver((mutationsList) => {
             for (const { attributeName, target, type } of mutationsList) {
                 switch (type) {
@@ -106,12 +124,6 @@ class StimulusLazyControllerHandler {
             subtree: true,
             childList: true,
         });
-    }
-
-    private queryControllerNamesWithin(element: Element): string[] {
-        return Array.from(element.querySelectorAll(`[${controllerAttribute}]`))
-            .map(extractControllerNamesFrom)
-            .flat();
     }
 }
 

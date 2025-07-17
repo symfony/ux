@@ -1,8 +1,10 @@
 <?php
 
 /*
- * This file is part of the Symfony StimulusBundle package.
+ * This file is part of the Symfony package.
+ *
  * (c) Fabien Potencier <fabien@symfony.com>
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -13,7 +15,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * @experimental
+ * @internal
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */
@@ -24,7 +26,7 @@ class RemoveAssetMapperServicesCompiler implements CompilerPassInterface
         if (!$container->hasDefinition('asset_mapper')) {
             $container->removeDefinition('stimulus.ux_controllers_twig_runtime');
             $container->removeDefinition('stimulus.asset_mapper.controllers_map_generator');
-            $container->removeDefinition('stimulus.asset_mapper.stimulus_loader_javascript_compiler');
+            $container->removeDefinition('stimulus.asset_mapper.loader_javascript_compiler');
         }
     }
 }

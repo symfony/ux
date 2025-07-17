@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% set meta = {
+    title: demo.name,
+    title_suffix: ' -  Live Component - Symfony UX',
+    description: demo.description|striptags,
+    canonical: url(demo.route),
+    social: {
+        title: demo.name ~ ' - Symfony UX',
+        description: demo.longDescription|markdown_to_html|striptags,
+        image: {
+            url: absolute_url(asset(demo.screenshotFilename('1280x720'))),
+            type: 'image/png',
+            width: 1280,
+            height: 720,
+            alt: demo.name ~ ' - Demo Screenshot',
+        },
+    },
+} %}
+
+{% block content %}
+
+    {% block demo_header %}
+        <div class="hero">
+            <div class="container-fluid container-xxl pt-4 px-4 px-md-5 my-5">
+                <div class="text-center mt-md-0">
+                    <p class="eyebrows">
+                        <a href="{{ url('app_demos') }}">DEMOS</a> /
+                        <a href="{{ url('app_live_component') }}">Live Component</a>
+                    </p>
+                    <h1 class="text-center">{{ demo.name }}</h1>
+                    <div style="font-size: 1rem; line-height: 1.75rem;" class="mt-4 demo-introduction">
+                        {% block demo_description %}
+                            {{ demo.longDescription|markdown_to_html }}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% set messages = app.flashes('live_demo_success') %}
+    {% if messages %}
+        <div class="container-fluid container-xxl px-4 px-md-5">
+            {% for message in messages %}
+                <div class="alert alert-success" data-turbo-cache="false">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% block demo_container %}
+        <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5 mb-5">
+            <div class="mb-5" style="position: relative;">
+                <div class="p-4 markdown-container bg-body shadow-blur shadow-blur--rainbow" id="demo">
+                    {% block demo_content %}{% endblock %}
+                </div>
+                <div class="arrow-2 mb-3 d-sm-block" style="position:absolute; bottom: 0; left: 0; transform: scaleX(-1) translateY(70px) translateX(20px)"></div>
+            </div>
+
+            {% block code_block_full %}
+                <div class="arrow mb-3 d-none d-md-block"></div>
+                <div class="row mb-5">
+                    <div class="col-12 col-md-6">
+                        {% block code_block_left %}{% endblock %}
+                    </div>
+                    <div class="col-12 col-md-6 mt-3 mt-md-0">
+                        {% block code_block_right %}{% endblock %}
+                    </div>
+                </div>
+            {% endblock %}
+        </div>
+    {% endblock %}
+
+    <div class="container container-xl x-4 pt-4 px-md-5 pt-md-5">
+        <div class="cluster">
+            <twig:Badge:Github label="Author" username="{{ demo.author }}" />
+            <twig:Badge:Date label="Published" date="{{ demo.publishedAt }}" />
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block aside %}
+    <aside style="background-color: var(--bs-secondary-bg-subtle);" class="mt-5">
+        <twig:Demo:PrevNext demo="{{ demo }}" />
+    </aside>
+{% endblock %}

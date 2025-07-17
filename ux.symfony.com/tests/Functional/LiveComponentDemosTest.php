@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Tests\Functional;
 
 use App\Entity\Food;
@@ -10,7 +19,7 @@ use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
-use function Zenstruck\Foundry\create;
+use function Zenstruck\Foundry\Persistence\persist;
 
 class LiveComponentDemosTest extends KernelTestCase
 {
@@ -23,7 +32,7 @@ class LiveComponentDemosTest extends KernelTestCase
      */
     public function setupEntities(): void
     {
-        create(Food::class, ['name' => 'Pizza', 'votes' => 10]);
+        persist(Food::class, ['name' => 'Pizza', 'votes' => 10]);
     }
 
     /**
@@ -36,11 +45,12 @@ class LiveComponentDemosTest extends KernelTestCase
         $this->browser()
             ->visit($url)
             ->assertSuccessful()
+            ->assertSeeIn('title', $liveDemo->getName())
             ->assertSeeIn('h1', $liveDemo->getName())
         ;
     }
 
-    public function getSmokeTests(): \Generator
+    public static function getSmokeTests(): \Generator
     {
         $demoRepository = new LiveDemoRepository();
         foreach ($demoRepository->findAll() as $demo) {

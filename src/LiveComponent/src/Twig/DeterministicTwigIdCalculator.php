@@ -17,8 +17,6 @@ use Twig\Template;
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class DeterministicTwigIdCalculator
@@ -41,16 +39,16 @@ class DeterministicTwigIdCalculator
      * @param bool        $increment Whether to increment the counter for this file+line
      * @param string|null $key       An optional key to use instead of the incremented counter
      */
-    public function calculateDeterministicId(bool $increment = true, string $key = null): string
+    public function calculateDeterministicId(bool $increment = true, ?string $key = null): string
     {
         $lineData = $this->guessTemplateInfo();
 
-        $fileAndLine = sprintf('%s-%d', $lineData['name'], $lineData['line']);
+        $fileAndLine = \sprintf('%s-%d', $lineData['name'], $lineData['line']);
         if (!isset($this->lineAndFileCounts[$fileAndLine])) {
             $this->lineAndFileCounts[$fileAndLine] = 0;
         }
 
-        $id = sprintf(
+        $id = \sprintf(
             'live-%s-%s',
             crc32($fileAndLine),
             null !== $key ? $key : $this->lineAndFileCounts[$fileAndLine]
@@ -174,6 +172,6 @@ class DeterministicTwigIdCalculator
             }
         }
 
-        throw new \LogicException(sprintf('Could not find line number in template "%s" while generating deterministic id.', $name));
+        throw new \LogicException(\sprintf('Could not find line number in template "%s" while generating deterministic id.', $name));
     }
 }

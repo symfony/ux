@@ -27,7 +27,7 @@ class EntitySearchUtil
     /**
      * Adapted from easycorp/easyadmin EntityRepository.
      */
-    public function addSearchClause(QueryBuilder $queryBuilder, string $query, string $entityClass, array $searchableProperties = null): void
+    public function addSearchClause(QueryBuilder $queryBuilder, string $query, string $entityClass, ?array $searchableProperties = null): void
     {
         $entityMetadata = $this->metadataFactory->create($entityClass);
 
@@ -47,6 +47,7 @@ class EntitySearchUtil
         ];
 
         $entitiesAlreadyJoined = [];
+        $aliasAlreadyUsed = [];
         $searchableProperties = empty($searchableProperties) ? $entityMetadata->getAllPropertyNames() : $searchableProperties;
         $expressions = [];
         foreach ($searchableProperties as $propertyName) {
@@ -56,11 +57,11 @@ class EntitySearchUtil
                 $numAssociatedProperties = \count($associatedProperties);
 
                 if (1 === $numAssociatedProperties) {
-                    throw new \InvalidArgumentException(sprintf('The "%s" property included in the setSearchFields() method is not a valid search field. When using associated properties in search, you must also define the exact field used in the search (e.g. \'%s.id\', \'%s.name\', etc.)', $propertyName, $propertyName, $propertyName));
+                    throw new \InvalidArgumentException(\sprintf('The "%s" property included in the setSearchFields() method is not a valid search field. When using associated properties in search, you must also define the exact field used in the search (e.g. \'%s.id\', \'%s.name\', etc.)', $propertyName, $propertyName, $propertyName));
                 }
 
                 $originalPropertyName = $associatedProperties[0];
-                $originalPropertyMetadata = $entityMetadata->getPropertyMetadata($originalPropertyName);
+                $originalPropertyMetadata = $entityMetadata->getAssociationMetadata($originalPropertyName);
                 $associatedEntityDto = $this->metadataFactory->create($originalPropertyMetadata['targetEntity']);
 
                 for ($i = 0; $i < $numAssociatedProperties - 1; ++$i) {
@@ -68,16 +69,23 @@ class EntitySearchUtil
                     $associatedEntityAlias = SearchEscaper::escapeDqlAlias($associatedEntityName);
                     $associatedPropertyName = $associatedProperties[$i + 1];
 
-                    if (!\in_array($associatedEntityName, $entitiesAlreadyJoined, true)) {
+                    $associatedParentName = null;
+                    if (\array_key_exists($i - 1, $associatedProperties) && $queryBuilder->getRootAliases()[0] !== $associatedProperties[$i - 1]) {
+                        $associatedParentName = $associatedProperties[$i - 1];
+                    }
+
+                    $associatedEntityAlias = $associatedParentName ? $associatedParentName.'_'.$associatedEntityAlias : $associatedEntityAlias;
+
+                    if (!\in_array($associatedEntityName, $entitiesAlreadyJoined, true) || !\in_array($associatedEntityAlias, $aliasAlreadyUsed, true)) {
                         $parentEntityName = 0 === $i ? $queryBuilder->getRootAliases()[0] : $associatedProperties[$i - 1];
                         $queryBuilder->leftJoin($parentEntityName.'.'.$associatedEntityName, $associatedEntityAlias);
                         $entitiesAlreadyJoined[] = $associatedEntityName;
+                        $aliasAlreadyUsed[] = $associatedEntityAlias;
                     }
 
                     if ($i < $numAssociatedProperties - 2) {
-                        $propertyMetadata = $associatedEntityDto->getPropertyMetadata($associatedPropertyName);
-                        $targetEntity = $propertyMetadata['targetEntity'];
-                        $associatedEntityDto = $this->metadataFactory->create($targetEntity);
+                        $propertyMetadata = $associatedEntityDto->getAssociationMetadata($associatedPropertyName);
+                        $associatedEntityDto = $this->metadataFactory->create($propertyMetadata['targetEntity']);
                     }
                 }
 
@@ -103,19 +111,19 @@ class EntitySearchUtil
                 || ($isIntegerProperty && $isIntegerQuery)
                 || ($isNumericProperty && $isNumericQuery)
             ) {
-                $expressions[] = $queryBuilder->expr()->eq(sprintf('%s.%s', $entityName, $propertyName), ':query_for_numbers');
+                $expressions[] = $queryBuilder->expr()->eq(\sprintf('%s.%s', $entityName, $propertyName), ':query_for_numbers');
                 $queryBuilder->setParameter('query_for_numbers', $dqlParameters['numeric_query']);
             } elseif ($isGuidProperty && $isUuidQuery) {
-                $expressions[] = $queryBuilder->expr()->eq(sprintf('%s.%s', $entityName, $propertyName), ':query_for_uuids');
+                $expressions[] = $queryBuilder->expr()->eq(\sprintf('%s.%s', $entityName, $propertyName), ':query_for_uuids');
                 $queryBuilder->setParameter('query_for_uuids', $dqlParameters['uuid_query'], 'uuid' === $propertyDataType ? 'uuid' : null);
             } elseif ($isUlidProperty && $isUlidQuery) {
-                $expressions[] = $queryBuilder->expr()->eq(sprintf('%s.%s', $entityName, $propertyName), ':query_for_uuids');
+                $expressions[] = $queryBuilder->expr()->eq(\sprintf('%s.%s', $entityName, $propertyName), ':query_for_uuids');
                 $queryBuilder->setParameter('query_for_uuids', $dqlParameters['uuid_query'], 'ulid');
             } elseif ($isTextProperty) {
-                $expressions[] = $queryBuilder->expr()->like(sprintf('LOWER(%s.%s)', $entityName, $propertyName), ':query_for_text');
+                $expressions[] = $queryBuilder->expr()->like(\sprintf('LOWER(%s.%s)', $entityName, $propertyName), ':query_for_text');
                 $queryBuilder->setParameter('query_for_text', $dqlParameters['text_query']);
 
-                $expressions[] = $queryBuilder->expr()->in(sprintf('LOWER(%s.%s)', $entityName, $propertyName), ':query_as_words');
+                $expressions[] = $queryBuilder->expr()->in(\sprintf('LOWER(%s.%s)', $entityName, $propertyName), ':query_as_words');
                 $queryBuilder->setParameter('query_as_words', $dqlParameters['words_query']);
             }
         }

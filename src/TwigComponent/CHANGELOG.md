@@ -1,5 +1,82 @@
 # CHANGELOG
 
+## 2.25.2
+
+-   Fix `ComponentAttributes` rendering when using `StimulusAttributes` as default attributes
+
+## 2.25.1
+
+-   [SECURITY] `ComponentAttributes` now requires a `Twig\Runtime\EscaperRuntime`
+    instance as second argument
+-   Remove `HtmlAttributeEscaperInterface`, `TwigHtmlAttributeEscaper` and `ComponentAttributesFactory`
+
+## 2.25.0
+
+-   [SECURITY] Make `ComponentAttributes` responsible for attribute escaping ensuring
+    consistent and secure HTML output across all rendering contexts
+-   Deprecate not passing an `HtmlAttributeEscaperInterface` to the `ComponentAttributes`
+    constructor
+
+## 2.20.0
+
+-  Add Anonymous Component support for 3rd-party bundles #2019
+-  Deprecate `cva` Twig function in favor of [`html_cva` from `twig/html-extra`](https://twig.symfony.com/html_cva) #2144
+
+## 2.17.0
+
+-   Add nested attribute support #1405
+
+## 2.16.0
+
+-   Introduce CVA to style TwigComponent #1416
+-   Drop Twig 2 support #1436
+-   Fix full context is stored in profiler #1552
+-   Add CVA (Class variant authority) integration #1416
+
+## 2.15.0
+
+-   Add the ability to render specific attributes from the `attributes` variable #1442
+-   Restrict Twig 3.9 for now #1486
+-   Build reproducible TemplateMap to fix possible post-deploy breakage #1497
+
+## 2.14.0
+
+-   Make `ComponentAttributes` traversable/countable
+-   Fixed lexing some `{# twig comments #}` with HTML Twig syntax
+-   Fix various usages of deprecated Twig code
+
+## 2.13.0
+
+-   [BC BREAK] Add component metadata to `PreMountEvent` and `PostMountEvent`
+-   Added configuration to separate your components into different "namespaces"
+-   Add `outerScope` variable reach variables from the parent template of an
+    "embedded" component.
+-   Deprecate calling `ComponentTemplateFinder` constructor without `directory` argument.
+-   Add profiler integration: `TwigComponentDataCollector` and debug toolbar templates
+-   Add search feature in `debug:twig-component` command.
+-   Fix inconsistencies with how `{% component %}`/`<twig:component>` syntaxes are
+    rendered vs `component()`: `PostRenderEvent` is now dispatched & the template
+    resolution happens at runtime.
+-   Fix priority of passed in props vs default props with anonymous components.
+-   Add Symfony 7 support.
+-   TwigPreLexer: improve performance.
+-   Fix twig:lint bug with anonymous component tag.
+
+## 2.12.0
+
+-   Added a `debug:twig-component` command.
+-   Fixed bad exception when the error comes from a Twig template.
+-   Fixed deprecation with `TemplateCacheWarmer` return type.
+
+## 2.11.0
+
+-   Support ...spread operator with html syntax (requires Twig 3.7.0 or higher)
+-   Add support for anonymous Twig components.
+-   Add `RenderedComponent::crawler()` and `toString()` methods.
+-   Allow a block outside a Twig component to be available inside via `outerBlocks`.
+-   Fix `<twig:component>` syntax where an attribute is set to an empty value.
+-   Add component debug command for TwigComponent and LiveComponent.
+
 ## 2.9.0
 
 -   The `ComponentAttributes::defaults()` method now accepts any iterable argument.

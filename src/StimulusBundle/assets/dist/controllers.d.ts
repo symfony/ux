@@ -1,4 +1,4 @@
-import { ControllerConstructor } from '@hotwired/stimulus';
+import type { ControllerConstructor } from '@hotwired/stimulus';
 export interface EagerControllersCollection {
     [key: string]: ControllerConstructor;
 }

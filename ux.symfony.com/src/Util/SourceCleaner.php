@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Util;
 
 use function Symfony\Component\String\u;
@@ -8,23 +17,39 @@ class SourceCleaner
 {
     public static function cleanupPhpFile(string $contents, bool $removeClass = false): string
     {
-        $contents = u($contents)
-            ->replace("<?php\n", '')
-            ->replaceMatches('/namespace[^\n]*/', '');
+        // Remove <?php
+        $contents = u($contents)->replace("<?php\n", '');
 
+        // Remove LICENCE header
+        if ($contents->indexOf('* This file is part of the Symfony package')) {
+            $contents = $contents->before('/*')->trim()->append($contents->after(' */')->trim());
+        }
+
+        // Remove namespace(s)
+        $contents = $contents->replaceMatches('/namespace[^\n]*/', '');
+
+        // Remove class declaration
         if ($removeClass) {
             $contents = $contents->replaceMatches('/class[^\n]*\n{/', '')
                 ->trim('{}')
-                // remove use statements
+                // Remove use statements
                 ->replaceMatches('/^use [^\n]*$/m', '');
 
-            // unindent all lines by 4 spaces
+            // Unindent all lines by 4 spaces
             $lines = explode("\n", $contents);
             $lines = array_map(function (string $line) {
                 return substr($line, 4);
             }, $lines);
             $contents = u(implode("\n", $lines));
         }
+
+        return $contents->trim()->toString();
+    }
+
+    public static function cleanupTwigFile(string $contents): string
+    {
+        // Remove "Toolkit:$themeName:" prefix
+        $contents = u($contents)->replaceMatches('/Toolkit:.+?:/', '');
 
         return $contents->trim()->toString();
     }
@@ -40,12 +65,17 @@ class SourceCleaner
                 return '';
             }
 
-            // comment lines
-            if (str_starts_with($line, '//')) {
-                return sprintf('<span class="hljs-comment">%s</span>', $line);
+            // command output
+            if (str_starts_with($line, '>')) {
+                return preg_replace('/^>\s+/m', '', $line);
             }
 
-            return '<span class="hljs-prompt">$ </span>'.$line;
+            // comment lines
+            if (str_starts_with($line, '//') || str_starts_with($line, '#')) {
+                return \sprintf('<span class="hl-comment">%s</span>', $line);
+            }
+
+            return '<span>$ </span>'.$line;
         }, $lines);
 
         return trim(implode("\n", $lines));
@@ -54,7 +84,7 @@ class SourceCleaner
     public static function extractTwigBlock(string $content, string $targetTwigBlock, bool $showTwigExtends = true): string
     {
         $lines = explode("\n", $content);
-        $startBlock = sprintf('{%% block %s %%}', $targetTwigBlock);
+        $startBlock = \sprintf('{%% block %s %%}', $targetTwigBlock);
         $insideTargetBlock = false;
         $nestedBlockCount = 0;
         $blockLines = [];
@@ -134,7 +164,13 @@ EOF;
     public static function removeExcessHtml(string $content): string
     {
         // remove all HTML attributes and values + whitespace around them
-        $content = preg_replace('/\s+[a-z0-9-]+="[^"]*"/', '', $content);
+        $content = preg_replace_callback('/\s+[a-z0-9-]+="[^"]*"/', function ($matches) {
+            if (str_starts_with(trim($matches[0]), 'data-')) {
+                return $matches[0];
+            }
+
+            return '';
+        }, $content);
 
         // Find all the <div> elements without attributes
         preg_match_all('/<div>\s*(.*?)\s*<\/div>/s', $content, $matches);

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Command;
 
 use App\Entity\Category;
@@ -115,7 +124,7 @@ class LoadDataCommand extends Command
 
     private function clearEntity(string $className, SymfonyStyle $io): void
     {
-        $io->writeln(sprintf('Clearing <comment>%s</comment>', $className));
+        $io->writeln(\sprintf('Clearing <comment>%s</comment>', $className));
         $this->entityManager
             ->createQuery('DELETE FROM '.$className)
             ->execute();

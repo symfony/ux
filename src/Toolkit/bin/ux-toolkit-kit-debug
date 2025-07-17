@@ -1,0 +1,55 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+if ('cli' !== \PHP_SAPI) {
+    throw new Exception('This script must be run from the command line.');
+}
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\Service\ServiceLocatorTrait;
+use Symfony\Contracts\Service\ServiceProviderInterface;
+use Symfony\UX\Toolkit\Command\DebugKitCommand;
+use Symfony\UX\Toolkit\Kit\KitSynchronizer;
+use Symfony\UX\Toolkit\Kit\KitFactory;
+use Symfony\UX\Toolkit\Registry\GitHubRegistry;
+use Symfony\UX\Toolkit\Registry\LocalRegistry;
+use Symfony\UX\Toolkit\Registry\RegistryFactory;
+use Symfony\UX\Toolkit\Registry\Type;
+
+function includeIfExists(string $file): bool
+{
+    return file_exists($file) && include $file;
+}
+
+if (
+    !includeIfExists(__DIR__ . '/../../../autoload.php') &&
+    !includeIfExists(__DIR__ . '/../vendor/autoload.php')
+) {
+    fwrite(STDERR, 'Install dependencies using Composer.'.PHP_EOL);
+    exit(1);
+}
+
+if (!class_exists(Application::class)) {
+    fwrite(STDERR, 'You need the "symfony/console" component in order to run the UX Toolkit kit linter.'.PHP_EOL);
+    exit(1);
+}
+
+$filesystem = new Filesystem();
+$kitFactory = new KitFactory($filesystem, new KitSynchronizer($filesystem));
+
+(new Application())->add($command = new DebugKitCommand($kitFactory))
+    ->getApplication()
+    ->setDefaultCommand($command->getName(), true)
+    ->run()
+;

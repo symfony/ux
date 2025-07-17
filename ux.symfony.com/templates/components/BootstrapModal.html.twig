@@ -3,7 +3,9 @@
     tabindex: '-1',
     'aria-hidden': 'true',
     id: id ? id : false,
-}).defaults(stimulus_controller('bootstrap-modal')) }}>
+}) }}
+    data-controller="bootstrap-modal"
+>
     <div class="modal-dialog">
         <div class="modal-content">
             {% block modal_full_content %}

@@ -6,17 +6,24 @@ class default_1 extends Controller {
         const errorMessages = [];
         if (!this.hasHubValue)
             errorMessages.push('A "hub" value pointing to the Mercure hub must be provided.');
-        if (!this.hasTopicValue)
-            errorMessages.push('A "topic" value must be provided.');
+        if (!this.hasTopicValue && !this.hasTopicsValue)
+            errorMessages.push('Either "topic" or "topics" value must be provided.');
         if (errorMessages.length)
             throw new Error(errorMessages.join(' '));
         const u = new URL(this.hubValue);
-        u.searchParams.append('topic', this.topicValue);
+        if (this.hasTopicValue) {
+            u.searchParams.append('topic', this.topicValue);
+        }
+        else {
+            this.topicsValue.forEach((topic) => {
+                u.searchParams.append('topic', topic);
+            });
+        }
         this.url = u.toString();
     }
     connect() {
         if (this.url) {
-            this.es = new EventSource(this.url);
+            this.es = new EventSource(this.url, { withCredentials: this.withCredentialsValue });
             connectStreamSource(this.es);
         }
     }
@@ -29,7 +36,9 @@ class default_1 extends Controller {
 }
 default_1.values = {
     topic: String,
+    topics: Array,
     hub: String,
+    withCredentials: Boolean,
 };
 
 export { default_1 as default };

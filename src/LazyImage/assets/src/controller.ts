@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {

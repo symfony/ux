@@ -1,0 +1,10 @@
+<li
+    class="{{ '[&>svg]:w-3.5 [&>svg]:h-3.5 ' ~ attributes.render('class')|tailwind_merge }}"
+    {{ attributes }}
+    role="presentation"
+    aria-hidden="true"
+>
+    {%- block content -%}
+        <twig:ux:icon name="mdi:chevron-right" />
+    {%- endblock %}
+</li>

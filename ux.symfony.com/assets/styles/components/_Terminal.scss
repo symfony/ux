@@ -1,0 +1,225 @@
+.Terminal {
+    --border-radius: .75rem;
+    --bg-color: #1b1e21;
+
+    background-color: var(--bg-color);
+    border-radius: .75rem;
+    position: relative;
+    font-size: 12px;
+    display: grid; // Ensure the Terminal overflow its parent if "pre" contains a very-long-line of the same highlighted element (e.g.: a long string)
+}
+
+.Terminal_light {
+    --header-opacity: .25;
+}
+
+.Terminal_header {
+    display: flex;
+    background-color: var(--bg-header, #0D0D0DBA);
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+    align-items: center;
+    justify-content: space-between;
+    padding: .5rem;
+    opacity: var(--header-opacity, 1);
+    transition: all 250ms ease-in-out;
+
+    .Terminal:hover & {
+        opacity: 1;
+         transition: all 350ms ease-out;
+    }
+
+    .nav-tabs {
+        border: 0;
+    }
+    .nav-tabs .nav-link,
+    .nav-tabs .nav-item {
+        border: 0;
+    }
+    .nav-link {
+        border-bottom: 0;
+        margin-bottom: 0;
+        color: $n-100;
+    }
+    .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+        background-color: var(--bg-color);
+        border-color: $n-800;
+        color: $n-100;
+    }
+    .nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus {
+        border-color: $n-800;
+        color: $n-100;
+    }
+}
+
+.Terminal_title {
+    color: #fff;
+    display: inline-block;
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-inline-start: .25rem;
+
+    code {
+        font-size: inherit;
+        opacity: .8;
+
+        em {
+            font-style: normal;
+            color: #77d1e0 !important;
+        }
+    }
+}
+
+.Terminal_controls {
+    align-items: center;
+    gap: 0.5rem;
+    display: flex;
+    padding: .25rem 0.5rem;
+}
+.Terminal_controls span {
+    display: inline-block;
+    width: .65rem;
+    height: .65rem;
+    border-radius: 50%;
+
+    &.red {
+        background: $red;
+    }
+    &.yellow {
+        background: $yellow;
+    }
+    &.green {
+        background: $green;
+    }
+    [data-bs-theme="dark"] & {
+        opacity: .85;
+        filter: grayscale(.4);
+    }
+}
+
+
+.Terminal_body {
+    height: 100%;
+    font-family: var(--font-family-code);
+    font-size: 14px;
+    line-height: 160%;
+    color: #FFF;
+    border-radius: .75rem;
+    border: 1px solid var(--bs-body-color);
+    position: relative;
+
+    [data-bs-theme="dark"] & {
+        border: 1px solid var(--bs-secondary-bg-subtle);
+    }
+}
+
+.Terminal_header + .Terminal_body,
+.Terminal .Terminal .Terminal_body {
+    border-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.Terminal_actions {
+    .btn-link {
+        color: $n-200;
+        background: none;
+    }
+    .btn-copy {
+        color: $n-200;
+        background: none;
+        transition: all 250ms ease-in-out;
+        &:hover {
+            color: $n-100;
+        }
+    }
+    .btn-link:hover {
+        color: $n-100;
+    }
+    white-space: nowrap;
+}
+
+/* copy button inside the code block itself */
+.Terminal_body .Terminal_actions {
+    position: absolute;
+    right: .5rem;
+    top: .5rem;
+}
+
+.Terminal_body {
+    overflow-inline: auto;
+}
+.Terminal_body pre {
+    padding: 0;
+    margin: 0;
+}
+.Terminal_content {
+    overflow-x: auto;
+    overflow-y: auto;
+    padding: 1em;
+    pre {
+        overflow: visible;
+    }
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, .8) transparent;
+    pre {
+        background: none;
+    }
+    code {
+        background: none;
+    }
+}
+
+// @media screen and (min-width: 768px) {
+//     .Terminal_content::-webkit-scrollbar {
+//         display: none;
+//     }
+//     .Terminal_content {
+//         --webkit-scrollbar-width: none;
+//         scrollbar-width: none;
+//     }
+// }
+
+.Terminal_expand {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: auto;
+    color: rgb(156, 163, 175);
+    background-color: rgb(9, 10, 11);
+    border-radius: 1rem;
+    font-size: smaller;
+    display: inline-flex !important;
+    align-items: center;
+    padding: .25rem .75rem;
+    flex-direction: row;
+    gap: 0.5rem;
+    opacity: .35;
+    transition: all 250ms;
+    text-transform: capitalize;
+}
+
+.Terminal:hover .Terminal_expand {
+    background-color: rgb(9, 10, 11) !important;
+    opacity: .7;
+}
+.Terminal_expand:hover, .Terminal_expand:active {
+    color: #fff !important;
+    opacity: 1;
+}
+
+.Terminal .hl-gutter  {
+    display: inline-flex;
+  font-size: 0.8em;
+  color: #474747;
+  padding: 0 1ch 0 0;
+  user-select: none;
+  margin-inline-start: -1ch;
+    opacity: 0;
+    transition: all 250ms;
+}
+.Terminal:hover .hl-gutter  {
+    opacity: 1;
+}

@@ -14,6 +14,7 @@ namespace Symfony\UX\TwigComponent\Tests\Integration;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\UX\TwigComponent\ComponentFactory;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Component\BasicComponent;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentA;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentC;
@@ -86,22 +87,14 @@ final class ComponentFactoryTest extends KernelTestCase
     public function testExceptionThrownIfRequiredMountParameterIsMissingFromPassedData(): void
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentC::mount() has a required $propA parameter. Make sure this is passed or make give a default value.');
+        $this->expectExceptionMessage('Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentC::mount() has a required $propA parameter. Make sure to pass it or give it a default value.');
 
         $this->createComponent('component_c');
     }
 
-    public function testExceptionThrownIfUnableToWritePassedDataToPropertyAndIsNotScalar(): void
-    {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('But, the value is not a scalar (it\'s a stdClass)');
-
-        $this->createComponent('component_a', ['propB' => 'B', 'service' => new \stdClass()]);
-    }
-
     public function testStringableObjectCanBePassedToComponent(): void
     {
-        $attributes = $this->factory()->create('component_a', ['propB' => 'B', 'data-item-id-param' => new class() {
+        $attributes = $this->factory()->create('component_a', ['propB' => 'B', 'data-item-id-param' => new class {
             public function __toString(): string
             {
                 return 'test';
@@ -129,6 +122,90 @@ final class ComponentFactoryTest extends KernelTestCase
         self::assertInstanceOf(ComponentB::class, $component);
     }
 
+    /**
+     * @group legacy
+     */
+    public function testLegacyAutoNaming(): void
+    {
+        self::bootKernel(['environment' => 'legacy_autonaming']);
+        $component = $this->createComponent('BasicComponent');
+        self::assertInstanceOf(BasicComponent::class, $component);
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testLegacyAnonymous(): void
+    {
+        self::bootKernel(['environment' => 'legacy_anonymous']);
+
+        // Named templates should be found
+        $metadata = $this->factory()->metadataFor('foo:bar:baz');
+        $this->assertSame('components/foo/bar/baz.html.twig', $metadata->getTemplate());
+
+        // Prefixed nonymous templates should be found
+        $metadata = $this->factory()->metadataFor('anonymous:AButton');
+        $this->assertSame('anonymous/AButton.html.twig', $metadata->getTemplate());
+
+        // Unprefixed anonymous templates should not be found
+        $this->expectException(\InvalidArgumentException::class);
+        $this->factory()->metadataFor('AButton');
+    }
+
+    public function testAnonymous(): void
+    {
+        self::bootKernel(['environment' => 'anonymous_directory']);
+
+        // Named templates should be found
+        $metadata = $this->factory()->metadataFor('foo:bar:baz');
+        $this->assertSame('components/foo/bar/baz.html.twig', $metadata->getTemplate());
+
+        // Unprefix anonymous templates should be found
+        $metadata = $this->factory()->metadataFor('AButton');
+        $this->assertSame('anonymous/AButton.html.twig', $metadata->getTemplate());
+
+        // Prefixed anonymous templates should not be found
+        $this->expectException(\InvalidArgumentException::class);
+        $this->factory()->metadataFor('anonymous:AButton');
+    }
+
+    public function testLoadingAnonymousComponentFromBundle(): void
+    {
+        $metadata = $this->factory()->metadataFor('Acme:Button');
+
+        $this->assertSame('@Acme/components/Button.html.twig', $metadata->getTemplate());
+        $this->assertSame('Acme:Button', $metadata->getName());
+        $this->assertNull($metadata->get('class'));
+    }
+
+    public function testAutoNamingInSubDirectory(): void
+    {
+        $metadata = $this->factory()->metadataFor('SubDirectory:ComponentInSubDirectory');
+        $this->assertSame('SubDirectory:ComponentInSubDirectory', $metadata->getName());
+        $this->assertSame('components/SubDirectory/ComponentInSubDirectory.html.twig', $metadata->getTemplate());
+    }
+
+    public function testAutoNamingWithNamePrefixAndDirectory(): void
+    {
+        $metadata = $this->factory()->metadataFor('AcmePrefix:AcmeRootComponent');
+        $this->assertSame('AcmePrefix:AcmeRootComponent', $metadata->getName());
+        $this->assertSame('acme_components/AcmeRootComponent.html.twig', $metadata->getTemplate());
+
+        $metadata = $this->factory()->metadataFor('AcmePrefix:AcmeSubDir:AcmeOtherComponent');
+        $this->assertSame('AcmePrefix:AcmeSubDir:AcmeOtherComponent', $metadata->getName());
+        $this->assertSame('acme_components/AcmeSubDir/AcmeOtherComponent.html.twig', $metadata->getTemplate());
+    }
+
+    public function testAutoNamingWithNamePrefixOnly(): void
+    {
+        self::bootKernel(['environment' => 'no_template_directory']);
+        $metadata = $this->factory()->metadataFor('AcmePrefix:AcmeRootComponent');
+        $this->assertSame('AcmePrefix:AcmeRootComponent', $metadata->getName());
+        // the "AcmePrefix" is never part of the template directory name
+        // if the user wants it to be, they can set the "template_directory" option
+        $this->assertSame('components/AcmeRootComponent.html.twig', $metadata->getTemplate());
+    }
+
     public function testCanGetMetadataForComponentByName(): void
     {
         $metadata = $this->factory()->metadataFor('component_a');
@@ -152,17 +229,24 @@ final class ComponentFactoryTest extends KernelTestCase
     public function testCannotGetConfigByNameForNonRegisteredComponent(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/^Unknown component "invalid"\. The registered components are:.* component_a/');
+        $this->expectExceptionMessage('Unknown component "tabl". Did you mean this: "table"?');
 
-        $this->factory()->metadataFor('invalid');
+        $this->factory()->metadataFor('tabl');
     }
 
-    public function testCannotGetInvalidComponent(): void
+    /**
+     * @testWith ["tabl", "Unknown component \"tabl\". Did you mean this: \"table\"?"]
+     *           ["Basic", "Unknown component \"Basic\". Did you mean this: \"BasicComponent\"?"]
+     *           ["basic", "Unknown component \"basic\". Did you mean this: \"BasicComponent\"?"]
+     *           ["with", "Unknown component \"with\". Did you mean one of these: \"with_attributes\", \"with_exposed_variables\", \"WithSlots\"?"]
+     *           ["anonAnon", "Unknown component \"anonAnon\". And no matching anonymous component template was found."]
+     */
+    public function testCannotGetInvalidComponent(string $name, string $expectedExceptionMessage): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/^Unknown component "invalid"\. The registered components are:.* component_a/');
+        $this->expectExceptionMessage($expectedExceptionMessage);
 
-        $this->factory()->get('invalid');
+        $this->factory()->get($name);
     }
 
     public function testInputPropsStoredOnMountedComponent(): void

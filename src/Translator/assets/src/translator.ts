@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 export type DomainType = string;
 export type LocaleType = string;
 
@@ -34,11 +32,12 @@ export interface Message<Translations extends TranslationsType, Locale extends L
     };
 }
 
-import { formatIntl } from './formatters/intl-formatter';
 import { format } from './formatters/formatter';
+import { formatIntl } from './formatters/intl-formatter';
 
 let _locale: LocaleType | null = null;
 let _localeFallbacks: Record<LocaleType, LocaleType> = {};
+let _throwWhenNotFound = false;
 
 export function setLocale(locale: LocaleType | null) {
     _locale = locale;
@@ -47,10 +46,14 @@ export function setLocale(locale: LocaleType | null) {
 export function getLocale(): LocaleType {
     return (
         _locale ||
-        document.documentElement.getAttribute('data-symfony-ux-translator-locale') || // <html data-symfony-ux-translator-locale="en">
-        document.documentElement.lang || // <html lang="en">
+        document.documentElement.getAttribute('data-symfony-ux-translator-locale') || // <html data-symfony-ux-translator-locale="en_US">
+        (document.documentElement.lang ? document.documentElement.lang.replace('-', '_') : null) || // <html lang="en-US">
         'en'
     );
+}
+
+export function throwWhenNotFound(enabled: boolean): void {
+    _throwWhenNotFound = enabled;
 }
 
 export function setLocaleFallbacks(localeFallbacks: Record<LocaleType, LocaleType>): void {
@@ -105,7 +108,7 @@ export function getLocaleFallbacks(): Record<LocaleType, LocaleType> {
 export function trans<
     M extends Message<TranslationsType, LocaleType>,
     D extends DomainsOf<M>,
-    P extends ParametersOf<M, D>
+    P extends ParametersOf<M, D>,
 >(
     ...args: P extends NoParametersType
         ? [message: M, parameters?: P, domain?: RemoveIntlIcuSuffix<D>, locale?: LocaleOf<M>]
@@ -114,7 +117,7 @@ export function trans<
 export function trans<
     M extends Message<TranslationsType, LocaleType>,
     D extends DomainsOf<M>,
-    P extends ParametersOf<M, D>
+    P extends ParametersOf<M, D>,
 >(
     message: M,
     parameters: P = {} as P,
@@ -161,6 +164,10 @@ export function trans<
         if (locale) {
             return format(translations[locale], parameters, locale);
         }
+    }
+
+    if (_throwWhenNotFound) {
+        throw new Error(`No translation message found with id "${message.id}".`);
     }
 
     return message.id;

@@ -3,16 +3,17 @@ import RequestBuilder from './RequestBuilder';
 
 export interface ChildrenFingerprints {
     // key is the id of the child component
-    [key: string]: {fingerprint: string, tag: string}
+    [key: string]: { fingerprint: string; tag: string };
 }
 
 export interface BackendInterface {
     makeRequest(
         props: any,
         actions: BackendAction[],
-        updated: {[key: string]: any},
+        updated: { [key: string]: any },
         children: ChildrenFingerprints,
-        updatedPropsFromParent: {[key: string]: any},
+        updatedPropsFromParent: { [key: string]: any },
+        files: { [key: string]: FileList }
     ): BackendRequest;
 }
 
@@ -24,23 +25,25 @@ export interface BackendAction {
 export default class implements BackendInterface {
     private readonly requestBuilder: RequestBuilder;
 
-    constructor(url: string, csrfToken: string | null = null) {
-        this.requestBuilder = new RequestBuilder(url, csrfToken);
+    constructor(url: string, method: 'get' | 'post' = 'post') {
+        this.requestBuilder = new RequestBuilder(url, method);
     }
 
     makeRequest(
         props: any,
         actions: BackendAction[],
-        updated: {[key: string]: any},
+        updated: { [key: string]: any },
         children: ChildrenFingerprints,
-        updatedPropsFromParent: {[key: string]: any},
+        updatedPropsFromParent: { [key: string]: any },
+        files: { [key: string]: FileList }
     ): BackendRequest {
         const { url, fetchOptions } = this.requestBuilder.buildRequest(
             props,
             actions,
             updated,
             children,
-            updatedPropsFromParent
+            updatedPropsFromParent,
+            files
         );
 
         return new BackendRequest(

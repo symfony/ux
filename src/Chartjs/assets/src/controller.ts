@@ -7,10 +7,13 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Controller } from '@hotwired/stimulus';
-import Chart from 'chart.js/auto';
+import { Chart, registerables } from 'chart.js';
+
+// ChartJs 3.x
+if (registerables) {
+    Chart.register(...registerables);
+}
 
 let isChartInitialized = false;
 
@@ -54,13 +57,28 @@ export default class extends Controller {
         this.dispatchEvent('connect', { chart: this.chart });
     }
 
+    disconnect() {
+        this.dispatchEvent('disconnect', { chart: this.chart });
+
+        if (this.chart) {
+            this.chart.destroy();
+            this.chart = null;
+        }
+    }
+
     /**
      * If the underlying data or options change, let's update the chart!
      */
     viewValueChanged(): void {
         if (this.chart) {
-            this.chart.data = this.viewValue.data;
-            this.chart.options = this.viewValue.options;
+            const viewValue = { data: this.viewValue.data, options: this.viewValue.options };
+            if (Array.isArray(viewValue.options) && 0 === viewValue.options.length) {
+                viewValue.options = {};
+            }
+            this.dispatchEvent('view-value-change', viewValue);
+            this.chart.data = viewValue.data;
+            this.chart.options = viewValue.options;
+
             this.chart.update();
 
             // Updating the chart seems to sometimes result in a chart that is
@@ -69,7 +87,7 @@ export default class extends Controller {
             const parentElement = this.element.parentElement;
             if (parentElement && this.chart.options.responsive) {
                 const originalWidth = parentElement.style.width;
-                parentElement.style.width = parentElement.offsetWidth + 1 + 'px';
+                parentElement.style.width = `${parentElement.offsetWidth + 1}px`;
                 setTimeout(() => {
                     parentElement.style.width = originalWidth;
                 }, 0);

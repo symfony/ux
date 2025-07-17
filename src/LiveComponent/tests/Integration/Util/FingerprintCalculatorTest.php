@@ -18,7 +18,7 @@ use Symfony\UX\LiveComponent\Util\FingerprintCalculator;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
-use function Zenstruck\Foundry\create;
+use function Zenstruck\Foundry\Persistence\persist;
 
 final class FingerprintCalculatorTest extends KernelTestCase
 {
@@ -28,7 +28,7 @@ final class FingerprintCalculatorTest extends KernelTestCase
     public function testFingerprintEqual()
     {
         $fingerprintCalculator = $this->getFingerprintCalculator();
-        $entityOne = create(Entity1::class)->object();
+        $entityOne = persist(Entity1::class);
 
         $entityTwo = clone $entityOne;
 
@@ -61,9 +61,9 @@ final class FingerprintCalculatorTest extends KernelTestCase
     {
         $fingerprintCalculator = $this->getFingerprintCalculator();
 
-        $entityOne = create(Entity1::class)->object();
+        $entityOne = persist(Entity1::class);
 
-        $entityTwo = create(Entity1::class)->object();
+        $entityTwo = persist(Entity1::class);
 
         $metadata1 = $this->createMock(LiveComponentMetadata::class);
         $metadata1

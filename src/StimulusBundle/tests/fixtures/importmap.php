@@ -1,8 +1,10 @@
 <?php
 
 /*
- * This file is part of the Symfony StimulusBundle package.
+ * This file is part of the Symfony package.
+ *
  * (c) Fabien Potencier <fabien@symfony.com>
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -10,19 +12,26 @@
 return [
     'app' => [
         'path' => 'app.js',
-        'preload' => true,
+        'entrypoint' => true,
     ],
     '@hotwired/stimulus' => [
-        'url' => 'https://ga.jspm.io/npm:@hotwired/stimulus@3.2.1/dist/stimulus.js',
+        'version' => '3.2.1',
     ],
     '@symfony/stimulus-bundle' => [
         'path' => '@symfony/stimulus-bundle/loader.js',
-        'preload' => true,
     ],
     'needed-vendor' => [
-        'url' => 'https://cdn.jsdelivr.net/npm/needed-vendor@3.2.0/dist/needed-vendor+esm',
+        'version' => '3.2.0',
+    ],
+    'needed-vendor/file.css' => [
+        'version' => '3.2.0',
+        'type' => 'css',
     ],
     '@scoped/needed-vendor' => [
-        'url' => 'https://cdn.jsdelivr.net/npm/@scoped/needed-vendor@1.2.3',
+        'version' => '1.2.3',
+    ],
+    '@scoped/needed-vendor/the/file2.css' => [
+        'version' => '1.2.3',
+        'type' => 'css',
     ],
 ];

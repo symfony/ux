@@ -1,29 +1,31 @@
 <tr {{ attributes }}>
     <th>{{ food.name }}</th>
     <td>
-        Votes: <span class="badge bg-secondary"></span>{{ food.votes }}
+        Votes: {{ food.votes }}
     </td>
     <td style="width: 250px;">
         {% if hasVoted %}
             <div class="alert alert-success">
-                Thanks for voting! <i class="fa fa-check-circle"></i>
+                Thanks for voting! <twig:ux:icon name="circle-check" />
             </div>
         {% else %}
             <button
                 type="button"
                 class="btn btn-secondary"
                 data-action="live#action"
-                data-action-name="vote(direction=up)"
+                data-live-action-param="vote"
+                data-live-direction-param="up"
             >
-                <i class="fa fa-arrow-up"></i>
+                <twig:ux:icon name="arrow-up" />
             </button>
             <button
                 type="button"
                 class="btn btn-secondary"
                 data-action="live#action"
-                data-action-name="vote(direction=down)"
+                data-live-action-param="vote"
+                data-live-direction-param="down"
             >
-                <i class="fa fa-arrow-down"></i>
+                <twig:ux:icon name="arrow-down" />
             </button>
         {% endif %}
     </td>

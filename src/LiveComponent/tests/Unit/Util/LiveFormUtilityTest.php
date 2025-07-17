@@ -25,7 +25,7 @@ final class LiveFormUtilityTest extends TestCase
         $this->assertEquals($expectedPaths, LiveFormUtility::removePathsNotInData($inputPaths, $inputData));
     }
 
-    public function getPathsTests(): iterable
+    public static function getPathsTests(): iterable
     {
         yield 'it_leaves_everything_with_simple_paths' => [
             ['name', 'price'],
@@ -71,7 +71,7 @@ final class LiveFormUtilityTest extends TestCase
         $this->assertSame($expected, LiveFormUtility::doesFormContainAnyErrors($formView));
     }
 
-    public function provideFormContainsAnyErrorsTests()
+    public static function provideFormContainsAnyErrorsTests()
     {
         yield 'no_errors_key' => [
             new FormView(),

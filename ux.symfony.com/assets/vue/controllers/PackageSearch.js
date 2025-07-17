@@ -1,4 +1,4 @@
-/*
+/**
  |  Single-File Components - e.g. PackageSearch.vue -
  |  are supported when using Webpack Encore.
  */

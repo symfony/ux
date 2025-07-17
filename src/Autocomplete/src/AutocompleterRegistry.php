@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 final class AutocompleterRegistry
 {
     public function __construct(
-        private ServiceLocator $autocompletersLocator
+        private ServiceLocator $autocompletersLocator,
     ) {
     }
 
@@ -28,6 +28,9 @@ final class AutocompleterRegistry
         return $this->autocompletersLocator->has($alias) ? $this->autocompletersLocator->get($alias) : null;
     }
 
+    /**
+     * @return list<string>
+     */
     public function getAutocompleterNames(): array
     {
         return array_keys($this->autocompletersLocator->getProvidedServices());

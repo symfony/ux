@@ -1,10 +1,10 @@
-import Component from './Component';
+import type Component from './Component';
 
 export default class {
     component: Component;
     isPollingActive = true;
     polls: Array<{ actionName: string; duration: number }>;
-    pollingIntervals: NodeJS.Timer[] = [];
+    pollingIntervals: number[] = [];
 
     constructor(component: Component) {
         this.component = component;
@@ -55,7 +55,7 @@ export default class {
             };
         }
 
-        const timer = setInterval(() => {
+        const timer = window.setInterval(() => {
             callback();
         }, duration);
         this.pollingIntervals.push(timer);

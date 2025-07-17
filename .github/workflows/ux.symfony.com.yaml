@@ -2,27 +2,85 @@ name: ux.symfony.com
 
 on:
     push:
+        paths:
+            - 'ux.symfony.com/**'
+            - 'src/*/**'
+            - '!src/*/doc/**'
+            - '!src/**/*.md'
+            - '.github/**'
     pull_request:
+        paths:
+            - 'ux.symfony.com/**'
+            - 'src/*/**'
+            - '!src/*/doc/**'
+            - '!src/**/*.md'
+            - '.github/**'
 
 jobs:
+
+    cs-php:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                shell: bash
+                working-directory: ux.symfony.com
+        steps:
+            -   uses: actions/checkout@v4
+            -   uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.3'
+                    tools: php-cs-fixer
+            -   name: Install dependencies
+                uses: ramsey/composer-install@v3
+                with:
+                    working-directory: ux.symfony.com
+            -   name: php-cs-fixer
+                run: php-cs-fixer check --diff
+
+    cs-twig:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                shell: bash
+                working-directory: ux.symfony.com
+        steps:
+            -   uses: actions/checkout@v4
+            -   uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.3'
+            -   name: Install dependencies
+                uses: ramsey/composer-install@v3
+                with:
+                    working-directory: ux.symfony.com
+            -   name: twig-cs-fixer
+                run: vendor/bin/twig-cs-fixer lint templates --report=github
+
     tests:
         runs-on: ubuntu-latest
         defaults:
-          run:
-            shell: bash
-            working-directory: ux.symfony.com
-
-        steps:
-            - uses: actions/checkout@v3
-
-            - uses: shivammathur/setup-php@v2
-              with:
-                php-version: 8.1
-
-            - name: Install dependencies
-              uses: ramsey/composer-install@v2
-              with:
+            run:
+                shell: bash
                 working-directory: ux.symfony.com
-
-            - name: Tests
-              run: vendor/bin/phpunit
+        steps:
+            -   uses: actions/checkout@v4
+            -   uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.3'
+            -   name: Install root dependencies
+                uses: ramsey/composer-install@v3
+                with:
+                    working-directory: ${{ github.workspace }}
+            -   name: Build root packages
+                run: php .github/build-packages.php
+                working-directory: ${{ github.workspace }}
+            -   name: Install dependencies
+                uses: ramsey/composer-install@v3
+                with:
+                    working-directory: ux.symfony.com
+                    dependency-versions: 'highest'
+            -   name: Importmap dependencies
+                run: php bin/console importmap:install
+            -   name: Build Sass assets
+                run: php bin/console sass:build
+            -   name: Tests
+                run: vendor/bin/phpunit

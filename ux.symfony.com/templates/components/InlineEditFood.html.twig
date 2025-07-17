@@ -22,13 +22,13 @@
                     </div>
 
                     <button
-                        data-action="live#action"
-                        data-action-name="prevent|save"
+                        data-action="live#action:prevent"
+                        data-live-action-param="save"
                         class="btn btn-outline btn-outline-{{ error ? 'danger' : 'secondary' }}"
                     >Save</button>
 
-                    {% if this.getError('food.name') %}
-                        <div class="invalid-feedback">{{ this.getError('food.name').message }}</div>
+                    {% if error %}
+                        <div class="invalid-feedback">{{ error.message }}</div>
                     {% endif %}
                 </div>
                 <div class="form-text">Clear the field to trigger validation!</div>
@@ -37,11 +37,11 @@
             <h2>{{ food.name }}</h2>
             <button
                 data-action="live#action"
-                data-action-name="activateEditing"
+                data-live-action-param="activateEditing"
                 class="btn btn-link"
                 title="Click to edit!"
             >
-                <small class="fa fa-pencil"></small>
+                <twig:ux:icon name="pencil" />
             </button>
         {% endif %}
     </div>

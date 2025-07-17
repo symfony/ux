@@ -1,0 +1,97 @@
+<div class="ProductGrid" {{ attributes.defaults(stimulus_controller('appear')) }}>
+
+    <div id="results" style="display: flex; gap: 1rem; flex-direction: column;" class="p-4">
+        <div class="ProductGrid_items">
+
+            {# 🐯- Last result from previous page #}
+            {% if page > 1 %}
+                <article id="item--{{ page - 1 }}-{{ per_page }}"></article>
+            {% endif %}
+
+            {# 🦊 - Current page #}
+            {% for item in this.items %}
+                <article
+                    id="item--{{ page }}-{{ loop.index }}"
+                    class="ProductGrid_item"
+                    data-live-ignore
+                    style="--i: {{ item.id }};"
+                >
+                    <div class="ProductGrid_media">
+                        <svg><use href="#svg-tshirt" /></svg>
+                        <span>{{ item.emoji }}</span>
+                    </div>
+                    <data class="ProductGrid_price">
+                        {{ item.id }}<small>.99</small>
+                    </data>
+                </article>
+            {% endfor %}
+
+            {% if this.hasMore %}
+
+                {# 🐼 - Next page #}
+                {% for i in 1..per_page %}
+                    <article id="item--{{ page + 1 }}-{{ i }}"
+                         class="ProductGrid_item"
+                         style="--i: {{ (page * per_page) + i - 1 }};"
+
+                        {# 🦁 - The trigger #}
+                        {% if loop.first %}
+                            data-appear-target="loader"
+                            data-action="appear->live#action"
+                            data-live-action-param="debounce(750)|more"
+                        {% endif %}
+
+                    >
+                        <div class="ProductGrid_media">
+                            <svg><use href="#svg-tshirt" /></svg>
+                        </div>
+                        <span class="ProductGrid_price">
+                            {# 🐹 - Loading bar #}
+                            {# Animated progress bar shown during page load #}
+                            <span class="ProductGrid_loader"
+                                  style="--delay: {{ (loop.index + 1) / per_page }};"></span>
+                        </span>
+                    </article>
+                {% endfor %}
+
+            {% endif %}
+
+        </div>
+
+        {% if not this.hasMore %}
+            <div style="display: grid; place-content: center;padding-block: 2rem;">
+                <div style="max-width: 36rem;">
+                    <h4>Did you know?</h4>
+                    <p>
+                        This demo adds a fixed delay of <code>750ms</code> before each page load to simulate slow
+                        network conditions. Or maybe just to let you enjoy the sweet animations... 🍿
+                    </p>
+                    <p>Wonder how it would feel without? Why not get the code and try it yourself?</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    {# Custom style - Retro TShirt #}
+    <style>
+      .ProductGrid_item {
+        --color: hsl(calc(var(--i) * 40deg + 200deg), 77%, 80%);
+      }
+
+      .ProductGrid_media span {
+        top: 20%;
+        font-size: 3rem;
+        display: grid;
+        background: #260a0a42;
+        width: 3.5rem;
+        height: 3.5rem;
+        place-content: center;
+        border-radius: 50%;
+        filter: brightness(1.5) contrast(1);
+        border: 3px solid #fff4;
+        box-shadow: 0 0 0 .5px #0006;
+        mix-blend-mode: luminosity;
+      }
+    </style>
+
+</div>

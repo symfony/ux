@@ -1,0 +1,6 @@
+<tbody
+    class="{{ '[&_tr:last-child]:border-0 ' ~ attributes.render('class')|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</tbody>

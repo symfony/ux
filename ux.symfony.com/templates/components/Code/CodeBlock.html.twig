@@ -1,0 +1,54 @@
+<div {{ attributes.defaults({
+    class: 'Terminal ' ~ this.classString,
+}) }}>
+
+    {% if showFilename %}
+        <div class="Terminal_header py-2 px-3 mb-0 d-flex justify-content-between align-items-center">
+            <a id="{{ this.elementId }}" href="{{ this.githubLink ~ '#%s'|format(this.lineAnchor) }}" class="Terminal_title">
+                <code>{{ filename }}{% if this.lineStart %}<em>{{ '#%s'|format(this.lineAnchor) }}</em>{% endif %}
+                </code>
+            </a>
+            <div class="Terminal_actions">
+                <twig:Code:CodeBlockButtons copyButton="{{ this.copyButton }}" source="{{ this.rawSource }}" link="{{ this.githubLink }}"/>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="Terminal_body" data-controller="code-expander">
+        {% if not showFilename %}
+            <div class="Terminal_actions">
+                <twig:Code:CodeBlockButtons copyButton="{{ this.copyButton }}" source="{{ this.rawSource }}" link="{{ this.githubLink }}"/>
+            </div>
+        {% endif %}
+        <div class="Terminal_content" style="height: {{ height }};"
+             data-code-expander-target="codeContent"
+        >
+            {% for piece in this.prepareSource %}
+                {% if piece.highlight ?? true %}
+                    <pre><code class="language-{{ this.language }}">
+                        {%- if this.lineStart -%}
+                            {%- set content = piece.content|u.prepend(this.lineStart > 1 ? '⇥|') -%}
+                            {{- content|highlight(this.language, this.lineStart)|u.replace('⇥|', '')|raw -}}
+                        {%- else -%}
+                            {{- piece.content|highlight(this.language) -}}
+                        {%- endif -%}
+                    </code></pre>
+                {% else %}
+                    {{ piece.content|raw }}
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        {% block code_content_bottom %}
+            <button
+                type="button"
+                class="Terminal_expand"
+                data-code-expander-target="expandCodeButton"
+                data-action="code-expander#expandCode"
+            >
+                <twig:ux:icon name="arrow-down"/>
+                <span>Expand code</span>
+            </button>
+        {% endblock %}
+    </div>
+</div>

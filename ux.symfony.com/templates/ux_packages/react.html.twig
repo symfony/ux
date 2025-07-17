@@ -1,13 +1,16 @@
-{% extends 'packageBase.html.twig' %}
+{% extends 'ux_packages/package.html.twig' %}
 
-{% block component_header %}
+{% block importmap %}
+    {{ importmap('app-react') }}
+{% endblock %}
+
+{% block package_header %}
     {% component PackageHeader with {
         package: 'react',
         eyebrowText: 'React Component Rendering'
     } %}
         {% block title_header %}
-            Render React from
-            <span class="playfair ps-2">inside Twig</span>
+            Render React from <em>inside Twig</em>
         {% endblock %}
 
         {% block sub_content %}
@@ -17,7 +20,7 @@
 {% endblock %}
 
 {% block code_block_left %}
-    <twig:CodeBlock filename="assets/react/controllers/PackageSearch.jsx" height="300px" />
+    <twig:CodeBlock filename="assets/react/src/controllers/PackageSearch.jsx" height="300px" />
 {% endblock %}
 
 {% block code_block_right %}
@@ -31,9 +34,7 @@
 {% block demo_title %}UX React{% endblock %}
 
 {% block demo_content %}
-    <div {{ react_component('PackageSearch', {
-        packages: packagesData
-    }) }}>
-        Loading... <i class="fas fa-cog fa-spin fa-3x"></i>
+    <div {{ react_component('PackageSearch', {packages: packagesData}) }}>
+        Loading...
     </div>
 {% endblock %}

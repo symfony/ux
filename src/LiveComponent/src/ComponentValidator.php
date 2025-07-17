@@ -19,8 +19,6 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class ComponentValidator implements ComponentValidatorInterface, ServiceSubscriberInterface

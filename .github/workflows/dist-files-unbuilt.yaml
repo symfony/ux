@@ -1,0 +1,43 @@
+name: Dist Files Unbuilt
+
+on:
+    push:
+        paths-ignore:
+            - 'src/*/doc/**'
+            - 'src/**/*.md'
+            - 'ux.symfony.com/**'
+    pull_request:
+        paths-ignore:
+            - 'src/*/doc/**'
+            - 'src/**/*.md'
+            - 'ux.symfony.com/**'
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm i -g corepack && corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+          cache-dependency-path: |
+            yarn.lock
+            **/package.json
+      - run: yarn --immutable && yarn build
+
+      - name: Check if JS dist files are current
+        run: |
+          if ! git diff --quiet; then
+            echo "The Git workspace is unclean! Changes detected:"
+            git status --porcelain
+            git diff
+            exit 1
+          else
+            echo "The Git workspace is clean. No changes detected."
+          fi

@@ -11,12 +11,11 @@
 
 namespace Symfony\UX\Turbo\Bridge\Mercure;
 
-use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
-use Symfony\Component\VarExporter\LazyObjectInterface;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
+use Symfony\UX\Turbo\Doctrine\ClassUtil;
 
 /**
  * Broadcasts updates rendered using Twig with Mercure.
@@ -41,20 +40,13 @@ final class Broadcaster implements BroadcasterInterface
      */
     public const TOPIC_PATTERN = 'https://symfony.com/ux-turbo/%s/%s';
 
-    private $name;
-    private $hub;
+    private ?ExpressionLanguage $expressionLanguage;
 
-    /** @var ExpressionLanguage|null */
-    private $expressionLanguage;
-
-    public function __construct(string $name, HubInterface $hub)
-    {
-        $this->name = $name;
-        $this->hub = $hub;
-
-        if (class_exists(ExpressionLanguage::class)) {
-            $this->expressionLanguage = new ExpressionLanguage();
-        }
+    public function __construct(
+        private string $name,
+        private HubInterface $hub,
+    ) {
+        $this->expressionLanguage = class_exists(ExpressionLanguage::class) ? new ExpressionLanguage() : null;
     }
 
     public function broadcast(object $entity, string $action, array $options): void
@@ -63,26 +55,20 @@ final class Broadcaster implements BroadcasterInterface
             return;
         }
 
-        if ($entity instanceof LazyObjectInterface) {
-            $entityClass = get_parent_class($entity);
-            if (false === $entityClass) {
-                throw new \LogicException('Parent class missing');
-            }
-        } else {
-            $entityClass = ClassUtils::getClass($entity);
-        }
+        $entityClass = ClassUtil::getEntityClass($entity);
 
         if (!isset($options['rendered_action'])) {
-            throw new \InvalidArgumentException(sprintf('Cannot broadcast entity of class "%s" as option "rendered_action" is missing.', $entityClass));
+            throw new \InvalidArgumentException(\sprintf('Cannot broadcast entity of class "%s" as option "rendered_action" is missing.', $entityClass));
         }
 
         if (!isset($options['topics']) && !isset($options['id'])) {
-            throw new \InvalidArgumentException(sprintf('Cannot broadcast entity of class "%s": either option "topics" or "id" is missing, or the PropertyAccess component is not installed. Try running "composer require property-access".', $entityClass));
+            throw new \InvalidArgumentException(\sprintf('Cannot broadcast entity of class "%s": either option "topics" or "id" is missing, or the PropertyAccess component is not installed. Try running "composer require property-access".', $entityClass));
         }
 
         $topics = [];
 
         foreach ((array) ($options['topics'] ?? []) as $topic) {
+            // @phpstan-ignore function.alreadyNarrowedType ($topic should always be a string given the PHPDoc... could be removed in 3.x)
             if (!\is_string($topic)) {
                 $topics[] = $topic;
                 continue;
@@ -104,10 +90,10 @@ final class Broadcaster implements BroadcasterInterface
 
         if (0 === \count($options['topics'])) {
             if (!isset($options['id'])) {
-                throw new \InvalidArgumentException(sprintf('Cannot broadcast entity of class "%s": the option "topics" is empty and "id" is missing.', $entityClass));
+                throw new \InvalidArgumentException(\sprintf('Cannot broadcast entity of class "%s": the option "topics" is empty and "id" is missing.', $entityClass));
             }
 
-            $options['topics'] = (array) sprintf(self::TOPIC_PATTERN, rawurlencode($entityClass), rawurlencode(implode('-', (array) $options['id'])));
+            $options['topics'] = (array) \sprintf(self::TOPIC_PATTERN, rawurlencode($entityClass), rawurlencode(implode('-', (array) $options['id'])));
         }
 
         $update = new Update(

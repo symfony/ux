@@ -7,14 +7,12 @@ Start a Mercure Hub:
         -e MERCURE_PUBLISHER_JWT_KEY='!ChangeMe!' \
         -e MERCURE_SUBSCRIBER_JWT_KEY='!ChangeMe!' \
         -p 3000:3000 \
-        dunglas/mercure caddy run -config /etc/caddy/Caddyfile.dev
+        dunglas/mercure caddy run -config /etc/caddy/dev.Caddyfile
 
 Install the test app:
 
     $ composer install
     $ cd tests/app
-    $ yarn install
-    $ yarn build
     $ php public/index.php doctrine:schema:create
 
 Start the test app:

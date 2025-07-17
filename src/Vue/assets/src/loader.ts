@@ -7,10 +7,8 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import type { Component } from 'vue';
-import { ComponentCollection, components } from './components.js';
+import { type ComponentCollection, components } from './components.js';
 
 declare global {
     function resolveVueComponent(name: string): Component;

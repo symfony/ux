@@ -10,6 +10,8 @@ export interface BackendInterface {
         [key: string]: any;
     }, children: ChildrenFingerprints, updatedPropsFromParent: {
         [key: string]: any;
+    }, files: {
+        [key: string]: FileList;
     }): BackendRequest;
 }
 export interface BackendAction {
@@ -18,10 +20,12 @@ export interface BackendAction {
 }
 export default class implements BackendInterface {
     private readonly requestBuilder;
-    constructor(url: string, csrfToken?: string | null);
+    constructor(url: string, method?: 'get' | 'post');
     makeRequest(props: any, actions: BackendAction[], updated: {
         [key: string]: any;
     }, children: ChildrenFingerprints, updatedPropsFromParent: {
         [key: string]: any;
+    }, files: {
+        [key: string]: FileList;
     }): BackendRequest;
 }

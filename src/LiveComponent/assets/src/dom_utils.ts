@@ -1,7 +1,8 @@
-import ValueStore from './Component/ValueStore';
-import { Directive, parseDirectives } from './Directive/directives_parser';
+import type Component from './Component';
+import type ValueStore from './Component/ValueStore';
+import { type Directive, parseDirectives } from './Directive/directives_parser';
 import { normalizeModelName } from './string_utils';
-import Component from './Component';
+import getElementAsTagText from './Util/getElementAsTagText';
 
 /**
  * Return the "value" of any given element.
@@ -20,6 +21,11 @@ export function getValueFromElement(element: HTMLElement, valueStore: ValueStore
                 const modelValue = valueStore.get(modelNameData.action);
                 if (Array.isArray(modelValue)) {
                     return getMultipleCheckboxValue(element, modelValue);
+                }
+                if (Object(modelValue) === modelValue) {
+                    // we might get objects of values from forms, like {'1': 'foo', '2': 'bar'}
+                    // this occurs in symfony forms with expanded ChoiceType when first checked options get unchecked
+                    return getMultipleCheckboxValue(element, Object.values(modelValue));
                 }
             }
 
@@ -72,6 +78,7 @@ export function setValueOnElement(element: HTMLElement, value: any): void {
         }
 
         if (element.type === 'radio') {
+            // biome-ignore lint/suspicious/noDoubleEquals: need fuzzy matching
             element.checked = element.value == value;
 
             return;
@@ -79,34 +86,25 @@ export function setValueOnElement(element: HTMLElement, value: any): void {
 
         if (element.type === 'checkbox') {
             if (Array.isArray(value)) {
-                // I'm purposely not using Array.includes here because it's
-                // strict, and because of Numeric/String mis-casting, I
-                // want the "includes" to be "fuzzy".
-                let valueFound = false;
-                value.forEach((val) => {
-                    if (val == element.value) {
-                        valueFound = true;
-                    }
-                });
-
-                element.checked = valueFound;
+                // Because of Numeric/String mis-casting,
+                // we want the "includes" to be "fuzzy".
+                // biome-ignore lint/suspicious/noDoubleEquals: need fuzzy matching
+                element.checked = value.some((val) => val == element.value);
+            } else if (element.hasAttribute('value')) {
+                // if the checkbox has a value="", then check if it matches
+                // biome-ignore lint/suspicious/noDoubleEquals: need fuzzy matching
+                element.checked = element.value == value;
             } else {
-                if (element.hasAttribute('value')) {
-                    // if the checkbox has a value="", then check if it matches
-                    element.checked = element.value == value;
-                } else {
-                    // no value, treat it like a boolean
-                    element.checked = value;
-                }
+                // no value, treat it like a boolean
+                element.checked = value;
             }
-
             return;
         }
     }
 
     if (element instanceof HTMLSelectElement) {
         const arrayWrappedValue = [].concat(value).map((value) => {
-            return value + '';
+            return `${value}`;
         });
 
         Array.from(element.options).forEach((option) => {
@@ -135,7 +133,7 @@ export function getAllModelDirectiveFromElements(element: HTMLElement): Directiv
     const directives = parseDirectives(element.dataset.model);
 
     directives.forEach((directive) => {
-        if (directive.args.length > 0 || directive.named.length > 0) {
+        if (directive.args.length > 0) {
             throw new Error(
                 `The data-model="${element.dataset.model}" format is invalid: it does not support passing arguments to the model.`
             );
@@ -161,7 +159,7 @@ export function getModelDirectiveFromElement(element: HTMLElement, throwOnMissin
             const directives = parseDirectives(formElement.dataset.model || '*');
             const directive = directives[0];
 
-            if (directive.args.length > 0 || directive.named.length > 0) {
+            if (directive.args.length > 0) {
                 throw new Error(
                     `The data-model="${formElement.dataset.model}" format is invalid: it does not support passing arguments to the model.`
                 );
@@ -201,19 +199,9 @@ export function elementBelongsToThisComponent(element: Element, component: Compo
         return false;
     }
 
-    let foundChildComponent = false;
-    component.getChildren().forEach((childComponent) => {
-        if (foundChildComponent) {
-            // return early
-            return;
-        }
+    const closestLiveComponent = element.closest('[data-controller~="live"]');
 
-        if (childComponent.element === element || childComponent.element.contains(element)) {
-            foundChildComponent = true;
-        }
-    });
-
-    return !foundChildComponent;
+    return closestLiveComponent === component.element;
 }
 
 export function cloneHTMLElement(element: HTMLElement): HTMLElement {
@@ -250,22 +238,7 @@ export function htmlToElement(html: string): HTMLElement {
     return child;
 }
 
-/**
- * Returns just the outer element's HTML as a string - useful for error messages.
- *
- * For example:
- *      <div class="outer">And text inside <p>more text</p></div>
- *
- * Would return:
- *      <div class="outer">
- */
-export function getElementAsTagText(element: HTMLElement): string {
-    return element.innerHTML
-        ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML))
-        : element.outerHTML;
-}
-
-const getMultipleCheckboxValue = function (element: HTMLInputElement, currentValues: Array<string>): Array<string> {
+const getMultipleCheckboxValue = (element: HTMLInputElement, currentValues: Array<string>): Array<string> => {
     const finalValues = [...currentValues];
     const value = inputValue(element);
     const index = currentValues.indexOf(value);
@@ -287,6 +260,5 @@ const getMultipleCheckboxValue = function (element: HTMLInputElement, currentVal
     return finalValues;
 };
 
-const inputValue = function (element: HTMLInputElement): string {
-    return element.dataset.value ? element.dataset.value : element.value;
-};
+const inputValue = (element: HTMLInputElement): string =>
+    element.dataset.value ? element.dataset.value : element.value;

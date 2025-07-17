@@ -1,7 +1,7 @@
 <div {{ attributes }}>
     <form
-        data-action="live#action"
-        data-action-name="prevent|saveProduct"
+        data-action="live#action:prevent"
+        data-live-action-param="saveProduct"
     >
         <div class="row align-items-center">
             <div class="col-2">
@@ -52,8 +52,8 @@
                     class="form-control {{ _errors.has('category') ? 'is-invalid' }}"
                 >
                     <option value="">Choose a category</option>
-                    {% for categoryOption in categories %}
-                        <option value="{{ categoryOption.id }}" {{ this.isCurrentCategory(categoryOption) ? 'selected' }}>{{ categoryOption.name }}</option>
+                    {% for category_option in categories %}
+                        <option value="{{ category_option.id }}" {{ this.isCurrentCategory(category_option) ? 'selected' }}>{{ category_option.name }}</option>
                     {% endfor %}
                 </select>
                 {% if _errors.has('category') %}
@@ -79,13 +79,13 @@
         </div>
     </form>
 
-    {% component BootstrapModal with { id: 'new-category-modal' } %}
+    {% component BootstrapModal with {id: 'new-category-modal'} %}
         {% block modal_header %}
             <h5>Add a Category</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         {% endblock %}
         {% block modal_body %}
-            {{ component('NewCategoryForm') }}
+            <twig:NewCategoryForm />
         {% endblock %}
     {% endcomponent %}
 </div>

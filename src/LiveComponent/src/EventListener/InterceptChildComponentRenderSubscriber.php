@@ -16,16 +16,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
 use Symfony\UX\LiveComponent\Util\ChildComponentPartialRenderer;
+use Symfony\UX\LiveComponent\Util\LiveComponentStack;
 use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
-use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
 
 /**
  * Responsible for rendering children as empty elements during a re-render.
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  *
  * @internal
  */
@@ -34,7 +32,7 @@ class InterceptChildComponentRenderSubscriber implements EventSubscriberInterfac
     public const CHILDREN_FINGERPRINTS_METADATA_KEY = 'children_fingerprints';
 
     public function __construct(
-        private ComponentStack $componentStack,
+        private LiveComponentStack $componentStack,
         private ContainerInterface $container,
     ) {
     }
@@ -42,7 +40,7 @@ class InterceptChildComponentRenderSubscriber implements EventSubscriberInterfac
     public function preComponentCreated(PreCreateForRenderEvent $event): void
     {
         // if there is already a component, that's a parent. Else, this is not a child.
-        if (null === $parentComponent = $this->componentStack->getCurrentComponent()) {
+        if (null === $parentComponent = $this->componentStack->getCurrentLiveComponent()) {
             return;
         }
 
@@ -53,8 +51,8 @@ class InterceptChildComponentRenderSubscriber implements EventSubscriberInterfac
         $childFingerprints = $parentComponent->getExtraMetadata(self::CHILDREN_FINGERPRINTS_METADATA_KEY);
 
         // get the deterministic id for this child, but without incrementing the counter yet
-        if (isset($event->getInputProps()['data-live-id'])) {
-            $deterministicId = $event->getInputProps()['data-live-id'];
+        if (isset($event->getInputProps()['id'])) {
+            $deterministicId = $event->getInputProps()['id'];
         } else {
             $key = $event->getInputProps()[LiveControllerAttributesCreator::KEY_PROP_NAME] ?? null;
             $deterministicId = $this->getDeterministicIdCalculator()->calculateDeterministicId(increment: false, key: $key);

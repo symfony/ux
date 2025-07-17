@@ -1,0 +1,29 @@
+name: Dist Files Size Diff (Comment)
+
+on:
+  workflow_run:
+    workflows: ["Dist Files Size Diff"]
+    types:
+      - completed
+
+jobs:
+    dist-files-size-diff:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Download artifacts
+            uses: actions/download-artifact@v4
+            with:
+              name: dist-size-diff
+              run-id: ${{ github.event.workflow_run.id }}
+              github-token: ${{ secrets.GITHUB_TOKEN }}
+              
+          - name: Read pr-number artifact to env var
+            id: read-pr-number
+            run: |
+              echo "pr-number=$(cat ./pr-number)" >> $GITHUB_OUTPUT
+              
+          - name: Comment on the pull request (if success)
+            uses: marocchino/sticky-pull-request-comment@v2
+            with:
+              number: ${{ steps.read-pr-number.outputs.pr-number }}
+              path: ./diff.md

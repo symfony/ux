@@ -7,12 +7,10 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
+import { formatIntl } from '../../src/formatters/intl-formatter';
 
-import {formatIntl} from '../../src/formatters/intl-formatter';
-
-describe('Intl Formatter', function () {
-    test('format with named arguments', function() {
+describe('Intl Formatter', () => {
+    test('format with named arguments', () => {
         const chooseMessage = `
 {gender_of_host, select,
     female {{num_guests, plural, offset:1
@@ -31,20 +29,24 @@ describe('Intl Formatter', function () {
         =2 {{host} invites {guest} and one other person to their party.}
         other {{host} invites {guest} as one of the # people invited to their party.}}}}`.trim();
 
-        const message = formatIntl(chooseMessage, {
-            gender_of_host: 'male',
-            num_guests: 10,
-            host: 'Fabien',
-            guest: 'Guilherme',
-        }, 'en');
+        const message = formatIntl(
+            chooseMessage,
+            {
+                gender_of_host: 'male',
+                num_guests: 10,
+                host: 'Fabien',
+                guest: 'Guilherme',
+            },
+            'en'
+        );
 
         expect(message).toEqual('Fabien invites Guilherme as one of the 9 people invited to his party.');
-    })
+    });
 
-    test('percents and brackets are trimmed', function() {
-        expect(formatIntl('Hello {name}', { name: 'Fab'}, 'en')).toEqual('Hello Fab');
-        expect(formatIntl('Hello {name}', { '%name%': 'Fab'}, 'en')).toEqual('Hello Fab');
-        expect(formatIntl('Hello {name}', { '{{ name }}': 'Fab'}, 'en')).toEqual('Hello Fab');
+    test('percents and brackets are trimmed', () => {
+        expect(formatIntl('Hello {name}', { name: 'Fab' }, 'en')).toEqual('Hello Fab');
+        expect(formatIntl('Hello {name}', { '%name%': 'Fab' }, 'en')).toEqual('Hello Fab');
+        expect(formatIntl('Hello {name}', { '{{ name }}': 'Fab' }, 'en')).toEqual('Hello Fab');
 
         // Parameters object should not be modified
         const parameters = { '%name%': 'Fab' };
@@ -52,13 +54,13 @@ describe('Intl Formatter', function () {
         expect(parameters).toEqual({ '%name%': 'Fab' });
     });
 
-    test('format with HTML inside', function() {
-        expect(formatIntl('Hello <b>{name}</b>', { name: 'Fab'}, 'en')).toEqual('Hello <b>Fab</b>');
-        expect(formatIntl('Hello {name}', { name: '<b>Fab</b>'}, 'en')).toEqual('Hello <b>Fab</b>');
-    })
+    test('format with HTML inside', () => {
+        expect(formatIntl('Hello <b>{name}</b>', { name: 'Fab' }, 'en')).toEqual('Hello <b>Fab</b>');
+        expect(formatIntl('Hello {name}', { name: '<b>Fab</b>' }, 'en')).toEqual('Hello <b>Fab</b>');
+    });
 
-    test('format with locale containg underscore', function() {
-        expect(formatIntl('Hello {name}', { name: 'Fab'}, 'en_US')).toEqual('Hello Fab');
-        expect(formatIntl('Bonjour {name}', { name: 'Fab'}, 'fr_FR')).toEqual('Bonjour Fab');
+    test('format with locale containg underscore', () => {
+        expect(formatIntl('Hello {name}', { name: 'Fab' }, 'en_US')).toEqual('Hello Fab');
+        expect(formatIntl('Bonjour {name}', { name: 'Fab' }, 'fr_FR')).toEqual('Bonjour Fab');
     });
 });

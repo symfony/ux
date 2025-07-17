@@ -10,6 +10,7 @@ import { Modal } from 'bootstrap';
  * See templates/components/BootstrapModal.html.twig to see how this is
  * attached to Bootstrap modal.
  */
+/* stimulusFetch: 'lazy' */
 export default class extends Controller {
     modal = null;
 

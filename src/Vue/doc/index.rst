@@ -18,8 +18,7 @@ Installation
     This package works best with WebpackEncore. To use it with AssetMapper, see
     :ref:`Using with AssetMapper <using-with-asset-mapper>`.
 
-Before you start, make sure you have `StimulusBundle configured in your app`_.
-Then install the bundle using Composer and Symfony Flex:
+Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -36,9 +35,9 @@ Next, install a package to help Vue:
     $ npm install -D vue-loader --force
     $ npm run watch
 
-    # or with yarn
-    $ yarn add vue-loader --dev --force
-    $ yarn watch
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-vue npm package`_
 
 That's it! Any files inside ``assets/vue/controllers/`` can now be rendered as
 Vue components.
@@ -54,7 +53,7 @@ code to your ``assets/app.js`` file:
     // assets/app.js
     import { registerVueControllerComponents } from '@symfony/ux-vue';
 
-    registerVueControllerComponents(require.context('./vue/controllers', true, /\\.(j|t)sx?$/));
+    registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
 
 This will load all Vue components located in the ``assets/vue/controllers``
 directory. These are known as **Vue controller components**: top-level
@@ -140,9 +139,7 @@ Web History mode with Vue Router
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To use "web" history mode with Vue Router, a catch-all route will be needed
-which should render the same template and Vue component:
-
-.. code-block::
+which should render the same template and Vue component::
 
     #Route('/survey/{path<.+>}')
     public function survey($path = ''): Response
@@ -187,6 +184,6 @@ the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`Vue.js`: https://vuejs.org/
-.. _`the Symfony UX initiative`: https://symfony.com/ux
+.. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _ `the related section of the documentation`: https://symfony.com/doc/current/frontend/encore/vuejs.html
-.. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
+.. _`@symfony/ux-vue npm package`: https://www.npmjs.com/package/@symfony/ux-vue

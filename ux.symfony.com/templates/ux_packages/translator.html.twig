@@ -1,13 +1,12 @@
-{% extends 'packageBase.html.twig' %}
+{% extends 'ux_packages/package.html.twig' %}
 
-{% block component_header %}
+{% block package_header %}
     {% component PackageHeader with {
         package: 'translator',
         eyebrowText: 'JavaScript-enabled Translation'
     } %}
         {% block title_header %}
-            Translations directly imported in
-            <span class="playfair ps-2">JavaScript</span>
+            Translations directly imported in <em>JavaScript</em>
         {% endblock %}
 
         {% block sub_content %}
@@ -17,235 +16,161 @@
 {% endblock %}
 
 {% block code_block_left %}
-    <twig:CodeBlock filename="translations/messages+intl-icu.en.yaml" height="300px" />
+    <twig:CodeBlock filename="translations/messages+intl-icu.en.yaml" height="300px"/>
 {% endblock %}
 
 {% block code_block_right %}
-    <twig:CodeBlock filename="translations/messages+intl-icu.fr.yaml" height="300px" />
+    <twig:CodeBlock filename="translations/messages+intl-icu.fr.yaml" height="300px"/>
 {% endblock %}
 
 {% block demo_title %}UX Translator{% endblock %}
 
 {% block demo_content %}
-    <div {{ stimulus_controller('translator-demo') }}>
-        <div {{ stimulus_target('translator-demo', 'localeSwitcher') }} style="position: absolute; top: 16px; right: 16px ">
-            <div class="row">
-                <label for="translator-demo-locale" class="col-3 col-form-label">Locale</label>
-                <div class="col">
-                    <select id="translator-demo-locale" {{ stimulus_action('translator-demo', 'setLocale') }} class="form-select">
-                        <option value="en">🇬🇧 English</option>
-                        <option value="fr">🇫🇷 French</option>
+
+        {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
+            message: 'HELLO',
+        } %}
+        {% endembed %}
+
+        {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
+            message: 'SAY_HELLO',
+            parameters: {
+                name: 'Fabien'
+            },
+        } %}
+            {% block parameters %}
+                <div>
+                    <label for="SAY_HELLO-name" class="small opacity-50">Name</label>
+                    <input id="SAY_HELLO-name" class="form-control"
+                           type="text" name="name" value="Fabien"
+                           data-translator-demo-block-target="parameters"
+                           data-action="translator-demo-block#render"
+                    >
+                </div>
+            {% endblock %}
+        {% endembed %}
+
+        {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
+            message: 'INVITATION_TITLE',
+            parameters: {
+                organizer_gender: 'Fabien',
+                organizer_name: 'Clara',
+            },
+        } %}
+            {% block parameters %}
+                <div>
+                    <label for="INVITATION_TITLE-organizer_gender" class="small opacity-50">Gender</label>
+                    <select id="INVITATION_TITLE-organizer_gender" class="form-select"
+                        name="organizer_gender"
+                        data-translator-demo-block-target="parameters"
+                        data-action="translator-demo-block#render"
+                    >
+                        <option value="female" selected>Female</option>
+                        <option value="male">Male</option>
+                        <option value="multiple">Multiple</option>
+                        <option value="trans">Trans</option>
                     </select>
                 </div>
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-5">
-                <div class="h3 text-center">Code</div>
-            </div>
-            <div class="col">
-                <div class="h3 text-center">Result</div>
-            </div>
-            <div class="col-4">
-                <div class="h3 text-center">Parameters</div>
-            </div>
-        </div>
-
-        <div class="row mb-4">
-            <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'helloCode') }}></pre>
-            </div>
-            <div class="col">
-                <span {{ stimulus_target('translator-demo', 'helloOutput') }}></span>
-            </div>
-        </div>
-
-        <div class="row mb-4">
-            <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'sayHelloCode') }}></pre>
-            </div>
-            <div class="col">
-                <span {{ stimulus_target('translator-demo', 'sayHelloOutput') }}></span>
-            </div>
-            <div class="col-4">
-                <div class="row mb-3">
-                    <label for="sayHelloNameInput" class="col-3 col-form-label text-end">Name</label>
-                    <div class="col">
-                        <input
-                            type="text"
-                            value="Fabien"
-                            class="form-control"
-                            id="sayHelloNameInput"
-                            {{ stimulus_target('translator-demo', 'sayHelloNameInput') }}
-                            {{ stimulus_action('translator-demo', 'render') }}
-                        >
-                    </div>
+                <div>
+                    <label for="INVITATION_TITLE-organizer_name" class="small opacity-50">Name</label>
+                    <input id="INVITATION_TITLE-organizer_name" class="form-control"
+                           name="organizer_name"
+                           value="Clara"
+                           data-translator-demo-block-target="parameters"
+                           data-action="translator-demo-block#render"
+                    >
                 </div>
-            </div>
-        </div>
+            {% endblock %}
+        {% endembed %}
 
-        <div class="row mb-4">
-            <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'invitationTitleCode') }}></pre>
-            </div>
-            <div class="col">
-                <span {{ stimulus_target('translator-demo', 'invitationTitleOutput') }}></span>
-            </div>
-            <div class="col-4">
-                <div class="row mb-3">
-                    <label for="invitationTitleOrganizationGenderInput" class="col-3 col-form-label text-end">Gender</label>
-                    <div class="col">
-                        <select
-                            id="invitationTitleOrganizationGenderInput"
-                            class="form-select"
-                            {{ stimulus_target('translator-demo', 'invitationTitleOrganizationGenderInput') }}
-                            {{ stimulus_action('translator-demo', 'render') }}
-                        >
-                            <option value="female">Female</option>
-                            <option value="male">Male</option>
-                            <option value="multiple">Multiple</option>
-                            <option value="trans">Trans</option>
-                        </select>
-                    </div>
+        {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
+            message: 'NUM_OF_APPLES',
+            parameters: {
+                apples: 2
+            },
+        } %}
+            {% block parameters %}
+                <div>
+                    <label for="NUM_OF_APPLES-apples" class="small opacity-50">Count</label>
+                    <input id="NUM_OF_APPLES-apples" class="form-control"
+                           name="apples" type="number" min="0" max="5" value="2"
+                           data-translator-demo-block-target="parameters"
+                           data-action="translator-demo-block#render"
+                    >
                 </div>
+            {% endblock %}
+        {% endembed %}
 
-                <div class="row mb-3">
-                    <label for="invitationTitleOrganizationNameInput" class="col-3 col-form-label text-end">Name</label>
-                    <div class="col">
-                        <input
-                            id="invitationTitleOrganizationNameInput"
-                            type="text"
-                            value="Clara"
-                            class="form-control"
-                            {{ stimulus_target('translator-demo', 'invitationTitleOrganizationNameInput') }}
-                            {{ stimulus_action('translator-demo', 'render') }}
-                        >
-                    </div>
+        {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
+            message: 'FINISH_PLACE',
+            parameters: {
+                place: 2
+            },
+        } %}
+            {% block parameters %}
+                <div>
+                    <label for="FINISH_PLACE-apples" class="small opacity-50">Place</label>
+                    <input id="FINISH_PLACE-apples" class="form-control"
+                           name="place" type="number" min="0" max="5" value="1"
+                           data-translator-demo-block-target="parameters"
+                           data-action="translator-demo-block#render"
+                    >
                 </div>
-            </div>
-        </div>
+            {% endblock %}
+        {% endembed %}
 
-        <div class="row mb-4">
-            <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'numOfApplesCode') }}></pre>
-            </div>
-            <div class="col">
-                <span {{ stimulus_target('translator-demo', 'numOfApplesOutput') }}></span>
-            </div>
-            <div class="col-4">
-                <div class="row mb-3">
-                    <label for="numOfApplesCountInput" class="col-3 col-form-label text-end">Count</label>
-                    <div class="col">
-                        <input
-                            type="number"
-                            min="0"
-                            max="5"
-                            value="2"
-                            class="form-control"
-                            id="numOfApplesCountInput"
-                            {{ stimulus_target('translator-demo', 'numOfApplesCountInput') }}
-                            {{ stimulus_action('translator-demo', 'render') }}
-                        >
-                    </div>
+        {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
+            message: 'PUBLISHED_AT',
+            parameters: {
+                publication_date: '2023-04-27 08:12'
+            },
+        } %}
+            {% block parameters %}
+                <div>
+                    <label for="PUBLISHED_AT-publication_date" class="small opacity-50">Date</label>
+                    <input id="PUBLISHED_AT-publication_date" class="form-control"
+                           name="publication_date" type="datetime-local" value="2023-04-27 08:12"
+                           data-translator-demo-block-target="parameters"
+                           data-action="translator-demo-block#render"
+                    >
                 </div>
-            </div>
-        </div>
+            {% endblock %}
+        {% endembed %}
 
-        <div class="row mb-4">
-            <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'finishPlaceCode') }}></pre>
-            </div>
-            <div class="col">
-                <span {{ stimulus_target('translator-demo', 'finishPlaceOutput') }}></span>
-            </div>
-            <div class="col-4">
-                <div class="row mb-3">
-                    <label for="finishPlacePlaceInput" class="col-3 col-form-label text-end">Place</label>
-                    <div class="col">
-                        <input
-                            type="number"
-                            min="1"
-                            value="1"
-                            class="form-control"
-                            id="finishPlacePlaceInput"
-                            {{ stimulus_target('translator-demo', 'finishPlacePlaceInput') }}
-                            {{ stimulus_action('translator-demo', 'render') }}
-                        >
-                    </div>
+         {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
+            message: 'PROGRESS',
+            parameters: {
+                progress: 42
+            },
+        } %}
+            {% block parameters %}
+                <div>
+                    <label for="PROGRESS-progress" class="small opacity-50">Place</label>
+                    <input id="PROGRESS-progress" class="form-range"
+                           name="progress" type="range" min="0" max="100" value="42"
+                           data-translator-demo-block-target="parameters"
+                           data-action="translator-demo-block#render"
+                    >
                 </div>
-            </div>
-        </div>
+            {% endblock %}
+        {% endembed %}
 
-        <div class="row mb-4">
-            <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'publishedAtCode') }}></pre>
-            </div>
-            <div class="col">
-                <span {{ stimulus_target('translator-demo', 'publishedAtOutput') }}></span>
-            </div>
-            <div class="col-4">
-                <div class="row mb-3">
-                    <label for="publishedAtDateInput" class="col-3 col-form-label text-end">Date</label>
-                    <div class="col">
-                        <input
-                            type="datetime-local"
-                            value="2023-04-27 08:12"
-                            class="form-control"
-                            id="publishedAtDateInput"
-                            {{ stimulus_target('translator-demo', 'publishedAtDateInput') }}
-                            {{ stimulus_action('translator-demo', 'render') }}
-                        >
-                    </div>
+        {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
+            message: 'VALUE_OF_OBJECT',
+            parameters: {
+                value: 30
+            },
+        } %}
+            {% block parameters %}
+                <div>
+                    <label for="VALUE_OF_OBJECT-value" class="small opacity-50">Value</label>
+                    <input id="VALUE_OF_OBJECT-value" class="form-control"
+                           name="value" type="number" min="1"  value="30" step="0.1"
+                           data-translator-demo-block-target="parameters"
+                           data-action="translator-demo-block#render"
+                    >
                 </div>
-            </div>
-        </div>
+            {% endblock %}
+        {% endembed %}
 
-        <div class="row mb-4">
-            <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'progressAtCode') }}></pre>
-            </div>
-            <div class="col">
-                <span {{ stimulus_target('translator-demo', 'progressAtOutput') }}></span>
-            </div>
-            <div class="col-4">
-                <div class="row mb-3">
-                    <label for="progressAtProgressInput" class="col-3 col-form-label text-end">Progress</label>
-                    <div class="col d-flex align-items-center">
-                        <input
-                            id="progressAtProgressInput"
-                            type="range"
-                            class="form-range"
-                            {{ stimulus_target('translator-demo', 'progressAtProgressInput') }}
-                            {{ stimulus_action('translator-demo', 'render') }}
-                        />
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'valueOfObjectCode') }}></pre>
-            </div>
-            <div class="col">
-                <span {{ stimulus_target('translator-demo', 'valueOfObjectOutput') }}></span>
-            </div>
-            <div class="col-4">
-                <div class="row mb-3">
-                    <label for="valueOfObjectValueInput" class="col-3 col-form-label text-end">Value</label>
-                    <div class="col">
-                        <input
-                            type="number"
-                            min="1"
-                            value="30"
-                            class="form-control"
-                            id="valueOfObjectValueInput"
-                            {{ stimulus_target('translator-demo', 'valueOfObjectValueInput') }}
-                            {{ stimulus_action('translator-demo', 'render') }}
-                        >
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock %}

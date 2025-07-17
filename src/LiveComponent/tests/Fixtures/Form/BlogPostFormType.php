@@ -9,8 +9,6 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 namespace Symfony\UX\LiveComponent\Tests\Fixtures\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -40,7 +38,6 @@ class BlogPostFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => BlogPost::class,
-            'csrf_protection' => false,
         ]);
     }
 }

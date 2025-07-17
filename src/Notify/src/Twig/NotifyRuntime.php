@@ -53,6 +53,6 @@ final class NotifyRuntime implements RuntimeExtensionInterface
             $stimulusAttributes->addController($name, $controllerValues);
         }
 
-        return trim(sprintf('<div %s></div>', $stimulusAttributes));
+        return trim(\sprintf('<div %s></div>', $stimulusAttributes));
     }
 }

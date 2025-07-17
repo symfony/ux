@@ -32,6 +32,10 @@ use function Symfony\Component\String\s;
  */
 class TranslationsDumper
 {
+    private array $excludedDomains = [];
+    private array $includedDomains = [];
+    private array $alreadyGeneratedConstants = [];
+
     public function __construct(
         private string $dumpDir,
         private MessageParametersExtractor $messageParametersExtractor,
@@ -55,7 +59,7 @@ class TranslationsDumper
         foreach ($this->getTranslations(...$catalogues) as $translationId => $translationsByDomainAndLocale) {
             $constantName = $this->generateConstantName($translationId);
 
-            $translationsJs .= sprintf(
+            $translationsJs .= \sprintf(
                 "export const %s = %s;\n",
                 $constantName,
                 json_encode([
@@ -63,7 +67,7 @@ class TranslationsDumper
                     'translations' => $translationsByDomainAndLocale,
                 ], \JSON_THROW_ON_ERROR),
             );
-            $translationsTs .= sprintf(
+            $translationsTs .= \sprintf(
                 "export declare const %s: %s;\n",
                 $constantName,
                 $this->getTranslationsTypeScriptTypeDefinition($translationsByDomainAndLocale)
@@ -72,7 +76,7 @@ class TranslationsDumper
 
         $this->filesystem->dumpFile($this->dumpDir.'/index.js', $translationsJs);
         $this->filesystem->dumpFile($this->dumpDir.'/index.d.ts', $translationsTs);
-        $this->filesystem->dumpFile($this->dumpDir.'/configuration.js', sprintf(
+        $this->filesystem->dumpFile($this->dumpDir.'/configuration.js', \sprintf(
             "export const localeFallbacks = %s;\n",
             json_encode($this->getLocaleFallbacks(...$catalogues), \JSON_THROW_ON_ERROR)
         ));
@@ -82,6 +86,22 @@ import { LocaleType } from '@symfony/ux-translator';
 export declare const localeFallbacks: Record<LocaleType, LocaleType>;
 TS
         );
+    }
+
+    public function addExcludedDomain(string $domain): void
+    {
+        if ($this->includedDomains) {
+            throw new \LogicException('You cannot set both "excluded_domains" and "included_domains" at the same time.');
+        }
+        $this->excludedDomains[] = $domain;
+    }
+
+    public function addIncludedDomain(string $domain): void
+    {
+        if ($this->excludedDomains) {
+            throw new \LogicException('You cannot set both "excluded_domains" and "included_domains" at the same time.');
+        }
+        $this->includedDomains[] = $domain;
     }
 
     /**
@@ -94,6 +114,12 @@ TS
         foreach ($catalogues as $catalogue) {
             $locale = $catalogue->getLocale();
             foreach ($catalogue->getDomains() as $domain) {
+                if (\in_array($domain, $this->excludedDomains, true)) {
+                    continue;
+                }
+                if ($this->includedDomains && !\in_array($domain, $this->includedDomains, true)) {
+                    continue;
+                }
                 foreach ($catalogue->all($domain) as $id => $message) {
                     $realDomain = $catalogue->has($id, $domain.MessageCatalogueInterface::INTL_DOMAIN_SUFFIX)
                         ? $domain.MessageCatalogueInterface::INTL_DOMAIN_SUFFIX
@@ -126,25 +152,22 @@ TS
                         ? $this->intlMessageParametersExtractor->extract($translation)
                         : $this->messageParametersExtractor->extract($translation);
                 } catch (\Throwable $e) {
-                    throw new \Exception(sprintf('Error while extracting parameters from message "%s" in domain "%s" and locale "%s".', $translation, $domain, $locale), previous: $e);
+                    throw new \Exception(\sprintf('Error while extracting parameters from message "%s" in domain "%s" and locale "%s".', $translation, $domain, $locale), previous: $e);
                 }
 
                 $parametersTypes[$domain] = $this->typeScriptMessageParametersPrinter->print($parameters);
-
                 $locales[] = $locale;
             }
         }
 
-        return sprintf(
+        $typeScriptParametersType = [];
+        foreach ($parametersTypes as $domain => $parametersType) {
+            $typeScriptParametersType[] = \sprintf("'%s': { parameters: %s }", $domain, $parametersType);
+        }
+
+        return \sprintf(
             'Message<{ %s }, %s>',
-            implode(', ', array_reduce(
-                array_keys($parametersTypes),
-                fn (array $carry, string $domain) => [
-                    ...$carry,
-                    sprintf("'%s': { parameters: %s }", $domain, $parametersTypes[$domain]),
-                ],
-                [],
-            )),
+            implode(', ', $typeScriptParametersType),
             implode('|', array_map(fn (string $locale) => "'$locale'", array_unique($locales))),
         );
     }
@@ -162,15 +185,14 @@ TS
 
     private function generateConstantName(string $translationId): string
     {
-        static $alreadyGenerated = [];
-
+        $translationId = s($translationId)->ascii()->snake()->upper()->replaceMatches('/^(\d)/', '_$1')->toString();
         $prefix = 0;
         do {
-            $constantName = s($translationId)->ascii()->snake()->upper()->toString().($prefix > 0 ? '_'.$prefix : '');
+            $constantName = $translationId.($prefix > 0 ? '_'.$prefix : '');
             ++$prefix;
-        } while (\in_array($constantName, $alreadyGenerated, true));
+        } while ($this->alreadyGeneratedConstants[$constantName] ?? false);
 
-        $alreadyGenerated[] = $constantName;
+        $this->alreadyGeneratedConstants[$constantName] = true;
 
         return $constantName;
     }

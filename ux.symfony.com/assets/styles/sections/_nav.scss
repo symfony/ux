@@ -1,0 +1,164 @@
+.AppNav {
+  color: inherit;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  justify-content: space-between;
+  @media (max-width: 859px) {
+    flex-wrap: wrap;
+  }
+}
+
+.AppNav_actions {
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 1rem;
+  align-items: center;
+
+  @media (min-width: 860px) {
+    order: 2;
+  }
+}
+
+.AppNav_socials {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  
+  @media (max-width: 576px) {
+    position: absolute;
+    top: 80vh;
+    width: 100%;
+    display: none;
+  }
+}
+.AppHeader.open .AppNav_socials {
+    @media (max-width: 576px) {
+      display: flex;
+      gap: 2rem;
+      .AppNav_item--icon .Icon {
+        font-size: 2rem;
+      }
+    }
+}
+
+.AppNav_menu {
+  justify-content: flex-end;
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+
+  @media (min-width: 860px) {
+    margin-inline-start: auto;
+    align-items: center;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 859px) {
+  .AppNav_menu {
+    transform: translateY(-40%);
+    opacity: 0;
+    z-index: -1;
+    transition: transform 350ms ease-out;
+    width: 100%;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+    height: 0;
+  }
+  .AppHeader.open .AppNav_menu {
+    transform: translateY(0);
+    transition: transform 500ms ease-out, height 500ms ease-out;
+    opacity: 1;
+    z-index: 1;
+    height: auto;
+  }
+  .AppNav_menu a {
+    font-size: 1.5rem;
+    padding: .5rem;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 800px) {
+  .AppNav_menu a {
+    font-size: 1.5rem;
+    padding: .5rem;
+    opacity: 1;
+  }
+}
+
+.AppNav_item {
+  color: inherit;
+  font-family: var(--font-family-title);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  opacity: .9;
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: center;
+  line-height: 1.45;
+  position: relative;
+  transition: all 250ms;
+  &:hover {
+    opacity: 1;
+  }
+}
+.AppNav_item--cs {
+  @media (min-width: 860px) and (max-width: 1023px) {
+    display: none;
+  }
+} 
+.AppNav_item--desktop {
+  @media (min-width: 860px) {
+    display: none;
+  }
+}
+
+.AppNav_actions .AppNav_item:hover {
+  transform: scale(1.1);
+}
+
+.AppNav_item--icon {
+  padding: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: grid;
+  place-content: center;
+
+  .Icon {
+    font-size: 1.25rem;
+  }
+}
+
+.AppNav_badge {
+  position: absolute;
+  right: -1rem;
+  top: -.75rem;
+  text-align: right;
+  padding: .2rem .4rem;
+  font-size: .5rem;
+  font-family: var(--font-family-text);
+  text-transform: uppercase;
+  line-height: 1;
+  background: rgba(0,0,0,0.1);
+  border-radius: .25rem;
+  opacity: 0.75;
+  display: flex;
+}
+.AppNav_badge:after {
+  content: attr(data-content);
+  color: inherit;
+}
+@media (max-width: 859px) {
+  .AppNav_badge {
+    display: none;
+  }
+}

@@ -1,10 +1,26 @@
 {
     "name": "@symfony/ux-autocomplete",
-    "description": "JavaScript-powered autocompletion functionality for forms.",
+    "description": "JavaScript Autocomplete functionality for Symfony",
+    "license": "MIT",
+    "version": "2.27.0",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://ux.symfony.com/autocomplete",
+    "repository": "https://github.com/symfony/ux-autocomplete",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
     "main": "dist/controller.js",
     "types": "dist/controller.d.ts",
-    "version": "1.0.0",
-    "license": "MIT",
+    "scripts": {
+        "build": "tsx ../../../bin/build_package.ts .",
+        "watch": "tsx ../../../bin/build_package.ts . --watch",
+        "test": "../../../bin/test_package.sh .",
+        "check": "biome check",
+        "ci": "biome ci"
+    },
     "symfony": {
         "controllers": {
             "autocomplete": {
@@ -14,13 +30,17 @@
                 "enabled": true,
                 "autoimport": {
                     "tom-select/dist/css/tom-select.default.css": true,
+                    "tom-select/dist/css/tom-select.bootstrap4.css": false,
                     "tom-select/dist/css/tom-select.bootstrap5.css": false
                 }
             }
         },
         "importmap": {
             "@hotwired/stimulus": "^3.0.0",
-            "tom-select": "^2.2.2"
+            "tom-select": "^2.2.2",
+            "tom-select/dist/css/tom-select.default.css": "^2.2.2",
+            "tom-select/dist/css/tom-select.bootstrap4.css": "^2.2.2",
+            "tom-select/dist/css/tom-select.bootstrap5.css": "^2.2.2"
         }
     },
     "peerDependencies": {
@@ -29,7 +49,7 @@
     },
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
-        "fetch-mock-jest": "^1.5.1",
-        "tom-select": "^2.2.2"
+        "tom-select": "^2.2.2",
+        "vitest-fetch-mock": "^0.2.2"
     }
 }

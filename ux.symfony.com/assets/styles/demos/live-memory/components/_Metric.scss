@@ -1,0 +1,65 @@
+// -----------------------------------------------------------------
+// Metric
+// -----------------------------------------------------------------
+
+.LiveMemory-Metrics dl {
+  --rows: 4;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(var(--rows), 1fr);
+  margin: 0;
+}
+@media screen and (max-width: 480px) {
+  .LiveMemory-Metrics dl {
+    --rows: 2;
+  }
+}
+
+.LiveMemory-Metric {
+  --metric-opacity: 1;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  justify-items: center;
+  align-items: center;
+  padding: .5rem .75rem;
+  border-radius: .5rem;
+  font-size: .8rem;
+  background: rgb(var(--color-background-rgb) / 50%);
+  border: 1px solid var(--color-border);
+  font-family: monospace;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.LiveMemory-Metric dt {
+  font-weight: lighter;
+  display: flex;
+  align-items: center;
+  gap: 0.65em;
+  opacity: var(--metric-opacity);
+}
+
+.LiveMemory-Metric dt svg {
+  aspect-ratio: 1 / 1;
+  height: 1rem;
+  display: block;
+  width: auto;
+}
+
+.LiveMemory-Metric dt span {
+  opacity: .75;
+}
+
+.LiveMemory-Metric dd {
+  font-size: 1.1em;
+  font-family: var(--font-code);
+  font-weight: 600;
+  margin: 0;
+  opacity: var(--metric-opacity);
+}
+
+.LiveMemory-Metric dd small {
+  font-weight: 300;
+  font-size: 100%;
+}

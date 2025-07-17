@@ -22,4 +22,5 @@ export default class {
     private handleStyleAttributeMutation;
     private handleGenericAttributeMutation;
     private extractStyles;
+    private isElementAddedByTranslation;
 }

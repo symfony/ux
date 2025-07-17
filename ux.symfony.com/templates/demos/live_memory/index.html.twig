@@ -1,0 +1,43 @@
+{% extends 'demos/live_demo.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/demos/live-memory.min.css') }}"/>
+    <meta name="turbo" content="false">
+    <meta name="turbo-prefetch" content="false">
+{% endblock %}
+
+{% block importmap %}
+    {{ importmap('demos/live-memory') }}
+{% endblock %}
+
+{% block body %}
+
+    {% block header %}
+        <header class="Header">
+            <nav class="HeaderMenu">
+                <a href="{{ url('app_demos') }}" class="HeaderButton" aria-label="Back to the demos">
+                    <twig:ux:icon name="arrow-left" />
+                    <span aria-hidden="true" hidden>Back to the demos</span>
+                </a>
+            </nav>
+            <nav class="HeaderLinks">
+                <twig:LiveMemory:ThemeSwitch/>
+            </nav>
+            <h1 class="HeaderLogo">
+                <a href="{{ url('app_demo_live_memory') }}" aria-label="Live Memory">
+                    <twig:LiveMemory:Logo class="shadow-blur" />
+                    <span aria-hidden="true" hidden>{{ demo.name }}</span>
+                </a>
+            </h1>
+        </header>
+    {% endblock %}
+
+    {% block content %}
+        <main class="wrapper">
+            <div class="LiveMemory shadow-blur shadow-blur--rainbow shadow-blur--before">
+                <twig:LiveMemory:Board />
+            </div>
+        </main>
+    {% endblock %}
+
+{% endblock %}

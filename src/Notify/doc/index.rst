@@ -7,9 +7,11 @@ in Symfony applications using `Mercure`_. It is part of `the Symfony UX initiati
 Installation
 ------------
 
-Before you start, make sure you have `StimulusBundle configured in your app`_.
+.. caution::
 
-Then, install this bundle using Composer and Symfony Flex:
+    Before you start, make sure you have `StimulusBundle configured in your app`_.
+
+Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -23,9 +25,9 @@ needed if you're using AssetMapper):
     $ npm install --force
     $ npm run watch
 
-    # or use yarn
-    $ yarn install --force
-    $ yarn watch
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-notify npm package`_
 
 Usage
 -----
@@ -151,8 +153,9 @@ This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
-.. _`the Symfony UX initiative`: https://symfony.com/ux
+.. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`Mercure`: https://mercure.rocks
 .. _`running Mercure server`: https://symfony.com/doc/current/mercure.html#running-a-mercure-hub
 .. _`native notifications`: https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API/Using_the_Notifications_API
+.. _`@symfony/ux-notify npm package`: https://www.npmjs.com/package/@symfony/ux-notify

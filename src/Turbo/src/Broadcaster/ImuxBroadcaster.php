@@ -18,14 +18,12 @@ namespace Symfony\UX\Turbo\Broadcaster;
  */
 final class ImuxBroadcaster implements BroadcasterInterface
 {
-    private $broadcasters;
-
     /**
      * @param BroadcasterInterface[] $broadcasters
      */
-    public function __construct(iterable $broadcasters)
-    {
-        $this->broadcasters = $broadcasters;
+    public function __construct(
+        private iterable $broadcasters,
+    ) {
     }
 
     public function broadcast(object $entity, string $action, array $options): void

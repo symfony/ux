@@ -73,6 +73,6 @@ class ChartExtension extends AbstractExtension
             }
         }
 
-        return sprintf('<canvas %s></canvas>', $stimulusAttributes);
+        return \sprintf('<canvas %s></canvas>', $stimulusAttributes);
     }
 }

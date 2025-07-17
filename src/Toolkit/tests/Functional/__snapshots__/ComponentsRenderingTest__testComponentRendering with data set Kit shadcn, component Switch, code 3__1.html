@@ -1,0 +1,53 @@
+<!--
+- Kit: Shadcn UI
+- Component: Switch
+- Code:
+```twig
+<form action="/" method="post">
+    <h3 class="mb-4 text-lg font-medium">Email Notifications</h3>
+    <div class="flex flex-col gap-3">
+        <div class="gap-2 flex flex-row items-center justify-between rounded-lg border p-4">
+            <div class="space-y-0.5">
+                <twig:Label class="text-base" for="marketing-emails">Marketing emails</twig:Label>
+                <p class="text-sm text-muted-foreground">Receive emails about new products, features, and more.</p>
+            </div>
+            <twig:Switch id="marketing-emails" />
+        </div>
+        <div class="gap-2 flex flex-row items-center justify-between rounded-lg border p-4">
+            <div class="space-y-0.5">
+                <twig:Label class="text-base" for="security-emails">Security emails</twig:Label>
+                <p class="text-sm text-muted-foreground">Receive emails about your account security.</p>
+            </div>
+            <twig:Switch id="security-emails" checked disabled />
+        </div>
+    </div>
+</form>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<form action="/" method="post">
+    <h3 class="mb-4 text-lg font-medium">Email Notifications</h3>
+    <div class="flex flex-col gap-3">
+        <div class="gap-2 flex flex-row items-center justify-between rounded-lg border p-4">
+            <div class="space-y-0.5">
+                <label class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-base" for="marketing-emails">Marketing emails</label>
+                <p class="text-sm text-muted-foreground">Receive emails about new products, features, and more.</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer ">
+    <input type="checkbox" class="sr-only peer absolute inset-0 w-full h-full cursor-pointer" id="marketing-emails">
+    <div class="pointer-events-none w-11 h-6 bg-input rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary peer-disabled:opacity-50 peer-disabled:cursor-not-allowed"></div>
+</label>
+
+        </div>
+        <div class="gap-2 flex flex-row items-center justify-between rounded-lg border p-4">
+            <div class="space-y-0.5">
+                <label class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-base" for="security-emails">Security emails</label>
+                <p class="text-sm text-muted-foreground">Receive emails about your account security.</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer ">
+    <input type="checkbox" class="sr-only peer absolute inset-0 w-full h-full cursor-pointer" id="security-emails" checked disabled>
+    <div class="pointer-events-none w-11 h-6 bg-input rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary peer-disabled:opacity-50 peer-disabled:cursor-not-allowed"></div>
+</label>
+
+        </div>
+    </div>
+</form>

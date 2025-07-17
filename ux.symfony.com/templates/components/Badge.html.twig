@@ -1,0 +1,19 @@
+<div {{ attributes.defaults({
+    class: 'Badge',
+}) }}>
+    <span class="Badge__label">
+        {%- if icon %}
+            <twig:ux:Icon name="{{ icon }}" class="Badge__icon" />
+        {% endif -%}
+        {{- label -}}
+    </span>
+    <span class="Badge__value">
+        {%- if url %}
+            <a href="{{ url }}" class="Badge__link">
+                {{- value -}}
+            </a>
+        {% else %}
+            {{ value }}
+        {% endif -%}
+    </span>
+</div>

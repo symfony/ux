@@ -14,6 +14,9 @@ namespace Symfony\UX\Autocomplete\Tests\Functional;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Factory\CategoryFactory;
+use Symfony\UX\Autocomplete\Tests\Fixtures\Factory\CategoryTagFactory;
+use Symfony\UX\Autocomplete\Tests\Fixtures\Factory\ProductFactory;
+use Symfony\UX\Autocomplete\Tests\Fixtures\Factory\ProductTagFactory;
 use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -99,6 +102,59 @@ class FieldAutocompleterTest extends KernelTestCase
             ->get('/test/autocomplete/category_no_choice_label_autocomplete_type?query=foo')
             ->assertSuccessful()
             ->assertJsonMatches('length(results)', 5)
+        ;
+    }
+
+    public function testItUsesTheCustomStringValue(): void
+    {
+        $category = CategoryFactory::createOne(['code' => 'foo']);
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/category_with_property_name_as_custom_value?query=foo')
+            ->assertSuccessful()
+            ->assertJsonMatches('results[0].value', 'foo')
+            ->assertJsonMatches('results[0].text', $category->getName())
+        ;
+    }
+
+    public function testItUsesTheCustomCallbackValue(): void
+    {
+        $category = CategoryFactory::createOne(['code' => 'foo']);
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/category_with_callback_as_custom_value?query=foo')
+            ->assertSuccessful()
+            ->assertJsonMatches('results[0].value', 'foo')
+            ->assertJsonMatches('results[0].text', $category->getName())
+        ;
+    }
+
+    public function testItSearchesByTags(): void
+    {
+        $productTag = ProductTagFactory::createOne(['name' => 'technology']);
+        $categoryTag = CategoryTagFactory::createOne(['name' => 'home appliances']);
+        $category = CategoryFactory::createOne(['name' => 'Electronics', 'tags' => [$categoryTag]]);
+        $product1 = ProductFactory::createOne(['name' => 'Smartphone', 'tags' => [$productTag], 'category' => $category]);
+        $product2 = ProductFactory::createOne(['name' => 'Laptop', 'category' => $category]);
+        ProductFactory::createOne(['name' => 'Microwave']);
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/product_with_tags_autocomplete_type?query=technology')
+            ->assertSuccessful()
+            ->assertJsonMatches('length(results)', 1)
+            ->assertJsonMatches('results[0].value', (string) $product1->getId())
+            ->assertJsonMatches('results[0].text', '<strong>Smartphone</strong>')
+        ;
+
+        $this->browser()
+            ->get('/test/autocomplete/product_with_tags_autocomplete_type?query=home appliance')
+            ->assertSuccessful()
+            ->assertJsonMatches('length(results)', 2)
+            ->assertJsonMatches('results[0].value', (string) $product1->getId())
+            ->assertJsonMatches('results[1].value', (string) $product2->getId())
         ;
     }
 }

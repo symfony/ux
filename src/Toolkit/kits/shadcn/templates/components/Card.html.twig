@@ -1,0 +1,6 @@
+<div
+    class="{{ 'rounded-lg border bg-card text-card-foreground shadow-sm ' ~ attributes.render('class')|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

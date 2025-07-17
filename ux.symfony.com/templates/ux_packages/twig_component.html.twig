@@ -1,0 +1,65 @@
+{% extends 'ux_packages/package.html.twig' %}
+
+{% block package_header %}
+    {% component PackageHeader with {
+        package: 'twig-component',
+        eyebrowText: 'Object-Oriented Templates'
+    } %}
+        {% block title_header %}
+            PHP Classes that render: <em>Twig Components</em>
+        {% endblock %}
+
+        {% block sub_content %}
+            Create reusable, object-oriented templates. PHP class + template = Twig components.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    <twig:CodeBlock filename="src/Twig/Components/Alert.php" height="330px"/>
+{% endblock %}
+
+{% block code_block_right %}
+    <twig:CodeBlock filename="templates/components/Alert.html.twig" height="330px"/>
+{% endblock %}
+
+{% block demo_title %}UX Twig Components{% endblock %}
+
+{% block demo_content %}
+    <div class="row">
+        <div class="col-6">
+            <twig:CodeBlock
+                filename="templates/ux_packages/twig_component.html.twig"
+                :showFilename="false"
+                targetTwigBlock="alert_success_example"
+                :showTwigExtends="false"
+                height="auto"
+            />
+        </div>
+        <div class="col-6">
+            {% block alert_success_example %}
+                <twig:Alert message="I am a success alert!" />
+            {% endblock %}
+        </div>
+    </div>
+
+    <div class="row my-2">
+        <div class="col-6">
+            <twig:CodeBlock
+                filename="templates/ux_packages/twig_component.html.twig"
+                :showFilename="false"
+                targetTwigBlock="alert_danger_example"
+                :showTwigExtends="false"
+                height="auto"
+            />
+        </div>
+        <div class="col-6">
+            {% block alert_danger_example %}
+                <twig:Alert
+                    type="danger"
+                    message="Oh no! The dinos escaped!"
+                />
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}

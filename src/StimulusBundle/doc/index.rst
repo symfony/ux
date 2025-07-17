@@ -7,11 +7,9 @@ StimulusBundle: Symfony integration with Stimulus
 
 This bundle adds integration between Symfony, `Stimulus`_ and the Symfony UX packages:
 
-A) Twig ``stimulus_`` functions & filters to add Stimulus controllers,
-   actions & targets in your templates;
-
-B) Integration to load :ref:`UX Packages <ux-packages>` (extra Stimulus controllers)
-   (if you're using AssetMapper, this integration is `experimental`_)
+* Twig ``stimulus_`` functions & filters to add Stimulus controllers,
+  actions & targets in your templates;
+* Integration to load :ref:`UX Packages <ux-packages>` (extra Stimulus controllers)
 
 Installation
 ------------
@@ -19,11 +17,11 @@ Installation
 First, if you don't have one yet, choose and install an asset handling system;
 both work great with StimulusBundle:
 
-* A) `Webpack Encore`_ Node-based packaging system:
+* `AssetMapper`_: PHP-based system for handling assets
 
 or
 
-* B) `AssetMapper`_: PHP-based system for handling assets:
+* `Webpack Encore`_ Node-based packaging system
 
 See `Encore vs AssetMapper`_ to learn which is best for your project.
 
@@ -44,7 +42,7 @@ necessary files. If not, or you're curious, see :ref:`Manual Setup <manual-insta
 Usage
 -----
 
-You can now create custom Stimulus controllers inside of the ``assets/controllers.``
+You can now create custom Stimulus controllers inside of the ``assets/controllers``
 directory. In fact, you should have an example controller there already: ``hello_controller.js``:
 
 .. code-block:: javascript
@@ -57,7 +55,15 @@ directory. In fact, you should have an example controller there already: ``hello
         }
     }
 
-Use the Twig functions from this bundle to activate your controllers:
+Then, activate the controller in your HTML:
+
+.. code-block:: html+twig
+
+    <div data-controller="hello">
+       ...
+    </div>
+
+Optionally, this bundle has a Twig function to render the attribute:
 
 .. code-block:: html+twig
 
@@ -65,11 +71,24 @@ Use the Twig functions from this bundle to activate your controllers:
         ...
     </div>
 
+    <!-- would render -->
+    <div data-controller="hello">
+       ...
+    </div>
+
 That's it! Whenever this element appears on the page, the ``hello`` controller
 will activate.
 
 There's a *lot* more to learn about Stimulus. See the `Stimulus Documentation`_
 for all the goodies.
+
+TypeScript Controllers
+~~~~~~~~~~~~~~~~~~~~~~
+
+If you want to use `TypeScript`_ to define your controllers, you can! Install and set up the
+`sensiolabs/typescript-bundle`_. Then be sure to add the ``assets/controllers`` path to the
+``sensiolabs_typescript.source_dir`` configuration. Finally, create your controller in that
+directory and you're good to go.
 
 .. _ux-packages:
 
@@ -81,31 +100,7 @@ common problems. StimulusBundle activates any 3rd party Stimulus controllers
 that are mentioned in your ``assets/controllers.json`` file. This file is updated
 whenever you install a UX package.
 
-The official UX packages are:
-
-* `ux-autocomplete`_: Transform ``EntityType``, ``ChoiceType`` or *any*
-  ``<select>`` element into an Ajax-powered autocomplete field
-  (`see demo <https://ux.symfony.com/autocomplete>`_)
-* `ux-chartjs`_: Easy charts with `Chart.js`_ (`see demo <https://ux.symfony.com/chartjs>`_)
-* `ux-cropperjs`_: Form Type and tools for cropping images (`see demo <https://ux.symfony.com/cropperjs>`_)
-* `ux-dropzone`_: Form Type for stylized "drop zone" for file uploads
-  (`see demo <https://ux.symfony.com/dropzone>`_)
-* `ux-lazy-image`_: Optimize Image Loading with BlurHash
-  (`see demo <https://ux.symfony.com/lazy-image>`_)
-* `ux-live-component`_: Build Dynamic Interfaces with Zero JavaScript
-  (`see demo <https://ux.symfony.com/live-component>`_)
-* `ux-notify`_: Send server-sent native notification with Mercure
-  (`see demo <https://ux.symfony.com/notify>`_)
-* `ux-react`_: Render `React`_ component from Twig (`see demo <https://ux.symfony.com/react>`_)
-* `ux-svelte`_: Render `Svelte`_ component from Twig (`see demo <https://ux.symfony.com/svelte>`_)
-* `ux-swup`_: Integration with `Swup`_ (`see demo <https://ux.symfony.com/swup>`_)
-* `ux-translator`_: Use your Symfony translations in JavaScript `Swup`_ (`see demo <https://ux.symfony.com/translator>`_)
-* `ux-turbo`_: Integration with `Turbo Drive`_ for a single-page-app experience
-  (`see demo <https://ux.symfony.com/turbo>`_)
-* `ux-twig-component`_: Build Twig Components Backed by a PHP Class
-  (`see demo <https://ux.symfony.com/twig-component>`_)
-* `ux-typed`_: Integration with `Typed`_ (`see demo <https://ux.symfony.com/typed>`_)
-* `ux-vue`_: Render `Vue`_ component from Twig (`see demo <https://ux.symfony.com/vue>`_)
+Check out the `official UX packages`_.
 
 Lazy Stimulus Controllers
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -115,7 +110,7 @@ controllers in ``assets/controllers.json``) will be downloaded and loaded on
 every page.
 
 Sometimes you may have a controller that's only used on some pages. In that case,
-you can make the controller "lazy". In this case, will *not be downloaded on
+you can make the controller "lazy". In this case, will *not* be downloaded on
 initial page load. Instead, as soon as an element appears on the page matching
 the controller (e.g. ``<div data-controller="hello">``), the controller - and anything
 else it imports - will be lazily-loaded via Ajax.
@@ -136,8 +131,9 @@ To make a third-party controller lazy, in ``assets/controllers.json``, set
 
 .. note::
 
-    If you write your controllers using TypeScript, make sure
-    ``removeComments`` is not set to ``true`` in your TypeScript config.
+    If you write your controllers using TypeScript and you're using
+    StimulusBundle 2.21.0 or earlier, make sure ``removeComments`` is not set
+    to ``true`` in your TypeScript config.
 
 Stimulus Tools around the World
 -------------------------------
@@ -154,8 +150,18 @@ exist beyond the UX packages:
 Stimulus Twig Helpers
 ---------------------
 
-This bundle adds 3 Twig functions/filters to help add Stimulus controllers,
-actions & targets in your templates.
+This bundle adds some Twig functions/filters to help add Stimulus controllers,
+actions and targets in your templates.
+
+.. note::
+
+    Though this bundle provides these helpful Twig functions/filters, it's
+    recommended to use raw data attributes instead, as they're straightforward.
+
+.. tip::
+
+    If you use PhpStorm IDE - you may want to install `Stimulus plugin`_
+    to get nice auto-completion for the attributes.
 
 stimulus_controller
 ~~~~~~~~~~~~~~~~~~~
@@ -168,15 +174,15 @@ For example:
 
 .. code-block:: html+twig
 
-    <div {{ stimulus_controller('chart', { 'name': 'Likes', 'data': [1, 2, 3, 4] }) }}>
+    <div {{ stimulus_controller('hello', { 'name': 'World', 'data': [1, 2, 3, 4] }) }}>
         Hello
     </div>
 
     <!-- would render -->
     <div
-       data-controller="chart"
-       data-chart-name-value="Likes"
-       data-chart-data-value="&#x5B;1,2,3,4&#x5D;"
+       data-controller="hello"
+       data-hello-name-value="World"
+       data-hello-data-value="&#x5B;1,2,3,4&#x5D;"
     >
        Hello
     </div>
@@ -185,22 +191,22 @@ If you want to set CSS classes:
 
 .. code-block:: html+twig
 
-    <div {{ stimulus_controller('chart', { 'name': 'Likes', 'data': [1, 2, 3, 4] }, { 'loading': 'spinner' }) }}>
+    <div {{ stimulus_controller('hello', { 'name': 'World', 'data': [1, 2, 3, 4] }, { 'loading': 'spinner' }) }}>
         Hello
     </div>
 
     <!-- would render -->
     <div
-       data-controller="chart"
-       data-chart-name-value="Likes"
-       data-chart-data-value="&#x5B;1,2,3,4&#x5D;"
-       data-chart-loading-class="spinner"
+       data-controller="hello"
+       data-hello-name-value="World"
+       data-hello-data-value="&#x5B;1,2,3,4&#x5D;"
+       data-hello-loading-class="spinner"
     >
        Hello
     </div>
 
     <!-- or without values -->
-    <div {{ stimulus_controller('chart', controllerClasses = { 'loading': 'spinner' }) }}>
+    <div {{ stimulus_controller('hello', controllerClasses: { 'loading': 'spinner' }) }}>
         Hello
     </div>
 
@@ -208,23 +214,26 @@ And with outlets:
 
 .. code-block:: html+twig
 
-    <div {{ stimulus_controller('chart', { 'name': 'Likes', 'data': [1, 2, 3, 4] }, { 'loading': 'spinner' }, { 'other': '.target' ) }}>
+    <div {{ stimulus_controller('hello',
+            { 'name': 'World', 'data': [1, 2, 3, 4] },
+            { 'loading': 'spinner' },
+            { 'other': '.target' } ) }}>
         Hello
     </div>
 
     <!-- would render -->
     <div
-       data-controller="chart"
-       data-chart-name-value="Likes"
-       data-chart-data-value="&#x5B;1,2,3,4&#x5D;"
-       data-chart-loading-class="spinner"
-       data-chart-other-outlet=".target"
+       data-controller="hello"
+       data-hello-name-value="World"
+       data-hello-data-value="&#x5B;1,2,3,4&#x5D;"
+       data-hello-loading-class="spinner"
+       data-hello-other-outlet=".target"
     >
        Hello
     </div>
 
     <!-- or without values/classes -->
-    <div {{ stimulus_controller('chart', controllerOutlets = { 'other': '.target' }) }}>
+    <div {{ stimulus_controller('hello', controllerOutlets: { 'other': '.target' }) }}>
         Hello
     </div>
 
@@ -237,7 +246,12 @@ there's also a ``stimulus_controller`` filter:
 
 .. code-block:: html+twig
 
-    <div {{ stimulus_controller('chart', { 'name': 'Likes' })|stimulus_controller('other-controller') }}>
+    <div {{ stimulus_controller('hello', { 'name': 'World' })|stimulus_controller('other-controller') }}>
+        Hello
+    </div>
+
+    <!-- would render -->
+    <div data-controller="hello other-controller" data-hello-name-value="World">
         Hello
     </div>
 
@@ -245,7 +259,7 @@ You can also retrieve the generated attributes as an array, which can be helpful
 
 .. code-block:: twig
 
-    {{ form_start(form, { attr: stimulus_controller('chart', { 'name': 'Likes' }).toArray() }) }}
+    {{ form_start(form, { attr: stimulus_controller('hello', { 'name': 'World' }).toArray() }) }}
 
 stimulus_action
 ~~~~~~~~~~~~~~~
@@ -301,24 +315,24 @@ For example:
 
 .. code-block:: html+twig
 
-    <div {{ stimulus_target('controller', 'a-target') }}>Hello</div>
-    <div {{ stimulus_target('controller', 'a-target second-target') }}>Hello</div>
+    <div {{ stimulus_target('controller', 'myTarget') }}>Hello</div>
+    <div {{ stimulus_target('controller', 'myTarget secondTarget') }}>Hello</div>
 
     <!-- would render -->
-    <div data-controller-target="a-target">Hello</div>
-    <div data-controller-target="a-target second-target">Hello</div>
+    <div data-controller-target="myTarget">Hello</div>
+    <div data-controller-target="myTarget secondTarget">Hello</div>
 
 If you have multiple targets on the same element, you can chain them as there's
 also a ``stimulus_target`` filter:
 
 .. code-block:: html+twig
 
-    <div {{ stimulus_target('controller', 'a-target')|stimulus_target('other-controller', 'another-target') }}>
+    <div {{ stimulus_target('controller', 'myTarget')|stimulus_target('other-controller', 'anotherTarget') }}>
         Hello
     </div>
 
     <!-- would render -->
-    <div data-controller-target="a-target" data-other-controller-target="another-target">
+    <div data-controller-target="myTarget" data-other-controller-target="anotherTarget">
         Hello
     </div>
 
@@ -326,7 +340,7 @@ You can also retrieve the generated attributes as an array, which can be helpful
 
 .. code-block:: twig
 
-    {{ form_row(form.password, { attr: stimulus_target('hello-controller', 'a-target').toArray() }) }}
+    {{ form_row(form.password, { attr: stimulus_target('hello-controller', 'myTarget').toArray() }) }}
 
 .. _configuration:
 
@@ -342,7 +356,7 @@ directory and the ``controllers.json`` file if you need to use different paths:
     stimulus:
         # the default values
         controller_paths:
-            - %kernel.project_dir%/assets/controllers
+            - '%kernel.project_dir%/assets/controllers'
         controllers_json: '%kernel.project_dir%/assets/controllers.json'
 
 .. _manual-installation:
@@ -368,6 +382,44 @@ the `StimulusBundle Flex recipe`_. Here's a summary of what's inside:
   controllers. It comes with one example ``hello_controller.js`` file.
 
 A few other changes depend on which asset system you're using:
+
+With AssetMapper
+~~~~~~~~~~~~~~~~
+
+If you're using AssetMapper, two new entries will be added to your ``importmap.php``
+file::
+
+    // importmap.php
+    return [
+        // ...
+
+        '@symfony/stimulus-bundle' => [
+            'path' => '@symfony/stimulus-bundle/loader.js',
+        ],
+        '@hotwired/stimulus' => [
+            'version' => '3.2.2',
+        ],
+    ];
+
+The recipe will update your ``assets/bootstrap.js`` file to look like this:
+
+.. code-block:: javascript
+
+    // assets/bootstrap.js
+    import { startStimulusApp } from '@symfony/stimulus-bundle';
+
+    const app = startStimulusApp();
+
+The ``@symfony/stimulus-bundle`` refers the one of the new entries in your
+``importmap.php`` file. This file is dynamically built by the bundle and
+will import all your custom controllers as well as those from ``controllers.json``.
+It will also dynamically enable "debug" mode in Stimulus when your application
+is running in debug mode.
+
+.. tip::
+
+    For AssetMapper 6.3 only, you also need a ``{{ ux_controller_link_tags() }``
+    in ``base.html.twig``. This is not needed in AssetMapper 6.4+.
 
 With WebpackEncoreBundle
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -396,39 +448,6 @@ The ``assets/bootstrap.js`` file will be updated to look like this:
 
 And 2 new packages - ``@hotwired/stimulus`` and ``@symfony/stimulus-bridge`` - will
 be added to your ``package.json`` file.
-
-With AssetMapper
-~~~~~~~~~~~~~~~~
-
-If you're using AssetMapper, two new entries will be added to your ``importmap.php``
-file::
-
-    // importmap.php
-    return [
-        // ...
-
-        '@symfony/stimulus-bundle' => [
-            'path' => '@symfony/stimulus-bundle/loader.js',
-        ],
-        '@hotwired/stimulus' => [
-            'url' => 'https://ga.jspm.io/npm:@hotwired/stimulus@3.2.1/dist/stimulus.js',
-        ],
-    ];
-
-The recipe will update your ``assets/bootstrap.js`` file to look like this:
-
-.. code-block:: javascript
-
-    // assets/bootstrap.js
-    import { startStimulusApp } from '@symfony/stimulus-bundle';
-
-    const app = startStimulusApp();
-
-The ``@symfony/stimulus-bundle`` refers the one of the new entries in your
-``importmap.php`` file. This file is dynamically built by the bundle and
-will import all your custom controllers as well as those from ``controllers.json``.
-It will also dynamically enable "debug" mode in Stimulus when your application
-is running in debug mode.
 
 How are the Stimulus Controllers Loaded?
 ----------------------------------------
@@ -500,7 +519,7 @@ it will normalize it:
 .. _`@symfony/stimulus-bridge`: https://github.com/symfony/stimulus-bridge
 .. _`Stimulus`: https://stimulus.hotwired.dev/
 .. _`Webpack Encore`: https://symfony.com/doc/current/frontend.html
-.. _`AssetMapper`: https://symfony.com/doc/current/frontend/asset-mapper.html
+.. _`AssetMapper`: https://symfony.com/doc/current/frontend/asset_mapper.html
 .. _`Stimulus Controllers & Values`: https://stimulus.hotwired.dev/reference/values
 .. _`CSS Classes`: https://stimulus.hotwired.dev/reference/css-classes
 .. _`Outlets`: https://stimulus.hotwired.dev/reference/outlets
@@ -508,28 +527,9 @@ it will normalize it:
 .. _`parameters`: https://stimulus.hotwired.dev/reference/actions#action-parameters
 .. _`Stimulus Targets`: https://stimulus.hotwired.dev/reference/targets
 .. _`StimulusBundle Flex recipe`: https://github.com/symfony/recipes/tree/main/symfony/stimulus-bundle
-.. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
-.. _`ux-autocomplete`: https://symfony.com/bundles/ux-autocomplete/current/index.html
-.. _`ux-chartjs`: https://symfony.com/bundles/ux-chartjs/current/index.html
-.. _`ux-cropperjs`: https://symfony.com/bundles/ux-cropperjs/current/index.html
-.. _`ux-dropzone`: https://symfony.com/bundles/ux-dropzone/current/index.html
-.. _`ux-lazy-image`: https://symfony.com/bundles/ux-lazy-image/current/index.html
-.. _`ux-live-component`: https://symfony.com/bundles/ux-live-component/current/index.html
-.. _`ux-notify`: https://symfony.com/bundles/ux-notify/current/index.html
-.. _`ux-react`: https://symfony.com/bundles/ux-react/current/index.html
-.. _ux-translator: https://symfony.com/bundles/ux-translator/current/index.html
-.. _`ux-swup`: https://symfony.com/bundles/ux-swup/current/index.html
-.. _`ux-turbo`: https://symfony.com/bundles/ux-turbo/current/index.html
-.. _`ux-twig-component`: https://symfony.com/bundles/ux-twig-component/current/index.html
-.. _`ux-typed`: https://symfony.com/bundles/ux-typed/current/index.html
-.. _`ux-vue`: https://symfony.com/bundles/ux-vue/current/index.html
-.. _`ux-svelte`: https://symfony.com/bundles/ux-svelte/current/index.html
-.. _`Chart.js`: https://www.chartjs.org/
-.. _`Swup`: https://swup.js.org/
-.. _`React`: https://reactjs.org/
-.. _`Svelte`: https://svelte.dev/
-.. _`Turbo Drive`: https://turbo.hotwired.dev/
-.. _`Typed`: https://github.com/mattboldt/typed.js/
-.. _`Vue`: https://vuejs.org/
 .. _`stimulus-use`: https://stimulus-use.github.io/stimulus-use
-.. _`stimulus-components`: https://stimulus-components.netlify.app/
+.. _`stimulus-components`: https://www.stimulus-components.com/
+.. _`TypeScript`: https://www.typescriptlang.org/
+.. _`sensiolabs/typescript-bundle`: https://github.com/sensiolabs/AssetMapperTypeScriptBundle
+.. _`Stimulus plugin`: https://plugins.jetbrains.com/plugin/24562-stimulus
+.. _`official UX packages`: https://ux.symfony.com/packages

@@ -1,18 +1,24 @@
 import { Application } from '@hotwired/stimulus';
-import LiveController from '../src/live_controller';
 import { waitFor } from '@testing-library/dom';
-import { htmlToElement } from '../src/dom_utils';
-import Component from '../src/Component';
-import { BackendAction, BackendInterface, ChildrenFingerprints } from '../src/Backend/Backend';
-import BackendRequest from '../src/Backend/BackendRequest';
 import { Response } from 'node-fetch';
+import type { BackendAction, BackendInterface, ChildrenFingerprints } from '../src/Backend/Backend';
+import BackendRequest from '../src/Backend/BackendRequest';
+import Component from '../src/Component';
+import type { ElementDriver } from '../src/Component/ElementDriver';
 import { setDeepData } from '../src/data_manipulation_utils';
+import { htmlToElement } from '../src/dom_utils';
+import LiveController from '../src/live_controller';
+import LiveControllerDefault from '../src/live_controller';
 
 let activeTests: FunctionalTest[] = [];
 
 let application: Application;
 
 export function shutdownTests() {
+    if (application) {
+        application.stop();
+    }
+
     if (activeTests.length === 0) {
         // no test was run, apparently
         return;
@@ -25,12 +31,12 @@ export function shutdownTests() {
     });
 }
 
-const shutdownTest = function(test: FunctionalTest) {
-    test.pendingAjaxCallsThatAreStillExpected().forEach((mock => {
+const shutdownTest = (test: FunctionalTest) => {
+    test.pendingAjaxCallsThatAreStillExpected().forEach((mock) => {
         const requestInfo = mock.getVisualSummary();
         throw new Error(`EXPECTED request was never made matching the following info: \n${requestInfo.join('\n')}`);
-    }));
-}
+    });
+};
 
 class FunctionalTest {
     component: Component;
@@ -38,13 +44,16 @@ class FunctionalTest {
     template: (props: any) => string;
     mockedBackend: MockedBackend;
 
-    constructor(component: Component, element: HTMLElement, template: (props: any) => string) {
+    constructor(
+        component: Component,
+        element: HTMLElement,
+        mockedBackend: MockedBackend,
+        template: (props: any) => string
+    ) {
         this.component = component;
         this.element = element;
+        this.mockedBackend = mockedBackend;
         this.template = template;
-
-        this.mockedBackend = new MockedBackend();
-        this.component._swapBackend(this.mockedBackend);
     }
 
     expectsAjaxCall = (): MockedAjaxCall => {
@@ -52,11 +61,11 @@ class FunctionalTest {
         this.mockedBackend.addMockedAjaxCall(mock);
 
         return mock;
-    }
+    };
 
     queryByDataModel(modelName: string): HTMLElement {
         const elements = this.element.querySelectorAll(`[data-model$="${modelName}"]`);
-        let matchedElement: null|Element = null;
+        let matchedElement: null | Element = null;
 
         // skip any elements that are actually controllers
         // these are child component bindings, not real fields
@@ -93,7 +102,13 @@ class MockedBackend implements BackendInterface {
         this.expectedMockedAjaxCalls.push(mock);
     }
 
-    makeRequest(props: any, actions: BackendAction[], updated: { [key: string]: any }, children: ChildrenFingerprints, updatedPropsFromParent: {[key: string]: any}): BackendRequest {
+    makeRequest(
+        props: any,
+        actions: BackendAction[],
+        updated: { [key: string]: any },
+        children: ChildrenFingerprints,
+        updatedPropsFromParent: { [key: string]: any }
+    ): BackendRequest {
         const matchedMock = this.findMatchingMock(props, actions, updated, children, updatedPropsFromParent);
 
         if (!matchedMock) {
@@ -110,7 +125,7 @@ class MockedBackend implements BackendInterface {
                 requestInfo.push('No mocked Ajax calls were expected.');
             } else {
                 this.expectedMockedAjaxCalls.forEach((mock) => {
-                    requestInfo.push(`EXPECTED REQUEST #${this.expectedMockedAjaxCalls.indexOf(mock) + 1}:`)
+                    requestInfo.push(`EXPECTED REQUEST #${this.expectedMockedAjaxCalls.indexOf(mock) + 1}:`);
                     requestInfo.push(...mock.getVisualSummary());
                 });
             }
@@ -128,8 +143,14 @@ class MockedBackend implements BackendInterface {
         return this.expectedMockedAjaxCalls;
     }
 
-    private findMatchingMock(props: any, actions: BackendAction[], updated: { [key: string]: any }, children: ChildrenFingerprints, updatedPropsFromParent: {[key: string]: any}): MockedAjaxCall|null {
-        for(let i = 0; i < this.expectedMockedAjaxCalls.length; i++) {
+    private findMatchingMock(
+        props: any,
+        actions: BackendAction[],
+        updated: { [key: string]: any },
+        children: ChildrenFingerprints,
+        updatedPropsFromParent: { [key: string]: any }
+    ): MockedAjaxCall | null {
+        for (let i = 0; i < this.expectedMockedAjaxCalls.length; i++) {
             const mock = this.expectedMockedAjaxCalls[i];
             if (mock.matches(props, actions, updated, children, updatedPropsFromParent)) {
                 return mock;
@@ -144,14 +165,14 @@ class MockedAjaxCall {
     private test: FunctionalTest;
 
     /* Matcher properties */
-    private expectedActions: Array<{ name: string, args: any }> = [];
+    private expectedActions: Array<{ name: string; args: any }> = [];
     private expectedSentUpdatedData: { [key: string]: any } = {};
-    private expectedChildFingerprints: ChildrenFingerprints|null = null;
-    private expectedUpdatedPropsFromParent: {[key: string]: any}|null = null;
+    private expectedChildFingerprints: ChildrenFingerprints | null = null;
+    private expectedUpdatedPropsFromParent: { [key: string]: any } | null = null;
 
     /* Response properties */
     private changePropsCallback?: (props: any) => void;
-    private template?: (props: any) => string
+    private template?: (props: any) => string;
     private delayResponseTime?: number = 0;
     private customResponseStatusCode?: number;
     private customResponseHTML?: string;
@@ -171,7 +192,13 @@ class MockedAjaxCall {
         return requestInfo;
     }
 
-    matches(props: any, actions: BackendAction[], updated: { [key: string]: any }, children: ChildrenFingerprints, updatedPropsFromParent: {[key: string]: any}): boolean {
+    matches(
+        props: any,
+        actions: BackendAction[],
+        updated: { [key: string]: any },
+        children: ChildrenFingerprints,
+        updatedPropsFromParent: { [key: string]: any }
+    ): boolean {
         if (!this.isEqual(this.test.component.valueStore.getOriginalProps(), props)) {
             return false;
         }
@@ -180,7 +207,7 @@ class MockedAjaxCall {
             return {
                 name: action.name,
                 args: action.args,
-            }
+            };
         });
 
         if (!this.isEqual(normalizedBackendActions, this.expectedActions)) {
@@ -191,15 +218,14 @@ class MockedAjaxCall {
             return false;
         }
 
-        if (
-            null !== this.expectedChildFingerprints && !this.isEqual(children, this.expectedChildFingerprints)
-        ) {
+        if (null !== this.expectedChildFingerprints && !this.isEqual(children, this.expectedChildFingerprints)) {
             return false;
         }
 
         if (
-            (null !== this.expectedUpdatedPropsFromParent || Object.keys(updatedPropsFromParent).length > 0)
-            && !this.isEqual(updatedPropsFromParent, this.expectedUpdatedPropsFromParent)) {
+            (null !== this.expectedUpdatedPropsFromParent || Object.keys(updatedPropsFromParent).length > 0) &&
+            !this.isEqual(updatedPropsFromParent, this.expectedUpdatedPropsFromParent)
+        ) {
             return false;
         }
 
@@ -250,7 +276,7 @@ class MockedAjaxCall {
 
                 const response = new Response(html, {
                     status: this.customResponseStatusCode || 200,
-                    headers
+                    headers,
                 });
 
                 resolve(response);
@@ -261,7 +287,7 @@ class MockedAjaxCall {
             // @ts-ignore Response doesn't quite match the underlying interface
             promise,
             this.expectedActions.map((action) => action.name),
-            Object.keys(this.expectedSentUpdatedData),
+            Object.keys(this.expectedSentUpdatedData)
         );
     }
 
@@ -272,19 +298,19 @@ class MockedAjaxCall {
         this.expectedSentUpdatedData = updated;
 
         return this;
-    }
+    };
 
     expectChildFingerprints = (fingerprints: any): MockedAjaxCall => {
         this.expectedChildFingerprints = fingerprints;
 
         return this;
-    }
+    };
 
     expectUpdatedPropsFromParent = (updatedProps: any): MockedAjaxCall => {
         this.expectedUpdatedPropsFromParent = updatedProps;
 
         return this;
-    }
+    };
 
     /**
      * Call if the "server" will change the props before it re-renders.
@@ -293,19 +319,19 @@ class MockedAjaxCall {
         this.changePropsCallback = callback;
 
         return this;
-    }
+    };
 
     delayResponse = (milliseconds: number): MockedAjaxCall => {
         this.delayResponseTime = milliseconds;
 
         return this;
-    }
+    };
 
     expectActionCalled(actionName: string, args: any = {}): MockedAjaxCall {
         this.expectedActions.push({
             name: actionName,
-            args: args
-        })
+            args: args,
+        });
 
         return this;
     }
@@ -332,24 +358,32 @@ class MockedAjaxCall {
             return a === b;
         }
 
-        const sortedA = Object.keys(a).sort().reduce((obj: any, key) => {
-            obj[key] = a[key];
-            return obj;
-        }, {});
+        const sortedA = Object.keys(a)
+            .sort()
+            .reduce((obj: any, key) => {
+                obj[key] = a[key];
+                return obj;
+            }, {});
 
-        const sortedB = Object.keys(b).sort().reduce((obj: any, key) => {
-            obj[key] = b[key];
-            return obj;
-        }, {});
+        const sortedB = Object.keys(b)
+            .sort()
+            .reduce((obj: any, key) => {
+                obj[key] = b[key];
+                return obj;
+            }, {});
 
         return JSON.stringify(sortedA) === JSON.stringify(sortedB);
     }
 }
 
+const mockBackend = new MockedBackend();
+
 export async function createTest(props: any, template: (props: any) => string): Promise<FunctionalTest> {
+    LiveControllerDefault.backendFactory = () => mockBackend;
+
     const testData = await startStimulus(template(props));
 
-    const test = new FunctionalTest(testData.controller.component, testData.element, template);
+    const test = new FunctionalTest(testData.controller.component, testData.element, mockBackend, template);
     activeTests.push(test);
 
     return test;
@@ -358,15 +392,17 @@ export async function createTest(props: any, template: (props: any) => string): 
  * An internal way to create a FunctionalTest: useful for child components
  */
 export function createTestForExistingComponent(component: Component): FunctionalTest {
-    const test = new FunctionalTest(component, component.element, () => '');
+    const test = new FunctionalTest(component, component.element, mockBackend, () => '');
     activeTests.push(test);
 
     return test;
 }
 
-export async function startStimulus(element: string|HTMLElement) {
+export async function startStimulus(element: string | HTMLElement) {
     // start the Stimulus app just once per test suite
-    if (!application) {
+    if (application) {
+        await application.start();
+    } else {
         application = Application.start();
         application.register('live', LiveController);
     }
@@ -384,9 +420,13 @@ export async function startStimulus(element: string|HTMLElement) {
 
     return {
         controller,
-        element: controllerElement
-    }
+        element: controllerElement,
+    };
 }
+
+export const getStimulusApplication = (): Application => {
+    return application;
+};
 
 const getControllerElement = (container: HTMLElement): HTMLElement => {
     if (container.dataset.controller === 'live') {
@@ -402,7 +442,7 @@ const getControllerElement = (container: HTMLElement): HTMLElement => {
     return element;
 };
 
-const dataToJsonAttribute = (data: any): string => {
+export const dataToJsonAttribute = (data: any): string => {
     const container = document.createElement('div');
     container.dataset.foo = JSON.stringify(data);
 
@@ -413,8 +453,8 @@ const dataToJsonAttribute = (data: any): string => {
     }
 
     // returns the now-escaped string, ready to be used in an HTML attribute
-    return matches[1]
-}
+    return matches[1];
+};
 
 export function initComponent(props: any = {}, controllerValues: any = {}) {
     return `
@@ -423,15 +463,16 @@ export function initComponent(props: any = {}, controllerValues: any = {}) {
         data-live-url-value="http://localhost/components/_test_component_${Math.round(Math.random() * 1000)}"
         data-live-props-value="${dataToJsonAttribute(props)}"
         ${controllerValues.debounce ? `data-live-debounce-value="${controllerValues.debounce}"` : ''}
-        ${controllerValues.csrf ? `data-live-csrf-value="${controllerValues.csrf}"` : ''}
-        ${controllerValues.id ? `data-live-id="${controllerValues.id}"` : ''}
+        ${controllerValues.id ? `id="${controllerValues.id}"` : ''}
         ${controllerValues.fingerprint ? `data-live-fingerprint-value="${controllerValues.fingerprint}"` : ''}
         ${controllerValues.listeners ? `data-live-listeners-value="${dataToJsonAttribute(controllerValues.listeners)}"` : ''}
-        ${controllerValues.browserDispatch ? `data-live-browser-dispatch="${dataToJsonAttribute(controllerValues.browserDispatch)}"` : ''}
+        ${controllerValues.eventEmit ? `data-live-events-to-emit-value="${dataToJsonAttribute(controllerValues.eventEmit)}"` : ''}
+        ${controllerValues.browserDispatch ? `data-live-events-to-dispatch-value="${dataToJsonAttribute(controllerValues.browserDispatch)}"` : ''}
+        ${controllerValues.queryMapping ? `data-live-query-mapping-value="${dataToJsonAttribute(controllerValues.queryMapping)}"` : ''}
     `;
 }
 
-export function getComponent(element: HTMLElement|null) {
+export function getComponent(element: HTMLElement | null) {
     if (!element) {
         throw new Error('could not find element');
     }
@@ -443,4 +484,35 @@ export function getComponent(element: HTMLElement|null) {
     }
 
     return component;
+}
+
+export function setCurrentSearch(search: string) {
+    history.replaceState(history.state, '', window.location.origin + window.location.pathname + search);
+}
+
+export function expectCurrentSearch() {
+    return expect(decodeURIComponent(window.location.search));
+}
+
+export class noopElementDriver implements ElementDriver {
+    getBrowserEventsToDispatch(): Array<{ event: string; payload: any }> {
+        throw new Error('Method not implemented.');
+    }
+
+    getComponentProps(): any {
+        throw new Error('Method not implemented.');
+    }
+
+    getEventsToEmit(): Array<{
+        event: string;
+        data: any;
+        target: string | null;
+        componentName: string | null;
+    }> {
+        throw new Error('Method not implemented.');
+    }
+
+    getModelName(): string | null {
+        throw new Error('Method not implemented.');
+    }
 }

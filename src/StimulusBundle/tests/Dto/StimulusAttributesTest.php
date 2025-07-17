@@ -1,10 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 /*
- * This file is part of the Symfony StimulusBundle package.
+ * This file is part of the Symfony package.
+ *
  * (c) Fabien Potencier <fabien@symfony.com>
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -145,7 +145,94 @@ final class StimulusAttributesTest extends TestCase
     public function testAddAttribute()
     {
         $this->stimulusAttributes->addAttribute('foo', 'bar baz');
-        $this->assertSame('foo="bar&#x20;baz"', (string) $this->stimulusAttributes);
+        $this->assertSame('foo="bar baz"', (string) $this->stimulusAttributes);
         $this->assertSame(['foo' => 'bar baz'], $this->stimulusAttributes->toArray());
+    }
+
+    /**
+     * @dataProvider provideAddComplexActionData
+     */
+    public function testAddComplexAction(string $controllerName, string $actionName, ?string $eventName, string $expectedAction): void
+    {
+        $this->stimulusAttributes->addAction($controllerName, $actionName, $eventName);
+        $attributesHtml = (string) $this->stimulusAttributes;
+        self::assertSame(\sprintf('data-action="%s"', $expectedAction), $attributesHtml);
+    }
+
+    /**
+     * @return iterable<array{
+     *     controllerName: string,
+     *     actionName: string,
+     *     eventName: ?string,
+     *     expectedAction: string,
+     * }>
+     */
+    public static function provideAddComplexActionData(): iterable
+    {
+        // basic datasets
+        yield 'foo#bar' => [
+            'controllerName' => 'foo',
+            'actionName' => 'bar',
+            'eventName' => null,
+            'expectedAction' => 'foo#bar',
+        ];
+        yield 'baz->foo#bar' => [
+            'controllerName' => 'foo',
+            'actionName' => 'bar',
+            'eventName' => 'baz',
+            'expectedAction' => 'baz->foo#bar',
+        ];
+
+        // datasets from https://github.com/hotwired/stimulus
+        yield 'keydown.esc@document->a#log' => [
+            'controllerName' => 'a',
+            'actionName' => 'log',
+            'eventName' => 'keydown.esc@document',
+            'expectedAction' => 'keydown.esc@document->a#log',
+        ];
+        yield 'keydown.enter->a#log' => [
+            'controllerName' => 'a',
+            'actionName' => 'log',
+            'eventName' => 'keydown.enter',
+            'expectedAction' => 'keydown.enter->a#log',
+        ];
+        yield 'keydown.shift+a->a#log' => [
+            'controllerName' => 'a',
+            'actionName' => 'log',
+            'eventName' => 'keydown.shift+a',
+            'expectedAction' => 'keydown.shift+a->a#log',
+        ];
+        yield 'keydown@window->c#log' => [
+            'controllerName' => 'c',
+            'actionName' => 'log',
+            'eventName' => 'keydown@window',
+            'expectedAction' => 'keydown@window->c#log',
+        ];
+        yield 'click->c#log:once' => [
+            'controllerName' => 'c',
+            'actionName' => 'log:once',
+            'eventName' => 'click',
+            'expectedAction' => 'click->c#log:once',
+        ];
+
+        // extended datasets
+        yield 'vue:mount->foo#bar:passive' => [
+            'controllerName' => 'foo',
+            'actionName' => 'bar:passive',
+            'eventName' => 'vue:mount',
+            'expectedAction' => 'vue:mount->foo#bar:passive',
+        ];
+        yield 'foo--controller-1:baz->bar--controller-2#log' => [
+            'controllerName' => '@bar/controller_2',
+            'actionName' => 'log',
+            'eventName' => '@foo/controller_1:baz',
+            'expectedAction' => 'foo--controller-1:baz->bar--controller-2#log',
+        ];
+        yield 'foo--controller-1:baz@document->bar--controller-2#log:capture' => [
+            'controllerName' => '@bar/controller_2',
+            'actionName' => 'log:capture',
+            'eventName' => '@foo/controller_1:baz@document',
+            'expectedAction' => 'foo--controller-1:baz@document->bar--controller-2#log:capture',
+        ];
     }
 }

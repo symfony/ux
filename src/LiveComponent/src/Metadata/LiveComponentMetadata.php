@@ -16,17 +16,19 @@ use Symfony\UX\TwigComponent\ComponentMetadata;
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class LiveComponentMetadata
 {
     public function __construct(
         private ComponentMetadata $componentMetadata,
-        /** @var LivePropMetadata[] */
+        /** @var list<LivePropMetadata|LegacyLivePropMetadata> */
         private array $livePropsMetadata,
     ) {
+        uasort(
+            $this->livePropsMetadata,
+            static fn (LivePropMetadata|LegacyLivePropMetadata $a, LivePropMetadata|LegacyLivePropMetadata $b) => $a->hasModifier() <=> $b->hasModifier()
+        );
     }
 
     public function getComponentMetadata(): ComponentMetadata
@@ -35,11 +37,13 @@ class LiveComponentMetadata
     }
 
     /**
-     * @return LivePropMetadata[]
+     * @return list<LivePropMetadata|LegacyLivePropMetadata>
      */
-    public function getAllLivePropsMetadata(): array
+    public function getAllLivePropsMetadata(object $component): iterable
     {
-        return $this->livePropsMetadata;
+        foreach ($this->livePropsMetadata as $livePropMetadata) {
+            yield $livePropMetadata->withModifier($component);
+        }
     }
 
     /**
@@ -51,7 +55,7 @@ class LiveComponentMetadata
      */
     public function getOnlyPropsThatAcceptUpdatesFromParent(array $inputProps): array
     {
-        $writableProps = array_filter($this->livePropsMetadata, function (LivePropMetadata $livePropMetadata) {
+        $writableProps = array_filter($this->livePropsMetadata, function (LivePropMetadata|LegacyLivePropMetadata $livePropMetadata) {
             return $livePropMetadata->acceptUpdatesFromParent();
         });
 
@@ -60,5 +64,16 @@ class LiveComponentMetadata
         }, $writableProps);
 
         return array_intersect_key($inputProps, array_flip($propNames));
+    }
+
+    public function hasQueryStringBindings($component): bool
+    {
+        foreach ($this->getAllLivePropsMetadata($component) as $livePropMetadata) {
+            if ($livePropMetadata->urlMapping()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -1,0 +1,12 @@
+{
+    "devDependencies": {
+        "@babel/cli": "^7.25.6",
+        "@babel/core": "^7.25.2",
+        "svelte": "^3.59.1"
+    },
+    "license": "MIT",
+    "private": true,
+    "scripts": {
+        "build": "node build.js"
+    }
+}

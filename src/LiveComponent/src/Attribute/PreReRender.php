@@ -16,10 +16,15 @@ namespace Symfony\UX\LiveComponent\Attribute;
  *
  * This hook ONLY happens when rendering via HTTP: it does
  * not happen during the initial render of a component.
- *
- * @experimental
  */
 #[\Attribute(\Attribute::TARGET_METHOD)]
 final class PreReRender
 {
+    /**
+     * @param int $priority If multiple hooks are registered in a component, use to configure
+     *                      the order in which they are called (higher called earlier)
+     */
+    public function __construct(public int $priority = 0)
+    {
+    }
 }

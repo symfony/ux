@@ -1,0 +1,34 @@
+
+{% set x = game.level + 2 %}
+{% set y = game.level + 1 %}
+
+<div class="LiveMemory-Cards" style="--deck-x: {{ x }}; --deck-y: {{ y }};">
+
+    {% for key, card in cards %}
+
+        <div class="LiveMemory-CardSlot" id="LiveMemory-CardSlot-{{ key }}">
+            <twig:LiveMemory:Card
+                key="{{ key }}"
+                front="{{ card.image }}"
+                back="{{ game.theme }}"
+                selected="{{ card.selected }}"
+                flipped="{{ card.flipped }}"
+                matched="{{ card.matched }}"
+                paired="{{ card.paired }}"
+                unflipped="{{ card.unflipped }}"
+            />
+
+            {# We want the "particles" only when "just matched" (and not all previous on page refresh) #}
+            {% if card.matched and card.selected %}
+                <div class="LiveMemory-CardDots" style="--card-dots-delta: {{ key }};">
+                    {% for i in 0..9 %}
+                        <span style="--i: {{ (i + (x * y)) }};"></span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        </div>
+
+    {% endfor %}
+
+</div>

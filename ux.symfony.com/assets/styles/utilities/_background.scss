@@ -1,0 +1,23 @@
+.background-glass {
+  --glass-opacity: .75;
+  --glass-color: 255 255 255;
+  background: rgba(var(--glass-color) / var(--glass-opacity));
+
+  [data-bs-theme="dark"] & {
+    --glass-color: 0 0 0;
+  }
+}
+
+.background-cover {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+.background-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(var(--blur, 2px));
+    opacity: var(--opacity, .15);
+}

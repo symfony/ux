@@ -11,8 +11,7 @@
 
 namespace Symfony\UX\Turbo\Broadcaster;
 
-use Doctrine\Common\Util\ClassUtils;
-use Symfony\Component\VarExporter\LazyObjectInterface;
+use Symfony\UX\Turbo\Doctrine\ClassUtil;
 use Twig\Environment;
 
 /**
@@ -22,19 +21,17 @@ use Twig\Environment;
  */
 final class TwigBroadcaster implements BroadcasterInterface
 {
-    private $broadcaster;
-    private $twig;
-    private $templatePrefixes;
-    private $idAccessor;
+    private IdAccessor $idAccessor;
 
     /**
      * @param array<string, string> $templatePrefixes
      */
-    public function __construct(BroadcasterInterface $broadcaster, Environment $twig, array $templatePrefixes = [], IdAccessor $idAccessor = null)
-    {
-        $this->broadcaster = $broadcaster;
-        $this->twig = $twig;
-        $this->templatePrefixes = $templatePrefixes;
+    public function __construct(
+        private BroadcasterInterface $broadcaster,
+        private Environment $twig,
+        private array $templatePrefixes = [],
+        ?IdAccessor $idAccessor = null,
+    ) {
         $this->idAccessor = $idAccessor ?? new IdAccessor();
     }
 
@@ -44,15 +41,7 @@ final class TwigBroadcaster implements BroadcasterInterface
             $options['id'] = $id;
         }
 
-        // handle proxies (both styles)
-        if ($entity instanceof LazyObjectInterface) {
-            $class = get_parent_class($entity);
-            if (false === $class) {
-                throw new \LogicException('Parent class missing');
-            }
-        } else {
-            $class = ClassUtils::getClass($entity);
-        }
+        $class = ClassUtil::getEntityClass($entity);
 
         if (null === $template = $options['template'] ?? null) {
             $template = $class;

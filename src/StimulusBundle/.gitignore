@@ -1,5 +1,7 @@
-.php-cs-fixer.cache
-.phpunit.result.cache
-composer.lock
-vendor/
-tests/fixtures/var
+/assets/node_modules/
+/vendor/
+/composer.lock
+/phpunit.xml
+/.phpunit.result.cache
+
+/tests/fixtures/var

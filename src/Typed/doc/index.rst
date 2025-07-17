@@ -1,6 +1,13 @@
 Symfony UX Typed
 ================
 
+.. warning::
+
+    **Deprecated: This package has been deprecated in 2.x and will be removed in the next major version.**
+
+    To keep the same functionality in your Symfony application, please follow the migration steps
+    from the `Symfony UX Typed README.md`_.
+
 Symfony UX Typed is a Symfony bundle integrating `Typed`_ in
 Symfony applications. It is part of `the Symfony UX initiative`_.
 
@@ -13,9 +20,11 @@ Just enter the strings you want to see typed, and it goes live without complexit
 Installation
 ------------
 
-Before you start, make sure you have `StimulusBundle configured in your app`_.
+.. caution::
 
-Then install the bundle using Composer and Symfony Flex:
+    Before you start, make sure you have `StimulusBundle configured in your app`_.
+
+Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -29,9 +38,9 @@ needed if you're using AssetMapper):
     $ npm install --force
     $ npm run watch
 
-    # or use yarn
-    $ yarn install --force
-    $ yarn watch
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-typed npm package`_
 
 Usage
 -----
@@ -52,7 +61,7 @@ The main usage of Symfony UX Typed is to use its Stimulus controller to initiali
     </div>
 
 
-That's it! Typed now shows the messages defined in the `strings` argument.
+That's it! Typed now shows the messages defined in the ``strings`` argument.
 You can customize the way those messages are typed.
 Parameters are exactly the same as for the `typed library`_
 
@@ -71,8 +80,6 @@ Parameters are exactly the same as for the `typed library`_
             cursorChar: '✨'
         }) }}></span>
     </div>
-
-.. note::
 
 Extend the JavaScript Controller
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -99,8 +106,8 @@ Stimulus controller:
 
         disconnect() {
             // You should always remove listeners when the controller is disconnected to avoid side-effects
-            this.element.removeEventListener('typed:pre-connect', this._onConnect);
-            this.element.removeEventListener('typed:connect', this._onPreConnect);
+            this.element.removeEventListener('typed:connect', this._onConnect);
+            this.element.removeEventListener('typed:pre-connect', this._onPreConnect);
         }
 
         _onPreConnect(event) {
@@ -108,10 +115,10 @@ Stimulus controller:
             console.log(event.detail.options); // Options that will be used to initialize Typed
             event.detail.options.onBegin = (typed) => {
                 console.log("Typed is ready to type cool messages!");
-            });
+            };
             event.detail.options.onStop = (typed) => {
                 console.log("OK. Enough is enough.");
-            });
+            };
         }
 
         _onConnect(event) {
@@ -152,6 +159,8 @@ the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`Typed`: https://github.com/mattboldt/typed.js/blob/master/README.md
-.. _`the Symfony UX initiative`: https://symfony.com/ux
+.. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _`typed library`: https://github.com/mattboldt/typed.js/blob/master/README.md
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
+.. _`@symfony/ux-typed npm package`: https://www.npmjs.com/package/@symfony/ux-typed
+.. _`Symfony UX Typed README.md`: https://github.com/symfony/ux/tree/2.x/src/Typed

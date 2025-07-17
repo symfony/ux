@@ -3,8 +3,7 @@ import { createApp } from 'vue';
 
 class default_1 extends Controller {
     connect() {
-        var _a;
-        this.props = (_a = this.propsValue) !== null && _a !== void 0 ? _a : null;
+        this.props = this.propsValue ?? null;
         this.dispatchEvent('connect', { componentName: this.componentValue, props: this.props });
         const component = window.resolveVueComponent(this.componentValue);
         this.app = createApp(component, this.props);

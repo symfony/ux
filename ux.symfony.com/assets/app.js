@@ -1,6 +1,4 @@
-import { registerReactControllerComponents } from '@symfony/ux-react';
-import {registerVueControllerComponents} from "@symfony/ux-vue";
-import { registerSvelteControllerComponents } from "@symfony/ux-svelte";
+import './styles/app.scss';
 
 // start the Stimulus application
 import './bootstrap.js';
@@ -9,6 +7,5 @@ import './bootstrap.js';
 // dropdown, collapse, tab
 import * as bootstrap from 'bootstrap';
 
-registerReactControllerComponents();
-registerVueControllerComponents();
-registerSvelteControllerComponents();
+import 'tippy.js/dist/tippy.css';
+import 'tippy.js/themes/translucent.css';

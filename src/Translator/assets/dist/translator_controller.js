@@ -1,20 +1,5 @@
 import { IntlMessageFormat } from 'intl-messageformat';
 
-function formatIntl(id, parameters = {}, locale) {
-    if (id === '') {
-        return '';
-    }
-    const intlMessage = new IntlMessageFormat(id, [locale.replace('_', '-')], undefined, { ignoreTag: true });
-    parameters = Object.assign({}, parameters);
-    Object.entries(parameters).forEach(([key, value]) => {
-        if (key.includes('%') || key.includes('{')) {
-            delete parameters[key];
-            parameters[key.replace(/[%{} ]/g, '').trim()] = value;
-        }
-    });
-    return intlMessage.format(parameters);
-}
-
 function strtr(string, replacePairs) {
     const regex = Object.entries(replacePairs).map(([from]) => {
         return from.replace(/([-[\]{}()*+?.\\^$|#,])/g, '\\$1');
@@ -25,7 +10,7 @@ function strtr(string, replacePairs) {
     return string.replace(new RegExp(regex.join('|'), 'g'), (matched) => replacePairs[matched].toString());
 }
 
-function format(id, parameters = {}, locale) {
+function format(id, parameters, locale) {
     if (null === id || '' === id) {
         return '';
     }
@@ -38,41 +23,36 @@ function format(id, parameters = {}, locale) {
         parts = id.split('|');
     }
     else {
-        const matches = id.match(/(?:\|\||[^|])+/g);
-        if (matches !== null) {
-            parts = matches;
-        }
+        parts = id.match(/(?:\|\||[^|])+/g) || [];
     }
     const intervalRegex = /^(?<interval>({\s*(-?\d+(\.\d+)?[\s*,\s*\-?\d+(.\d+)?]*)\s*})|(?<left_delimiter>[[\]])\s*(?<left>-Inf|-?\d+(\.\d+)?)\s*,\s*(?<right>\+?Inf|-?\d+(\.\d+)?)\s*(?<right_delimiter>[[\]]))\s*(?<message>.*?)$/s;
     const standardRules = [];
     for (let part of parts) {
         part = part.trim().replace(/\|\|/g, '|');
-        let matches = part.match(intervalRegex);
-        if (matches !== null) {
+        const matches = part.match(intervalRegex);
+        if (matches) {
+            const matchGroups = matches.groups || {};
             if (matches[2]) {
                 for (const n of matches[3].split(',')) {
                     if (number === Number(n)) {
-                        return strtr(matches.groups['message'], parameters);
+                        return strtr(matchGroups.message, parameters);
                     }
                 }
             }
             else {
-                const leftNumber = '-Inf' === matches.groups['left'] ? Number.NEGATIVE_INFINITY : Number(matches.groups['left']);
-                const rightNumber = ['Inf', '+Inf'].includes(matches.groups['right']) ? Number.POSITIVE_INFINITY : Number(matches.groups['right']);
-                if (('[' === matches.groups['left_delimiter'] ? number >= leftNumber : number > leftNumber)
-                    && (']' === matches.groups['right_delimiter'] ? number <= rightNumber : number < rightNumber)) {
-                    return strtr(matches.groups['message'], parameters);
+                const leftNumber = '-Inf' === matchGroups.left ? Number.NEGATIVE_INFINITY : Number(matchGroups.left);
+                const rightNumber = ['Inf', '+Inf'].includes(matchGroups.right)
+                    ? Number.POSITIVE_INFINITY
+                    : Number(matchGroups.right);
+                if (('[' === matchGroups.left_delimiter ? number >= leftNumber : number > leftNumber) &&
+                    (']' === matchGroups.right_delimiter ? number <= rightNumber : number < rightNumber)) {
+                    return strtr(matchGroups.message, parameters);
                 }
             }
         }
         else {
-            matches = part.match(/^\w+:\s*(.*?)$/);
-            if (matches !== null) {
-                standardRules.push(matches[1]);
-            }
-            else {
-                standardRules.push(part);
-            }
+            const ruleMatch = part.match(/^\w+:\s*(.*?)$/);
+            standardRules.push(ruleMatch ? ruleMatch[1] : part);
         }
     }
     const position = getPluralizationRule(number, locale);
@@ -144,7 +124,7 @@ function getPluralizationRule(number, locale) {
         case 'tk':
         case 'ur':
         case 'zu':
-            return (1 == number) ? 0 : 1;
+            return 1 === number ? 0 : 1;
         case 'am':
         case 'bh':
         case 'fil':
@@ -158,7 +138,7 @@ function getPluralizationRule(number, locale) {
         case 'pt_BR':
         case 'ti':
         case 'wa':
-            return (number < 2) ? 0 : 1;
+            return number < 2 ? 0 : 1;
         case 'be':
         case 'bs':
         case 'hr':
@@ -166,45 +146,92 @@ function getPluralizationRule(number, locale) {
         case 'sh':
         case 'sr':
         case 'uk':
-            return ((1 == number % 10) && (11 != number % 100)) ? 0 : (((number % 10 >= 2) && (number % 10 <= 4) && ((number % 100 < 10) || (number % 100 >= 20))) ? 1 : 2);
+            return 1 === number % 10 && 11 !== number % 100
+                ? 0
+                : number % 10 >= 2 && number % 10 <= 4 && (number % 100 < 10 || number % 100 >= 20)
+                    ? 1
+                    : 2;
         case 'cs':
         case 'sk':
-            return (1 == number) ? 0 : (((number >= 2) && (number <= 4)) ? 1 : 2);
+            return 1 === number ? 0 : number >= 2 && number <= 4 ? 1 : 2;
         case 'ga':
-            return (1 == number) ? 0 : ((2 == number) ? 1 : 2);
+            return 1 === number ? 0 : 2 === number ? 1 : 2;
         case 'lt':
-            return ((1 == number % 10) && (11 != number % 100)) ? 0 : (((number % 10 >= 2) && ((number % 100 < 10) || (number % 100 >= 20))) ? 1 : 2);
+            return 1 === number % 10 && 11 !== number % 100
+                ? 0
+                : number % 10 >= 2 && (number % 100 < 10 || number % 100 >= 20)
+                    ? 1
+                    : 2;
         case 'sl':
-            return (1 == number % 100) ? 0 : ((2 == number % 100) ? 1 : (((3 == number % 100) || (4 == number % 100)) ? 2 : 3));
+            return 1 === number % 100 ? 0 : 2 === number % 100 ? 1 : 3 === number % 100 || 4 === number % 100 ? 2 : 3;
         case 'mk':
-            return (1 == number % 10) ? 0 : 1;
+            return 1 === number % 10 ? 0 : 1;
         case 'mt':
-            return (1 == number) ? 0 : (((0 == number) || ((number % 100 > 1) && (number % 100 < 11))) ? 1 : (((number % 100 > 10) && (number % 100 < 20)) ? 2 : 3));
+            return 1 === number
+                ? 0
+                : 0 === number || (number % 100 > 1 && number % 100 < 11)
+                    ? 1
+                    : number % 100 > 10 && number % 100 < 20
+                        ? 2
+                        : 3;
         case 'lv':
-            return (0 == number) ? 0 : (((1 == number % 10) && (11 != number % 100)) ? 1 : 2);
+            return 0 === number ? 0 : 1 === number % 10 && 11 !== number % 100 ? 1 : 2;
         case 'pl':
-            return (1 == number) ? 0 : (((number % 10 >= 2) && (number % 10 <= 4) && ((number % 100 < 12) || (number % 100 > 14))) ? 1 : 2);
+            return 1 === number
+                ? 0
+                : number % 10 >= 2 && number % 10 <= 4 && (number % 100 < 12 || number % 100 > 14)
+                    ? 1
+                    : 2;
         case 'cy':
-            return (1 == number) ? 0 : ((2 == number) ? 1 : (((8 == number) || (11 == number)) ? 2 : 3));
+            return 1 === number ? 0 : 2 === number ? 1 : 8 === number || 11 === number ? 2 : 3;
         case 'ro':
-            return (1 == number) ? 0 : (((0 == number) || ((number % 100 > 0) && (number % 100 < 20))) ? 1 : 2);
+            return 1 === number ? 0 : 0 === number || (number % 100 > 0 && number % 100 < 20) ? 1 : 2;
         case 'ar':
-            return (0 == number) ? 0 : ((1 == number) ? 1 : ((2 == number) ? 2 : (((number % 100 >= 3) && (number % 100 <= 10)) ? 3 : (((number % 100 >= 11) && (number % 100 <= 99)) ? 4 : 5))));
+            return 0 === number
+                ? 0
+                : 1 === number
+                    ? 1
+                    : 2 === number
+                        ? 2
+                        : number % 100 >= 3 && number % 100 <= 10
+                            ? 3
+                            : number % 100 >= 11 && number % 100 <= 99
+                                ? 4
+                                : 5;
         default:
             return 0;
     }
 }
 
+function formatIntl(id, parameters, locale) {
+    if (id === '') {
+        return '';
+    }
+    const intlMessage = new IntlMessageFormat(id, [locale.replace('_', '-')], undefined, { ignoreTag: true });
+    parameters = { ...parameters };
+    Object.entries(parameters).forEach(([key, value]) => {
+        if (key.includes('%') || key.includes('{')) {
+            delete parameters[key];
+            parameters[key.replace(/[%{} ]/g, '').trim()] = value;
+        }
+    });
+    return intlMessage.format(parameters);
+}
+
 let _locale = null;
 let _localeFallbacks = {};
+let _throwWhenNotFound = false;
 function setLocale(locale) {
     _locale = locale;
 }
 function getLocale() {
     return (_locale ||
         document.documentElement.getAttribute('data-symfony-ux-translator-locale') ||
-        document.documentElement.lang ||
+        (document.documentElement.lang ? document.documentElement.lang.replace('-', '_') : null) ||
         'en');
+}
+function throwWhenNotFound(enabled) {
+    _throwWhenNotFound = enabled;
 }
 function setLocaleFallbacks(localeFallbacks) {
     _localeFallbacks = localeFallbacks;
@@ -247,7 +274,10 @@ function trans(message, parameters = {}, domain = 'messages', locale = null) {
             return format(translations[locale], parameters, locale);
         }
     }
+    if (_throwWhenNotFound) {
+        throw new Error(`No translation message found with id "${message.id}".`);
+    }
     return message.id;
 }
 
-export { getLocale, getLocaleFallbacks, setLocale, setLocaleFallbacks, trans };
+export { getLocale, getLocaleFallbacks, setLocale, setLocaleFallbacks, throwWhenNotFound, trans };

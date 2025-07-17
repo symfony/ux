@@ -20,7 +20,7 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 /**
  * @author Tomas Norkūnas <norkunas.tom@gmail.com>
  */
-#[AsLiveComponent('component6')]
+#[AsLiveComponent('component6', method: 'get')]
 class Component6
 {
     use DefaultActionTrait;

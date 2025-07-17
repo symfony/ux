@@ -14,7 +14,7 @@ namespace Symfony\UX\Translator\MessageParameters\Extractor;
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
  *
- * @experimental
+ * @internal
  */
 interface ExtractorInterface
 {

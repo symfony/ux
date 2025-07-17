@@ -1,0 +1,75 @@
+// -----------------------------------------------------------------
+// Timer
+// -----------------------------------------------------------------
+
+.LiveMemory-Timer {
+  display: flex;
+  flex-direction: row;
+}
+
+.LiveMemory-Timer-Display {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.LiveMemory-Timer-Separator {
+  display: grid;
+  place-content: center;
+}
+
+.LiveMemory-Timer-Digit {
+  overflow: hidden;
+  position: relative;
+  display: block;
+  height: 1rem;
+}
+
+.LiveMemory-Timer-Digit ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  animation-play-state: var(--play-state);
+  animation-name: timer-tick;
+  animation-timing-function: steps(var(--steps), end);
+  animation-duration: calc(var(--duration) * 1s);
+  animation-iteration-count: var(--iterations);
+  animation-delay: var(--delay);
+  animation-fill-mode: forwards;
+  align-items: stretch;
+  justify-content: flex-end;
+}
+
+.LiveMemory-Timer-Digit li {
+  margin: 0;
+  display: block;
+  width: 1ch;
+  line-height: 1.25;
+}
+
+@keyframes timer-tick {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+.LiveMemory-Timer--blinking {
+  color: color-mix(in oklab, var(--live-memory-color) 50%, var(--color-text));
+  animation: live-memory-timer-blinking 1s infinite;
+}
+
+@keyframes live-memory-timer-blinking {
+  70% {
+    opacity: 1;
+    scale: 1.1;
+  }
+  100% {
+    opacity: 0;
+    scale: 1;
+  }
+}

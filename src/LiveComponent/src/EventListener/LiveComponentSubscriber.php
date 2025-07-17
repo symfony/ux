@@ -21,18 +21,14 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
-use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\ComponentRenderer;
@@ -42,8 +38,6 @@ use Symfony\UX\TwigComponent\MountedComponent;
  * @author Kevin Bond <kevinbond@gmail.com>
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface
@@ -51,8 +45,10 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     private const HTML_CONTENT_TYPE = 'application/vnd.live-component+html';
     private const REDIRECT_HEADER = 'X-Live-Redirect';
 
-    public function __construct(private ContainerInterface $container)
-    {
+    public function __construct(
+        private ContainerInterface $container,
+        private bool $testMode = true,
+    ) {
     }
 
     public static function getSubscribedServices(): array
@@ -62,7 +58,6 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             ComponentFactory::class,
             LiveComponentHydrator::class,
             LiveComponentMetadataFactory::class,
-            '?'.CsrfTokenManagerInterface::class,
         ];
     }
 
@@ -88,18 +83,18 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             /** @var ComponentMetadata $metadata */
             $metadata = $this->container->get(ComponentFactory::class)->metadataFor($componentName);
         } catch (\InvalidArgumentException $e) {
-            throw new NotFoundHttpException(sprintf('Component "%s" not found.', $componentName), $e);
+            throw new NotFoundHttpException(\sprintf('Component "%s" not found.', $componentName), $e);
         }
 
         if (!$metadata->get('live', false)) {
-            throw new NotFoundHttpException(sprintf('"%s" (%s) is not a Live Component.', $metadata->getClass(), $componentName));
+            throw new NotFoundHttpException(\sprintf('"%s" (%s) is not a Live Component.', $metadata->getClass(), $componentName));
         }
 
         if ('get' === $action) {
             $defaultAction = trim($metadata->get('default_action', '__invoke'), '()');
 
             // set default controller for "default" action
-            $request->attributes->set('_controller', sprintf('%s::%s', $metadata->getServiceId(), $defaultAction));
+            $request->attributes->set('_controller', \sprintf('%s::%s', $metadata->getServiceId(), $defaultAction));
             $request->attributes->set('_component_default_action', true);
 
             return;
@@ -107,13 +102,6 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         if (!$request->isMethod('post')) {
             throw new MethodNotAllowedHttpException(['POST']);
-        }
-
-        if (
-            $this->container->has(CsrfTokenManagerInterface::class)
-            && $metadata->get('csrf')
-            && !$this->container->get(CsrfTokenManagerInterface::class)->isTokenValid(new CsrfToken(LiveControllerAttributesCreator::getCsrfTokeName($componentName), $request->headers->get('X-CSRF-TOKEN')))) {
-            throw new BadRequestHttpException('Invalid CSRF token.');
         }
 
         if ('_batch' === $action) {
@@ -133,7 +121,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        $request->attributes->set('_controller', sprintf('%s::%s', $metadata->getServiceId(), $action));
+        $request->attributes->set('_controller', \sprintf('%s::%s', $metadata->getServiceId(), $action));
     }
 
     public function onKernelController(ControllerEvent $event): void
@@ -161,7 +149,18 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         }
 
         if (!$request->attributes->get('_component_default_action', false) && !AsLiveComponent::isActionAllowed($component, $action)) {
-            throw new NotFoundHttpException(sprintf('The action "%s" either doesn\'t exist or is not allowed in "%s". Make sure it exist and has the LiveAction attribute above it.', $action, $component::class));
+            throw new NotFoundHttpException(\sprintf('The action "%s" either doesn\'t exist or is not allowed in "%s". Make sure it exist and has the LiveAction attribute above it.', $action, $component::class));
+        }
+
+        $componentName = $request->attributes->get('_component_name') ?? $request->attributes->get('_mounted_component')->getName();
+        $requestMethod = $this->container->get(ComponentFactory::class)->metadataFor($componentName)?->get('method') ?? 'post';
+
+        /**
+         * $requestMethod 'post' allows POST requests only
+         * $requestMethod 'get' allows GET and POST requests.
+         */
+        if ($request->isMethod('get') && 'post' === $requestMethod) {
+            throw new MethodNotAllowedHttpException([strtoupper($requestMethod)]);
         }
 
         /*
@@ -221,7 +220,11 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
                     'propsFromParent' => self::parseJsonFromQuery($request, 'propsFromParent'),
                 ];
             } else {
-                $requestData = $request->toArray();
+                try {
+                    $requestData = json_decode($request->request->get('data'), true, 512, \JSON_BIGINT_AS_STRING | \JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new JsonException('Could not decode request body.', $e->getCode(), $e);
+                }
 
                 $liveRequestData = [
                     'props' => $requestData['props'] ?? [],
@@ -278,15 +281,20 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         $request = $event->getRequest();
         $response = $event->getResponse();
 
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
         if (!$this->isLiveComponentRequest($request)) {
             return;
         }
 
-        if (!\in_array(self::HTML_CONTENT_TYPE, $request->getAcceptableContentTypes(), true)) {
+        if (!$response->isRedirection()) {
             return;
         }
 
-        if (!$response->isRedirection()) {
+        if ($this->testMode && !\in_array(self::HTML_CONTENT_TYPE, $request->getAcceptableContentTypes(), true)) {
+            // Make testing redirections easier
             return;
         }
 
@@ -327,7 +335,17 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
     private function isLiveComponentRequest(Request $request): bool
     {
-        return $request->attributes->has('_live_component');
+        if (!$request->attributes->has('_live_component')) {
+            return false;
+        }
+
+        if ($this->testMode) {
+            return true;
+        }
+
+        // Except when testing, require the correct content-type in the Accept header.
+        // This also acts as a CSRF protection since this can only be set in accordance with same-origin/CORS policies.
+        return \in_array(self::HTML_CONTENT_TYPE, $request->getAcceptableContentTypes(), true);
     }
 
     private function hydrateComponent(object $component, string $componentName, Request $request): MountedComponent
@@ -364,7 +382,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         try {
             return json_decode($request->query->get($key), true, 512, \JSON_THROW_ON_ERROR);
         } catch (\JsonException $exception) {
-            throw new JsonException(sprintf('Invalid JSON on query string %s.', $key), 0, $exception);
+            throw new JsonException(\sprintf('Invalid JSON on query string "%s".', $key), 0, $exception);
         }
     }
 }

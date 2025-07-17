@@ -1,13 +1,31 @@
 {
     "name": "@symfony/ux-live-component",
     "description": "Live Component: bring server-side re-rendering & model binding to any element.",
+    "license": "MIT",
+    "version": "2.27.0",
+    "keywords": [
+        "symfony-ux",
+        "twig",
+        "components"
+    ],
+    "homepage": "https://ux.symfony.com/live-component",
+    "repository": "https://github.com/symfony/ux-live-component",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
     "main": "dist/live_controller.js",
     "types": "dist/live_controller.d.ts",
-    "version": "1.0.0",
     "config": {
         "css_source": "styles/live.css"
     },
-    "license": "MIT",
+    "scripts": {
+        "build": "tsx ../../../bin/build_package.ts .",
+        "watch": "tsx ../../../bin/build_package.ts . --watch",
+        "test": "../../../bin/test_package.sh .",
+        "check": "biome check",
+        "ci": "biome ci"
+    },
     "symfony": {
         "controllers": {
             "live": {
@@ -22,11 +40,12 @@
             }
         },
         "importmap": {
-            "@hotwired/stimulus": "^3.0.0"
+            "@hotwired/stimulus": "^3.0.0",
+            "@symfony/ux-live-component": "path:%PACKAGE%/dist/live_controller.js"
         }
     },
     "dependencies": {
-        "morphdom": "^2.6.1"
+        "idiomorph": "^0.3.0"
     },
     "peerDependencies": {
         "@hotwired/stimulus": "^3.0.0"

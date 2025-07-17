@@ -26,8 +26,8 @@ class BroadcastTest extends PantherTestCase
 
     protected function setUp(): void
     {
-        if (!file_exists(__DIR__.'/app/public/build')) {
-            throw new \Exception(sprintf('Move into %s and execute Encore before running this test.', realpath(__DIR__.'/app')));
+        if (!file_exists(__DIR__.'/app/assets/vendor/installed.php')) {
+            throw new \Exception(\sprintf('Move into "%s" and execute `php public/index.php importmap:install` before running this test.', realpath(__DIR__.'/app')));
         }
 
         parent::setUp();
@@ -38,7 +38,7 @@ class BroadcastTest extends PantherTestCase
         ($client = self::createPantherClient())->request('GET', '/books');
 
         $crawler = $client->submitForm('Submit', ['title' => self::BOOK_TITLE]);
-        $client->waitForElementToContain('#books div', self::BOOK_TITLE);
+        // $client->waitForElementToContain('#books div', self::BOOK_TITLE);
 
         $this->assertSelectorWillContain('#books', self::BOOK_TITLE);
         if (!preg_match('/\(#(\d+)\)/', $crawler->filter('#books div')->text(), $matches)) {
@@ -57,9 +57,10 @@ class BroadcastTest extends PantherTestCase
         ($client = self::createPantherClient())->request('GET', '/artists');
 
         $client->submitForm('Submit', ['name' => self::ARTIST_NAME_1]);
-        $client->waitForElementToContain('#artists div:nth-child(1)', self::ARTIST_NAME_1);
+        $client->waitForElementToContain('#artists div:nth-child(1)', self::ARTIST_NAME_1, 5);
+
         $client->submitForm('Submit', ['name' => self::ARTIST_NAME_2]);
-        $client->waitForElementToContain('#artists div:nth-child(2)', self::ARTIST_NAME_2);
+        $client->waitForElementToContain('#artists div:nth-child(2)', self::ARTIST_NAME_2, 5);
 
         $crawlerArtist = $client->getCrawler();
 
@@ -78,7 +79,7 @@ class BroadcastTest extends PantherTestCase
 
         $client->submitForm('Submit', ['title' => self::SONG_TITLE, 'artistId' => $artist1Id]);
 
-        $clientArtist1->waitForElementToContain('#songs div', self::SONG_TITLE);
+        $clientArtist1->waitForElementToContain('#songs div', self::SONG_TITLE, 5);
 
         $songsElement = $clientArtist2->findElement(WebDriverBy::cssSelector('#songs'));
 

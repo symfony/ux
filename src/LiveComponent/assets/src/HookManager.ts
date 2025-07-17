@@ -1,19 +1,22 @@
+import type { ComponentHookCallback, ComponentHookName } from './Component';
+
 export default class {
-    private hooks: Map<string, Array<(...args: any[]) => void>>;
+    private hooks: Map<ComponentHookName | string, Array<(...args: any[]) => void>> = new Map();
 
-    constructor() {
-        this.hooks = new Map();
-    }
-
-    register(hookName: string, callback: () => void): void {
+    register<T extends string | ComponentHookName = ComponentHookName>(
+        hookName: T,
+        callback: ComponentHookCallback<T>
+    ): void {
         const hooks = this.hooks.get(hookName) || [];
         hooks.push(callback);
         this.hooks.set(hookName, hooks);
     }
 
-    unregister(hookName: string, callback: () => void): void {
+    unregister<T extends string | ComponentHookName = ComponentHookName>(
+        hookName: T,
+        callback: ComponentHookCallback<T>
+    ): void {
         const hooks = this.hooks.get(hookName) || [];
-
         const index = hooks.indexOf(callback);
         if (index === -1) {
             return;
@@ -23,10 +26,11 @@ export default class {
         this.hooks.set(hookName, hooks);
     }
 
-    triggerHook(hookName: string, ...args: any[]): void {
+    triggerHook<T extends string | ComponentHookName = ComponentHookName>(
+        hookName: T,
+        ...args: Parameters<ComponentHookCallback<T>>
+    ): void {
         const hooks = this.hooks.get(hookName) || [];
-        hooks.forEach((callback) => {
-            callback(...args);
-        });
+        hooks.forEach((callback) => callback(...args));
     }
 }

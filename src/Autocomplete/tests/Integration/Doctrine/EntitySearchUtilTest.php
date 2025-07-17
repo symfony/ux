@@ -34,7 +34,7 @@ class EntitySearchUtilTest extends KernelTestCase
         $prod4 = ProductFactory::createOne(['description' => 'all about prod 4']);
 
         $results = $this->callAddSearchClass('prod');
-        $this->assertSame([$prod1->object(), $prod2->object(), $prod4->object()], $results);
+        $this->assertSame([$prod1, $prod2, $prod4], $results);
     }
 
     public function testItSearchesOnCorrectFields(): void
@@ -43,7 +43,7 @@ class EntitySearchUtilTest extends KernelTestCase
         ProductFactory::createOne(['description' => 'foo prod2']);
 
         $results = $this->callAddSearchClass('prod', ['name']);
-        $this->assertSame([$prod1->object()], $results);
+        $this->assertSame([$prod1], $results);
     }
 
     public function testItCanSearchOnRelationFields(): void
@@ -55,13 +55,13 @@ class EntitySearchUtilTest extends KernelTestCase
         ProductFactory::createOne(['name' => 'puzzle', 'category' => $category2]);
 
         $results = $this->callAddSearchClass('food', ['name', 'category.name']);
-        $this->assertSame([$prod1->object(), $prod2->object()], $results);
+        $this->assertSame([$prod1, $prod2], $results);
     }
 
     /**
      * @return array<Product>
      */
-    private function callAddSearchClass(string $search, array $searchableProperties = null): array
+    private function callAddSearchClass(string $search, ?array $searchableProperties = null): array
     {
         /** @var ManagerRegistry $registry */
         $registry = self::getContainer()->get('doctrine');

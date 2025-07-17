@@ -1,18 +1,17 @@
 <div {{ attributes.defaults({
     class: 'homepage-terminal-swapper'
 }) }}>
-    {% component Terminal with { height: '180px', bottomPadding: 0, processContents: false } %}
+    {% component Terminal with {height: '180px', bottomPadding: 0, processContents: false} %}
         {% block content -%}
             <span
                 style="font-size: 1.2em;"
-                {{ stimulus_controller('symfony/ux-typed', {
-                    strings: typedStrings,
-                    loop: true,
-                    showCursor: true,
-                    typeSpeed: 20,
-                    cursorChar: '🖱',
-                    contentType: 'html'
-                }) }}
+                data-controller="symfony--ux-typed"
+                data-symfony--ux-typed-loop-value="true"
+                data-symfony--ux-typed-show-cursor-value="true"
+                data-symfony--ux-typed-type-speed-value="20"
+                data-symfony--ux-typed-cursor-char-value="🖱"
+                data-symfony--ux-typed-content-type-value="html"
+                data-symfony--ux-typed-strings-value="{{ typedStrings|json_encode|e('html_attr') }}"
             ></span>
         {%- endblock %}
     {% endcomponent %}

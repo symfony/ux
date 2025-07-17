@@ -2,9 +2,25 @@
     "name": "@symfony/ux-vue",
     "description": "Integration of Vue.js in Symfony",
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "2.27.0",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://ux.symfony.com/vue",
+    "repository": "https://github.com/symfony/ux-vue",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
     "main": "dist/register_controller.js",
     "types": "dist/register_controller.d.ts",
+    "scripts": {
+        "build": "tsx ../../../bin/build_package.ts .",
+        "watch": "tsx ../../../bin/build_package.ts . --watch",
+        "test": "../../../bin/test_package.sh .",
+        "check": "biome check",
+        "ci": "biome ci"
+    },
     "symfony": {
         "controllers": {
             "vue": {
@@ -30,8 +46,7 @@
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
         "@types/webpack-env": "^1.16",
-        "@vue/vue3-jest": "^27.0.0",
-        "ts-jest": "^27.1.5",
+        "@vitejs/plugin-vue": "^4.4.0",
         "vue": "^3.0"
     }
 }

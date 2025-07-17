@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\React\Tests;
+namespace Symfony\UX\React\Tests\Twig;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\React\Tests\Kernel\TwigAppKernel;
@@ -36,9 +36,42 @@ class ReactComponentExtensionTest extends TestCase
         );
 
         $this->assertSame(
-            'data-controller="symfony--ux-react--react" data-symfony--ux-react--react-component-value="SubDir&#x2F;MyComponent" data-symfony--ux-react--react-props-value="&#x7B;&quot;fullName&quot;&#x3A;&quot;Titouan&#x20;Galopin&quot;&#x7D;"',
+            'data-controller="symfony--ux-react--react" data-symfony--ux-react--react-component-value="SubDir/MyComponent" data-symfony--ux-react--react-props-value="{&quot;fullName&quot;:&quot;Titouan Galopin&quot;}"',
             $rendered
         );
+    }
+
+    /**
+     * @dataProvider provideOptions
+     */
+    public function testRenderComponentWithOptions(array $options, string|false $expected)
+    {
+        $kernel = new TwigAppKernel('test', true);
+        $kernel->boot();
+
+        /** @var ReactComponentExtension $extension */
+        $extension = $kernel->getContainer()->get('test.twig.extension.react');
+
+        $rendered = $extension->renderReactComponent(
+            'SubDir/MyComponent',
+            ['fullName' => 'Titouan Galopin'],
+            $options,
+        );
+
+        $this->assertStringContainsString('data-controller="symfony--ux-react--react" data-symfony--ux-react--react-component-value="SubDir/MyComponent" data-symfony--ux-react--react-props-value="{&quot;fullName&quot;:&quot;Titouan Galopin&quot;}"', $rendered);
+        if (false === $expected) {
+            $this->assertStringNotContainsString('data-symfony--ux-react--react-permanent-value', $rendered);
+        } else {
+            $this->assertStringContainsString($expected, $rendered);
+        }
+    }
+
+    public static function provideOptions(): iterable
+    {
+        yield 'permanent' => [['permanent' => true], 'data-symfony--ux-react--react-permanent-value="true"'];
+        yield 'not permanent' => [['permanent' => false], 'data-symfony--ux-react--react-permanent-value="false"'];
+        yield 'permanent not bool' => [['permanent' => 12345], false];
+        yield 'no permanent' => [[], false];
     }
 
     public function testRenderComponentWithoutProps()
@@ -52,7 +85,7 @@ class ReactComponentExtensionTest extends TestCase
         $rendered = $extension->renderReactComponent('SubDir/MyComponent');
 
         $this->assertSame(
-            'data-controller="symfony--ux-react--react" data-symfony--ux-react--react-component-value="SubDir&#x2F;MyComponent"',
+            'data-controller="symfony--ux-react--react" data-symfony--ux-react--react-component-value="SubDir/MyComponent"',
             $rendered
         );
     }

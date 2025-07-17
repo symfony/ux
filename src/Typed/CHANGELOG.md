@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 2.26.0
+
+-   Deprecate the package
+
+## 2.13.2
+
+-   Revert "Change JavaScript package to `type: module`"
+
+## 2.13.0
+
+-   Change JavaScript package to `type: module`
+
 ## 2.9.0
 
 -   A TypedBundle was added - which allows for integration with symfony/asset-mapper.

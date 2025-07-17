@@ -27,7 +27,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class UxTranslatorExtension extends Extension implements PrependExtensionInterface
 {
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -35,10 +35,18 @@ class UxTranslatorExtension extends Extension implements PrependExtensionInterfa
         $loader = (new PhpFileLoader($container, new FileLocator(\dirname(__DIR__).'/../config')));
         $loader->load('services.php');
 
-        $container->getDefinition('ux.translator.translations_dumper')->setArgument(0, $config['dump_directory']);
+        $dumperDefinition = $container->getDefinition('ux.translator.translations_dumper');
+        $dumperDefinition->setArgument(0, $config['dump_directory']);
+
+        if (isset($config['domains'])) {
+            $method = 'inclusive' === $config['domains']['type'] ? 'addIncludedDomain' : 'addExcludedDomain';
+            foreach ($config['domains']['elements'] as $domainName) {
+                $dumperDefinition->addMethodCall($method, [$domainName]);
+            }
+        }
     }
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         if (!$this->isAssetMapperAvailable($container)) {
             return;

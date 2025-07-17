@@ -11,17 +11,11 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-use Symfony\UX\LiveComponent\Attribute\PreReRender;
-use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
-use Symfony\UX\LiveComponent\Attribute\PostHydrate;
-use Symfony\UX\LiveComponent\Attribute\PreDehydrate;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent('component_with_writable_props')]
+#[AsLiveComponent('component_with_writable_props', method: 'get')]
 final class ComponentWithWritableProps
 {
     use DefaultActionTrait;

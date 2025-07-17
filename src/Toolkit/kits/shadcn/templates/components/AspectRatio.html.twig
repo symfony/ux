@@ -1,0 +1,7 @@
+{%- props ratio, style = '' -%}
+<div
+    style="aspect-ratio: {{ ratio }}; {{ style }}"
+    {{ attributes.without('style') }}
+>
+    {%- block content %}{% endblock -%}
+</div>

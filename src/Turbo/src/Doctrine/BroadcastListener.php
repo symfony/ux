@@ -13,11 +13,9 @@ namespace Symfony\UX\Turbo\Doctrine;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\EventArgs;
-use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
-use Symfony\Component\VarExporter\LazyObjectInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
@@ -29,9 +27,6 @@ use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
  */
 final class BroadcastListener implements ResetInterface
 {
-    private $broadcaster;
-    private $annotationReader;
-
     /**
      * @var array<class-string, array<mixed>>
      */
@@ -50,12 +45,11 @@ final class BroadcastListener implements ResetInterface
      */
     private $removedEntities;
 
-    public function __construct(BroadcasterInterface $broadcaster, Reader $annotationReader = null)
-    {
+    public function __construct(
+        private BroadcasterInterface $broadcaster,
+        private ?Reader $annotationReader = null,
+    ) {
         $this->reset();
-
-        $this->broadcaster = $broadcaster;
-        $this->annotationReader = $annotationReader;
     }
 
     /**
@@ -67,6 +61,7 @@ final class BroadcastListener implements ResetInterface
             return;
         }
 
+        // @phpstan-ignore function.alreadyNarrowedType, method.notFound (`getEntityManager()` has been removed in Doctrine 3.0)
         $em = method_exists($eventArgs, 'getObjectManager') ? $eventArgs->getObjectManager() : $eventArgs->getEntityManager();
         $uow = $em->getUnitOfWork();
         foreach ($uow->getScheduledEntityInsertions() as $entity) {
@@ -91,6 +86,7 @@ final class BroadcastListener implements ResetInterface
             return;
         }
 
+        // @phpstan-ignore function.alreadyNarrowedType, method.notFound (`getEntityManager()` has been removed in Doctrine 3.0)
         $em = method_exists($eventArgs, 'getObjectManager') ? $eventArgs->getObjectManager() : $eventArgs->getEntityManager();
 
         try {
@@ -128,25 +124,17 @@ final class BroadcastListener implements ResetInterface
 
     private function storeEntitiesToPublish(EntityManagerInterface $em, object $entity, string $property): void
     {
-        // handle proxies (both styles)
-        if ($entity instanceof LazyObjectInterface) {
-            $class = get_parent_class($entity);
-            if (false === $class) {
-                throw new \LogicException('Parent class missing');
-            }
-        } else {
-            $class = ClassUtils::getClass($entity);
-        }
+        $class = ClassUtil::getEntityClass($entity);
 
         if (!isset($this->broadcastedClasses[$class])) {
             $this->broadcastedClasses[$class] = [];
-            $r = null;
+            $r = new \ReflectionClass($class);
 
-            if (\PHP_VERSION_ID >= 80000 && $options = ($r = new \ReflectionClass($class))->getAttributes(Broadcast::class)) {
+            if ($options = $r->getAttributes(Broadcast::class)) {
                 foreach ($options as $option) {
                     $this->broadcastedClasses[$class][] = $option->newInstance()->options;
                 }
-            } elseif ($this->annotationReader && $options = $this->annotationReader->getClassAnnotations($r ?? new \ReflectionClass($class))) {
+            } elseif ($this->annotationReader && $options = $this->annotationReader->getClassAnnotations($r)) {
                 foreach ($options as $option) {
                     if ($option instanceof Broadcast) {
                         $this->broadcastedClasses[$class][] = $option->options;

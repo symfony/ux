@@ -1,0 +1,45 @@
+{% props source, link, copyButton = true %}
+
+{% set github_button %}
+    <a
+        href="{{ link }}"
+        type="button"
+        rel="external noopener noreferrer"
+        target="_blank"
+        class="btn btn-link btn-sm"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        title="View on GitHub"
+    >
+        <twig:ux:icon name="github"/>
+    </a>
+{% endset %}
+
+{% if copyButton %}
+
+    <div
+        data-controller="tooltips clipboarder"
+        data-clipboarder-source-value="{{ source }}"
+        class="code-buttons"
+    >
+        {{ github_button }}
+        <button
+            type="button"
+            class="btn btn-link btn-sm btn-copy"
+            data-bs-toggle="tooltip"
+            data-bs-placement="bottom"
+            title="Copy code"
+            data-action="clipboarder#copy"
+            data-clipboarder-target="button"
+        >
+            <twig:ux:icon name="copy"/>
+        </button>
+    </div>
+
+{% else %}
+
+    <div class="code-buttons">
+        {{ github_button }}
+    </div>
+
+{% endif %}

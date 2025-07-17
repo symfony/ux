@@ -1,0 +1,108 @@
+name: App Tests
+
+on:
+    push:
+        paths-ignore:
+            - 'src/*/doc/**'
+            - 'src/**/*.md'
+            - 'ux.symfony.com/**'
+    pull_request:
+        paths-ignore:
+            - 'src/*/doc/**'
+            - 'src/**/*.md'
+            - 'ux.symfony.com/**'
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
+
+jobs:
+    encore-app:
+      name: "Encore (${{ matrix.name}})"
+      runs-on: ubuntu-latest
+      strategy:
+        fail-fast: false
+        matrix:
+          include:
+            - name: Internal, from "vendor/"
+              ux-packages-source: php-vendor
+            - name: External, from "npm add"
+              ux-packages-source: js-packages
+      steps:
+        - uses: actions/checkout@v4
+
+        - run: npm i -g corepack && corepack enable
+
+        - uses: actions/setup-node@v4
+          with:
+            node-version-file: '.nvmrc'
+            cache: 'yarn'
+            cache-dependency-path: |
+              yarn.lock
+              package.json
+              src/**/package.json
+              test_apps/encore-app/package.json
+
+        - uses: shivammathur/setup-php@v2
+
+        - name: Install root dependencies
+          uses: ramsey/composer-install@v3
+          with:
+            working-directory: ${{ github.workspace }}
+
+        - name: Build root packages
+          run: php .github/build-packages.php
+
+        # We always install PHP deps because of the UX Translator, which requires `var/translations` to exists
+        - name: Install App dependencies
+          uses: ramsey/composer-install@v3
+          with:
+            working-directory: test_apps/encore-app
+            dependency-versions: highest
+
+        - if: matrix.ux-packages-source == 'php-vendor'
+          name: Refresh dependencies from vendor/
+          working-directory: test_apps/encore-app
+          run: yarn
+          env:
+            YARN_ENABLE_HARDENED_MODE: 0
+            YARN_ENABLE_IMMUTABLE_INSTALLS: 0
+
+        - if: matrix.ux-packages-source == 'js-packages'
+          name: Install UX JS packages with a JS package manager
+          working-directory: test_apps/encore-app
+          run: |
+            PACKAGES_TO_INSTALL=''
+            for PACKAGE in $(cd ../..; yarn workspaces list --no-private --json); do
+              PACKAGE_DIR=../../$(echo $PACKAGE | jq -r '.location')
+              PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL $PACKAGE_DIR"
+            done
+            echo "Installing packages: $PACKAGES_TO_INSTALL"
+            yarn add --dev $PACKAGES_TO_INSTALL
+
+        - name: Ensure UX packages are installed from "${{ matrix.ux-packages-source == 'php-vendor' && 'vendor/symfony/ux-...' || '../../../src/**/assets' }}"
+          working-directory: test_apps/encore-app
+          run: |
+            for PACKAGE in $(cat package.json | jq -c '(.dependencies // {}) + (.devDependencies // {}) | to_entries[] | select(.key | startswith("@symfony/ux-")) | {name: .key, version: .value}'); do
+              PACKAGE_NAME=$(echo $PACKAGE | jq -r '.name')
+              PACKAGE_VERSION=$(echo $PACKAGE | jq -r '.version')
+
+              echo -n "Checking $PACKAGE_NAME@$PACKAGE_VERSION..."
+              if [[ $PACKAGE_VERSION == $EXPECTED_PATTERN* ]]; then
+                echo " OK"
+              else
+                echo " KO"
+                echo "The package version of $PACKAGE_NAME must starts with the pattern (e.g.: $EXPECTED_PATTERN), got $PACKAGE_VERSION instead."
+                exit 1
+              fi
+            done;
+          env:
+            EXPECTED_PATTERN: ${{ matrix.ux-packages-source == 'php-vendor' && 'file:vendor/symfony/*' || '../../src/*' }}
+
+        - name: Run Encore (dev)
+          working-directory: test_apps/encore-app
+          run: yarn encore dev
+
+        - name: Run Encore (prod)
+          working-directory: test_apps/encore-app
+          run: yarn encore production

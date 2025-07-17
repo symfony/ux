@@ -11,11 +11,8 @@
 
 namespace Symfony\UX\TwigComponent\Twig;
 
-use Psr\Container\ContainerInterface;
-use Symfony\Contracts\Service\ServiceSubscriberInterface;
-use Symfony\UX\TwigComponent\ComponentFactory;
-use Symfony\UX\TwigComponent\ComponentRenderer;
-use Twig\Error\RuntimeError;
+use Symfony\UX\TwigComponent\CVA;
+use Twig\DeprecatedCallableInfo;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -24,57 +21,54 @@ use Twig\TwigFunction;
  *
  * @internal
  */
-final class ComponentExtension extends AbstractExtension implements ServiceSubscriberInterface
+final class ComponentExtension extends AbstractExtension
 {
-    public function __construct(private ContainerInterface $container)
-    {
-    }
-
-    public static function getSubscribedServices(): array
-    {
-        return [
-            ComponentRenderer::class,
-            ComponentFactory::class,
-        ];
-    }
-
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('component', [$this, 'render'], ['is_safe' => ['all']]),
+            new TwigFunction('component', [ComponentRuntime::class, 'render'], ['is_safe' => ['all']]),
+            new TwigFunction('cva', [$this, 'cva'], [
+                ...(class_exists(DeprecatedCallableInfo::class)
+                    ? ['deprecation_info' => new DeprecatedCallableInfo('symfony/ux-twig-component', '2.20', 'html_cva', 'twig/html-extra')]
+                    : ['deprecated' => '2.20', 'deprecating_package' => 'symfony/ux-twig-component', 'alternative' => 'html_cva']),
+            ]),
         ];
     }
 
     public function getTokenParsers(): array
     {
         return [
-            new ComponentTokenParser(fn () => $this->container->get(ComponentFactory::class)),
+            new ComponentTokenParser(),
+            new PropsTokenParser(),
         ];
     }
 
-    public function render(string $name, array $props = []): string
+    /**
+     * Create a CVA instance.
+     *
+     * base some base class you want to have in every matching recipes
+     * variants your recipes class
+     * compoundVariants compounds allow you to add extra class when multiple variation are matching in the same time
+     * defaultVariants allow you to add a default class when no recipe is matching
+     *
+     * @see https://symfony.com/bundles/ux-twig-component/current/index.html#component-with-complex-variants-cva
+     *
+     * @param array{
+     *   base: string|string[]|null,
+     *   variants: array<string, array<string, string|string[]>>,
+     *   compoundVariants: list<array<string, string|string[]>>,
+     *   defaultVariants: array<string, string>,
+     * } $cva
+     */
+    public function cva(array $cva): CVA
     {
-        try {
-            return $this->container->get(ComponentRenderer::class)->createAndRender($name, $props);
-        } catch (\Throwable $e) {
-            $this->throwRuntimeError($name, $e);
-        }
-    }
+        trigger_deprecation('symfony/ux-twig-component', '2.20', 'Twig Function "cva" is deprecated; use "html_cva" from the "twig/html-extra" package (available since version 3.12) instead.');
 
-    public function embeddedContext(string $name, array $props, array $context): array
-    {
-        try {
-            return $this->container->get(ComponentRenderer::class)->embeddedContext($name, $props, $context);
-        } catch (\Throwable $e) {
-            $this->throwRuntimeError($name, $e);
-        }
-    }
-
-    private function throwRuntimeError(string $name, \Throwable $e): void
-    {
-        if (!($e instanceof \Exception)) {
-            $e = new \Exception($e->getMessage(), $e->getCode(), $e->getPrevious());
-        }
-        throw new RuntimeError(sprintf('Error rendering "%s" component: %s', $name, $e->getMessage()), previous: $e);
+        return new CVA(
+            $cva['base'] ?? '',
+            $cva['variants'] ?? [],
+            $cva['compoundVariants'] ?? [],
+            $cva['defaultVariants'] ?? [],
+        );
     }
 }

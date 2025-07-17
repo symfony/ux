@@ -11,10 +11,12 @@
 
 namespace Symfony\UX\LiveComponent;
 
+use Symfony\Component\Form\ChoiceList\View\ChoiceGroupView;
 use Symfony\Component\Form\ClearableErrorsInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Contracts\Translation\TranslatableInterface;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Attribute\PreReRender;
 use Symfony\UX\LiveComponent\Util\LiveFormUtility;
@@ -23,8 +25,6 @@ use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 trait ComponentWithFormTrait
 {
@@ -136,19 +136,27 @@ trait ComponentWithFormTrait
     /**
      * Reset the form to its initial state, so it can be used again.
      */
-    private function resetForm(): void
+    private function resetForm(bool $soft = false): void
     {
         // prevent the system from trying to submit this reset form
         $this->shouldAutoSubmitForm = false;
         $this->form = null;
         $this->formView = null;
-        $this->formValues = $this->extractFormValues($this->getFormView());
+        if (true !== $soft) {
+            $this->formValues = $this->extractFormValues($this->getFormView());
+        }
     }
 
     private function submitForm(bool $validateAll = true): void
     {
         if (null !== $this->formView) {
-            throw new \LogicException('The submitForm() method is being called, but the FormView has already been built. Are you calling $this->getForm() - which creates the FormView - before submitting the form?');
+            // Two scenarios can cause this:
+            // 1) Not intended: form was already submitted and validated in the same main request.
+            // 2) Expected: form was submitted during a sub-request (e.g., a batch action).
+            //
+            // Before 2.23, both cases triggered an exception.
+            // Since 2.23, we reset the form (preserving its values) to handle case 2 correctly.
+            $this->resetForm(true);
         }
 
         $form = $this->getForm();
@@ -178,7 +186,7 @@ trait ComponentWithFormTrait
         );
 
         if (!$form->isValid()) {
-            throw new UnprocessableEntityHttpException('Form validation failed in component');
+            throw new UnprocessableEntityHttpException('Form validation failed in component.');
         }
     }
 
@@ -257,12 +265,44 @@ trait ComponentWithFormTrait
                 continue;
             }
 
+            // <input type="checkbox">
             if (\array_key_exists('checked', $child->vars)) {
-                // special handling for check boxes
                 $values[$name] = $child->vars['checked'] ? $child->vars['value'] : null;
-            } else {
-                $values[$name] = $child->vars['value'];
+                continue;
             }
+
+            // <select> - Simulate browser behavior
+            // When no option is selected, browsers send the value of the first
+            // option, when the following conditions are met:
+            if (
+                \array_key_exists('choices', $child->vars)
+                && $child->vars['choices']                  // has defined choices
+                && $child->vars['required']                 // is required
+                && !$child->vars['disabled']                // is not disabled
+                && '' === $child->vars['value']             // has no value set  ("0" can be a value)
+                && !array_diff_key(
+                    /* @see \Symfony\Component\Form\Extension\Core\Type\ChoiceType::buildView() */
+                    array_flip(['choices', 'expanded', 'multiple', 'placeholder', 'placeholder_in_choices', 'preferred_choices']),
+                    $child->vars,
+                )
+                && !$child->vars['expanded']                // is a <select>     (not a radio/checkbox)
+                && !$child->vars['multiple']                // is not multiple
+                && !\is_string($child->vars['placeholder']) // has no placeholder (empty string is valid)
+                && !$child->vars['placeholder'] instanceof TranslatableInterface // has no placeholder (translatable interface is valid)
+            ) {
+                $choices = $child->vars['preferred_choices'] ?: $child->vars['choices']; // preferred_choices has precedence, as they rendered before regular choices
+                do {
+                    $choice = $choices[array_key_first($choices)];
+                    if (!$choice instanceof ChoiceGroupView) {
+                        break;
+                    }
+                } while ($choices = $choice->choices);
+
+                $values[$name] = $choice?->value;
+                continue;
+            }
+
+            $values[$name] = $child->vars['value'];
         }
 
         return $values;
@@ -275,7 +315,7 @@ trait ComponentWithFormTrait
         }
 
         foreach ($form as $name => $child) {
-            $this->clearErrorsForNonValidatedFields($child, sprintf('%s.%s', $currentPath, $name));
+            $this->clearErrorsForNonValidatedFields($child, \sprintf('%s.%s', $currentPath, $name));
         }
     }
 }

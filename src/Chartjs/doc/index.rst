@@ -8,9 +8,7 @@ It is part of `the Symfony UX initiative`_.
 Installation
 ------------
 
-Before you start, make sure you have `StimulusBundle configured in your app`_.
-
-Then install the bundle using Composer and Symfony Flex:
+Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -24,9 +22,9 @@ needed if you're using AssetMapper):
     $ npm install --force
     $ npm run watch
 
-    # or use yarn
-    $ yarn install --force
-    $ yarn watch
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-chartjs npm package`_
 
 Usage
 -----
@@ -96,9 +94,6 @@ First, install the plugin:
 .. code-block:: terminal
 
     $ npm install chartjs-plugin-zoom -D
-
-    # or use yarn
-    $ yarn add chartjs-plugin-zoom --dev
 
 Then register the plugin globally. This can be done in your ``app.js`` file:
 
@@ -183,16 +178,30 @@ custom Stimulus controller:
             console.log(event.detail.config);
 
             // For instance you can format Y axis
+            // To avoid overriding existing config, you should distinguish 3 cases:
+            // # 1. No existing scales config => add a new scales config
             event.detail.config.options.scales = {
-                yAxes: [
-                    {
-                        ticks: {
-                            callback: function (value, index, values) {
-                                /* ... */
-                            },
+                y: {
+                    ticks: {
+                        callback: function (value, index, values) {
+                            /* ... */
                         },
                     },
-                ],
+                },
+            };
+            // # 2. Existing scales config without Y axis config => add new Y axis config
+            event.detail.config.options.scales.y = {
+                ticks: {
+                    callback: function (value, index, values) {
+                        /* ... */
+                    },
+                },
+            };
+            // # 3. Existing Y axis config => update it
+            event.detail.config.options.scales.y.ticks = {
+                callback: function (value, index, values) {
+                    /* ... */
+                },
             };
         }
 
@@ -217,7 +226,7 @@ Then in your render call, add your controller as an HTML attribute:
     {{ render_chart(chart, {'data-controller': 'mychart'}) }}
 
 There is also a ``chartjs:init`` event that is called just *one* time before your
-first chart is rendered. That's an ideal place to `register plugins globally <Using Plugins>`_
+first chart is rendered. That's an ideal place to `register Chart.js plugins globally`_
 or make other changes to any "static"/global part of Chart.js. For example,
 to add a global `Tooltip positioner`_:
 
@@ -241,10 +250,11 @@ This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html.
 
 .. _`Chart.js`: https://www.chartjs.org
-.. _`the Symfony UX initiative`: https://symfony.com/ux
+.. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _`Chart.js documentation`: https://www.chartjs.org/docs/latest/
-.. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`a lot of plugins`: https://github.com/chartjs/awesome#plugins
 .. _`zoom plugin`: https://www.chartjs.org/chartjs-plugin-zoom/latest/
 .. _`zoom plugin documentation`: https://www.chartjs.org/chartjs-plugin-zoom/latest/guide/integration.html
+.. _`register Chart.js plugins globally`: https://www.chartjs.org/docs/latest/developers/plugins.html
 .. _`Tooltip positioner`: https://www.chartjs.org/docs/latest/samples/tooltip/position.html
+.. _`@symfony/ux-chartjs npm package`: https://www.npmjs.com/package/@symfony/ux-chartjs

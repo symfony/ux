@@ -1,0 +1,47 @@
+{% extends 'ux_packages/package.html.twig' %}
+
+{% set package = 'map'|ux_package %}
+
+{% block package_header %}
+    {% component PackageHeader with {
+        package: 'map',
+        eyebrowText: 'Seamless Maps Integration',
+    } %}
+        {% block title_header %}
+            Embed <em>interactive maps</em> in a breeze!
+        {% endblock %}
+
+        {% block sub_content %}
+            Decouple your code from your map provider: <em>Google Maps</em>, <em>LeaftLet</em>.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    <twig:CodeBlock filename="src/Controller/UxPackage/MapController.php" height="250px"/>
+{% endblock %}
+
+{% block code_block_right %}
+    <twig:CodeBlock
+        filename="templates/ux_packages/map.html.twig"
+        targetTwigBlock="demo_content"
+        height="250px"
+    />
+{% endblock %}
+
+{% block demo_title %}UX Map{% endblock %}
+
+{% block demo_content %}
+    <div>
+        {# The map must have a defined height #}
+        {{ ux_map(map, {style: 'height: 600px;'}) }}
+    </div>
+{% endblock %}
+
+{% block package_install '' %}
+
+{% block package_links %}
+    {{ include('ux_packages/map/_aside.html.twig', {
+        package: 'map'|ux_package,
+    }) }}
+{% endblock %}

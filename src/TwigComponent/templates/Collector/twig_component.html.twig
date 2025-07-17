@@ -1,0 +1,304 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block page_title 'Twig Components' %}
+
+{% block head %}
+    {{ parent() }}
+    <style>
+        .twig-component-dump {
+            display: block;
+            background: rgba(0, 0, 0, .15);
+            --font-size-monospace: 12px;
+            font-weight: 400;
+            border-radius: 4px;
+            padding: 5px;
+        }
+        .twig-component-metrics {
+            margin-block-end: 3rem;
+        }
+
+        .twig-component-component {
+            margin-block-end: 3rem;
+        }
+        .twig-component-component th:first-child,
+        .twig-component-component td:first-child {
+            width: 25%;
+        }
+        .twig-component-component thead th {
+            font-weight: 200;
+            vertical-align: middle;
+            padding: .75rem 1rem;
+        }
+        .twig-component-component thead strong {
+            font-weight: 600;
+            display: block;
+        }
+        .twig-component-component td {
+            vertical-align: middle;
+            padding: .75rem 1rem;
+        }
+        .twig-component-component tbody td.metric {
+            text-align: right;
+        }
+        .twig-component-component thead small,
+        .twig-component-component thead strong {
+            display: block;
+        }
+        .twig-component-component .cell-right {
+            width: 4rem;
+            text-align: right;
+        }
+
+        .twig-component-renders {
+            margin-bottom: 2rem;
+        }
+        .twig-component-render {
+            margin-left: calc(var(--render-depth) * .5rem);
+            width: calc(100% - calc(var(--render-depth) * .5rem));
+        }
+        .twig-component-render thead th {
+            text-align: left;
+            border-bottom: none;
+            vertical-align: middle;
+        }
+        .twig-component-render thead tr {
+            vertical-align: middle;
+            opacity: .9;
+        }
+        .twig-component-render thead tr:hover {
+            opacity: 1;
+            cursor: pointer;
+        }
+        .twig-component-render .sf-toggle .toggle-button {
+            color: inherit;
+        }
+        .twig-component-render .sf-toggle-on .toggle-button {
+            transform: rotate(0deg);
+            opacity: 1;
+            transition: all 150ms ease-in-out;
+        }
+        .twig-component-render .sf-toggle-off .toggle-button {
+            transform: rotate(90deg);
+            opacity: .85;
+            transition: all 250ms ease-in-out;
+        }
+        .twig-component-render th:first-child,
+        .twig-component-render tr:first-child {
+            width: 25%;
+        }
+        .twig-component-render th,
+        .twig-component-render tbody th {
+            font-weight: normal;
+        }
+        .twig-component-render th:first-child {
+            font-weight: bolder;
+        }
+        .twig-component-render th:first-child svg {
+            transform: rotate(45deg);
+            transform-origin: inherit;
+            transform-style: initial;
+            width: 1.25rem;
+            vertical-align: inherit;
+        }
+        .twig-component-render th:last-child {
+            width: 2rem;
+        }
+        .twig-component-render th.renderTime {
+            width: 4rem;
+            font-weight: initial;
+        }
+        .twig-component-render tbody.sf-toggle-visible {
+            display: table-row-group;
+            width: inherit;
+        }
+        .twig-component-render tbody th {
+            font-weight: normal !important;
+        }
+    </style>
+{% endblock %}
+
+{% block toolbar %}
+    {% if collector.renderCount %}
+
+        {% set icon %}
+            {{ source('@TwigComponent/Collector/icon.svg') }}
+            <span class="sf-toolbar-value">{{ collector.renderCount }}</span>
+            <span class="sf-toolbar-info-piece-additional-detail">
+                <span class="sf-toolbar-label">in</span>
+                <span class="sf-toolbar-value">{{ collector.renderTime|round }}</span>
+                <span class="sf-toolbar-label">ms</span>
+            </span>
+        {% endset %}
+
+        {% set text %}
+            {% for _component in collector.components %}
+                <div class="sf-toolbar-info-piece">
+                    <b class="label">{{ _component.name }}</b>
+                    <span class="sf-toolbar-status">{{ _component.render_count }}</span>
+                </div>
+            {% endfor %}
+        {% endset %}
+
+        {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', {link: profiler_url}) }}
+
+    {% endif %}
+{% endblock %}
+
+{% block menu %}
+    <span class="label{{ collector.components is empty ? ' disabled' }}">
+        <span class="icon">{{ source('@TwigComponent/Collector/icon.svg') }}</span>
+        <strong>Twig Components</strong>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>Components</h2>
+    {% if not collector.componentCount|default %}
+        <div class="empty empty-panel">
+            <p>No component were rendered for this request.</p>
+        </div>
+    {% else %}
+        <section class="twig-component-metrics metrics">
+            <div class="metric-group">
+                {{ _self.metric(collector.componentCount, "Twig Components") }}
+            </div>
+            <div class="metric-divider"></div>
+            <div class="metric-group">
+                {{ _self.metric(collector.renderCount, "Render Count") }}
+                {{ _self.metric(collector.renderTime|round, "Render Time", "ms") }}
+            </div>
+            <div class="metric-divider"></div>
+            <div class="metric-group">
+                {{ _self.metric((collector.peakMemoryUsage / 1024 / 1024)|number_format(1), "Memory Usage", "MiB") }}
+            </div>
+        </section>
+        <section class="twig-component-components">
+            <h3>Components</h3>
+            {{ block('table_components') }}
+        </section>
+        <section class="twig-component-renders">
+            <h3>Render calls</h3>
+            {{ block('table_renders') }}
+        </section>
+    {% endif %}
+{% endblock %}
+
+{% macro metric(value, label, unit = '') %}
+    <div class="metric">
+        <span class="value">
+            {{ value }}
+            {% if unit %}
+                <span class="unit text-small">{{ unit }}</span>
+            {% endif %}
+        </span>
+        <span class="label">
+            {{- label -}}
+        </span>
+    </div>
+{% endmacro %}
+
+{% block table_components %}
+    <table class="twig-component-component">
+        <thead>
+        <tr>
+            <th class="key">
+                <strong>Name</strong>
+            </th>
+            <th>
+                <strong>Metadata</strong>
+            </th>
+            <th class="cell-right">
+                <small>Render</small>
+                <strong>Count</strong>
+            </th>
+            <th class="cell-right">
+                <small>Render</small>
+                <strong>Time</strong>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for component in collector.components %}
+                <tr>
+                    <td>{{ component.name }}</td>
+                    <td>
+                        {% if component.class == 'Symfony\\UX\\TwigComponent\\AnonymousComponent' %}
+                            <pre class="sf-dump"><span class="text-muted">[Anonymous]</span></pre>
+                        {% else %}
+                            {{ profiler_dump(component.class_stub) }}
+                        {% endif %}
+                        {% if component.template_path %}
+                            <a class=text-muted" href="{{ component.template_path|file_link(1) }}">
+                                {{- component.template -}}
+                            </a>
+                        {% else %}
+                            <span class=text-muted">{{ component.template }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="cell-right">{{ component.render_count }}</td>
+                    <td class="cell-right">
+                        {{- component.render_time|number_format(2) -}}
+                        <span class="text-muted text-small">ms</span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block table_renders %}
+    <div class="twig-component-renders">
+        {% set _memory = null %}
+        {% for render in collector.renders %}
+            <table class="twig-component-render" style="--render-depth:{{ render.depth }};">
+                <thead
+                    class="sf-toggle {{ loop.index == 1 ? 'sf-toggle-on' : 'sf-toggle-off' }}"
+                   data-toggle-selector="#render-{{ loop.index }}--details"
+                   data-toggle-initial="{{ loop.index == 1 ? 'display' }}"
+                >
+                    <tr>
+                        <th class="key">{{ render.depth ? source('@TwigComponent/Collector/chevron-down.svg') }}{{ render.name }}</th>
+                        <th>
+                            {% if render.class == 'Symfony\\UX\\TwigComponent\\AnonymousComponent' %}
+                                <pre class="sf-dump"><span class="text-muted">[Anonymous]</span></pre>
+                            {% else %}
+                                {{ render.class }}
+                            {% endif %}
+                        </th>
+                        <th class="cell-right renderTime">
+                            {% set _render_memory = render.render_memory|default(0) / 1024 / 1024 %}
+                            <span class="{{ _render_memory == _memory ? 'text-muted' }}">
+                                {{- _render_memory|number_format(1) -}}
+                            </span>
+                            <span class="text-muted text-small">MiB</span>
+                            {% set _memory = _render_memory %}
+                        </th>
+                        <th class="cell-right renderTime">
+                            {{ render.render_time|number_format(2) }}
+                            <span class="text-muted text-small">ms</span>
+                        </th>
+                        <th class="cell-right">
+                            <button class="btn btn-link toggle-button" type="button" aria-label="Toggle details">
+                                {{ source('@TwigComponent/Collector/chevron-down.svg') }}
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="render-{{ loop.index }}--details">
+                    <tr class="{{ not render.input_props|default ? 'opacity-50' }}">
+                        <th scope="row">Input props</th>
+                        <td colspan="4">{{ profiler_dump(render.input_props) }}</td>
+                    </tr>
+                    <tr class="{{ not render.attributes|default ? 'opacity-50' }}">
+                        <th scope="row">Attributes</th>
+                        <td colspan="4">{{ profiler_dump(render.attributes) }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Component</th>
+                        <td colspan="4">{{ profiler_dump(render.component) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        {% endfor %}
+    </div>
+{% endblock %}

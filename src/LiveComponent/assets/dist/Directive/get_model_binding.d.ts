@@ -1,4 +1,4 @@
-import { Directive } from './directives_parser';
+import type { Directive } from './directives_parser';
 export interface ModelBinding {
     modelName: string;
     innerModelName: string | null;

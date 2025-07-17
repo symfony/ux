@@ -1,0 +1,26 @@
+<aside style="background-color: var(--bs-secondary-bg-subtle);" class="mt-5">
+    <div class="container-fluid container-xxl p-4 p-md-5">
+        <div style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));">
+            {% block links %}
+                <twig:DocsLink
+                    title="Documentation"
+                    text="Get going with the official Symfony UX doc."
+                    url="{{ path('app_documentation') }}"
+                    icon="mdi:book-open-variant-outline"
+                />
+                <twig:DocsLink
+                    title="Community"
+                    text="Feedback · ideas · contributions."
+                    url="https://github.com/symfony/ux"
+                    icon="github"
+                />
+                <twig:DocsLink
+                    title="Support"
+                    text="Ask questions about Symfony UX."
+                    url="{{ path('app_support') }}"
+                    icon="raphael:help"
+                />
+            {% endblock %}
+        </div>
+    </div>
+</aside>

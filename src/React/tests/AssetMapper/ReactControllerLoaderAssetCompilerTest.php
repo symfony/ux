@@ -1,8 +1,10 @@
 <?php
 
 /*
- * This file is part of the Symfony StimulusBundle package.
+ * This file is part of the Symfony package.
+ *
  * (c) Fabien Potencier <fabien@symfony.com>
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -29,6 +31,7 @@ class ReactControllerLoaderAssetCompilerTest extends TestCase
                 if (str_contains($sourcePath, 'MyReactController')) {
                     return new MappedAsset(
                         'MyReactController.js',
+                        '/project/assets/react/controllers/MyReactController.js',
                         publicPathWithoutDigest: '/assets/react/controllers/MyReactController.js',
                     );
                 }
@@ -36,6 +39,7 @@ class ReactControllerLoaderAssetCompilerTest extends TestCase
                 if (str_contains($sourcePath, 'DeeperReactController')) {
                     return new MappedAsset(
                         'subdir/DeeperReactController.js',
+                        '/project/assets/react/controllers/subdir/DeeperReactController.js',
                         publicPathWithoutDigest: '/assets/react/controllers/subdir/DeeperReactController.js',
                     );
                 }
@@ -48,7 +52,7 @@ class ReactControllerLoaderAssetCompilerTest extends TestCase
             ['*.js']
         );
 
-        $loaderAsset = new MappedAsset('loader.js', publicPathWithoutDigest: '/assets/symfony/ux-react/loader.js');
+        $loaderAsset = new MappedAsset('loader.js', '/project/assets/vendor/StimulusBundle/loader.js', publicPathWithoutDigest: '/assets/symfony/ux-react/loader.js');
         $startingContents = file_get_contents(__DIR__.'/../../assets/dist/loader.js');
 
         $compiledContents = $compiler->compile($startingContents, $loaderAsset, $assetMapper);

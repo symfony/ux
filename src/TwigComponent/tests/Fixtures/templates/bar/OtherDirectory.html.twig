@@ -1,0 +1,9 @@
+<div class="alert alert-{{ type }} alert-dismissible" role="alert">
+    <span class="me-2 {{ this.iconClass }}"></span>
+    {{ message }}
+    {% if type == 'success' %}
+        <a href="#" class="alert-right-message">
+            (browse all {{ this.packageCount }} packages)
+        </a>
+    {% endif %}
+</div>

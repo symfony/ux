@@ -18,7 +18,7 @@ use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 
-#[AsLiveComponent('component_with_emit', csrf: false)]
+#[AsLiveComponent('component_with_emit')]
 final class ComponentWithEmit
 {
     use DefaultActionTrait;
@@ -29,7 +29,7 @@ final class ComponentWithEmit
     #[LiveAction]
     public function actionThatEmits(): void
     {
-        $this->emit('event1', ['foo' => 'bar']);
+        $this->emit('event1', ['foo' => 'bar', 'bar' => 'foo']);
         $this->events = $this->liveResponder->getEventsToEmit();
     }
 

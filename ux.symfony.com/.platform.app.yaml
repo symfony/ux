@@ -1,10 +1,10 @@
 name: app
 
-type: php:8.1
+type: php:8.3
 
 dependencies:
     php:
-        composer/composer: "^2"
+        composer/composer: "^2.8"
 
 build:
     flavor: none
@@ -33,7 +33,7 @@ web:
             expires: 1h
             passthru: "/index.php"
             rules:
-                '\.(gif|jpe?g|png|css|js|woff|woff2|ttf|eot|svg)$':
+                '\.(gif|jpe?g|png|css|js|woff|woff2|ttf|eot|svg|webp|ico)$':
                     expires: 365d
 
 disk: 256
@@ -47,8 +47,13 @@ hooks:
 
         curl -s https://get.symfony.com/cloud/configurator | (>&2 bash)
 
-        (>&2 symfony-build)
+        # We don't need to run yarn or npm... 
+        # ...let's skip both build steps  
+        export NO_YARN=1
+        export NO_NPM=1
 
+        (>&2 symfony-build)
+        php bin/console tailwind:build --minify
         php bin/console asset-map:compile
 
     deploy: |
@@ -57,6 +62,7 @@ hooks:
         (>&2 symfony-deploy)
 
         php bin/console app:load-data
+        
         # needed because StimulusBundle / asset mapper will currently
         # expect this asset mapper directory to exist at runtime
-        mkdir var/translations
+        mkdir -p var/translations

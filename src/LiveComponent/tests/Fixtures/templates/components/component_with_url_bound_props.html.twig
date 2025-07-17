@@ -1,0 +1,12 @@
+<div {{ attributes }}>
+    StringProp: {{ stringProp }}
+    IntProp: {{ intProp }}
+    ArrayProp: {{ arrayProp|join(',') }}
+    UnboundProp: {{ unboundProp }}
+    ObjectProp: address: {{ objectProp.address ?? '' }} city: {{ objectProp.city ?? '' }}
+    PropWithField1: {{ propWithField1 }}
+    PropWithField2: {{ propWithField2 }}
+    MaybeBoundProp: {{ maybeBoundProp }}
+    BoundPropWithAlias: {{ boundPropWithAlias }}
+    BoundPropWithCustomAlias: {{ boundPropWithCustomAlias }}
+</div>

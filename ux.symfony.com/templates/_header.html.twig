@@ -1,0 +1,65 @@
+<header class="AppHeader {{ theme is defined ? ('AppHeader--' ~ theme) }}" data-controller="ux-header">
+    <div class="container-xxl px-4 px-md-5">
+
+        <nav class="AppNav AppNav--white">
+
+            <a class="AppHeader_logo" href="{{ path('app_homepage') }}"  aria-label="Symfony UX">
+                <img src="{{ asset('images/sf-ux.svg') }}" alt="Symfony UX" width="161" height="30" />
+            </a>
+
+            <div class="AppNav_actions">
+                <button
+                    class="AppHeader_toggler AppNav_item AppNav_item--icon"
+                    data-action="ux-header#toggleMenu"
+                    aria-label="Toggle menu"
+                >
+                    <twig:ux:icon name="menu"/>
+                </button>
+                <twig:ThemeSwitcher class="AppNav_item AppNav_item--icon" aria-label="Switch dark/light mode"/>
+                <div class="AppNav_socials">
+                    <a
+                        class="AppNav_item AppNav_item--icon d-grid"
+                        href="https://x.com/symfonyux"
+                        rel="external me"
+                        title="Symfony UX on X (Twitter)"
+                    >
+                        <twig:ux:icon name="x-twitter"/>
+                    </a>
+                    <a
+                        class="AppNav_item AppNav_item--icon d-grid"
+                        href="https://bsky.app/profile/ux.symfony.com"
+                        rel="external me"
+                        title="Symfony UX on BlueSky"
+                    >
+                        <span class="AppNav_badge" data-content="New"></span>
+                        <twig:ux:icon name="bluesky"/>
+                    </a>
+                    <a
+                        class="AppNav_item AppNav_item--icon d-grid"
+                        href="https://github.com/symfony/ux"
+                        rel="external me"
+                        title="Symfony UX on GitHub"
+                    >
+                        <twig:ux:icon name="github" />
+                    </a>
+                </div>
+            </div>
+
+            <div class="AppNav_menu">
+                <a href="{{ path('app_toolkit') }}" class="AppNav_item AppNav_item--cs">
+                    <span class="AppNav_badge" data-content="New"></span>
+                    Toolkit
+                </a>
+                <a href="{{ path('app_turbo') }}" class="AppNav_item">Turbo</a>
+                <a href="{{ path('app_live_component') }}" class="AppNav_item">Live <span>Components</span></a>
+                <a href="{{ path('app_icons') }}" class="AppNav_item">Icons</a>
+                <a href="{{ path('app_packages') }}" class="AppNav_item">Packages</a>
+                <a href="{{ path('app_demos') }}" class="AppNav_item">Demos</a>
+                {# <a href="{{ path('app_cookbook') }}" class="AppNav_item AppNav_item--cs">Cookbook</a> #}
+                <a href="{{ path('app_support') }}" class="AppNav_item AppNav_item--cs" rel="help">Support</a>
+            </div>
+
+        </nav>
+
+    </div>
+</header>

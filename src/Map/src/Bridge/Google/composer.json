@@ -1,0 +1,37 @@
+{
+    "name": "symfony/ux-google-map",
+    "type": "symfony-ux-map-bridge",
+    "description": "Symfony UX Map GoogleMaps Bridge",
+    "keywords": ["symfony-ux", "google-maps", "map"],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hugo Alliaume",
+            "email": "hugo@alliau.me"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "symfony/stimulus-bundle": "^2.18.1",
+        "symfony/ux-map": "^2.19"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^7.2",
+        "symfony/ux-icons": "^2.18",
+        "spatie/phpunit-snapshot-assertions": "^4.2.17",
+        "phpunit/phpunit": "^9.6.22"
+    },
+    "autoload": {
+        "psr-4": { "Symfony\\UX\\Map\\Bridge\\Google\\": "src/" },
+        "exclude-from-classmap": []
+    },
+    "autoload-dev": {
+        "psr-4": { "Symfony\\UX\\Map\\Bridge\\Google\\Tests\\": "tests/" }
+    },
+    "minimum-stability": "dev"
+}

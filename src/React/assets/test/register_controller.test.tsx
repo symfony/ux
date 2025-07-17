@@ -7,17 +7,31 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-import {registerReactControllerComponents} from '../src/register_controller';
+import { registerReactControllerComponents } from '../src/register_controller';
+// @ts-ignore
+import MyJsxComponent from './fixtures/MyJsxComponent';
 import MyTsxComponent from './fixtures/MyTsxComponent';
-import {createRequireContextPolyfill} from './util/require_context_poylfill';
 
-require.context = createRequireContextPolyfill(__dirname);
+import RequireContext = __WebpackModuleApi.RequireContext;
+
+const createFakeFixturesContext = (): RequireContext => {
+    const files: any = {
+        './MyJsxComponent.jsx': { default: MyJsxComponent },
+        './MyTsxComponent.tsx': { default: MyTsxComponent },
+        './NoDefaultExportComponent.jsx': { default: undefined },
+    };
+
+    const context = (id: string): any => files[id];
+    context.keys = () => Object.keys(files);
+    context.resolve = (id: string) => id;
+    context.id = './fixtures';
+
+    return context;
+};
 
 describe('registerReactControllerComponents', () => {
-    it('test', () => {
-        registerReactControllerComponents(require.context('./fixtures', true, /\.(j|t)sx$/));
+    it('test working setup', () => {
+        registerReactControllerComponents(createFakeFixturesContext());
         const resolveComponent = (window as any).resolveReactComponent;
 
         expect(resolveComponent).not.toBeUndefined();
@@ -26,9 +40,20 @@ describe('registerReactControllerComponents', () => {
     });
 
     it('errors with a bad name', () => {
-        registerReactControllerComponents(require.context('./fixtures', true, /\.(j|t)sx$/));
+        registerReactControllerComponents(createFakeFixturesContext());
         const resolveComponent = (window as any).resolveReactComponent;
 
-        expect(() => resolveComponent('MyABCComponent')).toThrow('React controller "MyABCComponent" does not exist. Possible values: MyJsxComponent, MyTsxComponent');
+        expect(() => resolveComponent('MyABCComponent')).toThrow(
+            'React controller "MyABCComponent" does not exist. Possible values: MyJsxComponent, MyTsxComponent'
+        );
+    });
+
+    it('throws when no default export found in imported module', () => {
+        registerReactControllerComponents(createFakeFixturesContext());
+        const resolveComponent = (window as any).resolveReactComponent;
+
+        expect(() => resolveComponent('NoDefaultExportComponent')).toThrow(
+            'React controller "NoDefaultExportComponent" could not be resolved. Ensure the module exports the controller as a default export.'
+        );
     });
 });

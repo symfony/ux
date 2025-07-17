@@ -8,7 +8,7 @@
  */
 
 // This file is dynamically rewritten by StimulusBundle + AssetMapper.
-import { ControllerConstructor } from '@hotwired/stimulus';
+import type { ControllerConstructor } from '@hotwired/stimulus';
 
 export interface EagerControllersCollection {
     [key: string]: ControllerConstructor;

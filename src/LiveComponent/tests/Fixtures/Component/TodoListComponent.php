@@ -15,7 +15,7 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent('todo_list')]
+#[AsLiveComponent('todo_list', method: 'get')]
 final class TodoListComponent
 {
     #[LiveProp(writable: true)]

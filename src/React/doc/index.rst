@@ -2,11 +2,13 @@ Symfony UX React
 ================
 
 Symfony UX React is a Symfony bundle integrating `React`_ in
-Symfony applications. It is part of `the Symfony UX initiative`_.
+Symfony applications. It is part of the `Symfony UX initiative`_.
 
 React is a JavaScript library for building user interfaces.
 Symfony UX React provides tools to render React components from Twig,
 handling rendering and data transfers.
+
+You can see a live example of this integration on the `Symfony UX React demo`_.
 
 Symfony UX React supports React 18+.
 
@@ -18,8 +20,7 @@ Installation
     This package works best with WebpackEncore. To use it with AssetMapper, see
     :ref:`Using with AssetMapper <using-with-asset-mapper>`.
 
-Before you start, make sure you have `StimulusBundle configured in your app`_.
-Then install the bundle using Composer and Symfony Flex:
+Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -36,15 +37,18 @@ Next, install a package to help React:
     $ npm install -D @babel/preset-react --force
     $ npm run watch
 
-    # or use yarn
-    $ yarn add @babel/preset-react --dev --force
-    $ yarn watch
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-react npm package`_
 
 That's it! Any files inside ``assets/react/controllers/`` can now be rendered as
 React components.
 
 Usage
 -----
+
+Register components
+~~~~~~~~~~~~~~~~~~~
 
 The Flex recipe will have already added the ``registerReactControllerComponents()``
 code to your ``assets/app.js`` file:
@@ -54,13 +58,17 @@ code to your ``assets/app.js`` file:
     // assets/app.js
     import { registerReactControllerComponents } from '@symfony/ux-react';
 
-    registerReactControllerComponents(require.context('./react/controllers', true, /\\.(j|t)sx?$/));
+    registerReactControllerComponents(require.context('./react/controllers', true, /\.(j|t)sx?$/));
 
 This will load all React components located in the ``assets/react/controllers``
 directory. These are known as **React controller components**: top-level
 components that are meant to be rendered from Twig.
 
-You can render any React controller component in Twig using the ``react_component()``.
+Render in Twig
+~~~~~~~~~~~~~~
+
+You can render any React controller component in your Twig templates, using the
+``react_component()`` function.
 
 For example:
 
@@ -73,19 +81,48 @@ For example:
         return <div>Hello {props.fullName}</div>;
     }
 
+.. note::
+
+    Ensure your module exports the controller as the ``export default``. The default export is used when resolving components.
+
 .. code-block:: html+twig
 
     {# templates/home.html.twig #}
     {% extends 'base.html.twig' %}
 
     {% block body %}
-        <div {{ react_component('Hello', { 'fullName': number }) }}>
+        <div {{ react_component('Hello', { fullName: 'Fabien' }) }}>
             Loading... <i class="fas fa-cog fa-spin fa-3x"></i>
         </div>
 
         {# Component living in a subdirectory: "assets/react/controllers/Admin/OtherComponent" #}
         <div {{ react_component('Admin/OtherComponent') }}></div>
     {% endblock %}
+
+Permanent components
+~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.21
+
+    The ability to mark a component ``permanent`` was added in UX React 2.21.
+
+The controller responsible to render the React components can be configured
+to keep the React component mounted when the root element is removed from
+the DOM, using the ``permanent`` option.
+
+This is particularly useful when the root element of a component is moved around
+in the DOM  or is removed and immediately re-added to the DOM (e.g. when using
+`Turbo`_ and its `data-turbo-permanent` attribute).
+
+.. code-block:: html+twig
+
+    {# templates/home.html.twig #}
+    {% extends 'base.html.twig' %}
+
+    {# The React component will stay mounted if the div is moved in the DOM #}
+    <div {{ react_component('Hello', {fullName: 'Fabien'}, {permanent: true}) }}>
+         Loading...
+    </div>
 
 .. _using-with-asset-mapper:
 
@@ -97,7 +134,7 @@ requires some extra steps.
 
 #. Compile your ``.jsx`` files to pure JavaScript files. This can be done by
    installing Babel and the ``@babel/preset-react`` preset. Example:
-   https://github.com/symfony/ux/blob/2.x/ux.symfony.com/package.json
+   https://github.com/symfony/ux/blob/2.x/ux.symfony.com/assets/react/build/package.json
 
 #. Point this library at the "built" controllers directory that contains the final
    JavaScript files:
@@ -124,5 +161,7 @@ the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`React`: https://reactjs.org/
-.. _`the Symfony UX initiative`: https://symfony.com/ux
-.. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
+.. _`Symfony UX initiative`: https://ux.symfony.com/
+.. _`Symfony UX React demo`: https://ux.symfony.com/react
+.. _`Turbo`: https://turbo.hotwire.dev/
+.. _`@symfony/ux-react npm package`: https://www.npmjs.com/package/@symfony/ux-react

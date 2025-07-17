@@ -1,4 +1,6 @@
-<div{{ attributes }}>
+<div{{ attributes.defaults({class: 'component2'}) }} >
+    {% block content %}
     Count: {{ this.count }}
     PreReRenderCalled: {{ this.preReRenderCalled ? 'Yes' : 'No' }}
+    {% endblock %}
 </div>

@@ -26,14 +26,10 @@ export interface Directive {
      */
     args: string[];
     /**
-     * An object of named arguments
-     */
-    named: any;
-    /**
      * Any modifiers applied to the action
      */
     modifiers: DirectiveModifier[];
-    getString: { (): string };
+    getString: () => string;
 }
 
 /**
@@ -41,22 +37,13 @@ export interface Directive {
  * into an array of directives, with this format:
  *
  *      [
- *          { action: 'addClass', args: ['foo'], named: {}, modifiers: [] },
- *          { action: 'removeAttribute', args: ['bar'], named: {}, modifiers: [] }
- *      ]
- *
- * This also handles named arguments
- *
- *      save(foo=bar, baz=bazzles)
- *
- * Which would return:
- *      [
- *          { action: 'save', args: [], named: { foo: 'bar', baz: 'bazzles }, modifiers: [] }
+ *          { action: 'addClass', args: ['foo'], modifiers: [] },
+ *          { action: 'removeAttribute', args: ['bar'], modifiers: [] }
  *      ]
  *
  * @param {string} content The value of the attribute
  */
-export function parseDirectives(content: string|null): Directive[] {
+export function parseDirectives(content: string | null): Directive[] {
     const directives: Directive[] = [];
 
     if (!content) {
@@ -64,14 +51,12 @@ export function parseDirectives(content: string|null): Directive[] {
     }
 
     let currentActionName = '';
-    let currentArgumentName = '';
     let currentArgumentValue = '';
     let currentArguments: string[] = [];
-    let currentNamedArguments: any = {};
-    let currentModifiers: { name: string, value: string | null }[] = [];
+    let currentModifiers: { name: string; value: string | null }[] = [];
     let state = 'action';
 
-    const getLastActionName = function() {
+    const getLastActionName = () => {
         if (currentActionName) {
             return currentActionName;
         }
@@ -81,60 +66,34 @@ export function parseDirectives(content: string|null): Directive[] {
         }
 
         return directives[directives.length - 1].action;
-    }
-    const pushInstruction = function() {
+    };
+    const pushInstruction = () => {
         directives.push({
             action: currentActionName,
             args: currentArguments,
-            named: currentNamedArguments,
             modifiers: currentModifiers,
             getString: () => {
                 // TODO - make a string representation of JUST this directive
 
                 return content;
-            }
+            },
         });
         currentActionName = '';
-        currentArgumentName = '';
         currentArgumentValue = '';
         currentArguments = [];
-        currentNamedArguments = {};
         currentModifiers = [];
         state = 'action';
-    }
-    const pushArgument = function() {
-        const mixedArgTypesError = () => {
-            throw new Error(`Normal and named arguments cannot be mixed inside "${currentActionName}()"`)
-        }
-
-        if (currentArgumentName) {
-            if (currentArguments.length > 0) {
-                mixedArgTypesError();
-            }
-
-            // argument names are also trimmed to avoid space after ","
-            // "foo=bar, baz=bazzles"
-            currentNamedArguments[currentArgumentName.trim()] = currentArgumentValue;
-        } else {
-            if (Object.keys(currentNamedArguments).length > 0) {
-                mixedArgTypesError();
-            }
-
-            // value is trimmed to avoid space after ","
-            // "foo, bar"
-            currentArguments.push(currentArgumentValue.trim());
-        }
-        currentArgumentName = '';
+    };
+    const pushArgument = () => {
+        // value is trimmed to avoid space after ","
+        // "foo, bar"
+        currentArguments.push(currentArgumentValue.trim());
         currentArgumentValue = '';
-    }
+    };
 
-    const pushModifier = function() {
+    const pushModifier = () => {
         if (currentArguments.length > 1) {
-            throw new Error(`The modifier "${currentActionName}()" does not support multiple arguments.`)
-        }
-
-        if (Object.keys(currentNamedArguments).length > 0) {
-            throw new Error(`The modifier "${currentActionName}()" does not support named arguments.`)
+            throw new Error(`The modifier "${currentActionName}()" does not support multiple arguments.`);
         }
 
         currentModifiers.push({
@@ -142,14 +101,13 @@ export function parseDirectives(content: string|null): Directive[] {
             value: currentArguments.length > 0 ? currentArguments[0] : null,
         });
         currentActionName = '';
-        currentArgumentName = '';
         currentArguments = [];
         state = 'action';
-    }
+    };
 
     for (let i = 0; i < content.length; i++) {
         const char = content[i];
-        switch(state) {
+        switch (state) {
             case 'action':
                 if (char === '(') {
                     state = 'arguments';
@@ -196,14 +154,6 @@ export function parseDirectives(content: string|null): Directive[] {
                     break;
                 }
 
-                if (char === '=') {
-                    // this is a named argument!
-                    currentArgumentName = currentArgumentValue;
-                    currentArgumentValue = '';
-
-                    break;
-                }
-
                 // add next character to argument
                 currentArgumentValue += char;
 
@@ -221,7 +171,7 @@ export function parseDirectives(content: string|null): Directive[] {
 
                 // we just finished an action(), and now we need a space
                 if (char !== ' ') {
-                    throw new Error(`Missing space after ${getLastActionName()}()`)
+                    throw new Error(`Missing space after ${getLastActionName()}()`);
                 }
 
                 pushInstruction();
@@ -239,7 +189,7 @@ export function parseDirectives(content: string|null): Directive[] {
 
             break;
         default:
-            throw new Error(`Did you forget to add a closing ")" after "${currentActionName}"?`)
+            throw new Error(`Did you forget to add a closing ")" after "${currentActionName}"?`);
     }
 
     return directives;

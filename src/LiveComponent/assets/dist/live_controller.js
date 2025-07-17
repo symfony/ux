@@ -1,18 +1,211 @@
 import { Controller } from '@hotwired/stimulus';
 
+class BackendRequest {
+    constructor(promise, actions, updateModels) {
+        this.isResolved = false;
+        this.promise = promise;
+        this.promise.then((response) => {
+            this.isResolved = true;
+            return response;
+        });
+        this.actions = actions;
+        this.updatedModels = updateModels;
+    }
+    containsOneOfActions(targetedActions) {
+        return this.actions.filter((action) => targetedActions.includes(action)).length > 0;
+    }
+    areAnyModelsUpdated(targetedModels) {
+        return this.updatedModels.filter((model) => targetedModels.includes(model)).length > 0;
+    }
+}
+
+class RequestBuilder {
+    constructor(url, method = 'post') {
+        this.url = url;
+        this.method = method;
+    }
+    buildRequest(props, actions, updated, children, updatedPropsFromParent, files) {
+        const splitUrl = this.url.split('?');
+        let [url] = splitUrl;
+        const [, queryString] = splitUrl;
+        const params = new URLSearchParams(queryString || '');
+        const fetchOptions = {};
+        fetchOptions.headers = {
+            Accept: 'application/vnd.live-component+html',
+            'X-Requested-With': 'XMLHttpRequest',
+        };
+        const totalFiles = Object.entries(files).reduce((total, current) => total + current.length, 0);
+        const hasFingerprints = Object.keys(children).length > 0;
+        if (actions.length === 0 &&
+            totalFiles === 0 &&
+            this.method === 'get' &&
+            this.willDataFitInUrl(JSON.stringify(props), JSON.stringify(updated), params, JSON.stringify(children), JSON.stringify(updatedPropsFromParent))) {
+            params.set('props', JSON.stringify(props));
+            params.set('updated', JSON.stringify(updated));
+            if (Object.keys(updatedPropsFromParent).length > 0) {
+                params.set('propsFromParent', JSON.stringify(updatedPropsFromParent));
+            }
+            if (hasFingerprints) {
+                params.set('children', JSON.stringify(children));
+            }
+            fetchOptions.method = 'GET';
+        }
+        else {
+            fetchOptions.method = 'POST';
+            const requestData = { props, updated };
+            if (Object.keys(updatedPropsFromParent).length > 0) {
+                requestData.propsFromParent = updatedPropsFromParent;
+            }
+            if (hasFingerprints) {
+                requestData.children = children;
+            }
+            if (actions.length > 0) {
+                if (actions.length === 1) {
+                    requestData.args = actions[0].args;
+                    url += `/${encodeURIComponent(actions[0].name)}`;
+                }
+                else {
+                    url += '/_batch';
+                    requestData.actions = actions;
+                }
+            }
+            const formData = new FormData();
+            formData.append('data', JSON.stringify(requestData));
+            for (const [key, value] of Object.entries(files)) {
+                const length = value.length;
+                for (let i = 0; i < length; ++i) {
+                    formData.append(key, value[i]);
+                }
+            }
+            fetchOptions.body = formData;
+        }
+        const paramsString = params.toString();
+        return {
+            url: `${url}${paramsString.length > 0 ? `?${paramsString}` : ''}`,
+            fetchOptions,
+        };
+    }
+    willDataFitInUrl(propsJson, updatedJson, params, childrenJson, propsFromParentJson) {
+        const urlEncodedJsonData = new URLSearchParams(propsJson + updatedJson + childrenJson + propsFromParentJson).toString();
+        return (urlEncodedJsonData + params.toString()).length < 1500;
+    }
+}
+
+class Backend {
+    constructor(url, method = 'post') {
+        this.requestBuilder = new RequestBuilder(url, method);
+    }
+    makeRequest(props, actions, updated, children, updatedPropsFromParent, files) {
+        const { url, fetchOptions } = this.requestBuilder.buildRequest(props, actions, updated, children, updatedPropsFromParent, files);
+        return new BackendRequest(fetch(url, fetchOptions), actions.map((backendAction) => backendAction.name), Object.keys(updated));
+    }
+}
+
+class BackendResponse {
+    constructor(response) {
+        this.response = response;
+    }
+    async getBody() {
+        if (!this.body) {
+            this.body = await this.response.text();
+        }
+        return this.body;
+    }
+}
+
+function getElementAsTagText(element) {
+    return element.innerHTML
+        ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML))
+        : element.outerHTML;
+}
+
+let componentMapByElement = new WeakMap();
+let componentMapByComponent = new Map();
+const registerComponent = (component) => {
+    componentMapByElement.set(component.element, component);
+    componentMapByComponent.set(component, component.name);
+};
+const unregisterComponent = (component) => {
+    componentMapByElement.delete(component.element);
+    componentMapByComponent.delete(component);
+};
+const getComponent = (element) => new Promise((resolve, reject) => {
+    let count = 0;
+    const maxCount = 10;
+    const interval = setInterval(() => {
+        const component = componentMapByElement.get(element);
+        if (component) {
+            clearInterval(interval);
+            resolve(component);
+        }
+        count++;
+        if (count > maxCount) {
+            clearInterval(interval);
+            reject(new Error(`Component not found for element ${getElementAsTagText(element)}`));
+        }
+    }, 5);
+});
+const findComponents = (currentComponent, onlyParents, onlyMatchName) => {
+    const components = [];
+    componentMapByComponent.forEach((componentName, component) => {
+        if (onlyParents && (currentComponent === component || !component.element.contains(currentComponent.element))) {
+            return;
+        }
+        if (onlyMatchName && componentName !== onlyMatchName) {
+            return;
+        }
+        components.push(component);
+    });
+    return components;
+};
+const findChildren = (currentComponent) => {
+    const children = [];
+    componentMapByComponent.forEach((componentName, component) => {
+        if (currentComponent === component) {
+            return;
+        }
+        if (!currentComponent.element.contains(component.element)) {
+            return;
+        }
+        let foundChildComponent = false;
+        componentMapByComponent.forEach((childComponentName, childComponent) => {
+            if (foundChildComponent) {
+                return;
+            }
+            if (childComponent === component) {
+                return;
+            }
+            if (childComponent.element.contains(component.element)) {
+                foundChildComponent = true;
+            }
+        });
+        children.push(component);
+    });
+    return children;
+};
+const findParent = (currentComponent) => {
+    let parentElement = currentComponent.element.parentElement;
+    while (parentElement) {
+        const component = componentMapByElement.get(parentElement);
+        if (component) {
+            return component;
+        }
+        parentElement = parentElement.parentElement;
+    }
+    return null;
+};
+
 function parseDirectives(content) {
     const directives = [];
     if (!content) {
         return directives;
     }
     let currentActionName = '';
-    let currentArgumentName = '';
     let currentArgumentValue = '';
     let currentArguments = [];
-    let currentNamedArguments = {};
     let currentModifiers = [];
     let state = 'action';
-    const getLastActionName = function () {
+    const getLastActionName = () => {
         if (currentActionName) {
             return currentActionName;
         }
@@ -21,56 +214,34 @@ function parseDirectives(content) {
         }
         return directives[directives.length - 1].action;
     };
-    const pushInstruction = function () {
+    const pushInstruction = () => {
         directives.push({
             action: currentActionName,
             args: currentArguments,
-            named: currentNamedArguments,
             modifiers: currentModifiers,
             getString: () => {
                 return content;
-            }
+            },
         });
         currentActionName = '';
-        currentArgumentName = '';
         currentArgumentValue = '';
         currentArguments = [];
-        currentNamedArguments = {};
         currentModifiers = [];
         state = 'action';
     };
-    const pushArgument = function () {
-        const mixedArgTypesError = () => {
-            throw new Error(`Normal and named arguments cannot be mixed inside "${currentActionName}()"`);
-        };
-        if (currentArgumentName) {
-            if (currentArguments.length > 0) {
-                mixedArgTypesError();
-            }
-            currentNamedArguments[currentArgumentName.trim()] = currentArgumentValue;
-        }
-        else {
-            if (Object.keys(currentNamedArguments).length > 0) {
-                mixedArgTypesError();
-            }
-            currentArguments.push(currentArgumentValue.trim());
-        }
-        currentArgumentName = '';
+    const pushArgument = () => {
+        currentArguments.push(currentArgumentValue.trim());
         currentArgumentValue = '';
     };
-    const pushModifier = function () {
+    const pushModifier = () => {
         if (currentArguments.length > 1) {
             throw new Error(`The modifier "${currentActionName}()" does not support multiple arguments.`);
-        }
-        if (Object.keys(currentNamedArguments).length > 0) {
-            throw new Error(`The modifier "${currentActionName}()" does not support named arguments.`);
         }
         currentModifiers.push({
             name: currentActionName,
             value: currentArguments.length > 0 ? currentArguments[0] : null,
         });
         currentActionName = '';
-        currentArgumentName = '';
         currentArguments = [];
         state = 'action';
     };
@@ -104,11 +275,6 @@ function parseDirectives(content) {
                     pushArgument();
                     break;
                 }
-                if (char === '=') {
-                    currentArgumentName = currentArgumentValue;
-                    currentArgumentValue = '';
-                    break;
-                }
                 currentArgumentValue += char;
                 break;
             case 'after_arguments':
@@ -139,17 +305,18 @@ function parseDirectives(content) {
 function combineSpacedArray(parts) {
     const finalParts = [];
     parts.forEach((part) => {
-        finalParts.push(...part.split(' '));
+        finalParts.push(...trimAll(part).split(' '));
     });
     return finalParts;
+}
+function trimAll(str) {
+    return str.replace(/[\s]+/g, ' ').trim();
 }
 function normalizeModelName(model) {
     return (model
         .replace(/\[]$/, '')
         .split('[')
-        .map(function (s) {
-        return s.replace(']', '');
-    })
+        .map((s) => s.replace(']', ''))
         .join('.'));
 }
 
@@ -161,6 +328,9 @@ function getValueFromElement(element, valueStore) {
                 const modelValue = valueStore.get(modelNameData.action);
                 if (Array.isArray(modelValue)) {
                     return getMultipleCheckboxValue(element, modelValue);
+                }
+                if (Object(modelValue) === modelValue) {
+                    return getMultipleCheckboxValue(element, Object.values(modelValue));
                 }
             }
             if (element.hasAttribute('value')) {
@@ -198,28 +368,20 @@ function setValueOnElement(element, value) {
         }
         if (element.type === 'checkbox') {
             if (Array.isArray(value)) {
-                let valueFound = false;
-                value.forEach((val) => {
-                    if (val == element.value) {
-                        valueFound = true;
-                    }
-                });
-                element.checked = valueFound;
+                element.checked = value.some((val) => val == element.value);
+            }
+            else if (element.hasAttribute('value')) {
+                element.checked = element.value == value;
             }
             else {
-                if (element.hasAttribute('value')) {
-                    element.checked = element.value == value;
-                }
-                else {
-                    element.checked = value;
-                }
+                element.checked = value;
             }
             return;
         }
     }
     if (element instanceof HTMLSelectElement) {
         const arrayWrappedValue = [].concat(value).map((value) => {
-            return value + '';
+            return `${value}`;
         });
         Array.from(element.options).forEach((option) => {
             option.selected = arrayWrappedValue.includes(option.value);
@@ -235,7 +397,7 @@ function getAllModelDirectiveFromElements(element) {
     }
     const directives = parseDirectives(element.dataset.model);
     directives.forEach((directive) => {
-        if (directive.args.length > 0 || directive.named.length > 0) {
+        if (directive.args.length > 0) {
             throw new Error(`The data-model="${element.dataset.model}" format is invalid: it does not support passing arguments to the model.`);
         }
         directive.action = normalizeModelName(directive.action);
@@ -252,7 +414,7 @@ function getModelDirectiveFromElement(element, throwOnMissing = true) {
         if (formElement && 'model' in formElement.dataset) {
             const directives = parseDirectives(formElement.dataset.model || '*');
             const directive = directives[0];
-            if (directive.args.length > 0 || directive.named.length > 0) {
+            if (directive.args.length > 0) {
                 throw new Error(`The data-model="${formElement.dataset.model}" format is invalid: it does not support passing arguments to the model.`);
             }
             directive.action = normalizeModelName(element.getAttribute('name'));
@@ -271,16 +433,8 @@ function elementBelongsToThisComponent(element, component) {
     if (!component.element.contains(element)) {
         return false;
     }
-    let foundChildComponent = false;
-    component.getChildren().forEach((childComponent) => {
-        if (foundChildComponent) {
-            return;
-        }
-        if (childComponent.element === element || childComponent.element.contains(element)) {
-            foundChildComponent = true;
-        }
-    });
-    return !foundChildComponent;
+    const closestLiveComponent = element.closest('[data-controller~="live"]');
+    return closestLiveComponent === component.element;
 }
 function cloneHTMLElement(element) {
     const newElement = element.cloneNode(true);
@@ -305,12 +459,7 @@ function htmlToElement(html) {
     }
     return child;
 }
-function getElementAsTagText(element) {
-    return element.innerHTML
-        ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML))
-        : element.outerHTML;
-}
-const getMultipleCheckboxValue = function (element, currentValues) {
+const getMultipleCheckboxValue = (element, currentValues) => {
     const finalValues = [...currentValues];
     const value = inputValue(element);
     const index = currentValues.indexOf(value);
@@ -325,861 +474,864 @@ const getMultipleCheckboxValue = function (element, currentValues) {
     }
     return finalValues;
 };
-const inputValue = function (element) {
-    return element.dataset.value ? element.dataset.value : element.value;
-};
+const inputValue = (element) => element.dataset.value ? element.dataset.value : element.value;
 
-function getDeepData(data, propertyPath) {
-    const { currentLevelData, finalKey } = parseDeepData(data, propertyPath);
-    if (currentLevelData === undefined) {
-        return undefined;
+class HookManager {
+    constructor() {
+        this.hooks = new Map();
     }
-    return currentLevelData[finalKey];
+    register(hookName, callback) {
+        const hooks = this.hooks.get(hookName) || [];
+        hooks.push(callback);
+        this.hooks.set(hookName, hooks);
+    }
+    unregister(hookName, callback) {
+        const hooks = this.hooks.get(hookName) || [];
+        const index = hooks.indexOf(callback);
+        if (index === -1) {
+            return;
+        }
+        hooks.splice(index, 1);
+        this.hooks.set(hookName, hooks);
+    }
+    triggerHook(hookName, ...args) {
+        const hooks = this.hooks.get(hookName) || [];
+        hooks.forEach((callback) => callback(...args));
+    }
 }
-const parseDeepData = function (data, propertyPath) {
-    const finalData = JSON.parse(JSON.stringify(data));
-    let currentLevelData = finalData;
-    const parts = propertyPath.split('.');
-    for (let i = 0; i < parts.length - 1; i++) {
-        currentLevelData = currentLevelData[parts[i]];
-    }
-    const finalKey = parts[parts.length - 1];
-    return {
-        currentLevelData,
-        finalData,
-        finalKey,
-        parts,
-    };
-};
 
-class ValueStore {
-    constructor(props) {
-        this.props = {};
-        this.dirtyProps = {};
-        this.pendingProps = {};
-        this.updatedPropsFromParent = {};
-        this.props = props;
-    }
-    get(name) {
-        const normalizedName = normalizeModelName(name);
-        if (this.dirtyProps[normalizedName] !== undefined) {
-            return this.dirtyProps[normalizedName];
+// base IIFE to define idiomorph
+var Idiomorph = (function () {
+
+        //=============================================================================
+        // AND NOW IT BEGINS...
+        //=============================================================================
+        let EMPTY_SET = new Set();
+
+        // default configuration values, updatable by users now
+        let defaults = {
+            morphStyle: "outerHTML",
+            callbacks : {
+                beforeNodeAdded: noOp,
+                afterNodeAdded: noOp,
+                beforeNodeMorphed: noOp,
+                afterNodeMorphed: noOp,
+                beforeNodeRemoved: noOp,
+                afterNodeRemoved: noOp,
+                beforeAttributeUpdated: noOp,
+
+            },
+            head: {
+                style: 'merge',
+                shouldPreserve: function (elt) {
+                    return elt.getAttribute("im-preserve") === "true";
+                },
+                shouldReAppend: function (elt) {
+                    return elt.getAttribute("im-re-append") === "true";
+                },
+                shouldRemove: noOp,
+                afterHeadMorphed: noOp,
+            }
+        };
+
+        //=============================================================================
+        // Core Morphing Algorithm - morph, morphNormalizedContent, morphOldNodeTo, morphChildren
+        //=============================================================================
+        function morph(oldNode, newContent, config = {}) {
+
+            if (oldNode instanceof Document) {
+                oldNode = oldNode.documentElement;
+            }
+
+            if (typeof newContent === 'string') {
+                newContent = parseContent(newContent);
+            }
+
+            let normalizedContent = normalizeContent(newContent);
+
+            let ctx = createMorphContext(oldNode, normalizedContent, config);
+
+            return morphNormalizedContent(oldNode, normalizedContent, ctx);
         }
-        if (this.pendingProps[normalizedName] !== undefined) {
-            return this.pendingProps[normalizedName];
+
+        function morphNormalizedContent(oldNode, normalizedNewContent, ctx) {
+            if (ctx.head.block) {
+                let oldHead = oldNode.querySelector('head');
+                let newHead = normalizedNewContent.querySelector('head');
+                if (oldHead && newHead) {
+                    let promises = handleHeadElement(newHead, oldHead, ctx);
+                    // when head promises resolve, call morph again, ignoring the head tag
+                    Promise.all(promises).then(function () {
+                        morphNormalizedContent(oldNode, normalizedNewContent, Object.assign(ctx, {
+                            head: {
+                                block: false,
+                                ignore: true
+                            }
+                        }));
+                    });
+                    return;
+                }
+            }
+
+            if (ctx.morphStyle === "innerHTML") {
+
+                // innerHTML, so we are only updating the children
+                morphChildren(normalizedNewContent, oldNode, ctx);
+                return oldNode.children;
+
+            } else if (ctx.morphStyle === "outerHTML" || ctx.morphStyle == null) {
+                // otherwise find the best element match in the new content, morph that, and merge its siblings
+                // into either side of the best match
+                let bestMatch = findBestNodeMatch(normalizedNewContent, oldNode, ctx);
+
+                // stash the siblings that will need to be inserted on either side of the best match
+                let previousSibling = bestMatch?.previousSibling;
+                let nextSibling = bestMatch?.nextSibling;
+
+                // morph it
+                let morphedNode = morphOldNodeTo(oldNode, bestMatch, ctx);
+
+                if (bestMatch) {
+                    // if there was a best match, merge the siblings in too and return the
+                    // whole bunch
+                    return insertSiblings(previousSibling, morphedNode, nextSibling);
+                } else {
+                    // otherwise nothing was added to the DOM
+                    return []
+                }
+            } else {
+                throw "Do not understand how to morph style " + ctx.morphStyle;
+            }
         }
-        if (this.props[normalizedName] !== undefined) {
-            return this.props[normalizedName];
+
+
+        /**
+         * @param possibleActiveElement
+         * @param ctx
+         * @returns {boolean}
+         */
+        function ignoreValueOfActiveElement(possibleActiveElement, ctx) {
+            return ctx.ignoreActiveValue && possibleActiveElement === document.activeElement;
         }
-        return getDeepData(this.props, normalizedName);
-    }
-    has(name) {
-        return this.get(name) !== undefined;
-    }
-    set(name, value) {
-        const normalizedName = normalizeModelName(name);
-        const currentValue = this.get(normalizedName);
-        if (currentValue === value) {
+
+        /**
+         * @param oldNode root node to merge content into
+         * @param newContent new content to merge
+         * @param ctx the merge context
+         * @returns {Element} the element that ended up in the DOM
+         */
+        function morphOldNodeTo(oldNode, newContent, ctx) {
+            if (ctx.ignoreActive && oldNode === document.activeElement) ; else if (newContent == null) {
+                if (ctx.callbacks.beforeNodeRemoved(oldNode) === false) return oldNode;
+
+                oldNode.remove();
+                ctx.callbacks.afterNodeRemoved(oldNode);
+                return null;
+            } else if (!isSoftMatch(oldNode, newContent)) {
+                if (ctx.callbacks.beforeNodeRemoved(oldNode) === false) return oldNode;
+                if (ctx.callbacks.beforeNodeAdded(newContent) === false) return oldNode;
+
+                oldNode.parentElement.replaceChild(newContent, oldNode);
+                ctx.callbacks.afterNodeAdded(newContent);
+                ctx.callbacks.afterNodeRemoved(oldNode);
+                return newContent;
+            } else {
+                if (ctx.callbacks.beforeNodeMorphed(oldNode, newContent) === false) return oldNode;
+
+                if (oldNode instanceof HTMLHeadElement && ctx.head.ignore) ; else if (oldNode instanceof HTMLHeadElement && ctx.head.style !== "morph") {
+                    handleHeadElement(newContent, oldNode, ctx);
+                } else {
+                    syncNodeFrom(newContent, oldNode, ctx);
+                    if (!ignoreValueOfActiveElement(oldNode, ctx)) {
+                        morphChildren(newContent, oldNode, ctx);
+                    }
+                }
+                ctx.callbacks.afterNodeMorphed(oldNode, newContent);
+                return oldNode;
+            }
+        }
+
+        /**
+         * This is the core algorithm for matching up children.  The idea is to use id sets to try to match up
+         * nodes as faithfully as possible.  We greedily match, which allows us to keep the algorithm fast, but
+         * by using id sets, we are able to better match up with content deeper in the DOM.
+         *
+         * Basic algorithm is, for each node in the new content:
+         *
+         * - if we have reached the end of the old parent, append the new content
+         * - if the new content has an id set match with the current insertion point, morph
+         * - search for an id set match
+         * - if id set match found, morph
+         * - otherwise search for a "soft" match
+         * - if a soft match is found, morph
+         * - otherwise, prepend the new node before the current insertion point
+         *
+         * The two search algorithms terminate if competing node matches appear to outweigh what can be achieved
+         * with the current node.  See findIdSetMatch() and findSoftMatch() for details.
+         *
+         * @param {Element} newParent the parent element of the new content
+         * @param {Element } oldParent the old content that we are merging the new content into
+         * @param ctx the merge context
+         */
+        function morphChildren(newParent, oldParent, ctx) {
+
+            let nextNewChild = newParent.firstChild;
+            let insertionPoint = oldParent.firstChild;
+            let newChild;
+
+            // run through all the new content
+            while (nextNewChild) {
+
+                newChild = nextNewChild;
+                nextNewChild = newChild.nextSibling;
+
+                // if we are at the end of the exiting parent's children, just append
+                if (insertionPoint == null) {
+                    if (ctx.callbacks.beforeNodeAdded(newChild) === false) return;
+
+                    oldParent.appendChild(newChild);
+                    ctx.callbacks.afterNodeAdded(newChild);
+                    removeIdsFromConsideration(ctx, newChild);
+                    continue;
+                }
+
+                // if the current node has an id set match then morph
+                if (isIdSetMatch(newChild, insertionPoint, ctx)) {
+                    morphOldNodeTo(insertionPoint, newChild, ctx);
+                    insertionPoint = insertionPoint.nextSibling;
+                    removeIdsFromConsideration(ctx, newChild);
+                    continue;
+                }
+
+                // otherwise search forward in the existing old children for an id set match
+                let idSetMatch = findIdSetMatch(newParent, oldParent, newChild, insertionPoint, ctx);
+
+                // if we found a potential match, remove the nodes until that point and morph
+                if (idSetMatch) {
+                    insertionPoint = removeNodesBetween(insertionPoint, idSetMatch, ctx);
+                    morphOldNodeTo(idSetMatch, newChild, ctx);
+                    removeIdsFromConsideration(ctx, newChild);
+                    continue;
+                }
+
+                // no id set match found, so scan forward for a soft match for the current node
+                let softMatch = findSoftMatch(newParent, oldParent, newChild, insertionPoint, ctx);
+
+                // if we found a soft match for the current node, morph
+                if (softMatch) {
+                    insertionPoint = removeNodesBetween(insertionPoint, softMatch, ctx);
+                    morphOldNodeTo(softMatch, newChild, ctx);
+                    removeIdsFromConsideration(ctx, newChild);
+                    continue;
+                }
+
+                // abandon all hope of morphing, just insert the new child before the insertion point
+                // and move on
+                if (ctx.callbacks.beforeNodeAdded(newChild) === false) return;
+
+                oldParent.insertBefore(newChild, insertionPoint);
+                ctx.callbacks.afterNodeAdded(newChild);
+                removeIdsFromConsideration(ctx, newChild);
+            }
+
+            // remove any remaining old nodes that didn't match up with new content
+            while (insertionPoint !== null) {
+
+                let tempNode = insertionPoint;
+                insertionPoint = insertionPoint.nextSibling;
+                removeNode(tempNode, ctx);
+            }
+        }
+
+        //=============================================================================
+        // Attribute Syncing Code
+        //=============================================================================
+
+        /**
+         * @param attr {String} the attribute to be mutated
+         * @param to {Element} the element that is going to be updated
+         * @param updateType {("update"|"remove")}
+         * @param ctx the merge context
+         * @returns {boolean} true if the attribute should be ignored, false otherwise
+         */
+        function ignoreAttribute(attr, to, updateType, ctx) {
+            if(attr === 'value' && ctx.ignoreActiveValue && to === document.activeElement){
+                return true;
+            }
+            return ctx.callbacks.beforeAttributeUpdated(attr, to, updateType) === false;
+        }
+
+        /**
+         * syncs a given node with another node, copying over all attributes and
+         * inner element state from the 'from' node to the 'to' node
+         *
+         * @param {Element} from the element to copy attributes & state from
+         * @param {Element} to the element to copy attributes & state to
+         * @param ctx the merge context
+         */
+        function syncNodeFrom(from, to, ctx) {
+            let type = from.nodeType;
+
+            // if is an element type, sync the attributes from the
+            // new node into the new node
+            if (type === 1 /* element type */) {
+                const fromAttributes = from.attributes;
+                const toAttributes = to.attributes;
+                for (const fromAttribute of fromAttributes) {
+                    if (ignoreAttribute(fromAttribute.name, to, 'update', ctx)) {
+                        continue;
+                    }
+                    if (to.getAttribute(fromAttribute.name) !== fromAttribute.value) {
+                        to.setAttribute(fromAttribute.name, fromAttribute.value);
+                    }
+                }
+                // iterate backwards to avoid skipping over items when a delete occurs
+                for (let i = toAttributes.length - 1; 0 <= i; i--) {
+                    const toAttribute = toAttributes[i];
+                    if (ignoreAttribute(toAttribute.name, to, 'remove', ctx)) {
+                        continue;
+                    }
+                    if (!from.hasAttribute(toAttribute.name)) {
+                        to.removeAttribute(toAttribute.name);
+                    }
+                }
+            }
+
+            // sync text nodes
+            if (type === 8 /* comment */ || type === 3 /* text */) {
+                if (to.nodeValue !== from.nodeValue) {
+                    to.nodeValue = from.nodeValue;
+                }
+            }
+
+            if (!ignoreValueOfActiveElement(to, ctx)) {
+                // sync input values
+                syncInputValue(from, to, ctx);
+            }
+        }
+
+        /**
+         * @param from {Element} element to sync the value from
+         * @param to {Element} element to sync the value to
+         * @param attributeName {String} the attribute name
+         * @param ctx the merge context
+         */
+        function syncBooleanAttribute(from, to, attributeName, ctx) {
+            if (from[attributeName] !== to[attributeName]) {
+                let ignoreUpdate = ignoreAttribute(attributeName, to, 'update', ctx);
+                if (!ignoreUpdate) {
+                    to[attributeName] = from[attributeName];
+                }
+                if (from[attributeName]) {
+                    if (!ignoreUpdate) {
+                        to.setAttribute(attributeName, from[attributeName]);
+                    }
+                } else {
+                    if (!ignoreAttribute(attributeName, to, 'remove', ctx)) {
+                        to.removeAttribute(attributeName);
+                    }
+                }
+            }
+        }
+
+        /**
+         * NB: many bothans died to bring us information:
+         *
+         *  https://github.com/patrick-steele-idem/morphdom/blob/master/src/specialElHandlers.js
+         *  https://github.com/choojs/nanomorph/blob/master/lib/morph.jsL113
+         *
+         * @param from {Element} the element to sync the input value from
+         * @param to {Element} the element to sync the input value to
+         * @param ctx the merge context
+         */
+        function syncInputValue(from, to, ctx) {
+            if (from instanceof HTMLInputElement &&
+                to instanceof HTMLInputElement &&
+                from.type !== 'file') {
+
+                let fromValue = from.value;
+                let toValue = to.value;
+
+                // sync boolean attributes
+                syncBooleanAttribute(from, to, 'checked', ctx);
+                syncBooleanAttribute(from, to, 'disabled', ctx);
+
+                if (!from.hasAttribute('value')) {
+                    if (!ignoreAttribute('value', to, 'remove', ctx)) {
+                        to.value = '';
+                        to.removeAttribute('value');
+                    }
+                } else if (fromValue !== toValue) {
+                    if (!ignoreAttribute('value', to, 'update', ctx)) {
+                        to.setAttribute('value', fromValue);
+                        to.value = fromValue;
+                    }
+                }
+            } else if (from instanceof HTMLOptionElement) {
+                syncBooleanAttribute(from, to, 'selected', ctx);
+            } else if (from instanceof HTMLTextAreaElement && to instanceof HTMLTextAreaElement) {
+                let fromValue = from.value;
+                let toValue = to.value;
+                if (ignoreAttribute('value', to, 'update', ctx)) {
+                    return;
+                }
+                if (fromValue !== toValue) {
+                    to.value = fromValue;
+                }
+                if (to.firstChild && to.firstChild.nodeValue !== fromValue) {
+                    to.firstChild.nodeValue = fromValue;
+                }
+            }
+        }
+
+        //=============================================================================
+        // the HEAD tag can be handled specially, either w/ a 'merge' or 'append' style
+        //=============================================================================
+        function handleHeadElement(newHeadTag, currentHead, ctx) {
+
+            let added = [];
+            let removed = [];
+            let preserved = [];
+            let nodesToAppend = [];
+
+            let headMergeStyle = ctx.head.style;
+
+            // put all new head elements into a Map, by their outerHTML
+            let srcToNewHeadNodes = new Map();
+            for (const newHeadChild of newHeadTag.children) {
+                srcToNewHeadNodes.set(newHeadChild.outerHTML, newHeadChild);
+            }
+
+            // for each elt in the current head
+            for (const currentHeadElt of currentHead.children) {
+
+                // If the current head element is in the map
+                let inNewContent = srcToNewHeadNodes.has(currentHeadElt.outerHTML);
+                let isReAppended = ctx.head.shouldReAppend(currentHeadElt);
+                let isPreserved = ctx.head.shouldPreserve(currentHeadElt);
+                if (inNewContent || isPreserved) {
+                    if (isReAppended) {
+                        // remove the current version and let the new version replace it and re-execute
+                        removed.push(currentHeadElt);
+                    } else {
+                        // this element already exists and should not be re-appended, so remove it from
+                        // the new content map, preserving it in the DOM
+                        srcToNewHeadNodes.delete(currentHeadElt.outerHTML);
+                        preserved.push(currentHeadElt);
+                    }
+                } else {
+                    if (headMergeStyle === "append") {
+                        // we are appending and this existing element is not new content
+                        // so if and only if it is marked for re-append do we do anything
+                        if (isReAppended) {
+                            removed.push(currentHeadElt);
+                            nodesToAppend.push(currentHeadElt);
+                        }
+                    } else {
+                        // if this is a merge, we remove this content since it is not in the new head
+                        if (ctx.head.shouldRemove(currentHeadElt) !== false) {
+                            removed.push(currentHeadElt);
+                        }
+                    }
+                }
+            }
+
+            // Push the remaining new head elements in the Map into the
+            // nodes to append to the head tag
+            nodesToAppend.push(...srcToNewHeadNodes.values());
+
+            let promises = [];
+            for (const newNode of nodesToAppend) {
+                let newElt = document.createRange().createContextualFragment(newNode.outerHTML).firstChild;
+                if (ctx.callbacks.beforeNodeAdded(newElt) !== false) {
+                    if (newElt.href || newElt.src) {
+                        let resolve = null;
+                        let promise = new Promise(function (_resolve) {
+                            resolve = _resolve;
+                        });
+                        newElt.addEventListener('load', function () {
+                            resolve();
+                        });
+                        promises.push(promise);
+                    }
+                    currentHead.appendChild(newElt);
+                    ctx.callbacks.afterNodeAdded(newElt);
+                    added.push(newElt);
+                }
+            }
+
+            // remove all removed elements, after we have appended the new elements to avoid
+            // additional network requests for things like style sheets
+            for (const removedElement of removed) {
+                if (ctx.callbacks.beforeNodeRemoved(removedElement) !== false) {
+                    currentHead.removeChild(removedElement);
+                    ctx.callbacks.afterNodeRemoved(removedElement);
+                }
+            }
+
+            ctx.head.afterHeadMorphed(currentHead, {added: added, kept: preserved, removed: removed});
+            return promises;
+        }
+
+        function noOp() {
+        }
+
+        /*
+          Deep merges the config object and the Idiomoroph.defaults object to
+          produce a final configuration object
+         */
+        function mergeDefaults(config) {
+            let finalConfig = {};
+            // copy top level stuff into final config
+            Object.assign(finalConfig, defaults);
+            Object.assign(finalConfig, config);
+
+            // copy callbacks into final config (do this to deep merge the callbacks)
+            finalConfig.callbacks = {};
+            Object.assign(finalConfig.callbacks, defaults.callbacks);
+            Object.assign(finalConfig.callbacks, config.callbacks);
+
+            // copy head config into final config  (do this to deep merge the head)
+            finalConfig.head = {};
+            Object.assign(finalConfig.head, defaults.head);
+            Object.assign(finalConfig.head, config.head);
+            return finalConfig;
+        }
+
+        function createMorphContext(oldNode, newContent, config) {
+            config = mergeDefaults(config);
+            return {
+                target: oldNode,
+                newContent: newContent,
+                config: config,
+                morphStyle: config.morphStyle,
+                ignoreActive: config.ignoreActive,
+                ignoreActiveValue: config.ignoreActiveValue,
+                idMap: createIdMap(oldNode, newContent),
+                deadIds: new Set(),
+                callbacks: config.callbacks,
+                head: config.head
+            }
+        }
+
+        function isIdSetMatch(node1, node2, ctx) {
+            if (node1 == null || node2 == null) {
+                return false;
+            }
+            if (node1.nodeType === node2.nodeType && node1.tagName === node2.tagName) {
+                if (node1.id !== "" && node1.id === node2.id) {
+                    return true;
+                } else {
+                    return getIdIntersectionCount(ctx, node1, node2) > 0;
+                }
+            }
             return false;
         }
-        this.dirtyProps[normalizedName] = value;
-        return true;
-    }
-    getOriginalProps() {
-        return Object.assign({}, this.props);
-    }
-    getDirtyProps() {
-        return Object.assign({}, this.dirtyProps);
-    }
-    getUpdatedPropsFromParent() {
-        return Object.assign({}, this.updatedPropsFromParent);
-    }
-    flushDirtyPropsToPending() {
-        this.pendingProps = Object.assign({}, this.dirtyProps);
-        this.dirtyProps = {};
-    }
-    reinitializeAllProps(props) {
-        this.props = props;
-        this.updatedPropsFromParent = {};
-        this.pendingProps = {};
-    }
-    pushPendingPropsBackToDirty() {
-        this.dirtyProps = Object.assign(Object.assign({}, this.pendingProps), this.dirtyProps);
-        this.pendingProps = {};
-    }
-    storeNewPropsFromParent(props) {
-        let changed = false;
-        for (const [key, value] of Object.entries(props)) {
-            const currentValue = this.get(key);
-            if (currentValue !== value) {
-                changed = true;
+
+        function isSoftMatch(node1, node2) {
+            if (node1 == null || node2 == null) {
+                return false;
             }
+            return node1.nodeType === node2.nodeType && node1.tagName === node2.tagName
         }
-        if (changed) {
-            this.updatedPropsFromParent = props;
+
+        function removeNodesBetween(startInclusive, endExclusive, ctx) {
+            while (startInclusive !== endExclusive) {
+                let tempNode = startInclusive;
+                startInclusive = startInclusive.nextSibling;
+                removeNode(tempNode, ctx);
+            }
+            removeIdsFromConsideration(ctx, endExclusive);
+            return endExclusive.nextSibling;
         }
-        return changed;
-    }
-}
 
-var DOCUMENT_FRAGMENT_NODE = 11;
+        //=============================================================================
+        // Scans forward from the insertionPoint in the old parent looking for a potential id match
+        // for the newChild.  We stop if we find a potential id match for the new child OR
+        // if the number of potential id matches we are discarding is greater than the
+        // potential id matches for the new child
+        //=============================================================================
+        function findIdSetMatch(newContent, oldParent, newChild, insertionPoint, ctx) {
 
-function morphAttrs(fromNode, toNode) {
-    var toNodeAttrs = toNode.attributes;
-    var attr;
-    var attrName;
-    var attrNamespaceURI;
-    var attrValue;
-    var fromValue;
+            // max id matches we are willing to discard in our search
+            let newChildPotentialIdCount = getIdIntersectionCount(ctx, newChild, oldParent);
 
-    // document-fragments dont have attributes so lets not do anything
-    if (toNode.nodeType === DOCUMENT_FRAGMENT_NODE || fromNode.nodeType === DOCUMENT_FRAGMENT_NODE) {
-      return;
-    }
+            let potentialMatch = null;
 
-    // update attributes on original DOM element
-    for (var i = toNodeAttrs.length - 1; i >= 0; i--) {
-        attr = toNodeAttrs[i];
-        attrName = attr.name;
-        attrNamespaceURI = attr.namespaceURI;
-        attrValue = attr.value;
+            // only search forward if there is a possibility of an id match
+            if (newChildPotentialIdCount > 0) {
+                let potentialMatch = insertionPoint;
+                // if there is a possibility of an id match, scan forward
+                // keep track of the potential id match count we are discarding (the
+                // newChildPotentialIdCount must be greater than this to make it likely
+                // worth it)
+                let otherMatchCount = 0;
+                while (potentialMatch != null) {
 
-        if (attrNamespaceURI) {
-            attrName = attr.localName || attrName;
-            fromValue = fromNode.getAttributeNS(attrNamespaceURI, attrName);
+                    // If we have an id match, return the current potential match
+                    if (isIdSetMatch(newChild, potentialMatch, ctx)) {
+                        return potentialMatch;
+                    }
 
-            if (fromValue !== attrValue) {
-                if (attr.prefix === 'xmlns'){
-                    attrName = attr.name; // It's not allowed to set an attribute with the XMLNS namespace without specifying the `xmlns` prefix
+                    // computer the other potential matches of this new content
+                    otherMatchCount += getIdIntersectionCount(ctx, potentialMatch, newContent);
+                    if (otherMatchCount > newChildPotentialIdCount) {
+                        // if we have more potential id matches in _other_ content, we
+                        // do not have a good candidate for an id match, so return null
+                        return null;
+                    }
+
+                    // advanced to the next old content child
+                    potentialMatch = potentialMatch.nextSibling;
                 }
-                fromNode.setAttributeNS(attrNamespaceURI, attrName, attrValue);
             }
-        } else {
-            fromValue = fromNode.getAttribute(attrName);
-
-            if (fromValue !== attrValue) {
-                fromNode.setAttribute(attrName, attrValue);
-            }
+            return potentialMatch;
         }
-    }
 
-    // Remove any extra attributes found on the original DOM element that
-    // weren't found on the target element.
-    var fromNodeAttrs = fromNode.attributes;
+        //=============================================================================
+        // Scans forward from the insertionPoint in the old parent looking for a potential soft match
+        // for the newChild.  We stop if we find a potential soft match for the new child OR
+        // if we find a potential id match in the old parents children OR if we find two
+        // potential soft matches for the next two pieces of new content
+        //=============================================================================
+        function findSoftMatch(newContent, oldParent, newChild, insertionPoint, ctx) {
 
-    for (var d = fromNodeAttrs.length - 1; d >= 0; d--) {
-        attr = fromNodeAttrs[d];
-        attrName = attr.name;
-        attrNamespaceURI = attr.namespaceURI;
+            let potentialSoftMatch = insertionPoint;
+            let nextSibling = newChild.nextSibling;
+            let siblingSoftMatchCount = 0;
 
-        if (attrNamespaceURI) {
-            attrName = attr.localName || attrName;
+            while (potentialSoftMatch != null) {
 
-            if (!toNode.hasAttributeNS(attrNamespaceURI, attrName)) {
-                fromNode.removeAttributeNS(attrNamespaceURI, attrName);
-            }
-        } else {
-            if (!toNode.hasAttribute(attrName)) {
-                fromNode.removeAttribute(attrName);
-            }
-        }
-    }
-}
-
-var range; // Create a range object for efficently rendering strings to elements.
-var NS_XHTML = 'http://www.w3.org/1999/xhtml';
-
-var doc = typeof document === 'undefined' ? undefined : document;
-var HAS_TEMPLATE_SUPPORT = !!doc && 'content' in doc.createElement('template');
-var HAS_RANGE_SUPPORT = !!doc && doc.createRange && 'createContextualFragment' in doc.createRange();
-
-function createFragmentFromTemplate(str) {
-    var template = doc.createElement('template');
-    template.innerHTML = str;
-    return template.content.childNodes[0];
-}
-
-function createFragmentFromRange(str) {
-    if (!range) {
-        range = doc.createRange();
-        range.selectNode(doc.body);
-    }
-
-    var fragment = range.createContextualFragment(str);
-    return fragment.childNodes[0];
-}
-
-function createFragmentFromWrap(str) {
-    var fragment = doc.createElement('body');
-    fragment.innerHTML = str;
-    return fragment.childNodes[0];
-}
-
-/**
- * This is about the same
- * var html = new DOMParser().parseFromString(str, 'text/html');
- * return html.body.firstChild;
- *
- * @method toElement
- * @param {String} str
- */
-function toElement(str) {
-    str = str.trim();
-    if (HAS_TEMPLATE_SUPPORT) {
-      // avoid restrictions on content for things like `<tr><th>Hi</th></tr>` which
-      // createContextualFragment doesn't support
-      // <template> support not available in IE
-      return createFragmentFromTemplate(str);
-    } else if (HAS_RANGE_SUPPORT) {
-      return createFragmentFromRange(str);
-    }
-
-    return createFragmentFromWrap(str);
-}
-
-/**
- * Returns true if two node's names are the same.
- *
- * NOTE: We don't bother checking `namespaceURI` because you will never find two HTML elements with the same
- *       nodeName and different namespace URIs.
- *
- * @param {Element} a
- * @param {Element} b The target element
- * @return {boolean}
- */
-function compareNodeNames(fromEl, toEl) {
-    var fromNodeName = fromEl.nodeName;
-    var toNodeName = toEl.nodeName;
-    var fromCodeStart, toCodeStart;
-
-    if (fromNodeName === toNodeName) {
-        return true;
-    }
-
-    fromCodeStart = fromNodeName.charCodeAt(0);
-    toCodeStart = toNodeName.charCodeAt(0);
-
-    // If the target element is a virtual DOM node or SVG node then we may
-    // need to normalize the tag name before comparing. Normal HTML elements that are
-    // in the "http://www.w3.org/1999/xhtml"
-    // are converted to upper case
-    if (fromCodeStart <= 90 && toCodeStart >= 97) { // from is upper and to is lower
-        return fromNodeName === toNodeName.toUpperCase();
-    } else if (toCodeStart <= 90 && fromCodeStart >= 97) { // to is upper and from is lower
-        return toNodeName === fromNodeName.toUpperCase();
-    } else {
-        return false;
-    }
-}
-
-/**
- * Create an element, optionally with a known namespace URI.
- *
- * @param {string} name the element name, e.g. 'div' or 'svg'
- * @param {string} [namespaceURI] the element's namespace URI, i.e. the value of
- * its `xmlns` attribute or its inferred namespace.
- *
- * @return {Element}
- */
-function createElementNS(name, namespaceURI) {
-    return !namespaceURI || namespaceURI === NS_XHTML ?
-        doc.createElement(name) :
-        doc.createElementNS(namespaceURI, name);
-}
-
-/**
- * Copies the children of one DOM element to another DOM element
- */
-function moveChildren(fromEl, toEl) {
-    var curChild = fromEl.firstChild;
-    while (curChild) {
-        var nextChild = curChild.nextSibling;
-        toEl.appendChild(curChild);
-        curChild = nextChild;
-    }
-    return toEl;
-}
-
-function syncBooleanAttrProp(fromEl, toEl, name) {
-    if (fromEl[name] !== toEl[name]) {
-        fromEl[name] = toEl[name];
-        if (fromEl[name]) {
-            fromEl.setAttribute(name, '');
-        } else {
-            fromEl.removeAttribute(name);
-        }
-    }
-}
-
-var specialElHandlers = {
-    OPTION: function(fromEl, toEl) {
-        var parentNode = fromEl.parentNode;
-        if (parentNode) {
-            var parentName = parentNode.nodeName.toUpperCase();
-            if (parentName === 'OPTGROUP') {
-                parentNode = parentNode.parentNode;
-                parentName = parentNode && parentNode.nodeName.toUpperCase();
-            }
-            if (parentName === 'SELECT' && !parentNode.hasAttribute('multiple')) {
-                if (fromEl.hasAttribute('selected') && !toEl.selected) {
-                    // Workaround for MS Edge bug where the 'selected' attribute can only be
-                    // removed if set to a non-empty value:
-                    // https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/12087679/
-                    fromEl.setAttribute('selected', 'selected');
-                    fromEl.removeAttribute('selected');
+                if (getIdIntersectionCount(ctx, potentialSoftMatch, newContent) > 0) {
+                    // the current potential soft match has a potential id set match with the remaining new
+                    // content so bail out of looking
+                    return null;
                 }
-                // We have to reset select element's selectedIndex to -1, otherwise setting
-                // fromEl.selected using the syncBooleanAttrProp below has no effect.
-                // The correct selectedIndex will be set in the SELECT special handler below.
-                parentNode.selectedIndex = -1;
-            }
-        }
-        syncBooleanAttrProp(fromEl, toEl, 'selected');
-    },
-    /**
-     * The "value" attribute is special for the <input> element since it sets
-     * the initial value. Changing the "value" attribute without changing the
-     * "value" property will have no effect since it is only used to the set the
-     * initial value.  Similar for the "checked" attribute, and "disabled".
-     */
-    INPUT: function(fromEl, toEl) {
-        syncBooleanAttrProp(fromEl, toEl, 'checked');
-        syncBooleanAttrProp(fromEl, toEl, 'disabled');
 
-        if (fromEl.value !== toEl.value) {
-            fromEl.value = toEl.value;
-        }
+                // if we have a soft match with the current node, return it
+                if (isSoftMatch(newChild, potentialSoftMatch)) {
+                    return potentialSoftMatch;
+                }
 
-        if (!toEl.hasAttribute('value')) {
-            fromEl.removeAttribute('value');
-        }
-    },
+                if (isSoftMatch(nextSibling, potentialSoftMatch)) {
+                    // the next new node has a soft match with this node, so
+                    // increment the count of future soft matches
+                    siblingSoftMatchCount++;
+                    nextSibling = nextSibling.nextSibling;
 
-    TEXTAREA: function(fromEl, toEl) {
-        var newValue = toEl.value;
-        if (fromEl.value !== newValue) {
-            fromEl.value = newValue;
-        }
+                    // If there are two future soft matches, bail to allow the siblings to soft match
+                    // so that we don't consume future soft matches for the sake of the current node
+                    if (siblingSoftMatchCount >= 2) {
+                        return null;
+                    }
+                }
 
-        var firstChild = fromEl.firstChild;
-        if (firstChild) {
-            // Needed for IE. Apparently IE sets the placeholder as the
-            // node value and vise versa. This ignores an empty update.
-            var oldValue = firstChild.nodeValue;
-
-            if (oldValue == newValue || (!newValue && oldValue == fromEl.placeholder)) {
-                return;
+                // advanced to the next old content child
+                potentialSoftMatch = potentialSoftMatch.nextSibling;
             }
 
-            firstChild.nodeValue = newValue;
+            return potentialSoftMatch;
         }
-    },
-    SELECT: function(fromEl, toEl) {
-        if (!toEl.hasAttribute('multiple')) {
-            var selectedIndex = -1;
-            var i = 0;
-            // We have to loop through children of fromEl, not toEl since nodes can be moved
-            // from toEl to fromEl directly when morphing.
-            // At the time this special handler is invoked, all children have already been morphed
-            // and appended to / removed from fromEl, so using fromEl here is safe and correct.
-            var curChild = fromEl.firstChild;
-            var optgroup;
-            var nodeName;
-            while(curChild) {
-                nodeName = curChild.nodeName && curChild.nodeName.toUpperCase();
-                if (nodeName === 'OPTGROUP') {
-                    optgroup = curChild;
-                    curChild = optgroup.firstChild;
+
+        function parseContent(newContent) {
+            let parser = new DOMParser();
+
+            // remove svgs to avoid false-positive matches on head, etc.
+            let contentWithSvgsRemoved = newContent.replace(/<svg(\s[^>]*>|>)([\s\S]*?)<\/svg>/gim, '');
+
+            // if the newContent contains a html, head or body tag, we can simply parse it w/o wrapping
+            if (contentWithSvgsRemoved.match(/<\/html>/) || contentWithSvgsRemoved.match(/<\/head>/) || contentWithSvgsRemoved.match(/<\/body>/)) {
+                let content = parser.parseFromString(newContent, "text/html");
+                // if it is a full HTML document, return the document itself as the parent container
+                if (contentWithSvgsRemoved.match(/<\/html>/)) {
+                    content.generatedByIdiomorph = true;
+                    return content;
                 } else {
-                    if (nodeName === 'OPTION') {
-                        if (curChild.hasAttribute('selected')) {
-                            selectedIndex = i;
-                            break;
-                        }
-                        i++;
-                    }
-                    curChild = curChild.nextSibling;
-                    if (!curChild && optgroup) {
-                        curChild = optgroup.nextSibling;
-                        optgroup = null;
-                    }
-                }
-            }
-
-            fromEl.selectedIndex = selectedIndex;
-        }
-    }
-};
-
-var ELEMENT_NODE = 1;
-var DOCUMENT_FRAGMENT_NODE$1 = 11;
-var TEXT_NODE = 3;
-var COMMENT_NODE = 8;
-
-function noop() {}
-
-function defaultGetNodeKey(node) {
-  if (node) {
-    return (node.getAttribute && node.getAttribute('id')) || node.id;
-  }
-}
-
-function morphdomFactory(morphAttrs) {
-
-  return function morphdom(fromNode, toNode, options) {
-    if (!options) {
-      options = {};
-    }
-
-    if (typeof toNode === 'string') {
-      if (fromNode.nodeName === '#document' || fromNode.nodeName === 'HTML' || fromNode.nodeName === 'BODY') {
-        var toNodeHtml = toNode;
-        toNode = doc.createElement('html');
-        toNode.innerHTML = toNodeHtml;
-      } else {
-        toNode = toElement(toNode);
-      }
-    } else if (toNode.nodeType === DOCUMENT_FRAGMENT_NODE$1) {
-      toNode = toNode.firstElementChild;
-    }
-
-    var getNodeKey = options.getNodeKey || defaultGetNodeKey;
-    var onBeforeNodeAdded = options.onBeforeNodeAdded || noop;
-    var onNodeAdded = options.onNodeAdded || noop;
-    var onBeforeElUpdated = options.onBeforeElUpdated || noop;
-    var onElUpdated = options.onElUpdated || noop;
-    var onBeforeNodeDiscarded = options.onBeforeNodeDiscarded || noop;
-    var onNodeDiscarded = options.onNodeDiscarded || noop;
-    var onBeforeElChildrenUpdated = options.onBeforeElChildrenUpdated || noop;
-    var skipFromChildren = options.skipFromChildren || noop;
-    var addChild = options.addChild || function(parent, child){ return parent.appendChild(child); };
-    var childrenOnly = options.childrenOnly === true;
-
-    // This object is used as a lookup to quickly find all keyed elements in the original DOM tree.
-    var fromNodesLookup = Object.create(null);
-    var keyedRemovalList = [];
-
-    function addKeyedRemoval(key) {
-      keyedRemovalList.push(key);
-    }
-
-    function walkDiscardedChildNodes(node, skipKeyedNodes) {
-      if (node.nodeType === ELEMENT_NODE) {
-        var curChild = node.firstChild;
-        while (curChild) {
-
-          var key = undefined;
-
-          if (skipKeyedNodes && (key = getNodeKey(curChild))) {
-            // If we are skipping keyed nodes then we add the key
-            // to a list so that it can be handled at the very end.
-            addKeyedRemoval(key);
-          } else {
-            // Only report the node as discarded if it is not keyed. We do this because
-            // at the end we loop through all keyed elements that were unmatched
-            // and then discard them in one final pass.
-            onNodeDiscarded(curChild);
-            if (curChild.firstChild) {
-              walkDiscardedChildNodes(curChild, skipKeyedNodes);
-            }
-          }
-
-          curChild = curChild.nextSibling;
-        }
-      }
-    }
-
-    /**
-    * Removes a DOM node out of the original DOM
-    *
-    * @param  {Node} node The node to remove
-    * @param  {Node} parentNode The nodes parent
-    * @param  {Boolean} skipKeyedNodes If true then elements with keys will be skipped and not discarded.
-    * @return {undefined}
-    */
-    function removeNode(node, parentNode, skipKeyedNodes) {
-      if (onBeforeNodeDiscarded(node) === false) {
-        return;
-      }
-
-      if (parentNode) {
-        parentNode.removeChild(node);
-      }
-
-      onNodeDiscarded(node);
-      walkDiscardedChildNodes(node, skipKeyedNodes);
-    }
-
-    // // TreeWalker implementation is no faster, but keeping this around in case this changes in the future
-    // function indexTree(root) {
-    //     var treeWalker = document.createTreeWalker(
-    //         root,
-    //         NodeFilter.SHOW_ELEMENT);
-    //
-    //     var el;
-    //     while((el = treeWalker.nextNode())) {
-    //         var key = getNodeKey(el);
-    //         if (key) {
-    //             fromNodesLookup[key] = el;
-    //         }
-    //     }
-    // }
-
-    // // NodeIterator implementation is no faster, but keeping this around in case this changes in the future
-    //
-    // function indexTree(node) {
-    //     var nodeIterator = document.createNodeIterator(node, NodeFilter.SHOW_ELEMENT);
-    //     var el;
-    //     while((el = nodeIterator.nextNode())) {
-    //         var key = getNodeKey(el);
-    //         if (key) {
-    //             fromNodesLookup[key] = el;
-    //         }
-    //     }
-    // }
-
-    function indexTree(node) {
-      if (node.nodeType === ELEMENT_NODE || node.nodeType === DOCUMENT_FRAGMENT_NODE$1) {
-        var curChild = node.firstChild;
-        while (curChild) {
-          var key = getNodeKey(curChild);
-          if (key) {
-            fromNodesLookup[key] = curChild;
-          }
-
-          // Walk recursively
-          indexTree(curChild);
-
-          curChild = curChild.nextSibling;
-        }
-      }
-    }
-
-    indexTree(fromNode);
-
-    function handleNodeAdded(el) {
-      onNodeAdded(el);
-
-      var curChild = el.firstChild;
-      while (curChild) {
-        var nextSibling = curChild.nextSibling;
-
-        var key = getNodeKey(curChild);
-        if (key) {
-          var unmatchedFromEl = fromNodesLookup[key];
-          // if we find a duplicate #id node in cache, replace `el` with cache value
-          // and morph it to the child node.
-          if (unmatchedFromEl && compareNodeNames(curChild, unmatchedFromEl)) {
-            curChild.parentNode.replaceChild(unmatchedFromEl, curChild);
-            morphEl(unmatchedFromEl, curChild);
-          } else {
-            handleNodeAdded(curChild);
-          }
-        } else {
-          // recursively call for curChild and it's children to see if we find something in
-          // fromNodesLookup
-          handleNodeAdded(curChild);
-        }
-
-        curChild = nextSibling;
-      }
-    }
-
-    function cleanupFromEl(fromEl, curFromNodeChild, curFromNodeKey) {
-      // We have processed all of the "to nodes". If curFromNodeChild is
-      // non-null then we still have some from nodes left over that need
-      // to be removed
-      while (curFromNodeChild) {
-        var fromNextSibling = curFromNodeChild.nextSibling;
-        if ((curFromNodeKey = getNodeKey(curFromNodeChild))) {
-          // Since the node is keyed it might be matched up later so we defer
-          // the actual removal to later
-          addKeyedRemoval(curFromNodeKey);
-        } else {
-          // NOTE: we skip nested keyed nodes from being removed since there is
-          //       still a chance they will be matched up later
-          removeNode(curFromNodeChild, fromEl, true /* skip keyed nodes */);
-        }
-        curFromNodeChild = fromNextSibling;
-      }
-    }
-
-    function morphEl(fromEl, toEl, childrenOnly) {
-      var toElKey = getNodeKey(toEl);
-
-      if (toElKey) {
-        // If an element with an ID is being morphed then it will be in the final
-        // DOM so clear it out of the saved elements collection
-        delete fromNodesLookup[toElKey];
-      }
-
-      if (!childrenOnly) {
-        // optional
-        if (onBeforeElUpdated(fromEl, toEl) === false) {
-          return;
-        }
-
-        // update attributes on original DOM element first
-        morphAttrs(fromEl, toEl);
-        // optional
-        onElUpdated(fromEl);
-
-        if (onBeforeElChildrenUpdated(fromEl, toEl) === false) {
-          return;
-        }
-      }
-
-      if (fromEl.nodeName !== 'TEXTAREA') {
-        morphChildren(fromEl, toEl);
-      } else {
-        specialElHandlers.TEXTAREA(fromEl, toEl);
-      }
-    }
-
-    function morphChildren(fromEl, toEl) {
-      var skipFrom = skipFromChildren(fromEl);
-      var curToNodeChild = toEl.firstChild;
-      var curFromNodeChild = fromEl.firstChild;
-      var curToNodeKey;
-      var curFromNodeKey;
-
-      var fromNextSibling;
-      var toNextSibling;
-      var matchingFromEl;
-
-      // walk the children
-      outer: while (curToNodeChild) {
-        toNextSibling = curToNodeChild.nextSibling;
-        curToNodeKey = getNodeKey(curToNodeChild);
-
-        // walk the fromNode children all the way through
-        while (!skipFrom && curFromNodeChild) {
-          fromNextSibling = curFromNodeChild.nextSibling;
-
-          if (curToNodeChild.isSameNode && curToNodeChild.isSameNode(curFromNodeChild)) {
-            curToNodeChild = toNextSibling;
-            curFromNodeChild = fromNextSibling;
-            continue outer;
-          }
-
-          curFromNodeKey = getNodeKey(curFromNodeChild);
-
-          var curFromNodeType = curFromNodeChild.nodeType;
-
-          // this means if the curFromNodeChild doesnt have a match with the curToNodeChild
-          var isCompatible = undefined;
-
-          if (curFromNodeType === curToNodeChild.nodeType) {
-            if (curFromNodeType === ELEMENT_NODE) {
-              // Both nodes being compared are Element nodes
-
-              if (curToNodeKey) {
-                // The target node has a key so we want to match it up with the correct element
-                // in the original DOM tree
-                if (curToNodeKey !== curFromNodeKey) {
-                  // The current element in the original DOM tree does not have a matching key so
-                  // let's check our lookup to see if there is a matching element in the original
-                  // DOM tree
-                  if ((matchingFromEl = fromNodesLookup[curToNodeKey])) {
-                    if (fromNextSibling === matchingFromEl) {
-                      // Special case for single element removals. To avoid removing the original
-                      // DOM node out of the tree (since that can break CSS transitions, etc.),
-                      // we will instead discard the current node and wait until the next
-                      // iteration to properly match up the keyed target element with its matching
-                      // element in the original tree
-                      isCompatible = false;
+                    // otherwise return the html element as the parent container
+                    let htmlElement = content.firstChild;
+                    if (htmlElement) {
+                        htmlElement.generatedByIdiomorph = true;
+                        return htmlElement;
                     } else {
-                      // We found a matching keyed element somewhere in the original DOM tree.
-                      // Let's move the original DOM node into the current position and morph
-                      // it.
-
-                      // NOTE: We use insertBefore instead of replaceChild because we want to go through
-                      // the `removeNode()` function for the node that is being discarded so that
-                      // all lifecycle hooks are correctly invoked
-                      fromEl.insertBefore(matchingFromEl, curFromNodeChild);
-
-                      // fromNextSibling = curFromNodeChild.nextSibling;
-
-                      if (curFromNodeKey) {
-                        // Since the node is keyed it might be matched up later so we defer
-                        // the actual removal to later
-                        addKeyedRemoval(curFromNodeKey);
-                      } else {
-                        // NOTE: we skip nested keyed nodes from being removed since there is
-                        //       still a chance they will be matched up later
-                        removeNode(curFromNodeChild, fromEl, true /* skip keyed nodes */);
-                      }
-
-                      curFromNodeChild = matchingFromEl;
+                        return null;
                     }
-                  } else {
-                    // The nodes are not compatible since the "to" node has a key and there
-                    // is no matching keyed node in the source tree
-                    isCompatible = false;
-                  }
                 }
-              } else if (curFromNodeKey) {
-                // The original has a key
-                isCompatible = false;
-              }
-
-              isCompatible = isCompatible !== false && compareNodeNames(curFromNodeChild, curToNodeChild);
-              if (isCompatible) {
-                // We found compatible DOM elements so transform
-                // the current "from" node to match the current
-                // target DOM node.
-                // MORPH
-                morphEl(curFromNodeChild, curToNodeChild);
-              }
-
-            } else if (curFromNodeType === TEXT_NODE || curFromNodeType == COMMENT_NODE) {
-              // Both nodes being compared are Text or Comment nodes
-              isCompatible = true;
-              // Simply update nodeValue on the original node to
-              // change the text value
-              if (curFromNodeChild.nodeValue !== curToNodeChild.nodeValue) {
-                curFromNodeChild.nodeValue = curToNodeChild.nodeValue;
-              }
-
+            } else {
+                // if it is partial HTML, wrap it in a template tag to provide a parent element and also to help
+                // deal with touchy tags like tr, tbody, etc.
+                let responseDoc = parser.parseFromString("<body><template>" + newContent + "</template></body>", "text/html");
+                let content = responseDoc.body.querySelector('template').content;
+                content.generatedByIdiomorph = true;
+                return content
             }
-          }
+        }
 
-          if (isCompatible) {
-            // Advance both the "to" child and the "from" child since we found a match
-            // Nothing else to do as we already recursively called morphChildren above
-            curToNodeChild = toNextSibling;
-            curFromNodeChild = fromNextSibling;
-            continue outer;
-          }
-
-          // No compatible match so remove the old node from the DOM and continue trying to find a
-          // match in the original DOM. However, we only do this if the from node is not keyed
-          // since it is possible that a keyed node might match up with a node somewhere else in the
-          // target tree and we don't want to discard it just yet since it still might find a
-          // home in the final DOM tree. After everything is done we will remove any keyed nodes
-          // that didn't find a home
-          if (curFromNodeKey) {
-            // Since the node is keyed it might be matched up later so we defer
-            // the actual removal to later
-            addKeyedRemoval(curFromNodeKey);
-          } else {
-            // NOTE: we skip nested keyed nodes from being removed since there is
-            //       still a chance they will be matched up later
-            removeNode(curFromNodeChild, fromEl, true /* skip keyed nodes */);
-          }
-
-          curFromNodeChild = fromNextSibling;
-        } // END: while(curFromNodeChild) {}
-
-        // If we got this far then we did not find a candidate match for
-        // our "to node" and we exhausted all of the children "from"
-        // nodes. Therefore, we will just append the current "to" node
-        // to the end
-        if (curToNodeKey && (matchingFromEl = fromNodesLookup[curToNodeKey]) && compareNodeNames(matchingFromEl, curToNodeChild)) {
-          // MORPH
-          if(!skipFrom){ addChild(fromEl, matchingFromEl); }
-          morphEl(matchingFromEl, curToNodeChild);
-        } else {
-          var onBeforeNodeAddedResult = onBeforeNodeAdded(curToNodeChild);
-          if (onBeforeNodeAddedResult !== false) {
-            if (onBeforeNodeAddedResult) {
-              curToNodeChild = onBeforeNodeAddedResult;
+        function normalizeContent(newContent) {
+            if (newContent == null) {
+                // noinspection UnnecessaryLocalVariableJS
+                const dummyParent = document.createElement('div');
+                return dummyParent;
+            } else if (newContent.generatedByIdiomorph) {
+                // the template tag created by idiomorph parsing can serve as a dummy parent
+                return newContent;
+            } else if (newContent instanceof Node) {
+                // a single node is added as a child to a dummy parent
+                const dummyParent = document.createElement('div');
+                dummyParent.append(newContent);
+                return dummyParent;
+            } else {
+                // all nodes in the array or HTMLElement collection are consolidated under
+                // a single dummy parent element
+                const dummyParent = document.createElement('div');
+                for (const elt of [...newContent]) {
+                    dummyParent.append(elt);
+                }
+                return dummyParent;
             }
+        }
 
-            if (curToNodeChild.actualize) {
-              curToNodeChild = curToNodeChild.actualize(fromEl.ownerDocument || doc);
+        function insertSiblings(previousSibling, morphedNode, nextSibling) {
+            let stack = [];
+            let added = [];
+            while (previousSibling != null) {
+                stack.push(previousSibling);
+                previousSibling = previousSibling.previousSibling;
             }
-            addChild(fromEl, curToNodeChild);
-            handleNodeAdded(curToNodeChild);
-          }
+            while (stack.length > 0) {
+                let node = stack.pop();
+                added.push(node); // push added preceding siblings on in order and insert
+                morphedNode.parentElement.insertBefore(node, morphedNode);
+            }
+            added.push(morphedNode);
+            while (nextSibling != null) {
+                stack.push(nextSibling);
+                added.push(nextSibling); // here we are going in order, so push on as we scan, rather than add
+                nextSibling = nextSibling.nextSibling;
+            }
+            while (stack.length > 0) {
+                morphedNode.parentElement.insertBefore(stack.pop(), morphedNode.nextSibling);
+            }
+            return added;
         }
 
-        curToNodeChild = toNextSibling;
-        curFromNodeChild = fromNextSibling;
-      }
-
-      cleanupFromEl(fromEl, curFromNodeChild, curFromNodeKey);
-
-      var specialElHandler = specialElHandlers[fromEl.nodeName];
-      if (specialElHandler) {
-        specialElHandler(fromEl, toEl);
-      }
-    } // END: morphChildren(...)
-
-    var morphedNode = fromNode;
-    var morphedNodeType = morphedNode.nodeType;
-    var toNodeType = toNode.nodeType;
-
-    if (!childrenOnly) {
-      // Handle the case where we are given two DOM nodes that are not
-      // compatible (e.g. <div> --> <span> or <div> --> TEXT)
-      if (morphedNodeType === ELEMENT_NODE) {
-        if (toNodeType === ELEMENT_NODE) {
-          if (!compareNodeNames(fromNode, toNode)) {
-            onNodeDiscarded(fromNode);
-            morphedNode = moveChildren(fromNode, createElementNS(toNode.nodeName, toNode.namespaceURI));
-          }
-        } else {
-          // Going from an element node to a text node
-          morphedNode = toNode;
+        function findBestNodeMatch(newContent, oldNode, ctx) {
+            let currentElement;
+            currentElement = newContent.firstChild;
+            let bestElement = currentElement;
+            let score = 0;
+            while (currentElement) {
+                let newScore = scoreElement(currentElement, oldNode, ctx);
+                if (newScore > score) {
+                    bestElement = currentElement;
+                    score = newScore;
+                }
+                currentElement = currentElement.nextSibling;
+            }
+            return bestElement;
         }
-      } else if (morphedNodeType === TEXT_NODE || morphedNodeType === COMMENT_NODE) { // Text or comment node
-        if (toNodeType === morphedNodeType) {
-          if (morphedNode.nodeValue !== toNode.nodeValue) {
-            morphedNode.nodeValue = toNode.nodeValue;
-          }
 
-          return morphedNode;
-        } else {
-          // Text node to something else
-          morphedNode = toNode;
+        function scoreElement(node1, node2, ctx) {
+            if (isSoftMatch(node1, node2)) {
+                return .5 + getIdIntersectionCount(ctx, node1, node2);
+            }
+            return 0;
         }
-      }
-    }
 
-    if (morphedNode === toNode) {
-      // The "to node" was not compatible with the "from node" so we had to
-      // toss out the "from node" and use the "to node"
-      onNodeDiscarded(fromNode);
-    } else {
-      if (toNode.isSameNode && toNode.isSameNode(morphedNode)) {
-        return;
-      }
+        function removeNode(tempNode, ctx) {
+            removeIdsFromConsideration(ctx, tempNode);
+            if (ctx.callbacks.beforeNodeRemoved(tempNode) === false) return;
 
-      morphEl(morphedNode, toNode, childrenOnly);
-
-      // We now need to loop over any keyed nodes that might need to be
-      // removed. We only do the removal if we know that the keyed node
-      // never found a match. When a keyed node is matched up we remove
-      // it out of fromNodesLookup and we use fromNodesLookup to determine
-      // if a keyed node has been matched up or not
-      if (keyedRemovalList) {
-        for (var i=0, len=keyedRemovalList.length; i<len; i++) {
-          var elToRemove = fromNodesLookup[keyedRemovalList[i]];
-          if (elToRemove) {
-            removeNode(elToRemove, elToRemove.parentNode, false);
-          }
+            tempNode.remove();
+            ctx.callbacks.afterNodeRemoved(tempNode);
         }
-      }
-    }
 
-    if (!childrenOnly && morphedNode !== fromNode && fromNode.parentNode) {
-      if (morphedNode.actualize) {
-        morphedNode = morphedNode.actualize(fromNode.ownerDocument || doc);
-      }
-      // If we had to swap out the from node with a new node because the old
-      // node was not compatible with the target node then we need to
-      // replace the old DOM node in the original DOM tree. This is only
-      // possible if the original DOM node was part of a DOM tree which
-      // we know is the case if it has a parent node.
-      fromNode.parentNode.replaceChild(morphedNode, fromNode);
-    }
+        //=============================================================================
+        // ID Set Functions
+        //=============================================================================
 
-    return morphedNode;
-  };
-}
+        function isIdInConsideration(ctx, id) {
+            return !ctx.deadIds.has(id);
+        }
 
-var morphdom = morphdomFactory(morphAttrs);
+        function idIsWithinNode(ctx, id, targetNode) {
+            let idSet = ctx.idMap.get(targetNode) || EMPTY_SET;
+            return idSet.has(id);
+        }
+
+        function removeIdsFromConsideration(ctx, node) {
+            let idSet = ctx.idMap.get(node) || EMPTY_SET;
+            for (const id of idSet) {
+                ctx.deadIds.add(id);
+            }
+        }
+
+        function getIdIntersectionCount(ctx, node1, node2) {
+            let sourceSet = ctx.idMap.get(node1) || EMPTY_SET;
+            let matchCount = 0;
+            for (const id of sourceSet) {
+                // a potential match is an id in the source and potentialIdsSet, but
+                // that has not already been merged into the DOM
+                if (isIdInConsideration(ctx, id) && idIsWithinNode(ctx, id, node2)) {
+                    ++matchCount;
+                }
+            }
+            return matchCount;
+        }
+
+        /**
+         * A bottom up algorithm that finds all elements with ids inside of the node
+         * argument and populates id sets for those nodes and all their parents, generating
+         * a set of ids contained within all nodes for the entire hierarchy in the DOM
+         *
+         * @param node {Element}
+         * @param {Map<Node, Set<String>>} idMap
+         */
+        function populateIdMapForNode(node, idMap) {
+            let nodeParent = node.parentElement;
+            // find all elements with an id property
+            let idElements = node.querySelectorAll('[id]');
+            for (const elt of idElements) {
+                let current = elt;
+                // walk up the parent hierarchy of that element, adding the id
+                // of element to the parent's id set
+                while (current !== nodeParent && current != null) {
+                    let idSet = idMap.get(current);
+                    // if the id set doesn't exist, create it and insert it in the  map
+                    if (idSet == null) {
+                        idSet = new Set();
+                        idMap.set(current, idSet);
+                    }
+                    idSet.add(elt.id);
+                    current = current.parentElement;
+                }
+            }
+        }
+
+        /**
+         * This function computes a map of nodes to all ids contained within that node (inclusive of the
+         * node).  This map can be used to ask if two nodes have intersecting sets of ids, which allows
+         * for a looser definition of "matching" than tradition id matching, and allows child nodes
+         * to contribute to a parent nodes matching.
+         *
+         * @param {Element} oldContent  the old content that will be morphed
+         * @param {Element} newContent  the new content to morph to
+         * @returns {Map<Node, Set<String>>} a map of nodes to id sets for the
+         */
+        function createIdMap(oldContent, newContent) {
+            let idMap = new Map();
+            populateIdMapForNode(oldContent, idMap);
+            populateIdMapForNode(newContent, idMap);
+            return idMap;
+        }
+
+        //=============================================================================
+        // This is what ends up becoming the Idiomorph global object
+        //=============================================================================
+        return {
+            morph,
+            defaults
+        }
+    })();
 
 function normalizeAttributesForComparison(element) {
     const isFileInput = element instanceof HTMLInputElement && element.type === 'file';
@@ -1196,60 +1348,446 @@ function normalizeAttributesForComparison(element) {
     });
 }
 
-function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, getElementValue, childComponents, findChildComponent, getKeyFromElement, externalMutationTracker) {
-    const childComponentMap = new Map();
-    childComponents.forEach((childComponent) => {
-        childComponentMap.set(childComponent.element, childComponent);
+const syncAttributes = (fromEl, toEl) => {
+    for (let i = 0; i < fromEl.attributes.length; i++) {
+        const attr = fromEl.attributes[i];
+        toEl.setAttribute(attr.name, attr.value);
+    }
+};
+function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, getElementValue, externalMutationTracker) {
+    const originalElementIdsToSwapAfter = [];
+    const originalElementsToPreserve = new Map();
+    const markElementAsNeedingPostMorphSwap = (id, replaceWithClone) => {
+        const oldElement = originalElementsToPreserve.get(id);
+        if (!(oldElement instanceof HTMLElement)) {
+            throw new Error(`Original element with id ${id} not found`);
+        }
+        originalElementIdsToSwapAfter.push(id);
+        if (!replaceWithClone) {
+            return null;
+        }
+        const clonedOldElement = cloneHTMLElement(oldElement);
+        oldElement.replaceWith(clonedOldElement);
+        return clonedOldElement;
+    };
+    rootToElement.querySelectorAll('[data-live-preserve]').forEach((newElement) => {
+        const id = newElement.id;
+        if (!id) {
+            throw new Error('The data-live-preserve attribute requires an id attribute to be set on the element');
+        }
+        const oldElement = rootFromElement.querySelector(`#${id}`);
+        if (!(oldElement instanceof HTMLElement)) {
+            throw new Error(`The element with id "${id}" was not found in the original HTML`);
+        }
+        newElement.removeAttribute('data-live-preserve');
+        originalElementsToPreserve.set(id, oldElement);
+        syncAttributes(newElement, oldElement);
     });
-    morphdom(rootFromElement, rootToElement, {
-        getNodeKey: (node) => {
-            if (!(node instanceof HTMLElement)) {
-                return;
-            }
-            if (externalMutationTracker.wasElementAdded(node)) {
-                return 'added_element_' + Math.random();
-            }
-            return getKeyFromElement(node);
-        },
-        onBeforeElUpdated: (fromEl, toEl) => {
-            if (fromEl === rootFromElement) {
-                return true;
-            }
-            if (fromEl instanceof HTMLElement && toEl instanceof HTMLElement) {
-                if (childComponentMap.has(fromEl)) {
-                    const childComponent = childComponentMap.get(fromEl);
-                    childComponent.updateFromNewElementFromParentRender(toEl);
-                    return false;
+    Idiomorph.morph(rootFromElement, rootToElement, {
+        callbacks: {
+            beforeNodeMorphed: (fromEl, toEl) => {
+                if (!(fromEl instanceof Element) || !(toEl instanceof Element)) {
+                    return true;
                 }
-                if (modifiedFieldElements.includes(fromEl)) {
-                    setValueOnElement(toEl, getElementValue(fromEl));
+                if (fromEl === rootFromElement) {
+                    return true;
                 }
-                const elementChanges = externalMutationTracker.getChangedElement(fromEl);
-                if (elementChanges) {
-                    elementChanges.applyToElement(toEl);
-                }
-                if (fromEl.isEqualNode(toEl)) {
-                    const normalizedFromEl = cloneHTMLElement(fromEl);
-                    normalizeAttributesForComparison(normalizedFromEl);
-                    const normalizedToEl = cloneHTMLElement(toEl);
-                    normalizeAttributesForComparison(normalizedToEl);
-                    if (normalizedFromEl.isEqualNode(normalizedToEl)) {
+                if (fromEl.id && originalElementsToPreserve.has(fromEl.id)) {
+                    if (fromEl.id === toEl.id) {
                         return false;
                     }
+                    const clonedFromEl = markElementAsNeedingPostMorphSwap(fromEl.id, true);
+                    if (!clonedFromEl) {
+                        throw new Error('missing clone');
+                    }
+                    Idiomorph.morph(clonedFromEl, toEl);
+                    return false;
                 }
-            }
-            return !fromEl.hasAttribute('data-live-ignore');
-        },
-        onBeforeNodeDiscarded(node) {
-            if (!(node instanceof HTMLElement)) {
-                return true;
-            }
-            if (externalMutationTracker.wasElementAdded(node)) {
-                return false;
-            }
-            return !node.hasAttribute('data-live-ignore');
+                if (fromEl instanceof HTMLElement && toEl instanceof HTMLElement) {
+                    if (typeof fromEl.__x !== 'undefined') {
+                        if (!window.Alpine) {
+                            throw new Error('Unable to access Alpine.js though the global window.Alpine variable. Please make sure Alpine.js is loaded before Symfony UX LiveComponent.');
+                        }
+                        if (typeof window.Alpine.morph !== 'function') {
+                            throw new Error('Unable to access Alpine.js morph function. Please make sure the Alpine.js Morph plugin is installed and loaded, see https://alpinejs.dev/plugins/morph for more information.');
+                        }
+                        window.Alpine.morph(fromEl.__x, toEl);
+                    }
+                    if (externalMutationTracker.wasElementAdded(fromEl)) {
+                        fromEl.insertAdjacentElement('afterend', toEl);
+                        return false;
+                    }
+                    if (modifiedFieldElements.includes(fromEl)) {
+                        setValueOnElement(toEl, getElementValue(fromEl));
+                    }
+                    if (fromEl === document.activeElement &&
+                        fromEl !== document.body &&
+                        null !== getModelDirectiveFromElement(fromEl, false)) {
+                        setValueOnElement(toEl, getElementValue(fromEl));
+                    }
+                    const elementChanges = externalMutationTracker.getChangedElement(fromEl);
+                    if (elementChanges) {
+                        elementChanges.applyToElement(toEl);
+                    }
+                    if (fromEl.nodeName.toUpperCase() !== 'OPTION' && fromEl.isEqualNode(toEl)) {
+                        const normalizedFromEl = cloneHTMLElement(fromEl);
+                        normalizeAttributesForComparison(normalizedFromEl);
+                        const normalizedToEl = cloneHTMLElement(toEl);
+                        normalizeAttributesForComparison(normalizedToEl);
+                        if (normalizedFromEl.isEqualNode(normalizedToEl)) {
+                            return false;
+                        }
+                    }
+                }
+                if (fromEl.hasAttribute('data-skip-morph') || (fromEl.id && fromEl.id !== toEl.id)) {
+                    fromEl.innerHTML = toEl.innerHTML;
+                    return true;
+                }
+                if (fromEl.parentElement?.hasAttribute('data-skip-morph')) {
+                    return false;
+                }
+                return !fromEl.hasAttribute('data-live-ignore');
+            },
+            beforeNodeRemoved(node) {
+                if (!(node instanceof HTMLElement)) {
+                    return true;
+                }
+                if (node.id && originalElementsToPreserve.has(node.id)) {
+                    markElementAsNeedingPostMorphSwap(node.id, false);
+                    return true;
+                }
+                if (externalMutationTracker.wasElementAdded(node)) {
+                    return false;
+                }
+                return !node.hasAttribute('data-live-ignore');
+            },
         },
     });
+    originalElementIdsToSwapAfter.forEach((id) => {
+        const newElement = rootFromElement.querySelector(`#${id}`);
+        const originalElement = originalElementsToPreserve.get(id);
+        if (!(newElement instanceof HTMLElement) || !(originalElement instanceof HTMLElement)) {
+            throw new Error('Missing elements.');
+        }
+        newElement.replaceWith(originalElement);
+    });
+}
+
+class ChangingItemsTracker {
+    constructor() {
+        this.changedItems = new Map();
+        this.removedItems = new Map();
+    }
+    setItem(itemName, newValue, previousValue) {
+        if (this.removedItems.has(itemName)) {
+            const removedRecord = this.removedItems.get(itemName);
+            this.removedItems.delete(itemName);
+            if (removedRecord.original === newValue) {
+                return;
+            }
+        }
+        if (this.changedItems.has(itemName)) {
+            const originalRecord = this.changedItems.get(itemName);
+            if (originalRecord.original === newValue) {
+                this.changedItems.delete(itemName);
+                return;
+            }
+            this.changedItems.set(itemName, { original: originalRecord.original, new: newValue });
+            return;
+        }
+        this.changedItems.set(itemName, { original: previousValue, new: newValue });
+    }
+    removeItem(itemName, currentValue) {
+        let trueOriginalValue = currentValue;
+        if (this.changedItems.has(itemName)) {
+            const originalRecord = this.changedItems.get(itemName);
+            trueOriginalValue = originalRecord.original;
+            this.changedItems.delete(itemName);
+            if (trueOriginalValue === null) {
+                return;
+            }
+        }
+        if (!this.removedItems.has(itemName)) {
+            this.removedItems.set(itemName, { original: trueOriginalValue });
+        }
+    }
+    getChangedItems() {
+        return Array.from(this.changedItems, ([name, { new: value }]) => ({ name, value }));
+    }
+    getRemovedItems() {
+        return Array.from(this.removedItems.keys());
+    }
+    isEmpty() {
+        return this.changedItems.size === 0 && this.removedItems.size === 0;
+    }
+}
+
+class ElementChanges {
+    constructor() {
+        this.addedClasses = new Set();
+        this.removedClasses = new Set();
+        this.styleChanges = new ChangingItemsTracker();
+        this.attributeChanges = new ChangingItemsTracker();
+    }
+    addClass(className) {
+        if (!this.removedClasses.delete(className)) {
+            this.addedClasses.add(className);
+        }
+    }
+    removeClass(className) {
+        if (!this.addedClasses.delete(className)) {
+            this.removedClasses.add(className);
+        }
+    }
+    addStyle(styleName, newValue, originalValue) {
+        this.styleChanges.setItem(styleName, newValue, originalValue);
+    }
+    removeStyle(styleName, originalValue) {
+        this.styleChanges.removeItem(styleName, originalValue);
+    }
+    addAttribute(attributeName, newValue, originalValue) {
+        this.attributeChanges.setItem(attributeName, newValue, originalValue);
+    }
+    removeAttribute(attributeName, originalValue) {
+        this.attributeChanges.removeItem(attributeName, originalValue);
+    }
+    getAddedClasses() {
+        return [...this.addedClasses];
+    }
+    getRemovedClasses() {
+        return [...this.removedClasses];
+    }
+    getChangedStyles() {
+        return this.styleChanges.getChangedItems();
+    }
+    getRemovedStyles() {
+        return this.styleChanges.getRemovedItems();
+    }
+    getChangedAttributes() {
+        return this.attributeChanges.getChangedItems();
+    }
+    getRemovedAttributes() {
+        return this.attributeChanges.getRemovedItems();
+    }
+    applyToElement(element) {
+        element.classList.add(...this.addedClasses);
+        element.classList.remove(...this.removedClasses);
+        this.styleChanges.getChangedItems().forEach((change) => {
+            element.style.setProperty(change.name, change.value);
+            return;
+        });
+        this.styleChanges.getRemovedItems().forEach((styleName) => {
+            element.style.removeProperty(styleName);
+        });
+        this.attributeChanges.getChangedItems().forEach((change) => {
+            element.setAttribute(change.name, change.value);
+        });
+        this.attributeChanges.getRemovedItems().forEach((attributeName) => {
+            element.removeAttribute(attributeName);
+        });
+    }
+    isEmpty() {
+        return (this.addedClasses.size === 0 &&
+            this.removedClasses.size === 0 &&
+            this.styleChanges.isEmpty() &&
+            this.attributeChanges.isEmpty());
+    }
+}
+
+class ExternalMutationTracker {
+    constructor(element, shouldTrackChangeCallback) {
+        this.changedElements = new WeakMap();
+        this.changedElementsCount = 0;
+        this.addedElements = [];
+        this.removedElements = [];
+        this.isStarted = false;
+        this.element = element;
+        this.shouldTrackChangeCallback = shouldTrackChangeCallback;
+        this.mutationObserver = new MutationObserver(this.onMutations.bind(this));
+    }
+    start() {
+        if (this.isStarted) {
+            return;
+        }
+        this.mutationObserver.observe(this.element, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeOldValue: true,
+        });
+        this.isStarted = true;
+    }
+    stop() {
+        if (this.isStarted) {
+            this.mutationObserver.disconnect();
+            this.isStarted = false;
+        }
+    }
+    getChangedElement(element) {
+        return this.changedElements.has(element) ? this.changedElements.get(element) : null;
+    }
+    getAddedElements() {
+        return this.addedElements;
+    }
+    wasElementAdded(element) {
+        return this.addedElements.includes(element);
+    }
+    handlePendingChanges() {
+        this.onMutations(this.mutationObserver.takeRecords());
+    }
+    onMutations(mutations) {
+        const handledAttributeMutations = new WeakMap();
+        for (const mutation of mutations) {
+            const element = mutation.target;
+            if (!this.shouldTrackChangeCallback(element)) {
+                continue;
+            }
+            if (this.isElementAddedByTranslation(element)) {
+                continue;
+            }
+            let isChangeInAddedElement = false;
+            for (const addedElement of this.addedElements) {
+                if (addedElement.contains(element)) {
+                    isChangeInAddedElement = true;
+                    break;
+                }
+            }
+            if (isChangeInAddedElement) {
+                continue;
+            }
+            switch (mutation.type) {
+                case 'childList':
+                    this.handleChildListMutation(mutation);
+                    break;
+                case 'attributes':
+                    if (!handledAttributeMutations.has(element)) {
+                        handledAttributeMutations.set(element, []);
+                    }
+                    if (!handledAttributeMutations.get(element).includes(mutation.attributeName)) {
+                        this.handleAttributeMutation(mutation);
+                        handledAttributeMutations.set(element, [
+                            ...handledAttributeMutations.get(element),
+                            mutation.attributeName,
+                        ]);
+                    }
+                    break;
+            }
+        }
+    }
+    handleChildListMutation(mutation) {
+        mutation.addedNodes.forEach((node) => {
+            if (!(node instanceof Element)) {
+                return;
+            }
+            if (this.removedElements.includes(node)) {
+                this.removedElements.splice(this.removedElements.indexOf(node), 1);
+                return;
+            }
+            if (this.isElementAddedByTranslation(node)) {
+                return;
+            }
+            this.addedElements.push(node);
+        });
+        mutation.removedNodes.forEach((node) => {
+            if (!(node instanceof Element)) {
+                return;
+            }
+            if (this.addedElements.includes(node)) {
+                this.addedElements.splice(this.addedElements.indexOf(node), 1);
+                return;
+            }
+            this.removedElements.push(node);
+        });
+    }
+    handleAttributeMutation(mutation) {
+        const element = mutation.target;
+        if (!this.changedElements.has(element)) {
+            this.changedElements.set(element, new ElementChanges());
+            this.changedElementsCount++;
+        }
+        const changedElement = this.changedElements.get(element);
+        switch (mutation.attributeName) {
+            case 'class':
+                this.handleClassAttributeMutation(mutation, changedElement);
+                break;
+            case 'style':
+                this.handleStyleAttributeMutation(mutation, changedElement);
+                break;
+            default:
+                this.handleGenericAttributeMutation(mutation, changedElement);
+        }
+        if (changedElement.isEmpty()) {
+            this.changedElements.delete(element);
+            this.changedElementsCount--;
+        }
+    }
+    handleClassAttributeMutation(mutation, elementChanges) {
+        const element = mutation.target;
+        const previousValue = mutation.oldValue || '';
+        const previousValues = previousValue.match(/(\S+)/gu) || [];
+        const newValues = [].slice.call(element.classList);
+        const addedValues = newValues.filter((value) => !previousValues.includes(value));
+        const removedValues = previousValues.filter((value) => !newValues.includes(value));
+        addedValues.forEach((value) => {
+            elementChanges.addClass(value);
+        });
+        removedValues.forEach((value) => {
+            elementChanges.removeClass(value);
+        });
+    }
+    handleStyleAttributeMutation(mutation, elementChanges) {
+        const element = mutation.target;
+        const previousValue = mutation.oldValue || '';
+        const previousStyles = this.extractStyles(previousValue);
+        const newValue = element.getAttribute('style') || '';
+        const newStyles = this.extractStyles(newValue);
+        const addedOrChangedStyles = Object.keys(newStyles).filter((key) => previousStyles[key] === undefined || previousStyles[key] !== newStyles[key]);
+        const removedStyles = Object.keys(previousStyles).filter((key) => !newStyles[key]);
+        addedOrChangedStyles.forEach((style) => {
+            elementChanges.addStyle(style, newStyles[style], previousStyles[style] === undefined ? null : previousStyles[style]);
+        });
+        removedStyles.forEach((style) => {
+            elementChanges.removeStyle(style, previousStyles[style]);
+        });
+    }
+    handleGenericAttributeMutation(mutation, elementChanges) {
+        const attributeName = mutation.attributeName;
+        const element = mutation.target;
+        let oldValue = mutation.oldValue;
+        let newValue = element.getAttribute(attributeName);
+        if (oldValue === attributeName) {
+            oldValue = '';
+        }
+        if (newValue === attributeName) {
+            newValue = '';
+        }
+        if (!element.hasAttribute(attributeName)) {
+            if (oldValue === null) {
+                return;
+            }
+            elementChanges.removeAttribute(attributeName, mutation.oldValue);
+            return;
+        }
+        if (newValue === oldValue) {
+            return;
+        }
+        elementChanges.addAttribute(attributeName, element.getAttribute(attributeName), mutation.oldValue);
+    }
+    extractStyles(styles) {
+        const styleObject = {};
+        styles.split(';').forEach((style) => {
+            const parts = style.split(':');
+            if (parts.length === 1) {
+                return;
+            }
+            const property = parts[0].trim();
+            styleObject[property] = parts.slice(1).join(':').trim();
+        });
+        return styleObject;
+    }
+    isElementAddedByTranslation(element) {
+        return element.tagName === 'FONT' && element.getAttribute('style') === 'vertical-align: inherit;';
+    }
 }
 
 class UnsyncedInputsTracker {
@@ -1338,410 +1876,118 @@ class UnsyncedInputContainer {
     }
 }
 
-class HookManager {
-    constructor() {
-        this.hooks = new Map();
+function getDeepData(data, propertyPath) {
+    const { currentLevelData, finalKey } = parseDeepData(data, propertyPath);
+    if (currentLevelData === undefined) {
+        return undefined;
     }
-    register(hookName, callback) {
-        const hooks = this.hooks.get(hookName) || [];
-        hooks.push(callback);
-        this.hooks.set(hookName, hooks);
+    return currentLevelData[finalKey];
+}
+const parseDeepData = (data, propertyPath) => {
+    const finalData = JSON.parse(JSON.stringify(data));
+    let currentLevelData = finalData;
+    const parts = propertyPath.split('.');
+    for (let i = 0; i < parts.length - 1; i++) {
+        currentLevelData = currentLevelData[parts[i]];
     }
-    unregister(hookName, callback) {
-        const hooks = this.hooks.get(hookName) || [];
-        const index = hooks.indexOf(callback);
-        if (index === -1) {
-            return;
+    const finalKey = parts[parts.length - 1];
+    return {
+        currentLevelData,
+        finalData,
+        finalKey,
+        parts,
+    };
+};
+
+class ValueStore {
+    constructor(props) {
+        this.props = {};
+        this.dirtyProps = {};
+        this.pendingProps = {};
+        this.updatedPropsFromParent = {};
+        this.props = props;
+    }
+    get(name) {
+        const normalizedName = normalizeModelName(name);
+        if (this.dirtyProps[normalizedName] !== undefined) {
+            return this.dirtyProps[normalizedName];
         }
-        hooks.splice(index, 1);
-        this.hooks.set(hookName, hooks);
+        if (this.pendingProps[normalizedName] !== undefined) {
+            return this.pendingProps[normalizedName];
+        }
+        if (this.props[normalizedName] !== undefined) {
+            return this.props[normalizedName];
+        }
+        return getDeepData(this.props, normalizedName);
     }
-    triggerHook(hookName, ...args) {
-        const hooks = this.hooks.get(hookName) || [];
-        hooks.forEach((callback) => {
-            callback(...args);
-        });
+    has(name) {
+        return this.get(name) !== undefined;
+    }
+    set(name, value) {
+        const normalizedName = normalizeModelName(name);
+        if (this.get(normalizedName) === value) {
+            return false;
+        }
+        this.dirtyProps[normalizedName] = value;
+        return true;
+    }
+    getOriginalProps() {
+        return { ...this.props };
+    }
+    getDirtyProps() {
+        return { ...this.dirtyProps };
+    }
+    getUpdatedPropsFromParent() {
+        return { ...this.updatedPropsFromParent };
+    }
+    flushDirtyPropsToPending() {
+        this.pendingProps = { ...this.dirtyProps };
+        this.dirtyProps = {};
+    }
+    reinitializeAllProps(props) {
+        this.props = props;
+        this.updatedPropsFromParent = {};
+        this.pendingProps = {};
+    }
+    pushPendingPropsBackToDirty() {
+        this.dirtyProps = { ...this.pendingProps, ...this.dirtyProps };
+        this.pendingProps = {};
+    }
+    storeNewPropsFromParent(props) {
+        let changed = false;
+        for (const [key, value] of Object.entries(props)) {
+            const currentValue = this.get(key);
+            if (currentValue !== value) {
+                changed = true;
+            }
+        }
+        if (changed) {
+            this.updatedPropsFromParent = props;
+        }
+        return changed;
     }
 }
 
-class BackendResponse {
-    constructor(response) {
-        this.response = response;
-    }
-    async getBody() {
-        if (!this.body) {
-            this.body = await this.response.text();
-        }
-        return this.body;
-    }
-}
-
-class ChangingItemsTracker {
-    constructor() {
-        this.changedItems = new Map();
-        this.removedItems = new Map();
-    }
-    setItem(itemName, newValue, previousValue) {
-        if (this.removedItems.has(itemName)) {
-            const removedRecord = this.removedItems.get(itemName);
-            this.removedItems.delete(itemName);
-            if (removedRecord.original === newValue) {
-                return;
-            }
-        }
-        if (this.changedItems.has(itemName)) {
-            const originalRecord = this.changedItems.get(itemName);
-            if (originalRecord.original === newValue) {
-                this.changedItems.delete(itemName);
-                return;
-            }
-            this.changedItems.set(itemName, { original: originalRecord.original, new: newValue });
-            return;
-        }
-        this.changedItems.set(itemName, { original: previousValue, new: newValue });
-    }
-    removeItem(itemName, currentValue) {
-        let trueOriginalValue = currentValue;
-        if (this.changedItems.has(itemName)) {
-            const originalRecord = this.changedItems.get(itemName);
-            trueOriginalValue = originalRecord.original;
-            this.changedItems.delete(itemName);
-            if (trueOriginalValue === null) {
-                return;
-            }
-        }
-        if (!this.removedItems.has(itemName)) {
-            this.removedItems.set(itemName, { original: trueOriginalValue });
-        }
-    }
-    getChangedItems() {
-        const changedItems = [];
-        this.changedItems.forEach((value, key) => {
-            changedItems.push({ name: key, value: value.new });
-        });
-        return changedItems;
-    }
-    getRemovedItems() {
-        const removedItems = [];
-        this.removedItems.forEach((value, key) => {
-            removedItems.push(key);
-        });
-        return removedItems;
-    }
-    isEmpty() {
-        return this.changedItems.size === 0 && this.removedItems.size === 0;
-    }
-}
-
-class ElementChanges {
-    constructor() {
-        this.addedClasses = [];
-        this.removedClasses = [];
-        this.styleChanges = new ChangingItemsTracker();
-        this.attributeChanges = new ChangingItemsTracker();
-    }
-    addClass(className) {
-        if (this.removedClasses.includes(className)) {
-            this.removedClasses = this.removedClasses.filter((name) => name !== className);
-            return;
-        }
-        if (!this.addedClasses.includes(className)) {
-            this.addedClasses.push(className);
-        }
-    }
-    removeClass(className) {
-        if (this.addedClasses.includes(className)) {
-            this.addedClasses = this.addedClasses.filter((name) => name !== className);
-            return;
-        }
-        if (!this.removedClasses.includes(className)) {
-            this.removedClasses.push(className);
-        }
-    }
-    addStyle(styleName, newValue, originalValue) {
-        this.styleChanges.setItem(styleName, newValue, originalValue);
-    }
-    removeStyle(styleName, originalValue) {
-        this.styleChanges.removeItem(styleName, originalValue);
-    }
-    addAttribute(attributeName, newValue, originalValue) {
-        this.attributeChanges.setItem(attributeName, newValue, originalValue);
-    }
-    removeAttribute(attributeName, originalValue) {
-        this.attributeChanges.removeItem(attributeName, originalValue);
-    }
-    getAddedClasses() {
-        return this.addedClasses;
-    }
-    getRemovedClasses() {
-        return this.removedClasses;
-    }
-    getChangedStyles() {
-        return this.styleChanges.getChangedItems();
-    }
-    getRemovedStyles() {
-        return this.styleChanges.getRemovedItems();
-    }
-    getChangedAttributes() {
-        return this.attributeChanges.getChangedItems();
-    }
-    getRemovedAttributes() {
-        return this.attributeChanges.getRemovedItems();
-    }
-    applyToElement(element) {
-        this.addedClasses.forEach((className) => {
-            element.classList.add(className);
-        });
-        this.removedClasses.forEach((className) => {
-            element.classList.remove(className);
-        });
-        this.styleChanges.getChangedItems().forEach((change) => {
-            element.style.setProperty(change.name, change.value);
-            return;
-        });
-        this.styleChanges.getRemovedItems().forEach((styleName) => {
-            element.style.removeProperty(styleName);
-        });
-        this.attributeChanges.getChangedItems().forEach((change) => {
-            element.setAttribute(change.name, change.value);
-        });
-        this.attributeChanges.getRemovedItems().forEach((attributeName) => {
-            element.removeAttribute(attributeName);
-        });
-    }
-    isEmpty() {
-        return (this.addedClasses.length === 0 &&
-            this.removedClasses.length === 0 &&
-            this.styleChanges.isEmpty() &&
-            this.attributeChanges.isEmpty());
-    }
-}
-
-class ExternalMutationTracker {
-    constructor(element, shouldTrackChangeCallback) {
-        this.changedElements = new WeakMap();
-        this.changedElementsCount = 0;
-        this.addedElements = [];
-        this.removedElements = [];
-        this.isStarted = false;
-        this.element = element;
-        this.shouldTrackChangeCallback = shouldTrackChangeCallback;
-        this.mutationObserver = new MutationObserver(this.onMutations.bind(this));
-    }
-    start() {
-        if (this.isStarted) {
-            return;
-        }
-        this.mutationObserver.observe(this.element, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-            attributeOldValue: true,
-        });
-        this.isStarted = true;
-    }
-    stop() {
-        if (this.isStarted) {
-            this.mutationObserver.disconnect();
-            this.isStarted = false;
-        }
-    }
-    getChangedElement(element) {
-        return this.changedElements.has(element) ? this.changedElements.get(element) : null;
-    }
-    getAddedElements() {
-        return this.addedElements;
-    }
-    wasElementAdded(element) {
-        return this.addedElements.includes(element);
-    }
-    handlePendingChanges() {
-        this.onMutations(this.mutationObserver.takeRecords());
-    }
-    onMutations(mutations) {
-        const handledAttributeMutations = new WeakMap();
-        for (const mutation of mutations) {
-            const element = mutation.target;
-            if (!this.shouldTrackChangeCallback(element)) {
-                continue;
-            }
-            let isChangeInAddedElement = false;
-            for (const addedElement of this.addedElements) {
-                if (addedElement.contains(element)) {
-                    isChangeInAddedElement = true;
-                    break;
-                }
-            }
-            if (isChangeInAddedElement) {
-                continue;
-            }
-            switch (mutation.type) {
-                case 'childList':
-                    this.handleChildListMutation(mutation);
-                    break;
-                case 'attributes':
-                    if (!handledAttributeMutations.has(element)) {
-                        handledAttributeMutations.set(element, []);
-                    }
-                    if (!handledAttributeMutations.get(element).includes(mutation.attributeName)) {
-                        this.handleAttributeMutation(mutation);
-                        handledAttributeMutations.set(element, [
-                            ...handledAttributeMutations.get(element),
-                            mutation.attributeName
-                        ]);
-                    }
-                    break;
-            }
-        }
-    }
-    handleChildListMutation(mutation) {
-        mutation.addedNodes.forEach((node) => {
-            if (!(node instanceof Element)) {
-                return;
-            }
-            if (this.removedElements.includes(node)) {
-                this.removedElements.splice(this.removedElements.indexOf(node), 1);
-                return;
-            }
-            this.addedElements.push(node);
-        });
-        mutation.removedNodes.forEach((node) => {
-            if (!(node instanceof Element)) {
-                return;
-            }
-            if (this.addedElements.includes(node)) {
-                this.addedElements.splice(this.addedElements.indexOf(node), 1);
-                return;
-            }
-            this.removedElements.push(node);
-        });
-    }
-    handleAttributeMutation(mutation) {
-        const element = mutation.target;
-        if (!this.changedElements.has(element)) {
-            this.changedElements.set(element, new ElementChanges());
-            this.changedElementsCount++;
-        }
-        const changedElement = this.changedElements.get(element);
-        switch (mutation.attributeName) {
-            case 'class':
-                this.handleClassAttributeMutation(mutation, changedElement);
-                break;
-            case 'style':
-                this.handleStyleAttributeMutation(mutation, changedElement);
-                break;
-            default:
-                this.handleGenericAttributeMutation(mutation, changedElement);
-        }
-        if (changedElement.isEmpty()) {
-            this.changedElements.delete(element);
-            this.changedElementsCount--;
-        }
-    }
-    handleClassAttributeMutation(mutation, elementChanges) {
-        const element = mutation.target;
-        const previousValue = mutation.oldValue;
-        const previousValues = previousValue ? previousValue.split(' ') : [];
-        previousValues.forEach((value, index) => {
-            const trimmedValue = value.trim();
-            if (trimmedValue !== '') {
-                previousValues[index] = trimmedValue;
-            }
-            else {
-                previousValues.splice(index, 1);
-            }
-        });
-        const newValues = [].slice.call(element.classList);
-        const addedValues = newValues.filter((value) => !previousValues.includes(value));
-        const removedValues = previousValues.filter((value) => !newValues.includes(value));
-        addedValues.forEach((value) => {
-            elementChanges.addClass(value);
-        });
-        removedValues.forEach((value) => {
-            elementChanges.removeClass(value);
-        });
-    }
-    handleStyleAttributeMutation(mutation, elementChanges) {
-        const element = mutation.target;
-        const previousValue = mutation.oldValue || '';
-        const previousStyles = this.extractStyles(previousValue);
-        const newValue = element.getAttribute('style') || '';
-        const newStyles = this.extractStyles(newValue);
-        const addedOrChangedStyles = Object.keys(newStyles).filter((key) => previousStyles[key] === undefined || previousStyles[key] !== newStyles[key]);
-        const removedStyles = Object.keys(previousStyles).filter((key) => !newStyles[key]);
-        addedOrChangedStyles.forEach((style) => {
-            elementChanges.addStyle(style, newStyles[style], previousStyles[style] === undefined ? null : previousStyles[style]);
-        });
-        removedStyles.forEach((style) => {
-            elementChanges.removeStyle(style, previousStyles[style]);
-        });
-    }
-    handleGenericAttributeMutation(mutation, elementChanges) {
-        const attributeName = mutation.attributeName;
-        const element = mutation.target;
-        let oldValue = mutation.oldValue;
-        let newValue = element.getAttribute(attributeName);
-        if (oldValue === attributeName) {
-            oldValue = '';
-        }
-        if (newValue === attributeName) {
-            newValue = '';
-        }
-        if (!element.hasAttribute(attributeName)) {
-            if (oldValue === null) {
-                return;
-            }
-            elementChanges.removeAttribute(attributeName, mutation.oldValue);
-            return;
-        }
-        if (newValue === oldValue) {
-            return;
-        }
-        elementChanges.addAttribute(attributeName, element.getAttribute(attributeName), mutation.oldValue);
-    }
-    extractStyles(styles) {
-        const styleObject = {};
-        styles.split(';').forEach((style) => {
-            const parts = style.split(':');
-            if (parts.length === 1) {
-                return;
-            }
-            const property = parts[0].trim();
-            styleObject[property] = parts.slice(1).join(':').trim();
-        });
-        return styleObject;
-    }
-}
-
-class ChildComponentWrapper {
-    constructor(component, modelBindings) {
-        this.component = component;
-        this.modelBindings = modelBindings;
-    }
-}
 class Component {
-    constructor(element, name, props, listeners, componentFinder, fingerprint, id, backend, elementDriver) {
+    constructor(element, name, props, listeners, id, backend, elementDriver) {
+        this.fingerprint = '';
         this.defaultDebounce = 150;
         this.backendRequest = null;
         this.pendingActions = [];
+        this.pendingFiles = {};
         this.isRequestPending = false;
         this.requestDebounceTimeout = null;
-        this.children = new Map();
-        this.parent = null;
         this.element = element;
         this.name = name;
-        this.componentFinder = componentFinder;
         this.backend = backend;
         this.elementDriver = elementDriver;
         this.id = id;
-        this.fingerprint = fingerprint;
         this.listeners = new Map();
         listeners.forEach((listener) => {
-            var _a;
             if (!this.listeners.has(listener.event)) {
                 this.listeners.set(listener.event, []);
             }
-            (_a = this.listeners.get(listener.event)) === null || _a === void 0 ? void 0 : _a.push(listener.action);
+            this.listeners.get(listener.event)?.push(listener.action);
         });
         this.valueStore = new ValueStore(props);
         this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, elementDriver);
@@ -1749,20 +1995,18 @@ class Component {
         this.resetPromise();
         this.externalMutationTracker = new ExternalMutationTracker(this.element, (element) => elementBelongsToThisComponent(element, this));
         this.externalMutationTracker.start();
-        this.onChildComponentModelUpdate = this.onChildComponentModelUpdate.bind(this);
-    }
-    _swapBackend(backend) {
-        this.backend = backend;
     }
     addPlugin(plugin) {
         plugin.attachToComponent(this);
     }
     connect() {
+        registerComponent(this);
         this.hooks.triggerHook('connect', this);
         this.unsyncedInputsTracker.activate();
         this.externalMutationTracker.start();
     }
     disconnect() {
+        unregisterComponent(this);
         this.hooks.triggerHook('disconnect', this);
         this.clearRequestDebounceTimeout();
         this.unsyncedInputsTracker.deactivate();
@@ -1777,6 +2021,9 @@ class Component {
     set(model, value, reRender = false, debounce = false) {
         const promise = this.nextRequestPromise;
         const modelName = normalizeModelName(model);
+        if (!this.valueStore.has(modelName)) {
+            throw new Error(`Invalid model name "${model}".`);
+        }
         const isChanged = this.valueStore.set(modelName, value);
         this.hooks.triggerHook('model:set', model, value, this);
         this.unsyncedInputsTracker.markModelAsSynced(modelName);
@@ -1796,10 +2043,13 @@ class Component {
         const promise = this.nextRequestPromise;
         this.pendingActions.push({
             name,
-            args
+            args,
         });
         this.debouncedStartRequest(debounce);
         return promise;
+    }
+    files(key, input) {
+        this.pendingFiles[key] = input;
     }
     render() {
         const promise = this.nextRequestPromise;
@@ -1809,43 +2059,17 @@ class Component {
     getUnsyncedModels() {
         return this.unsyncedInputsTracker.getUnsyncedModels();
     }
-    addChild(child, modelBindings = []) {
-        if (!child.id) {
-            throw new Error('Children components must have an id.');
-        }
-        this.children.set(child.id, new ChildComponentWrapper(child, modelBindings));
-        child.parent = this;
-        child.on('model:set', this.onChildComponentModelUpdate);
-    }
-    removeChild(child) {
-        if (!child.id) {
-            throw new Error('Children components must have an id.');
-        }
-        this.children.delete(child.id);
-        child.parent = null;
-        child.off('model:set', this.onChildComponentModelUpdate);
-    }
-    getParent() {
-        return this.parent;
-    }
-    getChildren() {
-        const children = new Map();
-        this.children.forEach((childComponent, id) => {
-            children.set(id, childComponent.component);
-        });
-        return children;
-    }
     emit(name, data, onlyMatchingComponentsNamed = null) {
-        return this.performEmit(name, data, false, onlyMatchingComponentsNamed);
+        this.performEmit(name, data, false, onlyMatchingComponentsNamed);
     }
     emitUp(name, data, onlyMatchingComponentsNamed = null) {
-        return this.performEmit(name, data, true, onlyMatchingComponentsNamed);
+        this.performEmit(name, data, true, onlyMatchingComponentsNamed);
     }
     emitSelf(name, data) {
-        return this.doEmit(name, data);
+        this.doEmit(name, data);
     }
     performEmit(name, data, emitUp, matchingName) {
-        const components = this.componentFinder(this, emitUp, matchingName);
+        const components = findComponents(this, emitUp, matchingName);
         components.forEach((component) => {
             component.doEmit(name, data);
         });
@@ -1859,35 +2083,8 @@ class Component {
             this.action(action, data, 1);
         });
     }
-    updateFromNewElementFromParentRender(toEl) {
-        const props = this.elementDriver.getComponentProps(toEl);
-        if (props === null) {
-            return;
-        }
-        const isChanged = this.valueStore.storeNewPropsFromParent(props);
-        const fingerprint = toEl.dataset.liveFingerprintValue;
-        if (fingerprint !== undefined) {
-            this.fingerprint = fingerprint;
-        }
-        if (isChanged) {
-            this.render();
-        }
-    }
-    onChildComponentModelUpdate(modelName, value, childComponent) {
-        if (!childComponent.id) {
-            throw new Error('Missing id');
-        }
-        const childWrapper = this.children.get(childComponent.id);
-        if (!childWrapper) {
-            throw new Error('Missing child');
-        }
-        childWrapper.modelBindings.forEach((modelBinding) => {
-            const childModelName = modelBinding.innerModelName || 'value';
-            if (childModelName !== modelName) {
-                return;
-            }
-            this.set(modelBinding.modelName, value, modelBinding.shouldRender, modelBinding.debounce);
-        });
+    isTurboEnabled() {
+        return typeof Turbo !== 'undefined' && !this.element.closest('[data-turbo="false"]');
     }
     tryStartingRequest() {
         if (!this.backendRequest) {
@@ -1900,27 +2097,47 @@ class Component {
         const thisPromiseResolve = this.nextRequestPromiseResolve;
         this.resetPromise();
         this.unsyncedInputsTracker.resetUnsyncedFields();
-        this.backendRequest = this.backend.makeRequest(this.valueStore.getOriginalProps(), this.pendingActions, this.valueStore.getDirtyProps(), this.getChildrenFingerprints(), this.valueStore.getUpdatedPropsFromParent());
+        const filesToSend = {};
+        for (const [key, value] of Object.entries(this.pendingFiles)) {
+            if (value.files) {
+                filesToSend[key] = value.files;
+            }
+        }
+        const requestConfig = {
+            props: this.valueStore.getOriginalProps(),
+            actions: this.pendingActions,
+            updated: this.valueStore.getDirtyProps(),
+            children: {},
+            updatedPropsFromParent: this.valueStore.getUpdatedPropsFromParent(),
+            files: filesToSend,
+        };
+        this.hooks.triggerHook('request:started', requestConfig);
+        this.backendRequest = this.backend.makeRequest(requestConfig.props, requestConfig.actions, requestConfig.updated, requestConfig.children, requestConfig.updatedPropsFromParent, requestConfig.files);
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
         this.pendingActions = [];
         this.valueStore.flushDirtyPropsToPending();
         this.isRequestPending = false;
         this.backendRequest.promise.then(async (response) => {
-            this.backendRequest = null;
             const backendResponse = new BackendResponse(response);
             const html = await backendResponse.getBody();
+            for (const input of Object.values(this.pendingFiles)) {
+                input.value = '';
+            }
             const headers = backendResponse.response.headers;
-            if (headers.get('Content-Type') !== 'application/vnd.live-component+html' && !headers.get('X-Live-Redirect')) {
+            if (!headers.get('Content-Type')?.includes('application/vnd.live-component+html') &&
+                !headers.get('X-Live-Redirect')) {
                 const controls = { displayError: true };
                 this.valueStore.pushPendingPropsBackToDirty();
                 this.hooks.triggerHook('response:error', backendResponse, controls);
                 if (controls.displayError) {
                     this.renderError(html);
                 }
+                this.backendRequest = null;
                 thisPromiseResolve(backendResponse);
                 return response;
             }
             this.processRerender(html, backendResponse);
+            this.backendRequest = null;
             thisPromiseResolve(backendResponse);
             if (this.isRequestPending) {
                 this.isRequestPending = false;
@@ -1936,7 +2153,7 @@ class Component {
             return;
         }
         if (backendResponse.response.headers.get('Location')) {
-            if (typeof Turbo !== 'undefined') {
+            if (this.isTurboEnabled()) {
                 Turbo.visit(backendResponse.response.headers.get('Location'));
             }
             else {
@@ -1957,17 +2174,19 @@ class Component {
             }
         }
         catch (error) {
-            console.error('There was a problem with the component HTML returned:');
+            console.error(`There was a problem with the '${this.name}' component HTML returned:`, {
+                id: this.id,
+            });
             throw error;
         }
-        const newProps = this.elementDriver.getComponentProps(newElement);
-        this.valueStore.reinitializeAllProps(newProps);
-        const eventsToEmit = this.elementDriver.getEventsToEmit(newElement);
-        const browserEventsToDispatch = this.elementDriver.getBrowserEventsToDispatch(newElement);
         this.externalMutationTracker.handlePendingChanges();
         this.externalMutationTracker.stop();
-        executeMorphdom(this.element, newElement, this.unsyncedInputsTracker.getUnsyncedInputs(), (element) => getValueFromElement(element, this.valueStore), Array.from(this.getChildren().values()), this.elementDriver.findChildComponentElement, this.elementDriver.getKeyFromElement, this.externalMutationTracker);
+        executeMorphdom(this.element, newElement, this.unsyncedInputsTracker.getUnsyncedInputs(), (element) => getValueFromElement(element, this.valueStore), this.externalMutationTracker);
         this.externalMutationTracker.start();
+        const newProps = this.elementDriver.getComponentProps();
+        this.valueStore.reinitializeAllProps(newProps);
+        const eventsToEmit = this.elementDriver.getEventsToEmit();
+        const browserEventsToDispatch = this.elementDriver.getBrowserEventsToDispatch();
         Object.keys(modifiedModelValues).forEach((modelName) => {
             this.valueStore.set(modelName, modifiedModelValues[modelName]);
         });
@@ -2049,31 +2268,23 @@ class Component {
         };
         modal.addEventListener('click', () => closeModal(modal));
         modal.setAttribute('tabindex', '0');
-        modal.addEventListener('keydown', e => {
+        modal.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeModal(modal);
             }
         });
         modal.focus();
     }
-    getChildrenFingerprints() {
-        const fingerprints = {};
-        this.children.forEach((childComponent) => {
-            const child = childComponent.component;
-            if (!child.id) {
-                throw new Error('missing id');
-            }
-            fingerprints[child.id] = {
-                fingerprint: child.fingerprint,
-                tag: child.element.tagName.toLowerCase(),
-            };
-        });
-        return fingerprints;
-    }
     resetPromise() {
         this.nextRequestPromise = new Promise((resolve) => {
             this.nextRequestPromiseResolve = resolve;
         });
+    }
+    _updateFromParentProps(props) {
+        const isChanged = this.valueStore.storeNewPropsFromParent(props);
+        if (isChanged) {
+            this.render();
+        }
     }
 }
 function proxifyComponent(component) {
@@ -2106,100 +2317,10 @@ function proxifyComponent(component) {
     });
 }
 
-class BackendRequest {
-    constructor(promise, actions, updateModels) {
-        this.isResolved = false;
-        this.promise = promise;
-        this.promise.then((response) => {
-            this.isResolved = true;
-            return response;
-        });
-        this.actions = actions;
-        this.updatedModels = updateModels;
+class StimulusElementDriver {
+    constructor(controller) {
+        this.controller = controller;
     }
-    containsOneOfActions(targetedActions) {
-        return this.actions.filter((action) => targetedActions.includes(action)).length > 0;
-    }
-    areAnyModelsUpdated(targetedModels) {
-        return this.updatedModels.filter((model) => targetedModels.includes(model)).length > 0;
-    }
-}
-
-class RequestBuilder {
-    constructor(url, csrfToken = null) {
-        this.url = url;
-        this.csrfToken = csrfToken;
-    }
-    buildRequest(props, actions, updated, children, updatedPropsFromParent) {
-        const splitUrl = this.url.split('?');
-        let [url] = splitUrl;
-        const [, queryString] = splitUrl;
-        const params = new URLSearchParams(queryString || '');
-        const fetchOptions = {};
-        fetchOptions.headers = {
-            Accept: 'application/vnd.live-component+html',
-        };
-        const hasFingerprints = Object.keys(children).length > 0;
-        if (actions.length === 0 &&
-            this.willDataFitInUrl(JSON.stringify(props), JSON.stringify(updated), params, JSON.stringify(children), JSON.stringify(updatedPropsFromParent))) {
-            params.set('props', JSON.stringify(props));
-            params.set('updated', JSON.stringify(updated));
-            if (Object.keys(updatedPropsFromParent).length > 0) {
-                params.set('propsFromParent', JSON.stringify(updatedPropsFromParent));
-            }
-            if (hasFingerprints) {
-                params.set('children', JSON.stringify(children));
-            }
-            fetchOptions.method = 'GET';
-        }
-        else {
-            fetchOptions.method = 'POST';
-            fetchOptions.headers['Content-Type'] = 'application/json';
-            const requestData = { props, updated };
-            if (Object.keys(updatedPropsFromParent).length > 0) {
-                requestData.propsFromParent = updatedPropsFromParent;
-            }
-            if (hasFingerprints) {
-                requestData.children = children;
-            }
-            if (actions.length > 0) {
-                if (this.csrfToken) {
-                    fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfToken;
-                }
-                if (actions.length === 1) {
-                    requestData.args = actions[0].args;
-                    url += `/${encodeURIComponent(actions[0].name)}`;
-                }
-                else {
-                    url += '/_batch';
-                    requestData.actions = actions;
-                }
-            }
-            fetchOptions.body = JSON.stringify(requestData);
-        }
-        const paramsString = params.toString();
-        return {
-            url: `${url}${paramsString.length > 0 ? `?${paramsString}` : ''}`,
-            fetchOptions,
-        };
-    }
-    willDataFitInUrl(propsJson, updatedJson, params, childrenJson, propsFromParentJson) {
-        const urlEncodedJsonData = new URLSearchParams(propsJson + updatedJson + childrenJson + propsFromParentJson).toString();
-        return (urlEncodedJsonData + params.toString()).length < 1500;
-    }
-}
-
-class Backend {
-    constructor(url, csrfToken = null) {
-        this.requestBuilder = new RequestBuilder(url, csrfToken);
-    }
-    makeRequest(props, actions, updated, children, updatedPropsFromParent) {
-        const { url, fetchOptions } = this.requestBuilder.buildRequest(props, actions, updated, children, updatedPropsFromParent);
-        return new BackendRequest(fetch(url, fetchOptions), actions.map((backendAction) => backendAction.name), Object.keys(updated));
-    }
-}
-
-class StandardElementDriver {
     getModelName(element) {
         const modelDirective = getModelDirectiveFromElement(element, false);
         if (!modelDirective) {
@@ -2207,53 +2328,152 @@ class StandardElementDriver {
         }
         return modelDirective.action;
     }
-    getComponentProps(rootElement) {
-        var _a;
-        const propsJson = (_a = rootElement.dataset.livePropsValue) !== null && _a !== void 0 ? _a : '{}';
-        return JSON.parse(propsJson);
+    getComponentProps() {
+        return this.controller.propsValue;
     }
-    findChildComponentElement(id, element) {
-        return element.querySelector(`[data-live-id=${id}]`);
+    getEventsToEmit() {
+        return this.controller.eventsToEmitValue;
     }
-    getKeyFromElement(element) {
-        return element.dataset.liveId || null;
+    getBrowserEventsToDispatch() {
+        return this.controller.eventsToDispatchValue;
     }
-    getEventsToEmit(element) {
-        var _a;
-        const eventsJson = (_a = element.dataset.liveEmit) !== null && _a !== void 0 ? _a : '[]';
-        return JSON.parse(eventsJson);
+}
+
+function getModelBinding (modelDirective) {
+    let shouldRender = true;
+    let targetEventName = null;
+    let debounce = false;
+    modelDirective.modifiers.forEach((modifier) => {
+        switch (modifier.name) {
+            case 'on':
+                if (!modifier.value) {
+                    throw new Error(`The "on" modifier in ${modelDirective.getString()} requires a value - e.g. on(change).`);
+                }
+                if (!['input', 'change'].includes(modifier.value)) {
+                    throw new Error(`The "on" modifier in ${modelDirective.getString()} only accepts the arguments "input" or "change".`);
+                }
+                targetEventName = modifier.value;
+                break;
+            case 'norender':
+                shouldRender = false;
+                break;
+            case 'debounce':
+                debounce = modifier.value ? Number.parseInt(modifier.value) : true;
+                break;
+            default:
+                throw new Error(`Unknown modifier "${modifier.name}" in data-model="${modelDirective.getString()}".`);
+        }
+    });
+    const [modelName, innerModelName] = modelDirective.action.split(':');
+    return {
+        modelName,
+        innerModelName: innerModelName || null,
+        shouldRender,
+        debounce,
+        targetEventName,
+    };
+}
+
+class ChildComponentPlugin {
+    constructor(component) {
+        this.parentModelBindings = [];
+        this.component = component;
+        const modelDirectives = getAllModelDirectiveFromElements(this.component.element);
+        this.parentModelBindings = modelDirectives.map(getModelBinding);
     }
-    getBrowserEventsToDispatch(element) {
-        var _a;
-        const eventsJson = (_a = element.dataset.liveBrowserDispatch) !== null && _a !== void 0 ? _a : '[]';
-        return JSON.parse(eventsJson);
+    attachToComponent(component) {
+        component.on('request:started', (requestData) => {
+            requestData.children = this.getChildrenFingerprints();
+        });
+        component.on('model:set', (model, value) => {
+            this.notifyParentModelChange(model, value);
+        });
+    }
+    getChildrenFingerprints() {
+        const fingerprints = {};
+        this.getChildren().forEach((child) => {
+            if (!child.id) {
+                throw new Error('missing id');
+            }
+            fingerprints[child.id] = {
+                fingerprint: child.fingerprint,
+                tag: child.element.tagName.toLowerCase(),
+            };
+        });
+        return fingerprints;
+    }
+    notifyParentModelChange(modelName, value) {
+        const parentComponent = findParent(this.component);
+        if (!parentComponent) {
+            return;
+        }
+        this.parentModelBindings.forEach((modelBinding) => {
+            const childModelName = modelBinding.innerModelName || 'value';
+            if (childModelName !== modelName) {
+                return;
+            }
+            parentComponent.set(modelBinding.modelName, value, modelBinding.shouldRender, modelBinding.debounce);
+        });
+    }
+    getChildren() {
+        return findChildren(this.component);
+    }
+}
+
+class LazyPlugin {
+    constructor() {
+        this.intersectionObserver = null;
+    }
+    attachToComponent(component) {
+        if ('lazy' !== component.element.attributes.getNamedItem('loading')?.value) {
+            return;
+        }
+        component.on('connect', () => {
+            this.getObserver().observe(component.element);
+        });
+        component.on('disconnect', () => {
+            this.intersectionObserver?.unobserve(component.element);
+        });
+    }
+    getObserver() {
+        if (!this.intersectionObserver) {
+            this.intersectionObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.dispatchEvent(new CustomEvent('live:appear'));
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+        }
+        return this.intersectionObserver;
     }
 }
 
 class LoadingPlugin {
     attachToComponent(component) {
         component.on('loading.state:started', (element, request) => {
-            this.startLoading(element, request);
+            this.startLoading(component, element, request);
         });
         component.on('loading.state:finished', (element) => {
-            this.finishLoading(element);
+            this.finishLoading(component, element);
         });
-        this.finishLoading(component.element);
+        this.finishLoading(component, component.element);
     }
-    startLoading(targetElement, backendRequest) {
-        this.handleLoadingToggle(true, targetElement, backendRequest);
+    startLoading(component, targetElement, backendRequest) {
+        this.handleLoadingToggle(component, true, targetElement, backendRequest);
     }
-    finishLoading(targetElement) {
-        this.handleLoadingToggle(false, targetElement, null);
+    finishLoading(component, targetElement) {
+        this.handleLoadingToggle(component, false, targetElement, null);
     }
-    handleLoadingToggle(isLoading, targetElement, backendRequest) {
+    handleLoadingToggle(component, isLoading, targetElement, backendRequest) {
         if (isLoading) {
             this.addAttributes(targetElement, ['busy']);
         }
         else {
             this.removeAttributes(targetElement, ['busy']);
         }
-        this.getLoadingDirectives(targetElement).forEach(({ element, directives }) => {
+        this.getLoadingDirectives(component, targetElement).forEach(({ element, directives }) => {
             if (isLoading) {
                 this.addAttributes(element, ['data-live-is-loading']);
             }
@@ -2275,7 +2495,7 @@ class LoadingPlugin {
             if (!isLoading) {
                 return;
             }
-            delay = modifier.value ? parseInt(modifier.value) : 200;
+            delay = modifier.value ? Number.parseInt(modifier.value) : 200;
         });
         validModifiers.set('action', (modifier) => {
             if (!modifier.value) {
@@ -2290,26 +2510,29 @@ class LoadingPlugin {
             targetedModels.push(modifier.value);
         });
         directive.modifiers.forEach((modifier) => {
-            var _a;
             if (validModifiers.has(modifier.name)) {
-                const callable = (_a = validModifiers.get(modifier.name)) !== null && _a !== void 0 ? _a : (() => { });
+                const callable = validModifiers.get(modifier.name) ?? (() => { });
                 callable(modifier);
                 return;
             }
             throw new Error(`Unknown modifier "${modifier.name}" used in data-loading="${directive.getString()}". Available modifiers are: ${Array.from(validModifiers.keys()).join(', ')}.`);
         });
-        if (isLoading && targetedActions.length > 0 && backendRequest && !backendRequest.containsOneOfActions(targetedActions)) {
+        if (isLoading &&
+            targetedActions.length > 0 &&
+            backendRequest &&
+            !backendRequest.containsOneOfActions(targetedActions)) {
             return;
         }
-        if (isLoading && targetedModels.length > 0 && backendRequest && !backendRequest.areAnyModelsUpdated(targetedModels)) {
+        if (isLoading &&
+            targetedModels.length > 0 &&
+            backendRequest &&
+            !backendRequest.areAnyModelsUpdated(targetedModels)) {
             return;
         }
         let loadingDirective;
         switch (finalAction) {
             case 'show':
-                loadingDirective = () => {
-                    this.showElement(element);
-                };
+                loadingDirective = () => this.showElement(element);
                 break;
             case 'hide':
                 loadingDirective = () => this.hideElement(element);
@@ -2339,9 +2562,14 @@ class LoadingPlugin {
         }
         loadingDirective();
     }
-    getLoadingDirectives(element) {
+    getLoadingDirectives(component, element) {
         const loadingDirectives = [];
-        element.querySelectorAll('[data-loading]').forEach((element => {
+        let matchingElements = [...Array.from(element.querySelectorAll('[data-loading]'))];
+        matchingElements = matchingElements.filter((elt) => elementBelongsToThisComponent(elt, component));
+        if (element.hasAttribute('data-loading')) {
+            matchingElements = [element, ...matchingElements];
+        }
+        matchingElements.forEach((element) => {
             if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) {
                 throw new Error('Invalid Element Type');
             }
@@ -2350,11 +2578,11 @@ class LoadingPlugin {
                 element,
                 directives,
             });
-        }));
+        });
         return loadingDirectives;
     }
     showElement(element) {
-        element.style.display = 'inline-block';
+        element.style.display = 'revert';
     }
     hideElement(element) {
         element.style.display = 'none';
@@ -2365,7 +2593,7 @@ class LoadingPlugin {
     removeClass(element, classes) {
         element.classList.remove(...combineSpacedArray(classes));
         if (element.classList.length === 0) {
-            this.removeAttributes(element, ['class']);
+            element.removeAttribute('class');
         }
     }
     addAttributes(element, attributes) {
@@ -2379,7 +2607,7 @@ class LoadingPlugin {
         });
     }
 }
-const parseLoadingAction = function (action, isLoading) {
+const parseLoadingAction = (action, isLoading) => {
     switch (action) {
         case 'show':
             return isLoading ? 'show' : 'hide';
@@ -2396,23 +2624,6 @@ const parseLoadingAction = function (action, isLoading) {
     }
     throw new Error(`Unknown data-loading action "${action}"`);
 };
-
-class ValidatedFieldsPlugin {
-    attachToComponent(component) {
-        component.on('model:set', (modelName) => {
-            this.handleModelSet(modelName, component.valueStore);
-        });
-    }
-    handleModelSet(modelName, valueStore) {
-        if (valueStore.has('validatedFields')) {
-            const validatedFields = [...valueStore.get('validatedFields')];
-            if (!validatedFields.includes(modelName)) {
-                validatedFields.push(modelName);
-            }
-            valueStore.set('validatedFields', validatedFields);
-        }
-    }
-}
 
 class PageUnloadingPlugin {
     constructor() {
@@ -2477,7 +2688,7 @@ class PollingDirector {
                 this.component.action(actionName, {}, 0);
             };
         }
-        const timer = setInterval(() => {
+        const timer = window.setInterval(() => {
             callback();
         }, duration);
         this.pollingIntervals.push(timer);
@@ -2518,7 +2729,7 @@ class PollingPlugin {
                 switch (modifier.name) {
                     case 'delay':
                         if (modifier.value) {
-                            duration = parseInt(modifier.value);
+                            duration = Number.parseInt(modifier.value);
                         }
                         break;
                     default:
@@ -2526,6 +2737,129 @@ class PollingPlugin {
                 }
             });
             this.addPoll(directive.action, duration);
+        });
+    }
+}
+
+function isValueEmpty(value) {
+    if (null === value || value === '' || undefined === value || (Array.isArray(value) && value.length === 0)) {
+        return true;
+    }
+    if (typeof value !== 'object') {
+        return false;
+    }
+    for (const key of Object.keys(value)) {
+        if (!isValueEmpty(value[key])) {
+            return false;
+        }
+    }
+    return true;
+}
+function toQueryString(data) {
+    const buildQueryStringEntries = (data, entries = {}, baseKey = '') => {
+        Object.entries(data).forEach(([iKey, iValue]) => {
+            const key = baseKey === '' ? iKey : `${baseKey}[${iKey}]`;
+            if ('' === baseKey && isValueEmpty(iValue)) {
+                entries[key] = '';
+            }
+            else if (null !== iValue) {
+                if (typeof iValue === 'object') {
+                    entries = { ...entries, ...buildQueryStringEntries(iValue, entries, key) };
+                }
+                else {
+                    entries[key] = encodeURIComponent(iValue)
+                        .replace(/%20/g, '+')
+                        .replace(/%2C/g, ',');
+                }
+            }
+        });
+        return entries;
+    };
+    const entries = buildQueryStringEntries(data);
+    return Object.entries(entries)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&');
+}
+function fromQueryString(search) {
+    search = search.replace('?', '');
+    if (search === '')
+        return {};
+    const insertDotNotatedValueIntoData = (key, value, data) => {
+        const [first, second, ...rest] = key.split('.');
+        if (!second) {
+            data[key] = value;
+            return value;
+        }
+        if (data[first] === undefined) {
+            data[first] = Number.isNaN(Number.parseInt(second)) ? {} : [];
+        }
+        insertDotNotatedValueIntoData([second, ...rest].join('.'), value, data[first]);
+    };
+    const entries = search.split('&').map((i) => i.split('='));
+    const data = {};
+    entries.forEach(([key, value]) => {
+        value = decodeURIComponent(String(value || '').replace(/\+/g, '%20'));
+        if (!key.includes('[')) {
+            data[key] = value;
+        }
+        else {
+            if ('' === value)
+                return;
+            const dotNotatedKey = key.replace(/\[/g, '.').replace(/]/g, '');
+            insertDotNotatedValueIntoData(dotNotatedKey, value, data);
+        }
+    });
+    return data;
+}
+class UrlUtils extends URL {
+    has(key) {
+        const data = this.getData();
+        return Object.keys(data).includes(key);
+    }
+    set(key, value) {
+        const data = this.getData();
+        data[key] = value;
+        this.setData(data);
+    }
+    get(key) {
+        return this.getData()[key];
+    }
+    remove(key) {
+        const data = this.getData();
+        delete data[key];
+        this.setData(data);
+    }
+    getData() {
+        if (!this.search) {
+            return {};
+        }
+        return fromQueryString(this.search);
+    }
+    setData(data) {
+        this.search = toQueryString(data);
+    }
+}
+class HistoryStrategy {
+    static replace(url) {
+        history.replaceState(history.state, '', url);
+    }
+}
+
+class QueryStringPlugin {
+    constructor(mapping) {
+        this.mapping = mapping;
+    }
+    attachToComponent(component) {
+        component.on('render:finished', (component) => {
+            const urlUtils = new UrlUtils(window.location.href);
+            const currentUrl = urlUtils.toString();
+            Object.entries(this.mapping).forEach(([prop, mapping]) => {
+                const value = component.valueStore.get(prop);
+                urlUtils.set(mapping.name, value);
+            });
+            if (currentUrl !== urlUtils.toString()) {
+                HistoryStrategy.replace(urlUtils);
+            }
         });
     }
 }
@@ -2566,89 +2900,23 @@ class SetValueOntoModelFieldsPlugin {
     }
 }
 
-function getModelBinding (modelDirective) {
-    let shouldRender = true;
-    let targetEventName = null;
-    let debounce = false;
-    modelDirective.modifiers.forEach((modifier) => {
-        switch (modifier.name) {
-            case 'on':
-                if (!modifier.value) {
-                    throw new Error(`The "on" modifier in ${modelDirective.getString()} requires a value - e.g. on(change).`);
-                }
-                if (!['input', 'change'].includes(modifier.value)) {
-                    throw new Error(`The "on" modifier in ${modelDirective.getString()} only accepts the arguments "input" or "change".`);
-                }
-                targetEventName = modifier.value;
-                break;
-            case 'norender':
-                shouldRender = false;
-                break;
-            case 'debounce':
-                debounce = modifier.value ? parseInt(modifier.value) : true;
-                break;
-            default:
-                throw new Error(`Unknown modifier "${modifier.name}" in data-model="${modelDirective.getString()}".`);
+class ValidatedFieldsPlugin {
+    attachToComponent(component) {
+        component.on('model:set', (modelName) => {
+            this.handleModelSet(modelName, component.valueStore);
+        });
+    }
+    handleModelSet(modelName, valueStore) {
+        if (valueStore.has('validatedFields')) {
+            const validatedFields = [...valueStore.get('validatedFields')];
+            if (!validatedFields.includes(modelName)) {
+                validatedFields.push(modelName);
+            }
+            valueStore.set('validatedFields', validatedFields);
         }
-    });
-    const [modelName, innerModelName] = modelDirective.action.split(':');
-    return {
-        modelName,
-        innerModelName: innerModelName || null,
-        shouldRender,
-        debounce,
-        targetEventName
-    };
-}
-
-class ComponentRegistry {
-    constructor() {
-        this.componentMapByElement = new WeakMap();
-        this.componentMapByComponent = new Map();
-    }
-    registerComponent(element, component) {
-        this.componentMapByElement.set(element, component);
-        this.componentMapByComponent.set(component, component.name);
-    }
-    unregisterComponent(component) {
-        this.componentMapByElement.delete(component.element);
-        this.componentMapByComponent.delete(component);
-    }
-    getComponent(element) {
-        return new Promise((resolve, reject) => {
-            let count = 0;
-            const maxCount = 10;
-            const interval = setInterval(() => {
-                const component = this.componentMapByElement.get(element);
-                if (component) {
-                    clearInterval(interval);
-                    resolve(component);
-                }
-                count++;
-                if (count > maxCount) {
-                    clearInterval(interval);
-                    reject(new Error(`Component not found for element ${getElementAsTagText(element)}`));
-                }
-            }, 5);
-        });
-    }
-    findComponents(currentComponent, onlyParents, onlyMatchName) {
-        const components = [];
-        this.componentMapByComponent.forEach((componentName, component) => {
-            if (onlyParents &&
-                (currentComponent === component || !component.element.contains(currentComponent.element))) {
-                return;
-            }
-            if (onlyMatchName && componentName !== onlyMatchName) {
-                return;
-            }
-            components.push(component);
-        });
-        return components;
     }
 }
 
-const getComponent = (element) => LiveControllerDefault.componentRegistry.getComponent(element);
 class LiveControllerDefault extends Controller {
     constructor() {
         super(...arguments);
@@ -2656,44 +2924,22 @@ class LiveControllerDefault extends Controller {
         this.elementEventListeners = [
             { event: 'input', callback: (event) => this.handleInputEvent(event) },
             { event: 'change', callback: (event) => this.handleChangeEvent(event) },
-            { event: 'live:connect', callback: (event) => this.handleConnectedControllerEvent(event) },
         ];
+        this.pendingFiles = {};
     }
     initialize() {
-        this.handleDisconnectedChildControllerEvent = this.handleDisconnectedChildControllerEvent.bind(this);
-        const id = this.element.dataset.liveId || null;
-        this.component = new Component(this.element, this.nameValue, this.propsValue, this.listenersValue, (currentComponent, onlyParents, onlyMatchName) => LiveControllerDefault.componentRegistry.findComponents(currentComponent, onlyParents, onlyMatchName), this.fingerprintValue, id, new Backend(this.urlValue, this.csrfValue), new StandardElementDriver());
-        this.proxiedComponent = proxifyComponent(this.component);
-        this.element.__component = this.proxiedComponent;
-        if (this.hasDebounceValue) {
-            this.component.defaultDebounce = this.debounceValue;
-        }
-        const plugins = [
-            new LoadingPlugin(),
-            new ValidatedFieldsPlugin(),
-            new PageUnloadingPlugin(),
-            new PollingPlugin(),
-            new SetValueOntoModelFieldsPlugin(),
-        ];
-        plugins.forEach((plugin) => {
-            this.component.addPlugin(plugin);
-        });
+        this.mutationObserver = new MutationObserver(this.onMutations.bind(this));
+        this.createComponent();
     }
     connect() {
-        LiveControllerDefault.componentRegistry.registerComponent(this.element, this.component);
-        this.component.connect();
-        this.elementEventListeners.forEach(({ event, callback }) => {
-            this.component.element.addEventListener(event, callback);
+        this.connectComponent();
+        this.mutationObserver.observe(this.element, {
+            attributes: true,
         });
-        this.dispatchEvent('connect');
     }
     disconnect() {
-        LiveControllerDefault.componentRegistry.unregisterComponent(this.component);
-        this.component.disconnect();
-        this.elementEventListeners.forEach(({ event, callback }) => {
-            this.component.element.removeEventListener(event, callback);
-        });
-        this.dispatchEvent('disconnect');
+        this.disconnectComponent();
+        this.mutationObserver.disconnect();
     }
     update(event) {
         if (event.type === 'input' || event.type === 'change') {
@@ -2702,14 +2948,18 @@ class LiveControllerDefault extends Controller {
         this.updateModelFromElementEvent(event.currentTarget, null);
     }
     action(event) {
-        const rawAction = event.currentTarget.dataset.actionName;
+        const params = event.params;
+        if (!params.action) {
+            throw new Error(`No action name provided on element: ${getElementAsTagText(event.currentTarget)}. Did you forget to add the "data-live-action-param" attribute?`);
+        }
+        const rawAction = params.action;
+        const actionArgs = { ...params };
+        delete actionArgs.action;
         const directives = parseDirectives(rawAction);
         let debounce = false;
         directives.forEach((directive) => {
+            let pendingFiles = {};
             const validModifiers = new Map();
-            validModifiers.set('prevent', () => {
-                event.preventDefault();
-            });
             validModifiers.set('stop', () => {
                 event.stopPropagation();
             });
@@ -2719,18 +2969,31 @@ class LiveControllerDefault extends Controller {
                 }
             });
             validModifiers.set('debounce', (modifier) => {
-                debounce = modifier.value ? parseInt(modifier.value) : true;
+                debounce = modifier.value ? Number.parseInt(modifier.value) : true;
+            });
+            validModifiers.set('files', (modifier) => {
+                if (!modifier.value) {
+                    pendingFiles = this.pendingFiles;
+                }
+                else if (this.pendingFiles[modifier.value]) {
+                    pendingFiles[modifier.value] = this.pendingFiles[modifier.value];
+                }
             });
             directive.modifiers.forEach((modifier) => {
-                var _a;
                 if (validModifiers.has(modifier.name)) {
-                    const callable = (_a = validModifiers.get(modifier.name)) !== null && _a !== void 0 ? _a : (() => { });
+                    const callable = validModifiers.get(modifier.name) ?? (() => { });
                     callable(modifier);
                     return;
                 }
                 console.warn(`Unknown modifier ${modifier.name} in action "${rawAction}". Available modifiers are: ${Array.from(validModifiers.keys()).join(', ')}.`);
             });
-            this.component.action(directive.action, directive.named, debounce);
+            for (const [key, input] of Object.entries(pendingFiles)) {
+                if (input.files) {
+                    this.component.files(key, input);
+                }
+                delete this.pendingFiles[key];
+            }
+            this.component.action(directive.action, actionArgs, debounce);
             if (getModelDirectiveFromElement(event.currentTarget, false)) {
                 this.pendingActionTriggerModelElement = event.currentTarget;
             }
@@ -2754,12 +3017,23 @@ class LiveControllerDefault extends Controller {
             this.component.emitSelf(name, data);
         });
     }
+    $updateModel(model, value, shouldRender = true, debounce = true) {
+        return this.component.set(model, value, shouldRender, debounce);
+    }
+    propsUpdatedFromParentValueChanged() {
+        this.component._updateFromParentProps(this.propsUpdatedFromParentValue);
+    }
+    fingerprintValueChanged() {
+        this.component.fingerprint = this.fingerprintValue;
+    }
     getEmitDirectives(event) {
-        const element = event.currentTarget;
-        if (!element.dataset.event) {
-            throw new Error(`No data-event attribute found on element: ${getElementAsTagText(element)}`);
+        const params = event.params;
+        if (!params.event) {
+            throw new Error(`No event name provided on element: ${getElementAsTagText(event.currentTarget)}. Did you forget to add the "data-live-event-param" attribute?`);
         }
-        const eventInfo = element.dataset.event;
+        const eventInfo = params.event;
+        const eventArgs = { ...params };
+        delete eventArgs.event;
         const directives = parseDirectives(eventInfo);
         const emits = [];
         directives.forEach((directive) => {
@@ -2775,14 +3049,53 @@ class LiveControllerDefault extends Controller {
             });
             emits.push({
                 name: directive.action,
-                data: directive.named,
+                data: eventArgs,
                 nameMatch,
             });
         });
         return emits;
     }
-    $updateModel(model, value, shouldRender = true, debounce = true) {
-        return this.component.set(model, value, shouldRender, debounce);
+    createComponent() {
+        const id = this.element.id || null;
+        this.component = new Component(this.element, this.nameValue, this.propsValue, this.listenersValue, id, LiveControllerDefault.backendFactory(this), new StimulusElementDriver(this));
+        this.proxiedComponent = proxifyComponent(this.component);
+        Object.defineProperty(this.element, '__component', {
+            value: this.proxiedComponent,
+            writable: true,
+        });
+        if (this.hasDebounceValue) {
+            this.component.defaultDebounce = this.debounceValue;
+        }
+        const plugins = [
+            new LoadingPlugin(),
+            new LazyPlugin(),
+            new ValidatedFieldsPlugin(),
+            new PageUnloadingPlugin(),
+            new PollingPlugin(),
+            new SetValueOntoModelFieldsPlugin(),
+            new QueryStringPlugin(this.queryMappingValue),
+            new ChildComponentPlugin(this.component),
+        ];
+        plugins.forEach((plugin) => {
+            this.component.addPlugin(plugin);
+        });
+    }
+    connectComponent() {
+        this.component.connect();
+        this.mutationObserver.observe(this.element, {
+            attributes: true,
+        });
+        this.elementEventListeners.forEach(({ event, callback }) => {
+            this.component.element.addEventListener(event, callback);
+        });
+        this.dispatchEvent('connect');
+    }
+    disconnectComponent() {
+        this.component.disconnect();
+        this.elementEventListeners.forEach(({ event, callback }) => {
+            this.component.element.removeEventListener(event, callback);
+        });
+        this.dispatchEvent('disconnect');
     }
     handleInputEvent(event) {
         const target = event.target;
@@ -2804,6 +3117,15 @@ class LiveControllerDefault extends Controller {
         }
         if (!(element instanceof HTMLElement)) {
             throw new Error('Could not update model for non HTMLElement');
+        }
+        if (element instanceof HTMLInputElement && element.type === 'file') {
+            const key = element.name;
+            if (element.files?.length) {
+                this.pendingFiles[key] = element;
+            }
+            else if (this.pendingFiles[key]) {
+                delete this.pendingFiles[key];
+            }
         }
         const modelDirective = getModelDirectiveFromElement(element, false);
         if (!modelDirective) {
@@ -2833,43 +3155,36 @@ class LiveControllerDefault extends Controller {
         const finalValue = getValueFromElement(element, this.component.valueStore);
         this.component.set(modelBinding.modelName, finalValue, modelBinding.shouldRender, modelBinding.debounce);
     }
-    handleConnectedControllerEvent(event) {
-        if (event.target === this.element) {
-            return;
-        }
-        const childController = event.detail.controller;
-        if (childController.component.getParent()) {
-            return;
-        }
-        const modelDirectives = getAllModelDirectiveFromElements(childController.element);
-        const modelBindings = modelDirectives.map(getModelBinding);
-        this.component.addChild(childController.component, modelBindings);
-        childController.element.addEventListener('live:disconnect', this.handleDisconnectedChildControllerEvent);
-    }
-    handleDisconnectedChildControllerEvent(event) {
-        const childController = event.detail.controller;
-        childController.element.removeEventListener('live:disconnect', this.handleDisconnectedChildControllerEvent);
-        if (childController.component.getParent() !== this.component) {
-            return;
-        }
-        this.component.removeChild(childController.component);
-    }
     dispatchEvent(name, detail = {}, canBubble = true, cancelable = false) {
         detail.controller = this;
         detail.component = this.proxiedComponent;
         this.dispatch(name, { detail, prefix: 'live', cancelable, bubbles: canBubble });
     }
+    onMutations(mutations) {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' &&
+                mutation.attributeName === 'id' &&
+                this.element.id !== this.component.id) {
+                this.disconnectComponent();
+                this.createComponent();
+                this.connectComponent();
+            }
+        });
+    }
 }
 LiveControllerDefault.values = {
     name: String,
     url: String,
-    props: Object,
-    csrf: String,
+    props: { type: Object, default: {} },
+    propsUpdatedFromParent: { type: Object, default: {} },
     listeners: { type: Array, default: [] },
+    eventsToEmit: { type: Array, default: [] },
+    eventsToDispatch: { type: Array, default: [] },
     debounce: { type: Number, default: 150 },
-    id: String,
     fingerprint: { type: String, default: '' },
+    requestMethod: { type: String, default: 'post' },
+    queryMapping: { type: Object, default: {} },
 };
-LiveControllerDefault.componentRegistry = new ComponentRegistry();
+LiveControllerDefault.backendFactory = (controller) => new Backend(controller.urlValue, controller.requestMethodValue);
 
 export { Component, LiveControllerDefault as default, getComponent };

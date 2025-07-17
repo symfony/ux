@@ -1,0 +1,5 @@
+symfonycasts_sass:
+    sass_options:
+        style: compressed       
+        source_map: false       
+        quiet: true             # silence deprecation warnings

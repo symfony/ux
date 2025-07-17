@@ -7,11 +7,10 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
-import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
+import { vi } from 'vitest';
+import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import NotifyController from '../src/controller';
 
 // Controller used to check the actual controller was properly booted
@@ -36,19 +35,19 @@ const startStimulus = (): Application => {
 };
 
 describe('NotifyController', () => {
-    let application;
+    let application: Application;
 
     afterEach(() => {
         clearDOM();
         application.stop();
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
-    const addEventListenerMock = jest.fn();
-    const removeEventListenerMock = jest.fn();
-    const closeMock = jest.fn();
+    const addEventListenerMock = vi.fn();
+    const removeEventListenerMock = vi.fn();
+    const closeMock = vi.fn();
 
-    global.EventSource = jest.fn().mockImplementation(() => {
+    global.EventSource = vi.fn().mockImplementation(() => {
         return {
             addEventListener: addEventListenerMock,
             removeEventListener: removeEventListenerMock,

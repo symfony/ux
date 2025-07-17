@@ -24,7 +24,7 @@ use Symfony\UX\LazyImage\Tests\Kernel\TwigAppKernel;
  */
 class LazyImageBundleTest extends TestCase
 {
-    public function provideKernels()
+    public static function provideKernels()
     {
         yield 'empty' => [new EmptyAppKernel('test', true)];
         yield 'framework' => [new FrameworkAppKernel('test', true)];

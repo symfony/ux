@@ -4,39 +4,25 @@ import ChangingItemsTracker from './ChangingItemsTracker';
  * Tracks attribute changes for a specific element.
  */
 export default class ElementChanges {
-    private addedClasses: string[] = [];
-    private removedClasses: string[] = [];
+    private addedClasses: Set<string> = new Set();
+    private removedClasses: Set<string> = new Set();
 
     private styleChanges: ChangingItemsTracker = new ChangingItemsTracker();
     private attributeChanges: ChangingItemsTracker = new ChangingItemsTracker();
 
     addClass(className: string) {
-        if (this.removedClasses.includes(className)) {
-            // this was previously removed, so we're just undoing that
-            this.removedClasses = this.removedClasses.filter((name) => name !== className);
-
-            return;
-        }
-
-        if (!this.addedClasses.includes(className)) {
-            this.addedClasses.push(className);
+        if (!this.removedClasses.delete(className)) {
+            this.addedClasses.add(className);
         }
     }
 
     removeClass(className: string) {
-        if (this.addedClasses.includes(className)) {
-            // this was previously added, so we're just undoing that
-            this.addedClasses = this.addedClasses.filter((name) => name !== className);
-
-            return;
-        }
-
-        if (!this.removedClasses.includes(className)) {
-            this.removedClasses.push(className);
+        if (!this.addedClasses.delete(className)) {
+            this.removedClasses.add(className);
         }
     }
 
-    addStyle(styleName: string, newValue: string, originalValue: string|null) {
+    addStyle(styleName: string, newValue: string, originalValue: string | null) {
         this.styleChanges.setItem(styleName, newValue, originalValue);
     }
 
@@ -44,23 +30,23 @@ export default class ElementChanges {
         this.styleChanges.removeItem(styleName, originalValue);
     }
 
-    addAttribute(attributeName: string, newValue: string, originalValue: string|null) {
+    addAttribute(attributeName: string, newValue: string, originalValue: string | null) {
         this.attributeChanges.setItem(attributeName, newValue, originalValue);
     }
 
-    removeAttribute(attributeName: string, originalValue: string|null) {
+    removeAttribute(attributeName: string, originalValue: string | null) {
         this.attributeChanges.removeItem(attributeName, originalValue);
     }
 
     getAddedClasses(): string[] {
-        return this.addedClasses;
+        return [...this.addedClasses];
     }
 
     getRemovedClasses(): string[] {
-        return this.removedClasses;
+        return [...this.removedClasses];
     }
 
-    getChangedStyles(): { name: string, value: string }[] {
+    getChangedStyles(): { name: string; value: string }[] {
         return this.styleChanges.getChangedItems();
     }
 
@@ -68,7 +54,7 @@ export default class ElementChanges {
         return this.styleChanges.getRemovedItems();
     }
 
-    getChangedAttributes(): { name: string, value: string }[] {
+    getChangedAttributes(): { name: string; value: string }[] {
         return this.attributeChanges.getChangedItems();
     }
 
@@ -77,13 +63,8 @@ export default class ElementChanges {
     }
 
     applyToElement(element: HTMLElement): void {
-        this.addedClasses.forEach((className) => {
-            element.classList.add(className);
-        });
-
-        this.removedClasses.forEach((className) => {
-            element.classList.remove(className);
-        });
+        element.classList.add(...this.addedClasses);
+        element.classList.remove(...this.removedClasses);
 
         this.styleChanges.getChangedItems().forEach((change) => {
             element.style.setProperty(change.name, change.value);
@@ -105,8 +86,8 @@ export default class ElementChanges {
 
     isEmpty(): boolean {
         return (
-            this.addedClasses.length === 0 &&
-            this.removedClasses.length === 0 &&
+            this.addedClasses.size === 0 &&
+            this.removedClasses.size === 0 &&
             this.styleChanges.isEmpty() &&
             this.attributeChanges.isEmpty()
         );

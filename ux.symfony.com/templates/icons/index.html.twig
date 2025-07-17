@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <meta name="turbo-prefetch" content="false">
+{% endblock %}
+
+{% set meta = {
+    title: 'UX Icons - SVG icons made easy',
+    description: 'Render SVG icons seamlessly from your Twig templates. Find the perfect icon among 200,000 choices from the most popular icon sets.',
+    canonical: url('app_icons'),
+    social: {
+        title: 'Symfony UX Icons - SVG icons made easy',
+        description: 'Render SVG icons seamlessly from your Twig templates. Find the perfect icon among 200,000 choices from the most popular icon sets.',
+        image: {
+            url: absolute_url(asset(package.getSocialImage('1200x675'))),
+            type: 'image/png',
+            width: 1200,
+            height: 675,
+            alt: package.humanName ~ ' - Component Icon',
+        },
+    }
+} %}
+
+{% block content %}
+
+    <div class="hero">
+        <div class="container-fluid container-xxl px-4 pt-4 px-md-5">
+            <p class="eyebrows text-center mt-5">SVG icons made easy</p>
+            <h1 class="text-center">
+                <a href="{{ url('app_icons') }}">UX Icons</a>
+            </h1>
+            <div style="font-size: 1rem; line-height: 1.75rem;" class="mt-4 text-center demo-introduction">
+                <p>
+                    Render SVG icons seamlessly from your Twig templates.
+                <br/>
+                    Find the <code>perfect icon</code> among <code>200,000 choices</code> from the most popular <code>icon sets</code>.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <section class="container-fluid container-xxl px-4 px-md-5 py-3">
+        <twig:Icon:IconSearch/>
+    </section>
+
+    <section class="container-fluid container-xxl px-4 px-md-5 py-3">
+        <p class="eyebrows" style="margin: 4rem 0 0;">Iconic Packages</p>
+        <div class="d-md-flex justify-content-md-between text-center align-items-center text-md-start">
+            <h2 class="ubuntu pt-2 component-headlines">Popular <em class="rainbow-emphasis">Icon Sets</em></h2>
+            <a style="height: 100%;" class="btn btn-md btn-outline-primary my-3 my-md-0"
+               href="https://symfony.com/bundles/ux-icons/current/index.html" rel="external" target="_blank">
+                Read Documentation
+                <twig:ux:icon name="arrow-right" style="transform: rotate(-45deg);"/>
+            </a>
+        </div>
+        <div class="mt-3 mt-md-5">
+            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2rem;">
+                {% for icon_set in iconSets %}
+                    <twig:Icon:IconSetCard
+                        iconSet="{{ icon_set }}"
+                        index="{{ loop.index0 }}"
+                    />
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container-fluid container-xxl px-4 px-md-5 py-3">
+
+            <div class="d-md-flex justify-content-md-between py-5 text-center align-items-center text-md-start">
+                <h2 class="ubuntu pt-2 component-headlines">Documentation</h2>
+                <a href="https://symfony.com/bundles/ux-icons/current/index.html" class="btn btn-md btn-outline-primary my-3 my-md-0"
+                   rel="external" target="_blank">
+                    Read Full Documentation
+                    <twig:ux:icon name="arrow-right" style="transform: rotate(-45deg);"/>
+                </a>
+            </div>
+
+            <div class="row">
+                <div class="col-4">
+                    <h3 class="ubuntu mb-4" style="font-weight: 400;" title="Install UX Icons">Installation</h3>
+                    <twig:Terminal bottomPadding="20">
+                        composer require {{ package.composerName }}
+                    </twig:Terminal>
+                </div>
+                <div class="col-4">
+                    <h3 class="ubuntu mb-4" style="font-weight: 400;" title="Search UX Icons">Search Icons</h3>
+                    <twig:Terminal bottomPadding="20">
+                        php bin/console ux:icons:search lucide
+                    </twig:Terminal>
+                </div>
+                <div class="col-4">
+                   <h3 class="ubuntu mb-4" style="font-weight: 400;" title="Symfony UX Bundle Configuration">Configuration</h3>
+                    <twig:Terminal bottomPadding="20">
+                        php bin/console debug:config ux_icons
+                    </twig:Terminal>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block aside %}
+    {{ include('icons/_aside.html.twig') }}
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+    <twig:Icon:IconModal/>
+{% endblock %}

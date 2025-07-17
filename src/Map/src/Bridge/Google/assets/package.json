@@ -1,0 +1,56 @@
+{
+    "name": "@symfony/ux-google-map",
+    "description": "GoogleMaps bridge for Symfony UX Map, integrate interactive maps in your Symfony applications",
+    "license": "MIT",
+    "version": "2.27.0",
+    "keywords": [
+        "symfony-ux",
+        "google-maps",
+        "map"
+    ],
+    "homepage": "https://ux.symfony.com/map",
+    "repository": "https://github.com/symfony/ux-google-map",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "dist/map_controller.js",
+    "types": "dist/map_controller.d.ts",
+    "scripts": {
+        "build": "tsx ../../../../../../bin/build_package.ts .",
+        "watch": "tsx ../../../../../../bin/build_package.ts . --watch",
+        "test": "../../../../../../bin/test_package.sh .",
+        "check": "biome check",
+        "ci": "biome ci"
+    },
+    "symfony": {
+        "controllers": {
+            "map": {
+                "main": "dist/map_controller.js",
+                "webpackMode": "lazy",
+                "fetch": "lazy",
+                "enabled": true
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0",
+            "@googlemaps/js-api-loader": "^1.16.6",
+            "@symfony/ux-google-map": "path:%PACKAGE%/dist/map_controller.js"
+        }
+    },
+    "peerDependencies": {
+        "@googlemaps/js-api-loader": "^1.16.6",
+        "@hotwired/stimulus": "^3.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@googlemaps/js-api-loader": {
+            "optional": false
+        }
+    },
+    "devDependencies": {
+        "@googlemaps/js-api-loader": "^1.16.6",
+        "@hotwired/stimulus": "^3.0.0",
+        "@symfony/ux-map": "workspace:*",
+        "@types/google.maps": "^3.55.9"
+    }
+}

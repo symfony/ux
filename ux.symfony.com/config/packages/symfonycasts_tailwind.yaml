@@ -1,0 +1,9 @@
+symfonycasts_tailwind:
+    # Specify the EXACT version of Tailwind CSS you want to use
+    binary_version: 'v4.1.1'
+
+    # Alternatively, you can specify the path to the binary that you manage yourself
+    #binary: 'node_modules/.bin/tailwindcss'
+
+    input_css:
+        - assets/styles/toolkit-shadcn.css

@@ -7,10 +7,9 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Controller } from '@hotwired/stimulus';
 import Cropper from 'cropperjs';
+
 import CropEvent = Cropper.CropEvent;
 
 export default class CropperController extends Controller {

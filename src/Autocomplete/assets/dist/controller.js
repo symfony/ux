@@ -15,6 +15,8 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
+/* global Reflect, Promise, SuppressedError, Symbol */
+
 
 function __classPrivateFieldGet(receiver, state, kind, f) {
     if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
@@ -22,33 +24,51 @@ function __classPrivateFieldGet(receiver, state, kind, f) {
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 }
 
-var _default_1_instances, _default_1_getCommonConfig, _default_1_createAutocomplete, _default_1_createAutocompleteWithHtmlContents, _default_1_createAutocompleteWithRemoteData, _default_1_stripTags, _default_1_mergeObjects, _default_1_createTomSelect;
+typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
+    var e = new Error(message);
+    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
+};
+
+var _default_1_instances, _default_1_getCommonConfig, _default_1_createAutocomplete, _default_1_createAutocompleteWithHtmlContents, _default_1_createAutocompleteWithRemoteData, _default_1_stripTags, _default_1_mergeConfigs, _default_1_normalizePluginsToHash, _default_1_createTomSelect;
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
         _default_1_instances.add(this);
         this.isObserving = false;
         this.hasLoadedChoicesPreviously = false;
+        this.originalOptions = [];
+        _default_1_normalizePluginsToHash.set(this, (plugins) => {
+            if (Array.isArray(plugins)) {
+                return plugins.reduce((acc, plugin) => {
+                    if (typeof plugin === 'string') {
+                        acc[plugin] = {};
+                    }
+                    if (typeof plugin === 'object' && plugin.name) {
+                        acc[plugin.name] = plugin.options || {};
+                    }
+                    return acc;
+                }, {});
+            }
+            return plugins;
+        });
     }
     initialize() {
-        if (this.requiresLiveIgnore()) {
-            this.element.setAttribute('data-live-ignore', '');
-            if (this.element.id) {
-                const label = document.querySelector(`label[for="${this.element.id}"]`);
-                if (label) {
-                    label.setAttribute('data-live-ignore', '');
-                }
-            }
-        }
-        else {
-            if (!this.mutationObserver) {
-                this.mutationObserver = new MutationObserver((mutations) => {
-                    this.onMutations(mutations);
-                });
-            }
+        if (!this.mutationObserver) {
+            this.mutationObserver = new MutationObserver((mutations) => {
+                this.onMutations(mutations);
+            });
         }
     }
     connect() {
+        if (this.selectElement) {
+            this.originalOptions = this.createOptionsDataStructure(this.selectElement);
+        }
+        this.initializeTomSelect();
+    }
+    initializeTomSelect() {
+        if (this.selectElement) {
+            this.selectElement.setAttribute('data-skip-morph', '');
+        }
         if (this.urlValue) {
             this.tomSelect = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createAutocompleteWithRemoteData).call(this, this.urlValue, this.hasMinCharactersValue ? this.minCharactersValue : null);
             return;
@@ -62,7 +82,31 @@ class default_1 extends Controller {
     }
     disconnect() {
         this.stopMutationObserver();
+        let currentSelectedValues = [];
+        if (this.selectElement) {
+            if (this.selectElement.multiple) {
+                currentSelectedValues = Array.from(this.selectElement.options)
+                    .filter((option) => option.selected)
+                    .map((option) => option.value);
+            }
+            else {
+                currentSelectedValues = [this.selectElement.value];
+            }
+        }
         this.tomSelect.destroy();
+        if (this.selectElement) {
+            if (this.selectElement.multiple) {
+                Array.from(this.selectElement.options).forEach((option) => {
+                    option.selected = currentSelectedValues.includes(option.value);
+                });
+            }
+            else {
+                this.selectElement.value = currentSelectedValues[0];
+            }
+        }
+    }
+    urlValueChanged() {
+        this.resetTomSelect();
     }
     getMaxOptions() {
         return this.selectElement ? this.selectElement.options.length : 50;
@@ -86,21 +130,24 @@ class default_1 extends Controller {
         if (!this.hasPreloadValue) {
             return 'focus';
         }
-        if (this.preloadValue == 'false') {
+        if (this.preloadValue === 'false') {
             return false;
         }
-        if (this.preloadValue == 'true') {
+        if (this.preloadValue === 'true') {
             return true;
         }
         return this.preloadValue;
     }
     resetTomSelect() {
         if (this.tomSelect) {
+            this.dispatchEvent('before-reset', { tomSelect: this.tomSelect });
             this.stopMutationObserver();
-            this.tomSelect.clearOptions();
-            this.tomSelect.settings.maxOptions = this.getMaxOptions();
-            this.tomSelect.sync();
-            this.startMutationObserver();
+            const currentHtml = this.element.innerHTML;
+            const currentValue = this.tomSelect.getValue();
+            this.tomSelect.destroy();
+            this.element.innerHTML = currentHtml;
+            this.initializeTomSelect();
+            this.tomSelect.setValue(currentValue);
         }
     }
     changeTomSelectDisabledState(isDisabled) {
@@ -113,22 +160,6 @@ class default_1 extends Controller {
         }
         this.startMutationObserver();
     }
-    updateTomSelectPlaceholder() {
-        const input = this.element;
-        let placeholder = input.getAttribute('placeholder') || input.getAttribute('data-placeholder');
-        if (!placeholder && !this.tomSelect.allowEmptyOption) {
-            const option = input.querySelector('option[value=""]');
-            if (option) {
-                placeholder = option.textContent;
-            }
-        }
-        if (placeholder) {
-            this.stopMutationObserver();
-            this.tomSelect.settings.placeholder = placeholder;
-            this.tomSelect.control_input.setAttribute('placeholder', placeholder);
-            this.startMutationObserver();
-        }
-    }
     startMutationObserver() {
         if (!this.isObserving && this.mutationObserver) {
             this.mutationObserver.observe(this.element, {
@@ -136,6 +167,7 @@ class default_1 extends Controller {
                 subtree: true,
                 attributes: true,
                 characterData: true,
+                attributeOldValue: true,
             });
             this.isObserving = true;
         }
@@ -147,76 +179,65 @@ class default_1 extends Controller {
         }
     }
     onMutations(mutations) {
-        const addedOptionElements = [];
-        const removedOptionElements = [];
-        let hasAnOptionChanged = false;
         let changeDisabledState = false;
-        let changePlaceholder = false;
+        let requireReset = false;
         mutations.forEach((mutation) => {
             switch (mutation.type) {
-                case 'childList':
-                    if (mutation.target instanceof HTMLOptionElement) {
-                        if (mutation.target.value === '') {
-                            changePlaceholder = true;
-                            break;
-                        }
-                        hasAnOptionChanged = true;
-                        break;
-                    }
-                    mutation.addedNodes.forEach((node) => {
-                        if (node instanceof HTMLOptionElement) {
-                            if (removedOptionElements.includes(node)) {
-                                removedOptionElements.splice(removedOptionElements.indexOf(node), 1);
-                                return;
-                            }
-                            addedOptionElements.push(node);
-                        }
-                    });
-                    mutation.removedNodes.forEach((node) => {
-                        if (node instanceof HTMLOptionElement) {
-                            if (addedOptionElements.includes(node)) {
-                                addedOptionElements.splice(addedOptionElements.indexOf(node), 1);
-                                return;
-                            }
-                            removedOptionElements.push(node);
-                        }
-                    });
-                    break;
                 case 'attributes':
-                    if (mutation.target instanceof HTMLOptionElement) {
-                        hasAnOptionChanged = true;
-                        break;
-                    }
                     if (mutation.target === this.element && mutation.attributeName === 'disabled') {
                         changeDisabledState = true;
                         break;
                     }
-                    break;
-                case 'characterData':
-                    if (mutation.target instanceof Text && mutation.target.parentElement instanceof HTMLOptionElement) {
-                        if (mutation.target.parentElement.value === '') {
-                            changePlaceholder = true;
-                            break;
+                    if (mutation.target === this.element && mutation.attributeName === 'multiple') {
+                        const isNowMultiple = this.element.hasAttribute('multiple');
+                        const wasMultiple = mutation.oldValue === 'multiple';
+                        if (isNowMultiple !== wasMultiple) {
+                            requireReset = true;
                         }
-                        hasAnOptionChanged = true;
+                        break;
                     }
+                    break;
             }
         });
-        if (hasAnOptionChanged || addedOptionElements.length > 0 || removedOptionElements.length > 0) {
+        const newOptions = this.selectElement ? this.createOptionsDataStructure(this.selectElement) : [];
+        const areOptionsEquivalent = this.areOptionsEquivalent(newOptions);
+        if (!areOptionsEquivalent || requireReset) {
+            this.originalOptions = newOptions;
             this.resetTomSelect();
         }
         if (changeDisabledState) {
             this.changeTomSelectDisabledState(this.formElement.disabled);
         }
-        if (changePlaceholder) {
-            this.updateTomSelectPlaceholder();
-        }
     }
-    requiresLiveIgnore() {
-        return this.element instanceof HTMLSelectElement && this.element.multiple;
+    createOptionsDataStructure(selectElement) {
+        return Array.from(selectElement.options).map((option) => {
+            return {
+                value: option.value,
+                text: option.text,
+            };
+        });
+    }
+    areOptionsEquivalent(newOptions) {
+        const filteredOriginalOptions = this.originalOptions.filter((option) => option.value !== '');
+        const filteredNewOptions = newOptions.filter((option) => option.value !== '');
+        const originalPlaceholderOption = this.originalOptions.find((option) => option.value === '');
+        const newPlaceholderOption = newOptions.find((option) => option.value === '');
+        if (originalPlaceholderOption &&
+            newPlaceholderOption &&
+            originalPlaceholderOption.text !== newPlaceholderOption.text) {
+            return false;
+        }
+        if (filteredOriginalOptions.length !== filteredNewOptions.length) {
+            return false;
+        }
+        const normalizeOption = (option) => `${option.value}-${option.text}`;
+        const originalOptionsSet = new Set(filteredOriginalOptions.map(normalizeOption));
+        const newOptionsSet = new Set(filteredNewOptions.map(normalizeOption));
+        return (originalOptionsSet.size === newOptionsSet.size &&
+            [...originalOptionsSet].every((option) => newOptionsSet.has(option)));
     }
 }
-_default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _default_1_getCommonConfig() {
+_default_1_normalizePluginsToHash = new WeakMap(), _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _default_1_getCommonConfig() {
     const plugins = {};
     const isMultiple = !this.selectElement || this.selectElement.multiple;
     if (!this.formElement.disabled && !isMultiple) {
@@ -232,52 +253,82 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
         no_results: () => {
             return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
         },
+        option_create: (data, escapeData) => {
+            return `<div class="create">${this.createOptionTextValue.replace('%placeholder%', `<strong>${escapeData(data.input)}</strong>`)}</div>`;
+        },
     };
-    const requiresLiveIgnore = this.requiresLiveIgnore();
     const config = {
         render,
         plugins,
         onItemAdd: () => {
             this.tomSelect.setTextboxValue('');
         },
-        onInitialize: function () {
-            if (requiresLiveIgnore) {
-                const tomSelect = this;
-                tomSelect.wrapper.setAttribute('data-live-ignore', '');
+        closeAfterSelect: true,
+        onOptionAdd: (value, data) => {
+            let parentElement = this.tomSelect.input;
+            let optgroupData = null;
+            const optgroup = data[this.tomSelect.settings.optgroupField];
+            if (optgroup && this.tomSelect.optgroups) {
+                optgroupData = this.tomSelect.optgroups[optgroup];
+                if (optgroupData) {
+                    const optgroupElement = parentElement.querySelector(`optgroup[label="${optgroupData.label}"]`);
+                    if (optgroupElement) {
+                        parentElement = optgroupElement;
+                    }
+                }
+            }
+            const optionElement = document.createElement('option');
+            optionElement.value = value;
+            optionElement.text = data[this.tomSelect.settings.labelField];
+            const optionOrder = data.$order;
+            let orderedOption = null;
+            for (const [, tomSelectOption] of Object.entries(this.tomSelect.options)) {
+                if (tomSelectOption.$order === optionOrder) {
+                    orderedOption = parentElement.querySelector(`:scope > option[value="${CSS.escape(tomSelectOption[this.tomSelect.settings.valueField])}"]`);
+                    break;
+                }
+            }
+            if (orderedOption) {
+                orderedOption.insertAdjacentElement('afterend', optionElement);
+            }
+            else if (optionOrder >= 0) {
+                parentElement.append(optionElement);
+            }
+            else {
+                parentElement.prepend(optionElement);
             }
         },
-        closeAfterSelect: true,
     };
     if (!this.selectElement && !this.urlValue) {
         config.shouldLoad = () => false;
     }
-    return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeObjects).call(this, config, this.tomSelectOptionsValue);
+    return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeConfigs).call(this, config, this.tomSelectOptionsValue);
 }, _default_1_createAutocomplete = function _default_1_createAutocomplete() {
-    const config = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeObjects).call(this, __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_getCommonConfig).call(this), {
+    const config = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeConfigs).call(this, __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_getCommonConfig).call(this), {
         maxOptions: this.getMaxOptions(),
     });
     return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createTomSelect).call(this, config);
 }, _default_1_createAutocompleteWithHtmlContents = function _default_1_createAutocompleteWithHtmlContents() {
-    const config = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeObjects).call(this, __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_getCommonConfig).call(this), {
+    const commonConfig = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_getCommonConfig).call(this);
+    const labelField = commonConfig.labelField ?? 'text';
+    const config = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeConfigs).call(this, commonConfig, {
         maxOptions: this.getMaxOptions(),
         score: (search) => {
             const scoringFunction = this.tomSelect.getScoreFunction(search);
             return (item) => {
-                return scoringFunction(Object.assign(Object.assign({}, item), { text: __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_stripTags).call(this, item.text) }));
+                return scoringFunction({ ...item, text: __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_stripTags).call(this, item[labelField]) });
             };
         },
         render: {
-            item: function (item) {
-                return `<div>${item.text}</div>`;
-            },
-            option: function (item) {
-                return `<div>${item.text}</div>`;
-            },
+            item: (item) => `<div>${item[labelField]}</div>`,
+            option: (item) => `<div>${item[labelField]}</div>`,
         },
     });
     return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createTomSelect).call(this, config);
 }, _default_1_createAutocompleteWithRemoteData = function _default_1_createAutocompleteWithRemoteData(autocompleteEndpointUrl, minCharacterLength) {
-    const config = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeObjects).call(this, __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_getCommonConfig).call(this), {
+    const commonConfig = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_getCommonConfig).call(this);
+    const labelField = commonConfig.labelField ?? 'text';
+    const config = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeConfigs).call(this, commonConfig, {
         firstUrl: (query) => {
             const separator = autocompleteEndpointUrl.includes('?') ? '&' : '?';
             return `${autocompleteEndpointUrl}${separator}query=${encodeURIComponent(query)}`;
@@ -305,17 +356,12 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
             return query.length >= 3;
         },
         optgroupField: 'group_by',
-        score: function (search) {
-            return function (item) {
-                return 1;
-            };
-        },
+        score: (search) => (item) => 1,
         render: {
-            option: function (item) {
-                return `<div>${item.text}</div>`;
-            },
-            item: function (item) {
-                return `<div>${item.text}</div>`;
+            option: (item) => `<div>${item[labelField]}</div>`,
+            item: (item) => `<div>${item[labelField]}</div>`,
+            loading_more: () => {
+                return `<div class="loading-more-results">${this.loadingMoreTextValue}</div>`;
             },
             no_more_results: () => {
                 return `<div class="no-more-results">${this.noMoreResultsTextValue}</div>`;
@@ -323,14 +369,24 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
             no_results: () => {
                 return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
             },
+            option_create: (data, escapeData) => {
+                return `<div class="create">${this.createOptionTextValue.replace('%placeholder%', `<strong>${escapeData(data.input)}</strong>`)}</div>`;
+            },
         },
         preload: this.preload,
     });
     return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createTomSelect).call(this, config);
 }, _default_1_stripTags = function _default_1_stripTags(string) {
     return string.replace(/(<([^>]+)>)/gi, '');
-}, _default_1_mergeObjects = function _default_1_mergeObjects(object1, object2) {
-    return Object.assign(Object.assign({}, object1), object2);
+}, _default_1_mergeConfigs = function _default_1_mergeConfigs(config1, config2) {
+    return {
+        ...config1,
+        ...config2,
+        plugins: {
+            ...__classPrivateFieldGet(this, _default_1_normalizePluginsToHash, "f").call(this, config1.plugins || {}),
+            ...__classPrivateFieldGet(this, _default_1_normalizePluginsToHash, "f").call(this, config2.plugins || {}),
+        },
+    };
 }, _default_1_createTomSelect = function _default_1_createTomSelect(options) {
     const preConnectPayload = { options };
     this.dispatchEvent('pre-connect', preConnectPayload);
@@ -342,8 +398,10 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
 default_1.values = {
     url: String,
     optionsAsHtml: Boolean,
+    loadingMoreText: String,
     noResultsFoundText: String,
     noMoreResultsText: String,
+    createOptionText: String,
     minCharacters: Number,
     tomSelectOptions: Object,
     preload: String,

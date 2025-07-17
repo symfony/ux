@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Controller } from '@hotwired/stimulus';
 import Typed from 'typed.js';
 
@@ -25,7 +23,7 @@ export default class extends Controller {
         fadeOutClass: { type: String, default: 'typed-fade-out' },
         fadeOutDelay: { type: Number, default: 500 },
         loop: Boolean,
-        loopCount: { type: Number, default: Infinity },
+        loopCount: { type: Number, default: Number.POSITIVE_INFINITY },
         showCursor: { type: Boolean, default: true },
         cursorChar: { type: String, default: '.' },
         autoInsertCss: { type: Boolean, default: true },

@@ -12,13 +12,13 @@
 namespace Symfony\UX\Autocomplete;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\PropertyAccess\PropertyPathInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\UX\Autocomplete\Doctrine\DoctrineRegistryWrapper;
 
 /**
@@ -73,10 +73,7 @@ final class AutocompleteResultsExecutor
 
         if (!method_exists($autocompleter, 'getGroupBy') || null === $groupBy = $autocompleter->getGroupBy()) {
             foreach ($paginator as $entity) {
-                $results[] = [
-                    'value' => $autocompleter->getValue($entity),
-                    'text' => $autocompleter->getLabel($entity),
-                ];
+                $results[] = $this->formatResult($autocompleter, $entity);
             }
 
             return new AutocompleteResults($results, $hasNextPage);
@@ -98,16 +95,13 @@ final class AutocompleteResultsExecutor
         }
 
         if (!\is_callable($groupBy)) {
-            throw new \InvalidArgumentException(sprintf('Option "group_by" must be callable, "%s" given.', get_debug_type($groupBy)));
+            throw new \InvalidArgumentException(\sprintf('Option "group_by" must be callable, "%s" given.', get_debug_type($groupBy)));
         }
 
         $optgroupLabels = [];
 
         foreach ($paginator as $entity) {
-            $result = [
-                'value' => $autocompleter->getValue($entity),
-                'text' => $autocompleter->getLabel($entity),
-            ];
+            $result = $this->formatResult($autocompleter, $entity);
 
             $groupLabels = $groupBy($entity, $result['value'], $result['text']);
 
@@ -123,5 +117,22 @@ final class AutocompleteResultsExecutor
         $optgroups = array_map(fn (string $label) => ['value' => $label, 'label' => $label], array_unique($optgroupLabels));
 
         return new AutocompleteResults($results, $hasNextPage, $optgroups);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function formatResult(EntityAutocompleterInterface $autocompleter, object $entity): array
+    {
+        $attributes = [];
+        if (method_exists($autocompleter, 'getAttributes')) {
+            $attributes = $autocompleter->getAttributes($entity);
+        }
+
+        return [
+            ...$attributes,
+            'value' => $autocompleter->getValue($entity),
+            'text' => $autocompleter->getLabel($entity),
+        ];
     }
 }

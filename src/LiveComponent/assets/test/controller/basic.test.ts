@@ -7,16 +7,15 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-import {createTest, initComponent, shutdownTests, startStimulus} from '../tools';
-import { htmlToElement } from '../../src/dom_utils';
 import Component from '../../src/Component';
-import LiveControllerDefault, { getComponent } from '../../src/live_controller';
+import { findComponents } from '../../src/ComponentRegistry';
+import { htmlToElement } from '../../src/dom_utils';
+import { getComponent } from '../../src/live_controller';
+import { createTest, initComponent, shutdownTests, startStimulus } from '../tools';
 
 describe('LiveController Basic Tests', () => {
     afterEach(() => {
-        shutdownTests()
+        shutdownTests();
     });
 
     it('dispatches connect event', async () => {
@@ -25,7 +24,7 @@ describe('LiveController Basic Tests', () => {
         let eventTriggered = false;
         container.addEventListener('live:connect', () => {
             eventTriggered = true;
-        })
+        });
         const { element } = await startStimulus(container);
 
         // smoke test
@@ -34,20 +33,22 @@ describe('LiveController Basic Tests', () => {
     });
 
     it('creates the Component object', async () => {
-        const test = await createTest({ firstName: 'Ryan' }, (data: any) => `
+        const test = await createTest(
+            { firstName: 'Ryan' },
+            (data: any) => `
             <div ${initComponent(data, { debounce: 115, id: 'the-id', fingerprint: 'the-fingerprint' })}></div>
-        `);
+        `
+        );
 
         expect(test.component).toBeInstanceOf(Component);
         expect(test.component.defaultDebounce).toEqual(115);
         expect(test.component.id).toEqual('the-id');
-        expect(test.component.fingerprint).toEqual('the-fingerprint');
         await expect(getComponent(test.element)).resolves.toBe(test.component);
-        expect(LiveControllerDefault.componentRegistry.findComponents(test.component, false, null)[0]).toBe(test.component);
+        expect(findComponents(test.component, false, null)[0]).toBe(test.component);
 
         // check that it disconnects
         document.body.innerHTML = '';
         await expect(getComponent(test.element)).rejects.toThrow('Component not found for element');
-        expect(LiveControllerDefault.componentRegistry.findComponents(test.component, false, null)).toEqual([]);
+        expect(findComponents(test.component, false, null)).toEqual([]);
     });
 });

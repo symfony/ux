@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LazyImage\DependencyInjection;
 
+use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -22,6 +23,9 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\UX\LazyImage\BlurHash\BlurHash;
 use Symfony\UX\LazyImage\BlurHash\BlurHashInterface;
 use Symfony\UX\LazyImage\Twig\BlurHashExtension;
+use Symfony\UX\LazyImage\Twig\BlurHashRuntime;
+
+trigger_deprecation('symfony/ux-lazy-image', '2.27.0', 'The package is deprecated and will be removed in 3.0.');
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
@@ -32,26 +36,50 @@ class LazyImageExtension extends Extension implements PrependExtensionInterface
 {
     public function load(array $configs, ContainerBuilder $container)
     {
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
         if (class_exists(ImageManager::class)) {
             $container
                 ->setDefinition('lazy_image.image_manager', new Definition(ImageManager::class))
-                ->setPublic(false)
+                ->addArgument(BlurHash::intervention3() ? Driver::class : [])
             ;
         }
 
         $container
             ->setDefinition('lazy_image.blur_hash', new Definition(BlurHash::class))
-            ->addArgument(new Reference('lazy_image.image_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE))
-            ->setPublic(false)
+            ->setArguments([
+                new Reference('lazy_image.image_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                null, // $cache
+                null, // $fetchImageContent
+            ])
         ;
+
+        if (isset($config['cache'])) {
+            $container
+                ->getDefinition('lazy_image.blur_hash')
+                ->setArgument(1, new Reference($config['cache']))
+            ;
+        }
+
+        if (isset($config['fetch_image_content'])) {
+            $container
+                ->getDefinition('lazy_image.blur_hash')
+                ->setArgument(2, new Reference($config['fetch_image_content']))
+            ;
+        }
 
         $container->setAlias(BlurHashInterface::class, 'lazy_image.blur_hash')->setPublic(false);
 
         $container
             ->setDefinition('twig.extension.blur_hash', new Definition(BlurHashExtension::class))
-            ->addArgument(new Reference('lazy_image.blur_hash'))
             ->addTag('twig.extension')
-            ->setPublic(false)
+        ;
+
+        $container
+            ->setDefinition('twig.runtime.blur_hash', new Definition(BlurHashRuntime::class))
+            ->addArgument(new Reference('lazy_image.blur_hash'))
+            ->addTag('twig.runtime')
         ;
     }
 

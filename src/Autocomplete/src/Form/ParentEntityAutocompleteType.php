@@ -23,11 +23,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * All form types that want to expose autocomplete functionality should use this for its getParent().
+ *
+ * @deprecated since UX 2.13, use "Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType" instead
  */
 final class ParentEntityAutocompleteType extends AbstractType implements DataMapperInterface
 {
     public function __construct(
-        private UrlGeneratorInterface $urlGenerator
+        private UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -37,7 +39,7 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
         $attribute = AsEntityAutocompleteField::getInstance($formType::class);
 
         if (!$attribute && empty($options['autocomplete_url'])) {
-            throw new \LogicException(sprintf('You must either provide your own autocomplete_url, or add #[AsEntityAutocompleteField] attribute to %s.', $formType::class));
+            throw new \LogicException(\sprintf('You must either provide your own autocomplete_url, or add #[AsEntityAutocompleteField] attribute to "%s".', $formType::class));
         }
 
         // Use the provided URL, or auto-generate from the provided alias
@@ -78,7 +80,7 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
             // }
             'filter_query' => null,
             // set to the string role that's required to view the autocomplete results
-            // or a callable: function(Symfony\Component\Security\Core\Security $security): bool
+            // or a callable: function(Symfony\Bundle\SecurityBundle\Security $security): bool
             'security' => false,
             // set the max results number that a query on automatic endpoint return.
             'max_results' => 10,
@@ -102,13 +104,13 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
         return 'ux_entity_autocomplete';
     }
 
-    public function mapDataToForms($data, $forms)
+    public function mapDataToForms($data, $forms): void
     {
         $form = current(iterator_to_array($forms, false));
         $form->setData($data);
     }
 
-    public function mapFormsToData($forms, &$data)
+    public function mapFormsToData($forms, &$data): void
     {
         $form = current(iterator_to_array($forms, false));
         $data = $form->getData();

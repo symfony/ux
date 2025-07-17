@@ -31,10 +31,24 @@ class FrameworkAppKernel extends Kernel
         return [new FrameworkBundle(), new CropperjsBundle()];
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) {
-            $container->loadFromExtension('framework', ['secret' => '$ecret', 'test' => true]);
+            $frameworkConfig = [
+                'secret' => '$ecret',
+                'test' => true,
+                'http_method_override' => false,
+                'php_errors' => ['log' => true],
+                'validation' => [
+                    'email_validation_mode' => 'html5',
+                ],
+            ];
+
+            if (self::VERSION_ID >= 60200) {
+                $frameworkConfig['handle_all_throwables'] = true;
+            }
+
+            $container->loadFromExtension('framework', $frameworkConfig);
         });
     }
 }

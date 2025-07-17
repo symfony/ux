@@ -1,0 +1,5 @@
+%Since symfony/property-info 7.1: The "Symfony\\Component\\PropertyInfo\\Extractor\\ReflectionExtractor::getTypes\(\)".+%
+%Since symfony/property-info 7.1: The "Symfony\\Component\\PropertyInfo\\Extractor\\PhpStanExtractor::getTypes\(\)".+%
+%Since symfony/property-info 7.1: The "Symfony\\Component\\PropertyInfo\\Extractor\\PhpDocExtractor::getTypes\(\)".+%
+%Since symfony/property-info 7.1: The "Symfony\\Component\\PropertyInfo\\PropertyInfoExtractor::getTypes\(\)".+%
+%Since symfony/property-info 7.1: The "Symfony\\Component\\PropertyInfo\\Type" class is deprecated..+%

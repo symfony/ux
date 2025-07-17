@@ -15,14 +15,15 @@ use PHPUnit\Framework\TestCase;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\MountedComponent;
+use Twig\Runtime\EscaperRuntime;
 
 final class ComponentStackTest extends TestCase
 {
     public function testPushAndPopAndFetchingComponents(): void
     {
         $stack = new ComponentStack();
-        $component1 = new MountedComponent('component1', new \stdClass(), new ComponentAttributes([]));
-        $component2 = new MountedComponent('component2', new \stdClass(), new ComponentAttributes([]));
+        $component1 = new MountedComponent('component1', new \stdClass(), new ComponentAttributes([], new EscaperRuntime()));
+        $component2 = new MountedComponent('component2', new \stdClass(), new ComponentAttributes([], new EscaperRuntime()));
 
         $this->assertNull($stack->pop());
         $this->assertNull($stack->getCurrentComponent());

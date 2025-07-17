@@ -7,11 +7,9 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
-import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
+import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import SvelteController from '../src/render_controller';
 import MyComponent from './fixtures/MyComponent.svelte';
 
@@ -64,11 +62,10 @@ describe('SvelteController', () => {
 
         await waitFor(() => expect(component).toHaveClass('connected'));
         await waitFor(() => expect(component).toHaveClass('mounted'));
-        await waitFor(() => expect(component.innerHTML).toEqual('<div><div>Hello Symfony</div></div>'));
+        await waitFor(() => expect(component.innerHTML).toContain('<div><div>Hello Symfony</div></div>'));
     });
 
     it('connect without props', async () => {
-
         const container = mountDOM(`
           <div data-testid="component" id="container"
               data-controller="check svelte"
@@ -83,7 +80,7 @@ describe('SvelteController', () => {
 
         await waitFor(() => expect(component).toHaveClass('connected'));
         await waitFor(() => expect(component).toHaveClass('mounted'));
-        await waitFor(() => expect(component.innerHTML).toEqual('<div><div>Hello without props</div></div>'));
+        await waitFor(() => expect(component.innerHTML).toContain('<div><div>Hello without props</div></div>'));
     });
 
     it('connect with props and intro', async () => {
@@ -104,6 +101,6 @@ describe('SvelteController', () => {
         await waitFor(() => expect(component).toHaveClass('connected'));
         await waitFor(() => expect(component).toHaveClass('mounted'));
         expect(component.innerHTML).toContain('style="animation:');
-        await waitFor(() => expect(component.innerHTML.trim()).toEqual('<div style=""><div>Hello Symfony with transition</div></div>'));
+        await waitFor(() => expect(component.innerHTML.trim()).toContain('<div>Hello Symfony with transition</div>'));
     });
 });

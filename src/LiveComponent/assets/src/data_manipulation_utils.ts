@@ -9,7 +9,7 @@ export function getDeepData(data: any, propertyPath: string) {
 }
 
 // post.user.username
-const parseDeepData = function (data: any, propertyPath: string) {
+const parseDeepData = (data: any, propertyPath: string) => {
     const finalData = JSON.parse(JSON.stringify(data));
 
     let currentLevelData = finalData;
@@ -69,13 +69,13 @@ export function setDeepData(data: any, propertyPath: string, value: any): any {
             throw new Error(
                 `The model name ${propertyPath} was never initialized. Did you forget to add exposed={"${lastPart}"} to its LiveProp?`
             );
-        } else {
-            throw new Error(
-                `The model name "${propertyPath}" was never initialized. Did you forget to expose "${lastPart}" as a LiveProp? Available models values are: ${
-                    Object.keys(data).length > 0 ? Object.keys(data).join(', ') : '(none)'
-                }`
-            );
         }
+
+        throw new Error(
+            `The model name "${propertyPath}" was never initialized. Did you forget to expose "${lastPart}" as a LiveProp? Available models values are: ${
+                Object.keys(data).length > 0 ? Object.keys(data).join(', ') : '(none)'
+            }`
+        );
     }
 
     currentLevelData[finalKey] = value;

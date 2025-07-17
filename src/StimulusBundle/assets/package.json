@@ -1,8 +1,26 @@
 {
     "name": "@symfony/stimulus-bundle",
     "description": "Integration of @hotwired/stimulus into Symfony",
-    "version": "1.0.0",
+    "private": true,
     "license": "MIT",
+    "version": "2.27.0",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://ux.symfony.com/stimulus",
+    "repository": "https://github.com/symfony/stimulus-bundle",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "dist/loader.js",
+    "scripts": {
+        "build": "tsx ../../../bin/build_package.ts .",
+        "watch": "tsx ../../../bin/build_package.ts . --watch",
+        "test": "../../../bin/test_package.sh .",
+        "check": "biome check",
+        "ci": "biome ci"
+    },
     "symfony": {
         "needsPackageAsADependency": false,
         "importmap": {
@@ -12,6 +30,6 @@
     },
     "peerDependencies": {
         "@hotwired/stimulus": "^3.0.0",
-        "@symfony/stimulus-bridge": "^3.2.0"
+        "@symfony/stimulus-bridge": "^3.2.0 || ^4.0.0"
     }
 }

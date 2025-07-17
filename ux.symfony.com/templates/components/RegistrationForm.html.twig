@@ -2,13 +2,13 @@
     {{ attributes }}
 >
     {% if isSuccessful %}
-        <div>Welcome {{ newUserEmail}}!</div>
+        <div>Welcome {{ newUserEmail }}!</div>
     {% else %}
         {{ form_start(form, {
             attr: {
-                'novalidate': true,
-                'data-action': 'live#action',
-                'data-action-name': 'prevent|saveRegistration',
+                novalidate: true,
+                'data-action': 'live#action:prevent',
+                'data-live-action-param': 'saveRegistration',
             }
         }) }}
             {{ form_row(form.email) }}
@@ -21,6 +21,6 @@
             >Register</button>
 
             {{ form_rest(form) }}
-        </form>
+        {{ form_end(form) }}
     {% endif %}
 </div>

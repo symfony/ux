@@ -1,0 +1,153 @@
+{% extends 'demos/live_demo.html.twig' %}
+
+{% block demo_container %}
+
+    <div class="container container-xl mb-5">
+        <twig:Browser url="/foo" class="shadow-blur shadow-blur--rainbow" id="browser">
+
+            {# Retro Tshirt SVG code #}
+            {# Used as external ref in ProductGrid2 (to improve code readability) #}
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" display="none">
+                <symbol id="svg-tshirt" viewBox="0 0 1068 1032">
+                    <style>
+                      #svg-tshirt .retro {
+                        stroke: rgba(0 0 0 / 0.5);
+                        stroke-width: 2px;
+                        fill: color-mix(in lch, currentColor 50%, #fff 75%);
+                      }
+                    </style>
+                    <path
+                        d="M397 5c-1 2-5 3-8 3-3 1-7 2-11 5-11 6-58 24-95 35-25 8-39 14-47 19-8 6-39 38-51 54l-26 34-25 35-65 87a1267 1267 0 0 1-65 78c0 2 11 13 31 28a1375 1375 0 0 1 51 43 704 704 0 0 1 69 59l3 1 10-9a772.9 772.9 0 0 0 41-39c15.6-15.5 32-30.1 49-44 1 0 1 1-1 51l-3 77c-3.8 109-5.1 218-4 327-2.1 56.3-2.8 112.7-2 169 2 6 24 9 81 9 36.7-.4 73.5 1.3 110 5l14-1 23-1 25-1c27-2 36-2 48-1 13 2 32 2 83 0l106-2c77-1 82-1 87-4 1.3-25.3 2-50.7 2-76-2.2-148-6.6-296-13-444-2-70-2-98 0-99 1-1 3 1 11 8a261 261 0 0 0 32 27 323 323 0 0 1 44 39l8 6 3 4 4-3 10-7c9.3-9.1 19-17.8 29-26a766.8 766.8 0 0 1 81-66 279 279 0 0 1 28-24l-3-3c-4-3-16-18-33-40l-20-26-37-53A760 760 0 0 0 821 67c-4-5-20-12-36-17l-35-10A1330 1330 0 0 1 650 6c-6-3-11-3-15 1a224 224 0 0 1-119 27c-24-1-52-4-65-8-7-2-26-11-33-16-5-4-13-7-16-7l-5 2Z"/>
+                    <path class="retro"
+                          d="M1042.5 335.4 944.9 422l-51.7 47 20 18.8L995 416l68.1-55.5-20.5-25ZM24.5 332l100.4 85.2 54.1 49.3-21 20.5-73.5-64.9-79.9-67L24.5 332ZM657.9 9 650 6c-6-3-11-3-15 1a224 224 0 0 1-119 27c-24-1-52-4-65-8-7-2-26-11-33-16-5-4-13-7-16-7l-5 2c-1 2-5 3-8 3l-1.3.4-1.6.6c17.6 29 71.8 50 135.9 50 64 0 118.2-21 135.9-50Z"/>
+                    <path class="retro"
+                          d="m1042.8 331.1 24.4 29.8-70.3 57.4-83.7 73.5-24.4-22.7 54-49.3 100-88.7ZM995 416l68.1-55.5-20.5-25L945 422l-51.7 47 20 18.8L995 416ZM24.2 327.8l102.7 87.1 56.5 51.5-25.3 24.7-75.6-66.7-82.1-69 23.8-27.6ZM84.5 422l73.5 65 21-20.5-54-49.3L24.4 332 4.6 355l79.9 67.1ZM662.3 7.5l-1.8 3c-9.4 15.4-28 28.2-52.1 37.2-24.1 9-54 14.3-86.4 14.3-32.4 0-62.3-5.3-86.4-14.4-24.1-9-42.8-21.8-52.1-37l-2-3.3 3.6-1.2 1.7-.5 1.3-.4.4-.2h.5c1.2 0 2.6-.2 3.8-.6a4.3 4.3 0 0 0 1.5-.7l.5-1 6.6-2.7h.6c2.1 0 5.4 1 8.4 2.2 3.1 1.3 6.6 3.2 9.4 5.4a128 128 0 0 0 16 8.8c6.5 3.1 12.8 5.8 16 6.7 12.7 4 40.3 6.9 64.3 7.9A221 221 0 0 0 633.3 4.6c2.4-2.3 5.2-3.6 8.4-3.7a19 19 0 0 1 9.6 2.4l7.8 2.9 3.3 1.3ZM650 6c-6-3-11-3-15 1a224 224 0 0 1-119 27c-24-1-52-4-65-8-7-2-26-11-33-16-5-4-13-7-16-7l-5 2c-1 2-5 3-8 3l-1.3.4-1.6.6 1.7 2.6C407 39.2 459.8 59 522 59c62.1 0 115-19.8 134.2-47.4L658 9a1291.2 1291.2 0 0 1-7.9-3Z"/>
+                </symbol>
+            </svg>
+
+            {# Retro Tshirt Infinite Scroll collection #}
+            <twig:ProductGrid2/>
+        </twig:Browser>
+    </div>
+
+    <section class="py-5">
+        <div class="container container-xxl">
+            <div class="code-description text-center">
+                <h2>So... how does it work?</h2>
+                <p>
+                    Let's focus on two aspects. But first, <code>did you scroll</code> all the way to the end?
+                    <br>
+                    You might have missed some important details about performance... 🍿
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section--alt py-5">
+        <div class="container container-xxl d-flex flex-column">
+            <twig:Code:CodeWithExplanationRow
+                filename="templates/components/ProductGrid2.html.twig"
+                lineStart="1"
+                lineEnd="10"
+                reversed
+                codeCols="7"
+                copyButton="0"
+            >
+                ## Morphin' Trick
+
+                This trick is very similar to the one used in the
+                [`Part 1/2`]({{ url('app_demo_live_component_infinite_scroll') }})
+                of this "Infinite Scroll" demo with LiveComponent.
+
+                ### Previous Results
+
+                🐯 For the previous page results, we add one fake item
+                corresponding to the last item of the previous page,
+                with the same `id`. This allows the **addition of new elements** after the existing ones.
+
+            </twig:Code:CodeWithExplanationRow>
+            <twig:Code:CodeWithExplanationRow
+                filename="templates/components/ProductGrid2.html.twig"
+                lineStart="11"
+                lineEnd="19"
+                reversed
+                codeCols="7"
+                copyButton="0"
+            >
+                ### Current Page Results
+
+                🦊 For the current page results, we use both `id` and `data-live-ignore`.
+                This allows the **conservation of previous elements** in the DOM.
+            </twig:Code:CodeWithExplanationRow>
+            <twig:Code:CodeWithExplanationRow
+                filename="templates/components/ProductGrid2.html.twig"
+                lineStart="31"
+                lineEnd="36"
+                reversed
+                codeCols="7"
+                copyButton="0"
+            >
+                ### Next Page
+
+                🐼 Finally, for the next page results, we add placeholders with an `id`.
+
+                This, combined with the "previous page" trick, force the **order of insertion** of
+                the next elements
+
+                ... with no div in between!
+            </twig:Code:CodeWithExplanationRow>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container container-xxl">
+            <twig:Code:CodeWithExplanationRow
+                filename="assets/controllers/appear-controller.js"
+                codeCols="7"
+            >
+                ## Intersection Observer
+
+                We want to load the next results automatically when the user
+                scrolls to the bottom of the page.
+
+                We create a small **Stimulus controller** that leverages the `IntersectionObserver` API
+                to trigger a custom `appear` event when its target element becomes visible in the viewport.
+
+                By making a dedicated controller, we can keep the logic separate from the product grid.
+                And we can reuse it in other components!
+            </twig:Code:CodeWithExplanationRow>
+
+            <twig:Code:CodeWithExplanationRow
+                filename="templates/components/ProductGrid2.html.twig"
+                lineStart="1"
+                lineEnd="3"
+                codeCols="7"
+            >
+                ### LiveComponent + Stimulus
+
+                We now add the `appear` controller to our `ProductGrid` component, thanks to the `stimulus_controller`
+                method.
+            </twig:Code:CodeWithExplanationRow>
+
+             <twig:Code:CodeWithExplanationRow
+                filename="templates/components/ProductGrid2.html.twig"
+                lineStart="32"
+                lineEnd="45"
+                codeCols="7"
+            >
+                ### Event -> LiveAction
+
+                Finally, we add the `loader` target to the first "item" placeholder we added for the next page.
+
+                🦁 And we configure the `appear` event to call the `more` action of the `live controller`, when
+                the event is triggered.
+
+                 Doing so, we can **load the next page** when the first item of the next page is visible.
+
+                 With no need for a "Load More" button!
+            </twig:Code:CodeWithExplanationRow>
+
+        </div>
+    </section>
+
+{% endblock %}

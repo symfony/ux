@@ -1,7 +1,7 @@
 # Symfony UX Chart.js
 
 Symfony UX Chart.js is a Symfony bundle integrating the [Chart.js](https://www.chartjs.org/)
-library in Symfony applications. It is part of [the Symfony UX initiative](https://symfony.com/ux).
+library in Symfony applications. It is part of [the Symfony UX initiative](https://ux.symfony.com/).
 
 **This repository is a READ-ONLY sub-tree split**. See
 https://github.com/symfony/ux to create issues or submit pull requests.

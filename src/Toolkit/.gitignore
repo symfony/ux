@@ -1,0 +1,7 @@
+vendor
+composer.lock
+.phpunit.result.cache
+var
+.twig-cs-fixer.cache
+tests/ui/output
+tests/ui/screens

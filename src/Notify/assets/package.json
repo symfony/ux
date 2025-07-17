@@ -2,9 +2,25 @@
     "name": "@symfony/ux-notify",
     "description": "Native notification integration for Symfony using Mercure",
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "2.27.0",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://ux.symfony.com/notify",
+    "repository": "https://github.com/symfony/ux-notify",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
     "main": "dist/controller.js",
     "types": "dist/controller.d.ts",
+    "scripts": {
+        "build": "tsx ../../../bin/build_package.ts .",
+        "watch": "tsx ../../../bin/build_package.ts . --watch",
+        "test": "../../../bin/test_package.sh .",
+        "check": "biome check",
+        "ci": "biome ci"
+    },
     "symfony": {
         "controllers": {
             "notify": {

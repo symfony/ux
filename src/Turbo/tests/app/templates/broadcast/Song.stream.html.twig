@@ -1,19 +1,15 @@
 {% block create %}
-    <turbo-stream action="append" target="songs">
-        <template>
-            <div id="{{ 'song_' ~ id }}">{{ entity.title }} (#{{ id }}){% if entity.artist %} by {{ entity.artist.name }} (#{{ entity.artist.id }}){% endif %}</div>
-        </template>
-    </turbo-stream>
+    <twig:Turbo:Stream:Append target="#songs">
+        <div id="song_{{ id }}">{{ entity.title }} (#{{ id }}){% if entity.artist %} by {{ entity.artist.name }} (#{{ entity.artist.id }}){% endif %}</div>
+    </twig:Turbo:Stream:Append>
 {% endblock %}
 
 {% block update %}
-    <turbo-stream action="update" target="song_{{ id }}">
-        <template>
-            {{ entity.title }} (#{{ id }}, updated)
-        </template>
-    </turbo-stream>
+    <twig:Turbo:Stream:Update target="#song_{{ id }}">
+        {{ entity.title }} (#{{ id }}, updated)
+    </twig:Turbo:Stream:Update>
 {% endblock %}
 
 {% block remove %}
-    <turbo-stream action="remove" target="song_{{ id }}"></turbo-stream>
+    <twig:Turbo:Stream:Remove target="#song_{{ id }}"></twig:Turbo:Stream:Remove>
 {% endblock %}

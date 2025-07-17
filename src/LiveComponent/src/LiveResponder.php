@@ -12,8 +12,6 @@
 namespace Symfony\UX\LiveComponent;
 
 /**
- * @experimental
- *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */
 final class LiveResponder
@@ -28,7 +26,7 @@ final class LiveResponder
      */
     private array $browserEventsToDispatch = [];
 
-    public function emit(string $eventName, array $data = [], string $componentName = null): void
+    public function emit(string $eventName, array $data = [], ?string $componentName = null): void
     {
         $this->eventsToEmit[] = [
             'event' => $eventName,
@@ -38,7 +36,7 @@ final class LiveResponder
         ];
     }
 
-    public function emitUp(string $eventName, array $data = [], string $componentName = null): void
+    public function emitUp(string $eventName, array $data = [], ?string $componentName = null): void
     {
         $this->eventsToEmit[] = [
             'event' => $eventName,

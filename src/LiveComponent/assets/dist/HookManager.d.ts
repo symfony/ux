@@ -1,7 +1,7 @@
+import type { ComponentHookCallback, ComponentHookName } from './Component';
 export default class {
     private hooks;
-    constructor();
-    register(hookName: string, callback: () => void): void;
-    unregister(hookName: string, callback: () => void): void;
-    triggerHook(hookName: string, ...args: any[]): void;
+    register<T extends string | ComponentHookName = ComponentHookName>(hookName: T, callback: ComponentHookCallback<T>): void;
+    unregister<T extends string | ComponentHookName = ComponentHookName>(hookName: T, callback: ComponentHookCallback<T>): void;
+    triggerHook<T extends string | ComponentHookName = ComponentHookName>(hookName: T, ...args: Parameters<ComponentHookCallback<T>>): void;
 }

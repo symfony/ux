@@ -1,6 +1,13 @@
 Symfony UX Swup
 ===============
 
+.. warning::
+
+    **Deprecated: This package has been deprecated in 2.x and will be removed in the next major version.**
+
+    To keep the same functionality in your Symfony application, please follow the migration steps
+    from the `Symfony UX Swup README.md`_.
+
 Symfony UX Swup is a Symfony bundle integrating `Swup`_ in
 Symfony applications. It is part of `the Symfony UX initiative`_.
 
@@ -12,9 +19,11 @@ bringing the complexity of a React/Vue/Angular application.
 Installation
 ------------
 
-Before you start, make sure you have `StimulusBundle configured in your app`_.
+.. caution::
 
-Then install the bundle using Composer and Symfony Flex:
+    Before you start, make sure you have `StimulusBundle configured in your app`_.
+
+Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -28,9 +37,9 @@ needed if you're using AssetMapper):
     $ npm install --force
     $ npm run watch
 
-    # or use yarn
-    $ yarn install --force
-    $ yarn watch
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-swup npm package`_
 
 Usage
 -----
@@ -144,6 +153,7 @@ Stimulus controller:
     // assets/controllers/myswup_controller.js
 
     import { Controller } from '@hotwired/stimulus';
+    import SwupProgressPlugin from '@swup/progress-plugin';
 
     export default class extends Controller {
         connect() {
@@ -153,13 +163,14 @@ Stimulus controller:
 
         disconnect() {
             // You should always remove listeners when the controller is disconnected to avoid side-effects
-            this.element.removeEventListener('swup:pre-connect', this._onConnect);
-            this.element.removeEventListener('swup:connect', this._onPreConnect);
+            this.element.removeEventListener('swup:connect', this._onConnect);
+            this.element.removeEventListener('swup:pre-connect', this._onPreConnect);
         }
 
         _onPreConnect(event) {
             // Swup has not been initialized - options can be changed
             console.log(event.detail.options); // Options that will be used to initialize Swup
+            event.detail.options.plugins.push(new SwupProgressPlugin()); // Adding the progress bar plugin
         }
 
         _onConnect(event) {
@@ -198,7 +209,9 @@ the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`Swup`: https://swup.js.org/
-.. _`the Symfony UX initiative`: https://symfony.com/ux
+.. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _`StimulusBundle`: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`Swup Options`: https://swup.js.org/options
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
+.. _`@symfony/ux-swup npm package`: https://www.npmjs.com/package/@symfony/ux-swup
+.. _`Symfony UX Swup README.md`: https://github.com/symfony/ux/tree/2.x/src/Swup/README.md

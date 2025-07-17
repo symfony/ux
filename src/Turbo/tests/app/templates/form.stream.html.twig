@@ -1,13 +1,9 @@
-<turbo-stream action="replace" target="form">
-    <template>
-        <div id="form">
-            This div replaces the existing element with the DOM ID "form".
-        </div>
-    </template>
-</turbo-stream>
+<twig:Turbo:Stream:Replace target="#form">
+    <div id="form">
+        This div replaces the existing element with the DOM ID "form".
+    </div>
+</twig:Turbo:Stream:Replace>
 
-<turbo-stream action="append" target="another_block">
-    <template>
-        <div>Appended!</div>
-    </template>
-</turbo-stream>
+<twig:Turbo:Stream:Append target="#another_block">
+    <div>Appended!</div>
+</twig:Turbo:Stream:Append>

@@ -14,8 +14,8 @@ namespace Symfony\UX\Turbo;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\UX\Turbo\DependencyInjection\Compiler\RegisterMercureHubsPass;
 
 /**
  * @author Kévin Dunglas <kevin@dunglas.fr>
@@ -25,16 +25,13 @@ final class TurboBundle extends Bundle
     public const STREAM_FORMAT = 'turbo_stream';
     public const STREAM_MEDIA_TYPE = 'text/vnd.turbo-stream.html';
 
-    public function boot(): void
-    {
-        (new Request())->setFormat(self::STREAM_FORMAT, self::STREAM_MEDIA_TYPE);
-    }
-
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 
-        $container->addCompilerPass(new class() implements CompilerPassInterface {
+        $container->addCompilerPass(new RegisterMercureHubsPass());
+
+        $container->addCompilerPass(new class implements CompilerPassInterface {
             public function process(ContainerBuilder $container): void
             {
                 if (!$container->hasDefinition('turbo.broadcaster.imux')) {

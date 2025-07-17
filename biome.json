@@ -1,0 +1,75 @@
+{
+    "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+    "files": {
+        "includes": [
+            "**/*.json",
+            "**/*.md",
+            "**/bin/**/*.js",
+            "**/src/**/assets/src/**",
+            "**/src/**/assets/test/**",
+            "!**/composer.json",
+            "!**/vendor",
+            "!**/package.json",
+            "!**/node_modules",
+            "!**/var",
+            "!**/dist"
+        ]
+    },
+    "linter": {
+        "rules": {
+            "suspicious": {
+                "noExplicitAny": "off",
+                "noEmptyBlockStatements": "off"
+            },
+            "complexity": {
+                "noStaticOnlyClass": "off",
+                "noForEach": "off"
+            },
+            "style": {
+                "noParameterAssign": "off",
+                "useAsConstAssertion": "error",
+                "useDefaultParameterLast": "error",
+                "useEnumInitializers": "error",
+                "useSelfClosingElements": "error",
+                "useSingleVarDeclarator": "error",
+                "noUnusedTemplateLiteral": "error",
+                "useNumberNamespace": "error",
+                "noInferrableTypes": "error",
+                "noUselessElse": "error"
+            },
+            "performance": {
+                "noDelete": "off"
+            }
+        }
+    },
+    "formatter": {
+        "lineWidth": 120,
+        "indentStyle": "space",
+        "indentWidth": 4
+    },
+    "javascript": {
+        "formatter": {
+            "trailingCommas": "es5",
+            "bracketSameLine": true,
+            "quoteStyle": "single"
+        }
+    },
+    "overrides": [
+        {
+            "includes": ["**/*.svelte"],
+            "linter": {
+                "rules": {
+                    "style": {
+                        "useConst": "off"
+                    }
+                }
+            }
+        },
+        {
+            "includes": ["src/Map/**/*map_controller.ts"],
+            "formatter": {
+                "lineWidth": 160
+            }
+        }
+    ]
+}

@@ -37,7 +37,7 @@ class SvelteComponentExtensionTest extends TestCase
         );
 
         $this->assertSame(
-            'data-controller="symfony--ux-svelte--svelte" data-symfony--ux-svelte--svelte-component-value="SubDir&#x2F;MyComponent" data-symfony--ux-svelte--svelte-props-value="&#x7B;&quot;fullName&quot;&#x3A;&quot;Titouan&#x20;Galopin&quot;&#x7D;"',
+            'data-controller="symfony--ux-svelte--svelte" data-symfony--ux-svelte--svelte-component-value="SubDir/MyComponent" data-symfony--ux-svelte--svelte-props-value="{&quot;fullName&quot;:&quot;Titouan Galopin&quot;}"',
             $rendered
         );
     }
@@ -53,7 +53,7 @@ class SvelteComponentExtensionTest extends TestCase
         $rendered = $extension->renderSvelteComponent('SubDir/MyComponent');
 
         $this->assertSame(
-            'data-controller="symfony--ux-svelte--svelte" data-symfony--ux-svelte--svelte-component-value="SubDir&#x2F;MyComponent"',
+            'data-controller="symfony--ux-svelte--svelte" data-symfony--ux-svelte--svelte-component-value="SubDir/MyComponent"',
             $rendered
         );
     }
@@ -73,7 +73,7 @@ class SvelteComponentExtensionTest extends TestCase
         );
 
         $this->assertSame(
-            'data-controller="symfony--ux-svelte--svelte" data-symfony--ux-svelte--svelte-component-value="SubDir&#x2F;MyComponent" data-symfony--ux-svelte--svelte-props-value="&#x7B;&quot;fullName&quot;&#x3A;&quot;Titouan&#x20;Galopin&quot;&#x7D;" data-symfony--ux-svelte--svelte-intro-value="true"',
+            'data-controller="symfony--ux-svelte--svelte" data-symfony--ux-svelte--svelte-component-value="SubDir/MyComponent" data-symfony--ux-svelte--svelte-props-value="{&quot;fullName&quot;:&quot;Titouan Galopin&quot;}" data-symfony--ux-svelte--svelte-intro-value="true"',
             $rendered
         );
     }

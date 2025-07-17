@@ -1,0 +1,56 @@
+{% if meta.canonical|default %}
+    <link rel="canonical" href="{{ meta.canonical }}">
+{% endif %}
+
+<meta name="description" content="{% block description %}{{ meta.description|default|u.truncate(200, '...', false) }}{% endblock %}">
+
+{# META < META.SOCIAL #}
+{% set social = {
+    title: meta.title,
+    description: meta.description ?? '',
+    image: meta.image ?? null,
+    url: meta.canonical ?? null,
+}|merge(meta.social ?? {}) %}
+
+{# META < META.SOCIAL < META.OG #}
+{% set og = social|merge(meta.og ?? {}) %}
+<meta property="og:title" content="{{ og.title|u.truncate(55, '...', false) }}">
+<meta property="og:description" content="{{ og.description|u.truncate(120, '...', false) }}">
+<meta property="og:url" content="{{ absolute_url(og.url) }}">
+<meta property="og:site_name" content="Symfony UX" />
+{% if og.image.url|default %}
+    <meta property="og:image" content="{{ absolute_url(og.image.url) }}">
+     {% if og.image.width|default and og.image.height|default %}
+        <meta property="og:image:width" content="{{ og.image.width }}">
+        <meta property="og:image:height" content="{{ og.image.height }}">
+     {% endif %}
+    {% if og.image.type|default %}
+        <meta property="og:image:type" content="{{ og.image.type }}">
+    {% endif %}
+    {% if og.image.alt|default %}
+        <meta property="og:image:alt" content="{{ og.image.alt }}">
+    {% endif %}
+{% else %}
+    <meta property="og:image" content="{{ absolute_url(asset('images/symfony-ux.png')) }}">
+    <meta property="og:image:width" content="1024">
+    <meta property="og:image:height" content="576">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:alt" content="Symfony UX">
+{% endif %}
+
+{# META < META.SOCIAL < META.TWITTER #}
+{% set twitter = social|merge(meta.twitter ?? {}) %}
+{% set twitter_card = twitter.image.width|default(0) >= 1200 ? 'summary_large_image' : 'summary' %}
+<meta name="twitter:title" content="{{ twitter.title|u.truncate(55, '...', false) }}">
+<meta name="twitter:card" content="{{ twitter.card ?? twitter_card }}">
+<meta name="twitter:description" content="{{ twitter.description|u.truncate(120, '...', false) }}">
+<meta name="twitter:url" content="{{ absolute_url(twitter.url) }}">
+<meta name="twitter:creator" content="{{ twitter.creator ?? '@symfonyux' }}">
+<meta name="twitter:site" content="@symfonyux">
+{% if twitter.image.url|default %}
+    <meta name="twitter:image" content="{{ absolute_url(twitter.image.url) }}">
+    {% if twitter.image.width|default and twitter.image.height|default %}
+        <meta name="twitter:image:width" content="{{ twitter.image.width }}">
+        <meta name="twitter:image:height" content="{{ twitter.image.height }}">
+    {% endif %}
+{% endif %}

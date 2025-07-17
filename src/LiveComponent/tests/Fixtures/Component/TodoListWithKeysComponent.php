@@ -15,7 +15,7 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent('todo_list_with_keys')]
+#[AsLiveComponent('todo_list_with_keys', method: 'get')]
 final class TodoListWithKeysComponent
 {
     use DefaultActionTrait;

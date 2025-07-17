@@ -1,0 +1,55 @@
+<div
+    id="live-memory-board"
+    class="LiveMemory-Board" {{ attributes.without('class') }}
+    data-live-memory-theme="{{ game.theme }}"
+>
+
+    <style>
+      .shadow-blur::after {
+        --gradient: var({{ '--live-memory-gradient-' ~ game.theme }}) !important;
+      }
+    </style>
+
+    <div class="LiveMemory-Header">
+        {{ include('demos/live_memory/components/LiveMemory/Metrics.html.twig') }}
+    </div>
+
+    <div class="LiveMemory-Main">
+
+        <div class="LiveMemory-Tableau">
+            {{ include('demos/live_memory/components/LiveMemory/Tableau.html.twig') }}
+        </div>
+
+        <div id="live-memory-overlay" class="LiveMemory-Overlay {{ game.isEnded ? 'on' : 'hidden' }}">
+            {% for i in 0..5 %}<div></div>{% endfor %}
+        </div>
+
+        <div id="live-memory-score" class="LiveMemory-Score {{ game.isEnded ? 'on' : 'hidden' }}">
+            {% if game.isEnded %}
+                {{ include('demos/live_memory/components/LiveMemory/Score.html.twig', {game}) }}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="LiveMemory-Footer">
+        <span>Dev & Design by <a href="https://github.com/smnandre" rel="external author" class="author">Simon André</a></span>
+        <span>A <a href="{{ url('app_demos') }}">Symfony UX demo</a></span>
+        <span><a href="https://github.com/symfony/ux">Version 1.1.0</a></span>
+    </div>
+
+    {% if app.debug %}
+        <div class="LiveMemory-Debug">
+            {% for i in 1..3 %}
+                <button
+                    type="button"
+                    data-action="live#action"
+                    data-live-action-param="play"
+                    data-live-level-param="{{ i }}"
+                >
+                    {{ i + 2 }}x{{ i + 1 }}
+                </button>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</div>

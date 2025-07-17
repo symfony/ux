@@ -12,9 +12,9 @@
 namespace Symfony\UX\Autocomplete\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\UX\Autocomplete\AutocompleteResultsExecutor;
 use Symfony\UX\Autocomplete\Doctrine\DoctrineRegistryWrapper;
 use Symfony\UX\Autocomplete\EntityAutocompleterInterface;

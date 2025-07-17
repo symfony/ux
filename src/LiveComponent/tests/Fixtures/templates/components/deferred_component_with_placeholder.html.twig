@@ -1,0 +1,9 @@
+<div {{ attributes }}>
+    {# for row in this.rows ... #}
+</div>
+
+{% macro placeholder(props) %}
+    {%- for i in 1..props.rows -%}
+        <span class="loading-row"></span>
+    {%- endfor -%}
+{% endmacro %}

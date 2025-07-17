@@ -1,0 +1,24 @@
+<!--
+- Kit: Shadcn UI
+- Component: Skeleton
+- Code:
+```twig
+<div class="flex items-center space-x-4">
+    <twig:Skeleton class="h-12 w-12 rounded-full" />
+    <div class="space-y-2">
+        <twig:Skeleton class="h-4 w-[250px]" />
+        <twig:Skeleton class="h-4 w-[200px]" />
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex items-center space-x-4">
+    <div class="animate-pulse rounded-full bg-muted h-12 w-12 rounded-full"></div>
+
+    <div class="space-y-2">
+        <div class="animate-pulse rounded-full bg-muted h-4 w-[250px]"></div>
+
+        <div class="animate-pulse rounded-full bg-muted h-4 w-[200px]"></div>
+
+    </div>
+</div>

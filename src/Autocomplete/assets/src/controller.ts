@@ -1,7 +1,14 @@
 import { Controller } from '@hotwired/stimulus';
 import TomSelect from 'tom-select';
-import { TPluginHash } from 'tom-select/dist/types/contrib/microplugin';
-import { RecursivePartial, TomSettings, TomTemplates, TomLoadCallback } from 'tom-select/dist/types/types';
+import type { TPluginHash } from 'tom-select/dist/types/contrib/microplugin';
+import type {
+    RecursivePartial,
+    TomLoadCallback,
+    TomOption,
+    TomSettings,
+    TomTemplates,
+} from 'tom-select/dist/types/types';
+import type { escape_html } from 'tom-select/dist/types/utils';
 
 export interface AutocompletePreConnectOptions {
     options: any;
@@ -10,13 +17,19 @@ export interface AutocompleteConnectOptions {
     tomSelect: TomSelect;
     options: any;
 }
+interface OptionDataStructure {
+    value: string;
+    text: string;
+}
 
 export default class extends Controller {
     static values = {
         url: String,
         optionsAsHtml: Boolean,
+        loadingMoreText: String,
         noResultsFoundText: String,
         noMoreResultsText: String,
+        createOptionText: String,
         minCharacters: Number,
         tomSelectOptions: Object,
         preload: String,
@@ -24,8 +37,10 @@ export default class extends Controller {
 
     declare readonly urlValue: string;
     declare readonly optionsAsHtmlValue: boolean;
+    declare readonly loadingMoreTextValue: string;
     declare readonly noMoreResultsTextValue: string;
     declare readonly noResultsFoundTextValue: string;
+    declare readonly createOptionTextValue: string;
     declare readonly minCharactersValue: number;
     declare readonly hasMinCharactersValue: boolean;
     declare readonly tomSelectOptionsValue: object;
@@ -36,33 +51,31 @@ export default class extends Controller {
     private mutationObserver: MutationObserver;
     private isObserving = false;
     private hasLoadedChoicesPreviously = false;
+    private originalOptions: Array<OptionDataStructure> = [];
 
     initialize() {
-        if (this.requiresLiveIgnore()) {
-            // unfortunately, TomSelect does enough weird things that, for a
-            // multi select, if the HTML in the `<select>` element changes,
-            // we can't reliably update TomSelect to see those changes. So,
-            // as a workaround, we tell LiveComponents to entirely ignore trying
-            // to update this item
-            this.element.setAttribute('data-live-ignore', '');
-            if (this.element.id) {
-                const label = document.querySelector(`label[for="${this.element.id}"]`);
-                if (label) {
-                    label.setAttribute('data-live-ignore', '');
-                }
-            }
-        } else {
-            // for non-multiple selects, we use a MutationObserver to update
-            // the TomSelect instance if the options themselves change
-            if (!this.mutationObserver) {
-                this.mutationObserver = new MutationObserver((mutations: MutationRecord[]) => {
-                    this.onMutations(mutations);
-                });
-            }
+        if (!this.mutationObserver) {
+            this.mutationObserver = new MutationObserver((mutations: MutationRecord[]) => {
+                this.onMutations(mutations);
+            });
         }
     }
 
     connect() {
+        if (this.selectElement) {
+            this.originalOptions = this.createOptionsDataStructure(this.selectElement);
+        }
+
+        this.initializeTomSelect();
+    }
+
+    initializeTomSelect() {
+        // live components support: morphing the options causes issues, due
+        // to the fact that TomSelect reorders the options when you select them
+        if (this.selectElement) {
+            this.selectElement.setAttribute('data-skip-morph', '');
+        }
+
         if (this.urlValue) {
             this.tomSelect = this.#createAutocompleteWithRemoteData(
                 this.urlValue,
@@ -84,7 +97,39 @@ export default class extends Controller {
 
     disconnect() {
         this.stopMutationObserver();
+
+        // TomSelect.destroy() resets the element to its original HTML. This
+        // causes the selected value to be lost. We store it.
+        let currentSelectedValues: string[] = [];
+        if (this.selectElement) {
+            if (this.selectElement.multiple) {
+                // For multiple selects, store the array of selected values
+                currentSelectedValues = Array.from(this.selectElement.options)
+                    .filter((option) => option.selected)
+                    .map((option) => option.value);
+            } else {
+                // For single select, store the single value
+                currentSelectedValues = [this.selectElement.value];
+            }
+        }
+
         this.tomSelect.destroy();
+
+        if (this.selectElement) {
+            if (this.selectElement.multiple) {
+                // Restore selections for multiple selects
+                Array.from(this.selectElement.options).forEach((option) => {
+                    option.selected = currentSelectedValues.includes(option.value);
+                });
+            } else {
+                // Restore selection for single select
+                this.selectElement.value = currentSelectedValues[0];
+            }
+        }
+    }
+
+    urlValueChanged() {
+        this.resetTomSelect();
     }
 
     #getCommonConfig(): Partial<TomSettings> {
@@ -108,9 +153,10 @@ export default class extends Controller {
             no_results: () => {
                 return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
             },
+            option_create: (data: TomOption, escapeData: typeof escape_html): string => {
+                return `<div class="create">${this.createOptionTextValue.replace('%placeholder%', `<strong>${escapeData(data.input)}</strong>`)}</div>`;
+            },
         };
-
-        const requiresLiveIgnore = this.requiresLiveIgnore();
 
         const config: RecursivePartial<TomSettings> = {
             render,
@@ -119,14 +165,48 @@ export default class extends Controller {
             onItemAdd: () => {
                 this.tomSelect.setTextboxValue('');
             },
-            // see initialize() method for explanation
-            onInitialize: function () {
-                if (requiresLiveIgnore) {
-                    const tomSelect = this as any;
-                    tomSelect.wrapper.setAttribute('data-live-ignore', '');
+            closeAfterSelect: true,
+            // fix positioning (in the dropdown) of options added through addOption()
+            onOptionAdd: (value: string, data: { [key: string]: any }) => {
+                let parentElement = this.tomSelect.input as Element;
+                let optgroupData = null;
+
+                const optgroup = data[this.tomSelect.settings.optgroupField];
+                if (optgroup && this.tomSelect.optgroups) {
+                    optgroupData = this.tomSelect.optgroups[optgroup];
+                    if (optgroupData) {
+                        const optgroupElement = parentElement.querySelector(`optgroup[label="${optgroupData.label}"]`);
+                        if (optgroupElement) {
+                            parentElement = optgroupElement;
+                        }
+                    }
+                }
+
+                const optionElement = document.createElement('option');
+                optionElement.value = value;
+                optionElement.text = data[this.tomSelect.settings.labelField];
+
+                const optionOrder = data.$order;
+                let orderedOption = null;
+
+                for (const [, tomSelectOption] of Object.entries(this.tomSelect.options)) {
+                    if (tomSelectOption.$order === optionOrder) {
+                        orderedOption = parentElement.querySelector(
+                            `:scope > option[value="${CSS.escape(tomSelectOption[this.tomSelect.settings.valueField])}"]`
+                        );
+
+                        break;
+                    }
+                }
+
+                if (orderedOption) {
+                    orderedOption.insertAdjacentElement('afterend', optionElement);
+                } else if (optionOrder >= 0) {
+                    parentElement.append(optionElement);
+                } else {
+                    parentElement.prepend(optionElement);
                 }
             },
-            closeAfterSelect: true,
         };
 
         // for non-autocompleting input elements, avoid the "No results" message that always shows
@@ -134,11 +214,11 @@ export default class extends Controller {
             config.shouldLoad = () => false;
         }
 
-        return this.#mergeObjects(config, this.tomSelectOptionsValue);
+        return this.#mergeConfigs(config, this.tomSelectOptionsValue);
     }
 
     #createAutocomplete(): TomSelect {
-        const config = this.#mergeObjects(this.#getCommonConfig(), {
+        const config = this.#mergeConfigs(this.#getCommonConfig(), {
             maxOptions: this.getMaxOptions(),
         });
 
@@ -146,22 +226,21 @@ export default class extends Controller {
     }
 
     #createAutocompleteWithHtmlContents(): TomSelect {
-        const config = this.#mergeObjects(this.#getCommonConfig(), {
+        const commonConfig = this.#getCommonConfig();
+        const labelField = commonConfig.labelField ?? 'text';
+
+        const config = this.#mergeConfigs(commonConfig, {
             maxOptions: this.getMaxOptions(),
             score: (search: string) => {
                 const scoringFunction = this.tomSelect.getScoreFunction(search);
                 return (item: any) => {
                     // strip HTML tags from each option's searchable text
-                    return scoringFunction({ ...item, text: this.#stripTags(item.text) });
+                    return scoringFunction({ ...item, text: this.#stripTags(item[labelField]) });
                 };
             },
             render: {
-                item: function (item: any) {
-                    return `<div>${item.text}</div>`;
-                },
-                option: function (item: any) {
-                    return `<div>${item.text}</div>`;
-                },
+                item: (item: any) => `<div>${item[labelField]}</div>`,
+                option: (item: any) => `<div>${item[labelField]}</div>`,
             },
         });
 
@@ -169,7 +248,10 @@ export default class extends Controller {
     }
 
     #createAutocompleteWithRemoteData(autocompleteEndpointUrl: string, minCharacterLength: number | null): TomSelect {
-        const config: RecursivePartial<TomSettings> = this.#mergeObjects(this.#getCommonConfig(), {
+        const commonConfig = this.#getCommonConfig();
+        const labelField = commonConfig.labelField ?? 'text';
+
+        const config: RecursivePartial<TomSettings> = this.#mergeConfigs(commonConfig, {
             firstUrl: (query: string) => {
                 const separator = autocompleteEndpointUrl.includes('?') ? '&' : '?';
 
@@ -212,23 +294,21 @@ export default class extends Controller {
             },
             optgroupField: 'group_by',
             // avoid extra filtering after results are returned
-            score: function (search: string) {
-                return function (item: any) {
-                    return 1;
-                };
-            },
+            score: (search: string) => (item: any) => 1,
             render: {
-                option: function (item: any) {
-                    return `<div>${item.text}</div>`;
-                },
-                item: function (item: any) {
-                    return `<div>${item.text}</div>`;
+                option: (item: any) => `<div>${item[labelField]}</div>`,
+                item: (item: any) => `<div>${item[labelField]}</div>`,
+                loading_more: (): string => {
+                    return `<div class="loading-more-results">${this.loadingMoreTextValue}</div>`;
                 },
                 no_more_results: (): string => {
                     return `<div class="no-more-results">${this.noMoreResultsTextValue}</div>`;
                 },
                 no_results: (): string => {
                     return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
+                },
+                option_create: (data: TomOption, escapeData: typeof escape_html): string => {
+                    return `<div class="create">${this.createOptionTextValue.replace('%placeholder%', `<strong>${escapeData(data.input)}</strong>`)}</div>`;
                 },
             },
             preload: this.preload,
@@ -245,9 +325,38 @@ export default class extends Controller {
         return string.replace(/(<([^>]+)>)/gi, '');
     }
 
-    #mergeObjects(object1: any, object2: any): any {
-        return { ...object1, ...object2 };
+    #mergeConfigs(config1: any, config2: any): any {
+        return {
+            ...config1,
+            ...config2,
+            // Plugins from both configs should be merged together.
+            plugins: {
+                ...this.#normalizePluginsToHash(config1.plugins || {}),
+                ...this.#normalizePluginsToHash(config2.plugins || {}),
+            },
+        };
     }
+
+    /**
+     * Normalizes the plugins to a hash, so that we can merge them easily.
+     */
+    #normalizePluginsToHash = (plugins: TomSettings['plugins']): TPluginHash => {
+        if (Array.isArray(plugins)) {
+            return plugins.reduce((acc, plugin) => {
+                if (typeof plugin === 'string') {
+                    acc[plugin] = {};
+                }
+
+                if (typeof plugin === 'object' && plugin.name) {
+                    acc[plugin.name] = plugin.options || {};
+                }
+
+                return acc;
+            }, {} as TPluginHash);
+        }
+
+        return plugins;
+    };
 
     /**
      * Returns the element, but only if it's a select element.
@@ -290,11 +399,11 @@ export default class extends Controller {
             return 'focus';
         }
 
-        if (this.preloadValue == 'false') {
+        if (this.preloadValue === 'false') {
             return false;
         }
 
-        if (this.preloadValue == 'true') {
+        if (this.preloadValue === 'true') {
             return true;
         }
 
@@ -303,11 +412,18 @@ export default class extends Controller {
 
     private resetTomSelect(): void {
         if (this.tomSelect) {
+            this.dispatchEvent('before-reset', { tomSelect: this.tomSelect });
             this.stopMutationObserver();
-            this.tomSelect.clearOptions();
-            this.tomSelect.settings.maxOptions = this.getMaxOptions();
-            this.tomSelect.sync();
-            this.startMutationObserver();
+
+            // Grab the current HTML then restore it after destroying TomSelect
+            // This is needed because TomSelect's destroy revert the element to
+            // its original HTML.
+            const currentHtml = this.element.innerHTML;
+            const currentValue: any = this.tomSelect.getValue();
+            this.tomSelect.destroy();
+            this.element.innerHTML = currentHtml;
+            this.initializeTomSelect();
+            this.tomSelect.setValue(currentValue);
         }
     }
 
@@ -321,33 +437,6 @@ export default class extends Controller {
         this.startMutationObserver();
     }
 
-    /**
-     * TomSelect doesn't give us a way to update the placeholder, so most of
-     * this code is copied from TomSelect's source code.
-     *
-     * @private
-     */
-    private updateTomSelectPlaceholder(): void {
-        const input = this.element;
-        let placeholder = input.getAttribute('placeholder') || input.getAttribute('data-placeholder');
-        if (!placeholder && !this.tomSelect.allowEmptyOption) {
-            const option = input.querySelector('option[value=""]');
-
-            if (option) {
-                placeholder = option.textContent;
-            }
-        }
-
-        if (placeholder) {
-            this.stopMutationObserver();
-            // override settings so it's used again later
-            this.tomSelect.settings.placeholder = placeholder;
-            // and set it right now
-            this.tomSelect.control_input.setAttribute('placeholder', placeholder);
-            this.startMutationObserver();
-        }
-    }
-
     private startMutationObserver(): void {
         if (!this.isObserving && this.mutationObserver) {
             this.mutationObserver.observe(this.element, {
@@ -355,6 +444,7 @@ export default class extends Controller {
                 subtree: true,
                 attributes: true,
                 characterData: true,
+                attributeOldValue: true,
             });
             this.isObserving = true;
         }
@@ -368,93 +458,80 @@ export default class extends Controller {
     }
 
     private onMutations(mutations: MutationRecord[]): void {
-        const addedOptionElements: HTMLOptionElement[] = [];
-        const removedOptionElements: HTMLOptionElement[] = [];
-        let hasAnOptionChanged = false;
         let changeDisabledState = false;
-        let changePlaceholder = false;
+        let requireReset = false;
 
         mutations.forEach((mutation) => {
             switch (mutation.type) {
-                case 'childList':
-                    // look for changes to any <option> elements - e.g. text
-                    if (mutation.target instanceof HTMLOptionElement) {
-                        if (mutation.target.value === '') {
-                            changePlaceholder = true;
-
-                            break;
-                        }
-
-                        hasAnOptionChanged = true;
-                        break;
-                    }
-
-                    // look for new or removed <option> elements
-                    mutation.addedNodes.forEach((node) => {
-                        if (node instanceof HTMLOptionElement) {
-                            // check if a previously-removed is being added back
-                            if (removedOptionElements.includes(node)) {
-                                removedOptionElements.splice(removedOptionElements.indexOf(node), 1);
-                                return;
-                            }
-
-                            addedOptionElements.push(node);
-                        }
-                    });
-                    mutation.removedNodes.forEach((node) => {
-                        if (node instanceof HTMLOptionElement) {
-                            // check if a previously-added is being removed
-                            if (addedOptionElements.includes(node)) {
-                                addedOptionElements.splice(addedOptionElements.indexOf(node), 1);
-                                return;
-                            }
-
-                            removedOptionElements.push(node);
-                        }
-                    });
-                    break;
                 case 'attributes':
-                    // look for changes to any <option> elements (e.g. value attribute)
-                    if (mutation.target instanceof HTMLOptionElement) {
-                        hasAnOptionChanged = true;
-                        break;
-                    }
-
                     if (mutation.target === this.element && mutation.attributeName === 'disabled') {
                         changeDisabledState = true;
 
                         break;
                     }
 
-                    break;
-                case 'characterData':
-                    // an alternative way for an option's text to change
-                    if (mutation.target instanceof Text && mutation.target.parentElement instanceof HTMLOptionElement) {
-                        if (mutation.target.parentElement.value === '') {
-                            changePlaceholder = true;
-
-                            break;
+                    if (mutation.target === this.element && mutation.attributeName === 'multiple') {
+                        const isNowMultiple = this.element.hasAttribute('multiple');
+                        const wasMultiple = mutation.oldValue === 'multiple';
+                        if (isNowMultiple !== wasMultiple) {
+                            requireReset = true;
                         }
 
-                        hasAnOptionChanged = true;
+                        break;
                     }
+
+                    break;
             }
         });
 
-        if (hasAnOptionChanged || addedOptionElements.length > 0 || removedOptionElements.length > 0) {
+        const newOptions = this.selectElement ? this.createOptionsDataStructure(this.selectElement) : [];
+        const areOptionsEquivalent = this.areOptionsEquivalent(newOptions);
+        if (!areOptionsEquivalent || requireReset) {
+            this.originalOptions = newOptions;
             this.resetTomSelect();
         }
 
         if (changeDisabledState) {
             this.changeTomSelectDisabledState(this.formElement.disabled);
         }
-
-        if (changePlaceholder) {
-            this.updateTomSelectPlaceholder();
-        }
     }
 
-    private requiresLiveIgnore(): boolean {
-        return this.element instanceof HTMLSelectElement && this.element.multiple;
+    private createOptionsDataStructure(selectElement: HTMLSelectElement): Array<OptionDataStructure> {
+        return Array.from(selectElement.options).map((option) => {
+            return {
+                value: option.value,
+                text: option.text,
+            };
+        });
+    }
+
+    private areOptionsEquivalent(newOptions: Array<OptionDataStructure>): boolean {
+        // remove the empty option, which is added by TomSelect so may be missing from new options
+        const filteredOriginalOptions = this.originalOptions.filter((option) => option.value !== '');
+        const filteredNewOptions = newOptions.filter((option) => option.value !== '');
+
+        const originalPlaceholderOption = this.originalOptions.find((option) => option.value === '');
+        const newPlaceholderOption = newOptions.find((option) => option.value === '');
+
+        if (
+            originalPlaceholderOption &&
+            newPlaceholderOption &&
+            originalPlaceholderOption.text !== newPlaceholderOption.text
+        ) {
+            return false;
+        }
+
+        if (filteredOriginalOptions.length !== filteredNewOptions.length) {
+            return false;
+        }
+
+        const normalizeOption = (option: OptionDataStructure) => `${option.value}-${option.text}`;
+        const originalOptionsSet = new Set(filteredOriginalOptions.map(normalizeOption));
+        const newOptionsSet = new Set(filteredNewOptions.map(normalizeOption));
+
+        return (
+            originalOptionsSet.size === newOptionsSet.size &&
+            [...originalOptionsSet].every((option) => newOptionsSet.has(option))
+        );
     }
 }

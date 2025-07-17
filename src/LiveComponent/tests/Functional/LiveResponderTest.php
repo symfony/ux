@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
+namespace Symfony\UX\LiveComponent\Tests\Functional;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
@@ -31,11 +31,11 @@ final class LiveResponderTest extends KernelTestCase
         $this->browser()
             ->throwExceptions()
             ->post('/_components/component_with_emit/actionThatEmits', [
-                'body' => json_encode(['props' => $dehydrated->getProps()]),
+                'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertSuccessful()
             ->assertSee('Event: event1')
-            ->assertSee('Data: {"foo":"bar"}');
+            ->assertSee('Data: {"foo":"bar","bar":"foo"}');
     }
 
     public function testComponentCanDispatchBrowserEvents(): void
@@ -46,14 +46,14 @@ final class LiveResponderTest extends KernelTestCase
         $crawler = $this->browser()
             ->throwExceptions()
             ->post('/_components/component_with_emit/actionThatDispatchesABrowserEvent', [
-                'body' => json_encode(['props' => $dehydrated->getProps()]),
+                'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertSuccessful()
             ->crawler()
         ;
 
         $div = $crawler->filter('div');
-        $browserDispatch = $div->attr('data-live-browser-dispatch');
+        $browserDispatch = $div->attr('data-live-events-to-dispatch-value');
         $this->assertNotNull($browserDispatch);
         $browserDispatchData = json_decode($browserDispatch, true);
         $this->assertSame([

@@ -11,7 +11,11 @@
 
 namespace Symfony\UX\Autocomplete\Tests\Fixtures;
 
+use Composer\InstalledVersions;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\ORM\Mapping\AssociationMapping;
+use Fixtures\Form\CategoryWithCallbackAsCustomValue;
+use Fixtures\Form\CategoryWithPropertyNameAsCustomValue;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -31,6 +35,7 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\UX\Autocomplete\AutocompleteBundle;
 use Symfony\UX\Autocomplete\DependencyInjection\AutocompleteFormTypePass;
+use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomAttributesProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomGroupByProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Form\ProductType;
@@ -54,7 +59,7 @@ final class Kernel extends BaseKernel
         $form->handleRequest($request);
 
         return new Response($twig->render('form.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]));
     }
 
@@ -96,11 +101,9 @@ final class Kernel extends BaseKernel
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
         ]);
 
-        $c->extension('zenstruck_foundry', [
-            'auto_refresh_proxies' => false,
-        ]);
+        $c->extension('zenstruck_foundry', []);
 
-        $c->extension('doctrine', [
+        $doctrineConfig = [
             'dbal' => ['url' => '%env(resolve:DATABASE_URL)%'],
             'orm' => [
                 'auto_generate_proxy_classes' => true,
@@ -115,31 +118,39 @@ final class Kernel extends BaseKernel
                     ],
                 ],
             ],
-        ]);
+        ];
+        if (class_exists(AssociationMapping::class)) {
+            // Doctrine ORM >= 3.0
+            $doctrineConfig['orm']['controller_resolver'] = [
+                'auto_mapping' => true,
+            ];
+        }
+        if (null !== $doctrineBundleVersion = InstalledVersions::getVersion('doctrine/doctrine-bundle')) {
+            if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=')) {
+                $doctrineConfig['orm']['enable_native_lazy_objects'] = true;
+            }
+        }
+
+        $c->extension('doctrine', $doctrineConfig);
 
         $c->extension('security', [
-            'enable_authenticator_manager' => true,
             'password_hashers' => [
-                PasswordAuthenticatedUserInterface::class => 'plaintext'
+                PasswordAuthenticatedUserInterface::class => 'plaintext',
             ],
             'providers' => [
                 'users_in_memory' => [
                     'memory' => [
                         'users' => [
-                            'mr_autocompleter' => ['password' => 'symfonypass', 'roles' => ['ROLE_USER']]
+                            'mr_autocompleter' => ['password' => 'symfonypass', 'roles' => ['ROLE_USER']],
                         ],
                     ],
-                ]
+                ],
             ],
             'firewalls' => [
                 'main' => [
                     'http_basic' => true,
                 ],
             ],
-        ]);
-
-        $c->extension('zenstruck_foundry', [
-            'auto_refresh_proxies' => false,
         ]);
 
         $services = $c->services();
@@ -157,14 +168,21 @@ final class Kernel extends BaseKernel
             ->public()
             ->arg(1, new Reference('ux.autocomplete.entity_search_util'))
             ->tag(AutocompleteFormTypePass::ENTITY_AUTOCOMPLETER_TAG, [
-                'alias' => 'custom_product'
+                'alias' => 'custom_product',
             ]);
 
         $services->set(CustomGroupByProductAutocompleter::class)
             ->public()
             ->arg(1, new Reference('ux.autocomplete.entity_search_util'))
             ->tag(AutocompleteFormTypePass::ENTITY_AUTOCOMPLETER_TAG, [
-                'alias' => 'custom_group_by_product'
+                'alias' => 'custom_group_by_product',
+            ]);
+
+        $services->set(CustomAttributesProductAutocompleter::class)
+            ->public()
+            ->arg(1, new Reference('ux.autocomplete.entity_search_util'))
+            ->tag(AutocompleteFormTypePass::ENTITY_AUTOCOMPLETER_TAG, [
+                'alias' => 'custom_attributes_product',
             ]);
 
         $services->alias('public.results_executor', 'ux.autocomplete.results_executor')
@@ -172,6 +190,16 @@ final class Kernel extends BaseKernel
 
         $services->alias('public.ux.autocomplete.make_autocomplete_field', 'ux.autocomplete.make_autocomplete_field')
             ->public();
+
+        $services->set(CategoryWithPropertyNameAsCustomValue::class)
+            ->tag('ux.entity_autocomplete_field')
+            ->public()
+        ;
+
+        $services->set(CategoryWithCallbackAsCustomValue::class)
+            ->tag('ux.entity_autocomplete_field')
+            ->public()
+        ;
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void

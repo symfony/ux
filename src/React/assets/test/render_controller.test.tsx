@@ -7,12 +7,10 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-import React from 'react';
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
-import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
+import React from 'react';
+import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import ReactController from '../src/render_controller';
 
 // Controller used to check the actual controller was properly booted

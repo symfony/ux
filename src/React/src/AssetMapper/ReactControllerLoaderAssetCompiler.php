@@ -1,18 +1,21 @@
 <?php
 
 /*
- * This file is part of the Symfony StimulusBundle package.
+ * This file is part of the Symfony package.
+ *
  * (c) Fabien Potencier <fabien@symfony.com>
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 namespace Symfony\UX\React\AssetMapper;
 
+use Symfony\Component\AssetMapper\AssetDependency;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\AssetMapper\Compiler\AssetCompilerInterface;
-use Symfony\Component\AssetMapper\Compiler\AssetCompilerPathResolverTrait;
 use Symfony\Component\AssetMapper\MappedAsset;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -22,8 +25,6 @@ use Symfony\Component\Finder\Finder;
  */
 class ReactControllerLoaderAssetCompiler implements AssetCompilerInterface
 {
-    use AssetCompilerPathResolverTrait;
-
     public function __construct(
         private string $controllerPath,
         private array $nameGlobs,
@@ -39,23 +40,28 @@ class ReactControllerLoaderAssetCompiler implements AssetCompilerInterface
     {
         $importLines = [];
         $componentParts = [];
-        $loaderPublicPath = $asset->publicPathWithoutDigest;
         foreach ($this->findControllerAssets($assetMapper) as $name => $mappedAsset) {
-            $controllerPublicPath = $mappedAsset->publicPathWithoutDigest;
-            $relativeImportPath = $this->createRelativePath($loaderPublicPath, $controllerPublicPath);
+            // @legacy: backwards compatibility with Symfony 6.3
+            if (class_exists(AssetDependency::class)) {
+                $controllerPublicPath = $mappedAsset->publicPathWithoutDigest;
+                $loaderPublicPath = $asset->publicPathWithoutDigest;
+                $relativeImportPath = Path::makeRelative($controllerPublicPath, \dirname($loaderPublicPath));
+            } else {
+                $relativeImportPath = Path::makeRelative($mappedAsset->sourcePath, \dirname($asset->sourcePath));
+            }
 
-            $controllerNameForVariable = sprintf('component_%s', \count($componentParts));
+            $controllerNameForVariable = \sprintf('component_%s', \count($componentParts));
 
-            $importLines[] = sprintf(
+            $importLines[] = \sprintf(
                 "import %s from '%s';",
                 $controllerNameForVariable,
                 $relativeImportPath
             );
-            $componentParts[] = sprintf('"%s": %s', $name, $controllerNameForVariable);
+            $componentParts[] = \sprintf('"%s": %s', Path::normalize($name), $controllerNameForVariable);
         }
 
         $importCode = implode("\n", $importLines);
-        $componentsJson = sprintf('{%s}', implode(', ', $componentParts));
+        $componentsJson = \sprintf('{%s}', implode(', ', $componentParts));
 
         return <<<EOF
         $importCode
@@ -86,7 +92,7 @@ class ReactControllerLoaderAssetCompiler implements AssetCompilerInterface
             $asset = $assetMapper->getAssetFromSourcePath($file->getRealPath());
 
             if (null === $asset) {
-                throw new \LogicException(sprintf('Could not find an asset mapper path for the React controller file "%s".', $file->getRealPath()));
+                throw new \LogicException(\sprintf('Could not find an asset mapper path for the React controller file "%s".', $file->getRealPath()));
             }
 
             $name = $file->getRelativePathname();

@@ -11,10 +11,19 @@
 
 namespace Symfony\UX\LiveComponent\Hydration;
 
+/**
+ * Interface for custom hydration of objects.
+ */
 interface HydrationExtensionInterface
 {
+    /**
+     * @param class-string $className
+     */
     public function supports(string $className): bool;
 
+    /**
+     * @param class-string $className
+     */
     public function hydrate(mixed $value, string $className): ?object;
 
     /**

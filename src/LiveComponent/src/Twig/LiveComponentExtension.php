@@ -17,8 +17,6 @@ use Twig\TwigFunction;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  *
- * @experimental
- *
  * @internal
  */
 final class LiveComponentExtension extends AbstractExtension
@@ -27,6 +25,7 @@ final class LiveComponentExtension extends AbstractExtension
     {
         return [
             new TwigFunction('component_url', [LiveComponentRuntime::class, 'getComponentUrl']),
+            new TwigFunction('live_action', [LiveComponentRuntime::class, 'liveAction'], ['is_safe' => ['html_attr']]),
         ];
     }
 }

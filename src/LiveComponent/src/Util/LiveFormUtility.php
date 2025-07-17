@@ -14,8 +14,6 @@ namespace Symfony\UX\LiveComponent\Util;
 use Symfony\Component\Form\FormView;
 
 /**
- * @experimental
- *
  * @internal
  */
 final class LiveFormUtility

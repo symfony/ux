@@ -1,5 +1,38 @@
 # CHANGELOG
 
+## 2.23.0
+
+-   Listen to Stimulus `disconnect` event to destroy the chart #1944
+
+## 2.18.0
+
+-   Replace `chartjs/auto` import with explicit `Chart.register()` call #1263
+
+## 2.17.0
+
+-   Add `chartjs:view-value-change` event #1605
+
+## 2.15.0
+
+-   Remove restriction that prevented Chart.js 3.9 #1518
+
+## 2.14.0
+
+-   Add support for Chart.js version 4
+
+## 2.13.2
+
+-   Change "module" key back to "main" in package.json
+
+## 2.13.1
+
+-   Revert "Change JavaScript package to `type: module`"
+
+## 2.13.0
+
+-   Add Symfony 7 support.
+-   Change JavaScript package to `type: module`
+
 ## 2.9.0
 
 -   Add support for symfony/asset-mapper

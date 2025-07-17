@@ -12,7 +12,6 @@
 namespace Symfony\UX\React\DependencyInjection;
 
 use Symfony\Component\AssetMapper\AssetMapperInterface;
-use Symfony\Component\AssetMapper\Compiler\AssetCompilerPathResolverTrait;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -44,22 +43,19 @@ class ReactExtension extends Extension implements PrependExtensionInterface, Con
             ->setPublic(false)
         ;
 
-        // on older versions, the absence of this trait will trigger an error if the service is loaded
-        if (trait_exists(AssetCompilerPathResolverTrait::class)) {
-            $container->setDefinition('react.asset_mapper.react_controller_loader_compiler', new Definition(ReactControllerLoaderAssetCompiler::class))
-                ->setArguments([
-                    $config['controllers_path'],
-                    $config['name_glob'],
-                ])
-                // run before the core JavaScript compiler
-                ->addTag('asset_mapper.compiler', ['priority' => 100]);
+        $container->setDefinition('react.asset_mapper.react_controller_loader_compiler', new Definition(ReactControllerLoaderAssetCompiler::class))
+            ->setArguments([
+                $config['controllers_path'],
+                $config['name_glob'],
+            ])
+            // run before the core JavaScript compiler
+            ->addTag('asset_mapper.compiler', ['priority' => 100]);
 
-            $container->setDefinition('react.asset_mapper.replace_process_env_compiler', new Definition(ReactReplaceProcessEnvAssetCompiler::class))
-                ->setArguments([
-                    '%kernel.debug%',
-                ])
-                ->addTag('asset_mapper.compiler');
-        }
+        $container->setDefinition('react.asset_mapper.replace_process_env_compiler', new Definition(ReactReplaceProcessEnvAssetCompiler::class))
+            ->setArguments([
+                '%kernel.debug%',
+            ])
+            ->addTag('asset_mapper.compiler');
     }
 
     public function prepend(ContainerBuilder $container)

@@ -1,17 +1,31 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Symfony\UX\Translator\Intl;
+
+use Symfony\Component\String\AbstractString;
 
 use function Symfony\Component\String\s;
 
 /**
  * Adapted from https://github.com/formatjs/formatjs/blob/590f1f81b26934c6dc7a55fff938df5436c6f158/packages/icu-messageformat-parser/parser.ts.
  *
- * @experimental
+ * @internal
  */
-class IntlMessageParser
+final class IntlMessageParser
 {
-    private string $message;
+    private readonly AbstractString $message;
+    // Minor optimization, this avoid a lot of calls to `$this->message->length()`
+    private readonly int $messageLength;
+
     private Position $position;
     private bool $ignoreTag;
     private bool $requiresOtherClause;
@@ -19,7 +33,8 @@ class IntlMessageParser
     public function __construct(
         string $message,
     ) {
-        $this->message = $message;
+        $this->message = s($message);
+        $this->messageLength = $this->message->length();
         $this->position = new Position(0, 1, 1);
         $this->ignoreTag = true;
         $this->requiresOtherClause = true;
@@ -103,14 +118,14 @@ class IntlMessageParser
      */
     private function parseTagName(): string
     {
-        $startOffset = $this->offset();
+        $startOffset = $this->position->offset;
 
         $this->bump(); // the first tag name character
         while (!$this->isEOF() && Utils::isPotentialElementNameChar($this->char())) {
             $this->bump();
         }
 
-        return s($this->message)->slice($startOffset, $this->offset() - $startOffset)->toString();
+        return $this->message->slice($startOffset, $this->position->offset - $startOffset)->toString();
     }
 
     /**
@@ -155,7 +170,7 @@ class IntlMessageParser
         ];
     }
 
-    private function tryParseLeftAngleBracket(): string|null
+    private function tryParseLeftAngleBracket(): ?string
     {
         if (
             !$this->isEOF()
@@ -177,7 +192,7 @@ class IntlMessageParser
      * a character that requires quoting (that is, "only where needed"), and works the same in
      * nested messages as on the top level of the pattern. The new behavior is otherwise compatible.
      */
-    private function tryParseQuote(string $parentArgType): string|null
+    private function tryParseQuote(string $parentArgType): ?string
     {
         if ($this->isEOF() || 39 !== $this->char() /* `'` */) {
             return null;
@@ -237,8 +252,8 @@ class IntlMessageParser
 
     private function tryParseUnquoted(
         int $nestingLevel,
-        string $parentArgType
-    ): string|null {
+        string $parentArgType,
+    ): ?string {
         if ($this->isEOF()) {
             return null;
         }
@@ -264,7 +279,7 @@ class IntlMessageParser
      */
     private function parseArgument(
         int $nestingLevel,
-        bool $expectingCloseTag
+        bool $expectingCloseTag,
     ): array {
         $openingBracePosition = clone $this->position;
         $this->bump(); // `{`
@@ -356,7 +371,7 @@ class IntlMessageParser
     {
         $startingPosition = clone $this->position;
 
-        $startOffset = $this->offset();
+        $startOffset = $this->position->offset;
         $value = Utils::matchIdentifierAtIndex($this->message, $startOffset);
         $endOffset = $startOffset + s($value)->length();
 
@@ -372,7 +387,7 @@ class IntlMessageParser
         int $nestingLevel,
         bool $expectingCloseTag,
         string $value,
-        Position $openingBracePosition
+        Position $openingBracePosition,
     ): array {
         // Parse this range:
         // {name, type, style}
@@ -436,9 +451,9 @@ class IntlMessageParser
                 );
 
                 // Extract style or skeleton
-                if ($styleAndLocation && s($styleAndLocation['style'] ?? '')->startsWith('::')) {
+                if ($styleAndLocation && ($style = s($styleAndLocation['style'] ?? ''))->startsWith('::')) {
                     // Skeleton starts with `::`.
-                    $skeleton = s($styleAndLocation['style'])->slice(2)->trimStart()->toString();
+                    $skeleton = $style->slice(2)->trimStart()->toString();
 
                     if ('number' === $argType) {
                         $result = $this->parseNumberSkeletonFromString(
@@ -602,7 +617,7 @@ class IntlMessageParser
     }
 
     private function tryParseArgumentClose(
-        Position $openingBracePosition
+        Position $openingBracePosition,
     ): array {
         // Parse: {value, number, ::currency/GBP }
         //
@@ -654,7 +669,7 @@ class IntlMessageParser
                         --$nestedBraces;
                     } else {
                         return [
-                            'val' => s($this->message)->slice($startPosition->offset, $this->offset() - $startPosition->offset)->toString(),
+                            'val' => $this->message->slice($startPosition->offset, $this->position->offset - $startPosition->offset)->toString(),
                             'err' => null,
                         ];
                     }
@@ -667,14 +682,14 @@ class IntlMessageParser
         }
 
         return [
-            'val' => s($this->message)->slice($startPosition->offset, $this->offset() - $startPosition->offset)->toString(),
+            'val' => $this->message->slice($startPosition->offset, $this->position->offset - $startPosition->offset)->toString(),
             'err' => null,
         ];
     }
 
     private function parseNumberSkeletonFromString(
         string $skeleton,
-        Location $location
+        Location $location,
     ) {
         $tokens = [];
 
@@ -703,7 +718,7 @@ class IntlMessageParser
         int $nestingLevel,
         string $parentArgType,
         bool $expectCloseTag,
-        array $parsedFirstIdentifier
+        array $parsedFirstIdentifier,
     ): array {
         $hasOtherClause = false;
         $options = [];
@@ -726,7 +741,7 @@ class IntlMessageParser
                         return $result;
                     }
                     $selectorLocation = new Location($startPosition, clone $this->position);
-                    $selector = s($this->message)->slice($startPosition->offset, $this->offset() - $startPosition->offset)->toString();
+                    $selector = $this->message->slice($startPosition->offset, $this->position->offset - $startPosition->offset)->toString();
                 } else {
                     break;
                 }
@@ -855,14 +870,9 @@ class IntlMessageParser
         ];
     }
 
-    private function offset(): int
-    {
-        return $this->position->offset;
-    }
-
     private function isEOF(): bool
     {
-        return $this->offset() === s($this->message)->length();
+        return $this->position->offset === $this->messageLength;
     }
 
     /**
@@ -873,16 +883,14 @@ class IntlMessageParser
      */
     private function char(): int
     {
-        $message = s($this->message);
-
         $offset = $this->position->offset;
-        if ($offset >= $message->length()) {
+        if ($offset >= $this->messageLength) {
             throw new \OutOfBoundsException();
         }
 
-        $code = $message->slice($offset, 1)->codePointsAt(0)[0] ?? null;
+        $code = $this->message->codePointsAt($offset)[0] ?? null;
         if (null === $code) {
-            throw new \Exception("Offset {$offset} is at invalid UTF-16 code unit boundary");
+            throw new \Exception("Offset {$offset} is at invalid UTF-16 code unit boundary.");
         }
 
         return $code;
@@ -900,7 +908,7 @@ class IntlMessageParser
             'err' => [
                 'kind' => $kind,
                 'location' => $location,
-                'message' => $this->message,
+                'message' => $this->message->toString(),
             ],
         ];
     }
@@ -932,7 +940,7 @@ class IntlMessageParser
      */
     private function bumpIf(string $prefix): bool
     {
-        if (s($this->message)->slice($this->offset())->startsWith($prefix)) {
+        if ($this->message->slice($this->position->offset)->startsWith($prefix)) {
             for ($i = 0, $len = \strlen($prefix); $i < $len; ++$i) {
                 $this->bump();
             }
@@ -949,14 +957,13 @@ class IntlMessageParser
      */
     private function bumpUntil(string $pattern): bool
     {
-        $currentOffset = $this->offset();
-        $index = s($this->message)->indexOf($pattern, $currentOffset);
+        $index = $this->message->indexOf($pattern, $this->position->offset);
         if ($index >= 0) {
             $this->bumpTo($index);
 
             return true;
         } else {
-            $this->bumpTo(s($this->message)->length());
+            $this->bumpTo($this->messageLength);
 
             return false;
         }
@@ -970,18 +977,18 @@ class IntlMessageParser
      */
     private function bumpTo(int $targetOffset)
     {
-        if ($this->offset() > $targetOffset) {
-            throw new \Exception(sprintf('targetOffset %s must be greater than or equal to the current offset %d', $targetOffset, $this->offset()));
+        if ($this->position->offset > $targetOffset) {
+            throw new \Exception(\sprintf('targetOffset "%s" must be greater than or equal to the current offset %d', $targetOffset, $this->position->offset));
         }
 
-        $targetOffset = min($targetOffset, s($this->message)->length());
+        $targetOffset = min($targetOffset, $this->messageLength);
         while (true) {
-            $offset = $this->offset();
+            $offset = $this->position->offset;
             if ($offset === $targetOffset) {
                 break;
             }
             if ($offset > $targetOffset) {
-                throw new \Exception("targetOffset {$targetOffset} is at invalid UTF-16 code unit boundary");
+                throw new \Exception("targetOffset {$targetOffset} is at invalid UTF-16 code unit boundary.");
             }
 
             $this->bump();
@@ -1010,8 +1017,7 @@ class IntlMessageParser
         }
 
         $code = $this->char();
-        $offset = $this->offset();
-        $nextCodes = s($this->message)->codePointsAt($offset + ($code >= 0x10000 ? 2 : 1));
+        $nextCodes = $this->message->codePointsAt($this->position->offset + ($code >= 0x10000 ? 2 : 1));
 
         return $nextCodes[0] ?? null;
     }

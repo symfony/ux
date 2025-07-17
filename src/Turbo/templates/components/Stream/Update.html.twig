@@ -1,0 +1,5 @@
+{% props target, morph = false -%}
+
+<turbo-stream action="update" targets="{{ target }}"{% if morph %} method="morph"{% endif %} {{- attributes }}>
+    <template>{% block content %}{% endblock %}</template>
+</turbo-stream>

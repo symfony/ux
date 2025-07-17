@@ -1,0 +1,24 @@
+<!--
+- Kit: Shadcn UI
+- Component: Progress
+- Code:
+```twig
+<div class="flex flex-col gap-2 w-sm">
+    <div class="flex items-center justify-between">
+        <twig:Label>Loading</twig:Label>
+        <span class="text-sm text-muted-foreground">33%</span>
+    </div>
+    <twig:Progress value="33" />
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex flex-col gap-2 w-sm">
+    <div class="flex items-center justify-between">
+        <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Loading</label>
+        <span class="text-sm text-muted-foreground">33%</span>
+    </div>
+    <div class="relative h-4 w-full overflow-hidden rounded-full bg-secondary " role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="33">
+    <div class="h-full w-full flex-1 bg-primary transition-all" style="transform: translateX(-67%)"></div>
+</div>
+
+</div>

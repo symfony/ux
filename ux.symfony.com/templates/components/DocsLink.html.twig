@@ -1,16 +1,30 @@
-<a
-    {{ attributes.defaults({
-        href: url,
-        rel: isExternal ? 'external noopener noreferrer',
-    }) }}
->
-    <div class="light-container p-4">
-        <p class="ubuntu-header">
-            {{ title }}
-            {% if isExternal %}
-                <i class="fa-solid fa-arrow-right ms-2" style="transform: rotate(-45deg);"></i>
-            {% endif %}
-        </p>
-        <p>{{ text }}</p>
+<div {{ attributes.defaults({class: 'DocsLink DocsLink-' ~ size}) }}>
+    <div class="DocsLink_content">
+        {% if isSmall %}
+            <p class="d-flex align-items-center">
+                <twig:ux:icon name="{{ icon|default('mdi:book-open-variant-outline') }}" class="Icon me-2" />
+
+                <a href="{{ url }}" class="DocsLink_link"
+                   rel="{{ isExternal ? 'external noopened noreferrer' }}"
+                >{{ title }}</a>
+            </p>
+        {% else %}
+            <p class="DocsLink_title ubuntu-header">
+                <a href="{{ url }}" class="DocsLink_link" rel="{{ isExternal ? 'external noopened noreferrer' }}">
+                    {{ title }}
+                </a>
+                {% if icon|default %}
+                    <twig:ux:icon name="{{ icon }}" class="Icon DocsLink_arrow"/>
+                {% elseif isExternal %}
+                    <twig:ux:icon name="arrow-right" style="transform: rotate(-45deg);" class="Icon DocsLink_arrow"/>
+                {% endif %}
+            </p>
+        {% endif %}
+
+        {% if text %}
+            <div class="DocsLink_description">
+                <p>{{ text }}</p>
+            </div>
+        {% endif %}
     </div>
-</a>
+</div>

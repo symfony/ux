@@ -1,0 +1,51 @@
+{% extends 'ux_packages/package.html.twig' %}
+
+{% block package_header %}
+    {% component PackageHeader with {
+        package: 'lazy-image',
+        eyebrowText: 'Images that Zoom',
+    } %}
+        {% block title_header %}
+            Load fast with <em>Lazy Images</em>
+        {% endblock %}
+
+        {% block sub_content %}
+            Serve small or <a class="font-white" style="color: transparent; text-shadow: 0 0 1.5px rgba(255,255,255,0.5);" href="https://blurha.sh/" rel="external noopener noreferrer">blurred</a>
+            images first, then load the real thing after the page loads.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    <twig:CodeBlock
+        filename="templates/ux_packages/lazy_image.html.twig"
+        height="230px"
+        targetTwigBlock="code_block_right"
+        :showTwigExtends="false"
+    >
+        <twig:block name="code_content_bottom">
+            <div class="pb-2 px-2" style="opacity: .8;">
+                <div class="eyebrows d-flex align-items-center">
+                    <twig:ux:icon name="circle-fill" />
+                    Load a small (or blurred) image first
+                </div>
+                <div class="eyebrows d-flex align-items-center">
+                    <twig:ux:icon name="circle-fill" />
+                    The real (large) image is downloaded after page load
+                </div>
+            </div>
+        </twig:block>
+    </twig:CodeBlock>
+{% endblock %}
+
+{% block code_block_right %}
+    <img
+        src="{{ data_uri_thumbnail(legosFilePath, 40, 30) }}"
+        data-controller="symfony--ux-lazy-image--lazy-image"
+        data-symfony--ux-lazy-image--lazy-image-src-value="{{ asset('images/legos.jpg') }}"
+        alt="A blurhash image that is replaced by the real image on load"
+        width="578"
+        height="275"
+        style="border-radius: 5px;"
+    >
+{% endblock %}

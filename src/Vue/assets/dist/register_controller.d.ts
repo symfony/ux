@@ -1,4 +1,3 @@
-/// <reference types="webpack-env" />
 import type { Component } from 'vue';
 declare global {
     function resolveVueComponent(name: string): Component;

@@ -2,19 +2,35 @@
     "name": "@symfony/ux-translator",
     "description": "Symfony Translator for JavaScript",
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "2.27.0",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://ux.symfony.com/translator",
+    "repository": "https://github.com/symfony/ux-translator",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
     "main": "dist/translator_controller.js",
     "types": "dist/translator_controller.d.ts",
+    "scripts": {
+        "build": "tsx ../../../bin/build_package.ts .",
+        "watch": "tsx ../../../bin/build_package.ts . --watch",
+        "test": "../../../bin/test_package.sh .",
+        "check": "biome check",
+        "ci": "biome ci"
+    },
     "symfony": {
         "importmap": {
-            "intl-messageformat": "^10.2.5",
+            "intl-messageformat": "^10.5.11",
             "@symfony/ux-translator": "path:%PACKAGE%/dist/translator_controller.js",
             "@app/translations": "path:var/translations/index.js",
             "@app/translations/configuration": "path:var/translations/configuration.js"
         }
     },
     "peerDependencies": {
-        "intl-messageformat": "^10.2.5"
+        "intl-messageformat": "^10.5.11"
     },
     "peerDependenciesMeta": {
         "intl-messageformat": {
@@ -22,7 +38,6 @@
         }
     },
     "devDependencies": {
-        "intl-messageformat": "^10.2.5",
-        "ts-jest": "^27.1.5"
+        "intl-messageformat": "^10.5.11"
     }
 }

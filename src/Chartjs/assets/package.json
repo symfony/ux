@@ -2,9 +2,25 @@
     "name": "@symfony/ux-chartjs",
     "description": "Chart.js integration for Symfony",
     "license": "MIT",
-    "version": "1.1.0",
+    "version": "2.27.0",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://ux.symfony.com/chartjs",
+    "repository": "https://github.com/symfony/ux-chartjs",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
     "main": "dist/controller.js",
     "types": "dist/controller.d.ts",
+    "scripts": {
+        "build": "tsx ../../../bin/build_package.ts .",
+        "watch": "tsx ../../../bin/build_package.ts . --watch",
+        "test": "../../../bin/test_package.sh .",
+        "check": "biome check",
+        "ci": "biome ci"
+    },
     "symfony": {
         "controllers": {
             "chart": {
@@ -16,18 +32,17 @@
         },
         "importmap": {
             "@hotwired/stimulus": "^3.0.0",
-            "chart.js/auto": "^3.4.1"
+            "chart.js": "^3.4.1 || ^4.0"
         }
     },
     "peerDependencies": {
         "@hotwired/stimulus": "^3.0.0",
-        "chart.js": "^3.4.1"
+        "chart.js": "^3.4.1 || ^4.0"
     },
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
-        "@types/chart.js": "^2.9.34",
-        "chart.js": "^3.4.1 <3.9",
-        "jest-canvas-mock": "^2.3.0",
-        "resize-observer-polyfill": "^1.5.1"
+        "chart.js": "^3.4.1 || ^4.0",
+        "resize-observer-polyfill": "^1.5.1",
+        "vitest-canvas-mock": "^0.3.3"
     }
 }

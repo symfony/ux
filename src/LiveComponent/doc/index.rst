@@ -1,9 +1,6 @@
 Live Components
 ===============
 
-**EXPERIMENTAL** This component is currently experimental and is likely
-to change, or even change drastically.
-
 Live components builds on top of the `TwigComponent`_ library
 to give you the power to automatically update your Twig components on
 the frontend as the user interacts with them. Inspired by
@@ -14,8 +11,8 @@ to familiarize yourself in the `TwigComponent documentation`_.
 
 A real-time product search component might look like this::
 
-    // src/Components/ProductSearch.php
-    namespace App\Components;
+    // src/Twig/Components/ProductSearch.php
+    namespace App\Twig\Components;
 
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -72,9 +69,7 @@ Want some demos? Check out https://ux.symfony.com/live-component#demo
 Installation
 ------------
 
-Before you start, make sure you have `StimulusBundle configured in your app`_.
-
-Now install the library with:
+Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -88,18 +83,17 @@ needed if you're using AssetMapper):
     $ npm install --force
     $ npm run watch
 
-    # or use yarn
-    $ yarn install --force
-    $ yarn watch
+.. note::
 
-In case your project `localizes its URLs`_ by adding the special
-``{_locale}`` parameter to the paths of its route definitions,
-you need to do the same with the UX Live Components route definition:
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-live-component npm package`_
+
+If your project is localized in different languages (either via the `locale route parameter`_
+or by `setting the locale in the request`_) add the ``{_locale}`` attribute to
+the UX Live Components route definition to keep the locale between re-renders:
 
 .. code-block:: diff
 
-      // config/routes/ux_live_component.yaml
-
+      # config/routes/ux_live_component.yaml
       live_component:
           resource: '@LiveComponentBundle/config/routes.php'
     -     prefix: /_components
@@ -115,12 +109,12 @@ documentation to get the basics of Twig components.
 
 Suppose you've already built a basic Twig component::
 
-    // src/Components/RandomNumber.php
-    namespace App\Components;
+    // src/Twig/Components/RandomNumber.php
+    namespace App\Twig\Components;
 
     use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-    #[AsTwigComponent()]
+    #[AsTwigComponent]
     class RandomNumber
     {
         public function getRandomNumber(): int
@@ -143,12 +137,12 @@ re-rendered live on the frontend), replace the component's
 
 .. code-block:: diff
 
-      // src/Components/RandomNumber.php
+      // src/Twig/Components/RandomNumber.php
     - use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
     + use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     + use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-    - #[AsTwigComponent()]
+    - #[AsTwigComponent]
     + #[AsLiveComponent]
       class RandomNumber
       {
@@ -188,6 +182,15 @@ let's keep going because… things get cooler.
 
 .. tip::
 
+    If you use the `Symfony MakerBundle`_, you can easily create a new component
+    with the ``make:twig-component`` command:
+
+    .. code-block:: terminal
+
+        $ php bin/console make:twig-component --live EditPost
+
+.. tip::
+
     Need to do some extra data initialization on your component? Create
     a ``mount()`` method or use the ``PostMount`` hook: `Twig Component mount documentation`_.
 
@@ -196,8 +199,8 @@ LiveProps: Stateful Component Properties
 
 Let's make our component more flexible by adding a ``$max`` property::
 
-    // src/Components/RandomNumber.php
-    namespace App\Components;
+    // src/Twig/Components/RandomNumber.php
+    namespace App\Twig\Components;
 
     // ...
     use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -205,6 +208,8 @@ Let's make our component more flexible by adding a ``$max`` property::
     #[AsLiveComponent]
     class RandomNumber
     {
+        use DefaultActionTrait;
+
         #[LiveProp]
         public int $max = 1000;
 
@@ -242,9 +247,9 @@ LiveProp Data Types
 
 LiveProps must be a value that can be sent to JavaScript. Supported values
 are scalars (int, float, string, bool, null), arrays (of scalar values), enums,
-DateTime objects & Doctrine entity objects.
+DateTime objects, Doctrine entity objects, DTOs, or array of DTOs.
 
-See :ref:`hydration` for handling more complex data.
+See :ref:`hydration <hydration>` for handling more complex data.
 
 Data Binding
 ------------
@@ -296,7 +301,7 @@ Well, actually, we're missing one step. By default, a ``LiveProp`` is
 
 .. code-block:: diff
 
-      // src/Components/RandomNumber.php
+      // src/Twig/Components/RandomNumber.php
       // ...
 
       class RandomNumber
@@ -352,10 +357,48 @@ clicked). To do that, use ``norender`` modifier:
 
     <input data-model="norender|max">
 
+For a form using ``ComponentWithFormTrait``, override the ``getDataModelValue()`` method::
+
+    private function getDataModelValue(): ?string
+    {
+        return 'norender|*';
+    }
+
+.. tip::
+
+    You can also define this value inside Twig::
+
+    .. code-block:: twig
+
+        {{ form_start(form, {attr: {'data-model': 'norender|*'}}) }}
+
 Now, as you type, the ``max`` "model" will be updated in JavaScript, but
 it won't, yet, make an Ajax call to re-render the component. Whenever
 the next re-render *does* happen, the updated ``max`` value will be
 used.
+
+This can be useful along with a button that triggers a render on click:
+
+.. code-block:: html+twig
+
+    <input data-model="norender|coupon">
+    <button data-action="live#$render">Apply</button>
+
+Forcing a Re-Render Explicitly
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In some cases, you might want to force a component re-render explicitly. For
+example, consider a checkout component that provides a coupon input that must
+only be used when clicking on the associated "Apply coupon" button:
+
+.. code-block:: html+twig
+
+    <input data-model="norender|coupon">
+    <button data-action="live#$render">Apply coupon</button>
+
+The ``norender`` option on the input ensures that the component won't re-render
+when this input changes. The ``live#$render`` action is a special built-in action
+that triggers a re-render.
 
 .. _name-attribute-model:
 
@@ -365,10 +408,6 @@ Using name="" instead of data-model
 If you're building a form (:ref:`more on forms later <forms>`),
 instead of adding ``data-model`` to every field, you can instead
 rely on the ``name`` attribute.
-
-.. versionadded:: 2.3
-
-    The ``data-model`` attribute on the ``form`` is required since version 2.3.
 
 To activate this, you must add a ``data-model`` attribute to
 the ``<form>`` element:
@@ -438,6 +477,24 @@ can read::
     /** @var Product[] */
     public $products = [];
 
+Collection type extraction from the docblock requires the ``phpdocumentor/reflection-docblock``
+library. Make sure it is installed in you application:
+
+.. code-block:: terminal
+
+    $ composer require phpdocumentor/reflection-docblock
+
+.. versionadded:: 2.26
+
+    Support for `Symfony TypeInfo`_ component was added in LiveComponents 2.26.
+
+To get rid of deprecations about ``PropertyInfoExtractor::getTypes()`` from the `Symfony PropertyInfo`_ component,
+ensure to upgrade ``symfony/property-info`` to at least 7.1, which requires **PHP 8.2**::
+
+.. code-block:: terminal
+
+    $ composer require symfony/property-info:^7.1
+
 Writable Object Properties or Array Keys
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -501,10 +558,6 @@ changed, added or removed::
 Checkboxes, Select Elements Radios & Arrays
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 2.8
-
-    The ability to use checkboxes to set boolean values was added in LiveComponent 2.8.
-
 Checkboxes can be used to set a boolean or an array of strings::
 
     #[AsLiveComponent]
@@ -558,10 +611,6 @@ single value or an array of values::
 LiveProp Date Formats
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 2.8
-
-    The ``format`` option was introduced in Live Components 2.8.
-
 If you have a writable ``LiveProp`` that is some sort of ``DateTime`` instance,
 you can control the format of the model on the frontend with the ``format``
 option::
@@ -585,7 +634,7 @@ the user to switch the *entity* to another? For example:
 
     <select data-model="post">
         {% for post in posts %}
-            <option data-model="{{ post.id }}">{{ post.title }}</option>
+            <option value="{{ post.id }}">{{ post.title }}</option>
         {% endfor %}
     </select>
 
@@ -622,20 +671,52 @@ Note that being able to change the "identity" of an object is something
 that works only for objects that are dehydrated to a scalar value (like
 persisted entities, which dehydrate to an ``id``).
 
-Hydration, DTO's & the Serializer
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using DTO's on a LiveProp
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you try to use a ``LiveProp`` for some unsupported type (e.g.a DTO object),
-it will fail. A best practice is to use simple data.
+.. versionadded:: 2.12
 
-But there are two options to make this work:
+    The automatic (de)hydration of DTO objects was introduced in LiveComponents 2.12.
 
-1) Hydrating with the Serializer
-................................
+You can also use a DTO (i.e. data transfer object / any simple class) with LiveProp as long as the property has the correct type::
 
-.. versionadded:: 2.8
+    class ComponentWithAddressDto
+    {
+        #[LiveProp]
+        public AddressDto $addressDto;
+    }
 
-    The ``useSerializerForHydration`` option was added in LiveComponent 2.8.
+To work with a collection of DTOs, specify the collection type inside PHPDoc::
+
+    class ComponentWithAddressDto
+    {
+        /**
+         * @var AddressDto[]
+         */
+        #[LiveProp]
+        public array $addressDtoCollection;
+    }
+
+Collection type extraction from the docblock requires the ``phpdocumentor/reflection-docblock`` library. Make sure it is installed in you application:
+
+.. code-block:: terminal
+
+    $ composer require phpdocumentor/reflection-docblock
+
+Here is how the (de)hydration of DTO objects works:
+
+- All "properties" (public properties or fake properties via
+  getter/setter methods) are read & dehydrated. If a property is settable
+  but not gettable (or vice versa), an error will be thrown.
+- The PropertyAccess component is used to get/set the value, which means
+  getter and setter methods are supported, in addition to public properties.
+- The DTO cannot have any constructor arguments.
+
+If this solution doesn't fit your need there are two others options to
+make this work:
+
+Hydrating with the Serializer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To hydrate/dehydrate through Symfony's serializer, use the ``useSerializerForHydration``
 option::
@@ -648,15 +729,15 @@ option::
 
 You can also set a ``serializationContext`` option on the ``LiveProp``.
 
-2) Hydrating with Methods: hydrateWith & dehydrateWith
-......................................................
+Hydrating with Methods: hydrateWith & dehydrateWith
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can take full control of the hydration process by setting the ``hydrateWith``
 and ``dehydrateWith`` options on ``LiveProp``::
 
     class ComponentWithAddressDto
     {
-        #[LiveProp(dehydrateWith: 'dehydrateAddress', hydrateWith: 'hydrateAddress')]
+        #[LiveProp(hydrateWith: 'hydrateAddress', dehydrateWith: 'dehydrateAddress')]
         public AddressDto $addressDto;
 
         public function dehydrateAddress(AddressDto $address)
@@ -790,10 +871,25 @@ of the change:
 
 .. code-block:: javascript
 
-    const rootElement = document.getElementById('favorite-food');
+    const input = document.getElementById('favorite-food');
     input.value = 'sushi';
 
     input.dispatchEvent(new Event('change', { bubbles: true }));
+
+Adding a Stimulus Controller to your Component Root Element
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.9
+
+    The ability to use the ``defaults()`` method with ``stimulus_controller()``
+    was added in TwigComponents 2.9 and requires ``symfony/stimulus-bundle``.
+    Previously, ``stimulus_controller()`` was passed to ``attributes.add()``.
+
+To add a custom Stimulus controller to your root component element:
+
+.. code-block:: html+twig
+
+    <div {{ attributes.defaults(stimulus_controller('some-custom', { someValue: 'foo' })) }}>
 
 JavaScript Component Hooks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -818,6 +914,11 @@ component system from Stimulus:
         }
     }
 
+.. note::
+
+    The ``render:started`` and ``render:finished`` events are only dispatched
+    when the component is **re**-rendered (via an action or a model change).
+
 The following hooks are available (along with the arguments that are passed):
 
 * ``connect`` args ``(component: Component)``
@@ -828,21 +929,6 @@ The following hooks are available (along with the arguments that are passed):
 * ``loading.state:started`` args ``(element: HTMLElement, request: BackendRequest)``
 * ``loading.state:finished`` args ``(element: HTMLElement)``
 * ``model:set`` args ``(model: string, value: any, component: Component)``
-
-Adding a Stimulus Controller to your Component Root Element
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.9
-
-    The ability to use the ``defaults()`` method with ``stimulus_controller()``
-    was added in TwigComponents 2.9 and requires ``symfony/stimulus-bundle``.
-    Previously, ``stimulus_controller()`` was passed to ``attributes.add()``.
-
-To add a custom Stimulus controller to your root component element:
-
-.. code-block:: html+twig
-
-    <div {{ attributes.defaults(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
 
 Loading States
 --------------
@@ -880,15 +966,21 @@ a class:
     <div data-loading="removeClass(opacity-50)">...</div>
 
     <!-- add multiple classes when loading -->
-    <div data-loading="addClass(opacity-50 disabled)">...</div>
+    <div data-loading="addClass(opacity-50 text-muted)">...</div>
 
-Sometimes you may want to add or remove an attribute when loading. That
+Sometimes you may want to add or remove an HTML attribute when loading. That
 can be accomplished with ``addAttribute`` or ``removeAttribute``:
 
 .. code-block:: html+twig
 
     <!-- add the "disabled" attribute when loading -->
     <div data-loading="addAttribute(disabled)">...</div>
+
+.. caution::
+
+    The ``addAttribute()`` and ``removeAttribute()`` functions only work with
+    empty HTML attributes (``disabled``, ``readonly``, ``required``, etc.) and
+    not with attributes that define their values (e.g. this won't work: ``addAttribute(style='color: red')``).
 
 You can also combine any number of directives by separating them with a
 space:
@@ -914,10 +1006,6 @@ changes until loading has taken longer than a certain amount of time:
 Targeting Loading for a Specific Action
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 2.5
-
-    The ``action()`` modifier was introduced in Live Components 2.5.
-
 To only toggle the loading behavior when a specific action is triggered,
 use the ``action()`` modifier with the name of the action - e.g. ``saveForm()``:
 
@@ -930,10 +1018,6 @@ use the ``action()`` modifier with the name of the action - e.g. ``saveForm()``:
 
 Targeting Loading When a Specific Model Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.5
-
-    The ``model()`` modifier was introduced in Live Components 2.5.
 
 You can also toggle the loading behavior only if a specific model value
 was just changed using the ``model()`` modifier:
@@ -956,10 +1040,11 @@ Actions
 
 Live components require a single "default action" that is used to
 re-render it. By default, this is an empty ``__invoke()`` method and can
-be added with the ``DefaultActionTrait``. Live components are actually
-Symfony controllers so you can add the normal controller
-attributes/annotations (ie ``#[Cache]``/``#[Security]``) to either the
-entire class just a single action.
+be added with the ``DefaultActionTrait``.
+
+Live components __are__ actually Symfony controllers so you can add
+controller attributes (i.e. ``#[IsGranted]``) to either the entire class
+just a single action.
 
 You can also trigger custom actions on your component. Let's pretend we
 want to add a "Reset Max" button to our "random number" component
@@ -968,8 +1053,8 @@ that, when clicked, sets the min/max numbers back to a default value.
 First, add a method with a ``LiveAction`` attribute above it that does
 the work::
 
-    // src/Components/RandomNumber.php
-    namespace App\Components;
+    // src/Twig/Components/RandomNumber.php
+    namespace App\Twig\Components;
 
     // ...
     use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -987,14 +1072,21 @@ the work::
         // ...
     }
 
-To call this, add ``data-action="live#action"`` and ``data-action-name``
-to an element (e.g. a button or form):
+.. versionadded:: 2.16
+
+    The ``data-live-action-param`` attribute way of specifying the action
+    was added in Live Components 2.16. Previously, this was done with
+    ``data-action-name``.
+
+To call this, trigger the ``action`` method on the ``live`` Stimulus
+controller and pass ``resetMax`` as a `Stimulus action parameter`_ called
+``action``:
 
 .. code-block:: html+twig
 
     <button
         data-action="live#action"
-        data-action-name="resetMax"
+        data-live-action-param="resetMax"
     >Reset Min/Max</button>
 
 Done! When the user clicks this button, a POST request will be sent that
@@ -1009,14 +1101,23 @@ You can also add several "modifiers" to the action:
     <form>
         <button
             data-action="live#action"
-            data-action-name="prevent|debounce(300)|save"
+            data-live-action-param="debounce(300)|save"
         >Save</button>
     </form>
 
-The ``prevent`` modifier would prevent the form from submitting
-(``event.preventDefault()``). The ``debounce(300)`` modifier will add
-300ms of "debouncing" before the action is executed. In other words, if
-you click really fast 5 times, only one Ajax request will be made!
+The ``debounce(300)`` adds 300ms of "debouncing" before the action is executed.
+In other words, if you click really fast 5 times, only one Ajax request will be made!
+
+You can also use the ``live_action`` twig helper function to render the attributes:
+
+.. code-block:: html+twig
+
+    <button {{ live_action('resetMax') }}>Reset Min/Max</button>
+
+    {# with modifiers #}
+
+    <button {{ live_action('save', {}, {'debounce': 300}) }}>Save</button>
+
 
 Actions & Services
 ~~~~~~~~~~~~~~~~~~
@@ -1027,8 +1128,8 @@ normal controller method that you would create with a route.
 
 This means that, for example, you can use action autowiring::
 
-    // src/Components/RandomNumber.php
-    namespace App\Components;
+    // src/Twig/Components/RandomNumber.php
+    namespace App\Twig\Components;
 
     // ...
     use Psr\Log\LoggerInterface;
@@ -1050,26 +1151,38 @@ This means that, for example, you can use action autowiring::
 Actions & Arguments
 ~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 2.1
+.. versionadded:: 2.16
 
-    The ability to pass arguments to actions was added in version 2.1.
+    The ``data-live-{NAME}-param`` attribute way of specifying action
+    arguments was added in Live Components 2.16. Previously, this was done
+    inside the ``data-action-name`` attribute.
 
-You can also provide custom arguments to your action:
+You can also pass arguments to your action by adding each as a
+`Stimulus action parameter`_:
 
 .. code-block:: html+twig
 
     <form>
         <button
             data-action="live#action"
-            data-action-name="addItem(id={{ item.id }}, itemName=CustomItem)"
+            data-live-action-param="addItem"
+
+            data-live-id-param="{{ item.id }}"
+            data-live-item-name-param="CustomItem"
         >Add Item</button>
     </form>
 
-In your component, to allow each argument to be passed, we need to add
-the ``#[LiveArg()]`` attribute::
+    {# or #}
 
-    // src/Components/ItemList.php
-    namespace App\Components;
+    <form>
+        <button {{ live_action('addItem', {'id': item.id, 'itemName': 'CustomItem' }) }}>Add Item</button>
+    </form>
+
+In your component, to allow each argument to be passed, add
+the ``#[LiveArg]`` attribute::
+
+    // src/Twig/Components/ItemList.php
+    namespace App\Twig\Components;
 
     // ...
     use Psr\Log\LoggerInterface;
@@ -1086,36 +1199,20 @@ the ``#[LiveArg()]`` attribute::
         }
     }
 
-Normally, the argument name in PHP - e.g. ``$id`` - should match the
-argument named used in Twig ``id={{ item.id }}``. But if they don't
-match, you can pass an argument to ``LiveArg``, like we did with ``itemName``.
-
 Actions and CSRF Protection
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When you trigger an action, a POST request is sent that contains a
-``X-CSRF-TOKEN`` header. This header is automatically populated and
-validated. In other words… you get CSRF protection without any work.
+When an action is triggered, a POST request is sent with a custom ``Accept``
+header. This header is automatically set and validated for you. In other
+words, you benefit from CSRF protection effortlessly, thanks to the
+``same-origin`` and ``CORS`` policies enforced by browsers.
 
-Your only job is to make sure that the CSRF component is installed:
+.. warning::
 
-.. code-block:: terminal
+	To ensure this built-in CSRF protection remains effective, pay attention
+	to your CORS headers (e.g. *DO NOT* use ``Access-Control-Allow-Origin: *``).
 
-    $ composer require symfony/security-csrf
-
-If you want to disable CSRF for a single component you can set
-``csrf`` option to ``false``::
-
-    namespace App\Twig\Components;
-
-    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-    use Symfony\UX\LiveComponent\Attribute\LiveProp;
-
-    #[AsLiveComponent(csrf: false)]
-    class MyLiveComponent
-    {
-        // ...
-    }
+In test-mode, the CSRF protection is disabled to make testing easier.
 
 Actions, Redirecting and AbstractController
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1125,8 +1222,8 @@ Sometimes, you may want to redirect after an action is executed
 page). You can do that by returning a ``RedirectResponse`` from your
 action::
 
-    // src/Components/RandomNumber.php
-    namespace App\Components;
+    // src/Twig/Components/RandomNumber.php
+    namespace App\Twig\Components;
 
     // ...
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -1152,6 +1249,109 @@ You probably noticed one interesting trick: to make redirecting easier,
 the component now extends ``AbstractController``! That is totally
 allowed, and gives you access to all of your normal controller
 shortcuts. We even added a flash message!
+
+.. _files:
+
+Uploading files
+---------------
+
+.. versionadded:: 2.11
+
+    The ability to upload files to actions was added in version 2.11.
+
+Files aren't sent to the component by default. You need to use a live action
+to handle the files and tell the component when the file should be sent:
+
+.. code-block:: html+twig
+
+    <input type="file" name="my_file" />
+    <button
+        data-action="live#action"
+        data-live-action-param="files|my_action"
+    />
+
+To send a file (or files) with an action use ``files`` modifier.
+Without an argument it will send all pending files to your action.
+You can also specify a modifier parameter to choose which files should be upload.
+
+
+.. code-block:: html+twig
+
+    <p>
+        <input type="file" name="my_file" />
+        <input type="file" name="multiple[]" multiple />
+
+        {# Send only file from first input #}
+        <button data-action="live#action" data-live-action-param="files(my_file)|myAction" />
+        {# You can chain modifiers to send multiple files #}
+        <button data-action="live#action" data-live-action-param="files(my_file)|files(multiple[])|myAction" />
+        {# Or send all pending files #}
+        <button data-action="live#action" data-live-action-param="files|myAction" />
+    </p>
+
+The files will be available in a regular ``$request->files`` files bag::
+
+    // src/Twig/Components/FileUpload.php
+    namespace App\Twig\Components;
+
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+    use Symfony\UX\LiveComponent\Attribute\LiveAction;
+    use Symfony\UX\LiveComponent\DefaultActionTrait;
+
+    #[AsLiveComponent]
+    class FileUpload
+    {
+        use DefaultActionTrait;
+
+        #[LiveAction]
+        public function myAction(Request $request)
+        {
+            $file = $request->files->get('my_file');
+            $multiple = $request->files->all('multiple');
+
+            // Handle files
+        }
+    }
+
+.. tip::
+
+    Remember that in order to send multiple files from a single input you
+    need to specify ``multiple`` attribute on HTML element and end ``name``
+    with ``[]``.
+
+.. _downloads:
+
+Downloading files
+-----------------
+
+Currently, Live Components do not natively support returning file responses directly from a LiveAction. However, you can implement file downloads by redirecting to a route that handles the file response.
+
+Create a LiveAction that generates the URL for the file download and returns a ``RedirectResponse``::
+
+        #[LiveAction]
+        public function initiateDownload(UrlGeneratorInterface $urlGenerator): RedirectResponse
+        {
+            $url = $urlGenerator->generate('app_file_download');
+            return new RedirectResponse($url);
+        }
+
+.. code-block:: html+twig
+
+    <div {{ attributes }} data-turbo="false">
+        <button
+            data-action="live#action"
+            data-live-action-param="initiateDownload"
+        >
+            Download
+        </button>
+    </div>
+
+
+.. tip::
+
+    When Turbo is enabled, if a LiveAction response redirects to another URL, Turbo will make a request to prefetch the content. Here, adding ``data-turbo="false"`` ensures that the download URL is called only once.
+
 
 .. _forms:
 
@@ -1236,7 +1436,7 @@ make it easy to deal with forms::
          * The initial data used to create the form.
          */
         #[LiveProp]
-        public Post $initialFormData = null;
+        public ?Post $initialFormData = null;
 
         protected function instantiateForm(): FormInterface
         {
@@ -1291,9 +1491,7 @@ or omit it entirely to let the ``initialFormData`` property default to ``null``:
     {# templates/post/new.html.twig #}
     {# ... #}
 
-    {{ component('PostForm', {
-        form: form
-    }) }}
+    {{ component('PostForm') }}
 
 Submitting the Form via a LiveAction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1317,7 +1515,7 @@ a :ref:`LiveAction <actions>`::
             $this->submitForm();
 
             /** @var Post $post */
-            $post = $this->getFormInstance()->getData();
+            $post = $this->getForm()->getData();
             $entityManager->persist($post);
             $entityManager->flush();
 
@@ -1338,8 +1536,8 @@ Next, tell the ``form`` element to use this action:
 
     {{ form_start(form, {
         attr: {
-            'data-action': 'live#action',
-            'data-action-name': 'prevent|save'
+            'data-action': 'live#action:prevent',
+            'data-live-action-param': 'save'
         }
     }) }}
 
@@ -1368,7 +1566,7 @@ this, create your controller like normal, including the submit logic::
 
             return $this->render('post/edit.html.twig', [
                 'post' => $post,
-                'form' => $form,
+                'form' => $form, // use $form->createView() in Symfony <6.2
             ]);
         }
     }
@@ -1411,7 +1609,7 @@ the form::
         $this->submitForm();
 
         // now you can access the latest data
-        $post = $this->getFormInstance()->getData();
+        $post = $this->getForm()->getData();
         // (same as above)
         $post = $this->initialFormData;
     }
@@ -1447,7 +1645,7 @@ before the form is submitted::
 
         // this would *not* work
         // $this->submitForm();
-        // $post = $this->getFormInstance()->getData();
+        // $post = $this->getForm()->getData();
         // $post->setTitle('... some auto-generated-title');
     }
 
@@ -1601,7 +1799,7 @@ Now, create a Twig component to render the form::
         use DefaultActionTrait;
 
         #[LiveProp]
-        public initialFormData $post;
+        public Post $initialFormData;
 
         protected function instantiateForm(): FormInterface
         {
@@ -1639,20 +1837,20 @@ and ``removeComment()`` actions:
             {% for key, commentForm in form.comments %}
                 <button
                     data-action="live#action"
-                    data-action-name="removeComment(index={{ key }})"
+                    data-live-action-param="removeComment"
+                    data-live-index-param="{{ key }}"
                     type="button"
                 >X</button>
 
                 {{ form_widget(commentForm) }}
             {% endfor %}
-            </div>
 
             {# avoid an extra label for this field #}
             {% do form.comments.setRendered %}
 
             <button
                 data-action="live#action"
-                data-action-name="addComment"
+                data-live-action-param="addComment"
                 type="button"
             >+ Add Comment</button>
 
@@ -1687,10 +1885,6 @@ When the user clicks ``removeComment()``, a similar process happens.
 
 Using LiveCollectionType
 ~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.2
-
-    The ``LiveCollectionType`` and the ``LiveCollectionTrait`` was added in LiveComponent 2.2.
 
 The ``LiveCollectionType`` uses the same method described above, but in
 a generic way, so it needs even less code. This form type adds an 'Add'
@@ -1802,7 +1996,7 @@ Inline rendering:
 
     <div {{ attributes }}>
         {{ form_start(form) }}
-            {{ form_row(form.title)
+            {{ form_row(form.title) }}
 
             <h3>Comments:</h3>
             {% for key, commentForm in form.comments %}
@@ -1814,7 +2008,7 @@ Inline rendering:
             {% endfor %}
 
             {# render the add button #}
-            {{ form_widget(form.comments.vars.button_add, { label: '+ Add comment', class: 'btn btn-outline-primary' }) }}
+            {{ form_widget(form.comments.vars.button_add, { label: '+ Add comment', attr: { class: 'btn btn-outline-primary' } }) }}
 
             {# render rest of the form #}
             {{ form_row(form) }}
@@ -1830,8 +2024,6 @@ Override the specific block for comment items:
     {% form_theme form 'components/_form_theme_comment_list.html.twig' %}
 
     <div {{ attributes }}>
-        {{ form_start(form) }}
-
         {{ form_start(form) }}
             {{ form_row(form.title)
 
@@ -1968,6 +2160,8 @@ then render it manually after:
 
     {{ form_widget(form.todoItems.vars.button_add, { label: '+ Add Item', attr: { class: 'btn btn-outline-primary' } }) }}
 
+.. _validation:
+
 Validation (without a Form)
 ---------------------------
 
@@ -2055,8 +2249,8 @@ re-rendered. In your template, render errors using an ``_errors`` variable:
 
     <button
         type="submit"
-        data-action="live#action"
-        data-action-name="prevent|save"
+        data-action="live#action:prevent"
+        data-live-action-param="save"
     >Save</button>
 
 Once a component has been validated, the component will "remember" that
@@ -2106,6 +2300,166 @@ To validate only on "change", use the ``on(change)`` modifier:
         class="{{ _errors.has('post.content') ? 'is-invalid' : '' }}"
     >
 
+Deferring / Lazy Loading Components
+-----------------------------------
+
+When a page loads, all components are rendered immediately. If a component is
+heavy to render, you can defer its rendering until after the page has loaded.
+This is done by making an Ajax call to load the component's real content either
+as soon as the page loads (``defer``) or when the component becomes visible
+(``lazy``).
+
+.. note::
+
+    Behind the scenes, your component *is* created & mounted during the initial
+    page load, but its template isn't rendered. So keep your heavy work to
+    methods in your component (e.g. ``getProducts()``) that are only called
+    from the component's template.
+
+Loading "defer" (Ajax on Load)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.13.0
+
+    The ability to defer loading a component was added in Live Components 2.13.
+
+If a component is heavy to render, you can defer rendering it until after
+the page has loaded. To do this, add a ``loading="defer"`` attribute:
+
+.. code-block:: html+twig
+
+    {# With the HTML syntax #}
+    <twig:SomeHeavyComponent loading="defer" />
+
+.. code-block:: twig
+
+    {# With the component function #}
+    {{ component('SomeHeavyComponent', { loading: 'defer' }) }}
+
+This renders an empty ``<div>`` tag, but triggers an Ajax call to render the
+real component once the page has loaded.
+
+Loading "lazy" (Ajax when Visible)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.17.0
+
+    The ability to load a component "lazily" was added in Live Components 2.17.
+
+The ``lazy`` option is similar to ``defer``, but it defers the loading of
+the component until it's in the viewport. This is useful for components that
+are far down the page and are not needed until the user scrolls to them.
+
+To use this, set a ``loading="lazy"`` attribute to your component:
+
+.. code-block:: html+twig
+
+    {# With the HTML syntax #}
+    <twig:Acme foo="bar" loading="lazy" />
+
+.. code-block:: twig
+
+    {# With the Twig syntax #}
+    {{ component('SomeHeavyComponent', { loading: 'lazy' }) }}
+
+This renders an empty ``<div>`` tag. The real component is only rendered when
+it appears in the viewport.
+
+Defer or Lazy?
+~~~~~~~~~~~~~~
+
+The ``defer`` and ``lazy`` options may seem similar, but they serve different
+purposes:
+* ``defer`` is useful for components that are heavy to render but are required
+    when the page loads.
+* ``lazy`` is useful for components that are not needed until the user scrolls
+    to them (and may even never be rendered).
+
+Loading content
+~~~~~~~~~~~~~~~
+
+You can define some content to be rendered while the component is loading, either
+inside the component template (the ``placeholder`` macro) or from the calling template
+(the ``loading-template`` attribute and the ``loadingContent`` block).
+
+.. versionadded:: 2.16.0
+
+    Defining a placeholder macro into the component template was added in Live Components 2.16.0.
+
+In the component template, define a ``placeholder`` macro, outside of the
+component's main content. This macro will be called when the component is deferred:
+
+.. code-block:: html+twig
+
+    {# templates/recommended-products.html.twig #}
+    <div {{ attributes }}>
+        {# This will be rendered when the component is fully loaded #}
+        {% for product in this.products %}
+            <div>{{ product.name }}</div>
+        {% endfor %}
+    </div>
+
+    {% macro placeholder(props) %}
+        {# This content will (only) be rendered as loading content #}
+        <span class="loading-row"></span>
+    {% endmacro %}
+
+The ``props`` argument contains the props passed to the component.
+You can use it to customize the placeholder content. Let's say your
+component shows a certain number of products (defined with the ``size``
+prop). You can use it to define a placeholder that shows the same
+number of rows:
+
+.. code-block:: html+twig
+
+    {# In the calling template #}
+    <twig:RecommendedProducts size="3" loading="defer" />
+
+.. code-block:: html+twig
+
+    {# In the component template #}
+    {% macro placeholder(props) %}
+        {% for i in 1..props.size %}
+            <div class="loading-product">
+                ...
+            </div>
+        {% endfor %}
+    {% endmacro %}
+
+To customize the loading content from the calling template, you can use
+the ``loading-template`` option to point to a template:
+
+.. code-block:: html+twig
+
+    {# With the HTML syntax #}
+    <twig:SomeHeavyComponent loading="defer" loading-template="spinning-wheel.html.twig" />
+
+    {# With the component function #}
+    {{ component('SomeHeavyComponent', { loading: 'defer', 'loading-template': 'spinning-wheel.html.twig' }) }}
+
+Or override the ``loadingContent`` block:
+
+.. code-block:: html+twig
+
+    {# With the HTML syntax #}
+    <twig:SomeHeavyComponent loading="defer">
+        <twig:block name="loadingContent">Custom Loading Content...</twig:block>
+    </twig:SomeHeavyComponent>
+
+    {# With the component tag #}
+    {% component SomeHeavyComponent with { loading: 'defer' } %}
+        {% block loadingContent %}Loading...{% endblock %}
+    {% endcomponent %}
+
+When ``loading-template`` or ``loadingContent`` is defined, the ``placeholder``
+macro is ignored.
+
+To change the initial tag from a ``div`` to something else, use the ``loading-tag`` option:
+
+.. code-block:: twig
+
+    {{ component('SomeHeavyComponent', { loading: 'defer', 'loading-tag': 'span' }) }}
+
 Polling
 -------
 
@@ -2145,14 +2499,229 @@ You can also trigger a specific "action" instead of a normal re-render:
         #}
     >
 
+Changing the URL when a LiveProp changes
+----------------------------------------
+
+.. versionadded:: 2.14
+
+    The ``url`` option was introduced in Live Components 2.14.
+
+If you want the URL to update when a ``LiveProp`` changes, you can do that with the ``url`` option::
+
+    // src/Twig/Components/SearchModule.php
+    namespace App\Twig\Components;
+
+    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+    use Symfony\UX\LiveComponent\Attribute\LiveProp;
+    use Symfony\UX\LiveComponent\DefaultActionTrait;
+
+    #[AsLiveComponent]
+    class SearchModule
+    {
+        use DefaultActionTrait;
+
+        #[LiveProp(writable: true, url: true)]
+        public string $query = '';
+    }
+
+Now, when the user changes the value of the ``query`` prop, a query parameter in the URL will be updated to reflect the
+new state of your component, for example: ``https://my.domain/search?query=my+search+string``.
+
+If you load this URL in your browser, the ``LiveProp`` value will be initialized using the query string
+(e.g. ``my search string``).
+
+.. note::
+
+    The URL is changed via ``history.replaceState()``. So no new entry is added.
+
+Supported Data Types
+~~~~~~~~~~~~~~~~~~~~
+
+You can use scalars, arrays and objects in your URL bindings:
+
+============================================  =================================================
+JavaScript ``prop`` value                     URL representation
+============================================  =================================================
+``'some search string'``                      ``prop=some+search+string``
+``42``                                        ``prop=42``
+``['foo', 'bar']``                            ``prop[0]=foo&prop[1]=bar``
+``{ foo: 'bar', baz: 42 }``                   ``prop[foo]=bar&prop[baz]=42``
+
+
+When a page is loaded with a query parameter that's bound to a ``LiveProp`` (e.g. ``/search?query=my+search+string``),
+the value - ``my search string`` - goes through the hydration system before it's set onto the property. If a value can't
+be hydrated, it will be ignored.
+
+Multiple Query Parameter Bindings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can use as many URL bindings as you want in your component. To ensure the state is fully represented in the URL,
+all bound props will be set as query parameters, even if their values didn't change.
+
+For example, if you declare the following bindings::
+
+    // ...
+    #[AsLiveComponent]
+    class SearchModule
+    {
+        #[LiveProp(writable: true, url: true)]
+        public string $query = '';
+
+        #[LiveProp(writable: true, url: true)]
+        public string $mode = 'fulltext';
+
+        // ...
+    }
+
+
+And you only set the ``query`` value, then your URL will be updated to
+``https://my.domain/search?query=my+query+string&mode=fulltext``.
+
+Controlling the Query Parameter Name
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.17
+
+    The ``as`` option was added in LiveComponents 2.17.
+
+
+Instead of using the prop's field name as the query parameter name, you can use the ``as`` option in your ``LiveProp``
+definition::
+
+    // ...
+    use Symfony\UX\LiveComponent\Metadata\UrlMapping;
+
+    #[AsLiveComponent]
+    class SearchModule
+    {
+        #[LiveProp(writable: true, url: new UrlMapping(as: 'q'))]
+        public string $query = '';
+
+        // ...
+    }
+
+Then the ``query`` value will appear in the URL like ``https://my.domain/search?q=my+query+string``.
+
+If you need to change the parameter name on a specific page, you can leverage the :ref:`modifier <modifier>` option::
+
+    // ...
+    use Symfony\UX\LiveComponent\Metadata\UrlMapping;
+
+    #[AsLiveComponent]
+    class SearchModule
+    {
+        #[LiveProp(writable: true, url: true, modifier: 'modifyQueryProp')]
+        public string $query = '';
+
+        #[LiveProp]
+        public ?string $alias = null;
+
+        public function modifyQueryProp(LiveProp $liveProp): LiveProp
+        {
+            if ($this->alias) {
+                $liveProp = $liveProp->withUrl(new UrlMapping(as: $this->alias));
+            }
+            return $liveProp;
+        }
+    }
+
+.. code-block:: html+twig
+
+    <twig:SearchModule alias="q" />
+
+This way you can also use the component multiple times in the same page and avoid collisions in parameter names:
+
+.. code-block:: html+twig
+
+    <twig:SearchModule alias="q1" />
+    <twig:SearchModule alias="q2" />
+
+.. versionadded:: 2.26
+
+   The property name is passed into the modifier function since LiveComponents 2.26.
+
+The ``modifier`` function can also take the name of the property as a secondary parameter.
+It can be used to perform more generic operations inside of the modifier that can be re-used for multiple props::
+
+    abstract class AbstractSearchModule
+    {
+        #[LiveProp(writable: true, url: true, modifier: 'modifyQueryProp')]
+        public string $query = '';
+
+        protected string $urlPrefix = '';
+
+        public function modifyQueryProp(LiveProp $liveProp, string $propName): LiveProp
+        {
+            if ($this->urlPrefix) {
+                return $liveProp->withUrl(new UrlMapping(as: $this->urlPrefix.'-'.$propName));
+            }
+            return $liveProp;
+        }
+    }
+
+    #[AsLiveComponent]
+    class ImportantSearchModule extends AbstractSearchModule
+    {
+    }
+
+    #[AsLiveComponent]
+    class SecondarySearchModule extends AbstractSearchModule
+    {
+        protected string $urlPrefix = 'secondary';
+    }
+
+.. code-block:: html+twig
+
+    <twig:ImportantSearchModule />
+    <twig:SecondarySearchModule />
+
+The ``query`` value will appear in the URL like ``/search?query=my+important+query&secondary-query=my+secondary+query``.
+
+Validating the Query Parameter Values
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Like any writable ``LiveProp``, because the user can modify this value, you should consider adding
+:ref:`validation <validation>`. When you bind a ``LiveProp`` to the URL, the initial value is not automatically
+validated. To validate it, you have to set up a `PostMount hook`_::
+
+    // ...
+    use Symfony\Component\Validator\Constraints as Assert;
+    use Symfony\UX\LiveComponent\ValidatableComponentTrait;
+    use Symfony\UX\TwigComponent\Attribute\PostMount;
+
+    #[AsLiveComponent]
+    class SearchModule
+    {
+        use ValidatableComponentTrait;
+
+        #[LiveProp(writable: true, url: true)]
+        public string $query = '';
+
+        #[LiveProp(writable: true, url: true)]
+        #[Assert\NotBlank]
+        public string $mode = 'fulltext';
+
+        #[PostMount]
+        public function postMount(): void
+        {
+            // Validate 'mode' field without throwing an exception, so the component can
+            // be mounted anyway and a validation error can be shown to the user
+            if (!$this->validateField('mode', false)) {
+                // Do something when validation fails
+            }
+        }
+
+        // ...
+    }
+
+.. note::
+
+    You can use `validation groups`_ if you want to use specific validation rules only in the PostMount hook.
+
 .. _emit:
 
 Communication Between Components: Emitting Events
 -------------------------------------------------
-
-.. versionadded:: 2.8
-
-    The ability to emit events was added in Live Components 2.8.
 
 Events allow you to communicate between any two components that live
 on your page.
@@ -2162,14 +2731,19 @@ Emitting an Event
 
 There are three ways to emit an event:
 
+.. versionadded:: 2.16
+
+    The ``data-live-event-param`` attribute was added in Live Components 2.16.
+    Previously, it was called ``data-event``.
+
 1. From Twig:
 
-.. code-block:: html+twig
+   .. code-block:: html+twig
 
-    <button
-        data-action="live#emit"
-        data-event="productAdded"
-    >
+       <button
+           data-action="live#emit"
+           data-live-event-param="productAdded"
+       >
 
 2. From your PHP component via ``ComponentToolsTrait``::
 
@@ -2197,7 +2771,7 @@ There are three ways to emit an event:
 Listen to Events
 ~~~~~~~~~~~~~~~~
 
-To listen to an event, add a method with a `#[LiveListener]` above it::
+To listen to an event, add a method with a ``#[LiveListener]`` above it::
 
     #[LiveProp]
     public int $productCount = 0;
@@ -2211,7 +2785,7 @@ To listen to an event, add a method with a `#[LiveListener]` above it::
 Thanks to this, when any other component emits the ``productAdded`` event, an Ajax
 call will be made to call this method and re-render the component.
 
-Behind the scenes, event listeners are also `LiveActions <actions>`, so you can
+Behind the scenes, event listeners are also ``LiveActions <actions>``, so you can
 autowire any services you need.
 
 Passing Data to Listeners
@@ -2229,14 +2803,24 @@ You can also pass extra (scalar) data to the listeners::
         ]);
     }
 
+From a Twig template:
+
+  .. code-block:: html+twig
+
+       <button
+           data-action="live#emit"
+           data-live-event-param="productAdded"
+           data-live-product-param="123"
+       >
+
 In your listeners, you can access this by adding a matching argument
-name with `#[LiveArg]` in front::
+name with ``#[LiveArg]`` in front::
 
     #[LiveListener('productAdded')]
     public function incrementProductCount(#[LiveArg] int $product)
     {
         $this->productCount++;
-        $this->lastProduct = $data['product'];
+        $this->lastProductId = $product;
     }
 
 And because event listeners are also actions, you can type-hint an argument
@@ -2265,7 +2849,7 @@ If you want to emit an event to only the parent components, use the
 
     <button
         data-action="live#emitUp"
-        data-event="productAdded"
+        data-live-event-param="productAdded"
     >
 
 Or, in PHP::
@@ -2282,12 +2866,12 @@ use the ``name()`` modifier:
 
     <button
         data-action="live#emit"
-        data-event="name(ProductList)|productAdded"
+        data-live-event-param="name(ProductList)|productAdded"
     >
 
 Or, in PHP::
 
-    $this->emit('productAdded', name: 'ProductList');
+    $this->emit('productAdded', componentName: 'ProductList');
 
 Emitting only to Yourself
 .........................
@@ -2298,7 +2882,7 @@ To emit an event to only yourself, use the ``emitSelf()`` method:
 
     <button
         data-action="live#emitSelf"
-        data-event="productAdded"
+        data-live-event-param="productAdded"
     >
 
 Or, in PHP::
@@ -2413,16 +2997,11 @@ Suppose the user updates the ``listName`` model and the parent component
 re-renders. In this case, the child component will *not* re-render by design:
 each component lives in its own universe.
 
-.. versionadded:: 2.8
-
-    The ``updateFromParent`` option was added in Live Components 2.8. Previously,
-    a child would re-render when *any* props passed into it changed.
-
 However, if the user adds a *new* todo item then we *do* want the ``TodoFooter``
 child component to re-render: using the new ``count`` value. To trigger this,
 in the ``TodoFooter`` component, add the ``updateFromParent`` option::
 
-    #[LiveComponent()]
+    #[LiveComponent]
     class TodoFooter
     {
         #[LiveProp(updateFromParent: true)]
@@ -2437,7 +3016,7 @@ changes, the child will make a second Ajax request to re-render itself.
     To work, the name of the prop that's passed when rendering the ``TodoFooter``
     component must match the property name that has the ``updateFromParent`` - e.g.
     ``{{ component('TodoFooter', { count: todos|length }) }}``. If you pass in a
-    different name and set the ``count`` property via a ref:``mount()`` method, the
+    different name and set the ``count`` property via a `mount() <https://symfony.com/bundles/ux-twig-component/current/index.html#the-mount-method>`_ method, the
     child component will not re-render correctly.
 
 Child components keep their modifiable LiveProp values
@@ -2453,7 +3032,7 @@ current value for all props, except for those that are marked as
 
 What if you *do* want your entire child component to re-render (including
 resetting writable live props) when some value in the parent changes? This
-can be done by manually giving your component a ``data-live-id`` attribute
+can be done by manually giving your component an ``id`` attribute
 that will change if the component should be totally re-rendered:
 
 .. code-block:: html+twig
@@ -2464,11 +3043,11 @@ that will change if the component should be totally re-rendered:
 
         {{ component('TodoFooter', {
             count: todos|length,
-            'data-live-id': 'todo-footer-'~todos|length
+            id: 'todo-footer-'~todos|length
         }) }}
     </div>
 
-In this case, if the number of todos change, then the ``data-live-id``
+In this case, if the number of todos change, then the ``id``
 attribute of the component will also change. This signals that the
 component should re-render itself completely, discarding any writable
 LiveProp values.
@@ -2481,7 +3060,7 @@ suppose your child component has:
 
 .. code-block:: html
 
-    <button data-action="live#action" data-action-name="save">Save</button>
+    <button data-action="live#action" data-live-action-param="save">Save</button>
 
 When the user clicks that button, it will attempt to call the ``save``
 action in the *child* component only, even if the ``save`` action
@@ -2505,6 +3084,7 @@ component:
     model: when the child model changes, the parent model will also change.
 
 .. _data-model:
+.. _update-parent-model:
 
 Updating a Parent Model from a Child
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2645,7 +3225,7 @@ In the ``EditPost`` template, you render the
 
             <button
                 data-action="live#action"
-                data-action-name="save"
+                data-live-action-param="save"
             >Save</button>
         </form>
     </div>
@@ -2674,14 +3254,14 @@ Rendering Quirks with List of Elements
 
 If you're rendering a list of elements in your component, to help LiveComponents
 understand which element is which between re-renders (i.e. if something re-orders
-or removes some of those elements), you can add a ``data-live-id`` attribute to
+or removes some of those elements), you can add a ``key`` attribute to
 each element
 
 .. code-block:: html+twig
 
     {# templates/components/Invoice.html.twig #}
     {% for lineItem in lineItems %}
-        <div data-live-id="{{ lineItem.id }}">
+        <div key="{{ lineItem.id }}">
             {{ lineItem.name }}
         </div>
     {% endfor %}
@@ -2696,10 +3276,6 @@ the list changes as the user types into a search box... or by clicking
 "delete" on an item. In this case, the wrong children may be removed
 or existing child components may not disappear when they should.
 
-.. versionadded:: 2.8
-
-    The ``key`` prop was added in Symfony UX Live Component 2.8.
-
 To fix this, add a ``key`` prop to each child component that's unique
 to that component:
 
@@ -2713,10 +3289,8 @@ to that component:
         }) }}
     {% endfor %}
 
-The ``key`` will be used to generate a ``data-live-id`` attribute,
-which will be used to identify each child component. You can
-also pass in a ``data-live-id`` attribute directly, but ``key`` is
-a bit more convenient.
+The ``key`` will be used to generate an ``id`` attribute,
+which will be used to identify each child component.
 
 .. _rendering-loop-new-element:
 
@@ -2755,7 +3329,7 @@ it emits a ``lineItem:created`` event to the parent::
         #[PostMount]
         public function postMount(): void
         {
-            if(!$this->lineItem) {
+            if (!$this->lineItem) {
                 $this->lineItem = new InvoiceLineItem();
             }
         }
@@ -2842,6 +3416,85 @@ To fix this, you have two options:
         }
     }
 
+.. _passing-blocks:
+
+Passing Content (Blocks) to Components
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Passing content via blocks to Live components works completely the same way you would `pass content to Twig Components`_.
+Except with one important difference: when a component is re-rendered, any variables defined only in the
+"outside" template will not be available. For example, this won't work:
+
+.. code-block:: twig
+
+    {# templates/some_page.html.twig #}
+    {% set message = 'Variables from the outer part of the template are only available during  the initial render' %}
+
+    {% component Alert %}
+        {% block content %}{{ message }}{% endblock %}
+    {% endcomponent %}
+
+Local variables do remain available:
+
+.. code-block:: twig
+
+    {# templates/some_page.html.twig #}
+    {% component Alert %}
+        {% block content %}
+            {% set message = 'this works during re-rendering!' %}
+            {{ message }}
+        {% endblock %}
+    {% endcomponent %}
+
+Hooks: Handle Component Behavior
+--------------------------------
+
+Most of the time, you'll just pass data to your components and let it handle
+the rest. However, if you need to do something more complex during certain
+stages of a component's lifecycle, you can take advantage of lifecycle hooks.
+
+``PostHydrate`` Hook
+~~~~~~~~~~~~~~~~~~~~
+
+The ``#[PostHydrate]`` hook is called immediately after the component's state
+is loaded from the client. This is useful if you need to process or adjust
+the data once it's been hydrated.
+
+``PreDehydrate`` Hook
+~~~~~~~~~~~~~~~~~~~~~
+
+The ``#[PreDehydrate]`` hook is triggered just before your component's state
+is sent back to the client. You can use this to modify or clean up the data
+before it's serialized and returned to the client.
+
+``PreReRender`` Hook
+~~~~~~~~~~~~~~~~~~~~
+
+The ``#[PreReRender]`` hook is called before your component is re-rendered
+during an HTTP request. It does not run during the initial render but is
+helpful when you need to adjust the state before sending it back to the client
+for re-rendering.
+
+Hook Priority
+~~~~~~~~~~~~~
+
+You can control the order in which hooks are executed by using the ``priority``
+argument. If multiple hooks of the same type are registered in a component,
+those with a higher priority value will run first. This allows you to manage
+the order in which your actions are performed within the same lifecycle stage::
+
+    #[PostHydrate(priority: 10)]
+    public function highPriorityHook(): void
+    {
+        // Runs first
+    }
+
+    #[PostHydrate(priority: 1)]
+    public function lowPriorityHook(): void
+    {
+        // Runs last
+    }
+
 Advanced Functionality
 ----------------------
 
@@ -2854,10 +3507,6 @@ When a component re-renders, the new HTML is "morphed" onto the existing
 elements on the page. For example, if the re-render includes a new ``class``
 on an existing element, that class will be added to that element.
 
-.. versionadded:: 2.8
-
-    The smart re-render algorithm was introduced in LiveComponent 2.8.
-
 The rendering system is also smart enough to know when an element was changed
 by something *outside* of the LiveComponents system: e.g. some JavaScript
 that added a class to an element. In this case, the class will be preserved
@@ -2865,7 +3514,7 @@ when the component re-renders.
 
 The system doesn't handle every edge case, so here are some things to keep in mind:
 
-* If JavaScript changes an attribute on an element, that change is **preserved**.
+* If JavaScript changes an attribute on a child element, that change is **preserved**.
 * If JavaScript adds a new element, that element is **preserved**.
 * If JavaScript removes an element that was originally rendered by the component,
   that change will be **lost**: the element will be re-added during the next re-render.
@@ -2875,39 +3524,23 @@ The system doesn't handle every edge case, so here are some things to keep in mi
   that change is **lost**: the element will be re-added in its original location
   during the next re-render.
 
-The Mystical data-live-id Attribute
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The Mystical id Attribute
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``data-live-id`` attribute is mentioned several times throughout the documentation
+The ``id`` attribute is mentioned several times throughout the documentation
 to solve various problems. It's usually not needed, but can be the key to solving
 certain complex problems. But what is it?
 
 .. note::
 
-    The :ref:`key prop <key-prop>` is used to create a ``data-live-id`` attribute
+    The :ref:`key prop <key-prop>` is used to create a ``id`` attribute
     on child components. So everything in this section applies equally to the
     ``key`` prop.
 
-The ``data-live-id`` attribute is a unique identifier for an element or a component.
-It's used when a component re-renders and helps Live Components "connect" elements
-or components in the existing HTML with the new HTML. The logic works like this:
-
-Suppose an element or component in the new HTML has a ``data-live-id="some-id`` attribute.
-Then:
-
-A) If there **is** an element or component with ``data-live-id="some-id"`` in the
-   existing HTML, then the old and new elements/components are considered to be the
-   "same". For elements, the new element will be used to update the old element even
-   if the two elements appear in different places - e.g. like if :ref:`elements are moved <rendering-loop-of-elements>`
-   or re-ordered. For components, because child components render independently
-   from their parent, the existing component will be "left alone" and not re-rendered
-   (unless some ``updateFromParent`` props have changed - see :ref:`child-component-independent-rerender`).
-
-B) If there is **not** an element or component with ``data-live-id="some-id"`` in
-   the existing HTML, then the new element or component is considered to be "new".
-   In both cases, the new element or component will be added to the page. If there
-   is a component/element with a ``data-live-id`` attribute that is *not* in the
-   new HTML, that component/element will be removed from the page.
+The ``id`` attribute is a unique identifier for an element or a component.
+It's used during the morphing process when a component re-renders: it helps the
+`morphing library`_ "connect" elements or components in the existing HTML with the new
+HTML.
 
 Skipping Updating Certain Elements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2924,16 +3557,29 @@ an element, that changes is preserved (see :ref:`smart-rerender-algorithm`).
 
 .. note::
 
-    To *force* an ignored element to re-render, give its parent element a
-    ``data-live-id`` attribute. During a re-render, if this value changes, all
+    To *force* an ignored element to re-render, give its parent element an
+    ``id`` attribute. During a re-render, if this value changes, all
     of the children of the element will be re-rendered, even those with ``data-live-ignore``.
+
+Overwrite HTML Instead of Morphing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Normally, when a component re-renders, the new HTML is "morphed" onto the existing
+elements on the page. In some rare cases, you may want to simply overwrite the existing
+inner HTML of an element with the new HTML instead of morphing it. This can be done by adding a
+``data-skip-morph`` attribute:
+
+.. code-block:: html
+
+    <select data-skip-morph>
+        <option>...</option>
+    </select>
+
+In this case, any changes to the ``<select>`` element attributes will still be
+"morphed" onto the existing element, but the inner HTML will be overwritten.
 
 Define another route for your Component
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.7
-
-    The ``route`` option  was added in LiveComponents 2.7.
 
 The default route for live components is ``/components/{_live_component}/{_live_action}``.
 Sometimes it may be useful to customize this URL - e.g. so that the component lives
@@ -2953,7 +3599,7 @@ Then specify this new route on your component:
 
 .. code-block:: diff
 
-    // src/Components/RandomNumber.php
+    // src/Twig/Components/RandomNumber.php
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\DefaultActionTrait;
 
@@ -2964,6 +3610,284 @@ Then specify this new route on your component:
           use DefaultActionTrait;
       }
 
+.. versionadded:: 2.14
+
+    The ``urlReferenceType`` option  was added in LiveComponents 2.14.
+
+You can also control the type of the generated URL:
+
+.. code-block:: diff
+
+      // src/Twig/Components/RandomNumber.php
+    + use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+      use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+      use Symfony\UX\LiveComponent\DefaultActionTrait;
+
+    - #[AsLiveComponent]
+    + #[AsLiveComponent(urlReferenceType: UrlGeneratorInterface::ABSOLUTE_URL)]
+      class RandomNumber
+      {
+          use DefaultActionTrait;
+      }
+
+Add a Hook on LiveProp Update
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.12
+
+    The ``onUpdated`` option was added in LiveComponents 2.12.
+
+If you want to run custom code after a specific LiveProp is updated,
+you can do it by adding an ``onUpdated`` option set to a public method name
+on the component::
+
+    #[AsLiveComponent]
+    class ProductSearch
+    {
+        #[LiveProp(writable: true, onUpdated: 'onQueryUpdated')]
+        public string $query = '';
+
+        // ...
+
+        public function onQueryUpdated($previousValue): void
+        {
+            // $this->query already contains a new value
+            // and its previous value is passed as an argument
+        }
+    }
+
+As soon as the ``query`` LiveProp is updated, the ``onQueryUpdated()`` method
+will be called. The previous value is passed there as the first argument.
+
+If you're allowing object properties to be writable, you can also listen to
+the change of one specific key::
+
+    use App\Entity\Post;
+
+    #[AsLiveComponent]
+    class EditPost
+    {
+        #[LiveProp(writable: ['title', 'content'], onUpdated: ['title' => 'onTitleUpdated'])]
+        public Post $post;
+
+        // ...
+
+        public function onTitleUpdated($previousValue): void
+        {
+            // ...
+        }
+    }
+
+.. _modifier:
+
+Set LiveProp Options Dynamically
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.17
+
+    The ``modifier`` option was added in LiveComponents 2.17.
+
+
+If you need to configure a LiveProp's options dynamically, you can use the ``modifier`` option to use a custom
+method in your component that returns a modified version of your LiveProp::
+
+
+    #[AsLiveComponent]
+    class ProductSearch
+    {
+        #[LiveProp(writable: true, modifier: 'modifyAddedDate')]
+        public ?\DateTimeImmutable $addedDate = null;
+
+        #[LiveProp]
+        public string $dateFormat = 'Y-m-d';
+
+        // ...
+
+        public function modifyAddedDate(LiveProp $prop): LiveProp
+        {
+            return $prop->withFormat($this->dateFormat);
+        }
+    }
+
+Then, when using your component in a template, you can change the date format used for ``$addedDate``:
+
+.. code-block:: twig
+
+    {{ component('ProductSearch', {
+        dateFormat: 'd/m/Y'
+    }) }}
+
+
+All ``LiveProp::with*`` methods are immutable, so you need to use their return value as your new LiveProp.
+
+.. caution::
+
+    Avoid relying on props that also use a modifier in other modifiers methods. For example, if the ``$dateFormat``
+    property above also had a ``modifier`` option, then it wouldn't be safe to reference it from the ``modifyAddedDate``
+    modifier method. This is because the ``$dateFormat`` property may not have been hydrated by this point.
+
+
+Debugging Components
+--------------------
+
+Need to list or debug some component issues.
+The `Twig Component debug command`_ can help you.
+
+Test Helper
+-----------
+
+.. versionadded:: 2.11
+
+    The test helper was added in LiveComponents 2.11.
+
+Interact With Live-Components
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For testing, you can use the ``InteractsWithLiveComponents`` trait which
+uses Symfony's test client to render and make requests to your components::
+
+    use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+    use Symfony\UX\LiveComponent\Test\InteractsWithLiveComponents;
+
+    class MyComponentTest extends KernelTestCase
+    {
+        use InteractsWithLiveComponents;
+
+        public function testCanRenderAndInteract(): void
+        {
+            $testComponent = $this->createLiveComponent(
+                name: 'MyComponent', // can also use FQCN (MyComponent::class)
+                data: ['foo' => 'bar'],
+            );
+
+            // render the component html
+            $this->assertStringContainsString('Count: 0', $testComponent->render());
+
+            // call live actions
+            $testComponent
+                ->call('increase')
+                ->call('increase', ['amount' => 2]) // call a live action with arguments
+            ;
+
+            $this->assertStringContainsString('Count: 3', $testComponent->render());
+
+            // call live action with file uploads
+            $testComponent
+                ->call('processUpload', files: ['file' => new UploadedFile(...)]);
+
+            // emit live events
+            $testComponent
+                ->emit('increaseEvent')
+                ->emit('increaseEvent', ['amount' => 2, 'unit' => 'kg']) // emit a live event with arguments
+            ;
+
+            // Assert that the event was emitted
+            $this->assertComponentEmitEvent($testComponent->render(), 'increaseEvent')
+                // optionally, you can assert that the event was emitted with specific data...
+                ->withData(['amount' => 2, 'unit' => 'kg'])
+                // ... or only with a subset of data
+                ->withDataSubset(['amount' => 2])
+            ;
+
+            // Assert that an event was not emitted
+            $this->assertComponentNotEmitEvent($testComponent->render(), 'decreaseEvent');
+
+            // set live props
+            $testComponent
+                ->set('count', 99)
+            ;
+
+            // Submit form data ('my_form' for your MyFormType form)
+            $testComponent
+                ->submitForm(['my_form' => ['input' => 'value']], 'save');
+
+            $this->assertStringContainsString('Count: 99', $testComponent->render());
+
+            // refresh the component
+            $testComponent->refresh();
+
+            // access the component object (in its current state)
+            $component = $testComponent->component(); // MyComponent
+
+            $this->assertSame(99, $component->count);
+
+            // test a live action that redirects
+            $response = $testComponent->call('redirect')->response(); // Symfony\Component\HttpFoundation\Response
+
+            $this->assertSame(302, $response->getStatusCode());
+
+            // authenticate a user ($user is instance of UserInterface)
+            $testComponent->actingAs($user);
+
+            // set the '_locale' route parameter (if the component route is localized)
+            $testComponent->setRouteLocale('fr');
+
+            // customize the test client
+            $client = self::getContainer()->get('test.client');
+
+            // do some stuff with the client (ie login user via form)
+
+            $testComponent = $this->createLiveComponent(
+                name: 'MyComponent',
+                data: ['foo' => 'bar'],
+                client: $client,
+            );
+        }
+    }
+
+.. note::
+
+    The ``InteractsWithLiveComponents`` trait can only be used in tests that extend
+    ``Symfony\Bundle\FrameworkBundle\Test\KernelTestCase``.
+
+Test LiveCollectionType
+~~~~~~~~~~~~~~~~~~~~~~~
+
+To test the submission of a form within a Live Component (with the above ``submitForm`` helper) containing a ``LiveCollectionType``, you first need to programmatically add the desired number of entries to the form, replicating the action of clicking the "Add" button.
+
+So, if the following are the forms used::
+
+    use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
+
+    // Parent FormType used in the Live Component
+    class LiveCollectionFormType extends AbstractType
+    {
+        public function buildForm(FormBuilderInterface $builder, array $options): void
+        {
+            $builder->add('children', LiveCollectionType::class, [
+                    'entry_type' => ChildFormType::class,
+                ])
+            ;
+        }
+    }
+
+    // Child Form Type used for each entry in the collection
+    class ChildFormType extends AbstractType
+    {
+        public function buildForm(FormBuilderInterface $builder, array $options): void
+        {
+            $builder
+                ->add('name', TextType::class)
+                ->add('age', IntegerType::class)
+            ;
+        }
+    }
+
+Use the addCollectionItem method from the LiveCollectionTrait to dynamically add entries to the children field of the form before submitting it::
+
+    // Call the addCollectionItem method as many times as needed, specifying the name of the collection field.
+    $component->call('addCollectionItem', ['name' => 'children']);
+    $component->call('addCollectionItem', ['name' => 'children']);
+    //... can be called as many times as you need entries in your 'children' field
+
+    // ... then submit the form by providing data for all the fields in the ChildFormType for each added entry:
+    $component->submitForm([ 'live_collection_form' => [
+        'children' => [
+            ['name' => 'childName1', 'age' => 10],
+            ['name' => 'childName2', 'age' => 15],
+        ]
+    ]]);
+
 Backward Compatibility promise
 ------------------------------
 
@@ -2971,22 +3895,32 @@ This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
-However it is currently considered `experimental`_, meaning it is not
-bound to Symfony's BC policy for the moment.
+For JavaScript files, the public API (i.e. documented features and exports
+from the main JavaScript file) is protected by the backward compatibility
+promise. However, any internal implementation in the JavaScript files
+(i.e. exports from internal files) is not protected.
 
 .. _`TwigComponent`: https://symfony.com/bundles/ux-twig-component/current/index.html
 .. _TwigComponent documentation: https://symfony.com/bundles/ux-twig-component/current/index.html
-.. _`Livewire`: https://laravel-livewire.com
+.. _`Livewire`: https://livewire.laravel.com
 .. _`Phoenix LiveView`: https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html
 .. _`Twig Component`: https://symfony.com/bundles/ux-twig-component/current/index.html
 .. _`Twig Component mount documentation`: https://symfony.com/bundles/ux-twig-component/current/index.html#the-mount-method
 .. _`Symfony form`: https://symfony.com/doc/current/forms.html
-.. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`dependent form fields`: https://ux.symfony.com/live-component/demos/dependent-form-fields
-.. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
-.. _`localizes its URLs`: https://symfony.com/doc/current/translation/locale.html#translation-locale-url
 .. _`attributes variable`: https://symfony.com/bundles/ux-twig-component/current/index.html#component-attributes
 .. _`CollectionType`: https://symfony.com/doc/current/form/form_collections.html
 .. _`the traditional collection type`: https://symfony.com/doc/current/form/form_themes.html#fragment-naming-for-collections
 .. _`How to Work with Form Themes`: https://symfony.com/doc/current/form/form_themes.html
 .. _`Symfony's built-in form theming techniques`: https://symfony.com/doc/current/form/form_themes.html
+.. _`pass content to Twig Components`: https://symfony.com/bundles/ux-twig-component/current/index.html#passing-blocks
+.. _`Twig Component debug command`: https://symfony.com/bundles/ux-twig-component/current/index.html#debugging-components
+.. _`PostMount hook`: https://symfony.com/bundles/ux-twig-component/current/index.html#postmount-hook
+.. _`validation groups`: https://symfony.com/doc/current/form/validation_groups.html
+.. _morphing library: https://github.com/bigskysoftware/idiomorph
+.. _`locale route parameter`: https://symfony.com/doc/current/translation.html#the-locale-and-the-url
+.. _`setting the locale in the request`: https://symfony.com/doc/current/translation.html#translation-locale
+.. _`Stimulus action parameter`: https://stimulus.hotwired.dev/reference/actions#action-parameters
+.. _`@symfony/ux-live-component npm package`: https://www.npmjs.com/package/@symfony/ux-live-component
+.. _`Symfony TypeInfo`: https://symfony.com/doc/current/components/type_info.html
+.. _`Symfony PropertyInfo`: https://symfony.com/doc/current/components/property_info.html

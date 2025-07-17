@@ -1,13 +1,12 @@
 import { Controller } from '@hotwired/stimulus';
 
+/* stimulusFetch: 'lazy' */
 export default class extends Controller {
     static targets = ['useStatements', 'expandCodeButton', 'codeContent'];
 
     connect() {
-        if (this.#isOverflowing(this.codeContentTarget)) {
-            this.expandCodeButtonTarget.style.display = 'block';
-            // add extra padding so the button doesn't block the code
-            this.codeContentTarget.classList.add('pb-5');
+        if (this.hasExpandCodeButtonTarget && !this.#isOverflowing(this.codeContentTarget)) {
+            this.expandCodeButtonTarget.remove();
         }
     }
 
@@ -18,8 +17,9 @@ export default class extends Controller {
 
     expandCode(event) {
         this.codeContentTarget.style.height = 'auto';
-        this.codeContentTarget.classList.remove('pb-5');
-        this.expandCodeButtonTarget.remove();
+        if (this.hasExpandCodeButtonTarget) {
+            this.expandCodeButtonTarget.remove();
+        }
     }
 
     #isOverflowing(element) {

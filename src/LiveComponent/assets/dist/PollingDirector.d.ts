@@ -1,5 +1,4 @@
-/// <reference types="node" />
-import Component from './Component';
+import type Component from './Component';
 export default class {
     component: Component;
     isPollingActive: boolean;
@@ -7,7 +6,7 @@ export default class {
         actionName: string;
         duration: number;
     }>;
-    pollingIntervals: NodeJS.Timer[];
+    pollingIntervals: number[];
     constructor(component: Component);
     addPoll(actionName: string, duration: number): void;
     startAllPolling(): void;

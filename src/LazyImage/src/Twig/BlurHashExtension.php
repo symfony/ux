@@ -11,9 +11,10 @@
 
 namespace Symfony\UX\LazyImage\Twig;
 
-use Symfony\UX\LazyImage\BlurHash\BlurHashInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+
+trigger_deprecation('symfony/ux-lazy-image', '2.27.0', 'The package is deprecated and will be removed in 3.0.');
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
@@ -22,28 +23,11 @@ use Twig\TwigFunction;
  */
 class BlurHashExtension extends AbstractExtension
 {
-    private $blurHash;
-
-    public function __construct(BlurHashInterface $blurHash)
-    {
-        $this->blurHash = $blurHash;
-    }
-
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('data_uri_thumbnail', [$this, 'createDataUriThumbnail']),
-            new TwigFunction('blur_hash', [$this, 'blurHash']),
+            new TwigFunction('data_uri_thumbnail', [BlurHashRuntime::class, 'createDataUriThumbnail']),
+            new TwigFunction('blur_hash', [BlurHashRuntime::class, 'blurHash']),
         ];
-    }
-
-    public function createDataUriThumbnail(string $filename, int $width, int $height, int $encodingWidth = 75, int $encodingHeight = 75): string
-    {
-        return $this->blurHash->createDataUriThumbnail($filename, $width, $height, $encodingWidth, $encodingHeight);
-    }
-
-    public function blurHash(string $filename, int $encodingWidth = 75, int $encodingHeight = 75): string
-    {
-        return $this->blurHash->encode($filename, $encodingWidth, $encodingHeight);
     }
 }

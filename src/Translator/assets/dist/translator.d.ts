@@ -21,6 +21,7 @@ export interface Message<Translations extends TranslationsType, Locale extends L
 }
 export declare function setLocale(locale: LocaleType | null): void;
 export declare function getLocale(): LocaleType;
+export declare function throwWhenNotFound(enabled: boolean): void;
 export declare function setLocaleFallbacks(localeFallbacks: Record<LocaleType, LocaleType>): void;
 export declare function getLocaleFallbacks(): Record<LocaleType, LocaleType>;
 export declare function trans<M extends Message<TranslationsType, LocaleType>, D extends DomainsOf<M>, P extends ParametersOf<M, D>>(...args: P extends NoParametersType ? [message: M, parameters?: P, domain?: RemoveIntlIcuSuffix<D>, locale?: LocaleOf<M>] : [message: M, parameters: P, domain?: RemoveIntlIcuSuffix<D>, locale?: LocaleOf<M>]): string;

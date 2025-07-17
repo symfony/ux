@@ -1,5 +1,5 @@
-import { ElementDriver } from './ElementDriver';
-import Component from './index';
+import type { ElementDriver } from './ElementDriver';
+import type Component from './index';
 export default class {
     private readonly component;
     private readonly modelElementResolver;
