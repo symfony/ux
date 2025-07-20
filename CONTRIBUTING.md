@@ -1,6 +1,6 @@
 # Contributing
- 
-Thank you for considering contributing to Symfony UX! 
+
+Thank you for considering contributing to Symfony UX!
 
 Symfony UX is an open source, community-driven project, and we are happy to receive contributions from the community!
 
@@ -39,15 +39,15 @@ To set up the development environment, you need the following tools:
 
 - [PHP](https://www.php.net/downloads.php) 8.1 or higher
 - [Composer](https://getcomposer.org/download/)
-- [Node.js](https://nodejs.org/en/download/package-manager) 22 or higher
+- [Node.js](https://nodejs.org/en/download/package-manager) 22.11 or higher
 - [Corepack](https://github.com/nodejs/corepack)
-- [Yarn](https://yarnpkg.com/) 4 or higher
+- [PNPM](https://pnpm.io/) 10.13 or higher
 
 With these tools installed, you can install the project dependencies:
 
 ```shell
 $ composer install
-$ corepack enable && yarn install
+$ corepack enable && pnpm install
 ```
 
 ### Linking Symfony UX packages to your project
@@ -79,17 +79,17 @@ Assets are specific to each Symfony UX package:
   - Assets **must be** compatible with the [Symfony AssetMapper](https://symfony.com/doc/current/frontend/asset_mapper.html) and [Symfony Webpack Encore](https://symfony.com/doc/current/frontend/encore/index.html).
 
 To help you with assets, you can run the following commands in a specific package directory (e.g., `src/Map/assets/`):
-  - `yarn run build`: build (compile) assets from the package,
-  - `yarn run watch`: watch for modifications and rebuild assets from the package,
-  - `yarn run test`: run the tests from the package,
-  - `yarn run check`: run the formatter, linter, and sort imports, and fails if any modifications 
-  - `yarn run check --write`: run the formatter, linter, imports sorting, and write modifications 
+  - `pnpm run build`: build (compile) assets from the package,
+  - `pnpm run watch`: watch for modifications and rebuild assets from the package,
+  - `pnpm run test`: run the tests from the package,
+  - `pnpm run check`: run the formatter, linter, and sort imports, and fails if any modifications
+  - `pnpm run check --write`: run the formatter, linter, imports sorting, and write modifications
 
-Thanks to [Yarn Workspaces](https://yarnpkg.com/features/workspaces), you can also run these commands from the root directory of the project:
-  - `yarn run build`: build (compile) assets from **all** packages,
-  - `yarn run test`: run the tests from **all** packages,
-  - `yarn run check`: run the formatter, linter, and sort imports for **all** packages, and fails if any modifications
-  - `yarn run check --write`: run the formatter, linter, imports sorting for **all** packages, and write modifications
+Thanks to [PNPM Workspaces](https://pnpm.io/workspaces), you can also run these commands from the root directory of the project:
+  - `pnpm run build`: build (compile) assets from **all** packages,
+  - `pnpm run test`: run the tests from **all** packages,
+  - `pnpm run check`: run the formatter, linter, and sort imports for **all** packages, and fails if any modifications
+  - `pnpm run check --write`: run the formatter, linter, imports sorting for **all** packages, and write modifications
 
 ### Working on documentation
 

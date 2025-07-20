@@ -23,7 +23,7 @@ fi
 
 runTestSuite() {
     echo -e "Running tests for $workspace...\n"
-    yarn run -T vitest --run || { all_tests_passed=false; }
+    pnpm exec vitest --run || { all_tests_passed=false; }
 }
 
 processWorkspace() {
@@ -39,15 +39,15 @@ processWorkspace() {
         echo "No package.json found at $package_json_path"
         return
     fi
-    
+
     workspace=$(jq -r '.name' "$package_json_path")
     if [ -z "$workspace" ]; then
         echo "No name found in package.json at $package_json_path"
         return
     fi
-    
+
     echo -e "Processing workspace $workspace at location $location...\n"
-    
+
     echo "Checking '$package_json_path' for peerDependencies and importmap dependencies to have the same version"
     deps=$(jq -r '.peerDependencies | keys[]' "$package_json_path")
     for library in $deps; do
@@ -76,15 +76,15 @@ processWorkspace() {
                 if [ -n "$trimmed_version" ]; then
                     # Install each version of the library separately
                     echo -e "  - Install $library@$trimmed_version for $workspace\n"
-                    yarn workspace "$workspace" add "$library@$trimmed_version" --peer
+                    pnpm add "$library@$trimmed_version" --save-peer --filter "$workspace"
 
                     runTestSuite
                 fi
             done
-            
-            echo " -> Reverting version changes for $library"
-            yarn workspace "$workspace" add "$library@$versionValue" --peer
         done
+
+        echo " -> Reverting version changes from $package_json_path"
+        git checkout -- "$package_json_path"
     else
         echo -e " -> No peerDependencies found with multiple versions defined\n"
         runTestSuite

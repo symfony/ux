@@ -1,14 +1,14 @@
 {
     "private": true,
-    "packageManager": "yarn@4.5.0",
+    "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad",
     "type": "module",
     "workspaces": [
         "src/*/assets",
         "src/*/src/Bridge/*/assets"
     ],
     "scripts": {
-        "build": "yarn workspaces foreach -Ap --topological-dev run build",
-        "test": "yarn workspaces foreach -Ap --topological-dev run test",
+        "build": "pnpm run -r --aggregate-output build",
+        "test": "pnpm run -r --aggregate-output test",
         "check": "biome check",
         "ci": "biome ci"
     },
@@ -17,28 +17,14 @@
         "@rollup/plugin-commonjs": "^28.0.6",
         "@rollup/plugin-node-resolve": "^16.0.1",
         "@rollup/plugin-typescript": "^12.1.4",
-        "@testing-library/dom": "^10.4.0",
-        "@testing-library/jest-dom": "^6.6.3",
-        "@testing-library/user-event": "^14.6.1",
+        "@testing-library/dom": "catalog:",
+        "@testing-library/jest-dom": "catalog:",
         "@types/node": "^22.6.0",
-        "@vitest/browser": "^2.1.1",
-        "jsdom": "^26.1.0",
         "lightningcss": "^1.28.2",
         "playwright": "^1.47.0",
         "rollup": "^4.44.1",
         "tinyglobby": "^0.2.14",
-        "tslib": "^2.6.3",
-        "tsx": "^4.20.3",
-        "typescript": "^5.8.3",
-        "vitest": "^2.1.1"
-    },
-    "resolutions": {
-        "@swup/plugin/@swup/prettier-config": "link:node_modules/.cache/null",
-        "@swup/plugin/@swup/browserslist-config": "link:node_modules/.cache/null",
-        "@swup/plugin/microbundle": "link:node_modules/.cache/null",
-        "@swup/plugin/prettier": "link:node_modules/.cache/null",
-        "@swup/plugin/shelljs": "link:node_modules/.cache/null",
-        "@swup/plugin/shelljs-live": "link:node_modules/.cache/null"
+        "vitest": "catalog:"
     },
     "version": "2.27.0"
 }

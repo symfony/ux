@@ -2,6 +2,7 @@
     "devDependencies": {
         "@babel/core": "^7.17.0",
         "@babel/preset-env": "^7.16.0",
+        "@babel/preset-react": "^7.27.1",
         "@googlemaps/js-api-loader": "^1.16.6",
         "@hotwired/stimulus": "^3.0.0",
         "@hotwired/turbo": "^7.1.1 || ^8.0",

@@ -49,7 +49,15 @@
     },
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
+        "@testing-library/dom": "catalog:",
+        "@testing-library/jest-dom": "catalog:",
+        "@testing-library/user-event": "catalog:",
+        "jsdom": "catalog:",
         "tom-select": "^2.2.2",
+        "tslib": "catalog:",
+        "tsx": "catalog:",
+        "typescript": "catalog:",
+        "vitest": "catalog:",
         "vitest-fetch-mock": "^0.2.2"
     }
 }

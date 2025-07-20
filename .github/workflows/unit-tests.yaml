@@ -143,11 +143,11 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                 node-version: ${{ matrix.node-version }}
-                cache: 'yarn'
+                cache: 'pnpm'
                 cache-dependency-path: |
-                  yarn.lock
+                  pnpm-lock.yaml
                   package.json
                   src/**/package.json
-            - run: yarn --immutable
-            - run: yarn playwright install
-            - run: yarn test
+            - run: pnpm install --frozen-lockfile
+            - run: pnpm exec playwright install
+            - run: pnpm run test

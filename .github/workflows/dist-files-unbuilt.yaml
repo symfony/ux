@@ -25,11 +25,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-          cache: 'yarn'
+          cache: 'pnpm'
           cache-dependency-path: |
-            yarn.lock
+            pnpm-lock.yaml
             **/package.json
-      - run: yarn --immutable && yarn build
+      - run: pnpm install --frozen-lockfile && pnpm run build
 
       - name: Check if JS dist files are current
         run: |

@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+/// <reference types="@types/webpack-env" />
+
 import type { Component } from 'vue';
 import { defineAsyncComponent } from 'vue';
 
