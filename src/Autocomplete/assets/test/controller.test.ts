@@ -11,7 +11,7 @@ import { Application } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import type TomSelect from 'tom-select';
-import { vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import createFetchMock from 'vitest-fetch-mock';
 import AutocompleteController, {
     type AutocompleteConnectOptions,

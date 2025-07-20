@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import ChangingItemsTracker from '../../src/Rendering/ChangingItemsTracker';
 
 describe('ChangingItemsTracker', () => {

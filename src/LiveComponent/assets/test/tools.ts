@@ -1,6 +1,7 @@
 import { Application } from '@hotwired/stimulus';
 import { waitFor } from '@testing-library/dom';
 import { Response } from 'node-fetch';
+import { expect } from 'vitest';
 import type { BackendAction, BackendInterface, ChildrenFingerprints } from '../src/Backend/Backend';
 import BackendRequest from '../src/Backend/BackendRequest';
 import Component from '../src/Component';

@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { describe, expect, it } from 'vitest';
 import { registerReactControllerComponents } from '../src/register_controller';
 // @ts-ignore
 import MyJsxComponent from './fixtures/MyJsxComponent';

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { htmlToElement } from '../src/dom_utils';
 import { normalizeAttributesForComparison } from '../src/normalize_attributes_for_comparison';
 

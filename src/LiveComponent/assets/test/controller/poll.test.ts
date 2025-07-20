@@ -9,6 +9,7 @@
 
 import { waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
+import { afterEach, describe, expect, it } from 'vitest';
 import { createTest, initComponent, shutdownTests } from '../tools';
 
 describe('LiveController polling Tests', () => {

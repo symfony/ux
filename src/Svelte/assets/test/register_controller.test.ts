@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { describe, expect, it } from 'vitest';
 import { registerSvelteControllerComponents } from '../src/register_controller';
 import MyComponent from './fixtures/MyComponent.svelte';
 

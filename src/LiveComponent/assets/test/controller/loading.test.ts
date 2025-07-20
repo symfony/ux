@@ -9,6 +9,7 @@
 
 import { getByTestId, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
+import { afterEach, describe, expect, it } from 'vitest';
 import { createTest, initComponent, shutdownTests } from '../tools';
 
 describe('LiveController data-loading Tests', () => {
@@ -21,7 +22,7 @@ describe('LiveController data-loading Tests', () => {
             { food: 'pizza' },
             (data: any) => `
             <div ${initComponent(data)}>
-                <span>I like: ${data.food}</span> 
+                <span>I like: ${data.food}</span>
                 <span data-loading="show" data-testid="loading-element">Loading...</span>
             </div>
         `
@@ -53,7 +54,7 @@ describe('LiveController data-loading Tests', () => {
             { food: 'pizza' },
             (data: any) => `
             <div ${initComponent(data)} data-loading="addClass(opacity-20)">
-                <span>I like: ${data.food}</span> 
+                <span>I like: ${data.food}</span>
                 <button data-action="live#$render">Re-Render</button>
             </div>
         `
@@ -84,7 +85,7 @@ describe('LiveController data-loading Tests', () => {
         const test = await createTest(
             {},
             (data: any) => `
-            <div ${initComponent(data)}> 
+            <div ${initComponent(data)}>
                 <span data-loading="action(save)|show" data-testid="loading-element">Loading...</span>
 
                 <button data-action="live#action" data-live-action-param="save">Save</button>
@@ -131,7 +132,7 @@ describe('LiveController data-loading Tests', () => {
         const test = await createTest(
             { comments: '', user: { email: '' } },
             (data: any) => `
-            <div ${initComponent(data)}> 
+            <div ${initComponent(data)}>
                 <textarea data-model="comments"></textarea>
                 <span data-loading="model(comments)|show" data-testid="comments-loading">Comments change loading...</span>
 
@@ -185,7 +186,7 @@ describe('LiveController data-loading Tests', () => {
         const test = await createTest(
             {},
             (data: any) => `
-            <div ${initComponent(data)}> 
+            <div ${initComponent(data)}>
                 <span data-loading="action(otherAction)|show" data-testid="loading-element">Loading...</span>
 
                 <button data-action="live#action" data-live-action-param="debounce(50)|save">Save</button>
@@ -215,7 +216,7 @@ describe('LiveController data-loading Tests', () => {
         const test = await createTest(
             {},
             (data: any) => `
-           <div ${initComponent(data)}> 
+           <div ${initComponent(data)}>
                <span data-loading="action(save)|delay(50)|show" data-testid="loading-element">Loading...</span>
 
                <button data-action="live#action" data-live-action-param="save">Save</button>

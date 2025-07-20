@@ -1,4 +1,5 @@
 import { Response } from 'node-fetch';
+import { beforeEach, describe, expect, it } from 'vitest';
 import type { BackendInterface } from '../src/Backend/Backend';
 import BackendRequest from '../src/Backend/BackendRequest';
 import Component from '../src/Component';

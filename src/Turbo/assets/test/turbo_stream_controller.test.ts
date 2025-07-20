@@ -9,7 +9,7 @@
 
 import { Application } from '@hotwired/stimulus';
 import { getByTestId } from '@testing-library/dom';
-import { vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import TurboStreamController from '../src/turbo_stream_controller';
 

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import Backend from '../src/Backend/Backend';
 import Component from '../src/Component';
 import ValueStore from '../src/Component/ValueStore';

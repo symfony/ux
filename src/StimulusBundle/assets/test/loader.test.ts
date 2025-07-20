@@ -1,5 +1,6 @@
 import { Application, Controller } from '@hotwired/stimulus';
 import { waitFor } from '@testing-library/dom';
+import { describe, expect, it } from 'vitest';
 // load from dist because the source TypeScript file points directly to controllers.js,
 // which does not actually exist in the source code
 import { loadControllers } from '../dist/loader';

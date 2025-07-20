@@ -9,7 +9,7 @@
 
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
-import { vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import NotifyController from '../src/controller';
 

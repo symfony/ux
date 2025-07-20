@@ -8,6 +8,7 @@
  */
 
 import { getByText, waitFor } from '@testing-library/dom';
+import { afterEach, describe, expect, it } from 'vitest';
 import { createTest, expectCurrentSearch, initComponent, setCurrentSearch, shutdownTests } from '../tools';
 
 describe('LiveController query string binding', () => {

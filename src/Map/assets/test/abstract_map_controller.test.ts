@@ -1,5 +1,6 @@
 import { Application } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import AbstractMapController from '../src/abstract_map_controller.ts';
 

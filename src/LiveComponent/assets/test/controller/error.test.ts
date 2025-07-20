@@ -8,6 +8,7 @@
  */
 
 import { getByText, waitFor } from '@testing-library/dom';
+import { afterEach, describe, expect, it } from 'vitest';
 import type BackendResponse from '../../src/Backend/BackendResponse';
 import { createTest, initComponent, shutdownTests } from '../tools';
 
@@ -108,7 +109,7 @@ describe('LiveController Error Handling', () => {
             .expectActionCalled('save');
 
         let isHookCalled = false;
-        test.component.on('response:error', (backendResponse: BackendResponse, controls) => {
+        test.component.on('response:error', (_backendResponse: BackendResponse, controls) => {
             isHookCalled = true;
             controls.displayError = false;
         });

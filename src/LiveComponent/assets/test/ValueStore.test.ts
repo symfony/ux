@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import ValueStore from '../src/Component/ValueStore';
 
 describe('ValueStore', () => {

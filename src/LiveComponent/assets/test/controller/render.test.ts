@@ -9,6 +9,7 @@
 
 import { getByTestId, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
+import { afterEach, describe, expect, it } from 'vitest';
 import { htmlToElement } from '../../src/dom_utils';
 import { createTest, initComponent, shutdownTests } from '../tools';
 
@@ -51,7 +52,7 @@ describe('LiveController rendering Tests', () => {
                     We want the first to finish, to see if it overwrites our value
                 -->
                 <textarea data-model="norender|comment">${data.comment}</textarea>
-                
+
                 Title: "${data.title}"
                 Comment: "${data.comment}"
 
@@ -213,7 +214,7 @@ describe('LiveController rendering Tests', () => {
             (data: any) => `
             <div ${initComponent(data)}>
                 <div data-live-ignore>Inside Ignore Name: <span>${data.firstName}</span></div>
-                
+
                 Outside Ignore Name: ${data.firstName}
 
                 <button data-action="live#$render">Reload</button>
@@ -249,7 +250,7 @@ describe('LiveController rendering Tests', () => {
                 <div id="${data.containerId}">
                     <div data-live-ignore>Inside Ignore Name: <span>${data.firstName}</span></div>
                 </div>
-                
+
                 Outside Ignore Name: ${data.firstName}
 
                 <button data-action="live#$render">Reload</button>
@@ -491,8 +492,8 @@ describe('LiveController rendering Tests', () => {
             // correctly delayed, the "first render finish" and "second render
             // start" times could be the same, because no time has passed.
             const sleep = (milliseconds: number) => {
-                const startTime = new Date().getTime();
-                while (new Date().getTime() < startTime + milliseconds);
+                const startTime = Date.now();
+                while (Date.now() < startTime + milliseconds);
             };
             sleep(10);
         });
@@ -585,7 +586,7 @@ describe('LiveController rendering Tests', () => {
                         <option value="2">Two</option>
                         <option value="3">Three</option>
                     </select>
-                    
+
                     <select id="select_option_2">
                         <option value="">Choose option 2</option>
                         <option value="1_1">One - One</option>
@@ -610,7 +611,7 @@ describe('LiveController rendering Tests', () => {
                             <option value="2" selected>Two</option>
                             <option value="3">Three</option>
                         </select>
-                        
+
                         <select id="select_option_2">
                             <option value="">Choose option 2</option>
                             <option value="2_1">Two - One</option>

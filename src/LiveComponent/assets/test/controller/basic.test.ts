@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { afterEach, describe, expect, it } from 'vitest';
 import Component from '../../src/Component';
 import { findComponents } from '../../src/ComponentRegistry';
 import { htmlToElement } from '../../src/dom_utils';

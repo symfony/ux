@@ -3,7 +3,6 @@ import path from 'path';
 
 export default defineConfig({
     test: {
-        globals: true,
         environment: 'jsdom',
         setupFiles: [path.join(__dirname, 'test', 'setup.js')],
         coverage: {

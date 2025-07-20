@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { type Directive, parseDirectives } from '../../src/Directive/directives_parser';
 
 const assertDirectiveEquals = (actual: Directive, expected: any) => {

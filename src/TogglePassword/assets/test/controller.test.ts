@@ -10,6 +10,7 @@
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, getByText, waitFor } from '@testing-library/dom';
 import user from '@testing-library/user-event';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import TogglePasswordController from '../src/controller';
 

@@ -7,4 +7,4 @@
  * file that was distributed with this source code.
  */
 
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';

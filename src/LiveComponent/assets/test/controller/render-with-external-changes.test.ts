@@ -8,6 +8,7 @@
  */
 
 import { getByTestId } from '@testing-library/dom';
+import { afterEach, describe, expect, it } from 'vitest';
 import { htmlToElement } from '../../src/dom_utils';
 import { createTest, initComponent, shutdownTests } from '../tools';
 

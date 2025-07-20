@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import ElementChanges from '../../src/Rendering/ElementChanges';
 
 describe('ElementChanges', () => {

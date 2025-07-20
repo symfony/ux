@@ -10,6 +10,7 @@
 import { Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
+import { afterEach, describe, expect, it } from 'vitest';
 import { findChildren } from '../../src/ComponentRegistry';
 import {
     createTest,

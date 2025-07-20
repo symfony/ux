@@ -1,5 +1,6 @@
 import { waitFor } from '@testing-library/dom';
 import { Response } from 'node-fetch';
+import { describe, expect, it } from 'vitest';
 import type { BackendAction, BackendInterface } from '../../src/Backend/Backend';
 import BackendRequest from '../../src/Backend/BackendRequest';
 import type BackendResponse from '../../src/Backend/BackendResponse';
@@ -13,7 +14,7 @@ interface MockBackend extends BackendInterface {
 const makeTestComponent = (): { component: Component; backend: MockBackend } => {
     const backend: MockBackend = {
         actions: [],
-        makeRequest(data: any, actions: BackendAction[]): BackendRequest {
+        makeRequest(_data: any, actions: BackendAction[]): BackendRequest {
             this.actions = actions;
 
             return new BackendRequest(

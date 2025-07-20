@@ -9,17 +9,18 @@
 
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { clearDOM, mountDOM } from '../../../../../../../test/stimulus-helpers';
 import GoogleController from '../src/map_controller';
 
 // Controller used to check the actual controller was properly booted
 class CheckController extends Controller {
     connect() {
-        this.element.addEventListener('ux:map:pre-connect', (event) => {
+        this.element.addEventListener('ux:map:pre-connect', (_event) => {
             this.element.classList.add('pre-connected');
         });
 
-        this.element.addEventListener('ux:map:connect', (event) => {
+        this.element.addEventListener('ux:map:connect', (_event) => {
             this.element.classList.add('connected');
         });
     }

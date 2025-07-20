@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { describe, expect, it } from 'vitest';
 import { registerVueControllerComponents } from '../src/register_controller';
 import Hello from './fixtures/Hello.vue';
 import Goodbye from './fixtures-lazy/Goodbye.vue';

@@ -9,7 +9,7 @@
 
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
-import React from 'react';
+import { describe, expect, it } from 'vitest';
 import { clearDOM, mountDOM } from '../../../../test/stimulus-helpers';
 import ReactController from '../src/render_controller';
 

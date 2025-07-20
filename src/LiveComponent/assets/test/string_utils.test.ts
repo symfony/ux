@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { combineSpacedArray, normalizeModelName } from '../src/string_utils';
 
 describe('combinedSpacedArray', () => {

@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { afterEach, describe, expect, it } from 'vitest';
 import { createTest, initComponent, shutdownTests } from '../tools';
 
 describe('LiveController Event Dispatching Tests', () => {

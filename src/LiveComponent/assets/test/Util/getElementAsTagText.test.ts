@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { htmlToElement } from '../../src/dom_utils';
 import getElementAsTagText from '../../src/Util/getElementAsTagText';
 

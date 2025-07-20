@@ -8,6 +8,7 @@
  */
 
 import { getByText, waitFor } from '@testing-library/dom';
+import { afterEach, describe, expect, it } from 'vitest';
 import { createTest, initComponent, shutdownTests } from '../tools';
 
 describe('LiveController Emit Tests', () => {

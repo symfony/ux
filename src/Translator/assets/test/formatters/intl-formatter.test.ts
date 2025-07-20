@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { describe, expect, test } from 'vitest';
 import { formatIntl } from '../../src/formatters/intl-formatter';
 
 describe('Intl Formatter', () => {

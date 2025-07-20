@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { parseDirectives } from '../../src/Directive/directives_parser';
 import getModelBinding from '../../src/Directive/get_model_binding';
 

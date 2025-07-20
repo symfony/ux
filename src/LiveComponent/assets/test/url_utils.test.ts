@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { HistoryStrategy, UrlUtils } from '../src/url_utils';
 
 describe('url_utils', () => {
