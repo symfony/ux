@@ -1,0 +1,43 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-07-20T14:45:47Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/move-from-yarn-to-pnpm/src/Autocomplete/assets/dist"><b>Autocomplete</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/move-from-yarn-to-pnpm/src/Autocomplete/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>17.6 kB</code>
+                    / <code>4.12 kB</code>
+                </td><td>
+                    <code>17.61 kB</code><sup>0%</sup>
+                    / <code>4.13 kB</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-07-21T09:27:55Z
+
+What does it mean for the contributors?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-07-21T09:29:47Z
+
+Nice job and i’m all in to leave legacy yarn :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-21T09:35:50Z
+
+> What does it mean for the contributors?
+
+pnpm will be automatically installed when running `corepack enable`, which we already explain in our CONTRIBUTING.md. And of course, commands like `yarn install` or `yarn build` won't work anymore, in favor of `pnpm install`, `pnpm build`, etc...
