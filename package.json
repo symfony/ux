@@ -14,16 +14,14 @@
     },
     "devDependencies": {
         "@biomejs/biome": "^2.0.4",
-        "@rollup/plugin-commonjs": "^28.0.6",
-        "@rollup/plugin-node-resolve": "^16.0.1",
-        "@rollup/plugin-typescript": "^12.1.4",
+        "@oxc-project/runtime": "^0.77.3",
         "@testing-library/dom": "catalog:",
         "@testing-library/jest-dom": "catalog:",
         "@types/node": "^22.6.0",
         "lightningcss": "^1.28.2",
         "playwright": "^1.47.0",
-        "rollup": "^4.44.1",
         "tinyglobby": "^0.2.14",
+        "tsdown": "^0.12.9",
         "vitest": "catalog:"
     },
     "version": "2.27.0"

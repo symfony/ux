@@ -6,9 +6,8 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { parseArgs } from 'node:util';
 import * as LightningCSS from 'lightningcss';
-import * as rollup from 'rollup';
 import { globSync } from 'tinyglobby';
-import { getRollupConfiguration } from './rollup.ts';
+import { build } from 'tsdown';
 
 const args = parseArgs({
     allowPositionals: true,
@@ -34,7 +33,7 @@ async function main() {
         process.exit(1);
     }
 
-    const packageData = await import(path.join(packageRoot, 'package.json'), {with: { type: 'json'}});
+    const packageData = await import(path.join(packageRoot, 'package.json'), { with: { type: 'json' } });
     const packageName = packageData.name;
     const srcDir = path.join(packageRoot, 'src');
     const distDir = path.join(packageRoot, 'dist');
@@ -44,13 +43,7 @@ async function main() {
         process.exit(1);
     }
 
-    if (fs.existsSync(distDir)) {
-        console.log(`Cleaning up the "${distDir}" directory...`);
-        await fs.promises.rm(distDir, { recursive: true });
-        await fs.promises.mkdir(distDir);
-    }
-
-    const inputScriptFiles = [
+    const inputFiles = [
         ...globSync(path.join(srcDir, '*controller.ts')),
         ...(['@symfony/ux-react', '@symfony/ux-vue', '@symfony/ux-svelte'].includes(packageName)
             ? [path.join(srcDir, 'loader.ts'), path.join(srcDir, 'components.ts')]
@@ -58,93 +51,107 @@ async function main() {
         ...(packageName === '@symfony/stimulus-bundle'
             ? [path.join(srcDir, 'loader.ts'), path.join(srcDir, 'controllers.ts')]
             : []),
+        ...(packageData?.config?.css_source ? [packageData.config.css_source] : []),
     ];
 
-    const inputStyleFile = packageData.config?.css_source;
-    const buildCss = async () => {
-        if (!inputStyleFile) {
-            return;
+    const peerDependencies = [
+        '@hotwired/stimulus',
+        ...(packageData.peerDependencies ? Object.keys(packageData.peerDependencies) : []),
+    ];
+
+    inputFiles.forEach((file) => {
+        // custom handling for StimulusBundle
+        if (file.includes('StimulusBundle/assets/src/loader.ts')) {
+            peerDependencies.push('./controllers.js');
         }
-        const inputStyleFileDist = path.resolve(distDir, `${path.basename(inputStyleFile, '.css')}.min.css`);
 
-        console.log('Minifying CSS...');
-        const css = await fs.promises.readFile(inputStyleFile, 'utf-8');
-        const { code: minified } = LightningCSS.transform({
-            filename: path.basename(inputStyleFile, '.css'),
-            code: Buffer.from(css),
-            minify: true,
-            sourceMap: false, // TODO: Maybe we can add source maps later? :)
-        });
-        await fs.promises.writeFile(inputStyleFileDist, minified);
-    };
-
-    if (inputScriptFiles.length === 0) {
-        console.error(
-            `No input files found for package "${packageName}" (directory "${packageRoot}").\nEnsure you have at least a file matching the pattern "src/*_controller.ts", or manually specify input files in "${import.meta.filename}" file.`
-        );
-        process.exit(1);
-    }
-
-    const rollupConfig = getRollupConfiguration({
-        packageRoot,
-        inputFiles: inputScriptFiles,
-        isWatch,
-        additionalPlugins: [
-            ...(isWatch && inputStyleFile
-                ? [
-                      {
-                          name: 'watcher',
-                          buildStart(this: rollup.PluginContext) {
-                              this.addWatchFile(inputStyleFile);
-                          },
-                      },
-                  ]
-                : []),
-        ],
+        // React, Vue
+        if (file.includes('assets/src/loader.ts')) {
+            peerDependencies.push('./components.js');
+        }
     });
 
-    if (isWatch) {
-        console.log(
-            `Watching for JavaScript${inputStyleFile ? ' and CSS' : ''} files modifications in "${srcDir}" directory...`
-        );
+    build({
+        entry: inputFiles,
+        outDir: distDir,
+        clean: true,
+        outputOptions: {
+            cssEntryFileNames: '[name].min.css',
+        },
+        external: peerDependencies,
+        format: 'esm',
+        platform: 'browser',
+        tsconfig: path.join(import.meta.dirname, '../tsconfig.packages.json'),
+        // The target should be kept in sync with `tsconfig.packages.json` file.
+        // In the future, I hope the target will be read from the `tsconfig.packages.json` file, but for now we need to specify it manually.
+        target: 'es2021',
+        watch: isWatch,
+        plugins: [
 
-        const watcher = rollup.watch(rollupConfig);
-        watcher.on('event', (event) => {
-            if (event.code === 'ERROR') {
-                console.error('Error during build:', event.error);
-            }
+            /**
+             * Guarantees that any files imported from a peer dependency are treated as an external.
+             *
+             * For example, if we import `chart.js/auto`, that would not normally
+             * match the "chart.js" we pass to the "externals" config. This plugin
+             * catches that case and adds it as an external.
+             *
+             * Inspired by https://github.com/oat-sa/rollup-plugin-wildcard-external
+             */
+            {
+                name: 'wildcard-externals',
+                resolveId(source: string, importer: string) {
+                    if (!importer) {
+                        return null; // other ids should be handled as usually
+                    }
 
-            if ((event.code === 'BUNDLE_END' || event.code === 'ERROR') && event.result) {
-                event.result.close();
-            }
-        });
-        watcher.on('change', async (id, { event }) => {
-            if (event === 'update') {
-                console.log('Files were modified, rebuilding...');
-            }
+                    const matchesExternal = peerDependencies.some((peerDependency) => {
+                        return source.includes(`/${peerDependency}/`)
+                    });
 
-            if (inputStyleFile && id === inputStyleFile) {
-                await buildCss();
-            }
-        });
-    } else {
-        console.log(`Building JavaScript files from ${packageName} package...`);
-        const start = Date.now();
+                    if (matchesExternal) {
+                        return {
+                            id: source,
+                            external: true,
+                            moduleSideEffects: true,
+                        };
+                    }
 
-        if (typeof rollupConfig.output === 'undefined' || Array.isArray(rollupConfig.output)) {
-            console.error(
-                `The rollup configuration for package "${packageName}" does not contain a valid output configuration.`
-            );
-            process.exit(1);
+                    return null; // other ids should be handled as usually
+                },
+            },
+            // Since minifying files is not configurable per file, we need to use a custom plugin to handle CSS minification.
+            {
+                name: 'minimize-css',
+                transform: {
+                    filter: {
+                        id: /\.css$/,
+                    },
+                    handler (code, id) {
+                        const { code: minifiedCode } = LightningCSS.transform({
+                            filename: path.basename(id),
+                            code: Buffer.from(code),
+                            minify: true,
+                            sourceMap: false,
+                        });
+
+                        return { code: minifiedCode.toString(), map: null };
+                    }
+                },
+            },
+        ],
+        hooks: {
+            async 'build:done'() {
+                // TODO: Idk why, but when we build a CSS file (e.g. `style.css`), it also generate an empty JS file (e.g. `style.js`).
+                if (packageData?.config?.css_source) {
+                    const unwantedJsFile = path.join(distDir, path.basename(packageData.config.css_source, '.css') + '.js');
+                    await fs.promises.rm(unwantedJsFile, { force: true });
+                }
+            }
         }
-
-        const bundle = await rollup.rollup(rollupConfig);
-        await bundle.write(rollupConfig.output);
-
-        await buildCss();
-
-        console.log(`Done in ${((Date.now() - start) / 1000).toFixed(3)} seconds.`);
-    }
+    }).catch((error) => {
+        console.error('Error during build:', error);
+        process.exit(1);
+    });
 }
 
 main();
