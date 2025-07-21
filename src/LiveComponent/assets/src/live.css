@@ -1,0 +1,5 @@
+[data-loading=""],
+[data-loading="show"],
+[data-loading*="|show"] {
+    display: none;
+}

@@ -1,5 +1,9 @@
-import type { Component } from 'vue';
-export interface ComponentCollection {
-    [key: string]: Component;
+import { Component } from "vue";
+
+//#region src/components.d.ts
+interface ComponentCollection {
+  [key: string]: Component;
 }
-export declare const components: ComponentCollection;
+declare const components: ComponentCollection;
+//#endregion
+export { ComponentCollection, components };

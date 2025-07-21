@@ -1,11 +1,14 @@
-import type { ComponentClass, FunctionComponent } from 'react';
-import { type ComponentCollection } from './components.js';
+import { ComponentCollection } from "./components.js";
+import { ComponentClass, FunctionComponent } from "react";
+
+//#region src/loader.d.ts
 type Component = string | FunctionComponent<object> | ComponentClass<object, any>;
 declare global {
-    function resolveReactComponent(name: string): Component;
-    interface Window {
-        resolveReactComponent(name: string): Component;
-    }
+  function resolveReactComponent(name: string): Component;
+  interface Window {
+    resolveReactComponent(name: string): Component;
+  }
 }
-export declare function registerReactControllerComponents(reactComponents?: ComponentCollection): void;
-export {};
+declare function registerReactControllerComponents(reactComponents?: ComponentCollection): void;
+//#endregion
+export { registerReactControllerComponents };

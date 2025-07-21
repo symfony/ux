@@ -1,83 +1,100 @@
-import { Controller } from '@hotwired/stimulus';
-import React from 'react';
-import require$$0 from 'react-dom';
+import { Controller } from "@hotwired/stimulus";
+import React from "react";
+import { createRoot } from "react-dom/client";
 
-var client = {};
+//#region ../../../node_modules/.pnpm/@oxc-project+runtime@0.77.2/node_modules/@oxc-project/runtime/src/helpers/esm/typeof.js
+function _typeof(o) {
+	"@babel/helpers - typeof";
+	return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o$1) {
+		return typeof o$1;
+	} : function(o$1) {
+		return o$1 && "function" == typeof Symbol && o$1.constructor === Symbol && o$1 !== Symbol.prototype ? "symbol" : typeof o$1;
+	}, _typeof(o);
+}
 
-var hasRequiredClient;
-
-function requireClient () {
-	if (hasRequiredClient) return client;
-	hasRequiredClient = 1;
-
-	var m = require$$0;
-	if (process.env.NODE_ENV === 'production') {
-	  client.createRoot = m.createRoot;
-	  client.hydrateRoot = m.hydrateRoot;
-	} else {
-	  var i = m.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
-	  client.createRoot = function(c, o) {
-	    i.usingClientEntryPoint = true;
-	    try {
-	      return m.createRoot(c, o);
-	    } finally {
-	      i.usingClientEntryPoint = false;
-	    }
-	  };
-	  client.hydrateRoot = function(c, h, o) {
-	    i.usingClientEntryPoint = true;
-	    try {
-	      return m.hydrateRoot(c, h, o);
-	    } finally {
-	      i.usingClientEntryPoint = false;
-	    }
-	  };
+//#endregion
+//#region ../../../node_modules/.pnpm/@oxc-project+runtime@0.77.2/node_modules/@oxc-project/runtime/src/helpers/esm/toPrimitive.js
+function toPrimitive(t, r) {
+	if ("object" != _typeof(t) || !t) return t;
+	var e = t[Symbol.toPrimitive];
+	if (void 0 !== e) {
+		var i = e.call(t, r || "default");
+		if ("object" != _typeof(i)) return i;
+		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
-	return client;
+	return ("string" === r ? String : Number)(t);
 }
 
-var clientExports = requireClient();
-
-class default_1 extends Controller {
-    connect() {
-        const props = this.propsValue ? this.propsValue : null;
-        this.dispatchEvent('connect', { component: this.componentValue, props: props });
-        if (!this.componentValue) {
-            throw new Error('No component specified.');
-        }
-        const component = window.resolveReactComponent(this.componentValue);
-        this._renderReactElement(React.createElement(component, props, null));
-        this.dispatchEvent('mount', {
-            componentName: this.componentValue,
-            component: component,
-            props: props,
-        });
-    }
-    disconnect() {
-        if (this.permanentValue) {
-            return;
-        }
-        this.element.root.unmount();
-        this.dispatchEvent('unmount', {
-            component: this.componentValue,
-            props: this.propsValue ? this.propsValue : null,
-        });
-    }
-    _renderReactElement(reactElement) {
-        const element = this.element;
-        if (!element.root) {
-            element.root = clientExports.createRoot(this.element);
-        }
-        element.root.render(reactElement);
-    }
-    dispatchEvent(name, payload) {
-        this.dispatch(name, { detail: payload, prefix: 'react' });
-    }
+//#endregion
+//#region ../../../node_modules/.pnpm/@oxc-project+runtime@0.77.2/node_modules/@oxc-project/runtime/src/helpers/esm/toPropertyKey.js
+function toPropertyKey(t) {
+	var i = toPrimitive(t, "string");
+	return "symbol" == _typeof(i) ? i : i + "";
 }
-default_1.values = {
-    component: String,
-    props: Object,
-    permanent: { type: Boolean, default: false },
+
+//#endregion
+//#region ../../../node_modules/.pnpm/@oxc-project+runtime@0.77.2/node_modules/@oxc-project/runtime/src/helpers/esm/defineProperty.js
+function _defineProperty(e, r, t) {
+	return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+		value: t,
+		enumerable: !0,
+		configurable: !0,
+		writable: !0
+	}) : e[r] = t, e;
+}
+
+//#endregion
+//#region src/render_controller.ts
+var _Class = class extends Controller {
+	constructor(..._args) {
+		super(..._args);
+		_defineProperty(this, "componentValue", void 0);
+		_defineProperty(this, "propsValue", void 0);
+		_defineProperty(this, "permanentValue", void 0);
+	}
+	connect() {
+		const props = this.propsValue ? this.propsValue : null;
+		this.dispatchEvent("connect", {
+			component: this.componentValue,
+			props
+		});
+		if (!this.componentValue) throw new Error("No component specified.");
+		const component = window.resolveReactComponent(this.componentValue);
+		this._renderReactElement(React.createElement(component, props, null));
+		this.dispatchEvent("mount", {
+			componentName: this.componentValue,
+			component,
+			props
+		});
+	}
+	disconnect() {
+		if (this.permanentValue) return;
+		this.element.root.unmount();
+		this.dispatchEvent("unmount", {
+			component: this.componentValue,
+			props: this.propsValue ? this.propsValue : null
+		});
+	}
+	_renderReactElement(reactElement) {
+		const element = this.element;
+		if (!element.root) element.root = createRoot(this.element);
+		element.root.render(reactElement);
+	}
+	dispatchEvent(name, payload) {
+		this.dispatch(name, {
+			detail: payload,
+			prefix: "react"
+		});
+	}
 };
+_defineProperty(_Class, "values", {
+	component: String,
+	props: Object,
+	permanent: {
+		type: Boolean,
+		default: false
+	}
+});
 
-export { default_1 as default };
+//#endregion
+export { _Class as default };

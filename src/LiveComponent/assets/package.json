@@ -17,7 +17,7 @@
     "main": "dist/live_controller.js",
     "types": "dist/live_controller.d.ts",
     "config": {
-        "css_source": "styles/live.css"
+        "css_source": "src/live.css"
     },
     "scripts": {
         "build": "tsx ../../../bin/build_package.ts .",

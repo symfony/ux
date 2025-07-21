@@ -1,7 +1,13 @@
-import { Controller } from '@hotwired/stimulus';
-import '@hotwired/turbo';
+import { Controller } from "@hotwired/stimulus";
+import "@hotwired/turbo";
 
-class turbo_controller extends Controller {
-}
+//#region src/turbo_controller.ts
+/**
+* Empty Stimulus controller only used for Symfony Flex wiring.
+*
+* @author Titouan Galopin <galopintitouan@gmail.com>
+*/
+var turbo_controller_default = class extends Controller {};
 
-export { turbo_controller as default };
+//#endregion
+export { turbo_controller_default as default };
