@@ -53,6 +53,14 @@
         "@swup/fade-theme": "^1.0",
         "@swup/forms-plugin": "^2.0",
         "@swup/slide-theme": "^1.0",
-        "swup": "^3.0"
+        "@testing-library/dom": "catalog:",
+        "@testing-library/jest-dom": "catalog:",
+        "@testing-library/user-event": "catalog:",
+        "jsdom": "catalog:",
+        "swup": "^3.0",
+        "tslib": "catalog:",
+        "tsx": "catalog:",
+        "typescript": "catalog:",
+        "vitest": "catalog:"
     }
 }

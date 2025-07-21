@@ -41,7 +41,15 @@
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
         "@sveltejs/vite-plugin-svelte": "^2.4.6",
+        "@testing-library/dom": "catalog:",
+        "@testing-library/jest-dom": "catalog:",
+        "@testing-library/user-event": "catalog:",
         "@types/webpack-env": "^1.16",
-        "svelte": "^3.0 || ^4.0"
+        "jsdom": "catalog:",
+        "svelte": "^3.0 || ^4.0",
+        "tslib": "catalog:",
+        "tsx": "catalog:",
+        "typescript": "catalog:",
+        "vitest": "catalog:"
     }
 }

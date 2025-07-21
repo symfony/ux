@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+/// <reference types="google.maps" />
+
 import type { LoaderOptions } from '@googlemaps/js-api-loader';
 import { Loader } from '@googlemaps/js-api-loader';
 import type {

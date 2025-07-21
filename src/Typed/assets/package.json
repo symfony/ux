@@ -42,6 +42,14 @@
     },
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
-        "typed.js": "^2.0"
+        "@testing-library/dom": "catalog:",
+        "@testing-library/jest-dom": "catalog:",
+        "@testing-library/user-event": "catalog:",
+        "jsdom": "catalog:",
+        "tslib": "catalog:",
+        "tsx": "catalog:",
+        "typed.js": "^2.0",
+        "typescript": "catalog:",
+        "vitest": "catalog:"
     }
 }

@@ -36,11 +36,11 @@ jobs:
         - uses: actions/setup-node@v4
           with:
             node-version-file: '.nvmrc'
-            cache: 'yarn'
+            cache: 'pnpm'
             cache-dependency-path: |
-              yarn.lock
               package.json
               src/**/package.json
+              test_apps/encore-app/pnpm-lock.yaml
               test_apps/encore-app/package.json
 
         - uses: shivammathur/setup-php@v2
@@ -54,33 +54,29 @@ jobs:
           run: php .github/build-packages.php
 
         # We always install PHP deps because of the UX Translator, which requires `var/translations` to exists
-        - name: Install App dependencies
+        - name: Install PHP dependencies
           uses: ramsey/composer-install@v3
           with:
             working-directory: test_apps/encore-app
             dependency-versions: highest
 
-        - if: matrix.ux-packages-source == 'php-vendor'
-          name: Refresh dependencies from vendor/
-          working-directory: test_apps/encore-app
-          run: yarn
-          env:
-            YARN_ENABLE_HARDENED_MODE: 0
-            YARN_ENABLE_IMMUTABLE_INSTALLS: 0
+        - working-directory: test_apps/encore-app
+          run: pnpm install --ignore-workspace
 
         - if: matrix.ux-packages-source == 'js-packages'
           name: Install UX JS packages with a JS package manager
           working-directory: test_apps/encore-app
           run: |
             PACKAGES_TO_INSTALL=''
-            for PACKAGE in $(cd ../..; yarn workspaces list --no-private --json); do
-              PACKAGE_DIR=../../$(echo $PACKAGE | jq -r '.location')
-              PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL $PACKAGE_DIR"
+            for PACKAGE in $(cd ../..; pnpm ls -r --json --depth -1 | jq 'map(select(.private != true))' | jq -c '.[]'); do
+              PACKAGE_ABSOLUTE_PATH=$(echo $PACKAGE | jq -r '.path')
+              PACKAGE_RELATIVE_PATH=$(realpath --relative-to=. "$PACKAGE_ABSOLUTE_PATH")
+              PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL file:$PACKAGE_RELATIVE_PATH"
             done
             echo "Installing packages: $PACKAGES_TO_INSTALL"
-            yarn add --dev $PACKAGES_TO_INSTALL
+            pnpm add --save-dev $PACKAGES_TO_INSTALL
 
-        - name: Ensure UX packages are installed from "${{ matrix.ux-packages-source == 'php-vendor' && 'vendor/symfony/ux-...' || '../../../src/**/assets' }}"
+        - name: Ensure UX packages are installed from "${{ env.EXPECTED_PATTERN }}"
           working-directory: test_apps/encore-app
           run: |
             for PACKAGE in $(cat package.json | jq -c '(.dependencies // {}) + (.devDependencies // {}) | to_entries[] | select(.key | startswith("@symfony/ux-")) | {name: .key, version: .value}'); do
@@ -97,12 +93,12 @@ jobs:
               fi
             done;
           env:
-            EXPECTED_PATTERN: ${{ matrix.ux-packages-source == 'php-vendor' && 'file:vendor/symfony/*' || '../../src/*' }}
+            EXPECTED_PATTERN: ${{ matrix.ux-packages-source == 'php-vendor' && 'file:vendor/symfony/*' || 'file:../../src/*' }}
 
-        - name: Run Encore (dev)
+        - name: Ensure project can be built in dev mode
           working-directory: test_apps/encore-app
-          run: yarn encore dev
+          run: pnpm run dev
 
-        - name: Run Encore (prod)
+        - name: Ensure project can be built in prod mode
           working-directory: test_apps/encore-app
-          run: yarn encore production
+          run: pnpm run build

@@ -25,29 +25,25 @@ jobs:
           - uses: actions/setup-node@v4
             with:
               node-version-file: '.nvmrc'
-              cache: 'yarn'
+              cache: 'pnpm'
               cache-dependency-path: |
-                yarn.lock
+                pnpm-lock.yaml
                 package.json
                 src/**/package.json
-          - run: yarn --immutable
+          - run: pnpm install --frozen-lockfile
 
           - name: Update version of JS packages
-            run: yarn workspaces foreach -pA exec "npm version ${{ env.VERSION }} --no-git-tag-version --no-workspaces-update"
+            run: pnpm version ${{ env.VERSION }} --no-git-tag-version --workspaces --no-workspaces-update
 
           - name: Commit changes
             run: |
               git add .
               git commit -m "Update versions to ${{ env.VERSION }}"
 
-          - name: Replace local "workspace:*" occurrences
-            run: |
-              yarn workspaces foreach -pA exec "sed -i 's/\"workspace:\*\"/\"${{ env.VERSION }}\"/g' package.json"
-
           - name: Publish on NPM
             env:
               NPM_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
-            run: yarn workspaces foreach -A --no-private npm publish --access public --tolerate-republish
+            run: pnpm publish --recursive --access public --no-git-checks
 
           - name: Push changes
             env:

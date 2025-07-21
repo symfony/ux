@@ -45,8 +45,16 @@
     },
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
+        "@testing-library/dom": "catalog:",
+        "@testing-library/jest-dom": "catalog:",
+        "@testing-library/user-event": "catalog:",
         "@types/webpack-env": "^1.16",
         "@vitejs/plugin-vue": "^4.4.0",
+        "jsdom": "catalog:",
+        "tslib": "catalog:",
+        "tsx": "catalog:",
+        "typescript": "catalog:",
+        "vitest": "catalog:",
         "vue": "^3.0"
     }
 }

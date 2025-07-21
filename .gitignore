@@ -1,14 +1,5 @@
-# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
-.yarn/*
-!.yarn/cache
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-
+vendor/
 node_modules
-yarn-error.log
 
 .doctor-rst.cache
 .php-cs-fixer.cache

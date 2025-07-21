@@ -1,0 +1,24 @@
+packages:
+  - src/*/assets
+  - src/*/src/Bridge/*/assets
+
+catalog:
+  '@testing-library/dom': 10.4.0
+  '@testing-library/jest-dom': 6.6.3
+  '@testing-library/user-event': 14.6.1
+  '@vitest/browser': 2.1.9
+  jsdom: 26.1.0
+  tslib: 2.8.1
+  tsx: 4.20.3
+  typescript: 5.8.3
+  vitest: 2.1.9
+
+linkWorkspacePackages: true
+
+overrides:
+  '@swup/plugin>@swup/browserslist-config': link:node_modules/.ignored
+  '@swup/plugin>@swup/prettier-config': link:node_modules/.ignored
+  '@swup/plugin>microbundle': link:node_modules/.ignored
+  '@swup/plugin>prettier': link:node_modules/.ignored
+  '@swup/plugin>shelljs': link:node_modules/.ignored
+  '@swup/plugin>shelljs-live': link:node_modules/.ignored

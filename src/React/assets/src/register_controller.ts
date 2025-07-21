@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+/// <reference types="@types/webpack-env" />
+
 import type { ComponentClass, FunctionComponent } from 'react';
 
 type Component = string | FunctionComponent<object> | ComponentClass<object, any>;
