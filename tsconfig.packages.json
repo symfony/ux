@@ -9,7 +9,7 @@
         "strict": true,
         "strictPropertyInitialization": false,
         "//": "The target should be kept in sync with `bin/build_packages.ts` file.",
-        "target": "es2021",
+        "target": "es2022",
         "removeComments": true,
         "outDir": "types",
         "baseUrl": ".",

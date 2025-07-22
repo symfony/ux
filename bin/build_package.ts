@@ -81,7 +81,7 @@ async function main() {
         tsconfig: path.join(import.meta.dirname, '../tsconfig.packages.json'),
         // The target should be kept in sync with `tsconfig.packages.json` file.
         // In the future, I hope the target will be read from the `tsconfig.packages.json` file, but for now we need to specify it manually.
-        target: 'es2021',
+        target: 'es2022',
         watch: isWatch,
         plugins: [
             // Since minifying files is not configurable per file, we need to use a custom plugin to handle CSS minification.
