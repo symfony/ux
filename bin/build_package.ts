@@ -54,20 +54,17 @@ async function main() {
         ...(packageData?.config?.css_source ? [packageData.config.css_source] : []),
     ];
 
-    const peerDependencies = [
-        '@hotwired/stimulus',
-        ...(packageData.peerDependencies ? Object.keys(packageData.peerDependencies) : []),
-    ];
+    const external = [];
 
     inputFiles.forEach((file) => {
         // custom handling for StimulusBundle
         if (file.includes('StimulusBundle/assets/src/loader.ts')) {
-            peerDependencies.push('./controllers.js');
+            external.push('./controllers.js');
         }
 
         // React, Vue
         if (file.includes('assets/src/loader.ts')) {
-            peerDependencies.push('./components.js');
+            external.push('./components.js');
         }
     });
 
@@ -78,7 +75,7 @@ async function main() {
         outputOptions: {
             cssEntryFileNames: '[name].min.css',
         },
-        external: peerDependencies,
+        external,
         format: 'esm',
         platform: 'browser',
         tsconfig: path.join(import.meta.dirname, '../tsconfig.packages.json'),
@@ -87,38 +84,6 @@ async function main() {
         target: 'es2021',
         watch: isWatch,
         plugins: [
-
-            /**
-             * Guarantees that any files imported from a peer dependency are treated as an external.
-             *
-             * For example, if we import `chart.js/auto`, that would not normally
-             * match the "chart.js" we pass to the "externals" config. This plugin
-             * catches that case and adds it as an external.
-             *
-             * Inspired by https://github.com/oat-sa/rollup-plugin-wildcard-external
-             */
-            {
-                name: 'wildcard-externals',
-                resolveId(source: string, importer: string) {
-                    if (!importer) {
-                        return null; // other ids should be handled as usually
-                    }
-
-                    const matchesExternal = peerDependencies.some((peerDependency) => {
-                        return source.includes(`/${peerDependency}/`)
-                    });
-
-                    if (matchesExternal) {
-                        return {
-                            id: source,
-                            external: true,
-                            moduleSideEffects: true,
-                        };
-                    }
-
-                    return null; // other ids should be handled as usually
-                },
-            },
             // Since minifying files is not configurable per file, we need to use a custom plugin to handle CSS minification.
             {
                 name: 'minimize-css',

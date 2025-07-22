@@ -1,4 +1,3 @@
-// @ts-ignore
 import { Idiomorph } from 'idiomorph/dist/idiomorph.esm.js';
 import { cloneHTMLElement, getModelDirectiveFromElement, setValueOnElement } from './dom_utils';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';

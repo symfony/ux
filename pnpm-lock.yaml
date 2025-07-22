@@ -246,10 +246,6 @@ importers:
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/LiveComponent/assets:
-    dependencies:
-      idiomorph:
-        specifier: ^0.3.0
-        version: 0.3.0
     devDependencies:
       '@hotwired/stimulus':
         specifier: ^3.0.0
@@ -266,6 +262,9 @@ importers:
       '@types/node-fetch':
         specifier: ^2.6.2
         version: 2.6.12
+      idiomorph:
+        specifier: ^0.3.0
+        version: 0.3.0
       jsdom:
         specifier: 'catalog:'
         version: 26.1.0
