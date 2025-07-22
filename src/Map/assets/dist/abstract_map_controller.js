@@ -1,94 +1,40 @@
 import { Controller } from "@hotwired/stimulus";
 
-//#region ../../../node_modules/.pnpm/@oxc-project+runtime@0.77.2/node_modules/@oxc-project/runtime/src/helpers/esm/typeof.js
-function _typeof(o) {
-	"@babel/helpers - typeof";
-	return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o$1) {
-		return typeof o$1;
-	} : function(o$1) {
-		return o$1 && "function" == typeof Symbol && o$1.constructor === Symbol && o$1 !== Symbol.prototype ? "symbol" : typeof o$1;
-	}, _typeof(o);
-}
-
-//#endregion
-//#region ../../../node_modules/.pnpm/@oxc-project+runtime@0.77.2/node_modules/@oxc-project/runtime/src/helpers/esm/toPrimitive.js
-function toPrimitive(t, r) {
-	if ("object" != _typeof(t) || !t) return t;
-	var e = t[Symbol.toPrimitive];
-	if (void 0 !== e) {
-		var i = e.call(t, r || "default");
-		if ("object" != _typeof(i)) return i;
-		throw new TypeError("@@toPrimitive must return a primitive value.");
-	}
-	return ("string" === r ? String : Number)(t);
-}
-
-//#endregion
-//#region ../../../node_modules/.pnpm/@oxc-project+runtime@0.77.2/node_modules/@oxc-project/runtime/src/helpers/esm/toPropertyKey.js
-function toPropertyKey(t) {
-	var i = toPrimitive(t, "string");
-	return "symbol" == _typeof(i) ? i : i + "";
-}
-
-//#endregion
-//#region ../../../node_modules/.pnpm/@oxc-project+runtime@0.77.2/node_modules/@oxc-project/runtime/src/helpers/esm/defineProperty.js
-function _defineProperty(e, r, t) {
-	return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
-		value: t,
-		enumerable: !0,
-		configurable: !0,
-		writable: !0
-	}) : e[r] = t, e;
-}
-
-//#endregion
 //#region src/abstract_map_controller.ts
 const IconTypes = {
 	Url: "url",
 	Svg: "svg",
 	UxIcon: "ux-icon"
 };
-var _Class = class extends Controller {
-	constructor(..._args) {
-		super(..._args);
-		_defineProperty(this, "centerValue", void 0);
-		_defineProperty(this, "zoomValue", void 0);
-		_defineProperty(this, "minZoomValue", void 0);
-		_defineProperty(this, "maxZoomValue", void 0);
-		_defineProperty(this, "fitBoundsToMarkersValue", void 0);
-		_defineProperty(this, "markersValue", void 0);
-		_defineProperty(this, "polygonsValue", void 0);
-		_defineProperty(this, "polylinesValue", void 0);
-		_defineProperty(this, "circlesValue", void 0);
-		_defineProperty(this, "rectanglesValue", void 0);
-		_defineProperty(this, "optionsValue", void 0);
-		_defineProperty(this, "extraValue", void 0);
-		_defineProperty(this, "hasCenterValue", void 0);
-		_defineProperty(this, "hasZoomValue", void 0);
-		_defineProperty(this, "hasMinZoomValue", void 0);
-		_defineProperty(this, "hasMaxZoomValue", void 0);
-		_defineProperty(this, "hasFitBoundsToMarkersValue", void 0);
-		_defineProperty(this, "hasMarkersValue", void 0);
-		_defineProperty(this, "hasPolygonsValue", void 0);
-		_defineProperty(this, "hasPolylinesValue", void 0);
-		_defineProperty(this, "hasCirclesValue", void 0);
-		_defineProperty(this, "hasRectanglesValue", void 0);
-		_defineProperty(this, "hasOptionsValue", void 0);
-		_defineProperty(this, "hasExtraValue", void 0);
-		_defineProperty(this, "map", void 0);
-		_defineProperty(this, "markers", /* @__PURE__ */ new Map());
-		_defineProperty(this, "polygons", /* @__PURE__ */ new Map());
-		_defineProperty(this, "polylines", /* @__PURE__ */ new Map());
-		_defineProperty(this, "circles", /* @__PURE__ */ new Map());
-		_defineProperty(this, "rectangles", /* @__PURE__ */ new Map());
-		_defineProperty(this, "infoWindows", []);
-		_defineProperty(this, "isConnected", false);
-		_defineProperty(this, "createMarker", void 0);
-		_defineProperty(this, "createPolygon", void 0);
-		_defineProperty(this, "createPolyline", void 0);
-		_defineProperty(this, "createCircle", void 0);
-		_defineProperty(this, "createRectangle", void 0);
-	}
+var abstract_map_controller_default = class extends Controller {
+	static values = {
+		providerOptions: Object,
+		center: Object,
+		zoom: Number,
+		minZoom: Number,
+		maxZoom: Number,
+		fitBoundsToMarkers: Boolean,
+		markers: Array,
+		polygons: Array,
+		polylines: Array,
+		circles: Array,
+		rectangles: Array,
+		options: Object,
+		extra: Object
+	};
+	map;
+	markers = /* @__PURE__ */ new Map();
+	polygons = /* @__PURE__ */ new Map();
+	polylines = /* @__PURE__ */ new Map();
+	circles = /* @__PURE__ */ new Map();
+	rectangles = /* @__PURE__ */ new Map();
+	infoWindows = [];
+	isConnected = false;
+	createMarker;
+	createPolygon;
+	createPolyline;
+	createCircle;
+	createRectangle;
 	connect() {
 		const extra = this.hasExtraValue ? this.extraValue : {};
 		const mapDefinition = {
@@ -192,21 +138,6 @@ var _Class = class extends Controller {
 		});
 	}
 };
-_defineProperty(_Class, "values", {
-	providerOptions: Object,
-	center: Object,
-	zoom: Number,
-	minZoom: Number,
-	maxZoom: Number,
-	fitBoundsToMarkers: Boolean,
-	markers: Array,
-	polygons: Array,
-	polylines: Array,
-	circles: Array,
-	rectangles: Array,
-	options: Object,
-	extra: Object
-});
 
 //#endregion
-export { IconTypes, _Class as default };
+export { IconTypes, abstract_map_controller_default as default };

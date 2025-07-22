@@ -1,3 +1,4 @@
+import "leaflet/dist/leaflet.min.css";
 import * as L from "leaflet";
 import { CircleOptions, ControlPosition, MapOptions, MarkerOptions, PolylineOptions, PopupOptions } from "leaflet";
 import AbstractMapController, { CircleDefinition, Icon, InfoWindowDefinition, MapDefinition, MarkerDefinition, PolygonDefinition, PolylineDefinition, RectangleDefinition } from "@symfony/ux-map";

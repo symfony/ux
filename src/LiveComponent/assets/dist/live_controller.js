@@ -1,54 +1,12 @@
 import { Controller } from "@hotwired/stimulus";
 
-//#region ../../../node_modules/.pnpm/@oxc-project+runtime@0.77.2/node_modules/@oxc-project/runtime/src/helpers/esm/typeof.js
-function _typeof(o) {
-	"@babel/helpers - typeof";
-	return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o$1) {
-		return typeof o$1;
-	} : function(o$1) {
-		return o$1 && "function" == typeof Symbol && o$1.constructor === Symbol && o$1 !== Symbol.prototype ? "symbol" : typeof o$1;
-	}, _typeof(o);
-}
-
-//#endregion
-//#region ../../../node_modules/.pnpm/@oxc-project+runtime@0.77.2/node_modules/@oxc-project/runtime/src/helpers/esm/toPrimitive.js
-function toPrimitive(t, r) {
-	if ("object" != _typeof(t) || !t) return t;
-	var e = t[Symbol.toPrimitive];
-	if (void 0 !== e) {
-		var i = e.call(t, r || "default");
-		if ("object" != _typeof(i)) return i;
-		throw new TypeError("@@toPrimitive must return a primitive value.");
-	}
-	return ("string" === r ? String : Number)(t);
-}
-
-//#endregion
-//#region ../../../node_modules/.pnpm/@oxc-project+runtime@0.77.2/node_modules/@oxc-project/runtime/src/helpers/esm/toPropertyKey.js
-function toPropertyKey(t) {
-	var i = toPrimitive(t, "string");
-	return "symbol" == _typeof(i) ? i : i + "";
-}
-
-//#endregion
-//#region ../../../node_modules/.pnpm/@oxc-project+runtime@0.77.2/node_modules/@oxc-project/runtime/src/helpers/esm/defineProperty.js
-function _defineProperty(e, r, t) {
-	return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
-		value: t,
-		enumerable: !0,
-		configurable: !0,
-		writable: !0
-	}) : e[r] = t, e;
-}
-
-//#endregion
 //#region src/Backend/BackendRequest.ts
 var BackendRequest_default = class {
+	promise;
+	actions;
+	updatedModels;
+	isResolved = false;
 	constructor(promise, actions, updateModels) {
-		_defineProperty(this, "promise", void 0);
-		_defineProperty(this, "actions", void 0);
-		_defineProperty(this, "updatedModels", void 0);
-		_defineProperty(this, "isResolved", false);
 		this.promise = promise;
 		this.promise.then((response) => {
 			this.isResolved = true;
@@ -74,9 +32,9 @@ var BackendRequest_default = class {
 //#endregion
 //#region src/Backend/RequestBuilder.ts
 var RequestBuilder_default = class {
+	url;
+	method;
 	constructor(url, method = "post") {
-		_defineProperty(this, "url", void 0);
-		_defineProperty(this, "method", void 0);
 		this.url = url;
 		this.method = method;
 	}
@@ -136,8 +94,8 @@ var RequestBuilder_default = class {
 //#endregion
 //#region src/Backend/Backend.ts
 var Backend_default = class {
+	requestBuilder;
 	constructor(url, method = "post") {
-		_defineProperty(this, "requestBuilder", void 0);
 		this.requestBuilder = new RequestBuilder_default(url, method);
 	}
 	makeRequest(props, actions, updated, children, updatedPropsFromParent, files) {
@@ -149,9 +107,9 @@ var Backend_default = class {
 //#endregion
 //#region src/Backend/BackendResponse.ts
 var BackendResponse_default = class {
+	response;
+	body;
 	constructor(response) {
-		_defineProperty(this, "response", void 0);
-		_defineProperty(this, "body", void 0);
 		this.response = response;
 	}
 	async getBody() {
@@ -547,9 +505,7 @@ function isNumericalInputElement(element) {
 //#endregion
 //#region src/HookManager.ts
 var HookManager_default = class {
-	constructor() {
-		_defineProperty(this, "hooks", /* @__PURE__ */ new Map());
-	}
+	hooks = /* @__PURE__ */ new Map();
 	register(hookName, callback) {
 		const hooks = this.hooks.get(hookName) || [];
 		hooks.push(callback);
@@ -1229,10 +1185,8 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
 * Helps track added/changed styles or attributes.
 */
 var ChangingItemsTracker_default = class {
-	constructor() {
-		_defineProperty(this, "changedItems", /* @__PURE__ */ new Map());
-		_defineProperty(this, "removedItems", /* @__PURE__ */ new Map());
-	}
+	changedItems = /* @__PURE__ */ new Map();
+	removedItems = /* @__PURE__ */ new Map();
 	/**
 	* A "null" previousValue means the item was NOT previously present.
 	*/
@@ -1289,12 +1243,10 @@ var ChangingItemsTracker_default = class {
 * Tracks attribute changes for a specific element.
 */
 var ElementChanges = class {
-	constructor() {
-		_defineProperty(this, "addedClasses", /* @__PURE__ */ new Set());
-		_defineProperty(this, "removedClasses", /* @__PURE__ */ new Set());
-		_defineProperty(this, "styleChanges", new ChangingItemsTracker_default());
-		_defineProperty(this, "attributeChanges", new ChangingItemsTracker_default());
-	}
+	addedClasses = /* @__PURE__ */ new Set();
+	removedClasses = /* @__PURE__ */ new Set();
+	styleChanges = new ChangingItemsTracker_default();
+	attributeChanges = new ChangingItemsTracker_default();
 	addClass(className) {
 		if (!this.removedClasses.delete(className)) this.addedClasses.add(className);
 	}
@@ -1362,15 +1314,16 @@ var ElementChanges = class {
 * a change from a component re-render.
 */
 var ExternalMutationTracker_default = class {
+	element;
+	shouldTrackChangeCallback;
+	mutationObserver;
+	changedElements = /* @__PURE__ */ new WeakMap();
+	/** For testing */
+	changedElementsCount = 0;
+	addedElements = [];
+	removedElements = [];
+	isStarted = false;
 	constructor(element, shouldTrackChangeCallback) {
-		_defineProperty(this, "element", void 0);
-		_defineProperty(this, "shouldTrackChangeCallback", void 0);
-		_defineProperty(this, "mutationObserver", void 0);
-		_defineProperty(this, "changedElements", /* @__PURE__ */ new WeakMap());
-		_defineProperty(this, "changedElementsCount", 0);
-		_defineProperty(this, "addedElements", []);
-		_defineProperty(this, "removedElements", []);
-		_defineProperty(this, "isStarted", false);
 		this.element = element;
 		this.shouldTrackChangeCallback = shouldTrackChangeCallback;
 		this.mutationObserver = new MutationObserver(this.onMutations.bind(this));
@@ -1542,14 +1495,15 @@ var ExternalMutationTracker_default = class {
 //#endregion
 //#region src/Component/UnsyncedInputsTracker.ts
 var UnsyncedInputsTracker_default = class {
+	component;
+	modelElementResolver;
+	/** Fields that have changed, but whose value is not set back onto the value store */
+	unsyncedInputs;
+	elementEventListeners = [{
+		event: "input",
+		callback: (event) => this.handleInputEvent(event)
+	}];
 	constructor(component, modelElementResolver) {
-		_defineProperty(this, "component", void 0);
-		_defineProperty(this, "modelElementResolver", void 0);
-		_defineProperty(this, "unsyncedInputs", void 0);
-		_defineProperty(this, "elementEventListeners", [{
-			event: "input",
-			callback: (event) => this.handleInputEvent(event)
-		}]);
 		this.component = component;
 		this.modelElementResolver = modelElementResolver;
 		this.unsyncedInputs = new UnsyncedInputContainer();
@@ -1607,10 +1561,10 @@ var UnsyncedInputsTracker_default = class {
 * remain unsynced until the next Ajax call starts.
 */
 var UnsyncedInputContainer = class {
+	unsyncedModelFields;
+	unsyncedNonModelFields = [];
+	unsyncedModelNames = [];
 	constructor() {
-		_defineProperty(this, "unsyncedModelFields", void 0);
-		_defineProperty(this, "unsyncedNonModelFields", []);
-		_defineProperty(this, "unsyncedModelNames", []);
 		this.unsyncedModelFields = /* @__PURE__ */ new Map();
 	}
 	add(element, modelName = null) {
@@ -1670,11 +1624,28 @@ const parseDeepData = (data, propertyPath) => {
 //#endregion
 //#region src/Component/ValueStore.ts
 var ValueStore_default = class {
+	/**
+	* Original, read-only props that represent the original component state.
+	*
+	* @private
+	*/
+	props = {};
+	/**
+	* A list of props that have been "dirty" (changed) since the last request to the server.
+	*/
+	dirtyProps = {};
+	/**
+	* A list of dirty props that were sent to the server, but the response has
+	* not yet been received.
+	*/
+	pendingProps = {};
+	/**
+	* A list of props that the parent wants us to update.
+	*
+	* These will be sent on the next request to the server.
+	*/
+	updatedPropsFromParent = {};
 	constructor(props) {
-		_defineProperty(this, "props", {});
-		_defineProperty(this, "dirtyProps", {});
-		_defineProperty(this, "pendingProps", {});
-		_defineProperty(this, "updatedPropsFromParent", {});
 		this.props = props;
 	}
 	/**
@@ -1768,6 +1739,36 @@ var ValueStore_default = class {
 //#endregion
 //#region src/Component/index.ts
 var Component = class {
+	element;
+	name;
+	listeners;
+	backend;
+	elementDriver;
+	id;
+	/**
+	* A fingerprint that identifies the props/input that was used on
+	* the server to create this component, especially if it was a
+	* child component. This is sent back to the server and can be used
+	* to determine if any "input" to the child component changed and thus,
+	* if the child component needs to be re-rendered.
+	*/
+	fingerprint = "";
+	valueStore;
+	unsyncedInputsTracker;
+	hooks;
+	defaultDebounce = 150;
+	backendRequest = null;
+	/** Actions that are waiting to be executed */
+	pendingActions = [];
+	/** Files that are waiting to be sent */
+	pendingFiles = {};
+	/** Is a request waiting to be made? */
+	isRequestPending = false;
+	/** Current "timeout" before the pending request should be sent. */
+	requestDebounceTimeout = null;
+	nextRequestPromise;
+	nextRequestPromiseResolve;
+	externalMutationTracker;
 	/**
 	* @param element The root element
 	* @param name    The name of the component
@@ -1778,36 +1779,6 @@ var Component = class {
 	* @param elementDriver Class to get "model" name from any element.
 	*/
 	constructor(element, name, props, listeners, id, backend, elementDriver) {
-		_defineProperty(this, "element", void 0);
-		_defineProperty(this, "name", void 0);
-		_defineProperty(this, "listeners", void 0);
-		_defineProperty(this, "backend", void 0);
-		_defineProperty(this, "elementDriver", void 0);
-		_defineProperty(this, "id", void 0);
-		_defineProperty(
-			this,
-			/**
-			* A fingerprint that identifies the props/input that was used on
-			* the server to create this component, especially if it was a
-			* child component. This is sent back to the server and can be used
-			* to determine if any "input" to the child component changed and thus,
-			* if the child component needs to be re-rendered.
-			*/
-			"fingerprint",
-			""
-		);
-		_defineProperty(this, "valueStore", void 0);
-		_defineProperty(this, "unsyncedInputsTracker", void 0);
-		_defineProperty(this, "hooks", void 0);
-		_defineProperty(this, "defaultDebounce", 150);
-		_defineProperty(this, "backendRequest", null);
-		_defineProperty(this, "pendingActions", []);
-		_defineProperty(this, "pendingFiles", {});
-		_defineProperty(this, "isRequestPending", false);
-		_defineProperty(this, "requestDebounceTimeout", null);
-		_defineProperty(this, "nextRequestPromise", void 0);
-		_defineProperty(this, "nextRequestPromiseResolve", void 0);
-		_defineProperty(this, "externalMutationTracker", void 0);
 		this.element = element;
 		this.name = name;
 		this.backend = backend;
@@ -2129,8 +2100,8 @@ function proxifyComponent(component) {
 //#endregion
 //#region src/Component/ElementDriver.ts
 var StimulusElementDriver = class {
+	controller;
 	constructor(controller) {
-		_defineProperty(this, "controller", void 0);
 		this.controller = controller;
 	}
 	getModelName(element) {
@@ -2213,9 +2184,9 @@ function get_model_binding_default(modelDirective) {
 *      * Notifying the parent of a model change.
 */
 var ChildComponentPlugin_default = class {
+	component;
+	parentModelBindings = [];
 	constructor(component) {
-		_defineProperty(this, "component", void 0);
-		_defineProperty(this, "parentModelBindings", []);
 		this.component = component;
 		const modelDirectives = getAllModelDirectiveFromElements(this.component.element);
 		this.parentModelBindings = modelDirectives.map(get_model_binding_default);
@@ -2262,9 +2233,7 @@ var ChildComponentPlugin_default = class {
 //#endregion
 //#region src/Component/plugins/LazyPlugin.ts
 var LazyPlugin_default = class {
-	constructor() {
-		_defineProperty(this, "intersectionObserver", null);
-	}
+	intersectionObserver = null;
 	attachToComponent(component) {
 		if ("lazy" !== component.element.attributes.getNamedItem("loading")?.value) return;
 		component.on("connect", () => {
@@ -2428,9 +2397,7 @@ const parseLoadingAction = (action, isLoading) => {
 //#endregion
 //#region src/Component/plugins/PageUnloadingPlugin.ts
 var PageUnloadingPlugin_default = class {
-	constructor() {
-		_defineProperty(this, "isConnected", false);
-	}
+	isConnected = false;
 	attachToComponent(component) {
 		component.on("render:started", (html, response, controls) => {
 			if (!this.isConnected) controls.shouldRender = false;
@@ -2447,11 +2414,11 @@ var PageUnloadingPlugin_default = class {
 //#endregion
 //#region src/PollingDirector.ts
 var PollingDirector_default = class {
+	component;
+	isPollingActive = true;
+	polls;
+	pollingIntervals = [];
 	constructor(component) {
-		_defineProperty(this, "component", void 0);
-		_defineProperty(this, "isPollingActive", true);
-		_defineProperty(this, "polls", void 0);
-		_defineProperty(this, "pollingIntervals", []);
 		this.component = component;
 	}
 	addPoll(actionName, duration) {
@@ -2497,10 +2464,8 @@ var PollingDirector_default = class {
 //#endregion
 //#region src/Component/plugins/PollingPlugin.ts
 var PollingPlugin_default = class {
-	constructor() {
-		_defineProperty(this, "element", void 0);
-		_defineProperty(this, "pollingDirector", void 0);
-	}
+	element;
+	pollingDirector;
 	attachToComponent(component) {
 		this.element = component.element;
 		this.pollingDirector = new PollingDirector_default(component);
@@ -2730,38 +2695,61 @@ var ValidatedFieldsPlugin_default = class {
 //#endregion
 //#region src/live_controller.ts
 var LiveControllerDefault = class LiveControllerDefault extends Controller {
-	constructor(..._args) {
-		super(..._args);
-		_defineProperty(this, "nameValue", void 0);
-		_defineProperty(this, "urlValue", void 0);
-		_defineProperty(this, "propsValue", void 0);
-		_defineProperty(this, "propsUpdatedFromParentValue", void 0);
-		_defineProperty(this, "listenersValue", void 0);
-		_defineProperty(this, "eventsToEmitValue", void 0);
-		_defineProperty(this, "eventsToDispatchValue", void 0);
-		_defineProperty(this, "hasDebounceValue", void 0);
-		_defineProperty(this, "debounceValue", void 0);
-		_defineProperty(this, "fingerprintValue", void 0);
-		_defineProperty(this, "requestMethodValue", void 0);
-		_defineProperty(this, "queryMappingValue", void 0);
-		_defineProperty(this, "proxiedComponent", void 0);
-		_defineProperty(this, "mutationObserver", void 0);
-		_defineProperty(
-			this,
-			/** The raw Component object */
-			"component",
-			void 0
-		);
-		_defineProperty(this, "pendingActionTriggerModelElement", null);
-		_defineProperty(this, "elementEventListeners", [{
-			event: "input",
-			callback: (event) => this.handleInputEvent(event)
-		}, {
-			event: "change",
-			callback: (event) => this.handleChangeEvent(event)
-		}]);
-		_defineProperty(this, "pendingFiles", {});
-	}
+	static values = {
+		name: String,
+		url: String,
+		props: {
+			type: Object,
+			default: {}
+		},
+		propsUpdatedFromParent: {
+			type: Object,
+			default: {}
+		},
+		listeners: {
+			type: Array,
+			default: []
+		},
+		eventsToEmit: {
+			type: Array,
+			default: []
+		},
+		eventsToDispatch: {
+			type: Array,
+			default: []
+		},
+		debounce: {
+			type: Number,
+			default: 150
+		},
+		fingerprint: {
+			type: String,
+			default: ""
+		},
+		requestMethod: {
+			type: String,
+			default: "post"
+		},
+		queryMapping: {
+			type: Object,
+			default: {}
+		}
+	};
+	/** The component, wrapped in the convenience Proxy */
+	proxiedComponent;
+	mutationObserver;
+	/** The raw Component object */
+	component;
+	pendingActionTriggerModelElement = null;
+	elementEventListeners = [{
+		event: "input",
+		callback: (event) => this.handleInputEvent(event)
+	}, {
+		event: "change",
+		callback: (event) => this.handleChangeEvent(event)
+	}];
+	pendingFiles = {};
+	static backendFactory = (controller) => new Backend_default(controller.urlValue, controller.requestMethodValue);
 	initialize() {
 		this.mutationObserver = new MutationObserver(this.onMutations.bind(this));
 		this.createComponent();
@@ -2998,47 +2986,6 @@ var LiveControllerDefault = class LiveControllerDefault extends Controller {
 		});
 	}
 };
-_defineProperty(LiveControllerDefault, "values", {
-	name: String,
-	url: String,
-	props: {
-		type: Object,
-		default: {}
-	},
-	propsUpdatedFromParent: {
-		type: Object,
-		default: {}
-	},
-	listeners: {
-		type: Array,
-		default: []
-	},
-	eventsToEmit: {
-		type: Array,
-		default: []
-	},
-	eventsToDispatch: {
-		type: Array,
-		default: []
-	},
-	debounce: {
-		type: Number,
-		default: 150
-	},
-	fingerprint: {
-		type: String,
-		default: ""
-	},
-	requestMethod: {
-		type: String,
-		default: "post"
-	},
-	queryMapping: {
-		type: Object,
-		default: {}
-	}
-});
-_defineProperty(LiveControllerDefault, "backendFactory", (controller) => new Backend_default(controller.urlValue, controller.requestMethodValue));
 
 //#endregion
 export { Component, LiveControllerDefault as default, getComponent };
