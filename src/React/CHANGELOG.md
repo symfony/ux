@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.28.0
+
+-   [BC BREAK] If you are using the Symfony AssetMapper but **not** Symfony Flex,
+    you need to upgrade your `importmap.php` and change the asset `react-dom` to `react-dom/client`,
+    and run `php bin/console importmap:install`.
+
+    Symfony Flex or Webpack Encore users are not affected.
+
 ## 2.26.0
 
 -   Improve error handling when resolving a React component
