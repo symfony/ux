@@ -1,0 +1,122 @@
+---------------------------------------------------------------------------
+
+by maartendekeizer at 2022-08-07T19:42:23Z
+
+@weaverryan Bit off topic but related to solving your feedback: Where can I find information about how to run tests cases etc. I think I am missing a good _contribute to_ symfony/ux page. The part in the readme is very short and is also missing a part about building...
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-08-10T20:52:44Z
+
+@maartendekeizer that's fair - that could certainly use some help :).
+
+To run tests for a specific component, from the root of the project
+
+```
+yarn install
+cd src/Autocomplete/assets
+yarn jest
+
+# or to run a specific test
+yarn jest -t 'connect without options'
+```
+
+Let me know if that gives you any trouble - the tests can be tricky, but the existing ones in autocomplete should be fairly similar to what you're trying to do.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-09-22T10:55:30Z
+
+Friendly ping @maartendekeizer :)
+
+---------------------------------------------------------------------------
+
+by daFish at 2022-12-16T15:07:43Z
+
+Hey @maartendekeizer is there anything I can help with? 😄
+
+---------------------------------------------------------------------------
+
+by daFish at 2024-02-15T13:27:35Z
+
+@weaverryan How should we proceed with this PR?
+
+---------------------------------------------------------------------------
+
+by simonsolutions at 2024-07-11T12:37:34Z
+
++1 for a solution for this problem. I'm facing it too and would like to have the PR procceded.
+
+---------------------------------------------------------------------------
+
+by simonsolutions at 2024-10-26T20:05:30Z
+
+I would vote for merging it to the next release please. We really need the fix.
+
+---------------------------------------------------------------------------
+
+by simonsolutions at 2024-12-29T23:33:24Z
+
+As the PR seems mergable without conflict, when can we expect this fix to be released?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-23T20:23:23Z
+
+Working on it
+
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-07-23T21:41:59Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/maartendekeizer/ux/tree/issue_379/src/Autocomplete/assets/dist"><b>Autocomplete</b></a></td></tr><tr>
+                <td><a href="https://github.com/maartendekeizer/ux/blob/issue_379/src/Autocomplete/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>17.61 kB</code>
+                    / <code>4.13 kB</code>
+                </td><td>
+                    <code>18.01 kB</code><sup>+2% 📈</sup>
+                    / <code>4.21 kB</code><sup>+2% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-23T21:42:22Z
+
+I've pushed a new commit that allows default plugins to be disableable when passing `false`, e.g.:
+```php
+<?php
+#[AsEntityAutocompleteField]
+class IngredientAutocompleteType extends AbstractType
+{
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'class' => Ingredient::class,
+            'tom_select_options' => [
+                'plugins' => [
+                    'clear_button' => false, // Disable the clear button
+                    'remove_button' => false, // Disable the remove button
+                ],
+            ],
+        ]);
+    }
+
+    public function getParent(): string
+    {
+        return BaseEntityAutocompleteType::class;
+    }
+}
+```
+
+I added some tests too
