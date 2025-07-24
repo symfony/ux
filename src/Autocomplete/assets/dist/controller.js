@@ -29,7 +29,7 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
     return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
 };
 
-var _default_1_instances, _default_1_getCommonConfig, _default_1_createAutocomplete, _default_1_createAutocompleteWithHtmlContents, _default_1_createAutocompleteWithRemoteData, _default_1_stripTags, _default_1_mergeConfigs, _default_1_normalizePluginsToHash, _default_1_createTomSelect;
+var _default_1_instances, _default_1_getCommonConfig, _default_1_createAutocomplete, _default_1_createAutocompleteWithHtmlContents, _default_1_createAutocompleteWithRemoteData, _default_1_stripTags, _default_1_mergeConfigs, _default_1_normalizePluginsToHash, _default_1_normalizePlugins, _default_1_createTomSelect;
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
@@ -382,11 +382,18 @@ _default_1_normalizePluginsToHash = new WeakMap(), _default_1_instances = new We
     return {
         ...config1,
         ...config2,
-        plugins: {
+        plugins: __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_normalizePlugins).call(this, {
             ...__classPrivateFieldGet(this, _default_1_normalizePluginsToHash, "f").call(this, config1.plugins || {}),
             ...__classPrivateFieldGet(this, _default_1_normalizePluginsToHash, "f").call(this, config2.plugins || {}),
-        },
+        }),
     };
+}, _default_1_normalizePlugins = function _default_1_normalizePlugins(plugins) {
+    return Object.entries(plugins).reduce((acc, [pluginName, pluginOptions]) => {
+        if (pluginOptions !== false) {
+            acc[pluginName] = pluginOptions;
+        }
+        return acc;
+    }, {});
 }, _default_1_createTomSelect = function _default_1_createTomSelect(options) {
     const preConnectPayload = { options };
     this.dispatchEvent('pre-connect', preConnectPayload);
