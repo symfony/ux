@@ -50,14 +50,14 @@ describe('LiveController query string binding', () => {
         // String
 
         // Set value
-        test.expectsAjaxCall().expectUpdatedData({ prop1: 'foo' });
+        test.expectsAjaxCall().expectUpdatedData({ prop1: 'foo' }).willReturnLiveUrl('?prop1=foo&prop2=');
 
         await test.component.set('prop1', 'foo', true);
 
         expectCurrentSearch().toEqual('?prop1=foo&prop2=');
 
         // Remove value
-        test.expectsAjaxCall().expectUpdatedData({ prop1: '' });
+        test.expectsAjaxCall().expectUpdatedData({ prop1: '' }).willReturnLiveUrl('?prop1=&prop2=');
 
         await test.component.set('prop1', '', true);
 
@@ -66,14 +66,14 @@ describe('LiveController query string binding', () => {
         // Number
 
         // Set value
-        test.expectsAjaxCall().expectUpdatedData({ prop2: 42 });
+        test.expectsAjaxCall().expectUpdatedData({ prop2: 42 }).willReturnLiveUrl('?prop1=&prop2=42');
 
         await test.component.set('prop2', 42, true);
 
         expectCurrentSearch().toEqual('?prop1=&prop2=42');
 
         // Remove value
-        test.expectsAjaxCall().expectUpdatedData({ prop2: null });
+        test.expectsAjaxCall().expectUpdatedData({ prop2: null }).willReturnLiveUrl('?prop1=&prop2=');
 
         await test.component.set('prop2', null, true);
 
@@ -89,21 +89,25 @@ describe('LiveController query string binding', () => {
         );
 
         // Set value
-        test.expectsAjaxCall().expectUpdatedData({ prop: ['foo', 'bar'] });
+        test.expectsAjaxCall()
+            .expectUpdatedData({ prop: ['foo', 'bar'] })
+            .willReturnLiveUrl('?prop[0]=foo&prop[1]=bar');
 
         await test.component.set('prop', ['foo', 'bar'], true);
 
         expectCurrentSearch().toEqual('?prop[0]=foo&prop[1]=bar');
 
         // Remove one value
-        test.expectsAjaxCall().expectUpdatedData({ prop: ['foo'] });
+        test.expectsAjaxCall()
+            .expectUpdatedData({ prop: ['foo'] })
+            .willReturnLiveUrl('?prop[0]=foo');
 
         await test.component.set('prop', ['foo'], true);
 
         expectCurrentSearch().toEqual('?prop[0]=foo');
 
         // Remove all remaining values
-        test.expectsAjaxCall().expectUpdatedData({ prop: [] });
+        test.expectsAjaxCall().expectUpdatedData({ prop: [] }).willReturnLiveUrl('?prop=');
 
         await test.component.set('prop', [], true);
 
@@ -119,28 +123,34 @@ describe('LiveController query string binding', () => {
         );
 
         // Set single nested prop
-        test.expectsAjaxCall().expectUpdatedData({ 'prop.foo': 'dummy' });
+        test.expectsAjaxCall().expectUpdatedData({ 'prop.foo': 'dummy' }).willReturnLiveUrl('?prop[foo]=dummy');
 
         await test.component.set('prop.foo', 'dummy', true);
 
         expectCurrentSearch().toEqual('?prop[foo]=dummy');
 
         // Set multiple values
-        test.expectsAjaxCall().expectUpdatedData({ prop: { foo: 'other', bar: 42 } });
+        test.expectsAjaxCall()
+            .expectUpdatedData({ prop: { foo: 'other', bar: 42 } })
+            .willReturnLiveUrl('?prop[foo]=other&prop[bar]=42');
 
         await test.component.set('prop', { foo: 'other', bar: 42 }, true);
 
         expectCurrentSearch().toEqual('?prop[foo]=other&prop[bar]=42');
 
         // Remove one value
-        test.expectsAjaxCall().expectUpdatedData({ prop: { foo: 'other', bar: null } });
+        test.expectsAjaxCall()
+            .expectUpdatedData({ prop: { foo: 'other', bar: null } })
+            .willReturnLiveUrl('?prop[foo]=other');
 
         await test.component.set('prop', { foo: 'other', bar: null }, true);
 
         expectCurrentSearch().toEqual('?prop[foo]=other');
 
         // Remove all values
-        test.expectsAjaxCall().expectUpdatedData({ prop: { foo: null, bar: null } });
+        test.expectsAjaxCall()
+            .expectUpdatedData({ prop: { foo: null, bar: null } })
+            .willReturnLiveUrl('?prop=');
 
         await test.component.set('prop', { foo: null, bar: null }, true);
 
@@ -162,13 +172,15 @@ describe('LiveController query string binding', () => {
             .expectActionCalled('changeProp')
             .serverWillChangeProps((data: any) => {
                 data.prop = 'foo';
-            });
+            })
+            .willReturnLiveUrl('?prop=foo');
 
         getByText(test.element, 'Change prop').click();
 
-        await waitFor(() => expect(test.element).toHaveTextContent('Prop: foo'));
-
-        expectCurrentSearch().toEqual('?prop=foo');
+        await waitFor(() => {
+            expect(test.element).toHaveTextContent('Prop: foo');
+            expectCurrentSearch().toEqual('?prop=foo');
+        });
     });
 
     it('uses custom name instead of prop name in the URL', async () => {
@@ -180,14 +192,14 @@ describe('LiveController query string binding', () => {
         );
 
         // Set value
-        test.expectsAjaxCall().expectUpdatedData({ prop1: 'foo' });
+        test.expectsAjaxCall().expectUpdatedData({ prop1: 'foo' }).willReturnLiveUrl('?alias1=foo');
 
         await test.component.set('prop1', 'foo', true);
 
         expectCurrentSearch().toEqual('?alias1=foo');
 
         // Remove value
-        test.expectsAjaxCall().expectUpdatedData({ prop1: '' });
+        test.expectsAjaxCall().expectUpdatedData({ prop1: '' }).willReturnLiveUrl('?alias1=');
 
         await test.component.set('prop1', '', true);
 

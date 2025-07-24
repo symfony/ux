@@ -19,6 +19,7 @@ describe('buildRequest', () => {
         expect(fetchOptions.method).toEqual('GET');
         expect(fetchOptions.headers).toEqual({
             Accept: 'application/vnd.live-component+html',
+            'X-Live-Url': '/',
             'X-Requested-With': 'XMLHttpRequest',
         });
     });
@@ -43,6 +44,7 @@ describe('buildRequest', () => {
         expect(fetchOptions.method).toEqual('POST');
         expect(fetchOptions.headers).toEqual({
             Accept: 'application/vnd.live-component+html',
+            'X-Live-Url': '/',
             'X-Requested-With': 'XMLHttpRequest',
         });
         const body = <FormData>fetchOptions.body;
@@ -116,6 +118,7 @@ describe('buildRequest', () => {
         expect(fetchOptions.headers).toEqual({
             // no token
             Accept: 'application/vnd.live-component+html',
+            'X-Live-Url': '/',
             'X-Requested-With': 'XMLHttpRequest',
         });
         const body = <FormData>fetchOptions.body;
@@ -146,6 +149,7 @@ describe('buildRequest', () => {
         expect(fetchOptions.headers).toEqual({
             // no token
             Accept: 'application/vnd.live-component+html',
+            'X-Live-Url': '/',
             'X-Requested-With': 'XMLHttpRequest',
         });
         const body = <FormData>fetchOptions.body;
@@ -231,6 +235,7 @@ describe('buildRequest', () => {
         expect(fetchOptions.method).toEqual('POST');
         expect(fetchOptions.headers).toEqual({
             Accept: 'application/vnd.live-component+html',
+            'X-Live-Url': '/',
             'X-Requested-With': 'XMLHttpRequest',
         });
         const body = <FormData>fetchOptions.body;
@@ -255,6 +260,7 @@ describe('buildRequest', () => {
         expect(fetchOptions.method).toEqual('POST');
         expect(fetchOptions.headers).toEqual({
             Accept: 'application/vnd.live-component+html',
+            'X-Live-Url': '/',
             'X-Requested-With': 'XMLHttpRequest',
         });
         const body = <FormData>fetchOptions.body;

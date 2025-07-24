@@ -14,7 +14,7 @@ namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Zenstruck\Browser\Test\HasBrowser;
 
-class QueryStringInitializerSubscriberTest extends KernelTestCase
+class RequestInitializerSubscriberTest extends KernelTestCase
 {
     use HasBrowser;
 

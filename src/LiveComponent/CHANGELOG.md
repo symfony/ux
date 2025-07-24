@@ -6,6 +6,9 @@
     - `min_length` and `max_length`: validate length from textual input elements
     - `min_value` and `max_value`: validate value from numeral input elements
 
+-   Add new `mapPath` options (default `false`) to `UrlMapping` of a `LiveProp`
+    to allow the prop to be mapped to the path instead of the query in the url.
+
 ```twig
 <!-- Do not trigger model update until 3 characters are typed -->
 <input data-model="min_length(3)|username" type="text" value="" />

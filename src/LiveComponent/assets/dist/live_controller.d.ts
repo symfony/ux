@@ -49,10 +49,6 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
             type: StringConstructor;
             default: string;
         };
-        queryMapping: {
-            type: ObjectConstructor;
-            default: {};
-        };
     };
     readonly nameValue: string;
     readonly urlValue: string;
@@ -76,11 +72,6 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     readonly debounceValue: number;
     readonly fingerprintValue: string;
     readonly requestMethodValue: 'get' | 'post';
-    readonly queryMappingValue: {
-        [p: string]: {
-            name: string;
-        };
-    };
     private proxiedComponent;
     private mutationObserver;
     component: Component;

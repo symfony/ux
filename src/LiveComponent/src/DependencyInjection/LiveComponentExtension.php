@@ -33,7 +33,8 @@ use Symfony\UX\LiveComponent\EventListener\DataModelPropsSubscriber;
 use Symfony\UX\LiveComponent\EventListener\DeferLiveComponentSubscriber;
 use Symfony\UX\LiveComponent\EventListener\InterceptChildComponentRenderSubscriber;
 use Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber;
-use Symfony\UX\LiveComponent\EventListener\QueryStringInitializeSubscriber;
+use Symfony\UX\LiveComponent\EventListener\LiveUrlSubscriber;
+use Symfony\UX\LiveComponent\EventListener\RequestInitializeSubscriber;
 use Symfony\UX\LiveComponent\EventListener\ResetDeterministicIdSubscriber;
 use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
 use Symfony\UX\LiveComponent\Hydration\HydrationExtensionInterface;
@@ -50,8 +51,9 @@ use Symfony\UX\LiveComponent\Util\ChildComponentPartialRenderer;
 use Symfony\UX\LiveComponent\Util\FingerprintCalculator;
 use Symfony\UX\LiveComponent\Util\LiveComponentStack;
 use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
-use Symfony\UX\LiveComponent\Util\QueryStringPropsExtractor;
+use Symfony\UX\LiveComponent\Util\RequestPropsExtractor;
 use Symfony\UX\LiveComponent\Util\TwigAttributeHelperFactory;
+use Symfony\UX\LiveComponent\Util\UrlFactory;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 
@@ -136,6 +138,14 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->addTag('container.service_subscriber', ['key' => LiveComponentMetadataFactory::class, 'id' => 'ux.live_component.metadata_factory'])
         ;
 
+        $container->register('ux.live_component.live_url_subscriber', LiveUrlSubscriber::class)
+            ->setArguments([
+                new Reference('ux.live_component.metadata_factory'),
+                new Reference('ux.live_component.url_factory'),
+            ])
+            ->addTag('kernel.event_subscriber')
+        ;
+
         $container->register('ux.live_component.live_responder', LiveResponder::class);
         $container->setAlias(LiveResponder::class, 'ux.live_component.live_responder');
 
@@ -202,6 +212,9 @@ final class LiveComponentExtension extends Extension implements PrependExtension
 
         $container->register('ux.live_component.attribute_helper_factory', TwigAttributeHelperFactory::class);
 
+        $container->register('ux.live_component.url_factory', UrlFactory::class)
+            ->setArguments([new Reference('router')]);
+
         $container->register('ux.live_component.live_controller_attributes_creator', LiveControllerAttributesCreator::class)
             ->setArguments([
                 new Reference('ux.live_component.metadata_factory'),
@@ -225,12 +238,12 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->addTag('container.service_subscriber', ['key' => LiveControllerAttributesCreator::class, 'id' => 'ux.live_component.live_controller_attributes_creator'])
         ;
 
-        $container->register('ux.live_component.query_string_props_extractor', QueryStringPropsExtractor::class)
+        $container->register('ux.live_component.query_string_props_extractor', RequestPropsExtractor::class)
             ->setArguments([
                 new Reference('ux.live_component.component_hydrator'),
             ]);
 
-        $container->register('ux.live_component.query_string_initializer_subscriber', QueryStringInitializeSubscriber::class)
+        $container->register('ux.live_component.query_string_initializer_subscriber', RequestInitializeSubscriber::class)
             ->setArguments([
                 new Reference('request_stack'),
                 new Reference('ux.live_component.metadata_factory'),

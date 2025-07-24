@@ -8,7 +8,6 @@ import LoadingPlugin from './Component/plugins/LoadingPlugin';
 import PageUnloadingPlugin from './Component/plugins/PageUnloadingPlugin';
 import type { PluginInterface } from './Component/plugins/PluginInterface';
 import PollingPlugin from './Component/plugins/PollingPlugin';
-import QueryStringPlugin from './Component/plugins/QueryStringPlugin';
 import SetValueOntoModelFieldsPlugin from './Component/plugins/SetValueOntoModelFieldsPlugin';
 import ValidatedFieldsPlugin from './Component/plugins/ValidatedFieldsPlugin';
 import { type DirectiveModifier, parseDirectives } from './Directive/directives_parser';
@@ -50,7 +49,6 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         debounce: { type: Number, default: 150 },
         fingerprint: { type: String, default: '' },
         requestMethod: { type: String, default: 'post' },
-        queryMapping: { type: Object, default: {} },
     };
 
     declare readonly nameValue: string;
@@ -69,7 +67,6 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     declare readonly debounceValue: number;
     declare readonly fingerprintValue: string;
     declare readonly requestMethodValue: 'get' | 'post';
-    declare readonly queryMappingValue: { [p: string]: { name: string } };
 
     /** The component, wrapped in the convenience Proxy */
     private proxiedComponent: Component;
@@ -309,7 +306,6 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
             new PageUnloadingPlugin(),
             new PollingPlugin(),
             new SetValueOntoModelFieldsPlugin(),
-            new QueryStringPlugin(this.queryMappingValue),
             new ChildComponentPlugin(this.component),
         ];
         plugins.forEach((plugin) => {

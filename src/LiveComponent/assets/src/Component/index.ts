@@ -328,6 +328,14 @@ export default class Component {
             }
 
             this.processRerender(html, backendResponse);
+            const liveUrl = backendResponse.getLiveUrl();
+            if (liveUrl) {
+                history.replaceState(
+                    history.state,
+                    '',
+                    new URL(liveUrl + window.location.hash, window.location.origin)
+                );
+            }
 
             // finally resolve this promise
             this.backendRequest = null;
