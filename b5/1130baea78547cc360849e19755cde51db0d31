@@ -1,0 +1,141 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-04-01T18:30:02Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/mbuliard/ux/tree/live-url/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/mbuliard/ux/blob/live-url/src/LiveComponent/assets/dist/Backend/BackendResponse.d.ts"><code>Backend/BackendResponse.d.ts</code></a></td>
+            <td>
+                    <code>136 B</code>
+                    / <code>139 B</code>
+                </td><td>
+                    <code>190 B</code><sup>+40% 📈</sup>
+                    / <code>163 B</code><sup>+17% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/mbuliard/ux/blob/live-url/src/LiveComponent/assets/dist/Component/plugins/QueryStringPlugin.d.ts"><code>Component/plugins/QueryStringPlugin.d.ts</code></a></td>
+            <td>
+                    <code>356 B</code>
+                    / <code>239 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/mbuliard/ux/blob/live-url/src/LiveComponent/assets/dist/live_controller.d.ts"><code>live_controller.d.ts</code></a></td>
+            <td>
+                    <code>3.3 kB</code>
+                    / <code>924 B</code>
+                </td><td>
+                    <code>3.1 kB</code><sup>-6% 📉</sup>
+                    / <code>893 B</code><sup>-3% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/mbuliard/ux/blob/live-url/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>121.94 kB</code>
+                    / <code>23.76 kB</code>
+                </td><td>
+                    <code>118.58 kB</code><sup>-3% 📉</sup>
+                    / <code>22.92 kB</code><sup>-4% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/mbuliard/ux/blob/live-url/src/LiveComponent/assets/dist/url_utils.d.ts"><code>url_utils.d.ts</code></a></td>
+            <td>
+                    <code>306 B</code>
+                    / <code>205 B</code>
+                </td><td><em>Removed</em></td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-04-04T13:40:53Z
+
+(Had a quick chat with @mbuliard  yesterday — he's making a few adjustments before opening the PR. Stay tuned! 😄 )
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-04T02:59:09Z
+
+Do you want/need any help here @mbuliard ?
+
+---------------------------------------------------------------------------
+
+by mbuliard at 2025-05-12T16:49:18Z
+
+> Do you want/need any help here @mbuliard ?
+
+Thanks ! I needed free time, but the PR is almost done. Related tests are green, but I shall now add my own testing of the backend.
+
+What took me some time was to the handling of custom actions, who may (and often do) update component props. I choose to store the updated component props in `_live_request_data.responseProps`, next to `props` and `updated` values.
+I'm thinking to always populate these `responseProps`, even for default action and then simplifying my LiveUrlSubscriber.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-05-25T01:12:22Z
+
+Hey @squrious if you find a minute, i'd be happy to have your input (even a quick one) here :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-06-09T12:14:22Z
+
+To me it's 💯  👍 ..
+
+@Kocal @kbond I'd like a second look on this!
+
+---------------------------------------------------------------------------
+
+by mbuliard at 2025-06-10T15:32:49Z
+
+@kbond
+Thanks for your review !
+Defining the Route in the Component would be an interesting idea but it would be far too big for this MR in my opinion.
+For now, the `mapPath` option will only tell the `LiveUrlSubscriber` to try to set the `LiveProp` in the path instead of the query.
+
+> Can/should you have multiple routes per component? Or should multiple `LiveProp`'s with `mapPath: true` all be contained in a single route?
+
+The `Route` and the `LiveProp` are not programmatically linked to each other so there is no restriction : several `LiveProps` can be used for the same `Route` and each `LiveProp` can be used for several `Routes`.
+
+---------------------------------------------------------------------------
+
+by kbond at 2025-06-10T19:49:56Z
+
+@mbuliard, sorry, I misunderstood the feature. It took me a bit to realize the docs showed the route/controller that _renders_ the component initially.
+
+---------------------------------------------------------------------------
+
+by mbuliard at 2025-06-11T16:19:34Z
+
+> @mbuliard, sorry, I misunderstood the feature. It took me a bit to realize the docs showed the route/controller that _renders_ the component initially.
+
+My example was not clear enough, I added a line to clarify that it was a controller.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-07-10T17:08:53Z
+
+What do you think here @Kocal @kbond ? :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-10T20:33:25Z
+
+Thanks for working on it! Just few nitpicking, the PR seems pretty mature right now
+
+---------------------------------------------------------------------------
+
+by mbuliard at 2025-07-11T13:19:43Z
+
+> Thanks for working on it! Just few nitpicking, the PR seems pretty mature right now
+
+Thanks for your review ! I made the changes you suggested.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-07-23T00:01:44Z
+
+Can you rebase (a last time i hope) @mbuliard ?
+
+Is that ok for you @Kocal ? Anything else to check ?
