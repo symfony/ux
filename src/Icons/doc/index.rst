@@ -628,6 +628,21 @@ Full Configuration
         # Whether to ignore errors when an icon is not found
         ignore_not_found: false
 
+        # Icon sets configuration, array of prefix => icon set configuration
+        icon_sets:
+            # Icon set for "flags", can be used like this: ux_icon('flags:fr')
+            flags:
+                It can either be mapped to a local directory...
+                path: '%kernel.project_dir%/assets/images/flags'
+                ... or to an existing icon set identifier
+                alias: 'lucide'
+
+                # Override the default attributes (default_icon_attributes) for this icon set
+                icon_attributes:
+                    class: 'flag'    # Replace the default class
+                    stroke: 'none'      # Add a new attribute
+                    fill: false         # Use "false" to remove a default attribute
+
 Learn more
 ----------
 
