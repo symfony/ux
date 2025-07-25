@@ -6,7 +6,8 @@
         "module": "esnext",
         "moduleResolution": "node",
         "resolveJsonModule": true,
-        "types": ["@testing-library/jest-dom"]
+        "types": ["node", "@testing-library/jest-dom"],
+        "lib": ["es2022", "dom"]
     },
     "include": ["bin/**/*.ts"]
 }
