@@ -5,10 +5,9 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { parseArgs } from 'node:util';
-import * as LightningCSS from 'lightningcss';
-import * as rollup from 'rollup';
 import { globSync } from 'tinyglobby';
-import { getRollupConfiguration } from './rollup.ts';
+import { build } from 'tsup';
+import { readPackageJSON } from "pkg-types";
 
 const args = parseArgs({
     allowPositionals: true,
@@ -34,117 +33,105 @@ async function main() {
         process.exit(1);
     }
 
-    const packageData = await import(path.join(packageRoot, 'package.json'), {with: { type: 'json'}});
-    const packageName = packageData.name;
-    const srcDir = path.join(packageRoot, 'src');
-    const distDir = path.join(packageRoot, 'dist');
+    const packageData = await readPackageJSON(path.join(packageRoot, 'package.json'));
+    const isStimulusBundle = '@symfony/stimulus-bundle' === packageData.name;
+    const isReactOrVueOrSvelte = ['@symfony/ux-react', '@symfony/ux-vue', '@symfony/ux-svelte'].some(name => packageData.name.startsWith(name));
 
-    if (!fs.existsSync(srcDir)) {
-        console.error(`The package directory "${packageRoot}" does not contain a "src" directory.`);
-        process.exit(1);
-    }
-
-    if (fs.existsSync(distDir)) {
-        console.log(`Cleaning up the "${distDir}" directory...`);
-        await fs.promises.rm(distDir, { recursive: true });
-        await fs.promises.mkdir(distDir);
-    }
-
-    const inputScriptFiles = [
-        ...globSync(path.join(srcDir, '*controller.ts')),
-        ...(['@symfony/ux-react', '@symfony/ux-vue', '@symfony/ux-svelte'].includes(packageName)
-            ? [path.join(srcDir, 'loader.ts'), path.join(srcDir, 'components.ts')]
-            : []),
-        ...(packageName === '@symfony/stimulus-bundle'
-            ? [path.join(srcDir, 'loader.ts'), path.join(srcDir, 'controllers.ts')]
-            : []),
+    const inputCssFile = packageData?.config?.css_source;
+    const inputFiles = [
+        ...globSync('src/*controller.ts'),
+        ...(isStimulusBundle ? ['src/loader.ts', 'src/controllers.ts'] : []),
+        ...(isReactOrVueOrSvelte ? ['src/loader.ts', 'src/components.ts'] : []),
+        ...(inputCssFile ? [inputCssFile] : []),
     ];
 
-    const inputStyleFile = packageData.config?.css_source;
-    const buildCss = async () => {
-        if (!inputStyleFile) {
-            return;
+    const external = new Set([
+        // We force "dependencies" and "peerDependencies" to be external to avoid bundling them.
+        ...Object.keys(packageData.dependencies || {}),
+        ...Object.keys(packageData.peerDependencies || {}),
+    ]);
+
+    inputFiles.forEach((file) => {
+        // custom handling for StimulusBundle
+        if (file.includes('StimulusBundle/assets/src/loader.ts')) {
+            external.add('./controllers.js');
         }
-        const inputStyleFileDist = path.resolve(distDir, `${path.basename(inputStyleFile, '.css')}.min.css`);
 
-        console.log('Minifying CSS...');
-        const css = await fs.promises.readFile(inputStyleFile, 'utf-8');
-        const { code: minified } = LightningCSS.transform({
-            filename: path.basename(inputStyleFile, '.css'),
-            code: Buffer.from(css),
-            minify: true,
-            sourceMap: false, // TODO: Maybe we can add source maps later? :)
-        });
-        await fs.promises.writeFile(inputStyleFileDist, minified);
-    };
-
-    if (inputScriptFiles.length === 0) {
-        console.error(
-            `No input files found for package "${packageName}" (directory "${packageRoot}").\nEnsure you have at least a file matching the pattern "src/*_controller.ts", or manually specify input files in "${import.meta.filename}" file.`
-        );
-        process.exit(1);
-    }
-
-    const rollupConfig = getRollupConfiguration({
-        packageRoot,
-        inputFiles: inputScriptFiles,
-        isWatch,
-        additionalPlugins: [
-            ...(isWatch && inputStyleFile
-                ? [
-                      {
-                          name: 'watcher',
-                          buildStart(this: rollup.PluginContext) {
-                              this.addWatchFile(inputStyleFile);
-                          },
-                      },
-                  ]
-                : []),
-        ],
+        // React, Vue, Svelte
+        if (file.includes('assets/src/loader.ts')) {
+            external.add('./components.js');
+        }
     });
 
-    if (isWatch) {
-        console.log(
-            `Watching for JavaScript${inputStyleFile ? ' and CSS' : ''} files modifications in "${srcDir}" directory...`
-        );
+    await build({
+        entry: inputFiles,
+        outDir: path.join(packageRoot, 'dist'),
+        clean: true,
+        external: Array.from(external),
+        format: 'esm',
+        platform: 'browser',
+        tsconfig: path.join(import.meta.dirname, '../tsconfig.packages.json'),
+        dts: {
+            entry: inputFiles.filter(inputFile => !inputFile.endsWith('.css')),
+        },
+        watch: isWatch,
+        splitting: false,
+        esbuildOptions(options) {
+            // Disabling `bundle` option prevent esbuild to inline relative (but external) imports (like "./components.js" for React, Vue, Svelte).
+            options.bundle = !(isStimulusBundle || isReactOrVueOrSvelte);
+        },
+        plugins: [
+            {
+                /**
+                 * This plugin is used to minify CSS files using LightningCSS.
+                 *
+                 * Even if tsup supports CSS minification through ESBuild by setting the `minify: true` option,
+                 * it also minifies JS files but we don't want that.
+                 */
+                name: 'symfony-ux:minify-css',
+                async renderChunk(code, chunkInfo) {
+                    if (!/\.css$/.test(chunkInfo.path)) {
+                        return null;
+                    }
 
-        const watcher = rollup.watch(rollupConfig);
-        watcher.on('event', (event) => {
-            if (event.code === 'ERROR') {
-                console.error('Error during build:', event.error);
+                    const { transform } = await import('lightningcss');
+                    const result = transform({
+                        filename: chunkInfo.path,
+                        code: Buffer.from(code),
+                        minify: true,
+                    });
+
+                    console.log(`[Symfony UX] Minified CSS file: ${chunkInfo.path}`);
+
+                    return {
+                        code: result.code.toString(),
+                        map: result.map ? result.map.toString() : null,
+                    }
+                },
+            },
+
+            /**
+             * Unlike tsdown/rolldown and the option "cssEntryFileNames", tsup does not support
+             * customizing the output file names for CSS files.
+             * A plugin is needed to rename the written CSS files to add the ".min" suffix.
+             */
+            {
+                name: 'symfony-ux:append-min-to-css',
+                async buildEnd({ writtenFiles }) {
+                    for (const writtenFile of writtenFiles) {
+                        if (!writtenFile.name.endsWith('.css')) {
+                            continue;
+                        }
+
+                        const newName = writtenFile.name.replace(/\.css$/, '.min.css');
+                        await fs.promises.rename(writtenFile.name, newName);
+
+                        console.info(`[Symfony UX] Renamed ${writtenFile.name} to ${newName}`);
+                    }
+                }
             }
-
-            if ((event.code === 'BUNDLE_END' || event.code === 'ERROR') && event.result) {
-                event.result.close();
-            }
-        });
-        watcher.on('change', async (id, { event }) => {
-            if (event === 'update') {
-                console.log('Files were modified, rebuilding...');
-            }
-
-            if (inputStyleFile && id === inputStyleFile) {
-                await buildCss();
-            }
-        });
-    } else {
-        console.log(`Building JavaScript files from ${packageName} package...`);
-        const start = Date.now();
-
-        if (typeof rollupConfig.output === 'undefined' || Array.isArray(rollupConfig.output)) {
-            console.error(
-                `The rollup configuration for package "${packageName}" does not contain a valid output configuration.`
-            );
-            process.exit(1);
-        }
-
-        const bundle = await rollup.rollup(rollupConfig);
-        await bundle.write(rollupConfig.output);
-
-        await buildCss();
-
-        console.log(`Done in ${((Date.now() - start) / 1000).toFixed(3)} seconds.`);
-    }
+        ],
+    });
 }
 
 main();

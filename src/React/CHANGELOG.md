@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 2.28.0
+
+-   [BC BREAK] By modernizing our building tools, the file `dist/render_controller.js` now does not contain any useless
+    code related to `development` environment.
+
+    This file is now smaller and faster to load, but the imported module changed from `react-dom` to `react-dom/client`:
+    - You **are not impacted** if you are using the Symfony AssetMapper and Symfony Flex, or Webpack Encore.
+    - You **are impacted** if you are using the Symfony AssetMapper but **not** Symfony Flex, you need to :
+    ```shell
+    php bin/console importmap:remove react-dom
+    php bin/console importmap:require react-dom
+    ```
+
 ## 2.26.0
 
 -   Improve error handling when resolving a React component

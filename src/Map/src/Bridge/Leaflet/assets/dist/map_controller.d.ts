@@ -1,9 +1,8 @@
-import type { CircleDefinition, Icon, InfoWindowDefinition, MapDefinition, MarkerDefinition, PolygonDefinition, PolylineDefinition, RectangleDefinition } from '@symfony/ux-map';
-import AbstractMapController from '@symfony/ux-map';
-import 'leaflet/dist/leaflet.min.css';
-import type { CircleOptions, ControlPosition, MapOptions as LeafletMapOptions, MarkerOptions, PolylineOptions as PolygonOptions, PolylineOptions, PopupOptions, PolylineOptions as RectangleOptions } from 'leaflet';
+import AbstractMapController, { MapDefinition, MarkerDefinition, PolygonDefinition, PolylineDefinition, CircleDefinition, RectangleDefinition, InfoWindowDefinition, Icon } from '@symfony/ux-map';
 import * as L from 'leaflet';
-type MapOptions = Pick<LeafletMapOptions, 'attributionControl' | 'zoomControl'> & {
+import { MapOptions as MapOptions$1, ControlPosition, MarkerOptions, PopupOptions, PolylineOptions, CircleOptions } from 'leaflet';
+
+type MapOptions = Pick<MapOptions$1, 'attributionControl' | 'zoomControl'> & {
     attributionControlOptions?: {
         position: ControlPosition;
         prefix: string | false;
@@ -21,7 +20,7 @@ type MapOptions = Pick<LeafletMapOptions, 'attributionControl' | 'zoomControl'> 
         options: Record<string, unknown>;
     } | false;
 };
-export default class extends AbstractMapController<MapOptions, LeafletMapOptions, L.Map, MarkerOptions, L.Marker, PopupOptions, L.Popup, PolygonOptions, L.Polygon, PolylineOptions, L.Polyline, CircleOptions, L.Circle, RectangleOptions, L.Rectangle> {
+declare class export_default extends AbstractMapController<MapOptions, MapOptions$1, L.Map, MarkerOptions, L.Marker, PopupOptions, L.Popup, PolylineOptions, L.Polygon, PolylineOptions, L.Polyline, CircleOptions, L.Circle, PolylineOptions, L.Rectangle> {
     map: L.Map;
     connect(): void;
     centerValueChanged(): void;
@@ -30,14 +29,14 @@ export default class extends AbstractMapController<MapOptions, LeafletMapOptions
     maxZoomValueChanged(): void;
     protected dispatchEvent(name: string, payload?: Record<string, unknown>): void;
     protected doCreateMap({ definition }: {
-        definition: MapDefinition<MapOptions, LeafletMapOptions>;
+        definition: MapDefinition<MapOptions, MapOptions$1>;
     }): L.Map;
     protected doCreateMarker({ definition }: {
         definition: MarkerDefinition<MarkerOptions, PopupOptions>;
     }): L.Marker;
     protected doRemoveMarker(marker: L.Marker): void;
     protected doCreatePolygon({ definition }: {
-        definition: PolygonDefinition<PolygonOptions, PopupOptions>;
+        definition: PolygonDefinition<PolylineOptions, PopupOptions>;
     }): L.Polygon;
     protected doRemovePolygon(polygon: L.Polygon): void;
     protected doCreatePolyline({ definition }: {
@@ -49,7 +48,7 @@ export default class extends AbstractMapController<MapOptions, LeafletMapOptions
     }): L.Circle;
     protected doRemoveCircle(circle: L.Circle): void;
     protected doCreateRectangle({ definition }: {
-        definition: RectangleDefinition<RectangleOptions, PopupOptions>;
+        definition: RectangleDefinition<PolylineOptions, PopupOptions>;
     }): L.Rectangle;
     protected doRemoveRectangle(rectangle: L.Rectangle): void;
     protected doCreateInfoWindow({ definition, element, }: {
@@ -63,4 +62,5 @@ export default class extends AbstractMapController<MapOptions, LeafletMapOptions
     protected doFitBoundsToMarkers(): void;
     private closePopups;
 }
-export {};
+
+export { export_default as default };

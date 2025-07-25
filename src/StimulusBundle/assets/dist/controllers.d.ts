@@ -1,12 +1,15 @@
-import type { ControllerConstructor } from '@hotwired/stimulus';
-export interface EagerControllersCollection {
+import { ControllerConstructor } from '@hotwired/stimulus';
+
+interface EagerControllersCollection {
     [key: string]: ControllerConstructor;
 }
-export interface LazyControllersCollection {
+interface LazyControllersCollection {
     [key: string]: () => Promise<{
         default: ControllerConstructor;
     }>;
 }
-export declare const eagerControllers: EagerControllersCollection;
-export declare const lazyControllers: LazyControllersCollection;
-export declare const isApplicationDebug = false;
+declare const eagerControllers: EagerControllersCollection;
+declare const lazyControllers: LazyControllersCollection;
+declare const isApplicationDebug = false;
+
+export { type EagerControllersCollection, type LazyControllersCollection, eagerControllers, isApplicationDebug, lazyControllers };

@@ -1,4 +1,7 @@
 import { Application } from '@hotwired/stimulus';
-import { type EagerControllersCollection, type LazyControllersCollection } from './controllers.js';
-export declare const loadControllers: (application: Application, eagerControllers: EagerControllersCollection, lazyControllers: LazyControllersCollection) => void;
-export declare const startStimulusApp: () => Application;
+import { EagerControllersCollection, LazyControllersCollection } from './controllers.js';
+
+declare const loadControllers: (application: Application, eagerControllers: EagerControllersCollection, lazyControllers: LazyControllersCollection) => void;
+declare const startStimulusApp: () => Application;
+
+export { loadControllers, startStimulusApp };

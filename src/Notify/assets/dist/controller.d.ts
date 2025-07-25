@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-export default class extends Controller {
+
+declare class export_default extends Controller {
     static values: {
         hub: StringConstructor;
         topics: ArrayConstructor;
@@ -16,3 +17,5 @@ export default class extends Controller {
     _notify(title: string | undefined, options: NotificationOptions | undefined): void;
     private dispatchEvent;
 }
+
+export { export_default as default };

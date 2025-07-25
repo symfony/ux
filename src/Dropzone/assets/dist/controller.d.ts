@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-export default class extends Controller {
+
+declare class export_default extends Controller {
     readonly inputTarget: HTMLInputElement;
     readonly placeholderTarget: HTMLDivElement;
     readonly previewTarget: HTMLDivElement;
@@ -17,3 +18,5 @@ export default class extends Controller {
     onDragLeave(event: any): void;
     private dispatchEvent;
 }
+
+export { export_default as default };
