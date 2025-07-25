@@ -632,9 +632,10 @@ Full Configuration
         icon_sets:
             # Icon set for "flags", can be used like this: ux_icon('flags:fr')
             flags:
-                It can either be mapped to a local directory...
+                # It can either be mapped to a local directory...
                 path: '%kernel.project_dir%/assets/images/flags'
-                ... or to an existing icon set identifier
+
+                # ... or to an existing icon set identifier
                 alias: 'lucide'
 
                 # Override the default attributes (default_icon_attributes) for this icon set
