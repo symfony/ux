@@ -17,7 +17,7 @@
     "main": "dist/live_controller.js",
     "types": "dist/live_controller.d.ts",
     "config": {
-        "css_source": "styles/live.css"
+        "css_source": "src/live.css"
     },
     "scripts": {
         "build": "tsx ../../../bin/build_package.ts .",
@@ -44,9 +44,6 @@
             "@symfony/ux-live-component": "path:%PACKAGE%/dist/live_controller.js"
         }
     },
-    "dependencies": {
-        "idiomorph": "^0.3.0"
-    },
     "peerDependencies": {
         "@hotwired/stimulus": "^3.0.0"
     },
@@ -56,6 +53,7 @@
         "@testing-library/jest-dom": "catalog:",
         "@testing-library/user-event": "^13.1.9",
         "@types/node-fetch": "^2.6.2",
+        "idiomorph": "^0.3.0",
         "jsdom": "catalog:",
         "node-fetch": "^2.6.1",
         "tslib": "catalog:",
