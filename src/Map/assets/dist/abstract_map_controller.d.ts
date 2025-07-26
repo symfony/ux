@@ -1,19 +1,20 @@
 import { Controller } from '@hotwired/stimulus';
-export type Point = {
+
+type Point = {
     lat: number;
     lng: number;
 };
-export type Identifier = string;
-export type WithIdentifier<T extends Record<string, unknown>> = T & {
+type Identifier = string;
+type WithIdentifier<T extends Record<string, unknown>> = T & {
     '@id': Identifier;
 };
 type ExtraData = Record<string, unknown>;
-export declare const IconTypes: {
+declare const IconTypes: {
     readonly Url: "url";
     readonly Svg: "svg";
     readonly UxIcon: "ux-icon";
 };
-export type Icon = {
+type Icon = {
     width: number;
     height: number;
 } & ({
@@ -27,7 +28,7 @@ export type Icon = {
     type: typeof IconTypes.Svg;
     html: string;
 });
-export type MapDefinition<MapOptions, BridgeMapOptions> = {
+type MapDefinition<MapOptions, BridgeMapOptions> = {
     center: Point | null;
     zoom: number | null;
     minZoom: number | null;
@@ -36,7 +37,7 @@ export type MapDefinition<MapOptions, BridgeMapOptions> = {
     bridgeOptions?: BridgeMapOptions;
     extra: ExtraData;
 };
-export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     position: Point;
     title: string | null;
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
@@ -45,7 +46,7 @@ export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = Wit
     bridgeOptions?: BridgeMarkerOptions;
     extra: ExtraData;
 }>;
-export type PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+type PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     points: Array<Point> | Array<Array<Point>>;
     title: string | null;
@@ -53,7 +54,7 @@ export type PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions> = W
     bridgeOptions?: BridgePolygonOptions;
     extra: ExtraData;
 }>;
-export type PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+type PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     points: Array<Point>;
     title: string | null;
@@ -61,7 +62,7 @@ export type PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions> =
     bridgeOptions?: BridgePolylineOptions;
     extra: ExtraData;
 }>;
-export type CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+type CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     center: Point;
     radius: number;
@@ -70,7 +71,7 @@ export type CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions> = Wit
     bridgeOptions?: BridgeCircleOptions;
     extra: ExtraData;
 }>;
-export type RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
+type RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     southWest: Point;
     northEast: Point;
@@ -79,7 +80,7 @@ export type RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions>
     bridgeOptions?: BridgeRectangleOptions;
     extra: ExtraData;
 }>;
-export type InfoWindowDefinition<BridgeInfoWindowOptions> = {
+type InfoWindowDefinition<BridgeInfoWindowOptions> = {
     headerContent: string | null;
     content: string | null;
     position: Point;
@@ -89,7 +90,7 @@ export type InfoWindowDefinition<BridgeInfoWindowOptions> = {
     bridgeOptions?: BridgeInfoWindowOptions;
     extra: ExtraData;
 };
-export default abstract class<MapOptions, BridgeMapOptions, BridgeMap, BridgeMarkerOptions, BridgeMarker, BridgeInfoWindowOptions, BridgeInfoWindow, BridgePolygonOptions, BridgePolygon, BridgePolylineOptions, BridgePolyline, BridgeCircleOptions, BridgeCircle, BridgeRectangleOptions, BridgeRectangle> extends Controller<HTMLElement> {
+declare abstract class export_default<MapOptions, BridgeMapOptions, BridgeMap, BridgeMarkerOptions, BridgeMarker, BridgeInfoWindowOptions, BridgeInfoWindow, BridgePolygonOptions, BridgePolygon, BridgePolylineOptions, BridgePolyline, BridgeCircleOptions, BridgeCircle, BridgeRectangleOptions, BridgeRectangle> extends Controller<HTMLElement> {
     static values: {
         providerOptions: ObjectConstructor;
         center: ObjectConstructor;
@@ -192,4 +193,5 @@ export default abstract class<MapOptions, BridgeMapOptions, BridgeMap, BridgeMar
     private createDrawingFactory;
     private onDrawChanged;
 }
-export {};
+
+export { type CircleDefinition, type Icon, IconTypes, type Identifier, type InfoWindowDefinition, type MapDefinition, type MarkerDefinition, type Point, type PolygonDefinition, type PolylineDefinition, type RectangleDefinition, type WithIdentifier, export_default as default };

@@ -1,7 +1,9 @@
-import type { ComponentClass, FunctionComponent } from 'react';
+import { FunctionComponent, ComponentClass } from 'react';
+
 type Component = string | FunctionComponent<object> | ComponentClass<object, any>;
-export interface ComponentCollection {
+interface ComponentCollection {
     [key: string]: Component;
 }
-export declare const components: ComponentCollection;
-export {};
+declare const components: ComponentCollection;
+
+export { type ComponentCollection, components };
