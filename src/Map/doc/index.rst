@@ -1,9 +1,6 @@
 Symfony UX Map
 ==============
 
-**EXPERIMENTAL** This component is currently experimental and is likely
-to change, or even change drastically.
-
 Symfony UX Map is a Symfony bundle integrating interactive Maps in
 Symfony applications. It is part of `the Symfony UX initiative`_.
 

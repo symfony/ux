@@ -3,6 +3,7 @@
 ## 2.28
 
 -  Add `minZoom` and `maxZoom` options to `Map` to set the minimum and maximum zoom levels
+-  The package is not experimental anymore
 
 ## 2.27
 
