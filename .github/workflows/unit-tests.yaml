@@ -149,5 +149,5 @@ jobs:
                   package.json
                   src/**/package.json
             - run: pnpm install --frozen-lockfile
-            - run: pnpm exec playwright install
+            - run: pnpm exec playwright install chromium
             - run: pnpm run test
