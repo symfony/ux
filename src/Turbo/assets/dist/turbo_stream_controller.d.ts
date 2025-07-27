@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-export default class extends Controller {
+
+declare class export_default extends Controller {
     static values: {
         topic: StringConstructor;
         topics: ArrayConstructor;
@@ -19,3 +20,5 @@ export default class extends Controller {
     connect(): void;
     disconnect(): void;
 }
+
+export { export_default as default };

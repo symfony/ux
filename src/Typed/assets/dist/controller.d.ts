@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-export default class extends Controller {
+
+declare class export_default extends Controller {
     static values: {
         strings: ArrayConstructor;
         typeSpeed: {
@@ -71,3 +72,5 @@ export default class extends Controller {
     connect(): void;
     private dispatchEvent;
 }
+
+export { export_default as default };

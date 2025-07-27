@@ -1,8 +1,8 @@
-import type { LoaderOptions } from '@googlemaps/js-api-loader';
-import type { CircleDefinition, Icon, InfoWindowDefinition, MapDefinition, MarkerDefinition, PolygonDefinition, PolylineDefinition, RectangleDefinition } from '@symfony/ux-map';
-import AbstractMapController from '@symfony/ux-map';
+import { LoaderOptions } from '@googlemaps/js-api-loader';
+import AbstractMapController, { MapDefinition, MarkerDefinition, PolygonDefinition, PolylineDefinition, CircleDefinition, RectangleDefinition, InfoWindowDefinition, Icon } from '@symfony/ux-map';
+
 type MapOptions = Pick<google.maps.MapOptions, 'mapId' | 'gestureHandling' | 'backgroundColor' | 'disableDoubleClickZoom' | 'zoomControl' | 'zoomControlOptions' | 'mapTypeControl' | 'mapTypeControlOptions' | 'streetViewControl' | 'streetViewControlOptions' | 'fullscreenControl' | 'fullscreenControlOptions'>;
-export default class extends AbstractMapController<MapOptions, google.maps.MapOptions, google.maps.Map, google.maps.marker.AdvancedMarkerElementOptions, google.maps.marker.AdvancedMarkerElement, google.maps.InfoWindowOptions, google.maps.InfoWindow, google.maps.PolygonOptions, google.maps.Polygon, google.maps.PolylineOptions, google.maps.Polyline, google.maps.CircleOptions, google.maps.Circle, google.maps.RectangleOptions, google.maps.Rectangle> {
+declare class export_default extends AbstractMapController<MapOptions, google.maps.MapOptions, google.maps.Map, google.maps.marker.AdvancedMarkerElementOptions, google.maps.marker.AdvancedMarkerElement, google.maps.InfoWindowOptions, google.maps.InfoWindow, google.maps.PolygonOptions, google.maps.Polygon, google.maps.PolylineOptions, google.maps.Polyline, google.maps.CircleOptions, google.maps.Circle, google.maps.RectangleOptions, google.maps.Rectangle> {
     providerOptionsValue: Pick<LoaderOptions, 'apiKey' | 'id' | 'language' | 'region' | 'nonce' | 'retries' | 'url' | 'version' | 'libraries'>;
     map: google.maps.Map;
     connect(): Promise<void>;
@@ -46,4 +46,5 @@ export default class extends AbstractMapController<MapOptions, google.maps.MapOp
     }): void;
     private closeInfoWindowsExcept;
 }
-export {};
+
+export { export_default as default };

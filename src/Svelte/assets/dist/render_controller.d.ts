@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
-import type { SvelteComponent } from 'svelte';
-export default class extends Controller<Element & {
+import { SvelteComponent } from 'svelte';
+
+declare class export_default extends Controller<Element & {
     root?: SvelteComponent;
 }> {
     private app;
@@ -19,3 +20,5 @@ export default class extends Controller<Element & {
     _destroyIfExists(): void;
     private dispatchEvent;
 }
+
+export { export_default as default };
