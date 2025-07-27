@@ -1,8 +1,5 @@
 # Symfony UX Map
 
-**EXPERIMENTAL** This component is currently experimental and is
-likely to change, or even change drastically.
-
 Symfony UX Map integrates interactive Maps in Symfony applications, like Leaflet or Google Maps.
 
 **This repository is a READ-ONLY sub-tree split**. See
