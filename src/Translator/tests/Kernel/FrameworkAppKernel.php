@@ -39,7 +39,9 @@ class FrameworkAppKernel extends Kernel
                 'test' => true,
                 'translator' => [
                     'fallbacks' => ['en'],
+                    'default_path' => '%kernel.project_dir%/tests/Fixtures/translations',
                 ],
+                'enabled_locales' => ['en', 'fr'],
                 'http_method_override' => false,
             ]);
         });

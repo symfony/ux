@@ -37,7 +37,8 @@
     "require-dev": {
         "symfony/framework-bundle": "^5.4|^6.0|^7.0",
         "symfony/phpunit-bridge": "^5.2|^6.0|^7.0",
-        "symfony/var-dumper": "^5.4|^6.0|^7.0"
+        "symfony/var-dumper": "^5.4|^6.0|^7.0",
+        "symfony/yaml": "^5.4|^6.0|^7.0"
     },
     "extra": {
         "thanks": {
