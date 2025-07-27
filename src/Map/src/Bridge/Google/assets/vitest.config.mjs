@@ -21,7 +21,7 @@ export default mergeConfig(
             browser: {
                 enabled: true,
                 provider: 'playwright', // or 'webdriverio'
-                name: 'chromium', // browser name is required
+                instances: [{ browser: 'chromium' }],
                 headless: true,
             },
         },
