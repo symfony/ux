@@ -4,36 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-catalogs:
-  default:
-    '@testing-library/dom':
-      specifier: 10.4.0
-      version: 10.4.0
-    '@testing-library/jest-dom':
-      specifier: 6.6.3
-      version: 6.6.3
-    '@testing-library/user-event':
-      specifier: 14.6.1
-      version: 14.6.1
-    '@vitest/browser':
-      specifier: ^3.2.4
-      version: 3.2.4
-    jsdom:
-      specifier: 26.1.0
-      version: 26.1.0
-    tslib:
-      specifier: 2.8.1
-      version: 2.8.1
-    tsx:
-      specifier: 4.20.3
-      version: 4.20.3
-    typescript:
-      specifier: 5.8.3
-      version: 5.8.3
-    vitest:
-      specifier: ^3.2.4
-      version: 3.2.4
-
 overrides:
   '@swup/plugin>@swup/prettier-config': link:node_modules/.ignored
   '@swup/plugin>@swup/browserslist-config': link:node_modules/.ignored
@@ -50,10 +20,10 @@ importers:
         specifier: ^2.0.4
         version: 2.1.2
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@types/node':
         specifier: ^22.6.0
@@ -74,7 +44,7 @@ importers:
         specifier: ^8.5.0
         version: 8.5.0(postcss@8.5.6)(tsx@4.20.3)(typescript@5.8.3)
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/Autocomplete/assets:
@@ -83,31 +53,31 @@ importers:
         specifier: ^3.0.0
         version: 3.2.2
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       tom-select:
         specifier: ^2.2.2
         version: 2.4.3
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
       vitest-fetch-mock:
         specifier: ^0.2.2
@@ -119,34 +89,34 @@ importers:
         specifier: ^3.0.0
         version: 3.2.2
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       chart.js:
         specifier: ^3.4.1 || ^4.0
         version: 4.5.0
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       resize-observer-polyfill:
         specifier: ^1.5.1
         version: 1.5.1
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
       vitest-canvas-mock:
         specifier: ^0.3.3
@@ -158,31 +128,31 @@ importers:
         specifier: ^3.0.0
         version: 3.2.2
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       cropperjs:
         specifier: ^1.5.9
         version: 1.6.2
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/Dropzone/assets:
@@ -191,28 +161,28 @@ importers:
         specifier: ^3.0.0
         version: 3.2.2
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/LazyImage/assets:
@@ -221,28 +191,28 @@ importers:
         specifier: ^3.0.0
         version: 3.2.2
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/LiveComponent/assets:
@@ -254,7 +224,7 @@ importers:
         specifier: ^7.31.0
         version: 7.31.2
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
         specifier: ^13.1.9
@@ -266,22 +236,22 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       node-fetch:
         specifier: ^2.6.1
         version: 2.7.0
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/Map/assets:
@@ -290,28 +260,28 @@ importers:
         specifier: ^3.0.0
         version: 3.2.2
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/Map/src/Bridge/Google/assets:
@@ -326,34 +296,34 @@ importers:
         specifier: workspace:*
         version: link:../../../../assets
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       '@types/google.maps':
         specifier: ^3.55.9
         version: 3.58.1
       '@vitest/browser':
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(playwright@1.54.1)(vite@5.4.19(@types/node@22.16.5)(lightningcss@1.30.1)(terser@5.43.1))(vitest@3.2.4)
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/Map/src/Bridge/Leaflet/assets:
@@ -365,37 +335,37 @@ importers:
         specifier: workspace:*
         version: link:../../../../assets
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       '@types/leaflet':
         specifier: ^1.9.12
         version: 1.9.20
       '@vitest/browser':
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(playwright@1.54.1)(vite@5.4.19(@types/node@22.16.5)(lightningcss@1.30.1)(terser@5.43.1))(vitest@3.2.4)
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       leaflet:
         specifier: ^1.9.4
         version: 1.9.4
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/Notify/assets:
@@ -404,28 +374,28 @@ importers:
         specifier: ^3.0.0
         version: 3.2.2
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/React/assets:
@@ -434,13 +404,13 @@ importers:
         specifier: ^3.0.0
         version: 3.2.2
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       '@types/react':
         specifier: ^18.0
@@ -455,7 +425,7 @@ importers:
         specifier: ^4.1.0
         version: 4.7.0(vite@5.4.19(@types/node@22.16.5)(lightningcss@1.30.1)(terser@5.43.1))
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       react:
         specifier: ^18.0
@@ -464,16 +434,16 @@ importers:
         specifier: ^18.0
         version: 18.3.1(react@18.3.1)
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/StimulusBundle/assets:
@@ -486,28 +456,28 @@ importers:
         version: 4.0.1(@hotwired/stimulus@3.2.2)
     devDependencies:
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/Svelte/assets:
@@ -519,34 +489,34 @@ importers:
         specifier: ^2.4.6
         version: 2.5.3(svelte@4.2.20)(vite@5.4.19(@types/node@22.16.5)(lightningcss@1.30.1)(terser@5.43.1))
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       '@types/webpack-env':
         specifier: ^1.16
         version: 1.18.8
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       svelte:
         specifier: ^3.0 || ^4.0
         version: 4.2.20
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/Swup/assets:
@@ -567,31 +537,31 @@ importers:
         specifier: ^1.0
         version: 1.0.5
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       swup:
         specifier: ^3.0
         version: 3.1.1
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/TogglePassword/assets:
@@ -600,58 +570,58 @@ importers:
         specifier: ^3.0.0
         version: 3.2.2
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/Translator/assets:
     devDependencies:
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       intl-messageformat:
         specifier: ^10.5.11
         version: 10.7.16
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/Turbo/assets:
@@ -663,31 +633,31 @@ importers:
         specifier: ^7.1.0 || ^8.0
         version: 8.0.13
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       '@types/hotwired__turbo':
         specifier: ^8.0.4
         version: 8.0.4
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/Typed/assets:
@@ -696,31 +666,31 @@ importers:
         specifier: ^3.0.0
         version: 3.2.2
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typed.js:
         specifier: ^2.0
         version: 2.1.0
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/Vue/assets:
@@ -729,13 +699,13 @@ importers:
         specifier: ^3.0.0
         version: 3.2.2
       '@testing-library/dom':
-        specifier: 'catalog:'
+        specifier: ^10.4.0
         version: 10.4.0
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.0)
       '@types/webpack-env':
         specifier: ^1.16
@@ -744,19 +714,19 @@ importers:
         specifier: ^4.4.0
         version: 4.6.2(vite@5.4.19(@types/node@22.16.5)(lightningcss@1.30.1)(terser@5.43.1))(vue@3.5.17(typescript@5.8.3))
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^26.1.0
         version: 26.1.0
       tslib:
-        specifier: 'catalog:'
+        specifier: ^2.8.1
         version: 2.8.1
       tsx:
-        specifier: 'catalog:'
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
       vue:
         specifier: ^3.0

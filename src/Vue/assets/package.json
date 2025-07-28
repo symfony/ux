@@ -45,16 +45,16 @@
     },
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
-        "@testing-library/dom": "catalog:",
-        "@testing-library/jest-dom": "catalog:",
-        "@testing-library/user-event": "catalog:",
+        "@testing-library/dom": "^10.4.0",
+        "@testing-library/jest-dom": "^6.6.3",
+        "@testing-library/user-event": "^14.6.1",
         "@types/webpack-env": "^1.16",
         "@vitejs/plugin-vue": "^4.4.0",
-        "jsdom": "catalog:",
-        "tslib": "catalog:",
-        "tsx": "catalog:",
-        "typescript": "catalog:",
-        "vitest": "catalog:",
+        "jsdom": "^26.1.0",
+        "tslib": "^2.8.1",
+        "tsx": "^4.20.3",
+        "typescript": "^5.8.3",
+        "vitest": "^3.2.4",
         "vue": "^3.0"
     }
 }
