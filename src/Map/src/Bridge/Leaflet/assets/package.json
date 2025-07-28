@@ -50,16 +50,16 @@
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
         "@symfony/ux-map": "workspace:*",
-        "@testing-library/dom": "catalog:",
-        "@testing-library/jest-dom": "catalog:",
-        "@testing-library/user-event": "catalog:",
+        "@testing-library/dom": "^10.4.0",
+        "@testing-library/jest-dom": "^6.6.3",
+        "@testing-library/user-event": "^14.6.1",
         "@types/leaflet": "^1.9.12",
-        "@vitest/browser": "catalog:",
-        "jsdom": "catalog:",
+        "@vitest/browser": "^3.2.4",
+        "jsdom": "^26.1.0",
         "leaflet": "^1.9.4",
-        "tslib": "catalog:",
-        "tsx": "catalog:",
-        "typescript": "catalog:",
-        "vitest": "catalog:"
+        "tslib": "^2.8.1",
+        "tsx": "^4.20.3",
+        "typescript": "^5.8.3",
+        "vitest": "^3.2.4"
     }
 }
