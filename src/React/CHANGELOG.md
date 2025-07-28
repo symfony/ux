@@ -10,7 +10,7 @@
     - You **are impacted** if you are using the Symfony AssetMapper but **not** Symfony Flex, you need to :
     ```shell
     php bin/console importmap:remove react-dom
-    php bin/console importmap:require react-dom
+    php bin/console importmap:require react-dom/client
     ```
 
 ## 2.26.0
