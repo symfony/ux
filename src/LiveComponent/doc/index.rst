@@ -2701,7 +2701,7 @@ This way you can also use the component multiple times in the same page and avoi
    The property name is passed into the modifier function since LiveComponents 2.26.
 
 The ``modifier`` function can also take the name of the property as a secondary parameter.
-It can be used to perform more generic operations inside of the modifier that can be re-used for multiple props::
+It can be used to perform more generic operations inside of the modifier that can be reused for multiple props::
 
     abstract class AbstractSearchModule
     {
@@ -3344,7 +3344,7 @@ In the ``EditPost`` template, you render the
     </div>
 
 Notice that ``MarkdownTextarea`` allows a dynamic ``name``
-attribute to be passed in. This makes that component re-usable in any
+attribute to be passed in. This makes that component reusable in any
 form.
 
 .. _rendering-loop-of-elements:

@@ -21,7 +21,7 @@ use Symfony\UX\Toolkit\Kit\KitFactory;
 
 final class KitFactoryTest extends KernelTestCase
 {
-    public function testShouldFailIfPathIsNotAbsolute(): void
+    public function testShouldFailIfPathIsNotAbsolute()
     {
         $kitFactory = $this->createKitFactory();
 
@@ -31,7 +31,7 @@ final class KitFactoryTest extends KernelTestCase
         $kitFactory->createKitFromAbsolutePath('shadcn');
     }
 
-    public function testShouldFailIfKitDoesNotExist(): void
+    public function testShouldFailIfKitDoesNotExist()
     {
         $kitFactory = $this->createKitFactory();
 
@@ -41,7 +41,7 @@ final class KitFactoryTest extends KernelTestCase
         $kitFactory->createKitFromAbsolutePath(__DIR__.'/../../kits/does-not-exist');
     }
 
-    public function testCanCreateShadKit(): void
+    public function testCanCreateShadKit()
     {
         $kitFactory = $this->createKitFactory();
 
@@ -73,7 +73,7 @@ EOF
             , $table->doc->markdownContent);
     }
 
-    public function testCanHandleStimulusControllers(): void
+    public function testCanHandleStimulusControllers()
     {
         $kitFactory = $this->createKitFactory();
 

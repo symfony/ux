@@ -24,7 +24,7 @@ class MapComponentTest extends KernelTestCase
         return TwigComponentKernel::class;
     }
 
-    public function testRenderMapComponent(): void
+    public function testRenderMapComponent()
     {
         $map = (new Map())
             ->center(new Point(latitude: 5, longitude: 10))

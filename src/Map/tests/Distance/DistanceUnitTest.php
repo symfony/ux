@@ -33,7 +33,7 @@ class DistanceUnitTest extends TestCase
     /**
      * @dataProvider provideConvertedUnits
      */
-    public function testConversionFactorFrom(DistanceUnit $unit, DistanceUnit $otherUnit, float $expected): void
+    public function testConversionFactorFrom(DistanceUnit $unit, DistanceUnit $otherUnit, float $expected)
     {
         $this->assertEqualsWithDelta($expected, $unit->getConversionFactorFrom($otherUnit), 0.001);
     }

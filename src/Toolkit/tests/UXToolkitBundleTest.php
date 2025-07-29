@@ -16,7 +16,7 @@ use Symfony\UX\Toolkit\UXToolkitBundle;
 
 class UXToolkitBundleTest extends KernelTestCase
 {
-    public function testBundleBuildsSuccessfully(): void
+    public function testBundleBuildsSuccessfully()
     {
         self::bootKernel();
         $container = self::$kernel->getContainer();

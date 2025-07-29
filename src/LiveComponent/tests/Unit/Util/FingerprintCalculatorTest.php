@@ -16,7 +16,7 @@ use Symfony\UX\LiveComponent\Util\FingerprintCalculator;
 
 final class FingerprintCalculatorTest extends TestCase
 {
-    public function testConstructWithEmptySecret(): void
+    public function testConstructWithEmptySecret()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('A non-empty secret is required.');

@@ -19,7 +19,7 @@ use Twig\Environment;
 
 class TogglePasswordTypeTest extends TestCase
 {
-    public function testRenderFormWithToggle(): void
+    public function testRenderFormWithToggle()
     {
         $container = $this->givenServiceContainer();
         $form = $container->get(FormFactoryInterface::class)->createBuilder()
@@ -32,7 +32,7 @@ class TogglePasswordTypeTest extends TestCase
         self::assertStringContainsString('<div class="toggle-password-container"><input type="password" id="form_password" name="form[password]" required="required" data-controller="symfony--ux-toggle-password--toggle-password" data-symfony--ux-toggle-password--toggle-password-hidden-label-value="Hide" data-symfony--ux-toggle-password--toggle-password-visible-label-value="Show" data-symfony--ux-toggle-password--toggle-password-hidden-icon-value="Default" data-symfony--ux-toggle-password--toggle-password-visible-icon-value="Default" data-symfony--ux-toggle-password--toggle-password-button-classes-value="[&quot;toggle-password-button&quot;]"', $rendered);
     }
 
-    public function testRenderFormWithoutToggle(): void
+    public function testRenderFormWithoutToggle()
     {
         $container = $this->givenServiceContainer();
         $form = $container->get(FormFactoryInterface::class)->createBuilder()

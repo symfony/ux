@@ -2,7 +2,7 @@ Twig Components
 ===============
 
 Twig components give you the power to bind an object to a template,
-making it easier to render and re-use small template "units" - like an
+making it easier to render and reuse small template "units" - like an
 "alert", markup for a modal, or a category sidebar:
 
 Every component consists of (1) a class::
@@ -921,7 +921,7 @@ For example, imagine we want to create a ``SuccessAlert`` component:
         We will successfully <em>forward</em> this block content!
     <twig:SuccessAlert>
 
-We already have a generic ``Alert`` component, so let's re-use it:
+We already have a generic ``Alert`` component, so let's reuse it:
 
 .. code-block:: html+twig
 

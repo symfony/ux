@@ -23,7 +23,7 @@ use Symfony\UX\Icons\Tests\Util\InMemoryIconRegistry;
  */
 class IconRendererTest extends TestCase
 {
-    public function testRenderIcon(): void
+    public function testRenderIcon()
     {
         $registry = $this->createRegistry([
             'user' => '<circle ',
@@ -36,7 +36,7 @@ class IconRendererTest extends TestCase
         $this->assertStringContainsString('<circle', $icon);
     }
 
-    public function testRenderIconThrowsExceptionWhenIconNotFound(): void
+    public function testRenderIconThrowsExceptionWhenIconNotFound()
     {
         $registry = $this->createRegistry([]);
         $iconRenderer = new IconRenderer($registry);
@@ -46,7 +46,7 @@ class IconRendererTest extends TestCase
         $iconRenderer->renderIcon('foo');
     }
 
-    public function testRenderIconThrowsExceptionWhenAttributesAreInvalid(): void
+    public function testRenderIconThrowsExceptionWhenAttributesAreInvalid()
     {
         $registry = $this->createRegistry(['foo' => '<path d="M0 0L12 12"/>']);
         $iconRenderer = new IconRenderer($registry);
@@ -56,7 +56,7 @@ class IconRendererTest extends TestCase
         $iconRenderer->renderIcon('foo', [1, 2, null]);
     }
 
-    public function testRenderIconWithAttributes(): void
+    public function testRenderIconWithAttributes()
     {
         $registry = $this->createRegistry([
             'foo' => '<path d="M0 0L12 12"/>',
@@ -69,7 +69,7 @@ class IconRendererTest extends TestCase
         $this->assertSame('<svg viewBox="0 0 24 24" class="icon" id="FooBar" aria-hidden="true"><path d="M0 0L12 12"/></svg>', $svg);
     }
 
-    public function testRenderIconWithDefaultAttributes(): void
+    public function testRenderIconWithDefaultAttributes()
     {
         $registry = $this->createRegistry([
             'foo' => '<path d="M0 0L12 12"/>',
@@ -281,7 +281,7 @@ class IconRendererTest extends TestCase
      * @param string|array{string, array<string, string|bool>} $icon
      * @param array<string, string|bool>                       $attributes
      */
-    public function testRenderIconWithAutoAriaHidden(string|array $icon, array $attributes, string $expectedSvg): void
+    public function testRenderIconWithAutoAriaHidden(string|array $icon, array $attributes, string $expectedSvg)
     {
         $icon = (array) $icon;
         $registry = $this->createRegistry([
@@ -345,7 +345,7 @@ class IconRendererTest extends TestCase
         ];
     }
 
-    public function testRenderIconWithAliases(): void
+    public function testRenderIconWithAliases()
     {
         $registry = $this->createRegistry([
             'foo' => '<path d="M0 FOO"/>',
@@ -369,7 +369,7 @@ class IconRendererTest extends TestCase
      *
      * @dataProvider provideRenderIconWithIconSetAttributes
      */
-    public function testRenderIconWithIconSetAttributes(string $name, array $attributes, string $expectedSvg): void
+    public function testRenderIconWithIconSetAttributes(string $name, array $attributes, string $expectedSvg)
     {
         $registry = $this->createRegistry([
             'a' => '<path d="a"/>',

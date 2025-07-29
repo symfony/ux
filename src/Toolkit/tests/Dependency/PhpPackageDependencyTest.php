@@ -17,7 +17,7 @@ use Symfony\UX\Toolkit\Dependency\Version;
 
 final class PhpPackageDependencyTest extends TestCase
 {
-    public function testShouldBeInstantiable(): void
+    public function testShouldBeInstantiable()
     {
         $dependency = new PhpPackageDependency('twig/html-extra');
         $this->assertSame('twig/html-extra', $dependency->name);
@@ -29,7 +29,7 @@ final class PhpPackageDependencyTest extends TestCase
         $this->assertSame('twig/html-extra:^3.2.1', (string) $dependency);
     }
 
-    public function testShouldFailIfPackageNameIsInvalid(): void
+    public function testShouldFailIfPackageNameIsInvalid()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid PHP package name "/foo".');

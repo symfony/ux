@@ -20,7 +20,7 @@ class AsEntityAutocompleteFieldTest extends TestCase
     /**
      * @dataProvider provideClassNames
      */
-    public function testShortName(string $shortName, string $className): void
+    public function testShortName(string $shortName, string $className)
     {
         $this->assertEquals($shortName, AsEntityAutocompleteField::shortName($className));
     }

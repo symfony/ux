@@ -25,7 +25,7 @@ class DoctrineEntityHydrationExtensionTest extends KernelTestCase
     use Factories;
     use ResetDatabase;
 
-    public function testCompositeId(): void
+    public function testCompositeId()
     {
         $compositeIdEntity = CompositeIdEntityFactory::createOne()->_real();
 
@@ -38,7 +38,7 @@ class DoctrineEntityHydrationExtensionTest extends KernelTestCase
         );
     }
 
-    public function testForeignKeyId(): void
+    public function testForeignKeyId()
     {
         $foreignKeyIdEntity = ForeignKeyIdEntityFactory::createOne()->_real();
 

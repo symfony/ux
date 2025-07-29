@@ -16,14 +16,14 @@ use Symfony\UX\Toolkit\Dependency\Version;
 
 final class VersionTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
+    public function testCanBeInstantiated()
     {
         $version = new Version('1.2.3');
 
         $this->assertSame('1.2.3', (string) $version);
     }
 
-    public function testCanBeCompared(): void
+    public function testCanBeCompared()
     {
         $this->assertTrue((new Version('1.2.3'))->isHigherThan(new Version('1.2.2')));
         $this->assertFalse((new Version('1.2.3'))->isHigherThan(new Version('1.2.4')));

@@ -154,7 +154,7 @@ describe('Formatter', () => {
             new-line in it. Selector > 1.`,
             5,
         ],
-        // with double-quotes and id split accros lines
+        // with double-quotes and id split across lines
         [
             `This is a text with a
             new-line in it. Selector = 1.`,
@@ -164,7 +164,7 @@ describe('Formatter', () => {
             new-line in it. Selector > 1.`,
             1,
         ],
-        // with single-quotes and id split accros lines
+        // with single-quotes and id split across lines
         [
             `This is a text with a
             new-line in it. Selector > 1.`,
@@ -180,7 +180,7 @@ describe('Formatter', () => {
             '{0}This is a text with a\nnew-line in it. Selector = 0.|{1}This is a text with a\nnew-line in it. Selector = 1.|[1,Inf]This is a text with a\nnew-line in it. Selector > 1.',
             0,
         ],
-        // with double-quotes and id split accros lines
+        // with double-quotes and id split across lines
         [
             'This is a text with a\nnew-line in it. Selector = 1.',
             '{0}This is a text with a\nnew-line in it. Selector = 0.|{1}This is a text with a\nnew-line in it. Selector = 1.|[1,Inf]This is a text with a\nnew-line in it. Selector > 1.',

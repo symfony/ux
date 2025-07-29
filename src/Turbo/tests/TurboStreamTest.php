@@ -18,7 +18,7 @@ use Symfony\Component\Panther\PantherTestCase;
  */
 final class TurboStreamTest extends PantherTestCase
 {
-    public function testStream(): void
+    public function testStream()
     {
         ($client = self::createPantherClient())->request('GET', '/');
 

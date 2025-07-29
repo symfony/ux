@@ -45,7 +45,7 @@ class TranslationsDumperTest extends TestCase
         );
     }
 
-    public function testDump(): void
+    public function testDump()
     {
         $this->translationsDumper->dump(...self::getMessageCatalogues());
 
@@ -105,7 +105,7 @@ export declare const _0STARTS_WITH_NUMERIC: Message<{ 'messages': { parameters: 
 TYPESCRIPT);
     }
 
-    public function testDumpWithExcludedDomains(): void
+    public function testDumpWithExcludedDomains()
     {
         $this->translationsDumper->addExcludedDomain('foobar');
         $this->translationsDumper->dump(...$this->getMessageCatalogues());
@@ -114,7 +114,7 @@ TYPESCRIPT);
         $this->assertStringNotContainsString('foobar', file_get_contents(self::$translationsDumpDir.'/index.js'));
     }
 
-    public function testDumpIncludedDomains(): void
+    public function testDumpIncludedDomains()
     {
         $this->translationsDumper->addIncludedDomain('messages');
         $this->translationsDumper->dump(...$this->getMessageCatalogues());
@@ -123,7 +123,7 @@ TYPESCRIPT);
         $this->assertStringNotContainsString('foobar', file_get_contents(self::$translationsDumpDir.'/index.js'));
     }
 
-    public function testSetBothIncludedAndExcludedDomains(): void
+    public function testSetBothIncludedAndExcludedDomains()
     {
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('You cannot set both "excluded_domains" and "included_domains" at the same time.');
@@ -131,7 +131,7 @@ TYPESCRIPT);
         $this->translationsDumper->addExcludedDomain('messages');
     }
 
-    public function testSetBothExcludedAndIncludedDomains(): void
+    public function testSetBothExcludedAndIncludedDomains()
     {
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('You cannot set both "excluded_domains" and "included_domains" at the same time.');

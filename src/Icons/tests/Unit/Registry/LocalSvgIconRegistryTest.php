@@ -23,7 +23,7 @@ final class LocalSvgIconRegistryTest extends TestCase
     /**
      * @dataProvider validSvgProvider
      */
-    public function testValidSvgs(string $name, array $expectedAttributes, string $expectedContent): void
+    public function testValidSvgs(string $name, array $expectedAttributes, string $expectedContent)
     {
         $icon = $this->registry()->get($name);
         $this->assertInstanceOf(Icon::class, $icon);
@@ -67,7 +67,7 @@ final class LocalSvgIconRegistryTest extends TestCase
     /**
      * @dataProvider invalidSvgProvider
      */
-    public function testInvalidSvgs(string $name): void
+    public function testInvalidSvgs(string $name)
     {
         $this->expectException(\RuntimeException::class);
 
@@ -85,7 +85,7 @@ final class LocalSvgIconRegistryTest extends TestCase
     /**
      * @dataProvider provideIconSetPathsCases
      */
-    public function testIconSetPaths(string $name, array $iconSetPaths, ?string $expectedContent): void
+    public function testIconSetPaths(string $name, array $iconSetPaths, ?string $expectedContent)
     {
         $registry = new LocalSvgIconRegistry(
             iconDir: __DIR__.'/../../Fixtures/icons',

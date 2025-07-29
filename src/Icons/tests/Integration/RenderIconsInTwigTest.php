@@ -19,7 +19,7 @@ use Twig\Environment;
  */
 final class RenderIconsInTwigTest extends KernelTestCase
 {
-    public function testRenderIcons(): void
+    public function testRenderIcons()
     {
         $output = self::getContainer()->get(Environment::class)->render('template1.html.twig');
 
@@ -41,7 +41,7 @@ final class RenderIconsInTwigTest extends KernelTestCase
         );
     }
 
-    public function testRenderAliasIcons(): void
+    public function testRenderAliasIcons()
     {
         $templateIcon = '<twig:ux:icon name="flowbite:close-outline" />';
         $outputIcon = self::getContainer()->get(Environment::class)->createTemplate($templateIcon)->render();

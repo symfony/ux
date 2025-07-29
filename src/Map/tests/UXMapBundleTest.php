@@ -35,7 +35,7 @@ class UXMapBundleTest extends TestCase
      *
      * @param class-string<Kernel> $kernelClass
      */
-    public function testBootKernel(string $kernelClass): void
+    public function testBootKernel(string $kernelClass)
     {
         $kernel = new $kernelClass('test', true);
         $kernel->boot();
@@ -48,7 +48,7 @@ class UXMapBundleTest extends TestCase
      *
      * @param class-string<Kernel> $kernelClass
      */
-    public function testNullRendererAsDefault(string $kernelClass): void
+    public function testNullRendererAsDefault(string $kernelClass)
     {
         $expectedRenderer = new NullRenderer(['symfony/ux-google-map', 'symfony/ux-leaflet-map']);
 

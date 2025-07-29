@@ -18,7 +18,7 @@ use Symfony\UX\Toolkit\Kit\Kit;
 
 final class KitTest extends TestCase
 {
-    public function testShouldFailIfKitNameIsInvalid(): void
+    public function testShouldFailIfKitNameIsInvalid()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid kit name "-foobar".');
@@ -26,7 +26,7 @@ final class KitTest extends TestCase
         new Kit(__DIR__, '-foobar', 'https://example.com', 'MIT');
     }
 
-    public function testShouldFailIfKitPathIsNotAbsolute(): void
+    public function testShouldFailIfKitPathIsNotAbsolute()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Kit path "./%s" is not absolute.', __DIR__));
@@ -34,7 +34,7 @@ final class KitTest extends TestCase
         new Kit(\sprintf('./%s', __DIR__), 'foo', 'https://example.com', 'MIT');
     }
 
-    public function testCanAddComponentsToTheKit(): void
+    public function testCanAddComponentsToTheKit()
     {
         $kit = new Kit(__DIR__, 'foo', 'https://example.com', 'MIT');
         $kit->addComponent(new Component('Table', [new File('Table.html.twig', 'Table.html.twig')], null));
@@ -43,7 +43,7 @@ final class KitTest extends TestCase
         $this->assertCount(2, $kit->getComponents());
     }
 
-    public function testShouldFailIfComponentIsAlreadyRegisteredInTheKit(): void
+    public function testShouldFailIfComponentIsAlreadyRegisteredInTheKit()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Component "Table" is already registered in the kit.');
@@ -53,7 +53,7 @@ final class KitTest extends TestCase
         $kit->addComponent(new Component('Table', [new File('Table.html.twig', 'Table.html.twig')], null));
     }
 
-    public function testCanGetComponentByName(): void
+    public function testCanGetComponentByName()
     {
         $kit = new Kit(__DIR__, 'foo', 'https://example.com', 'MIT');
         $kit->addComponent(new Component('Table', [new File('Table.html.twig', 'Table.html.twig')], null));
@@ -63,7 +63,7 @@ final class KitTest extends TestCase
         $this->assertSame('Table:Row', $kit->getComponent('Table:Row')->name);
     }
 
-    public function testShouldReturnNullIfComponentIsNotFound(): void
+    public function testShouldReturnNullIfComponentIsNotFound()
     {
         $kit = new Kit(__DIR__, 'foo', 'https://example.com', 'MIT');
 

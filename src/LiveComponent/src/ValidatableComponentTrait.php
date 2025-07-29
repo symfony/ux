@@ -58,7 +58,7 @@ trait ValidatableComponentTrait
         $this->getValidationErrors()->setAll($this->getValidator()->validate($this));
 
         if ($throw && \count($this->getValidationErrors()) > 0) {
-            throw new UnprocessableEntityHttpException('Component validation failed');
+            throw new UnprocessableEntityHttpException('Component validation failed.');
         }
     }
 
@@ -160,7 +160,7 @@ trait ValidatableComponentTrait
     private function getValidator(): ComponentValidatorInterface
     {
         if (!$this->componentValidator) {
-            throw new \InvalidArgumentException(\sprintf('The ComponentValidator service was not injected into %s. Did you forget to autowire this service or configure the setComponentValidator() call?', static::class));
+            throw new \InvalidArgumentException(\sprintf('The ComponentValidator service was not injected into "%s". Did you forget to autowire this service or configure the setComponentValidator() call?', static::class));
         }
 
         return $this->componentValidator;

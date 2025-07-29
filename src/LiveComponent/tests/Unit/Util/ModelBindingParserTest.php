@@ -19,7 +19,7 @@ final class ModelBindingParserTest extends TestCase
     /**
      * @dataProvider getModelStringTests
      */
-    public function testParseAllValidStrings(string $input, array $expectedBindings): void
+    public function testParseAllValidStrings(string $input, array $expectedBindings)
     {
         $parser = new ModelBindingParser();
         $this->assertEquals($expectedBindings, $parser->parse($input));
@@ -43,7 +43,7 @@ final class ModelBindingParserTest extends TestCase
         ]];
     }
 
-    public function testParseThrowsExceptionWithMultipleColons(): void
+    public function testParseThrowsExceptionWithMultipleColons()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid value "foo:bar:baz" given for "data-model"');

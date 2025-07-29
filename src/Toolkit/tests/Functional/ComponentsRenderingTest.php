@@ -54,7 +54,7 @@ class ComponentsRenderingTest extends WebTestCase
     /**
      * @dataProvider provideTestComponentRendering
      */
-    public function testComponentRendering(string $kitName, string $componentName, string $code): void
+    public function testComponentRendering(string $kitName, string $componentName, string $code)
     {
         $twig = self::getContainer()->get('twig');
         $kitContextRunner = self::getContainer()->get('ux_toolkit.kit.kit_context_runner');

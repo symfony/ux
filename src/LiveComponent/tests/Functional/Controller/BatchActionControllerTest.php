@@ -26,7 +26,7 @@ final class BatchActionControllerTest extends KernelTestCase
     use HasBrowser;
     use LiveComponentTestHelper;
 
-    public function testCanBatchActions(): void
+    public function testCanBatchActions()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
@@ -81,7 +81,7 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
-    public function testCanBatchActionsWithAlternateRoute(): void
+    public function testCanBatchActionsWithAlternateRoute()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('alternate_route'));
 
@@ -119,7 +119,7 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
-    public function testRedirect(): void
+    public function testRedirect()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
@@ -155,7 +155,7 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
-    public function testRedirectWithAcceptHeader(): void
+    public function testRedirectWithAcceptHeader()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
@@ -194,7 +194,7 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
-    public function testException(): void
+    public function testException()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
@@ -228,7 +228,7 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
-    public function testCannotBatchWithNonLiveAction(): void
+    public function testCannotBatchWithNonLiveAction()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 

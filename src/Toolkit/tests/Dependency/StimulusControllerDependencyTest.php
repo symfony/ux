@@ -16,7 +16,7 @@ use Symfony\UX\Toolkit\Dependency\StimulusControllerDependency;
 
 final class StimulusControllerDependencyTest extends TestCase
 {
-    public function testShouldBeInstantiable(): void
+    public function testShouldBeInstantiable()
     {
         $dependency = new StimulusControllerDependency('clipboard');
 
@@ -24,7 +24,7 @@ final class StimulusControllerDependencyTest extends TestCase
         $this->assertSame('clipboard', (string) $dependency);
     }
 
-    public function testShouldFailIfComponentNameIsInvalid(): void
+    public function testShouldFailIfComponentNameIsInvalid()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid Stimulus controller name "my_Controller".');

@@ -17,7 +17,7 @@ use Symfony\UX\Toolkit\Registry\LocalRegistry;
 
 final class LocalRegistryTest extends KernelTestCase
 {
-    public function testCanGetKit(): void
+    public function testCanGetKit()
     {
         $localRegistry = new LocalRegistry(
             self::getContainer()->get('ux_toolkit.kit.kit_factory'),

@@ -82,7 +82,7 @@ You can render any Vue controller component in Twig using the ``vue_component()`
 Events
 ~~~~~~
 
-The event ``vue:before-mount`` is called before a component is mounted on the page. This is the event to listen if you need to modifiy the Vue application (e.g.: add plugins, add global directives, states ...):
+The event ``vue:before-mount`` is called before a component is mounted on the page. This is the event to listen if you need to modify the Vue application (e.g.: add plugins, add global directives, states ...):
 
 .. code-block:: javascript
 

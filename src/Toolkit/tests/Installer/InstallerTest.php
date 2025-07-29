@@ -33,7 +33,7 @@ final class InstallerTest extends KernelTestCase
         $this->filesystem->mkdir($this->tmpDir);
     }
 
-    public function testCanInstallComponent(): void
+    public function testCanInstallComponent()
     {
         $componentInstaller = new Installer(self::getContainer()->get('filesystem'), fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
         $kit = $this->createKit('shadcn');
@@ -49,7 +49,7 @@ final class InstallerTest extends KernelTestCase
         $this->assertSame(file_get_contents($this->tmpDir.'/Button.html.twig'), file_get_contents(\sprintf('%s/templates/components/Button.html.twig', $kit->path)));
     }
 
-    public function testShouldAskIfFileAlreadyExists(): void
+    public function testShouldAskIfFileAlreadyExists()
     {
         $askedCount = 0;
         $componentInstaller = new Installer(self::getContainer()->get('filesystem'), function () use (&$askedCount) {
@@ -72,7 +72,7 @@ final class InstallerTest extends KernelTestCase
         $this->assertSame(1, $askedCount);
     }
 
-    public function testCanInstallComponentIfForced(): void
+    public function testCanInstallComponentIfForced()
     {
         $componentInstaller = new Installer(self::getContainer()->get('filesystem'), fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
         $kit = $this->createKit('shadcn');
@@ -91,7 +91,7 @@ final class InstallerTest extends KernelTestCase
         $this->assertSame(file_get_contents($this->tmpDir.'/Button.html.twig'), file_get_contents(\sprintf('%s/templates/components/Button.html.twig', $kit->path)));
     }
 
-    public function testCanInstallComponentAndItsComponentDependencies(): void
+    public function testCanInstallComponentAndItsComponentDependencies()
     {
         $componentInstaller = new Installer(self::getContainer()->get('filesystem'), fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
         $kit = $this->createKit('shadcn');

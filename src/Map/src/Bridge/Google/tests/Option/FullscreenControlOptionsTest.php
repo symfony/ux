@@ -17,7 +17,7 @@ use Symfony\UX\Map\Bridge\Google\Option\FullscreenControlOptions;
 
 class FullscreenControlOptionsTest extends TestCase
 {
-    public function testToArray(): void
+    public function testToArray()
     {
         $options = new FullscreenControlOptions(
             position: ControlPosition::BLOCK_END_INLINE_CENTER

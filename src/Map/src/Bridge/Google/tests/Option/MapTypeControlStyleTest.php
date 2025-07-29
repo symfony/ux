@@ -16,7 +16,7 @@ use Symfony\UX\Map\Bridge\Google\Option\MapTypeControlStyle;
 
 class MapTypeControlStyleTest extends TestCase
 {
-    public function testEnumValues(): void
+    public function testEnumValues()
     {
         self::assertSame(0, MapTypeControlStyle::DEFAULT->value);
         self::assertSame(2, MapTypeControlStyle::DROPDOWN_MENU->value);

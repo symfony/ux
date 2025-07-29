@@ -19,7 +19,7 @@ class DebugKitCommandTest extends KernelTestCase
 {
     use InteractsWithConsole;
 
-    public function testShouldBeAbleToDebug(): void
+    public function testShouldBeAbleToDebug()
     {
         $this->bootKernel();
         $this->consoleCommand(\sprintf('ux:toolkit:debug-kit %s', Path::join(__DIR__, '/../../kits/shadcn')))

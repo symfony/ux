@@ -39,7 +39,7 @@ class LiveComponentMetadataTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testGetAllUrlMappings(): void
+    public function testGetAllUrlMappings()
     {
         $aliasUrlMapping = new UrlMapping('alias');
         $propMetadas = [

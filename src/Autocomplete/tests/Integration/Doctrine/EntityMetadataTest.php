@@ -25,7 +25,7 @@ class EntityMetadataTest extends KernelTestCase
     use Factories;
     use ResetDatabase;
 
-    public function testGetAllPropertyNames(): void
+    public function testGetAllPropertyNames()
     {
         $this->assertSame(
             ['id', 'name', 'description', 'price', 'isEnabled'],
@@ -33,20 +33,20 @@ class EntityMetadataTest extends KernelTestCase
         );
     }
 
-    public function testIsAssociation(): void
+    public function testIsAssociation()
     {
         $metadata = $this->getMetadata();
         $this->assertFalse($metadata->isAssociation('name'));
         $this->assertTrue($metadata->isAssociation('category'));
     }
 
-    public function testGetIdValue(): void
+    public function testGetIdValue()
     {
         $product = ProductFactory::createOne();
         $this->assertEquals($product->getId(), $this->getMetadata()->getIdValue($product));
     }
 
-    public function testGetPropertyDataType(): void
+    public function testGetPropertyDataType()
     {
         $metadata = $this->getMetadata();
         $this->assertSame(Types::STRING, $metadata->getPropertyDataType('name'));
@@ -55,7 +55,7 @@ class EntityMetadataTest extends KernelTestCase
         $this->assertEquals(2, $metadata->getPropertyDataType('category'));
     }
 
-    public function testGetFieldMetadata(): void
+    public function testGetFieldMetadata()
     {
         $metadata = $this->getMetadata();
         $nameMetadata = $metadata->getFieldMetadata('name');
@@ -75,7 +75,7 @@ class EntityMetadataTest extends KernelTestCase
         }
     }
 
-    public function testGetAssociationMetadata(): void
+    public function testGetAssociationMetadata()
     {
         $metadata = $this->getMetadata();
         $expected = [
@@ -132,7 +132,7 @@ class EntityMetadataTest extends KernelTestCase
         }
     }
 
-    public function testIsEmbeddedClassProperty(): void
+    public function testIsEmbeddedClassProperty()
     {
         // TODO
         $this->markTestIncomplete();

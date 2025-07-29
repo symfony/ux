@@ -23,7 +23,7 @@ class IntlMessageParserTest extends TestCase
     /**
      * @dataProvider provideParse
      */
-    public function testIntlMessageParser(string $message, array $expectedAst): void
+    public function testIntlMessageParser(string $message, array $expectedAst)
     {
         $intlMessageParser = new IntlMessageParser($message);
 
