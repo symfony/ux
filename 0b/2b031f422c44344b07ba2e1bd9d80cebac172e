@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-29T08:17:47Z
+
+@nicolas-grekas The step `Check PR header` is failing with error message `syntax error near unexpected token |'`, I think that's because the presence of `"` character in the `PR_BODY`
+
+Maybe something like:
+```shell
+PR_TITLE=$(cat <<EOF
+${{ github.event.pull_request.title }}
+EOF
+)
+PR_BODY=$(cat <<EOF
+{{ github.event.pull_request.body }}
+EOF
+)
+```
+?
