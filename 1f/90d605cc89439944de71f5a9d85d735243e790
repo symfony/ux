@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2025-07-29T14:55:30Z
+
+(fabbot's failures are false-positive typos.)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-29T15:07:43Z
+
+For Turbo, we will need to configure PHPStan to ignore `missingType.return` errors on `tests/**/*.php` files
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2025-07-29T15:19:46Z
+
+> We will need to configure PHPStan to ignore missingType.return errors on tests/**/*.php files
+
+done!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-29T15:34:26Z
+
+Pretty happy with codespell's corrections
