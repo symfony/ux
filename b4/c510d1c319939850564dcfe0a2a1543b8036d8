@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-28T23:10:23Z
+
+> Post Run actions/setup-node@v4
+> Post job cleanup.
+> Error: Path Validation Error: Path(s) specified in the action for caching do(es) not exist, hence no cache is being saved.
+
+Maybe because I removed `test_apps/encore-app/pnpm-lock.yaml`?
+
+W/e, CI is running fine now, `workspace:*` are now nicely replaced and `npm` is used as main packages manager to install dependencies inside app tests
+
+**EDIT:** re-run the job in debug mode, it tried to cache path `/home/runner/.local/share/pnpm/store/v10` but it does not since we do not run `pnpm install` anymore. I simply removed the cache step, it is not necessary
