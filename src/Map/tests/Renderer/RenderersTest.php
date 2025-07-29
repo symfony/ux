@@ -21,7 +21,7 @@ use Symfony\UX\Map\Renderer\Renderers;
 
 class RenderersTest extends TestCase
 {
-    public function testConstructWithoutRenderers(): void
+    public function testConstructWithoutRenderers()
     {
         self::expectException(LogicException::class);
         self::expectExceptionMessage('"Symfony\UX\Map\Renderer\Renderers" must have at least one renderer configured.');
@@ -29,7 +29,7 @@ class RenderersTest extends TestCase
         new Renderers([]);
     }
 
-    public function testRenderMapWithDefaultRenderer(): void
+    public function testRenderMapWithDefaultRenderer()
     {
         $defaultRenderer = $this->createMock(RendererInterface::class);
         $defaultRenderer->expects(self::once())->method('renderMap')->willReturn('<div data-controller="@symfony/ux-default-map"></div>');
@@ -39,7 +39,7 @@ class RenderersTest extends TestCase
         self::assertSame('<div data-controller="@symfony/ux-default-map"></div>', $renderers->renderMap(new Map()));
     }
 
-    public function testRenderMapWithCustomRenderer(): void
+    public function testRenderMapWithCustomRenderer()
     {
         $defaultRenderer = $this->createMock(RendererInterface::class);
         $defaultRenderer->expects(self::never())->method('renderMap');
@@ -54,7 +54,7 @@ class RenderersTest extends TestCase
         self::assertSame('<div data-controller="@symfony/ux-custom-map"></div>', $renderers->renderMap($map));
     }
 
-    public function testRenderMapWithUnknownRenderer(): void
+    public function testRenderMapWithUnknownRenderer()
     {
         self::expectException(LogicException::class);
         self::expectExceptionMessage('The "unknown" renderer does not exist (available renderers: "default").');

@@ -16,7 +16,7 @@ use Symfony\UX\Toolkit\File\File;
 
 final class FileTest extends TestCase
 {
-    public function testShouldFailIfPathIsNotRelative(): void
+    public function testShouldFailIfPathIsNotRelative()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('The path to the kit "%s" must be relative.', __FILE__.'/templates/components/Button.html.twig'));
@@ -24,7 +24,7 @@ final class FileTest extends TestCase
         new File(__FILE__.'/templates/components/Button.html.twig', __FILE__.'Button.html.twig');
     }
 
-    public function testShouldFailIfPathNameIsNotRelative(): void
+    public function testShouldFailIfPathNameIsNotRelative()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('The path name "%s" must be relative.', __FILE__.'Button.html.twig'));
@@ -32,7 +32,7 @@ final class FileTest extends TestCase
         new File('templates/components/Button.html.twig', __FILE__.'Button.html.twig');
     }
 
-    public function testShouldFailIfPathNameIsNotASubpathOfPathToKit(): void
+    public function testShouldFailIfPathNameIsNotASubpathOfPathToKit()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('The relative path name "%s" must be a subpath of the relative path to the kit "%s".', 'foo/bar/Button.html.twig', 'templates/components/Button.html.twig'));
@@ -40,7 +40,7 @@ final class FileTest extends TestCase
         new File('templates/components/Button.html.twig', 'foo/bar/Button.html.twig');
     }
 
-    public function testCanInstantiateFile(): void
+    public function testCanInstantiateFile()
     {
         $file = new File('templates/components/Button.html.twig', 'Button.html.twig');
 
@@ -49,7 +49,7 @@ final class FileTest extends TestCase
         $this->assertSame('templates/components/Button.html.twig', (string) $file);
     }
 
-    public function testCanInstantiateFileWithSubComponent(): void
+    public function testCanInstantiateFileWithSubComponent()
     {
         $file = new File('templates/components/Table/Body.html.twig', 'Table/Body.html.twig');
 

@@ -44,7 +44,7 @@ final class NullRendererTest extends TestCase
     /**
      * @dataProvider provideTestRenderMap
      */
-    public function testRenderMap(string $expectedExceptionMessage, RendererInterface $renderer): void
+    public function testRenderMap(string $expectedExceptionMessage, RendererInterface $renderer)
     {
         self::expectException(LogicException::class);
         self::expectExceptionMessage($expectedExceptionMessage);

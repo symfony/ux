@@ -31,7 +31,7 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
     public const TODO_ITEM_DETERMINISTIC_PREFIX = 'live-1715058793-';
     public const TODO_ITEM_DETERMINISTIC_PREFIX_EMBEDDED = 'live-2285361477-';
 
-    public function testInitLiveComponent(): void
+    public function testInitLiveComponent()
     {
         $div = $this->browser()
             ->visit('/render-template/render_component_with_writable_props')
@@ -52,7 +52,7 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         $this->assertArrayHasKey('id', $props['@attributes']);
     }
 
-    public function testCanUseCustomAttributesVariableName(): void
+    public function testCanUseCustomAttributesVariableName()
     {
         $div = $this->browser()
             ->visit('/render-template/render_custom_attributes')
@@ -68,7 +68,7 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         $this->assertArrayHasKey('@checksum', $props);
     }
 
-    public function testItAddsIdAndFingerprintToChildComponent(): void
+    public function testItAddsIdAndFingerprintToChildComponent()
     {
         $templateName = 'components/todo_list.html.twig';
         $obscuredName = 'd9bcb8935cbb4282ac5d227fc82ae782';
@@ -100,7 +100,7 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         $this->assertSame('XSdvsiDR8VG0GFDQbOnj74XfSmfL6WrzMbSQcdIRhSs=', $lis->eq(1)->attr('data-live-fingerprint-value'));
     }
 
-    public function testItDoesNotOverrideDataLiveIdIfSpecified(): void
+    public function testItDoesNotOverrideDataLiveIdIfSpecified()
     {
         $templateName = 'components/todo_list.html.twig';
         $obscuredName = 'a643d58357b14c9bb077f0c00a742059';
@@ -146,7 +146,7 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         $this->assertEquals($expected, $queryMapping);
     }
 
-    public function testAbsoluteUrl(): void
+    public function testAbsoluteUrl()
     {
         $div = $this->browser()
             ->visit('/render-template/render_with_absolute_url')

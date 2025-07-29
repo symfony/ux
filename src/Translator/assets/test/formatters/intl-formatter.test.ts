@@ -60,7 +60,7 @@ describe('Intl Formatter', () => {
         expect(formatIntl('Hello {name}', { name: '<b>Fab</b>' }, 'en')).toEqual('Hello <b>Fab</b>');
     });
 
-    test('format with locale containg underscore', () => {
+    test('format with locale containing underscore', () => {
         expect(formatIntl('Hello {name}', { name: 'Fab' }, 'en_US')).toEqual('Hello Fab');
         expect(formatIntl('Bonjour {name}', { name: 'Fab' }, 'fr_FR')).toEqual('Bonjour Fab');
     });

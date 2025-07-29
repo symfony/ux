@@ -16,7 +16,7 @@ use Symfony\UX\Toolkit\Dependency\ComponentDependency;
 
 final class ComponentDependencyTest extends TestCase
 {
-    public function testShouldBeInstantiable(): void
+    public function testShouldBeInstantiable()
     {
         $dependency = new ComponentDependency('Table:Body');
 
@@ -24,7 +24,7 @@ final class ComponentDependencyTest extends TestCase
         $this->assertSame('Table:Body', (string) $dependency);
     }
 
-    public function testShouldFailIfComponentNameIsInvalid(): void
+    public function testShouldFailIfComponentNameIsInvalid()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid component name "foobar".');

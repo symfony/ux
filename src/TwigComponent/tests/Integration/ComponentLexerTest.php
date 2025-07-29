@@ -21,7 +21,7 @@ use Twig\Environment;
  */
 class ComponentLexerTest extends KernelTestCase
 {
-    public function testComponentSyntaxOpenTags(): void
+    public function testComponentSyntaxOpenTags()
     {
         $output = self::getContainer()->get(Environment::class)->render('tags/open_tag.html.twig');
 
@@ -29,14 +29,14 @@ class ComponentLexerTest extends KernelTestCase
         $this->assertStringContainsString('propB: hello', $output);
     }
 
-    public function testComponentSyntaxSelfCloseTags(): void
+    public function testComponentSyntaxSelfCloseTags()
     {
         $output = self::getContainer()->get(Environment::class)->render('tags/self_close_tag.html.twig');
         $this->assertStringContainsString('propA: 1', $output);
         $this->assertStringContainsString('propB: hello', $output);
     }
 
-    public function testComponentSyntaxCanRenderEmbeddedComponent(): void
+    public function testComponentSyntaxCanRenderEmbeddedComponent()
     {
         $output = self::getContainer()->get(Environment::class)->render('tags/embedded_component.html.twig');
 

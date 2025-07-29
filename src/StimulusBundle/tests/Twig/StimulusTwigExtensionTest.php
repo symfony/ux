@@ -32,7 +32,7 @@ final class StimulusTwigExtensionTest extends TestCase
     /**
      * @dataProvider provideRenderStimulusController
      */
-    public function testRenderStimulusController(string $controllerName, array $controllerValues, array $controllerClasses, array $controllerOutlets, string $expectedString, array $expectedArray): void
+    public function testRenderStimulusController(string $controllerName, array $controllerValues, array $controllerClasses, array $controllerOutlets, string $expectedString, array $expectedArray)
     {
         $extension = new StimulusTwigExtension(new StimulusHelper($this->twig));
         $dto = $extension->renderStimulusController($controllerName, $controllerValues, $controllerClasses, $controllerOutlets);
@@ -130,7 +130,7 @@ final class StimulusTwigExtensionTest extends TestCase
         ];
     }
 
-    public function testAppendStimulusController(): void
+    public function testAppendStimulusController()
     {
         $extension = new StimulusTwigExtension(new StimulusHelper($this->twig));
         $dto = $extension->renderStimulusController('my-controller', ['myValue' => 'scalar-value']);
@@ -143,7 +143,7 @@ final class StimulusTwigExtensionTest extends TestCase
     /**
      * @dataProvider provideRenderStimulusAction
      */
-    public function testRenderStimulusAction(string $controllerName, ?string $actionName, ?string $eventName, array $parameters, string $expectedString, array $expectedArray): void
+    public function testRenderStimulusAction(string $controllerName, ?string $actionName, ?string $eventName, array $parameters, string $expectedString, array $expectedArray)
     {
         $extension = new StimulusTwigExtension(new StimulusHelper($this->twig));
         $dto = $extension->renderStimulusAction($controllerName, $actionName, $eventName, $parameters);
@@ -208,7 +208,7 @@ final class StimulusTwigExtensionTest extends TestCase
         ];
     }
 
-    public function testAppendStimulusAction(): void
+    public function testAppendStimulusAction()
     {
         $extension = new StimulusTwigExtension(new StimulusHelper($this->twig));
         $dto = $extension->renderStimulusAction('my-controller', 'onClick', 'click');
@@ -246,7 +246,7 @@ final class StimulusTwigExtensionTest extends TestCase
         ];
     }
 
-    public function testAppendStimulusTarget(): void
+    public function testAppendStimulusTarget()
     {
         $extension = new StimulusTwigExtension(new StimulusHelper($this->twig));
         $dto = $extension->renderStimulusTarget('my-controller', 'myTarget');

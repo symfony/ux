@@ -64,7 +64,7 @@ final class IconTest extends TestCase
     /**
      * @dataProvider provideValidIds
      */
-    public function testIsValidIdWithValidIds(string $id): void
+    public function testIsValidIdWithValidIds(string $id)
     {
         $this->assertTrue(Icon::isValidId($id));
     }
@@ -72,7 +72,7 @@ final class IconTest extends TestCase
     /**
      * @dataProvider provideInvalidIds
      */
-    public function testIsValidIdWithInvalidIds(string $id): void
+    public function testIsValidIdWithInvalidIds(string $id)
     {
         $this->assertFalse(Icon::isValidId($id));
     }
@@ -80,7 +80,7 @@ final class IconTest extends TestCase
     /**
      * @dataProvider provideValidNames
      */
-    public function testIsValidNameWithValidNames(string $name): void
+    public function testIsValidNameWithValidNames(string $name)
     {
         $this->assertTrue(Icon::isValidName($name));
     }
@@ -88,7 +88,7 @@ final class IconTest extends TestCase
     /**
      * @dataProvider provideInvalidNames
      */
-    public function testIsValidNameWithInvalidNames(string $name): void
+    public function testIsValidNameWithInvalidNames(string $name)
     {
         $this->assertFalse(Icon::isValidName($name));
     }
@@ -108,7 +108,7 @@ final class IconTest extends TestCase
     /**
      * @dataProvider provideRenderAttributesTestCases
      */
-    public function testRenderAttributes(array $attributes, string $expected): void
+    public function testRenderAttributes(array $attributes, string $expected)
     {
         $icon = new Icon('', $attributes);
         $this->assertStringStartsWith($expected, $icon->toHtml());
@@ -117,7 +117,7 @@ final class IconTest extends TestCase
     /**
      * @dataProvider provideWithAttributesTestCases
      */
-    public function testWithAttributes(array $attributes, array $withAttributes, array $expected): void
+    public function testWithAttributes(array $attributes, array $withAttributes, array $expected)
     {
         $icon = new Icon('foo', $attributes);
         $icon = $icon->withAttributes($withAttributes);
@@ -284,7 +284,7 @@ final class IconTest extends TestCase
         ];
     }
 
-    public function testSerialize(): void
+    public function testSerialize()
     {
         $icon = new Icon('foo', ['bar' => 'baz']);
 

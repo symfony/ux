@@ -19,7 +19,7 @@ use Twig\Runtime\EscaperRuntime;
 
 final class ComponentStackTest extends TestCase
 {
-    public function testPushAndPopAndFetchingComponents(): void
+    public function testPushAndPopAndFetchingComponents()
     {
         $stack = new ComponentStack();
         $component1 = new MountedComponent('component1', new \stdClass(), new ComponentAttributes([], new EscaperRuntime()));

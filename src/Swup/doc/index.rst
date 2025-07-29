@@ -174,7 +174,7 @@ Stimulus controller:
         }
 
         _onConnect(event) {
-            // Swup has just been intialized and you can access details from the event
+            // Swup has just been initialized and you can access details from the event
             console.log(event.detail.swup); // Swup instance
             console.log(event.detail.options); // Options used to initialize Swup
         }

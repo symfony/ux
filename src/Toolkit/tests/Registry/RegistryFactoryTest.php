@@ -34,7 +34,7 @@ final class RegistryFactoryTest extends KernelTestCase
     /**
      * @dataProvider provideRegistryNames
      */
-    public function testCanCreateRegistry(string $registryName, string $expectedRegistryClass): void
+    public function testCanCreateRegistry(string $registryName, string $expectedRegistryClass)
     {
         $registryFactory = self::getContainer()->get('ux_toolkit.registry.registry_factory');
 
@@ -56,7 +56,7 @@ final class RegistryFactoryTest extends KernelTestCase
     /**
      * @dataProvider provideInvalidRegistryNames
      */
-    public function testShouldFailIfRegistryIsNotFound(string $registryName): void
+    public function testShouldFailIfRegistryIsNotFound(string $registryName)
     {
         $registryFactory = self::getContainer()->get('ux_toolkit.registry.registry_factory');
 

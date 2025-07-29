@@ -20,7 +20,7 @@ final class TwigPreLexerTest extends TestCase
     /**
      * @dataProvider getLexTests
      */
-    public function testPreLex(string $input, string $expectedOutput): void
+    public function testPreLex(string $input, string $expectedOutput)
     {
         $lexer = new TwigPreLexer();
         $this->assertSame($expectedOutput, $lexer->preLexComponents($input));
@@ -29,7 +29,7 @@ final class TwigPreLexerTest extends TestCase
     /**
      * @dataProvider getInvalidSyntaxTests
      */
-    public function testPreLexThrowsExceptionOnInvalidSyntax(string $input, string $expectedMessage): void
+    public function testPreLexThrowsExceptionOnInvalidSyntax(string $input, string $expectedMessage)
     {
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage($expectedMessage);

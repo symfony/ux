@@ -24,7 +24,7 @@ use Symfony\UX\Icons\Iconify;
  */
 class IconifyTest extends TestCase
 {
-    public function testFetchIcon(): void
+    public function testFetchIcon()
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -50,7 +50,7 @@ class IconifyTest extends TestCase
         $this->assertEquals($icon->getAttributes(), ['viewBox' => '0 0 24 24', 'xmlns' => 'https://www.w3.org/2000/svg']);
     }
 
-    public function testFetchIconByAlias(): void
+    public function testFetchIconByAlias()
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -81,7 +81,7 @@ class IconifyTest extends TestCase
         $this->assertEquals($icon->getAttributes(), ['viewBox' => '0 0 24 24', 'xmlns' => 'https://www.w3.org/2000/svg']);
     }
 
-    public function testFetchIconThrowsWhenIconSetDoesNotExists(): void
+    public function testFetchIconThrowsWhenIconSetDoesNotExists()
     {
         $iconify = new Iconify(new NullAdapter(), 'https://example.com', new MockHttpClient(new JsonMockResponse([])));
 
@@ -91,7 +91,7 @@ class IconifyTest extends TestCase
         $iconify->fetchIcon('bi', 'heart');
     }
 
-    public function testFetchIconUsesIconsetViewBoxHeight(): void
+    public function testFetchIconUsesIconsetViewBoxHeight()
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -119,7 +119,7 @@ class IconifyTest extends TestCase
         $this->assertEquals('0 0 17 17', $icon->getAttributes()['viewBox']);
     }
 
-    public function testFetchIconThrowsWhenViewBoxCannotBeComputed(): void
+    public function testFetchIconThrowsWhenViewBoxCannotBeComputed()
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -144,7 +144,7 @@ class IconifyTest extends TestCase
         $iconify->fetchIcon('bi', 'heart');
     }
 
-    public function testFetchIconThrowsWhenStatusCodeNot200(): void
+    public function testFetchIconThrowsWhenStatusCodeNot200()
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -163,7 +163,7 @@ class IconifyTest extends TestCase
         $iconify->fetchIcon('bi', 'heart');
     }
 
-    public function testFetchIcons(): void
+    public function testFetchIcons()
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -194,7 +194,7 @@ class IconifyTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Icon::class, $icons);
     }
 
-    public function testFetchIconsByAliases(): void
+    public function testFetchIconsByAliases()
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -234,7 +234,7 @@ class IconifyTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Icon::class, $icons);
     }
 
-    public function testFetchIconsThrowsWithInvalidIconNames(): void
+    public function testFetchIconsThrowsWithInvalidIconNames()
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -251,7 +251,7 @@ class IconifyTest extends TestCase
         $iconify->fetchIcons('bi', ['à', 'foo']);
     }
 
-    public function testFetchIconsThrowsWithTooManyIcons(): void
+    public function testFetchIconsThrowsWithTooManyIcons()
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -268,7 +268,7 @@ class IconifyTest extends TestCase
         $iconify->fetchIcons('bi', array_fill(0, 50, '1234567890'));
     }
 
-    public function testGetMetadata(): void
+    public function testGetMetadata()
     {
         $responseFile = __DIR__.'/../Fixtures/Iconify/collections.json';
         $client = $this->createHttpClient(json_decode(file_get_contents($responseFile)));
@@ -281,7 +281,7 @@ class IconifyTest extends TestCase
     /**
      * @dataProvider provideChunkCases
      */
-    public function testChunk(int $maxQueryLength, string $prefix, array $names, array $chunks): void
+    public function testChunk(int $maxQueryLength, string $prefix, array $names, array $chunks)
     {
         $iconify = new Iconify(
             new NullAdapter(),
@@ -331,7 +331,7 @@ class IconifyTest extends TestCase
         ];
     }
 
-    public function testChunkThrowWithIconPrefixTooLong(): void
+    public function testChunkThrowWithIconPrefixTooLong()
     {
         $iconify = new Iconify(new NullAdapter(), 'https://example.com', new MockHttpClient([]));
 
@@ -344,7 +344,7 @@ class IconifyTest extends TestCase
         $result = iterator_to_array($iconify->chunk($prefix, [$name]));
     }
 
-    public function testChunkThrowWithIconNameTooLong(): void
+    public function testChunkThrowWithIconNameTooLong()
     {
         $iconify = new Iconify(new NullAdapter(), 'https://example.com', new MockHttpClient([]));
 

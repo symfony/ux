@@ -127,7 +127,7 @@ class UrlFactoryTest extends TestCase
         $this->assertEquals($expectedUrl, $newUrl);
     }
 
-    public function testResourceNotFoundException(): void
+    public function testResourceNotFoundException()
     {
         $previousUrl = '/foo/bar';
         $router = $this->createMock(RouterInterface::class);
@@ -140,7 +140,7 @@ class UrlFactoryTest extends TestCase
         $this->assertNull($factory->createFromPreviousAndProps($previousUrl, [], []));
     }
 
-    public function testMissingMandatoryParametersException(): void
+    public function testMissingMandatoryParametersException()
     {
         $previousUrl = '/foo/bar';
         $matchedRouteName = 'foo_bar';

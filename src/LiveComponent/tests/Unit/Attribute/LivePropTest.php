@@ -19,26 +19,26 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
  */
 final class LivePropTest extends TestCase
 {
-    public function testHydrateWithMethod(): void
+    public function testHydrateWithMethod()
     {
         $this->assertSame('someMethod', (new LiveProp(false, 'someMethod'))->hydrateMethod());
         $this->assertSame('someMethod', (new LiveProp(false, 'someMethod()'))->hydrateMethod());
     }
 
-    public function testDehydrateWithMethod(): void
+    public function testDehydrateWithMethod()
     {
         $this->assertSame('someMethod', (new LiveProp(false, null, 'someMethod'))->dehydrateMethod());
         $this->assertSame('someMethod', (new LiveProp(false, null, 'someMethod()'))->dehydrateMethod());
     }
 
-    public function testCanCallCalculateFieldNameAsString(): void
+    public function testCanCallCalculateFieldNameAsString()
     {
         $component = new class {};
 
         $this->assertSame('field', (new LiveProp(false, null, null, false, [], 'field'))->calculateFieldName($component, 'fallback'));
     }
 
-    public function testCanCallCalculateFieldNameAsMethod(): void
+    public function testCanCallCalculateFieldNameAsMethod()
     {
         $component = new class {
             public function fieldName(): string
@@ -50,7 +50,7 @@ final class LivePropTest extends TestCase
         $this->assertSame('foo', (new LiveProp(false, null, null, false, [], 'fieldName()'))->calculateFieldName($component, 'fallback'));
     }
 
-    public function testCanCallCalculateFieldNameWhenNotSet(): void
+    public function testCanCallCalculateFieldNameWhenNotSet()
     {
         $component = new class {};
 
@@ -73,7 +73,7 @@ final class LivePropTest extends TestCase
     }
 
     // test updateFromParent property being set and accessed with acceptUpdatesFromParent()
-    public function testUpdateFromParent(): void
+    public function testUpdateFromParent()
     {
         $liveProp = new LiveProp();
         $this->assertFalse($liveProp->acceptUpdatesFromParent());

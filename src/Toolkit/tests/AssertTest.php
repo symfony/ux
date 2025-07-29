@@ -19,7 +19,7 @@ class AssertTest extends TestCase
     /**
      * @dataProvider provideValidKitNames
      */
-    public function testValidKitName(string $name): void
+    public function testValidKitName(string $name)
     {
         $this->expectNotToPerformAssertions();
 
@@ -53,7 +53,7 @@ class AssertTest extends TestCase
     /**
      * @dataProvider provideInvalidKitNames
      */
-    public function testInvalidKitName(string $name): void
+    public function testInvalidKitName(string $name)
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Invalid kit name "%s".', $name));
@@ -85,7 +85,7 @@ class AssertTest extends TestCase
     /**
      * @dataProvider provideValidComponentNames
      */
-    public function testValidComponentName(string $name): void
+    public function testValidComponentName(string $name)
     {
         $this->expectNotToPerformAssertions();
 
@@ -109,7 +109,7 @@ class AssertTest extends TestCase
     /**
      * @dataProvider provideInvalidComponentNames
      */
-    public function testInvalidComponentName(string $name): void
+    public function testInvalidComponentName(string $name)
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Invalid component name "%s".', $name));
@@ -146,7 +146,7 @@ class AssertTest extends TestCase
     /**
      * @dataProvider provideValidPhpPackageNames
      */
-    public function testValidPhpPackageName(string $name): void
+    public function testValidPhpPackageName(string $name)
     {
         $this->expectNotToPerformAssertions();
 
@@ -162,7 +162,7 @@ class AssertTest extends TestCase
     /**
      * @dataProvider provideInvalidPhpPackageNames
      */
-    public function testInvalidPhpPackageName(string $name): void
+    public function testInvalidPhpPackageName(string $name)
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Invalid PHP package name "%s".', $name));
@@ -181,7 +181,7 @@ class AssertTest extends TestCase
     /**
      * @dataProvider provideValidStimulusControllerNames
      */
-    public function testValidStimulusControllerName(string $name): void
+    public function testValidStimulusControllerName(string $name)
     {
         $this->expectNotToPerformAssertions();
 
@@ -199,7 +199,7 @@ class AssertTest extends TestCase
     /**
      * @dataProvider provideInvalidStimulusControllerNames
      */
-    public function testInvalidStimulusControllerName(string $name): void
+    public function testInvalidStimulusControllerName(string $name)
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Invalid Stimulus controller name "%s".', $name));

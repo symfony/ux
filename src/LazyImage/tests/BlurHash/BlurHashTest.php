@@ -44,7 +44,7 @@ class BlurHashTest extends TestCase
         );
     }
 
-    public function testWithCustomGetImageContent(): void
+    public function testWithCustomGetImageContent()
     {
         $kernel = new class('test', true) extends TwigAppKernel {
             public function registerContainerConfiguration(LoaderInterface $loader): void

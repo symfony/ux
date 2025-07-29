@@ -36,7 +36,7 @@ class ComponentWithFormTest extends KernelTestCase
     use LiveComponentTestHelper;
     use ResetDatabase;
 
-    public function testFormValuesRebuildAfterFormChanges(): void
+    public function testFormValuesRebuildAfterFormChanges()
     {
         $browser = $this->browser();
         $crawler = $browser
@@ -117,7 +117,7 @@ class ComponentWithFormTest extends KernelTestCase
         ;
     }
 
-    public function testFormRemembersValidationFromInitialForm(): void
+    public function testFormRemembersValidationFromInitialForm()
     {
         /** @var FormFactoryInterface $formFactory */
         $formFactory = self::getContainer()->get('form.factory');
@@ -160,7 +160,7 @@ class ComponentWithFormTest extends KernelTestCase
         ;
     }
 
-    public function testHandleCheckboxChanges(): void
+    public function testHandleCheckboxChanges()
     {
         $category = CategoryFixtureEntityFactory::createMany(5);
         $id = $category[0]->getId();
@@ -293,7 +293,7 @@ class ComponentWithFormTest extends KernelTestCase
         ;
     }
 
-    public function testLiveCollectionTypeAddButtonsByDefault(): void
+    public function testLiveCollectionTypeAddButtonsByDefault()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_live_collection_type'))->getProps();
 
@@ -310,7 +310,7 @@ class ComponentWithFormTest extends KernelTestCase
         ;
     }
 
-    public function testResetForm(): void
+    public function testResetForm()
     {
         CategoryFixtureEntityFactory::createMany(5);
         $mounted = $this->mountComponent('form_with_many_different_fields_type');
@@ -363,7 +363,7 @@ class ComponentWithFormTest extends KernelTestCase
         ;
     }
 
-    public function testLiveCollectionTypeFieldsAddedAndRemoved(): void
+    public function testLiveCollectionTypeFieldsAddedAndRemoved()
     {
         $dehydratedProps = $this->dehydrateComponent($this->mountComponent('form_with_live_collection_type'))->getProps();
         $updatedProps = [];
@@ -439,7 +439,7 @@ class ComponentWithFormTest extends KernelTestCase
         ;
     }
 
-    public function testDataModelAttributeAutomaticallyAdded(): void
+    public function testDataModelAttributeAutomaticallyAdded()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_collection_type'))->getProps();
 
@@ -455,7 +455,7 @@ class ComponentWithFormTest extends KernelTestCase
         ;
     }
 
-    public function testFormWithLivePropContainingAnEntityImplementingAnInterface(): void
+    public function testFormWithLivePropContainingAnEntityImplementingAnInterface()
     {
         $user = persist(User::class, ['username' => 'Fabien']);
         self::assertInstanceOf(User::class, $user);

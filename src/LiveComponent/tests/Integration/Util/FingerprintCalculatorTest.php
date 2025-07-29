@@ -85,7 +85,7 @@ final class FingerprintCalculatorTest extends KernelTestCase
         );
     }
 
-    public function testFingerprintOnlyUsesPropsThatAcceptUpdates(): void
+    public function testFingerprintOnlyUsesPropsThatAcceptUpdates()
     {
         $fingerprintCalculator = $this->getFingerprintCalculator();
 

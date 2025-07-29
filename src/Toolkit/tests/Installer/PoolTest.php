@@ -21,7 +21,7 @@ use Symfony\UX\Toolkit\Installer\Pool;
 
 final class PoolTest extends TestCase
 {
-    public function testCanAddFiles(): void
+    public function testCanAddFiles()
     {
         $pool = new Pool();
 
@@ -33,7 +33,7 @@ final class PoolTest extends TestCase
         $this->assertCount(2, $pool->getFiles());
     }
 
-    public function testCantAddSameFileTwice(): void
+    public function testCantAddSameFileTwice()
     {
         $pool = new Pool();
 
@@ -43,7 +43,7 @@ final class PoolTest extends TestCase
         $this->assertCount(1, $pool->getFiles());
     }
 
-    public function testCanAddPhpPackageDependencies(): void
+    public function testCanAddPhpPackageDependencies()
     {
         $pool = new Pool();
 
@@ -52,7 +52,7 @@ final class PoolTest extends TestCase
         $this->assertCount(1, $pool->getPhpPackageDependencies());
     }
 
-    public function testCantAddSamePhpPackageDependencyTwice(): void
+    public function testCantAddSamePhpPackageDependencyTwice()
     {
         $pool = new Pool();
 
@@ -62,7 +62,7 @@ final class PoolTest extends TestCase
         $this->assertCount(1, $pool->getPhpPackageDependencies());
     }
 
-    public function testCanAddPhpPackageDependencyWithHigherVersion(): void
+    public function testCanAddPhpPackageDependencyWithHigherVersion()
     {
         $pool = new Pool();
 

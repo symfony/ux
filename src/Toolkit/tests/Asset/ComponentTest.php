@@ -20,7 +20,7 @@ use Symfony\UX\Toolkit\File\File;
 
 final class ComponentTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
+    public function testCanBeInstantiated()
     {
         $component = new Component('Button', [
             new File('templates/components/Button/Button.html.twig', 'Button.html.twig'),
@@ -33,7 +33,7 @@ final class ComponentTest extends TestCase
         $this->assertCount(0, $component->getDependencies());
     }
 
-    public function testShouldFailIfComponentNameIsInvalid(): void
+    public function testShouldFailIfComponentNameIsInvalid()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid component name "foobar".');
@@ -43,7 +43,7 @@ final class ComponentTest extends TestCase
         ]);
     }
 
-    public function testShouldFailIfComponentHasNoFiles(): void
+    public function testShouldFailIfComponentHasNoFiles()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The component "Button" must have at least one file.');
@@ -51,7 +51,7 @@ final class ComponentTest extends TestCase
         new Component('Button', []);
     }
 
-    public function testCanAddAndGetDependencies(): void
+    public function testCanAddAndGetDependencies()
     {
         $component = new Component('Button', [
             new File('templates/components/Button/Button.html.twig', 'Button.html.twig'),
@@ -65,7 +65,7 @@ final class ComponentTest extends TestCase
         self::assertEquals([$dependency1, $dependency2, $dependency3], $component->getDependencies());
     }
 
-    public function testShouldNotAddDuplicateComponentDependencies(): void
+    public function testShouldNotAddDuplicateComponentDependencies()
     {
         $component = new Component('Button', [
             new File('templates/components/Button/Button.html.twig', 'Button.html.twig'),
@@ -80,7 +80,7 @@ final class ComponentTest extends TestCase
         self::assertEquals([$dependency1, $dependency2, $dependency4], $component->getDependencies());
     }
 
-    public function testShouldReplacePhpPackageDependencyIfVersionIsHigher(): void
+    public function testShouldReplacePhpPackageDependencyIfVersionIsHigher()
     {
         $component = new Component('Button', [
             new File('templates/components/Button/Button.html.twig', 'Button.html.twig'),
@@ -99,7 +99,7 @@ final class ComponentTest extends TestCase
         self::assertEquals([$dependency1, $dependency2, $dependency4], $component->getDependencies());
     }
 
-    public function testShouldNotReplacePhpPackageDependencyIfVersionIsLower(): void
+    public function testShouldNotReplacePhpPackageDependencyIfVersionIsLower()
     {
         $component = new Component('Button', [
             new File('templates/components/Button/Button.html.twig', 'Button.html.twig'),

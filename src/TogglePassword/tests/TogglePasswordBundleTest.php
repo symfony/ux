@@ -21,14 +21,14 @@ use Symfony\UX\TogglePassword\Tests\Kernel\TwigAppKernel;
  */
 class TogglePasswordBundleTest extends TestCase
 {
-    public function testBootKernel(): void
+    public function testBootKernel()
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();
         $this->assertArrayHasKey('TogglePasswordBundle', $kernel->getBundles());
     }
 
-    public function testFormThemeMerging(): void
+    public function testFormThemeMerging()
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();

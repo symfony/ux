@@ -34,7 +34,7 @@ class MapTest extends TestCase
         DummyOptions::unregisterFromNormalizer();
     }
 
-    public function testCenterValidation(): void
+    public function testCenterValidation()
     {
         self::expectException(InvalidArgumentException::class);
         self::expectExceptionMessage('The map "center" must be explicitly set when not enabling "fitBoundsToMarkers" feature.');
@@ -43,7 +43,7 @@ class MapTest extends TestCase
         $map->toArray();
     }
 
-    public function testZoomValidation(): void
+    public function testZoomValidation()
     {
         self::expectException(InvalidArgumentException::class);
         self::expectExceptionMessage('The map "zoom" must be explicitly set when not enabling "fitBoundsToMarkers" feature.');
@@ -54,7 +54,7 @@ class MapTest extends TestCase
         $map->toArray();
     }
 
-    public function testZoomAndCenterCanBeOmittedIfFitBoundsToMarkers(): void
+    public function testZoomAndCenterCanBeOmittedIfFitBoundsToMarkers()
     {
         $map = new Map(
             fitBoundsToMarkers: true
@@ -78,7 +78,7 @@ class MapTest extends TestCase
         ], $array);
     }
 
-    public function testWithMinimumConfiguration(): void
+    public function testWithMinimumConfiguration()
     {
         $map = new Map();
         $map
@@ -103,7 +103,7 @@ class MapTest extends TestCase
         ], $array);
     }
 
-    public function testWithMaximumConfiguration(): void
+    public function testWithMaximumConfiguration()
     {
         $map = new Map();
         $map
@@ -432,7 +432,7 @@ class MapTest extends TestCase
      *           [null, 5, 2, "The \"zoom\" must be less than or equal to \"maxZoom\"."]
      *           [2.1, null, 2.0, "The \"minZoom\" must be less than or equal to \"maxZoom\"."]
      */
-    public function testZoomsValidation(?float $minZoom, ?float $zoom, ?float $maxZoom, string $expectedExceptionMessage): void
+    public function testZoomsValidation(?float $minZoom, ?float $zoom, ?float $maxZoom, string $expectedExceptionMessage)
     {
         self::expectException(InvalidArgumentException::class);
         self::expectExceptionMessage($expectedExceptionMessage);

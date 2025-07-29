@@ -19,7 +19,7 @@ use Symfony\UX\Map\Point;
 
 class MarkerTest extends TestCase
 {
-    public function testToArray(): void
+    public function testToArray()
     {
         $marker = new Marker(
             position: new Point(48.8566, 2.3522),

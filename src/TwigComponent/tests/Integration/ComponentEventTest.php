@@ -25,7 +25,7 @@ final class ComponentEventTest extends KernelTestCase
     /**
      * @dataProvider provideFooBarSyntaxes
      */
-    public function testTemplateIsUpdatedByEventListener(string $syntax): void
+    public function testTemplateIsUpdatedByEventListener(string $syntax)
     {
         /** @var Environment $environment */
         $environment = self::getContainer()->get(Environment::class);

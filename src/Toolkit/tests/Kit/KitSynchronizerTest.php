@@ -33,7 +33,7 @@ final class KitSynchronizerTest extends KernelTestCase
         $this->filesystem = self::getContainer()->get('filesystem');
     }
 
-    public function testCanResolveDependencies(): void
+    public function testCanResolveDependencies()
     {
         $kitSynchronizer = new KitSynchronizer($this->filesystem);
         $kit = new Kit(Path::join(__DIR__, '../../kits/shadcn'), 'shadcn');
@@ -58,7 +58,7 @@ final class KitSynchronizerTest extends KernelTestCase
         ], $kit->getComponent('Table')->getDependencies());
     }
 
-    public function testCanResolveStimulusDependencies(): void
+    public function testCanResolveStimulusDependencies()
     {
         $kitSynchronizer = new KitSynchronizer($this->filesystem);
         $kit = new Kit(Path::join(__DIR__, '../Fixtures/kits/with-stimulus-controllers'), 'kit');

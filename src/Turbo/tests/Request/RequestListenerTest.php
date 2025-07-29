@@ -22,7 +22,7 @@ use Symfony\UX\Turbo\TurboBundle;
  */
 class RequestListenerTest extends WebTestCase
 {
-    public function testAddsTurboRequestFormat(): void
+    public function testAddsTurboRequestFormat()
     {
         $client = static::createClient(server: [
             'HTTP_ACCEPT' => 'text/vnd.turbo-stream.html, text/html, application/xhtml+xml',

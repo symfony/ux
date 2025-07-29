@@ -24,7 +24,7 @@ final class ComponentExtensionTest extends KernelTestCase
 {
     use ExpectDeprecationTrait;
 
-    public function testCanRenderComponent(): void
+    public function testCanRenderComponent()
     {
         $output = $this->renderComponent('component_a', [
             'propA' => 'prop a value',
@@ -36,7 +36,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('service: service a value', $output);
     }
 
-    public function testCanRenderTheSameComponentMultipleTimes(): void
+    public function testCanRenderTheSameComponentMultipleTimes()
     {
         $output = self::getContainer()->get(Environment::class)->render('multi_render.html.twig');
 
@@ -49,7 +49,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('service: service a value', $output);
     }
 
-    public function testCanRenderComponentWithMoreAdvancedTwigExpressions(): void
+    public function testCanRenderComponentWithMoreAdvancedTwigExpressions()
     {
         $output = self::getContainer()->get(Environment::class)->render('flexible_component_attributes.html.twig');
 
@@ -64,28 +64,28 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('service: service a value', $output);
     }
 
-    public function testCanNotRenderComponentWithInvalidExpressions(): void
+    public function testCanNotRenderComponentWithInvalidExpressions()
     {
         $this->expectException(\Throwable::class);
 
         self::getContainer()->get(Environment::class)->render('invalid_flexible_component.html.twig');
     }
 
-    public function testCanCustomizeTemplateWithAttribute(): void
+    public function testCanCustomizeTemplateWithAttribute()
     {
         $output = $this->renderComponent('component_b', ['value' => 'b value 1']);
 
         $this->assertStringContainsString('Custom template 1', $output);
     }
 
-    public function testCanCustomizeTemplateWithServiceTag(): void
+    public function testCanCustomizeTemplateWithServiceTag()
     {
         $output = $this->renderComponent('component_d', ['value' => 'b value 1']);
 
         $this->assertStringContainsString('Custom template 2', $output);
     }
 
-    public function testCanRenderComponentWithAttributes(): void
+    public function testCanRenderComponentWithAttributes()
     {
         $output = $this->renderComponent('with_attributes', [
             'prop' => 'prop value 1',
@@ -109,14 +109,14 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('<button class="foo baz" type="submit" style="color:red;">', $output);
     }
 
-    public function testCanSetCustomAttributesVariable(): void
+    public function testCanSetCustomAttributesVariable()
     {
         $output = $this->renderComponent('custom_attributes', ['class' => 'from-custom']);
 
         $this->assertStringContainsString('<div class="from-custom"></div>', $output);
     }
 
-    public function testRenderComponentWithExposedVariables(): void
+    public function testRenderComponentWithExposedVariables()
     {
         $output = $this->renderComponent('with_exposed_variables');
 
@@ -128,7 +128,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('customMethod: customMethod value', $output);
     }
 
-    public function testCanUseComputedMethods(): void
+    public function testCanUseComputedMethods()
     {
         $output = $this->renderComponent('computed_component');
 
@@ -141,14 +141,14 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('propComputed: value', $output);
     }
 
-    public function testCanDisableExposingPublicProps(): void
+    public function testCanDisableExposingPublicProps()
     {
         $output = $this->renderComponent('no_public_props');
 
         $this->assertStringContainsString('NoPublicProp1: default', $output);
     }
 
-    public function testCanRenderEmbeddedComponent(): void
+    public function testCanRenderEmbeddedComponent()
     {
         $output = self::getContainer()->get(Environment::class)->render('embedded_component.html.twig');
 
@@ -157,14 +157,14 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('custom td (1)', $output);
     }
 
-    public function testComponentWithNamespace(): void
+    public function testComponentWithNamespace()
     {
         $output = $this->renderComponent('foo:bar:baz');
 
         $this->assertStringContainsString('Content...', $output);
     }
 
-    public function testRenderAnonymousComponent(): void
+    public function testRenderAnonymousComponent()
     {
         $output = self::getContainer()->get(Environment::class)->render('anonymous_component.html.twig');
 
@@ -172,7 +172,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('class="primary"', $output);
     }
 
-    public function testRenderAnonymousComponentOverwriteProps(): void
+    public function testRenderAnonymousComponentOverwriteProps()
     {
         $output = self::getContainer()->get(Environment::class)->render('anonymous_component_overwrite_props.html.twig');
 
@@ -180,7 +180,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('class="secondary"', $output);
     }
 
-    public function testRenderAnonymousComponentInNestedDirectory(): void
+    public function testRenderAnonymousComponentInNestedDirectory()
     {
         $output = self::getContainer()->get(Environment::class)->render('anonymous_component_nested_directory.html.twig');
 
@@ -188,7 +188,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('class="primary"', $output);
     }
 
-    public function testRenderAnonymousComponentWithNonScalarProps(): void
+    public function testRenderAnonymousComponentWithNonScalarProps()
     {
         $user = new User('Fabien', 'test@test.com');
 
@@ -200,21 +200,21 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('class variable defined? no', $output);
     }
 
-    public function testComponentPropsOverwriteContextValue(): void
+    public function testComponentPropsOverwriteContextValue()
     {
         $output = self::getContainer()->get(Environment::class)->render('anonymous_component_with_variable_already_in_context.html.twig');
 
         $this->assertStringContainsString('<p>foo</p>', $output);
     }
 
-    public function testComponentPropsOverwriteContextValueWithInputProp(): void
+    public function testComponentPropsOverwriteContextValueWithInputProp()
     {
         $output = self::getContainer()->get(Environment::class)->render('anonymous_component_with_input_prop_with_same_name_in_context.html.twig');
 
         $this->assertStringContainsString('<p>bar</p>', $output);
     }
 
-    public function testComponentPropsWithTrailingComma(): void
+    public function testComponentPropsWithTrailingComma()
     {
         $output = self::getContainer()->get(Environment::class)->render('anonymous_component_props_trailing_comma.html.twig');
 
@@ -225,7 +225,7 @@ final class ComponentExtensionTest extends KernelTestCase
     /**
      * @dataProvider renderingAttributesManuallyProvider
      */
-    public function testRenderingAttributesManually(array $attributes, string $expected): void
+    public function testRenderingAttributesManually(array $attributes, string $expected)
     {
         $actual = trim($this->renderComponent('RenderAttributes', $attributes));
 
@@ -270,7 +270,7 @@ final class ComponentExtensionTest extends KernelTestCase
     /**
      * @group legacy
      */
-    public function testComponentWithClassMerge(): void
+    public function testComponentWithClassMerge()
     {
         $this->expectDeprecation('Since symfony/ux-twig-component 2.20: Twig Function "cva" is deprecated; use "html_cva" from the "twig/html-extra" package (available since version 3.12) instead.');
 
@@ -279,7 +279,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('class="alert alert-red alert-lg font-semibold rounded-md dark:bg-gray-600 flex p-4"', $output);
     }
 
-    public function testRenderingComponentWithNestedAttributes(): void
+    public function testRenderingComponentWithNestedAttributes()
     {
         $output = $this->renderComponent('NestedAttributes');
 
@@ -321,7 +321,7 @@ final class ComponentExtensionTest extends KernelTestCase
     /**
      * @dataProvider providePrefixedAttributesCases
      */
-    public function testRenderPrefixedAttributes(string $attributes, bool $expectContains): void
+    public function testRenderPrefixedAttributes(string $attributes, bool $expectContains)
     {
         /** @var Environment $twig */
         $twig = self::getContainer()->get(Environment::class);
@@ -370,7 +370,7 @@ final class ComponentExtensionTest extends KernelTestCase
         yield ['z-bind:id', false]; // Nested
     }
 
-    public function testRenderingHtmlSyntaxComponentWithNestedAttributes(): void
+    public function testRenderingHtmlSyntaxComponentWithNestedAttributes()
     {
         $output = self::getContainer()
             ->get(Environment::class)
@@ -413,7 +413,7 @@ final class ComponentExtensionTest extends KernelTestCase
         );
     }
 
-    public function testComponentWithPropsFromTemplateAndClass(): void
+    public function testComponentWithPropsFromTemplateAndClass()
     {
         $output = self::getContainer()->get(Environment::class)->render('component_with_props_from_template_and_class.html.twig');
 
@@ -422,7 +422,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('Congrats !', $output);
     }
 
-    public function testComponentWithConflictBetweenPropsFromTemplateAndClass(): void
+    public function testComponentWithConflictBetweenPropsFromTemplateAndClass()
     {
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('Cannot define prop "name" in template "components/Conflict.html.twig". Property already defined in component class "Symfony\UX\TwigComponent\Tests\Fixtures\Component\Conflict"');
@@ -430,7 +430,7 @@ final class ComponentExtensionTest extends KernelTestCase
         self::getContainer()->get(Environment::class)->render('component_with_conflict_between_props_from_template_and_class.html.twig');
     }
 
-    public function testComponentWithEmptyProps(): void
+    public function testComponentWithEmptyProps()
     {
         $output = self::getContainer()->get(Environment::class)->render('anonymous_component_with_empty_props.html.twig');
 
@@ -440,7 +440,7 @@ final class ComponentExtensionTest extends KernelTestCase
     /**
      * @dataProvider provideUnsafeAttributes
      */
-    public function testHtmlSyntaxEscapesAttributeValues(string $input): void
+    public function testHtmlSyntaxEscapesAttributeValues(string $input)
     {
         $output = self::getContainer()->get(Environment::class)->render(
             'anonymous_component_with_html_syntax.html.twig',
@@ -454,7 +454,7 @@ final class ComponentExtensionTest extends KernelTestCase
     /**
      * @dataProvider provideUnsafeAttributes
      */
-    public function testDynamicSyntaxEscapesAttributeValues(string $input): void
+    public function testDynamicSyntaxEscapesAttributeValues(string $input)
     {
         $output = self::getContainer()->get(Environment::class)->render(
             'anonymous_component_with_dynamic_syntax.html.twig',
@@ -478,7 +478,7 @@ final class ComponentExtensionTest extends KernelTestCase
     /**
      * @group legacy
      */
-    public function testAnonymousComponentWithPropsOverwriteParentsProps(): void
+    public function testAnonymousComponentWithPropsOverwriteParentsProps()
     {
         $this->expectDeprecation('Since symfony/ux-twig-component 2.20: Twig Function "cva" is deprecated; use "html_cva" from the "twig/html-extra" package (available since version 3.12) instead.');
 

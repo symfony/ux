@@ -16,7 +16,7 @@ use Symfony\UX\Toolkit\File\Doc;
 
 final class DocTest extends TestCase
 {
-    public function testCanBeInstantiated(): void
+    public function testCanBeInstantiated()
     {
         $doc = new Doc(
             '# Basic Button

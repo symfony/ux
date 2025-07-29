@@ -39,7 +39,7 @@ final class ImportIconCommandTest extends KernelTestCase
         }
     }
 
-    public function testCanImportIcon(): void
+    public function testCanImportIcon()
     {
         $this->assertFileDoesNotExist($expectedFile = self::ICON_DIR.'/uiw/dashboard.svg');
 
@@ -52,7 +52,7 @@ final class ImportIconCommandTest extends KernelTestCase
         $this->assertFileExists($expectedFile);
     }
 
-    public function testImportInvalidIconName(): void
+    public function testImportInvalidIconName()
     {
         $this->executeConsoleCommand('ux:icons:import something')
             ->assertStatusCode(1)
@@ -60,7 +60,7 @@ final class ImportIconCommandTest extends KernelTestCase
         ;
     }
 
-    public function testImportNonExistentIconSet(): void
+    public function testImportNonExistentIconSet()
     {
         $this->executeConsoleCommand('ux:icons:import something:invalid')
             ->assertStatusCode(1)
@@ -68,7 +68,7 @@ final class ImportIconCommandTest extends KernelTestCase
         ;
     }
 
-    public function testImportNonExistentIcon(): void
+    public function testImportNonExistentIcon()
     {
         $this->executeConsoleCommand('ux:icons:import lucide:not-existing-icon')
             ->assertStatusCode(1)
@@ -79,7 +79,7 @@ final class ImportIconCommandTest extends KernelTestCase
         $this->assertFileDoesNotExist(self::ICON_DIR.'/not-existing-icon.svg');
     }
 
-    public function testImportNonExistentIconWithExistentOne(): void
+    public function testImportNonExistentIconWithExistentOne()
     {
         $this->executeConsoleCommand('ux:icons:import lucide:circle lucide:not-existing-icon')
             ->assertStatusCode(0)

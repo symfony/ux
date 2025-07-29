@@ -17,7 +17,7 @@ use Symfony\UX\Map\Bridge\Leaflet\Option\ZoomControlOptions;
 
 class ZoomControlOptionsTest extends TestCase
 {
-    public function testToArray(): void
+    public function testToArray()
     {
         $options = new ZoomControlOptions(
             position: ControlPosition::TOP_LEFT,

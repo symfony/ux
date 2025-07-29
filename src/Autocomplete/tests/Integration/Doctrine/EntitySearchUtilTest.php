@@ -26,7 +26,7 @@ class EntitySearchUtilTest extends KernelTestCase
     use Factories;
     use ResetDatabase;
 
-    public function testItCreatesBasicStringSearchQuery(): void
+    public function testItCreatesBasicStringSearchQuery()
     {
         $prod1 = ProductFactory::createOne(['name' => 'bar prod1']);
         $prod2 = ProductFactory::createOne(['name' => 'foo prod2']);
@@ -37,7 +37,7 @@ class EntitySearchUtilTest extends KernelTestCase
         $this->assertSame([$prod1, $prod2, $prod4], $results);
     }
 
-    public function testItSearchesOnCorrectFields(): void
+    public function testItSearchesOnCorrectFields()
     {
         $prod1 = ProductFactory::createOne(['name' => 'bar prod1']);
         ProductFactory::createOne(['description' => 'foo prod2']);
@@ -46,7 +46,7 @@ class EntitySearchUtilTest extends KernelTestCase
         $this->assertSame([$prod1], $results);
     }
 
-    public function testItCanSearchOnRelationFields(): void
+    public function testItCanSearchOnRelationFields()
     {
         $category1 = CategoryFactory::createOne(['name' => 'foods']);
         $category2 = CategoryFactory::createOne(['name' => 'toys']);

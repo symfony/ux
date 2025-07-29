@@ -16,7 +16,7 @@ use Symfony\UX\Map\Bridge\Google\Option\ControlPosition;
 
 class ControlPositionTest extends TestCase
 {
-    public function testEnumValues(): void
+    public function testEnumValues()
     {
         self::assertSame(24, ControlPosition::BLOCK_END_INLINE_CENTER->value);
         self::assertSame(25, ControlPosition::BLOCK_END_INLINE_END->value);

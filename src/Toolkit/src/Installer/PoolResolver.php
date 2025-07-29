@@ -57,7 +57,7 @@ final class PoolResolver
                         $pool->addFile($file);
                     }
                 } else {
-                    throw new \RuntimeException(\sprintf('Unknown dependency type: %s', $dependency::class));
+                    throw new \RuntimeException(\sprintf('Unknown dependency type: "%s"', $dependency::class));
                 }
             }
         }

@@ -27,7 +27,7 @@ final class ComponentAttributesTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    public function testCanConvertToString(): void
+    public function testCanConvertToString()
     {
         $attributes = new ComponentAttributes([
             'class' => 'foo',
@@ -44,7 +44,7 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame(' class="foo" style="color:black;" value="" autofocus', (string) $attributes);
     }
 
-    public function testCanSetDefaults(): void
+    public function testCanSetDefaults()
     {
         $attributes = new ComponentAttributes(['class' => 'foo', 'style' => 'color:black;'], new EscaperRuntime());
 
@@ -60,14 +60,14 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame(['class' => 'foo'], (new ComponentAttributes([], new EscaperRuntime()))->defaults(['class' => 'foo'])->all());
     }
 
-    public function testCanGetOnly(): void
+    public function testCanGetOnly()
     {
         $attributes = new ComponentAttributes(['class' => 'foo', 'style' => 'color:black;'], new EscaperRuntime());
 
         $this->assertSame(['class' => 'foo'], $attributes->only('class')->all());
     }
 
-    public function testCanGetWithout(): void
+    public function testCanGetWithout()
     {
         $attributes = new ComponentAttributes(['class' => 'foo', 'style' => 'color:black;'], new EscaperRuntime());
 
@@ -77,7 +77,7 @@ final class ComponentAttributesTest extends TestCase
     /**
      * @group legacy
      */
-    public function testCanAddStimulusController(): void
+    public function testCanAddStimulusController()
     {
         $attributes = new ComponentAttributes([
             'class' => 'foo',
@@ -106,7 +106,7 @@ final class ComponentAttributesTest extends TestCase
     /**
      * @group legacy
      */
-    public function testCanAddStimulusControllerIfNoneAlreadyPresent(): void
+    public function testCanAddStimulusControllerIfNoneAlreadyPresent()
     {
         $attributes = new ComponentAttributes([
             'class' => 'foo',
@@ -129,7 +129,7 @@ final class ComponentAttributesTest extends TestCase
         ], $attributes->all());
     }
 
-    public function testCanAddStimulusControllerViaStimulusAttributes(): void
+    public function testCanAddStimulusControllerViaStimulusAttributes()
     {
         // if PHP less than 8.1, skip
         if (version_compare(\PHP_VERSION, '8.1.0', '<')) {
@@ -157,7 +157,7 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame(' data-controller="foo live" data-foo-name-value="ryan" data-foo-some-array-value="[&quot;a&quot;,&quot;b&quot;]" data-foo-some-array-with-keys-value="{&quot;key1&quot;:&quot;value1&quot;,&quot;key2&quot;:&quot;value2&quot;}" class="foo" data-live-data-value="{}"', (string) $attributes);
     }
 
-    public function testCanAddStimulusActionViaStimulusAttributes(): void
+    public function testCanAddStimulusActionViaStimulusAttributes()
     {
         // if PHP less than 8.1, skip
         if (version_compare(\PHP_VERSION, '8.1.0', '<')) {
@@ -180,7 +180,7 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame(' data-action="foo#barMethod live#foo" class="foo"', (string) $attributes);
     }
 
-    public function testBooleanBehaviour(): void
+    public function testBooleanBehaviour()
     {
         $attributes = new ComponentAttributes(['disabled' => true], new EscaperRuntime());
 
@@ -196,7 +196,7 @@ final class ComponentAttributesTest extends TestCase
     /**
      * @group legacy
      */
-    public function testNullBehaviour(): void
+    public function testNullBehaviour()
     {
         $attributes = new ComponentAttributes(['disabled' => null], new EscaperRuntime());
 
@@ -204,7 +204,7 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame(' disabled', (string) $attributes);
     }
 
-    public function testIsTraversableAndCountable(): void
+    public function testIsTraversableAndCountable()
     {
         $attributes = new ComponentAttributes(['foo' => 'bar'], new EscaperRuntime());
 
@@ -212,7 +212,7 @@ final class ComponentAttributesTest extends TestCase
         $this->assertCount(1, $attributes);
     }
 
-    public function testRenderSingleAttribute(): void
+    public function testRenderSingleAttribute()
     {
         $attributes = new ComponentAttributes(['attr1' => 'value1', 'attr2' => 'value2'], new EscaperRuntime());
 
@@ -220,7 +220,7 @@ final class ComponentAttributesTest extends TestCase
         $this->assertNull($attributes->render('attr3'));
     }
 
-    public function testRenderingSingleAttributeExcludesFromString(): void
+    public function testRenderingSingleAttributeExcludesFromString()
     {
         $attributes = new ComponentAttributes([
             'attr1' => new class {
@@ -236,7 +236,7 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame(' attr2="value2"', (string) $attributes);
     }
 
-    public function testCannotRenderNonStringAttribute(): void
+    public function testCannotRenderNonStringAttribute()
     {
         $attributes = new ComponentAttributes(['attr1' => false], new EscaperRuntime());
 
@@ -245,14 +245,14 @@ final class ComponentAttributesTest extends TestCase
         $attributes->render('attr1');
     }
 
-    public function testCanCheckIfAttributeExists(): void
+    public function testCanCheckIfAttributeExists()
     {
         $attributes = new ComponentAttributes(['foo' => 'bar'], new EscaperRuntime());
 
         $this->assertTrue($attributes->has('foo'));
     }
 
-    public function testNestedAttributes(): void
+    public function testNestedAttributes()
     {
         $attributes = new ComponentAttributes([
             'class' => 'foo',
@@ -266,7 +266,7 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame('', (string) $attributes->nested('invalid'));
     }
 
-    public function testPrefixedAttributes(): void
+    public function testPrefixedAttributes()
     {
         $attributes = new ComponentAttributes([
             'x-click' => 'x+',
@@ -279,7 +279,7 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame('', (string) $attributes->nested('invalid'));
     }
 
-    public function testConvertTrueAriaAttributeValue(): void
+    public function testConvertTrueAriaAttributeValue()
     {
         $attributes = new ComponentAttributes([
             'aria-bar' => false,
@@ -310,7 +310,7 @@ final class ComponentAttributesTest extends TestCase
     /**
      * @dataProvider provideSpecialSyntaxAttributeNames
      */
-    public function testAllowsSpecialSyntaxAttributeNames(string $name): void
+    public function testAllowsSpecialSyntaxAttributeNames(string $name)
     {
         $attributes = new ComponentAttributes([$name => 'value'], new EscaperRuntime());
 
@@ -327,7 +327,7 @@ final class ComponentAttributesTest extends TestCase
         yield ['@input.debounce.500ms'];
     }
 
-    public function testThrowsTypeErrorWithoutEscaperRuntime(): void
+    public function testThrowsTypeErrorWithoutEscaperRuntime()
     {
         $this->expectException(\TypeError::class);
         new ComponentAttributes([]);
@@ -336,7 +336,7 @@ final class ComponentAttributesTest extends TestCase
     /**
      * @dataProvider nameProvider
      */
-    public function testEscapeName(string $input, string $expected): void
+    public function testEscapeName(string $input, string $expected)
     {
         $runtime = new EscaperRuntime();
         $attributes = new ComponentAttributes([$input => 'foo'], $runtime);
@@ -347,7 +347,7 @@ final class ComponentAttributesTest extends TestCase
     /**
      * @dataProvider valueProvider
      */
-    public function testEscapeValue(string $input, string $expected): void
+    public function testEscapeValue(string $input, string $expected)
     {
         $runtime = new EscaperRuntime();
         $attributes = new ComponentAttributes(['foo' => $input], $runtime);

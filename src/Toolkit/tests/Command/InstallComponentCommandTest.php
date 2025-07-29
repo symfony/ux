@@ -33,7 +33,7 @@ class InstallComponentCommandTest extends KernelTestCase
         $this->filesystem->mkdir($this->tmpDir);
     }
 
-    public function testShouldAbleToInstallComponentTableAndItsDependencies(): void
+    public function testShouldAbleToInstallComponentTableAndItsDependencies()
     {
         $expectedFiles = [
             'Table.html.twig' => $this->tmpDir.'/Table.html.twig',
@@ -65,7 +65,7 @@ class InstallComponentCommandTest extends KernelTestCase
         }
     }
 
-    public function testShouldFailAndSuggestAlternativeComponentsWhenKitIsExplicit(): void
+    public function testShouldFailAndSuggestAlternativeComponentsWhenKitIsExplicit()
     {
         $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
         mkdir($destination);
@@ -86,7 +86,7 @@ class InstallComponentCommandTest extends KernelTestCase
         ;
     }
 
-    public function testShouldFailWhenComponentDoesNotExist(): void
+    public function testShouldFailWhenComponentDoesNotExist()
     {
         $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
         mkdir($destination);
@@ -98,7 +98,7 @@ class InstallComponentCommandTest extends KernelTestCase
             ->assertOutputContains('The component "Unknown" does not exist');
     }
 
-    public function testShouldWarnWhenComponentFileAlreadyExistsInNonInteractiveMode(): void
+    public function testShouldWarnWhenComponentFileAlreadyExistsInNonInteractiveMode()
     {
         $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
         mkdir($destination);

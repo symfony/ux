@@ -25,7 +25,7 @@ use Twig\Runtime\EscaperRuntime;
  */
 class TwigComponentLoggerListenerTest extends TestCase
 {
-    public function testLoggerStoreEvents(): void
+    public function testLoggerStoreEvents()
     {
         $logger = new TwigComponentLoggerListener();
         $this->assertSame([], $logger->getEvents());
@@ -39,7 +39,7 @@ class TwigComponentLoggerListenerTest extends TestCase
         $this->assertSame([$eventA, $eventB], array_column($logger->getEvents(), 0));
     }
 
-    public function testLoggerReset(): void
+    public function testLoggerReset()
     {
         $logger = new TwigComponentLoggerListener();
         $escaper = new EscaperRuntime();

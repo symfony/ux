@@ -43,7 +43,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
      */
     public const DETERMINISTIC_ID_MULTI_2 = 30904230242;
 
-    public function testCanRenderComponentAsHtml(): void
+    public function testCanRenderComponentAsHtml()
     {
         $component = $this->mountComponent('component1', [
             'prop1' => $entity = persist(Entity1::class),
@@ -72,7 +72,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testCanRenderComponentAsHtmlWithAlternateRoute(): void
+    public function testCanRenderComponentAsHtmlWithAlternateRoute()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('alternate_route'));
 
@@ -91,7 +91,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testCanExecuteComponentActionNormalRoute(): void
+    public function testCanExecuteComponentActionNormalRoute()
     {
         $templateName = 'render_embedded_with_blocks.html.twig';
         $obscuredName = '4bd9245af4594aa28cb77583c29e188e';
@@ -129,7 +129,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testCanExecuteComponentActionWithAlternateRoute(): void
+    public function testCanExecuteComponentActionWithAlternateRoute()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('alternate_route'));
 
@@ -153,7 +153,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testCannotExecuteComponentActionForGetRequest(): void
+    public function testCannotExecuteComponentActionForGetRequest()
     {
         $this->browser()
             ->get('/_components/component2/increase')
@@ -161,7 +161,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testCannotExecuteComponentDefaultActionForGetRequestWhenMethodIsPost(): void
+    public function testCannotExecuteComponentDefaultActionForGetRequestWhenMethodIsPost()
     {
         $this->browser()
             ->get('/_components/with_method_post/__invoke')
@@ -169,7 +169,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testPreReRenderHookOnlyExecutedDuringAjax(): void
+    public function testPreReRenderHookOnlyExecutedDuringAjax()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'));
 
@@ -189,7 +189,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testItAddsEmbeddedTemplateContextToEmbeddedComponents(): void
+    public function testItAddsEmbeddedTemplateContextToEmbeddedComponents()
     {
         $templateName = 'render_embedded_with_blocks.html.twig';
         $obscuredName = '1918f197faab43278ba06c0a672a2b97';
@@ -226,7 +226,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testItWorksWithNamespacedTemplateNamesForEmbeddedComponents(): void
+    public function testItWorksWithNamespacedTemplateNamesForEmbeddedComponents()
     {
         $templateName = 'render_embedded_with_blocks.html.twig';
         $obscuredName = 'fb7992f74bbb43c08e47b7cf5c880edb';
@@ -239,7 +239,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testItUseBlocksFromEmbeddedContextUsingMultipleComponents(): void
+    public function testItUseBlocksFromEmbeddedContextUsingMultipleComponents()
     {
         $templateName = 'render_multiple_embedded_with_blocks.html.twig';
         $obscuredName = '5c474b02358c46cca3da7340cc79cc2e';
@@ -271,7 +271,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testItUseBlocksFromEmbeddedContextUsingMultipleComponentsWithNamespacedTemplate(): void
+    public function testItUseBlocksFromEmbeddedContextUsingMultipleComponentsWithNamespacedTemplate()
     {
         $templateName = 'render_multiple_embedded_with_blocks.html.twig';
         $obscuredName = '5c474b02358c46cca3da7340cc79cc2e';
@@ -303,7 +303,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testCanRedirectFromComponentAction(): void
+    public function testCanRedirectFromComponentAction()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'));
 
@@ -338,7 +338,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testInjectsLiveArgs(): void
+    public function testInjectsLiveArgs()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('component6'));
 
@@ -373,7 +373,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testWithNullableEntity(): void
+    public function testWithNullableEntity()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_nullable_entity'));
 
@@ -391,7 +391,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testCanHaveControllerAttributes(): void
+    public function testCanHaveControllerAttributes()
     {
         if (!class_exists(IsGranted::class)) {
             $this->markTestSkipped('The security attributes are not available.');
@@ -409,7 +409,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testCanInjectSecurityUserIntoAction(): void
+    public function testCanInjectSecurityUserIntoAction()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_security'));
 

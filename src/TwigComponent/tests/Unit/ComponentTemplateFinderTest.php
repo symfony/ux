@@ -25,7 +25,7 @@ final class ComponentTemplateFinderTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    public function testFindTemplate(): void
+    public function testFindTemplate()
     {
         $templates = [
             'components/aa.html.twig',
@@ -52,7 +52,7 @@ final class ComponentTemplateFinderTest extends TestCase
     /**
      * @group legacy
      */
-    public function testFindTemplateWithLegacyAutonaming(): void
+    public function testFindTemplateWithLegacyAutonaming()
     {
         $templates = [
             'components/aa.html.twig',
@@ -88,7 +88,7 @@ final class ComponentTemplateFinderTest extends TestCase
     /**
      * @group legacy
      */
-    public function testTriggerDeprecationWhenEnvironmentAsFirstArgument(): void
+    public function testTriggerDeprecationWhenEnvironmentAsFirstArgument()
     {
         $environment = $this->createEnvironment([]);
 
@@ -99,7 +99,7 @@ final class ComponentTemplateFinderTest extends TestCase
     /**
      * @group legacy
      */
-    public function testTriggerDeprecationWhenDirectoryArgumentIsNullOrNotProvided(): void
+    public function testTriggerDeprecationWhenDirectoryArgumentIsNullOrNotProvided()
     {
         $environment = $this->createEnvironment([]);
 
@@ -110,7 +110,7 @@ final class ComponentTemplateFinderTest extends TestCase
         $finder = new ComponentTemplateFinder($environment, null);
     }
 
-    public function testFindTemplateWithinDirectory(): void
+    public function testFindTemplateWithinDirectory()
     {
         $templates = [
             'bar.html.twig',

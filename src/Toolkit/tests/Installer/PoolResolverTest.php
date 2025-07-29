@@ -23,7 +23,7 @@ use Symfony\UX\Toolkit\Kit\KitSynchronizer;
 
 final class PoolResolverTest extends TestCase
 {
-    public function testCanResolveDependencies(): void
+    public function testCanResolveDependencies()
     {
         $kitSynchronizer = new KitSynchronizer(new Filesystem());
         $kit = new Kit(Path::join(__DIR__, '../../kits/shadcn'), 'shadcn');
@@ -51,7 +51,7 @@ final class PoolResolverTest extends TestCase
         $this->assertCount(1, $pool->getPhpPackageDependencies());
     }
 
-    public function testCanHandleCircularComponentDependencies(): void
+    public function testCanHandleCircularComponentDependencies()
     {
         $kitSynchronizer = new KitSynchronizer(new Filesystem());
         $kit = new Kit(Path::join(__DIR__, '../Fixtures/kits/with-circular-components-dependencies'), 'with-circular-components-dependencies');
