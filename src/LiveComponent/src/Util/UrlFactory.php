@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Util;
 
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
@@ -43,7 +44,7 @@ class UrlFactory
 
         try {
             $newUrl = $this->createPath($previousUrl, $pathMappedProps);
-        } catch (ResourceNotFoundException|MissingMandatoryParametersException) {
+        } catch (ResourceNotFoundException|MethodNotAllowedException|MissingMandatoryParametersException) {
             return null;
         }
 
