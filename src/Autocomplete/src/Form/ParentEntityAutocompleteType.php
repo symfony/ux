@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * All form types that want to expose autocomplete functionality should use this for its getParent().
  *
- * @deprecated since UX 2.13, use "Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType" instead
+ * @deprecated since Symfony UX 2.13, use "Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType" instead
  */
 final class ParentEntityAutocompleteType extends AbstractType implements DataMapperInterface
 {
