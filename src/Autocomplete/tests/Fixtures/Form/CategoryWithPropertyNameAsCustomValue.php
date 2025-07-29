@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Fixtures\Form;
+namespace Symfony\UX\Autocomplete\Tests\Fixtures\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
