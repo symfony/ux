@@ -2,7 +2,7 @@
     "name": "@symfony/ux-vue",
     "description": "Integration of Vue.js in Symfony",
     "license": "MIT",
-    "version": "2.27.0",
+    "version": "2.28.1",
     "keywords": [
         "symfony-ux"
     ],

@@ -2,7 +2,7 @@
     "name": "@symfony/ux-swup",
     "description": "Swup integration for Symfony",
     "license": "MIT",
-    "version": "2.27.0",
+    "version": "2.28.1",
     "keywords": [
         "symfony-ux"
     ],
