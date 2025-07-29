@@ -36,12 +36,6 @@ jobs:
         - uses: actions/setup-node@v4
           with:
             node-version-file: '.nvmrc'
-            cache: 'pnpm'
-            cache-dependency-path: |
-              package.json
-              src/**/package.json
-              test_apps/encore-app/pnpm-lock.yaml
-              test_apps/encore-app/package.json
 
         - uses: shivammathur/setup-php@v2
 
@@ -60,35 +54,56 @@ jobs:
             working-directory: test_apps/encore-app
             dependency-versions: highest
 
+        - name: Manually replacing "workspace:*" references
+          run: |
+            # npm does not support "workspace:*" references, so we need to replace them with the actual package path
+            for PACKAGE_DATA in $(pnpm ls -r --json --depth -1 | jq 'map(select(.private != true))' | jq -c '.[]'); do
+              PACKAGE=$(echo $PACKAGE_DATA | jq -r '.name')
+              PACKAGE_PATH=$(echo $PACKAGE_DATA | jq -r '.path')
+
+              echo "🔍 Searching for \"workspace:*\" references in $PACKAGE_PATH/package.json"
+
+              # Manually replace "workspace:" constraints with the actual package version, it ensure packages can be installed with npm
+              jq -rc '[(.dependencies // {}) + (.devDependencies // {}) | to_entries[] | select(.value == "workspace:*") | .key][]' "$PACKAGE_PATH/package.json" | while read -r PACKAGE_FROM_WORKSPACE ; do
+                echo "ℹ️ Found \"$PACKAGE_FROM_WORKSPACE\" with \"workspace:*\""
+
+                PACKAGE_FROM_WORKSPACE_PATH=$(pnpm ls --filter $PACKAGE_FROM_WORKSPACE --json --depth -1 | jq -r '.[].path')
+                echo "ℹ️ The package \"$PACKAGE_FROM_WORKSPACE\" is located in \"$PACKAGE_FROM_WORKSPACE_PATH\" directory"
+
+                echo "⚒️ Replacing \"$PACKAGE_FROM_WORKSPACE\" with \"file:$PACKAGE_FROM_WORKSPACE_PATH\" in $PACKAGE_PATH/package.json"
+                sed -i "s|\"$PACKAGE_FROM_WORKSPACE\": \"workspace:\*\"|\"$PACKAGE_FROM_WORKSPACE\": \"file:$PACKAGE_FROM_WORKSPACE_PATH\"|g" "$PACKAGE_PATH/package.json"
+              done;
+            done
+
         - working-directory: test_apps/encore-app
-          run: pnpm install --ignore-workspace
+          run: npm install --install-links
 
         - if: matrix.ux-packages-source == 'js-packages'
           name: Install UX JS packages with a JS package manager
           working-directory: test_apps/encore-app
           run: |
             PACKAGES_TO_INSTALL=''
-            for PACKAGE in $(cd ../..; pnpm ls -r --json --depth -1 | jq 'map(select(.private != true))' | jq -c '.[]'); do
-              PACKAGE_ABSOLUTE_PATH=$(echo $PACKAGE | jq -r '.path')
-              PACKAGE_RELATIVE_PATH=$(realpath --relative-to=. "$PACKAGE_ABSOLUTE_PATH")
-              PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL file:$PACKAGE_RELATIVE_PATH"
+            for PACKAGE_DATA in $(pnpm ls -r --json --depth -1 | jq 'map(select(.private != true))' | jq -c '.[]'); do
+              PACKAGE_PATH=$(echo $PACKAGE_DATA | jq -r '.path')
+              PACKAGES_TO_INSTALL="$PACKAGES_TO_INSTALL file:$(realpath --relative-to=. "$PACKAGE_PATH")"
             done
+
             echo "Installing packages: $PACKAGES_TO_INSTALL"
-            pnpm add --save-dev $PACKAGES_TO_INSTALL
+            npm add --save-dev --install-links $PACKAGES_TO_INSTALL
 
         - name: Ensure UX packages are installed from "${{ env.EXPECTED_PATTERN }}"
           working-directory: test_apps/encore-app
           run: |
-            for PACKAGE in $(cat package.json | jq -c '(.dependencies // {}) + (.devDependencies // {}) | to_entries[] | select(.key | startswith("@symfony/ux-")) | {name: .key, version: .value}'); do
-              PACKAGE_NAME=$(echo $PACKAGE | jq -r '.name')
-              PACKAGE_VERSION=$(echo $PACKAGE | jq -r '.version')
+            for PACKAGE_DATA in $(cat package.json | jq -c '(.dependencies // {}) + (.devDependencies // {}) | to_entries[] | select(.key | startswith("@symfony/ux-")) | {name: .key, version: .value}'); do
+              PACKAGE=$(echo $PACKAGE_DATA | jq -r '.name')
+              PACKAGE_VERSION=$(echo $PACKAGE_DATA | jq -r '.version')
 
-              echo -n "Checking $PACKAGE_NAME@$PACKAGE_VERSION..."
+              echo -n "Checking $PACKAGE@$PACKAGE_VERSION..."
               if [[ $PACKAGE_VERSION == $EXPECTED_PATTERN* ]]; then
-                echo " OK"
+                echo "✅ OK"
               else
-                echo " KO"
-                echo "The package version of $PACKAGE_NAME must starts with the pattern (e.g.: $EXPECTED_PATTERN), got $PACKAGE_VERSION instead."
+                echo "❌ KO"
+                echo "ℹ️ The package version of $PACKAGE must starts with the pattern (e.g.: $EXPECTED_PATTERN), got $PACKAGE_VERSION instead."
                 exit 1
               fi
             done;
@@ -97,8 +112,8 @@ jobs:
 
         - name: Ensure project can be built in dev mode
           working-directory: test_apps/encore-app
-          run: pnpm run dev
+          run: npm run dev
 
         - name: Ensure project can be built in prod mode
           working-directory: test_apps/encore-app
-          run: pnpm run build
+          run: npm run build

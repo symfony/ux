@@ -8,6 +8,7 @@ on:
             - '!src/*/doc/**'
             - '!src/**/*.md'
             - '.github/**'
+            - '!.github/workflows/app-tests.yaml'
     pull_request:
         paths:
             - 'ux.symfony.com/**'
@@ -15,6 +16,7 @@ on:
             - '!src/*/doc/**'
             - '!src/**/*.md'
             - '.github/**'
+            - '!.github/workflows/app-tests.yaml'
 
 jobs:
 

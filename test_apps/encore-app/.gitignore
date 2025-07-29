@@ -1,4 +1,5 @@
 composer.lock
+package-lock.json
 
 ###> symfony/framework-bundle ###
 /.env.local
