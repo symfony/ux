@@ -27,7 +27,7 @@ use Symfony\UX\Icons\Exception\IconNotFoundException;
 final class Iconify
 {
     public const API_ENDPOINT = 'https://api.iconify.design';
-    private const ATTR_XMLNS_URL = 'https://www.w3.org/2000/svg';
+    private const ATTR_XMLNS_URL = 'http://www.w3.org/2000/svg';
 
     // URL must be 500 chars max (iconify limit)
     // -39 chars: https://api.iconify.design/XXX.json?icons=
