@@ -1,0 +1,54 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-30T08:34:58Z
+
+Btw it fixed https://symfony-devs.slack.com/archives/C3EQ7S3MJ/p1753802642567209 issue
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2025-07-30T09:25:53Z
+
+Thx for this MR. Waiting about this live. I found a workaround adding method in my attributes
+#[AsLiveComponent(name: 'filter_bar_brand_filter', template: 'front/components/common/filter_bar/brand_filter.html.twig', method:'get')]
+
+---------------------------------------------------------------------------
+
+by mpysiak at 2025-07-30T09:28:31Z
+
+Thanks 🙌 This bug has caused quite a few issues in Sylius. Do you have plans to release a patch soon?
+
+---------------------------------------------------------------------------
+
+by jmsche at 2025-07-30T09:33:58Z
+
+Hello there, I can confirm the patch fixes the reported issue :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-30T09:34:27Z
+
+We can release this MR today I think.
+
+I wish we could have fixed https://github.com/symfony/ux/issues/2963 before, but I think we will tag a 2nd release later
+
+---------------------------------------------------------------------------
+
+by GSadee at 2025-07-30T09:54:03Z
+
+Thanks for your quick response and PR 💪🏻
+
+We have tested this workaround in Sylius and can confirm that it solves the problem. We would greatly appreciate a patch as soon as possible 🙏🏻
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-30T10:10:14Z
+
+Thanks, such confirmations help us to move forward ✨
+
+cc @smnandre @kbond are we fine with merging it and releasing it today?
+
+---------------------------------------------------------------------------
+
+by davidnectarestudio at 2025-07-30T10:19:07Z
+
+Same problem here
