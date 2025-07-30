@@ -12,6 +12,7 @@
 namespace Symfony\UX\LiveComponent\Tests\Unit\Util;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
@@ -135,6 +136,19 @@ class UrlFactoryTest extends TestCase
             ->method('match')
             ->with($previousUrl)
             ->willThrowException(new ResourceNotFoundException());
+        $factory = new UrlFactory($router);
+
+        $this->assertNull($factory->createFromPreviousAndProps($previousUrl, [], []));
+    }
+
+    public function testMethodNotAllowedException()
+    {
+        $previousUrl = '/foo/bar';
+        $router = $this->createMock(RouterInterface::class);
+        $router->expects(self::once())
+            ->method('match')
+            ->with($previousUrl)
+            ->willThrowException(new MethodNotAllowedException(['GET']));
         $factory = new UrlFactory($router);
 
         $this->assertNull($factory->createFromPreviousAndProps($previousUrl, [], []));
