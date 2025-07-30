@@ -114,32 +114,32 @@ describe('LiveController polling Tests', () => {
         `
         );
 
-        // poll 1
-        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+        test.expectsAjaxCall('$render').serverWillChangeProps((data: any) => {
             data.renderCount = 1;
         });
-        // poll 2
-        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+
+        await waitFor(
+            () => {
+                expect(test.element).toHaveTextContent('Render count: 1');
+            },
+            { timeout: 500 }
+        );
+
+        test.expectsAjaxCall('$render').serverWillChangeProps((data: any) => {
             data.renderCount = 2;
             data.keepPolling = false;
         });
 
-        // only wait for about 250ms this time
-        await waitFor(() => expect(test.element).toHaveTextContent('Render count: 1'), {
-            timeout: 300,
-        });
-        await waitFor(() => expect(test.element).toHaveTextContent('Render count: 2'), {
-            timeout: 300,
-        });
-        // wait 500ms more... no more Ajax calls should be made
-        const timeoutPromise = new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(true);
-            }, 500);
-        });
-        await waitFor(() => timeoutPromise, {
-            timeout: 750,
-        });
+        await waitFor(
+            () => {
+                expect(test.element).toHaveTextContent('Render count: 2');
+            },
+            { timeout: 500 }
+        );
+
+        expect(test.component.pollingDirector.pollingConfigs.get('$render')).toBeUndefined();
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
     });
 
     it('stops polling after it disconnects', async () => {
@@ -209,5 +209,260 @@ describe('LiveController polling Tests', () => {
 
         await waitFor(() => expect(test.element).toHaveTextContent('Render count: 1'));
         await waitFor(() => expect(test.element).toHaveTextContent('Render count: 2'));
+    });
+
+    it('polls stop after limit reached', async () => {
+        const test = await createTest(
+            { renderCount: 0 },
+            (data: any) => `
+        <div ${initComponent(data)} data-poll="delay(100)|limit(3)|$render">
+            <span>Render count: ${data.renderCount}</span>
+        </div>
+    `
+        );
+
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.renderCount = 1;
+        });
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.renderCount = 2;
+        });
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.renderCount = 3;
+        });
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Render count: 1'), { timeout: 500 });
+        await waitFor(() => expect(test.element).toHaveTextContent('Render count: 2'), { timeout: 500 });
+        await waitFor(() => expect(test.element).toHaveTextContent('Render count: 3'), { timeout: 500 });
+
+        // Add a small delay to ensure no more renders happen
+        await new Promise((r) => setTimeout(r, 200));
+        expect(test.element).toHaveTextContent('Render count: 3');
+    });
+
+    it('respects polling limit correctly and stops polling after limit is hit', async () => {
+        const test = await createTest(
+            { count: 0 },
+            (data) => `
+                <div ${initComponent(data)} data-poll="delay(50)|limit(2)|$render">
+                    Count: ${data.count}
+                </div>
+            `
+        );
+
+        test.expectsAjaxCall().serverWillChangeProps((data) => {
+            data.count = 1;
+        });
+        test.expectsAjaxCall().serverWillChangeProps((data) => {
+            data.count = 2;
+        });
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Count: 2'));
+
+        await new Promise((r) => setTimeout(r, 200));
+        expect(test.element).toHaveTextContent('Count: 2'); // still 2 after limit
+    });
+
+    it('can pause and resume polling manually', async () => {
+        const test = await createTest(
+            { count: 0 },
+            (data) => `
+            <div ${initComponent(data)} data-poll="delay(100)|$render">
+                Count: ${data.count}
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall().serverWillChangeProps((data) => {
+            data.count = 1;
+        });
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Count: 1'));
+
+        test.component.pollingDirector.pause('$render');
+
+        await new Promise((r) => setTimeout(r, 300));
+        expect(test.element).toHaveTextContent('Count: 1');
+
+        test.component.pollingDirector.resume('$render');
+
+        test.expectsAjaxCall().serverWillChangeProps((data) => {
+            data.count = 2;
+        });
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Count: 2'));
+    });
+
+    it('can restart polling after stopping', async () => {
+        const test = await createTest(
+            { a: 0 },
+            (data) => `
+        <div ${initComponent(data)} data-poll="delay(30)|limit(2)|$render">
+            <span>A: ${data.a}</span>
+        </div>
+        `
+        );
+
+        test.expectsAjaxCall('$render').serverWillChangeProps((data) => {
+            data.a = 1;
+            return data;
+        });
+        await waitFor(() => {
+            expect(test.element).toHaveTextContent('A: 1');
+        });
+
+        test.component.pollingDirector.stop('$render');
+        const countStopped = test.component.pollingDirector.pollingCounts.get('$render') ?? 0;
+
+        test.component.pollingDirector.start('$render');
+        test.expectsAjaxCall('$render').serverWillChangeProps((data) => {
+            data.a = 2;
+            return data;
+        });
+
+        await waitFor(
+            () => {
+                expect(test.element).toHaveTextContent('A: 2');
+                expect(test.component.pollingDirector.pollingCounts.get('$render')).toBeGreaterThan(countStopped);
+            },
+            { timeout: 2000 }
+        );
+    });
+
+    it('should respect polling limits', async () => {
+        const test = await createTest(
+            { count: 0 },
+            (data) => `
+            <div ${initComponent(data)} data-poll="delay(100)|limit(2)|$render">
+                Count: ${data.count}
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall().serverWillChangeProps((data) => {
+            data.count = 1;
+        });
+        test.expectsAjaxCall().serverWillChangeProps((data) => {
+            data.count = 2;
+        });
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Count: 2'));
+
+        const count = test.component.pollingDirector.pollingCounts.get('$render');
+        expect(count).toBe(2);
+    });
+
+    it('does not crash if poll limit is non-numeric or malformed', async () => {
+        const test = await createTest(
+            { count: 0 },
+            (data) => `
+                <div ${initComponent(data)} data-poll="delay(100)|limit(bad)|$render">
+                    Count: ${data.count}
+                </div>
+            `
+        );
+
+        test.expectsAjaxCall().serverWillChangeProps((data) => {
+            data.count = 999;
+        });
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Count: 999'));
+    });
+
+    it('should handle invalid poll configs gracefully', async () => {
+        const test = await createTest(
+            { count: 0 },
+            (data) => `
+            <div ${initComponent(data)} data-poll="delay(invalid)|$render">
+                Count: ${data.count}
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall().serverWillChangeProps((data) => {
+            data.count = 1;
+        });
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Count: 1'), {
+            timeout: 2500,
+        });
+    });
+
+    it('polling triggers poll hooks correctly', async () => {
+        const test = await createTest(
+            { count: 0 },
+            (data) => `
+            <div ${initComponent(data)} data-poll="delay(100)|limit(2)|$render">
+                <span>Count: ${data.count}</span>
+            </div>
+        `
+        );
+
+        // An array to track all triggered hooks and their arguments
+        const calledHooks: Array<{ name: string; args: any }> = [];
+        const originalTriggerHook = test.component.triggerPollHook.bind(test.component);
+        test.component.triggerPollHook = (hookName, args) => {
+            calledHooks.push({ name: hookName, args });
+            return originalTriggerHook(hookName, args);
+        };
+
+        // Expect two Ajax calls triggered by polling
+        test.expectsAjaxCall('$render').serverWillChangeProps((props) => {
+            props.count = 1;
+        });
+        test.expectsAjaxCall('$render').serverWillChangeProps((props) => {
+            props.count = 2;
+        });
+
+        // Wait for the polling to finish and assert hook behavior and DOM updates
+        await waitFor(
+            () => {
+                expect(test.element).toHaveTextContent('Count: 2');
+                expect(calledHooks.filter((h) => h.name === 'poll:running').length).toBe(2);
+                expect(calledHooks.map((h) => h.name)).toContain('poll:stopped');
+            },
+            {
+                timeout: 5000,
+            }
+        );
+    });
+
+    it('triggers poll:error hook when polling action throws', async () => {
+        const test = await createTest(
+            { count: 0 },
+            (data) => `
+        <div ${initComponent(data)} data-poll="delay(100)|limit(1)|failPoll">
+            Count: ${data.count}
+        </div>
+    `
+        );
+
+        const calledHooks: Array<{ name: string; args: any }> = [];
+        const originalTriggerHook = test.component.triggerPollHook.bind(test.component);
+        test.component.triggerPollHook = (hookName, args) => {
+            console.log(`triggerPollHook called: ${hookName}`, args);
+            calledHooks.push({ name: hookName, args });
+            return originalTriggerHook(hookName, args);
+        };
+
+        const originalAction = test.component.action.bind(test.component);
+        test.component.action = async (actionName, args, delay) => {
+            if (actionName === 'failPoll') {
+                throw new Error('Forced failure for testing');
+            }
+            return originalAction(actionName, args, delay);
+        };
+
+        await waitFor(
+            () => {
+                const errorHook = calledHooks.find((h) => h.name === 'poll:error');
+                expect(errorHook).toBeDefined();
+                expect(errorHook?.args.actionName).toBe('failPoll');
+                expect(errorHook?.args.errorMessage).toBe('Forced failure for testing');
+            },
+            {
+                timeout: 5000,
+            }
+        );
     });
 });

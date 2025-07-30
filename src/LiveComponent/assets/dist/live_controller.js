@@ -1893,6 +1893,14 @@ var Component = class {
   off(hookName, callback) {
     this.hooks.unregister(hookName, callback);
   }
+  /**
+   * Trigger Polling Hook Events In PollingDirector
+   * @param event
+   * @param context
+   */
+  triggerPollHook(event, context) {
+    this.hooks.triggerHook(event, context);
+  }
   set(model, value, reRender = false, debounce = false) {
     const promise = this.nextRequestPromise;
     const modelName = normalizeModelName(model);
@@ -2584,52 +2592,195 @@ var PageUnloadingPlugin_default = class {
 
 // src/PollingDirector.ts
 var PollingDirector_default = class {
+  // Lock system for active polling
   constructor(component) {
-    this.isPollingActive = true;
-    this.pollingIntervals = [];
+    this.pollingIntervals = /* @__PURE__ */ new Map();
+    // actionName → intervalId
+    this.pollingCounts = /* @__PURE__ */ new Map();
+    // actionName → current count
+    this.pollingConfigs = /* @__PURE__ */ new Map();
+    // All Polling's Map
+    this.pollingStates = /* @__PURE__ */ new Map();
+    // All Polling's States Map
+    this.isPollingRunnig = /* @__PURE__ */ new Map();
     this.component = component;
   }
-  addPoll(actionName, duration) {
-    this.polls.push({ actionName, duration });
-    if (this.isPollingActive) {
-      this.initiatePoll(actionName, duration);
+  addPoll(actionName, duration, limit = 0) {
+    this.pollingConfigs.set(actionName, { duration, limit });
+    if (!this.pollingStates.has(actionName)) {
+      this.pollingStates.set(actionName, "active");
     }
+    if (!this.pollingCounts.has(actionName)) {
+      this.pollingCounts.set(actionName, 0);
+    }
+    this.initiatePoll(actionName, duration);
   }
+  /**
+   * Start All Pollings In PollingStates Map Entires
+   */
   startAllPolling() {
-    if (this.isPollingActive) {
-      return;
+    for (const [actionName] of this.pollingConfigs.entries()) {
+      this.start(actionName);
     }
-    this.isPollingActive = true;
-    this.polls.forEach(({ actionName, duration }) => {
-      this.initiatePoll(actionName, duration);
-    });
   }
+  /**
+   * Stop All Pollings In PollingStates Map Entires
+   */
   stopAllPolling() {
-    this.isPollingActive = false;
-    this.pollingIntervals.forEach((interval) => {
-      clearInterval(interval);
-    });
+    for (const [actionName] of this.pollingConfigs.entries()) {
+      this.stop(actionName);
+    }
   }
-  clearPolling() {
-    this.stopAllPolling();
-    this.polls = [];
-    this.startAllPolling();
+  /**
+   * Stop All Pollings and Clear All Pollings Data
+   */
+  clearAllPolling(soft = false) {
+    for (const intervalId of this.pollingIntervals.values()) {
+      clearTimeout(intervalId);
+    }
+    this.pollingIntervals.clear();
+    this.pollingConfigs.clear();
+    if (!soft) {
+      this.pollingStates.clear();
+      this.pollingCounts.clear();
+    }
   }
   initiatePoll(actionName, duration) {
-    let callback;
-    if (actionName === "$render") {
-      callback = () => {
-        this.component.render();
-      };
-    } else {
-      callback = () => {
-        this.component.action(actionName, {}, 0);
-      };
-    }
-    const timer = window.setInterval(() => {
-      callback();
+    this.isPollingRunnig.set(actionName, false);
+    const callback = async () => {
+      if (this.isPollingRunnig.get(actionName)) return;
+      this.isPollingRunnig.set(actionName, true);
+      const limit = this.pollingConfigs.get(actionName)?.limit ?? 0;
+      const currentCount = this.pollingCounts.get(actionName) ?? 0;
+      if (currentCount === 0) {
+        this.component.triggerPollHook("poll:started", { actionName, limit });
+      }
+      this.pollingCounts.set(actionName, currentCount + 1);
+      if (limit > 0 && currentCount >= limit) {
+        this.stop(actionName);
+        return;
+      }
+      try {
+        if (actionName === "$render") {
+          await this.component.render();
+        } else {
+          const response = await this.component.action(actionName, {}, 0);
+          if (response?.response?.status === 500) {
+            this.stop(actionName);
+            throw new Error(this.decodeErrorMessage(await response.getBody()));
+          }
+        }
+        this.component.triggerPollHook("poll:running", {
+          actionName,
+          count: currentCount + 1,
+          limit
+        });
+      } catch (error) {
+        this.component.triggerPollHook("poll:error", {
+          actionName,
+          finalCount: currentCount + 1,
+          limit,
+          errorMessage: error instanceof Error ? error.message : String(error)
+        });
+      } finally {
+        this.isPollingRunnig.set(actionName, false);
+      }
+    };
+    const intervalId = window.setInterval(() => {
+      if (this.pollingStates.get(actionName) !== "active") {
+        clearInterval(intervalId);
+        this.pollingIntervals.delete(actionName);
+        return;
+      }
+      callback().catch((e) => console.error(e));
     }, duration);
-    this.pollingIntervals.push(timer);
+    this.pollingIntervals.set(actionName, intervalId);
+  }
+  /**
+   * Pause Polling by action Name
+   * Pause if polling's status is active only
+   */
+  pause(actionName = "$render") {
+    if (this.pollingStates.get(actionName) !== "active") return;
+    const intervalId = this.pollingIntervals.get(actionName);
+    if (intervalId !== void 0) {
+      clearInterval(intervalId);
+      this.pollingIntervals.delete(actionName);
+    }
+    this.pollingStates.set(actionName, "paused");
+    const count = this.pollingCounts.get(actionName) ?? 0;
+    const limit = this.pollingConfigs.get(actionName)?.limit ?? 0;
+    this.component.triggerPollHook("poll:paused", { actionName, count, limit });
+  }
+  /**
+   * Resume Polling by action Name
+   * Resume if polling's status is paused only
+   */
+  resume(actionName = "$render") {
+    const config = this.pollingConfigs.get(actionName);
+    if (this.pollingStates.get(actionName) !== "paused" || !config) {
+      return;
+    }
+    this.pollingStates.set(actionName, "active");
+    this.initiatePoll(actionName, config.duration);
+  }
+  /**
+   * Stop Polling by action Name
+   * Stop if polling's status is active or paused
+   */
+  stop(actionName = "$render") {
+    const state = this.pollingStates.get(actionName);
+    if (state !== "active" && state !== "paused") {
+      return;
+    }
+    const intervalId = this.pollingIntervals.get(actionName);
+    if (intervalId !== void 0) {
+      clearInterval(intervalId);
+      this.pollingIntervals.delete(actionName);
+    }
+    const currentCount = this.pollingCounts.get(actionName) ?? 1;
+    const limit = this.pollingConfigs.get(actionName)?.limit ?? 0;
+    this.component.triggerPollHook("poll:stopped", {
+      actionName,
+      finalCount: currentCount,
+      limit
+    });
+    this.pollingCounts.delete(actionName);
+    this.pollingStates.set(actionName, "stopped");
+  }
+  /**
+   * Start Polling by action Name
+   * Start if polling's status is stopped only
+   */
+  start(actionName = "$render") {
+    const config = this.pollingConfigs.get(actionName);
+    if (!config || this.pollingStates.get(actionName) !== "stopped") return;
+    this.clearForAction(actionName);
+    this.pollingCounts.set(actionName, 0);
+    this.pollingStates.set(actionName, "active");
+    this.initiatePoll(actionName, config.duration);
+  }
+  /**
+   * Clear Polling Count and Interval data by action Name
+   */
+  clearForAction(actionName = "$render") {
+    this.pollingCounts.delete(actionName);
+    const intervalId = this.pollingIntervals.get(actionName);
+    if (intervalId !== void 0) {
+      clearInterval(intervalId);
+      this.pollingIntervals.delete(actionName);
+    }
+  }
+  /**
+   * Decode Error Message
+   */
+  decodeErrorMessage(errorMessage) {
+    errorMessage = errorMessage.split("<!--")[1]?.split("-->")[0]?.trim();
+    if (errorMessage) {
+      const decoded = errorMessage.replace(/&quot;/g, '"').replace(/&#039;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+      return `Poll\xB7error:\xB7${decoded}`;
+    }
+    return "Poll error: 500 Internal Server Error";
   }
 };
 
@@ -2639,6 +2790,7 @@ var PollingPlugin_default = class {
     this.element = component.element;
     this.pollingDirector = new PollingDirector_default(component);
     this.initializePolling();
+    component.pollingDirector = this.pollingDirector;
     component.on("connect", () => {
       this.pollingDirector.startAllPolling();
     });
@@ -2649,11 +2801,11 @@ var PollingPlugin_default = class {
       this.initializePolling();
     });
   }
-  addPoll(actionName, duration) {
-    this.pollingDirector.addPoll(actionName, duration);
+  addPoll(actionName, duration, limit) {
+    this.pollingDirector.addPoll(actionName, duration, limit);
   }
   clearPolling() {
-    this.pollingDirector.clearPolling();
+    this.pollingDirector.clearAllPolling(true);
   }
   initializePolling() {
     this.clearPolling();
@@ -2664,18 +2816,26 @@ var PollingPlugin_default = class {
     const directives = parseDirectives(rawPollConfig || "$render");
     directives.forEach((directive) => {
       let duration = 2e3;
+      let limit = 0;
       directive.modifiers.forEach((modifier) => {
         switch (modifier.name) {
           case "delay":
             if (modifier.value) {
-              duration = Number.parseInt(modifier.value);
+              const parsed = Number.parseInt(modifier.value);
+              duration = Number.isNaN(parsed) || parsed <= 0 ? 2e3 : parsed;
+            }
+            break;
+          case "limit":
+            if (modifier.value) {
+              const parsed = Number.parseInt(modifier.value);
+              limit = Number.isNaN(parsed) || parsed <= 0 ? 1 : parsed;
             }
             break;
           default:
             console.warn(`Unknown modifier "${modifier.name}" in data-poll "${rawPollConfig}".`);
         }
       });
-      this.addPoll(directive.action, duration);
+      this.addPoll(directive.action, duration, limit);
     });
   }
 };

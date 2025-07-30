@@ -1,8 +1,14 @@
 # CHANGELOG
 
+## 2.29.0
+
+-   Added new modifier `limit` and new Hooks for Poll System.
+    - New Hooks: `poll:started`, `poll:running`, `poll:paused`, `poll:stopped`, `poll:error`
+    - Handling Count loop and pause, start, stop, resume, error events
+
 ## 2.28.0
 
--   Add new modifiers for input validations, useful to prevent unnecessary HTTP requests:
+-   Add new modifiers for input validations, useful to prevent uneccessary HTTP requests:
     - `min_length` and `max_length`: validate length from textual input elements
     - `min_value` and `max_value`: validate value from numeral input elements
 
@@ -364,7 +370,7 @@ live_component:
 -   Unexpected Ajax errors are now displayed in a modal to ease debugging! #467.
 
 -   Fixed bug where sometimes a live component was broken after hitting "Back:
-    in your browser - #436.
+    in your browser" - #436.
 
 ## 2.4.0
 

@@ -88,6 +88,31 @@ type ComponentHooks = {
     'loading.state:started': (element: HTMLElement, request: export_default$1) => MaybePromise;
     'loading.state:finished': (element: HTMLElement) => MaybePromise;
     'model:set': (model: string, value: any, component: Component) => MaybePromise;
+    'poll:started': (context: {
+        actionName: string;
+        limit: number;
+    }) => MaybePromise;
+    'poll:running': (context: {
+        actionName: string;
+        count: number;
+        limit: number;
+    }) => MaybePromise;
+    'poll:paused': (context: {
+        actionName: string;
+        count: number;
+        limit: number;
+    }) => MaybePromise;
+    'poll:stopped': (context: {
+        actionName: string;
+        finalCount: number;
+        limit: number;
+    }) => MaybePromise;
+    'poll:error': (context: {
+        actionName: string;
+        finalCount: number;
+        limit: number;
+        errorMessage: string;
+    }) => MaybePromise;
 };
 type ComponentHookName = keyof ComponentHooks;
 type ComponentHookCallback<T extends string = ComponentHookName> = T extends ComponentHookName ? ComponentHooks[T] : (...args: any[]) => MaybePromise;
@@ -120,6 +145,7 @@ declare class Component {
     disconnect(): void;
     on<T extends string | ComponentHookName = ComponentHookName>(hookName: T, callback: ComponentHookCallback<T>): void;
     off<T extends string | ComponentHookName = ComponentHookName>(hookName: T, callback: ComponentHookCallback<T>): void;
+    triggerPollHook(event: 'poll:started' | 'poll:running' | 'poll:paused' | 'poll:stopped' | 'poll:error', context: any): void;
     set(model: string, value: any, reRender?: boolean, debounce?: number | boolean): Promise<export_default$2>;
     getData(model: string): any;
     action(name: string, args?: any, debounce?: number | boolean): Promise<export_default$2>;

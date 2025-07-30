@@ -2523,41 +2523,136 @@ To change the initial tag from a ``div`` to something else, use the ``loading-ta
 Polling
 -------
 
-You can also use "polling" to continually refresh a component. On the
-**top-level** element for your component, add ``data-poll``:
+.. versionadded:: 2.29
 
-.. code-block:: diff
+    The ``limit`` modifier and poll lifecycle hooks (``poll:started``, ``poll:running``, ``poll:stopped``, ``poll:paused``, and ``poll:error``) were introduced in UX LiveComponent 2.29.
 
-      <div
-          {{ attributes }}
-    +     data-poll
-      >
+You can use the ``data-poll`` attribute to automatically repeat a component action at a specific interval. This is useful for live updates, status checks, or real-time UI interactions.
 
-This will make a request every 2 seconds to re-render the component. You
-can change this by adding a ``delay()`` modifier. When you do this, you
-need to be specific that you want to call the ``$render`` method. To
-delay for 500ms:
+Basic usage
+^^^^^^^^^^^
+
+By default, polling runs the ``$render`` action every 2000 milliseconds (2 seconds).
 
 .. code-block:: html+twig
 
-    <div
-        {{ attributes }}
-        data-poll="delay(500)|$render"
-    >
+    {# Unlimited polling every 2 seconds (default) using $render #}
+    <div {{ attributes }} data-poll>...</div>
 
-You can also trigger a specific "action" instead of a normal re-render:
+    {# Poll every 5 seconds, up to 20 times, using $render #}
+    <div {{ attributes }} data-poll="delay(5000)|limit(20)|$render">...</div>
+
+    {# Poll a custom action (savePost) every 3 seconds, up to 10 times #}
+    <div {{ attributes }} data-poll="delay(3000)|limit(10)|savePost">...</div>
+
+Available Modifiers
+^^^^^^^^^^^^^^^^^^^
+
+- ``delay(ms)`` — The delay between polls in milliseconds (default: ``2000``)
+- ``limit(n)`` — Maximum number of times to run the poll (default: unlimited)
+- ``actionName`` — The component action to call (default: ``$render``)
+
+Poll Hooks
+^^^^^^^^^^
+
+The component emits lifecycle hooks during polling. You can listen to these using JavaScript, for example:
+
+.. code-block:: javascript
+
+    // controllers/poll_controller.js
+    import { Controller } from '@hotwired/stimulus';
+    import { getComponent } from '@symfony/ux-live-component';
+
+    export default class extends Controller {
+        async connect() {
+            this.component = await getComponent(this.element);
+
+            // Disable default error window (optional)
+            this.component.on('response:error', (backendResponse, controls) => {
+                controls.displayError = false;
+            });
+
+            this.component.on('poll:started', ({ actionName, limit }) => {
+                console.log(`Polling started: ${actionName}, limit: ${limit}`);
+            });
+
+            this.component.on('poll:running', ({ actionName, count, limit }) => {
+                console.log(`Polling running: ${actionName} (${count}/${limit})`);
+            });
+
+            this.component.on('poll:paused', ({ actionName, count, limit }) => {
+                console.log(`Polling paused: ${actionName}`);
+            });
+
+            this.component.on('poll:stopped', ({ actionName, finalCount, limit }) => {
+                console.log(`Polling stopped: ${actionName}, total runs: ${finalCount}`);
+            });
+
+            this.component.on('poll:error', ({ actionName, finalCount, limit, errorMessage }) => {
+                console.error(`Polling error on ${actionName}: ${errorMessage}`);
+            });
+        }
+    }
+
+.. note::
+
+    These events are dispatched on the component and can be handled using Stimulus. You must retrieve the component instance with ``getComponent(this.element)`` before accessing event listeners.
+
+Handling Poll Actions (Start, Stop, Pause, Resume)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Starting from version 2.29, polling can be programmatically managed using the ``pollingDirector`` API.
+
+This allows you to start, pause, resume, or stop polling dynamically for a given action.
 
 .. code-block:: html+twig
 
-    <div
-        {{ attributes }}
+    <div {{ attributes.defaults(stimulus_controller('poll')) }} data-poll="delay(5000)|limit(50)|$render">
+        <button type="button" data-action="click->poll#start" data-poll-action-param="$render">Start</button>
+        <button type="button" data-action="click->poll#stop" data-poll-action-param="$render">Stop</button>
+    </div>
 
-        data-poll="save"
-        {#
-        Or add a delay() modifier:
-        data-poll="delay(2000)|save"
-        #}
-    >
+.. code-block:: javascript
+
+    // controllers/poll_controller.js
+    import { Controller } from '@hotwired/stimulus';
+    import { getComponent } from '@symfony/ux-live-component';
+
+    export default class extends Controller {
+        static values = {
+            action: String
+        }
+
+        async start(event) {
+            const actionName = event.params.action;
+            (await getComponent(this.element)).pollingDirector.start(actionName);
+        }
+
+        async stop(event) {
+            const actionName = event.params.action;
+            (await getComponent(this.element)).pollingDirector.stop(actionName);
+        }
+
+        async pause(event) {
+            const actionName = event.params.action;
+            (await getComponent(this.element)).pollingDirector.pause(actionName);
+        }
+
+        async resume(event) {
+            const actionName = event.params.action;
+            (await getComponent(this.element)).pollingDirector.resume(actionName);
+        }
+    }
+
+Available Methods
+^^^^^^^^^^^^^^^^^
+
+The ``pollingDirector`` API exposes the following methods:
+
+- ``component.pollingDirector.start(actionName)`` — Starts polling for the given action (if previously stopped).
+- ``component.pollingDirector.pause(actionName)`` — Temporarily pauses polling. Can be resumed later.
+- ``component.pollingDirector.resume(actionName)`` — Resumes a previously paused poll.
+- ``component.pollingDirector.stop(actionName)`` — Stops polling entirely. Use ``start()`` to restart.
 
 Changing the URL when a LiveProp changes
 ----------------------------------------

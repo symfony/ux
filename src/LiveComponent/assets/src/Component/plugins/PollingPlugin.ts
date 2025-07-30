@@ -12,6 +12,9 @@ export default class implements PluginInterface {
         this.pollingDirector = new PollingDirector(component);
         this.initializePolling();
 
+        // access from stimulus_controller
+        (component as any).pollingDirector = this.pollingDirector;
+
         component.on('connect', () => {
             this.pollingDirector.startAllPolling();
         });
@@ -24,12 +27,12 @@ export default class implements PluginInterface {
         });
     }
 
-    addPoll(actionName: string, duration: number): void {
-        this.pollingDirector.addPoll(actionName, duration);
+    addPoll(actionName: string, duration: number, limit: number): void {
+        this.pollingDirector.addPoll(actionName, duration, limit);
     }
 
     clearPolling(): void {
-        this.pollingDirector.clearPolling();
+        this.pollingDirector.clearAllPolling(true);
     }
 
     private initializePolling(): void {
@@ -44,21 +47,28 @@ export default class implements PluginInterface {
 
         directives.forEach((directive) => {
             let duration = 2000;
+            let limit = 0;
 
             directive.modifiers.forEach((modifier) => {
                 switch (modifier.name) {
                     case 'delay':
                         if (modifier.value) {
-                            duration = Number.parseInt(modifier.value);
+                            const parsed = Number.parseInt(modifier.value);
+                            duration = Number.isNaN(parsed) || parsed <= 0 ? 2000 : parsed;
                         }
-
+                        break;
+                    case 'limit':
+                        if (modifier.value) {
+                            const parsed = Number.parseInt(modifier.value);
+                            limit = Number.isNaN(parsed) || parsed <= 0 ? 1 : parsed;
+                        }
                         break;
                     default:
                         console.warn(`Unknown modifier "${modifier.name}" in data-poll "${rawPollConfig}".`);
                 }
             });
 
-            this.addPoll(directive.action, duration);
+            this.addPoll(directive.action, duration, limit);
         });
     }
 }

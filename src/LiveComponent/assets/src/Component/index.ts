@@ -25,6 +25,16 @@ export type ComponentHooks = {
     'loading.state:started': (element: HTMLElement, request: BackendRequest) => MaybePromise;
     'loading.state:finished': (element: HTMLElement) => MaybePromise;
     'model:set': (model: string, value: any, component: Component) => MaybePromise;
+    'poll:started': (context: { actionName: string; limit: number }) => MaybePromise;
+    'poll:running': (context: { actionName: string; count: number; limit: number }) => MaybePromise;
+    'poll:paused': (context: { actionName: string; count: number; limit: number }) => MaybePromise;
+    'poll:stopped': (context: { actionName: string; finalCount: number; limit: number }) => MaybePromise;
+    'poll:error': (context: {
+        actionName: string;
+        finalCount: number;
+        limit: number;
+        errorMessage: string;
+    }) => MaybePromise;
 };
 
 export type ComponentHookName = keyof ComponentHooks;
@@ -147,6 +157,19 @@ export default class Component {
         callback: ComponentHookCallback<T>
     ): void {
         this.hooks.unregister(hookName, callback);
+    }
+
+    /**
+     * Trigger Polling Hook Events In PollingDirector
+     * @param event
+     * @param context
+     */
+
+    public triggerPollHook(
+        event: 'poll:started' | 'poll:running' | 'poll:paused' | 'poll:stopped' | 'poll:error',
+        context: any
+    ) {
+        this.hooks.triggerHook(event, context);
     }
 
     set(model: string, value: any, reRender = false, debounce: number | boolean = false): Promise<BackendResponse> {
