@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-07-29T23:14:50Z
+
+I did not know that... https://github.com/w3c/svgwg/issues/738  👍
+
+@roverwolf  Could you also change the UX toolkit affected tests?
+
+---------------------------------------------------------------------------
+
+by roverwolf at 2025-07-30T00:26:06Z
+
+@smnandre Toolkit snapshots have been updated in the PR.  Sorry, I had only checked the tests in the Icons component.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-07-30T01:57:43Z
+
+PHP 8.4 failures unrelated (autocomplete)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-07-30T01:57:59Z
+
+Thank you @roverwolf!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-07-30T06:09:30Z
+
+Interesting, I didn't know this was so subtile
