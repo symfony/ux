@@ -2014,7 +2014,7 @@ var Component = class {
         const controls = { displayError: true };
         this.valueStore.pushPendingPropsBackToDirty();
         this.hooks.triggerHook("response:error", backendResponse, controls);
-        if (controls.displayError) {
+        if (controls.displayError && !headers.get("Content-Type")?.includes("application/json")) {
           this.renderError(html);
         }
         this.backendRequest = null;

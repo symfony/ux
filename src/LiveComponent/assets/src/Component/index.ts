@@ -317,7 +317,7 @@ export default class Component {
                 this.valueStore.pushPendingPropsBackToDirty();
                 this.hooks.triggerHook('response:error', backendResponse, controls);
 
-                if (controls.displayError) {
+                if (controls.displayError && !headers.get('Content-Type')?.includes('application/json')) {
                     this.renderError(html);
                 }
 
