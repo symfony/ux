@@ -65,7 +65,7 @@ jobs:
 
                   # Exclude deprecated packages when testing against lowest dependencies
                   if [ "${{ matrix.dependency-version }}" = "lowest" ]; then
-                    EXCLUDED_PACKAGES="$EXCLUDED_PACKAGES|LazyImage"
+                    EXCLUDED_PACKAGES="$EXCLUDED_PACKAGES|LazyImage|TogglePassword"
                   fi
 
                   PACKAGES=$(find src/ -mindepth 2 -type f -name composer.json -not -path "*/vendor/*" -printf '%h\n' | sed 's/^src\///' | grep -Ev "$EXCLUDED_PACKAGES" | sort |  tr '\n' ' ')

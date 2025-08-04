@@ -1,6 +1,13 @@
 Symfony UX TogglePassword
 =========================
 
+.. warning::
+
+    **Deprecated: This package has been deprecated in 2.x and will be removed in the next major version.**
+
+    To keep the same functionality in your Symfony application, please follow the migration steps
+    from the `Symfony UX TogglePassword README.md`_.
+
 Symfony UX TogglePassword is a Symfony bundle providing visibility toggle for password inputs
 in Symfony Forms. It is part of `the Symfony UX initiative`_.
 
@@ -306,3 +313,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _Heroicons: https://heroicons.com/
 .. _`@symfony/ux-toggle-password npm package`: https://www.npmjs.com/package/@symfony/ux-toggle-password
+.. _`Symfony UX TogglePassword README.md`: https://github.com/symfony/ux/tree/2.x/src/TogglePassword/README.md
