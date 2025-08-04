@@ -7,13 +7,13 @@ export default class implements PluginInterface {
     private element: Element;
     private pollingDirector: PollingDirector;
 
-    attachToComponent(component: Component): void {
+    attachToComponent(component: Component & { pollingDirector?: PollingDirector }): void {
         this.element = component.element;
         this.pollingDirector = new PollingDirector(component);
         this.initializePolling();
 
         // access from stimulus_controller
-        (component as any).pollingDirector = this.pollingDirector;
+        component.pollingDirector = this.pollingDirector;
 
         component.on('connect', () => {
             this.pollingDirector.startAllPolling();
