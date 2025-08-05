@@ -36,14 +36,8 @@ class UrlFactory
             return null;
         }
 
-        // Make sure to handle only path and query
-        $previousUrl = $parsed['path'] ?? '';
-        if (isset($parsed['query'])) {
-            $previousUrl .= '?'.$parsed['query'];
-        }
-
         try {
-            $newUrl = $this->createPath($previousUrl, $pathMappedProps);
+            $newUrl = $this->createPath($parsed['path'] ?? '', $pathMappedProps);
         } catch (ResourceNotFoundException|MethodNotAllowedException|MissingMandatoryParametersException) {
             return null;
         }
@@ -60,10 +54,27 @@ class UrlFactory
 
     private function createPath(string $previousUrl, array $props): string
     {
-        return $this->router->generate(
-            $this->router->match($previousUrl)['_route'] ?? '',
+        $newPath = $this->router->generate(
+            $this->matchRoute($previousUrl),
             $props
         );
+
+        return $newPath;
+    }
+
+    private function matchRoute(string $previousUrl): string
+    {
+        $context = $this->router->getContext();
+        $tmpContext = clone $context;
+        $tmpContext->setMethod('GET');
+        $this->router->setContext($tmpContext);
+        try {
+            $match = $this->router->match($previousUrl);
+        } finally {
+            $this->router->setContext($context);
+        }
+
+        return $match['_route'] ?? '';
     }
 
     private function replaceQueryString($url, array $props): string
