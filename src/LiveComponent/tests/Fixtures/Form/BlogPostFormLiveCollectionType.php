@@ -21,7 +21,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\BlogPost;
 
 class BlogPostFormLiveCollectionType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('title', TextType::class)
@@ -34,14 +34,14 @@ class BlogPostFormLiveCollectionType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => BlogPost::class,
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'blog_post_form';
     }

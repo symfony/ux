@@ -38,7 +38,7 @@ class TwigComponentKernel extends Kernel
         ];
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) {
             $container->loadFromExtension('framework', [

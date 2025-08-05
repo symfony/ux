@@ -46,9 +46,17 @@ jobs:
                     -   php-version: '8.1'
                         symfony-version: '6.4.*'
                         os: 'windows-latest'
+                    # Explicit Symfony versions
+                    -  php-version: '8.1'
+                       symfony-version: '6.4.*'
+                    -  php-version: '8.2'
+                       symfony-version: '7.3.*' # TODO: change to '7.4' when Symfony 7.4 is released
+                    -  php-version: '8.4'
+                       symfony-version: '8.0.x-dev' # TODO: change to '8.0' when Symfony 8.0 is released
+                       minimum-stability: 'dev' # TODO: remove when Symfony 8.0 is released
 
         env:
-            SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=5.4' }}
+            SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=5.4' }} # TODO: To change to '>=6.4' in 3.x
         steps:
             - uses: actions/checkout@v4
 

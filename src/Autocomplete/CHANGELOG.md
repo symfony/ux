@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.29.0
+
+-  Add Symfony 8 support
+
 ## 2.28.0
 
 -   Default plugins like `clear_button` or `remove_button` can now be removed when setting their value to `false` in the `tom_select_options.plugins` option, for example:

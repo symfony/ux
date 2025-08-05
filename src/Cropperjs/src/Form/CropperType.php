@@ -26,7 +26,7 @@ use Symfony\UX\Cropperjs\Model\Crop;
  */
 class CropperType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('options', HiddenType::class, [
@@ -40,7 +40,7 @@ class CropperType extends AbstractType
         ;
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['attr']['class'] = trim(($view->vars['attr']['class'] ?? '').' cropperjs');
 
@@ -50,7 +50,7 @@ class CropperType extends AbstractType
         }
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired('public_url');
         $resolver->setAllowedTypes('public_url', 'string');
@@ -62,7 +62,7 @@ class CropperType extends AbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'cropper';
     }

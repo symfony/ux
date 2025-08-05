@@ -43,7 +43,7 @@ replacement of the native FileType class::
 
     class CommentFormType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 // ...
@@ -136,7 +136,7 @@ Then in your form, add your controller as an HTML attribute::
 
     class CommentFormType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 // ...

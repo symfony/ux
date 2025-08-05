@@ -45,7 +45,7 @@ class DropzoneExtension extends Extension implements PrependExtensionInterface
         }
     }
 
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $container
             ->setDefinition('form.dropzone', new Definition(DropzoneType::class))

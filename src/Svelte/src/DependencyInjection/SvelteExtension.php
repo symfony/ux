@@ -31,7 +31,7 @@ use Symfony\UX\Svelte\Twig\SvelteComponentExtension;
  */
 class SvelteExtension extends Extension implements PrependExtensionInterface, ConfigurationInterface
 {
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
@@ -52,7 +52,7 @@ class SvelteExtension extends Extension implements PrependExtensionInterface, Co
             ->addTag('asset_mapper.compiler', ['priority' => 100]);
     }
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         if (!$this->isAssetMapperAvailable($container)) {
             return;

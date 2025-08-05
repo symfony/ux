@@ -79,6 +79,10 @@ final class ComponentAttributesTest extends TestCase
      */
     public function testCanAddStimulusController()
     {
+        if (!class_exists(AbstractStimulusDto::class)) {
+            $this->markTestSkipped('AbstractStimulusDto class does not exist, skipping test.');
+        }
+
         $attributes = new ComponentAttributes([
             'class' => 'foo',
             'data-controller' => 'live',
@@ -108,6 +112,10 @@ final class ComponentAttributesTest extends TestCase
      */
     public function testCanAddStimulusControllerIfNoneAlreadyPresent()
     {
+        if (!class_exists(AbstractStimulusDto::class)) {
+            $this->markTestSkipped('AbstractStimulusDto class does not exist, skipping test.');
+        }
+
         $attributes = new ComponentAttributes([
             'class' => 'foo',
         ], new EscaperRuntime());

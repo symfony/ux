@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.29.0
+
+-  Add Symfony 8 support
+
 ## 2.23.0
 
 -   Listen to Stimulus `disconnect` event to destroy the chart #1944

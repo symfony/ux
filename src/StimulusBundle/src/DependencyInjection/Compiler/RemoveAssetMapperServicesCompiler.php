@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class RemoveAssetMapperServicesCompiler implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('asset_mapper')) {
             $container->removeDefinition('stimulus.ux_controllers_twig_runtime');

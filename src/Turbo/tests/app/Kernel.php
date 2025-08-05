@@ -24,6 +24,7 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\MercureBundle\MercureBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
+use Symfony\Component\Config\Exception\LoaderLoadException;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -132,9 +133,13 @@ class Kernel extends BaseKernel
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.xml')->prefix('/_wdt');
-        $routes->import('@WebProfilerBundle/Resources/config/routing/profiler.xml')->prefix('/_profiler');
-
+        try {
+            $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.xml')->prefix('/_wdt');
+            $routes->import('@WebProfilerBundle/Resources/config/routing/profiler.xml')->prefix('/_profiler');
+        } catch (LoaderLoadException) {
+            $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.php', 'php')->prefix('/_wdt');
+            $routes->import('@WebProfilerBundle/Resources/config/routing/profiler.php', 'php')->prefix('/_profiler');
+        }
         $routes->add('home', '/')->controller(TemplateController::class)->defaults(['template' => 'home.html.twig']);
         $routes->add('block', '/block')->controller(TemplateController::class)->defaults(['template' => 'block.html.twig']);
         $routes->add('lazy', '/lazy')->controller(TemplateController::class)->defaults(['template' => 'lazy.html.twig']);

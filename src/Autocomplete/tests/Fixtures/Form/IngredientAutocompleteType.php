@@ -22,7 +22,7 @@ use Symfony\UX\Autocomplete\Tests\Fixtures\Entity\Ingredient;
 #[AsEntityAutocompleteField]
 class IngredientAutocompleteType extends AbstractType
 {
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'class' => Ingredient::class,

@@ -66,7 +66,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
 {
     public const TEMPLATES_MAP_FILENAME = 'live_components_twig_templates.map';
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         // Register the form theme if TwigBundle is available
         $bundles = $container->getParameter('kernel.bundles');

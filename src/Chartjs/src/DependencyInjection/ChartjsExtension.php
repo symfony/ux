@@ -28,7 +28,7 @@ use Symfony\UX\Chartjs\Twig\ChartExtension;
  */
 class ChartjsExtension extends Extension implements PrependExtensionInterface
 {
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $container
             ->setDefinition('chartjs.builder', new Definition(ChartBuilder::class))
@@ -48,7 +48,7 @@ class ChartjsExtension extends Extension implements PrependExtensionInterface
         ;
     }
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         if (!$this->isAssetMapperAvailable($container)) {
             return;

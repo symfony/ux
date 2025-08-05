@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.29.0
+
+-  Add Symfony 8 support
+
 ## 2.28.0
 
 -   [BC BREAK] By modernizing our building tools, the file `dist/render_controller.js` now does not contain any useless
