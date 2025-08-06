@@ -1340,12 +1340,12 @@ Component with a ``JsonResponse`` in a LiveAction:
     // src/Twig/Components/Posts.php
     namespace App\Twig\Components;
 
+    use App\Repository\PostRepository;
+    use Doctrine\ORM\EntityManagerInterface;
+    use Exception;
     use Symfony\Component\HttpFoundation\JsonResponse;
     use Symfony\UX\LiveComponent\Attribute\LiveAction;
     use Symfony\UX\LiveComponent\Attribute\LiveArg;
-    use Doctrine\ORM\EntityManagerInterface;
-    use App\Repository\PostRepository;
-    use Exception;
 
     class Posts
     {
