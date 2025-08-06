@@ -2,6 +2,10 @@
 
 ## 2.28.0
 
+-   Added `JSONResponse` support (LiveAction functions) in LiveComponent.
+
+## 2.28.0
+
 -   Add new modifiers for input validations, useful to prevent unnecessary HTTP requests:
     - `min_length` and `max_length`: validate length from textual input elements
     - `min_value` and `max_value`: validate value from numeral input elements

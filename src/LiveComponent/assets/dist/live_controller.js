@@ -143,6 +143,24 @@ var BackendResponse_default = class {
     }
     return this.liveUrl;
   }
+  async checkResponseType() {
+    const contentType = this.response.headers.get("Content-Type") || "";
+    const headers = this.response.headers;
+    const text = await this.getBody();
+    const trimmed = text.trim();
+    if (contentType.includes("application/json")) {
+      try {
+        JSON.parse(trimmed);
+        return { type: "json", body: trimmed };
+      } catch {
+      }
+    }
+    const isValidHtml = trimmed.length > 0 && (contentType.includes("application/vnd.live-component+html") || headers.get("X-Live-Redirect") !== null);
+    if (isValidHtml) {
+      return { type: "html", body: trimmed };
+    }
+    return { type: "invalid", body: trimmed };
+  }
 };
 
 // src/Util/getElementAsTagText.ts
@@ -2005,23 +2023,32 @@ var Component = class {
     this.isRequestPending = false;
     this.backendRequest.promise.then(async (response) => {
       const backendResponse = new BackendResponse_default(response);
-      const html = await backendResponse.getBody();
+      const result = await backendResponse.checkResponseType();
+      if (result.type === "json") {
+        this.backendRequest = null;
+        thisPromiseResolve(backendResponse);
+        if (this.isRequestPending) {
+          this.isRequestPending = false;
+          this.performRequest();
+        }
+        return response;
+      }
       for (const input of Object.values(this.pendingFiles)) {
         input.value = "";
       }
-      const headers = backendResponse.response.headers;
-      if (!headers.get("Content-Type")?.includes("application/vnd.live-component+html") && !headers.get("X-Live-Redirect")) {
+      const backendResponseBody = result.body;
+      if (result.type === "invalid") {
         const controls = { displayError: true };
         this.valueStore.pushPendingPropsBackToDirty();
         this.hooks.triggerHook("response:error", backendResponse, controls);
-        if (controls.displayError && !headers.get("Content-Type")?.includes("application/json")) {
-          this.renderError(html);
+        if (controls.displayError) {
+          this.renderError(backendResponseBody);
         }
         this.backendRequest = null;
         thisPromiseResolve(backendResponse);
         return response;
       }
-      this.processRerender(html, backendResponse);
+      this.processRerender(backendResponseBody, backendResponse);
       const liveUrl = backendResponse.getLiveUrl();
       if (liveUrl) {
         history.replaceState(
@@ -2039,9 +2066,9 @@ var Component = class {
       return response;
     });
   }
-  processRerender(html, backendResponse) {
+  processRerender(backendResponseBody, backendResponse) {
     const controls = { shouldRender: true };
-    this.hooks.triggerHook("render:started", html, backendResponse, controls);
+    this.hooks.triggerHook("render:started", backendResponseBody, backendResponse, controls);
     if (!controls.shouldRender) {
       return;
     }
@@ -2060,7 +2087,7 @@ var Component = class {
     });
     let newElement;
     try {
-      newElement = htmlToElement(html);
+      newElement = htmlToElement(backendResponseBody);
       if (!newElement.matches("[data-controller~=live]")) {
         throw new Error("A live component template must contain a single root controller element.");
       }
@@ -2130,7 +2157,7 @@ var Component = class {
     }, this.calculateDebounce(debounce));
   }
   // inspired by Livewire!
-  renderError(html) {
+  renderError(backendResponseBody) {
     let modal = document.getElementById("live-component-error");
     if (modal) {
       modal.innerHTML = "";
@@ -2156,7 +2183,7 @@ var Component = class {
     document.body.style.overflow = "hidden";
     if (iframe.contentWindow) {
       iframe.contentWindow.document.open();
-      iframe.contentWindow.document.write(html);
+      iframe.contentWindow.document.write(backendResponseBody);
       iframe.contentWindow.document.close();
     }
     const closeModal = (modal2) => {

@@ -3,7 +3,7 @@ import { Response } from 'node-fetch';
 import { describe, expect, it } from 'vitest';
 import type { BackendAction, BackendInterface } from '../../src/Backend/Backend';
 import BackendRequest from '../../src/Backend/BackendRequest';
-import type BackendResponse from '../../src/Backend/BackendResponse';
+import BackendResponse from '../../src/Backend/BackendResponse';
 import Component, { proxifyComponent } from '../../src/Component';
 import { noopElementDriver } from '../tools';
 
@@ -130,5 +130,123 @@ describe('Component class', () => {
             expect(backend.actions[0].name).toBe('save');
             expect(backend.actions[0].args).toEqual({ foo: 'bar', secondArg: 'secondValue' });
         });
+    });
+});
+
+describe('BackendResponse.checkResponseType', () => {
+    it('should detect valid JSON response', async () => {
+        const jsonData = JSON.stringify({ message: 'hello' });
+        const response = new Response(jsonData, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        const backendResponse = new BackendResponse(response);
+        const result = await backendResponse.checkResponseType();
+
+        expect(result.type).toBe('json');
+        expect(result.body).toBe(jsonData);
+    });
+
+    it('should detect valid HTML response with correct Content-Type', async () => {
+        const htmlContent = '<div>Live component</div>';
+        const response = new Response(htmlContent, {
+            headers: {
+                'Content-Type': 'application/vnd.live-component+html',
+            },
+        });
+
+        const backendResponse = new BackendResponse(response);
+        const result = await backendResponse.checkResponseType();
+
+        expect(result.type).toBe('html');
+        expect(result.body).toBe(htmlContent);
+    });
+
+    it('should detect valid HTML response with X-Live-Redirect header', async () => {
+        const htmlContent = '<div>Redirected HTML</div>';
+        const response = new Response(htmlContent, {
+            headers: {
+                'X-Live-Redirect': '/some/path',
+            },
+        });
+
+        const backendResponse = new BackendResponse(response);
+        const result = await backendResponse.checkResponseType();
+
+        expect(result.type).toBe('html');
+        expect(result.body).toBe(htmlContent);
+    });
+
+    it('should detect invalid response (not JSON or HTML)', async () => {
+        const plainText = 'Just a plain response';
+        const response = new Response(plainText, {
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+        });
+
+        const backendResponse = new BackendResponse(response);
+        const result = await backendResponse.checkResponseType();
+
+        expect(result.type).toBe('invalid');
+        expect(result.body).toBe(plainText);
+    });
+
+    it('should detect broken JSON as invalid', async () => {
+        const brokenJson = '{"invalidJson": ';
+        const response = new Response(brokenJson, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        const backendResponse = new BackendResponse(response);
+        const result = await backendResponse.checkResponseType();
+
+        expect(result.type).toBe('invalid');
+        expect(result.body).toBe(brokenJson.trim());
+    });
+
+    it('should detect invalid response with empty body', async () => {
+        const emptyBody = '';
+        const response = new Response(emptyBody, {
+            headers: {
+                'Content-Type': 'application/vnd.live-component+html',
+            },
+        });
+
+        const backendResponse = new BackendResponse(response);
+        const result = await backendResponse.checkResponseType();
+
+        expect(result.type).toBe('invalid');
+        expect(result.body).toBe(emptyBody);
+    });
+
+    it('should detect invalid response with no Content-Type header', async () => {
+        const bodyContent = '<div>Some HTML</div>';
+        const response = new Response(bodyContent, {
+            headers: {
+                // no Content-Type header
+            },
+        });
+
+        const backendResponse = new BackendResponse(response);
+        const result = await backendResponse.checkResponseType();
+
+        expect(result.type).toBe('invalid');
+        expect(result.body).toBe(bodyContent);
+    });
+
+    it('should detect invalid response with empty body and no headers', async () => {
+        const emptyBody = '';
+        const response = new Response(emptyBody);
+
+        const backendResponse = new BackendResponse(response);
+        const result = await backendResponse.checkResponseType();
+
+        expect(result.type).toBe('invalid');
+        expect(result.body).toBe(emptyBody);
     });
 });
