@@ -1335,7 +1335,7 @@ Based on the JSON data, you can perform operations or trigger actions within the
 
 Component with a ``JsonResponse`` in a LiveAction:
 
-.. code-block:: php
+::
 
     // src/Twig/Components/Posts.php
     namespace App\Twig\Components;

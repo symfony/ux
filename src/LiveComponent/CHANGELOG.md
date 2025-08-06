@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 2.28.0
+## 2.29.0
 
 -   Added `JSONResponse` support (LiveAction functions) in LiveComponent.
 
