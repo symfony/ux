@@ -981,9 +981,20 @@ component system from Stimulus:
 
 The following hooks are available (along with the arguments that are passed):
 
+
+.. versionadded:: 2.29
+
+    ``render:started`` argument changed in 2.29.
+
+.. code-block:: diff
+
+    - render:started`` args ``(html: string, response: BackendResponse, controls: { shouldRender: boolean })
+    + render:started`` args ``(backendResponseBody: string, response: BackendResponse, controls: { shouldRender: boolean })
+
 * ``connect`` args ``(component: Component)``
 * ``disconnect`` args ``(component: Component)``
-* ``render:started`` args ``(html: string, response: BackendResponse, controls: { shouldRender: boolean })``
+* ``request:started`` args ``(requestConfig: any)``
+* ``render:started`` args ``(backendResponseBody: string, response: BackendResponse, controls: { shouldRender: boolean })``
 * ``render:finished`` args ``(component: Component)``
 * ``response:error`` args ``(backendResponse: BackendResponse, controls: { displayError: boolean })``
 * ``loading.state:started`` args ``(element: HTMLElement, request: BackendRequest)``
@@ -1305,10 +1316,122 @@ action::
         // ...
     }
 
+
 You probably noticed one interesting trick: to make redirecting easier,
 the component now extends ``AbstractController``! That is totally
 allowed, and gives you access to all of your normal controller
 shortcuts. We even added a flash message!
+
+JSONResponse in LiveActions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.29
+
+   LiveAction JSONResponse support was added in version 2.29.
+
+You can now return a ``JsonResponse`` from methods marked with ``LiveAction``.
+If your component is connected to a Stimulus controller, you can handle the ``JsonResponse`` on the client side.
+Based on the JSON data, you can perform operations or trigger actions within the component. For example:
+
+Component with a ``JsonResponse`` in a LiveAction:
+
+::
+
+    // src/Twig/Components/Posts.php
+    namespace App\Twig\Components;
+
+    use App\Repository\PostRepository;
+    use Doctrine\ORM\EntityManagerInterface;
+    use Exception;
+    use Symfony\Component\HttpFoundation\JsonResponse;
+    use Symfony\UX\LiveComponent\Attribute\LiveAction;
+    use Symfony\UX\LiveComponent\Attribute\LiveArg;
+
+    class Posts
+    {
+        public function __construct(
+            private EntityManagerInterface $entityManager,
+            private PostRepository $postRepository,
+        ) {}
+
+        #[LiveAction]
+        public function deletePost(#[LiveArg] int $id): JsonResponse
+        {
+            $post = $this->postRepository->find($id);
+            if ($post) {
+                try {
+                    $this->entityManager->remove($post);
+                    $this->entityManager->flush();
+                } catch (Exception) {
+                    return new JsonResponse([
+                        'status' => 'error',
+                        'message' => 'Post delete failed.'
+                    ]);
+                }
+
+                return new JsonResponse([
+                    'status' => 'success',
+                    'message' => 'Post deleted successfully.'
+                ]);
+            }
+
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Error: Post was not found.'
+            ]);
+        }
+    }
+
+Triggering the LiveAction from Twig:
+
+.. code-block:: html+twig
+
+    <div {{ attributes.defaults(stimulus_controller('postactions')) }}>
+        <button
+            data-postactions-id-param="{{ post.id }}"
+            data-action="click->postactions#postDelete"
+            class="btn btn-danger btn-xs d-flex align-items-center justify-content-center"
+            title="Delete"
+        >
+            Delete
+        </button>
+    </div>
+
+Handling the ``JsonResponse`` in a Stimulus controller:
+
+.. code-block:: javascript
+
+    // assets/controllers/postactions-controller.js
+    import { Controller } from '@hotwired/stimulus';
+    import { getComponent } from '@symfony/ux-live-component';
+
+    export default class extends Controller {
+        async initialize() {
+            this.component = await getComponent(this.element);
+        }
+
+        async postDelete(event) {
+            let id = event.params.id;
+
+            if (id === undefined || id === 0) {
+                return;
+            }
+
+            const result = await this.component.action('deletePost', { id: id });
+            const response = JSON.parse(result.body);
+
+            if (response.status === "success") {
+                console.log('Success -> ', response.message)
+            } else {
+                // ...
+            }
+
+            // Note: The component does not re-render automatically after a JsonResponse.
+            // You must call render() manually if you want to re-render it.
+            // this.component.render();
+        }
+    }
+
 
 .. _files:
 

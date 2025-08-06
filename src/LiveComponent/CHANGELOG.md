@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.29.0
+
+-   Added `JSONResponse` support (LiveAction functions) in LiveComponent.
+
 ## 2.28.0
 
 -   Add new modifiers for input validations, useful to prevent unnecessary HTTP requests:

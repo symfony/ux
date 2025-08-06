@@ -20,6 +20,11 @@ export type ComponentHooks = {
     connect: (component: Component) => MaybePromise;
     disconnect: (component: Component) => MaybePromise;
     'request:started': (requestConfig: any) => MaybePromise;
+    'render:started': (
+        backendResponseBody: string,
+        backendResponse: BackendResponse,
+        controls: { shouldRender: boolean }
+    ) => MaybePromise;
     'render:finished': (component: Component) => MaybePromise;
     'response:error': (backendResponse: BackendResponse, controls: { displayError: boolean }) => MaybePromise;
     'loading.state:started': (element: HTMLElement, request: BackendRequest) => MaybePromise;
@@ -300,34 +305,43 @@ export default class Component {
 
         this.backendRequest.promise.then(async (response) => {
             const backendResponse = new BackendResponse(response);
-            const html = await backendResponse.getBody();
+            const result = await backendResponse.checkResponseType();
 
-            // clear sent files inputs
+            if (result.type === 'json') {
+                this.backendRequest = null;
+                thisPromiseResolve(backendResponse);
+
+                if (this.isRequestPending) {
+                    this.isRequestPending = false;
+                    this.performRequest();
+                }
+                return response;
+            }
+
+            // Clear all file inputs
             for (const input of Object.values(this.pendingFiles)) {
                 input.value = '';
             }
 
+            const backendResponseBody = result.body;
+
             // if the response does not contain a component, render as an error
-            const headers = backendResponse.response.headers;
-            if (
-                !headers.get('Content-Type')?.includes('application/vnd.live-component+html') &&
-                !headers.get('X-Live-Redirect')
-            ) {
+            if (result.type === 'invalid') {
                 const controls = { displayError: true };
                 this.valueStore.pushPendingPropsBackToDirty();
                 this.hooks.triggerHook('response:error', backendResponse, controls);
 
                 if (controls.displayError) {
-                    this.renderError(html);
+                    this.renderError(backendResponseBody);
                 }
 
                 this.backendRequest = null;
                 thisPromiseResolve(backendResponse);
-
                 return response;
             }
 
-            this.processRerender(html, backendResponse);
+            // HTML processing
+            this.processRerender(backendResponseBody, backendResponse);
             const liveUrl = backendResponse.getLiveUrl();
             if (liveUrl) {
                 history.replaceState(
@@ -337,11 +351,9 @@ export default class Component {
                 );
             }
 
-            // finally resolve this promise
             this.backendRequest = null;
             thisPromiseResolve(backendResponse);
 
-            // do we already have another request pending?
             if (this.isRequestPending) {
                 this.isRequestPending = false;
                 this.performRequest();
@@ -351,9 +363,9 @@ export default class Component {
         });
     }
 
-    private processRerender(html: string, backendResponse: BackendResponse) {
+    private processRerender(backendResponseBody: string, backendResponse: BackendResponse) {
         const controls = { shouldRender: true };
-        this.hooks.triggerHook('render:started', html, backendResponse, controls);
+        this.hooks.triggerHook('render:started', backendResponseBody, backendResponse, controls);
         // used to notify that the component doesn't live on the page anymore
         if (!controls.shouldRender) {
             return;
@@ -387,7 +399,7 @@ export default class Component {
 
         let newElement: HTMLElement;
         try {
-            newElement = htmlToElement(html);
+            newElement = htmlToElement(backendResponseBody);
 
             if (!newElement.matches('[data-controller~=live]')) {
                 throw new Error('A live component template must contain a single root controller element.');
@@ -477,7 +489,7 @@ export default class Component {
     }
 
     // inspired by Livewire!
-    private renderError(html: string): void {
+    private renderError(backendResponseBody: string): void {
         let modal = document.getElementById('live-component-error');
         if (modal) {
             modal.innerHTML = '';
@@ -505,7 +517,7 @@ export default class Component {
         document.body.style.overflow = 'hidden';
         if (iframe.contentWindow) {
             iframe.contentWindow.document.open();
-            iframe.contentWindow.document.write(html);
+            iframe.contentWindow.document.write(backendResponseBody);
             iframe.contentWindow.document.close();
         }
 

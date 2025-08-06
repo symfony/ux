@@ -7,6 +7,10 @@ declare class export_default$2{
     constructor(response: Response);
     getBody(): Promise<string>;
     getLiveUrl(): string | null;
+    checkResponseType(): Promise<{
+        type: 'json' | 'html' | 'invalid';
+        body: string;
+    }>;
 }
 
 declare class export_default$1{
@@ -81,6 +85,9 @@ type ComponentHooks = {
     connect: (component: Component) => MaybePromise;
     disconnect: (component: Component) => MaybePromise;
     'request:started': (requestConfig: any) => MaybePromise;
+    'render:started': (backendResponseBody: string, backendResponse: export_default$2, controls: {
+        shouldRender: boolean;
+    }) => MaybePromise;
     'render:finished': (component: Component) => MaybePromise;
     'response:error': (backendResponse: export_default$2, controls: {
         displayError: boolean;
