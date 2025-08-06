@@ -112,7 +112,7 @@ Or, create the field by hand::
     #[AsEntityAutocompleteField]
     class FoodAutocompleteField extends AbstractType
     {
-        public function configureOptions(OptionsResolver $resolver)
+        public function configureOptions(OptionsResolver $resolver): void
         {
             $resolver->setDefaults([
                 'class' => Food::class,
@@ -512,7 +512,7 @@ your ``configureOptions()`` method:
 
 .. code-block:: diff
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'class' => Food::class,

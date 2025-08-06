@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.29.0
+
+-  Add Symfony 8 support
+
 ## 2.25.2
 
 -   Fix `ComponentAttributes` rendering when using `StimulusAttributes` as default attributes

@@ -20,7 +20,7 @@ use Symfony\UX\Autocomplete\Tests\Fixtures\Entity\Product;
 #[AsEntityAutocompleteField]
 class ProductWithTagsAutocompleteType extends AbstractType
 {
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'class' => Product::class,

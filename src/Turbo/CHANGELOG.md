@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.29.0
+
+-  Add Symfony 8 support
+
 ## 2.24.0
 
 -   Add Twig Extensions for `meta` tags

@@ -29,7 +29,7 @@ use Symfony\UX\Cropperjs\Form\CropperType;
  */
 class CropperjsExtension extends Extension implements PrependExtensionInterface
 {
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $container
             ->setDefinition('form.cropper', new Definition(CropperType::class))
@@ -51,7 +51,7 @@ class CropperjsExtension extends Extension implements PrependExtensionInterface
         $container->setAlias(CropperInterface::class, 'cropper')->setPublic(false);
     }
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         if (!$this->isAssetMapperAvailable($container)) {
             return;

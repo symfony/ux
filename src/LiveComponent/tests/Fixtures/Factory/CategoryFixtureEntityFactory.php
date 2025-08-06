@@ -14,6 +14,9 @@ namespace Symfony\UX\LiveComponent\Tests\Fixtures\Factory;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\CategoryFixtureEntity;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
+/**
+ * @extends PersistentProxyObjectFactory<CategoryFixtureEntity>
+ */
 final class CategoryFixtureEntityFactory extends PersistentProxyObjectFactory
 {
     protected function defaults(): array|callable

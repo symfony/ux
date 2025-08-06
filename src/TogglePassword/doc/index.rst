@@ -53,7 +53,7 @@ Any ``PasswordType`` can be transformed into a toggle password field by adding t
 
     class CredentialFormType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 // ...
@@ -73,7 +73,7 @@ You can disable it by passing ``use_toggle_form_theme`` option to ``false``::
 
     class CredentialFormType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 // ...
@@ -103,7 +103,7 @@ to the field (use ``null`` to disable label or icon)::
 
     class CredentialFormType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 // ...
@@ -173,7 +173,7 @@ A ``toggle_container_classes`` option is also available to customize the contain
 
     class CredentialFormType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 // ...
@@ -255,7 +255,7 @@ Then in your form, add your controller as an HTML attribute::
 
     class CredentialFormType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 // ...

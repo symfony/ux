@@ -33,7 +33,7 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
     ) {
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $formType = $builder->getType()->getInnerType();
         $attribute = AsEntityAutocompleteField::getInstance($formType::class);
@@ -52,7 +52,7 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
             ->setDataMapper($this);
     }
 
-    public function finishView(FormView $view, FormInterface $form, array $options)
+    public function finishView(FormView $view, FormInterface $form, array $options): void
     {
         // Add a custom block prefix to inner field to ease theming:
         array_splice($view['autocomplete']->vars['block_prefixes'], -1, 0, 'ux_entity_autocomplete_inner');
@@ -65,7 +65,7 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
         $view->vars['compound_data'] = true;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'multiple' => false,

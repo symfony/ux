@@ -1438,7 +1438,7 @@ instant validation as the user types::
 
     class PostType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 ->add('title')
@@ -1447,7 +1447,7 @@ instant validation as the user types::
             ;
         }
 
-        public function configureOptions(OptionsResolver $resolver)
+        public function configureOptions(OptionsResolver $resolver): void
         {
             $resolver->setDefaults([
                 'data_class' => Post::class,
@@ -1749,7 +1749,7 @@ typing! To fix this, either re-render on the ``change`` event (which
 fires after the text box loses focus) or set the ``trim`` option of your
 field to ``false``::
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             // ...
@@ -1768,7 +1768,7 @@ a submit.
 
 To fix this, set the ``always_empty`` option to ``false`` in your form::
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             // ...
@@ -1818,7 +1818,7 @@ via the ``CollectionType``::
 
     class BlogPostFormType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 ->add('title', TextType::class)
@@ -1832,7 +1832,7 @@ via the ``CollectionType``::
             ;
         }
 
-        public function configureOptions(OptionsResolver $resolver)
+        public function configureOptions(OptionsResolver $resolver): void
         {
             $resolver->setDefaults(['data_class' => BlogPost::class]);
         }
@@ -1964,7 +1964,7 @@ via the ``LiveCollectionType``::
 
     class BlogPostFormType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 ->add('title', TextType::class)
@@ -1975,7 +1975,7 @@ via the ``LiveCollectionType``::
             ;
         }
 
-        public function configureOptions(OptionsResolver $resolver)
+        public function configureOptions(OptionsResolver $resolver): void
         {
             $resolver->setDefaults(['data_class' => BlogPost::class]);
         }
