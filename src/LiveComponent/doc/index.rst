@@ -1423,7 +1423,7 @@ Handling the ``JsonResponse`` in a Stimulus controller:
             if (response.status === "success") {
                 console.log('Success -> ', response.message)
             } else {
-                //...
+                // ...
             }
 
             // Note: The component does not re-render automatically after a JsonResponse.
