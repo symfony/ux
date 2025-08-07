@@ -2256,7 +2256,7 @@ need::
         public bool $agreeToTerms = false;
     }
 
-Be sure to add the ``IsValid`` attribute/annotation to any property
+Be sure to add the ``Valid`` attribute/annotation to any property
 where you want the object on that property to also be validated.
 
 Thanks to this setup, the component will now be automatically validated
