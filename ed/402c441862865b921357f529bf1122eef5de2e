@@ -1,0 +1,148 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-09T02:50:53Z
+
+(cannot ask for your review @Kocal as you're code owner, i would have otherwise ;) )
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-09T13:30:28Z
+
+You have 30000 markers in database. Sending them all in HTML is non sense. Clustering them in backend is definitively the way to go. That way you only send data you want to display, and fix the performance problem some people had with too many infowindow for instance.
+
+Moreover it enforces the initial problem this bundle save: abstract the map services and manipulate data / UI from backend.
+
+People that do want to use custom GoogleMaps SDK Methods wont install this Bundle, so -personal opinion- it’s a mistake to base our choices on what they would do there.
+
+Also this would not coexist with Live trait for now.
+
+So Next step is to continue the path and provide the missing link: making the LiveComponent able to react on map events: zoom or pan, clicks, etc.
+
+That’s where I am right now, I Hope i’ve clarified my vision and goal for both this feature and more generally this bundle.
+
+And would love to integrate this Into yours, if you have a différent one :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-02-09T13:38:23Z
+
+Thanks for the explanations! I was asking because I didn't see any modifications on `Map` nor in the documentation, and so I was wondering what you really wanted to do with this PR.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-09T13:58:27Z
+
+Yeah i'm sorry I miss time and need to push more often, or i end with hundreds of "features ready at 80%" on my computer and never find time to release them.
+
+Here, it's because two unrelated people asked me for the same exact thing last week, I've reopened my "geo" archives and started to prepare the foundations.
+
+I'd like to end this (documentation included) before 2.24 😅
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-04T08:01:11Z
+
+After a small rebase, that would be perfect 🤓
+
+---------------------------------------------------------------------------
+
+by rvmourik at 2025-04-03T11:56:51Z
+
+Just a question out of curiosity, will this be in 2.24? Thanks in advance
+
+---------------------------------------------------------------------------
+
+by mart-insiders at 2025-06-16T13:26:46Z
+
+Hi @rvmourik @Kocal ,
+I was wondering what the current state of this feature is and what is required to finish it.
+
+At the moment some issues occur when implementing [https://github.com/Leaflet/Leaflet.markercluster](https://github.com/Leaflet/Leaflet.markercluster) with the current leaflet bridge.
+The only possible way to add a leaflet layer with clustered markers at the moment is via javascript.
+This feels like unnecessary iterations over every marker in your stimulus controller.
+
+`import { Controller } from "@hotwired/stimulus";
+
+/* stimulusFetch: 'lazy' */
+export default class extends Controller {
+    connect() {
+        this.element.addEventListener('ux:map:connect', this._onConnect);
+    }
+
+    disconnect() {
+        this.element.removeEventListener('ux:map:connect', this._onConnect);
+    }
+
+    async _onConnect(event) {
+      await import("leaflet.markercluster/dist/leaflet.markercluster-src.js");
+
+      const { map } = event.detail;
+
+      var clusterMarkerLayer = L.markerClusterGroup({
+        spiderfyOnMaxZoom: true,
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: true
+      });
+
+      map.eachLayer(layer => {
+        if (!(layer instanceof L.Marker)) {
+            return;
+        }
+
+        clusterMarkerLayer.addLayer(layer);
+        map.removeLayer(layer);
+      })
+
+      map.addLayer(clusterMarkerLayer);
+    }
+}`
+
+An issue which occurs is Events are not persisted when creating a marker on this different layer.
+Would the following changes suffice to resolve this?
+- Implementation of a Layers object within the Map object or a reference in the Marker object.
+- Changing the `doCreateMarker` in `map_controller.js` to add a marker to a configured layer or as a layer to the map.
+
+I would like to hear your opinion on this matter.
+
+---------------------------------------------------------------------------
+
+by dannyvw at 2025-07-09T11:16:58Z
+
+@smnandre Do you perhaps have an update for this feature?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-07-10T02:18:26Z
+
+100% forgot this one : will rebase/clean tomorrow!
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-07-10T17:07:19Z
+
+Cleaned a bit:
+- Cluster is now countable + iterable
+- remove getCenterLat / getCenterLng with getCenter(): Point
+- add PHP 8.1/2 support
+- removed readonly classes
+- rebased  and changelog updated
+
+Not sure if doc will follow first, or if i first open the PR to integrate this in the components (depending on the time i find)
+
+@Kocal : to me it's ready
+
+Thx @dannyvw for the poke :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-07-11T00:51:05Z
+
+Thanks for all the feedback / suggestions @Kocal : all commited :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-08-07T21:45:51Z
+
+Rebased, conflicts fixed, and added some documentation.
+
+Will merge when CI becomes green
