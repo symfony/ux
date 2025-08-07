@@ -1,0 +1,36 @@
+---------------------------------------------------------------------------
+
+by mbuliard at 2025-08-06T21:11:40Z
+
+> Thanks for working on this, that's much appreciated! :)
+>
+> Is the modified test enough to cover issue #2975, or should we add a dedicated one?
+>
+> Also please, can you update your PR's title to something more relevant? Thanks!
+
+@Kocal
+I would have prefered to help for the fixes sooner but I was on vacation, without computer. :-/
+
+I edited the fixtures of functional tests to reproduce the bug. Previously the route was accepting all methods and the problem was not detected.
+
+I am confident that the issue #2975 is the same as the previous #2960 but the exception is caught by the hotfix #2961 and no new url is returned.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-08-07T06:37:24Z
+
+So should we remove the `MethodNotAllowedException` from `catch()`?
+
+---------------------------------------------------------------------------
+
+by mbuliard at 2025-08-07T09:19:32Z
+
+> So should we remove the `MethodNotAllowedException` from `catch()`?
+
+I think the exception should not happen, but since the `$previousUrl` comes from user-land, anything can enter, including a url matching a POST route, which would throw the exception. I would keep catching it, just in case.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-08-07T20:32:10Z
+
+I confirm it fixes #2975, thanks!
