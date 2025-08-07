@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\UX\LiveComponent\Util\UrlFactory;
 
@@ -40,10 +41,10 @@ class UrlFactoryTest extends TestCase
 
         yield 'keep_url_with_query_parameters' => [
             'input' => ['previousUrl' => 'https://symfony.com/foo/bar?prop1=val1&prop2=val2'],
-            '/foo/bar?prop1=val1&prop2=val2',
+            'expectedUrl' => '/foo/bar?prop1=val1&prop2=val2',
             'routerStubData' => [
-                'previousUrl' => '/foo/bar?prop1=val1&prop2=val2',
-                'newUrl' => '/foo/bar?prop1=val1&prop2=val2',
+                'previousUrl' => '/foo/bar',
+                'newUrl' => '/foo/bar',
             ],
         ];
 
@@ -61,6 +62,10 @@ class UrlFactoryTest extends TestCase
                 'queryMappedProps' => ['prop1' => 'val1', 'prop2' => 'val2'],
             ],
             'expectedUrl' => '/foo/bar?prop1=val1&prop3=oldValue&prop2=val2',
+            'routerStubData' => [
+                'previousUrl' => '/foo/bar',
+                'newUrl' => '/foo/bar',
+            ],
         ];
 
         yield 'add_path_parameters' => [
@@ -178,7 +183,13 @@ class UrlFactoryTest extends TestCase
         array $props = [],
     ): RouterInterface {
         $matchedRoute = 'default';
+        $context = $this->createMock(RequestContext::class);
         $router = $this->createMock(RouterInterface::class);
+        $router->expects(self::once())
+            ->method('getContext')
+            ->willReturn($context);
+        $router->expects(self::exactly(2))
+            ->method('setContext');
         $router->expects(self::once())
             ->method('match')
             ->with($previousUrl)

@@ -217,7 +217,7 @@ final class Kernel extends BaseKernel
         $routes->add('homepage', '/')->controller('kernel::index');
         $routes->add('alternate_live_route', '/alt/{_live_component}/{_live_action}')->defaults(['_live_action' => 'get']);
         $routes->add('localized_route', '/locale/{_locale}/{_live_component}/{_live_action}')->defaults(['_live_action' => 'get']);
-        $routes->add('route_with_prop', '/route_with_prop/{pathProp}');
+        $routes->add('route_with_prop', '/route_with_prop/{pathProp}')->methods(['GET']);
         $routes->add('route_with_alias_prop', '/route_with_alias_prop/{pathAlias}');
     }
 }
