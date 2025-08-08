@@ -45,7 +45,7 @@
     "symfony/http-client": "6.4|^7.0|^8.0",
     "symfony/stopwatch": "^6.4|^7.0|^8.0",
     "symfony/phpunit-bridge": "^7.2|^8.0",
-    "vincentlanglet/twig-cs-fixer": "^3.5",
+    "vincentlanglet/twig-cs-fixer": "^3.9",
     "spatie/phpunit-snapshot-assertions": "^4.2.17",
     "phpunit/phpunit": "^9.6.22",
     "symfony/ux-icons": "^2.18",

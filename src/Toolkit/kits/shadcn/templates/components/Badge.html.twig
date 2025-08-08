@@ -11,7 +11,7 @@
     },
 ) -%}
 <div
-    class="{{ style.apply({variant, outline}, attributes.render('class'))|tailwind_merge }}"
+    class="{{ style.apply({variant: variant, outline: outline}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}

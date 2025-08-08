@@ -9,7 +9,7 @@
     },
 ) -%}
 <div
-    class="{{ style.apply({orientation, decorative}, attributes.render('class'))|tailwind_merge }}"
+    class="{{ style.apply({orientation: orientation, decorative: decorative}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
         role: decorative ? 'none' : 'separator',
         'aria-orientation': decorative ? false : orientation,
