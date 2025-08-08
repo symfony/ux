@@ -10,7 +10,7 @@
 ) -%}
 
 <div
-    class="{{ style.apply({variant}, attributes.render('class'))|tailwind_merge }}"
+    class="{{ style.apply({variant: variant}, attributes.render('class'))|tailwind_merge }}"
     role="alert"
     {{ attributes }}
 >
