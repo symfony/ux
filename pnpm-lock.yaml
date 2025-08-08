@@ -5,12 +5,14 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@swup/plugin>@swup/prettier-config': link:node_modules/.ignored
   '@swup/plugin>@swup/browserslist-config': link:node_modules/.ignored
+  '@swup/plugin>@swup/prettier-config': link:node_modules/.ignored
   '@swup/plugin>microbundle': link:node_modules/.ignored
   '@swup/plugin>prettier': link:node_modules/.ignored
   '@swup/plugin>shelljs': link:node_modules/.ignored
   '@swup/plugin>shelljs-live': link:node_modules/.ignored
+
+packageExtensionsChecksum: sha256-WAjVn6fGcTN4WZY3qf7RaCWK/tjZAB60w1JyC1Mc7SA=
 
 importers:
 
@@ -285,6 +287,10 @@ importers:
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/Map/src/Bridge/Google/assets:
+    dependencies:
+      '@symfony/ux-map':
+        specifier: workspace:*
+        version: link:../../../../assets
     devDependencies:
       '@googlemaps/js-api-loader':
         specifier: ^1.16.6
@@ -292,9 +298,6 @@ importers:
       '@hotwired/stimulus':
         specifier: ^3.0.0
         version: 3.2.2
-      '@symfony/ux-map':
-        specifier: workspace:*
-        version: link:../../../../assets
       '@testing-library/dom':
         specifier: ^10.4.0
         version: 10.4.0
@@ -327,13 +330,14 @@ importers:
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
   src/Map/src/Bridge/Leaflet/assets:
+    dependencies:
+      '@symfony/ux-map':
+        specifier: workspace:*
+        version: link:../../../../assets
     devDependencies:
       '@hotwired/stimulus':
         specifier: ^3.0.0
         version: 3.2.2
-      '@symfony/ux-map':
-        specifier: workspace:*
-        version: link:../../../../assets
       '@testing-library/dom':
         specifier: ^10.4.0
         version: 10.4.0
