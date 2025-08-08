@@ -11,3 +11,12 @@ overrides:
   '@swup/plugin>prettier': link:node_modules/.ignored
   '@swup/plugin>shelljs': link:node_modules/.ignored
   '@swup/plugin>shelljs-live': link:node_modules/.ignored
+
+packageExtensions:
+    '@symfony/ux-google-map':
+      dependencies:
+        '@symfony/ux-map': 'workspace:*'
+
+    '@symfony/ux-leaflet-map':
+      dependencies:
+        '@symfony/ux-map': 'workspace:*'

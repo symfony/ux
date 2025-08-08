@@ -50,7 +50,6 @@
     "devDependencies": {
         "@googlemaps/js-api-loader": "^1.16.6",
         "@hotwired/stimulus": "^3.0.0",
-        "@symfony/ux-map": "workspace:*",
         "@testing-library/dom": "^10.4.0",
         "@testing-library/jest-dom": "^6.6.3",
         "@testing-library/user-event": "^14.6.1",

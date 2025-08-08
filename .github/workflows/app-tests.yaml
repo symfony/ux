@@ -54,27 +54,6 @@ jobs:
             working-directory: test_apps/encore-app
             dependency-versions: highest
 
-        - name: Manually replacing "workspace:*" references
-          run: |
-            # npm does not support "workspace:*" references, so we need to replace them with the actual package path
-            for PACKAGE_DATA in $(pnpm ls -r --json --depth -1 | jq 'map(select(.private != true))' | jq -c '.[]'); do
-              PACKAGE=$(echo $PACKAGE_DATA | jq -r '.name')
-              PACKAGE_PATH=$(echo $PACKAGE_DATA | jq -r '.path')
-
-              echo "🔍 Searching for \"workspace:*\" references in $PACKAGE_PATH/package.json"
-
-              # Manually replace "workspace:" constraints with the actual package version, it ensure packages can be installed with npm
-              jq -rc '[(.dependencies // {}) + (.devDependencies // {}) | to_entries[] | select(.value == "workspace:*") | .key][]' "$PACKAGE_PATH/package.json" | while read -r PACKAGE_FROM_WORKSPACE ; do
-                echo "ℹ️ Found \"$PACKAGE_FROM_WORKSPACE\" with \"workspace:*\""
-
-                PACKAGE_FROM_WORKSPACE_PATH=$(pnpm ls --filter $PACKAGE_FROM_WORKSPACE --json --depth -1 | jq -r '.[].path')
-                echo "ℹ️ The package \"$PACKAGE_FROM_WORKSPACE\" is located in \"$PACKAGE_FROM_WORKSPACE_PATH\" directory"
-
-                echo "⚒️ Replacing \"$PACKAGE_FROM_WORKSPACE\" with \"file:$PACKAGE_FROM_WORKSPACE_PATH\" in $PACKAGE_PATH/package.json"
-                sed -i "s|\"$PACKAGE_FROM_WORKSPACE\": \"workspace:\*\"|\"$PACKAGE_FROM_WORKSPACE\": \"file:$PACKAGE_FROM_WORKSPACE_PATH\"|g" "$PACKAGE_PATH/package.json"
-              done;
-            done
-
         - working-directory: test_apps/encore-app
           run: npm install --install-links
 
