@@ -10,16 +10,35 @@ Install the bridge using Composer and Symfony Flex:
 composer require symfony/ux-leaflet-map
 ```
 
-If you're using WebpackEncore, install your assets and restart Encore (not
-needed if you're using AssetMapper):
+If you're using WebpackEncore, install your assets with a JavaScript packages manager that supports `workspace:` protocol
+like [pnpm](https://pnpm.io/) or [Yarn](https://yarnpkg.com/), and restart Encore (not needed if you're using AssetMapper):
 
 ```shell
-npm install --force
-npm run watch
+# with pnpm
+pnpm install --force
+pnpm run watch
+
+# or with Yarn
+yarn install --force
+yarn run watch
 ```
 
 > [!NOTE]
 > Alternatively, [@symfony/ux-leaflet-map package](https://www.npmjs.com/package/@symfony/ux-leaflet-map) can be used to install the JavaScript assets without requiring PHP.
+
+> [!IMPORTANT]
+> **Q: Why can't I use `npm` to install dependency from `vendor:symfony/ux-leaflet-map`? What is `workspace:` protocol?**
+>
+> Internally, UX Leaflet Map uses the [pnpm's workspace feature](https://pnpm.io/workspaces) to reference `@symfony/ux-map` package as a **development** dependency.
+>
+> When running `npm install` with `"@symfony/ux-leaflet-map": "file:vendor/symfony/ux-leaflet-map/assets"` in your `package.json`, npm is not smart enough to ignore the `devDependencies` section from `vendor/symfony/ux-leaflet-map/assets/package.json` file, leading to the following error:
+> ```
+> npm error code EUNSUPPORTEDPROTOCOL
+> npm error Unsupported URL Type "workspace:": workspace:*
+> ```
+> To fix this, we can recommend you to use a better JavaScript package manager like [pnpm](https://pnpm.io/) or [Yarn](https://yarnpkg.com/), which supports `workspace` protocol.
+>
+> Related issues: https://github.com/symfony/ux/issues/2737, https://github.com/symfony/ux/issues/2951
 
 ## DSN example
 
