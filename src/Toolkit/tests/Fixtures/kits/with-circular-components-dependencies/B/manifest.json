@@ -1,0 +1,15 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "B",
+    "description": "Component B",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": [
+        {
+            "type": "recipe",
+            "name": "C"
+        }
+    ]
+}

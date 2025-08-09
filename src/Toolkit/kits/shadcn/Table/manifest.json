@@ -1,0 +1,15 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Table",
+    "description": "A structured grid element that organizes data into rows and columns, supporting headers, captions, and footers.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": [
+        {
+            "type": "php",
+            "package": "tales-from-a-dev/twig-tailwind-extra"
+        }
+    ]
+}

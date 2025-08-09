@@ -55,11 +55,4 @@ final class Assert
             throw new \InvalidArgumentException(\sprintf('Invalid PHP package name "%s".', $name));
         }
     }
-
-    public static function stimulusControllerName(string $name): void
-    {
-        if (1 !== preg_match('/^[a-z][a-z0-9-]*[a-z0-9]$/', $name)) {
-            throw new \InvalidArgumentException(\sprintf('Invalid Stimulus controller name "%s".', $name));
-        }
-    }
 }

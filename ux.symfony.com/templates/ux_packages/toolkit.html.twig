@@ -22,8 +22,8 @@
 {% block code_block_left %}
 <twig:Terminal>
 # Install the components you need...
-php bin/console ux:toolkit:install-component Card
-php bin/console ux:toolkit:install-component Button
+php bin/console ux:install Card
+php bin/console ux:install Button
 
 # ... and find them in your <code>templates/components</code> folder!
 tree templates/components
@@ -65,15 +65,15 @@ tree templates/components
             {% for kit_id, kit in kits %}
                 <div class="PackageBox">
                     <div class="PackageBox_logo">
-                        <twig:ux:icon name="toolkit:{{ kit_id }}" alt="{{ kit.name }}" style="color: #fff; width: 50%; height: 50%;" />
+                        <twig:ux:icon name="toolkit:{{ kit_id }}" alt="{{ kit.manifest.name }}" style="color: #fff; width: 50%; height: 50%;" />
                     </div>
                     <div class="PackageBox_content">
                         <h2 class="PackageBox_title">
-                            <a href="{{ path('app_toolkit_kit', {kitId: kit_id}) }}" class="PackageBox_link">{{ kit.name }}</a>
+                            <a href="{{ path('app_toolkit_kit', {kitId: kit_id}) }}" class="PackageBox_link">{{ kit.manifest.name }}</a>
                         </h2>
 
                         <div class="PackageBox_description">
-                            <p>{{ kit.description }}</p>
+                            <p>{{ kit.manifest.description }}</p>
                         </div>
                     </div>
                 </div>

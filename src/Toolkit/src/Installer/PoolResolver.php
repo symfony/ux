@@ -13,49 +13,49 @@ declare(strict_types=1);
 
 namespace Symfony\UX\Toolkit\Installer;
 
-use Symfony\UX\Toolkit\Asset\Component;
-use Symfony\UX\Toolkit\Dependency\ComponentDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
-use Symfony\UX\Toolkit\Dependency\StimulusControllerDependency;
+use Symfony\UX\Toolkit\Dependency\RecipeDependency;
 use Symfony\UX\Toolkit\Kit\Kit;
+use Symfony\UX\Toolkit\Recipe\Recipe;
 
+/**
+ * @author Hugo Alliaume <hugo@alliau.me>
+ *
+ * @internal
+ */
 final class PoolResolver
 {
-    public function resolveForComponent(Kit $kit, Component $component): Pool
+    public function resolveForRecipe(Kit $kit, Recipe $recipe): Pool
     {
         $pool = new Pool();
 
         // Process the component and its dependencies
-        $componentsStack = [$component];
-        $visitedComponents = new \SplObjectStorage();
+        $recipesStack = [$recipe];
+        $visitedRecipes = new \SplObjectStorage();
 
-        while (!empty($componentsStack)) {
-            $currentComponent = array_pop($componentsStack);
+        while (!empty($recipesStack)) {
+            $currentRecipe = array_pop($recipesStack);
 
             // Skip circular references
-            if ($visitedComponents->contains($currentComponent)) {
+            if ($visitedRecipes->contains($currentRecipe)) {
                 continue;
             }
 
-            $visitedComponents->attach($currentComponent);
+            $visitedRecipes->attach($currentRecipe);
 
-            foreach ($currentComponent->files as $file) {
-                $pool->addFile($file);
+            foreach ($currentRecipe->getFiles() as $file) {
+                $pool->addFile($currentRecipe, $file);
             }
 
-            foreach ($currentComponent->getDependencies() as $dependency) {
-                if ($dependency instanceof ComponentDependency) {
-                    $componentsStack[] = $kit->getComponent($dependency->name);
-                } elseif ($dependency instanceof PhpPackageDependency) {
+            foreach ($currentRecipe->manifest->dependencies as $dependency) {
+                if ($dependency instanceof PhpPackageDependency) {
                     $pool->addPhpPackageDependency($dependency);
-                } elseif ($dependency instanceof StimulusControllerDependency) {
-                    if (null === $stimulusController = $kit->getStimulusController($dependency->name)) {
-                        throw new \RuntimeException(\sprintf('Stimulus controller "%s" not found.', $dependency->name));
+                } elseif ($dependency instanceof RecipeDependency) {
+                    if (null === $recipeDependency = $kit->getRecipe($dependency->name)) {
+                        throw new \LogicException(\sprintf('The recipe "%s" has a dependency on unregistered recipe "%s".', $currentRecipe->manifest->name, $dependency->name));
                     }
 
-                    foreach ($stimulusController->files as $file) {
-                        $pool->addFile($file);
-                    }
+                    $recipesStack[] = $recipeDependency;
                 } else {
                     throw new \RuntimeException(\sprintf('Unknown dependency type: "%s"', $dependency::class));
                 }

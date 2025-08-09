@@ -14,7 +14,8 @@ declare(strict_types=1);
 namespace Symfony\UX\Toolkit\Installer;
 
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
-use Symfony\UX\Toolkit\File\File;
+use Symfony\UX\Toolkit\File;
+use Symfony\UX\Toolkit\Recipe\Recipe;
 
 /**
  * Represents a pool of files and dependencies to be installed.
@@ -35,13 +36,13 @@ final class Pool
      */
     private array $phpPackageDependencies = [];
 
-    public function addFile(File $file): void
+    public function addFile(Recipe $recipe, File $file): void
     {
-        $this->files[$file->relativePathName] ??= $file;
+        $this->files[$recipe->absolutePath][$file->destinationRelativePathName] ??= $file;
     }
 
     /**
-     * @return array<non-empty-string, File>
+     * @return array<non-empty-string, array<non-empty-string, File>>
      */
     public function getFiles(): array
     {

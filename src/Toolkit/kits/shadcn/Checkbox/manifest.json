@@ -1,0 +1,15 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Checkbox",
+    "description": "A form control that allows the user to toggle between checked and unchecked states.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": [
+        {
+            "type": "php",
+            "package": "tales-from-a-dev/twig-tailwind-extra"
+        }
+    ]
+}

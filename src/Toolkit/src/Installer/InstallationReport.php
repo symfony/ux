@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Symfony\UX\Toolkit\Installer;
 
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
-use Symfony\UX\Toolkit\File\File;
+use Symfony\UX\Toolkit\File;
 
 /**
  * Represents the output after an installation.

@@ -177,45 +177,4 @@ class AssertTest extends TestCase
         yield ['twig/html-extra/'];
         yield ['twig/html-extra/twig'];
     }
-
-    /**
-     * @dataProvider provideValidStimulusControllerNames
-     */
-    public function testValidStimulusControllerName(string $name)
-    {
-        $this->expectNotToPerformAssertions();
-
-        Assert::stimulusControllerName($name);
-    }
-
-    public static function provideValidStimulusControllerNames(): iterable
-    {
-        yield ['my-controller'];
-        yield ['users--list-item'];
-        yield ['controller'];
-        yield ['controller-with-numbers-123'];
-    }
-
-    /**
-     * @dataProvider provideInvalidStimulusControllerNames
-     */
-    public function testInvalidStimulusControllerName(string $name)
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage(\sprintf('Invalid Stimulus controller name "%s".', $name));
-
-        Assert::stimulusControllerName($name);
-    }
-
-    public static function provideInvalidStimulusControllerNames(): iterable
-    {
-        yield [''];
-        yield ['my_controller'];
-        yield ['my-controller-'];
-        yield ['-my-controller'];
-        yield ['my-controller/qsd'];
-        yield ['my-controller@qsd'];
-        yield ['my-controller.qsd'];
-        yield ['my-controller:qsd'];
-    }
 }

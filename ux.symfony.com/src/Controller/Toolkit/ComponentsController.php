@@ -24,6 +24,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\UX\Toolkit\Kit\KitContextRunner;
+use Symfony\UX\Toolkit\Recipe\RecipeType;
 
 class ComponentsController extends AbstractController
 {
@@ -47,7 +48,7 @@ class ComponentsController extends AbstractController
     public function showComponent(ToolkitKitId $kitId, string $componentName): Response
     {
         $kit = $this->toolkitService->getKit($kitId);
-        if (null === $component = $kit->getComponent($componentName)) {
+        if (null === $component = $kit->getRecipe($componentName, type: RecipeType::Component)) {
             throw $this->createNotFoundException(\sprintf('Component "%s" not found', $componentName));
         }
 

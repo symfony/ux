@@ -16,9 +16,10 @@ use Spatie\Snapshots\MatchesSnapshots;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
-use Symfony\UX\Toolkit\Asset\Component;
 use Symfony\UX\Toolkit\Kit\Kit;
+use Symfony\UX\Toolkit\Kit\KitContextRunner;
 use Symfony\UX\Toolkit\Kit\KitFactory;
+use Symfony\UX\Toolkit\Recipe\Recipe;
 use Symfony\UX\Toolkit\Registry\LocalRegistry;
 
 class ComponentsRenderingTest extends WebTestCase
@@ -33,11 +34,11 @@ class ComponentsRenderingTest extends WebTestCase
     public static function provideTestComponentRendering(): iterable
     {
         foreach (LocalRegistry::getAvailableKitsName() as $kitName) {
-            $kitDir = Path::join(__DIR__, '../../kits', $kitName, 'docs/components');
-            $docsFinder = (new Finder())->files()->name('*.md')->in($kitDir)->depth(0);
+            $kitDir = Path::join(__DIR__, '../../kits', $kitName);
+            $docsFinder = (new Finder())->files()->name('EXAMPLES.md')->in($kitDir)->depth(1);
 
             foreach ($docsFinder as $docFile) {
-                $componentName = $docFile->getFilenameWithoutExtension();
+                $componentName = $docFile->getRelativePath();
 
                 $codeBlockMatchesResult = preg_match_all('/```twig.*?\n(?P<code>.+?)```/s', $docFile->getContents(), $codeBlockMatches);
                 if (false === $codeBlockMatchesResult || 0 === $codeBlockMatchesResult) {
@@ -54,16 +55,17 @@ class ComponentsRenderingTest extends WebTestCase
     /**
      * @dataProvider provideTestComponentRendering
      */
-    public function testComponentRendering(string $kitName, string $componentName, string $code)
+    public function testComponentRendering(string $kitName, string $recipeName, string $code)
     {
         $twig = self::getContainer()->get('twig');
+        /** @var KitContextRunner $kitContextRunner */
         $kitContextRunner = self::getContainer()->get('ux_toolkit.kit.kit_context_runner');
 
         $kit = $this->instantiateKit($kitName);
         $template = $twig->createTemplate($code);
         $renderedCode = $kitContextRunner->runForKit($kit, fn () => $template->render());
 
-        $this->assertCodeRenderedMatchesHtmlSnapshot($kit, $kit->getComponent($componentName), $code, $renderedCode);
+        $this->assertCodeRenderedMatchesHtmlSnapshot($kit, $kit->getRecipe($recipeName), $code, $renderedCode);
     }
 
     private function instantiateKit(string $kitName): Kit
@@ -75,9 +77,10 @@ class ComponentsRenderingTest extends WebTestCase
         return $kitFactory->createKitFromAbsolutePath(Path::join(__DIR__, '../../kits', $kitName));
     }
 
-    private function assertCodeRenderedMatchesHtmlSnapshot(Kit $kit, Component $component, string $code, string $renderedCode): void
+    private function assertCodeRenderedMatchesHtmlSnapshot(Kit $kit, Recipe $recipe, string $code, string $renderedCode): void
     {
-        $info = \sprintf(<<<HTML
+        $info = \sprintf(
+            <<<HTML
             <!--
             - Kit: %s
             - Component: %s
@@ -87,8 +90,8 @@ class ComponentsRenderingTest extends WebTestCase
             ```
             - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
             HTML,
-            $kit->name,
-            $component->name,
+            $kit->manifest->name,
+            $recipe->manifest->name,
             trim($code)
         );
 

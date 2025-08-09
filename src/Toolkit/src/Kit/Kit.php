@@ -12,9 +12,8 @@
 namespace Symfony\UX\Toolkit\Kit;
 
 use Symfony\Component\Filesystem\Path;
-use Symfony\UX\Toolkit\Assert;
-use Symfony\UX\Toolkit\Asset\Component;
-use Symfony\UX\Toolkit\Asset\StimulusController;
+use Symfony\UX\Toolkit\Recipe\Recipe;
+use Symfony\UX\Toolkit\Recipe\RecipeType;
 
 /**
  * @internal
@@ -24,86 +23,53 @@ use Symfony\UX\Toolkit\Asset\StimulusController;
 final class Kit
 {
     /**
-     * @param non-empty-string         $path
-     * @param non-empty-string         $name
-     * @param non-empty-string|null    $homepage
-     * @param non-empty-string|null    $license
-     * @param list<Component>          $components
-     * @param list<StimulusController> $stimulusControllers
+     * @var list<Recipe>
+     */
+    private array $recipes = [];
+
+    /**
+     * @param non-empty-string $absolutePath
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(
-        public readonly string $path,
-        public readonly string $name,
-        public readonly ?string $homepage = null,
-        public readonly ?string $license = null,
-        public readonly ?string $description = null,
-        public readonly ?string $uxIcon = null,
+        public readonly string $absolutePath,
+        public readonly KitManifest $manifest,
         public ?string $installAsMarkdown = null,
-        private array $components = [],
-        private array $stimulusControllers = [],
     ) {
-        Assert::kitName($this->name);
+        if (!Path::isAbsolute($this->absolutePath)) {
+            throw new \InvalidArgumentException(\sprintf('Kit path "%s" is not absolute.', $this->absolutePath));
+        }
+    }
 
-        if (!Path::isAbsolute($this->path)) {
-            throw new \InvalidArgumentException(\sprintf('Kit path "%s" is not absolute.', $this->path));
+    public function addRecipe(Recipe $recipe): void
+    {
+        foreach ($this->recipes as $existingRecipe) {
+            if ($existingRecipe->manifest->name === $recipe->manifest->name) {
+                throw new \InvalidArgumentException(\sprintf('Recipe "%s" is already registered in the kit.', $recipe->manifest->name));
+            }
         }
 
-        if (null !== $this->homepage && !filter_var($this->homepage, \FILTER_VALIDATE_URL)) {
-            throw new \InvalidArgumentException(\sprintf('Invalid homepage URL "%s".', $this->homepage));
-        }
+        $this->recipes[] = $recipe;
     }
 
     /**
-     * @throws \InvalidArgumentException if the component is already registered in the kit
+     * @return array<Recipe>
      */
-    public function addComponent(Component $component): void
+    public function getRecipes(?RecipeType $type = null): array
     {
-        foreach ($this->components as $existingComponent) {
-            if ($existingComponent->name === $component->name) {
-                throw new \InvalidArgumentException(\sprintf('Component "%s" is already registered in the kit.', $component->name));
-            }
+        if (null !== $type) {
+            $this->recipes = array_filter($this->recipes, fn (Recipe $recipe) => $recipe->manifest->type === $type);
         }
 
-        $this->components[] = $component;
+        return $this->recipes;
     }
 
-    public function getComponents(): array
+    public function getRecipe(string $name, ?RecipeType $type = null): ?Recipe
     {
-        return $this->components;
-    }
-
-    public function getComponent(string $name): ?Component
-    {
-        foreach ($this->components as $component) {
-            if ($component->name === $name) {
-                return $component;
-            }
-        }
-
-        return null;
-    }
-
-    public function addStimulusController(StimulusController $stimulusController): void
-    {
-        foreach ($this->stimulusControllers as $existingStimulusController) {
-            if ($existingStimulusController->name === $stimulusController->name) {
-                throw new \InvalidArgumentException(\sprintf('Stimulus controller "%s" is already registered in the kit.', $stimulusController->name));
-            }
-        }
-
-        $this->stimulusControllers[] = $stimulusController;
-    }
-
-    public function getStimulusControllers(): array
-    {
-        return $this->stimulusControllers;
-    }
-
-    public function getStimulusController(string $name): ?StimulusController
-    {
-        foreach ($this->stimulusControllers as $stimulusController) {
-            if ($stimulusController->name === $name) {
-                return $stimulusController;
+        foreach ($this->recipes as $recipe) {
+            if ($recipe->manifest->name === $name && (null === $type || $recipe->manifest->type === $type)) {
+                return $recipe;
             }
         }
 
