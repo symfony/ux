@@ -85,26 +85,8 @@ return [
         'version' => '3.4.31',
         'package_specifier' => 'vue/dist/vue.esm-bundler.js',
     ],
-    'swup' => [
-        'version' => '3.1.1',
-    ],
     'delegate-it' => [
         'version' => '6.1.0',
-    ],
-    '@swup/debug-plugin' => [
-        'version' => '3.0.0',
-    ],
-    '@swup/fade-theme' => [
-        'version' => '1.0.5',
-    ],
-    '@swup/forms-plugin' => [
-        'version' => '2.0.1',
-    ],
-    '@swup/slide-theme' => [
-        'version' => '1.0.5',
-    ],
-    '@swup/plugin' => [
-        'version' => '2.0.3',
     ],
     '@hotwired/turbo' => [
         'version' => '8.0.4',
@@ -184,9 +166,6 @@ return [
     ],
     'path-to-regexp' => [
         'version' => '6.2.1',
-    ],
-    '@swup/theme' => [
-        'version' => '2.1.0',
     ],
     '@kurkle/color' => [
         'version' => '0.3.2',

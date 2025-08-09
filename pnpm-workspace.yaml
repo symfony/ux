@@ -4,14 +4,6 @@ packages:
 
 linkWorkspacePackages: true
 
-overrides:
-  '@swup/plugin>@swup/browserslist-config': link:node_modules/.ignored
-  '@swup/plugin>@swup/prettier-config': link:node_modules/.ignored
-  '@swup/plugin>microbundle': link:node_modules/.ignored
-  '@swup/plugin>prettier': link:node_modules/.ignored
-  '@swup/plugin>shelljs': link:node_modules/.ignored
-  '@swup/plugin>shelljs-live': link:node_modules/.ignored
-
 packageExtensions:
     '@symfony/ux-google-map':
       dependencies:

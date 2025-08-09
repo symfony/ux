@@ -18,7 +18,7 @@ class UxPackageRepository
     /**
      * @return array<UxPackage>
      */
-    public function findAll(?string $query = null): array
+    public function findAll(?string $query = null, ?bool $deprecated = null): array
     {
         $packages = [
             new UxPackage(
@@ -208,6 +208,7 @@ class UxPackageRepository
                 'linear-gradient(95deg, #D87036 -5%, #EA9633 105%)',
                 'Stylized Page Transitions',
                 'Integration with the page transition library Swup',
+                isDeprecated: true,
             ))
                 ->setDocsLink('https://swup.js.org/', 'Swup documentation'),
 
@@ -257,13 +258,15 @@ class UxPackageRepository
                 ->setDocsLink('https://github.com/mattboldt/typed.js/', 'Typed.js documentation'),
         ];
 
-        if (!$query) {
-            return $packages;
+        if ($query) {
+            $packages = array_filter($packages, static fn (UxPackage $package) => str_contains($package->getName(), $query) || str_contains($package->getHumanName(), $query));
         }
 
-        return array_filter($packages, function (UxPackage $package) use ($query) {
-            return str_contains($package->getName(), $query) || str_contains($package->getHumanName(), $query);
-        });
+        if (null !== $deprecated) {
+            $packages = array_filter($packages, static fn (UxPackage $package) => $package->isDeprecated() === $deprecated);
+        }
+
+        return $packages;
     }
 
     public function find(string $name): UxPackage

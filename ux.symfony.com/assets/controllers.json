@@ -75,12 +75,6 @@
                 "fetch": "lazy"
             }
         },
-        "@symfony/ux-swup": {
-            "swup": {
-                "enabled": true,
-                "fetch": "lazy"
-            }
-        },
         "@symfony/ux-toggle-password": {
             "toggle-password": {
                 "enabled": true,
