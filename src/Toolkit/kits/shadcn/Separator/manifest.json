@@ -1,0 +1,23 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Separator",
+    "description": "A visual divider that creates space between content elements, available in horizontal and vertical orientations.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": [
+        {
+            "type": "php",
+            "package": "twig/extra-bundle"
+        },
+        {
+            "type": "php",
+            "package": "twig/html-extra:^3.12.0"
+        },
+        {
+            "type": "php",
+            "package": "tales-from-a-dev/twig-tailwind-extra"
+        }
+    ]
+}

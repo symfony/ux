@@ -1,0 +1,15 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Avatar",
+    "description": "A circular element that displays a user's profile image or initials as a fallback.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": [
+        {
+            "type": "php",
+            "package": "tales-from-a-dev/twig-tailwind-extra"
+        }
+    ]
+}

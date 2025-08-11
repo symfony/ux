@@ -15,9 +15,8 @@ namespace Symfony\UX\Toolkit\Installer;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\UX\Toolkit\Asset\Component;
-use Symfony\UX\Toolkit\File\File;
 use Symfony\UX\Toolkit\Kit\Kit;
+use Symfony\UX\Toolkit\Recipe\Recipe;
 
 final class Installer
 {
@@ -33,9 +32,9 @@ final class Installer
         $this->poolResolver = new PoolResolver();
     }
 
-    public function installComponent(Kit $kit, Component $component, string $destinationPath, bool $force): InstallationReport
+    public function installRecipe(Kit $kit, Recipe $recipe, string $destinationPath, bool $force): InstallationReport
     {
-        $pool = $this->poolResolver->resolveForComponent($kit, $component);
+        $pool = $this->poolResolver->resolveForRecipe($kit, $recipe);
         $output = $this->handlePool($pool, $kit, $destinationPath, $force);
 
         return $output;
@@ -48,30 +47,29 @@ final class Installer
     {
         $installedFiles = [];
 
-        foreach ($pool->getFiles() as $file) {
-            if ($this->installFile($kit, $file, $destinationPath, $force)) {
-                $installedFiles[] = $file;
+        foreach ($pool->getFiles() as $recipeAbsolutePath => $files) {
+            foreach ($files as $file) {
+                $sourceAbsolutePathName = Path::join($recipeAbsolutePath, $file->sourceRelativePathName);
+                $destinationAbsolutePathName = Path::join($destinationPath, $file->destinationRelativePathName);
+
+                if ($this->copyFile($kit, $sourceAbsolutePathName, $destinationAbsolutePathName, $force)) {
+                    $installedFiles[] = $file;
+                }
             }
         }
 
         return new InstallationReport(newFiles: $installedFiles, suggestedPhpPackages: $pool->getPhpPackageDependencies());
     }
 
-    /**
-     * @param non-empty-string $destinationPath
-     */
-    private function installFile(Kit $kit, File $file, string $destinationPath, bool $force): bool
+    private function copyFile(Kit $kit, string $sourceAbsolutePathName, string $destinationAbsolutePathName, bool $force): bool
     {
-        $componentPath = Path::join($kit->path, $file->relativePathNameToKit);
-        $componentDestinationPath = Path::join($destinationPath, $file->relativePathName);
-
-        if ($this->filesystem->exists($componentDestinationPath) && !$force) {
-            if (!($this->askConfirmation)(\sprintf('File "%s" already exists. Do you want to overwrite it?', $componentDestinationPath))) {
+        if ($this->filesystem->exists($destinationAbsolutePathName) && !$force) {
+            if (!($this->askConfirmation)(\sprintf('File "%s" already exists. Do you want to overwrite it?', $destinationAbsolutePathName))) {
                 return false;
             }
         }
 
-        $this->filesystem->copy($componentPath, $componentDestinationPath, $force);
+        $this->filesystem->copy($sourceAbsolutePathName, $destinationAbsolutePathName, $force);
 
         return true;
     }

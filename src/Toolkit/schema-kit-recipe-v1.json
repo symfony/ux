@@ -1,0 +1,68 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Kit recipe schema",
+    "description": "Schema for describing a Kit recipe for the Symfony UX Toolkit.",
+    "type": "object",
+    "required": ["name", "description"],
+    "properties": {
+        "type": {
+            "type": "string",
+            "enum": ["component"]
+        },
+        "name": {
+            "type": "string",
+            "description": "The name of the component"
+        },
+        "description": {
+            "description": "A brief description of the component",
+            "type": "string"
+        },
+        "copy-files": {
+            "description": "Relative files or directories to copy into the project",
+            "type": "object"
+        },
+        "examples-dir": {
+            "description": "Relative path to the directory containing example files for the component, must end with a slash",
+            "type": "string",
+            "pattern": "^.+/$"
+        },
+        "dependencies": {
+            "description": "List of dependencies required by the component",
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {
+                        "description": "A dependency on a PHP package",
+                        "type": "object",
+                        "required": ["type", "package"],
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["php"]
+                            },
+                            "package": {
+                                "type": "string",
+                                "description": "Package name and optional version constraint (e.g., 'vendor/package:^1.0')"
+                            }
+                        }
+                    },
+                    {
+                        "description": "A dependency on a Recipe",
+                        "type": "object",
+                        "required": ["type", "name"],
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["recipe"]
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "The name of the Recipe this component depends on, e.g., 'Button'"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

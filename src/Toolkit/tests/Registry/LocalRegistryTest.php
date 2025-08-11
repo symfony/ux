@@ -22,12 +22,11 @@ final class LocalRegistryTest extends KernelTestCase
         $localRegistry = new LocalRegistry(
             self::getContainer()->get('ux_toolkit.kit.kit_factory'),
             self::getContainer()->get('filesystem'),
-            self::getContainer()->getParameter('kernel.project_dir'),
         );
 
         $kit = $localRegistry->getKit('shadcn');
 
         $this->assertInstanceOf(Kit::class, $kit);
-        $this->assertSame('Shadcn UI', $kit->name);
+        $this->assertSame('Shadcn UI', $kit->manifest->name);
     }
 }

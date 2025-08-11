@@ -29,7 +29,6 @@ final class KitFactory
 
     /**
      * @throws \InvalidArgumentException if the manifest file is missing a required key
-     * @throws \JsonException            if the manifest file is not valid JSON
      */
     public function createKitFromAbsolutePath(string $absolutePath): Kit
     {
@@ -45,15 +44,13 @@ final class KitFactory
             throw new \InvalidArgumentException(\sprintf('File "%s" not found.', $manifestPath));
         }
 
-        $manifest = json_decode(file_get_contents($manifestPath), true, flags: \JSON_THROW_ON_ERROR);
+        try {
+            $manifest = KitManifest::fromJson(file_get_contents($manifestPath));
+        } catch (\JsonException $e) {
+            throw new \RuntimeException(\sprintf('Unable to parse "%s"', $manifestPath), previous: $e);
+        }
 
-        $kit = new Kit(
-            path: $absolutePath,
-            name: $manifest['name'] ?? throw new \InvalidArgumentException('Manifest file is missing "name" key.'),
-            homepage: $manifest['homepage'] ?? throw new \InvalidArgumentException('Manifest file is missing "homepage" key.'),
-            license: $manifest['license'] ?? throw new \InvalidArgumentException('Manifest file is missing "license" key.'),
-            description: $manifest['description'] ?? null,
-        );
+        $kit = new Kit(absolutePath: $absolutePath, manifest: $manifest);
 
         $this->kitSynchronizer->synchronize($kit);
 

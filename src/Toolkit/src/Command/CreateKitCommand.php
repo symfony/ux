@@ -78,11 +78,17 @@ class CreateKitCommand extends Command
 
         // Create the kit
         $this->filesystem->dumpFile('manifest.json', json_encode([
+            '$schema' => '../vendor/symfony/ux-toolkit/schema-kit-v1.json',
             'name' => $kitName,
+            'description' => 'A custom kit for Symfony UX Toolkit.',
             'homepage' => $kitHomepage,
             'license' => $kitLicense,
         ], \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
-        $this->filesystem->dumpFile('templates/components/Button.html.twig', <<<TWIG
+
+        // Create a component
+        $this->filesystem->dumpFile(
+            'Button/templates/components/Button.html.twig',
+            <<<TWIG
 {% props type = 'button', variant = 'default' %}
 {%- set style = html_cva(
     base: 'inline-flex items-center',
@@ -101,49 +107,22 @@ class CreateKitCommand extends Command
 </button>
 TWIG
         );
-        $this->filesystem->dumpFile('docs/components/Button.md', <<<MARKDOWN
-# Button
 
-The Button component is a versatile component that allows you to create clickable buttons with various styles and states.
-
-## Installation
-
-Ensure the Symfony UX Toolkit is installed in your Symfony app:
-
-```shell
-$ composer require --dev symfony/ux-toolkit
-```
-
-Then, run the following command to install the component and its dependencies:
-```shell
-$ bin/console ux:toolkit:install-component Button --kit github.com/user/my-ux-toolkit-kit
-```
-
-## Usage
-
-```twig
-<twig:Button>
-    Click me
-</twig:Button>
-```
-
-## Examples
-
-### Button with Variants
-
-```twig
-<twig:Button variant="default">Default</twig:Button>
-<twig:Button variant="secondary">Secondary</twig:Button>
-```
-
-MARKDOWN
-        );
-        $this->filesystem->dumpFile('docs/components/Button.meta.json', json_encode([
-            '$schema' => '../vendor/symfony/ux-toolkit/schemas/component.schema.json',
-            'dependencies' => (object) [],
+        $this->filesystem->dumpFile('Button/manifest.json', json_encode([
+            '$schema' => '../vendor/symfony/ux-toolkit/schema-kit-recipe-v1.json',
+            'name' => 'Button',
+            'description' => 'A clickable element that triggers actions or events, supporting various styles and states.',
+            'copy-files' => [
+                'templates/' => 'templates/',
+            ],
+            'dependencies' => [
+                ['type' => 'php', 'package' => 'twig/extra-bundle'],
+                ['type' => 'php', 'package' => 'twig/html-extra:^3.12.0'],
+                ['type' => 'php', 'package' => 'tales-from-a-dev/twig-tailwind-extra'],
+            ],
         ], \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
 
-        $io->success('Your kit has been scaffolded, enjoy!');
+        $io->success('Your kit has been created successfully, happy coding!');
 
         return self::SUCCESS;
     }

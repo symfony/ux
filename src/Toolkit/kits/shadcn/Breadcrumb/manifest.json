@@ -1,0 +1,15 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Breadcrumb",
+    "description": "A navigation element that shows the current page's location in the site hierarchy with clickable links.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": [
+        {
+            "type": "php",
+            "package": "tales-from-a-dev/twig-tailwind-extra"
+        }
+    ]
+}

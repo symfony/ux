@@ -16,8 +16,11 @@ namespace Symfony\UX\Toolkit\Tests\Installer;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\Dependency\Version;
-use Symfony\UX\Toolkit\File\File;
+use Symfony\UX\Toolkit\File;
 use Symfony\UX\Toolkit\Installer\Pool;
+use Symfony\UX\Toolkit\Recipe\Recipe;
+use Symfony\UX\Toolkit\Recipe\RecipeManifest;
+use Symfony\UX\Toolkit\Recipe\RecipeType;
 
 final class PoolTest extends TestCase
 {
@@ -27,18 +30,31 @@ final class PoolTest extends TestCase
 
         $this->assertCount(0, $pool->getFiles());
 
-        $pool->addFile(new File('path/to/file.html.twig', 'file.html.twig'));
-        $pool->addFile(new File('path/to/another-file.html.twig', 'another-file.html.twig'));
+        $recipe = new Recipe(__DIR__, new RecipeManifest(
+            type: RecipeType::Component,
+            name: 'test-recipe',
+            description: 'A test recipe',
+            copyFiles: [],
+        ));
+        $pool->addFile($recipe, new File('path/to/file.html.twig', 'file.html.twig'));
+        $pool->addFile($recipe, new File('path/to/another-file.html.twig', 'another-file.html.twig'));
 
-        $this->assertCount(2, $pool->getFiles());
+        $this->assertCount(1, $pool->getFiles());
+        $this->assertCount(2, $pool->getFiles()[$recipe->absolutePath]);
     }
 
     public function testCantAddSameFileTwice()
     {
         $pool = new Pool();
 
-        $pool->addFile(new File('path/to/file.html.twig', 'file.html.twig'));
-        $pool->addFile(new File('path/to/file.html.twig', 'file.html.twig'));
+        $recipe = new Recipe(__DIR__, new RecipeManifest(
+            type: RecipeType::Component,
+            name: 'test-recipe',
+            description: 'A test recipe',
+            copyFiles: [],
+        ));
+        $pool->addFile($recipe, new File('path/to/file.html.twig', 'file.html.twig'));
+        $pool->addFile($recipe, new File('path/to/file.html.twig', 'file.html.twig'));
 
         $this->assertCount(1, $pool->getFiles());
     }
@@ -66,12 +82,12 @@ final class PoolTest extends TestCase
     {
         $pool = new Pool();
 
-        $pool->addPhpPackageDependency(new PhpPackageDependency('twig/html-extra', new Version('3.11.0')));
+        $pool->addPhpPackageDependency(new PhpPackageDependency('twig/html-extra', new Version('^3.11.0')));
 
         $this->assertCount(1, $pool->getPhpPackageDependencies());
         $this->assertEquals('twig/html-extra:^3.11.0', (string) $pool->getPhpPackageDependencies()['twig/html-extra']);
 
-        $pool->addPhpPackageDependency(new PhpPackageDependency('twig/html-extra', new Version('3.12.0')));
+        $pool->addPhpPackageDependency(new PhpPackageDependency('twig/html-extra', new Version('^3.12.0')));
 
         $this->assertCount(1, $pool->getPhpPackageDependencies());
         $this->assertEquals('twig/html-extra:^3.12.0', (string) $pool->getPhpPackageDependencies()['twig/html-extra']);

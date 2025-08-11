@@ -7,25 +7,23 @@ to change, or even change drastically.
 Symfony UX Toolkit provides a set of ready-to-use kits for Symfony applications.
 It is part of `the Symfony UX initiative`_.
 
-Kits are a nice way to begin a new Symfony application, by providing a set
-of `Twig components`_ (based on Tailwind CSS, but fully customizable depending
-on your needs).
+Kits are a nice way to begin a new Symfony application, they contains
+recipes to install nicely-crafter `Twig components`_ (already stylized,
+but fully customizable depending on your needs) and more.
 
 Please note that the **UX Toolkit is not a library of UI components**,
 but **a tool to help you build your own UI components**.
 It uses the same approach than the popular `Shadcn UI`_,
 and a similar approach than `Tailwind Plus`_.
 
-After installing the UX Toolkit, you can start pulling the components you need
-from `UX Toolkit Kits`_, and use them in your project.
-They become **your own components**, and **you can customize them as you want**.
+After installing the UX Toolkit, you can start installing the recipes you need
+from `UX Toolkit Kits`_ and use them in your project.
+Files created by the recipes become part of your project, and
+you can customize them as you want.
 
 Additionally, some `Twig components`_ use ``html_cva`` and ``tailwind_merge``,
 you can either remove them from your project or install ``twig/html-extra``
 and ``tales-from-a-dev/twig-tailwind-extra`` to use them.
-
-Also, we do not force you to use Tailwind CSS at all. You can use whatever
-CSS framework you want, but you will need to adapt the UI components to it.
 
 Installation
 ------------
@@ -37,27 +35,25 @@ Install the UX Toolkit using Composer and Symfony Flex:
     # The UX Toolkit is a development dependency:
     $ composer require --dev symfony/ux-toolkit
 
-    # If you want to keep `html_cva` and `tailwind_merge` in your Twig components:
-    $ composer require twig/extra-bundle twig/html-extra:^3.12.0 tales-from-a-dev/twig-tailwind-extra
-
 Usage
 -----
 
-You may find a list of components in the `UX Components page`_, with the installation instructions for each of them.
+You may find a list of available kits in the `UX Toolkit Kits`_ page, with the installation instructions for each of them.
 
 For example, if you want to install a `Button` component, you will find the following instruction:
 
 .. code-block:: terminal
 
-    $ php bin/console ux:toolkit:install-component Button --kit=<kitName>
+    $ php bin/console ux:install Button --kit=<kitName>
 
-It will create the ``templates/components/Button.html.twig`` file, and you will be able to use the `Button` component like this:
+It will create the ``templates/components/Button.html.twig`` file in your project,
+and you will be able to use the `Button` component like this:
 
 .. code-block:: html+twig
 
     <twig:Button>Click me</twig:Button>
 
-Create your own kit
+Create your own Kit
 -------------------
 
 You have the ability to create and share your own kit with the community,
@@ -96,19 +92,55 @@ After creating your kit, the repository should have the following structure:
 .. code-block:: text
 
     .
-    ├── docs
-    │   └── components
-    │       └── Button.twig
-    ├── manifest.json
-    └── templates
-        └── components
-            └── Button.html.twig
+    ├── Button
+    │   ├── manifest.json
+    │   └── templates
+    │       └── components
+    │           └── Button.html.twig
+    └── manifest.json
 
-A kit is composed of:
 
-- A ``manifest.json`` file, that describes the kit (name, license, homepage, authors, ...),
-- A ``templates/components`` directory, that contains the Twig components,
-- A ``docs/components`` directory, optional, that contains the documentation for each "root" Twig component.
+A kit is described by a ``manifest.json`` file at the root directory, which contains the metadata of the kit:
+
+.. code-block:: json
+
+    {
+        "$schema": "../vendor/symfony/ux-toolkit/schema-kit-v1.json",
+        "name": "My UX Toolkit Kit",
+        "description": "A custom kit for Symfony UX Toolkit.",
+        "homepage": "https://github/com/User/MyUxToolkitKit",
+        "license": "MIT"
+    }
+
+Then, a kit can contain one or more recipes. Each recipe is a directory
+with a ``manifest.json`` file and some files to be copied into the project.
+
+The ``manifest.json`` file of a recipe contains the metadata of the recipe:
+
+.. code-block:: json
+
+    {
+        "$schema": "../vendor/symfony/ux-toolkit/schema-kit-recipe-v1.json",
+        "name": "Button",
+        "description": "A clickable element that triggers actions or events, supporting various styles and states.",
+        "copy-files": {
+            "templates/": "templates/"
+        },
+        "dependencies": {
+            {
+                "type": "php",
+                "package": "twig/extra-bundle"
+            },
+            {
+                "type": "php",
+                "package": "twig/html-extra:^3.12.0"
+            },
+            {
+                "type": "php",
+                "package": "tales-from-a-dev/twig-tailwind-extra"
+            }
+        }
+    }
 
 Using your kit
 ~~~~~~~~~~~~~~
@@ -117,10 +149,10 @@ Once your kit is published on GitHub, you can use it by specifying the ``--kit``
 
 .. code-block:: terminal
 
-    $ php bin/console ux:toolkit:install-component Button --kit=github.com/my-username/my-ux-toolkit-kit
+    $ php bin/console ux:install Button --kit=github.com/my-username/my-ux-toolkit-kit
 
     # or for a specific version
-    $ php bin/console ux:toolkit:install-component Button --kit=github.com/my-username/my-ux-toolkit-kit:1.0.0
+    $ php bin/console ux:install Button --kit=github.com/my-username/my-ux-toolkit-kit:1.0.0
 
 Backward Compatibility promise
 ------------------------------

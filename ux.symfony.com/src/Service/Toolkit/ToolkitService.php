@@ -17,9 +17,10 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\UX\Toolkit\Asset\Component;
 use Symfony\UX\Toolkit\Installer\PoolResolver;
 use Symfony\UX\Toolkit\Kit\Kit;
+use Symfony\UX\Toolkit\Recipe\Recipe;
+use Symfony\UX\Toolkit\Recipe\RecipeType;
 use Symfony\UX\Toolkit\Registry\RegistryFactory;
 
 class ToolkitService
@@ -55,11 +56,11 @@ class ToolkitService
     }
 
     /**
-     * @return Component[]
+     * @return Recipe[]
      */
     public function getDocumentableComponents(Kit $kit): array
     {
-        return array_filter($kit->getComponents(), fn (Component $component) => $component->doc);
+        return array_filter($kit->getRecipes(RecipeType::Component), fn (Recipe $recipe) => file_exists(Path::join($recipe->absolutePath, 'EXAMPLES.md')));
     }
 
     public function renderComponentPreviewCodeTabs(ToolkitKitId $kitId, string $code, string $highlightedCode, string $height): string
@@ -79,20 +80,22 @@ class ToolkitService
         ]);
     }
 
-    public function renderInstallationSteps(ToolkitKitId $kitId, Component $component): string
+    public function renderInstallationSteps(ToolkitKitId $kitId, Recipe $component): string
     {
         $kit = $this->getKit($kitId);
-        $pool = (new PoolResolver())->resolveForComponent($kit, $component);
+        $pool = (new PoolResolver())->resolveForRecipe($kit, $component);
 
         $manual = '<p>The UX Toolkit is not mandatory to install a component. You can install it manually by following the next steps:</p>';
         $manual .= '<ol style="display: grid; gap: 1rem;">';
         $manual .= '<li><strong>Copy the following file(s) into your Symfony app:</strong>';
-        foreach ($pool->getFiles() as $file) {
-            $manual .= \sprintf(
-                "<details><summary><code>%s</code></summary>\n%s\n</details>",
-                $file->relativePathNameToKit,
-                \sprintf("\n```%s\n%s\n```", pathinfo($file->relativePathNameToKit, \PATHINFO_EXTENSION), trim(file_get_contents(Path::join($kit->path, $file->relativePathNameToKit))))
-            );
+        foreach ($pool->getFiles() as $recipeFullPath => $files) {
+            foreach ($files as $file) {
+                $manual .= \sprintf(
+                    "<details><summary><code>%s</code></summary>\n%s\n</details>",
+                    $file->sourceRelativePathName,
+                    \sprintf("\n```%s\n%s\n```", pathinfo($file->sourceRelativePathName, \PATHINFO_EXTENSION), trim(file_get_contents(Path::join($recipeFullPath, $file->sourceRelativePathName))))
+                );
+            }
         }
         $manual .= '</li>';
 
@@ -109,7 +112,7 @@ class ToolkitService
             'Automatic' => \sprintf(
                 '<p>Ensure the Symfony UX Toolkit is installed in your Symfony app:</p>%s<p>Then, run the following command to install the component and its dependencies:</p>%s',
                 CodeBlockRenderer::highlightCode('shell', '$ composer require --dev symfony/ux-toolkit'),
-                CodeBlockRenderer::highlightCode('shell', "$ bin/console ux:toolkit:install-component {$component->name} --kit {$kitId->value}"),
+                CodeBlockRenderer::highlightCode('shell', "$ bin/console ux:install {$component->manifest->name} --kit {$kitId->value}"),
             ),
             'Manual' => $manual,
         ]);
