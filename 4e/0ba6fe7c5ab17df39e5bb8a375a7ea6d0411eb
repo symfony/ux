@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-08-12T19:59:35Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/2732-remove-lazy-image/src/LazyImage/assets/dist"><b>LazyImage</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/2732-remove-lazy-image/src/LazyImage/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>422 B</code>
+                    / <code>261 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/2732-remove-lazy-image/src/LazyImage/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>1.04 kB</code>
+                    / <code>481 B</code>
+                </td><td><em>Removed</em></td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
