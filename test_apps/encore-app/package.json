@@ -12,7 +12,6 @@
         "@symfony/ux-cropperjs": "file:vendor/symfony/ux-cropperjs/assets",
         "@symfony/ux-dropzone": "file:vendor/symfony/ux-dropzone/assets",
         "@symfony/ux-google-map": "file:vendor/symfony/ux-google-map/assets",
-        "@symfony/ux-lazy-image": "file:vendor/symfony/ux-lazy-image/assets",
         "@symfony/ux-leaflet-map": "file:vendor/symfony/ux-leaflet-map/assets",
         "@symfony/ux-live-component": "file:vendor/symfony/ux-live-component/assets",
         "@symfony/ux-notify": "file:vendor/symfony/ux-notify/assets",

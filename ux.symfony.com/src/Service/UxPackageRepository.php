@@ -187,6 +187,7 @@ class UxPackageRepository
                 'linear-gradient(136deg, #AC2777 -8%, #F246AD 105%)',
                 'Delay Loading with Blurhash',
                 'Optimize Image Loading with BlurHash',
+                isDeprecated: true,
             ),
 
             new UxPackage(

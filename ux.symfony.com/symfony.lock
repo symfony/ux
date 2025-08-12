@@ -560,9 +560,6 @@
             "assets/icons/symfony.svg"
         ]
     },
-    "symfony/ux-lazy-image": {
-        "version": "v2.1.1"
-    },
     "symfony/ux-leaflet-map": {
         "version": "2.19",
         "recipe": {

@@ -22,11 +22,9 @@ class LazyImageController extends AbstractController
     public function __invoke(UxPackageRepository $packageRepository): Response
     {
         $package = $packageRepository->find('lazy-image');
-        $legosFilePath = $this->getParameter('kernel.project_dir').'/assets/images/legos.jpg';
 
         return $this->render('ux_packages/lazy_image.html.twig', [
             'package' => $package,
-            'legosFilePath' => $legosFilePath,
         ]);
     }
 }

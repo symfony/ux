@@ -37,7 +37,6 @@
         "symfony/ux-cropperjs": "2.x-dev",
         "symfony/ux-dropzone": "2.x-dev",
         "symfony/ux-icons": "2.x-dev",
-        "symfony/ux-lazy-image": "2.x-dev",
         "symfony/ux-leaflet-map": "2.x-dev",
         "symfony/ux-live-component": "2.x-dev",
         "symfony/ux-map": "2.x-dev",
