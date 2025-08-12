@@ -56,7 +56,7 @@ jobs:
                        minimum-stability: 'dev' # TODO: remove when Symfony 8.0 is released
 
         env:
-            SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=5.4' }} # TODO: To change to '>=6.4' in 3.x
+            SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=6.4' }}
         steps:
             - uses: actions/checkout@v4
 

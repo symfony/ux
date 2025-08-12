@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.0
+
+-   Minimum required Symfony version is now 6.4
+
 ## 2.29.0
 
 -  Add Symfony 8 support
