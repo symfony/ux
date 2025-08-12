@@ -13,8 +13,9 @@ namespace App\Twig\Components\Toolkit;
 
 use App\Enum\ToolkitKitId;
 use App\Service\Toolkit\ToolkitService;
-use Symfony\Component\String\AbstractString;
-use Symfony\UX\Toolkit\Asset\Component;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
+use Symfony\UX\Toolkit\Recipe\Recipe;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 use function Symfony\Component\String\s;
@@ -23,53 +24,92 @@ use function Symfony\Component\String\s;
 class ComponentDoc
 {
     public ToolkitKitId $kitId;
-    public Component $component;
+    public Recipe $component;
 
-    public function __construct(private readonly ToolkitService $toolkitService)
-    {
+    public function __construct(
+        private readonly Filesystem $filesystem,
+        private readonly ToolkitService $toolkitService,
+    ) {
     }
 
     public function getContent(): string
     {
-        return $this->formatContent($this->component->doc->markdownContent);
+        $examples = $this->getExamples();
+
+        return $this->adaptPreviewableCodeBlocks(\sprintf(<<<MARKDOWN
+            # %s
+
+            %s
+
+            %s
+
+            ## Installation
+
+            %s
+
+            ## Usage
+
+            %s
+
+            ## Examples
+
+            %s
+            MARKDOWN,
+            $this->component->manifest->name,
+            $this->component->manifest->description,
+            current($examples),
+            $this->toolkitService->renderInstallationSteps($this->kitId, $this->component),
+            dump(preg_replace('/^```twig.*\n/', '```twig'.\PHP_EOL, current($examples))),
+            array_reduce(array_keys($examples), function (string $acc, string $exampleTitle) use ($examples) {
+                $acc .= '### '.$exampleTitle.\PHP_EOL.$examples[$exampleTitle].\PHP_EOL;
+
+                return $acc;
+            }, '')
+        ));
     }
 
-    private function formatContent(string $markdownContent): string
+    /**
+     * @return array<string, string>
+     */
+    private function getExamples(): array
     {
-        $markdownContent = s($markdownContent);
+        $examplesMdPath = Path::join($this->component->absolutePath, 'EXAMPLES.md');
 
-        $markdownContent = $this->insertInstallation($markdownContent);
-        $markdownContent = $this->insertUsage($markdownContent);
-        $markdownContent = $this->adaptPreviewableCodeBlocks($markdownContent);
+        $markdown = s($this->filesystem->readFile($examplesMdPath));
 
-        return $markdownContent;
-    }
+        // Remove "# Examples" header
+        $markdown = $markdown->replace('# Examples', '');
 
-    private function insertInstallation(AbstractString $markdownContent): AbstractString
-    {
-        return $markdownContent->replace(
-            '<!-- Placeholder: Installation -->',
-            $this->toolkitService->renderInstallationSteps($this->kitId, $this->component)
-        );
-    }
+        // Split the markdown for each title and content
+        $examples = [];
+        foreach (explode(\PHP_EOL, $markdown) as $line) {
+            if (str_starts_with($line, '## ')) {
+                // This is a new example title
+                $title = trim(substr($line, 2));
+                $examples[$title] = '';
+            } elseif (isset($title)) {
+                // This line belongs to the last example
+                $examples[$title] .= $line.\PHP_EOL;
+            }
+        }
 
-    private function insertUsage(AbstractString $markdownContent): AbstractString
-    {
-        $firstTwigPreviewBlock = $markdownContent->match('/```twig.*?\n(.+?)```/s');
-        $firstTwigPreviewBlock = $firstTwigPreviewBlock ? trim($firstTwigPreviewBlock[1]) : '';
+        if ([] === $examples) {
+            throw new \LogicException(\sprintf('No examples found in "%s".', $examplesMdPath));
+        }
 
-        return $markdownContent->replace(
-            '<!-- Placeholder: Usage -->',
-            '```twig'."\n".$firstTwigPreviewBlock."\n".'```'
-        );
+        foreach ($examples as $title => &$example) {
+            $example = trim($example);
+        }
+
+        return $examples;
     }
 
     /**
      * Iterate over code blocks, and add the option "kit" if the option "preview" exists.
      */
-    private function adaptPreviewableCodeBlocks(AbstractString $markdownContent): AbstractString
+    private function adaptPreviewableCodeBlocks(string $markdownContent): string
     {
-        return $markdownContent->replaceMatches('/```(?P<lang>[a-z]+) +(?P<options>\{.+?\})\n/', function (array $matches) {
+        return s($markdownContent)->replaceMatches('/```(?P<lang>[a-z]+) +(?P<options>\{.+?\})\n/', function (array $matches) {
             $lang = $matches['lang'];
             $options = json_decode($matches['options'], true, flags: \JSON_THROW_ON_ERROR);
 
@@ -77,7 +117,7 @@ class ComponentDoc
                 $options['kit'] = $this->kitId->value;
             }
 
-            return \sprintf('```%s %s'."\n", $lang, json_encode($options, \JSON_THROW_ON_ERROR));
-        });
+            return \sprintf('```%s %s'.\PHP_EOL, $lang, json_encode($options, \JSON_THROW_ON_ERROR));
+        })->toString();
     }
 }

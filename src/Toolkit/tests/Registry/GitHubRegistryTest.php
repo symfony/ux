@@ -64,11 +64,10 @@ final class GitHubRegistryTest extends KernelTestCase
         $kit = $githubRegistry->getKit('github.com/user/repo');
 
         $this->assertTrue($isHttpClientCalled);
-        $this->assertSame('Shadcn UI', $kit->name);
-        $this->assertNotEmpty($kit->getComponents());
-        $this->assertFileExists($kit->path);
-        $this->assertFileExists(Path::join($kit->path, 'templates/components/Button.html.twig'));
-        $this->assertFileExists(Path::join($kit->path, 'docs/components/Button.md'));
+        $this->assertSame('Shadcn UI', $kit->manifest->name);
+        $this->assertNotEmpty($kit->getRecipes());
+        $this->assertFileExists($kit->absolutePath);
+        $this->assertFileExists(Path::join($kit->absolutePath, 'Button/templates/components/Button.html.twig'));
     }
 
     public function testShouldThrowExceptionIfKitNotFound()

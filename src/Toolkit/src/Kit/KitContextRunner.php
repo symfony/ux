@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\Toolkit\Kit;
 
-use Symfony\Component\Filesystem\Path;
+use Symfony\UX\Toolkit\Recipe\RecipeType;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentTemplateFinderInterface;
 use Twig\Loader\ChainLoader;
@@ -55,10 +55,11 @@ final class KitContextRunner
     {
         // Configure Twig
         $initialTwigLoader = $this->twig->getLoader();
-        $this->twig->setLoader(new ChainLoader([
-            new FilesystemLoader(Path::join($kit->path, 'templates/components')),
-            $initialTwigLoader,
-        ]));
+        $loaders = [];
+        foreach ($kit->getRecipes(type: RecipeType::Component) as $recipe) {
+            $loaders[] = new FilesystemLoader($recipe->absolutePath);
+        }
+        $this->twig->setLoader(new ChainLoader([...$loaders, $initialTwigLoader]));
 
         // Configure Twig Components
         $reflComponentFactory = new \ReflectionClass($this->componentFactory);
@@ -82,22 +83,22 @@ final class KitContextRunner
     {
         static $instances = [];
 
-        return $instances[$kit->name] ?? new class($kit) implements ComponentTemplateFinderInterface {
+        return $instances[$kit->manifest->name] ?? new class($kit) implements ComponentTemplateFinderInterface {
             public function __construct(private readonly Kit $kit)
             {
             }
 
             public function findAnonymousComponentTemplate(string $name): ?string
             {
-                if (null === $component = $this->kit->getComponent($name)) {
-                    throw new \RuntimeException(\sprintf('Component "%s" does not exist in kit "%s".', $name, $this->kit->name));
+                foreach ($this->kit->getRecipes(type: RecipeType::Component) as $recipe) {
+                    foreach ($recipe->getFiles() as $file) {
+                        if (str_ends_with($file->sourceRelativePathName, str_replace(':', \DIRECTORY_SEPARATOR, $name).'.html.twig')) {
+                            return $file->sourceRelativePathName;
+                        }
+                    }
                 }
 
-                foreach ($component->files as $file) {
-                    return $file->relativePathName;
-                }
-
-                throw new \LogicException(\sprintf('No Twig files found for component "%s" in kit "%s", it should not happens.', $name, $this->kit->name));
+                throw new \LogicException(\sprintf('No Twig files found for component "%s" in kit "%s", it should not happens.', $name, $this->kit->manifest->name));
             }
         };
     }

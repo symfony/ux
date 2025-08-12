@@ -31,24 +31,24 @@ class DebugKitCommandTest extends KernelTestCase
             ->assertOutputContains('License    MIT')
             // Components details
             ->assertOutputContains(implode(\PHP_EOL, [
-                '+--------------+----------------------- Component: "Avatar" --------------------------------------+',
+                '+--------------+------------------------ Recipe: "Avatar" ----------------------------------------+',
                 '| File(s)      | templates/components/Avatar.html.twig                                            |',
+                '|              | templates/components/Avatar/Image.html.twig                                      |',
+                '|              | templates/components/Avatar/Text.html.twig                                       |',
                 '| Dependencies | tales-from-a-dev/twig-tailwind-extra                                             |',
-                '|              | Avatar:Image                                                                     |',
-                '|              | Avatar:Text                                                                      |',
                 '+--------------+----------------------------------------------------------------------------------+',
             ]))
             ->assertOutputContains(implode(\PHP_EOL, [
-                '+--------------+----------------------- Component: "Table" ---------------------------------------+',
+                '+--------------+------------------------- Recipe: "Table" ----------------------------------------+',
                 '| File(s)      | templates/components/Table.html.twig                                             |',
+                '|              | templates/components/Table/Body.html.twig                                        |',
+                '|              | templates/components/Table/Caption.html.twig                                     |',
+                '|              | templates/components/Table/Cell.html.twig                                        |',
+                '|              | templates/components/Table/Footer.html.twig                                      |',
+                '|              | templates/components/Table/Head.html.twig                                        |',
+                '|              | templates/components/Table/Header.html.twig                                      |',
+                '|              | templates/components/Table/Row.html.twig                                         |',
                 '| Dependencies | tales-from-a-dev/twig-tailwind-extra                                             |',
-                '|              | Table:Body                                                                       |',
-                '|              | Table:Caption                                                                    |',
-                '|              | Table:Cell                                                                       |',
-                '|              | Table:Footer                                                                     |',
-                '|              | Table:Head                                                                       |',
-                '|              | Table:Header                                                                     |',
-                '|              | Table:Row                                                                        |',
                 '+--------------+----------------------------------------------------------------------------------+',
             ]));
     }

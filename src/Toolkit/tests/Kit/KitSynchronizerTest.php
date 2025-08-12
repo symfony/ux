@@ -13,30 +13,27 @@ namespace Symfony\UX\Toolkit\Tests\Kit;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
-use Symfony\UX\Toolkit\Dependency\ComponentDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
-use Symfony\UX\Toolkit\Dependency\StimulusControllerDependency;
 use Symfony\UX\Toolkit\Dependency\Version;
-use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Kit\KitSynchronizer;
+use Symfony\UX\Toolkit\Recipe\RecipeSynchronizer;
+use Symfony\UX\Toolkit\Tests\TestHelperTrait;
 
 final class KitSynchronizerTest extends KernelTestCase
 {
-    private Filesystem $filesystem;
+    use TestHelperTrait;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->bootKernel();
-        $this->filesystem = self::getContainer()->get('filesystem');
     }
 
     public function testCanResolveDependencies()
     {
-        $kitSynchronizer = new KitSynchronizer($this->filesystem);
-        $kit = new Kit(Path::join(__DIR__, '../../kits/shadcn'), 'shadcn');
+        $kitSynchronizer = new KitSynchronizer(new Filesystem(), new RecipeSynchronizer());
+        $kit = self::createLocalKit('shadcn');
 
         $kitSynchronizer->synchronize($kit);
 
@@ -44,30 +41,6 @@ final class KitSynchronizerTest extends KernelTestCase
             new PhpPackageDependency('twig/extra-bundle'),
             new PhpPackageDependency('twig/html-extra', new Version('^3.12.0')),
             new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra'),
-        ], $kit->getComponent('Button')->getDependencies());
-
-        $this->assertEquals([
-            new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra'),
-            new ComponentDependency('Table:Body'),
-            new ComponentDependency('Table:Caption'),
-            new ComponentDependency('Table:Cell'),
-            new ComponentDependency('Table:Footer'),
-            new ComponentDependency('Table:Head'),
-            new ComponentDependency('Table:Header'),
-            new ComponentDependency('Table:Row'),
-        ], $kit->getComponent('Table')->getDependencies());
-    }
-
-    public function testCanResolveStimulusDependencies()
-    {
-        $kitSynchronizer = new KitSynchronizer($this->filesystem);
-        $kit = new Kit(Path::join(__DIR__, '../Fixtures/kits/with-stimulus-controllers'), 'kit');
-
-        $kitSynchronizer->synchronize($kit);
-
-        $this->assertEquals([new StimulusControllerDependency('clipboard')], $kit->getComponent('Clipboard')->getDependencies());
-        $this->assertEquals([new StimulusControllerDependency('date-picker')], $kit->getComponent('DatePicker')->getDependencies());
-        $this->assertEquals([new StimulusControllerDependency('local-time')], $kit->getComponent('LocalTime')->getDependencies());
-        $this->assertEquals([new StimulusControllerDependency('users--list-item'), new StimulusControllerDependency('clipboard')], $kit->getComponent('UsersListItem')->getDependencies());
+        ], $kit->getRecipe('Button')->manifest->dependencies);
     }
 }
