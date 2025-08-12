@@ -17,7 +17,6 @@
         "@symfony/ux-notify": "file:vendor/symfony/ux-notify/assets",
         "@symfony/ux-react": "file:vendor/symfony/ux-react/assets",
         "@symfony/ux-svelte": "file:vendor/symfony/ux-svelte/assets",
-        "@symfony/ux-toggle-password": "file:vendor/symfony/ux-toggle-password/assets",
         "@symfony/ux-translator": "file:vendor/symfony/ux-translator/assets",
         "@symfony/ux-turbo": "file:vendor/symfony/ux-turbo/assets",
         "@symfony/ux-vue": "file:vendor/symfony/ux-vue/assets",

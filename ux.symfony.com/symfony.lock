@@ -602,9 +602,6 @@
     "symfony/ux-svelte": {
         "version": "2.x-dev"
     },
-    "symfony/ux-toggle-password": {
-        "version": "2.x-dev"
-    },
     "symfony/ux-toolkit": {
         "version": "2.x-dev"
     },

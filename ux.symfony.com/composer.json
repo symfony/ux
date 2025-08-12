@@ -43,7 +43,6 @@
         "symfony/ux-notify": "2.x-dev",
         "symfony/ux-react": "2.x-dev",
         "symfony/ux-svelte": "2.x-dev",
-        "symfony/ux-toggle-password": "2.x-dev",
         "symfony/ux-toolkit": "2.x-dev",
         "symfony/ux-translator": "2.x-dev",
         "symfony/ux-turbo": "2.x-dev",

@@ -231,6 +231,7 @@ class UxPackageRepository
                 'linear-gradient(142deg, #FD963C -15%, #BE0404 95%)',
                 'Password Visibility Switch',
                 'Switch the visibility of a password field',
+                isDeprecated: true,
             ),
 
             new UxPackage(
