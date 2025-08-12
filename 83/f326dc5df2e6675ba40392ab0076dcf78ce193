@@ -1,0 +1,40 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-08-10T00:18:04Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/smnandre/ux/tree/ux3/remove-swup/src/Swup/assets/dist"><b>Swup</b></a></td></tr><tr>
+                <td><a href="https://github.com/smnandre/ux/blob/ux3/remove-swup/src/Swup/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>1.06 kB</code>
+                    / <code>365 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/smnandre/ux/blob/ux3/remove-swup/src/Swup/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>1.96 kB</code>
+                    / <code>692 B</code>
+                </td><td><em>Removed</em></td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-08-10T00:48:56Z
+
+fabbot find typo in pnpm.lock.yaml hashes 😅
+
+<img width="999" height="508" alt="image" src="https://github.com/user-attachments/assets/92f6b3b4-5b21-4225-a290-3608355c88d7" />
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-08-12T18:57:02Z
+
+I did minor modifications on the `/packages` page to display deprecated packages in a second packages list:
+<img width="1354" height="714" alt="image" src="https://github.com/user-attachments/assets/ed921f6f-61a1-4c20-801f-f9198f5f6a30" />
