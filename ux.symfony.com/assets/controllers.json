@@ -36,12 +36,6 @@
                 }
             }
         },
-        "@symfony/ux-lazy-image": {
-            "lazy-image": {
-                "enabled": true,
-                "fetch": "lazy"
-            }
-        },
         "@symfony/ux-leaflet-map": {
             "map": {
                 "enabled": true,

@@ -1,51 +1,58 @@
-{% extends 'ux_packages/package.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block package_header %}
-    {% component PackageHeader with {
-        package: 'lazy-image',
-        eyebrowText: 'Images that Zoom',
-    } %}
-        {% block title_header %}
-            Load fast with <em>Lazy Images</em>
-        {% endblock %}
+{% set meta = {
+    title: package.humanName ~ ' - Symfony UX 2',
+    description: package.description,
+    canonical: url(package.route),
+    social: {
+        title: package.tagline ~ ' - Symfony UX 2' ~ package.humanName|u.trimStart('UX '),
+        description: package.description|striptags,
+        image: {
+            url: absolute_url(asset(package.getSocialImage('1200x675'))),
+            type: 'image/png',
+            width: 1200,
+            height: 675,
+            alt: package.humanName ~ ' - Component Icon',
+        },
+    }
+} %}
 
-        {% block sub_content %}
-            Serve small or <a class="font-white" style="color: transparent; text-shadow: 0 0 1.5px rgba(255,255,255,0.5);" href="https://blurha.sh/" rel="external noopener noreferrer">blurred</a>
-            images first, then load the real thing after the page loads.
-        {% endblock %}
-    {% endcomponent %}
+{% block main %}
+    <main class="deprecated-package">
+        <div class="">
+            <p class="deprecated-badge">Deprecated Package</p>
+            <h1 class="mb-4">UX LazyImage 2.x</h1>
+            <p>This component is <strong>deprecated</strong> and will not receive further updates.<br>
+                Instead, use the <a href="https://web.dev/learn/images/performance-issues" class="link">modern techniques to improve image loading performance</a>
+                natively supported by all major browsers.</p>
+        </div>
+    </main>
 {% endblock %}
 
-{% block code_block_left %}
-    <twig:CodeBlock
-        filename="templates/ux_packages/lazy_image.html.twig"
-        height="230px"
-        targetTwigBlock="code_block_right"
-        :showTwigExtends="false"
-    >
-        <twig:block name="code_content_bottom">
-            <div class="pb-2 px-2" style="opacity: .8;">
-                <div class="eyebrows d-flex align-items-center">
-                    <twig:ux:icon name="circle-fill" />
-                    Load a small (or blurred) image first
-                </div>
-                <div class="eyebrows d-flex align-items-center">
-                    <twig:ux:icon name="circle-fill" />
-                    The real (large) image is downloaded after page load
-                </div>
-            </div>
-        </twig:block>
-    </twig:CodeBlock>
-{% endblock %}
-
-{% block code_block_right %}
-    <img
-        src="{{ data_uri_thumbnail(legosFilePath, 40, 30) }}"
-        data-controller="symfony--ux-lazy-image--lazy-image"
-        data-symfony--ux-lazy-image--lazy-image-src-value="{{ asset('images/legos.jpg') }}"
-        alt="A blurhash image that is replaced by the real image on load"
-        width="578"
-        height="275"
-        style="border-radius: 5px;"
-    >
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .deprecated-package {
+            display: grid;
+            place-content: center;
+            text-align: center;
+            padding-top: 5rem;
+            max-width: 36rem;
+            margin-block: auto;
+            align-self: center;
+        }
+        .deprecated-badge {
+            opacity: 0.85;
+            background: orange;
+            display: inline-block;
+            padding: .1rem .6rem;
+            border-radius: .1rem;
+            box-shadow: 0 0 -3px 4px rgb(0 0 0 / .1);
+            color: #000;
+            font-size: .875rem;
+            text-shadow: 0 1px 4px #fff;
+            transform-origin: center;
+            transform: translateY(0rem) rotate(11deg) translateX(8rem);
+        }
+    </style>
 {% endblock %}

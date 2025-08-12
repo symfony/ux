@@ -19,7 +19,6 @@
         "symfony/ux-dropzone": "^2.23",
         "symfony/ux-google-map": "^2.23",
         "symfony/ux-icons": "^2.23",
-        "symfony/ux-lazy-image": "^2.23",
         "symfony/ux-leaflet-map": "^2.23",
         "symfony/ux-live-component": "^2.23",
         "symfony/ux-map": "^2.23",
