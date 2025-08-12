@@ -94,12 +94,6 @@
                 "fetch": "lazy"
             }
         },
-        "@symfony/ux-typed": {
-            "typed": {
-                "enabled": true,
-                "fetch": "lazy"
-            }
-        },
         "@symfony/ux-vue": {
             "vue": {
                 "enabled": true,

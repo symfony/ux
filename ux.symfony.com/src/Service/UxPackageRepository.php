@@ -254,6 +254,7 @@ class UxPackageRepository
                 'linear-gradient(95deg, #20A091 -5%, #4EC9B3 105%)',
                 'Animated Typing with Typed.js',
                 'Animated typing with Typed.js',
+                isDeprecated: true
             ))
                 ->setDocsLink('https://github.com/mattboldt/typed.js/', 'Typed.js documentation'),
         ];

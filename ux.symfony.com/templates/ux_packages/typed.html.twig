@@ -1,45 +1,58 @@
-{% extends 'ux_packages/package.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block package_header %}
-    {% component PackageHeader with {
-        package: 'typed',
-        eyebrowText: 'A Library that Types'
-    } %}
-        {% block title_header %}
-            Typed brings text <em>to life</em>
-        {% endblock %}
+{% set meta = {
+    title: package.humanName ~ ' - Symfony UX 2',
+    description: package.description,
+    canonical: url(package.route),
+    social: {
+        title: package.tagline ~ ' - Symfony UX 2' ~ package.humanName|u.trimStart('UX '),
+        description: package.description|striptags,
+        image: {
+            url: absolute_url(asset(package.getSocialImage('1200x675'))),
+            type: 'image/png',
+            width: 1200,
+            height: 675,
+            alt: package.humanName ~ ' - Component Icon',
+        },
+    }
+} %}
 
-        {% block sub_content %}
-            Spice up some text by typing, backspacing and re-typing with <a class="font-white text-underline" href="https://github.com/mattboldt/typed.js/" rel="noopener nofollow noreferrer">Typed.js</a>.
-        {% endblock %}
-    {% endcomponent %}
+{% block main %}
+    <main class="deprecated-package">
+        <div class="">
+            <p class="deprecated-badge">Deprecated Package</p>
+            <h1 class="mb-4">UX Typed 2.x</h1>
+            <p>This component is <strong>deprecated</strong> and will not receive further updates.<br>
+                Please follow <a href="https://github.com/symfony/ux/tree/2.x/src/Typed" class="link">the migration steps</a>
+                if you want to keep using Typed in your app.</p>
+        </div>
+    </main>
 {% endblock %}
 
-{% block code_block_left %}
-    <twig:CodeBlock
-        filename="templates/ux_packages/typed.html.twig"
-        height="300px"
-        targetTwigBlock="code_block_right"
-    />
-{% endblock %}
-
-{% block code_block_right %}
-    <div class="p-5" style="font-size: 1.3em;">
-        {% set strings = [
-            'I ❤️ Symfony UX!',
-            'Symfony UX Typed loves to type',
-            'Symfony UX Typed and backspace',
-            'Control the speed',
-            'Control the cursor',
-            'Control your destiny!!!',
-            'Control your destiny... sort of',
-        ] %}
-        <span
-            data-controller="symfony--ux-typed"
-            data-symfony--ux-typed-loop-value="true"
-            data-symfony--ux-typed-show-cursor-value="true"
-            data-symfony--ux-typed-cursor-char-value="✨"
-            data-symfony--ux-typed-strings-value="{{ strings|json_encode|e('html_attr') }}"
-        ></span>
-    </div>
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .deprecated-package {
+            display: grid;
+            place-content: center;
+            text-align: center;
+            padding-top: 5rem;
+            max-width: 36rem;
+            margin-block: auto;
+            align-self: center;
+        }
+        .deprecated-badge {
+            opacity: 0.85;
+            background: orange;
+            display: inline-block;
+            padding: .1rem .6rem;
+            border-radius: .1rem;
+            box-shadow: 0 0 -3px 4px rgb(0 0 0 / .1);
+            color: #000;
+            font-size: .875rem;
+            text-shadow: 0 1px 4px #fff;
+            transform-origin: center;
+            transform: translateY(0rem) rotate(11deg) translateX(8rem);
+        }
+    </style>
 {% endblock %}

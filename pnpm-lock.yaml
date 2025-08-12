@@ -611,39 +611,6 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
 
-  src/Typed/assets:
-    devDependencies:
-      '@hotwired/stimulus':
-        specifier: ^3.0.0
-        version: 3.2.2
-      '@testing-library/dom':
-        specifier: ^10.4.0
-        version: 10.4.0
-      '@testing-library/jest-dom':
-        specifier: ^6.6.3
-        version: 6.6.3
-      '@testing-library/user-event':
-        specifier: ^14.6.1
-        version: 14.6.1(@testing-library/dom@10.4.0)
-      jsdom:
-        specifier: ^26.1.0
-        version: 26.1.0
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
-      tsx:
-        specifier: ^4.20.3
-        version: 4.20.3
-      typed.js:
-        specifier: ^2.0
-        version: 2.1.0
-      typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
-      vitest:
-        specifier: ^3.2.4
-        version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@22.16.5)(typescript@5.8.3))(terser@5.43.1)
-
   src/Vue/assets:
     devDependencies:
       '@hotwired/stimulus':
@@ -2656,9 +2623,6 @@ packages:
   type-fest@4.41.0:
     resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
     engines: {node: '>=16'}
-
-  typed.js@2.1.0:
-    resolution: {integrity: sha512-bDuXEf7YcaKN4g08NMTUM6G90XU25CK3bh6U0THC/Mod/QPKlEt9g/EjvbYB8x2Qwr2p6J6I3NrsoYaVnY6wsQ==}
 
   typescript@5.8.3:
     resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
@@ -4776,8 +4740,6 @@ snapshots:
 
   type-fest@4.41.0:
     optional: true
-
-  typed.js@2.1.0: {}
 
   typescript@5.8.3: {}
 

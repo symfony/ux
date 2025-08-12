@@ -30,7 +30,6 @@
         "symfony/ux-translator": "^2.23",
         "symfony/ux-turbo": "^2.23",
         "symfony/ux-twig-component": "^2.23",
-        "symfony/ux-typed": "^2.23",
         "symfony/ux-vue": "^2.23",
         "symfony/webpack-encore-bundle": "^2.2",
         "symfony/yaml": "7.2.*"

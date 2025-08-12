@@ -100,12 +100,6 @@
                 "fetch": "eager"
             }
         },
-        "@symfony/ux-typed": {
-            "typed": {
-                "enabled": true,
-                "fetch": "eager"
-            }
-        },
         "@symfony/ux-vue": {
             "vue": {
                 "enabled": true,
