@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-08-12T19:39:57Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/2740-remove-typed/src/Typed/assets/dist"><b>Typed</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/2740-remove-typed/src/Typed/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>2.17 kB</code>
+                    / <code>506 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/2740-remove-typed/src/Typed/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>1.88 kB</code>
+                    / <code>646 B</code>
+                </td><td><em>Removed</em></td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
