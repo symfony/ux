@@ -21,6 +21,5 @@ return [
     Symfony\UX\TogglePassword\TogglePasswordBundle::class => ['all' => true],
     Symfony\UX\Translator\UxTranslatorBundle::class => ['all' => true],
     Symfony\UX\Turbo\TurboBundle::class => ['all' => true],
-    Symfony\UX\Typed\TypedBundle::class => ['all' => true],
     Symfony\UX\Vue\VueBundle::class => ['all' => true],
 ];

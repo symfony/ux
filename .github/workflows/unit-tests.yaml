@@ -68,8 +68,8 @@ jobs:
                   echo PHPUNIT='vendor/bin/simple-phpunit' >> $GITHUB_ENV
                   [ 'lowest' = '${{ matrix.dependency-version }}' ] && export SYMFONY_DEPRECATIONS_HELPER=weak
 
-                  # Typed has no tests, Turbo has its own workflow file
-                  EXCLUDED_PACKAGES="Typed|Turbo"
+                  # Turbo has its own workflow file
+                  EXCLUDED_PACKAGES="Turbo"
 
                   # Exclude deprecated packages when testing against lowest dependencies
                   if [ "${{ matrix.dependency-version }}" = "lowest" ]; then

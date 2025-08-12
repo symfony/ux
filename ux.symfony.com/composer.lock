@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cb6b21545f526b7e56b3d51e502ff6cf",
+    "content-hash": "6c79221d08e8c24c875bf442d76aac9a",
     "packages": [
         {
             "name": "composer/semver",
@@ -8663,74 +8663,6 @@
             "time": "2025-01-25T02:19:26+00:00"
         },
         {
-            "name": "symfony/ux-typed",
-            "version": "2.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/ux-typed.git",
-                "reference": "07b8b33a68a66b20dd4df8e3f9b9618e74a786f1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-typed/zipball/07b8b33a68a66b20dd4df8e3f9b9618e74a786f1",
-                "reference": "07b8b33a68a66b20dd4df8e3f9b9618e74a786f1",
-                "shasum": ""
-            },
-            "conflict": {
-                "symfony/flex": "<1.13"
-            },
-            "default-branch": true,
-            "type": "symfony-bundle",
-            "extra": {
-                "thanks": {
-                    "url": "https://github.com/symfony/ux",
-                    "name": "symfony/ux"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\UX\\Typed\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Florent Morselli",
-                    "email": "contact@spomky-labs.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Typed integration for Symfony",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "symfony-ux"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/ux-typed/tree/v2.22.1"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-12-05T14:25:02+00:00"
-        },
-        {
             "name": "symfony/ux-vue",
             "version": "2.x-dev",
             "source": {
@@ -12824,7 +12756,6 @@
         "symfony/ux-translator": 20,
         "symfony/ux-turbo": 20,
         "symfony/ux-twig-component": 20,
-        "symfony/ux-typed": 20,
         "symfony/ux-vue": 20
     },
     "prefer-stable": true,

@@ -256,9 +256,6 @@
             "assets/svelte/controllers/Hello.svelte"
         ]
     },
-    "symfony/ux-swup": {
-        "version": "v2.23.0"
-    },
     "symfony/ux-toggle-password": {
         "version": "v2.23.0"
     },

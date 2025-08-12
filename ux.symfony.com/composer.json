@@ -49,7 +49,6 @@
         "symfony/ux-translator": "2.x-dev",
         "symfony/ux-turbo": "2.x-dev",
         "symfony/ux-twig-component": "2.x-dev",
-        "symfony/ux-typed": "2.x-dev",
         "symfony/ux-vue": "2.x-dev",
         "symfony/validator": "7.2.*",
         "symfony/yaml": "7.2.*",

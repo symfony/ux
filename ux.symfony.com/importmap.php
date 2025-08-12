@@ -91,9 +91,6 @@ return [
     '@hotwired/turbo' => [
         'version' => '8.0.4',
     ],
-    'typed.js' => [
-        'version' => '2.1.0',
-    ],
     'snarkdown' => [
         'version' => '2.0.0',
     ],
@@ -182,5 +179,13 @@ return [
     ],
     '@symfony/ux-leaflet-map' => [
         'path' => './vendor/symfony/ux-leaflet-map/assets/dist/map_controller.js',
+    ],
+    'tom-select/dist/css/tom-select.default.css' => [
+        'version' => '2.4.3',
+        'type' => 'css',
+    ],
+    'tom-select/dist/css/tom-select.bootstrap4.css' => [
+        'version' => '2.4.3',
+        'type' => 'css',
     ],
 ];

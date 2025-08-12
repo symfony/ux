@@ -632,9 +632,6 @@
     "symfony/ux-twig-component": {
         "version": "v2.1.0"
     },
-    "symfony/ux-typed": {
-        "version": "2.x-dev"
-    },
     "symfony/ux-vue": {
         "version": "2.x-dev"
     },
