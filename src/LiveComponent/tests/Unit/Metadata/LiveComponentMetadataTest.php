@@ -48,7 +48,7 @@ class LiveComponentMetadataTest extends TestCase
             new LivePropMetadata('aliasUrlMapping', new LiveProp(url: $aliasUrlMapping), null, false, false, null),
         ];
         $liveComponentMetadata = new LiveComponentMetadata(new ComponentMetadata([]), $propMetadas);
-        $urlMappings = $liveComponentMetadata->getAllUrlMappings();
+        $urlMappings = $liveComponentMetadata->getAllUrlMappings(new \stdClass());
         $this->assertCount(2, $urlMappings);
         $this->assertInstanceOf(UrlMapping::class, $urlMappings['basicUrlMapping']);
         $this->assertEquals($aliasUrlMapping, $urlMappings['aliasUrlMapping']);

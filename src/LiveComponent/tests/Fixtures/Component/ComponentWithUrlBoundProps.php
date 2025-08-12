@@ -54,6 +54,19 @@ class ComponentWithUrlBoundProps
     #[LiveProp]
     public ?bool $maybeBoundPropInUrl = false;
 
+    #[LiveProp(url: new UrlMapping(as: 'p'), modifier: 'modifyPropertyWithModifierAndAlias')]
+    public ?string $propertyWithModifierAndAlias = null;
+
+    public function modifyPropertyWithModifierAndAlias(LiveProp $liveProp): LiveProp
+    {
+        $urlMapping = $liveProp->url();
+        if (!$urlMapping instanceof UrlMapping) {
+            return $liveProp;
+        }
+
+        return $liveProp->withUrl(new UrlMapping(as: 'alias_' . $urlMapping->as));
+    }
+
     public function getField2(): string
     {
         return 'field2';

@@ -112,6 +112,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
                 'propValue' => 'search',
             ],
         ];
+
         $address = new Address();
         $address->address = '123 Main St';
         $address->city = 'Anytown';
@@ -125,6 +126,15 @@ class LiveUrlSubscriberTest extends KernelTestCase
                 'propName' => 'intProp',
                 'propValue' => '3',
             ],
+        ];
+
+        yield 'query with alias ("p") and modifier (prefix by "alias_")' => [
+            'previousLocation' => '/',
+            'expectedLocation' => '/?alias_p=test',
+            'props' => [
+                'propertyWithModifierAndAlias' => 'test',
+            ],
+            'args' => [],
         ];
     }
 

@@ -90,7 +90,7 @@ class LiveUrlSubscriber implements EventSubscriberInterface
             'query' => [],
         ];
 
-        foreach ($metadata->getAllUrlMappings() as $name => $urlMapping) {
+        foreach ($metadata->getAllUrlMappings($mounted->getComponent()) as $name => $urlMapping) {
             if (isset($values[$name]) && $urlMapping) {
                 $urlLiveProps[$urlMapping->mapPath ? 'path' : 'query'][$urlMapping->as ?? $name] = $values[$name];
             }
