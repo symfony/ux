@@ -25,7 +25,6 @@
         "symfony/ux-notify": "^2.23",
         "symfony/ux-react": "^2.23",
         "symfony/ux-svelte": "^2.23",
-        "symfony/ux-toggle-password": "^2.23",
         "symfony/ux-translator": "^2.23",
         "symfony/ux-turbo": "^2.23",
         "symfony/ux-twig-component": "^2.23",
