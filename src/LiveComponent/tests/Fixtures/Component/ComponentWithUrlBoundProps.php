@@ -12,6 +12,8 @@
 namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
+use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\Metadata\UrlMapping;
@@ -36,6 +38,9 @@ class ComponentWithUrlBoundProps
 
     #[LiveProp(url: true)]
     public ?Address $objectProp = null;
+
+    #[LiveProp(url: true, useSerializerForHydration: true)]
+    public ?Address $objectPropWithSerializerForHydration = null;
 
     #[LiveProp(fieldName: 'field1', url: true)]
     public ?string $propWithField1 = null;
@@ -83,5 +88,13 @@ class ComponentWithUrlBoundProps
         return $liveProp;
     }
 
+    #[LiveAction]
+    public function updateLiveProp(#[LiveArg] string $propName, #[LiveArg] mixed $propValue): void
+    {
+        if (!property_exists($this, $propName)) {
+            throw new \InvalidArgumentException(\sprintf('Property "%s" does not exist on component "%s".', $propName, static::class));
+        }
 
+        $this->{$propName} = $propValue;
+    }
 }

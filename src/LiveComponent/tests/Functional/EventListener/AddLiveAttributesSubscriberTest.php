@@ -141,6 +141,7 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
             'boundPropWithCustomAlias' => ['name' => 'customAlias'],
             'pathProp' => ['name' => 'pathProp'],
             'pathPropWithAlias' => ['name' => 'pathAlias'],
+            'objectPropWithSerializerForHydration' => ['name' => 'objectPropWithSerializerForHydration'],
         ];
 
         $this->assertEquals($expected, $queryMapping);

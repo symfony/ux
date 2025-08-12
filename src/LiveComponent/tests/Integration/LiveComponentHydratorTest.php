@@ -451,7 +451,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ;
         }];
 
-        yield 'Persisted entity: with custom_normalizer and embeddable (de)hydrates correctly' => [function () {
+        yield 'Persisted entity: using serializer, with custom_normalizer and embeddable (de)hydrates correctly' => [function () {
             $entity2 = persist(Entity2::class, ['embedded1' => new Embeddable1('bar'), 'embedded2' => new Embeddable2('baz')]);
 
             return HydrationTest::create(new class {
@@ -1001,7 +1001,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 });
         }];
 
-        yield 'Array with DTOs: fully writable allows anything to change' => [function () {
+        yield 'Array with DTOs: using serializer, fully writable allows anything to change' => [function () {
             $address1 = object(Address::class, ['address' => '17 Arcadia Road', 'city' => 'London']);
             $address2 = object(Address::class, ['address' => '4 Privet Drive', 'city' => 'Little Whinging']);
             $address3 = object(Address::class, ['address' => '124 Conch St.', 'city' => 'Bikini Bottom']);
@@ -1018,11 +1018,11 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->assertDehydratesTo(['addresses' => [
                     [
                         'address' => '17 Arcadia Road',
-                        'city' => 'London',
+                        'c' => 'London',
                     ],
                     [
                         'address' => '4 Privet Drive',
-                        'city' => 'Little Whinging',
+                        'c' => 'Little Whinging',
                     ],
                 ]])
                 ->userUpdatesProps(['addresses' => [$address3, $address4]])
@@ -1042,7 +1042,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 /**
                  * @var \Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address[]
                  */
-                #[LiveProp(writable: true, useSerializerForHydration: true)]
+                #[LiveProp(writable: true)]
                 public array $addresses = [];
             })
                 ->mountWith(['addresses' => [$address1, $address2]])
@@ -1065,12 +1065,43 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 });
         }];
 
+        yield 'Array with DTOs: using serializer, fully writable allows partial changes' => [function () {
+            $address1 = object(Address::class, ['address' => '1600 Pennsylvania Avenue', 'city' => 'Washington DC']);
+            $address2 = object(Address::class, ['address' => '221 B Baker St', 'city' => 'Birmingham']);
+
+            return HydrationTest::create(new class {
+                /**
+                 * @var \Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address[]
+                 */
+                #[LiveProp(writable: true, useSerializerForHydration: true)]
+                public array $addresses = [];
+            })
+                ->mountWith(['addresses' => [$address1, $address2]])
+                ->assertDehydratesTo(['addresses' => [
+                    [
+                        'address' => '1600 Pennsylvania Avenue',
+                        'c' => 'Washington DC',
+                    ],
+                    [
+                        'address' => '221 B Baker St',
+                        'c' => 'Birmingham',
+                    ],
+                ]])
+                ->userUpdatesProps(['addresses.1.city' => 'London'])
+                ->assertObjectAfterHydration(function (object $object) {
+                    self::assertEquals([
+                        object(Address::class, ['address' => '1600 Pennsylvania Avenue', 'city' => 'Washington DC']),
+                        object(Address::class, ['address' => '221 B Baker St', 'city' => 'London']),
+                    ], $object->addresses);
+                });
+        }];
+
         yield 'Array with DTOs: fully writable allows deep partial changes' => [function () {
             return HydrationTest::create(new class {
                 /**
                  * @var \Symfony\UX\LiveComponent\Tests\Fixtures\Dto\HoldsArrayOfDtos[] $dtos
                  */
-                #[LiveProp(writable: true, useSerializerForHydration: true)]
+                #[LiveProp(writable: true)]
                 public array $dtos = [];
             })
                 ->mountWith(['dtos' => [
@@ -1096,6 +1127,63 @@ final class LiveComponentHydratorTest extends KernelTestCase
                         'addresses' => [
                             ['address' => '698 Sycamore Road', 'city' => 'San Pueblo'],
                             ['address' => 'Madison Square Garden', 'city' => 'Chicago'],
+                        ],
+                    ],
+                ]])
+                ->userUpdatesProps([
+                    'dtos.0.addresses.0.city' => 'Springfield',
+                    'dtos.1.addresses.1.address' => '1060 West Addison Street',
+                    'dtos.1.addresses.1' => object(Address::class, ['address' => '10 Downing Street', 'city' => 'London']),
+                ])
+                ->assertObjectAfterHydration(function (object $object) {
+                    self::assertEquals(
+                        [
+                            object(HoldsArrayOfDtos::class, ['addresses' => [
+                                object(Address::class, ['address' => '742 Evergreen Terrace', 'city' => 'Springfield']),
+                                object(Address::class, ['address' => 'Apartment 5A, 129 West 81st Street', 'city' => 'New York']),
+                                object(Address::class, ['address' => '52 Festive Road', 'city' => 'London']),
+                            ]]),
+                            object(HoldsArrayOfDtos::class, ['addresses' => [
+                                object(Address::class, ['address' => '698 Sycamore Road', 'city' => 'San Pueblo']),
+                                object(Address::class, ['address' => '10 Downing Street', 'city' => 'London']),
+                            ]]),
+                        ],
+                        $object->dtos
+                    );
+                });
+        }];
+
+        yield 'Array with DTOs: using serializer, fully writable allows deep partial changes' => [function () {
+            return HydrationTest::create(new class {
+                /**
+                 * @var \Symfony\UX\LiveComponent\Tests\Fixtures\Dto\HoldsArrayOfDtos[] $dtos
+                 */
+                #[LiveProp(writable: true, useSerializerForHydration: true)]
+                public array $dtos = [];
+            })
+                ->mountWith(['dtos' => [
+                    object(HoldsArrayOfDtos::class, ['addresses' => [
+                        object(Address::class, ['address' => '742 Evergreen Terrace', 'city' => 'Boston']),
+                        object(Address::class, ['address' => 'Apartment 5A, 129 West 81st Street', 'city' => 'New York']),
+                        object(Address::class, ['address' => '52 Festive Road', 'city' => 'London']),
+                    ]]),
+                    object(HoldsArrayOfDtos::class, ['addresses' => [
+                        object(Address::class, ['address' => '698 Sycamore Road', 'city' => 'San Pueblo']),
+                        object(Address::class, ['address' => 'Madison Square Garden', 'city' => 'Chicago']),
+                    ]]),
+                ]])
+                ->assertDehydratesTo(['dtos' => [
+                    [
+                        'addresses' => [
+                            ['address' => '742 Evergreen Terrace', 'c' => 'Boston'],
+                            ['address' => 'Apartment 5A, 129 West 81st Street', 'c' => 'New York'],
+                            ['address' => '52 Festive Road', 'c' => 'London'],
+                        ],
+                    ],
+                    [
+                        'addresses' => [
+                            ['address' => '698 Sycamore Road', 'c' => 'San Pueblo'],
+                            ['address' => 'Madison Square Garden', 'c' => 'Chicago'],
                         ],
                     ],
                 ]])
@@ -1151,7 +1239,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 });
         }];
 
-        yield 'Object: using custom normalizer (de)hydrates correctly' => [function () {
+        yield 'Object: using serializer, using custom normalizer (de)hydrates correctly' => [function () {
             return HydrationTest::create(new class {
                 #[LiveProp(useSerializerForHydration: true)]
                 public Money $money;
@@ -1167,7 +1255,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ;
         }];
 
-        yield 'Object: dehydrates to array works correctly' => [function () {
+        yield 'Object: using serializer dehydrates to array works correctly' => [function () {
             return HydrationTest::create(new class {
                 #[LiveProp(useSerializerForHydration: true)]
                 public Temperature $temperature;
@@ -1252,7 +1340,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ;
         }];
 
-        yield 'Context: Pass (de)normalization context' => [function () {
+        yield 'Context: using serializer, pass (de)normalization context' => [function () {
             return HydrationTest::create(new class {
                 #[LiveProp(serializationContext: ['groups' => 'foo'])]
                 public string $name;
