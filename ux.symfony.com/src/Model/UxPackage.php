@@ -30,6 +30,7 @@ class UxPackage
         private ?string $imageFileName = null,
         private ?string $composerName = null,
         private bool $isDevDependency = false,
+        private bool $isDeprecated = false,
     ) {
     }
 
@@ -150,5 +151,10 @@ class UxPackage
     public function getImage(?string $format = null): string
     {
         return 'images/ux_packages/'.$this->getImageFilename($format);
+    }
+
+    public function isDeprecated(): bool
+    {
+        return $this->isDeprecated;
     }
 }

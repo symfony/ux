@@ -22,10 +22,12 @@ class UxPackagesController extends AbstractController
     #[Route('/packages', name: 'app_packages')]
     public function __invoke(UxPackageRepository $packageRepository): Response
     {
-        $packages = $packageRepository->findAll();
+        $packages = $packageRepository->findAll(deprecated: false);
+        $deprecatedPackages = $packageRepository->findAll(deprecated: true);
 
         return $this->render('main/packages.html.twig', [
             'packages' => $packages,
+            'deprecated_packages' => $deprecatedPackages,
         ]);
     }
 

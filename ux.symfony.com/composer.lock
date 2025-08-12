@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4c63747018e3269a9e8d6adcd246355b",
+    "content-hash": "cb6b21545f526b7e56b3d51e502ff6cf",
     "packages": [
         {
             "name": "composer/semver",
@@ -8241,74 +8241,6 @@
             "time": "2024-12-05T14:25:02+00:00"
         },
         {
-            "name": "symfony/ux-swup",
-            "version": "2.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/ux-swup.git",
-                "reference": "e344e0308b2c303e138386b2a6f892443947c7f7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-swup/zipball/e344e0308b2c303e138386b2a6f892443947c7f7",
-                "reference": "e344e0308b2c303e138386b2a6f892443947c7f7",
-                "shasum": ""
-            },
-            "conflict": {
-                "symfony/flex": "<1.13"
-            },
-            "default-branch": true,
-            "type": "symfony-bundle",
-            "extra": {
-                "thanks": {
-                    "url": "https://github.com/symfony/ux",
-                    "name": "symfony/ux"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\UX\\Swup\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Titouan Galopin",
-                    "email": "galopintitouan@gmail.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Swup integration for Symfony",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "symfony-ux"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/ux-swup/tree/v2.22.1"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-12-05T14:25:02+00:00"
-        },
-        {
             "name": "symfony/ux-toggle-password",
             "version": "2.x-dev",
             "source": {
@@ -12887,7 +12819,6 @@
         "symfony/ux-notify": 20,
         "symfony/ux-react": 20,
         "symfony/ux-svelte": 20,
-        "symfony/ux-swup": 20,
         "symfony/ux-toggle-password": 20,
         "symfony/ux-toolkit": 20,
         "symfony/ux-translator": 20,

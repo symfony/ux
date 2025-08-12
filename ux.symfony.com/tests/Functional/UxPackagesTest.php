@@ -59,6 +59,12 @@ class UxPackagesTest extends KernelTestCase
                 continue;
             }
 
+            if ($package->isDeprecated()) {
+                // Deprecated packages have a minimal layout
+                yield $package->getName() => [$package, 'Deprecated Package'];
+                continue;
+            }
+
             yield $package->getName() => [$package, \sprintf('%s Doc', $package->getHumanName())];
         }
     }

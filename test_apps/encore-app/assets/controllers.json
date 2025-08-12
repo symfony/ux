@@ -81,12 +81,6 @@
                 "fetch": "eager"
             }
         },
-        "@symfony/ux-swup": {
-            "swup": {
-                "enabled": true,
-                "fetch": "eager"
-            }
-        },
         "@symfony/ux-toggle-password": {
             "toggle-password": {
                 "enabled": true,

@@ -1,61 +1,58 @@
-{% extends 'ux_packages/package.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block package_header %}
-    {% component PackageHeader with {
-        package: 'swup',
-        eyebrowText: 'Slick Page Transitions'
-    } %}
-        {% block title_header %}
-            Ajax Page Transitions with <em>Swup</em>
-        {% endblock %}
+{% set meta = {
+    title: package.humanName ~ ' - Symfony UX 2',
+    description: package.description,
+    canonical: url(package.route),
+    social: {
+        title: package.tagline ~ ' - Symfony UX 2' ~ package.humanName|u.trimStart('UX '),
+        description: package.description|striptags,
+        image: {
+            url: absolute_url(asset(package.getSocialImage('1200x675'))),
+            type: 'image/png',
+            width: 1200,
+            height: 675,
+            alt: package.humanName ~ ' - Component Icon',
+        },
+    }
+} %}
 
-        {% block sub_content %}
-            Replace full page refreshes with Ajax-powered, stylized page transitions (an alternative to Turbo).
-        {% endblock %}
-    {% endcomponent %}
-{% endblock %}
-
-{% block code_block_left %}
-    <twig:CodeBlock filename="src/Controller/UxPackage/SwupController.php"/>
-{% endblock %}
-
-{% block code_block_right %}
-    <twig:CodeBlock
-        filename="templates/ux_packages/swup.html.twig"
-        targetTwigBlock="swup_specific_demo_content"
-    />
-{% endblock %}
-
-{% block demo_title %}UX Swup{% endblock %}
-
-{% block demo_content %}
-    {% block swup_specific_demo_content %}
-        <div data-controller="symfony--ux-swup--swup" id="swup" data-turbo="false">
-
-            <div class="PackageList">
-                {% for package in results %}
-                    {{ include('components/Package/PackageListItem.html.twig', {package}) }}
-                {% endfor %}
-            </div>
-
-            <div class="mt-3">
-                <nav class="Pagination">
-                    {% for num in 1..pages %}
-                        <a href="{{ path('app_swup', num > 1 ? {page: num} : {}) }}"
-                           aria-current="{{ page == num ? 'true' : 'false' }}">
-                            {{ num }}
-                        </a>
-                    {% endfor %}
-                </nav>
-            </div>
+{% block main %}
+    <main class="deprecated-package">
+        <div class="">
+            <p class="deprecated-badge">Deprecated Package</p>
+            <h1 class="mb-4">UX Swup 2.x</h1>
+            <p>This component is <strong>deprecated</strong> and will not receive further updates.<br>
+                Please consider using <a href="{{ path('app_turbo') }}" class="link">Symfony UX Turbo</a> for modern page
+                transitions.</p>
         </div>
-    {% endblock %}
+    </main>
+{% endblock %}
 
-    <div class="d-flex eyebrows pt-3 gap-2 align-items-center justify-content-center flex-wrap">
-        <div>Ajax-powered page navigation</div>
-        <twig:ux:icon name="circle-fill" />
-        <div>URL in address bar changes</div>
-        <twig:ux:icon name="circle-fill" />
-        <div>Customizable transitions</div>
-    </div>
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .deprecated-package {
+            display: grid;
+            place-content: center;
+            text-align: center;
+            padding-top: 5rem;
+            max-width: 36rem;
+            margin-block: auto;
+            align-self: center;
+        }
+        .deprecated-badge {
+            opacity: 0.85;
+            background: orange;
+            display: inline-block;
+            padding: .1rem .6rem;
+            border-radius: .1rem;
+            box-shadow: 0 0 -3px 4px rgb(0 0 0 / .1);
+            color: #000;
+            font-size: .875rem;
+            text-shadow: 0 1px 4px #fff;
+            transform-origin: center;
+            transform: translateY(0rem) rotate(11deg) translateX(8rem);
+        }
+    </style>
 {% endblock %}

@@ -18,7 +18,6 @@ return [
     Symfony\UX\Notify\NotifyBundle::class => ['all' => true],
     Symfony\UX\React\ReactBundle::class => ['all' => true],
     Symfony\UX\Svelte\SvelteBundle::class => ['all' => true],
-    Symfony\UX\Swup\SwupBundle::class => ['all' => true],
     Symfony\UX\TogglePassword\TogglePasswordBundle::class => ['all' => true],
     Symfony\UX\Translator\UxTranslatorBundle::class => ['all' => true],
     Symfony\UX\Turbo\TurboBundle::class => ['all' => true],
