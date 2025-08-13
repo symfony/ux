@@ -80,6 +80,15 @@ jobs:
                   echo "Packages: $PACKAGES"
                   echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
 
+            - name: Configure environment for Windows
+              if: matrix.os == 'windows-latest'
+              run: |
+                  # Install MSYS2
+                  choco install msys2 -y --no-progress
+
+                  # Install "parallel" utility
+                  C:\\tools\\msys64\\usr\\bin\\bash -lc "pacman -S --noconfirm parallel"
+
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
@@ -108,39 +117,16 @@ jobs:
             - name: Build root packages
               run: php .github/build-packages.php
 
-            - name: Run packages tests (Unix)
-              if: matrix.os != 'windows-latest'
+            - name: Run packages tests
               run: |
                 source .github/workflows/.utils.sh
-                echo "$PACKAGES" | xargs -n1 | parallel -j +3 "_run_task {} \
+                echo "$PACKAGES" | xargs -n1 | ${{ matrix.os == 'windows-latest' && 'C:\\tools\\msys64\\usr\\bin\\parallel' || 'parallel' }} -j +3 "_run_task {} \
                   '(cd src/{} \
                   && $COMPOSER_MIN_STAB \
                   && $COMPOSER_UP \
                   && if [ {} = LiveComponent ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
                   && $PHPUNIT)'"
 
-            - name: Run packages tests (Windows)
-              if: matrix.os == 'windows-latest'
-              run: |
-                source .github/workflows/.utils.sh
-
-                # parallel is not available on Windows, so we need to run the tests sequentially
-                FAILED_PACKAGES=""
-                for PACKAGE in $PACKAGES; do
-                  if ! PACKAGE="$PACKAGE" _run_task_sequential $PACKAGE \
-                    '(cd src/$PACKAGE \
-                    && $COMPOSER_MIN_STAB \
-                    && $COMPOSER_UP \
-                    && if [ "$PACKAGE" = "LiveComponent" ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
-                    && $PHPUNIT)'; then
-                    FAILED_PACKAGES="$FAILED_PACKAGES $PACKAGE"
-                  fi
-                done
-
-                if [ -n "$FAILED_PACKAGES" ]; then
-                  echo "The following packages failed:$FAILED_PACKAGES"
-                  exit 1
-                fi
     js:
         runs-on: ubuntu-latest
         strategy:
