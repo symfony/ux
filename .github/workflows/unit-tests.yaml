@@ -132,7 +132,7 @@ jobs:
                   '(cd src/{1} \
                   && $COMPOSER_MIN_STAB \
                   && $COMPOSER_UP \
-                  && if [ \'{1}\' = \'LiveComponent\' ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
+                  && if [ \"{1}\" = \"LiveComponent\" ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
                   && $PHPUNIT)'"
 
     js:
