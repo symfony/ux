@@ -80,14 +80,22 @@ jobs:
                   echo "Packages: $PACKAGES"
                   echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
 
-            - name: Configure environment for Windows
-              if: matrix.os == 'windows-latest'
+            - name: Install rust-parallel
               run: |
-                  # Install MSYS2
-                  choco install msys2 -y --no-progress
+                  mkdir -p "$HOME/.local/bin"
 
-                  # Install "parallel" utility
-                  C:\\tools\\msys64\\usr\\bin\\bash -lc "pacman -S --noconfirm parallel"
+                  if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+                    # Windows installation
+                    curl -L https://github.com/aaronriekenberg/rust-parallel/releases/download/v1.18.1/rust-parallel-x86_64-pc-windows-msvc.zip -o rust-parallel.zip
+                    unzip rust-parallel.zip -d "$HOME/.local/bin"
+                  else
+                    # Linux installation
+                    curl -L https://github.com/aaronriekenberg/rust-parallel/releases/download/v1.18.1/rust-parallel-x86_64-unknown-linux-gnu.tar.gz -o rust-parallel.tar.gz
+                    tar -xzf rust-parallel.tar.gz -C "$HOME/.local/bin"
+                    chmod +x "$HOME/.local/bin/rust-parallel"
+                  fi
+
+                  echo "$HOME/.local/bin" >> $GITHUB_PATH
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -120,7 +128,7 @@ jobs:
             - name: Run packages tests
               run: |
                 source .github/workflows/.utils.sh
-                echo "$PACKAGES" | xargs -n1 | ${{ matrix.os == 'windows-latest' && 'C:\\tools\\msys64\\usr\\bin\\parallel' || 'parallel' }} -j +3 "_run_task {} \
+                echo "$PACKAGES" | xargs -n1 |  rust-parallel -j 3 -s -r '(.+)' "source .github/workflows/.utils.sh; _run_task {} \
                   '(cd src/{} \
                   && $COMPOSER_MIN_STAB \
                   && $COMPOSER_UP \
