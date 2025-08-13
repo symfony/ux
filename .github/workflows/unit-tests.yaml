@@ -132,7 +132,7 @@ jobs:
                   '(cd src/{1} \
                   && $COMPOSER_MIN_STAB \
                   && $COMPOSER_UP \
-                  && _before_test {1} ${{ matrix.php-version }} ${{ matrix.minimum-stability }} |
+                  && _before_test {1} ${{ matrix.php-version }} ${{ matrix.minimum-stability }} \
                   && $PHPUNIT)'"
 
     js:
