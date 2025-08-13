@@ -19,7 +19,7 @@ _run_task() {
       echo -e "\n\\e[32mOK\\e[0m $title\\n\\n::endgroup::"
     fi
 
-    exit $?
+    return $?
 }
 export -f _run_task
 
