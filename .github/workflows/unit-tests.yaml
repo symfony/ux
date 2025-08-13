@@ -128,11 +128,11 @@ jobs:
             - name: Run packages tests
               run: |
                 source .github/workflows/.utils.sh
-                echo "$PACKAGES" | xargs -n1 |  rust-parallel -j 3 -s -r '(.+)' "source .github/workflows/.utils.sh; _run_task {} \
-                  '(cd src/{} \
+                echo "$PACKAGES" | xargs -n1 |  rust-parallel -j 3 -s -r '(.+)' "source .github/workflows/.utils.sh; _run_task {1} \
+                  '(cd src/{1} \
                   && $COMPOSER_MIN_STAB \
                   && $COMPOSER_UP \
-                  && if [ {} = LiveComponent ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
+                  && if [ {1} = LiveComponent ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
                   && $PHPUNIT)'"
 
     js:
