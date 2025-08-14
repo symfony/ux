@@ -822,7 +822,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     self::assertNull($object->string);
                 })
             ;
-        }, 80100];
+        }];
 
         yield 'Enum: (de)hydrates correctly' => [function () {
             return HydrationTest::create(new class {
@@ -841,7 +841,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     self::assertSame('active', $object->string->value);
                 })
             ;
-        }, 80100];
+        }];
 
         yield 'Enum: writable enums can be changed' => [function () {
             return HydrationTest::create(new class {
@@ -854,7 +854,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     self::assertSame(1, $object->int->value);
                 })
             ;
-        }, 80100];
+        }];
 
         yield 'Enum: null-like enum values are handled correctly' => [function () {
             return HydrationTest::create(new class {
@@ -884,7 +884,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     self::assertSame(EmptyStringEnum::EMPTY, $object->emptyString);
                 })
             ;
-        }, 80100];
+        }];
 
         yield 'Enum: nullable enum with invalid value sets to null' => [function () {
             return HydrationTest::create(new class {
@@ -898,7 +898,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     self::assertNull($object->int);
                 })
             ;
-        }, 80100];
+        }];
 
         yield 'Object: (de)hydrates DTO correctly' => [function () {
             return HydrationTest::create(new class {
@@ -1612,7 +1612,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     // non-nullable change is rejected (1=LOW)
                     self::assertSame(1, $object->nonNullableInt->value);
                 });
-        }, 80100];
+        }];
 
         yield 'writable_path_with_type_problem_ignored' => [function () {
             return HydrationTest::create(new class {
