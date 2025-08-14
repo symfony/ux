@@ -128,13 +128,12 @@ jobs:
             - name: Run packages tests
               run: |
                 source .github/workflows/.utils.sh
-                echo "$PACKAGES" | xargs -n1 | rust-parallel -j 3 --exit-on-error --regex '(.+)' --shell "_run_task {1} \
-                  'bash -c \"(cd src/{1} \
-                  && source .github/workflows/.utils.sh
+                echo "$PACKAGES" | xargs -n1 | rust-parallel -j 3 --exit-on-error --regex '(.+)' --shell --shell-path bash --shell-argument -c  "_run_task {1} \
+                  '(cd src/{1} \
                   && $COMPOSER_MIN_STAB \
                   && $COMPOSER_UP \
                   && _before_test {1} ${{ matrix.php-version }} ${{ matrix.minimum-stability }} \
-                  && $PHPUNIT)\"'"
+                  && $PHPUNIT)'"
 
     js:
         runs-on: ubuntu-latest
