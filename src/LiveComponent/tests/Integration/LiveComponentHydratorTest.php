@@ -151,6 +151,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
     }
 
     /**
+     * @group transient-on-windows
      * @dataProvider provideDehydrationHydrationTests
      */
     public function testCanDehydrateAndHydrateComponentWithTestCases(callable $testFactory, ?int $minPhpVersion = null)
