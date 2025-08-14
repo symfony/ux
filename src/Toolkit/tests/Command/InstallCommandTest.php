@@ -13,6 +13,7 @@ namespace Symfony\UX\Toolkit\Tests\Command;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Zenstruck\Console\Test\InteractsWithConsole;
 
 class InstallCommandTest extends KernelTestCase
@@ -36,14 +37,14 @@ class InstallCommandTest extends KernelTestCase
     public function testShouldAbleToInstallComponentTableAndItsDependencies()
     {
         $expectedFiles = [
-            'Table/templates/components/Table.html.twig' => $this->tmpDir.'/templates/components/Table.html.twig',
-            'Table/templates/components/Table/Body.html.twig' => $this->tmpDir.'/templates/components/Table/Body.html.twig',
-            'Table/templates/components/Table/Caption.html.twig' => $this->tmpDir.'/templates/components/Table/Caption.html.twig',
-            'Table/templates/components/Table/Cell.html.twig' => $this->tmpDir.'/templates/components/Table/Cell.html.twig',
-            'Table/templates/components/Table/Footer.html.twig' => $this->tmpDir.'/templates/components/Table/Footer.html.twig',
-            'Table/templates/components/Table/Head.html.twig' => $this->tmpDir.'/templates/components/Table/Head.html.twig',
-            'Table/templates/components/Table/Header.html.twig' => $this->tmpDir.'/templates/components/Table/Header.html.twig',
-            'Table/templates/components/Table/Row.html.twig' => $this->tmpDir.'/templates/components/Table/Row.html.twig',
+            'Table/templates/components/Table.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table.html.twig'),
+            'Table/templates/components/Table/Body.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Body.html.twig'),
+            'Table/templates/components/Table/Caption.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Caption.html.twig'),
+            'Table/templates/components/Table/Cell.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Cell.html.twig'),
+            'Table/templates/components/Table/Footer.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Footer.html.twig'),
+            'Table/templates/components/Table/Head.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Head.html.twig'),
+            'Table/templates/components/Table/Header.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Header.html.twig'),
+            'Table/templates/components/Table/Row.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Row.html.twig'),
         ];
 
         foreach ($expectedFiles as $expectedFile) {
