@@ -139,11 +139,6 @@ final class ComponentAttributesTest extends TestCase
 
     public function testCanAddStimulusControllerViaStimulusAttributes()
     {
-        // if PHP less than 8.1, skip
-        if (version_compare(\PHP_VERSION, '8.1.0', '<')) {
-            $this->markTestSkipped('PHP 8.1+ required');
-        }
-
         $attributes = new ComponentAttributes([
             'class' => 'foo',
             'data-controller' => 'live',
@@ -167,11 +162,6 @@ final class ComponentAttributesTest extends TestCase
 
     public function testCanAddStimulusActionViaStimulusAttributes()
     {
-        // if PHP less than 8.1, skip
-        if (version_compare(\PHP_VERSION, '8.1.0', '<')) {
-            $this->markTestSkipped('PHP 8.1+ required');
-        }
-
         $attributes = new ComponentAttributes([
             'class' => 'foo',
             'data-action' => 'live#foo',
