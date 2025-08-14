@@ -81,10 +81,10 @@ class TranslationsDumper
             json_encode($this->getLocaleFallbacks(...$catalogues), \JSON_THROW_ON_ERROR)
         ));
         $this->filesystem->dumpFile($this->dumpDir.'/configuration.d.ts', <<<'TS'
-import { LocaleType } from '@symfony/ux-translator';
+            import { LocaleType } from '@symfony/ux-translator';
 
-export declare const localeFallbacks: Record<LocaleType, LocaleType>;
-TS
+            export declare const localeFallbacks: Record<LocaleType, LocaleType>;
+            TS
         );
     }
 

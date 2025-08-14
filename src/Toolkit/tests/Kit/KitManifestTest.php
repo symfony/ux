@@ -40,10 +40,10 @@ final class KitManifestTest extends TestCase
         $this->expectExceptionMessage('Property "description" is required.');
 
         KitManifest::fromJson(<<<JSON
-            {
-                "name": "kit"
-            }
-        JSON);
+                {
+                    "name": "kit"
+                }
+            JSON);
     }
 
     public function testFromJsonWithMissingLicense()
@@ -52,11 +52,11 @@ final class KitManifestTest extends TestCase
         $this->expectExceptionMessage('Property "license" is required.');
 
         KitManifest::fromJson(<<<JSON
-            {
-                "name": "kit",
-                "description": "A kit"
-            }
-        JSON);
+                {
+                    "name": "kit",
+                    "description": "A kit"
+                }
+            JSON);
     }
 
     public function testFromJsonWithMissingHomepage()
@@ -65,12 +65,12 @@ final class KitManifestTest extends TestCase
         $this->expectExceptionMessage('Property "homepage" is required.');
 
         KitManifest::fromJson(<<<JSON
-            {
-                "name": "kit",
-                "description": "A kit",
-                "license": "MIT"
-            }
-        JSON);
+                {
+                    "name": "kit",
+                    "description": "A kit",
+                    "license": "MIT"
+                }
+            JSON);
     }
 
     public function testFromJsonWithInvalidHomepage()
@@ -79,25 +79,25 @@ final class KitManifestTest extends TestCase
         $this->expectExceptionMessage('Invalid homepage URL "not-a-url".');
 
         KitManifest::fromJson(<<<JSON
-            {
-                "name": "kit",
-                "description": "A kit",
-                "license": "MIT",
-                "homepage": "not-a-url"
-            }
-        JSON);
+                {
+                    "name": "kit",
+                    "description": "A kit",
+                    "license": "MIT",
+                    "homepage": "not-a-url"
+                }
+            JSON);
     }
 
     public function testFromJsonWithValidData()
     {
         $manifest = KitManifest::fromJson(<<<JSON
-            {
-                "name": "kit",
-                "description": "A kit",
-                "license": "MIT",
-                "homepage": "https://example.com"
-            }
-        JSON);
+                {
+                    "name": "kit",
+                    "description": "A kit",
+                    "license": "MIT",
+                    "homepage": "https://example.com"
+                }
+            JSON);
 
         $this->assertSame('kit', $manifest->name);
         $this->assertSame('A kit', $manifest->description);
