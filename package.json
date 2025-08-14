@@ -7,7 +7,7 @@
         "src/*/src/Bridge/*/assets"
     ],
     "scripts": {
-        "build": "pnpm run -r --aggregate-output build",
+        "build": "pnpm run --filter @symfony/ux-map build && pnpm run -r --aggregate-output build",
         "test": "pnpm run -r --aggregate-output test",
         "check": "biome check",
         "ci": "biome ci"
