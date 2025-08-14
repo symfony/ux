@@ -57,12 +57,12 @@ class MakeAutocompleteField extends AbstractMaker
     {
         $command
              ->setHelp(<<<EOF
-The <info>%command.name%</info> command generates an Ajax-autocomplete form field class for symfony/ux-autocomplete
+                 The <info>%command.name%</info> command generates an Ajax-autocomplete form field class for symfony/ux-autocomplete
 
-<info>php %command.full_name%</info>
+                 <info>php %command.full_name%</info>
 
-The command will ask you which entity the field is for and what to call your new class.
-EOF)
+                 The command will ask you which entity the field is for and what to call your new class.
+                 EOF)
         ;
     }
 

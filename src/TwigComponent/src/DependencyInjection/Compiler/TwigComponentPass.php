@@ -69,7 +69,7 @@ final class TwigComponentPass implements CompilerPassInterface
 
                 $tag['service_id'] = $id;
                 $tag['class'] = $definition->getClass();
-                $tag['template'] = $tag['template'] ?? $this->calculateTemplate($tag['key'], $defaults);
+                $tag['template'] ??= $this->calculateTemplate($tag['key'], $defaults);
                 $componentConfig[$tag['key']] = [...$tag, ...$this->getMountMethods($tag['class'])];
                 $componentReferences[$tag['key']] = new Reference($id);
                 $componentNames[] = $tag['key'];

@@ -76,7 +76,7 @@ class TwigAppKernel extends Kernel
         $dir = sys_get_temp_dir().'/toggle_password_bundle/'.uniqid($type.'_', true);
 
         if (!file_exists($dir)) {
-            mkdir($dir, 0777, true);
+            mkdir($dir, 0o777, true);
         }
 
         return $dir;

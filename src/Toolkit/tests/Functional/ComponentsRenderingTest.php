@@ -81,15 +81,15 @@ class ComponentsRenderingTest extends WebTestCase
     {
         $info = \sprintf(
             <<<HTML
-            <!--
-            - Kit: %s
-            - Component: %s
-            - Code:
-            ```twig
-            %s
-            ```
-            - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-            HTML,
+                <!--
+                - Kit: %s
+                - Component: %s
+                - Code:
+                ```twig
+                %s
+                ```
+                - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+                HTML,
             $kit->manifest->name,
             $recipe->manifest->name,
             trim($code)

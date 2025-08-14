@@ -36,33 +36,33 @@ class DumpEnabledLocalesTest extends KernelTestCase
         self::assertStringEqualsFile(
             $translationsDumpDir.'/index.js',
             <<<JAVASCRIPT
-            export const SYMFONY_UX_GREAT = {"id":"symfony_ux.great","translations":{"messages":{"en":"Symfony UX is awesome","fr":"Symfony UX est g\u00e9nial"}}};
+                export const SYMFONY_UX_GREAT = {"id":"symfony_ux.great","translations":{"messages":{"en":"Symfony UX is awesome","fr":"Symfony UX est g\u00e9nial"}}};
 
-            JAVASCRIPT
+                JAVASCRIPT
         );
         self::assertStringEqualsFile(
             $translationsDumpDir.'/index.d.ts',
             <<<TYPESCRIPT
-            import { Message, NoParametersType } from '@symfony/ux-translator';
+                import { Message, NoParametersType } from '@symfony/ux-translator';
 
-            export declare const SYMFONY_UX_GREAT: Message<{ 'messages': { parameters: NoParametersType } }, 'en'|'fr'>;
+                export declare const SYMFONY_UX_GREAT: Message<{ 'messages': { parameters: NoParametersType } }, 'en'|'fr'>;
 
-            TYPESCRIPT
+                TYPESCRIPT
         );
         self::assertStringEqualsFile(
             $translationsDumpDir.'/configuration.js',
             <<<JAVASCRIPT
-            export const localeFallbacks = {"en":null,"fr":"en"};
+                export const localeFallbacks = {"en":null,"fr":"en"};
 
-            JAVASCRIPT
+                JAVASCRIPT
         );
         self::assertStringEqualsFile(
             $translationsDumpDir.'/configuration.d.ts',
             <<<TYPESCRIPT
-            import { LocaleType } from '@symfony/ux-translator';
+                import { LocaleType } from '@symfony/ux-translator';
 
-            export declare const localeFallbacks: Record<LocaleType, LocaleType>;
-            TYPESCRIPT
+                export declare const localeFallbacks: Record<LocaleType, LocaleType>;
+                TYPESCRIPT
         );
     }
 }

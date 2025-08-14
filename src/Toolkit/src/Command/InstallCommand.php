@@ -63,18 +63,18 @@ class InstallCommand extends Command
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the recipe installation, even if the files already exists')
             ->setHelp(
                 <<<EOF
-The <info>%command.name%</info> command will install a new UX Recipe in your project.
+                    The <info>%command.name%</info> command will install a new UX Recipe in your project.
 
-To install a recipe, use:
+                    To install a recipe, use:
 
-<info>php %command.full_name% Button</info>
+                    <info>php %command.full_name% Button</info>
 
-To install a recipe from a specific Kit (either official or external), use the <info>--kit</info> option:
+                    To install a recipe from a specific Kit (either official or external), use the <info>--kit</info> option:
 
-<info>php %command.full_name% Button --kit=shadcn</info>
-<info>php %command.full_name% Button --kit=https://github.com/user/my-kit</info>
-<info>php %command.full_name% Button --kit=https://github.com/user/my-kit:branch</info>
-EOF
+                    <info>php %command.full_name% Button --kit=shadcn</info>
+                    <info>php %command.full_name% Button --kit=https://github.com/user/my-kit</info>
+                    <info>php %command.full_name% Button --kit=https://github.com/user/my-kit:branch</info>
+                    EOF
             );
     }
 
