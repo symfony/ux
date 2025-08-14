@@ -656,8 +656,8 @@ Learn more
 .. _`symfony/asset-mapper`: https://symfony.com/doc/current/frontend/asset_mapper.html
 .. _`symfony/ux-twig-component`: https://symfony.com/bundles/ux-twig-component/current/index.html
 .. _`W3C guide about SVG icon accessibility`: https://design-system.w3.org/styles/svg-icons.html#svg-accessibility
-.. _`Bootstrap Icons`: https://icons.getbootstrap.com/
-.. _`Boxicons`: https://boxicons.com/
+.. _`Bootstrap Icons`: https://github.com/twbs/icons
+.. _`Boxicons`: https://github.com/atisawd/boxicons
 .. _`Flowbite`: https://github.com/themesberg/flowbite
 .. _`FontAwesome Icons`: https://github.com/FortAwesome/Font-Awesome
 .. _`Heroicons`: https://github.com/tailwindlabs/heroicons
