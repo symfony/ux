@@ -126,10 +126,9 @@ jobs:
               run: php .github/build-packages.php
 
             - name: Run packages tests
-              shell: bash
               run: |
                 source .github/workflows/.utils.sh
-                echo "$PACKAGES" | xargs -n1 | rust-parallel -j 3 --exit-on-error --regex '(.+)' --shell --shell-path bash --shell-argument -c "source .github/workflows/.utils.sh; _run_task {1} \
+                echo "$PACKAGES" | xargs -n1 | rust-parallel -j 3 --exit-on-error --regex '(.+)' --shell "; _run_task {1} \
                   '(cd src/{1} \
                   && $COMPOSER_MIN_STAB \
                   && $COMPOSER_UP \
