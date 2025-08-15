@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-08-12T11:10:11Z
+
+cc @mbuliard, can you take a look? Thanks!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-08-12T14:58:25Z
+
+I pushed a second commit to fix https://github.com/symfony/ux/issues/2991, now `modifier` are nicely used to generate the URL
