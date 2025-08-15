@@ -33,7 +33,7 @@
     },
     "require-dev": {
         "doctrine/collections": "^1.6.8|^2.0",
-        "doctrine/doctrine-bundle": "^2.5.0",
+        "doctrine/doctrine-bundle": "^2.14",
         "doctrine/orm": "^2.9.4|^3.0",
         "fakerphp/faker": "^1.22",
         "mtdowling/jmespath.php": "^2.6",
