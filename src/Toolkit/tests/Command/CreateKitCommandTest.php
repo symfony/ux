@@ -56,62 +56,62 @@ class CreateKitCommandTest extends KernelTestCase
         $this->assertStringEqualsFile(
             $this->tmpDir.'/manifest.json',
             <<<'JSON'
-            {
-                "$schema": "../vendor/symfony/ux-toolkit/schema-kit-v1.json",
-                "name": "MyKit",
-                "description": "A custom kit for Symfony UX Toolkit.",
-                "homepage": "http://example.com",
-                "license": "MIT"
-            }
-            JSON
+                {
+                    "$schema": "../vendor/symfony/ux-toolkit/schema-kit-v1.json",
+                    "name": "MyKit",
+                    "description": "A custom kit for Symfony UX Toolkit.",
+                    "homepage": "http://example.com",
+                    "license": "MIT"
+                }
+                JSON
         );
         $this->assertStringEqualsFile(
             $this->tmpDir.'/Button/manifest.json',
             <<<'JSON'
-            {
-                "$schema": "../vendor/symfony/ux-toolkit/schema-kit-recipe-v1.json",
-                "name": "Button",
-                "description": "A clickable element that triggers actions or events, supporting various styles and states.",
-                "copy-files": {
-                    "templates/": "templates/"
-                },
-                "dependencies": [
-                    {
-                        "type": "php",
-                        "package": "twig/extra-bundle"
+                {
+                    "$schema": "../vendor/symfony/ux-toolkit/schema-kit-recipe-v1.json",
+                    "name": "Button",
+                    "description": "A clickable element that triggers actions or events, supporting various styles and states.",
+                    "copy-files": {
+                        "templates/": "templates/"
                     },
-                    {
-                        "type": "php",
-                        "package": "twig/html-extra:^3.12.0"
-                    },
-                    {
-                        "type": "php",
-                        "package": "tales-from-a-dev/twig-tailwind-extra"
-                    }
-                ]
-            }
-            JSON
+                    "dependencies": [
+                        {
+                            "type": "php",
+                            "package": "twig/extra-bundle"
+                        },
+                        {
+                            "type": "php",
+                            "package": "twig/html-extra:^3.12.0"
+                        },
+                        {
+                            "type": "php",
+                            "package": "tales-from-a-dev/twig-tailwind-extra"
+                        }
+                    ]
+                }
+                JSON
         );
         $this->assertStringEqualsFile(
             $this->tmpDir.'/Button/templates/components/Button.html.twig',
             <<<'TWIG'
-            {% props type = 'button', variant = 'default' %}
-            {%- set style = html_cva(
-                base: 'inline-flex items-center',
-                variants: {
-                    variant: {
-                        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-                        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+                {% props type = 'button', variant = 'default' %}
+                {%- set style = html_cva(
+                    base: 'inline-flex items-center',
+                    variants: {
+                        variant: {
+                            default: "bg-primary text-primary-foreground hover:bg-primary/90",
+                            secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+                        },
                     },
-                },
-            ) -%}
+                ) -%}
 
-            <button class="{{ style.apply({ variant }, attributes.render('class'))|tailwind_merge }}"
-                {{ attributes }}
-            >
-                {%- block content %}{% endblock -%}
-            </button>
-            TWIG
+                <button class="{{ style.apply({ variant }, attributes.render('class'))|tailwind_merge }}"
+                    {{ attributes }}
+                >
+                    {%- block content %}{% endblock -%}
+                </button>
+                TWIG
         );
     }
 }

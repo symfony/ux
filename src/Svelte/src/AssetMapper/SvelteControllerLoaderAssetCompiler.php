@@ -64,9 +64,9 @@ class SvelteControllerLoaderAssetCompiler implements AssetCompilerInterface
         $componentsJson = \sprintf('{%s}', implode(', ', $componentParts));
 
         return <<<EOF
-        $importCode
-        export const components = $componentsJson;
-        EOF;
+            $importCode
+            export const components = $componentsJson;
+            EOF;
     }
 
     /**

@@ -91,6 +91,9 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
+    /**
+     * @group transient-on-windows
+     */
     public function testCanExecuteComponentActionNormalRoute()
     {
         $templateName = 'render_embedded_with_blocks.html.twig';
@@ -189,6 +192,9 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
+    /**
+     * @group transient-on-windows
+     */
     public function testItAddsEmbeddedTemplateContextToEmbeddedComponents()
     {
         $templateName = 'render_embedded_with_blocks.html.twig';
@@ -226,6 +232,9 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
+    /**
+     * @group transient-on-windows
+     */
     public function testItWorksWithNamespacedTemplateNamesForEmbeddedComponents()
     {
         $templateName = 'render_embedded_with_blocks.html.twig';
@@ -239,6 +248,9 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
+    /**
+     * @group transient-on-windows
+     */
     public function testItUseBlocksFromEmbeddedContextUsingMultipleComponents()
     {
         $templateName = 'render_multiple_embedded_with_blocks.html.twig';
@@ -271,6 +283,9 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
+    /**
+     * @group transient-on-windows
+     */
     public function testItUseBlocksFromEmbeddedContextUsingMultipleComponentsWithNamespacedTemplate()
     {
         $templateName = 'render_multiple_embedded_with_blocks.html.twig';

@@ -44,10 +44,10 @@ final class RecipeManifestTest extends TestCase
         $this->expectExceptionMessage('The recipe type "test" is not supported.');
 
         RecipeManifest::fromJson(<<<JSON
-            {
-                "type": "test"
-            }
-        JSON);
+                {
+                    "type": "test"
+                }
+            JSON);
     }
 
     public function testFromJsonWithMissingName()
@@ -56,10 +56,10 @@ final class RecipeManifestTest extends TestCase
         $this->expectExceptionMessage('Property "name" is required.');
 
         RecipeManifest::fromJson(<<<JSON
-            {
-                "type": "component"
-            }
-        JSON);
+                {
+                    "type": "component"
+                }
+            JSON);
     }
 
     public function testFromJsonWithMissingDescription()
@@ -68,11 +68,11 @@ final class RecipeManifestTest extends TestCase
         $this->expectExceptionMessage('Property "description" is required.');
 
         RecipeManifest::fromJson(<<<JSON
-            {
-                "type": "component",
-                "name": "MyComponent"
-            }
-        JSON);
+                {
+                    "type": "component",
+                    "name": "MyComponent"
+                }
+            JSON);
     }
 
     public function testFromJsonWithMissingLicense()
@@ -81,12 +81,12 @@ final class RecipeManifestTest extends TestCase
         $this->expectExceptionMessage('Property "copy-files" is required.');
 
         RecipeManifest::fromJson(<<<JSON
-            {
-                "type": "component",
-                "name": "MyComponent",
-                "description": "An incredible component"
-            }
-        JSON);
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "description": "An incredible component"
+                }
+            JSON);
     }
 
     public function testFromJsonWithInvalidDependencies()
@@ -95,16 +95,16 @@ final class RecipeManifestTest extends TestCase
         $this->expectExceptionMessage('Each dependency must be an associative array.');
 
         RecipeManifest::fromJson(<<<JSON
-            {
-                "type": "component",
-                "name": "MyComponent",
-                "description": "An incredible component",
-                "copy-files": {
-                    "templates/": "templates/"
-                },
-                "dependencies": ["foo"]
-            }
-        JSON);
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "description": "An incredible component",
+                    "copy-files": {
+                        "templates/": "templates/"
+                    },
+                    "dependencies": ["foo"]
+                }
+            JSON);
     }
 
     public function testFromJsonWithInvalidDependenciesType()
@@ -113,18 +113,18 @@ final class RecipeManifestTest extends TestCase
         $this->expectExceptionMessage('The dependency type is missing for dependency #0, add "type" key.');
 
         RecipeManifest::fromJson(<<<JSON
-            {
-                "type": "component",
-                "name": "MyComponent",
-                "description": "An incredible component",
-                "copy-files": {
-                    "templates/": "templates/"
-                },
-                "dependencies": [
-                    {"key": "value"}
-                ]
-            }
-        JSON);
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "description": "An incredible component",
+                    "copy-files": {
+                        "templates/": "templates/"
+                    },
+                    "dependencies": [
+                        {"key": "value"}
+                    ]
+                }
+            JSON);
     }
 
     public function testFromJsonWithInvalidPhpDependency()
@@ -133,18 +133,18 @@ final class RecipeManifestTest extends TestCase
         $this->expectExceptionMessage('The package name is missing for dependency #0, add "package" key.');
 
         RecipeManifest::fromJson(<<<JSON
-            {
-                "type": "component",
-                "name": "MyComponent",
-                "description": "An incredible component",
-                "copy-files": {
-                    "templates/": "templates/"
-                },
-                "dependencies": [
-                    {"type": "php"}
-                ]
-            }
-        JSON);
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "description": "An incredible component",
+                    "copy-files": {
+                        "templates/": "templates/"
+                    },
+                    "dependencies": [
+                        {"type": "php"}
+                    ]
+                }
+            JSON);
     }
 
     public function testFromJsonWithInvalidRecipeDependency()
@@ -153,32 +153,32 @@ final class RecipeManifestTest extends TestCase
         $this->expectExceptionMessage('The recipe name is missing for dependency #0, add "name" key.');
 
         RecipeManifest::fromJson(<<<JSON
-            {
-                "type": "component",
-                "name": "MyComponent",
-                "description": "An incredible component",
-                "copy-files": {
-                    "templates/": "templates/"
-                },
-                "dependencies": [
-                    {"type": "recipe"}
-                ]
-            }
-        JSON);
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "description": "An incredible component",
+                    "copy-files": {
+                        "templates/": "templates/"
+                    },
+                    "dependencies": [
+                        {"type": "recipe"}
+                    ]
+                }
+            JSON);
     }
 
     public function testFromJsonWithMinimumValidData()
     {
         $manifest = RecipeManifest::fromJson(<<<JSON
-            {
-                "type": "component",
-                "name": "MyComponent",
-                "description": "An incredible component",
-                "copy-files": {
-                    "templates/": "templates/"
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "description": "An incredible component",
+                    "copy-files": {
+                        "templates/": "templates/"
+                    }
                 }
-            }
-        JSON);
+            JSON);
 
         $this->assertSame(RecipeType::Component, $manifest->type);
         $this->assertSame('MyComponent', $manifest->name);
@@ -190,25 +190,25 @@ final class RecipeManifestTest extends TestCase
     public function testFromJsonWithValidData()
     {
         $manifest = RecipeManifest::fromJson(<<<JSON
-            {
-                "type": "component",
-                "name": "MyComponent",
-                "description": "An incredible component",
-                "copy-files": {
-                    "templates/": "templates/"
-                },
-                "dependencies": [
-                    {
-                        "type": "php",
-                        "package": "symfony/ux-twig-component:^2.29"
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "description": "An incredible component",
+                    "copy-files": {
+                        "templates/": "templates/"
                     },
-                    {
-                        "type": "recipe",
-                        "name": "OtherComponent"
-                    }
-                ]
-            }
-        JSON);
+                    "dependencies": [
+                        {
+                            "type": "php",
+                            "package": "symfony/ux-twig-component:^2.29"
+                        },
+                        {
+                            "type": "recipe",
+                            "name": "OtherComponent"
+                        }
+                    ]
+                }
+            JSON);
 
         $this->assertSame(RecipeType::Component, $manifest->type);
         $this->assertSame('MyComponent', $manifest->name);

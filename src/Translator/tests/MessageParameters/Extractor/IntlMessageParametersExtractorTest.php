@@ -68,12 +68,12 @@ class IntlMessageParametersExtractorTest extends TestCase
 
         yield [
             <<<TXT
-{gender, select,
-    male {He}
-    female {She}
-    other {They}
-} will respond shortly.
-TXT,
+                {gender, select,
+                    male {He}
+                    female {She}
+                    other {They}
+                } will respond shortly.
+                TXT,
             [
                 'gender' => ['type' => 'string', 'values' => ['male', 'female', 'other']],
             ],
@@ -81,11 +81,11 @@ TXT,
 
         yield [
             <<<TXT
-{taxableArea, select,
-    yes {An additional {taxRate, number, percent} tax will be collected.}
-    other {No taxes apply.}
-}
-TXT,
+                {taxableArea, select,
+                    yes {An additional {taxRate, number, percent} tax will be collected.}
+                    other {No taxes apply.}
+                }
+                TXT,
             [
                 'taxableArea' => ['type' => 'string', 'values' => ['yes', 'other']],
                 'taxRate' => ['type' => 'number'],
@@ -94,27 +94,27 @@ TXT,
 
         yield [
             <<<TXT
-{gender_of_host, select,
-    female {{num_guests, plural, offset:1
-        =0    {{host} does not give a party.}
-        =1    {{host} invites {guest} to her party.}
-        =2    {{host} invites {guest} and one other person to her party.}
-        other {{host} invites {guest} and # other people to her party.}
-    }}
-    male {{num_guests, plural, offset:1
-        =0    {{host} does not give a party.}
-        =1    {{host} invites {guest} to his party.}
-        =2    {{host} invites {guest} and one other person to his party.}
-        other {{host} invites {guest} and # other people to his party.}
-    }}
-    other {{num_guests, plural, offset:1
-        =0    {{host} does not give a party.}
-        =1    {{host} invites {guest} to their party.}
-        =2    {{host} invites {guest} and one other person to their party.}
-        other {{host} invites {guest} and # other people to their party.}
-    }}
-}
-TXT,
+                {gender_of_host, select,
+                    female {{num_guests, plural, offset:1
+                        =0    {{host} does not give a party.}
+                        =1    {{host} invites {guest} to her party.}
+                        =2    {{host} invites {guest} and one other person to her party.}
+                        other {{host} invites {guest} and # other people to her party.}
+                    }}
+                    male {{num_guests, plural, offset:1
+                        =0    {{host} does not give a party.}
+                        =1    {{host} invites {guest} to his party.}
+                        =2    {{host} invites {guest} and one other person to his party.}
+                        other {{host} invites {guest} and # other people to his party.}
+                    }}
+                    other {{num_guests, plural, offset:1
+                        =0    {{host} does not give a party.}
+                        =1    {{host} invites {guest} to their party.}
+                        =2    {{host} invites {guest} and one other person to their party.}
+                        other {{host} invites {guest} and # other people to their party.}
+                    }}
+                }
+                TXT,
             [
                 'gender_of_host' => ['type' => 'string', 'values' => ['female', 'male', 'other']],
                 'num_guests' => ['type' => 'number'],

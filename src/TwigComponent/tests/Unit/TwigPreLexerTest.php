@@ -160,140 +160,140 @@ final class TwigPreLexerTest extends TestCase
         ];
         yield 'component_where_entire_default_block_is_embedded_component' => [
             <<<EOF
-            <twig:foo>
-                <twig:bar>bar content</twig:bar>
-            </twig:foo>
-            EOF,
+                <twig:foo>
+                    <twig:bar>bar content</twig:bar>
+                </twig:foo>
+                EOF,
             <<<EOF
-            {% component 'foo' %}
-                {% block content %}{% component 'bar' %}{% block content %}bar content{% endblock %}{% endcomponent %}
-            {% endblock %}{% endcomponent %}
-            EOF,
+                {% component 'foo' %}
+                    {% block content %}{% component 'bar' %}{% block content %}bar content{% endblock %}{% endcomponent %}
+                {% endblock %}{% endcomponent %}
+                EOF,
         ];
         yield 'component_where_entire_default_block_is_embedded_component_self_closing' => [
             <<<EOF
-            <twig:foo>
-                <twig:bar />
-            </twig:foo>
-            EOF,
+                <twig:foo>
+                    <twig:bar />
+                </twig:foo>
+                EOF,
             <<<EOF
-            {% component 'foo' %}
-                {% block content %}{{ component('bar') }}
-            {% endblock %}{% endcomponent %}
-            EOF,
+                {% component 'foo' %}
+                    {% block content %}{{ component('bar') }}
+                {% endblock %}{% endcomponent %}
+                EOF,
         ];
 
         yield 'component_where_entire_default_block_is_twig_embed' => [
             <<<EOF
-            <twig:Alert>
-                <p>
-                    {% embed "my_embed.html.twig" with { foo: 'bar' } %}{% endembed %}
-                </p>
-            </twig:Alert>
-            EOF,
+                <twig:Alert>
+                    <p>
+                        {% embed "my_embed.html.twig" with { foo: 'bar' } %}{% endembed %}
+                    </p>
+                </twig:Alert>
+                EOF,
             <<<EOF
-            {% component 'Alert' %}
-                {% block content %}<p>
-                    {% embed "my_embed.html.twig" with { foo: 'bar' } %}{% endembed %}
-                </p>
-            {% endblock %}{% endcomponent %}
-            EOF,
+                {% component 'Alert' %}
+                    {% block content %}<p>
+                        {% embed "my_embed.html.twig" with { foo: 'bar' } %}{% endembed %}
+                    </p>
+                {% endblock %}{% endcomponent %}
+                EOF,
         ];
         yield 'component_where_entire_default_block_is_twig_embed_with_block_string' => [
             <<<EOF
-            <twig:Alert>
-                <p>
-                    {% embed "my_embed.html.twig" %}
-                        {% block my_embed_block "foo" %}
-                    {% endembed %}
-                </p>
-            </twig:Alert>
-            EOF,
+                <twig:Alert>
+                    <p>
+                        {% embed "my_embed.html.twig" %}
+                            {% block my_embed_block "foo" %}
+                        {% endembed %}
+                    </p>
+                </twig:Alert>
+                EOF,
             <<<EOF
-            {% component 'Alert' %}
-                {% block content %}<p>
-                    {% embed "my_embed.html.twig" %}
-                        {% block my_embed_block "foo" %}
-                    {% endembed %}
-                </p>
-            {% endblock %}{% endcomponent %}
-            EOF,
+                {% component 'Alert' %}
+                    {% block content %}<p>
+                        {% embed "my_embed.html.twig" %}
+                            {% block my_embed_block "foo" %}
+                        {% endembed %}
+                    </p>
+                {% endblock %}{% endcomponent %}
+                EOF,
         ];
         yield 'component_where_entire_default_block_is_twig_embed_with_block_variable' => [
             <<<EOF
-            <twig:Alert>
-                <p>
-                    {% embed "my_embed.html.twig" %}
-                        {% block my_embed_block fooVar %}
-                    {% endembed %}
-                </p>
-            </twig:Alert>
-            EOF,
+                <twig:Alert>
+                    <p>
+                        {% embed "my_embed.html.twig" %}
+                            {% block my_embed_block fooVar %}
+                        {% endembed %}
+                    </p>
+                </twig:Alert>
+                EOF,
             <<<EOF
-            {% component 'Alert' %}
-                {% block content %}<p>
-                    {% embed "my_embed.html.twig" %}
-                        {% block my_embed_block fooVar %}
-                    {% endembed %}
-                </p>
-            {% endblock %}{% endcomponent %}
-            EOF,
+                {% component 'Alert' %}
+                    {% block content %}<p>
+                        {% embed "my_embed.html.twig" %}
+                            {% block my_embed_block fooVar %}
+                        {% endembed %}
+                    </p>
+                {% endblock %}{% endcomponent %}
+                EOF,
         ];
         yield 'component_where_entire_default_block_is_twig_embed_with_block_expanded' => [
             <<<EOF
-            <twig:Alert>
-                <p>
-                    {% embed "my_embed.html.twig" %}
-                        {% block my_embed_block %}bar{% endblock %}
-                    {% endembed %}
-                </p>
-            </twig:Alert>
-            EOF,
+                <twig:Alert>
+                    <p>
+                        {% embed "my_embed.html.twig" %}
+                            {% block my_embed_block %}bar{% endblock %}
+                        {% endembed %}
+                    </p>
+                </twig:Alert>
+                EOF,
             <<<EOF
-            {% component 'Alert' %}
-                {% block content %}<p>
-                    {% embed "my_embed.html.twig" %}
-                        {% block my_embed_block %}bar{% endblock %}
-                    {% endembed %}
-                </p>
-            {% endblock %}{% endcomponent %}
-            EOF,
+                {% component 'Alert' %}
+                    {% block content %}<p>
+                        {% embed "my_embed.html.twig" %}
+                            {% block my_embed_block %}bar{% endblock %}
+                        {% endembed %}
+                    </p>
+                {% endblock %}{% endcomponent %}
+                EOF,
         ];
 
         yield 'component_where_entire_default_block_is_twig_embed_with_block_variable_and_manipulations' => [
             <<<EOF
-            <twig:Alert>
-                <p>
-                    {% embed "my_embed.html.twig" %}
-                        {% block my_embed_block doSomething(fooVar)|u.camel.title.truncate(5) %}
-                    {% endembed %}
-                </p>
-            </twig:Alert>
-            EOF,
+                <twig:Alert>
+                    <p>
+                        {% embed "my_embed.html.twig" %}
+                            {% block my_embed_block doSomething(fooVar)|u.camel.title.truncate(5) %}
+                        {% endembed %}
+                    </p>
+                </twig:Alert>
+                EOF,
             <<<EOF
-            {% component 'Alert' %}
-                {% block content %}<p>
-                    {% embed "my_embed.html.twig" %}
-                        {% block my_embed_block doSomething(fooVar)|u.camel.title.truncate(5) %}
-                    {% endembed %}
-                </p>
-            {% endblock %}{% endcomponent %}
-            EOF,
+                {% component 'Alert' %}
+                    {% block content %}<p>
+                        {% embed "my_embed.html.twig" %}
+                            {% block my_embed_block doSomething(fooVar)|u.camel.title.truncate(5) %}
+                        {% endembed %}
+                    </p>
+                {% endblock %}{% endcomponent %}
+                EOF,
         ];
 
         yield 'string_inside_of_twig_code_not_escaped' => [
             <<<EOF
-            <twig:TabbedCodeBlocks :files="[
-                'src/Twig/MealPlanner.php',
-                'templates/components/MealPlanner.html.twig',
-            ]" />
-            EOF,
+                <twig:TabbedCodeBlocks :files="[
+                    'src/Twig/MealPlanner.php',
+                    'templates/components/MealPlanner.html.twig',
+                ]" />
+                EOF,
             <<<EOF
-            {{ component('TabbedCodeBlocks', { files: [
-                'src/Twig/MealPlanner.php',
-                'templates/components/MealPlanner.html.twig',
-            ] }) }}
-            EOF,
+                {{ component('TabbedCodeBlocks', { files: [
+                    'src/Twig/MealPlanner.php',
+                    'templates/components/MealPlanner.html.twig',
+                ] }) }}
+                EOF,
         ];
 
         yield 'component_with_dashed_attribute' => [
@@ -382,59 +382,59 @@ final class TwigPreLexerTest extends TestCase
         ];
         yield 'component_with_comment_line_between_args' => [
             <<<TWIG
-            <twig:foo
-                # bar
-                bar="baz"
-            />
-            TWIG,
+                <twig:foo
+                    # bar
+                    bar="baz"
+                />
+                TWIG,
             '{{ component(\'foo\', { bar: \'baz\' }) }}',
         ];
         yield 'component_with_comment_lines_between_args' => [
             <<<TWIG
-            <twig:foo
-                # comment
-                foo="foo"
-                # comment
-                bar="bar"
-            />
-            TWIG,
+                <twig:foo
+                    # comment
+                    foo="foo"
+                    # comment
+                    bar="bar"
+                />
+                TWIG,
             '{{ component(\'foo\', { foo: \'foo\', bar: \'bar\' }) }}',
         ];
         yield 'component_with_comment_line_containing_ending_tag' => [
             <<<TWIG
-            <twig:foo
-                # comment /></twig:foo>
-                bar="bar"
-            />
-            TWIG,
+                <twig:foo
+                    # comment /></twig:foo>
+                    bar="bar"
+                />
+                TWIG,
             '{{ component(\'foo\', { bar: \'bar\' }) }}',
         ];
         yield 'component_with_comment_line_in_argument_value' => [
             <<<TWIG
-            <twig:foo
-                bar="# bar"
-            />
-            TWIG,
+                <twig:foo
+                    bar="# bar"
+                />
+                TWIG,
             '{{ component(\'foo\', { bar: \'# bar\' }) }}',
         ];
         yield 'component_with_comment_line_in_argument_array_value_is_kept' => [
             <<<TWIG
-            <twig:foo
-                bar="{{ {
-                    a: 'b',
-                    # comment
-                    c: 'd'
-                } }}"
-            />
-            TWIG,
+                <twig:foo
+                    bar="{{ {
+                        a: 'b',
+                        # comment
+                        c: 'd'
+                    } }}"
+                />
+                TWIG,
             // Twig will remove the comment, we don't need to remove it
             <<<TWIG
-            {{ component('foo', { bar: ({
-                    a: 'b',
-                    # comment
-                    c: 'd'
-                }) }) }}
-            TWIG,
+                {{ component('foo', { bar: ({
+                        a: 'b',
+                        # comment
+                        c: 'd'
+                    }) }) }}
+                TWIG,
         ];
     }
 }

@@ -47,13 +47,13 @@ class DebugKitCommand extends Command
             ->addArgument('kit-path', InputArgument::OPTIONAL, 'The path to the kit to debug', '.')
             ->setHelp(
                 <<<'EOF'
-To debug a Kit in the current directory:
-    <info>php %command.full_name%</info>
+                    To debug a Kit in the current directory:
+                        <info>php %command.full_name%</info>
 
-Or in another directory:
-    <info>php %command.full_name% ./kits/shadcn</info>
-    <info>php %command.full_name% /path/to/my-kit</info>
-EOF
+                    Or in another directory:
+                        <info>php %command.full_name% ./kits/shadcn</info>
+                        <info>php %command.full_name% /path/to/my-kit</info>
+                    EOF
             );
     }
 

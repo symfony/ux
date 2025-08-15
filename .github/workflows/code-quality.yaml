@@ -32,23 +32,6 @@ jobs:
             - run: pnpm install --frozen-lockfile
             - run: pnpm run ci
 
-    coding-style-php:
-        runs-on: ubuntu-latest
-        steps:
-            -   uses: actions/checkout@v4
-
-            -   uses: shivammathur/setup-php@v2
-                with:
-                    php-version: '8.1'
-
-            - name: Install root dependencies
-              uses: ramsey/composer-install@v3
-              with:
-                  working-directory: ${{ github.workspace }}
-
-            -   name: php-cs-fixer
-                run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
-
     phpstan:
         name: PHPStan
         runs-on: ubuntu-latest

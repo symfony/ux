@@ -89,23 +89,23 @@ class CreateKitCommand extends Command
         $this->filesystem->dumpFile(
             'Button/templates/components/Button.html.twig',
             <<<TWIG
-{% props type = 'button', variant = 'default' %}
-{%- set style = html_cva(
-    base: 'inline-flex items-center',
-    variants: {
-        variant: {
-            default: "bg-primary text-primary-foreground hover:bg-primary/90",
-            secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        },
-    },
-) -%}
+                {% props type = 'button', variant = 'default' %}
+                {%- set style = html_cva(
+                    base: 'inline-flex items-center',
+                    variants: {
+                        variant: {
+                            default: "bg-primary text-primary-foreground hover:bg-primary/90",
+                            secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+                        },
+                    },
+                ) -%}
 
-<button class="{{ style.apply({ variant }, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
->
-    {%- block content %}{% endblock -%}
-</button>
-TWIG
+                <button class="{{ style.apply({ variant }, attributes.render('class'))|tailwind_merge }}"
+                    {{ attributes }}
+                >
+                    {%- block content %}{% endblock -%}
+                </button>
+                TWIG
         );
 
         $this->filesystem->dumpFile('Button/manifest.json', json_encode([

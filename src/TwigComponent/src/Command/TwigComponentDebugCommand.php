@@ -52,16 +52,16 @@ class TwigComponentDebugCommand extends Command
             ])
             ->setHelp(
                 <<<'EOF'
-The <info>%command.name%</info> display all the Twig components in your application.
+                    The <info>%command.name%</info> display all the Twig components in your application.
 
-To list all components:
+                    To list all components:
 
-    <info>php %command.full_name%</info>
+                        <info>php %command.full_name%</info>
 
-To get specific information about a component, specify its name (or a part of it):
+                    To get specific information about a component, specify its name (or a part of it):
 
-    <info>php %command.full_name% Alert</info>
-EOF
+                        <info>php %command.full_name% Alert</info>
+                    EOF
             );
     }
 

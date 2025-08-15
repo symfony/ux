@@ -237,14 +237,14 @@ final class ComponentExtensionTest extends KernelTestCase
         yield [
             ['class' => 'block'],
             <<<HTML
-            <div
-                foo=""
-                bar="default"
-                baz="default "
-                qux=" default"
-                 class="block"
-            />
-            HTML,
+                <div
+                    foo=""
+                    bar="default"
+                    baz="default "
+                    qux=" default"
+                     class="block"
+                />
+                HTML,
         ];
 
         yield [
@@ -256,14 +256,14 @@ final class ComponentExtensionTest extends KernelTestCase
                 'qux' => 'value',
             ],
             <<<HTML
-            <div
-                foo="value"
-                bar="value"
-                baz="default value"
-                qux="value default"
-                 class="block"
-            />
-            HTML,
+                <div
+                    foo="value"
+                    bar="value"
+                    baz="default value"
+                    qux="value default"
+                     class="block"
+                />
+                HTML,
         ];
     }
 
@@ -285,15 +285,15 @@ final class ComponentExtensionTest extends KernelTestCase
 
         $this->assertSame(
             <<<HTML
-            <main>
-                <div>
-                    <span>
-                        <div/>
+                <main>
+                    <div>
+                        <span>
+                            <div/>
 
-                    </span>
-                </div>
-            </main>
-            HTML,
+                        </span>
+                    </div>
+                </main>
+                HTML,
             trim($output)
         );
 
@@ -305,15 +305,15 @@ final class ComponentExtensionTest extends KernelTestCase
 
         $this->assertSame(
             <<<HTML
-            <main class="foo">
-                <div class="bar">
-                    <span class="baz">
-                        <div/>
+                <main class="foo">
+                    <div class="bar">
+                        <span class="baz">
+                            <div/>
 
-                    </span>
-                </div>
-            </main>
-            HTML,
+                        </span>
+                    </div>
+                </main>
+                HTML,
             trim($output)
         );
     }
@@ -380,15 +380,15 @@ final class ComponentExtensionTest extends KernelTestCase
 
         $this->assertSame(
             <<<HTML
-            <main>
-                <div>
-                    <span>
-                        <div/>
+                <main>
+                    <div>
+                        <span>
+                            <div/>
 
-                    </span>
-                </div>
-            </main>
-            HTML,
+                        </span>
+                    </div>
+                </main>
+                HTML,
             trim($output)
         );
 
@@ -400,15 +400,15 @@ final class ComponentExtensionTest extends KernelTestCase
 
         $this->assertSame(
             <<<HTML
-            <main class="foo" @class="vex">
-                <div class="bar">
-                    <span class="baz">
-                        <div class="foo" @class="qux"/>
+                <main class="foo" @class="vex">
+                    <div class="bar">
+                        <span class="baz">
+                            <div class="foo" @class="qux"/>
 
-                    </span>
-                </div>
-            </main>
-            HTML,
+                        </span>
+                    </div>
+                </main>
+                HTML,
             trim($output)
         );
     }
