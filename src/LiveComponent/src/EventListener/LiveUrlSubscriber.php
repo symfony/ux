@@ -12,11 +12,12 @@
 namespace Symfony\UX\LiveComponent\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Util\UrlFactory;
+use Symfony\UX\TwigComponent\MountedComponent;
 
 /**
  * @internal
@@ -27,6 +28,7 @@ class LiveUrlSubscriber implements EventSubscriberInterface
 
     public function __construct(
         private LiveComponentMetadataFactory $metadataFactory,
+        private LiveComponentHydrator $liveComponentHydrator,
         private UrlFactory $urlFactory,
     ) {
     }
@@ -42,9 +44,14 @@ class LiveUrlSubscriber implements EventSubscriberInterface
             return;
         }
 
+        if (!$request->attributes->has('_mounted_component')) {
+            return;
+        }
+
         $newLiveUrl = null;
         if ($previousLiveUrl = $request->headers->get(self::URL_HEADER)) {
-            $liveProps = $this->getLivePropsFromRequest($request);
+            $mounted = $request->attributes->get('_mounted_component');
+            $liveProps = $this->getLiveProps($mounted);
             $newLiveUrl = $this->urlFactory->createFromPreviousAndProps($previousLiveUrl, $liveProps['path'], $liveProps['query']);
         }
 
@@ -66,26 +73,26 @@ class LiveUrlSubscriber implements EventSubscriberInterface
      *     query: array<string, mixed>
      * }
      */
-    private function getLivePropsFromRequest(Request $request): array
+    private function getLiveProps(MountedComponent $mounted): array
     {
-        $componentName = $request->attributes->get('_live_component');
-        $metadata = $this->metadataFactory->getMetadata($componentName);
+        $metadata = $this->metadataFactory->getMetadata($mounted->getName());
 
-        $liveRequestData = $request->attributes->get('_live_request_data') ?? [];
-        $values = array_merge(
-            $liveRequestData['props'] ?? [],
-            $liveRequestData['updated'] ?? [],
-            $liveRequestData['responseProps'] ?? []
+        $dehydratedProps = $this->liveComponentHydrator->dehydrate(
+            $mounted->getComponent(),
+            $mounted->getAttributes(),
+            $metadata
         );
+
+        $values = $dehydratedProps->getProps();
 
         $urlLiveProps = [
             'path' => [],
             'query' => [],
         ];
-        foreach ($metadata->getAllUrlMappings() as $name => $urlMapping) {
+
+        foreach ($metadata->getAllUrlMappings($mounted->getComponent()) as $name => $urlMapping) {
             if (isset($values[$name]) && $urlMapping) {
-                $urlLiveProps[$urlMapping->mapPath ? 'path' : 'query'][$urlMapping->as ?? $name] =
-                    $values[$name];
+                $urlLiveProps[$urlMapping->mapPath ? 'path' : 'query'][$urlMapping->as ?? $name] = $values[$name];
             }
         }
 

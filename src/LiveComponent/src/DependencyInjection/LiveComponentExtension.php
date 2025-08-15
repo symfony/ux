@@ -141,6 +141,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
         $container->register('ux.live_component.live_url_subscriber', LiveUrlSubscriber::class)
             ->setArguments([
                 new Reference('ux.live_component.metadata_factory'),
+                new Reference('ux.live_component.component_hydrator'),
                 new Reference('ux.live_component.url_factory'),
             ])
             ->addTag('kernel.event_subscriber')
