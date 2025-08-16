@@ -17,7 +17,8 @@
     "scripts": {
         "build": "tsx ../../../bin/build_package.ts .",
         "watch": "tsx ../../../bin/build_package.ts . --watch",
-        "test": "../../../bin/test_package.sh .",
+        "test": "pnpm run test:unit",
+        "test:unit": "../../../bin/test_package.sh . --unit",
         "check": "biome check",
         "ci": "biome ci"
     },

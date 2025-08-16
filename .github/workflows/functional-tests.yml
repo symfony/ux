@@ -1,3 +1,4 @@
+# Deprecated, will be removed in favor of browser-tests.yml
 name: Functional Tests
 
 defaults:
