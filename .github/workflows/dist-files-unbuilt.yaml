@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - run: npm i -g corepack && corepack enable
       - uses: actions/setup-node@v4
         with:
@@ -29,7 +30,12 @@ jobs:
           cache-dependency-path: |
             pnpm-lock.yaml
             **/package.json
-      - run: pnpm install --frozen-lockfile && pnpm run build
+
+      - name: Install root JS dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm run build
 
       - name: Check if JS dist files are current
         run: |

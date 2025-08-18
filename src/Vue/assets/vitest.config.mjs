@@ -1,6 +1,6 @@
 import vue from '@vitejs/plugin-vue';
 import { mergeConfig } from 'vitest/config';
-import configShared from '../../../vitest.config.mjs';
+import configShared from '../../../vitest.config.base.mjs';
 
 export default mergeConfig(configShared, {
     plugins: [vue()],
