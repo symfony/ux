@@ -9,10 +9,27 @@ PROJECT_DIR=$(dirname "$SCRIPT_DIR")
 # Flag to track if any test fails
 all_tests_passed=true
 
-# Check if we have enough arguments
+# Check if we have at least two arguments
 if [ $# -ne 2 ]; then
     echo "No arguments supplied, please provide the package's path and the test type (e.g. --unit or --browser)"
+    echo "Usage: $0 <package_path> <test_type> [args...]"
 fi
+
+location="$(realpath "$PWD/$1")"
+if [ ! -d "$location" ]; then
+    echo "The provided package path does not exist or is not a directory: $location"
+    exit 1
+fi
+
+shift
+case "$1" in
+  --unit) testType="unit" ;;
+  --browser) testType="browser" ;;
+  *) echo "Unknown test type: $2. Please use --unit or --browser."; exit 1 ;;
+esac
+
+shift
+args=("$@")
 
 # Check if jq is installed
 if ! command -v jq &> /dev/null; then
@@ -21,20 +38,16 @@ if ! command -v jq &> /dev/null; then
 fi
 
 runTestSuite() {
-    local testProject="$1"
-    if [ "$testProject" != "unit" ] && [ "$testProject" != "browser" ]; then
-        echo "Unknown test project: $testProject. Please use 'unit' or 'browser'."
-        exit 1
+    if [ "$testType" == "unit" ]; then
+      echo -e "🧪  Running unit tests for $workspace...\n"
+      pnpm exec vitest --run "${args[@]}" || { all_tests_passed=false; }
+    elif [ "$testType" == "browser" ]; then
+      echo -e "🧪  Running browser tests for $workspace...\n"
+      # TODO: to implement
     fi
-
-    echo -e "🧪  Running $testProject tests for $workspace...\n"
-    pnpm exec vitest --run --config "vitest.config.$testProject.mjs" || { all_tests_passed=false; }
 }
 
 processWorkspace() {
-    local location="$1"
-    local testProject="$2"
-
     if [ ! -d "$location" ]; then
         echo "⚠ No directory found at $location"
         return
@@ -89,7 +102,7 @@ processWorkspace() {
                     echo -e "  - Install $library@$trimmed_version for $workspace\n"
                     pnpm add "$library@$trimmed_version" --save-peer --filter "$workspace"
 
-                    runTestSuite "$testProject"
+                    runTestSuite
                 fi
             done
         done
@@ -98,17 +111,11 @@ processWorkspace() {
         git checkout -- "$package_json_path" "$PROJECT_DIR/pnpm-lock.yaml"
     else
         echo -e " -> No peerDependencies found with multiple versions defined\n"
-        runTestSuite "$testProject"
+        runTestSuite
     fi
 }
 
-case "$2" in
-  --unit) testProject="unit" ;;
-  --browser) testProject="browser" ;;
-  *) echo "Unknown test type: $2. Please use --unit or --browser."; exit 1 ;;
-esac
-
-processWorkspace "$(realpath "$PWD/$1")" "$testProject"
+processWorkspace
 
 # Check the flag at the end and exit with code 1 if any test failed
 if [ "$all_tests_passed" = false ]; then
