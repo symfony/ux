@@ -10,12 +10,13 @@
         "build": "pnpm run --filter @symfony/ux-map build && pnpm run -r --aggregate-output build",
         "test": "pnpm run -r --workspace-concurrency=1 test",
         "test:unit": "pnpm run -r --aggregate-output test:unit",
-        "test:browser": "pnpm run -r --workspace-concurrency=1 test:browser",
+        "test:browser": "pnpm exec playwright test",
         "check": "biome check",
         "ci": "biome ci"
     },
     "devDependencies": {
         "@biomejs/biome": "^2.0.4",
+        "@playwright/test": "^1.54.2",
         "@puppeteer/browsers": "^2.10.6",
         "@testing-library/dom": "^10.4.0",
         "@testing-library/jest-dom": "^6.6.3",

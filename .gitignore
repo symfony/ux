@@ -8,3 +8,5 @@ node_modules
 /vendor
 
 /browsers
+.last-run.json
+.playwright-report/
