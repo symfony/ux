@@ -19,7 +19,8 @@
     "scripts": {
         "build": "tsx ../../../../../../bin/build_package.ts .",
         "watch": "tsx ../../../../../../bin/build_package.ts . --watch",
-        "test": "../../../../../../bin/test_package.sh .",
+        "test": "pnpm run test:browser",
+        "test:browser": "../../../../../../bin/test_package.sh . --browser",
         "check": "biome check",
         "ci": "biome ci"
     },

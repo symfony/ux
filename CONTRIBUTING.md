@@ -39,7 +39,7 @@ To set up the development environment, you need the following tools:
 
 - [PHP](https://www.php.net/downloads.php) 8.1 or higher
 - [Composer](https://getcomposer.org/download/)
-- [Node.js](https://nodejs.org/en/download/package-manager) 22.11 or higher
+- [Node.js](https://nodejs.org/en/download/package-manager) 22.18 or higher
 - [Corepack](https://github.com/nodejs/corepack)
 - [PNPM](https://pnpm.io/) 10.13 or higher
 
@@ -82,12 +82,16 @@ To help you with assets, you can run the following commands in a specific packag
   - `pnpm run build`: build (compile) assets from the package,
   - `pnpm run watch`: watch for modifications and rebuild assets from the package,
   - `pnpm run test`: run the tests from the package,
+  - `pnpm run test:unit`: run the Unit tests from the package,
+  - `pnpm run test:browser`: run the Browser tests from the package,
   - `pnpm run check`: run the formatter, linter, and sort imports, and fails if any modifications
   - `pnpm run check --write`: run the formatter, linter, imports sorting, and write modifications
 
 Thanks to [PNPM Workspaces](https://pnpm.io/workspaces), you can also run these commands from the root directory of the project:
   - `pnpm run build`: build (compile) assets from **all** packages,
   - `pnpm run test`: run the tests from **all** packages,
+  - `pnpm run test:unit`: run the Unit tests from **all** packages,
+  - `pnpm run test:browser`: run the Browser tests from **all** packages,
   - `pnpm run check`: run the formatter, linter, and sort imports for **all** packages, and fails if any modifications
   - `pnpm run check --write`: run the formatter, linter, imports sorting for **all** packages, and write modifications
 
@@ -112,7 +116,7 @@ docker run --rm -it -e DOCS_DIR='/docs' -v ${PWD}:/docs  oskarstark/doctor-rst -
 ```shell
 $ git checkout 2.x && \
   git fetch upstream && \
-  git rebase upstream/2.x && \
+  git reset --hard upstream/2.x && \
   git push origin 2.x
 ```
 

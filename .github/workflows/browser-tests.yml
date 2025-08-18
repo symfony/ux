@@ -1,0 +1,43 @@
+name: Browser Tests
+
+defaults:
+    run:
+        shell: bash
+
+on:
+    push:
+        paths-ignore:
+            - 'src/*/doc/**'
+            - 'src/**/*.md'
+            - 'ux.symfony.com/**'
+            - '.github/workflows/app-tests.yaml'
+            - '.github/workflows/unit-tests.yaml'
+    pull_request:
+        paths-ignore:
+            - 'src/*/doc/**'
+            - 'src/**/*.md'
+            - 'ux.symfony.com/**'
+            - '.github/workflows/app-tests.yaml'
+            - '.github/workflows/unit-tests.yaml'
+
+jobs:
+    js:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v4
+            -   run: npm i -g corepack && corepack enable
+            -   uses: actions/setup-node@v4
+                with:
+                    node-version-file: '.nvmrc'
+                    cache: 'pnpm'
+                    cache-dependency-path: |
+                        pnpm-lock.yaml
+                        package.json
+                        src/**/package.json
+            -   run: pnpm install --frozen-lockfile
+
+            -   name: Install browsers
+                run: node ./bin/get_browsers.mjs
+
+            # TODO: Install the E2E app + run webserver
+            -   run: pnpm run test:browser
