@@ -138,21 +138,20 @@ jobs:
                 fi
     js:
         runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
-            matrix:
-                node-version: [ '18.x', '20.x', '22.x', '24.x' ]
         steps:
             - uses: actions/checkout@v4
+
             - run: npm i -g corepack && corepack enable
             - uses: actions/setup-node@v4
               with:
-                node-version: ${{ matrix.node-version }}
+                node-version-file: '.nvmrc'
                 cache: 'pnpm'
                 cache-dependency-path: |
                   pnpm-lock.yaml
                   package.json
                   src/**/package.json
-            - run: pnpm install --frozen-lockfile
-            - run: pnpm exec playwright install chromium
-            - run: pnpm run test
+
+            - name: Install root JS dependencies
+              run: pnpm install --frozen-lockfile
+
+            - run: pnpm run test:unit

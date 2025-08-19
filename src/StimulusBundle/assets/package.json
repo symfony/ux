@@ -3,7 +3,7 @@
     "description": "Integration of @hotwired/stimulus into Symfony",
     "private": true,
     "license": "MIT",
-    "version": "2.29.1",
+    "version": "2.29.2",
     "keywords": [
         "symfony-ux"
     ],
@@ -17,7 +17,8 @@
     "scripts": {
         "build": "tsx ../../../bin/build_package.ts .",
         "watch": "tsx ../../../bin/build_package.ts . --watch",
-        "test": "../../../bin/test_package.sh .",
+        "test": "pnpm run test:unit && pnpm run test:browser",
+        "test:unit": "../../../bin/test_package.sh . --unit",
         "check": "biome check",
         "ci": "biome ci"
     },

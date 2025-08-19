@@ -2,7 +2,7 @@
     "name": "@symfony/ux-leaflet-map",
     "description": "Leaflet bridge for Symfony UX Map, integrate interactive maps in your Symfony applications",
     "license": "MIT",
-    "version": "2.29.1",
+    "version": "2.29.2",
     "keywords": [
         "symfony-ux",
         "leaflet",
@@ -19,7 +19,8 @@
     "scripts": {
         "build": "tsx ../../../../../../bin/build_package.ts .",
         "watch": "tsx ../../../../../../bin/build_package.ts . --watch",
-        "test": "../../../../../../bin/test_package.sh .",
+        "test": "pnpm run test:browser",
+        "test:browser": "../../../../../../bin/test_package.sh . --browser",
         "check": "biome check",
         "ci": "biome ci"
     },

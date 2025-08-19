@@ -5,6 +5,7 @@
             "**/*.json",
             "**/*.md",
             "**/bin/**/*.js",
+            "**/src/**/assets/*.mjs",
             "**/src/**/assets/src/**",
             "**/src/**/assets/test/**",
             "!**/composer.json",
@@ -12,7 +13,8 @@
             "!**/package.json",
             "!**/node_modules",
             "!**/var",
-            "!**/dist"
+            "!**/dist",
+            "!**/browsers"
         ]
     },
     "linter": {

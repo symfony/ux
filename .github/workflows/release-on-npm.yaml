@@ -30,7 +30,8 @@ jobs:
                 pnpm-lock.yaml
                 package.json
                 src/**/package.json
-          - run: pnpm install --frozen-lockfile
+          - name: Install root JS dependencies
+            run: pnpm install --frozen-lockfile
 
           - name: Update version of JS packages
             run: pnpm version ${{ env.VERSION }} --no-git-tag-version --workspaces --no-workspaces-update

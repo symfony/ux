@@ -1,0 +1,6 @@
+ux_map:
+    # https://symfony.com/bundles/ux-map/current/index.html#available-renderers
+    renderer: '%env(resolve:default::UX_MAP_DSN)%'
+    google_maps:
+        # define the default map id for all maps (https://developers.google.com/maps/documentation/get-map-id)
+        default_map_id: null
