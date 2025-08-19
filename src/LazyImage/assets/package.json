@@ -2,7 +2,7 @@
     "name": "@symfony/ux-lazy-image",
     "description": "Lazy image loader and utilities for Symfony",
     "license": "MIT",
-    "version": "2.29.1",
+    "version": "2.29.2",
     "keywords": [
         "symfony-ux"
     ],

@@ -2,7 +2,7 @@
     "name": "@symfony/ux-toggle-password",
     "description": "Toggle visibility of password inputs for Symfony Forms",
     "license": "MIT",
-    "version": "2.29.1",
+    "version": "2.29.2",
     "keywords": [
         "symfony-ux"
     ],
