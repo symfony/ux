@@ -40,10 +40,10 @@ fi
 runTestSuite() {
     if [ "$testType" == "unit" ]; then
       echo -e "🧪  Running unit tests for $workspace...\n"
-      pnpm exec vitest --run "${args[@]}" || { all_tests_passed=false; }
+      (cd "$location"; pnpm exec vitest --run "${args[@]}") || { all_tests_passed=false; }
     elif [ "$testType" == "browser" ]; then
       echo -e "🧪  Running browser tests for $workspace...\n"
-      # TODO: to implement
+      (cd "$location"; pnpm exec playwright test "${args[@]}") || { all_tests_passed=false; }
     fi
 }
 
@@ -99,16 +99,18 @@ processWorkspace() {
                 trimmed_version=$(echo "$version" | tr -d '[:space:]')
                 if [ -n "$trimmed_version" ]; then
                     # Install each version of the library separately
-                    echo -e "  - Install $library@$trimmed_version for $workspace\n"
-                    pnpm add "$library@$trimmed_version" --save-peer --filter "$workspace"
+                    echo -e "  - Installing $library@$trimmed_version for $workspace\n"
+                    (cd "$location" || exit 1; pnpm add "$library@$trimmed_version" --save-peer --silent)
+                    echo -e "  - Building $workspace assets...\n"
+                    (cd "$location" || exit 1; pnpm run build)
 
                     runTestSuite
                 fi
             done
         done
 
-        echo " -> Reverting version changes from $package_json_path"
-        git checkout -- "$package_json_path" "$PROJECT_DIR/pnpm-lock.yaml"
+        echo " -> Reverting changes"
+        git checkout -- "$package_json_path" "$location/dist" "$PROJECT_DIR/pnpm-lock.yaml"
     else
         echo -e " -> No peerDependencies found with multiple versions defined\n"
         runTestSuite

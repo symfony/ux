@@ -20,11 +20,22 @@ on:
             - '.github/workflows/app-tests.yaml'
             - '.github/workflows/unit-tests.yaml'
 
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
+
 jobs:
-    js:
+    test:
         runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                symfony: ['6.4', '7.3']
+        env:
+            SYMFONY_REQUIRE: '${{ matrix.symfony }}.*'
         steps:
             -   uses: actions/checkout@v4
+
             -   run: npm i -g corepack && corepack enable
             -   uses: actions/setup-node@v4
                 with:
@@ -33,21 +44,76 @@ jobs:
                     cache-dependency-path: |
                         pnpm-lock.yaml
                         package.json
-                        src/**/package.json
-            -   run: pnpm install --frozen-lockfile
 
-            -   name: Install custom browsers
-                run: node ./bin/get_browsers.mjs
+            - name: Install root JS dependencies
+              run: pnpm install --frozen-lockfile
 
-            -   name: Install browsers with Playwright
-                run: pnpm exec playwright install firefox ffmpeg
+            - name: Install custom browsers
+              run: node ./bin/get_browsers.mjs
 
-            # TODO: Install the E2E app + run webserver
-            -   run: pnpm run test:browser
+            - name: Install browsers with Playwright
+              run: pnpm exec playwright install firefox ffmpeg
+
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.2
+                  tools: symfony-cli, flex
+
+            - name: Install root PHP dependencies
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: ${{ github.workspace }}
+
+            - name: Build root packages
+              run: php .github/build-packages.php
+
+            - name: Start Docker containers
+              run: docker compose up -d --build
+              working-directory: test_apps/e2e-app
+
+            - name: Configure E2E app
+              run: |
+                  echo 'APP_ENV=prod' >> .env.local
+                  echo 'APP_DEBUG=0' >> .env.local
+                  echo 'APP_SECRET=df4c071596e64cc75a349456f2887ae2419ae650' >> .env.local
+              working-directory: test_apps/e2e-app
+
+            - name: Install E2E PHP dependencies
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: test_apps/e2e-app
+                  dependency-versions: highest
+                  composer-options: --no-dev
+                  custom-cache-suffix: symfony-${{ matrix.symfony }}
+
+            - name: Prepare E2E app
+              run: |
+                  symfony composer dump-autoload --classmap-authoritative --no-dev
+                  symfony composer dump-env
+                  symfony console asset-map:compile
+                  symfony console ux:icons:warm-cache
+              working-directory: test_apps/e2e-app
+
+            - name: Start E2E app
+              run: symfony serve --daemon
+              working-directory: test_apps/e2e-app
+
+            - name: Run browser tests
+              run: pnpm run test:browser
+              id: browser-tests
 
             - uses: actions/upload-artifact@v4
-              if: ${{ !cancelled() }}
+              if: ${{ always() && steps.browser-tests.conclusion == 'failure' }}
               with:
-                  name: playwright-report
-                  path: .playwright-report/
+                  name: Playwright report and output (${{ matrix.symfony }})
+                  path: |
+                      src/**/assets/.playwright-report/
+                      src/**/assets/.playwright-output/
+                  retention-days: 7
+
+            - uses: actions/upload-artifact@v4
+              if: ${{ always() && steps.browser-tests.conclusion == 'failure' }}
+              with:
+                  name: Symfony logs (${{ matrix.symfony }})
+                  path: test_apps/e2e-app/var/log/
                   retention-days: 7
