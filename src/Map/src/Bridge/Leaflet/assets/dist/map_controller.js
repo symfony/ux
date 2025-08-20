@@ -307,7 +307,7 @@ var map_controller_default = class extends abstract_map_controller_default {
       if (autoClose) {
         this.closePopups();
       }
-      element.openPopup();
+      setTimeout(() => element.openPopup(), 0);
     }
     const popup = element.getPopup();
     if (!popup) {
