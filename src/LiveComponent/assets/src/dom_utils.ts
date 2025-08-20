@@ -51,7 +51,7 @@ export function getValueFromElement(element: HTMLElement, valueStore: ValueStore
     }
 
     // element is some other element
-    if (element.dataset.value) {
+    if (element.hasAttribute('data-value')) {
         return element.dataset.value;
     }
 
