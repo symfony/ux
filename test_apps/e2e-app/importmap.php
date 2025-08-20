@@ -85,6 +85,9 @@ return [
     'react-dom' => [
         'version' => '18.3.1',
     ],
+    'react-dom/client' => [
+        'version' => '18.3.1',
+    ],
     'scheduler' => [
         'version' => '0.23.2',
     ],
