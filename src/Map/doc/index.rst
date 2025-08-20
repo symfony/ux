@@ -191,9 +191,9 @@ You can also add Polygons, which represents an area enclosed by a series of ``Po
 
     `Polygon` with holes is available since UX Map 2.26.
 
-Since UX Map 2.26, you can also create polygons with holes in them, by passing an array of `array<Point>` to `points` parameter::
+Since UX Map 2.26, you can create polygons with holes by using an array of ``array<Point>``::
 
-    // Draw a polygon with a hole in it, on the French map
+    // Draw a polygon with a hole in it, on the France map
     $map->addPolygon(new Polygon(points: [
         // First path, the outer boundary of the polygon
         [
@@ -203,7 +203,7 @@ Since UX Map 2.26, you can also create polygons with holes in them, by passing a
             new Point(43.296482, 5.369780), // Marseille
             new Point(44.837789, -0.579180), // Bordeaux
         ],
-        // Second path, it will make a hole in the previous one
+        // Second path, making a hole in the first path
         [
             new Point(45.833619, 1.261105), // Limoges
             new Point(45.764043, 4.835659), // Lyon
