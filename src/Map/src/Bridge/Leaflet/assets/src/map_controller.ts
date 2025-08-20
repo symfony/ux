@@ -266,7 +266,7 @@ export default class extends AbstractMapController<
                 this.closePopups();
             }
 
-            element.openPopup();
+            setTimeout(() => element.openPopup(), 0);
         }
 
         const popup = element.getPopup();
