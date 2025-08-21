@@ -237,7 +237,6 @@ You can add Circles, which represents a circular area defined by a center point 
     $map->addCircle(new Circle(
         center: new Point(48.8566, 2.3522),
         radius: 5_000, // 5km
-        title: 'Paris',
         infoWindow: new InfoWindow(
             content: 'A 5km radius circle centered on Paris',
         ),
@@ -251,7 +250,6 @@ You can add Rectangles, which represents a rectangular area defined by two corne
     $map->addRectangle(new Rectangle(
         southWest: new Point(48.8566, 2.3522), // Paris
         northEast: new Point(50.6292, 3.0573), // Lille
-        title: 'Paris to Lille',
         infoWindow: new InfoWindow(
             content: 'A rectangle from Paris to Lille',
         ),
@@ -504,7 +502,7 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
          */
         _onPolygonBeforeCreate(event) {
             console.log(event.detail.definition);
-            // { title: 'My polygon', points: [ { lat: 48.8566, lng: 2.3522 }, { lat: 45.7640, lng: 4.8357 }, { lat: 43.2965, lng: 5.3698 }, ... ], ... }
+            // { points: [ { lat: 48.8566, lng: 2.3522 }, { lat: 45.7640, lng: 4.8357 }, { lat: 43.2965, lng: 5.3698 }, ... ], ... }
         }
 
         /**
@@ -522,7 +520,7 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
          */
         _onPolylineBeforeCreate(event) {
             console.log(event.detail.definition);
-            // { title: 'My polyline', points: [ { lat: 48.8566, lng: 2.3522 }, { lat: 45.7640, lng: 4.8357 }, { lat: 43.2965, lng: 5.3698 }, ... ], ... }
+            // {  points: [ { lat: 48.8566, lng: 2.3522 }, { lat: 45.7640, lng: 4.8357 }, { lat: 43.2965, lng: 5.3698 }, ... ], ... }
         }
 
         /**
@@ -536,7 +534,7 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
 
         _onCircleBeforeCreate(event) {
             console.log(event.detail.definition);
-            // { title: 'My circle', center: { lat: 48.8566, lng: 2.3522 }, radius: 1000, ... }
+            // { center: { lat: 48.8566, lng: 2.3522 }, radius: 1000, ... }
         }
 
         _onCircleAfterCreate(event) {
@@ -546,7 +544,7 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
 
         _onRectangleBeforeCreate(event) {
             console.log(event.detail.definition);
-            // { title: 'My rectangle', southWest: { lat: 48.8566, lng: 2.3522 }, northEast: { lat: 45.7640, lng: 4.8357 }, ... }
+            // { southWest: { lat: 48.8566, lng: 2.3522 }, northEast: { lat: 45.7640, lng: 4.8357 }, ... }
         }
 
         _onRectangleAfterCreate(event) {

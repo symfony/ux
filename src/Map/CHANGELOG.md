@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.30
+
+-  Deprecate option `title` from `Polygon`, `Polyline`, `Rectangle` and `Circle` in favor of `infoWindow`
+
 ## 2.29.0
 
 -  Add Symfony 8 support

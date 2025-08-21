@@ -169,6 +169,9 @@ export default class extends AbstractMapController<
 
         const polygon = L.polygon(points, { ...rawOptions, ...bridgeOptions }).addTo(this.map);
 
+        /**
+         * @deprecated since Symfony UX Map 2.29
+         */
         if (title) {
             polygon.bindPopup(title);
         }
@@ -189,6 +192,9 @@ export default class extends AbstractMapController<
 
         const polyline = L.polyline(points, { ...rawOptions, ...bridgeOptions }).addTo(this.map);
 
+        /**
+         * @deprecated since Symfony UX Map 2.29
+         */
         if (title) {
             polyline.bindPopup(title);
         }
@@ -209,6 +215,9 @@ export default class extends AbstractMapController<
 
         const circle = L.circle(center, { radius, ...rawOptions, ...bridgeOptions }).addTo(this.map);
 
+        /**
+         * @deprecated since Symfony UX Map 2.29
+         */
         if (title) {
             circle.bindPopup(title);
         }
@@ -235,6 +244,9 @@ export default class extends AbstractMapController<
             { ...rawOptions, ...bridgeOptions }
         ).addTo(this.map);
 
+        /**
+         * @deprecated since Symfony UX Map 2.29
+         */
         if (title) {
             rectangle.bindPopup(title);
         }
