@@ -19,11 +19,11 @@ use Symfony\UX\TwigComponent\ComponentMetadata;
  */
 final class PreMountEvent extends Event
 {
-    public function __construct(private object $component, private array $data, private readonly ?ComponentMetadata $metadata = null)
-    {
-        if (null === $this->metadata) {
-            trigger_deprecation('symfony/ux-twig-component', '2.13', 'In TwigComponent 3.0, "%s()" method will require a "%s $metadata" argument. Not passing it is deprecated.', __METHOD__, ComponentMetadata::class);
-        }
+    public function __construct(
+        private object $component,
+        private array $data,
+        private readonly ComponentMetadata $metadata,
+    ) {
     }
 
     public function getComponent(): object

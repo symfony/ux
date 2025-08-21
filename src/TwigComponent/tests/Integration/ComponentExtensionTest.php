@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\TwigComponent\Tests\Integration;
 
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\TwigComponent\Tests\Fixtures\User;
 use Twig\Environment;
@@ -22,8 +21,6 @@ use Twig\Error\RuntimeError;
  */
 final class ComponentExtensionTest extends KernelTestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testCanRenderComponent()
     {
         $output = $this->renderComponent('component_a', [
@@ -267,18 +264,6 @@ final class ComponentExtensionTest extends KernelTestCase
         ];
     }
 
-    /**
-     * @group legacy
-     */
-    public function testComponentWithClassMerge()
-    {
-        $this->expectDeprecation('Since symfony/ux-twig-component 2.20: Twig Function "cva" is deprecated; use "html_cva" from the "twig/html-extra" package (available since version 3.12) instead.');
-
-        $output = self::getContainer()->get(Environment::class)->render('class_merge.html.twig');
-
-        $this->assertStringContainsString('class="alert alert-red alert-lg font-semibold rounded-md dark:bg-gray-600 flex p-4"', $output);
-    }
-
     public function testRenderingComponentWithNestedAttributes()
     {
         $output = $this->renderComponent('NestedAttributes');
@@ -473,19 +458,6 @@ final class ComponentExtensionTest extends KernelTestCase
             "'><script>alert(\"XSS\")</script>",
             "\'><script>alert(\"XSS\")</script>",
         ]);
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testAnonymousComponentWithPropsOverwriteParentsProps()
-    {
-        $this->expectDeprecation('Since symfony/ux-twig-component 2.20: Twig Function "cva" is deprecated; use "html_cva" from the "twig/html-extra" package (available since version 3.12) instead.');
-
-        $output = self::getContainer()->get(Environment::class)->render('anonymous_component_with_props_overwrite_parents_props.html.twig');
-
-        $this->assertStringContainsString('I am an icon', $output);
-        $this->assertStringNotContainsString('I am md', $output);
     }
 
     private function renderComponent(string $name, array $data = []): string

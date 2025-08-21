@@ -122,36 +122,6 @@ final class ComponentFactoryTest extends KernelTestCase
         self::assertInstanceOf(ComponentB::class, $component);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyAutoNaming()
-    {
-        self::bootKernel(['environment' => 'legacy_autonaming']);
-        $component = $this->createComponent('BasicComponent');
-        self::assertInstanceOf(BasicComponent::class, $component);
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testLegacyAnonymous()
-    {
-        self::bootKernel(['environment' => 'legacy_anonymous']);
-
-        // Named templates should be found
-        $metadata = $this->factory()->metadataFor('foo:bar:baz');
-        $this->assertSame('components/foo/bar/baz.html.twig', $metadata->getTemplate());
-
-        // Prefixed nonymous templates should be found
-        $metadata = $this->factory()->metadataFor('anonymous:AButton');
-        $this->assertSame('anonymous/AButton.html.twig', $metadata->getTemplate());
-
-        // Unprefixed anonymous templates should not be found
-        $this->expectException(\InvalidArgumentException::class);
-        $this->factory()->metadataFor('AButton');
-    }
-
     public function testAnonymous()
     {
         self::bootKernel(['environment' => 'anonymous_directory']);
@@ -229,13 +199,13 @@ final class ComponentFactoryTest extends KernelTestCase
     public function testCannotGetConfigByNameForNonRegisteredComponent()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Unknown component "tabl". Did you mean this: "table"?');
+        $this->expectExceptionMessage('Unknown component "tabler". Did you mean this: "table"?');
 
-        $this->factory()->metadataFor('tabl');
+        $this->factory()->metadataFor('tabler');
     }
 
     /**
-     * @testWith ["tabl", "Unknown component \"tabl\". Did you mean this: \"table\"?"]
+     * @testWith ["tabler", "Unknown component \"tabler\". Did you mean this: \"table\"?"]
      *           ["Basic", "Unknown component \"Basic\". Did you mean this: \"BasicComponent\"?"]
      *           ["basic", "Unknown component \"basic\". Did you mean this: \"BasicComponent\"?"]
      *           ["with", "Unknown component \"with\". Did you mean one of these: \"with_attributes\", \"with_exposed_variables\", \"WithSlots\"?"]

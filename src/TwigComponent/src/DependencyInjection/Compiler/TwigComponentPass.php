@@ -35,8 +35,6 @@ final class TwigComponentPass implements CompilerPassInterface
         $componentNames = [];
         $componentDefaults = $container->getParameter('ux.twig_component.component_defaults');
         $container->getParameterBag()->remove('ux.twig_component.component_defaults');
-        $legacyAutoNaming = $container->hasParameter('ux.twig_component.legacy_autonaming');
-        $container->getParameterBag()->remove('ux.twig_component.legacy_autonaming');
 
         foreach ($container->findTaggedServiceIds('twig.component') as $id => $tags) {
             $definition = $container->findDefinition($id);
@@ -48,17 +46,13 @@ final class TwigComponentPass implements CompilerPassInterface
 
             foreach ($tags as $tag) {
                 if (!\array_key_exists('key', $tag)) {
-                    if ($legacyAutoNaming) {
-                        $name = substr($fqcn, strrpos($fqcn, '\\') + 1);
-                    } else {
-                        if (null === $defaults) {
-                            throw new LogicException(\sprintf('Could not generate a component name for class "%s": no matching namespace found under the "twig_component.defaults" to use as a root. Check the config or give your component an explicit name.', $fqcn));
-                        }
+                    if (null === $defaults) {
+                        throw new LogicException(\sprintf('Could not generate a component name for class "%s": no matching namespace found under the "twig_component.defaults" to use as a root. Check the config or give your component an explicit name.', $fqcn));
+                    }
 
-                        $name = str_replace('\\', ':', substr($fqcn, \strlen($defaults['namespace'])));
-                        if ($defaults['name_prefix']) {
-                            $name = \sprintf('%s:%s', $defaults['name_prefix'], $name);
-                        }
+                    $name = str_replace('\\', ':', substr($fqcn, \strlen($defaults['namespace'])));
+                    if ($defaults['name_prefix']) {
+                        $name = \sprintf('%s:%s', $defaults['name_prefix'], $name);
                     }
                     if (\in_array($name, $componentNames, true)) {
                         throw new LogicException(\sprintf('Failed creating the "%s" component with the automatic name "%s": another component already has this name. To fix this, give the component an explicit name (hint: using "%s" will override the existing component).', $fqcn, $name, $name));
