@@ -1,0 +1,5 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    {{ ux_map(map, { 'data-testid': 'map', style: 'height: 500px' }) }}
+{% endblock %}
