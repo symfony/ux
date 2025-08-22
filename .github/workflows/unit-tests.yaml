@@ -28,7 +28,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php-version: ['8.1', '8.2', '8.3', '8.4']
+                php-version: ['8.1', '8.2', '8.3', '8.4', '8.5']
                 dependency-version: ['']
                 symfony-version: ['']
                 minimum-stability: ['stable']
@@ -36,7 +36,7 @@ jobs:
                 include:
                     # dev packages (probably not needed to have multiple such jobs)
                     -   minimum-stability: 'dev'
-                        php-version: '8.4'
+                        php-version: '8.5'
                     # lowest deps
                     -   php-version: '8.1'
                         dependency-version: 'lowest'
@@ -50,8 +50,8 @@ jobs:
                     -  php-version: '8.1'
                        symfony-version: '6.4.*'
                     -  php-version: '8.2'
-                       symfony-version: '7.3.*' # TODO: change to '7.4' when Symfony 7.4 is released
-                    -  php-version: '8.4'
+                       symfony-version: '7.4.x-dev' # TODO: change to '7.4' when Symfony 7.4 is released
+                    -  php-version: '8.5'
                        symfony-version: '8.0.x-dev' # TODO: change to '8.0' when Symfony 8.0 is released
                        minimum-stability: 'dev' # TODO: remove when Symfony 8.0 is released
 

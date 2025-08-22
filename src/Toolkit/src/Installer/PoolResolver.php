@@ -37,11 +37,11 @@ final class PoolResolver
             $currentRecipe = array_pop($recipesStack);
 
             // Skip circular references
-            if ($visitedRecipes->contains($currentRecipe)) {
+            if ($visitedRecipes->offsetExists($currentRecipe)) {
                 continue;
             }
 
-            $visitedRecipes->attach($currentRecipe);
+            $visitedRecipes[$currentRecipe] = null;
 
             foreach ($currentRecipe->getFiles() as $file) {
                 $pool->addFile($currentRecipe, $file);
