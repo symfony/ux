@@ -71,7 +71,7 @@ class GoogleRendererTest extends RendererTestCase
                 ->addMarker($marker1)
                 ->addMarker($marker2)
                 ->removeMarker($marker1)
-                ->removeMarker($marker2),
+                ->removeMarker('marker2'),
         ];
 
         yield 'with marker remove and new ones added' => [
