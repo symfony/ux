@@ -69,19 +69,19 @@ jobs:
 
             - name: Start Docker containers
               run: docker compose up -d --build
-              working-directory: test_apps/e2e-app
+              working-directory: apps/e2e
 
             - name: Configure E2E app
               run: |
                   echo 'APP_ENV=prod' >> .env.local
                   echo 'APP_DEBUG=0' >> .env.local
                   echo 'APP_SECRET=df4c071596e64cc75a349456f2887ae2419ae650' >> .env.local
-              working-directory: test_apps/e2e-app
+              working-directory: apps/e2e
 
             - name: Install E2E PHP dependencies
               uses: ramsey/composer-install@v3
               with:
-                  working-directory: test_apps/e2e-app
+                  working-directory: apps/e2e
                   dependency-versions: highest
                   composer-options: --no-dev
                   custom-cache-suffix: symfony-${{ matrix.symfony }}
@@ -92,11 +92,11 @@ jobs:
                   symfony composer dump-env
                   symfony console asset-map:compile
                   symfony console ux:icons:warm-cache
-              working-directory: test_apps/e2e-app
+              working-directory: apps/e2e
 
             - name: Start E2E app
               run: symfony serve --daemon
-              working-directory: test_apps/e2e-app
+              working-directory: apps/e2e
 
             - name: Run browser tests
               run: pnpm run test:browser
@@ -115,5 +115,5 @@ jobs:
               if: ${{ always() && steps.browser-tests.conclusion == 'failure' }}
               with:
                   name: Symfony logs (${{ matrix.symfony }})
-                  path: test_apps/e2e-app/var/log/
+                  path: apps/e2e/var/log/
                   retention-days: 7

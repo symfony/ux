@@ -477,8 +477,8 @@ The following code won't work as expected::
 
         public function mount(): void
         {
-            {# ❌ this won't work: at this point $type still has its default value.
-                   Passed values are not yet available in props. #}
+            // ❌ this won't work: at this point $type still has its default value.
+            // Passed values are not yet available in props.
             if ('error' === $this->type) {
                 // ...
             }
@@ -493,8 +493,8 @@ untyped and has no default). If you need a prop's value, declare a parameter in
 
     public function mount(string $type): void
     {
-        {# ✅ this works as expected: the $type argument in PHP has the value
-               passed to the 'type' prop in the Twig template #}
+        // ✅ this works as expected: the $type argument in PHP has the value
+        // passed to the 'type' prop in the Twig template
         if ('error' === $type) {
             // ...
         }

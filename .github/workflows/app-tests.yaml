@@ -51,15 +51,15 @@ jobs:
         - name: Install PHP dependencies
           uses: ramsey/composer-install@v3
           with:
-            working-directory: test_apps/encore-app
+            working-directory: apps/encore
             dependency-versions: highest
 
-        - working-directory: test_apps/encore-app
+        - working-directory: apps/encore
           run: npm install --install-links
 
         - if: matrix.ux-packages-source == 'js-packages'
           name: Install UX JS packages with a JS package manager
-          working-directory: test_apps/encore-app
+          working-directory: apps/encore
           run: |
             PACKAGES_TO_INSTALL=''
             for PACKAGE_DATA in $(pnpm ls -r --json --depth -1 | jq 'map(select(.private != true))' | jq -c '.[]'); do
@@ -71,7 +71,7 @@ jobs:
             npm add --save-dev --install-links $PACKAGES_TO_INSTALL
 
         - name: Ensure UX packages are installed from "${{ env.EXPECTED_PATTERN }}"
-          working-directory: test_apps/encore-app
+          working-directory: apps/encore
           run: |
             for PACKAGE_DATA in $(cat package.json | jq -c '(.dependencies // {}) + (.devDependencies // {}) | to_entries[] | select(.key | startswith("@symfony/ux-")) | {name: .key, version: .value}'); do
               PACKAGE=$(echo $PACKAGE_DATA | jq -r '.name')
@@ -90,9 +90,9 @@ jobs:
             EXPECTED_PATTERN: ${{ matrix.ux-packages-source == 'php-vendor' && 'file:vendor/symfony/*' || 'file:../../src/*' }}
 
         - name: Ensure project can be built in dev mode
-          working-directory: test_apps/encore-app
+          working-directory: apps/encore
           run: npm run dev
 
         - name: Ensure project can be built in prod mode
-          working-directory: test_apps/encore-app
+          working-directory: apps/encore
           run: npm run build

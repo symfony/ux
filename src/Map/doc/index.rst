@@ -191,9 +191,9 @@ You can also add Polygons, which represents an area enclosed by a series of ``Po
 
     `Polygon` with holes is available since UX Map 2.26.
 
-Since UX Map 2.26, you can also create polygons with holes in them, by passing an array of `array<Point>` to `points` parameter::
+Since UX Map 2.26, you can create polygons with holes by using an array of ``array<Point>``::
 
-    // Draw a polygon with a hole in it, on the French map
+    // Draw a polygon with a hole in it, on the France map
     $map->addPolygon(new Polygon(points: [
         // First path, the outer boundary of the polygon
         [
@@ -203,7 +203,7 @@ Since UX Map 2.26, you can also create polygons with holes in them, by passing a
             new Point(43.296482, 5.369780), // Marseille
             new Point(44.837789, -0.579180), // Bordeaux
         ],
-        // Second path, it will make a hole in the previous one
+        // Second path, making a hole in the first path
         [
             new Point(45.833619, 1.261105), // Limoges
             new Point(45.764043, 4.835659), // Lyon
@@ -237,7 +237,6 @@ You can add Circles, which represents a circular area defined by a center point 
     $map->addCircle(new Circle(
         center: new Point(48.8566, 2.3522),
         radius: 5_000, // 5km
-        title: 'Paris',
         infoWindow: new InfoWindow(
             content: 'A 5km radius circle centered on Paris',
         ),
@@ -251,7 +250,6 @@ You can add Rectangles, which represents a rectangular area defined by two corne
     $map->addRectangle(new Rectangle(
         southWest: new Point(48.8566, 2.3522), // Paris
         northEast: new Point(50.6292, 3.0573), // Lille
-        title: 'Paris to Lille',
         infoWindow: new InfoWindow(
             content: 'A rectangle from Paris to Lille',
         ),
@@ -504,7 +502,7 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
          */
         _onPolygonBeforeCreate(event) {
             console.log(event.detail.definition);
-            // { title: 'My polygon', points: [ { lat: 48.8566, lng: 2.3522 }, { lat: 45.7640, lng: 4.8357 }, { lat: 43.2965, lng: 5.3698 }, ... ], ... }
+            // { points: [ { lat: 48.8566, lng: 2.3522 }, { lat: 45.7640, lng: 4.8357 }, { lat: 43.2965, lng: 5.3698 }, ... ], ... }
         }
 
         /**
@@ -522,7 +520,7 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
          */
         _onPolylineBeforeCreate(event) {
             console.log(event.detail.definition);
-            // { title: 'My polyline', points: [ { lat: 48.8566, lng: 2.3522 }, { lat: 45.7640, lng: 4.8357 }, { lat: 43.2965, lng: 5.3698 }, ... ], ... }
+            // {  points: [ { lat: 48.8566, lng: 2.3522 }, { lat: 45.7640, lng: 4.8357 }, { lat: 43.2965, lng: 5.3698 }, ... ], ... }
         }
 
         /**
@@ -536,7 +534,7 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
 
         _onCircleBeforeCreate(event) {
             console.log(event.detail.definition);
-            // { title: 'My circle', center: { lat: 48.8566, lng: 2.3522 }, radius: 1000, ... }
+            // { center: { lat: 48.8566, lng: 2.3522 }, radius: 1000, ... }
         }
 
         _onCircleAfterCreate(event) {
@@ -546,7 +544,7 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
 
         _onRectangleBeforeCreate(event) {
             console.log(event.detail.definition);
-            // { title: 'My rectangle', southWest: { lat: 48.8566, lng: 2.3522 }, northEast: { lat: 45.7640, lng: 4.8357 }, ... }
+            // { southWest: { lat: 48.8566, lng: 2.3522 }, northEast: { lat: 45.7640, lng: 4.8357 }, ... }
         }
 
         _onRectangleAfterCreate(event) {

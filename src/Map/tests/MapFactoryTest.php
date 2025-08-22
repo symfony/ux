@@ -85,7 +85,6 @@ class MapFactoryTest extends TestCase
                     new Point(48.853, 2.3499),
                     new Point(48.8566, 2.3522),
                 ],
-                title: 'Polygon 1',
                 infoWindow: new InfoWindow('Polygon 1', 'Polygon 1', extra: ['color' => 'red']),
                 extra: ['color' => 'blue'],
             ));
@@ -222,7 +221,7 @@ class MapFactoryTest extends TestCase
                             'lng' => 2.3522,
                         ],
                     ],
-                    'title' => 'Polygon 1',
+                    'title' => null,
                     'infoWindow' => [
                         'headerContent' => 'Polygon 1',
                         'content' => 'Polygon 1',
@@ -245,7 +244,7 @@ class MapFactoryTest extends TestCase
                             'lng' => 2.3522,
                         ],
                     ],
-                    'title' => 'Polyline 1',
+                    'title' => null,
                     'infoWindow' => [
                         'headerContent' => 'Polyline 1',
                         'content' => 'Polyline 1',

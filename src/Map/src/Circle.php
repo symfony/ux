@@ -34,6 +34,10 @@ final class Circle implements Element
         public readonly array $extra = [],
         public readonly ?string $id = null,
     ) {
+        if (null !== $title) {
+            trigger_deprecation('symfony/ux-map', '2.30', 'The "title" parameter is deprecated and will be removed in 3.0. Use "infoWindow" instead.');
+        }
+
         if ($radius <= 0) {
             throw new InvalidArgumentException(\sprintf('Radius must be greater than 0, "%s" given.', $radius));
         }

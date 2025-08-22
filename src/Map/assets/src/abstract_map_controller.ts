@@ -65,7 +65,7 @@ export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = Wit
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     icon?: Icon;
     /**
-     * @deprecated Use "bridgeOptions" instead.
+     * @deprecated since Symfony UX Map 2.27, use "bridgeOptions" instead.
      * Raw options passed to the marker constructor, specific to the map provider (e.g.: `L.marker()` for Leaflet).
      */
     rawOptions?: BridgeMarkerOptions;
@@ -86,9 +86,12 @@ export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = Wit
 export type PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     points: Array<Point> | Array<Array<Point>>;
+    /**
+     * @deprecated since Symfony UX Map 2.29, use "infoWindow" instead
+     */
     title: string | null;
     /**
-     * @deprecated Use "bridgeOptions" instead.
+     * @deprecated since Symfony UX Map 2.27, use "bridgeOptions" instead.
      * Raw options passed to the polygon constructor, specific to the map provider (e.g.: `L.polygon()` for Leaflet).
      */
     rawOptions?: BridgePolygonOptions;
@@ -109,9 +112,12 @@ export type PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions> = W
 export type PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     points: Array<Point>;
+    /**
+     * @deprecated since Symfony UX Map 2.29, use "infoWindow" instead
+     */
     title: string | null;
     /**
-     * @deprecated Use "bridgeOptions" instead.
+     * @deprecated since Symfony UX Map 2.27, use "bridgeOptions" instead.
      * Raw options passed to the polyline constructor, specific to the map provider (e.g.: `L.polyline()` for Leaflet).
      */
     rawOptions?: BridgePolylineOptions;
@@ -133,9 +139,12 @@ export type CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions> = Wit
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     center: Point;
     radius: number;
+    /**
+     * @deprecated since Symfony UX Map 2.29, use "infoWindow" instead
+     */
     title: string | null;
     /**
-     * @deprecated Use "bridgeOptions" instead.
+     * @deprecated since Symfony UX Map 2.27, use "bridgeOptions" instead.
      * Raw options passed to the circle constructor, specific to the map provider (e.g.: `L.circle()` for Leaflet).
      */
     rawOptions?: BridgeCircleOptions;
@@ -157,9 +166,12 @@ export type RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions>
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     southWest: Point;
     northEast: Point;
+    /**
+     * @deprecated since Symfony UX Map 2.29, use "infoWindow" instead
+     */
     title: string | null;
     /**
-     * @deprecated Use "bridgeOptions" instead.
+     * @deprecated since Symfony UX Map 2.27, use "bridgeOptions" instead.
      * Raw options passed to the rectangle constructor, specific to the map provider (e.g.: `L.rectangle()` for Leaflet).
      */
     rawOptions?: BridgeRectangleOptions;
@@ -184,7 +196,7 @@ export type InfoWindowDefinition<BridgeInfoWindowOptions> = {
     opened: boolean;
     autoClose: boolean;
     /**
-     * @deprecated Use "bridgeOptions" instead.
+     * @deprecated since Symfony UX Map 2.27, use "bridgeOptions" instead.
      * Raw options passed to the info window constructor, specific to the map provider (e.g.: `google.maps.InfoWindow()` for Google Maps).
      */
     rawOptions?: BridgeInfoWindowOptions;

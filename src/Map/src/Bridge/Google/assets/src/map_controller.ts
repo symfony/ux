@@ -212,6 +212,9 @@ export default class extends AbstractMapController<
             ...bridgeOptions,
         });
 
+        /**
+         * @deprecated since Symfony UX Map 2.29, will be removed in 3.0
+         */
         if (title) {
             polygon.set('title', title);
         }
@@ -241,6 +244,9 @@ export default class extends AbstractMapController<
             ...bridgeOptions,
         });
 
+        /**
+         * @deprecated since Symfony UX Map 2.29, will be removed in 3.0
+         */
         if (title) {
             polyline.set('title', title);
         }
@@ -267,6 +273,9 @@ export default class extends AbstractMapController<
             ...bridgeOptions,
         });
 
+        /**
+         * @deprecated since Symfony UX Map 2.29, will be removed in 3.0
+         */
         if (title) {
             circle.set('title', title);
         }
@@ -296,6 +305,9 @@ export default class extends AbstractMapController<
             ...bridgeOptions,
         });
 
+        /**
+         * @deprecated since Symfony UX Map 2.29, will be removed in 3.0
+         */
         if (title) {
             rectangle.set('title', title);
         }
