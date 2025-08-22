@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Fixtures\Dto;
 
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 final class BlogPostWithSerializationContext
 {
