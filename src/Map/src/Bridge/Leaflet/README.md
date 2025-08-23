@@ -119,7 +119,7 @@ export default class extends Controller
 ### Disable the default tile layer
 
 If you need to use a custom tiles layer rendering engine that is not compatible with the `L.tileLayer().addTo(map)` method
-(e.g. e.g.: [Esri/esri-leaflet-vector](https://github.com/Esri/esri-leaflet-vector)), you can disable the default tile layer by passing `tileLayer: false` to the `LeafletOptions`:
+(e.g. [Esri/esri-leaflet-vector](https://github.com/Esri/esri-leaflet-vector)), you can disable the default tile layer by passing `tileLayer: false` to the `LeafletOptions`:
 
 ```php
 use Symfony\UX\Map\Bridge\Leaflet\LeafletOptions;

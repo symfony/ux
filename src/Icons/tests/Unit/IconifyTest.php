@@ -119,7 +119,7 @@ class IconifyTest extends TestCase
         $this->assertEquals('0 0 17 17', $icon->getAttributes()['viewBox']);
     }
 
-    public function testFetchIconThrowsWhenViewBoxCannotBeComputed()
+    public function testFetchIconSetsDefaultViewBoxTo16()
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -138,10 +138,11 @@ class IconifyTest extends TestCase
             ]),
         );
 
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('The icon "bi:heart" does not have a width or height.');
+        $icon = $iconify->fetchIcon('bi', 'heart');
 
-        $iconify->fetchIcon('bi', 'heart');
+        $this->assertIsArray($icon->getAttributes());
+        $this->assertArrayHasKey('viewBox', $icon->getAttributes());
+        $this->assertEquals('0 0 16 16', $icon->getAttributes()['viewBox']);
     }
 
     public function testFetchIconThrowsWhenStatusCodeNot200()

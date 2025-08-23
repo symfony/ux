@@ -34,6 +34,10 @@ final class Iconify
     // -safe margin
     private const MAX_ICONS_QUERY_LENGTH = 400;
 
+    // https://github.com/iconify/iconify/blob/00cc144b040b838bd86474ab83f0e50e6c6a12a1/packages/utils/src/icon/defaults.ts#L23-L30
+    private const DEFAULT_ICON_WIDTH = 16;
+    private const DEFAULT_ICON_HEIGHT = 16;
+
     private HttpClientInterface $http;
     private \ArrayObject $sets;
     private int $maxIconsQueryLength;
@@ -81,13 +85,10 @@ final class Iconify
 
         $height = $data['icons'][$name]['height'] ?? $data['height'] ?? $this->sets()[$prefix]['height'] ?? null;
         $width = $data['icons'][$name]['width'] ?? $data['width'] ?? $this->sets()[$prefix]['width'] ?? null;
-        if (null === $width && null === $height) {
-            throw new \RuntimeException(\sprintf('The icon "%s:%s" does not have a width or height.', $prefix, $nameArg));
-        }
 
         return new Icon($data['icons'][$name]['body'], [
             'xmlns' => self::ATTR_XMLNS_URL,
-            'viewBox' => \sprintf('0 0 %s %s', $width ?? $height, $height ?? $width),
+            'viewBox' => \sprintf('0 0 %s %s', $width ?? $height ?? self::DEFAULT_ICON_WIDTH, $height ?? $width ?? self::DEFAULT_ICON_HEIGHT),
         ]);
     }
 
@@ -135,7 +136,7 @@ final class Iconify
 
             $icons[$iconName] = new Icon($iconData['body'], [
                 'xmlns' => self::ATTR_XMLNS_URL,
-                'viewBox' => \sprintf('0 0 %d %d', $width ?? $height, $height ?? $width),
+                'viewBox' => \sprintf('0 0 %d %d', $width ?? $height ?? self::DEFAULT_ICON_WIDTH, $height ?? $width ?? self::DEFAULT_ICON_HEIGHT),
             ]);
         }
 

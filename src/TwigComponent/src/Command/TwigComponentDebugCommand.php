@@ -298,7 +298,7 @@ class TwigComponentDebugCommand extends Command
                 } else {
                     $typeName = (string) $type;
                 }
-                $value = $property->getDefaultValue();
+                $value = $property->hasDefaultValue() ? $property->getDefaultValue() : null;
                 $propertyDisplay = $typeName.' $'.$propertyName.(null !== $value ? ' = '.json_encode($value) : '');
                 $properties[$property->name] = $propertyDisplay;
             }

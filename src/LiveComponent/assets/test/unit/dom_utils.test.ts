@@ -110,6 +110,40 @@ describe('getValueFromElement', () => {
 
         expect(getValueFromElement(div, createStore())).toEqual('the_value_from_attribute');
     });
+
+    it('Returns empty string for data-value=""', () => {
+        const btn = document.createElement('button');
+        // simulate the attribute explicitly present but empty
+        btn.dataset.value = '';
+        // also set a value on the button to ensure data-value takes precedence
+        btn.value = 'should_not_be_used';
+        expect(getValueFromElement(btn, createStore())).toBe('');
+    });
+
+    it('Returns "0" for data-value="0" (falsy but valid)', () => {
+        const el = document.createElement('div');
+        el.dataset.value = '0';
+        expect(getValueFromElement(el, createStore())).toBe('0');
+    });
+
+    it('Prefers data-value over value attribute when both are present', () => {
+        const el = document.createElement('div');
+        el.dataset.value = 'from_data_value';
+        el.setAttribute('value', 'from_value_attribute');
+        expect(getValueFromElement(el, createStore())).toBe('from_data_value');
+    });
+
+    it('Falls back to value attribute when data-value is absent', () => {
+        const el = document.createElement('div');
+        el.setAttribute('value', '');
+        // No data-value set
+        expect(getValueFromElement(el, createStore())).toBe('');
+    });
+
+    it('Returns null when neither data-value nor value attribute nor value property is present', () => {
+        const el = document.createElement('div');
+        expect(getValueFromElement(el, createStore())).toBe(null);
+    });
 });
 
 describe('setValueOnElement', () => {

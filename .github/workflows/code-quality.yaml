@@ -49,7 +49,7 @@ jobs:
                 include:
                     # dev packages (probably not needed to have multiple such jobs)
                     - minimum-stability: 'dev'
-                      php-version: 8.4
+                      php-version: 8.5
                     # lowest deps
                     - dependency-version: 'lowest'
                     # LTS version of Symfony

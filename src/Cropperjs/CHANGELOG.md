@@ -4,6 +4,10 @@
 
 -   Minimum required Symfony version is now 6.4
 
+## 2.30
+
+- Ensure compatibility with PHP 8.5
+
 ## 2.29.0
 
 -  Add Symfony 8 support
