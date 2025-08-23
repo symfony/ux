@@ -12,8 +12,6 @@ final class SvelteController extends AbstractController
     #[Route('/')]
     public function index(): Response
     {
-        return $this->render('ux_svelte/index.html.twig', [
-            'controller_name' => 'SvelteController',
-        ]);
+        return $this->render('ux_svelte/index.html.twig');
     }
 }

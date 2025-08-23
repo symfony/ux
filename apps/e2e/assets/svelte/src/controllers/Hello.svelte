@@ -2,4 +2,4 @@
     export let name = "Svelte";
 </script>
 
-<div>Hello {name}</div>
+<div>Hello {name} from Svelte</div>

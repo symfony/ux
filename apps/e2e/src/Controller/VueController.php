@@ -12,8 +12,6 @@ final class VueController extends AbstractController
     #[Route('/')]
     public function index(): Response
     {
-        return $this->render('ux_vue/index.html.twig', [
-            'controller_name' => 'VueController',
-        ]);
+        return $this->render('ux_vue/index.html.twig');
     }
 }
