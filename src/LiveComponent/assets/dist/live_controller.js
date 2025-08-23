@@ -377,7 +377,7 @@ function getValueFromElement(element, valueStore) {
     }
     return element.value;
   }
-  if (element.dataset.value) {
+  if (element.hasAttribute("data-value")) {
     return element.dataset.value;
   }
   if ("value" in element) {
