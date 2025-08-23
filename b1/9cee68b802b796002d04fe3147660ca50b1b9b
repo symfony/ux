@@ -1,0 +1,51 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-08-20T00:50:48Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/mercuryseries/ux/tree/fix/data-value-empty-string/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/mercuryseries/ux/blob/fix/data-value-empty-string/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>99.04 kB</code>
+                    / <code>21.35 kB</code>
+                </td><td>
+                    <code>99.06 kB</code><sup>0%</sup>
+                    / <code>21.35 kB</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-08-20T20:57:21Z
+
+👍
+
+It would indeed be consistent with Stimulus values https://stimulus.hotwired.dev/reference/values#getters
+
+Could you add some tests to prevent any future regression ?
+
+---------------------------------------------------------------------------
+
+by mercuryseries at 2025-08-22T15:38:10Z
+
+@smnandre I added some tests. I see that some tests failed, but seems not related with the changes. Can you confirm please?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-08-22T22:51:38Z
+
+It does not feel related to me.. @Kocal  wdyt ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-08-23T06:49:57Z
+
+No that's not related, it should be green after a rebase
