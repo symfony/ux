@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-08-23T02:01:10Z
+
+I do agree with your messages (here and in the og issue), less so for the "bug" term but nervermind  😄
+
+Thank you for taking the time to open a PR !
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-08-23T06:47:57Z
+
+I just did some modifications for adding private const and to ensure a default value is set even if only one of the width or height is null
