@@ -1,1 +1,7 @@
 {% extends 'base.html.twig' %}
+
+{% block main %}
+    <div {{ react_component('Hello', {
+        name: 'Fabien'
+    }) }}></div>
+{% endblock %}
