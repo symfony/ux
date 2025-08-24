@@ -49,37 +49,6 @@ class DeferLiveComponentSubscriberTest extends TestCase
         $this->assertArrayHasKey('loading', $event->getData());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLoadingAttributeOverrideDeferAttribute()
-    {
-        $subscriber = new DeferLiveComponentSubscriber();
-        $event = $this->createPostMountEvent(['loading' => 'lazy', 'defer' => true]);
-
-        $this->expectDeprecation('Since symfony/ux-live-component 2.17: The "defer" attribute is deprecated and will be removed in 3.0. Use the "loading" attribute instead set to the value "defer".');
-
-        $subscriber->onPostMount($event);
-
-        $this->assertArrayHasKey('loading', $event->getExtraMetadata());
-        $this->assertSame('lazy', $event->getExtraMetadata()['loading']);
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testDeferAttributeTriggerDeprecation()
-    {
-        $subscriber = new DeferLiveComponentSubscriber();
-        $event = $this->createPostMountEvent([
-            'defer' => true,
-        ]);
-
-        $this->expectDeprecation('Since symfony/ux-live-component 2.17: The "defer" attribute is deprecated and will be removed in 3.0. Use the "loading" attribute instead set to the value "defer".');
-
-        $subscriber->onPostMount($event);
-    }
-
     public function testLoadingAttributesAreRemoved()
     {
         $subscriber = new DeferLiveComponentSubscriber();
