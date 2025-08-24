@@ -217,7 +217,9 @@ final class Kernel extends BaseKernel
         $routes->add('homepage', '/')->controller('kernel::index');
         $routes->add('alternate_live_route', '/alt/{_live_component}/{_live_action}')->defaults(['_live_action' => 'get']);
         $routes->add('localized_route', '/locale/{_locale}/{_live_component}/{_live_action}')->defaults(['_live_action' => 'get']);
-        $routes->add('route_with_prop', '/route_with_prop/{pathProp}')->methods(['GET']);
-        $routes->add('route_with_alias_prop', '/route_with_alias_prop/{pathAlias}');
+        $routes->add('route_with_prop', '/route_with_prop/{pathProp}')->methods(['GET'])->requirements(['pathProp' => '\w+']);
+        $routes->add('route_with_alias_prop', '/route_with_alias_prop/{pathAlias}')->requirements(['pathAlias' => '\w+']);
+        $routes->add('route_with_two_props', '/route_with_two_props/{pathProp}/{pathAlias}')->methods(['GET'])->requirements(['pathProp' => '\w+', 'pathAlias' => '\w+']);
+        $routes->add('route_with_two_path_params_but_one_prop', '/route_with_two_path_params_but_one_prop/{pathProp}/{id}')->methods(['GET'])->requirements(['pathProp' => '\w+', 'id' => '\d+']);
     }
 }

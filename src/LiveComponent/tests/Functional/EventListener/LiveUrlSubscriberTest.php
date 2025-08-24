@@ -23,39 +23,33 @@ class LiveUrlSubscriberTest extends KernelTestCase
 
     public function getTestData(): iterable
     {
-        yield 'missing_header' => [
+        yield 'Missing header' => [
             'previousLocation' => null,
             'expectedLocation' => null,
-            'props' => [],
+            'initialComponentData' => [],
             'args' => [],
         ];
-        yield 'unknown_previous_location' => [
+
+        yield 'Unknown previous location' => [
             'previousLocation' => 'foo/bar',
-            'expectedLocation' => null,
-            'props' => [],
+            'expectedLocation' => 'foo/bar',
+            'initialComponentData' => [],
             'args' => [],
         ];
 
-        yield 'no_prop' => [
-            'previousLocation' => '/route_with_prop/foo',
-            'expectedLocation' => null,
-            'props' => [],
-            'args' => [],
-        ];
-
-        yield 'no_change' => [
+        yield 'No props change' => [
             'previousLocation' => '/route_with_prop/foo',
             'expectedLocation' => '/route_with_prop/foo',
-            'props' => [
+            'initialComponentData' => [
                 'pathProp' => 'foo',
             ],
             'args' => [],
         ];
 
-        yield 'path_prop_changed' => [
+        yield 'Changes in prop' => [
             'previousLocation' => '/route_with_prop/foo',
             'expectedLocation' => '/route_with_prop/bar',
-            'props' => [
+            'initialComponentData' => [
                 'pathProp' => 'foo',
             ],
             'args' => [
@@ -64,10 +58,46 @@ class LiveUrlSubscriberTest extends KernelTestCase
             ],
         ];
 
-        yield 'path_alias_prop_changed' => [
+        yield 'Change in query' => [
+            'previousLocation' => '/route_with_prop/foo',
+            'expectedLocation' => '/route_with_prop/foo?stringProp=hello',
+            'initialComponentData' => [
+                'pathProp' => 'foo',
+            ],
+            'args' => [
+                'propName' => 'stringProp',
+                'propValue' => 'hello',
+            ],
+        ];
+
+        yield 'Change in query (with an existing query that is not a LiveProp)' => [
+            'previousLocation' => '/route_with_prop/foo?not-a-prop=value',
+            'expectedLocation' => '/route_with_prop/foo?not-a-prop=value&stringProp=hello',
+            'initialComponentData' => [
+                'pathProp' => 'foo',
+            ],
+            'args' => [
+                'propName' => 'stringProp',
+                'propValue' => 'hello',
+            ],
+        ];
+        yield 'Change in query (with two existing query, one LiveProp, one non-LiveProp)' => [
+            'previousLocation' => '/route_with_prop/foo?not-a-prop=value&stringProp=hello',
+            'expectedLocation' => '/route_with_prop/foo?not-a-prop=value&stringProp=bye',
+            'initialComponentData' => [
+                'pathProp' => 'foo',
+                'stringProp' => 'hello',
+            ],
+            'args' => [
+                'propName' => 'stringProp',
+                'propValue' => 'bye',
+            ],
+        ];
+
+        yield 'Changes in prop (alias)' => [
             'previousLocation' => '/route_with_alias_prop/foo',
             'expectedLocation' => '/route_with_alias_prop/bar',
-            'props' => [
+            'initialComponentData' => [
                 'pathPropWithAlias' => 'foo',
             ],
             'args' => [
@@ -76,20 +106,44 @@ class LiveUrlSubscriberTest extends KernelTestCase
             ],
         ];
 
-        yield 'query_alias_prop_changed' => [
-            'previousLocation' => '/',
-            'expectedLocation' => '/?q=search%2Bterm',
-            'props' => [],
+        yield 'Changes in prop, with two props' => [
+            'previousLocation' => '/route_with_two_props/foo/alias',
+            'expectedLocation' => '/route_with_two_props/bar/alias',
+            'initialComponentData' => [
+                'pathProp' => 'foo',
+                'pathPropWithAlias' => 'alias',
+            ],
             'args' => [
-                'propName' => 'boundPropWithAlias',
-                'propValue' => 'search+term',
+                'propName' => 'pathProp',
+                'propValue' => 'bar',
+            ],
+        ];
+        yield 'Changes in prop, with two path params but only one prop' => [
+            'previousLocation' => '/route_with_two_path_params_but_one_prop/foo/30',
+            'expectedLocation' => '/route_with_two_path_params_but_one_prop/bar/30',
+            'initialComponentData' => [
+                'pathProp' => 'foo',
+            ],
+            'args' => [
+                'propName' => 'pathProp',
+                'propValue' => 'bar',
             ],
         ];
 
-        yield 'path_and_query_alias_prop_changed' => [
+        yield 'Changes in query (alias)' => [
+            'previousLocation' => '/',
+            'expectedLocation' => '/?q=search+term',
+            'initialComponentData' => [],
+            'args' => [
+                'propName' => 'boundPropWithAlias',
+                'propValue' => 'search term',
+            ],
+        ];
+
+        yield 'Changes in props and query' => [
             'previousLocation' => '/route_with_prop/foo',
             'expectedLocation' => '/route_with_prop/baz?q=foo+bar',
-            'props' => [
+            'initialComponentData' => [
                 'pathProp' => 'baz',
             ],
             'args' => [
@@ -104,7 +158,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'with an object in query, keys "address" and "city" must be present' => [
             'previousLocation' => '/',
             'expectedLocation' => '/?objectProp%5Baddress%5D=123+Main+St&objectProp%5Bcity%5D=Anytown&q=search',
-            'props' => [
+            'initialComponentData' => [
                 'objectProp' => $address,
             ],
             'args' => [
@@ -119,7 +173,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'with an object in query, with "useSerializerForHydration: true", keys "address" and "c" must be present' => [
             'previousLocation' => '/',
             'expectedLocation' => '/?intProp=3&objectPropWithSerializerForHydration%5Baddress%5D=123+Main+St&objectPropWithSerializerForHydration%5Bc%5D=Anytown',
-            'props' => [
+            'initialComponentData' => [
                 'objectPropWithSerializerForHydration' => $address,
             ],
             'args' => [
@@ -131,7 +185,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'query with alias ("p") and modifier (prefix by "alias_")' => [
             'previousLocation' => '/',
             'expectedLocation' => '/?alias_p=test',
-            'props' => [
+            'initialComponentData' => [
                 'propertyWithModifierAndAlias' => 'test',
             ],
             'args' => [],
@@ -144,10 +198,10 @@ class LiveUrlSubscriberTest extends KernelTestCase
     public function testNewLiveUrlAfterLiveAction(
         ?string $previousLocation,
         ?string $expectedLocation,
-        array $props,
+        array $initalComponentData,
         array $args,
     ): void {
-        $component = $this->mountComponent('component_with_url_bound_props', $props);
+        $component = $this->mountComponent('component_with_url_bound_props', $initalComponentData);
         $dehydrated = $this->dehydrateComponent($component);
 
         $this->browser()

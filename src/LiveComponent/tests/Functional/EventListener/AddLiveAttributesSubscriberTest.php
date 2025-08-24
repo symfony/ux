@@ -143,6 +143,7 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
             'pathPropWithAlias' => ['name' => 'pathAlias'],
             'objectPropWithSerializerForHydration' => ['name' => 'objectPropWithSerializerForHydration'],
             'propertyWithModifierAndAlias' => ['name' => 'alias_p'],
+            'pathPropForAnotherController' => ['name' => 'pathPropForAnotherController'],
         ];
 
         $this->assertEquals($expected, $queryMapping);
