@@ -31,16 +31,20 @@ export -f _run_task
 
 install_property_info_for_version() {
   local php_version="$1"
-  local min_stability="$2"
+  local symfony_version="$2"
+  local min_stability="$3"
 
-  if [ "$php_version" = "8.2" ]; then
+  if [ "$php_version" = "8.2" ] || [ "$symfony_version" = "6.4.*" ]; then
+    # Prevent usage of TypeInfo, required to test support of LegacyLivePropMetadata
+    composer require symfony/property-info:6.4.*
+  elif [ "$php_version" = "8.3" ] ; then
     composer require symfony/property-info:7.1.* symfony/type-info:7.2.*
-  elif [ "$php_version" = "8.3" ]; then
+  elif [ "$php_version" = "8.4" ]; then
     composer require symfony/property-info:7.2.* symfony/type-info:7.2.*
-  elif [ "$php_version" = "8.4" ] && [ "$min_stability" = "stable" ]; then
+  elif [ "$php_version" = "8.5" ] && [ "$min_stability" = "stable" ]; then
     composer require symfony/property-info:7.3.* symfony/type-info:7.3.*
-  elif [ "$php_version" = "8.4" ] && [ "$min_stability" = "dev" ]; then
-    composer require symfony/property-info:>=7.3 symfony/type-info:>=7.3
+  elif [ "$php_version" = "8.5" ] && [ "$min_stability" = "dev" ]; then
+    composer require symfony/property-info:8.0.x-dev symfony/type-info:8.0.x-dev
   fi
 }
 export -f install_property_info_for_version

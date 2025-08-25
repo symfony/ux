@@ -28,7 +28,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php-version: ['8.1', '8.2', '8.3', '8.4', '8.5']
+                php-version: ['8.2', '8.3', '8.4', '8.5']
                 dependency-version: ['']
                 symfony-version: ['']
                 minimum-stability: ['stable']
@@ -38,19 +38,21 @@ jobs:
                     -   minimum-stability: 'dev'
                         php-version: '8.5'
                     # lowest deps
-                    -   php-version: '8.1'
+                    -   php-version: '8.2'
                         dependency-version: 'lowest'
-                    # LTS version of Symfony
-                    -   php-version: '8.1'
-                        symfony-version: '6.4.*'
-                    -   php-version: '8.1'
-                        symfony-version: '6.4.*'
-                        os: 'windows-latest'
-                    # Explicit Symfony versions
-                    -  php-version: '8.1'
+
+                    # oldest LTS
+                    -  php-version: '8.2'
                        symfony-version: '6.4.*'
+
+                    # oldest LTS + Windows
+                    -  php-version: '8.2'
+                       symfony-version: '6.4.*'
+                       os: 'windows-latest'
+
                     -  php-version: '8.2'
                        symfony-version: '7.4.x-dev' # TODO: change to '7.4' when Symfony 7.4 is released
+
                     -  php-version: '8.5'
                        symfony-version: '8.0.x-dev' # TODO: change to '8.0' when Symfony 8.0 is released
                        minimum-stability: 'dev' # TODO: remove when Symfony 8.0 is released
@@ -79,7 +81,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                 php-version: ${{ matrix.php-version }}
-                extensions: ${{ matrix.os == 'windows-latest' && 'pdo_sqlite,sqlite3,fileinfo,gd' || '' }}
+                extensions: ${{ matrix.os == 'windows-latest' && 'pdo_sqlite,sqlite3,fileinfo,gd,zip' || '' }}
                 tools: flex
 
             -   name: Get composer cache directory
@@ -111,7 +113,7 @@ jobs:
                   '(cd src/{} \
                   && $COMPOSER_MIN_STAB \
                   && $COMPOSER_UP \
-                  && if [ {} = LiveComponent ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
+                  && if [ {} = LiveComponent ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.symfony-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
                   && $PHPUNIT)'"
 
             - name: Run packages tests (Windows)
@@ -126,7 +128,7 @@ jobs:
                     '(cd src/$PACKAGE \
                     && $COMPOSER_MIN_STAB \
                     && $COMPOSER_UP \
-                    && if [ "$PACKAGE" = "LiveComponent" ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
+                    && if [ "$PACKAGE" = "LiveComponent" ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.symfony-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
                     && $PHPUNIT)'; then
                     FAILED_PACKAGES="$FAILED_PACKAGES $PACKAGE"
                   fi
