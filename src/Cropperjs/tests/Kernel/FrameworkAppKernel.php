@@ -42,11 +42,10 @@ class FrameworkAppKernel extends Kernel
                 'validation' => [
                     'email_validation_mode' => 'html5',
                 ],
+                ...(self::VERSION_ID >= 60200 ? [
+                    'handle_all_throwables' => true,
+                ] : []),
             ];
-
-            if (self::VERSION_ID >= 60200) {
-                $frameworkConfig['handle_all_throwables'] = true;
-            }
 
             $container->loadFromExtension('framework', $frameworkConfig);
         });

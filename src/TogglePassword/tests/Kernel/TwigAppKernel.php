@@ -42,11 +42,13 @@ class TwigAppKernel extends Kernel
                 'php_errors' => [
                     'log' => true,
                 ],
+                ...(self::VERSION_ID >= 60200 ? [
+                    'handle_all_throwables' => true,
+                ] : []),
+                ...(self::VERSION_ID >= 70300 ? [
+                    'property_info' => ['with_constructor_extractor' => false],
+                ] : []),
             ];
-
-            if (self::VERSION_ID >= 60200) {
-                $frameworkConfig['handle_all_throwables'] = true;
-            }
 
             $container->loadFromExtension('framework', $frameworkConfig);
             $container->loadFromExtension('twig', [

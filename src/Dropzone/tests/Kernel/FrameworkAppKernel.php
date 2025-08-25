@@ -34,7 +34,13 @@ class FrameworkAppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) {
-            $container->loadFromExtension('framework', ['secret' => '$ecret', 'test' => true]);
+            $container->loadFromExtension('framework', [
+                'secret' => '$ecret',
+                'test' => true,
+                ...(self::VERSION_ID >= 70300 ? [
+                    'property_info' => ['with_constructor_extractor' => false],
+                ] : []),
+            ]);
         });
     }
 }

@@ -103,10 +103,15 @@ final class Kernel extends BaseKernel
             'validation' => [
                 'email_validation_mode' => 'html5',
             ],
+            ...(self::VERSION_ID >= 60200 ? [
+                'handle_all_throwables' => true,
+            ] : []),
+            ...(self::VERSION_ID >= 70300 ? [
+                'property_info' => ['with_constructor_extractor' => false],
+            ] : []),
         ];
 
         if (self::VERSION_ID >= 60400) {
-            $frameworkConfig['handle_all_throwables'] = true;
             $frameworkConfig['session'] = [
                 'storage_factory_id' => 'session.storage.factory.mock_file',
                 'cookie_secure' => 'auto',
@@ -143,7 +148,14 @@ final class Kernel extends BaseKernel
             'anonymous_template_directory' => 'components/',
         ]);
 
-        $c->extension('zenstruck_foundry', []);
+        $foundryConfig = [];
+        if (null !== $doctrineBundleVersion = InstalledVersions::getVersion('zenstruck/foundry')) {
+            if (version_compare($doctrineBundleVersion, '2.5.0', '>=')) {
+                $doctrineConfig['persistence']['flush_once'] = true;
+            }
+        }
+
+        $c->extension('zenstruck_foundry', $foundryConfig);
 
         $doctrineConfig = [
             'dbal' => [
