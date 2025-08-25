@@ -36,7 +36,6 @@ class CircleTest extends TestCase
         self::assertSame([
             'center' => ['lat' => 1.1, 'lng' => 2.2],
             'radius' => 500.0,
-            'title' => null,
             'infoWindow' => [
                 'headerContent' => 'info content',
                 'content' => null,
@@ -55,7 +54,6 @@ class CircleTest extends TestCase
         $data = [
             'center' => ['lat' => 1.1, 'lng' => 2.2],
             'radius' => 500,
-            'title' => null,
             'infoWindow' => ['content' => 'info content'],
             'extra' => ['foo' => 'bar'],
             'id' => 'circle1',
@@ -69,7 +67,6 @@ class CircleTest extends TestCase
         self::assertSame([
             'center' => ['lat' => 1.1, 'lng' => 2.2],
             'radius' => 500.0,
-            'title' => null,
             'infoWindow' => [
                 'headerContent' => null,
                 'content' => 'info content',

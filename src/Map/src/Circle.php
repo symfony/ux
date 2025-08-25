@@ -29,15 +29,10 @@ final class Circle implements Element
     public function __construct(
         public readonly Point $center,
         public readonly float $radius,
-        public readonly ?string $title = null,
         public readonly ?InfoWindow $infoWindow = null,
         public readonly array $extra = [],
         public readonly ?string $id = null,
     ) {
-        if (null !== $title) {
-            trigger_deprecation('symfony/ux-map', '2.30', 'The "title" parameter is deprecated and will be removed in 3.0. Use "infoWindow" instead.');
-        }
-
         if ($radius <= 0) {
             throw new InvalidArgumentException(\sprintf('Radius must be greater than 0, "%s" given.', $radius));
         }
@@ -60,7 +55,6 @@ final class Circle implements Element
         return [
             'center' => $this->center->toArray(),
             'radius' => $this->radius,
-            'title' => $this->title,
             'infoWindow' => $this->infoWindow?->toArray(),
             'extra' => $this->extra,
             'id' => $this->id,

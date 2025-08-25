@@ -42,23 +42,18 @@ type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = WithIdenti
     title: string | null;
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     icon?: Icon;
-    rawOptions?: BridgeMarkerOptions;
     bridgeOptions?: BridgeMarkerOptions;
     extra: ExtraData;
 }>;
 type PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     points: Array<Point> | Array<Array<Point>>;
-    title: string | null;
-    rawOptions?: BridgePolygonOptions;
     bridgeOptions?: BridgePolygonOptions;
     extra: ExtraData;
 }>;
 type PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     points: Array<Point>;
-    title: string | null;
-    rawOptions?: BridgePolylineOptions;
     bridgeOptions?: BridgePolylineOptions;
     extra: ExtraData;
 }>;
@@ -66,8 +61,6 @@ type CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions> = WithIdenti
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     center: Point;
     radius: number;
-    title: string | null;
-    rawOptions?: BridgeCircleOptions;
     bridgeOptions?: BridgeCircleOptions;
     extra: ExtraData;
 }>;
@@ -75,8 +68,6 @@ type RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions> = With
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     southWest: Point;
     northEast: Point;
-    title: string | null;
-    rawOptions?: BridgeRectangleOptions;
     bridgeOptions?: BridgeRectangleOptions;
     extra: ExtraData;
 }>;
@@ -86,7 +77,6 @@ type InfoWindowDefinition<BridgeInfoWindowOptions> = {
     position: Point;
     opened: boolean;
     autoClose: boolean;
-    rawOptions?: BridgeInfoWindowOptions;
     bridgeOptions?: BridgeInfoWindowOptions;
     extra: ExtraData;
 };

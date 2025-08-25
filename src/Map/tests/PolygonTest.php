@@ -36,7 +36,6 @@ class PolygonTest extends TestCase
         $array = $polygon->toArray();
         $this->assertSame([
             'points' => [['lat' => 1.1, 'lng' => 2.2], ['lat' => 3.3, 'lng' => 4.4]],
-            'title' => null,
             'infoWindow' => [
                 'headerContent' => 'info content',
                 'content' => null,
@@ -66,7 +65,6 @@ class PolygonTest extends TestCase
                 [['lat' => 1.1, 'lng' => 2.2], ['lat' => 3.3, 'lng' => 4.4]],
                 [['lat' => 5.5, 'lng' => 6.6]],
             ],
-            'title' => null,
             'infoWindow' => null,
             'extra' => $array['extra'],
             'id' => null,
@@ -91,7 +89,6 @@ class PolygonTest extends TestCase
         $array = $polygon->toArray();
         $this->assertSame([
             'points' => [['lat' => 1.1, 'lng' => 2.2], ['lat' => 3.3, 'lng' => 4.4]],
-            'title' => null,
             'infoWindow' => [
                 'headerContent' => null,
                 'content' => 'info content',
@@ -127,7 +124,6 @@ class PolygonTest extends TestCase
                 [['lat' => 1.1, 'lng' => 2.2], ['lat' => 3.3, 'lng' => 4.4]],
                 [['lat' => 5.5, 'lng' => 6.6]],
             ],
-            'title' => null,
             'infoWindow' => [
                 'headerContent' => null,
                 'content' => 'info content',

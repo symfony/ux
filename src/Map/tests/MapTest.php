@@ -289,7 +289,6 @@ class MapTest extends TestCase
                         ['lat' => 48.853, 'lng' => 2.3499],
                         ['lat' => 48.8566, 'lng' => 2.3522],
                     ],
-                    'title' => null,
                     'infoWindow' => null,
                     'extra' => [],
                     'id' => null,
@@ -300,7 +299,6 @@ class MapTest extends TestCase
                         ['lat' => 45.75, 'lng' => 4.85],
                         ['lat' => 45.77, 'lng' => 4.82],
                     ],
-                    'title' => null,
                     'infoWindow' => [
                         'headerContent' => '<b>Polygon 2</b>',
                         'content' => 'A polygon around Lyon with some additional info.',
@@ -320,7 +318,6 @@ class MapTest extends TestCase
                         ['lat' => 48.853, 'lng' => 2.3499],
                         ['lat' => 48.8566, 'lng' => 2.3522],
                     ],
-                    'title' => null,
                     'infoWindow' => null,
                     'extra' => [],
                     'id' => null,
@@ -331,7 +328,6 @@ class MapTest extends TestCase
                         ['lat' => 45.75, 'lng' => 4.85],
                         ['lat' => 45.77, 'lng' => 4.82],
                     ],
-                    'title' => null,
                     'infoWindow' => [
                         'headerContent' => '<b>Polyline 2</b>',
                         'content' => 'A polyline around Lyon with some additional info.',
@@ -348,7 +344,6 @@ class MapTest extends TestCase
                 [
                     'center' => ['lat' => 48.8566, 'lng' => 2.3522],
                     'radius' => 500,
-                    'title' => null,
                     'infoWindow' => [
                         'headerContent' => '<b>Circle around Paris</b>',
                         'content' => 'A circle with a radius of 500 meters around Paris.',
@@ -363,7 +358,6 @@ class MapTest extends TestCase
                 [
                     'center' => ['lat' => 45.764, 'lng' => 4.8357],
                     'radius' => 300,
-                    'title' => null,
                     'infoWindow' => [
                         'headerContent' => '<b>Circle around Lyon</b>',
                         'content' => 'A circle with a radius of 300 meters around Lyon.',
@@ -380,7 +374,6 @@ class MapTest extends TestCase
                 [
                     'southWest' => ['lat' => 48.853, 'lng' => 2.3499],
                     'northEast' => ['lat' => 48.8566, 'lng' => 2.3522],
-                    'title' => null,
                     'infoWindow' => [
                         'headerContent' => '<b>Rectangle around Paris</b>',
                         'content' => 'A rectangle around Paris.',
@@ -395,7 +388,6 @@ class MapTest extends TestCase
                 [
                     'southWest' => ['lat' => 45.75, 'lng' => 4.85],
                     'northEast' => ['lat' => 45.77, 'lng' => 4.82],
-                    'title' => null,
                     'infoWindow' => [
                         'headerContent' => '<b>Rectangle around Lyon</b>',
                         'content' => 'A rectangle around Lyon.',

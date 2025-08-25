@@ -173,13 +173,12 @@ export default class extends AbstractMapController<
     }: {
         definition: MarkerDefinition<google.maps.marker.AdvancedMarkerElementOptions, google.maps.InfoWindowOptions>;
     }): google.maps.marker.AdvancedMarkerElement {
-        const { '@id': _id, position, title, infoWindow, icon, rawOptions = {}, bridgeOptions = {} } = definition;
+        const { '@id': _id, position, title, infoWindow, icon, bridgeOptions = {} } = definition;
 
         const marker = new _google.maps.marker.AdvancedMarkerElement({
             position,
             title,
             map: this.map,
-            ...rawOptions,
             ...bridgeOptions,
         });
 
@@ -203,21 +202,13 @@ export default class extends AbstractMapController<
     }: {
         definition: PolygonDefinition<google.maps.PolygonOptions, google.maps.InfoWindowOptions>;
     }): google.maps.Polygon {
-        const { '@id': _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
+        const { '@id': _id, points, infoWindow, bridgeOptions = {} } = definition;
 
         const polygon = new _google.maps.Polygon({
             paths: points,
             map: this.map,
-            ...rawOptions,
             ...bridgeOptions,
         });
-
-        /**
-         * @deprecated since Symfony UX Map 2.29, will be removed in 3.0
-         */
-        if (title) {
-            polygon.set('title', title);
-        }
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: polygon });
@@ -235,21 +226,13 @@ export default class extends AbstractMapController<
     }: {
         definition: PolylineDefinition<google.maps.PolylineOptions, google.maps.InfoWindowOptions>;
     }): google.maps.Polyline {
-        const { '@id': _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
+        const { '@id': _id, points, infoWindow, bridgeOptions = {} } = definition;
 
         const polyline = new _google.maps.Polyline({
             path: points,
             map: this.map,
-            ...rawOptions,
             ...bridgeOptions,
         });
-
-        /**
-         * @deprecated since Symfony UX Map 2.29, will be removed in 3.0
-         */
-        if (title) {
-            polyline.set('title', title);
-        }
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: polyline });
@@ -263,22 +246,14 @@ export default class extends AbstractMapController<
     }
 
     protected doCreateCircle({ definition }: { definition: CircleDefinition<google.maps.CircleOptions, google.maps.InfoWindowOptions> }): google.maps.Circle {
-        const { '@id': _id, center, radius, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
+        const { '@id': _id, center, radius, infoWindow, bridgeOptions = {} } = definition;
 
         const circle = new _google.maps.Circle({
             center,
             radius,
             map: this.map,
-            ...rawOptions,
             ...bridgeOptions,
         });
-
-        /**
-         * @deprecated since Symfony UX Map 2.29, will be removed in 3.0
-         */
-        if (title) {
-            circle.set('title', title);
-        }
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: circle });
@@ -296,21 +271,13 @@ export default class extends AbstractMapController<
     }: {
         definition: RectangleDefinition<google.maps.RectangleOptions, google.maps.InfoWindowOptions>;
     }): google.maps.Rectangle {
-        const { northEast, southWest, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
+        const { northEast, southWest, infoWindow, bridgeOptions = {} } = definition;
 
         const rectangle = new _google.maps.Rectangle({
             bounds: new _google.maps.LatLngBounds(southWest, northEast),
             map: this.map,
-            ...rawOptions,
             ...bridgeOptions,
         });
-
-        /**
-         * @deprecated since Symfony UX Map 2.29, will be removed in 3.0
-         */
-        if (title) {
-            rectangle.set('title', title);
-        }
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: rectangle });
@@ -330,7 +297,7 @@ export default class extends AbstractMapController<
         definition: Omit<InfoWindowDefinition<google.maps.InfoWindowOptions>, 'position'>;
         element: google.maps.marker.AdvancedMarkerElement | google.maps.Polygon | google.maps.Polyline | google.maps.Circle | google.maps.Rectangle;
     }): google.maps.InfoWindow {
-        const { headerContent, content, opened, autoClose, rawOptions = {}, bridgeOptions = {} } = definition;
+        const { headerContent, content, opened, autoClose, bridgeOptions = {} } = definition;
 
         let position: google.maps.LatLng | null = null;
         if (element instanceof google.maps.Circle) {
@@ -351,7 +318,6 @@ export default class extends AbstractMapController<
             headerContent: this.createTextOrElement(headerContent),
             content: this.createTextOrElement(content),
             position,
-            ...rawOptions,
             ...bridgeOptions,
         };
 
@@ -362,7 +328,7 @@ export default class extends AbstractMapController<
                 this.closeInfoWindowsExcept(infoWindow);
             }
 
-            // Don't override the position if it was already set (e.g. through "rawOptions")
+            // Don't override the position if it was already set (e.g. through "bridgeOptions")
             if (infoWindowOptions.position === null) {
                 infoWindow.setPosition(event.latLng);
             }

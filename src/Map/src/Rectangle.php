@@ -28,14 +28,10 @@ final class Rectangle implements Element
     public function __construct(
         public readonly Point $southWest,
         public readonly Point $northEast,
-        public readonly ?string $title = null,
         public readonly ?InfoWindow $infoWindow = null,
         public readonly array $extra = [],
         public readonly ?string $id = null,
     ) {
-        if (null !== $title) {
-            trigger_deprecation('symfony/ux-map', '2.30', 'The "title" parameter is deprecated and will be removed in 3.0. Use "infoWindow" instead.');
-        }
     }
 
     /**
@@ -55,7 +51,6 @@ final class Rectangle implements Element
         return [
             'southWest' => $this->southWest->toArray(),
             'northEast' => $this->northEast->toArray(),
-            'title' => $this->title,
             'infoWindow' => $this->infoWindow?->toArray(),
             'extra' => $this->extra,
             'id' => $this->id,

@@ -27,14 +27,10 @@ final class Polyline implements Element
      */
     public function __construct(
         private readonly array $points,
-        private readonly ?string $title = null,
         private readonly ?InfoWindow $infoWindow = null,
         private readonly array $extra = [],
         public readonly ?string $id = null,
     ) {
-        if (null !== $title) {
-            trigger_deprecation('symfony/ux-map', '2.30', 'The "title" parameter is deprecated and will be removed in 3.0. Use "infoWindow" instead.');
-        }
     }
 
     /**
@@ -52,7 +48,6 @@ final class Polyline implements Element
     {
         return [
             'points' => array_map(fn (Point $point) => $point->toArray(), $this->points),
-            'title' => $this->title,
             'infoWindow' => $this->infoWindow?->toArray(),
             'extra' => $this->extra,
             'id' => $this->id,

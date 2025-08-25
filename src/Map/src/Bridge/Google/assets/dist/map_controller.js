@@ -105,12 +105,6 @@ var abstract_map_controller_default = class extends Controller {
     const eventAfter = `${type}:after-create`;
     return ({ definition }) => {
       this.dispatchEvent(eventBefore, { definition });
-      if (typeof definition.rawOptions !== "undefined") {
-        console.warn(
-          `[Symfony UX Map] The event "${eventBefore}" added a deprecated "rawOptions" property to the definition, it will be removed in a next major version, replace it with "bridgeOptions" instead.`,
-          definition
-        );
-      }
       const drawing = factory({ definition });
       this.dispatchEvent(eventAfter, { [type]: drawing, definition });
       draws.set(definition["@id"], drawing);
@@ -236,12 +230,11 @@ var map_controller_default = class extends abstract_map_controller_default {
   doCreateMarker({
     definition
   }) {
-    const { "@id": _id, position, title, infoWindow, icon, rawOptions = {}, bridgeOptions = {} } = definition;
+    const { "@id": _id, position, title, infoWindow, icon, bridgeOptions = {} } = definition;
     const marker = new _google.maps.marker.AdvancedMarkerElement({
       position,
       title,
       map: this.map,
-      ...rawOptions,
       ...bridgeOptions
     });
     if (infoWindow) {
@@ -258,16 +251,12 @@ var map_controller_default = class extends abstract_map_controller_default {
   doCreatePolygon({
     definition
   }) {
-    const { "@id": _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
+    const { "@id": _id, points, infoWindow, bridgeOptions = {} } = definition;
     const polygon = new _google.maps.Polygon({
       paths: points,
       map: this.map,
-      ...rawOptions,
       ...bridgeOptions
     });
-    if (title) {
-      polygon.set("title", title);
-    }
     if (infoWindow) {
       this.createInfoWindow({ definition: infoWindow, element: polygon });
     }
@@ -279,16 +268,12 @@ var map_controller_default = class extends abstract_map_controller_default {
   doCreatePolyline({
     definition
   }) {
-    const { "@id": _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
+    const { "@id": _id, points, infoWindow, bridgeOptions = {} } = definition;
     const polyline = new _google.maps.Polyline({
       path: points,
       map: this.map,
-      ...rawOptions,
       ...bridgeOptions
     });
-    if (title) {
-      polyline.set("title", title);
-    }
     if (infoWindow) {
       this.createInfoWindow({ definition: infoWindow, element: polyline });
     }
@@ -298,17 +283,13 @@ var map_controller_default = class extends abstract_map_controller_default {
     polyline.setMap(null);
   }
   doCreateCircle({ definition }) {
-    const { "@id": _id, center, radius, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
+    const { "@id": _id, center, radius, infoWindow, bridgeOptions = {} } = definition;
     const circle = new _google.maps.Circle({
       center,
       radius,
       map: this.map,
-      ...rawOptions,
       ...bridgeOptions
     });
-    if (title) {
-      circle.set("title", title);
-    }
     if (infoWindow) {
       this.createInfoWindow({ definition: infoWindow, element: circle });
     }
@@ -320,16 +301,12 @@ var map_controller_default = class extends abstract_map_controller_default {
   doCreateRectangle({
     definition
   }) {
-    const { northEast, southWest, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
+    const { northEast, southWest, infoWindow, bridgeOptions = {} } = definition;
     const rectangle = new _google.maps.Rectangle({
       bounds: new _google.maps.LatLngBounds(southWest, northEast),
       map: this.map,
-      ...rawOptions,
       ...bridgeOptions
     });
-    if (title) {
-      rectangle.set("title", title);
-    }
     if (infoWindow) {
       this.createInfoWindow({ definition: infoWindow, element: rectangle });
     }
@@ -342,7 +319,7 @@ var map_controller_default = class extends abstract_map_controller_default {
     definition,
     element
   }) {
-    const { headerContent, content, opened, autoClose, rawOptions = {}, bridgeOptions = {} } = definition;
+    const { headerContent, content, opened, autoClose, bridgeOptions = {} } = definition;
     let position = null;
     if (element instanceof google.maps.Circle) {
       position = element.getCenter();
@@ -354,7 +331,6 @@ var map_controller_default = class extends abstract_map_controller_default {
       headerContent: this.createTextOrElement(headerContent),
       content: this.createTextOrElement(content),
       position,
-      ...rawOptions,
       ...bridgeOptions
     };
     const infoWindow = new _google.maps.InfoWindow(infoWindowOptions);
