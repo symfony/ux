@@ -102,12 +102,6 @@ var abstract_map_controller_default = class extends Controller {
     const eventAfter = `${type}:after-create`;
     return ({ definition }) => {
       this.dispatchEvent(eventBefore, { definition });
-      if (typeof definition.rawOptions !== "undefined") {
-        console.warn(
-          `[Symfony UX Map] The event "${eventBefore}" added a deprecated "rawOptions" property to the definition, it will be removed in a next major version, replace it with "bridgeOptions" instead.`,
-          definition
-        );
-      }
       const drawing = factory({ definition });
       this.dispatchEvent(eventAfter, { [type]: drawing, definition });
       draws.set(definition["@id"], drawing);

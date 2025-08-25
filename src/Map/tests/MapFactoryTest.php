@@ -50,14 +50,12 @@ class MapFactoryTest extends TestCase
         $this->assertCount(1, $polygons = $map->toArray()['polygons']);
         $this->assertEquals($array['polygons'][0]['points'], $polygons[0]['points']);
         $this->assertEquals($array['polygons'][0]['points'], $polygons[0]['points']);
-        $this->assertSame($array['polygons'][0]['title'], $polygons[0]['title']);
         $this->assertSame($array['polygons'][0]['infoWindow']['headerContent'], $polygons[0]['infoWindow']['headerContent']);
         $this->assertSame($array['polygons'][0]['infoWindow']['content'], $polygons[0]['infoWindow']['content']);
 
         $this->assertCount(1, $polylines = $map->toArray()['polylines']);
         $this->assertEquals($array['polylines'][0]['points'], $polylines[0]['points']);
         $this->assertEquals($array['polylines'][0]['points'], $polylines[0]['points']);
-        $this->assertSame($array['polylines'][0]['title'], $polylines[0]['title']);
         $this->assertSame($array['polylines'][0]['infoWindow']['headerContent'], $polylines[0]['infoWindow']['headerContent']);
         $this->assertSame($array['polylines'][0]['infoWindow']['content'], $polylines[0]['infoWindow']['content']);
     }
@@ -221,7 +219,6 @@ class MapFactoryTest extends TestCase
                             'lng' => 2.3522,
                         ],
                     ],
-                    'title' => null,
                     'infoWindow' => [
                         'headerContent' => 'Polygon 1',
                         'content' => 'Polygon 1',
@@ -244,7 +241,6 @@ class MapFactoryTest extends TestCase
                             'lng' => 2.3522,
                         ],
                     ],
-                    'title' => null,
                     'infoWindow' => [
                         'headerContent' => 'Polyline 1',
                         'content' => 'Polyline 1',

@@ -65,11 +65,6 @@ export type MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> = Wit
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     icon?: Icon;
     /**
-     * @deprecated since Symfony UX Map 2.27, use "bridgeOptions" instead.
-     * Raw options passed to the marker constructor, specific to the map provider (e.g.: `L.marker()` for Leaflet).
-     */
-    rawOptions?: BridgeMarkerOptions;
-    /**
      * Additional options passed to the Marker constructor.
      * These options are specific to the Map Bridge, and can be defined through `ux:map:marker:before-create` event.
      */
@@ -87,15 +82,6 @@ export type PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions> = W
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     points: Array<Point> | Array<Array<Point>>;
     /**
-     * @deprecated since Symfony UX Map 2.29, use "infoWindow" instead
-     */
-    title: string | null;
-    /**
-     * @deprecated since Symfony UX Map 2.27, use "bridgeOptions" instead.
-     * Raw options passed to the polygon constructor, specific to the map provider (e.g.: `L.polygon()` for Leaflet).
-     */
-    rawOptions?: BridgePolygonOptions;
-    /**
      * Additional options passed to the Polygon constructor.
      * These options are specific to the Map Bridge, and can be defined through `ux:map:polygon:before-create` event.
      */
@@ -112,15 +98,6 @@ export type PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions> = W
 export type PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions> = WithIdentifier<{
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     points: Array<Point>;
-    /**
-     * @deprecated since Symfony UX Map 2.29, use "infoWindow" instead
-     */
-    title: string | null;
-    /**
-     * @deprecated since Symfony UX Map 2.27, use "bridgeOptions" instead.
-     * Raw options passed to the polyline constructor, specific to the map provider (e.g.: `L.polyline()` for Leaflet).
-     */
-    rawOptions?: BridgePolylineOptions;
     /**
      * Additional options passed to the Polyline constructor.
      * These options are specific to the Map Bridge, and can be defined through `ux:map:polyline:before-create` event.
@@ -140,15 +117,6 @@ export type CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions> = Wit
     center: Point;
     radius: number;
     /**
-     * @deprecated since Symfony UX Map 2.29, use "infoWindow" instead
-     */
-    title: string | null;
-    /**
-     * @deprecated since Symfony UX Map 2.27, use "bridgeOptions" instead.
-     * Raw options passed to the circle constructor, specific to the map provider (e.g.: `L.circle()` for Leaflet).
-     */
-    rawOptions?: BridgeCircleOptions;
-    /**
      * Additional options passed to the Circle constructor.
      * These options are specific to the Map Bridge, and can be defined through `ux:map:circle:before-create` event.
      */
@@ -166,15 +134,6 @@ export type RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions>
     infoWindow?: Omit<InfoWindowDefinition<BridgeInfoWindowOptions>, 'position'>;
     southWest: Point;
     northEast: Point;
-    /**
-     * @deprecated since Symfony UX Map 2.29, use "infoWindow" instead
-     */
-    title: string | null;
-    /**
-     * @deprecated since Symfony UX Map 2.27, use "bridgeOptions" instead.
-     * Raw options passed to the rectangle constructor, specific to the map provider (e.g.: `L.rectangle()` for Leaflet).
-     */
-    rawOptions?: BridgeRectangleOptions;
     /**
      * Additional options passed to the Rectangle constructor.
      * These options are specific to the Map Bridge, and can be defined through `ux:map:rectangle:before-create` event.
@@ -195,11 +154,6 @@ export type InfoWindowDefinition<BridgeInfoWindowOptions> = {
     position: Point;
     opened: boolean;
     autoClose: boolean;
-    /**
-     * @deprecated since Symfony UX Map 2.27, use "bridgeOptions" instead.
-     * Raw options passed to the info window constructor, specific to the map provider (e.g.: `google.maps.InfoWindow()` for Google Maps).
-     */
-    rawOptions?: BridgeInfoWindowOptions;
     /**
      * Additional options passed to the InfoWindow constructor.
      * These options are specific to the Map Bridge, and can be defined through `ux:map:info-window:before-create` event.
@@ -465,13 +419,6 @@ export default abstract class<
         // 'Factory' could be instantiated with an arbitrary type which could be unrelated to '({ definition }: { definition: WithIdentifier<any>; }) => Draw'
         return ({ definition }: { definition: WithIdentifier<any> }) => {
             this.dispatchEvent(eventBefore, { definition });
-
-            if (typeof definition.rawOptions !== 'undefined') {
-                console.warn(
-                    `[Symfony UX Map] The event "${eventBefore}" added a deprecated "rawOptions" property to the definition, it will be removed in a next major version, replace it with "bridgeOptions" instead.`,
-                    definition
-                );
-            }
 
             const drawing = factory({ definition }) as Draw;
             this.dispatchEvent(eventAfter, { [type]: drawing, definition });

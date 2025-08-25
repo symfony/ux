@@ -102,12 +102,6 @@ var abstract_map_controller_default = class extends Controller {
     const eventAfter = `${type}:after-create`;
     return ({ definition }) => {
       this.dispatchEvent(eventBefore, { definition });
-      if (typeof definition.rawOptions !== "undefined") {
-        console.warn(
-          `[Symfony UX Map] The event "${eventBefore}" added a deprecated "rawOptions" property to the definition, it will be removed in a next major version, replace it with "bridgeOptions" instead.`,
-          definition
-        );
-      }
       const drawing = factory({ definition });
       this.dispatchEvent(eventAfter, { [type]: drawing, definition });
       draws.set(definition["@id"], drawing);
@@ -217,12 +211,11 @@ var map_controller_default = class extends abstract_map_controller_default {
     return map2;
   }
   doCreateMarker({ definition }) {
-    const { "@id": _id, position, title, infoWindow, icon: icon2, rawOptions = {}, bridgeOptions = {} } = definition;
+    const { "@id": _id, position, title, infoWindow, icon: icon2, bridgeOptions = {} } = definition;
     const marker2 = L.marker(position, {
       title: title || void 0,
-      ...rawOptions,
-      ...bridgeOptions,
-      riseOnHover: true
+      riseOnHover: true,
+      ...bridgeOptions
     }).addTo(this.map);
     if (infoWindow) {
       this.createInfoWindow({ definition: infoWindow, element: marker2 });
@@ -236,11 +229,8 @@ var map_controller_default = class extends abstract_map_controller_default {
     marker2.remove();
   }
   doCreatePolygon({ definition }) {
-    const { "@id": _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
-    const polygon2 = L.polygon(points, { ...rawOptions, ...bridgeOptions }).addTo(this.map);
-    if (title) {
-      polygon2.bindPopup(title);
-    }
+    const { "@id": _id, points, infoWindow, bridgeOptions = {} } = definition;
+    const polygon2 = L.polygon(points, { ...bridgeOptions }).addTo(this.map);
     if (infoWindow) {
       this.createInfoWindow({ definition: infoWindow, element: polygon2 });
     }
@@ -250,11 +240,8 @@ var map_controller_default = class extends abstract_map_controller_default {
     polygon2.remove();
   }
   doCreatePolyline({ definition }) {
-    const { "@id": _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
-    const polyline2 = L.polyline(points, { ...rawOptions, ...bridgeOptions }).addTo(this.map);
-    if (title) {
-      polyline2.bindPopup(title);
-    }
+    const { "@id": _id, points, infoWindow, bridgeOptions = {} } = definition;
+    const polyline2 = L.polyline(points, { ...bridgeOptions }).addTo(this.map);
     if (infoWindow) {
       this.createInfoWindow({ definition: infoWindow, element: polyline2 });
     }
@@ -264,11 +251,8 @@ var map_controller_default = class extends abstract_map_controller_default {
     polyline2.remove();
   }
   doCreateCircle({ definition }) {
-    const { "@id": _id, center, radius, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
-    const circle2 = L.circle(center, { radius, ...rawOptions, ...bridgeOptions }).addTo(this.map);
-    if (title) {
-      circle2.bindPopup(title);
-    }
+    const { "@id": _id, center, radius, infoWindow, bridgeOptions = {} } = definition;
+    const circle2 = L.circle(center, { radius, ...bridgeOptions }).addTo(this.map);
     if (infoWindow) {
       this.createInfoWindow({ definition: infoWindow, element: circle2 });
     }
@@ -278,17 +262,14 @@ var map_controller_default = class extends abstract_map_controller_default {
     circle2.remove();
   }
   doCreateRectangle({ definition }) {
-    const { "@id": _id, southWest, northEast, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
+    const { "@id": _id, southWest, northEast, infoWindow, bridgeOptions = {} } = definition;
     const rectangle2 = L.rectangle(
       [
         [southWest.lat, southWest.lng],
         [northEast.lat, northEast.lng]
       ],
-      { ...rawOptions, ...bridgeOptions }
+      { ...bridgeOptions }
     ).addTo(this.map);
-    if (title) {
-      rectangle2.bindPopup(title);
-    }
     if (infoWindow) {
       this.createInfoWindow({ definition: infoWindow, element: rectangle2 });
     }
@@ -301,8 +282,8 @@ var map_controller_default = class extends abstract_map_controller_default {
     definition,
     element
   }) {
-    const { headerContent, content, opened, autoClose, rawOptions = {}, bridgeOptions = {} } = definition;
-    element.bindPopup([headerContent, content].filter((x) => x).join("<br>"), { ...rawOptions, ...bridgeOptions });
+    const { headerContent, content, opened, autoClose, bridgeOptions = {} } = definition;
+    element.bindPopup([headerContent, content].filter((x) => x).join("<br>"), { ...bridgeOptions });
     if (opened) {
       if (autoClose) {
         this.closePopups();

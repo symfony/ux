@@ -140,13 +140,12 @@ export default class extends AbstractMapController<
     }
 
     protected doCreateMarker({ definition }: { definition: MarkerDefinition<MarkerOptions, PopupOptions> }): L.Marker {
-        const { '@id': _id, position, title, infoWindow, icon, rawOptions = {}, bridgeOptions = {} } = definition;
+        const { '@id': _id, position, title, infoWindow, icon, bridgeOptions = {} } = definition;
 
         const marker = L.marker(position, {
             title: title || undefined,
-            ...rawOptions,
-            ...bridgeOptions,
             riseOnHover: true,
+            ...bridgeOptions,
         }).addTo(this.map);
 
         if (infoWindow) {
@@ -165,16 +164,9 @@ export default class extends AbstractMapController<
     }
 
     protected doCreatePolygon({ definition }: { definition: PolygonDefinition<PolygonOptions, PopupOptions> }): L.Polygon {
-        const { '@id': _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
+        const { '@id': _id, points, infoWindow, bridgeOptions = {} } = definition;
 
-        const polygon = L.polygon(points, { ...rawOptions, ...bridgeOptions }).addTo(this.map);
-
-        /**
-         * @deprecated since Symfony UX Map 2.29
-         */
-        if (title) {
-            polygon.bindPopup(title);
-        }
+        const polygon = L.polygon(points, { ...bridgeOptions }).addTo(this.map);
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: polygon });
@@ -188,16 +180,9 @@ export default class extends AbstractMapController<
     }
 
     protected doCreatePolyline({ definition }: { definition: PolylineDefinition<PolylineOptions, PopupOptions> }): L.Polyline {
-        const { '@id': _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
+        const { '@id': _id, points, infoWindow, bridgeOptions = {} } = definition;
 
-        const polyline = L.polyline(points, { ...rawOptions, ...bridgeOptions }).addTo(this.map);
-
-        /**
-         * @deprecated since Symfony UX Map 2.29
-         */
-        if (title) {
-            polyline.bindPopup(title);
-        }
+        const polyline = L.polyline(points, { ...bridgeOptions }).addTo(this.map);
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: polyline });
@@ -211,16 +196,9 @@ export default class extends AbstractMapController<
     }
 
     protected doCreateCircle({ definition }: { definition: CircleDefinition<CircleOptions, PopupOptions> }): L.Circle {
-        const { '@id': _id, center, radius, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
+        const { '@id': _id, center, radius, infoWindow, bridgeOptions = {} } = definition;
 
-        const circle = L.circle(center, { radius, ...rawOptions, ...bridgeOptions }).addTo(this.map);
-
-        /**
-         * @deprecated since Symfony UX Map 2.29
-         */
-        if (title) {
-            circle.bindPopup(title);
-        }
+        const circle = L.circle(center, { radius, ...bridgeOptions }).addTo(this.map);
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: circle });
@@ -234,22 +212,15 @@ export default class extends AbstractMapController<
     }
 
     protected doCreateRectangle({ definition }: { definition: RectangleDefinition<RectangleOptions, PopupOptions> }): L.Rectangle {
-        const { '@id': _id, southWest, northEast, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
+        const { '@id': _id, southWest, northEast, infoWindow, bridgeOptions = {} } = definition;
 
         const rectangle = L.rectangle(
             [
                 [southWest.lat, southWest.lng],
                 [northEast.lat, northEast.lng],
             ],
-            { ...rawOptions, ...bridgeOptions }
+            { ...bridgeOptions }
         ).addTo(this.map);
-
-        /**
-         * @deprecated since Symfony UX Map 2.29
-         */
-        if (title) {
-            rectangle.bindPopup(title);
-        }
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: rectangle });
@@ -269,9 +240,9 @@ export default class extends AbstractMapController<
         definition: Omit<InfoWindowDefinition<PopupOptions>, 'position'>;
         element: L.Marker | L.Polygon | L.Polyline | L.Circle | L.Rectangle;
     }): L.Popup {
-        const { headerContent, content, opened, autoClose, rawOptions = {}, bridgeOptions = {} } = definition;
+        const { headerContent, content, opened, autoClose, bridgeOptions = {} } = definition;
 
-        element.bindPopup([headerContent, content].filter((x) => x).join('<br>'), { ...rawOptions, ...bridgeOptions });
+        element.bindPopup([headerContent, content].filter((x) => x).join('<br>'), { ...bridgeOptions });
 
         if (opened) {
             if (autoClose) {
