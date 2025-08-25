@@ -4,6 +4,13 @@
 
 -   Minimum required Symfony version is now 6.4
 -   Minimum required PHP version is now 8.2
+-   The configuration `twig_component.defaults` could not be nullable anymore
+-   Remove method `PreCreateForRenderEvent::getProps()` in favor of `PreCreateForRenderEvent::getInputProps()`
+-   Remove `cva` Twig function in favor of [`html_cva` Twig function from `twig/html-extra`](https://twig.symfony.com/html_cva)
+-   Passing `null` as an attribute value when using `ComponentAttributes` (or `attributes` Twig variable) will now throw an exception, use `remove()` instead
+-   Remove method `ComponentAttributes::add()`,  use `{{ attributes.defaults(stimulus_controller('...')) }}` instead
+-   The `ComponentTemplateFinder` does not accept `Twig\Environment` as first argument anymore, pass a `LoaderInterface` instead
+-   The `ComponentTemplateFinder` does not accept a nullable `directory` argument anymore, pass a string instead
 
 ## 2.30
 
