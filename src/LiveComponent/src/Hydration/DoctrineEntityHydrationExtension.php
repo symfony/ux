@@ -102,18 +102,13 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
 
             foreach ($this->managerRegistries as $registry) {
                 foreach ($registry->getManagers() as $om) {
-                    // the getClassMetaData can indeed throw an exception
-                    // so, we
+
                     try {
                         if (null !== $om->getClassMetadata($class)) {
                             return self::ensureManagedObject($om, $class);
                         }
                     } catch (MappingException $e) {
-                        // I did not find a nice way to check if it is because the class is really unknown
-                        // It is good to check for a specific exception ?
-                        // eg: \Doctrine\Persistence\Mapping\MappingException
-                        // @see \Doctrine\Persistence\Mapping\AbstractClassMetadataFactory::getMetadataFor
-                        // throw $e;
+                        // Catching Excpetion in case of the $class does not match a valid classname or a valid interface name
                     }
                 }
             }
