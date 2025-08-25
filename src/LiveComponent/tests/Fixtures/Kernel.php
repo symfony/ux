@@ -173,7 +173,8 @@ final class Kernel extends BaseKernel
                     ],
                 ],
                 'resolve_target_entities' => [
-                    AliasedEntityInterface::class => AliasedEntity::class],
+                    AliasedEntityInterface::class => AliasedEntity::class,
+                ],
             ],
         ];
 
