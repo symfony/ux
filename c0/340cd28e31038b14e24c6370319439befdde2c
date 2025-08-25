@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-08-25T06:10:41Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/remove-map-deprecations/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/remove-map-deprecations/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.96 kB</code>
+                    / <code>1.51 kB</code>
+                </td><td>
+                    <code>7.63 kB</code><sup>-4% 📉</sup>
+                    / <code>1.48 kB</code><sup>-2% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/remove-map-deprecations/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>5.38 kB</code>
+                    / <code>1.47 kB</code>
+                </td><td>
+                    <code>5.06 kB</code><sup>-6% 📉</sup>
+                    / <code>1.32 kB</code><sup>-10% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/remove-map-deprecations/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/remove-map-deprecations/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>13.49 kB</code>
+                    / <code>3.18 kB</code>
+                </td><td>
+                    <code>12.7 kB</code><sup>-6% 📉</sup>
+                    / <code>3 kB</code><sup>-6% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/remove-map-deprecations/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/remove-map-deprecations/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>13.27 kB</code>
+                    / <code>3.43 kB</code>
+                </td><td>
+                    <code>12.52 kB</code><sup>-6% 📉</sup>
+                    / <code>3.24 kB</code><sup>-5% 📉</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
