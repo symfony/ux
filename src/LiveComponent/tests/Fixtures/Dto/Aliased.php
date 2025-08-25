@@ -4,6 +4,5 @@ namespace Symfony\UX\LiveComponent\Tests\Fixtures\Dto;
 
 class Aliased
 {
-//    public string $address;
     public string $name;
 }
