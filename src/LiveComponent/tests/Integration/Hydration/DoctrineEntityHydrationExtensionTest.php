@@ -54,7 +54,7 @@ class DoctrineEntityHydrationExtensionTest extends KernelTestCase
         self::assertSame($foreignKeyIdEntity, $extension->hydrate($dehydrated, ForeignKeyIdEntity::class));
     }
 
-    public function testSupportInterface(): void
+    public function testSupportInterface()
     {
         /** @var DoctrineEntityHydrationExtension $extension */
         $extension = self::getContainer()->get('ux.live_component.doctrine_entity_hydration_extension');
