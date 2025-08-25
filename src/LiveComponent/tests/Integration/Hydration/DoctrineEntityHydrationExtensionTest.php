@@ -64,7 +64,7 @@ class DoctrineEntityHydrationExtensionTest extends KernelTestCase
         self::assertFalse($extension->supports('UnknownClass'), 'UnknownClass should not be supported');
     }
 
-    public function testHydrationFromInterface(): void
+    public function testHydrationFromInterface()
     {
         /** @var DoctrineEntityHydrationExtension $extension */
         $extension = self::getContainer()->get('ux.live_component.doctrine_entity_hydration_extension');
