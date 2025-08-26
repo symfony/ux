@@ -13,6 +13,7 @@ namespace Symfony\UX\Map\Test;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Spatie\Snapshots\Drivers\TextDriver;
 use Spatie\Snapshots\MatchesSnapshots;
 use Symfony\UX\Map\Elements;
 use Symfony\UX\Map\Map;
@@ -40,7 +41,7 @@ abstract class RendererTestCase extends TestCase
         $rendered = $this->prettify($rendered);
 
         $this->assertElementsHaveComputedId($rendered);
-        $this->assertMatchesSnapshot($rendered);
+        $this->assertMatchesSnapshot($rendered, new TextDriver());
     }
 
     private function prettify(string $html): string

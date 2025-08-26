@@ -35,7 +35,17 @@ class TwigAppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) {
-            $container->loadFromExtension('framework', ['secret' => '$ecret', 'test' => true, 'http_method_override' => false]);
+            $container->loadFromExtension('framework', [
+                'secret' => '$ecret',
+                'test' => true,
+                'http_method_override' => false,
+                'php_errors' => [
+                    'log' => true,
+                ],
+                ...(self::VERSION_ID >= 60200 ? [
+                    'handle_all_throwables' => true,
+                ] : []),
+            ]);
             $container->loadFromExtension('twig', ['default_path' => __DIR__.'/templates', 'strict_variables' => true, 'exception_controller' => null]);
 
             $container->setAlias('test.twig', 'twig')->setPublic(true);
