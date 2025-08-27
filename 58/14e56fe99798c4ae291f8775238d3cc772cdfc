@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-08-23T07:17:25Z
+
+Hi,
+
+Thanks for working on this, could you add a test case and rebase your PR on latest 2.x to make the CI green? Thanks!
+
+---------------------------------------------------------------------------
+
+by norkunas at 2025-08-25T06:02:28Z
+
+> Hi,
+>
+> Thanks for working on this, could you add a test case and rebase your PR on latest 2.x to make the CI green? Thanks!
+
+Testcase added
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-08-27T15:19:40Z
+
+Thanks for providing a test, I was finally able to reproduce your issue and observe that indeed a small BC was introduced while working on https://github.com/symfony/ux/commit/de302ef36c4f67f1c2e1b378aa31a7b2e41ad5a5
