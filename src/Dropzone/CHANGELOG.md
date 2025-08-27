@@ -2,7 +2,7 @@
 
 ## 2.30
 
-- Ensure compatibility with PHP 8.5
+-  Ensure compatibility with PHP 8.5
 
 ## 2.29.0
 
