@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\Metadata;
 
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\Type as LegacyType;
+use Symfony\Component\TypeInfo\Exception\UnsupportedException;
 use Symfony\Component\TypeInfo\Type;
 use Symfony\Component\TypeInfo\Type\CollectionType;
 use Symfony\Component\TypeInfo\TypeResolver\TypeResolver;
@@ -130,8 +131,12 @@ class LiveComponentMetadataFactory implements ResetInterface
                 // Otherwise, we can use the TypeResolver to convert the ReflectionType to a Type
                 $type = $this->typeResolver->resolve($reflectionType);
             } else {
-                // If no type is available, we default to mixed
-                $type = Type::mixed();
+                try {
+                    $type = $this->typeResolver->resolve($property);
+                } catch (UnsupportedException) {
+                    // If no type is available, we default to mixed
+                    $type = Type::mixed();
+                }
             }
 
             return new LivePropMetadata($property->getName(), $liveProp, $type);
