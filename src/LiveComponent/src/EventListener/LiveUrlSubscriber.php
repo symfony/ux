@@ -14,9 +14,10 @@ namespace Symfony\UX\LiveComponent\EventListener;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
-use Symfony\UX\LiveComponent\Util\UrlFactory;
 use Symfony\UX\TwigComponent\MountedComponent;
 
 /**
@@ -29,35 +30,28 @@ class LiveUrlSubscriber implements EventSubscriberInterface
     public function __construct(
         private LiveComponentMetadataFactory $metadataFactory,
         private LiveComponentHydrator $liveComponentHydrator,
-        private UrlFactory $urlFactory,
+        private RouterInterface $router,
     ) {
     }
 
     public function onKernelResponse(ResponseEvent $event): void
     {
-        if (!$event->isMainRequest()) {
-            return;
-        }
-
         $request = $event->getRequest();
-        if (!$request->attributes->has('_live_component')) {
+        if (!$event->isMainRequest()
+            || !$event->getResponse()->isSuccessful()
+            || !$request->attributes->has('_live_component')
+            || !$request->attributes->has('_mounted_component')
+            || !($previousLiveUrl = $request->headers->get(self::URL_HEADER))
+        ) {
             return;
         }
 
-        if (!$request->attributes->has('_mounted_component')) {
-            return;
-        }
+        /** @var MountedComponent $mounted */
+        $mounted = $request->attributes->get('_mounted_component');
 
-        $newLiveUrl = null;
-        if ($previousLiveUrl = $request->headers->get(self::URL_HEADER)) {
-            $mounted = $request->attributes->get('_mounted_component');
-            $liveProps = $this->getLiveProps($mounted);
-            $newLiveUrl = $this->urlFactory->createFromPreviousAndProps($previousLiveUrl, $liveProps['path'], $liveProps['query']);
-        }
+        [$pathProps, $queryProps] = $this->extractUrlLiveProps($mounted);
 
-        if ($newLiveUrl) {
-            $event->getResponse()->headers->set(self::URL_HEADER, $newLiveUrl);
-        }
+        $event->getResponse()->headers->set(self::URL_HEADER, $this->generateNewLiveUrl($previousLiveUrl, $pathProps, $queryProps));
     }
 
     public static function getSubscribedEvents(): array
@@ -68,34 +62,73 @@ class LiveUrlSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @return array{
-     *     path: array<string, mixed>,
-     *     query: array<string, mixed>
-     * }
+     * @return array{ array<string, mixed>, array<string, mixed> }
      */
-    private function getLiveProps(MountedComponent $mounted): array
+    private function extractUrlLiveProps(MountedComponent $mounted): array
     {
-        $metadata = $this->metadataFactory->getMetadata($mounted->getName());
+        $pathProps = $queryProps = [];
 
-        $dehydratedProps = $this->liveComponentHydrator->dehydrate(
-            $mounted->getComponent(),
-            $mounted->getAttributes(),
-            $metadata
-        );
+        $mountedMetadata = $this->metadataFactory->getMetadata($mounted->getName());
 
-        $values = $dehydratedProps->getProps();
+        if ([] !== $urlMappings = $mountedMetadata->getAllUrlMappings($mounted->getComponent())) {
+            $dehydratedProps = $this->liveComponentHydrator->dehydrate($mounted->getComponent(), $mounted->getAttributes(), $mountedMetadata);
+            $props = $dehydratedProps->getProps();
 
-        $urlLiveProps = [
-            'path' => [],
-            'query' => [],
-        ];
-
-        foreach ($metadata->getAllUrlMappings($mounted->getComponent()) as $name => $urlMapping) {
-            if (isset($values[$name]) && $urlMapping) {
-                $urlLiveProps[$urlMapping->mapPath ? 'path' : 'query'][$urlMapping->as ?? $name] = $values[$name];
+            foreach ($urlMappings as $name => $urlMapping) {
+                if (\array_key_exists($name, $props)) {
+                    if ($urlMapping->mapPath) {
+                        $pathProps[$urlMapping->as ?? $name] = $props[$name];
+                    } else {
+                        $queryProps[$urlMapping->as ?? $name] = $props[$name];
+                    }
+                }
             }
         }
 
-        return $urlLiveProps;
+        return [$pathProps, $queryProps];
+    }
+
+    private function generateNewLiveUrl(string $previousUrl, array $pathProps, array $queryProps): string
+    {
+        $previousUrlParsed = parse_url($previousUrl);
+        $newUrl = $previousUrlParsed['path'];
+        $newQueryString = $previousUrlParsed['query'] ?? '';
+
+        if ([] !== $pathProps) {
+            $context = $this->router->getContext();
+            try {
+                // Re-create a context for the URL rendering the current LiveComponent
+                $tmpContext = clone $context;
+                $tmpContext->setMethod('GET');
+                $this->router->setContext($tmpContext);
+
+                $routeMatched = $this->router->match($previousUrlParsed['path']);
+                $routeParams = [];
+                foreach ($routeMatched as $k => $v) {
+                    if ('_route' === $k || '_controller' === $k) {
+                        continue;
+                    }
+                    $routeParams[$k] = \array_key_exists($k, $pathProps) ? $pathProps[$k] : $v;
+                }
+
+                $newUrl = $this->router->generate($routeMatched['_route'], $routeParams);
+            } catch (ResourceNotFoundException) {
+                // reuse the previous URL path
+            } finally {
+                $this->router->setContext($context);
+            }
+        }
+
+        if ([] !== $queryProps) {
+            $previousQueryString = [];
+
+            if (isset($previousUrlParsed['query'])) {
+                parse_str($previousUrlParsed['query'], $previousQueryString);
+            }
+
+            $newQueryString = http_build_query([...$previousQueryString, ...$queryProps]);
+        }
+
+        return $newUrl.($newQueryString ? '?'.$newQueryString : '');
     }
 }

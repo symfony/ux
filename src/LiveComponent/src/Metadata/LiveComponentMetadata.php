@@ -69,9 +69,10 @@ class LiveComponentMetadata
     /**
      * @return UrlMapping[]
      */
-    public function getAllUrlMappings(object $component): iterable
+    public function getAllUrlMappings(object $component): array
     {
         $urlMappings = [];
+
         foreach ($this->getAllLivePropsMetadata($component) as $livePropMetadata) {
             if ($livePropMetadata->urlMapping()) {
                 $urlMappings[$livePropMetadata->getName()] = $livePropMetadata->urlMapping();
