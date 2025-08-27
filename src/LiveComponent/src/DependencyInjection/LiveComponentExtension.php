@@ -53,7 +53,6 @@ use Symfony\UX\LiveComponent\Util\LiveComponentStack;
 use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
 use Symfony\UX\LiveComponent\Util\RequestPropsExtractor;
 use Symfony\UX\LiveComponent\Util\TwigAttributeHelperFactory;
-use Symfony\UX\LiveComponent\Util\UrlFactory;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 
@@ -142,7 +141,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->setArguments([
                 new Reference('ux.live_component.metadata_factory'),
                 new Reference('ux.live_component.component_hydrator'),
-                new Reference('ux.live_component.url_factory'),
+                new Reference('router'),
             ])
             ->addTag('kernel.event_subscriber')
         ;
@@ -212,9 +211,6 @@ final class LiveComponentExtension extends Extension implements PrependExtension
         ;
 
         $container->register('ux.live_component.attribute_helper_factory', TwigAttributeHelperFactory::class);
-
-        $container->register('ux.live_component.url_factory', UrlFactory::class)
-            ->setArguments([new Reference('router')]);
 
         $container->register('ux.live_component.live_controller_attributes_creator', LiveControllerAttributesCreator::class)
             ->setArguments([

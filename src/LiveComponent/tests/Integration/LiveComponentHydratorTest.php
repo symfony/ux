@@ -25,6 +25,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component3;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\BlogPostWithSerializationContext;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\CustomerDetails;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\DummyUsingPhpDoc;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Embeddable2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\HoldsArrayOfDtos;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Money;
@@ -38,6 +39,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\ProductFixtureEntity;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\User;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\ColorEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\EmptyStringEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\IntEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\StringEnum;
@@ -1518,6 +1520,22 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->assertDehydratesTo(['id' => '01AN4Z07BY79KA1307SR9X4MV3'])
                 ->assertObjectAfterHydration(function (object $object) {
                     self::assertEquals(new Ulid('01AN4Z07BY79KA1307SR9X4MV3'), $object->id);
+                })
+            ;
+        }];
+
+        yield 'Dehydrates correctly with phpdoc typehint' => [function () {
+            $input = new DummyUsingPhpDoc();
+            $input->color = ColorEnum::Green;
+
+            return HydrationTest::create(new class {
+                #[LiveProp]
+                public DummyUsingPhpDoc $input;
+            })
+                ->mountWith(['input' => $input])
+                ->assertDehydratesTo(['input' => ['color' => 'green']])
+                ->assertObjectAfterHydration(function (object $object) {
+                    self::assertEquals(ColorEnum::Green, $object->input->color);
                 })
             ;
         }];

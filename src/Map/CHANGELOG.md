@@ -2,15 +2,15 @@
 
 ## 3.0.0
 
--   Minimum required Symfony version is now 6.4
--   Minimum required PHP version is now 8.2
--   Remove `render_map()` Twig function, use `ux_map()` instead
--   Remove option `title` from `Polygon`, `Polyline`, `Rectangle` and `Circle`, use `infoWindow` instead
--    Remove property `rawOptions` from `ux:map:*:before-create` events, use `bridgeOptions` instead.
+-  Minimum required Symfony version is now 6.4
+-  Minimum required PHP version is now 8.2
+-  Remove `render_map()` Twig function, use `ux_map()` instead
+-  Remove option `title` from `Polygon`, `Polyline`, `Rectangle` and `Circle`, use `infoWindow` instead
+-  Remove property `rawOptions` from `ux:map:*:before-create` events, use `bridgeOptions` instead.
 
 ## 2.30
 
-- Ensure compatibility with PHP 8.5
+-  Ensure compatibility with PHP 8.5
 -  Deprecate option `title` from `Polygon`, `Polyline`, `Rectangle` and `Circle` in favor of `infoWindow`
 
 ## 2.29.0

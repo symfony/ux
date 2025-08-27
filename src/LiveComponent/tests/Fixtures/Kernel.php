@@ -103,10 +103,15 @@ final class Kernel extends BaseKernel
             'validation' => [
                 'email_validation_mode' => 'html5',
             ],
+            ...(self::VERSION_ID >= 60200 ? [
+                'handle_all_throwables' => true,
+            ] : []),
+            ...(self::VERSION_ID >= 70300 ? [
+                'property_info' => ['with_constructor_extractor' => false],
+            ] : []),
         ];
 
         if (self::VERSION_ID >= 60400) {
-            $frameworkConfig['handle_all_throwables'] = true;
             $frameworkConfig['session'] = [
                 'storage_factory_id' => 'session.storage.factory.mock_file',
                 'cookie_secure' => 'auto',
@@ -143,7 +148,14 @@ final class Kernel extends BaseKernel
             'anonymous_template_directory' => 'components/',
         ]);
 
-        $c->extension('zenstruck_foundry', []);
+        $foundryConfig = [];
+        if (null !== $doctrineBundleVersion = InstalledVersions::getVersion('zenstruck/foundry')) {
+            if (version_compare($doctrineBundleVersion, '2.5.0', '>=')) {
+                $doctrineConfig['persistence']['flush_once'] = true;
+            }
+        }
+
+        $c->extension('zenstruck_foundry', $foundryConfig);
 
         $doctrineConfig = [
             'dbal' => [
@@ -211,7 +223,9 @@ final class Kernel extends BaseKernel
         $routes->add('homepage', '/')->controller('kernel::index');
         $routes->add('alternate_live_route', '/alt/{_live_component}/{_live_action}')->defaults(['_live_action' => 'get']);
         $routes->add('localized_route', '/locale/{_locale}/{_live_component}/{_live_action}')->defaults(['_live_action' => 'get']);
-        $routes->add('route_with_prop', '/route_with_prop/{pathProp}')->methods(['GET']);
-        $routes->add('route_with_alias_prop', '/route_with_alias_prop/{pathAlias}');
+        $routes->add('route_with_prop', '/route_with_prop/{pathProp}')->methods(['GET'])->requirements(['pathProp' => '\w+']);
+        $routes->add('route_with_alias_prop', '/route_with_alias_prop/{pathAlias}')->requirements(['pathAlias' => '\w+']);
+        $routes->add('route_with_two_props', '/route_with_two_props/{pathProp}/{pathAlias}')->methods(['GET'])->requirements(['pathProp' => '\w+', 'pathAlias' => '\w+']);
+        $routes->add('route_with_two_path_params_but_one_prop', '/route_with_two_path_params_but_one_prop/{pathProp}/{id}')->methods(['GET'])->requirements(['pathProp' => '\w+', 'id' => '\d+']);
     }
 }
