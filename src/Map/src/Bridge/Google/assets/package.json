@@ -2,7 +2,7 @@
     "name": "@symfony/ux-google-map",
     "description": "GoogleMaps bridge for Symfony UX Map, integrate interactive maps in your Symfony applications",
     "license": "MIT",
-    "version": "2.29.2",
+    "version": "2.30.0",
     "keywords": [
         "symfony-ux",
         "google-maps",
