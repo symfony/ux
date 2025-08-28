@@ -118,6 +118,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
                 'propValue' => 'bar',
             ],
         ];
+
         yield 'Changes in prop, with two path params but only one prop' => [
             'previousLocation' => '/route_with_two_path_params_but_one_prop/foo/30',
             'expectedLocation' => '/route_with_two_path_params_but_one_prop/bar/30',
@@ -137,6 +138,42 @@ class LiveUrlSubscriberTest extends KernelTestCase
             'args' => [
                 'propName' => 'boundPropWithAlias',
                 'propValue' => 'search term',
+            ],
+        ];
+
+        yield 'Change in query (array)' => [
+            'previousLocation' => '/route_with_prop/foo',
+            'expectedLocation' => '/route_with_prop/foo?arrayProp%5B0%5D=hello&arrayProp%5B1%5D=world',
+            'initialComponentData' => [
+                'pathProp' => 'foo',
+            ],
+            'args' => [
+                'propName' => 'arrayProp',
+                'propValue' => ['hello', 'world'],
+            ],
+        ];
+
+        yield 'Change in query (array & alias)' => [
+            'previousLocation' => '/route_with_prop/foo',
+            'expectedLocation' => '/route_with_prop/foo?arr_alias%5B0%5D=hello&arr_alias%5B1%5D=world',
+            'initialComponentData' => [
+                'pathProp' => 'foo',
+            ],
+            'args' => [
+                'propName' => 'arrayPropAlias',
+                'propValue' => ['hello', 'world'],
+            ],
+        ];
+
+        yield 'Change in query (array & field name)' => [
+            'previousLocation' => '/route_with_prop/foo',
+            'expectedLocation' => '/route_with_prop/foo?arr_field_name%5B0%5D=hello&arr_field_name%5B1%5D=world',
+            'initialComponentData' => [
+                'pathProp' => 'foo',
+            ],
+            'args' => [
+                'propName' => 'arrayPropFieldName',
+                'propValue' => ['hello', 'world'],
             ],
         ];
 

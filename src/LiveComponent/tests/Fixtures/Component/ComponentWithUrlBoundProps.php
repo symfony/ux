@@ -33,6 +33,12 @@ class ComponentWithUrlBoundProps
     #[LiveProp(url: true)]
     public array $arrayProp = [];
 
+    #[LiveProp(url: new UrlMapping(as: 'arr_alias'))]
+    public array $arrayPropAlias = [];
+
+    #[LiveProp(writable: true, fieldName: 'getArrayFieldName()', url: true)]
+    public array $arrayPropFieldName = [];
+
     #[LiveProp]
     public ?string $unboundProp = null;
 
@@ -112,5 +118,10 @@ class ComponentWithUrlBoundProps
         }
 
         $this->{$propName} = $propValue;
+    }
+
+    public function getArrayFieldName(): string
+    {
+        return 'arr_field_name';
     }
 }
