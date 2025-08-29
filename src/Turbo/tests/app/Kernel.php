@@ -106,6 +106,10 @@ class Kernel extends BaseKernel
             if (version_compare($doctrineBundleVersion, '2.9.0', '>=')) {
                 $doctrineConfig['orm']['report_fields_where_declared'] = true;
             }
+
+            if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=')) {
+                $doctrineConfig['orm']['enable_native_lazy_objects'] = true;
+            }
         }
 
         $container
