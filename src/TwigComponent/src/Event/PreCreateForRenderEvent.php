@@ -34,14 +34,6 @@ final class PreCreateForRenderEvent extends Event
     }
 
     /**
-     * @deprecated since Symfony UX 2.8, use getInputProps() instead.
-     */
-    public function getProps(): array
-    {
-        return $this->inputProps;
-    }
-
-    /**
      * @return array the array of "input" data passed to originally create this component
      */
     public function getInputProps(): array

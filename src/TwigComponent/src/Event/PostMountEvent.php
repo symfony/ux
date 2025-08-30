@@ -19,31 +19,12 @@ use Symfony\UX\TwigComponent\ComponentMetadata;
  */
 final class PostMountEvent extends Event
 {
-    private ?ComponentMetadata $metadata;
-    private array $extraMetadata;
-
     public function __construct(
         private object $component,
         private array $data,
-        array|ComponentMetadata $metadata = [],
-        $extraMetadata = [],
+        private ?ComponentMetadata $metadata = null,
+        private array $extraMetadata = [],
     ) {
-        if (\is_array($metadata)) {
-            trigger_deprecation('symfony/ux-twig-component', '2.13', 'In TwigComponent 3.0, the third argument of "%s()" will be a "%s" object and the "$extraMetadata" array should be passed as the fourth argument.', __METHOD__, ComponentMetadata::class);
-
-            $this->metadata = null;
-            $this->extraMetadata = $metadata;
-        } else {
-            if (null !== $metadata && !$metadata instanceof ComponentMetadata) {
-                throw new \InvalidArgumentException(\sprintf('Expecting "$metadata" to be null or an instance of "%s", given: "%s."', ComponentMetadata::class, get_debug_type($metadata)));
-            }
-            if (!\is_array($extraMetadata)) {
-                throw new \InvalidArgumentException(\sprintf('Expecting "$extraMetadata" to be array, given: "%s".', get_debug_type($extraMetadata)));
-            }
-
-            $this->metadata = $metadata;
-            $this->extraMetadata = $extraMetadata;
-        }
     }
 
     public function getComponent(): object

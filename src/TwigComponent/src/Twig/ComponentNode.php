@@ -15,7 +15,6 @@ use Symfony\UX\TwigComponent\BlockStack;
 use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Environment;
-use Twig\Extension\CoreExtension;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Node;
 use Twig\Node\NodeOutputInterface;
@@ -51,15 +50,7 @@ final class ComponentNode extends Node implements NodeOutputInterface
 
         $useYield = method_exists(Environment::class, 'useYield') && $compiler->getEnvironment()->useYield();
 
-        // since twig/twig 3.9.0: Using the internal "twig_to_array" function is deprecated.
-        if (method_exists(CoreExtension::class, 'toArray')) {
-            $twig_to_array = 'Twig\Extension\CoreExtension::toArray';
-        } else {
-            $twig_to_array = 'twig_to_array';
-        }
-
         $componentRuntime = $compiler->getVarName();
-
         $compiler
                ->write(\sprintf('$%s = $this->env->getRuntime(', $componentRuntime))
                ->string(ComponentRuntime::class)
@@ -75,7 +66,7 @@ final class ComponentNode extends Node implements NodeOutputInterface
             ->write(\sprintf('$preRendered = $%s->preRender(', $componentRuntime))
             ->string($this->getAttribute('component'))
             ->raw(', ')
-            ->raw($twig_to_array)
+            ->raw('Twig\Extension\CoreExtension::toArray')
             ->raw('(');
         $this->writeProps($compiler)
             ->raw(')')
@@ -107,7 +98,7 @@ final class ComponentNode extends Node implements NodeOutputInterface
             ->write(\sprintf('$preRenderEvent = $%s->startEmbedComponent(', $componentRuntime))
             ->string($this->getAttribute('component'))
             ->raw(', ')
-            ->raw($twig_to_array)
+            ->raw('Twig\Extension\CoreExtension::toArray')
             ->raw('(');
         $this->writeProps($compiler)
             ->raw('), ')

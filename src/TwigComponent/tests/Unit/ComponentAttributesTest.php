@@ -12,10 +12,8 @@
 namespace Symfony\UX\TwigComponent\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Symfony\UX\TwigComponent\ComponentAttributes;
-use Symfony\WebpackEncoreBundle\Dto\AbstractStimulusDto;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Runtime\EscaperRuntime;
@@ -25,8 +23,6 @@ use Twig\Runtime\EscaperRuntime;
  */
 final class ComponentAttributesTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testCanConvertToString()
     {
         $attributes = new ComponentAttributes([
@@ -72,69 +68,6 @@ final class ComponentAttributesTest extends TestCase
         $attributes = new ComponentAttributes(['class' => 'foo', 'style' => 'color:black;'], new EscaperRuntime());
 
         $this->assertSame(['class' => 'foo'], $attributes->without('style')->all());
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testCanAddStimulusController()
-    {
-        if (!class_exists(AbstractStimulusDto::class)) {
-            $this->markTestSkipped('AbstractStimulusDto class does not exist, skipping test.');
-        }
-
-        $attributes = new ComponentAttributes([
-            'class' => 'foo',
-            'data-controller' => 'live',
-            'data-live-data-value' => '{}',
-        ], new EscaperRuntime());
-
-        $controllerDto = $this->createMock(AbstractStimulusDto::class);
-        $controllerDto->expects(self::once())
-            ->method('toArray')
-            ->willReturn([
-                'data-controller' => 'foo bar',
-                'data-foo-name-value' => 'ryan',
-            ]);
-
-        $attributes = $attributes->add($controllerDto);
-
-        $this->assertEquals([
-            'class' => 'foo',
-            'data-controller' => 'live foo bar',
-            'data-live-data-value' => '{}',
-            'data-foo-name-value' => 'ryan',
-        ], $attributes->all());
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testCanAddStimulusControllerIfNoneAlreadyPresent()
-    {
-        if (!class_exists(AbstractStimulusDto::class)) {
-            $this->markTestSkipped('AbstractStimulusDto class does not exist, skipping test.');
-        }
-
-        $attributes = new ComponentAttributes([
-            'class' => 'foo',
-        ], new EscaperRuntime());
-
-        $controllerDto = $this->createMock(AbstractStimulusDto::class);
-        $controllerDto->expects(self::once())
-            ->method('toArray')
-            ->willReturn([
-                'data-controller' => 'foo bar',
-                'data-foo-name-value' => 'ryan',
-            ]);
-
-        $attributes = $attributes->add($controllerDto);
-
-        $this->assertEquals([
-            'class' => 'foo',
-            'data-controller' => 'foo bar',
-            'data-foo-name-value' => 'ryan',
-        ], $attributes->all());
     }
 
     public function testCanAddStimulusControllerViaStimulusAttributes()
@@ -189,17 +122,6 @@ final class ComponentAttributesTest extends TestCase
 
         $this->assertSame(['disabled' => false], $attributes->all());
         $this->assertSame('', (string) $attributes);
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testNullBehaviour()
-    {
-        $attributes = new ComponentAttributes(['disabled' => null], new EscaperRuntime());
-
-        $this->assertSame(['disabled' => null], $attributes->all());
-        $this->assertSame(' disabled', (string) $attributes);
     }
 
     public function testIsTraversableAndCountable()
