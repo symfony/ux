@@ -49,28 +49,7 @@ final class AsLiveComponent extends AsTwigComponent
         string|bool $route = 'ux_live_component',
         string $method = 'post',
         int|string $urlReferenceType = UrlGeneratorInterface::ABSOLUTE_PATH,
-        public bool|int $csrf = true, // @deprecated
     ) {
-        if (8 < \func_num_args() || \is_bool($route)) {
-            trigger_deprecation('symfony/ux-live-component', '2.21', 'Argument "$csrf" of "#[%s]" has no effect anymore and is deprecated.', static::class);
-        }
-        if (\is_bool($route)) {
-            $this->csrf = $route;
-            $route = $method;
-            $method = $urlReferenceType;
-            $urlReferenceType = $csrf;
-
-            switch (\func_num_args()) {
-                case 6: $route = 'ux_live_component';
-                    // no break
-                case 7: $method = 'post';
-                    // no break
-                case 8: $urlReferenceType = UrlGeneratorInterface::ABSOLUTE_PATH;
-                    // no break
-                default:
-            }
-        }
-
         parent::__construct($name, $template, $exposePublicProps, $attributesVar);
 
         $this->defaultAction = $defaultAction;
@@ -78,7 +57,7 @@ final class AsLiveComponent extends AsTwigComponent
         $this->method = strtolower($method);
         $this->urlReferenceType = $urlReferenceType;
 
-        if (!\in_array($method, ['get', 'post'])) {
+        if (!\in_array($this->method, ['get', 'post'])) {
             throw new \UnexpectedValueException('$method must be either \'get\' or \'post\'.');
         }
     }
@@ -91,7 +70,6 @@ final class AsLiveComponent extends AsTwigComponent
         return array_merge(parent::serviceConfig(), [
             'default_action' => $this->defaultAction,
             'live' => true,
-            'csrf' => $this->csrf,
             'route' => $this->route,
             'method' => $this->method,
             'url_reference_type' => $this->urlReferenceType,
