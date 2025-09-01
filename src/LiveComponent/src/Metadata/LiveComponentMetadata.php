@@ -75,7 +75,7 @@ class LiveComponentMetadata
 
         foreach ($this->getAllLivePropsMetadata($component) as $livePropMetadata) {
             if ($livePropMetadata->urlMapping()) {
-                $urlMappings[$livePropMetadata->getName()] = $livePropMetadata->urlMapping();
+                $urlMappings[$livePropMetadata->calculateFieldName($component, $livePropMetadata->getName())] = $livePropMetadata->urlMapping();
             }
         }
 
