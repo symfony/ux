@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-08-26T18:13:05Z
+
+Thanks for the in-depth review. Updated accordingly
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-09-01T19:15:13Z
+
+Modified changelogs from TwigComponent and LiveComponent, according removed deprecations from #3040 and #3051, added migration steps in UPGRADE-3.0.md
