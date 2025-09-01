@@ -4,6 +4,7 @@
 
 -   Minimum required Symfony version is now 6.4
 -   Minimum required PHP version is now 8.2
+-   Remove `csrf` argument from `AsLiveComponent` in favor of same-origin/CORS
 
 ## 2.30
 

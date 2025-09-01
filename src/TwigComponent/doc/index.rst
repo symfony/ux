@@ -1216,58 +1216,41 @@ The nesting is recursive so you could potentially do something like this:
         row:widget:class="ui-form-widget"
     />
 
-Component with Complex Variants (CVA)
--------------------------------------
+Class Variant Authority
+-----------------------
 
-.. deprecated:: 2.20
-
-    The ``cva`` function was deprecated in TwigComponents 2.20, and will be
-    removed in 3.0. The function is now provided by the ``twig/html-extra:^3.12``
-    package under the name `html_cva`_.
-
-`CVA (Class Variant Authority)`_ originates from the JavaScript ecosystem. It
-enables reusable, customizable components by managing variants (e.g., color, size).
-The ``cva()`` Twig function defines ``base`` classes (always applied) and variant-specific
-classes:
+`CVA (Class Variant Authority)`_ originates from the JavaScript ecosystem.
+It enables reusable, customizable components by managing variants (e.g., color, size).
+The `html_cva()`_ Twig function from ``twig/html-extra:^3.12`` defines ``base`` classes (always applied)
+and variant-specific classes:
 
 .. code-block:: html+twig
 
-    {# templates/components/Alert.html.twig #}
-    {% props color = 'blue', size = 'md' %}
-
-     {% set alert = cva({
-        base: 'alert',
+    {% set button = html_cva(
+        base: 'btn',
         variants: {
-            color: {
-                blue: 'bg-blue',
-                red: 'bg-red',
-                green: 'bg-green',
-            },
-            size: {
-                sm: 'text-sm',
-                md: 'text-md',
-                lg: 'text-lg',
-            }
-        }
-    }) %}
+            color: { primary: 'btn-primary', secondary: 'btn-secondary' },
+            size: { sm: 'btn-sm', md: 'btn-md', lg: 'btn-lg' }
+        },
+        default_variant: { color: 'primary', size: 'md' }
+    ) %}
 
-    <div class="{{ alert.apply({color, size}, attributes.render('class')) }}">
-         {% block content %}{% endblock %}
-    </div>
+    <button class="{{ button.apply({color, size}, attributes.render('class')) }}">
+        {% block content %}{% endblock %}
+    </button>
 
-Then use the ``color`` and ``size`` variants to select the classes needed:
+When rendering the component, pass the desired variants:
 
 .. code-block:: html+twig
 
-    <twig:Alert color="green" size="sm">
-        ...
-    </twig:Alert>
+    {# renders as: <button class="btn btn-primary btn-md">... #}
+    <twig:Button>Click Me!</twig:Button>
 
-    {# will render as: #}
+    {# renders as: <button class="btn btn-secondary btn-lg">... #}
+    <twig:Button color="secondary" size="lg">Click Me!</twig:Button>
 
-     <div class="alert bg-green text-sm">
-        ...
-    </div>
+    {# renders as: <button class="btn btn-primary btn-sm custom-class">... #}
+    <twig:Button size="sm" class="custom-class">Click Me!</twig:Button>
 
 CVA and Tailwind CSS
 ~~~~~~~~~~~~~~~~~~~~
@@ -1278,83 +1261,8 @@ to resolve conflicts:
 
 .. code-block:: html+twig
 
-    <div class="{{ alert.apply({color, size}, attributes.render('class'))|tailwind_merge }}">
+    <div class="{{ button.apply({color, size}, attributes.render('class'))|tailwind_merge }}">
         {% block content %}{% endblock %}
-    </div>
-
-Compound Variants
-~~~~~~~~~~~~~~~~~
-
-Define compound variants for conditions involving multiple variants:
-
-.. code-block:: html+twig
-
-    {# templates/components/Alert.html.twig #}
-    {% props color = 'blue', size = 'md' %}
-
-    {% set alert = cva({
-        base: 'alert',
-        variants: {
-           color: { red: 'bg-red' },
-           size: { lg: 'text-lg' }
-        },
-        compoundVariants: [{
-            color: ['red'],
-            size: ['lg'],
-            class: 'font-bold'
-        }]
-    }) %}
-
-    <div class="{{ alert.apply({color, size}) }}">
-         {% block content %}{% endblock %}
-    </div>
-
-    {# index.html.twig #}
-
-    <twig:Alert color="red" size="lg">
-        ...
-    </twig:Alert>
-
-    {# will render as: #}
-
-    <div class="alert bg-red text-lg font-bold">
-        ...
-    </div>
-
-Default Variants
-~~~~~~~~~~~~~~~~
-
-If no variants match, you can define a default set of classes to apply:
-
-.. code-block:: html+twig
-
-    {# templates/components/Alert.html.twig #}
-    {% set alert = cva({
-        base: 'alert',
-        variants: {
-            color: {
-                red: 'bg-red'
-            },
-            rounded: {
-                sm: 'rounded-sm',
-                md: 'rounded-md'
-            }
-        },
-        defaultVariants: {
-            rounded: 'md'
-        }
-    }) %}
-
-    {# index.html.twig #}
-
-    <twig:Alert color="red">
-        ...
-    </twig:Alert>
-
-    {# will render as: #}
-
-    <div class="alert bg-red rounded-md">
-        ...
     </div>
 
 Test Helpers
@@ -1809,7 +1717,7 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Passing Blocks to Live Components`: https://symfony.com/bundles/ux-live-component/current/index.html#passing-blocks
 .. _`Stimulus controller`: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`CVA (Class Variant Authority)`: https://cva.style/docs/getting-started/variants
-.. _`html_cva`: https://twig.symfony.com/doc/3.x/functions/html_cva.html
+.. _`html_cva()`: https://twig.symfony.com/doc/3.x/functions/html_cva.html
 .. _`tales-from-a-dev/twig-tailwind-extra`: https://github.com/tales-from-a-dev/twig-tailwind-extra
 .. _`ignore not defined options`: https://symfony.com/doc/current/components/options_resolver.html#ignore-not-defined-options
 .. _`Symfony MakerBundle`: https://symfony.com/bundles/SymfonyMakerBundle/current/index.html
