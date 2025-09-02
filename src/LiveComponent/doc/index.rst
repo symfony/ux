@@ -1,13 +1,13 @@
 Live Components
 ===============
 
-Live components builds on top of the `TwigComponent`_ library
+Live components build on top of the `TwigComponent`_ library
 to give you the power to automatically update your Twig components on
 the frontend as the user interacts with them. Inspired by
 `Livewire`_ and `Phoenix LiveView`_.
 
 If you're not familiar with Twig components yet, it's worth taking a few minutes
-to familiarize yourself in the `TwigComponent documentation`_.
+to familiarize yourself with the `TwigComponent documentation`_.
 
 A real-time product search component might look like this::
 
@@ -1078,7 +1078,7 @@ Live components require a single "default action" that is used to
 re-render it. By default, this is an empty ``__invoke()`` method and can
 be added with the ``DefaultActionTrait``.
 
-Live components __are__ actually Symfony controllers so you can add
+Live components *are* actually Symfony controllers so you can add
 controller attributes (i.e. ``#[IsGranted]``) to either the entire class
 just a single action.
 
@@ -1245,8 +1245,8 @@ words, you benefit from CSRF protection effortlessly, thanks to the
 
 .. warning::
 
-	To ensure this built-in CSRF protection remains effective, pay attention
-	to your CORS headers (e.g. *DO NOT* use ``Access-Control-Allow-Origin: *``).
+    To ensure this built-in CSRF protection remains effective, pay attention
+    to your CORS headers (e.g. *DO NOT* use ``Access-Control-Allow-Origin: *``).
 
 In test-mode, the CSRF protection is disabled to make testing easier.
 
@@ -3936,6 +3936,41 @@ Use the addCollectionItem method from the LiveCollectionTrait to dynamically add
         ]
     ]]);
 
+Using Live Components in Reusable Bundles
+-----------------------------------------
+
+`Symfony Bundles`_ allow you to reuse features across many different Symfony applications.
+You can include live components in reusable bundles to make them available in any
+application that installs the bundle. Everything explained in this article applies
+to live components defined in reusable bundles, except for the component registration.
+
+The ``#[AsLiveComponent]`` attribute won't work in this case, so you must register
+all live components as services manually. For example, if you use the PHP format
+and modern bundle structure, use the following to register a ``ProductSearch``
+live component::
+
+    // config/services.php
+    return static function (ContainerConfigurator $container) {
+        // ...
+
+        $services->set(ProductSearch::class)
+            // ...
+            ->tag('twig.component', [
+                // the following options are mandatory to register the live component
+                'live' => true,
+                'route' => 'ux_live_component',
+                'url_reference_type' => true,
+
+                // the options below are optional
+                'key' => 'Acme:ProductSearch',
+                'expose_public_props' => true,
+                'attributes_var' => 'attributes',
+                'csrf' => true,
+                'method' => 'post',
+            ])
+            ->tag('controller.service_arguments');
+    };
+
 Backward Compatibility promise
 ------------------------------
 
@@ -3972,3 +4007,4 @@ promise. However, any internal implementation in the JavaScript files
 .. _`@symfony/ux-live-component npm package`: https://www.npmjs.com/package/@symfony/ux-live-component
 .. _`Symfony TypeInfo`: https://symfony.com/doc/current/components/type_info.html
 .. _`Symfony PropertyInfo`: https://symfony.com/doc/current/components/property_info.html
+.. _`Symfony Bundles`: https://symfony.com/doc/current/bundles.html
