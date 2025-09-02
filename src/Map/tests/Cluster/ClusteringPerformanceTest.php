@@ -20,7 +20,7 @@ use Symfony\UX\Map\Point;
 class ClusteringPerformanceTest extends TestCase
 {
     /**
-     * @const array<float>
+     * @var array<float>
      */
     private const ZOOMS = [
         2.0,
@@ -29,7 +29,7 @@ class ClusteringPerformanceTest extends TestCase
     ];
 
     /**
-     * @const array<string>
+     * @var array<string>
      */
     private const ALGORITHMS = [
         GridClusteringAlgorithm::class,
@@ -53,7 +53,7 @@ class ClusteringPerformanceTest extends TestCase
      *
      * @dataProvider algorithmProvider
      */
-    public function testScenarioRegion50000(ClusteringAlgorithmInterface $algorithm, float $zoom): void
+    public function testScenarioRegion50000(ClusteringAlgorithmInterface $algorithm, float $zoom)
     {
         $points = $this->generatePoints(50000, 48.8, 49, 2.2, 2.5);
 
@@ -65,7 +65,7 @@ class ClusteringPerformanceTest extends TestCase
      *
      * @dataProvider algorithmProvider
      */
-    public function testScenarioCountry5000(ClusteringAlgorithmInterface $algorithm, float $zoom): void
+    public function testScenarioCountry5000(ClusteringAlgorithmInterface $algorithm, float $zoom)
     {
         $points = $this->generatePoints(5000, 30, 60, -10, 35);
 
@@ -77,7 +77,7 @@ class ClusteringPerformanceTest extends TestCase
      *
      * @dataProvider algorithmProvider
      */
-    public function testScenarioWorld100000(ClusteringAlgorithmInterface $algorithm, float $zoom): void
+    public function testScenarioWorld100000(ClusteringAlgorithmInterface $algorithm, float $zoom)
     {
         $points = $this->generatePoints(100000, -90, 90, -180, 180);
 
