@@ -1,0 +1,36 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "AlertDialog",
+    "description": "A modal dialog that interrupts the user with important content and expects a response.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": [
+        {
+            "type": "php",
+            "name": "twig/extra-bundle"
+        },
+        {
+            "type": "php",
+            "name": "twig/html-extra",
+            "version": "^3.12.0"
+        },
+        {
+            "type": "php",
+            "name": "tales-from-a-dev/twig-tailwind-extra"
+        },
+        {
+            "type": "npm",
+            "name": "el-transition"
+        },
+        {
+            "type": "importmap",
+            "package": "el-transition"
+        },
+        {
+            "type": "recipe",
+            "name": "Button"
+        }
+    ]
+}

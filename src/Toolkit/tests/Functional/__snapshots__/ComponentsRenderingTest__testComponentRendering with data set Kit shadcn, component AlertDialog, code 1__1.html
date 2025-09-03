@@ -1,0 +1,45 @@
+<!--
+- Kit: Shadcn UI
+- Component: AlertDialog
+- Code:
+```twig
+<twig:AlertDialog id="delete_account">
+    <twig:AlertDialog:Trigger>
+        <twig:Button {{ ...trigger_attrs }}>Open</twig:Button>
+    </twig:AlertDialog:Trigger>
+    <twig:AlertDialog:Content>
+        <twig:AlertDialog:Header>
+            <twig:AlertDialog:Title>Are you absolutely sure?</twig:AlertDialog:Title>
+            <twig:AlertDialog:Description>
+                This action cannot be undone. This will permanently delete your account
+                and remove your data from our servers.
+            </twig:AlertDialog:Description>
+        </twig:AlertDialog:Header>
+        <twig:AlertDialog:Footer>
+            <twig:AlertDialog:Cancel>Cancel</twig:AlertDialog:Cancel>
+            <twig:AlertDialog:Action>Continue</twig:AlertDialog:Action>
+        </twig:AlertDialog:Footer>
+    </twig:AlertDialog:Content>
+</twig:AlertDialog>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-controller="alert-dialog" aria-labelledby="alert-dialog-delete_account-title" aria-describedby="alert-dialog-delete_account-description">
+    <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" data-action="click-&gt;alert-dialog#open" data-alert-dialog-target="trigger" aria-haspopup="dialog" aria-expanded="false">Open</button>
+        <dialog id="alert-dialog-delete_account" class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent " data-alert-dialog-target="dialog" data-action="keydown.esc-&gt;alert-dialog#close:prevent">
+    <div data-alert-dialog-target="overlay" data-transition-enter="transition ease-out duration-100" data-transition-enter-start="transform opacity-0" data-transition-enter-end="transform opacity-100" data-transition-leave="transition ease-in duration-75" data-transition-leave-start="transform opacity-100" data-transition-leave-end="transform opacity-0" class="hidden fixed inset-0 z-50 bg-black/50"></div>
+
+    <section tabindex="0" class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0">
+        <div data-transition-enter="transition ease-out duration-200" data-transition-enter-start="transform opacity-0 scale-95" data-transition-enter-end="transform opacity-100 scale-100" data-transition-leave="transition ease-in duration-75" data-transition-leave-start="transform opacity-100 scale-100" data-transition-leave-end="transform opacity-0 scale-95" class="hidden bg-background fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg sm:max-w-lg" data-alert-dialog-target="content">
+<header class="flex flex-col gap-2 text-center sm:text-left "><h2 id="alert-dialog-delete_account-title" class="text-lg font-semibold ">Are you absolutely sure?</h2>
+            <p id="alert-dialog-delete_account-description" class="text-muted-foreground text-sm ">This action cannot be undone. This will permanently delete your account
+                and remove your data from our servers.
+            </p>
+        </header>
+        <footer class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end "><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2" data-action="click-&gt;alert-dialog#close">Cancel</button>
+            <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">Continue
+</button>
+        </footer>
+    </div>
+    </section>
+</dialog>
+</div>

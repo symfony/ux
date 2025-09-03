@@ -216,15 +216,17 @@ class InstallCommand extends Command
      */
     private function getAlternativeRecipes(Kit $kit, string $recipeName): array
     {
-        $alternative = [];
+        $alternativeRecipes = [];
 
         foreach ($kit->getRecipes() as $recipe) {
             $lev = levenshtein($recipeName, $recipe->manifest->name, 2, 5, 10);
             if ($lev <= 8 || str_contains($recipe->manifest->name, $recipeName)) {
-                $alternative[] = $recipe;
+                $alternativeRecipes[] = $recipe;
             }
         }
 
-        return $alternative;
+        usort($alternativeRecipes, fn (Recipe $recipeA, Recipe $recipeB) => strcmp($recipeA->manifest->name, $recipeB->manifest->name));
+
+        return $alternativeRecipes;
     }
 }
