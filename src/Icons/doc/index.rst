@@ -16,9 +16,6 @@ Installation
 
     $ composer require symfony/ux-icons
 
-    # To use provided on-demand icon sets, you also need HTTP client:
-    $ composer require symfony/http-client
-
 SVG Icons
 ---------
 
@@ -108,24 +105,26 @@ sizing utilities for consistency and theming:
     {# HTML syntax #}
     <twig:ux:icon name="bi:chat" class="size-4" />
 
-To keep your design consistent and easily adjustable, consider defining a :ref:default attribute <icons_default_attributes>. This allows you to control the size of all your icons from a single place.
+To keep your design consistent and easily adjustable, consider defining a
+:ref:`default attribute <icons_default_attributes>`. This allows you to control
+the size of all your icons from a single place.
 
 Icon Sets
 ~~~~~~~~~
 
-.. note::
+UX Icons gives you access to a wide variety of icon sets, each with its own
+style. This allows you to cover different needs while maintaining a consistent
+look and feel across your application.
 
-    To use icons from icon sets via `ux.symfony.com/icons`_, the ``symfony/http-client``
-    package must be installed in your application:
+To download icons automatically from the many icon sets available, you must
+first install the following package in your application:
 
-    .. code-block:: terminal
+.. code-block:: terminal
 
-        $ composer require symfony/http-client
+    $ composer require symfony/http-client
 
-There are many icon sets available, each with their own unique style and set of
-icons, providing a wide range of icons for different purposes, while maintaining
-a consistent look and feel across your application. Here are some of the most
-popular icon sets available:
+Some of the most popular icon sets are shown below; for the complete list,
+visit `ux.symfony.com/icons`_.
 
 ========================  =======  ==========  ===============  =====================
 Icon Set                    Icons  License     Prefix           Example
@@ -143,8 +142,6 @@ Icon Set                    Icons  License     Prefix           Example
 `Phosphor Icons`_            7000  MIT         ``ph``           ``ph:check``
 `Tabler Icons`_              5200  MIT         ``tabler``       ``tabler:check``
 ========================  =======  ==========  ===============  =====================
-
-To see the full list of available icon sets, visit `ux.symfony.com/icons`_.
 
 Search Icon sets
 ~~~~~~~~~~~~~~~~
@@ -200,8 +197,14 @@ HTML Syntax
 ~~~~~~~~~~~
 
 In addition to the ``ux_icon()`` function explained in the previous sections,
-this package also supports an alternative HTML syntax based on the ``<twig:ux:icon>``
-tag if the ``symfony/ux-twig-component`` package is installed:
+this package also provides an alternative HTML-based syntax. Before using it,
+ensure that the following package is installed in your application:
+
+.. code-block:: terminal
+
+    $ composer require symfony/ux-twig-component
+
+You can then use the following syntax to include icons::
 
 .. code-block:: html
 
@@ -214,11 +217,6 @@ tag if the ``symfony/ux-twig-component`` package is installed:
 
     <!-- you can also add any HTML attributes -->
     <twig:ux:icon name="user-profile" height="16" width="16" aria-hidden="true" />
-
-.. tip::
-
-    To use the HTML syntax, the `symfony/ux-twig-component`_ package must be
-    installed in your project.
 
 Downloading Icons
 -----------------
@@ -654,7 +652,6 @@ Learn more
 .. _`ux.symfony.com/icons`: https://ux.symfony.com/icons
 .. _`Iconify`: https://iconify.design
 .. _`symfony/asset-mapper`: https://symfony.com/doc/current/frontend/asset_mapper.html
-.. _`symfony/ux-twig-component`: https://symfony.com/bundles/ux-twig-component/current/index.html
 .. _`W3C guide about SVG icon accessibility`: https://design-system.w3.org/styles/svg-icons.html#svg-accessibility
 .. _`Bootstrap Icons`: https://github.com/twbs/icons
 .. _`Boxicons`: https://github.com/atisawd/boxicons
