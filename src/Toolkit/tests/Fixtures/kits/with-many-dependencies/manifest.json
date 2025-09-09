@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../schema-kit-v1.json",
+    "name": "With many dependencies",
+    "description": "Kit used as a test fixture.",
+    "license": "MIT",
+    "homepage": "https://ux.symfony.com/"
+}

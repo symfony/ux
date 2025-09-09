@@ -58,7 +58,7 @@ final class Installer
             }
         }
 
-        return new InstallationReport(newFiles: $installedFiles, suggestedPhpPackages: $pool->getPhpPackageDependencies());
+        return new InstallationReport(newFiles: $installedFiles, suggestedPhpPackages: $pool->getPhpPackageDependencies(), suggestedNpmPackages: $pool->getNpmPackageDependencies(), suggestedImportmapPackages: $pool->getImportmapPackageDependencies());
     }
 
     private function copyFile(Kit $kit, string $sourceAbsolutePathName, string $destinationAbsolutePathName, bool $force): bool

@@ -105,6 +105,30 @@ class ToolkitService
             $manual .= '</li>';
         }
 
+        $npmPackageDependencies = $pool->getNpmPackageDependencies();
+        $importmapPackageDependencies = $pool->getImportmapPackageDependencies();
+
+        if ($npmPackageDependencies && $importmapPackageDependencies) {
+            $manual .= '<li><strong>If necessary, install the following front dependencies:</strong>';
+            $manual .= CodeBlockRenderer::highlightCode(
+                'shell',
+                '# With npm/yarn/pnpm'.\PHP_EOL
+                    .'$ npm install --save '.implode(' ', $npmPackageDependencies).\PHP_EOL
+                    .'# With importmap (Symfony 6.3+)'.\PHP_EOL
+                    .'$ php bin/console importmap:install '.implode(' ', $importmapPackageDependencies),
+                'margin-bottom: 0'
+            );
+            $manual .= '</li>';
+        } elseif ($npmPackageDependencies) {
+            $manual .= '<li><strong>If necessary, install the following npm dependencies:</strong>';
+            $manual .= CodeBlockRenderer::highlightCode('shell', '$ npm install --save '.implode(' ', $npmPackageDependencies), 'margin-bottom: 0');
+            $manual .= '</li>';
+        } elseif ($importmapPackageDependencies) {
+            $manual .= '<li><strong>If necessary, install the following importmap dependencies:</strong>';
+            $manual .= CodeBlockRenderer::highlightCode('shell', '$ php bin/console importmap:install '.implode(' ', $importmapPackageDependencies), 'margin-bottom: 0');
+            $manual .= '</li>';
+        }
+
         $manual .= '<li><strong>And the most important, enjoy!</strong></li>';
         $manual .= '</ol>';
 

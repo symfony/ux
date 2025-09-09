@@ -17,6 +17,11 @@ use Symfony\UX\Toolkit\Kit\KitManifest;
 
 trait TestHelperTrait
 {
+    private static function getLocalKitPath(string $kitName): string
+    {
+        return Path::join(__DIR__, '../kits', $kitName);
+    }
+
     private static function createLocalKit(string $kitName): Kit
     {
         $kitPath = Path::join(__DIR__, '../kits', $kitName);
@@ -24,9 +29,14 @@ trait TestHelperTrait
         return new Kit($kitPath, KitManifest::fromJson(file_get_contents(Path::join($kitPath, 'manifest.json'))));
     }
 
+    private static function getFixtureKitPath(string $kitName): string
+    {
+        return Path::join(__DIR__, 'Fixtures/kits', $kitName);
+    }
+
     private static function createFixtureKit(string $kitName): Kit
     {
-        $kitPath = Path::join(__DIR__, 'Fixtures/kits', $kitName);
+        $kitPath = self::getFixtureKitPath($kitName);
 
         return new Kit($kitPath, KitManifest::fromJson(file_get_contents(Path::join($kitPath, 'manifest.json'))));
     }

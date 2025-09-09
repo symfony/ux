@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Symfony\UX\Toolkit\Installer;
 
+use Symfony\UX\Toolkit\Dependency\ImportmapPackageDependency;
+use Symfony\UX\Toolkit\Dependency\NpmPackageDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\File;
 
@@ -26,12 +28,16 @@ use Symfony\UX\Toolkit\File;
 final class InstallationReport
 {
     /**
-     * @param array<File>                 $newFiles
-     * @param array<PhpPackageDependency> $suggestedPhpPackages
+     * @param array<File>                       $newFiles
+     * @param array<PhpPackageDependency>       $suggestedPhpPackages
+     * @param array<NpmPackageDependency>       $suggestedNpmPackages
+     * @param array<ImportmapPackageDependency> $suggestedImportmapPackages
      */
     public function __construct(
         public readonly array $newFiles,
         public readonly array $suggestedPhpPackages,
+        public readonly array $suggestedNpmPackages,
+        public readonly array $suggestedImportmapPackages,
     ) {
     }
 }

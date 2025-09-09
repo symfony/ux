@@ -9,7 +9,7 @@
     "dependencies": [
         {
             "type": "php",
-            "package": "tales-from-a-dev/twig-tailwind-extra"
+            "name": "tales-from-a-dev/twig-tailwind-extra"
         }
     ]
 }

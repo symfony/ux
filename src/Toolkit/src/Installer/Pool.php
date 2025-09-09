@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Symfony\UX\Toolkit\Installer;
 
+use Symfony\UX\Toolkit\Dependency\ImportmapPackageDependency;
+use Symfony\UX\Toolkit\Dependency\NpmPackageDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\File;
 use Symfony\UX\Toolkit\Recipe\Recipe;
@@ -32,9 +34,19 @@ final class Pool
     private array $files = [];
 
     /**
-     * @param array<non-empty-string, PhpPackageDependency> $files
+     * @var array<non-empty-string, PhpPackageDependency>
      */
     private array $phpPackageDependencies = [];
+
+    /**
+     * @var array<non-empty-string, NpmPackageDependency>
+     */
+    private array $npmPackageDependencies = [];
+
+    /**
+     * @var array<non-empty-string, ImportmapPackageDependency>
+     */
+    private array $importmapPackageDependencies = [];
 
     public function addFile(Recipe $recipe, File $file): void
     {
@@ -51,9 +63,7 @@ final class Pool
 
     public function addPhpPackageDependency(PhpPackageDependency $dependency): void
     {
-        if (isset($this->phpPackageDependencies[$dependency->name]) && $dependency->isHigherThan($this->phpPackageDependencies[$dependency->name])) {
-            $this->phpPackageDependencies[$dependency->name] = $dependency;
-
+        if (isset($this->phpPackageDependencies[$dependency->name]) && !$dependency->isHigherThan($this->phpPackageDependencies[$dependency->name])) {
             return;
         }
 
@@ -66,5 +76,35 @@ final class Pool
     public function getPhpPackageDependencies(): array
     {
         return $this->phpPackageDependencies;
+    }
+
+    public function addNpmPackageDependency(NpmPackageDependency $dependency): void
+    {
+        if (isset($this->npmPackageDependencies[$dependency->name]) && !$dependency->isHigherThan($this->npmPackageDependencies[$dependency->name])) {
+            return;
+        }
+
+        $this->npmPackageDependencies[$dependency->name] = $dependency;
+    }
+
+    /**
+     * @return array<non-empty-string, NpmPackageDependency>
+     */
+    public function getNpmPackageDependencies(): array
+    {
+        return $this->npmPackageDependencies;
+    }
+
+    public function addImportmapPackageDependency(ImportmapPackageDependency $dependency): void
+    {
+        $this->importmapPackageDependencies[$dependency->package] = $dependency;
+    }
+
+    /**
+     * @return array<non-empty-string, ImportmapPackageDependency>
+     */
+    public function getImportmapPackageDependencies(): array
+    {
+        return $this->importmapPackageDependencies;
     }
 }
