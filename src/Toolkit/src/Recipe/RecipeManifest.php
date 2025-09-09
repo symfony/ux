@@ -13,6 +13,8 @@ namespace Symfony\UX\Toolkit\Recipe;
 
 use Symfony\Component\Filesystem\Path;
 use Symfony\UX\Toolkit\Dependency\DependencyInterface;
+use Symfony\UX\Toolkit\Dependency\ImportmapPackageDependency;
+use Symfony\UX\Toolkit\Dependency\NpmPackageDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\Dependency\RecipeDependency;
 use Symfony\UX\Toolkit\Dependency\Version;
@@ -55,41 +57,44 @@ final class RecipeManifest
     {
         $data = json_decode($json, true, flags: \JSON_THROW_ON_ERROR);
 
+        $type = $data['type'] ?? throw new \InvalidArgumentException('Property "type" is required.');
+        if (null === $type = RecipeType::tryFrom($type)) {
+            throw new \InvalidArgumentException(\sprintf('The recipe type "%s" is not supported.', $data['type']));
+        }
+
         $dependencies = [];
         foreach ($data['dependencies'] ?? [] as $i => $dependency) {
             if (!\is_array($dependency)) {
                 throw new \InvalidArgumentException('Each dependency must be an associative array.');
             }
             if (!isset($dependency['type'])) {
-                throw new \InvalidArgumentException(\sprintf('The dependency type is missing for dependency #%d, add "type" key.', $i));
+                throw new \InvalidArgumentException(\sprintf('The dependency #%d is missing "type" field.', $i));
             }
 
             if ('php' === $dependency['type']) {
-                $package = $dependency['package'] ?? throw new \InvalidArgumentException(\sprintf('The package name is missing for dependency #%d, add "package" key.', $i));
-                if (str_contains($package, ':')) {
-                    [$name, $version] = explode(':', $package, 2);
-                    $dependencies[] = new PhpPackageDependency($name, new Version($version));
-                } else {
-                    $dependencies[] = new PhpPackageDependency($package);
-                }
+                $name = $dependency['name'] ?? throw new \InvalidArgumentException(\sprintf('The dependency #%d of type "php" is missing "name" field.', $i));
+                $version = $dependency['version'] ?? null;
+                $dependencies[] = new PhpPackageDependency($name, null === $version ? null : new Version($version));
             } elseif ('recipe' === $dependency['type']) {
-                $name = $dependency['name'] ?? throw new \InvalidArgumentException(\sprintf('The recipe name is missing for dependency #%d, add "name" key.', $i));
+                $name = $dependency['name'] ?? throw new \InvalidArgumentException(\sprintf('The dependency #%d of type "recipe" is missing "name" field.', $i));
                 $dependencies[] = new RecipeDependency($name);
+            } elseif ('npm' === $dependency['type']) {
+                $name = $dependency['name'] ?? throw new \InvalidArgumentException(\sprintf('The dependency #%d of type "npm" is missing "name" field.', $i));
+                $version = $dependency['version'] ?? null;
+                $dependencies[] = new NpmPackageDependency($name, null === $version ? null : new Version($version));
+            } elseif ('importmap' === $dependency['type']) {
+                $package = $dependency['package'] ?? throw new \InvalidArgumentException(\sprintf('The dependency #%d of type "importmap" is missing "package" field.', $i));
+                $dependencies[] = new ImportmapPackageDependency($package);
             } else {
                 throw new \InvalidArgumentException(\sprintf('The dependency type "%s" is not supported.', $dependency['type']));
             }
-        }
-
-        $type = $data['type'] ?? throw new \InvalidArgumentException('Property "type" is required.');
-        if (null === $type = RecipeType::tryFrom($type)) {
-            throw new \InvalidArgumentException(\sprintf('The recipe type "%s" is not supported.', $data['type']));
         }
 
         return new self(
             type: $type,
             name: $data['name'] ?? throw new \InvalidArgumentException('Property "name" is required.'),
             description: $data['description'] ?? throw new \InvalidArgumentException('Property "description" is required.'),
-            copyFiles: $data['copy-files'] ?? throw new \InvalidArgumentException('Property "copy-files" is required.'),
+            copyFiles: $data['copy-files'] ?? [],
             dependencies: $dependencies,
         );
     }

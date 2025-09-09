@@ -55,4 +55,19 @@ final class Assert
             throw new \InvalidArgumentException(\sprintf('Invalid PHP package name "%s".', $name));
         }
     }
+
+    /**
+     * Assert that the NPM package name is valid (ex: "react", "@hotwired/stimulus", etc.).
+     *
+     * @param non-empty-string $name
+     *
+     * @throws \InvalidArgumentException if the NPM package name is invalid
+     */
+    public static function npmPackageName(string $name): void
+    {
+        // Taken from https://github.com/dword-design/package-name-regex/blob/master/src/index.ts
+        if (1 !== preg_match('/^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/', $name)) {
+            throw new \InvalidArgumentException(\sprintf('Invalid NPM package name "%s".', $name));
+        }
+    }
 }

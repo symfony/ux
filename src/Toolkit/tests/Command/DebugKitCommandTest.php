@@ -12,17 +12,18 @@
 namespace Symfony\UX\Toolkit\Tests\Command;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Filesystem\Path;
+use Symfony\UX\Toolkit\Tests\TestHelperTrait;
 use Zenstruck\Console\Test\InteractsWithConsole;
 
 class DebugKitCommandTest extends KernelTestCase
 {
     use InteractsWithConsole;
+    use TestHelperTrait;
 
-    public function testShouldBeAbleToDebug()
+    public function testShouldBeAbleToDebugShadcnKit()
     {
         $this->bootKernel();
-        $this->consoleCommand(\sprintf('ux:toolkit:debug-kit %s', Path::join(__DIR__, '/../../kits/shadcn')))
+        $this->consoleCommand(\sprintf('ux:toolkit:debug-kit %s', self::getLocalKitPath('shadcn')))
             ->execute()
             ->assertSuccessful()
             // Kit details
@@ -49,6 +50,38 @@ class DebugKitCommandTest extends KernelTestCase
                 '|              | templates/components/Table/Header.html.twig                                      |',
                 '|              | templates/components/Table/Row.html.twig                                         |',
                 '| Dependencies | tales-from-a-dev/twig-tailwind-extra                                             |',
+                '+--------------+----------------------------------------------------------------------------------+',
+            ]));
+    }
+
+    public function testShouldBeAbleToDebugFixtureKitWithManyDependencies()
+    {
+        $this->bootKernel();
+        $this->consoleCommand(\sprintf('ux:toolkit:debug-kit %s', self::getFixtureKitPath('with-many-dependencies')))
+            ->execute()
+            ->assertSuccessful()
+            // Kit details
+            ->assertOutputContains('Name       With many dependencies')
+            ->assertOutputContains('Homepage   https://ux.symfony.com')
+            ->assertOutputContains('License    MIT')
+            // Components details
+            ->assertOutputContains(implode(\PHP_EOL, [
+                '+--------------+------------------------- Recipe: "Alert" ----------------------------------------+',
+                '| File(s)      | N/A                                                                              |',
+                '| Dependencies | twig/html-extra:^3.12.0                                                          |',
+                '|              | tales-from-a-dev/twig-tailwind-extra                                             |',
+                '|              | tailwindcss:^4.0.0                                                               |',
+                '|              | @hotwired/stimulus                                                               |',
+                '|              | Button                                                                           |',
+                '+--------------+----------------------------------------------------------------------------------+',
+            ]))
+            ->assertOutputContains(implode(\PHP_EOL, [
+                '+--------------+------------------------ Recipe: "Button" ----------------------------------------+',
+                '| File(s)      | N/A                                                                              |',
+                '| Dependencies | twig/html-extra:^3.12.0                                                          |',
+                '|              | another/php-package:^2.0                                                         |',
+                '|              | another-npm-package:^1.0.0                                                       |',
+                '|              | another-importmap-package                                                        |',
                 '+--------------+----------------------------------------------------------------------------------+',
             ]));
     }

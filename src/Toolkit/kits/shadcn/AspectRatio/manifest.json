@@ -9,7 +9,7 @@
     "dependencies": [
         {
             "type": "php",
-            "package": "twig/extra-bundle"
+            "name": "twig/extra-bundle"
         }
     ]
 }

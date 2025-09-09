@@ -34,15 +34,53 @@
                     {
                         "description": "A dependency on a PHP package",
                         "type": "object",
-                        "required": ["type", "package"],
+                        "required": ["type", "name"],
                         "properties": {
                             "type": {
                                 "type": "string",
                                 "enum": ["php"]
                             },
+                            "name": {
+                                "type": "string",
+                                "description": "Package name and optional version constraint (e.g., 'vendor/package')"
+                            },
+                            "version": {
+                                "type": "string",
+                                "description": "Optional version constraint (e.g., '^1.0')"
+                            }
+                        }
+                    },
+                    {
+                        "description": "A dependency on an NPM package",
+                        "type": "object",
+                        "required": ["type", "name"],
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["npm"]
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "Package name and optional version constraint (e.g., 'vendor/package')"
+                            },
+                            "version": {
+                                "type": "string",
+                                "description": "Optional version constraint (e.g., '^1.0')"
+                            }
+                        }
+                    },
+                    {
+                        "description": "A dependency on an Importmap package",
+                        "type": "object",
+                        "required": ["type", "package"],
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": ["importmap"]
+                            },
                             "package": {
                                 "type": "string",
-                                "description": "Package name and optional version constraint (e.g., 'vendor/package:^1.0')"
+                                "description": "Importmap package name (e.g., 'lodash', 'bootstrap/dist/css/bootstrap.min.css')"
                             }
                         }
                     },

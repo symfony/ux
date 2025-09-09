@@ -177,4 +177,51 @@ class AssertTest extends TestCase
         yield ['twig/html-extra/'];
         yield ['twig/html-extra/twig'];
     }
+
+    /**
+     * @dataProvider provideValidNpmPackageNames
+     */
+    public function testValidNpmPackageName(string $name)
+    {
+        $this->expectNotToPerformAssertions();
+
+        Assert::npmPackageName($name);
+    }
+
+    public static function provideValidNpmPackageNames(): iterable
+    {
+        yield ['react'];
+        yield ['@babel/core'];
+        yield ['lodash'];
+        yield ['@types/node'];
+        yield ['my-package'];
+        yield ['my_package'];
+        yield ['my.package'];
+        yield ['my-package123'];
+        yield ['@scope/my-package'];
+        yield ['~foo'];
+    }
+
+    /**
+     * @dataProvider provideInvalidNpmPackageNames
+     */
+    public function testInvalidNpmPackageName(string $name)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(\sprintf('Invalid NPM package name "%s".', $name));
+
+        Assert::npmPackageName($name);
+    }
+
+    public static function provideInvalidNpmPackageNames(): iterable
+    {
+        yield [''];
+        yield ['@'];
+        yield ['@scope/'];
+        yield ['my package'];
+        yield ['my/package'];
+        yield ['my@package'];
+        yield ['my/package/name'];
+        yield ['@scope//my-package'];
+    }
 }
