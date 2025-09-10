@@ -18,7 +18,7 @@ namespace Symfony\UX\Toolkit\Dependency;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final class Version implements \Stringable
+final class ConstraintVersion implements \Stringable
 {
     /**
      * @param non-empty-string

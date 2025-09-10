@@ -27,7 +27,7 @@ final class NpmPackageDependency implements DependencyInterface
      */
     public function __construct(
         public readonly string $name,
-        public readonly ?Version $constraintVersion = null,
+        public readonly ?ConstraintVersion $constraintVersion = null,
     ) {
         Assert::npmPackageName($name);
     }

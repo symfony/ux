@@ -3,25 +3,9 @@
     "type": "component",
     "name": "Button",
     "description": "Component Button",
-    "dependencies": [
-        {
-            "type": "php",
-            "name": "twig/html-extra",
-            "version": "^3.12.0"
-        },
-        {
-            "type": "php",
-            "name": "another/php-package",
-            "version": "^2.0"
-        },
-        {
-            "type": "npm",
-            "name": "another-npm-package",
-            "version": "^1.0.0"
-        },
-        {
-            "type": "importmap",
-            "package": "another-importmap-package"
-        }
-    ]
+    "dependencies": {
+        "composer": ["twig/html-extra:^3.12.0", "another/php-package:^2.0"],
+        "npm": ["another-npm-package@^1.0.0"],
+        "importmap": ["another-importmap-package"]
+    }
 }

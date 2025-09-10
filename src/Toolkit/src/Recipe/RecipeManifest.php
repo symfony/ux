@@ -12,12 +12,12 @@
 namespace Symfony\UX\Toolkit\Recipe;
 
 use Symfony\Component\Filesystem\Path;
+use Symfony\UX\Toolkit\Dependency\ConstraintVersion;
 use Symfony\UX\Toolkit\Dependency\DependencyInterface;
 use Symfony\UX\Toolkit\Dependency\ImportmapPackageDependency;
 use Symfony\UX\Toolkit\Dependency\NpmPackageDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\Dependency\RecipeDependency;
-use Symfony\UX\Toolkit\Dependency\Version;
 
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
@@ -63,30 +63,64 @@ final class RecipeManifest
         }
 
         $dependencies = [];
-        foreach ($data['dependencies'] ?? [] as $i => $dependency) {
-            if (!\is_array($dependency)) {
-                throw new \InvalidArgumentException('Each dependency must be an associative array.');
-            }
-            if (!isset($dependency['type'])) {
-                throw new \InvalidArgumentException(\sprintf('The dependency #%d is missing "type" field.', $i));
+        if (isset($data['dependencies'])) {
+            if (!\is_array($data['dependencies']) || array_values($data['dependencies']) === $data['dependencies']) {
+                throw new \InvalidArgumentException('The "dependencies" property must be an object.');
             }
 
-            if ('php' === $dependency['type']) {
-                $name = $dependency['name'] ?? throw new \InvalidArgumentException(\sprintf('The dependency #%d of type "php" is missing "name" field.', $i));
-                $version = $dependency['version'] ?? null;
-                $dependencies[] = new PhpPackageDependency($name, null === $version ? null : new Version($version));
-            } elseif ('recipe' === $dependency['type']) {
-                $name = $dependency['name'] ?? throw new \InvalidArgumentException(\sprintf('The dependency #%d of type "recipe" is missing "name" field.', $i));
+            foreach ($data['dependencies']['recipe'] ?? [] as $i => $name) {
+                if (!\is_string($name) || '' === $name) {
+                    throw new \InvalidArgumentException(\sprintf('The dependency #%d of type "recipe" must be a non-empty string.', $i));
+                }
+
                 $dependencies[] = new RecipeDependency($name);
-            } elseif ('npm' === $dependency['type']) {
-                $name = $dependency['name'] ?? throw new \InvalidArgumentException(\sprintf('The dependency #%d of type "npm" is missing "name" field.', $i));
-                $version = $dependency['version'] ?? null;
-                $dependencies[] = new NpmPackageDependency($name, null === $version ? null : new Version($version));
-            } elseif ('importmap' === $dependency['type']) {
-                $package = $dependency['package'] ?? throw new \InvalidArgumentException(\sprintf('The dependency #%d of type "importmap" is missing "package" field.', $i));
+            }
+            foreach ($data['dependencies']['composer'] ?? [] as $i => $package) {
+                if (!\is_string($package) || '' === $package) {
+                    throw new \InvalidArgumentException(\sprintf('The dependency #%d of type "composer" must be a non-empty string.', $i));
+                }
+
+                // format: "package:version"
+                if (str_contains($package, ':')) {
+                    [$name, $version] = explode(':', $package, 2);
+                    $dependencies[] = new PhpPackageDependency($name, new ConstraintVersion($version));
+                } else {
+                    $dependencies[] = new PhpPackageDependency($package);
+                }
+            }
+
+            foreach ($data['dependencies']['npm'] ?? [] as $i => $package) {
+                if (!\is_string($package) || '' === $package) {
+                    throw new \InvalidArgumentException(\sprintf('The dependency #%d of type "npm" must be a non-empty string.', $i));
+                }
+
+                // format: "package@version" or "@scope/package@version"
+                if (str_contains($package, '@')) {
+                    if (substr_count($package, '@') > 1) {
+                        $pos = strrpos($package, '@');
+                        $name = substr($package, 0, $pos);
+                        $version = substr($package, $pos + 1);
+                    } else {
+                        [$name, $version] = explode('@', $package, 2);
+                    }
+                    $dependencies[] = new NpmPackageDependency($name, new ConstraintVersion($version));
+                } else {
+                    $dependencies[] = new NpmPackageDependency($package);
+                }
+            }
+
+            foreach ($data['dependencies']['importmap'] ?? [] as $i => $package) {
+                if (!\is_string($package) || '' === $package) {
+                    throw new \InvalidArgumentException(\sprintf('The dependency #%d of type "importmap" must be a non-empty string.', $i));
+                }
+
                 $dependencies[] = new ImportmapPackageDependency($package);
-            } else {
-                throw new \InvalidArgumentException(\sprintf('The dependency type "%s" is not supported.', $dependency['type']));
+            }
+
+            unset($data['dependencies']['recipe'], $data['dependencies']['composer'], $data['dependencies']['npm'], $data['dependencies']['importmap']);
+
+            if ([] !== $data['dependencies'] ?? []) {
+                throw new \InvalidArgumentException(\sprintf('The dependency types "%s" are not supported.', implode('", "', array_keys($data['dependencies']))));
             }
         }
 

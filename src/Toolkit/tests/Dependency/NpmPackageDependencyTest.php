@@ -12,8 +12,8 @@
 namespace Symfony\UX\Toolkit\Tests\Dependency;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\UX\Toolkit\Dependency\ConstraintVersion;
 use Symfony\UX\Toolkit\Dependency\NpmPackageDependency;
-use Symfony\UX\Toolkit\Dependency\Version;
 
 class NpmPackageDependencyTest extends TestCase
 {
@@ -25,7 +25,7 @@ class NpmPackageDependencyTest extends TestCase
         $this->assertSame('NPM package "react"', $dependency->toDebug());
         $this->assertSame('react', (string) $dependency);
 
-        $dependency = new NpmPackageDependency('react', new Version('^18.0.0'));
+        $dependency = new NpmPackageDependency('react', new ConstraintVersion('^18.0.0'));
         $this->assertSame('react', $dependency->name);
         $this->assertSame('NPM package "react:^18.0.0"', $dependency->toDebug());
         $this->assertSame('react:^18.0.0', (string) $dependency);

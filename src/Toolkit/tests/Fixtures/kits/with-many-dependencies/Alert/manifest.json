@@ -3,28 +3,10 @@
     "type": "component",
     "name": "Alert",
     "description": "Component Alert",
-    "dependencies": [
-        {
-            "type": "php",
-            "name": "twig/html-extra",
-            "version": "^3.12.0"
-        },
-        {
-            "type": "php",
-            "name": "tales-from-a-dev/twig-tailwind-extra"
-        },
-        {
-            "type": "npm",
-            "name": "tailwindcss",
-            "version": "^4.0.0"
-        },
-        {
-            "type": "importmap",
-            "package": "@hotwired/stimulus"
-        },
-        {
-            "type": "recipe",
-            "name": "Button"
-        }
-    ]
+    "dependencies": {
+        "recipe": ["Button"],
+        "composer": ["twig/html-extra:^3.12.0", "tales-from-a-dev/twig-tailwind-extra"],
+        "npm": ["tailwindcss@^4.0.0", "@tailwindplus/elements@1"],
+        "importmap": ["@hotwired/stimulus"]
+    }
 }

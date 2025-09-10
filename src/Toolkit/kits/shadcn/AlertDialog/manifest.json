@@ -6,31 +6,10 @@
     "copy-files": {
         "templates/": "templates/"
     },
-    "dependencies": [
-        {
-            "type": "php",
-            "name": "twig/extra-bundle"
-        },
-        {
-            "type": "php",
-            "name": "twig/html-extra",
-            "version": "^3.12.0"
-        },
-        {
-            "type": "php",
-            "name": "tales-from-a-dev/twig-tailwind-extra"
-        },
-        {
-            "type": "npm",
-            "name": "el-transition"
-        },
-        {
-            "type": "importmap",
-            "package": "el-transition"
-        },
-        {
-            "type": "recipe",
-            "name": "Button"
-        }
-    ]
+    "dependencies": {
+        "recipe": ["Button"],
+        "composer": ["twig/extra-bundle", "twig/html-extra:^3.12.0", "tales-from-a-dev/twig-tailwind-extra"],
+        "npm": ["el-transition"],
+        "importmap": ["el-transition"]
+    }
 }
