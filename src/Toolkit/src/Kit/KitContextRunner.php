@@ -24,6 +24,11 @@ use Twig\Loader\FilesystemLoader;
  */
 final class KitContextRunner
 {
+    /**
+     * @var array<string, ComponentTemplateFinderInterface>
+     */
+    private static $componentTemplateFinders = [];
+
     public function __construct(
         private readonly \Twig\Environment $twig,
         private readonly ComponentFactory $componentFactory,
@@ -39,51 +44,59 @@ final class KitContextRunner
      */
     public function runForKit(Kit $kit, callable $callback): mixed
     {
-        $resetServices = $this->contextualizeServicesForKit($kit);
+        $resetTwig = $this->contextualizeTwig($kit);
+        $resetComponentFactory = $this->contextualizeComponentFactory($kit);
 
         try {
             return $callback($kit);
         } finally {
-            $resetServices();
+            $resetTwig();
+            $resetComponentFactory();
         }
     }
 
     /**
-     * @return callable(): void Reset the services when called
+     * @return callable(): void
      */
-    private function contextualizeServicesForKit(Kit $kit): callable
+    private function contextualizeTwig(Kit $kit): callable
     {
-        // Configure Twig
         $initialTwigLoader = $this->twig->getLoader();
+
         $loaders = [];
         foreach ($kit->getRecipes(type: RecipeType::Component) as $recipe) {
             $loaders[] = new FilesystemLoader($recipe->absolutePath);
         }
-        $this->twig->setLoader(new ChainLoader([...$loaders, $initialTwigLoader]));
+        $loaders[] = $initialTwigLoader;
 
-        // Configure Twig Components
+        $this->twig->setLoader(new ChainLoader($loaders));
+
+        return fn () => $this->twig->setLoader($initialTwigLoader);
+    }
+
+    /**
+     * @return callable(): void
+     */
+    private function contextualizeComponentFactory(Kit $kit): callable
+    {
         $reflComponentFactory = new \ReflectionClass($this->componentFactory);
 
-        $reflComponentFactoryConfig = $reflComponentFactory->getProperty('config');
-        $initialComponentFactoryConfig = $reflComponentFactoryConfig->getValue($this->componentFactory);
-        $reflComponentFactoryConfig->setValue($this->componentFactory, []);
+        $reflConfig = $reflComponentFactory->getProperty('config');
+        $initialConfig = $reflConfig->getValue($this->componentFactory);
+        $reflConfig->setValue($this->componentFactory, []);
 
-        $reflComponentFactoryComponentTemplateFinder = $reflComponentFactory->getProperty('componentTemplateFinder');
-        $initialComponentFactoryComponentTemplateFinder = $reflComponentFactoryComponentTemplateFinder->getValue($this->componentFactory);
-        $reflComponentFactoryComponentTemplateFinder->setValue($this->componentFactory, $this->createComponentTemplateFinder($kit));
+        $reflComponentTemplateFinder = $reflComponentFactory->getProperty('componentTemplateFinder');
+        $initialComponentTemplateFinder = $reflComponentTemplateFinder->getValue($this->componentFactory);
+        $reflComponentTemplateFinder->setValue($this->componentFactory, $this->createComponentTemplateFinder($kit));
 
-        return function () use ($initialTwigLoader, $reflComponentFactoryConfig, $initialComponentFactoryConfig, $reflComponentFactoryComponentTemplateFinder, $initialComponentFactoryComponentTemplateFinder) {
-            $this->twig->setLoader($initialTwigLoader);
-            $reflComponentFactoryConfig->setValue($this->componentFactory, $initialComponentFactoryConfig);
-            $reflComponentFactoryComponentTemplateFinder->setValue($this->componentFactory, $initialComponentFactoryComponentTemplateFinder);
+        return function () use ($reflConfig, $initialConfig, $reflComponentTemplateFinder, $initialComponentTemplateFinder): void {
+            $reflConfig->setValue($this->componentFactory, $initialConfig);
+            $reflComponentTemplateFinder->setValue($this->componentFactory, $initialComponentTemplateFinder);
         };
     }
 
     private function createComponentTemplateFinder(Kit $kit): ComponentTemplateFinderInterface
     {
-        static $instances = [];
-
-        return $instances[$kit->manifest->name] ?? new class($kit) implements ComponentTemplateFinderInterface {
+        return self::$componentTemplateFinders[$kit->manifest->name] ??= new class($kit) implements ComponentTemplateFinderInterface {
             public function __construct(private readonly Kit $kit)
             {
             }

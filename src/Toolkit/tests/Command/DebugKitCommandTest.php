@@ -28,7 +28,7 @@ class DebugKitCommandTest extends KernelTestCase
             ->assertSuccessful()
             // Kit details
             ->assertOutputContains('Name       Shadcn')
-            ->assertOutputContains('Homepage   https://ux.symfony.com/components')
+            ->assertOutputContains('Homepage   https://ux.symfony.com/toolkit/kits/shadcn')
             ->assertOutputContains('License    MIT')
             // Components details
             ->assertOutputContains(implode(\PHP_EOL, [

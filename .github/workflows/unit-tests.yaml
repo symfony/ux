@@ -57,6 +57,8 @@ jobs:
 
         env:
             SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=5.4' }} # TODO: To change to '>=6.4' in 3.x
+            # https://github.com/spatie/phpunit-snapshot-assertions#usage-in-ci
+            CREATE_SNAPSHOTS: false
         steps:
             - uses: actions/checkout@v4
 

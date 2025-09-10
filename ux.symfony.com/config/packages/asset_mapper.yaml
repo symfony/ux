@@ -2,7 +2,8 @@ framework:
     asset_mapper:
         # The paths to make available to the asset mapper.
         paths:
-            - assets/
+            assets/: ''
+            vendor/symfony/ux-toolkit/kits/: '@symfony/ux-toolkit/kits'
         excluded_patterns:
             - '*/assets/styles/_*.scss'
             - '*/assets/styles/**/_*.scss'
@@ -11,6 +12,9 @@ framework:
             - '*/assets/react/src**'       # React sources
             - '*/assets/svelte/build**'    # ESvelte build dir
             - '*/assets/svelte/src**'      # Svelte source files
+            - '*/kits/**/*.html.twig'      # UX Toolkit kit Twig templates
+            - '*/kits/**/*.md'             # UX Toolkit kit documentation
+            - '*/kits/**/manifest.json'    # UX Toolkit kit manifest files
         importmap_polyfill: false
 
 react:

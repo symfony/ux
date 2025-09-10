@@ -132,7 +132,7 @@ class ToolkitService
         $manual .= '<li><strong>And the most important, enjoy!</strong></li>';
         $manual .= '</ol>';
 
-        return $this->generateTabs([
+        return self::generateTabs([
             'Automatic' => \sprintf(
                 '<p>Ensure the Symfony UX Toolkit is installed in your Symfony app:</p>%s<p>Then, run the following command to install the component and its dependencies:</p>%s',
                 CodeBlockRenderer::highlightCode('shell', '$ composer require --dev symfony/ux-toolkit'),
