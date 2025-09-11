@@ -24,6 +24,7 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\ComponentValidator;
 use Symfony\UX\LiveComponent\ComponentValidatorInterface;
@@ -138,12 +139,10 @@ final class LiveComponentExtension extends Extension implements PrependExtension
         ;
 
         $container->register('ux.live_component.live_url_subscriber', LiveUrlSubscriber::class)
-            ->setArguments([
-                new Reference('ux.live_component.metadata_factory'),
-                new Reference('ux.live_component.component_hydrator'),
-                new Reference('router'),
-            ])
             ->addTag('kernel.event_subscriber')
+            ->addTag('container.service_subscriber', ['key' => LiveComponentHydrator::class, 'id' => 'ux.live_component.component_hydrator'])
+            ->addTag('container.service_subscriber', ['key' => LiveComponentMetadataFactory::class, 'id' => 'ux.live_component.metadata_factory'])
+            ->addTag('container.service_subscriber', ['key' => RouterInterface::class, 'id' => 'router'])
         ;
 
         $container->register('ux.live_component.live_responder', LiveResponder::class);

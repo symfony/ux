@@ -11,11 +11,13 @@
 
 namespace Symfony\UX\LiveComponent\EventListener;
 
+use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\TwigComponent\MountedComponent;
@@ -23,15 +25,22 @@ use Symfony\UX\TwigComponent\MountedComponent;
 /**
  * @internal
  */
-class LiveUrlSubscriber implements EventSubscriberInterface
+class LiveUrlSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface
 {
     private const URL_HEADER = 'X-Live-Url';
 
     public function __construct(
-        private LiveComponentMetadataFactory $metadataFactory,
-        private LiveComponentHydrator $liveComponentHydrator,
-        private RouterInterface $router,
+        private ContainerInterface $container,
     ) {
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        return [
+            LiveComponentMetadataFactory::class,
+            LiveComponentHydrator::class,
+            RouterInterface::class,
+        ];
     }
 
     public function onKernelResponse(ResponseEvent $event): void
@@ -68,10 +77,10 @@ class LiveUrlSubscriber implements EventSubscriberInterface
     {
         $pathProps = $queryProps = [];
 
-        $mountedMetadata = $this->metadataFactory->getMetadata($mounted->getName());
+        $mountedMetadata = $this->getMetadataFactory()->getMetadata($mounted->getName());
 
         if ([] !== $urlMappings = $mountedMetadata->getAllUrlMappings($mounted->getComponent())) {
-            $dehydratedProps = $this->liveComponentHydrator->dehydrate($mounted->getComponent(), $mounted->getAttributes(), $mountedMetadata);
+            $dehydratedProps = $this->getLiveComponentHydrator()->dehydrate($mounted->getComponent(), $mounted->getAttributes(), $mountedMetadata);
             $props = $dehydratedProps->getProps();
 
             foreach ($urlMappings as $name => $urlMapping) {
@@ -95,14 +104,15 @@ class LiveUrlSubscriber implements EventSubscriberInterface
         $newQueryString = $previousUrlParsed['query'] ?? '';
 
         if ([] !== $pathProps) {
-            $context = $this->router->getContext();
+            $router = $this->getRouter();
+            $context = $router->getContext();
             try {
                 // Re-create a context for the URL rendering the current LiveComponent
                 $tmpContext = clone $context;
                 $tmpContext->setMethod('GET');
-                $this->router->setContext($tmpContext);
+                $router->setContext($tmpContext);
 
-                $routeMatched = $this->router->match($previousUrlParsed['path']);
+                $routeMatched = $router->match($previousUrlParsed['path']);
                 $routeParams = [];
                 foreach ($routeMatched as $k => $v) {
                     if ('_route' === $k || '_controller' === $k) {
@@ -111,11 +121,11 @@ class LiveUrlSubscriber implements EventSubscriberInterface
                     $routeParams[$k] = \array_key_exists($k, $pathProps) ? $pathProps[$k] : $v;
                 }
 
-                $newUrl = $this->router->generate($routeMatched['_route'], $routeParams);
+                $newUrl = $router->generate($routeMatched['_route'], $routeParams);
             } catch (ResourceNotFoundException) {
                 // reuse the previous URL path
             } finally {
-                $this->router->setContext($context);
+                $router->setContext($context);
             }
         }
 
@@ -130,5 +140,20 @@ class LiveUrlSubscriber implements EventSubscriberInterface
         }
 
         return $newUrl.($newQueryString ? '?'.$newQueryString : '');
+    }
+
+    private function getMetadataFactory(): LiveComponentMetadataFactory
+    {
+        return $this->container->get(LiveComponentMetadataFactory::class);
+    }
+
+    private function getLiveComponentHydrator(): LiveComponentHydrator
+    {
+        return $this->container->get(LiveComponentHydrator::class);
+    }
+
+    private function getRouter(): RouterInterface
+    {
+        return $this->container->get(RouterInterface::class);
     }
 }
