@@ -13,8 +13,8 @@ namespace Symfony\UX\Toolkit\Tests\Kit;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\UX\Toolkit\Dependency\ConstraintVersion;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
-use Symfony\UX\Toolkit\Dependency\Version;
 use Symfony\UX\Toolkit\Kit\KitSynchronizer;
 use Symfony\UX\Toolkit\Recipe\RecipeSynchronizer;
 use Symfony\UX\Toolkit\Tests\TestHelperTrait;
@@ -39,7 +39,7 @@ final class KitSynchronizerTest extends KernelTestCase
 
         $this->assertEquals([
             new PhpPackageDependency('twig/extra-bundle'),
-            new PhpPackageDependency('twig/html-extra', new Version('^3.12.0')),
+            new PhpPackageDependency('twig/html-extra', new ConstraintVersion('^3.12.0')),
             new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra'),
         ], $kit->getRecipe('Button')->manifest->dependencies);
     }

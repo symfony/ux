@@ -6,10 +6,7 @@
     "copy-files": {
         "templates/": "templates/"
     },
-    "dependencies": [
-        {
-            "type": "php",
-            "name": "tales-from-a-dev/twig-tailwind-extra"
-        }
-    ]
+    "dependencies": {
+        "composer": ["tales-from-a-dev/twig-tailwind-extra"]
+    }
 }

@@ -100,8 +100,9 @@ class CreateKitCommand extends Command
                     },
                 ) -%}
 
-                <button class="{{ style.apply({ variant }, attributes.render('class'))|tailwind_merge }}"
-                    {{ attributes }}
+                <button
+                    class="{{ style.apply({ variant }, attributes.render('class'))|tailwind_merge }}"
+                    {{ attributes.defaults({ type: 'submit'}) }}
                 >
                     {%- block content %}{% endblock -%}
                 </button>
@@ -116,9 +117,11 @@ class CreateKitCommand extends Command
                 'templates/' => 'templates/',
             ],
             'dependencies' => [
-                ['type' => 'php', 'package' => 'twig/extra-bundle'],
-                ['type' => 'php', 'package' => 'twig/html-extra:^3.12.0'],
-                ['type' => 'php', 'package' => 'tales-from-a-dev/twig-tailwind-extra'],
+                'composer' => [
+                    'twig/extra-bundle',
+                    'twig/html-extra:^3.12.0',
+                    'tales-from-a-dev/twig-tailwind-extra',
+                ],
             ],
         ], \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
 

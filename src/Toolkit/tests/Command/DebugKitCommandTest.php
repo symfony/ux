@@ -68,11 +68,12 @@ class DebugKitCommandTest extends KernelTestCase
             ->assertOutputContains(implode(\PHP_EOL, [
                 '+--------------+------------------------- Recipe: "Alert" ----------------------------------------+',
                 '| File(s)      | N/A                                                                              |',
-                '| Dependencies | twig/html-extra:^3.12.0                                                          |',
+                '| Dependencies | Button                                                                           |',
+                '|              | twig/html-extra:^3.12.0                                                          |',
                 '|              | tales-from-a-dev/twig-tailwind-extra                                             |',
                 '|              | tailwindcss:^4.0.0                                                               |',
+                '|              | @tailwindplus/elements:1                                                         |',
                 '|              | @hotwired/stimulus                                                               |',
-                '|              | Button                                                                           |',
                 '+--------------+----------------------------------------------------------------------------------+',
             ]))
             ->assertOutputContains(implode(\PHP_EOL, [

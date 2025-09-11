@@ -6,10 +6,7 @@
     "copy-files": {
         "templates/": "templates/"
     },
-    "dependencies": [
-        {
-            "type": "recipe",
-            "name": "B"
-        }
-    ]
+    "dependencies": {
+        "recipe": ["B"]
+    }
 }
