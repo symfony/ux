@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
-
 {% block main %}
     <div class="px-4 py-5 my-5 text-center">
         <h1 class="display-5 fw-bold">Symfony UX's E2E App</h1>
@@ -12,5 +10,25 @@
                 to ensure they work as expected for multiple Symfony versions and various browsers.
             </p>
         </div>
+    </div>
+
+    <div class="container">
+        {% for package, examples in examples_by_package %}
+            {% set package = enum('App\\UxPackage').from(package)  %}
+            <h2 style="margin-top: 2rem;">{{ package.value }} <a href="{{ package.documentationUrl }}" title="{{ package.value }} documentation">📖</a></h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                {% for example in examples %}
+                    <div>
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ example.name }}</h5>
+                                <p class="card-text">{{ example.description }}</p>
+                                <a href="{{ example.url }}">See example</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}

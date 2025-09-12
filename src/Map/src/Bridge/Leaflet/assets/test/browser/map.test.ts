@@ -104,15 +104,15 @@ test('Can render polygons', async ({ page }) => {
     await expect(paths, '2 polygons must be present').toHaveCount(2);
     await expect(paths.nth(0)).toHaveAttribute(
         'd',
-        'M548 276L656 188L762 260L708 433L573 384zM615 352L696 354L678 236L640 250z'
+        'M466 276L574 188L680 260L626 433L491 384zM533 352L614 354L596 236L558 250z'
     );
-    await expect(paths.nth(1)).toHaveAttribute('d', 'M870 476L795 364L844 395L911 508z');
+    await expect(paths.nth(1)).toHaveAttribute('d', 'M788 476L713 364L762 395L829 508z');
 
     // Workaround for `paths.nth(0).click({ relative: { ... } })` which does not work, it tries to click the center of the polygon,
     // but since it's empty, the popup can't be opened.
     const firstPathBoundingBox = await paths.nth(0).boundingBox();
     await page.mouse.click(firstPathBoundingBox.x + 40, firstPathBoundingBox.y + 100);
-    await expectOneInfoWindowToBeOpenedAndContainText(page, 'A weird shape on the France');
+    await expectOneInfoWindowToBeOpenedAndContainText(page, 'A weird shape on France');
 
     const secondPathBoundingBox = await paths.nth(1).boundingBox();
     await page.mouse.click(secondPathBoundingBox.x + 50, secondPathBoundingBox.y + 40);
@@ -125,8 +125,8 @@ test('Can render polylines', async ({ page }) => {
 
     const paths = page.getByTestId('map').locator('path.leaflet-interactive');
     await expect(paths, '2 polylines must be present').toHaveCount(2);
-    await expect(paths.nth(0)).toHaveAttribute('d', 'M640 250L696 354L708 433L573 384');
-    await expect(paths.nth(1)).toHaveAttribute('d', 'M548 276L551 306L603 302');
+    await expect(paths.nth(0)).toHaveAttribute('d', 'M558 250L614 354L626 433L491 384');
+    await expect(paths.nth(1)).toHaveAttribute('d', 'M466 276L469 306L521 302');
 
     // Workaround for `paths.nth(0).click({ relative: { ... } })` which does not work, it tries to click the center of the polygon,
     // but since it's empty, the popup can't be opened.
@@ -147,11 +147,11 @@ test('Can render circles', async ({ page }) => {
     await expect(paths, '2 circles must be present').toHaveCount(2);
     await expect(paths.nth(0)).toHaveAttribute(
         'd',
-        'M623.5256177777774,250.21082480695986a16,16 0 1,0 32,0 a16,16 0 1,0 -32,0 '
+        'M541.5256177777774,250.21082480695986a16,16 0 1,0 32,0 a16,16 0 1,0 -32,0 '
     );
     await expect(paths.nth(1)).toHaveAttribute(
         'd',
-        'M687.0390399999997,354.0936387274919a9,9 0 1,0 18,0 a9,9 0 1,0 -18,0 '
+        'M605.0390399999997,354.0936387274919a9,9 0 1,0 18,0 a9,9 0 1,0 -18,0 '
     );
 
     await paths.nth(0).click();
@@ -167,8 +167,8 @@ test('Can render rectangles', async ({ page }) => {
 
     const paths = page.getByTestId('map').locator('path.leaflet-interactive');
     await expect(paths, '2 rectangles must be present').toHaveCount(2);
-    await expect(paths.nth(0)).toHaveAttribute('d', 'M640 250L640 188L656 188L656 250z');
-    await expect(paths.nth(1)).toHaveAttribute('d', 'M573 384L573 354L696 354L696 384z');
+    await expect(paths.nth(0)).toHaveAttribute('d', 'M558 250L558 188L574 188L574 250z');
+    await expect(paths.nth(1)).toHaveAttribute('d', 'M491 384L491 354L614 354L614 384z');
 
     await paths.nth(0).click();
     await expectOneInfoWindowToBeOpenedAndContainText(page, 'A rectangle from Paris to Lille');
