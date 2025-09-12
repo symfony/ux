@@ -143,7 +143,7 @@ final class MapController extends AbstractController
                         new Point(48.856613, 2.352222), // Paris
                     ],
                 ],
-                infoWindow: new InfoWindow(content: 'A weird shape on the France'),
+                infoWindow: new InfoWindow(content: 'A weird shape on France'),
             ))
 
             ->addPolygon(new Polygon(
