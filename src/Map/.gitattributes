@@ -3,6 +3,7 @@
 /phpunit.xml.dist export-ignore
 /assets/src export-ignore
 /assets/test export-ignore
-/assets/vitest.config.js export-ignore
+/assets/playwright.config.ts export-ignore
+/assets/vitest.config.mjs export-ignore
 /doc export-ignore
 /tests export-ignore

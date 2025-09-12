@@ -171,11 +171,40 @@ class InstallCommand extends Command
         }
 
         $this->io->success('The recipe has been installed.');
-        $this->io->writeln('The following file(s) have been added to your project:');
+
+        $this->io->section('Installed files');
         $this->io->listing(array_map(fn (File $file) => Path::join($destinationPath, $file->sourceRelativePathName), $installationReport->newFiles));
 
+        if ([] !== $installationReport->suggestedPhpPackages || [] !== $installationReport->suggestedNpmPackages || [] !== $installationReport->suggestedImportmapPackages) {
+            $this->io->section('Next steps');
+        }
+
+        $stepIndex = 0;
         if ([] !== $installationReport->suggestedPhpPackages) {
-            $this->io->writeln(\sprintf('Run <info>composer require %s</> to install the required PHP dependencies.', implode(' ', $installationReport->suggestedPhpPackages)));
+            $this->io->writeln(++$stepIndex.'. Install suggested PHP package(s) with the command:');
+            $this->io->newLine();
+            $this->io->writeln(\sprintf(' $ <info>composer require %s</>', implode(' ', $installationReport->suggestedPhpPackages)));
+            $this->io->newLine();
+        }
+
+        if ([] !== $installationReport->suggestedNpmPackages && [] !== $installationReport->suggestedImportmapPackages) {
+            $this->io->writeln(++$stepIndex.'. Install suggested front-end packages with one of the following commands:');
+            $this->io->newLine();
+            $this->io->writeln(' # with npm/pnpm/yarn');
+            $this->io->writeln(\sprintf(' $ <info>npm install --save %s</>', implode(' ', $installationReport->suggestedNpmPackages)));
+            $this->io->newLine();
+            $this->io->writeln(' # or with Importmap');
+            $this->io->writeln(\sprintf(' $ <info>php bin/console importmap:install %s</>', implode(' ', $installationReport->suggestedImportmapPackages)));
+            $this->io->newLine();
+        } elseif ([] !== $installationReport->suggestedNpmPackages) {
+            $this->io->writeln(++$stepIndex.'. Install suggested front-end package(s) with the command:');
+            $this->io->newLine();
+            $this->io->writeln(\sprintf(' $ <info>npm install --save %s</>', implode(' ', $installationReport->suggestedNpmPackages)));
+            $this->io->newLine();
+        } elseif ([] !== $installationReport->suggestedImportmapPackages) {
+            $this->io->writeln(++$stepIndex.'. Install suggested front-end package(s) with the command:');
+            $this->io->newLine();
+            $this->io->writeln(\sprintf(' $ <info>php bin/console importmap:install %s</>', implode(' ', $installationReport->suggestedImportmapPackages)));
             $this->io->newLine();
         }
 
@@ -187,15 +216,17 @@ class InstallCommand extends Command
      */
     private function getAlternativeRecipes(Kit $kit, string $recipeName): array
     {
-        $alternative = [];
+        $alternativeRecipes = [];
 
         foreach ($kit->getRecipes() as $recipe) {
             $lev = levenshtein($recipeName, $recipe->manifest->name, 2, 5, 10);
             if ($lev <= 8 || str_contains($recipe->manifest->name, $recipeName)) {
-                $alternative[] = $recipe;
+                $alternativeRecipes[] = $recipe;
             }
         }
 
-        return $alternative;
+        usort($alternativeRecipes, fn (Recipe $recipeA, Recipe $recipeB) => strcmp($recipeA->manifest->name, $recipeB->manifest->name));
+
+        return $alternativeRecipes;
     }
 }

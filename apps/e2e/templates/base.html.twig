@@ -16,6 +16,7 @@
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div class="container">
                     <a class="navbar-brand" href="{{ path('app_home') }}">E2E App</a>
+                    {% block navbar_brand_after %}{% endblock %}
                 </div>
             </nav>
 

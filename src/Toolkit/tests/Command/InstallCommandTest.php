@@ -76,7 +76,7 @@ class InstallCommandTest extends KernelTestCase
             ->execute()
             ->assertFaulty()
             ->assertOutputContains('[WARNING] The recipe "A" does not exist')
-            ->assertOutputContains('Possible alternatives: "Alert", "AspectRatio", "Avatar"')
+            ->assertOutputContains('Possible alternatives: "Alert", "AlertDialog", "AspectRatio"')
         ;
     }
 

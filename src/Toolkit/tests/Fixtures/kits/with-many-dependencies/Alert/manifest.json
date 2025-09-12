@@ -1,0 +1,12 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Alert",
+    "description": "Component Alert",
+    "dependencies": {
+        "recipe": ["Button"],
+        "composer": ["twig/html-extra:^3.12.0", "tales-from-a-dev/twig-tailwind-extra"],
+        "npm": ["tailwindcss@^4.0.0", "@tailwindplus/elements@1"],
+        "importmap": ["@hotwired/stimulus"]
+    }
+}

@@ -85,8 +85,8 @@ class DebugKitCommand extends Command
                     'Dependencies',
                 ])
                 ->addRow([
-                    implode("\n", iterator_to_array($recipe->getFiles())),
-                    implode("\n", $recipe->manifest->dependencies),
+                    implode("\n", iterator_to_array($recipe->getFiles())) ?: 'N/A',
+                    implode("\n", $recipe->manifest->dependencies) ?: 'N/A',
                 ])
                 ->setColumnWidth(1, 80)
                 ->setColumnMaxWidth(1, 80)

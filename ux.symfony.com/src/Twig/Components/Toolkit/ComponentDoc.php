@@ -59,7 +59,7 @@ class ComponentDoc
             $this->component->manifest->description,
             current($examples),
             $this->toolkitService->renderInstallationSteps($this->kitId, $this->component),
-            dump(preg_replace('/^```twig.*\n/', '```twig'.\PHP_EOL, current($examples))),
+            preg_replace('/^```twig.*\n/', '```twig'.\PHP_EOL, current($examples)),
             array_reduce(array_keys($examples), function (string $acc, string $exampleTitle) use ($examples) {
                 $acc .= '### '.$exampleTitle.\PHP_EOL.$examples[$exampleTitle].\PHP_EOL;
 

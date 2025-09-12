@@ -5,63 +5,54 @@
     "type": "object",
     "required": ["name", "description"],
     "properties": {
-        "type": {
-            "type": "string",
-            "enum": ["component"]
-        },
         "name": {
             "type": "string",
-            "description": "The name of the component"
+            "description": "The name of the Recipe"
         },
         "description": {
-            "description": "A brief description of the component",
+            "description": "A brief description of the Recipe",
             "type": "string"
         },
         "copy-files": {
             "description": "Relative files or directories to copy into the project",
             "type": "object"
         },
-        "examples-dir": {
-            "description": "Relative path to the directory containing example files for the component, must end with a slash",
-            "type": "string",
-            "pattern": "^.+/$"
-        },
         "dependencies": {
-            "description": "List of dependencies required by the component",
-            "type": "array",
-            "items": {
-                "oneOf": [
-                    {
-                        "description": "A dependency on a PHP package",
-                        "type": "object",
-                        "required": ["type", "package"],
-                        "properties": {
-                            "type": {
-                                "type": "string",
-                                "enum": ["php"]
-                            },
-                            "package": {
-                                "type": "string",
-                                "description": "Package name and optional version constraint (e.g., 'vendor/package:^1.0')"
-                            }
-                        }
-                    },
-                    {
-                        "description": "A dependency on a Recipe",
-                        "type": "object",
-                        "required": ["type", "name"],
-                        "properties": {
-                            "type": {
-                                "type": "string",
-                                "enum": ["recipe"]
-                            },
-                            "name": {
-                                "type": "string",
-                                "description": "The name of the Recipe this component depends on, e.g., 'Button'"
-                            }
-                        }
+            "description": "List of dependencies required by the Recipe",
+            "type": "object",
+            "properties": {
+                "recipe": {
+                    "description": "List of Recipe dependencies",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "The name of the Recipe this component depends on, e.g., 'Button'"
                     }
-                ]
+                },
+                "composer": {
+                    "description": "List of Composer package dependencies",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "A dependency on a Composer package, e.g., 'twig/extra-bundle' or 'twig/html-extra:^3.12.0'"
+                    }
+                },
+                "npm": {
+                    "description": "List of NPM package dependencies",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "A dependency on an NPM package, e.g., 'el-transition' or '@tailwindplus/elements@1'"
+                    }
+                },
+                "importmap": {
+                    "description": "List of Importmap package dependencies",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "A dependency on an Importmap package, e.g., 'lodash' or 'bootstrap/dist/css/bootstrap.min.css'"
+                    }
+                }
             }
         }
     }

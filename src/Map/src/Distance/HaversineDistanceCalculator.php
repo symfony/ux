@@ -23,7 +23,7 @@ use Symfony\UX\Map\Point;
 final class HaversineDistanceCalculator implements DistanceCalculatorInterface
 {
     /**
-     * @const float The Earth's radius in meters.
+     * @var float the Earth's radius in meters
      */
     private const EARTH_RADIUS = 6371000.0;
 

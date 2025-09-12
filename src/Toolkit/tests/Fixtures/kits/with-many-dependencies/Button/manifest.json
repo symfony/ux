@@ -1,0 +1,11 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Button",
+    "description": "Component Button",
+    "dependencies": {
+        "composer": ["twig/html-extra:^3.12.0", "another/php-package:^2.0"],
+        "npm": ["another-npm-package@^1.0.0"],
+        "importmap": ["another-importmap-package"]
+    }
+}

@@ -6,18 +6,7 @@
     "copy-files": {
         "templates/": "templates/"
     },
-    "dependencies": [
-        {
-            "type": "php",
-            "package": "twig/extra-bundle"
-        },
-        {
-            "type": "php",
-            "package": "twig/html-extra:^3.12.0"
-        },
-        {
-            "type": "php",
-            "package": "tales-from-a-dev/twig-tailwind-extra"
-        }
-    ]
+    "dependencies": {
+        "composer": ["twig/extra-bundle", "twig/html-extra:^3.12.0", "tales-from-a-dev/twig-tailwind-extra"]
+    }
 }

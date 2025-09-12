@@ -14,9 +14,11 @@ declare(strict_types=1);
 namespace Symfony\UX\Toolkit\Tests\Recipe;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\UX\Toolkit\Dependency\ConstraintVersion;
+use Symfony\UX\Toolkit\Dependency\ImportmapPackageDependency;
+use Symfony\UX\Toolkit\Dependency\NpmPackageDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\Dependency\RecipeDependency;
-use Symfony\UX\Toolkit\Dependency\Version;
 use Symfony\UX\Toolkit\Recipe\RecipeManifest;
 use Symfony\UX\Toolkit\Recipe\RecipeType;
 
@@ -75,24 +77,10 @@ final class RecipeManifestTest extends TestCase
             JSON);
     }
 
-    public function testFromJsonWithMissingLicense()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Property "copy-files" is required.');
-
-        RecipeManifest::fromJson(<<<JSON
-                {
-                    "type": "component",
-                    "name": "MyComponent",
-                    "description": "An incredible component"
-                }
-            JSON);
-    }
-
     public function testFromJsonWithInvalidDependencies()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Each dependency must be an associative array.');
+        $this->expectExceptionMessage('The "dependencies" property must be an object.');
 
         RecipeManifest::fromJson(<<<JSON
                 {
@@ -107,10 +95,10 @@ final class RecipeManifestTest extends TestCase
             JSON);
     }
 
-    public function testFromJsonWithInvalidDependenciesType()
+    public function testFromJsonWithInvalidPhpDependency()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The dependency type is missing for dependency #0, add "type" key.');
+        $this->expectExceptionMessage('The dependency #0 of type "composer" must be a non-empty string.');
 
         RecipeManifest::fromJson(<<<JSON
                 {
@@ -120,17 +108,17 @@ final class RecipeManifestTest extends TestCase
                     "copy-files": {
                         "templates/": "templates/"
                     },
-                    "dependencies": [
-                        {"key": "value"}
-                    ]
+                    "dependencies": {
+                        "composer": [""]
+                    }
                 }
             JSON);
     }
 
-    public function testFromJsonWithInvalidPhpDependency()
+    public function testFromJsonWithInvalidNpmDependency()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The package name is missing for dependency #0, add "package" key.');
+        $this->expectExceptionMessage('The dependency #0 of type "npm" must be a non-empty string.');
 
         RecipeManifest::fromJson(<<<JSON
                 {
@@ -140,9 +128,32 @@ final class RecipeManifestTest extends TestCase
                     "copy-files": {
                         "templates/": "templates/"
                     },
-                    "dependencies": [
-                        {"type": "php"}
-                    ]
+                    "dependencies": {
+                        "composer": ["symfony/string"],
+                        "npm": [""]
+                    }
+                }
+            JSON);
+    }
+
+    public function testFromJsonWithInvalidImportmapDependency()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The dependency #0 of type "importmap" must be a non-empty string.');
+
+        RecipeManifest::fromJson(<<<JSON
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "description": "An incredible component",
+                    "copy-files": {
+                        "templates/": "templates/"
+                    },
+                    "dependencies": {
+                        "composer": ["symfony/string"],
+                        "npm": ["tailwindcss"],
+                        "importmap": [""]
+                    }
                 }
             JSON);
     }
@@ -150,7 +161,7 @@ final class RecipeManifestTest extends TestCase
     public function testFromJsonWithInvalidRecipeDependency()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The recipe name is missing for dependency #0, add "name" key.');
+        $this->expectExceptionMessage('The dependency #0 of type "recipe" must be a non-empty string.');
 
         RecipeManifest::fromJson(<<<JSON
                 {
@@ -160,9 +171,12 @@ final class RecipeManifestTest extends TestCase
                     "copy-files": {
                         "templates/": "templates/"
                     },
-                    "dependencies": [
-                        {"type": "recipe"}
-                    ]
+                    "dependencies": {
+                        "composer": ["symfony/string"],
+                        "npm": ["tailwindcss"],
+                        "importmap": ["tailwindcss"],
+                        "recipe": [""]
+                    }
                 }
             JSON);
     }
@@ -197,16 +211,22 @@ final class RecipeManifestTest extends TestCase
                     "copy-files": {
                         "templates/": "templates/"
                     },
-                    "dependencies": [
-                        {
-                            "type": "php",
-                            "package": "symfony/ux-twig-component:^2.29"
-                        },
-                        {
-                            "type": "recipe",
-                            "name": "OtherComponent"
-                        }
-                    ]
+                    "dependencies": {
+                        "composer": [
+                            "tales-from-a-dev/twig-tailwind-extra",
+                            "symfony/ux-twig-component:^2.29"
+                        ],
+                        "npm": [
+                            "tailwindcss@^4.0.0",
+                            "@tailwindplus/elements@1"
+                        ],
+                        "importmap": [
+                            "@hotwired/stimulus"
+                        ],
+                        "recipe": [
+                            "OtherComponent"
+                        ]
+                    }
                 }
             JSON);
 
@@ -215,8 +235,12 @@ final class RecipeManifestTest extends TestCase
         $this->assertSame('An incredible component', $manifest->description);
         $this->assertSame(['templates/' => 'templates/'], $manifest->copyFiles);
         $this->assertEquals([
-            new PhpPackageDependency('symfony/ux-twig-component', new Version('^2.29')),
             new RecipeDependency('OtherComponent'),
+            new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra', null),
+            new PhpPackageDependency('symfony/ux-twig-component', new ConstraintVersion('^2.29')),
+            new NpmPackageDependency('tailwindcss', new ConstraintVersion('^4.0.0')),
+            new NpmPackageDependency('@tailwindplus/elements', new ConstraintVersion('1')),
+            new ImportmapPackageDependency('@hotwired/stimulus'),
         ], $manifest->dependencies);
     }
 }

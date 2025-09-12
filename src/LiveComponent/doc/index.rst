@@ -66,6 +66,16 @@ and show the new results!
 
 Want some demos? Check out https://ux.symfony.com/live-component#demo
 
+.. tip::
+
+    You can also specify the template path::
+
+        #[AsLiveComponent(template: 'some/path/to/your/template.html.twig')]
+        class ProductSearch
+        {
+            // ...
+
+
 Installation
 ------------
 

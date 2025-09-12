@@ -188,4 +188,10 @@ return [
         'version' => '2.4.3',
         'type' => 'css',
     ],
+    '@symfony/ux-toolkit/kits/shadcn/AlertDialog/assets/controllers/alert_dialog_controller.js' => [
+        'path' => './vendor/symfony/ux-toolkit/kits/shadcn/AlertDialog/assets/controllers/alert_dialog_controller.js',
+    ],
+    'el-transition' => [
+        'version' => '0.0.7',
+    ],
 ];

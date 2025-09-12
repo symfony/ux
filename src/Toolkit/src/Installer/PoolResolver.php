@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Symfony\UX\Toolkit\Installer;
 
+use Symfony\UX\Toolkit\Dependency\ImportmapPackageDependency;
+use Symfony\UX\Toolkit\Dependency\NpmPackageDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\Dependency\RecipeDependency;
 use Symfony\UX\Toolkit\Kit\Kit;
@@ -50,6 +52,10 @@ final class PoolResolver
             foreach ($currentRecipe->manifest->dependencies as $dependency) {
                 if ($dependency instanceof PhpPackageDependency) {
                     $pool->addPhpPackageDependency($dependency);
+                } elseif ($dependency instanceof NpmPackageDependency) {
+                    $pool->addNpmPackageDependency($dependency);
+                } elseif ($dependency instanceof ImportmapPackageDependency) {
+                    $pool->addImportmapPackageDependency($dependency);
                 } elseif ($dependency instanceof RecipeDependency) {
                     if (null === $recipeDependency = $kit->getRecipe($dependency->name)) {
                         throw new \LogicException(\sprintf('The recipe "%s" has a dependency on unregistered recipe "%s".', $currentRecipe->manifest->name, $dependency->name));
