@@ -61,6 +61,7 @@ abstract class Icon
         protected IconType $type,
         protected int $width = 24,
         protected int $height = 24,
+        protected ?string $color = null, // Nouvelle propriété pour la couleur
     ) {
     }
 
@@ -89,6 +90,20 @@ abstract class Icon
     }
 
     /**
+     * Sets the color of the icon.
+     * Note: This only has an effect on SvgIcon and UxIcon types when rendered client-side by the JavaScript controller.
+     * The color should be a valid CSS color string (e.g., 'red', '#FF0000', 'rgb(255,0,0)').
+     *
+     * @param non-empty-string $color
+     */
+    public function color(string $color): static
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    /**
      * @internal
      */
     public function toArray(): array
@@ -97,14 +112,15 @@ abstract class Icon
             'type' => $this->type->value,
             'width' => $this->width,
             'height' => $this->height,
+            'color' => $this->color, // Ajout de la couleur au tableau de sérialisation
         ];
     }
 
     /**
-     * @param array{ type: value-of<IconType>, width: positive-int, height: positive-int }
-     *     &(array{ url: non-empty-string }
-     *      |array{ html: non-empty-string }
-     *      |array{ name: non-empty-string }) $data
+     * @param array{ type: value-of<IconType>, width: positive-int, height: positive-int, color?: string }
+     * &(array{ url: non-empty-string }
+     * |array{ html: non-empty-string }
+     * |array{ name: non-empty-string }) $data
      *
      * @internal
      */
