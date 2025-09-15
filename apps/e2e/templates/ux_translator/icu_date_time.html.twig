@@ -1,0 +1,35 @@
+{% extends 'example.html.twig' %}
+
+{% block example %}
+    <div id="input" class="mb-3">
+        <h2>Input</h2>
+        <div class="mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input type="datetime-local" class="form-control" id="date" value="2023-04-27 08:12"/>
+        </div>
+        <button id="doRender" class="btn btn-primary">Render</button>
+    </div>
+    <output data-testid="output" class="mb-3"></output>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="module">
+        import { trans } from '@symfony/ux-translator';
+        import { PUBLISHED_AT } from '@app/translations';
+
+        const inputDate = document.querySelector('#date');
+
+        function render() {
+            document.querySelector('[data-testid="output"]').innerHTML = `
+                <h2>Output</h2>
+                <ul >
+                    <li>🇬🇧 ${trans(PUBLISHED_AT, { publication_date: new Date(inputDate.value) }, 'messages', 'en')}</li>
+                    <li>🇫🇷 ${trans(PUBLISHED_AT, { publication_date: new Date(inputDate.value) }, 'messages', 'fr')}</li>
+                </ul>
+            `
+        }
+
+        document.querySelector('#doRender').addEventListener('click', render);
+    </script>
+{% endblock %}
