@@ -43,6 +43,14 @@ class ExampleRepository
             new Example(UxPackage::Map, 'With rectangles (Google)', 'A map with two rectangles: one from Paris to Lille, the other from Lyon to Bordeaux', '/ux-map/with-rectangles?renderer=google'),
             new Example(UxPackage::React, 'Basic React Component', 'A basic React component that displays a welcoming message', '/ux-react/'),
             new Example(UxPackage::Svelte, 'Basic Svelte Component', 'A basic Svelte component that displays a welcoming message', '/ux-svelte/'),
+           new Example(UxPackage::Translator, 'Basic translation', 'A simple translation example using the Translator component', '/ux-translator/basic'),
+           new Example(UxPackage::Translator, 'Translation with parameter', 'Translation example with dynamic parameters', '/ux-translator/with-parameter'),
+           new Example(UxPackage::Translator, 'ICU Translation with `select` argument', 'ICU message format example using the `select` argument', '/ux-translator/icu-select'),
+           new Example(UxPackage::Translator, 'ICU Translation with `plural` argument', 'ICU message format example using the `plural` argument', '/ux-translator/icu-plural'),
+           new Example(UxPackage::Translator, 'ICU Translation with `selectordinal` argument', 'ICU message format example using the `selectordinal` argument', '/ux-translator/icu-selectordinal'),
+           new Example(UxPackage::Translator, 'ICU Translation with `date` and `time` arguments', 'ICU message format example using `date` and `time` arguments', '/ux-translator/icu-date-time'),
+           new Example(UxPackage::Translator, 'ICU Translation with `number` and `percent` arguments', 'ICU message format example using `number` and `percent` arguments', '/ux-translator/icu-number-percent'),
+           new Example(UxPackage::Translator, 'ICU Translation with `number` and `currency` arguments', 'ICU message format example using `number` and `currency` arguments', '/ux-translator/icu-number-currency'),
             new Example(UxPackage::Vue, 'Basic Vue Component', 'A basic Vue component that displays a welcoming message', '/ux-vue/'),
         ];
     }

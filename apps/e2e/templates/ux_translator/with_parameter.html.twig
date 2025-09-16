@@ -1,0 +1,35 @@
+{% extends 'example.html.twig' %}
+
+{% block example %}
+    <div id="input" class="mb-3">
+        <h2>Input</h2>
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" value="Fabien"/>
+        </div>
+        <button id="doRender" class="btn btn-primary">Render</button>
+    </div>
+    <output data-testid="output" class="mb-3"></output>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="module">
+        import { trans } from '@symfony/ux-translator';
+        import { SAY_HELLO } from '@app/translations';
+
+        const inputName = document.querySelector('#name');
+
+        function render() {
+            document.querySelector('[data-testid="output"]').innerHTML = `
+                <h2>Output</h2>
+                <ul >
+                    <li>🇬🇧 ${trans(SAY_HELLO, { name: inputName.value }, 'messages', 'en')}</li>
+                    <li>🇫🇷 ${trans(SAY_HELLO, { name: inputName.value }, 'messages', 'fr')}</li>
+                </ul>
+            `
+        }
+
+        document.querySelector('#doRender').addEventListener('click', render);
+    </script>
+{% endblock %}
