@@ -20,3 +20,5 @@ packageExtensions:
     '@symfony/ux-leaflet-map':
       dependencies:
         '@symfony/ux-map': 'workspace:*'
+
+minimumReleaseAge: 1440
