@@ -2021,7 +2021,6 @@ var Component = class {
         thisPromiseResolve(backendResponse);
         return response;
       }
-      this.processRerender(html, backendResponse);
       const liveUrl = backendResponse.getLiveUrl();
       if (liveUrl) {
         history.replaceState(
@@ -2030,6 +2029,7 @@ var Component = class {
           new URL(liveUrl + window.location.hash, window.location.origin)
         );
       }
+      this.processRerender(html, backendResponse);
       this.backendRequest = null;
       thisPromiseResolve(backendResponse);
       if (this.isRequestPending) {
