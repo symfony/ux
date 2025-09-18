@@ -105,7 +105,7 @@ final class KitContextRunner
             {
                 foreach ($this->kit->getRecipes(type: RecipeType::Component) as $recipe) {
                     foreach ($recipe->getFiles() as $file) {
-                        if (str_ends_with($file->sourceRelativePathName, str_replace(':', '/', $name).'.html.twig')) {
+                        if (str_ends_with($file->sourceRelativePathName, 'templates/components/'.str_replace(':', '/', $name).'.html.twig')) {
                             return $file->sourceRelativePathName;
                         }
                     }
