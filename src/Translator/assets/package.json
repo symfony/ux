@@ -20,6 +20,7 @@
         "test": "pnpm run test:unit && pnpm run test:browser",
         "test:unit": "../../../bin/test_package.sh . --unit",
         "test:browser": "../../../bin/test_package.sh . --browser",
+        "test:browser:ui": "../../../bin/test_package.sh . --browser --ui",
         "check": "biome check",
         "ci": "biome ci"
     },

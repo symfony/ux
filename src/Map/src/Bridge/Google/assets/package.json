@@ -21,6 +21,7 @@
         "watch": "tsx ../../../../../../bin/build_package.ts . --watch",
         "test": "pnpm run test:browser",
         "test:browser": "../../../../../../bin/test_package.sh . --browser",
+        "test:browser:ui": "../../../../../../bin/test_package.sh . --browser --ui",
         "check": "biome check",
         "ci": "biome ci"
     },

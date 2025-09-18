@@ -40,9 +40,11 @@ fi
 runTestSuite() {
     if [ "$testType" == "unit" ]; then
       echo -e "🧪  Running unit tests for $workspace...\n"
+      # Using "cd" instead of "pnpm --filter" prevent rendering issues in GitHub Actions that does not support nested groups
       (cd "$location"; pnpm exec vitest --run "${args[@]}") || { all_tests_passed=false; }
     elif [ "$testType" == "browser" ]; then
       echo -e "🧪  Running browser tests for $workspace...\n"
+      # Using "cd" instead of "pnpm --filter" prevent rendering issues in GitHub Actions that does not support nested groups
       (cd "$location"; pnpm exec playwright test "${args[@]}") || { all_tests_passed=false; }
     fi
 }
@@ -66,6 +68,12 @@ processWorkspace() {
     fi
 
     echo -e "⏳  Processing workspace $workspace at location $location...\n"
+
+    # TODO: Refactor the `test_package.sh` script to its simple form:  only run unit tests for a given UX package,
+    # The rest will be moved to `pnpm` scripts or other CI checks
+    if [ "$testType" == "browser" ]; then
+      runTestSuite
+    fi
 
     echo "⚙️  Checking '$package_json_path' for peerDependencies and importmap dependencies to have the same version"
     deps=$(jq -r '.peerDependencies | keys[]' "$package_json_path")
