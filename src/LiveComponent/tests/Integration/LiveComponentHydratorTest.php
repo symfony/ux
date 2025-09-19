@@ -44,6 +44,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\EmptyStringEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\IntEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\StringEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\ZeroIntEnum;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Factory\ProductFixtureEntityFactory;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentMetadata;
@@ -53,8 +54,8 @@ use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
 use function Zenstruck\Foundry\object;
+use function Zenstruck\Foundry\Persistence\delete;
 use function Zenstruck\Foundry\Persistence\persist;
-use function Zenstruck\Foundry\Persistence\proxy;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -434,16 +435,16 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Persisted entity: deleting entity between dehydration and hydration sets it to null' => [function () {
-            $product = proxy(persist(ProductFixtureEntity::class));
+            $product = ProductFixtureEntityFactory::createOne();
 
             return HydrationTest::create(new class {
                 // test that event the writable path doesn't cause problems
                 #[LiveProp(writable: ['name'])]
                 public ?ProductFixtureEntity $product;
             })
-                ->mountWith(['product' => $product->_real()])
+                ->mountWith(['product' => $product])
                 ->beforeHydration(function () use ($product) {
-                    $product->_delete();
+                    delete($product);
                 })
                 ->assertObjectAfterHydration(function (object $object) {
                     self::assertNull(

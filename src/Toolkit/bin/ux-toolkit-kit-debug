@@ -47,7 +47,7 @@ if (!class_exists(Application::class)) {
 }
 
 $filesystem = new Filesystem();
-$kitSynchronizer = new KitSynchronizer($filesystem, new RecipeSynchronizer($filesystem));
+$kitSynchronizer = new KitSynchronizer($filesystem, new RecipeSynchronizer());
 $kitFactory = new KitFactory($filesystem, $kitSynchronizer);
 
 (new Application())->add($command = new DebugKitCommand($kitFactory))

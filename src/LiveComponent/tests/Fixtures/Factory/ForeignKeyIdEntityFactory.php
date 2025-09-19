@@ -13,14 +13,14 @@ namespace Symfony\UX\LiveComponent\Tests\Fixtures\Factory;
 
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\ForeignKeyIdEntity;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 use function Zenstruck\Foundry\lazy;
 
 /**
- * @extends PersistentProxyObjectFactory<ForeignKeyIdEntity>
+ * @extends PersistentObjectFactory<ForeignKeyIdEntity>
  */
-class ForeignKeyIdEntityFactory extends PersistentProxyObjectFactory
+class ForeignKeyIdEntityFactory extends PersistentObjectFactory
 {
     public static function class(): string
     {
