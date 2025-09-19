@@ -11,13 +11,13 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Fixtures\Factory;
 
-use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\CategoryFixtureEntity;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\ProductFixtureEntity;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 /**
- * @extends PersistentObjectFactory<CategoryFixtureEntity>
+ * @extends PersistentObjectFactory<ProductFixtureEntity>
  */
-final class CategoryFixtureEntityFactory extends PersistentObjectFactory
+final class ProductFixtureEntityFactory extends PersistentObjectFactory
 {
     protected function defaults(): array|callable
     {
@@ -28,6 +28,6 @@ final class CategoryFixtureEntityFactory extends PersistentObjectFactory
 
     public static function class(): string
     {
-        return CategoryFixtureEntity::class;
+        return ProductFixtureEntity::class;
     }
 }

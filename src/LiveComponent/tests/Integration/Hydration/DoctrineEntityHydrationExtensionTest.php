@@ -27,7 +27,7 @@ class DoctrineEntityHydrationExtensionTest extends KernelTestCase
 
     public function testCompositeId()
     {
-        $compositeIdEntity = CompositeIdEntityFactory::createOne()->_real();
+        $compositeIdEntity = CompositeIdEntityFactory::createOne();
 
         /** @var DoctrineEntityHydrationExtension $extension */
         $extension = self::getContainer()->get('ux.live_component.doctrine_entity_hydration_extension');
@@ -40,7 +40,7 @@ class DoctrineEntityHydrationExtensionTest extends KernelTestCase
 
     public function testForeignKeyId()
     {
-        $foreignKeyIdEntity = ForeignKeyIdEntityFactory::createOne()->_real();
+        $foreignKeyIdEntity = ForeignKeyIdEntityFactory::createOne();
 
         /** @var DoctrineEntityHydrationExtension $extension */
         $extension = self::getContainer()->get('ux.live_component.doctrine_entity_hydration_extension');
