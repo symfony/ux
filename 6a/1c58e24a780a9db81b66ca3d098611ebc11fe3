@@ -1,0 +1,33 @@
+---------------------------------------------------------------------------
+
+by dbu at 2025-03-31T06:39:18Z
+
+ah, i did not realize its a default configuration. i reverted that change.
+
+although i don't understand what that configuration is done for. all icons i look at use `fill=currentColor` or `outline=currentColor` in the elements underneath the `<svg>` root element, and setting the fill on the root svg element has no effect whatsoever. setting the color does have an effect however. so talking about the fill color seems confusing - it was confusing me when i thought i would be able to change the color of the icon using that, and it did not work.
+
+if the default configuration is to work around weird icons that do not define the fill or outline to be currentColor, we could keep that in the doc about default configuration, but the example for adding global settings could show how to set color and size for example, to do something the user actually could want to do.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-04-02T11:26:16Z
+
+It is hard to find a solution that pleases everyone, and works for every icon 🤷
+
+"Styling icons" is indeed a good idea for a new dedicated section, with examples of hard-coded style, CSS classes, or global css styling.
+
+Would you like to try writing a first version of it ?
+
+---------------------------------------------------------------------------
+
+by dbu at 2025-04-03T05:58:50Z
+
+i think a section on styling icons is the right idea to share the relevant knowledge, even if it is not strictly about the symfony bundle per se.
+
+i can't promise if i find time, its gotten pretty busy for me right now. i will try, but if somebody else wants to do it, don't hesitate :-)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-09-20T02:29:46Z
+
+Rebased (then removed my merge commit 😅 ) and ready to merge :)
