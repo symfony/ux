@@ -1,78 +1,78 @@
 {
-  "name": "symfony/ux-toolkit",
-  "type": "symfony-bundle",
-  "description": "A tool to easily create a design system in your Symfony app with customizable, well-crafted Twig components",
-  "keywords": [
-    "symfony-ux",
-    "twig",
-    "components"
-  ],
-  "homepage": "https://symfony.com",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Symfony Community",
-      "homepage": "https://symfony.com/contributors"
+    "name": "symfony/ux-toolkit",
+    "type": "symfony-bundle",
+    "description": "A tool to easily create a design system in your Symfony app with customizable, well-crafted Twig components",
+    "keywords": [
+        "symfony-ux",
+        "design-system",
+        "ui",
+        "twig",
+        "components"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        },
+        {
+            "name": "Hugo Alliaume",
+            "email": "hugo@alliau.me"
+        },
+        {
+            "name": "Jean-François Lépine",
+            "email": "lepinejeanfrancois@gmail.com"
+        },
+        {
+            "name": "Simon André",
+            "email": "smn.andre@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "twig/twig": "^3.0",
+        "symfony/console": "^6.4|^7.0|^8.0",
+        "symfony/filesystem": "^6.4|^7.0|^8.0",
+        "symfony/framework-bundle": "^6.4|^7.0|^8.0",
+        "symfony/twig-bundle": "^6.4|^7.0|^8.0",
+        "symfony/ux-twig-component": "^2.25.1",
+        "symfony/yaml": "^6.4|^7.0|^8.0"
     },
-    {
-      "name": "Hugo Alliaume",
-      "email": "hugo@alliau.me"
+    "require-dev": {
+        "symfony/finder": "6.4|^7.0|^8.0",
+        "twig/extra-bundle": "^3.19|^4.0",
+        "twig/html-extra": "^3.19",
+        "zenstruck/console-test": "^1.7",
+        "symfony/http-client": "6.4|^7.0|^8.0",
+        "symfony/stopwatch": "^6.4|^7.0|^8.0",
+        "symfony/phpunit-bridge": "^7.2|^8.0",
+        "vincentlanglet/twig-cs-fixer": "^3.9",
+        "spatie/phpunit-snapshot-assertions": "^4.2.17",
+        "phpunit/phpunit": "^9.6.22",
+        "symfony/ux-icons": "^2.18",
+        "tales-from-a-dev/twig-tailwind-extra": "^0.4.0"
     },
-    {
-      "name": "Jean-François Lépine",
-      "email": "lepinejeanfrancois@gmail.com"
+    "bin": [
+        "bin/ux-toolkit-kit-create",
+        "bin/ux-toolkit-kit-debug"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Toolkit\\": "src"
+        },
+        "exclude-from-classmap": []
     },
-    {
-      "name": "Simon André",
-      "email": "smn.andre@gmail.com"
-    }
-  ],
-  "require": {
-    "php": ">=8.1",
-    "twig/twig": "^3.0",
-    "symfony/console": "^6.4|^7.0|^8.0",
-    "symfony/filesystem": "^6.4|^7.0|^8.0",
-    "symfony/framework-bundle": "^6.4|^7.0|^8.0",
-    "symfony/twig-bundle": "^6.4|^7.0|^8.0",
-    "symfony/ux-twig-component": "^2.25.1",
-    "symfony/yaml": "^6.4|^7.0|^8.0"
-  },
-  "require-dev": {
-    "symfony/finder": "6.4|^7.0|^8.0",
-    "twig/extra-bundle": "^3.19|^4.0",
-    "twig/html-extra": "^3.19",
-    "zenstruck/console-test": "^1.7",
-    "symfony/http-client": "6.4|^7.0|^8.0",
-    "symfony/stopwatch": "^6.4|^7.0|^8.0",
-    "symfony/phpunit-bridge": "^7.2|^8.0",
-    "vincentlanglet/twig-cs-fixer": "^3.9",
-    "spatie/phpunit-snapshot-assertions": "^4.2.17",
-    "phpunit/phpunit": "^9.6.22",
-    "symfony/ux-icons": "^2.18",
-    "tales-from-a-dev/twig-tailwind-extra": "^0.4.0"
-  },
-  "bin": [
-    "bin/ux-toolkit-kit-create",
-    "bin/ux-toolkit-kit-debug"
-  ],
-  "autoload": {
-    "psr-4": {
-      "Symfony\\UX\\Toolkit\\": "src"
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Toolkit\\Tests\\": "tests/"
+        }
     },
-    "exclude-from-classmap": []
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Symfony\\UX\\Toolkit\\Tests\\": "tests/"
-    }
-  },
-  "conflict": {
-    "symfony/ux-twig-component": "<2.21"
-  },
-  "extra": {
-    "thanks": {
-      "name": "symfony/ux",
-      "url": "https://github.com/symfony/ux"
-    }
-  }
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
 }

@@ -17,6 +17,9 @@
             "homepage": "https://symfony.com/contributors"
         }
     ],
+    "require": {
+        "php": ">=8.1"
+    },
     "autoload": {
         "psr-4": {
             "Symfony\\UX\\Swup\\": "src/"
