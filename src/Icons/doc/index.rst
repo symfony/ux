@@ -109,6 +109,13 @@ To keep your design consistent and easily adjustable, consider defining a
 :ref:`default attribute <icons_default_attributes>`. This allows you to control
 the size of all your icons from a single place.
 
+Icon Color
+~~~~~~~~~~
+
+Typically, SVG icons use ``fill="currentColor"`` to inherit the color of the containing element.
+You can set the color in CSS on the container or directly on the SVG element/class.
+
+
 Icon Sets
 ~~~~~~~~~
 
