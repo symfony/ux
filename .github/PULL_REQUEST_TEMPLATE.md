@@ -1,10 +1,11 @@
-| Q             | A
-| ------------- | ---
-| Bug fix?      | yes/no
-| New feature?  | yes/no <!-- please update src/**/CHANGELOG.md files -->
-| Docs?         | yes/no <!-- required for new features -->
-| Issues        | Fix #... <!-- prefix each issue number with "Fix #", no need to create an issue if none exist, explain below instead -->
-| License       | MIT
+| Q              | A
+| -------------- | ---
+| Bug fix?       | yes/no
+| New feature?   | yes/no <!-- please update src/**/CHANGELOG.md files -->
+| Deprecations?  | yes/no <!-- if yes, also update UPGRADE-*.md and src/**/CHANGELOG.md -->
+| Documentation? | yes/no <!-- required for new features, or documentation updates -->
+| Issues         | Fix #... <!-- prefix each issue number with "Fix #", no need to create an issue if none exist, explain below instead -->
+| License        | MIT
 
 <!--
 Replace this notice by a description of your feature/bugfix.
