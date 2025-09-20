@@ -21,9 +21,9 @@
         "build": "tsx ../../../bin/build_package.ts .",
         "watch": "tsx ../../../bin/build_package.ts . --watch",
         "test": "pnpm run test:unit && pnpm run test:browser",
-        "test:unit": "../../../bin/test_package.sh . --unit",
-        "test:browser": "../../../bin/test_package.sh . --browser",
-        "test:browser:ui": "../../../bin/test_package.sh . --browser --ui",
+        "test:unit": "../../../bin/unit_test_package.sh .",
+        "test:browser": "playwright test",
+        "test:browser:ui": "playwright test --ui",
         "check": "biome check",
         "ci": "biome ci"
     },

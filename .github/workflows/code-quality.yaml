@@ -19,6 +19,114 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
+    validate-packages:
+        name: Validate packages definition
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v4
+
+            -   name: Check all composer.json have label "symfony-ux"
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name composer.json); do
+                        if ! jq -e '.keywords | index("symfony-ux")' "$file" > /dev/null; then
+                            echo "File $file does not have the keyword 'symfony-ux' in its composer.json";
+                            exit 1;
+                        fi
+                    done
+
+            -   name: Check all composer.json have license "MIT"
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name composer.json); do
+                        if ! jq -e '.license == "MIT"' "$file" > /dev/null; then
+                            echo "File $file does not have the license 'MIT' in its composer.json";
+                            exit 1;
+                        fi
+                    done
+
+            -   name: Check all composer.json have minimum-stability "dev"
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name composer.json); do
+                        if ! jq -e '."minimum-stability" == "dev"' "$file" > /dev/null; then
+                            echo "File $file does not have the minimum-stability 'dev' in its composer.json";
+                            exit 1;
+                        fi
+                    done
+
+            -   name: Check all composer.json have dependency to "php" >=8.1
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name composer.json); do
+                        if ! jq -e '.require.php | test(">=8.1")' "$file" > /dev/null; then
+                            echo "File $file does not have the dependency 'php' >=8.1 in its composer.json";
+                            exit 1;
+                        fi
+                    done
+
+            -   name: Check all package.json have license "MIT"
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name package.json -not -path "*/tests/*"); do
+                        if ! jq -e '.license == "MIT"' "$file" > /dev/null; then
+                            echo "File $file does not have the license 'MIT' in its package.json";
+                            exit 1;
+                        fi
+                    done
+
+            -   name: Check all package.json have keywords including "symfony-ux"
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name package.json -not -path "*/tests/*"); do
+                        if ! jq -e '.keywords | index("symfony-ux")' "$file" > /dev/null; then
+                            echo "File $file does not have the keyword 'symfony-ux' in its package.json";
+                            exit 1;
+                        fi
+                    done
+
+
+            -   name: Check all package.json have type "module"
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name package.json -not -path "*/tests/*"); do
+                        if ! jq -e '.type == "module"' "$file" > /dev/null; then
+                            echo "File $file does not have the type 'module' in its package.json";
+                            exit 1;
+                        fi
+                    done
+
+            -   name: Check all package.json have files '["dist"]'
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name package.json -not -path "*/tests/*"); do
+                        if ! jq -e '.files | index("dist")' "$file" > /dev/null; then
+                            echo "File $file does not have the files 'dist' in its package.json";
+                            exit 1;
+                        fi
+                    done
+
+            -   name: Check all package.json peerDependencies are present in devDependencies and importmap to the exact same version
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name package.json -not -path "*/tests/*"); do
+                        peerDependencies=$(jq -r '.peerDependencies | keys[]' "$file")
+                        for peerDependency in $peerDependencies; do
+                            peerDependencyVersion=$(jq -r --arg dep "$peerDependency" '.peerDependencies[$dep]' "$file")
+                            importmapVersion=$(jq -r ".symfony.importmap.\"$peerDependency\" | if type == \"string\" then . else .version end" "$file")
+
+                            if [ "$importmapVersion" == null ]; then
+                                echo "File $file does not have the peerDependency '$peerDependency' in its symfony.importmap, skipping version check";
+                                continue
+                            fi
+
+                            if [ "$peerDependencyVersion" != "$importmapVersion" ]; then
+                                echo "File $file has a mismatch for $peerDependency: peerDependency version is '$peerDependencyVersion' but symfony.importmap version is '$importmapVersion'";
+                                exit 1;
+                            fi
+                        done
+                    done
+
     coding-style-js:
         name: JavaScript Coding Style
         runs-on: ubuntu-latest
@@ -68,7 +176,7 @@ jobs:
 
                   # TODO: Only Turbo has PHPStan configuration, let's improve this later :)
                   PACKAGES=Turbo
-                  #PACKAGES=$(find src/ -mindepth 2 -type f -name composer.json -not -path "*/vendor/*" -printf '%h\n' | sed 's/^src\///' | sort |  tr '\n' ' ')
+                  #PACKAGES=$(find src/ -mindepth 2 -type f -name composer.json -printf '%h\n' | sed 's/^src\///' | sort |  tr '\n' ' ')
                   echo "Packages: $PACKAGES"
                   echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
 
