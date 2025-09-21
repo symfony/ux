@@ -6,7 +6,7 @@ use TwigCsFixer\Rules\File\FileExtensionRule;
 use TwigCsFixer\Rules\File\FileNameRule;
 use TwigCsFixer\Rules\Function\IncludeFunctionRule;
 use TwigCsFixer\Rules\Punctuation\TrailingCommaSingleLineRule;
-use TwigCsFixer\Rules\String\SingleQuoteRule;
+use TwigCsFixer\Rules\Literal\SingleQuoteRule;
 use TwigCsFixer\Rules\Variable\VariableNameRule;
 use TwigCsFixer\Rules\Whitespace\EmptyLinesRule;
 use TwigCsFixer\Rules\Whitespace\TrailingSpaceRule;

@@ -210,4 +210,15 @@ return [
     'el-transition' => [
         'version' => '0.0.7',
     ],
+    'tom-select/dist/css/tom-select.default.css' => [
+        'version' => '2.4.3',
+        'type' => 'css',
+    ],
+    'tom-select/dist/css/tom-select.bootstrap4.css' => [
+        'version' => '2.4.3',
+        'type' => 'css',
+    ],
+    'react-dom/client' => [
+        'version' => '18.3.1',
+    ],
 ];
