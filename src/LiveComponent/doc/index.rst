@@ -3946,6 +3946,18 @@ Use the addCollectionItem method from the LiveCollectionTrait to dynamically add
         ]
     ]]);
 
+Using Live Components in Reusable Bundles
+-----------------------------------------
+
+`Symfony Bundles`_ let you reuse features across many different Symfony
+applications. However, you **cannot include live components in reusable
+bundles** to make them available in any application that installs the bundle.
+
+Some projects, such as the `Mezcalito UX File Manager bundle`_, provide live
+components inside reusable bundles. Their implementation relies on unsupported
+hacks that could break at any time, so Symfony does not recommend using this
+approach.
+
 Backward Compatibility promise
 ------------------------------
 
@@ -3982,3 +3994,4 @@ promise. However, any internal implementation in the JavaScript files
 .. _`@symfony/ux-live-component npm package`: https://www.npmjs.com/package/@symfony/ux-live-component
 .. _`Symfony TypeInfo`: https://symfony.com/doc/current/components/type_info.html
 .. _`Symfony PropertyInfo`: https://symfony.com/doc/current/components/property_info.html
+.. _`Mezcalito UX File Manager bundle`: https://github.com/Mezcalito/ux-filemanager
