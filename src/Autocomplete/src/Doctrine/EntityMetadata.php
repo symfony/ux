@@ -42,17 +42,6 @@ class EntityMetadata
         return \array_key_exists($propertyNameParts[0], $this->metadata->embeddedClasses);
     }
 
-    public function getPropertyMetadata(string $propertyName): array
-    {
-        trigger_deprecation('symfony/ux-autocomplete', '2.15.0', 'Calling EntityMetadata::getPropertyMetadata() is deprecated. You should stop using it, as it will be removed in the future.');
-
-        try {
-            return $this->getFieldMetadata($propertyName);
-        } catch (\InvalidArgumentException $e) {
-            return $this->getAssociationMetadata($propertyName);
-        }
-    }
-
     /**
      * @internal
      *

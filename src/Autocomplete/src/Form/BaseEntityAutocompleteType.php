@@ -19,7 +19,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\UX\Autocomplete\Form\ChoiceList\Loader\ExtraLazyChoiceLoader;
 
 /**
  * All form types that want to expose autocomplete functionality should use this for its getParent().
@@ -43,11 +42,11 @@ final class BaseEntityAutocompleteType extends AbstractType
                 return null;
             }
 
-            if (class_exists(LazyChoiceLoader::class)) {
-                return new LazyChoiceLoader($loader);
+            if (!class_exists(LazyChoiceLoader::class)) {
+                throw new \LogicException(\sprintf('Using "%s" with "%s" requires symfony/form >= 7.2 to be installed. Try running "composer require symfony/form:>=7.2".', LazyChoiceLoader::class, __CLASS__));
             }
 
-            return new ExtraLazyChoiceLoader($loader);
+            return new LazyChoiceLoader($loader);
         };
 
         $resolver->setDefaults([

@@ -10,6 +10,30 @@ the [Symfony documentation](https://symfony.com/doc/6.4/setup/upgrade_major.html
 >
 > Requires Symfony `6.4` or higher.
 
+## Autocomplete
+
+* The class `ParentEntityAutocompleteType` has been removed in favor of `BaseEntityAutocompleteType`:
+```diff
+-use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
++use Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType;
+
+    #[AsEntityAutocompleteField]
+    class FoodAutocompleteField extends AbstractType
+    {
+        // ...
+
+        public function getParent(): string
+        {
+-           return ParentEntityAutocompleteType::class;
++           return BaseEntityAutocompleteType::class;
+        }
+    }
+```
+
+* The class `ExtraLazyChoiceLoader` has been removed in favor of
+  `Symfony\Component\Form\ChoiceList\Loader\LazyChoiceLoader` from Symfony Form >=7.2,
+  run `composer require symfony/form:>=7.2"` if you don't have it installed yet.
+
 ## LazyImage
 
 * The package has been removed, see the [previous README](https://raw.githubusercontent.com/symfony/ux/refs/heads/2.x/src/LazyImage/README.md)
