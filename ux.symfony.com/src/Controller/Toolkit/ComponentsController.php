@@ -34,16 +34,6 @@ class ComponentsController extends AbstractController
     ) {
     }
 
-    #[Route('/toolkit/kits/{kit}/components/')]
-    public function listComponents(ToolkitKitId $kit): Response
-    {
-        // TODO: implementing listing in the future :D
-
-        return $this->redirectToRoute('app_toolkit_kit', [
-            'kit' => $kit->value,
-        ], Response::HTTP_FOUND);
-    }
-
     #[Route('/toolkit/kits/{kitId}/components/{componentName}', name: 'app_toolkit_component')]
     public function showComponent(ToolkitKitId $kitId, string $componentName): Response
     {
