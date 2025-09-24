@@ -16,7 +16,6 @@ use Symfony\Component\Mercure\Twig\MercureExtension;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 use Symfony\UX\Turbo\Broadcaster\IdAccessor;
 use Symfony\UX\Turbo\Twig\TurboStreamListenRendererWithOptionsInterface;
-use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 
@@ -27,22 +26,12 @@ use Twig\Error\RuntimeError;
  */
 final class TurboStreamListenRenderer implements TurboStreamListenRendererWithOptionsInterface
 {
-    private StimulusHelper $stimulusHelper;
-
     public function __construct(
         private HubInterface $hub,
-        StimulusHelper|StimulusTwigExtension $stimulus,
+        private StimulusHelper $stimulusHelper,
         private IdAccessor $idAccessor,
         private Environment $twig,
     ) {
-        if ($stimulus instanceof StimulusTwigExtension) {
-            trigger_deprecation('symfony/ux-turbo', '2.9', 'Passing an instance of "%s" as second argument of "%s" is deprecated, pass an instance of "%s" instead.', StimulusTwigExtension::class, __CLASS__, StimulusHelper::class);
-
-            $stimulus = new StimulusHelper(null);
-        }
-
-        /* @var StimulusHelper $stimulus */
-        $this->stimulusHelper = $stimulus;
     }
 
     public function renderTurboStreamListen(Environment $env, $topic /* array $eventSourceOptions = [] */): string
