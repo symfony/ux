@@ -11,6 +11,7 @@
 -   Remove method `ComponentAttributes::add()`,  use `{{ attributes.defaults(stimulus_controller('...')) }}` instead
 -   The `ComponentTemplateFinder` does not accept `Twig\Environment` as first argument anymore, pass a `LoaderInterface` instead
 -   The `ComponentTemplateFinder` does not accept a nullable `directory` argument anymore, pass a string instead
+-   Remove old compatibility layer with deprecated `StimulusTwigExtension` from WebpackEncoreBundle ^1.0, use StimulusBundle instead
 
 ## 2.30
 
