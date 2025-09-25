@@ -6,4 +6,5 @@ workers:
         cmd: ['symfony', 'console', 'tailwind:build', '--watch']
 
 http:
+    port: 9044
     use_gzip: true

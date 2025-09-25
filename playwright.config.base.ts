@@ -6,7 +6,7 @@
  * ```typescript
  * // src/Autocomplete/assets/playwright.config.ts
  *
- * import baseConfig from '../../../../../../playwright.config.base';
+ * import baseConfig from '../../../playwright.config.base';
  *
  * export default baseConfig;
  * ```

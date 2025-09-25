@@ -43,7 +43,7 @@
         "symfony/ux-notify": "2.x-dev",
         "symfony/ux-react": "2.x-dev",
         "symfony/ux-svelte": "2.x-dev",
-        "symfony/ux-toolkit": "2.x-dev",
+        "symfony/ux-toolkit": "3.x-dev",
         "symfony/ux-translator": "2.x-dev",
         "symfony/ux-turbo": "2.x-dev",
         "symfony/ux-twig-component": "2.x-dev",
@@ -72,7 +72,7 @@
         "symfony/phpunit-bridge": "7.2.*",
         "symfony/stopwatch": "7.2.*",
         "symfony/web-profiler-bundle": "7.2.*",
-        "vincentlanglet/twig-cs-fixer": "3.1.*",
+        "vincentlanglet/twig-cs-fixer": "3.9.*",
         "zenstruck/browser": "^1.9",
         "zenstruck/foundry": "2.2.*"
     },
@@ -134,6 +134,15 @@
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
             "importmap:install": "symfony-cmd",
             "tailwind:build": "symfony-cmd"
+        }
+    },
+    "repositories": {
+        "symfony-ux-toolkit": {
+            "type": "path",
+            "url": "../src/Toolkit",
+            "options": {
+                "symlink": true
+            }
         }
     }
 }

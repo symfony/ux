@@ -106,7 +106,7 @@ class InstallCommand extends Command
             }
             // If more than one kit is available, we ask the user which one to use
             if (($availableKitsCount = \count($availableKits)) > 1) {
-                $kitName = $io->choice(null === $recipeName ? 'Which kit do you want to use?' : \sprintf('The recipe "%s" exists in multiple kits. Which one do you want to use?', $recipeName), array_map(fn (Kit $kit) => $kit->manifest->name, $availableKits));
+                $kitName = $io->choice(null === $recipeName ? 'Which Kit do you want to use?' : \sprintf('The recipe "%s" exists in multiple Kits. Which one do you want to use?', $recipeName), array_map(fn (Kit $kit) => $kit->manifest->name, $availableKits));
 
                 foreach ($availableKits as $availableKit) {
                     if ($availableKit->manifest->name === $kitName) {
@@ -117,11 +117,12 @@ class InstallCommand extends Command
             } elseif (1 === $availableKitsCount) {
                 $kit = $availableKits[0];
             } else {
-                $io->error(
-                    null === $recipeName
-                    ? 'It seems that no local kits are available and it should not happens. Please open an issue on https://github.com/symfony/ux to report this.'
-                    : \sprintf("The recipe \"%s\" does not exist in any official kits.\n\nYou can try to run one of the following commands to interactively install recipes:\n%s\n\nOr you can try one of the community kits https://github.com/search?q=topic:ux-toolkit&type=repositories", $recipeName, implode("\n", array_map(fn (string $availableKitName) => \sprintf('$ bin/console %s --kit %s', $this->getName(), $availableKitName), $availableKitNames)))
-                );
+                if (null === $recipeName) {
+                    $io->error('It seems that no official kits are available and it should not happens. Please open an issue on https://github.com/symfony/ux to report this.');
+                } else {
+                    $io->error(\sprintf('The recipe "%s" does not exist in any official kits.', $recipeName));
+                    // $io->error(\sprintf("The recipe \"%s\" does not exist in any official kits.\n\nYou can try to run one of the following commands to interactively install recipes:\n%s\n\nOr you can try one of the community kits https://github.com/search?q=topic:ux-toolkit&type=repositories", $recipeName, implode("\n", array_map(fn (string $availableKitName) => \sprintf('$ bin/console %s --kit %s', $this->getName(), $availableKitName), $availableKitNames))));
+                }
 
                 return Command::FAILURE;
             }
