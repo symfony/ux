@@ -13,7 +13,6 @@ namespace Symfony\UX\Notify\Twig;
 
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
-use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
 use Twig\Extension\RuntimeExtensionInterface;
 
 /**
@@ -21,21 +20,10 @@ use Twig\Extension\RuntimeExtensionInterface;
  */
 final class NotifyRuntime implements RuntimeExtensionInterface
 {
-    private StimulusHelper $stimulusHelper;
-
-    /**
-     * @param $stimulus StimulusHelper
-     */
     public function __construct(
         private HubInterface $hub,
-        StimulusHelper|StimulusTwigExtension $stimulus,
+        private StimulusHelper $stimulusHelper,
     ) {
-        if ($stimulus instanceof StimulusTwigExtension) {
-            trigger_deprecation('symfony/ux-notify', '2.9', 'Passing an instance of "%s" to "%s" is deprecated, pass an instance of "%s" instead.', StimulusTwigExtension::class, __CLASS__, StimulusHelper::class);
-            $stimulus = new StimulusHelper(null);
-        }
-
-        $this->stimulusHelper = $stimulus;
     }
 
     public function renderStreamNotifications(array|string $topics = [], array $options = []): string
