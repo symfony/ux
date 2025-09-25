@@ -54,7 +54,6 @@ class TwigAppKernel extends Kernel
             $container->loadFromExtension('twig', [
                 'default_path' => __DIR__.'/templates',
                 'strict_variables' => true,
-                'exception_controller' => null,
                 'debug' => '%kernel.debug%',
             ]);
 

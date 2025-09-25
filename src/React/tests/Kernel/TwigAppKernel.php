@@ -45,7 +45,10 @@ class TwigAppKernel extends Kernel
                     'handle_all_throwables' => true,
                 ] : []),
             ]);
-            $container->loadFromExtension('twig', ['default_path' => __DIR__.'/templates', 'strict_variables' => true, 'exception_controller' => null]);
+            $container->loadFromExtension('twig', [
+                'default_path' => __DIR__.'/templates',
+                'strict_variables' => true,
+            ]);
 
             $container->setAlias('test.twig', 'twig')->setPublic(true);
             $container->setAlias('test.twig.extension.react', 'twig.extension.react')->setPublic(true);
