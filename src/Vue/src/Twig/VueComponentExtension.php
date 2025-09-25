@@ -12,7 +12,6 @@
 namespace Symfony\UX\Vue\Twig;
 
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
-use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -24,19 +23,8 @@ use Twig\TwigFunction;
  */
 class VueComponentExtension extends AbstractExtension
 {
-    private $stimulusHelper;
-
-    /**
-     * @param $stimulus StimulusHelper
-     */
-    public function __construct(StimulusHelper|StimulusTwigExtension $stimulus)
+    public function __construct(private StimulusHelper $stimulusHelper)
     {
-        if ($stimulus instanceof StimulusTwigExtension) {
-            trigger_deprecation('symfony/ux-vue', '2.9', 'Passing an instance of "%s" to "%s" is deprecated, pass an instance of "%s" instead.', StimulusTwigExtension::class, __CLASS__, StimulusHelper::class);
-            $stimulus = new StimulusHelper(null);
-        }
-
-        $this->stimulusHelper = $stimulus;
     }
 
     public function getFunctions(): array
