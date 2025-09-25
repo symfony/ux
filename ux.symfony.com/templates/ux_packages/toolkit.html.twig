@@ -79,15 +79,19 @@ tree templates/components
                 </div>
             {% endfor %}
 
-            <div class="PackageBox">
+            <div class="PackageBox" style="position: relative">
+                <span style="position: absolute; background-color: #e9c502; transform: rotate(-10deg); padding: 3px 8px; top: 10px; left: 0; font-size: 20px; font-weight: bold;">
+                    🚧 <abbr title="Work In Progress">WIP</abbr>!
+                </span>
+
                 <div class="PackageBox_logo" style="--color: #24292f;">
                     <twig:ux:icon name="flowbite:users-group-solid" style="color: #fff; width: 50%; height: 50%;" />
                 </div>
                 <div class="PackageBox_content">
                     <h2 class="PackageBox_title">
-                        <a href="https://github.com/search?q=topic%3Aux-toolkit&type=repositories" rel="external" class="PackageBox_link">
+                        {# <a href="https://github.com/search?q=topic%3Aux-toolkit&type=repositories" rel="external" class="PackageBox_link"> #}
                             Community Kits
-                        </a>
+                        {# </a> #}
                     </h2>
 
                     <div class="PackageBox_description">

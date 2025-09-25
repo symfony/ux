@@ -98,5 +98,3 @@ In your `assets/styles/app.css`, after the TailwindCSS imports, add the followin
     }
 }
 ```
-
-And voilà! You are now ready to use Shadcn components in your Symfony project.
