@@ -51,7 +51,10 @@ class TwigAppKernel extends Kernel
             ];
 
             $container->loadFromExtension('framework', $frameworkConfig);
-            $container->loadFromExtension('twig', ['default_path' => __DIR__.'/templates', 'strict_variables' => true, 'exception_controller' => null]);
+            $container->loadFromExtension('twig', [
+                'default_path' => __DIR__.'/templates',
+                'strict_variables' => true,
+            ]);
 
             // create a public alias - FormFactoryInterface is removed otherwise
             $container->setAlias('public_form_factory', new Alias(FormFactoryInterface::class, true));

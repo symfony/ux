@@ -54,7 +54,6 @@ class TwigAppKernel extends Kernel
                 'form_themes' => [
                     'form_theme.html.twig',
                 ],
-                'exception_controller' => null,
                 'debug' => '%kernel.debug%',
             ]);
 

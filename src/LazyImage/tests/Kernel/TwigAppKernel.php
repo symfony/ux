@@ -46,7 +46,10 @@ class TwigAppKernel extends Kernel
                     'handle_all_throwables' => true,
                 ] : []),
             ]);
-            $container->loadFromExtension('twig', ['default_path' => __DIR__.'/templates', 'strict_variables' => true, 'exception_controller' => null]);
+            $container->loadFromExtension('twig', [
+                'default_path' => __DIR__.'/templates',
+                'strict_variables' => true,
+            ]);
 
             $container->setAlias('test.lazy_image.blur_hash', 'lazy_image.blur_hash')->setPublic(true);
         });
