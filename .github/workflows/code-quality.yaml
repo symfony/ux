@@ -55,12 +55,12 @@ jobs:
                         fi
                     done
 
-            -   name: Check all composer.json have dependency to "php" >=8.1
+            -   name: Check all composer.json have dependency to "php" >=8.2
                 if: always()
                 run: |
                     for file in $(find src/ -mindepth 2 -type f -name composer.json); do
-                        if ! jq -e '.require.php | test(">=8.1")' "$file" > /dev/null; then
-                            echo "File $file does not have the dependency 'php' >=8.1 in its composer.json";
+                        if ! jq -e '.require.php | test(">=8.2")' "$file" > /dev/null; then
+                            echo "File $file does not have the dependency 'php' >=8.2 in its composer.json";
                             exit 1;
                         fi
                     done
