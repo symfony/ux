@@ -80,10 +80,10 @@ class ToolkitService
         ]);
     }
 
-    public function renderInstallationSteps(ToolkitKitId $kitId, Recipe $component): string
+    public function renderInstallationSteps(ToolkitKitId $kitId, Recipe $recipe): string
     {
         $kit = $this->getKit($kitId);
-        $pool = (new PoolResolver())->resolveForRecipe($kit, $component);
+        $pool = (new PoolResolver())->resolveForRecipe($kit, $recipe);
 
         $manual = '<p>The UX Toolkit is not mandatory to install a component. You can install it manually by following the next steps:</p>';
         $manual .= '<ol style="display: grid; gap: 1rem;">';
@@ -136,7 +136,7 @@ class ToolkitService
             'Automatic' => \sprintf(
                 '<p>Ensure the Symfony UX Toolkit is installed in your Symfony app:</p>%s<p>Then, run the following command to install the component and its dependencies:</p>%s',
                 CodeBlockRenderer::highlightCode('shell', '$ composer require --dev symfony/ux-toolkit'),
-                CodeBlockRenderer::highlightCode('shell', "$ bin/console ux:install {$component->manifest->name} --kit {$kitId->value}"),
+                CodeBlockRenderer::highlightCode('shell', "$ bin/console ux:install {$recipe->name} --kit {$kitId->value}"),
             ),
             'Manual' => $manual,
         ]);

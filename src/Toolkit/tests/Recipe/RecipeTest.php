@@ -26,9 +26,9 @@ final class RecipeTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Kit path "relative/path" is not absolute.');
 
-        new Recipe('relative/path', new RecipeManifest(
+        new Recipe('test-recipe', 'relative/path', new RecipeManifest(
             type: RecipeType::Component,
-            name: 'test-recipe',
+            name: 'Test Recipe',
             description: 'A test recipe',
             copyFiles: [],
         ));
@@ -39,9 +39,9 @@ final class RecipeTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Copy file destination "/" must be a relative path.');
 
-        new Recipe(__DIR__.'/../../kits/shadcn/Table', new RecipeManifest(
+        new Recipe('test-recipe', __DIR__.'/../../kits/shadcn/Table', new RecipeManifest(
             type: RecipeType::Component,
-            name: 'test-recipe',
+            name: 'Test Recipe',
             description: 'A test recipe',
             copyFiles: [
                 'templates/' => '/',
@@ -51,9 +51,9 @@ final class RecipeTest extends TestCase
 
     public function testGetCopyFiles()
     {
-        $recipe = new Recipe(__DIR__.'/../../kits/shadcn/Table', new RecipeManifest(
+        $recipe = new Recipe('test-recipe', __DIR__.'/../../kits/shadcn/Table', new RecipeManifest(
             type: RecipeType::Component,
-            name: 'test-recipe',
+            name: 'Test Recipe',
             description: 'A test recipe',
             copyFiles: [
                 'templates/' => 'templates/',
@@ -74,9 +74,9 @@ final class RecipeTest extends TestCase
 
     public function testGetCopyFilesWithDifferentDestDir()
     {
-        $recipe = new Recipe(__DIR__.'/../../kits/shadcn/Table', new RecipeManifest(
+        $recipe = new Recipe('test-recipe', __DIR__.'/../../kits/shadcn/Table', new RecipeManifest(
             type: RecipeType::Component,
-            name: 'test-recipe',
+            name: 'Test Recipe',
             description: 'A test recipe',
             copyFiles: [
                 'templates/' => 'dest-templates/',

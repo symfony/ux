@@ -204,8 +204,8 @@ return [
     '@symfony/ux-leaflet-map' => [
         'path' => './vendor/symfony/ux-leaflet-map/assets/dist/map_controller.js',
     ],
-    '@symfony/ux-toolkit/kits/shadcn/AlertDialog/assets/controllers/alert_dialog_controller.js' => [
-        'path' => './vendor/symfony/ux-toolkit/kits/shadcn/AlertDialog/assets/controllers/alert_dialog_controller.js',
+    '@symfony/ux-toolkit/kits/shadcn/alert-dialog/assets/controllers/alert_dialog_controller.js' => [
+        'path' => './vendor/symfony/ux-toolkit/kits/shadcn/alert-dialog/assets/controllers/alert_dialog_controller.js',
     ],
     'el-transition' => [
         'version' => '0.0.7',

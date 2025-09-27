@@ -21,6 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Path;
 use Symfony\UX\Toolkit\Kit\KitFactory;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\iterator;
 
 /**
  * @author Jean-François Lépine
@@ -78,7 +79,7 @@ class DebugKitCommand extends Command
         $io->section('Recipes');
         foreach ($kit->getRecipes() as $recipe) {
             (new Table($io))
-                ->setHeaderTitle(\sprintf('Recipe: "%s"', $recipe->manifest->name))
+                ->setHeaderTitle(\sprintf('Recipe: "%s"', $recipe->name))
                 ->setHorizontal()
                 ->setHeaders([
                     'File(s)',
