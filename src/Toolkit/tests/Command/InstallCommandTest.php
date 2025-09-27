@@ -37,14 +37,14 @@ class InstallCommandTest extends KernelTestCase
     public function testShouldAbleToInstallComponentTableAndItsDependencies()
     {
         $expectedFiles = [
-            'Table/templates/components/Table.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table.html.twig'),
-            'Table/templates/components/Table/Body.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Body.html.twig'),
-            'Table/templates/components/Table/Caption.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Caption.html.twig'),
-            'Table/templates/components/Table/Cell.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Cell.html.twig'),
-            'Table/templates/components/Table/Footer.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Footer.html.twig'),
-            'Table/templates/components/Table/Head.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Head.html.twig'),
-            'Table/templates/components/Table/Header.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Header.html.twig'),
-            'Table/templates/components/Table/Row.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Row.html.twig'),
+            'table/templates/components/Table.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table.html.twig'),
+            'table/templates/components/Table/Body.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Body.html.twig'),
+            'table/templates/components/Table/Caption.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Caption.html.twig'),
+            'table/templates/components/Table/Cell.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Cell.html.twig'),
+            'table/templates/components/Table/Footer.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Footer.html.twig'),
+            'table/templates/components/Table/Head.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Head.html.twig'),
+            'table/templates/components/Table/Header.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Header.html.twig'),
+            'table/templates/components/Table/Row.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Row.html.twig'),
         ];
 
         foreach ($expectedFiles as $expectedFile) {

@@ -21,7 +21,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Path;
 use Symfony\UX\Toolkit\Kit\KitFactory;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\iterator;
 
 /**
  * @author Jean-François Lépine

@@ -51,7 +51,7 @@ final class RecipeTest extends TestCase
 
     public function testGetCopyFiles()
     {
-        $recipe = new Recipe('test-recipe', __DIR__.'/../../kits/shadcn/Table', new RecipeManifest(
+        $recipe = new Recipe('test-recipe', __DIR__.'/../../kits/shadcn/table', new RecipeManifest(
             type: RecipeType::Component,
             name: 'Test Recipe',
             description: 'A test recipe',
@@ -74,7 +74,7 @@ final class RecipeTest extends TestCase
 
     public function testGetCopyFilesWithDifferentDestDir()
     {
-        $recipe = new Recipe('test-recipe', __DIR__.'/../../kits/shadcn/Table', new RecipeManifest(
+        $recipe = new Recipe('test-recipe', __DIR__.'/../../kits/shadcn/table', new RecipeManifest(
             type: RecipeType::Component,
             name: 'Test Recipe',
             description: 'A test recipe',
