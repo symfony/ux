@@ -30,6 +30,7 @@ final class RecipeSynchronizer
         }
 
         $recipe = new Recipe(
+            name: $manifestFile->getPathInfo()->getBasename(),
             absolutePath: $manifestFile->getPath(),
             manifest: $manifest,
         );

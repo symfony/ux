@@ -1,12 +1,12 @@
 {
     "$schema": "../../../../../schema-kit-recipe-v1.json",
     "type": "component",
-    "name": "C",
-    "description": "Component C",
+    "name": "A",
+    "description": "Component A",
     "copy-files": {
         "templates/": "templates/"
     },
     "dependencies": {
-        "recipe": ["A"]
+        "recipe": ["b"]
     }
 }

@@ -54,7 +54,7 @@ class ComponentsRenderingTest extends WebTestCase
                 }
 
                 foreach ($codeBlockMatches['code'] as $i => $code) {
-                    yield \sprintf('Kit %s, component %s, code #%d', $kitName, $recipe->manifest->name, $i + 1) => [$kitName, $recipe->manifest->name, $code];
+                    yield \sprintf('Kit %s, component %s, code #%d', $kitName, $recipe->name, $i + 1) => [$kitName, $recipe->name, $code];
                 }
             }
         }

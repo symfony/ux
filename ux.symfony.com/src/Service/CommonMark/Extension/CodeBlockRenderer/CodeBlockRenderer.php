@@ -18,6 +18,10 @@ use League\CommonMark\Node\Node;
 use League\CommonMark\Renderer\ChildNodeRendererInterface;
 use League\CommonMark\Renderer\NodeRendererInterface;
 use Tempest\Highlight\Highlighter;
+use Tempest\Highlight\Injection;
+use Tempest\Highlight\Language;
+use Tempest\Highlight\Languages\Base\Injections\DeletionInjection;
+use Tempest\Highlight\Languages\Twig\TwigLanguage;
 use Tempest\Highlight\WebTheme;
 
 final readonly class CodeBlockRenderer implements NodeRendererInterface
@@ -53,11 +57,23 @@ final readonly class CodeBlockRenderer implements NodeRendererInterface
     {
         $highlighter = new Highlighter();
 
+        // https://github.com/tempestphp/highlight/issues/182
+        if ('twig' === $language) {
+            $language = new class extends TwigLanguage {
+                public function getInjections(): array
+                {
+                    return array_filter(parent::getInjections(), static function (Injection $injection) {
+                        return !$injection instanceof DeletionInjection;
+                    });
+                }
+            };
+        }
+
         $theme = $highlighter->getTheme();
         $parsed = $highlighter->parse($code, $language);
         $output = $theme instanceof WebTheme
             ? $theme->preBefore($highlighter).$parsed.$theme->preAfter($highlighter)
-            : '<pre data-lang="'.$language.'" class="notranslate">'.$parsed.'</pre>';
+            : '<pre data-lang="'.($language instanceof Language ? $language->getName() : $language).'" class="notranslate">'.$parsed.'</pre>';
 
         return <<<HTML
             <div class="Terminal terminal-code" style="$style">

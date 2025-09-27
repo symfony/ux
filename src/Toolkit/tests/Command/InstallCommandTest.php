@@ -37,24 +37,24 @@ class InstallCommandTest extends KernelTestCase
     public function testShouldAbleToInstallComponentTableAndItsDependencies()
     {
         $expectedFiles = [
-            'Table/templates/components/Table.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table.html.twig'),
-            'Table/templates/components/Table/Body.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Body.html.twig'),
-            'Table/templates/components/Table/Caption.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Caption.html.twig'),
-            'Table/templates/components/Table/Cell.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Cell.html.twig'),
-            'Table/templates/components/Table/Footer.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Footer.html.twig'),
-            'Table/templates/components/Table/Head.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Head.html.twig'),
-            'Table/templates/components/Table/Header.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Header.html.twig'),
-            'Table/templates/components/Table/Row.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Row.html.twig'),
+            'table/templates/components/Table.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table.html.twig'),
+            'table/templates/components/Table/Body.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Body.html.twig'),
+            'table/templates/components/Table/Caption.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Caption.html.twig'),
+            'table/templates/components/Table/Cell.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Cell.html.twig'),
+            'table/templates/components/Table/Footer.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Footer.html.twig'),
+            'table/templates/components/Table/Head.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Head.html.twig'),
+            'table/templates/components/Table/Header.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Header.html.twig'),
+            'table/templates/components/Table/Row.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table/Row.html.twig'),
         ];
 
         foreach ($expectedFiles as $expectedFile) {
             $this->assertFileDoesNotExist($expectedFile);
         }
 
-        $testCommand = $this->consoleCommand(\sprintf('ux:install Table --destination="%s"', str_replace('\\', '\\\\', $this->tmpDir)))
+        $testCommand = $this->consoleCommand(\sprintf('ux:install table --destination="%s"', str_replace('\\', '\\\\', $this->tmpDir)))
             ->execute()
             ->assertSuccessful()
-            ->assertOutputContains('Installing recipe Table from the Shadcn UI kit...')
+            ->assertOutputContains('Installing recipe "table" from the Shadcn UI kit...')
             ->assertOutputContains('[OK] The recipe has been installed.')
         ;
 
@@ -72,11 +72,11 @@ class InstallCommandTest extends KernelTestCase
         mkdir($destination);
 
         $this->bootKernel();
-        $this->consoleCommand('ux:install A --kit=shadcn --destination='.$destination)
+        $this->consoleCommand('ux:install a --kit=shadcn --destination='.$destination)
             ->execute()
             ->assertFaulty()
-            ->assertOutputContains('[WARNING] The recipe "A" does not exist')
-            ->assertOutputContains('Possible alternatives: "Alert", "Alert Dialog", "Aspect Ratio"')
+            ->assertOutputContains('[WARNING] The recipe "a" does not exist')
+            ->assertOutputContains('Possible alternatives: "alert", "alert-dialog", "aspect-ratio"')
         ;
     }
 
@@ -86,10 +86,10 @@ class InstallCommandTest extends KernelTestCase
         mkdir($destination);
 
         $this->bootKernel();
-        $this->consoleCommand('ux:install Unknown --destination='.$destination)
+        $this->consoleCommand('ux:install unknown --destination='.$destination)
             ->execute()
             ->assertFaulty()
-            ->assertOutputContains('The recipe "Unknown" does not exist');
+            ->assertOutputContains('The recipe "unknown" does not exist');
     }
 
     public function testShouldWarnWhenComponentFileAlreadyExistsInNonInteractiveMode()
@@ -98,11 +98,11 @@ class InstallCommandTest extends KernelTestCase
         mkdir($destination);
 
         $this->bootKernel();
-        $this->consoleCommand('ux:install Badge --destination='.$destination)
+        $this->consoleCommand('ux:install badge --destination='.$destination)
             ->execute()
             ->assertSuccessful();
 
-        $this->consoleCommand('ux:install Badge --destination='.$destination)
+        $this->consoleCommand('ux:install badge --destination='.$destination)
             ->execute()
             ->assertFaulty()
             ->assertOutputContains('[WARNING] The recipe has not been installed.')

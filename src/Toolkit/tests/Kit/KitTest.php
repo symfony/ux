@@ -40,11 +40,13 @@ final class KitTest extends TestCase
     {
         $kit = new Kit(__DIR__, new KitManifest('foo', 'Description', 'MIT', 'https://example.com'));
         $kit->addRecipe(new Recipe(
-            __DIR__.'/Alert',
+            'alert',
+            __DIR__.'/alert',
             new RecipeManifest(RecipeType::Component, 'Alert', 'Description', []),
         ));
         $kit->addRecipe(new Recipe(
-            __DIR__.'/Table',
+            'table',
+            __DIR__.'/table',
             new RecipeManifest(RecipeType::Component, 'Table', 'Description', []),
         ));
 
@@ -59,11 +61,13 @@ final class KitTest extends TestCase
 
         $kit = new Kit(__DIR__, new KitManifest('foo', 'Description', 'MIT', 'https://example.com'));
         $kit->addRecipe(new Recipe(
-            __DIR__.'/Alert',
+            'alert',
+            __DIR__.'/alert',
             new RecipeManifest(RecipeType::Component, 'Alert', 'Description', []),
         ));
         $kit->addRecipe(new Recipe(
-            __DIR__.'/Alert',
+            'alert',
+            __DIR__.'/alert',
             new RecipeManifest(RecipeType::Component, 'Alert', 'Description', []),
         ));
     }
@@ -72,22 +76,24 @@ final class KitTest extends TestCase
     {
         $kit = new Kit(__DIR__, new KitManifest('foo', 'Description', 'MIT', 'https://example.com'));
         $kit->addRecipe(new Recipe(
+            'alert',
             __DIR__.'/Alert',
             new RecipeManifest(RecipeType::Component, 'Alert', 'Description', []),
         ));
         $kit->addRecipe(new Recipe(
+            'table',
             __DIR__.'/Table',
             new RecipeManifest(RecipeType::Component, 'Table', 'Description', []),
         ));
 
-        $this->assertSame('Table', $kit->getRecipe('Table')->manifest->name);
-        $this->assertSame('Alert', $kit->getRecipe('Alert')->manifest->name);
+        $this->assertSame('Table', $kit->getRecipe('table')->manifest->name);
+        $this->assertSame('Alert', $kit->getRecipe('alert')->manifest->name);
     }
 
     public function testShouldReturnNullIfRecipeIsNotFound()
     {
         $kit = new Kit(__DIR__, new KitManifest('foo', 'Description', 'MIT', 'https://example.com'));
 
-        $this->assertNull($kit->getRecipe('Table'));
+        $this->assertNull($kit->getRecipe('table'));
     }
 }

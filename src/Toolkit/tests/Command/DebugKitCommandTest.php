@@ -32,7 +32,7 @@ class DebugKitCommandTest extends KernelTestCase
             ->assertOutputContains('License    MIT')
             // Components details
             ->assertOutputContains(implode(\PHP_EOL, [
-                '+--------------+------------------------ Recipe: "Avatar" ----------------------------------------+',
+                '+--------------+------------------------ Recipe: "avatar" ----------------------------------------+',
                 '| File(s)      | templates/components/Avatar.html.twig                                            |',
                 '|              | templates/components/Avatar/Image.html.twig                                      |',
                 '|              | templates/components/Avatar/Text.html.twig                                       |',
@@ -40,7 +40,7 @@ class DebugKitCommandTest extends KernelTestCase
                 '+--------------+----------------------------------------------------------------------------------+',
             ]))
             ->assertOutputContains(implode(\PHP_EOL, [
-                '+--------------+------------------------- Recipe: "Table" ----------------------------------------+',
+                '+--------------+------------------------- Recipe: "table" ----------------------------------------+',
                 '| File(s)      | templates/components/Table.html.twig                                             |',
                 '|              | templates/components/Table/Body.html.twig                                        |',
                 '|              | templates/components/Table/Caption.html.twig                                     |',
@@ -66,9 +66,9 @@ class DebugKitCommandTest extends KernelTestCase
             ->assertOutputContains('License    MIT')
             // Components details
             ->assertOutputContains(implode(\PHP_EOL, [
-                '+--------------+------------------------- Recipe: "Alert" ----------------------------------------+',
+                '+--------------+------------------------- Recipe: "alert" ----------------------------------------+',
                 '| File(s)      | N/A                                                                              |',
-                '| Dependencies | Button                                                                           |',
+                '| Dependencies | button                                                                           |',
                 '|              | twig/html-extra:^3.12.0                                                          |',
                 '|              | tales-from-a-dev/twig-tailwind-extra                                             |',
                 '|              | tailwindcss:^4.0.0                                                               |',
@@ -77,7 +77,7 @@ class DebugKitCommandTest extends KernelTestCase
                 '+--------------+----------------------------------------------------------------------------------+',
             ]))
             ->assertOutputContains(implode(\PHP_EOL, [
-                '+--------------+------------------------ Recipe: "Button" ----------------------------------------+',
+                '+--------------+------------------------ Recipe: "button" ----------------------------------------+',
                 '| File(s)      | N/A                                                                              |',
                 '| Dependencies | twig/html-extra:^3.12.0                                                          |',
                 '|              | another/php-package:^2.0                                                         |',

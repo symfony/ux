@@ -28,9 +28,9 @@ final class RecipeSynchronizerTest extends TestCase
 
         $this->assertEmpty($kit->getRecipes());
 
-        $recipeSynchronizer->synchronizeRecipe($kit, new SplFileInfo(__DIR__.'/../../kits/shadcn/Alert/manifest.json', 'Alert', 'Alert/manifest.json'));
+        $recipeSynchronizer->synchronizeRecipe($kit, new SplFileInfo(__DIR__.'/../../kits/shadcn/alert/manifest.json', 'alert', 'alert/manifest.json'));
 
-        $recipeAlert = $kit->getRecipe('Alert');
+        $recipeAlert = $kit->getRecipe('alert');
         $this->assertNotNull($recipeAlert);
         $this->assertEquals('Alert', $recipeAlert->manifest->name);
         $this->assertEquals('A notification component that displays important messages with an icon, title, and description.', $recipeAlert->manifest->description);

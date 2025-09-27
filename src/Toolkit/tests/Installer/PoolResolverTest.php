@@ -37,14 +37,14 @@ final class PoolResolverTest extends TestCase
 
         $poolResolver = new PoolResolver();
 
-        $pool = $poolResolver->resolveForRecipe($kit, $recipeButton = $kit->getRecipe('Button'));
+        $pool = $poolResolver->resolveForRecipe($kit, $recipeButton = $kit->getRecipe('button'));
 
         $this->assertEquals([
             'templates/components/Button.html.twig',
         ], array_keys($pool->getFiles()[$recipeButton->absolutePath]));
         $this->assertCount(3, $pool->getPhpPackageDependencies());
 
-        $pool = $poolResolver->resolveForRecipe($kit, $recipeTable = $kit->getRecipe('Table'));
+        $pool = $poolResolver->resolveForRecipe($kit, $recipeTable = $kit->getRecipe('table'));
 
         $this->assertEquals([
             'templates/components/Table.html.twig',
@@ -67,13 +67,13 @@ final class PoolResolverTest extends TestCase
 
         $poolResolver = new PoolResolver();
 
-        $recipeA = $kit->getRecipe('A');
-        $recipeB = $kit->getRecipe('B');
-        $recipeC = $kit->getRecipe('C');
+        $recipeA = $kit->getRecipe('a');
+        $recipeB = $kit->getRecipe('b');
+        $recipeC = $kit->getRecipe('c');
 
-        $this->assertEquals([new RecipeDependency('B')], $recipeA->manifest->dependencies);
-        $this->assertEquals([new RecipeDependency('C')], $recipeB->manifest->dependencies);
-        $this->assertEquals([new RecipeDependency('A')], $recipeC->manifest->dependencies);
+        $this->assertEquals([new RecipeDependency('b')], $recipeA->manifest->dependencies);
+        $this->assertEquals([new RecipeDependency('c')], $recipeB->manifest->dependencies);
+        $this->assertEquals([new RecipeDependency('a')], $recipeC->manifest->dependencies);
 
         $pool = $poolResolver->resolveForRecipe($kit, $recipeA);
 
@@ -92,11 +92,11 @@ final class PoolResolverTest extends TestCase
 
         $poolResolver = new PoolResolver();
 
-        $recipeAlert = $kit->getRecipe('Alert');
-        $recipeButton = $kit->getRecipe('Button');
+        $recipeAlert = $kit->getRecipe('alert');
+        $recipeButton = $kit->getRecipe('button');
 
         $this->assertEquals([
-            new RecipeDependency('Button'),
+            new RecipeDependency('button'),
             new PhpPackageDependency('twig/html-extra', new ConstraintVersion('^3.12.0')),
             new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra'),
             new NpmPackageDependency('tailwindcss', new ConstraintVersion('^4.0.0')),

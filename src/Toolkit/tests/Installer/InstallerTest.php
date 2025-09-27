@@ -40,7 +40,7 @@ final class InstallerTest extends KernelTestCase
 
         $this->assertFileDoesNotExist($this->tmpDir.'/Button.html.twig');
 
-        $recipe = $kit->getRecipe('Button');
+        $recipe = $kit->getRecipe('button');
         $this->assertNotNull($recipe);
 
         $installer->installRecipe($kit, $recipe, $this->tmpDir, false);
@@ -59,7 +59,7 @@ final class InstallerTest extends KernelTestCase
         });
         $kit = $this->createKit('shadcn');
 
-        $recipe = $kit->getRecipe('Button');
+        $recipe = $kit->getRecipe('button');
         $this->assertNotNull($recipe);
 
         $installer->installRecipe($kit, $recipe, $this->tmpDir, false);
@@ -77,7 +77,7 @@ final class InstallerTest extends KernelTestCase
         $installer = new Installer(self::getContainer()->get('filesystem'), fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
         $kit = $this->createKit('shadcn');
 
-        $recipe = $kit->getRecipe('Button');
+        $recipe = $kit->getRecipe('button');
         $this->assertNotNull($recipe);
 
         $installer->installRecipe($kit, $recipe, $this->tmpDir, false);
@@ -113,9 +113,9 @@ final class InstallerTest extends KernelTestCase
             $this->assertFileDoesNotExist($expectedFile);
         }
 
-        $installer->installRecipe($kit, $kit->getRecipe('Table'), $this->tmpDir, false);
-        $installer->installRecipe($kit, $kit->getRecipe('Button'), $this->tmpDir, false);
-        $installer->installRecipe($kit, $kit->getRecipe('Input'), $this->tmpDir, false);
+        $installer->installRecipe($kit, $kit->getRecipe('table'), $this->tmpDir, false);
+        $installer->installRecipe($kit, $kit->getRecipe('button'), $this->tmpDir, false);
+        $installer->installRecipe($kit, $kit->getRecipe('input'), $this->tmpDir, false);
 
         foreach ($expectedFiles as $expectedFile) {
             $this->assertFileExists($expectedFile);

@@ -78,7 +78,7 @@ class DebugKitCommand extends Command
         $io->section('Recipes');
         foreach ($kit->getRecipes() as $recipe) {
             (new Table($io))
-                ->setHeaderTitle(\sprintf('Recipe: "%s"', $recipe->manifest->name))
+                ->setHeaderTitle(\sprintf('Recipe: "%s"', $recipe->name))
                 ->setHorizontal()
                 ->setHeaders([
                     'File(s)',

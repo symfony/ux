@@ -51,8 +51,8 @@ class InstallCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('recipe', InputArgument::OPTIONAL, 'The recipe name (Ex: Button)')
-            ->addOption('kit', 'k', InputOption::VALUE_OPTIONAL, 'The kit name (Ex: "shadcn", or "github.com/user/my-ux-toolkit-kit")')
+            ->addArgument('recipe', InputArgument::OPTIONAL, 'The recipe name (ex: "button")')
+            ->addOption('kit', 'k', InputOption::VALUE_OPTIONAL, 'The kit name (ex: "shadcn", or "github.com/user/my-ux-toolkit-kit")')
             ->addOption(
                 'destination',
                 'd',
@@ -67,13 +67,13 @@ class InstallCommand extends Command
 
                     To install a recipe, use:
 
-                    <info>php %command.full_name% Button</info>
+                    <info>php %command.full_name% button</info>
 
                     To install a recipe from a specific Kit (either official or external), use the <info>--kit</info> option:
 
-                    <info>php %command.full_name% Button --kit=shadcn</info>
-                    <info>php %command.full_name% Button --kit=https://github.com/user/my-kit</info>
-                    <info>php %command.full_name% Button --kit=https://github.com/user/my-kit:branch</info>
+                    <info>php %command.full_name% button --kit=shadcn</info>
+                    <info>php %command.full_name% button --kit=https://github.com/user/my-kit</info>
+                    <info>php %command.full_name% button --kit=https://github.com/user/my-kit:branch</info>
                     EOF
             );
     }
@@ -150,7 +150,7 @@ class InstallCommand extends Command
                     return Command::FAILURE;
                 }
             } elseif ($alternativeRecipesCount > 0) {
-                $io->warning(\sprintf('%s'."\n".'Possible alternatives: "%s"', $message, implode('", "', array_map(fn (Recipe $c) => $c->manifest->name, $alternativeRecipes))));
+                $io->warning(\sprintf('%s'."\n".'Possible alternatives: "%s"', $message, implode('", "', array_map(fn (Recipe $r) => $r->name, $alternativeRecipes))));
 
                 return Command::FAILURE;
             } else {
@@ -160,7 +160,7 @@ class InstallCommand extends Command
             }
         }
 
-        $io->writeln(\sprintf('Installing recipe <info>%s</> from the <info>%s</> kit...', $recipe->manifest->name, $kit->manifest->name));
+        $io->writeln(\sprintf('Installing recipe "<info>%s</>" from the <info>%s</> kit...', $recipe->name, $kit->manifest->name));
 
         $installer = new Installer($this->filesystem, fn (string $question) => $this->io->confirm($question, $input->isInteractive()));
         $installationReport = $installer->installRecipe($kit, $recipe, $destinationPath = $input->getOption('destination'), $input->getOption('force'));
@@ -220,13 +220,13 @@ class InstallCommand extends Command
         $alternativeRecipes = [];
 
         foreach ($kit->getRecipes() as $recipe) {
-            $lev = levenshtein($recipeName, $recipe->manifest->name, 2, 5, 10);
-            if ($lev <= 8 || str_contains($recipe->manifest->name, $recipeName)) {
+            $lev = levenshtein($recipeName, $recipe->name, 2, 5, 10);
+            if ($lev <= 8 || str_contains($recipe->name, $recipeName)) {
                 $alternativeRecipes[] = $recipe;
             }
         }
 
-        usort($alternativeRecipes, fn (Recipe $recipeA, Recipe $recipeB) => strcmp($recipeA->manifest->name, $recipeB->manifest->name));
+        usort($alternativeRecipes, fn (Recipe $recipeA, Recipe $recipeB) => strcmp($recipeA->name, $recipeB->name));
 
         return $alternativeRecipes;
     }
