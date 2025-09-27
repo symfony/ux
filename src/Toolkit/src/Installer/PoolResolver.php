@@ -58,7 +58,7 @@ final class PoolResolver
                     $pool->addImportmapPackageDependency($dependency);
                 } elseif ($dependency instanceof RecipeDependency) {
                     if (null === $recipeDependency = $kit->getRecipe($dependency->name)) {
-                        throw new \LogicException(\sprintf('The recipe "%s" has a dependency on unregistered recipe "%s".', $currentRecipe->manifest->name, $dependency->name));
+                        throw new \LogicException(\sprintf('The recipe "%s" has a dependency on unregistered recipe "%s".', $currentRecipe->name, $dependency->name));
                     }
 
                     $recipesStack[] = $recipeDependency;

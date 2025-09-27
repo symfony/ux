@@ -23,9 +23,11 @@ use Symfony\UX\Toolkit\File;
 final class Recipe
 {
     /**
+     * @param non-empty-string $name
      * @param non-empty-string $absolutePath
      */
     public function __construct(
+        public readonly string $name,
         public readonly string $absolutePath,
         public readonly RecipeManifest $manifest,
     ) {

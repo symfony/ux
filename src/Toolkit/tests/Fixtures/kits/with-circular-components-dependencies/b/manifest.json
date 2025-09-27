@@ -7,6 +7,6 @@
         "templates/": "templates/"
     },
     "dependencies": {
-        "recipe": ["C"]
+        "recipe": ["c"]
     }
 }

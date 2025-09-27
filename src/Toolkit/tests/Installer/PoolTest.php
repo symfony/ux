@@ -32,9 +32,9 @@ final class PoolTest extends TestCase
 
         $this->assertCount(0, $pool->getFiles());
 
-        $recipe = new Recipe(__DIR__, new RecipeManifest(
+        $recipe = new Recipe('test-recipe', __DIR__, new RecipeManifest(
             type: RecipeType::Component,
-            name: 'test-recipe',
+            name: 'Test Recipe',
             description: 'A test recipe',
             copyFiles: [],
         ));
@@ -49,9 +49,9 @@ final class PoolTest extends TestCase
     {
         $pool = new Pool();
 
-        $recipe = new Recipe(__DIR__, new RecipeManifest(
+        $recipe = new Recipe('test-recipe', __DIR__, new RecipeManifest(
             type: RecipeType::Component,
-            name: 'test-recipe',
+            name: 'Test Recipe',
             description: 'A test recipe',
             copyFiles: [],
         ));

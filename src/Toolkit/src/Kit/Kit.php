@@ -23,7 +23,7 @@ use Symfony\UX\Toolkit\Recipe\RecipeType;
 final class Kit
 {
     /**
-     * @var list<Recipe>
+     * @var array<string,Recipe>
      */
     private array $recipes = [];
 
@@ -44,13 +44,11 @@ final class Kit
 
     public function addRecipe(Recipe $recipe): void
     {
-        foreach ($this->recipes as $existingRecipe) {
-            if ($existingRecipe->manifest->name === $recipe->manifest->name) {
-                throw new \InvalidArgumentException(\sprintf('Recipe "%s" is already registered in the kit.', $recipe->manifest->name));
-            }
+        if (\array_key_exists($recipe->name, $this->recipes)) {
+            throw new \InvalidArgumentException(\sprintf('Recipe "%s" is already registered in the kit.', $recipe->manifest->name));
         }
 
-        $this->recipes[] = $recipe;
+        $this->recipes[$recipe->name] = $recipe;
     }
 
     /**
@@ -67,12 +65,14 @@ final class Kit
 
     public function getRecipe(string $name, ?RecipeType $type = null): ?Recipe
     {
-        foreach ($this->recipes as $recipe) {
-            if ($recipe->manifest->name === $name && (null === $type || $recipe->manifest->type === $type)) {
-                return $recipe;
-            }
+        if (null === $recipe = $this->recipes[$name] ?? null) {
+            return null;
         }
 
-        return null;
+        if (null !== $type && $recipe->manifest->type !== $type) {
+            return null;
+        }
+
+        return $recipe;
     }
 }

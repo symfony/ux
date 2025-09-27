@@ -8,7 +8,7 @@
         "templates/": "templates/"
     },
     "dependencies": {
-        "recipe": ["Button"],
+        "recipe": ["button"],
         "composer": ["twig/extra-bundle", "twig/html-extra:^3.12.0", "tales-from-a-dev/twig-tailwind-extra"],
         "npm": ["el-transition"],
         "importmap": ["el-transition"]

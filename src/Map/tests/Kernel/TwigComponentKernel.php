@@ -49,7 +49,6 @@ class TwigComponentKernel extends Kernel
             $container->loadFromExtension('twig', [
                 'default_path' => __DIR__.'/templates',
                 'strict_variables' => true,
-                'exception_controller' => null,
             ]);
             $container->loadFromExtension('twig_component', [
                 'defaults' => [],
