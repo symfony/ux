@@ -38,7 +38,7 @@ class LiveComponentDemosTest extends KernelTestCase
     /**
      * @dataProvider getSmokeTests
      */
-    public function testDemoPagesAllLoad(LiveDemo $liveDemo): void
+    public function testDemoPagesAllLoad(LiveDemo $liveDemo)
     {
         $router = self::bootKernel()->getContainer()->get('router');
         $url = $router->generate($liveDemo->getRoute());

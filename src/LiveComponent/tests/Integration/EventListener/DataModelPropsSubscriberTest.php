@@ -19,7 +19,7 @@ final class DataModelPropsSubscriberTest extends KernelTestCase
 {
     use LiveComponentTestHelper;
 
-    public function testDataModelPropsAreSharedToChild(): void
+    public function testDataModelPropsAreSharedToChild()
     {
         /** @var ComponentRenderer $renderer */
         $renderer = self::getContainer()->get('ux.twig_component.component_renderer');
@@ -38,7 +38,7 @@ final class DataModelPropsSubscriberTest extends KernelTestCase
         $this->assertStringContainsString('<textarea data-model="content2:value">Value for second child</textarea>', $html);
     }
 
-    public function testDataModelPropsAreAvailableInEmbeddedComponents(): void
+    public function testDataModelPropsAreAvailableInEmbeddedComponents()
     {
         $templateName = 'components/parent_component_data_model.html.twig';
         $obscuredName = '684c45bf85d3461dbe587407892e59d8';

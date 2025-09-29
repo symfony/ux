@@ -27,18 +27,18 @@ abstract class Elements
     ) {
         $this->elements = new \SplObjectStorage();
         foreach ($elements as $element) {
-            $this->elements->attach($element);
+            $this->add($element);
         }
     }
 
     public function add(Element $element): static
     {
-        $this->elements->attach($element, $element->id ?? $this->elements->getHash($element));
+        $this->elements[$element] = $element->id ?? $this->elements->getHash($element);
 
         return $this;
     }
 
-    private function getElement(string $id): ?Element
+    private function getElementById(string $id): ?Element
     {
         foreach ($this->elements as $element) {
             if ($element->id === $id) {
@@ -52,15 +52,13 @@ abstract class Elements
     public function remove(Element|string $elementOrId): static
     {
         if (\is_string($elementOrId)) {
-            $elementOrId = $this->getElement($elementOrId);
+            $element = $this->getElementById($elementOrId);
+        } else {
+            $element = $elementOrId;
         }
 
-        if (null === $elementOrId) {
-            return $this;
-        }
-
-        if ($this->elements->contains($elementOrId)) {
-            $this->elements->detach($elementOrId);
+        if (null !== $element && $this->elements->offsetExists($element)) {
+            unset($this->elements[$element]);
         }
 
         return $this;

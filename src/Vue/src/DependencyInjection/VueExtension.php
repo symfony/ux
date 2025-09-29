@@ -31,7 +31,7 @@ use Symfony\UX\Vue\Twig\VueComponentExtension;
  */
 class VueExtension extends Extension implements PrependExtensionInterface, ConfigurationInterface
 {
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
@@ -53,7 +53,7 @@ class VueExtension extends Extension implements PrependExtensionInterface, Confi
         ;
     }
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         if (!$this->isAssetMapperAvailable($container)) {
             return;

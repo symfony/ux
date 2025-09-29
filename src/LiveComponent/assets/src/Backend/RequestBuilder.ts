@@ -26,6 +26,7 @@ export default class {
         fetchOptions.headers = {
             Accept: 'application/vnd.live-component+html',
             'X-Requested-With': 'XMLHttpRequest',
+            'X-Live-Url': window.location.pathname + window.location.search,
         };
 
         const totalFiles = Object.entries(files).reduce((total, current) => total + current.length, 0);

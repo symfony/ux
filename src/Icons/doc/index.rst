@@ -3,9 +3,9 @@ Symfony UX Icons
 
 The ``symfony/ux-icons`` package offers simple and intuitive ways to render
 SVG icons in your Symfony application. It provides a Twig function to include
-any local or remote icons from your templates.
+both local and remote icons in your templates.
 
-UX Icons gives you a direct access to over 200,000 vector icons from popular
+UX Icons gives you direct access to over 200,000 vector icons from popular
 icon sets such as FontAwesome, Bootstrap Icons, Tabler Icons, Google Material
 Design Icons, etc.
 
@@ -15,15 +15,6 @@ Installation
 .. code-block:: terminal
 
     $ composer require symfony/ux-icons
-
-HTTP Client for On-Demand Icons
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-If you plan to use provided icon sets, make sure that you have the HTTP client installed:
-
-.. code-block:: terminal
-
-    $ composer require symfony/http-client
 
 SVG Icons
 ---------
@@ -39,7 +30,7 @@ your own.
 Icon Names
 ~~~~~~~~~~
 
-Icons are referenced using an unique identifier that follows one of the following syntaxes:
+Icons are referenced using a unique identifier using one of the following syntaxes:
 
 * ``prefix:name``  (e.g. ``mdi:check``, ``bi:check``, ``editor:align-left``)
 * ``name`` only (e.g. ``check``, ``close``, ``menu``)
@@ -50,7 +41,7 @@ The icon ``name`` is the same as the file name without the file extension (e.g. 
 
     The name must match a standard ``slug`` format: ``[a-z0-9-]+(-[a-z0-9])+``.
 
-Depending on your configuration, the ``prefix`` can be the name of an icon set, a directory
+Depending on your `configuration`_, the ``prefix`` can be the name of an icon set, a directory
 where the icon is located, or a combination of both.
 
 For example, the ``bi`` prefix refers to the Bootstrap Icons set, while the ``header`` prefix
@@ -83,23 +74,64 @@ define the HTML attributes added to the ``<svg>`` element:
     {{ ux_icon('user-profile', {height: '16px', width: '16px', 'aria-hidden': true}) }}
     {# renders <svg height="16" width="16" aria-hidden="true"> ... </svg> #}
 
+Icon Sizes
+~~~~~~~~~~
+
+.. note::
+
+    ``<svg>`` elements will be dynamically sized by the browser.
+    For icons, we therefore recommend to explicitly set the size.
+
+To align icons naturally with surrounding text and inherit font sizing, use ``em``
+units. This works well for buttons, links, or inline text. Defining the height alone
+ is sufficient—the width will scale proportionally:
+
+.. code-block:: html+twig
+
+    {# Twig function #}
+    {{ ux_icon('user-profile', {style: 'height: 1em;'}) }}
+
+    {# HTML syntax #}
+    <twig:ux:icon name="profile" style="height: 1em;" />
+
+If your project uses a CSS framework like Tailwind or Bootstrap, prefer their
+sizing utilities for consistency and theming:
+
+.. code-block:: html+twig
+
+    {# Twig function #}
+    {{ ux_icon('bi:chat', {class: 'size-4'}) }}
+
+    {# HTML syntax #}
+    <twig:ux:icon name="bi:chat" class="size-4" />
+
+To keep your design consistent and easily adjustable, consider defining a
+:ref:`default attribute <icons_default_attributes>`. This allows you to control
+the size of all your icons from a single place.
+
+Icon Color
+~~~~~~~~~~
+
+Typically, SVG icons use ``fill="currentColor"`` to inherit the color of the containing element.
+You can set the color in CSS on the container or directly on the SVG element/class.
+
 
 Icon Sets
 ~~~~~~~~~
 
-.. note::
+UX Icons gives you access to a wide variety of icon sets, each with its own
+style. This allows you to cover different needs while maintaining a consistent
+look and feel across your application.
 
-    To use icons from icon sets via `ux.symfony.com/icons`_, the ``symfony/http-client``
-    package must be installed in your application:
+To download icons automatically from the many icon sets available, you must
+first install the following package in your application:
 
-    .. code-block:: terminal
+.. code-block:: terminal
 
-        $ composer require symfony/http-client
+    $ composer require symfony/http-client
 
-There are many icon sets available, each with their own unique style and set of
-icons, providing a wide range of icons for different purposes, while maintaining
-a consistent look and feel across your application. Here are some of the most
-popular icon sets available:
+Some of the most popular icon sets are shown below; for the complete list,
+visit `ux.symfony.com/icons`_.
 
 ========================  =======  ==========  ===============  =====================
 Icon Set                    Icons  License     Prefix           Example
@@ -117,8 +149,6 @@ Icon Set                    Icons  License     Prefix           Example
 `Phosphor Icons`_            7000  MIT         ``ph``           ``ph:check``
 `Tabler Icons`_              5200  MIT         ``tabler``       ``tabler:check``
 ========================  =======  ==========  ===============  =====================
-
-To see the full list of available icon sets, visit `ux.symfony.com/icons`_.
 
 Search Icon sets
 ~~~~~~~~~~~~~~~~
@@ -174,8 +204,14 @@ HTML Syntax
 ~~~~~~~~~~~
 
 In addition to the ``ux_icon()`` function explained in the previous sections,
-this package also supports an alternative HTML syntax based on the ``<twig:ux:icon>``
-tag if the ``symfony/ux-twig-component`` package is installed:
+this package also provides an alternative HTML-based syntax. Before using it,
+ensure that the following package is installed in your application:
+
+.. code-block:: terminal
+
+    $ composer require symfony/ux-twig-component
+
+You can then use the following syntax to include icons::
 
 .. code-block:: html
 
@@ -188,11 +224,6 @@ tag if the ``symfony/ux-twig-component`` package is installed:
 
     <!-- you can also add any HTML attributes -->
     <twig:ux:icon name="user-profile" height="16" width="16" aria-hidden="true" />
-
-.. tip::
-
-    To use the HTML syntax, the `symfony/ux-twig-component`_ package must be
-    installed in your project.
 
 Downloading Icons
 -----------------
@@ -333,6 +364,8 @@ HTML Syntax
 .. note::
 
     ``symfony/ux-twig-component`` is required to use the HTML syntax.
+
+.. _icons_default_attributes:
 
 Default Attributes
 ~~~~~~~~~~~~~~~~~~
@@ -547,7 +580,7 @@ returning the HTML output.
 Configuration
 -------------
 
-The UX Icons integrates seamlessly in Symfony applications. All these options are configured under
+The UX Icons component integrates seamlessly in Symfony applications. All these options are configured under
 the ``ux_icons`` key in your application configuration.
 
 .. code-block:: yaml
@@ -600,6 +633,22 @@ Full Configuration
         # Whether to ignore errors when an icon is not found
         ignore_not_found: false
 
+        # Icon sets configuration, array of prefix => icon set configuration
+        icon_sets:
+            # Icon set for "flags", can be used like this: ux_icon('flags:fr')
+            flags:
+                # It can either be mapped to a local directory...
+                path: '%kernel.project_dir%/assets/images/flags'
+
+                # ... or to an existing icon set identifier
+                alias: 'lucide'
+
+                # Override the default attributes (default_icon_attributes) for this icon set
+                icon_attributes:
+                    class: 'flag'    # Replace the default class
+                    stroke: 'none'      # Add a new attribute
+                    fill: false         # Use "false" to remove a default attribute
+
 Learn more
 ----------
 
@@ -610,10 +659,9 @@ Learn more
 .. _`ux.symfony.com/icons`: https://ux.symfony.com/icons
 .. _`Iconify`: https://iconify.design
 .. _`symfony/asset-mapper`: https://symfony.com/doc/current/frontend/asset_mapper.html
-.. _`symfony/ux-twig-component`: https://symfony.com/bundles/ux-twig-component/current/index.html
 .. _`W3C guide about SVG icon accessibility`: https://design-system.w3.org/styles/svg-icons.html#svg-accessibility
-.. _`Bootstrap Icons`: https://icons.getbootstrap.com/
-.. _`Boxicons`: https://boxicons.com/
+.. _`Bootstrap Icons`: https://github.com/twbs/icons
+.. _`Boxicons`: https://github.com/atisawd/boxicons
 .. _`Flowbite`: https://github.com/themesberg/flowbite
 .. _`FontAwesome Icons`: https://github.com/FortAwesome/Font-Awesome
 .. _`Heroicons`: https://github.com/tailwindlabs/heroicons

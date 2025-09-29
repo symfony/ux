@@ -31,7 +31,7 @@ use Symfony\UX\React\Twig\ReactComponentExtension;
  */
 class ReactExtension extends Extension implements PrependExtensionInterface, ConfigurationInterface
 {
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
@@ -58,7 +58,7 @@ class ReactExtension extends Extension implements PrependExtensionInterface, Con
             ->addTag('asset_mapper.compiler');
     }
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         if (!$this->isAssetMapperAvailable($container)) {
             return;

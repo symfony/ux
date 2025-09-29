@@ -6,39 +6,143 @@ on:
             - 'src/*/doc/**'
             - 'src/**/*.md'
             - 'ux.symfony.com/**'
+            - '.github/workflows/app-tests.yaml'
     pull_request:
         paths-ignore:
             - 'src/*/doc/**'
             - 'src/**/*.md'
             - 'ux.symfony.com/**'
+            - '.github/workflows/app-tests.yaml'
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
     cancel-in-progress: true
 
 jobs:
+    validate-packages:
+        name: Validate packages definition
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v4
+
+            -   name: Check all composer.json have label "symfony-ux"
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name composer.json); do
+                        if ! jq -e '.keywords | index("symfony-ux")' "$file" > /dev/null; then
+                            echo "File $file does not have the keyword 'symfony-ux' in its composer.json";
+                            exit 1;
+                        fi
+                    done
+
+            -   name: Check all composer.json have license "MIT"
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name composer.json); do
+                        if ! jq -e '.license == "MIT"' "$file" > /dev/null; then
+                            echo "File $file does not have the license 'MIT' in its composer.json";
+                            exit 1;
+                        fi
+                    done
+
+            -   name: Check all composer.json have minimum-stability "dev"
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name composer.json); do
+                        if ! jq -e '."minimum-stability" == "dev"' "$file" > /dev/null; then
+                            echo "File $file does not have the minimum-stability 'dev' in its composer.json";
+                            exit 1;
+                        fi
+                    done
+
+            -   name: Check all composer.json have dependency to "php" >=8.1
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name composer.json); do
+                        if ! jq -e '.require.php | test(">=8.1")' "$file" > /dev/null; then
+                            echo "File $file does not have the dependency 'php' >=8.1 in its composer.json";
+                            exit 1;
+                        fi
+                    done
+
+            -   name: Check all package.json have license "MIT"
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name package.json -not -path "*/tests/*"); do
+                        if ! jq -e '.license == "MIT"' "$file" > /dev/null; then
+                            echo "File $file does not have the license 'MIT' in its package.json";
+                            exit 1;
+                        fi
+                    done
+
+            -   name: Check all package.json have keywords including "symfony-ux"
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name package.json -not -path "*/tests/*"); do
+                        if ! jq -e '.keywords | index("symfony-ux")' "$file" > /dev/null; then
+                            echo "File $file does not have the keyword 'symfony-ux' in its package.json";
+                            exit 1;
+                        fi
+                    done
+
+
+            -   name: Check all package.json have type "module"
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name package.json -not -path "*/tests/*"); do
+                        if ! jq -e '.type == "module"' "$file" > /dev/null; then
+                            echo "File $file does not have the type 'module' in its package.json";
+                            exit 1;
+                        fi
+                    done
+
+            -   name: Check all package.json have files '["dist"]'
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name package.json -not -path "*/tests/*"); do
+                        if ! jq -e '.files | index("dist")' "$file" > /dev/null; then
+                            echo "File $file does not have the files 'dist' in its package.json";
+                            exit 1;
+                        fi
+                    done
+
+            -   name: Check all package.json peerDependencies are present in devDependencies and importmap to the exact same version
+                if: always()
+                run: |
+                    for file in $(find src/ -mindepth 2 -type f -name package.json -not -path "*/tests/*"); do
+                        peerDependencies=$(jq -r '.peerDependencies | keys[]' "$file")
+                        for peerDependency in $peerDependencies; do
+                            peerDependencyVersion=$(jq -r --arg dep "$peerDependency" '.peerDependencies[$dep]' "$file")
+                            importmapVersion=$(jq -r ".symfony.importmap.\"$peerDependency\" | if type == \"string\" then . else .version end" "$file")
+
+                            if [ "$importmapVersion" == null ]; then
+                                echo "File $file does not have the peerDependency '$peerDependency' in its symfony.importmap, skipping version check";
+                                continue
+                            fi
+
+                            if [ "$peerDependencyVersion" != "$importmapVersion" ]; then
+                                echo "File $file has a mismatch for $peerDependency: peerDependency version is '$peerDependencyVersion' but symfony.importmap version is '$importmapVersion'";
+                                exit 1;
+                            fi
+                        done
+                    done
+
     coding-style-js:
         name: JavaScript Coding Style
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+
             - run: npm i -g corepack && corepack enable
             - uses: actions/setup-node@v4
               with:
-                cache: 'yarn'
-            - run: yarn --immutable
-            - run: yarn ci
+                node-version-file: '.nvmrc'
+                cache: 'pnpm'
 
-    coding-style-php:
-        runs-on: ubuntu-latest
-        steps:
-            -   uses: actions/checkout@v4
-            -   uses: shivammathur/setup-php@v2
-                with:
-                    php-version: '8.1'
-            -   run: composer install
-            -   name: php-cs-fixer
-                run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
+            - name: Install root JS dependencies
+              run: pnpm install --frozen-lockfile
+
+            - run: pnpm run ci
 
     phpstan:
         name: PHPStan
@@ -46,17 +150,18 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php-version: [ '8.1', '8.2', '8.3', '8.4']
+                php-version: ['8.1']
                 dependency-version: ['']
                 symfony-version: ['']
                 minimum-stability: ['stable']
                 include:
+                    # dev packages (probably not needed to have multiple such jobs)
+                    - minimum-stability: 'dev'
+                      php-version: 8.5
                     # lowest deps
-                    -   php-version: '8.1'
-                        dependency-version: 'lowest'
+                    - dependency-version: 'lowest'
                     # LTS version of Symfony
-                    -   php-version: '8.1'
-                        symfony-version: '6.4.*'
+                    - symfony-version: '6.4.*'
         steps:
             -   name: Checkout
                 uses: actions/checkout@v4
@@ -71,18 +176,33 @@ jobs:
 
                   # TODO: Only Turbo has PHPStan configuration, let's improve this later :)
                   PACKAGES=Turbo
-                  #PACKAGES=$(find src/ -mindepth 2 -type f -name composer.json -not -path "*/vendor/*" -printf '%h\n' | sed 's/^src\///' | sort |  tr '\n' ' ')
+                  #PACKAGES=$(find src/ -mindepth 2 -type f -name composer.json -printf '%h\n' | sed 's/^src\///' | sort |  tr '\n' ' ')
                   echo "Packages: $PACKAGES"
                   echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
 
             -   name: Setup PHP
                 uses: shivammathur/setup-php@v2
                 with:
-                    php-version: '8.1'
+                    php-version: 8.1
                     tools: flex
 
+            -   name: Get composer cache directory
+                id: composer-cache
+                run: |
+                    echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+            - name: Cache packages dependencies
+              uses: actions/cache@v4
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-packages-${{ matrix.php-version }}-${{ matrix.dependency-version }}-${{ matrix.symfony-version }}-${{ matrix.minimum-stability }}-${{ hashFiles('src/**/composer.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-composer-packages-${{ matrix.php-version }}-${{ matrix.dependency-version }}-${{ matrix.symfony-version }}-${{ matrix.minimum-stability }}
+
             - name: Install root dependencies
-              run: composer install
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: ${{ github.workspace }}
 
             - name: Build root packages
               run: php .github/build-packages.php

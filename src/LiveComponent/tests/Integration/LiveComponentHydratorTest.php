@@ -25,6 +25,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component3;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\BlogPostWithSerializationContext;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\CustomerDetails;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\DummyUsingPhpDoc;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Embeddable2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\HoldsArrayOfDtos;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Money;
@@ -37,10 +38,13 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Embeddable1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\ProductFixtureEntity;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\User;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\ColorEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\EmptyStringEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\IntEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\StringEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\ZeroIntEnum;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Factory\ProductFixtureEntityFactory;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentMetadata;
@@ -50,8 +54,8 @@ use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
 use function Zenstruck\Foundry\object;
+use function Zenstruck\Foundry\Persistence\delete;
 use function Zenstruck\Foundry\Persistence\persist;
-use function Zenstruck\Foundry\Persistence\proxy;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -150,9 +154,10 @@ final class LiveComponentHydratorTest extends KernelTestCase
     }
 
     /**
+     * @group transient-on-windows
      * @dataProvider provideDehydrationHydrationTests
      */
-    public function testCanDehydrateAndHydrateComponentWithTestCases(callable $testFactory, ?int $minPhpVersion = null): void
+    public function testCanDehydrateAndHydrateComponentWithTestCases(callable $testFactory, ?int $minPhpVersion = null)
     {
         $this->executeHydrationTestCase($testFactory, $minPhpVersion);
     }
@@ -336,6 +341,27 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ;
         }];
 
+        yield 'Persisted entity: (de)hydration works correctly to/from id, when the entity implements an interface' => [function () {
+            $user = persist(User::class, [
+                'username' => 'Fabien',
+            ]);
+            \assert($user instanceof User);
+
+            return HydrationTest::create(new class {
+                #[LiveProp]
+                public User $user;
+            })
+                ->mountWith(['user' => $user])
+                ->assertDehydratesTo(['user' => $user->id])
+                ->assertObjectAfterHydration(function (object $object) use ($user) {
+                    self::assertSame(
+                        $user->id,
+                        $object->user->id
+                    );
+                })
+            ;
+        }];
+
         yield 'Persisted entity: writable CAN be changed via id' => [function () {
             $entityOriginal = persist(Entity1::class);
             $entityNext = persist(Entity1::class);
@@ -409,16 +435,16 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Persisted entity: deleting entity between dehydration and hydration sets it to null' => [function () {
-            $product = proxy(persist(ProductFixtureEntity::class));
+            $product = ProductFixtureEntityFactory::createOne();
 
             return HydrationTest::create(new class {
                 // test that event the writable path doesn't cause problems
                 #[LiveProp(writable: ['name'])]
                 public ?ProductFixtureEntity $product;
             })
-                ->mountWith(['product' => $product->_real()])
+                ->mountWith(['product' => $product])
                 ->beforeHydration(function () use ($product) {
-                    $product->_delete();
+                    delete($product);
                 })
                 ->assertObjectAfterHydration(function (object $object) {
                     self::assertNull(
@@ -428,7 +454,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ;
         }];
 
-        yield 'Persisted entity: with custom_normalizer and embeddable (de)hydrates correctly' => [function () {
+        yield 'Persisted entity: using serializer, with custom_normalizer and embeddable (de)hydrates correctly' => [function () {
             $entity2 = persist(Entity2::class, ['embedded1' => new Embeddable1('bar'), 'embedded2' => new Embeddable2('baz')]);
 
             return HydrationTest::create(new class {
@@ -800,7 +826,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     self::assertNull($object->string);
                 })
             ;
-        }, 80100];
+        }];
 
         yield 'Enum: (de)hydrates correctly' => [function () {
             return HydrationTest::create(new class {
@@ -819,7 +845,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     self::assertSame('active', $object->string->value);
                 })
             ;
-        }, 80100];
+        }];
 
         yield 'Enum: writable enums can be changed' => [function () {
             return HydrationTest::create(new class {
@@ -832,7 +858,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     self::assertSame(1, $object->int->value);
                 })
             ;
-        }, 80100];
+        }];
 
         yield 'Enum: null-like enum values are handled correctly' => [function () {
             return HydrationTest::create(new class {
@@ -862,7 +888,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     self::assertSame(EmptyStringEnum::EMPTY, $object->emptyString);
                 })
             ;
-        }, 80100];
+        }];
 
         yield 'Enum: nullable enum with invalid value sets to null' => [function () {
             return HydrationTest::create(new class {
@@ -876,7 +902,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     self::assertNull($object->int);
                 })
             ;
-        }, 80100];
+        }];
 
         yield 'Object: (de)hydrates DTO correctly' => [function () {
             return HydrationTest::create(new class {
@@ -978,7 +1004,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 });
         }];
 
-        yield 'Array with DTOs: fully writable allows anything to change' => [function () {
+        yield 'Array with DTOs: using serializer, fully writable allows anything to change' => [function () {
             $address1 = object(Address::class, ['address' => '17 Arcadia Road', 'city' => 'London']);
             $address2 = object(Address::class, ['address' => '4 Privet Drive', 'city' => 'Little Whinging']);
             $address3 = object(Address::class, ['address' => '124 Conch St.', 'city' => 'Bikini Bottom']);
@@ -995,11 +1021,11 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->assertDehydratesTo(['addresses' => [
                     [
                         'address' => '17 Arcadia Road',
-                        'city' => 'London',
+                        'c' => 'London',
                     ],
                     [
                         'address' => '4 Privet Drive',
-                        'city' => 'Little Whinging',
+                        'c' => 'Little Whinging',
                     ],
                 ]])
                 ->userUpdatesProps(['addresses' => [$address3, $address4]])
@@ -1019,7 +1045,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 /**
                  * @var \Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address[]
                  */
-                #[LiveProp(writable: true, useSerializerForHydration: true)]
+                #[LiveProp(writable: true)]
                 public array $addresses = [];
             })
                 ->mountWith(['addresses' => [$address1, $address2]])
@@ -1042,12 +1068,43 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 });
         }];
 
+        yield 'Array with DTOs: using serializer, fully writable allows partial changes' => [function () {
+            $address1 = object(Address::class, ['address' => '1600 Pennsylvania Avenue', 'city' => 'Washington DC']);
+            $address2 = object(Address::class, ['address' => '221 B Baker St', 'city' => 'Birmingham']);
+
+            return HydrationTest::create(new class {
+                /**
+                 * @var \Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address[]
+                 */
+                #[LiveProp(writable: true, useSerializerForHydration: true)]
+                public array $addresses = [];
+            })
+                ->mountWith(['addresses' => [$address1, $address2]])
+                ->assertDehydratesTo(['addresses' => [
+                    [
+                        'address' => '1600 Pennsylvania Avenue',
+                        'c' => 'Washington DC',
+                    ],
+                    [
+                        'address' => '221 B Baker St',
+                        'c' => 'Birmingham',
+                    ],
+                ]])
+                ->userUpdatesProps(['addresses.1.city' => 'London'])
+                ->assertObjectAfterHydration(function (object $object) {
+                    self::assertEquals([
+                        object(Address::class, ['address' => '1600 Pennsylvania Avenue', 'city' => 'Washington DC']),
+                        object(Address::class, ['address' => '221 B Baker St', 'city' => 'London']),
+                    ], $object->addresses);
+                });
+        }];
+
         yield 'Array with DTOs: fully writable allows deep partial changes' => [function () {
             return HydrationTest::create(new class {
                 /**
                  * @var \Symfony\UX\LiveComponent\Tests\Fixtures\Dto\HoldsArrayOfDtos[] $dtos
                  */
-                #[LiveProp(writable: true, useSerializerForHydration: true)]
+                #[LiveProp(writable: true)]
                 public array $dtos = [];
             })
                 ->mountWith(['dtos' => [
@@ -1073,6 +1130,63 @@ final class LiveComponentHydratorTest extends KernelTestCase
                         'addresses' => [
                             ['address' => '698 Sycamore Road', 'city' => 'San Pueblo'],
                             ['address' => 'Madison Square Garden', 'city' => 'Chicago'],
+                        ],
+                    ],
+                ]])
+                ->userUpdatesProps([
+                    'dtos.0.addresses.0.city' => 'Springfield',
+                    'dtos.1.addresses.1.address' => '1060 West Addison Street',
+                    'dtos.1.addresses.1' => object(Address::class, ['address' => '10 Downing Street', 'city' => 'London']),
+                ])
+                ->assertObjectAfterHydration(function (object $object) {
+                    self::assertEquals(
+                        [
+                            object(HoldsArrayOfDtos::class, ['addresses' => [
+                                object(Address::class, ['address' => '742 Evergreen Terrace', 'city' => 'Springfield']),
+                                object(Address::class, ['address' => 'Apartment 5A, 129 West 81st Street', 'city' => 'New York']),
+                                object(Address::class, ['address' => '52 Festive Road', 'city' => 'London']),
+                            ]]),
+                            object(HoldsArrayOfDtos::class, ['addresses' => [
+                                object(Address::class, ['address' => '698 Sycamore Road', 'city' => 'San Pueblo']),
+                                object(Address::class, ['address' => '10 Downing Street', 'city' => 'London']),
+                            ]]),
+                        ],
+                        $object->dtos
+                    );
+                });
+        }];
+
+        yield 'Array with DTOs: using serializer, fully writable allows deep partial changes' => [function () {
+            return HydrationTest::create(new class {
+                /**
+                 * @var \Symfony\UX\LiveComponent\Tests\Fixtures\Dto\HoldsArrayOfDtos[] $dtos
+                 */
+                #[LiveProp(writable: true, useSerializerForHydration: true)]
+                public array $dtos = [];
+            })
+                ->mountWith(['dtos' => [
+                    object(HoldsArrayOfDtos::class, ['addresses' => [
+                        object(Address::class, ['address' => '742 Evergreen Terrace', 'city' => 'Boston']),
+                        object(Address::class, ['address' => 'Apartment 5A, 129 West 81st Street', 'city' => 'New York']),
+                        object(Address::class, ['address' => '52 Festive Road', 'city' => 'London']),
+                    ]]),
+                    object(HoldsArrayOfDtos::class, ['addresses' => [
+                        object(Address::class, ['address' => '698 Sycamore Road', 'city' => 'San Pueblo']),
+                        object(Address::class, ['address' => 'Madison Square Garden', 'city' => 'Chicago']),
+                    ]]),
+                ]])
+                ->assertDehydratesTo(['dtos' => [
+                    [
+                        'addresses' => [
+                            ['address' => '742 Evergreen Terrace', 'c' => 'Boston'],
+                            ['address' => 'Apartment 5A, 129 West 81st Street', 'c' => 'New York'],
+                            ['address' => '52 Festive Road', 'c' => 'London'],
+                        ],
+                    ],
+                    [
+                        'addresses' => [
+                            ['address' => '698 Sycamore Road', 'c' => 'San Pueblo'],
+                            ['address' => 'Madison Square Garden', 'c' => 'Chicago'],
                         ],
                     ],
                 ]])
@@ -1128,7 +1242,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 });
         }];
 
-        yield 'Object: using custom normalizer (de)hydrates correctly' => [function () {
+        yield 'Object: using serializer, using custom normalizer (de)hydrates correctly' => [function () {
             return HydrationTest::create(new class {
                 #[LiveProp(useSerializerForHydration: true)]
                 public Money $money;
@@ -1144,7 +1258,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ;
         }];
 
-        yield 'Object: dehydrates to array works correctly' => [function () {
+        yield 'Object: using serializer dehydrates to array works correctly' => [function () {
             return HydrationTest::create(new class {
                 #[LiveProp(useSerializerForHydration: true)]
                 public Temperature $temperature;
@@ -1229,7 +1343,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ;
         }];
 
-        yield 'Context: Pass (de)normalization context' => [function () {
+        yield 'Context: using serializer, pass (de)normalization context' => [function () {
             return HydrationTest::create(new class {
                 #[LiveProp(serializationContext: ['groups' => 'foo'])]
                 public string $name;
@@ -1410,9 +1524,25 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 })
             ;
         }];
+
+        yield 'Dehydrates correctly with phpdoc typehint' => [function () {
+            $input = new DummyUsingPhpDoc();
+            $input->color = ColorEnum::Green;
+
+            return HydrationTest::create(new class {
+                #[LiveProp]
+                public DummyUsingPhpDoc $input;
+            })
+                ->mountWith(['input' => $input])
+                ->assertDehydratesTo(['input' => ['color' => 'green']])
+                ->assertObjectAfterHydration(function (object $object) {
+                    self::assertEquals(ColorEnum::Green, $object->input->color);
+                })
+            ;
+        }];
     }
 
-    public function testHydrationWithInvalidDate(): void
+    public function testHydrationWithInvalidDate()
     {
         $this->expectException(BadRequestHttpException::class);
         $this->expectExceptionMessage('The model path "createdAt" was sent invalid date data "0" or in an invalid format. Make sure it\'s a valid date and it matches the expected format "Y. m. d.".');
@@ -1440,7 +1570,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         });
     }
 
-    public function testPassingArrayToWritablePropForHydrationIsNotAllowed(): void
+    public function testPassingArrayToWritablePropForHydrationIsNotAllowed()
     {
         $component = new class {
             #[LiveProp(writable: true)]
@@ -1471,7 +1601,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         );
     }
 
-    public function testInterfaceTypedLivePropCannotBeHydrated(): void
+    public function testInterfaceTypedLivePropCannotBeHydrated()
     {
         $componentClass = new class {
             #[LiveProp(writable: true)]
@@ -1490,7 +1620,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         );
     }
 
-    public function testInterfaceTypedLivePropCannotBeDehydrated(): void
+    public function testInterfaceTypedLivePropCannotBeDehydrated()
     {
         $componentClass = new class {
             #[LiveProp(writable: true)]
@@ -1509,7 +1639,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
     /**
      * @dataProvider provideInvalidHydrationTests
      */
-    public function testInvalidTypeHydration(callable $testFactory, ?int $minPhpVersion = null): void
+    public function testInvalidTypeHydration(callable $testFactory, ?int $minPhpVersion = null)
     {
         $this->executeHydrationTestCase($testFactory, $minPhpVersion);
     }
@@ -1590,7 +1720,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     // non-nullable change is rejected (1=LOW)
                     self::assertSame(1, $object->nonNullableInt->value);
                 });
-        }, 80100];
+        }];
 
         yield 'writable_path_with_type_problem_ignored' => [function () {
             return HydrationTest::create(new class {
@@ -1606,7 +1736,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
     }
 
-    public function testHydrationFailsIfChecksumMissing(): void
+    public function testHydrationFailsIfChecksumMissing()
     {
         $component = $this->getComponent('component1');
 
@@ -1615,7 +1745,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->hydrateComponent($component, 'component1', []);
     }
 
-    public function testHydrationFailsOnChecksumMismatch(): void
+    public function testHydrationFailsOnChecksumMismatch()
     {
         $component = $this->getComponent('component1');
 
@@ -1624,7 +1754,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->hydrateComponent($component, 'component1', ['@checksum' => 'invalid']);
     }
 
-    public function testHydrationTakeUpdatedParentPropsIntoAccount(): void
+    public function testHydrationTakeUpdatedParentPropsIntoAccount()
     {
         $component = new class {
             #[LiveProp(writable: true)]
@@ -1658,7 +1788,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertTrue($freshComponent->shouldUppercase);
     }
 
-    public function testHydrationWithUpdatesParentPropsAndBadChecksumFails(): void
+    public function testHydrationWithUpdatesParentPropsAndBadChecksumFails()
     {
         $component = new class {
             #[LiveProp(updateFromParent: true)]
@@ -1688,7 +1818,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         );
     }
 
-    public function testPreDehydrateAndPostHydrateHooksCalled(): void
+    public function testPreDehydrateAndPostHydrateHooksCalled()
     {
         $mounted = $this->mountComponent('component2');
 
@@ -1715,7 +1845,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertTrue($component->postHydrateCalled);
     }
 
-    public function testCorrectlyUsesCustomFrontendNameInDehydrateAndHydrate(): void
+    public function testCorrectlyUsesCustomFrontendNameInDehydrateAndHydrate()
     {
         $mounted = $this->mountComponent('component3', ['prop1' => 'value1', 'prop2' => 'value2']);
         $dehydratedProps = $this->dehydrateComponent($mounted)->getProps();
@@ -1736,7 +1866,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertSame('value2', $component->prop2);
     }
 
-    public function testCanDehydrateAndHydrateComponentsWithAttributes(): void
+    public function testCanDehydrateAndHydrateComponentsWithAttributes()
     {
         $mounted = $this->mountComponent('with_attributes', $attributes = ['class' => 'foo', 'value' => null], false);
 
@@ -1752,7 +1882,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertSame($attributes, $actualAttributes->all());
     }
 
-    public function testCanDehydrateAndHydrateComponentsWithEmptyAttributes(): void
+    public function testCanDehydrateAndHydrateComponentsWithEmptyAttributes()
     {
         $mounted = $this->mountComponent('with_attributes', [], false);
 
@@ -1770,7 +1900,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
     /**
      * @dataProvider truthyValueProvider
      */
-    public function testCoerceTruthyValuesForScalarTypes($prop, $value, $expected): void
+    public function testCoerceTruthyValuesForScalarTypes($prop, $value, $expected)
     {
         $dehydratedProps = $this->dehydrateComponent($this->mountComponent('scalar_types'))->getProps();
 
@@ -1784,7 +1914,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
     /**
      * @dataProvider falseyValueProvider
      */
-    public function testCoerceFalseyValuesForScalarTypes($prop, $value, $expected): void
+    public function testCoerceFalseyValuesForScalarTypes($prop, $value, $expected)
     {
         $dehydratedProps = $this->dehydrateComponent($this->mountComponent('scalar_types'))->getProps();
 

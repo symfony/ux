@@ -19,7 +19,7 @@ class MessageParametersExtractorTest extends TestCase
     /**
      * @dataProvider provideExtract
      */
-    public function testExtract(string $message, array $expectedParameters): void
+    public function testExtract(string $message, array $expectedParameters)
     {
         $messageParametersExtractor = new MessageParametersExtractor();
 

@@ -43,7 +43,7 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
         }
     }
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         if (!$this->isAssetMapperAvailable($container)) {
             return;

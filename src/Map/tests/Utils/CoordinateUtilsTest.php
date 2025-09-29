@@ -15,31 +15,31 @@ use PHPUnit\Framework\TestCase;
 
 class CoordinateUtilsTest extends TestCase
 {
-    public function testDecimalToDMSConvertsCorrectly(): void
+    public function testDecimalToDMSConvertsCorrectly()
     {
         $result = CoordinateUtils::decimalToDMS(48.8588443);
         $this->assertSame([48, 51, 31.83948], $result);
     }
 
-    public function testDecimalToDMSHandlesNegativeValues(): void
+    public function testDecimalToDMSHandlesNegativeValues()
     {
         $result = CoordinateUtils::decimalToDMS(-48.8588443);
         $this->assertSame([-48, 51, 31.83948], $result);
     }
 
-    public function testDMSToDecimalConvertsCorrectly(): void
+    public function testDMSToDecimalConvertsCorrectly()
     {
         $result = CoordinateUtils::DMSToDecimal(48, 51, 31.8388);
         $this->assertSame(48.858844, $result);
     }
 
-    public function testDMSToDecimalHandlesNegativeValues(): void
+    public function testDMSToDecimalHandlesNegativeValues()
     {
         $result = CoordinateUtils::DMSToDecimal(-48, 51, 31.8388);
         $this->assertSame(-48.858844, $result);
     }
 
-    public function testDMSToDecimalHandlesZeroValues(): void
+    public function testDMSToDecimalHandlesZeroValues()
     {
         $result = CoordinateUtils::DMSToDecimal(0, 0, 0.0);
         $this->assertSame(0.0, $result);

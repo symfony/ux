@@ -2,4 +2,5 @@
 /.symfony.bundle.yaml export-ignore
 /assets/src export-ignore
 /assets/test export-ignore
+/assets/vitest.config.mjs export-ignore
 /doc export-ignore

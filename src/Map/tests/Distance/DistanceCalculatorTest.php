@@ -21,7 +21,7 @@ use Symfony\UX\Map\Point;
 
 class DistanceCalculatorTest extends TestCase
 {
-    public function testCalculateDistanceUseCalculator(): void
+    public function testCalculateDistanceUseCalculator()
     {
         $calculator = new class implements DistanceCalculatorInterface {
             public function calculateDistance(Point $point1, Point $point2): float
@@ -41,7 +41,7 @@ class DistanceCalculatorTest extends TestCase
      *
      * @dataProvider distanceAccuracyProvider
      */
-    public function testAccuracyAgainstVincenty(Point $point1, Point $point2, float $tolerance): void
+    public function testAccuracyAgainstVincenty(Point $point1, Point $point2, float $tolerance)
     {
         $vincenty = new VincentyDistanceCalculator();
         $referenceDistance = $vincenty->calculateDistance($point1, $point2);

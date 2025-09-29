@@ -18,7 +18,7 @@ use Symfony\Component\Panther\PantherTestCase;
  */
 class TurboFrameTest extends PantherTestCase
 {
-    public function testFrame(): void
+    public function testFrame()
     {
         ($client = self::createPantherClient())->request('GET', '/');
 

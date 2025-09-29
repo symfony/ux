@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
-import { type App } from 'vue';
-export default class extends Controller<Element & {
+import { App } from 'vue';
+
+declare class export_default extends Controller<Element & {
     __vue_app__?: App<Element>;
 }> {
     private props;
@@ -15,3 +16,5 @@ export default class extends Controller<Element & {
     disconnect(): void;
     private dispatchEvent;
 }
+
+export { export_default as default };

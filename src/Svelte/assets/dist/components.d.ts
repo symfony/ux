@@ -1,5 +1,8 @@
-import type { SvelteComponent } from 'svelte';
-export interface ComponentCollection {
+import { SvelteComponent } from 'svelte';
+
+interface ComponentCollection {
     [key: string]: SvelteComponent;
 }
-export declare const components: ComponentCollection;
+declare const components: ComponentCollection;
+
+export { type ComponentCollection, components };

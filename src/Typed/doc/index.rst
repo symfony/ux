@@ -122,7 +122,7 @@ Stimulus controller:
         }
 
         _onConnect(event) {
-            // Typed has just been intialized and you can access details from the event
+            // Typed has just been initialized and you can access details from the event
             console.log(event.detail.typed); // Typed instance
             console.log(event.detail.options); // Options used to initialize Typed
         }

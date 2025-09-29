@@ -1,5 +1,5 @@
-import type ValueStore from '../ValueStore';
 import type Component from '../index';
+import type ValueStore from '../ValueStore';
 import type { PluginInterface } from './PluginInterface';
 
 export default class implements PluginInterface {

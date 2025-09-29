@@ -23,11 +23,18 @@ final class Map
     private Markers $markers;
     private Polygons $polygons;
     private Polylines $polylines;
+    private Circles $circles;
+    private Rectangles $rectangles;
 
     /**
-     * @param Marker[]   $markers
-     * @param Polygon[]  $polygons
-     * @param Polyline[] $polylines
+     * @param Marker[]             $markers
+     * @param Polygon[]            $polygons
+     * @param Polyline[]           $polylines
+     * @param Circle[]             $circles
+     * @param Rectangles[]         $rectangles
+     * @param array<string, mixed> $extra      Extra data forwarded to the JavaScript side. It can be used in your custom
+     *                                         Stimulus controller to benefit from greater flexibility and customization.
+     *                                         These data must be serializable to JSON. These data are not used by UX Map.
      */
     public function __construct(
         private readonly ?string $rendererName = null,
@@ -38,10 +45,18 @@ final class Map
         array $markers = [],
         array $polygons = [],
         array $polylines = [],
+        array $circles = [],
+        array $rectangles = [],
+        private array $extra = [],
+        private ?float $minZoom = null,
+        private ?float $maxZoom = null,
     ) {
         $this->markers = new Markers($markers);
         $this->polygons = new Polygons($polygons);
         $this->polylines = new Polylines($polylines);
+        $this->circles = new Circles($circles);
+        $this->rectangles = new Rectangles($rectangles);
+        $this->validateZooms();
     }
 
     public function getRendererName(): ?string
@@ -59,6 +74,23 @@ final class Map
     public function zoom(float $zoom): self
     {
         $this->zoom = $zoom;
+        $this->validateZooms();
+
+        return $this;
+    }
+
+    public function minZoom(float $minZoom): self
+    {
+        $this->minZoom = $minZoom;
+        $this->validateZooms();
+
+        return $this;
+    }
+
+    public function maxZoom(float $maxZoom): self
+    {
+        $this->maxZoom = $maxZoom;
+        $this->validateZooms();
 
         return $this;
     }
@@ -129,6 +161,46 @@ final class Map
         return $this;
     }
 
+    public function addCircle(Circle $circle): self
+    {
+        $this->circles->add($circle);
+
+        return $this;
+    }
+
+    public function removeCircle(Circle|string $circleOrId): self
+    {
+        $this->circles->remove($circleOrId);
+
+        return $this;
+    }
+
+    public function addRectangle(Rectangle $rectangle): self
+    {
+        $this->rectangles->add($rectangle);
+
+        return $this;
+    }
+
+    public function removeRectangle(Rectangle|string $rectangleOrId): self
+    {
+        $this->rectangles->remove($rectangleOrId);
+
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $extra Extra data forwarded to the JavaScript side. It can be used in your custom
+     *                                    Stimulus controller to benefit from greater flexibility and customization.
+     *                                    These data must be serializable to JSON. These data are not used by UX Map.
+     */
+    public function extra(array $extra): self
+    {
+        $this->extra = $extra;
+
+        return $this;
+    }
+
     public function toArray(): array
     {
         if (!$this->fitBoundsToMarkers) {
@@ -149,6 +221,13 @@ final class Map
             'markers' => $this->markers->toArray(),
             'polygons' => $this->polygons->toArray(),
             'polylines' => $this->polylines->toArray(),
+            'circles' => $this->circles->toArray(),
+            'rectangles' => $this->rectangles->toArray(),
+            // Send `null` if empty instead of `[]`, because Stimulus Controller values validation expect an Object,
+            // and sending `(object) $this->extra` mess with LiveComponent hydration checksum validation
+            'extra' => [] === $this->extra ? null : $this->extra,
+            'minZoom' => $this->minZoom,
+            'maxZoom' => $this->maxZoom,
         ];
     }
 
@@ -159,26 +238,25 @@ final class Map
      *     markers?: list<array>,
      *     polygons?: list<array>,
      *     polylines?: list<array>,
+     *     circles?: list<array>,
+     *     rectangles?: list<array>,
      *     fitBoundsToMarkers?: bool,
      *     options?: array<string, mixed>,
+     *     extra?: array<string, mixed>,
+     *     minZoom?: float,
+     *     maxZoom?: float,
      * } $map
      *
      * @internal
      */
     public static function fromArray(array $map): self
     {
-        $map['fitBoundsToMarkers'] = true;
-
         if (isset($map['options'])) {
             $map['options'] = [] === $map['options'] ? null : MapOptionsNormalizer::denormalize($map['options']);
         }
 
         if (isset($map['center'])) {
             $map['center'] = Point::fromArray($map['center']);
-        }
-
-        if (isset($map['zoom']) || isset($map['center'])) {
-            $map['fitBoundsToMarkers'] = false;
         }
 
         $map['markers'] ??= [];
@@ -199,6 +277,47 @@ final class Map
         }
         $map['polylines'] = array_map(Polyline::fromArray(...), $map['polylines']);
 
+        $map['circles'] ??= [];
+        if (!\is_array($map['circles'])) {
+            throw new InvalidArgumentException('The "circles" parameter must be an array.');
+        }
+        $map['circles'] = array_map(Circle::fromArray(...), $map['circles']);
+
+        $map['rectangles'] ??= [];
+        if (!\is_array($map['rectangles'])) {
+            throw new InvalidArgumentException('The "rectangles" parameter must be an array.');
+        }
+        $map['rectangles'] = array_map(Rectangle::fromArray(...), $map['rectangles']);
+
+        $map['extra'] ??= [];
+
         return new self(...$map);
+    }
+
+    private function validateZooms(): void
+    {
+        if (null !== $this->zoom && $this->zoom < 0) {
+            throw new InvalidArgumentException('The "zoom" must be greater than or equal to 0.');
+        }
+
+        if (null !== $this->minZoom && $this->minZoom < 0) {
+            throw new InvalidArgumentException('The "minZoom" must be greater than or equal to 0.');
+        }
+
+        if (null !== $this->maxZoom && $this->maxZoom < 0) {
+            throw new InvalidArgumentException('The "maxZoom" must be greater than or equal to 0.');
+        }
+
+        if (null !== $this->minZoom && null !== $this->maxZoom && $this->minZoom > $this->maxZoom) {
+            throw new InvalidArgumentException('The "minZoom" must be less than or equal to "maxZoom".');
+        }
+
+        if (null !== $this->zoom && null !== $this->minZoom && $this->zoom < $this->minZoom) {
+            throw new InvalidArgumentException('The "zoom" must be greater than or equal to "minZoom".');
+        }
+
+        if (null !== $this->zoom && null !== $this->maxZoom && $this->zoom > $this->maxZoom) {
+            throw new InvalidArgumentException('The "zoom" must be less than or equal to "maxZoom".');
+        }
     }
 }

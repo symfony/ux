@@ -16,7 +16,7 @@ use Symfony\UX\LiveComponent\LiveResponder;
 
 class LiveResponderTest extends TestCase
 {
-    public function testEmit(): void
+    public function testEmit()
     {
         $responder = new LiveResponder();
         $responder->emit('event_name1', ['data_key' => 'data_value']);
@@ -38,7 +38,7 @@ class LiveResponderTest extends TestCase
         ], $responder->getEventsToEmit());
     }
 
-    public function testEmitUp(): void
+    public function testEmitUp()
     {
         $responder = new LiveResponder();
         $responder->emitUp('event_name1', ['data_key' => 'data_value']);
@@ -60,7 +60,7 @@ class LiveResponderTest extends TestCase
         ], $responder->getEventsToEmit());
     }
 
-    public function testEmitSelf(): void
+    public function testEmitSelf()
     {
         $responder = new LiveResponder();
         $responder->emitSelf('event_name1', ['data_key' => 'data_value']);
@@ -82,7 +82,7 @@ class LiveResponderTest extends TestCase
         ], $responder->getEventsToEmit());
     }
 
-    public function testDispatchBrowserEvent(): void
+    public function testDispatchBrowserEvent()
     {
         $responder = new LiveResponder();
         $responder->dispatchBrowserEvent('event_name1', ['data_key' => 'data_value']);

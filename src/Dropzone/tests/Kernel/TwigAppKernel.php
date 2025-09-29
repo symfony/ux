@@ -34,17 +34,26 @@ class TwigAppKernel extends Kernel
         return [new FrameworkBundle(), new TwigBundle(), new DropzoneBundle()];
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) {
-            $container->loadFromExtension('framework', ['secret' => '$ecret', 'test' => true, 'http_method_override' => false]);
+            $container->loadFromExtension('framework', [
+                'secret' => '$ecret',
+                'test' => true,
+                'http_method_override' => false,
+                'php_errors' => [
+                    'log' => true,
+                ],
+                ...(self::VERSION_ID >= 60200 ? [
+                    'handle_all_throwables' => true,
+                ] : []),
+            ]);
             $container->loadFromExtension('twig', [
                 'default_path' => __DIR__.'/templates',
                 'strict_variables' => true,
                 'form_themes' => [
                     'form_theme.html.twig',
                 ],
-                'exception_controller' => null,
                 'debug' => '%kernel.debug%',
             ]);
 

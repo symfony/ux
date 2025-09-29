@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-export default class extends Controller {
+
+declare class export_default extends Controller {
     readonly animateHistoryBrowsingValue: boolean;
     readonly hasAnimateHistoryBrowsingValue: boolean;
     readonly animationSelectorValue: string;
@@ -26,3 +27,5 @@ export default class extends Controller {
     connect(): void;
     private dispatchEvent;
 }
+
+export { export_default as default };

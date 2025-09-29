@@ -1,0 +1,12 @@
+{
+    "private": true,
+    "license": "MIT",
+    "devDependencies": {
+        "@babel/cli": "^7.25.6",
+        "@babel/core": "^7.25.2",
+        "@babel/preset-react": "^7.24.7"
+    },
+    "scripts": {
+        "build": "babel ./src/ --out-dir ./build/ --presets=@babel/preset-react --no-babelrc"
+    }
+}

@@ -66,6 +66,16 @@ and show the new results!
 
 Want some demos? Check out https://ux.symfony.com/live-component#demo
 
+.. tip::
+
+    You can also specify the template path::
+
+        #[AsLiveComponent(template: 'some/path/to/your/template.html.twig')]
+        class ProductSearch
+        {
+            // ...
+
+
 Installation
 ------------
 
@@ -275,20 +285,10 @@ Add an input to the template:
         <strong>{{ this.randomNumber }}</strong>
     </div>
 
-.. versionadded:: 2.5
-
-    Before version 2.5, you needed to also set ``value="{{ max }}"``
-    on the ``<input>``. That is now set automatically for all
-    "data-model" fields.
 
 The key is the ``data-model`` attribute. Thanks
 to that, when the user types, the ``$max`` property on
 the component will automatically update!
-
-.. versionadded:: 2.3
-
-    Before version 2.3, you also needed a ``data-action="live#update"``
-    attribute. That attribute should now be removed.
 
 How? Live components *listens* to the ``input`` event and
 sends an Ajax request to re-render the component with the
@@ -383,6 +383,66 @@ This can be useful along with a button that triggers a render on click:
 
     <input data-model="norender|coupon">
     <button data-action="live#$render">Apply</button>
+
+Input Model Validation Modifiers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.28
+
+    Modifiers to validate ``<input>`` value were added in UX LiveComponent 2.28.
+
+Input model validation modifiers help to reduce unnecessary server requests and provide
+a lightweight form of frontend validation, for example:
+
+.. code-block:: html
+
+    <!-- Do not trigger model update until 3 characters are typed -->
+    <input data-model="min_length(3)|username" type="text" value="" />
+
+    <!-- Only trigger updates when value number is between 10 and 100 -->
+    <input data-model="min_value(10)|max_value(100)|quantity" type="number" value="20" />
+
+``min_length``
+..............
+
+Validate that an ``<input>`` element of type ``text``, ``email``, ``password``, ``search``, ``url``
+or a ``<textarea>`` element, has a value length not less than the specified length:
+
+.. code-block:: html
+
+    <!-- Validate the search term is at least 3 characters long-->
+    <input type="search" data-model="min_length(3)|search">
+
+``max_length``
+..............
+
+Validate that an ``<input>`` element of type ``text``, ``email``, ``password``, ``search``, ``url``
+or a ``<textarea>`` element, has a value length not higher than the specified length:
+
+.. code-block:: html
+
+    <!-- Validates that the username is not longer than 10 characters -->
+    <input type="text" data-model="max_length(10)|username">
+
+``min_value``
+.............
+
+Validate that an ``<input>`` element of type ``number`` or ``range`` has a numeric value which is not less than the specified value:
+
+.. code-block:: html
+
+    <!-- Validate that the age is not less than 18 -->
+    <input type="number" data-model="min_value(18)|age">
+
+``max_value``
+.............
+
+Validate that an ``<input>`` element of type ``number`` or ``range`` has a numeric value which is not higher than the specified value:
+
+.. code-block:: html
+
+    <!-- Validate that the year is not higher than 2025 -->
+    <input type="number" data-model="max_value(2025)|year">
 
 Forcing a Re-Render Explicitly
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -674,10 +734,6 @@ persisted entities, which dehydrate to an ``id``).
 Using DTO's on a LiveProp
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 2.12
-
-    The automatic (de)hydration of DTO objects was introduced in LiveComponents 2.12.
-
 You can also use a DTO (i.e. data transfer object / any simple class) with LiveProp as long as the property has the correct type::
 
     class ComponentWithAddressDto
@@ -757,10 +813,6 @@ and ``dehydrateWith`` options on ``LiveProp``::
 
 Hydration Extensions
 ~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.8
-
-    The ``HydrationExtensionInterface`` system was added in LiveComponents 2.8.
 
 If you frequently hydrate/dehydrate the same type of object, you can create a custom
 hydration extension to make this easier. For example, if you frequently hydrate
@@ -878,12 +930,6 @@ of the change:
 
 Adding a Stimulus Controller to your Component Root Element
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.9
-
-    The ability to use the ``defaults()`` method with ``stimulus_controller()``
-    was added in TwigComponents 2.9 and requires ``symfony/stimulus-bundle``.
-    Previously, ``stimulus_controller()`` was passed to ``attributes.add()``.
 
 To add a custom Stimulus controller to your root component element:
 
@@ -1255,10 +1301,6 @@ shortcuts. We even added a flash message!
 Uploading files
 ---------------
 
-.. versionadded:: 2.11
-
-    The ability to upload files to actions was added in version 2.11.
-
 Files aren't sent to the component by default. You need to use a live action
 to handle the files and tell the component when the file should be sent:
 
@@ -1325,7 +1367,9 @@ The files will be available in a regular ``$request->files`` files bag::
 Downloading files
 -----------------
 
-Currently, Live Components do not natively support returning file responses directly from a LiveAction. However, you can implement file downloads by redirecting to a route that handles the file response.
+Currently, Live Components do not natively support returning file responses
+directly from a LiveAction. However, you can implement file downloads by
+redirecting to a route that handles the file response.
 
 Create a LiveAction that generates the URL for the file download and returns a ``RedirectResponse``::
 
@@ -1350,7 +1394,9 @@ Create a LiveAction that generates the URL for the file download and returns a `
 
 .. tip::
 
-    When Turbo is enabled, if a LiveAction response redirects to another URL, Turbo will make a request to prefetch the content. Here, adding ``data-turbo="false"`` ensures that the download URL is called only once.
+    When Turbo is enabled, if a LiveAction response redirects to another URL,
+    Turbo will make a request to prefetch the content. Here, adding ``data-turbo="false"``
+    ensures that the download URL is called only once.
 
 
 .. _forms:
@@ -1378,7 +1424,7 @@ instant validation as the user types::
 
     class PostType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 ->add('title')
@@ -1387,7 +1433,7 @@ instant validation as the user types::
             ;
         }
 
-        public function configureOptions(OptionsResolver $resolver)
+        public function configureOptions(OptionsResolver $resolver): void
         {
             $resolver->setDefaults([
                 'data_class' => Post::class,
@@ -1689,7 +1735,7 @@ typing! To fix this, either re-render on the ``change`` event (which
 fires after the text box loses focus) or set the ``trim`` option of your
 field to ``false``::
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             // ...
@@ -1708,7 +1754,7 @@ a submit.
 
 To fix this, set the ``always_empty`` option to ``false`` in your form::
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             // ...
@@ -1720,10 +1766,6 @@ To fix this, set the ``always_empty`` option to ``false`` in your form::
 
 Resetting the Form
 ~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.10
-
-    The ``resetForm()`` method was added in LiveComponent 2.10.
 
 After submitting a form via an action, you might want to "reset" the form
 back to its initial state so you can use it again. Do that by calling
@@ -1758,7 +1800,7 @@ via the ``CollectionType``::
 
     class BlogPostFormType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 ->add('title', TextType::class)
@@ -1772,7 +1814,7 @@ via the ``CollectionType``::
             ;
         }
 
-        public function configureOptions(OptionsResolver $resolver)
+        public function configureOptions(OptionsResolver $resolver): void
         {
             $resolver->setDefaults(['data_class' => BlogPost::class]);
         }
@@ -1904,7 +1946,7 @@ via the ``LiveCollectionType``::
 
     class BlogPostFormType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 ->add('title', TextType::class)
@@ -1915,7 +1957,7 @@ via the ``LiveCollectionType``::
             ;
         }
 
-        public function configureOptions(OptionsResolver $resolver)
+        public function configureOptions(OptionsResolver $resolver): void
         {
             $resolver->setDefaults(['data_class' => BlogPost::class]);
         }
@@ -2196,7 +2238,7 @@ need::
         public bool $agreeToTerms = false;
     }
 
-Be sure to add the ``IsValid`` attribute/annotation to any property
+Be sure to add the ``Valid`` attribute/annotation to any property
 where you want the object on that property to also be validated.
 
 Thanks to this setup, the component will now be automatically validated
@@ -2319,10 +2361,6 @@ as soon as the page loads (``defer``) or when the component becomes visible
 Loading "defer" (Ajax on Load)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 2.13.0
-
-    The ability to defer loading a component was added in Live Components 2.13.
-
 If a component is heavy to render, you can defer rendering it until after
 the page has loaded. To do this, add a ``loading="defer"`` attribute:
 
@@ -2341,10 +2379,6 @@ real component once the page has loaded.
 
 Loading "lazy" (Ajax when Visible)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.17.0
-
-    The ability to load a component "lazily" was added in Live Components 2.17.
 
 The ``lazy`` option is similar to ``defer``, but it defers the loading of
 the component until it's in the viewport. This is useful for components that
@@ -2382,9 +2416,9 @@ You can define some content to be rendered while the component is loading, eithe
 inside the component template (the ``placeholder`` macro) or from the calling template
 (the ``loading-template`` attribute and the ``loadingContent`` block).
 
-.. versionadded:: 2.16.0
+.. versionadded:: 2.16
 
-    Defining a placeholder macro into the component template was added in Live Components 2.16.0.
+    Defining a placeholder macro into the component template was added in Live Components 2.16.
 
 In the component template, define a ``placeholder`` macro, outside of the
 component's main content. This macro will be called when the component is deferred:
@@ -2501,10 +2535,6 @@ You can also trigger a specific "action" instead of a normal re-render:
 
 Changing the URL when a LiveProp changes
 ----------------------------------------
-
-.. versionadded:: 2.14
-
-    The ``url`` option was introduced in Live Components 2.14.
 
 If you want the URL to update when a ``LiveProp`` changes, you can do that with the ``url`` option::
 
@@ -2641,7 +2671,7 @@ This way you can also use the component multiple times in the same page and avoi
    The property name is passed into the modifier function since LiveComponents 2.26.
 
 The ``modifier`` function can also take the name of the property as a secondary parameter.
-It can be used to perform more generic operations inside of the modifier that can be re-used for multiple props::
+It can be used to perform more generic operations inside of the modifier that can be reused for multiple props::
 
     abstract class AbstractSearchModule
     {
@@ -2676,6 +2706,46 @@ It can be used to perform more generic operations inside of the modifier that ca
     <twig:SecondarySearchModule />
 
 The ``query`` value will appear in the URL like ``/search?query=my+important+query&secondary-query=my+secondary+query``.
+
+Map the parameter to path instead of query
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.28
+
+    The ``mapPath`` option was added in LiveComponents 2.28.
+
+Instead of setting the ``LiveProp`` as a query parameter, it can be set as route parameter
+by passing the ``mapPath`` option to the ``UrlMapping`` defined for the ``LiveProp``::
+
+    // ...
+    use Symfony\UX\LiveComponent\Metadata\UrlMapping;
+
+    #[AsLiveComponent]
+    class SearchModule
+    {
+        #[LiveProp(writable: true, url: new UrlMapping(mapPath: true))]
+        public string $query = '';
+
+        // ...
+    }
+
+
+If the current route is defined like this::
+
+    // src/Controller/SearchController.php
+    // ...
+
+    #[Route('/search/{query}')]
+    public function __invoke(string $query): Response
+    {
+        // ... render template that uses SearchModule component ...
+    }
+
+Then the ``query`` value will appear in the URL like ``https://my.domain/search/my+query+string``.
+
+If the route parameter name is different from the LiveProp name, the ``as`` option can be used to map the ``LiveProp``.
+
+If the route parameter is not defined, the ``mapPath`` option will be ignored and the LiveProp value will fallback to a query parameter.
 
 Validating the Query Parameter Values
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3244,7 +3314,7 @@ In the ``EditPost`` template, you render the
     </div>
 
 Notice that ``MarkdownTextarea`` allows a dynamic ``name``
-attribute to be passed in. This makes that component re-usable in any
+attribute to be passed in. This makes that component reusable in any
 form.
 
 .. _rendering-loop-of-elements:
@@ -3610,10 +3680,6 @@ Then specify this new route on your component:
           use DefaultActionTrait;
       }
 
-.. versionadded:: 2.14
-
-    The ``urlReferenceType`` option  was added in LiveComponents 2.14.
-
 You can also control the type of the generated URL:
 
 .. code-block:: diff
@@ -3632,10 +3698,6 @@ You can also control the type of the generated URL:
 
 Add a Hook on LiveProp Update
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.12
-
-    The ``onUpdated`` option was added in LiveComponents 2.12.
 
 If you want to run custom code after a specific LiveProp is updated,
 you can do it by adding an ``onUpdated`` option set to a public method name
@@ -3736,10 +3798,6 @@ The `Twig Component debug command`_ can help you.
 Test Helper
 -----------
 
-.. versionadded:: 2.11
-
-    The test helper was added in LiveComponents 2.11.
-
 Interact With Live-Components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -3778,8 +3836,19 @@ uses Symfony's test client to render and make requests to your components::
             // emit live events
             $testComponent
                 ->emit('increaseEvent')
-                ->emit('increaseEvent', ['amount' => 2]) // emit a live event with arguments
+                ->emit('increaseEvent', ['amount' => 2, 'unit' => 'kg']) // emit a live event with arguments
             ;
+
+            // Assert that the event was emitted
+            $this->assertComponentEmitEvent($testComponent->render(), 'increaseEvent')
+                // optionally, you can assert that the event was emitted with specific data...
+                ->withData(['amount' => 2, 'unit' => 'kg'])
+                // ... or only with a subset of data
+                ->withDataSubset(['amount' => 2])
+            ;
+
+            // Assert that an event was not emitted
+            $this->assertComponentNotEmitEvent($testComponent->render(), 'decreaseEvent');
 
             // set live props
             $testComponent

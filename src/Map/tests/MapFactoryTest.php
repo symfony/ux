@@ -30,7 +30,7 @@ class MapFactoryTest extends TestCase
         DummyOptions::unregisterFromNormalizer();
     }
 
-    public function testFromArray(): void
+    public function testFromArray()
     {
         $array = self::createMapArray();
         $map = Map::fromArray($array);
@@ -62,7 +62,7 @@ class MapFactoryTest extends TestCase
         $this->assertSame($array['polylines'][0]['infoWindow']['content'], $polylines[0]['infoWindow']['content']);
     }
 
-    public function testToArrayFromArray(): void
+    public function testToArrayFromArray()
     {
         $map = (new Map())
             ->center(new Point(48.8566, 2.3522))
@@ -85,7 +85,6 @@ class MapFactoryTest extends TestCase
                     new Point(48.853, 2.3499),
                     new Point(48.8566, 2.3522),
                 ],
-                title: 'Polygon 1',
                 infoWindow: new InfoWindow('Polygon 1', 'Polygon 1', extra: ['color' => 'red']),
                 extra: ['color' => 'blue'],
             ));
@@ -95,7 +94,7 @@ class MapFactoryTest extends TestCase
         $this->assertEquals($map->toArray(), $newMap->toArray());
     }
 
-    public function testFromArrayWithInvalidCenter(): void
+    public function testFromArrayWithInvalidCenter()
     {
         $array = self::createMapArray();
         $array['center'] = 'invalid';
@@ -104,7 +103,7 @@ class MapFactoryTest extends TestCase
         Map::fromArray($array);
     }
 
-    public function testFromArrayWithInvalidZoom(): void
+    public function testFromArrayWithInvalidZoom()
     {
         $array = self::createMapArray();
         $array['zoom'] = 'invalid';
@@ -113,7 +112,7 @@ class MapFactoryTest extends TestCase
         Map::fromArray($array);
     }
 
-    public function testFromArrayWithInvalidMarkers(): void
+    public function testFromArrayWithInvalidMarkers()
     {
         $array = self::createMapArray();
         $array['markers'] = 'invalid';
@@ -123,7 +122,7 @@ class MapFactoryTest extends TestCase
         Map::fromArray($array);
     }
 
-    public function testFromArrayWithInvalidMarker(): void
+    public function testFromArrayWithInvalidMarker()
     {
         $array = self::createMapArray();
         $array['markers'] = [
@@ -137,7 +136,7 @@ class MapFactoryTest extends TestCase
         Map::fromArray($array);
     }
 
-    public function testFromArrayWithInvalidPolygons(): void
+    public function testFromArrayWithInvalidPolygons()
     {
         $array = self::createMapArray();
         $array['polygons'] = 'invalid';
@@ -147,7 +146,7 @@ class MapFactoryTest extends TestCase
         Map::fromArray($array);
     }
 
-    public function testFromArrayWithInvalidPolygon(): void
+    public function testFromArrayWithInvalidPolygon()
     {
         $array = self::createMapArray();
         $array['polygons'] = [
@@ -161,7 +160,7 @@ class MapFactoryTest extends TestCase
         Map::fromArray($array);
     }
 
-    public function testFromArrayWithInvalidPolylines(): void
+    public function testFromArrayWithInvalidPolylines()
     {
         $array = self::createMapArray();
         $array['polylines'] = 'invalid';
@@ -171,7 +170,7 @@ class MapFactoryTest extends TestCase
         Map::fromArray($array);
     }
 
-    public function testFromArrayWithInvalidPolyline(): void
+    public function testFromArrayWithInvalidPolyline()
     {
         $array = self::createMapArray();
         $array['polylines'] = [
@@ -222,7 +221,7 @@ class MapFactoryTest extends TestCase
                             'lng' => 2.3522,
                         ],
                     ],
-                    'title' => 'Polygon 1',
+                    'title' => null,
                     'infoWindow' => [
                         'headerContent' => 'Polygon 1',
                         'content' => 'Polygon 1',
@@ -245,7 +244,7 @@ class MapFactoryTest extends TestCase
                             'lng' => 2.3522,
                         ],
                     ],
-                    'title' => 'Polyline 1',
+                    'title' => null,
                     'infoWindow' => [
                         'headerContent' => 'Polyline 1',
                         'content' => 'Polyline 1',

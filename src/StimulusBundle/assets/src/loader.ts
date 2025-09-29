@@ -15,9 +15,9 @@
 import { Application, type ControllerConstructor } from '@hotwired/stimulus';
 import {
     type EagerControllersCollection,
-    type LazyControllersCollection,
     eagerControllers,
     isApplicationDebug,
+    type LazyControllersCollection,
     lazyControllers,
 } from './controllers.js';
 

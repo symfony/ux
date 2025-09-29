@@ -63,7 +63,9 @@ class StimulusTestKernel extends Kernel
                 'importmap_path' => '%kernel.project_dir%/'.(class_exists(ImportMapConfigReader::class) ? 'importmap.php' : 'legacy/importmap.php'),
             ],
             'test' => true,
-            'handle_all_throwables' => true,
+            ...(self::VERSION_ID >= 60200 ? [
+                'handle_all_throwables' => true,
+            ] : []),
             'php_errors' => ['log' => true],
         ]);
 

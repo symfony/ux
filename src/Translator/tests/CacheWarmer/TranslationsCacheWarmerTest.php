@@ -28,7 +28,7 @@ final class TranslationsCacheWarmerTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
-        @unlink(self::$cacheDir);
+        @rmdir(self::$cacheDir);
     }
 
     public function test()

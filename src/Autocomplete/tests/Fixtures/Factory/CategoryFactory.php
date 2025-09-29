@@ -11,33 +11,15 @@
 
 namespace Symfony\UX\Autocomplete\Tests\Fixtures\Factory;
 
-use Doctrine\ORM\EntityRepository;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Entity\Category;
-use Zenstruck\Foundry\ModelFactory;
-use Zenstruck\Foundry\Proxy;
-use Zenstruck\Foundry\RepositoryProxy;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 /**
- * @extends ModelFactory<Category>
- *
- * @method static Category|Proxy                   createOne(array $attributes = [])
- * @method static Category[]|Proxy[]               createMany(int $number, array|callable $attributes = [])
- * @method static Category|Proxy                   find(object|array|mixed $criteria)
- * @method static Category|Proxy                   findOrCreate(array $attributes)
- * @method static Category|Proxy                   first(string $sortedField = 'id')
- * @method static Category|Proxy                   last(string $sortedField = 'id')
- * @method static Category|Proxy                   random(array $attributes = [])
- * @method static Category|Proxy                   randomOrCreate(array $attributes = []))
- * @method static Category[]|Proxy[]               all()
- * @method static Category[]|Proxy[]               findBy(array $attributes)
- * @method static Category[]|Proxy[]               randomSet(int $number, array $attributes = []))
- * @method static Category[]|Proxy[]               randomRange(int $min, int $max, array $attributes = []))
- * @method static EntityRepository|RepositoryProxy repository()
- * @method        Category|Proxy                   create(array|callable $attributes = [])
+ * @extends PersistentObjectFactory<Category>
  */
-final class CategoryFactory extends ModelFactory
+final class CategoryFactory extends PersistentObjectFactory
 {
-    protected function getDefaults(): array
+    protected function defaults(): array
     {
         $name = self::faker()->name();
         return [
@@ -46,12 +28,7 @@ final class CategoryFactory extends ModelFactory
         ];
     }
 
-    protected function initialize(): self
-    {
-        return $this;
-    }
-
-    protected static function getClass(): string
+    public static function class(): string
     {
         return Category::class;
     }

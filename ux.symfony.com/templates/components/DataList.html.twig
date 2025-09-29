@@ -8,9 +8,9 @@
                 <dd>
                     {%- if value.href|default %}
                         <a href="{{ value.href }}">{{ value.title }}</a>
-                    {% else %}
+                    {% else -%}
                         {{ value.title ?? value }}
-                    {% endif -%}
+                    {%- endif -%}
                 </dd>
             </div>
         {% endif %}

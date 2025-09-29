@@ -1,0 +1,40 @@
+{% extends 'example.html.twig' %}
+
+{% block example %}
+    <div id="input" class="mb-3">
+        <h2>Input</h2>
+        <div class="mb-3">
+            <label for="gender" class="form-label">Gender</label>
+            <select type="text" class="form-control" id="gender">
+                <option value="female" selected>Female</option>
+                <option value="male">Male</option>
+                <option value="multiple">Multiple</option>
+                <option value="trans">Trans</option>
+            </select>
+        </div>
+        <button id="doRender" class="btn btn-primary">Render</button>
+    </div>
+    <output data-testid="output" class="mb-3"></output>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="module">
+        import { trans } from '@symfony/ux-translator';
+        import { INVITATION_TITLE } from '@app/translations';
+
+        const selectGender = document.querySelector('#gender');
+
+        function render() {
+            document.querySelector('[data-testid="output"]').innerHTML = `
+                <h2>Output</h2>
+                <ul >
+                    <li>🇬🇧 ${trans(INVITATION_TITLE, { organizer_gender: selectGender.value, organizer_name: 'Alex' }, 'messages', 'en')}</li>
+                    <li>🇫🇷 ${trans(INVITATION_TITLE, { organizer_gender: selectGender.value, organizer_name: 'Alex' }, 'messages', 'fr')}</li>
+                </ul>
+            `
+        }
+
+        document.querySelector('#doRender').addEventListener('click', render);
+    </script>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'example.html.twig' %}
+
+{% block example %}
+    <div id="input" class="mb-3">
+        <h2>Input</h2>
+        <div class="mb-3">
+            <label for="place" class="form-label">Place</label>
+            <input type="number" class="form-control" id="place" value="1" min="0"/>
+        </div>
+        <button id="doRender" class="btn btn-primary">Render</button>
+    </div>
+    <output data-testid="output" class="mb-3"></output>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="module">
+        import { trans } from '@symfony/ux-translator';
+        import { FINISH_PLACE } from '@app/translations';
+
+        const inputPlace = document.querySelector('#place');
+
+        function render() {
+            document.querySelector('[data-testid="output"]').innerHTML = `
+                <h2>Output</h2>
+                <ul >
+                    <li>🇬🇧 ${trans(FINISH_PLACE, { place: inputPlace.value }, 'messages', 'en')}</li>
+                    <li>🇫🇷 ${trans(FINISH_PLACE, { place: inputPlace.value }, 'messages', 'fr')}</li>
+                </ul>
+            `
+        }
+
+        document.querySelector('#doRender').addEventListener('click', render);
+    </script>
+{% endblock %}

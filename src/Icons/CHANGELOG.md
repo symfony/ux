@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.30
+
+-  Ensure compatibility with PHP 8.5
+
+## 2.29.0
+
+-  Add Symfony 8 support
+
 ## 2.25.0
 
 -   Improve DX when `symfony/http-client` is not installed.
@@ -14,10 +22,11 @@ We recommend you to **lock** your icons **before** upgrading to UX Icons 2.24. W
 
 -   Add `aliases` configuration option to define icon alternative names.
 -   Add support for `int` and `float` attribute values in `<twig:ux:icon />`.
+-   Add support for Icon sets, configurable with `icon_sets` option.
 
 ## 2.19.0
 
--   Add `ignore_not_found` option to silence error during rendering if the 
+-   Add `ignore_not_found` option to silence error during rendering if the
     icon is not found.
 
 ## 2.17.0

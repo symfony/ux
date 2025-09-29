@@ -1,0 +1,59 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Kit recipe schema",
+    "description": "Schema for describing a Kit recipe for the Symfony UX Toolkit.",
+    "type": "object",
+    "required": ["name", "description"],
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "The name of the Recipe"
+        },
+        "description": {
+            "description": "A brief description of the Recipe",
+            "type": "string"
+        },
+        "copy-files": {
+            "description": "Relative files or directories to copy into the project",
+            "type": "object"
+        },
+        "dependencies": {
+            "description": "List of dependencies required by the Recipe",
+            "type": "object",
+            "properties": {
+                "recipe": {
+                    "description": "List of Recipe dependencies",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "The name of the Recipe this component depends on, e.g., 'Button'"
+                    }
+                },
+                "composer": {
+                    "description": "List of Composer package dependencies",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "A dependency on a Composer package, e.g., 'twig/extra-bundle' or 'twig/html-extra:^3.12.0'"
+                    }
+                },
+                "npm": {
+                    "description": "List of NPM package dependencies",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "A dependency on an NPM package, e.g., 'el-transition' or '@tailwindplus/elements@1'"
+                    }
+                },
+                "importmap": {
+                    "description": "List of Importmap package dependencies",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "A dependency on an Importmap package, e.g., 'lodash' or 'bootstrap/dist/css/bootstrap.min.css'"
+                    }
+                }
+            }
+        }
+    }
+}

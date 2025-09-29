@@ -1,4 +1,7 @@
-.SidebarNav {}
+.SidebarNav {
+    position: sticky;
+    top: 0px
+}
 
 .SidebarNav_Heading {
     font-weight: 600;
@@ -8,6 +11,10 @@
 .SidebarNav_Item {
     border-radius: .5rem;
     transition: background-color 100ms ease-in-out;
+
+    & + & {
+        margin-top: .1rem;
+    }
 }
 .SidebarNav_Item.active,
 .SidebarNav_Item:hover {

@@ -15,64 +15,121 @@ namespace Symfony\UX\Toolkit\Tests\Installer;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
-use Symfony\UX\Toolkit\File\File;
+use Symfony\UX\Toolkit\Dependency\ConstraintVersion;
+use Symfony\UX\Toolkit\Dependency\ImportmapPackageDependency;
+use Symfony\UX\Toolkit\Dependency\NpmPackageDependency;
+use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
+use Symfony\UX\Toolkit\Dependency\RecipeDependency;
 use Symfony\UX\Toolkit\Installer\PoolResolver;
-use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Kit\KitSynchronizer;
+use Symfony\UX\Toolkit\Recipe\RecipeSynchronizer;
+use Symfony\UX\Toolkit\Tests\TestHelperTrait;
 
 final class PoolResolverTest extends TestCase
 {
-    public function testCanResolveDependencies(): void
+    use TestHelperTrait;
+
+    public function testCanResolveDependencies()
     {
-        $kitSynchronizer = new KitSynchronizer(new Filesystem());
-        $kit = new Kit(Path::join(__DIR__, '../../kits/shadcn'), 'shadcn');
+        $kitSynchronizer = new KitSynchronizer(new Filesystem(), new RecipeSynchronizer());
+        $kit = self::createLocalKit('shadcn');
         $kitSynchronizer->synchronize($kit);
 
         $poolResolver = new PoolResolver();
 
-        $pool = $poolResolver->resolveForComponent($kit, $kit->getComponent('Button'));
+        $pool = $poolResolver->resolveForRecipe($kit, $recipeButton = $kit->getRecipe('button'));
 
-        $this->assertCount(1, $pool->getFiles());
-        $this->assertArrayHasKey('Button.html.twig', $pool->getFiles());
+        $this->assertEquals([
+            'templates/components/Button.html.twig',
+        ], array_keys($pool->getFiles()[$recipeButton->absolutePath]));
         $this->assertCount(3, $pool->getPhpPackageDependencies());
 
-        $pool = $poolResolver->resolveForComponent($kit, $kit->getComponent('Table'));
+        $pool = $poolResolver->resolveForRecipe($kit, $recipeTable = $kit->getRecipe('table'));
 
-        $this->assertCount(8, $pool->getFiles());
-        $this->assertArrayHasKey('Table.html.twig', $pool->getFiles());
-        $this->assertArrayHasKey('Table/Row.html.twig', $pool->getFiles());
-        $this->assertArrayHasKey('Table/Cell.html.twig', $pool->getFiles());
-        $this->assertInstanceOf(File::class, $pool->getFiles()['Table/Head.html.twig']);
-        $this->assertArrayHasKey('Table/Header.html.twig', $pool->getFiles());
-        $this->assertArrayHasKey('Table/Footer.html.twig', $pool->getFiles());
-        $this->assertArrayHasKey('Table/Caption.html.twig', $pool->getFiles());
-        $this->assertArrayHasKey('Table/Body.html.twig', $pool->getFiles());
+        $this->assertEquals([
+            'templates/components/Table.html.twig',
+            'templates/components/Table/Body.html.twig',
+            'templates/components/Table/Caption.html.twig',
+            'templates/components/Table/Cell.html.twig',
+            'templates/components/Table/Footer.html.twig',
+            'templates/components/Table/Head.html.twig',
+            'templates/components/Table/Header.html.twig',
+            'templates/components/Table/Row.html.twig',
+        ], array_keys($pool->getFiles()[$recipeTable->absolutePath]));
         $this->assertCount(1, $pool->getPhpPackageDependencies());
     }
 
-    public function testCanHandleCircularComponentDependencies(): void
+    public function testCanHandleCircularRecipeDependencies()
     {
-        $kitSynchronizer = new KitSynchronizer(new Filesystem());
-        $kit = new Kit(Path::join(__DIR__, '../Fixtures/kits/with-circular-components-dependencies'), 'with-circular-components-dependencies');
+        $kitSynchronizer = new KitSynchronizer(new Filesystem(), new RecipeSynchronizer());
+        $kit = self::createFixtureKit('with-circular-components-dependencies');
         $kitSynchronizer->synchronize($kit);
 
         $poolResolver = new PoolResolver();
 
-        $pool = $poolResolver->resolveForComponent($kit, $kit->getComponent('A'));
+        $recipeA = $kit->getRecipe('a');
+        $recipeB = $kit->getRecipe('b');
+        $recipeC = $kit->getRecipe('c');
+
+        $this->assertEquals([new RecipeDependency('b')], $recipeA->manifest->dependencies);
+        $this->assertEquals([new RecipeDependency('c')], $recipeB->manifest->dependencies);
+        $this->assertEquals([new RecipeDependency('a')], $recipeC->manifest->dependencies);
+
+        $pool = $poolResolver->resolveForRecipe($kit, $recipeA);
 
         $this->assertCount(3, $pool->getFiles());
-        $this->assertArrayHasKey('A.html.twig', $pool->getFiles());
-        $this->assertArrayHasKey('B.html.twig', $pool->getFiles());
-        $this->assertArrayHasKey('C.html.twig', $pool->getFiles());
+        $this->assertEquals(['templates/components/A.html.twig'], array_keys($pool->getFiles()[$recipeA->absolutePath]));
+        $this->assertEquals(['templates/components/B.html.twig'], array_keys($pool->getFiles()[$recipeB->absolutePath]));
+        $this->assertEquals(['templates/components/C.html.twig'], array_keys($pool->getFiles()[$recipeC->absolutePath]));
         $this->assertCount(0, $pool->getPhpPackageDependencies());
+    }
 
-        $pool = $poolResolver->resolveForComponent($kit, $kit->getComponent('B'));
+    public function testCanHandleAllPossibleDependencies()
+    {
+        $kitSynchronizer = new KitSynchronizer(new Filesystem(), new RecipeSynchronizer());
+        $kit = self::createFixtureKit('with-many-dependencies');
+        $kitSynchronizer->synchronize($kit);
 
-        $this->assertCount(3, $pool->getFiles());
-        $this->assertArrayHasKey('A.html.twig', $pool->getFiles());
-        $this->assertArrayHasKey('B.html.twig', $pool->getFiles());
-        $this->assertArrayHasKey('C.html.twig', $pool->getFiles());
-        $this->assertCount(0, $pool->getPhpPackageDependencies());
+        $poolResolver = new PoolResolver();
+
+        $recipeAlert = $kit->getRecipe('alert');
+        $recipeButton = $kit->getRecipe('button');
+
+        $this->assertEquals([
+            new RecipeDependency('button'),
+            new PhpPackageDependency('twig/html-extra', new ConstraintVersion('^3.12.0')),
+            new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra'),
+            new NpmPackageDependency('tailwindcss', new ConstraintVersion('^4.0.0')),
+            new NpmPackageDependency('@tailwindplus/elements', new ConstraintVersion('1')),
+            new ImportmapPackageDependency('@hotwired/stimulus'),
+        ], $recipeAlert->manifest->dependencies);
+
+        $this->assertEquals([
+            new PhpPackageDependency('twig/html-extra', new ConstraintVersion('^3.12.0')),
+            new PhpPackageDependency('another/php-package', new ConstraintVersion('^2.0')),
+            new NpmPackageDependency('another-npm-package', new ConstraintVersion('^1.0.0')),
+            new ImportmapPackageDependency('another-importmap-package'),
+        ], $recipeButton->manifest->dependencies);
+
+        $pool = $poolResolver->resolveForRecipe($kit, $recipeAlert);
+
+        $this->assertCount(0, $pool->getFiles());
+
+        $this->assertEquals([
+            'twig/html-extra' => new PhpPackageDependency('twig/html-extra', new ConstraintVersion('^3.12.0')),
+            'tales-from-a-dev/twig-tailwind-extra' => new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra'),
+            'another/php-package' => new PhpPackageDependency('another/php-package', new ConstraintVersion('^2.0')),
+        ], $pool->getPhpPackageDependencies());
+
+        $this->assertEquals([
+            'tailwindcss' => new NpmPackageDependency('tailwindcss', new ConstraintVersion('^4.0.0')),
+            '@tailwindplus/elements' => new NpmPackageDependency('@tailwindplus/elements', new ConstraintVersion('1')),
+            'another-npm-package' => new NpmPackageDependency('another-npm-package', new ConstraintVersion('^1.0.0')),
+        ], $pool->getNpmPackageDependencies());
+
+        $this->assertEquals([
+            '@hotwired/stimulus' => new ImportmapPackageDependency('@hotwired/stimulus'),
+            'another-importmap-package' => new ImportmapPackageDependency('another-importmap-package'),
+        ], $pool->getImportmapPackageDependencies());
     }
 }

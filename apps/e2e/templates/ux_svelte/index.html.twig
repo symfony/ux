@@ -1,0 +1,7 @@
+{% extends 'example.html.twig' %}
+
+{% block example %}
+    <div {{ svelte_component('Hello', {
+        name: 'Fabien',
+    }) }}></div>
+{% endblock %}

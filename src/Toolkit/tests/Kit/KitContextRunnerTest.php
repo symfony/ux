@@ -19,7 +19,7 @@ use Symfony\UX\TwigComponent\ComponentTemplateFinderInterface;
 
 class KitContextRunnerTest extends KernelTestCase
 {
-    public function testRunForKitShouldConfigureThenResetServices(): void
+    public function testRunForKitShouldConfigureThenResetServices()
     {
         $twig = self::getContainer()->get('twig');
         $initialTwigLoader = $twig->getLoader();

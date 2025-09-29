@@ -1,0 +1,7 @@
+services:
+
+###> symfony/mercure-bundle ###
+  mercure:
+    ports:
+      - 9877
+###< symfony/mercure-bundle ###

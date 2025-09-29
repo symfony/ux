@@ -1,72 +1,69 @@
-import { Controller } from '@hotwired/stimulus';
-
-class default_1 extends Controller {
-    constructor() {
-        super(...arguments);
-        this.eventSources = [];
-        this.listeners = new WeakMap();
+// src/controller.ts
+import { Controller } from "@hotwired/stimulus";
+var controller_default = class extends Controller {
+  constructor() {
+    super(...arguments);
+    this.eventSources = [];
+    this.listeners = /* @__PURE__ */ new WeakMap();
+  }
+  initialize() {
+    const errorMessages = [];
+    if (!this.hasHubValue) errorMessages.push('A "hub" value pointing to the Mercure hub must be provided.');
+    if (!this.hasTopicsValue) errorMessages.push('A "topics" value must be provided.');
+    if (errorMessages.length) throw new Error(errorMessages.join(" "));
+    this.eventSources = this.topicsValue.map((topic) => {
+      const u = new URL(this.hubValue);
+      u.searchParams.append("topic", topic);
+      return new EventSource(u);
+    });
+  }
+  connect() {
+    if (!("Notification" in window)) {
+      console.warn("This browser does not support desktop notifications.");
+      return;
     }
-    initialize() {
-        const errorMessages = [];
-        if (!this.hasHubValue)
-            errorMessages.push('A "hub" value pointing to the Mercure hub must be provided.');
-        if (!this.hasTopicsValue)
-            errorMessages.push('A "topics" value must be provided.');
-        if (errorMessages.length)
-            throw new Error(errorMessages.join(' '));
-        this.eventSources = this.topicsValue.map((topic) => {
-            const u = new URL(this.hubValue);
-            u.searchParams.append('topic', topic);
-            return new EventSource(u);
-        });
+    this.eventSources.forEach((eventSource) => {
+      const listener = (event) => {
+        const { summary, content } = JSON.parse(event.data);
+        this._notify(summary, content);
+      };
+      eventSource.addEventListener("message", listener);
+      this.listeners.set(eventSource, listener);
+    });
+    this.dispatchEvent("connect", { eventSources: this.eventSources });
+  }
+  disconnect() {
+    this.eventSources.forEach((eventSource) => {
+      const listener = this.listeners.get(eventSource);
+      if (listener) {
+        eventSource.removeEventListener("message", listener);
+      }
+      eventSource.close();
+    });
+    this.eventSources = [];
+  }
+  _notify(title, options) {
+    if (!title) return;
+    if ("granted" === Notification.permission) {
+      new Notification(title, options);
+      return;
     }
-    connect() {
-        if (!('Notification' in window)) {
-            console.warn('This browser does not support desktop notifications.');
-            return;
+    if ("denied" !== Notification.permission) {
+      Notification.requestPermission().then((permission) => {
+        if ("granted" === permission) {
+          new Notification(title, options);
         }
-        this.eventSources.forEach((eventSource) => {
-            const listener = (event) => {
-                const { summary, content } = JSON.parse(event.data);
-                this._notify(summary, content);
-            };
-            eventSource.addEventListener('message', listener);
-            this.listeners.set(eventSource, listener);
-        });
-        this.dispatchEvent('connect', { eventSources: this.eventSources });
+      });
     }
-    disconnect() {
-        this.eventSources.forEach((eventSource) => {
-            const listener = this.listeners.get(eventSource);
-            if (listener) {
-                eventSource.removeEventListener('message', listener);
-            }
-            eventSource.close();
-        });
-        this.eventSources = [];
-    }
-    _notify(title, options) {
-        if (!title)
-            return;
-        if ('granted' === Notification.permission) {
-            new Notification(title, options);
-            return;
-        }
-        if ('denied' !== Notification.permission) {
-            Notification.requestPermission().then((permission) => {
-                if ('granted' === permission) {
-                    new Notification(title, options);
-                }
-            });
-        }
-    }
-    dispatchEvent(name, payload) {
-        this.dispatch(name, { detail: payload, prefix: 'notify' });
-    }
-}
-default_1.values = {
-    hub: String,
-    topics: Array,
+  }
+  dispatchEvent(name, payload) {
+    this.dispatch(name, { detail: payload, prefix: "notify" });
+  }
 };
-
-export { default_1 as default };
+controller_default.values = {
+  hub: String,
+  topics: Array
+};
+export {
+  controller_default as default
+};

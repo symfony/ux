@@ -33,7 +33,10 @@ You can use the `LeafletOptions` class to configure your `Map`::
 
 ```php
 use Symfony\UX\Map\Bridge\Leaflet\LeafletOptions;
+use Symfony\UX\Map\Bridge\Leaflet\Option\AttributionControlOptions;
+use Symfony\UX\Map\Bridge\Leaflet\Option\ControlPosition;
 use Symfony\UX\Map\Bridge\Leaflet\Option\TileLayer;
+use Symfony\UX\Map\Bridge\Leaflet\Option\ZoomControlOptions;
 use Symfony\UX\Map\Point;
 use Symfony\UX\Map\Map;
 
@@ -50,6 +53,10 @@ $leafletOptions = (new LeafletOptions())
             'maxZoom' => 10,
         ]
     ))
+    ->attributionControl(false)
+    ->attributionControlOptions(new AttributionControlOptions(ControlPosition::BOTTOM_LEFT))
+    ->zoomControl(false)
+    ->zoomControlOptions(new ZoomControlOptions(ControlPosition::TOP_LEFT))
 ;
 
 // Add the custom options to the map
@@ -87,7 +94,7 @@ export default class extends Controller
 
     _onMarkerBeforeCreate(event) {
         // You can access the marker definition and the Leaflet object
-        // Note: `definition.rawOptions` is the raw options object that will be passed to the `L.marker` constructor.
+        // Note: `definition.bridgeOptions` is the raw options object that will be passed to the `L.marker` constructor.
         const { definition, L } = event.detail;
 
         // Use a custom icon for the marker
@@ -102,7 +109,7 @@ export default class extends Controller
           popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
         })
 
-        definition.rawOptions = {
+        definition.bridgeOptions = {
           icon: redIcon,
         }
     }
@@ -112,7 +119,7 @@ export default class extends Controller
 ### Disable the default tile layer
 
 If you need to use a custom tiles layer rendering engine that is not compatible with the `L.tileLayer().addTo(map)` method
-(e.g. e.g.: [Esri/esri-leaflet-vector](https://github.com/Esri/esri-leaflet-vector)), you can disable the default tile layer by passing `tileLayer: false` to the `LeafletOptions`:
+(e.g. [Esri/esri-leaflet-vector](https://github.com/Esri/esri-leaflet-vector)), you can disable the default tile layer by passing `tileLayer: false` to the `LeafletOptions`:
 
 ```php
 use Symfony\UX\Map\Bridge\Leaflet\LeafletOptions;

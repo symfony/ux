@@ -32,4 +32,4 @@ published_at: 'Published at {publication_date, date} - {publication_date, time, 
 
 # Numbers
 progress: '{progress, number, percent} of the work is done'
-value_of_object: 'This artifact is worth {value, number, ::currency/EUR}'
+value_of_object: 'This artifact is worth {price, number, ::currency/EUR}'

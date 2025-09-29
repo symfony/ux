@@ -3,7 +3,7 @@
     "description": "Integration of @hotwired/stimulus into Symfony",
     "private": true,
     "license": "MIT",
-    "version": "2.25.2",
+    "version": "2.30.0",
     "keywords": [
         "symfony-ux"
     ],
@@ -15,9 +15,10 @@
     ],
     "main": "dist/loader.js",
     "scripts": {
-        "build": "node ../../../bin/build_package.js .",
-        "watch": "node ../../../bin/build_package.js . --watch",
-        "test": "../../../bin/test_package.sh .",
+        "build": "tsx ../../../bin/build_package.ts .",
+        "watch": "tsx ../../../bin/build_package.ts . --watch",
+        "test": "pnpm run test:unit && pnpm run test:browser",
+        "test:unit": "../../../bin/unit_test_package.sh .",
         "check": "biome check",
         "ci": "biome ci"
     },
@@ -31,5 +32,15 @@
     "peerDependencies": {
         "@hotwired/stimulus": "^3.0.0",
         "@symfony/stimulus-bridge": "^3.2.0 || ^4.0.0"
+    },
+    "devDependencies": {
+        "@testing-library/dom": "^10.4.0",
+        "@testing-library/jest-dom": "^6.6.3",
+        "@testing-library/user-event": "^14.6.1",
+        "jsdom": "^26.1.0",
+        "tslib": "^2.8.1",
+        "tsx": "^4.20.3",
+        "typescript": "^5.8.3",
+        "vitest": "^3.2.4"
     }
 }

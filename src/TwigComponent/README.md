@@ -1,9 +1,9 @@
 # Twig Components
 
 Twig components give you the power to bind an object to a template, making
-it easier to render and re-use small template "units" - like an "alert",
+it easier to render and reuse small template "units" - like an "alert",
 markup for a modal, or a category sidebar. A very simple example
-would be a re-usable alert component:
+would be a reusable alert component:
 
 ![Example of the AlertComponent](https://github.com/symfony/ux/blob/2.x/src/TwigComponent/alert-example.png?raw=true)
 

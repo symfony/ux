@@ -12,24 +12,26 @@
 namespace Symfony\UX\Toolkit\Tests\Dependency;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\UX\Toolkit\Dependency\ConstraintVersion;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
-use Symfony\UX\Toolkit\Dependency\Version;
 
 final class PhpPackageDependencyTest extends TestCase
 {
-    public function testShouldBeInstantiable(): void
+    public function testShouldBeInstantiable()
     {
         $dependency = new PhpPackageDependency('twig/html-extra');
         $this->assertSame('twig/html-extra', $dependency->name);
         $this->assertNull($dependency->constraintVersion);
+        $this->assertSame('PHP package "twig/html-extra"', $dependency->toDebug());
         $this->assertSame('twig/html-extra', (string) $dependency);
 
-        $dependency = new PhpPackageDependency('twig/html-extra', new Version('3.2.1'));
+        $dependency = new PhpPackageDependency('twig/html-extra', new ConstraintVersion('^3.2.1'));
         $this->assertSame('twig/html-extra', $dependency->name);
+        $this->assertSame('PHP package "twig/html-extra:^3.2.1"', $dependency->toDebug());
         $this->assertSame('twig/html-extra:^3.2.1', (string) $dependency);
     }
 
-    public function testShouldFailIfPackageNameIsInvalid(): void
+    public function testShouldFailIfPackageNameIsInvalid()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid PHP package name "/foo".');

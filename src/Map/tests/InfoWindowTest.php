@@ -17,7 +17,7 @@ use Symfony\UX\Map\Point;
 
 class InfoWindowTest extends TestCase
 {
-    public function testToArray(): void
+    public function testToArray()
     {
         $infoWindow = new InfoWindow(
             headerContent: 'Paris',

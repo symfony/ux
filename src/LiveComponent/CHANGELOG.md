@@ -1,5 +1,49 @@
 # CHANGELOG
 
+## 2.30
+
+-  Ensure compatibility with PHP 8.5
+
+## 2.29.0
+
+-  Add Symfony 8 support
+
+## 2.28.0
+
+-   Add new modifiers for input validations, useful to prevent unnecessary HTTP requests:
+    - `min_length` and `max_length`: validate length from textual input elements
+    - `min_value` and `max_value`: validate value from numeral input elements
+
+-   Add new `mapPath` options (default `false`) to `UrlMapping` of a `LiveProp`
+    to allow the prop to be mapped to the path instead of the query in the url.
+
+```twig
+<!-- Do not trigger model update until 3 characters are typed -->
+<input data-model="min_length(3)|username" type="text" value="" />
+
+<!-- Only trigger updates when value number is between 10 and 100 -->
+<input data-model="min_value(10)|max_value(100)|quantity" type="number" value="20" />
+```
+
+## 2.27.0
+
+-  Add events assertions in `InteractsWithLiveComponents`:
+```php
+$testComponent = $this->createLiveComponent(name: 'MyComponent');
+
+$renderedComponent = $testComponent->render();
+
+// Assert that the component did emit an event named 'event'
+$this->assertComponentEmitEvent($render, 'event')
+    // optionally, you can assert that the event was emitted with specific data...
+    ->withData(['arg1' => 'foo', 'arg2' => 'bar'])
+    // ... or only with a subset of data
+    ->withDataSubset(['arg1' => 'foo']);
+
+// Assert that the component did not emit an event named 'another-event'
+$this->assertComponentNotEmitEvent($render, 'another-event');
+```
+
 ## 2.26.0
 
 -   `LiveProp`: Pass the property name as second parameter of the `modifier` callable

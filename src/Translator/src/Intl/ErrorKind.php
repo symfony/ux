@@ -34,9 +34,9 @@ final class ErrorKind
     public const INVALID_NUMBER_SKELETON = 'INVALID_NUMBER_SKELETON';
     /** The date time skeleton is invalid. */
     public const INVALID_DATE_TIME_SKELETON = 'INVALID_DATE_TIME_SKELETON';
-    /** Exepct a number skeleton following the `::` (e.g. `{foo, number, ::}`) */
+    /** Expect a number skeleton following the `::` (e.g. `{foo, number, ::}`) */
     public const EXPECT_NUMBER_SKELETON = 'EXPECT_NUMBER_SKELETON';
-    /** Exepct a date time skeleton following the `::` (e.g. `{foo, date, ::}`) */
+    /** Expect a date time skeleton following the `::` (e.g. `{foo, date, ::}`) */
     public const EXPECT_DATE_TIME_SKELETON = 'EXPECT_DATE_TIME_SKELETON';
 
     /** Unmatched apostrophes in the argument style (e.g. `{foo, number, 'test`) */

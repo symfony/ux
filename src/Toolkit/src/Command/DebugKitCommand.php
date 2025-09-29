@@ -45,14 +45,15 @@ class DebugKitCommand extends Command
     {
         $this
             ->addArgument('kit-path', InputArgument::OPTIONAL, 'The path to the kit to debug', '.')
-            ->setHelp(<<<'EOF'
-To debug a Kit in the current directory:
-    <info>php %command.full_name%</info>
+            ->setHelp(
+                <<<'EOF'
+                    To debug a Kit in the current directory:
+                        <info>php %command.full_name%</info>
 
-Or in another directory:
-    <info>php %command.full_name% ./kits/shadcn</info>
-    <info>php %command.full_name% /path/to/my-kit</info>
-EOF
+                    Or in another directory:
+                        <info>php %command.full_name% ./kits/shadcn</info>
+                        <info>php %command.full_name% /path/to/my-kit</info>
+                    EOF
             );
     }
 
@@ -64,28 +65,28 @@ EOF
         $kitPath = Path::makeAbsolute($kitPath, getcwd());
         $kit = $this->kitFactory->createKitFromAbsolutePath($kitPath);
 
-        $io->title(\sprintf('Kit "%s"', $kit->name));
+        $io->title(\sprintf('Kit "%s"', $kit->manifest->name));
 
         $io->definitionList(
-            ['Name' => $kit->name],
-            ['Homepage' => $kit->homepage],
-            ['License' => $kit->license],
+            ['Name' => $kit->manifest->name],
+            ['Homepage' => $kit->manifest->homepage],
+            ['License' => $kit->manifest->license],
             new TableSeparator(),
-            ['Path' => $kit->path],
+            ['Path' => $kit->absolutePath],
         );
 
-        $io->section('Components');
-        foreach ($kit->getComponents() as $component) {
+        $io->section('Recipes');
+        foreach ($kit->getRecipes() as $recipe) {
             (new Table($io))
-                ->setHeaderTitle(\sprintf('Component: "%s"', $component->name))
+                ->setHeaderTitle(\sprintf('Recipe: "%s"', $recipe->name))
                 ->setHorizontal()
                 ->setHeaders([
                     'File(s)',
                     'Dependencies',
                 ])
                 ->addRow([
-                    implode("\n", $component->files),
-                    implode("\n", $component->getDependencies()),
+                    implode("\n", iterator_to_array($recipe->getFiles())) ?: 'N/A',
+                    implode("\n", $recipe->manifest->dependencies) ?: 'N/A',
                 ])
                 ->setColumnWidth(1, 80)
                 ->setColumnMaxWidth(1, 80)

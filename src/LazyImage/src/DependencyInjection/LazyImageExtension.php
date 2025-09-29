@@ -34,7 +34,7 @@ trigger_deprecation('symfony/ux-lazy-image', '2.27.0', 'The package is deprecate
  */
 class LazyImageExtension extends Extension implements PrependExtensionInterface
 {
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -83,7 +83,7 @@ class LazyImageExtension extends Extension implements PrependExtensionInterface
         ;
     }
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         if (!$this->isAssetMapperAvailable($container)) {
             return;

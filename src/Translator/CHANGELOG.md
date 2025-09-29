@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.30
+
+-  Ensure compatibility with PHP 8.5
+
+## 2.29.0
+
+-  Add Symfony 8 support
+
 ## 2.22.0
 
 -   Support both the Symfony format (`fr_FR`) and W3C specification (`fr-FR`) for locale subcodes.

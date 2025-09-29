@@ -1,0 +1,7 @@
+{%- set trigger_attrs = {
+    'data-action': 'click->alert-dialog#open',
+    'data-alert-dialog-target': 'trigger',
+    'aria-haspopup': 'dialog',
+    'aria-expanded': _alert_dialog_open ? 'true' : 'false',
+} -%}
+{%- block content %}{% endblock -%}

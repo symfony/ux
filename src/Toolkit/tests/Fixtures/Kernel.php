@@ -50,8 +50,9 @@ final class Kernel extends BaseKernel
             'php_errors' => ['log' => true],
             'property_access' => true,
             'http_client' => true,
-            'handle_all_throwables' => true,
-
+            ...(self::VERSION_ID >= 60200 ? [
+                'handle_all_throwables' => true,
+            ] : []),
             ...(self::VERSION_ID >= 70300 ? [
                 'property_info' => ['with_constructor_extractor' => false],
             ] : []),

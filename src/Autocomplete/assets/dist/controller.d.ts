@@ -1,13 +1,14 @@
 import { Controller } from '@hotwired/stimulus';
 import TomSelect from 'tom-select';
-export interface AutocompletePreConnectOptions {
+
+interface AutocompletePreConnectOptions {
     options: any;
 }
-export interface AutocompleteConnectOptions {
+interface AutocompleteConnectOptions {
     tomSelect: TomSelect;
     options: any;
 }
-export default class extends Controller {
+declare class export_default extends Controller {
     #private;
     static values: {
         url: StringConstructor;
@@ -54,3 +55,5 @@ export default class extends Controller {
     private createOptionsDataStructure;
     private areOptionsEquivalent;
 }
+
+export { type AutocompleteConnectOptions, type AutocompletePreConnectOptions, export_default as default };

@@ -16,7 +16,7 @@ use Symfony\UX\Map\Bridge\Google\Option\GestureHandling;
 
 class GestureHandlingTest extends TestCase
 {
-    public function testEnumValues(): void
+    public function testEnumValues()
     {
         self::assertSame('cooperative', GestureHandling::COOPERATIVE->value);
         self::assertSame('greedy', GestureHandling::GREEDY->value);

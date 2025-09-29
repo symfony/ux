@@ -38,7 +38,7 @@ class TwigComponentKernel extends Kernel
         ];
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) {
             $container->loadFromExtension('framework', [
@@ -49,7 +49,6 @@ class TwigComponentKernel extends Kernel
             $container->loadFromExtension('twig', [
                 'default_path' => __DIR__.'/templates',
                 'strict_variables' => true,
-                'exception_controller' => null,
             ]);
             $container->loadFromExtension('twig_component', [
                 'defaults' => [],

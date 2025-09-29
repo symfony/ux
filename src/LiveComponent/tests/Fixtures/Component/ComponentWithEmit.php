@@ -29,7 +29,7 @@ final class ComponentWithEmit
     #[LiveAction]
     public function actionThatEmits(): void
     {
-        $this->emit('event1', ['foo' => 'bar']);
+        $this->emit('event1', ['foo' => 'bar', 'bar' => 'foo']);
         $this->events = $this->liveResponder->getEventsToEmit();
     }
 

@@ -1,18 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% set meta = {
-    title: 'UX Toolkit - Kits - ' ~ kit.name,
-    description: kit.description,
+    title: 'UX Toolkit - Kits - ' ~ kit.manifest.name,
+    description: kit.manifest.description,
     canonical: url('app_icons'),
     social: {
-        title: 'UX Toolkit - Kits - ' ~ kit.name,
-        description: kit.description,
+        title: 'UX Toolkit - Kits - ' ~ kit.manifest.name,
+        description: kit.manifest.description,
         image: {
             url: absolute_url(asset(package.getSocialImage('1200x675'))),
             type: 'image/png',
             width: 1200,
             height: 675,
-            alt: package.humanName ~ ' - Kit ' ~ kit.name,
+            alt: package.humanName ~ ' - Kit ' ~ kit.manifest.name,
         },
     }
 } %}
@@ -28,7 +28,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ path('app_toolkit') }}">UX Toolkit</a></li>
                     <li class="breadcrumb-item"><a href="{{ path('app_toolkit', {'_fragment': 'kits'}) }}">Kits</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ kit.name }}</li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ kit.manifest.name }}</li>
                 </ol>
             </nav>
 

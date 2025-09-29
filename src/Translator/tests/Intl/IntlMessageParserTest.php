@@ -23,7 +23,7 @@ class IntlMessageParserTest extends TestCase
     /**
      * @dataProvider provideParse
      */
-    public function testIntlMessageParser(string $message, array $expectedAst): void
+    public function testIntlMessageParser(string $message, array $expectedAst)
     {
         $intlMessageParser = new IntlMessageParser($message);
 
@@ -129,12 +129,12 @@ class IntlMessageParserTest extends TestCase
 
         yield 'plural' => [
             <<<'EOT'
-You have {itemCount, plural,
-    =0 {no items}
-    one {1 item}
-    other {{itemCount} items}
-}.
-EOT,
+                You have {itemCount, plural,
+                    =0 {no items}
+                    one {1 item}
+                    other {{itemCount} items}
+                }.
+                EOT,
             [
                 'val' => [
                     [
@@ -198,24 +198,24 @@ EOT,
 
         yield 'many parameters, plural, select, with HTML' => [
             <<<'EOT'
-I have {count, plural,
-    one{a {
-        gender, select,
-            male{male}
-            female{female}
-            other{male}
-        } <b>dog</b>
-    }
-    other{many dogs}} and {count, plural,
-        one{a {
-            gender, select,
-                male{male}
-                female{female}
-                other{male}
-            } <strong>cat</strong>
-        }
-        other{many cats}}
-EOT,
+                I have {count, plural,
+                    one{a {
+                        gender, select,
+                            male{male}
+                            female{female}
+                            other{male}
+                        } <b>dog</b>
+                    }
+                    other{many dogs}} and {count, plural,
+                        one{a {
+                            gender, select,
+                                male{male}
+                                female{female}
+                                other{male}
+                            } <strong>cat</strong>
+                        }
+                        other{many cats}}
+                EOT,
             [
                 'val' => [
                     [

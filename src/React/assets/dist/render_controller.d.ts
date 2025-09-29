@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
-import { type ReactElement } from 'react';
-export default class extends Controller {
+import { ReactElement } from 'react';
+
+declare class export_default extends Controller {
     readonly componentValue?: string;
     readonly propsValue?: object;
     readonly permanentValue: boolean;
@@ -17,3 +18,5 @@ export default class extends Controller {
     _renderReactElement(reactElement: ReactElement): void;
     private dispatchEvent;
 }
+
+export { export_default as default };

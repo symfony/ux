@@ -45,7 +45,7 @@ final class LocalRegistry implements RegistryInterface
             return $this->kitFactory->createKitFromAbsolutePath($kitDir);
         }
 
-        throw new \RuntimeException(\sprintf('Unable to find the kit "%s" in the following directories: "%s"', $kitName, implode('", "', $possibleKitDirs)));
+        throw new \InvalidArgumentException(\sprintf('Kit "%s" does not exist.', $kitName));
     }
 
     /**
@@ -54,7 +54,7 @@ final class LocalRegistry implements RegistryInterface
     public static function getAvailableKitsName(): array
     {
         $availableKitsName = [];
-        $finder = (new Finder())->directories()->in(self::$kitsDir)->depth(0);
+        $finder = (new Finder())->directories()->in(self::$kitsDir)->sortByName()->depth(0);
 
         foreach ($finder as $directory) {
             $kitName = $directory->getRelativePathname();

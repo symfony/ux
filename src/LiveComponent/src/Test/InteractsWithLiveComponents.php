@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\Test;
 
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\UX\LiveComponent\Test\Util\AssertEmittedEvent;
 use Symfony\UX\TwigComponent\ComponentFactory;
 
 /**
@@ -43,5 +44,19 @@ trait InteractsWithLiveComponents
             self::getContainer()->get('ux.live_component.metadata_factory'),
             self::getContainer()->get('router'),
         );
+    }
+
+    protected function assertComponentEmitEvent(TestLiveComponent $testLiveComponent, string $expectedEventName): AssertEmittedEvent
+    {
+        $event = $testLiveComponent->getEmittedEvent($testLiveComponent->render(), $expectedEventName);
+
+        self::assertNotNull($event, \sprintf('The component "%s" did not emit event "%s".', $testLiveComponent->getName(), $expectedEventName));
+
+        return new AssertEmittedEvent($this, $event['event'], $event['data']);
+    }
+
+    protected function assertComponentNotEmitEvent(TestLiveComponent $testLiveComponent, string $eventName): void
+    {
+        self::assertNull($testLiveComponent->getEmittedEvent($testLiveComponent->render(), $eventName), \sprintf('The component "%s" did emit event "%s".', $testLiveComponent->getName(), $eventName));
     }
 }

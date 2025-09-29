@@ -1,4 +1,9 @@
+# Deprecated, will be removed in favor of browser-tests.yml
 name: Functional Tests
+
+defaults:
+  run:
+    shell: bash
 
 on:
     push:
@@ -12,25 +17,25 @@ on:
 
 jobs:
     turbo-tests:
-        runs-on: ubuntu-latest
+        runs-on: ${{ matrix.os || 'ubuntu-latest' }}
         strategy:
            fail-fast: false
            matrix:
-               php-version: ['8.1', '8.2', '8.3', '8.4']
+               php-version: ['8.1', '8.2', '8.3', '8.4', '8.5']
                dependency-version: ['']
                symfony-version: ['']
                minimum-stability: ['stable']
+               os: ['']
                include:
                    # dev packages (probably not needed to have multiple such jobs)
                    -   minimum-stability: 'dev'
-                       php-version: '8.4'
+                       php-version: '8.5'
                    # lowest deps
                    -   php-version: '8.1'
                        dependency-version: 'lowest'
                    # LTS version of Symfony
                    -   php-version: '8.1'
                        symfony-version: '6.4.*'
-
         env:
             SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=5.4' }}
         services:
@@ -56,11 +61,23 @@ jobs:
                   php-version: ${{ matrix.php-version }}
                   tools: flex
 
-            - name: Install dependencies with composer
+            - name: Install root dependencies
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: ${{ github.workspace }}
+
+            - name: Build root packages
+              run: php .github/build-packages.php
+
+            - name: Configure composer dependencies stability
+              run: composer config minimum-stability ${{ matrix.minimum-stability || 'stable' }}
               working-directory: src/Turbo
-              run: |
-                  composer config minimum-stability ${{ matrix.minimum-stability || 'stable' }}
-                  composer update ${{ matrix.dependency-version == 'lowest' && '--prefer-lowest' || '' }} --no-progress --no-interaction
+
+            - name: Install dependencies with composer
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: src/Turbo
+                  dependency-versions: ${{ matrix.dependency-version }}
 
             - name: Install JavaScript dependencies
               working-directory: src/Turbo/tests/app

@@ -11,11 +11,13 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Symfony\UX\Toolkit\Command\CreateKitCommand;
 use Symfony\UX\Toolkit\Command\DebugKitCommand;
-use Symfony\UX\Toolkit\Command\InstallComponentCommand;
+use Symfony\UX\Toolkit\Command\InstallCommand;
 use Symfony\UX\Toolkit\Kit\KitContextRunner;
 use Symfony\UX\Toolkit\Kit\KitFactory;
 use Symfony\UX\Toolkit\Kit\KitSynchronizer;
+use Symfony\UX\Toolkit\Recipe\RecipeSynchronizer;
 use Symfony\UX\Toolkit\Registry\GitHubRegistry;
 use Symfony\UX\Toolkit\Registry\LocalRegistry;
 use Symfony\UX\Toolkit\Registry\RegistryFactory;
@@ -34,7 +36,13 @@ return static function (ContainerConfigurator $container): void {
             ])
             ->tag('console.command')
 
-        ->set('.ux_toolkit.command.install', InstallComponentCommand::class)
+        ->set('.ux_toolkit.command.create_kit', CreateKitCommand::class)
+            ->args([
+                service('filesystem'),
+            ])
+            ->tag('console.command')
+
+        ->set('.ux_toolkit.command.install', InstallCommand::class)
             ->args([
                 service('.ux_toolkit.registry.registry_factory'),
                 service('filesystem'),
@@ -75,6 +83,7 @@ return static function (ContainerConfigurator $container): void {
         ->set('.ux_toolkit.kit.kit_synchronizer', KitSynchronizer::class)
             ->args([
                 service('filesystem'),
+                service('.ux_toolkit.recipe.recipe_synchronizer'),
             ])
 
         ->set('ux_toolkit.kit.kit_context_runner', KitContextRunner::class)
@@ -83,5 +92,7 @@ return static function (ContainerConfigurator $container): void {
                 service('twig'),
                 service('ux.twig_component.component_factory'),
             ])
+
+        ->set('.ux_toolkit.recipe.recipe_synchronizer', RecipeSynchronizer::class)
     ;
 };

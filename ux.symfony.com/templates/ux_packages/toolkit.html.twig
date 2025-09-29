@@ -22,8 +22,8 @@
 {% block code_block_left %}
 <twig:Terminal>
 # Install the components you need...
-php bin/console ux:toolkit:install-component Card
-php bin/console ux:toolkit:install-component Button
+php bin/console ux:install card
+php bin/console ux:install button
 
 # ... and find them in your <code>templates/components</code> folder!
 tree templates/components
@@ -65,29 +65,33 @@ tree templates/components
             {% for kit_id, kit in kits %}
                 <div class="PackageBox">
                     <div class="PackageBox_logo">
-                        <twig:ux:icon name="toolkit:{{ kit_id }}" alt="{{ kit.name }}" style="color: #fff; width: 50%; height: 50%;" />
+                        <twig:ux:icon name="toolkit:{{ kit_id }}" alt="{{ kit.manifest.name }}" style="color: #fff; width: 50%; height: 50%;" />
                     </div>
                     <div class="PackageBox_content">
                         <h2 class="PackageBox_title">
-                            <a href="{{ path('app_toolkit_kit', {kitId: kit_id}) }}" class="PackageBox_link">{{ kit.name }}</a>
+                            <a href="{{ path('app_toolkit_kit', {kitId: kit_id}) }}" class="PackageBox_link">{{ kit.manifest.name }}</a>
                         </h2>
 
                         <div class="PackageBox_description">
-                            <p>{{ kit.description }}</p>
+                            <p>{{ kit.manifest.description }}</p>
                         </div>
                     </div>
                 </div>
             {% endfor %}
 
-            <div class="PackageBox">
+            <div class="PackageBox" style="position: relative">
+                <span style="position: absolute; background-color: #e9c502; transform: rotate(-10deg); padding: 3px 8px; top: 10px; left: 0; font-size: 20px; font-weight: bold;">
+                    🚧 <abbr title="Work In Progress">WIP</abbr>!
+                </span>
+
                 <div class="PackageBox_logo" style="--color: #24292f;">
                     <twig:ux:icon name="flowbite:users-group-solid" style="color: #fff; width: 50%; height: 50%;" />
                 </div>
                 <div class="PackageBox_content">
                     <h2 class="PackageBox_title">
-                        <a href="https://github.com/search?q=topic%3Aux-toolkit&type=repositories" rel="external" class="PackageBox_link">
+                        {# <a href="https://github.com/search?q=topic%3Aux-toolkit&type=repositories" rel="external" class="PackageBox_link"> #}
                             Community Kits
-                        </a>
+                        {# </a> #}
                     </h2>
 
                     <div class="PackageBox_description">

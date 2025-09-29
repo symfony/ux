@@ -167,7 +167,7 @@ final class ComponentFactory implements ResetInterface
             } elseif ($refParameter->isDefaultValueAvailable()) {
                 $parameters[] = $refParameter->getDefaultValue();
             } else {
-                throw new \LogicException(\sprintf('%s has a required $%s parameter. Make sure to pass it or give it a default value.', $component::class.'::mount()', $name));
+                throw new \LogicException(\sprintf('"%s" has a required $%s parameter. Make sure to pass it or give it a default value.', $component::class.'::mount()', $name));
             }
         }
 

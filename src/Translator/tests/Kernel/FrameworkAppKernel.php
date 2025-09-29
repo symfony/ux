@@ -31,7 +31,7 @@ class FrameworkAppKernel extends Kernel
         return [new FrameworkBundle(), new UxTranslatorBundle()];
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) {
             $container->loadFromExtension('framework', [
@@ -39,7 +39,9 @@ class FrameworkAppKernel extends Kernel
                 'test' => true,
                 'translator' => [
                     'fallbacks' => ['en'],
+                    'default_path' => '%kernel.project_dir%/tests/Fixtures/translations',
                 ],
+                'enabled_locales' => ['en', 'fr'],
                 'http_method_override' => false,
             ]);
         });

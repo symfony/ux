@@ -19,7 +19,7 @@ class AssertTest extends TestCase
     /**
      * @dataProvider provideValidKitNames
      */
-    public function testValidKitName(string $name): void
+    public function testValidKitName(string $name)
     {
         $this->expectNotToPerformAssertions();
 
@@ -53,7 +53,7 @@ class AssertTest extends TestCase
     /**
      * @dataProvider provideInvalidKitNames
      */
-    public function testInvalidKitName(string $name): void
+    public function testInvalidKitName(string $name)
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Invalid kit name "%s".', $name));
@@ -85,7 +85,7 @@ class AssertTest extends TestCase
     /**
      * @dataProvider provideValidComponentNames
      */
-    public function testValidComponentName(string $name): void
+    public function testValidComponentName(string $name)
     {
         $this->expectNotToPerformAssertions();
 
@@ -109,7 +109,7 @@ class AssertTest extends TestCase
     /**
      * @dataProvider provideInvalidComponentNames
      */
-    public function testInvalidComponentName(string $name): void
+    public function testInvalidComponentName(string $name)
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Invalid component name "%s".', $name));
@@ -146,7 +146,7 @@ class AssertTest extends TestCase
     /**
      * @dataProvider provideValidPhpPackageNames
      */
-    public function testValidPhpPackageName(string $name): void
+    public function testValidPhpPackageName(string $name)
     {
         $this->expectNotToPerformAssertions();
 
@@ -162,7 +162,7 @@ class AssertTest extends TestCase
     /**
      * @dataProvider provideInvalidPhpPackageNames
      */
-    public function testInvalidPhpPackageName(string $name): void
+    public function testInvalidPhpPackageName(string $name)
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Invalid PHP package name "%s".', $name));
@@ -179,43 +179,49 @@ class AssertTest extends TestCase
     }
 
     /**
-     * @dataProvider provideValidStimulusControllerNames
+     * @dataProvider provideValidNpmPackageNames
      */
-    public function testValidStimulusControllerName(string $name): void
+    public function testValidNpmPackageName(string $name)
     {
         $this->expectNotToPerformAssertions();
 
-        Assert::stimulusControllerName($name);
+        Assert::npmPackageName($name);
     }
 
-    public static function provideValidStimulusControllerNames(): iterable
+    public static function provideValidNpmPackageNames(): iterable
     {
-        yield ['my-controller'];
-        yield ['users--list-item'];
-        yield ['controller'];
-        yield ['controller-with-numbers-123'];
+        yield ['react'];
+        yield ['@babel/core'];
+        yield ['lodash'];
+        yield ['@types/node'];
+        yield ['my-package'];
+        yield ['my_package'];
+        yield ['my.package'];
+        yield ['my-package123'];
+        yield ['@scope/my-package'];
+        yield ['~foo'];
     }
 
     /**
-     * @dataProvider provideInvalidStimulusControllerNames
+     * @dataProvider provideInvalidNpmPackageNames
      */
-    public function testInvalidStimulusControllerName(string $name): void
+    public function testInvalidNpmPackageName(string $name)
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage(\sprintf('Invalid Stimulus controller name "%s".', $name));
+        $this->expectExceptionMessage(\sprintf('Invalid NPM package name "%s".', $name));
 
-        Assert::stimulusControllerName($name);
+        Assert::npmPackageName($name);
     }
 
-    public static function provideInvalidStimulusControllerNames(): iterable
+    public static function provideInvalidNpmPackageNames(): iterable
     {
         yield [''];
-        yield ['my_controller'];
-        yield ['my-controller-'];
-        yield ['-my-controller'];
-        yield ['my-controller/qsd'];
-        yield ['my-controller@qsd'];
-        yield ['my-controller.qsd'];
-        yield ['my-controller:qsd'];
+        yield ['@'];
+        yield ['@scope/'];
+        yield ['my package'];
+        yield ['my/package'];
+        yield ['my@package'];
+        yield ['my/package/name'];
+        yield ['@scope//my-package'];
     }
 }

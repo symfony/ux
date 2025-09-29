@@ -30,7 +30,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\CategoryFixtureEntity;
  */
 class FormWithManyDifferentFieldsType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('text', TextType::class)

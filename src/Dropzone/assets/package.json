@@ -2,7 +2,7 @@
     "name": "@symfony/ux-dropzone",
     "description": "File input dropzones for Symfony Forms",
     "license": "MIT",
-    "version": "2.25.2",
+    "version": "2.30.0",
     "keywords": [
         "symfony-ux"
     ],
@@ -18,9 +18,12 @@
         "css_source": "src/style.css"
     },
     "scripts": {
-        "build": "node ../../../bin/build_package.js .",
-        "watch": "node ../../../bin/build_package.js . --watch",
-        "test": "../../../bin/test_package.sh .",
+        "build": "tsx ../../../bin/build_package.ts .",
+        "watch": "tsx ../../../bin/build_package.ts . --watch",
+        "test": "pnpm run test:unit && pnpm run test:browser",
+        "test:unit": "../../../bin/unit_test_package.sh .",
+        "test:browser": "playwright test",
+        "test:browser:ui": "playwright test --ui",
         "check": "biome check",
         "ci": "biome ci"
     },
@@ -44,6 +47,14 @@
         "@hotwired/stimulus": "^3.0.0"
     },
     "devDependencies": {
-        "@hotwired/stimulus": "^3.0.0"
+        "@hotwired/stimulus": "^3.0.0",
+        "@testing-library/dom": "^10.4.0",
+        "@testing-library/jest-dom": "^6.6.3",
+        "@testing-library/user-event": "^14.6.1",
+        "jsdom": "^26.1.0",
+        "tslib": "^2.8.1",
+        "tsx": "^4.20.3",
+        "typescript": "^5.8.3",
+        "vitest": "^3.2.4"
     }
 }

@@ -31,7 +31,7 @@ class FrameworkAppKernel extends Kernel
         return [new FrameworkBundle(), new CropperjsBundle()];
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) {
             $frameworkConfig = [
@@ -42,11 +42,10 @@ class FrameworkAppKernel extends Kernel
                 'validation' => [
                     'email_validation_mode' => 'html5',
                 ],
+                ...(self::VERSION_ID >= 60200 ? [
+                    'handle_all_throwables' => true,
+                ] : []),
             ];
-
-            if (self::VERSION_ID >= 60200) {
-                $frameworkConfig['handle_all_throwables'] = true;
-            }
 
             $container->loadFromExtension('framework', $frameworkConfig);
         });

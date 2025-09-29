@@ -20,6 +20,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+trigger_deprecation('symfony/ux-toggle-password', '2.29.0', 'The package is deprecated and will be removed in 3.0. Follow the migration steps in https://github.com/symfony/ux/tree/2.x/src/TogglePassword to keep using TogglePassword in your Symfony application.');
+
 /**
  * @author Félix Eymonot <felix.eymonot@alximy.io>
  */

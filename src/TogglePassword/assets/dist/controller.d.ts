@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-export default class extends Controller<HTMLInputElement> {
+
+declare class export_default extends Controller<HTMLInputElement> {
     readonly visibleLabelValue: string;
     readonly visibleIconValue: string;
     readonly hiddenLabelValue: string;
@@ -32,3 +33,5 @@ export default class extends Controller<HTMLInputElement> {
     toggle(event: any): void;
     private dispatchEvent;
 }
+
+export { export_default as default };

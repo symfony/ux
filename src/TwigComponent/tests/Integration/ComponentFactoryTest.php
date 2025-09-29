@@ -25,7 +25,7 @@ use Symfony\UX\TwigComponent\Tests\Fixtures\Component\WithSlots;
  */
 final class ComponentFactoryTest extends KernelTestCase
 {
-    public function testCreatedComponentsAreNotShared(): void
+    public function testCreatedComponentsAreNotShared()
     {
         /** @var ComponentA $componentA */
         $componentA = $this->createComponent('component_a', ['propA' => 'A', 'propB' => 'B']);
@@ -41,7 +41,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->assertSame('D', $componentB->getPropB());
     }
 
-    public function testNonAutoConfiguredCreatedComponentsAreNotShared(): void
+    public function testNonAutoConfiguredCreatedComponentsAreNotShared()
     {
         /** @var ComponentB $componentA */
         $componentA = $this->createComponent('component_b');
@@ -52,7 +52,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->assertNotSame(spl_object_id($componentA), spl_object_id($componentB));
     }
 
-    public function testCanGetUnmountedComponent(): void
+    public function testCanGetUnmountedComponent()
     {
         /** @var ComponentA $component */
         $component = $this->factory()->get('component_a');
@@ -61,7 +61,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->assertNull($component->getPropB());
     }
 
-    public function testMountCanHaveOptionalParameters(): void
+    public function testMountCanHaveOptionalParameters()
     {
         /** @var ComponentC $component */
         $component = $this->createComponent('component_c', [
@@ -84,15 +84,15 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->assertSame('default', $component->propC);
     }
 
-    public function testExceptionThrownIfRequiredMountParameterIsMissingFromPassedData(): void
+    public function testExceptionThrownIfRequiredMountParameterIsMissingFromPassedData()
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentC::mount() has a required $propA parameter. Make sure to pass it or give it a default value.');
+        $this->expectExceptionMessage('"Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentC::mount()" has a required $propA parameter. Make sure to pass it or give it a default value.');
 
         $this->createComponent('component_c');
     }
 
-    public function testStringableObjectCanBePassedToComponent(): void
+    public function testStringableObjectCanBePassedToComponent()
     {
         $attributes = $this->factory()->create('component_a', ['propB' => 'B', 'data-item-id-param' => new class {
             public function __toString(): string
@@ -104,7 +104,7 @@ final class ComponentFactoryTest extends KernelTestCase
         self::assertSame(['data-item-id-param' => 'test'], $attributes);
     }
 
-    public function testTwigComponentServiceTagWithoutKeyUsesShortClassName(): void
+    public function testTwigComponentServiceTagWithoutKeyUsesShortClassName()
     {
         // boots ComponentB, but with no key on the tag
         self::bootKernel(['environment' => 'missing_key']);
@@ -112,7 +112,7 @@ final class ComponentFactoryTest extends KernelTestCase
         self::assertInstanceOf(ComponentB::class, $component);
     }
 
-    public function testTwigComponentServiceTagWithoutKeyButCollissionCausesAnException(): void
+    public function testTwigComponentServiceTagWithoutKeyButCollissionCausesAnException()
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Failed creating the "Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB" component with the automatic name "ComponentB": another component already has this name. To fix this, give the component an explicit name (hint: using "ComponentB" will override the existing component).');
@@ -125,7 +125,7 @@ final class ComponentFactoryTest extends KernelTestCase
     /**
      * @group legacy
      */
-    public function testLegacyAutoNaming(): void
+    public function testLegacyAutoNaming()
     {
         self::bootKernel(['environment' => 'legacy_autonaming']);
         $component = $this->createComponent('BasicComponent');
@@ -135,7 +135,7 @@ final class ComponentFactoryTest extends KernelTestCase
     /**
      * @group legacy
      */
-    public function testLegacyAnonymous(): void
+    public function testLegacyAnonymous()
     {
         self::bootKernel(['environment' => 'legacy_anonymous']);
 
@@ -152,7 +152,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->factory()->metadataFor('AButton');
     }
 
-    public function testAnonymous(): void
+    public function testAnonymous()
     {
         self::bootKernel(['environment' => 'anonymous_directory']);
 
@@ -169,7 +169,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->factory()->metadataFor('anonymous:AButton');
     }
 
-    public function testLoadingAnonymousComponentFromBundle(): void
+    public function testLoadingAnonymousComponentFromBundle()
     {
         $metadata = $this->factory()->metadataFor('Acme:Button');
 
@@ -178,14 +178,14 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->assertNull($metadata->get('class'));
     }
 
-    public function testAutoNamingInSubDirectory(): void
+    public function testAutoNamingInSubDirectory()
     {
         $metadata = $this->factory()->metadataFor('SubDirectory:ComponentInSubDirectory');
         $this->assertSame('SubDirectory:ComponentInSubDirectory', $metadata->getName());
         $this->assertSame('components/SubDirectory/ComponentInSubDirectory.html.twig', $metadata->getTemplate());
     }
 
-    public function testAutoNamingWithNamePrefixAndDirectory(): void
+    public function testAutoNamingWithNamePrefixAndDirectory()
     {
         $metadata = $this->factory()->metadataFor('AcmePrefix:AcmeRootComponent');
         $this->assertSame('AcmePrefix:AcmeRootComponent', $metadata->getName());
@@ -196,7 +196,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->assertSame('acme_components/AcmeSubDir/AcmeOtherComponent.html.twig', $metadata->getTemplate());
     }
 
-    public function testAutoNamingWithNamePrefixOnly(): void
+    public function testAutoNamingWithNamePrefixOnly()
     {
         self::bootKernel(['environment' => 'no_template_directory']);
         $metadata = $this->factory()->metadataFor('AcmePrefix:AcmeRootComponent');
@@ -206,7 +206,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->assertSame('components/AcmeRootComponent.html.twig', $metadata->getTemplate());
     }
 
-    public function testCanGetMetadataForComponentByName(): void
+    public function testCanGetMetadataForComponentByName()
     {
         $metadata = $this->factory()->metadataFor('component_a');
 
@@ -216,7 +216,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->assertSame(ComponentA::class, $metadata->getClass());
     }
 
-    public function testCanGetMetadataForSameComponentWithDifferentName(): void
+    public function testCanGetMetadataForSameComponentWithDifferentName()
     {
         $metadata = $this->factory()->metadataFor('component_d');
 
@@ -226,7 +226,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->assertSame(ComponentB::class, $metadata->getClass());
     }
 
-    public function testCannotGetConfigByNameForNonRegisteredComponent(): void
+    public function testCannotGetConfigByNameForNonRegisteredComponent()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Unknown component "tabl". Did you mean this: "table"?');
@@ -241,7 +241,7 @@ final class ComponentFactoryTest extends KernelTestCase
      *           ["with", "Unknown component \"with\". Did you mean one of these: \"with_attributes\", \"with_exposed_variables\", \"WithSlots\"?"]
      *           ["anonAnon", "Unknown component \"anonAnon\". And no matching anonymous component template was found."]
      */
-    public function testCannotGetInvalidComponent(string $name, string $expectedExceptionMessage): void
+    public function testCannotGetInvalidComponent(string $name, string $expectedExceptionMessage)
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedExceptionMessage);
@@ -249,7 +249,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->factory()->get($name);
     }
 
-    public function testInputPropsStoredOnMountedComponent(): void
+    public function testInputPropsStoredOnMountedComponent()
     {
         $mountedComponent = $this->factory()->create('component_a', ['propA' => 'A', 'propB' => 'B']);
         $this->assertSame(['propA' => 'A', 'propB' => 'B'], $mountedComponent->getInputProps());
@@ -258,7 +258,7 @@ final class ComponentFactoryTest extends KernelTestCase
     /**
      * @doesNotPerformAssertions
      */
-    public function testGetComponentWithClassName(): void
+    public function testGetComponentWithClassName()
     {
         $factory = $this->factory();
 

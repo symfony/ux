@@ -27,7 +27,7 @@ final class ComponentParserTest extends KernelTestCase
     /**
      * @dataProvider provideValidComponentNames
      */
-    public function testAcceptTwigComponentTagWithValidComponentName(string $name): void
+    public function testAcceptTwigComponentTagWithValidComponentName(string $name)
     {
         $environment = $this->createEnvironment();
         $source = str_replace('XXX', $name, "{% component 'XXX' %}{% endcomponent %}");
@@ -40,7 +40,7 @@ final class ComponentParserTest extends KernelTestCase
     /**
      * @dataProvider provideValidComponentNames
      */
-    public function testAcceptHtmlComponentTagWithValidComponentName(string $name): void
+    public function testAcceptHtmlComponentTagWithValidComponentName(string $name)
     {
         $environment = $this->createEnvironment();
         $source = \sprintf('<twig:%s></twig:%s>', $name, $name);
@@ -53,7 +53,7 @@ final class ComponentParserTest extends KernelTestCase
     /**
      * @dataProvider provideValidComponentNames
      */
-    public function testAcceptHtmlSelfClosingComponentTagWithValidComponentName(string $name): void
+    public function testAcceptHtmlSelfClosingComponentTagWithValidComponentName(string $name)
     {
         $environment = $this->createEnvironment();
         $source = \sprintf('<twig:%s />', $name);
@@ -63,7 +63,7 @@ final class ComponentParserTest extends KernelTestCase
         $this->assertInstanceOf(TemplateWrapper::class, $template);
     }
 
-    public function testItThrowsWhenComponentNameCannotBeParsed(): void
+    public function testItThrowsWhenComponentNameCannotBeParsed()
     {
         $environment = $this->createEnvironment();
         $source = '{% component [] %}{% endcomponent %}';

@@ -2,7 +2,7 @@ Twig Components
 ===============
 
 Twig components give you the power to bind an object to a template,
-making it easier to render and re-use small template "units" - like an
+making it easier to render and reuse small template "units" - like an
 "alert", markup for a modal, or a category sidebar:
 
 Every component consists of (1) a class::
@@ -447,15 +447,24 @@ need to populate, you can render it with:
 Mounting Data
 -------------
 
-Most of the time, you will create public properties and then pass values
-to those as "props" when rendering. But there are several hooks in case
-you need to do something more complex.
+Most of the time, you will create public properties and pass values to them
+as "props" when rendering the component. However, there are several hooks
+available when you need to perform more complex logic.
 
 The mount() Method
 ~~~~~~~~~~~~~~~~~~
 
-For more control over how your "props" are handled, you can create a method
-called ``mount()``::
+The ``mount()`` method gives you more control over how your "props" are handled.
+It is called once, immediately after the component is instantiated, **but before**
+the component system assigns the props you passed when rendering.
+
+For example, if you call your component like this:
+
+.. code-block:: html+twig
+
+    <twig:Alert type="error" message="..."/>
+
+The following code won't work as expected::
 
     // src/Twig/Components/Alert.php
     // ...
@@ -466,30 +475,60 @@ called ``mount()``::
         public string $message;
         public string $type = 'success';
 
-        public function mount(bool $isSuccess = true): void
+        public function mount(): void
         {
-            $this->type = $isSuccess ? 'success' : 'danger';
+            // ❌ this won't work: at this point $type still has its default value.
+            // Passed values are not yet available in props.
+            if ('error' === $this->type) {
+                // ...
+            }
         }
 
         // ...
     }
 
-The ``mount()`` method is called just one time: immediately after your
-component is instantiated. Because the method has an ``$isSuccess``
-argument, if we pass an ``isSuccess`` prop when rendering, it will be
-passed to ``mount()``.
+Inside ``mount()``, each prop has only its *default* value (or ``null`` if it is
+untyped and has no default). If you need a prop's value, declare a parameter in
+``mount()`` whose name matches the prop instead of reading the public property::
+
+    public function mount(string $type): void
+    {
+        // ✅ this works as expected: the $type argument in PHP has the value
+        // passed to the 'type' prop in the Twig template
+        if ('error' === $type) {
+            // ...
+        }
+    }
+
+If a prop name (e.g. ``type``) matches an argument name in ``mount()``,
+its value will be passed only to the method. The component system **will not**
+set it on a public property or use it in the component's ``attributes``.
+
+``mount()`` can also receive props **even when no matching public property
+exists**. For example, pass an ``isError`` prop instead of ``type``:
 
 .. code-block:: html+twig
 
-    <twig:Alert
-        isSuccess="{{ false }}"
-        message="Danger Will Robinson!"
-    />
+    <twig:Alert isError="{{ true }}" message="..."/>
 
-If a prop name (e.g. ``isSuccess``) matches an argument name in ``mount()``,
-the prop will be passed as that argument and the component system will
-**not** try to set it directly on a property or use it for the component
-``attributes``.
+Define a ``$isError`` argument to capture the prop and initialize other
+properties using that value::
+
+    #[AsTwigComponent]
+    class Alert
+    {
+        public string $message;
+        public string $type = 'success';
+
+        public function mount(bool $isError = false): void
+        {
+            if ($isError) {
+                $this->type = 'danger';
+            }
+        }
+
+        // ...
+    }
 
 PreMount Hook
 ~~~~~~~~~~~~~
@@ -738,6 +777,8 @@ There is also a non-HTML syntax that can be used:
         {% block footer %}... footer content{% endblock %}
     {% endcomponent %}
 
+.. _embedded-components-context:
+
 Context / Variables Inside of Blocks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -801,10 +842,7 @@ When overriding the ``alert_message`` block, you have access to the ``message`` 
         </twig:block>
     </twig:SuccessAlert>
 
-.. versionadded:: 2.13
-
-    The ability to refer to the scope of higher components via the ``outerScope``
-    variable was added in 2.13.
+.. _embedded-components-outerScope:
 
 As mentioned before, variables from lower components are merged with those from
 upper components. When you need access to some properties or functions from higher
@@ -825,6 +863,11 @@ components, that can be done via the ``outerScope...`` variable:
         {{ outerScope.this.someProp }} {# references a "someProp" prop from SuccessAlert #}
     {% endcomponent %}
 
+.. versionadded:: 2.13
+
+    The ability to refer to the scope of higher components via the ``outerScope``
+    variable was added in 2.13.
+
 You can keep referring to components higher up as well. Just add another ``outerScope``.
 Remember though that the ``outerScope`` reference only starts once you're INSIDE the (embedded) component.
 
@@ -841,6 +884,8 @@ Remember though that the ``outerScope`` reference only starts once you're INSIDE
             {% endcomponent %}
         {% endblock %}
     {% endcomponent %}
+
+.. _embedded-components-outerBlocks:
 
 Inheritance & Forwarding "Outer Blocks"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -876,7 +921,7 @@ For example, imagine we want to create a ``SuccessAlert`` component:
         We will successfully <em>forward</em> this block content!
     <twig:SuccessAlert>
 
-We already have a generic ``Alert`` component, so let's re-use it:
+We already have a generic ``Alert`` component, so let's reuse it:
 
 .. code-block:: html+twig
 
@@ -1563,9 +1608,33 @@ listen to ``PreMountEvent`` or ``PostMountEvent``.
 Nested Components
 -----------------
 
-It's totally possible to include components as part of the contents of another
-component. When you do this, all components render independently. The only
-caveat is that you cannot mix the Twig syntax and the :ref:`HTML syntax <component_html_syntax>`
+It's possible to include components inside another component:
+
+.. code-block:: html+twig
+
+    <twig:SomeComponent>
+        {% for i in 1..10 %}
+            <twig:AnotherComponent>
+                {{ i }}
+            </twig:AnotherComponent>
+        {% endfor %}
+    </twig:SomeComponent>
+
+When you do this, each component is rendered independently, but there are some
+important caveats:
+
+#. As :ref:`explained above <embedded-components-context>`, the variables of a
+   component are merged with the variables of its parent component. Variables
+   with the same name (e.g. ``this`` or ``computed``) are overridden by the
+   inner component;
+#. The original parent component variables are available via the special
+   :ref:`outerScope variable <embedded-components-outerScope>`, so you can, for
+   example, call ``outerScope.this.someFunction()``;
+#. The contents of blocks defined in parent components are available via the
+   special :ref:`outerBlocks variable <embedded-components-outerBlocks>`, so you
+   can call ``block(outerBlocks.someBlockName)``.
+
+Finally, you cannot mix the Twig syntax and the :ref:`HTML syntax <component_html_syntax>`
 when using nested components:
 
 .. code-block:: html+twig
@@ -1599,8 +1668,9 @@ when using nested components:
         {% endblock %}
     {% endcomponent %}
 
-If you're using `Live Components`_, then there *are* some guidelines related to
-how the re-rendering of parent and child components works. Read `Live Nested Components`_.
+If you're using `Live Components`_, there *are* additional guidelines related
+to how parent and child components are re-rendered. See `Live Nested Components`_
+for details.
 
 Configuration
 -------------

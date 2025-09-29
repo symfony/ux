@@ -14,6 +14,9 @@ parameters:
 		- vendor/bin/.phpunit/phpunit/vendor/autoload.php
 	ignoreErrors:
 		-
+			message: "#^Method .*::test.*\\(\\) has no return type specified\\.$#"
+
+		-
 			message: "#^Call to method getClassAnnotations\\(\\) on an unknown class Doctrine\\\\Common\\\\Annotations\\\\Reader\\.$#"
 			count: 1
 			path: src/Doctrine/BroadcastListener.php

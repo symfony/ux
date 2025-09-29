@@ -57,16 +57,16 @@ class SvelteControllerLoaderAssetCompiler implements AssetCompilerInterface
                 $controllerNameForVariable,
                 $relativeImportPath
             );
-            $componentParts[] = \sprintf('"%s": %s', $name, $controllerNameForVariable);
+            $componentParts[] = \sprintf('"%s": %s', Path::normalize($name), $controllerNameForVariable);
         }
 
         $importCode = implode("\n", $importLines);
         $componentsJson = \sprintf('{%s}', implode(', ', $componentParts));
 
         return <<<EOF
-        $importCode
-        export const components = $componentsJson;
-        EOF;
+            $importCode
+            export const components = $componentsJson;
+            EOF;
     }
 
     /**

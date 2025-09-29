@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Functional\Test;
 
+use PHPUnit\Framework\AssertionFailedError;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\InMemoryUser;
@@ -30,7 +31,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
     use InteractsWithLiveComponents;
     use ResetDatabase;
 
-    public function testCanRenderInitialData(): void
+    public function testCanRenderInitialData()
     {
         $testComponent = $this->createLiveComponent('component2');
 
@@ -38,7 +39,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->assertSame(1, $testComponent->component()->count);
     }
 
-    public function testCanCreateWithClassString(): void
+    public function testCanCreateWithClassString()
     {
         $testComponent = $this->createLiveComponent(Component2::class);
 
@@ -46,7 +47,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->assertSame(1, $testComponent->component()->count);
     }
 
-    public function testCanCallLiveAction(): void
+    public function testCanCallLiveAction()
     {
         $testComponent = $this->createLiveComponent('component2');
 
@@ -59,7 +60,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->assertSame(2, $testComponent->component()->count);
     }
 
-    public function testCanCallLiveActionWithArguments(): void
+    public function testCanCallLiveActionWithArguments()
     {
         $testComponent = $this->createLiveComponent('component6');
 
@@ -80,7 +81,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->assertSame(33.3, $testComponent->component()->arg3);
     }
 
-    public function testCanEmitEvent(): void
+    public function testCanEmitEvent()
     {
         $testComponent = $this->createLiveComponent('component2');
 
@@ -93,7 +94,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->assertSame(5, $testComponent->component()->count);
     }
 
-    public function testInvalidEventName(): void
+    public function testInvalidEventName()
     {
         $testComponent = $this->createLiveComponent('component2');
 
@@ -102,7 +103,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $testComponent->emit('invalid');
     }
 
-    public function testCanSetLiveProp(): void
+    public function testCanSetLiveProp()
     {
         $testComponent = $this->createLiveComponent('component_with_writable_props');
 
@@ -115,7 +116,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->assertSame(100, $testComponent->component()->count);
     }
 
-    public function testCanRefreshComponent(): void
+    public function testCanRefreshComponent()
     {
         $testComponent = $this->createLiveComponent('track_renders');
 
@@ -130,7 +131,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->assertStringContainsString('Re-Render Count: 3', $testComponent->render());
     }
 
-    public function testCanAccessResponse(): void
+    public function testCanAccessResponse()
     {
         $testComponent = $this->createLiveComponent('component2');
 
@@ -140,7 +141,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->assertSame('1', $response->headers->get('X-Custom-Header'));
     }
 
-    public function testCannotUpdateComponentIfNoLongerInContext(): void
+    public function testCannotUpdateComponentIfNoLongerInContext()
     {
         $testComponent = $this->createLiveComponent('component2')->call('redirect');
 
@@ -149,7 +150,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $testComponent->call('increase');
     }
 
-    public function testRenderingIsLazy(): void
+    public function testRenderingIsLazy()
     {
         if (!class_exists(IsGranted::class)) {
             $this->markTestSkipped('The security attributes are not available.');
@@ -162,7 +163,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $testComponent->render();
     }
 
-    public function testActingAs(): void
+    public function testActingAs()
     {
         $testComponent = $this->createLiveComponent('with_security')
             ->actingAs(new InMemoryUser('kevin', 'pass', ['ROLE_USER']))
@@ -175,7 +176,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->assertStringContainsString('Username: kevin', $testComponent->render());
     }
 
-    public function testCanSubmitForm(): void
+    public function testCanSubmitForm()
     {
         CategoryFixtureEntityFactory::createMany(5);
         $testComponent = $this->createLiveComponent('form_with_many_different_fields_type');
@@ -186,7 +187,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->assertStringContainsString('foobar', $testComponent->render());
     }
 
-    public function testAccessAllLivePropsInsideOnUpdatedHook(): void
+    public function testAccessAllLivePropsInsideOnUpdatedHook()
     {
         $testComponent = $this->createLiveComponent('with_on_updated', [
             'number1' => 1,
@@ -201,7 +202,7 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->assertStringContainsString('Total: 9', $testComponent->render());
     }
 
-    public function testSetLocaleRenderLocalizedComponent(): void
+    public function testSetLocaleRenderLocalizedComponent()
     {
         $testComponent = $this->createLiveComponent('localized_route');
         $testComponent->setRouteLocale('fr');
@@ -216,5 +217,77 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $testComponent = $this->createLiveComponent('localized_route');
         $testComponent->setRouteLocale('de');
         $this->assertStringContainsString('Locale: de', $testComponent->render());
+    }
+
+    public function testAssertComponentEmitEvent()
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatEmits');
+
+        $this->assertComponentEmitEvent($testComponent, 'event1')
+            ->withData([
+                'foo' => 'bar',
+                'bar' => 'foo',
+            ]);
+    }
+
+    public function testAssertComponentEmitEventFails()
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatEmits');
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('The event "event1" data is different than expected.');
+        $this->assertComponentEmitEvent($testComponent, 'event1')->withData([
+            'foo' => 'bar',
+        ]);
+    }
+
+    public function testComponentEmitsExpectedPartialEventData()
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatEmits');
+
+        $this->assertComponentEmitEvent($testComponent, 'event1')
+            ->withDataSubset(['foo' => 'bar'])
+            ->withDataSubset(['bar' => 'foo'])
+        ;
+    }
+
+    public function testComponentDoesNotEmitUnexpectedEvent()
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatEmits');
+
+        $this->assertComponentNotEmitEvent($testComponent, 'event2');
+    }
+
+    public function testComponentDoesNotEmitUnexpectedEventFails()
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatEmits');
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('The component "component_with_emit" did emit event "event1".');
+        $this->assertComponentNotEmitEvent($testComponent, 'event1');
+    }
+
+    public function testComponentEmitsEventWithIncorrectDataFails()
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatEmits');
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('The event "event1" data is different than expected.');
+        $this->assertComponentEmitEvent($testComponent, 'event1')->withData([
+            'foo' => 'bar',
+            'foo2' => 'bar2',
+        ]);
     }
 }

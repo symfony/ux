@@ -31,7 +31,7 @@ final class BatchActionController
     public function __invoke(Request $request, MountedComponent $_mounted_component, string $serviceId, array $actions): ?Response
     {
         foreach ($actions as $action) {
-            $name = $action['name'] ?? throw new BadRequestHttpException('Invalid JSON');
+            $name = $action['name'] ?? throw new BadRequestHttpException('Invalid JSON.');
 
             $subRequest = $request->duplicate(attributes: [
                 '_controller' => [$serviceId, $name],

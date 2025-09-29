@@ -1,5 +1,60 @@
 # CHANGELOG
 
+## 2.30
+
+-  Ensure compatibility with PHP 8.5
+-  Deprecate option `title` from `Polygon`, `Polyline`, `Rectangle` and `Circle` in favor of `infoWindow`
+
+## 2.29.0
+
+-  Add Symfony 8 support
+-  Add `Cluster` class and `ClusteringAlgorithmInterface` with two implementations `GridClusteringAlgorithm` and `MortonClusteringAlgorithm`
+
+## 2.28
+
+-  Add `minZoom` and `maxZoom` options to `Map` to set the minimum and maximum zoom levels
+
+## 2.27
+
+-   The `fitBoundsToMarkers` option is not overridden anymore when using the `Map` LiveComponent, but now respects the value you defined.
+    You may encounter unwanted behavior when adding/removing elements to the map.
+    To use the previous behavior, you must call `$this->getMap()->fitBoundsToMarkers(false)` in your LiveComponent's live actions
+
+-   Add support for creating `Circle` by passing a `Point` and a radius (in meters) to the `Circle` constructor, e.g.:
+```php
+$map->addCircle(new Circle(
+    center: new Point(48.856613, 2.352222), // Paris
+    radius: 5_000 // 5km
+));
+```
+
+-   Add support for creating `Rectangle` by passing two `Point` instances to the `Rectangle` constructor, e.g.:
+```php
+$map->addRectangle(new Rectangle(
+    southWest: new Point(48.856613, 2.352222), // Paris
+    northEast: new Point(48.51238 2.21080) // Gare de Lyon (Paris)
+));
+```
+
+-   Deprecate property `rawOptions` from `ux:map:*:before-create` events, in favor of `bridgeOptions` instead.
+-   Map options can now be configured and overridden through the `ux:map:pre-connect` event:
+```js
+this.element.addEventListener('ux:map:pre-connect', (event) => {
+    // Override the map center and zoom
+    event.detail.zoom = 10;
+    event.detail.center = { lat: 48.856613, lng: 2.352222 };
+
+    // Override the normalized `*Options` PHP classes (e.g. `GoogleMapOptions` or `LeafletMapOptions`)
+    console.log(event.detail.options);
+
+    // Override the options specific to the renderer bridge (e.g. `google.maps.MapOptions` or `L.MapOptions`)
+    event.detail.bridgeOptions = {
+        // ...
+    };
+});
+```
+-  Add `extra` data support to `Map`, which can be accessed in `ux:map:pre-connect` and `ux:map:connect` events
+
 ## 2.26
 
 -  Add support for creating `Polygon` with holes, by passing an array of `array<Point>` as `points` parameter to the `Polygon` constructor, e.g.:

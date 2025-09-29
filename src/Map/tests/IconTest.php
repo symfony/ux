@@ -43,7 +43,7 @@ class IconTest extends TestCase
      *
      * @param class-string<Icon> $expectedInstance
      */
-    public function testIconConstruction(Icon $icon, string $expectedInstance, array $expectedToArray): void
+    public function testIconConstruction(Icon $icon, string $expectedInstance, array $expectedToArray)
     {
         self::assertInstanceOf($expectedInstance, $icon);
     }
@@ -51,7 +51,7 @@ class IconTest extends TestCase
     /**
      * @dataProvider provideIcons
      */
-    public function testToArray(Icon $icon, string $expectedInstance, array $expectedToArray): void
+    public function testToArray(Icon $icon, string $expectedInstance, array $expectedToArray)
     {
         self::assertSame($expectedToArray, $icon->toArray());
     }
@@ -59,7 +59,7 @@ class IconTest extends TestCase
     /**
      * @dataProvider provideIcons
      */
-    public function testFromArray(Icon $icon, string $expectedInstance, array $expectedToArray): void
+    public function testFromArray(Icon $icon, string $expectedInstance, array $expectedToArray)
     {
         self::assertEquals($icon, Icon::fromArray($expectedToArray));
     }
@@ -87,7 +87,7 @@ class IconTest extends TestCase
     /**
      * @dataProvider dataProviderForTestSvgIconCustomizationMethodsCanNotBeCalled
      */
-    public function testSvgIconCustomizationMethodsCanNotBeCalled(string $method, mixed ...$args): void
+    public function testSvgIconCustomizationMethodsCanNotBeCalled(string $method, mixed ...$args)
     {
         $this->expectException(\LogicException::class);
         if (\in_array($method, ['width', 'height'], true)) {

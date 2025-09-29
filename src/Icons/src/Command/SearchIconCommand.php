@@ -51,18 +51,18 @@ final class SearchIconCommand extends Command
             ->addArgument('name', InputArgument::OPTIONAL, 'Name of the icon (leave empty to search for sets)')
             ->setHelp(
                 <<<EOF
-The <info>%command.name%</info> command search icon sets and icons from ux.symfony.com
+                    The <info>%command.name%</info> command search icon sets and icons from ux.symfony.com
 
-To search for <comment>icon sets</comment>, pass the prefix or name of the icon set (or a part of it):
+                    To search for <comment>icon sets</comment>, pass the prefix or name of the icon set (or a part of it):
 
-  <info>php %command.full_name% bootstrap</info>
-  <info>php %command.full_name% material</info>
+                      <info>php %command.full_name% bootstrap</info>
+                      <info>php %command.full_name% material</info>
 
-To search for <comment>icons</comment>, pass the prefix of the icon set and the name of the icon:
+                    To search for <comment>icons</comment>, pass the prefix of the icon set and the name of the icon:
 
-  <info>php %command.full_name% bootstrap star</info>
+                      <info>php %command.full_name% bootstrap star</info>
 
-EOF
+                    EOF
             );
     }
 

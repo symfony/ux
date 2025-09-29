@@ -1,1 +1,1 @@
-[data-loading=""],[data-loading=show],[data-loading=delay\|show]{display:none}
+[data-loading=""],[data-loading=show],[data-loading*=\|show]{display:none}

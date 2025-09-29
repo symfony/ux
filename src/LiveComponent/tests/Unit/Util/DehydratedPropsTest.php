@@ -16,7 +16,7 @@ use Symfony\UX\LiveComponent\Util\DehydratedProps;
 
 class DehydratedPropsTest extends TestCase
 {
-    public function testDataIsBuiltCorrectly(): void
+    public function testDataIsBuiltCorrectly()
     {
         $dehydratedProps = new DehydratedProps();
         $dehydratedProps->addPropValue('firstName', 'Ryan');
@@ -43,7 +43,7 @@ class DehydratedPropsTest extends TestCase
         $this->assertEquals($dehydratedProps->getProps(), $propsFromArray->getProps());
     }
 
-    public function testRemovePropValue(): void
+    public function testRemovePropValue()
     {
         $props = new DehydratedProps();
         $props->addPropValue('firstName', 'Ryan');
@@ -52,7 +52,7 @@ class DehydratedPropsTest extends TestCase
         $this->assertSame(['lastName' => 'Weaver'], $props->getProps());
     }
 
-    public function testGetAndHasPropValue(): void
+    public function testGetAndHasPropValue()
     {
         $props = new DehydratedProps();
         $props->addPropValue('firstName', 'Ryan');
@@ -80,7 +80,7 @@ class DehydratedPropsTest extends TestCase
         $this->assertSame('Campfire Food', $props->getNestedPathValue('product', 'category.name'));
     }
 
-    public function testCreateFromUpdatedArray(): void
+    public function testCreateFromUpdatedArray()
     {
         $actual = DehydratedProps::createFromUpdatedArray([
             'isPublic' => true,
@@ -102,7 +102,7 @@ class DehydratedPropsTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testGetNestedPathsForProperty(): void
+    public function testGetNestedPathsForProperty()
     {
         $props = DehydratedProps::createFromUpdatedArray([
             'invoice.number' => '123',
@@ -118,7 +118,7 @@ class DehydratedPropsTest extends TestCase
         );
     }
 
-    public function testCalculateUnexpectedWritablePaths(): void
+    public function testCalculateUnexpectedWritablePaths()
     {
         $props = DehydratedProps::createFromUpdatedArray([
             'product.tags' => ['pretzels', 'nonsense'],

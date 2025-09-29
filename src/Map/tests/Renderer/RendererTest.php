@@ -19,7 +19,7 @@ use Symfony\UX\Map\Renderer\RendererInterface;
 
 final class RendererTest extends TestCase
 {
-    public function testUnsupportedSchemeException(): void
+    public function testUnsupportedSchemeException()
     {
         self::expectException(UnsupportedSchemeException::class);
         self::expectExceptionMessage('The renderer "scheme" is not supported.');
@@ -28,7 +28,7 @@ final class RendererTest extends TestCase
         $renderer->fromString('scheme://default');
     }
 
-    public function testSupportedFactory(): void
+    public function testSupportedFactory()
     {
         $renderer = new Renderer([
             'one' => $oneFactory = self::createMock(RendererFactoryInterface::class),

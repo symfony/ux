@@ -14,7 +14,7 @@
             {% for component in components %}
                 <li class="SidebarNav_Item {{ app.current_route == 'app_toolkit_component' and app.current_route_parameters.componentName == component.name ? 'active' : '' }}">
                     <a class="SidebarNav_Link" href="{{ path('app_toolkit_component', {kitId: kit_id.value, componentName: component.name}) }}">
-                        {{ component.name }}
+                        {{ component.manifest.name }}
                     </a>
                 </li>
             {% endfor %}

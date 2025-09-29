@@ -30,7 +30,7 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
         AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX.'1' => '8AooEz36WYQyxj54BCaDm/jKbcdDdPDLaNO4/49bcQk=',
     ];
 
-    public function testItAllowsFullChildRenderOnMissingFingerprints(): void
+    public function testItAllowsFullChildRenderOnMissingFingerprints()
     {
         $this->browser()
             ->visit($this->buildUrlForTodoListComponent([]))
@@ -42,7 +42,7 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testItRendersEmptyElementOnMatchingFingerprintBasic(): void
+    public function testItRendersEmptyElementOnMatchingFingerprintBasic()
     {
         $this->browser()
             ->visit($this->buildUrlForTodoListComponent(self::$actualTodoItemFingerprints))
@@ -54,7 +54,7 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testItRendersEmptyElementOnMatchingFingerprintWithCustomDataLiveId(): void
+    public function testItRendersEmptyElementOnMatchingFingerprintWithCustomDataLiveId()
     {
         $fingerPrintsWithCustomLiveId = [];
         foreach (array_values(self::$actualTodoItemFingerprints) as $key => $fingerprintValue) {
@@ -71,7 +71,7 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testItRendersNewPropWhenFingerprintDoesNotMatch(): void
+    public function testItRendersNewPropWhenFingerprintDoesNotMatch()
     {
         $fingerprints = self::$actualTodoItemFingerprints;
         $fingerprints[AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX_EMBEDDED.'0'] = 'wrong fingerprint';
@@ -104,7 +104,7 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
             });
     }
 
-    public function testItUsesKeysToRenderChildrenLiveIds(): void
+    public function testItUsesKeysToRenderChildrenLiveIds()
     {
         $fingerprintValues = array_values(self::$actualTodoItemFingerprints);
         $fingerprints = [];

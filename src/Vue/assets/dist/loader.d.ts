@@ -1,9 +1,12 @@
-import type { Component } from 'vue';
-import { type ComponentCollection } from './components.js';
+import { Component } from 'vue';
+import { ComponentCollection } from './components.js';
+
 declare global {
     function resolveVueComponent(name: string): Component;
     interface Window {
         resolveVueComponent(name: string): Component;
     }
 }
-export declare function registerVueControllerComponents(vueControllers?: ComponentCollection): void;
+declare function registerVueControllerComponents(vueControllers?: ComponentCollection): void;
+
+export { registerVueControllerComponents };

@@ -1,6 +1,7 @@
 import { Application } from '@hotwired/stimulus';
 import { waitFor } from '@testing-library/dom';
 import { Response } from 'node-fetch';
+import { expect } from 'vitest';
 import type { BackendAction, BackendInterface, ChildrenFingerprints } from '../src/Backend/Backend';
 import BackendRequest from '../src/Backend/BackendRequest';
 import Component from '../src/Component';
@@ -173,6 +174,7 @@ class MockedAjaxCall {
     /* Response properties */
     private changePropsCallback?: (props: any) => void;
     private template?: (props: any) => string;
+    private liveUrl?: string;
     private delayResponseTime?: number = 0;
     private customResponseStatusCode?: number;
     private customResponseHTML?: string;
@@ -269,9 +271,15 @@ class MockedAjaxCall {
                 const html = this.customResponseHTML ? this.customResponseHTML : template(newProps);
 
                 // assume a normal, live-component response unless it's totally custom
-                const headers = { 'Content-Type': 'application/vnd.live-component+html' };
+                const headers = {
+                    'Content-Type': 'application/vnd.live-component+html',
+                    'X-Live-Url': '',
+                };
                 if (this.customResponseHTML) {
                     headers['Content-Type'] = 'text/html';
+                }
+                if (this.liveUrl) {
+                    headers['X-Live-Url'] = this.liveUrl;
                 }
 
                 const response = new Response(html, {
@@ -338,6 +346,12 @@ class MockedAjaxCall {
 
     willReturn(template: (data: any) => string): MockedAjaxCall {
         this.template = template;
+
+        return this;
+    }
+
+    willReturnLiveUrl(liveUrl: string): MockedAjaxCall {
+        this.liveUrl = liveUrl;
 
         return this;
     }

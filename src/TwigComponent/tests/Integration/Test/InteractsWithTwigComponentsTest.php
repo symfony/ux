@@ -24,7 +24,7 @@ final class InteractsWithTwigComponentsTest extends KernelTestCase
     /**
      * @dataProvider componentANameProvider
      */
-    public function testCanMountComponent(string $name): void
+    public function testCanMountComponent(string $name)
     {
         $component = $this->mountTwigComponent($name, [
             'propA' => 'prop a value',
@@ -40,7 +40,7 @@ final class InteractsWithTwigComponentsTest extends KernelTestCase
     /**
      * @dataProvider componentANameProvider
      */
-    public function testCanRenderComponent(string $name): void
+    public function testCanRenderComponent(string $name)
     {
         $rendered = $this->renderTwigComponent($name, [
             'propA' => 'prop a value',
@@ -56,7 +56,7 @@ final class InteractsWithTwigComponentsTest extends KernelTestCase
     /**
      * @dataProvider withSlotsNameProvider
      */
-    public function testCanRenderComponentWithSlots(string $name): void
+    public function testCanRenderComponentWithSlots(string $name)
     {
         $rendered = $this->renderTwigComponent(
             name: $name,

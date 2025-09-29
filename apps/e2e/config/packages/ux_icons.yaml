@@ -1,0 +1,4 @@
+ux_icons:
+    default_icon_attributes:
+        width: '1em'
+        height: '1em'

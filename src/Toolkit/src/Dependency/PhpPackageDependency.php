@@ -27,7 +27,7 @@ final class PhpPackageDependency implements DependencyInterface
      */
     public function __construct(
         public readonly string $name,
-        public readonly ?Version $constraintVersion = null,
+        public readonly ?ConstraintVersion $constraintVersion = null,
     ) {
         Assert::phpPackageName($name);
     }
@@ -50,8 +50,13 @@ final class PhpPackageDependency implements DependencyInterface
         return $this->constraintVersion->isHigherThan($dependency->constraintVersion);
     }
 
+    public function toDebug(): string
+    {
+        return \sprintf('PHP package "%s"', $this->__toString());
+    }
+
     public function __toString(): string
     {
-        return $this->name.($this->constraintVersion ? ':^'.$this->constraintVersion : '');
+        return $this->name.(null !== $this->constraintVersion ? ':'.$this->constraintVersion : '');
     }
 }

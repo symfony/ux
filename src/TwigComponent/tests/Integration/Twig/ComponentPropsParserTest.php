@@ -28,7 +28,7 @@ class ComponentPropsParserTest extends KernelTestCase
     /**
      * @dataProvider providePropsData
      */
-    public function testPropsData(string $template, array $props, string $text): void
+    public function testPropsData(string $template, array $props, string $text)
     {
         $loader = new ArrayLoader(['template' => $template]);
 

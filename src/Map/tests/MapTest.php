@@ -12,6 +12,7 @@
 namespace Symfony\UX\Map\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\UX\Map\Circle;
 use Symfony\UX\Map\Exception\InvalidArgumentException;
 use Symfony\UX\Map\InfoWindow;
 use Symfony\UX\Map\Map;
@@ -19,6 +20,7 @@ use Symfony\UX\Map\Marker;
 use Symfony\UX\Map\Point;
 use Symfony\UX\Map\Polygon;
 use Symfony\UX\Map\Polyline;
+use Symfony\UX\Map\Rectangle;
 
 class MapTest extends TestCase
 {
@@ -32,7 +34,7 @@ class MapTest extends TestCase
         DummyOptions::unregisterFromNormalizer();
     }
 
-    public function testCenterValidation(): void
+    public function testCenterValidation()
     {
         self::expectException(InvalidArgumentException::class);
         self::expectExceptionMessage('The map "center" must be explicitly set when not enabling "fitBoundsToMarkers" feature.');
@@ -41,7 +43,7 @@ class MapTest extends TestCase
         $map->toArray();
     }
 
-    public function testZoomValidation(): void
+    public function testZoomValidation()
     {
         self::expectException(InvalidArgumentException::class);
         self::expectExceptionMessage('The map "zoom" must be explicitly set when not enabling "fitBoundsToMarkers" feature.');
@@ -52,7 +54,7 @@ class MapTest extends TestCase
         $map->toArray();
     }
 
-    public function testZoomAndCenterCanBeOmittedIfFitBoundsToMarkers(): void
+    public function testZoomAndCenterCanBeOmittedIfFitBoundsToMarkers()
     {
         $map = new Map(
             fitBoundsToMarkers: true
@@ -68,10 +70,15 @@ class MapTest extends TestCase
             'markers' => [],
             'polygons' => [],
             'polylines' => [],
+            'circles' => [],
+            'rectangles' => [],
+            'extra' => null,
+            'minZoom' => null,
+            'maxZoom' => null,
         ], $array);
     }
 
-    public function testWithMinimumConfiguration(): void
+    public function testWithMinimumConfiguration()
     {
         $map = new Map();
         $map
@@ -88,15 +95,22 @@ class MapTest extends TestCase
             'markers' => [],
             'polygons' => [],
             'polylines' => [],
+            'circles' => [],
+            'rectangles' => [],
+            'extra' => null,
+            'minZoom' => null,
+            'maxZoom' => null,
         ], $array);
     }
 
-    public function testWithMaximumConfiguration(): void
+    public function testWithMaximumConfiguration()
     {
         $map = new Map();
         $map
             ->center(new Point(48.8566, 2.3522))
             ->zoom(6)
+            ->minZoom(3)
+            ->maxZoom(15)
             ->fitBoundsToMarkers()
             ->options(new DummyOptions(mapId: '1a2b3c4d5e', mapType: 'roadmap'))
             ->addMarker(new Marker(
@@ -121,7 +135,6 @@ class MapTest extends TestCase
                     new Point(48.853, 2.3499),
                     new Point(48.8566, 2.3522),
                 ],
-                title: 'Polygon 1',
                 infoWindow: null,
             ))
             ->addPolygon(new Polygon(
@@ -130,7 +143,6 @@ class MapTest extends TestCase
                     new Point(45.75, 4.85),
                     new Point(45.77, 4.82),
                 ],
-                title: 'Polygon 2',
                 infoWindow: new InfoWindow(
                     headerContent: '<b>Polygon 2</b>',
                     content: 'A polygon around Lyon with some additional info.',
@@ -145,7 +157,6 @@ class MapTest extends TestCase
                     new Point(48.853, 2.3499),
                     new Point(48.8566, 2.3522),
                 ],
-                title: 'Polyline 1',
                 infoWindow: null,
             ))
             ->addPolyline(new Polyline(
@@ -154,7 +165,6 @@ class MapTest extends TestCase
                     new Point(45.75, 4.85),
                     new Point(45.77, 4.82),
                 ],
-                title: 'Polyline 2',
                 infoWindow: new InfoWindow(
                     headerContent: '<b>Polyline 2</b>',
                     content: 'A polyline around Lyon with some additional info.',
@@ -163,11 +173,62 @@ class MapTest extends TestCase
                     autoClose: true,
                 ),
             ))
+            ->addCircle(new Circle(
+                center: new Point(48.8566, 2.3522),
+                radius: 500,
+                infoWindow: new InfoWindow(
+                    headerContent: '<b>Circle around Paris</b>',
+                    content: 'A circle with a radius of 500 meters around Paris.',
+                    position: new Point(48.8566, 2.3522),
+                    opened: true,
+                    autoClose: true,
+                ),
+            ))
+            ->addCircle(new Circle(
+                center: new Point(45.764, 4.8357),
+                radius: 300,
+                infoWindow: new InfoWindow(
+                    headerContent: '<b>Circle around Lyon</b>',
+                    content: 'A circle with a radius of 300 meters around Lyon.',
+                    position: new Point(45.764, 4.8357),
+                    opened: true,
+                    autoClose: true,
+                ),
+            ))
+            ->addRectangle(new Rectangle(
+                southWest: new Point(48.853, 2.3499),
+                northEast: new Point(48.8566, 2.3522),
+                infoWindow: new InfoWindow(
+                    headerContent: '<b>Rectangle around Paris</b>',
+                    content: 'A rectangle around Paris.',
+                    position: new Point(48.8566, 2.3522),
+                    opened: true,
+                    autoClose: true,
+                ),
+            ))
+            ->addRectangle(new Rectangle(
+                southWest: new Point(45.75, 4.85),
+                northEast: new Point(45.77, 4.82),
+                infoWindow: new InfoWindow(
+                    headerContent: '<b>Rectangle around Lyon</b>',
+                    content: 'A rectangle around Lyon.',
+                    position: new Point(45.764, 4.8357),
+                    opened: true,
+                    autoClose: true,
+                ),
+            ))
+            ->extra([
+                'foo' => 'bar',
+                'bar' => true,
+                'baz' => ['qux' => 'quux'],
+            ])
         ;
 
         self::assertEquals([
             'center' => ['lat' => 48.8566, 'lng' => 2.3522],
             'zoom' => 6.0,
+            'minZoom' => 3.0,
+            'maxZoom' => 15.0,
             'fitBoundsToMarkers' => true,
             'options' => [
                 '@provider' => 'dummy',
@@ -228,7 +289,7 @@ class MapTest extends TestCase
                         ['lat' => 48.853, 'lng' => 2.3499],
                         ['lat' => 48.8566, 'lng' => 2.3522],
                     ],
-                    'title' => 'Polygon 1',
+                    'title' => null,
                     'infoWindow' => null,
                     'extra' => [],
                     'id' => null,
@@ -239,7 +300,7 @@ class MapTest extends TestCase
                         ['lat' => 45.75, 'lng' => 4.85],
                         ['lat' => 45.77, 'lng' => 4.82],
                     ],
-                    'title' => 'Polygon 2',
+                    'title' => null,
                     'infoWindow' => [
                         'headerContent' => '<b>Polygon 2</b>',
                         'content' => 'A polygon around Lyon with some additional info.',
@@ -259,7 +320,7 @@ class MapTest extends TestCase
                         ['lat' => 48.853, 'lng' => 2.3499],
                         ['lat' => 48.8566, 'lng' => 2.3522],
                     ],
-                    'title' => 'Polyline 1',
+                    'title' => null,
                     'infoWindow' => null,
                     'extra' => [],
                     'id' => null,
@@ -270,7 +331,7 @@ class MapTest extends TestCase
                         ['lat' => 45.75, 'lng' => 4.85],
                         ['lat' => 45.77, 'lng' => 4.82],
                     ],
-                    'title' => 'Polyline 2',
+                    'title' => null,
                     'infoWindow' => [
                         'headerContent' => '<b>Polyline 2</b>',
                         'content' => 'A polyline around Lyon with some additional info.',
@@ -283,6 +344,91 @@ class MapTest extends TestCase
                     'id' => null,
                 ],
             ],
+            'circles' => [
+                [
+                    'center' => ['lat' => 48.8566, 'lng' => 2.3522],
+                    'radius' => 500,
+                    'title' => null,
+                    'infoWindow' => [
+                        'headerContent' => '<b>Circle around Paris</b>',
+                        'content' => 'A circle with a radius of 500 meters around Paris.',
+                        'position' => ['lat' => 48.8566, 'lng' => 2.3522],
+                        'opened' => true,
+                        'autoClose' => true,
+                        'extra' => [],
+                    ],
+                    'extra' => [],
+                    'id' => null,
+                ],
+                [
+                    'center' => ['lat' => 45.764, 'lng' => 4.8357],
+                    'radius' => 300,
+                    'title' => null,
+                    'infoWindow' => [
+                        'headerContent' => '<b>Circle around Lyon</b>',
+                        'content' => 'A circle with a radius of 300 meters around Lyon.',
+                        'position' => ['lat' => 45.764, 'lng' => 4.8357],
+                        'opened' => true,
+                        'autoClose' => true,
+                        'extra' => [],
+                    ],
+                    'extra' => [],
+                    'id' => null,
+                ],
+            ],
+            'rectangles' => [
+                [
+                    'southWest' => ['lat' => 48.853, 'lng' => 2.3499],
+                    'northEast' => ['lat' => 48.8566, 'lng' => 2.3522],
+                    'title' => null,
+                    'infoWindow' => [
+                        'headerContent' => '<b>Rectangle around Paris</b>',
+                        'content' => 'A rectangle around Paris.',
+                        'position' => ['lat' => 48.8566, 'lng' => 2.3522],
+                        'opened' => true,
+                        'autoClose' => true,
+                        'extra' => [],
+                    ],
+                    'extra' => [],
+                    'id' => null,
+                ],
+                [
+                    'southWest' => ['lat' => 45.75, 'lng' => 4.85],
+                    'northEast' => ['lat' => 45.77, 'lng' => 4.82],
+                    'title' => null,
+                    'infoWindow' => [
+                        'headerContent' => '<b>Rectangle around Lyon</b>',
+                        'content' => 'A rectangle around Lyon.',
+                        'position' => ['lat' => 45.764, 'lng' => 4.8357],
+                        'opened' => true,
+                        'autoClose' => true,
+                        'extra' => [],
+                    ],
+                    'extra' => [],
+                    'id' => null,
+                ],
+            ],
+            'extra' => [
+                'foo' => 'bar',
+                'bar' => true,
+                'baz' => ['qux' => 'quux'],
+            ],
         ], $map->toArray());
+    }
+
+    /**
+     * @testWith [-1, null, null, "The \"minZoom\" must be greater than or equal to 0."]
+     *           [null, -1, null, "The \"zoom\" must be greater than or equal to 0."]
+     *           [null, null, -1, "The \"maxZoom\" must be greater than or equal to 0."]
+     *           [5, 2, null, "The \"zoom\" must be greater than or equal to \"minZoom\"."]
+     *           [null, 5, 2, "The \"zoom\" must be less than or equal to \"maxZoom\"."]
+     *           [2.1, null, 2.0, "The \"minZoom\" must be less than or equal to \"maxZoom\"."]
+     */
+    public function testZoomsValidation(?float $minZoom, ?float $zoom, ?float $maxZoom, string $expectedExceptionMessage)
+    {
+        self::expectException(InvalidArgumentException::class);
+        self::expectExceptionMessage($expectedExceptionMessage);
+
+        new Map(zoom: $zoom, minZoom: $minZoom, maxZoom: $maxZoom);
     }
 }

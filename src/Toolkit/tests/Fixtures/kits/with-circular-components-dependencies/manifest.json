@@ -1,4 +1,5 @@
 {
+    "$schema": "../../../../schema-kit-v1.json",
     "name": "With Circular Components Dependencies",
     "description": "Kit used as a test fixture.",
     "license": "MIT",

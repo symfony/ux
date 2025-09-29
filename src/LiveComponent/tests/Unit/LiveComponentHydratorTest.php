@@ -26,7 +26,7 @@ use Twig\Environment;
 
 final class LiveComponentHydratorTest extends TestCase
 {
-    public function testConstructWithEmptySecret(): void
+    public function testConstructWithEmptySecret()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('A non-empty secret is required.');

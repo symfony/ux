@@ -34,6 +34,7 @@ class TranslationsDumper
 {
     private array $excludedDomains = [];
     private array $includedDomains = [];
+    private array $alreadyGeneratedConstants = [];
 
     public function __construct(
         private string $dumpDir,
@@ -80,10 +81,10 @@ class TranslationsDumper
             json_encode($this->getLocaleFallbacks(...$catalogues), \JSON_THROW_ON_ERROR)
         ));
         $this->filesystem->dumpFile($this->dumpDir.'/configuration.d.ts', <<<'TS'
-import { LocaleType } from '@symfony/ux-translator';
+            import { LocaleType } from '@symfony/ux-translator';
 
-export declare const localeFallbacks: Record<LocaleType, LocaleType>;
-TS
+            export declare const localeFallbacks: Record<LocaleType, LocaleType>;
+            TS
         );
     }
 
@@ -184,16 +185,14 @@ TS
 
     private function generateConstantName(string $translationId): string
     {
-        static $alreadyGenerated = [];
-
         $translationId = s($translationId)->ascii()->snake()->upper()->replaceMatches('/^(\d)/', '_$1')->toString();
         $prefix = 0;
         do {
             $constantName = $translationId.($prefix > 0 ? '_'.$prefix : '');
             ++$prefix;
-        } while ($alreadyGenerated[$constantName] ?? false);
+        } while ($this->alreadyGeneratedConstants[$constantName] ?? false);
 
-        $alreadyGenerated[$constantName] = true;
+        $this->alreadyGeneratedConstants[$constantName] = true;
 
         return $constantName;
     }

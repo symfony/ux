@@ -115,7 +115,7 @@ final class LiveComponentHydrator
                     } catch (NoSuchPropertyException $e) {
                         throw new \LogicException(\sprintf('The writable path "%s" does not exist on the "%s" property of the "%s" component.', $path, $propertyName, $component::class), 0, $e);
                     } catch (PropertyAccessExceptionInterface $e) {
-                        throw new \LogicException(\sprintf('The writable path "%s" on the "%s" property of the "%s" component could not be read: %s', $path, $propertyName, $component::class, $e->getMessage()), 0, $e);
+                        throw new \LogicException(\sprintf('The writable path "%s" on the "%s" property of the "%s" component could not be read: ', $path, $propertyName, $component::class).$e->getMessage(), 0, $e);
                     }
 
                     // TODO: maybe we allow support the same types as LiveProps later
@@ -198,7 +198,7 @@ final class LiveComponentHydrator
              */
             if ($dehydratedUpdatedProps->hasPropValue($frontendName)) {
                 if (!$propMetadata->isIdentityWritable()) {
-                    throw new HydrationException(\sprintf('The model "%s" was sent for update, but it is not writable. Try adding "writable: true" to the $%s property in %s.', $frontendName, $propMetadata->getName(), $component::class));
+                    throw new HydrationException(\sprintf('The model "%s" was sent for update, but it is not writable. Try adding "writable: true" to the $%s property in "%s".', $frontendName, $propMetadata->getName(), $component::class));
                 }
                 try {
                     $propertyValue = $this->hydrateValue(
@@ -454,7 +454,7 @@ final class LiveComponentHydrator
     private function verifyChecksum(array $identifierPops, string $error = 'Invalid checksum sent when updating the live component.'): void
     {
         if (!\array_key_exists(self::CHECKSUM_KEY, $identifierPops)) {
-            throw new HydrationException(\sprintf('Missing %s. key', self::CHECKSUM_KEY));
+            throw new HydrationException(\sprintf('Missing "%s" key.', self::CHECKSUM_KEY));
         }
         $sentChecksum = $identifierPops[self::CHECKSUM_KEY];
         unset($identifierPops[self::CHECKSUM_KEY]);
@@ -565,7 +565,7 @@ final class LiveComponentHydrator
                     $collectionClass = $propMetadata->collectionValueType()->getClassName();
                     foreach ($value as $key => $objectItem) {
                         if (!$objectItem instanceof $collectionClass) {
-                            throw new \LogicException(\sprintf('The LiveProp "%s" on component "%s" is an array. We determined the array is full of %s objects, but at least one key had a different value of %s', $propMetadata->getName(), $parentObject::class, $collectionClass, get_debug_type($objectItem)));
+                            throw new \LogicException(\sprintf('The LiveProp "%s" on component "%s" is an array. We determined the array is full of "%s" objects, but at least one key had a different value of "%s".', $propMetadata->getName(), $parentObject::class, $collectionClass, get_debug_type($objectItem)));
                         }
 
                         $value[$key] = $this->dehydrateObjectValue($objectItem, $collectionClass, $propMetadata->getFormat(), $parentObject);
@@ -586,7 +586,7 @@ final class LiveComponentHydrator
                     if ($t instanceof ObjectType) {
                         foreach ($value as $key => $objectItem) {
                             if (!TypeHelper::accepts($t, $objectItem)) {
-                                throw new \LogicException(\sprintf('The LiveProp "%s" on component "%s" is an array. We determined the array is full of %s objects, but at least one key had a different value of %s', $propMetadata->getName(), $parentObject::class, $t->getClassName(), get_debug_type($objectItem)));
+                                throw new \LogicException(\sprintf('The LiveProp "%s" on component "%s" is an array. We determined the array is full of "%s" objects, but at least one key had a different value of "%s".', $propMetadata->getName(), $parentObject::class, $t->getClassName(), get_debug_type($objectItem)));
                             }
 
                             $value[$key] = $this->dehydrateObjectValue($objectItem, $t->getClassName(), $propMetadata->getFormat(), $parentObject);
@@ -762,7 +762,7 @@ final class LiveComponentHydrator
 
         if (\count($extraSentWritablePaths) > 0) {
             // we could show multiple fields here in the message
-            throw new HydrationException(\sprintf('The model "%s.%s" was sent for update, but it is not writable. Try adding "writable: [\'%s\']" to the $%s property in %s.', $frontendPropName, $extraSentWritablePaths[0], $extraSentWritablePaths[0], $propMetadata->getName(), $componentClass));
+            throw new HydrationException(\sprintf('The model "%s.%s" was sent for update, but it is not writable. Try adding "writable: [\'%s\']" to the $%s property in "%s".', $frontendPropName, $extraSentWritablePaths[0], $extraSentWritablePaths[0], $propMetadata->getName(), $componentClass));
         }
 
         return $writablePaths;

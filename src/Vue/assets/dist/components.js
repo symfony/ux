@@ -1,3 +1,4 @@
 const components = {};
-
-export { components };
+export {
+  components
+};

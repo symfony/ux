@@ -23,7 +23,7 @@ use Symfony\Component\Form\FormEvents;
  *
  * @internal
  *
- * @deprecated since UX 2.13
+ * @deprecated since Symfony UX 2.13
  */
 final class AutocompleteEntityTypeSubscriber implements EventSubscriberInterface
 {

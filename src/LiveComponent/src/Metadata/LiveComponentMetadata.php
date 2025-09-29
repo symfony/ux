@@ -66,7 +66,23 @@ class LiveComponentMetadata
         return array_intersect_key($inputProps, array_flip($propNames));
     }
 
-    public function hasQueryStringBindings($component): bool
+    /**
+     * @return UrlMapping[]
+     */
+    public function getAllUrlMappings(object $component): array
+    {
+        $urlMappings = [];
+
+        foreach ($this->getAllLivePropsMetadata($component) as $livePropMetadata) {
+            if ($livePropMetadata->urlMapping()) {
+                $urlMappings[$livePropMetadata->calculateFieldName($component, $livePropMetadata->getName())] = $livePropMetadata->urlMapping();
+            }
+        }
+
+        return $urlMappings;
+    }
+
+    public function hasQueryStringBindings(object $component): bool
     {
         foreach ($this->getAllLivePropsMetadata($component) as $livePropMetadata) {
             if ($livePropMetadata->urlMapping()) {

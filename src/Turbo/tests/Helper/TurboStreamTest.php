@@ -24,7 +24,7 @@ class TurboStreamTest extends TestCase
      *           ["before"]
      *           ["after"]
      */
-    public function testStream(string $action): void
+    public function testStream(string $action)
     {
         $this->assertSame(<<<EOHTML
             <turbo-stream action="{$action}" targets="some[&quot;selector&quot;]">
@@ -39,7 +39,7 @@ class TurboStreamTest extends TestCase
      * @testWith ["replace"]
      *           ["update"]
      */
-    public function testStreamMorph(string $action): void
+    public function testStreamMorph(string $action)
     {
         $this->assertSame(<<<EOHTML
             <turbo-stream action="{$action}" targets="some[&quot;selector&quot;]" method="morph">
@@ -50,7 +50,7 @@ class TurboStreamTest extends TestCase
         );
     }
 
-    public function testRemove(): void
+    public function testRemove()
     {
         $this->assertSame(<<<EOHTML
             <turbo-stream action="remove" targets="some[&quot;selector&quot;]"></turbo-stream>
@@ -59,7 +59,7 @@ class TurboStreamTest extends TestCase
         );
     }
 
-    public function testRefreshWithoutId(): void
+    public function testRefreshWithoutId()
     {
         $this->assertSame(<<<EOHTML
             <turbo-stream action="refresh"></turbo-stream>
@@ -68,7 +68,7 @@ class TurboStreamTest extends TestCase
         );
     }
 
-    public function testRefreshWithId(): void
+    public function testRefreshWithId()
     {
         $this->assertSame(<<<EOHTML
             <turbo-stream action="refresh" request-id="a&quot;b"></turbo-stream>
@@ -77,7 +77,7 @@ class TurboStreamTest extends TestCase
         );
     }
 
-    public function testCustom(): void
+    public function testCustom()
     {
         $this->assertSame(<<<EOHTML
             <turbo-stream action="customAction" targets="some[&quot;selector&quot;]" someAttr="someValue" boolAttr intAttr="0" floatAttr="3.14">
@@ -93,7 +93,7 @@ class TurboStreamTest extends TestCase
      *
      * @param array<string, string|int|float|null> $attr
      */
-    public function testCustomThrowsException(string $action, string $target, string $html, array $attr): void
+    public function testCustomThrowsException(string $action, string $target, string $html, array $attr)
     {
         $this->expectException(\InvalidArgumentException::class);
         TurboStream::action($action, $target, $html, $attr);

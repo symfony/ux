@@ -17,7 +17,7 @@ use Symfony\UX\Map\Bridge\Google\Option\ZoomControlOptions;
 
 class ZoomControlOptionsTest extends TestCase
 {
-    public function testToArray(): void
+    public function testToArray()
     {
         $options = new ZoomControlOptions(
             position: ControlPosition::BLOCK_START_INLINE_END,

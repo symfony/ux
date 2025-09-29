@@ -28,7 +28,6 @@ class PolygonTest extends TestCase
 
         $polygon = new Polygon(
             points: [$point1, $point2],
-            title: 'Test Polygon',
             infoWindow: $infoWindow,
             extra: ['foo' => 'bar'],
             id: 'poly1'
@@ -37,7 +36,7 @@ class PolygonTest extends TestCase
         $array = $polygon->toArray();
         $this->assertSame([
             'points' => [['lat' => 1.1, 'lng' => 2.2], ['lat' => 3.3, 'lng' => 4.4]],
-            'title' => 'Test Polygon',
+            'title' => null,
             'infoWindow' => [
                 'headerContent' => 'info content',
                 'content' => null,
@@ -80,7 +79,6 @@ class PolygonTest extends TestCase
             'points' => [
                 ['lat' => 1.1, 'lng' => 2.2], ['lat' => 3.3, 'lng' => 4.4],
             ],
-            'title' => 'Test Polygon',
             'infoWindow' => ['content' => 'info content'],
             'extra' => ['foo' => 'bar'],
             'id' => 'poly1',
@@ -93,7 +91,7 @@ class PolygonTest extends TestCase
         $array = $polygon->toArray();
         $this->assertSame([
             'points' => [['lat' => 1.1, 'lng' => 2.2], ['lat' => 3.3, 'lng' => 4.4]],
-            'title' => 'Test Polygon',
+            'title' => null,
             'infoWindow' => [
                 'headerContent' => null,
                 'content' => 'info content',
@@ -114,7 +112,6 @@ class PolygonTest extends TestCase
                 [['lat' => 1.1, 'lng' => 2.2], ['lat' => 3.3, 'lng' => 4.4]],
                 [['lat' => 5.5, 'lng' => 6.6]],
             ],
-            'title' => 'Test Polygon',
             'infoWindow' => ['content' => 'info content'],
             'extra' => ['foo' => 'bar'],
             'id' => 'poly1',
@@ -130,7 +127,7 @@ class PolygonTest extends TestCase
                 [['lat' => 1.1, 'lng' => 2.2], ['lat' => 3.3, 'lng' => 4.4]],
                 [['lat' => 5.5, 'lng' => 6.6]],
             ],
-            'title' => 'Test Polygon',
+            'title' => null,
             'infoWindow' => [
                 'headerContent' => null,
                 'content' => 'info content',

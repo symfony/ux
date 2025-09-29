@@ -20,7 +20,7 @@ class UxPackagesTest extends KernelTestCase
 {
     use HasBrowser;
 
-    public function testAllPackagesPage(): void
+    public function testAllPackagesPage()
     {
         $this->browser()
             ->visit('/packages')
@@ -33,7 +33,7 @@ class UxPackagesTest extends KernelTestCase
     /**
      * @dataProvider getSmokeTests
      */
-    public function testPackagePagesAllLoad(UxPackage $package, string $expectedText): void
+    public function testPackagePagesAllLoad(UxPackage $package, string $expectedText)
     {
         $this->browser()
             ->throwExceptions()

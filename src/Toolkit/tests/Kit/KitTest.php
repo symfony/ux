@@ -12,61 +12,88 @@
 namespace Symfony\UX\Toolkit\Tests\Kit;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\UX\Toolkit\Asset\Component;
-use Symfony\UX\Toolkit\File\File;
 use Symfony\UX\Toolkit\Kit\Kit;
+use Symfony\UX\Toolkit\Kit\KitManifest;
+use Symfony\UX\Toolkit\Recipe\Recipe;
+use Symfony\UX\Toolkit\Recipe\RecipeManifest;
+use Symfony\UX\Toolkit\Recipe\RecipeType;
 
 final class KitTest extends TestCase
 {
-    public function testShouldFailIfKitNameIsInvalid(): void
+    public function testShouldFailIfKitNameIsInvalid()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid kit name "-foobar".');
 
-        new Kit(__DIR__, '-foobar', 'https://example.com', 'MIT');
+        new Kit(__DIR__, new KitManifest('-foobar', 'Description', 'MIT', 'https://example.com'));
     }
 
-    public function testShouldFailIfKitPathIsNotAbsolute(): void
+    public function testShouldFailIfKitPathIsNotAbsolute()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Kit path "./%s" is not absolute.', __DIR__));
 
-        new Kit(\sprintf('./%s', __DIR__), 'foo', 'https://example.com', 'MIT');
+        new Kit(\sprintf('./%s', __DIR__), new KitManifest('foo', 'Description', 'MIT', 'https://example.com'));
     }
 
-    public function testCanAddComponentsToTheKit(): void
+    public function testCanAddRecipesToTheKit()
     {
-        $kit = new Kit(__DIR__, 'foo', 'https://example.com', 'MIT');
-        $kit->addComponent(new Component('Table', [new File('Table.html.twig', 'Table.html.twig')], null));
-        $kit->addComponent(new Component('Table:Row', [new File('Table/Row.html.twig', 'Table/Row.html.twig')], null));
+        $kit = new Kit(__DIR__, new KitManifest('foo', 'Description', 'MIT', 'https://example.com'));
+        $kit->addRecipe(new Recipe(
+            'alert',
+            __DIR__.'/alert',
+            new RecipeManifest(RecipeType::Component, 'Alert', 'Description', []),
+        ));
+        $kit->addRecipe(new Recipe(
+            'table',
+            __DIR__.'/table',
+            new RecipeManifest(RecipeType::Component, 'Table', 'Description', []),
+        ));
 
-        $this->assertCount(2, $kit->getComponents());
+        $this->assertCount(2, $kit->getRecipes());
+        $this->assertCount(2, $kit->getRecipes(type: RecipeType::Component));
     }
 
-    public function testShouldFailIfComponentIsAlreadyRegisteredInTheKit(): void
+    public function testShouldFailIfComponentIsAlreadyRegisteredInTheKit()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Component "Table" is already registered in the kit.');
+        $this->expectExceptionMessage('Recipe "Alert" is already registered in the kit.');
 
-        $kit = new Kit(__DIR__, 'foo', 'https://example.com', 'MIT');
-        $kit->addComponent(new Component('Table', [new File('Table.html.twig', 'Table.html.twig')], null));
-        $kit->addComponent(new Component('Table', [new File('Table.html.twig', 'Table.html.twig')], null));
+        $kit = new Kit(__DIR__, new KitManifest('foo', 'Description', 'MIT', 'https://example.com'));
+        $kit->addRecipe(new Recipe(
+            'alert',
+            __DIR__.'/alert',
+            new RecipeManifest(RecipeType::Component, 'Alert', 'Description', []),
+        ));
+        $kit->addRecipe(new Recipe(
+            'alert',
+            __DIR__.'/alert',
+            new RecipeManifest(RecipeType::Component, 'Alert', 'Description', []),
+        ));
     }
 
-    public function testCanGetComponentByName(): void
+    public function testCanGetRecipeByName()
     {
-        $kit = new Kit(__DIR__, 'foo', 'https://example.com', 'MIT');
-        $kit->addComponent(new Component('Table', [new File('Table.html.twig', 'Table.html.twig')], null));
-        $kit->addComponent(new Component('Table:Row', [new File('Table/Row.html.twig', 'Table/Row.html.twig')], null));
+        $kit = new Kit(__DIR__, new KitManifest('foo', 'Description', 'MIT', 'https://example.com'));
+        $kit->addRecipe(new Recipe(
+            'alert',
+            __DIR__.'/Alert',
+            new RecipeManifest(RecipeType::Component, 'Alert', 'Description', []),
+        ));
+        $kit->addRecipe(new Recipe(
+            'table',
+            __DIR__.'/Table',
+            new RecipeManifest(RecipeType::Component, 'Table', 'Description', []),
+        ));
 
-        $this->assertSame('Table', $kit->getComponent('Table')->name);
-        $this->assertSame('Table:Row', $kit->getComponent('Table:Row')->name);
+        $this->assertSame('Table', $kit->getRecipe('table')->manifest->name);
+        $this->assertSame('Alert', $kit->getRecipe('alert')->manifest->name);
     }
 
-    public function testShouldReturnNullIfComponentIsNotFound(): void
+    public function testShouldReturnNullIfRecipeIsNotFound()
     {
-        $kit = new Kit(__DIR__, 'foo', 'https://example.com', 'MIT');
+        $kit = new Kit(__DIR__, new KitManifest('foo', 'Description', 'MIT', 'https://example.com'));
 
-        $this->assertNull($kit->getComponent('Table:Cell'));
+        $this->assertNull($kit->getRecipe('table'));
     }
 }

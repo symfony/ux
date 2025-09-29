@@ -33,7 +33,7 @@ class BroadcastTest extends PantherTestCase
         parent::setUp();
     }
 
-    public function testBroadcastBasic(): void
+    public function testBroadcastBasic()
     {
         ($client = self::createPantherClient())->request('GET', '/books');
 
@@ -52,7 +52,7 @@ class BroadcastTest extends PantherTestCase
         $this->assertSelectorWillNotContain('#books', $matches[1]);
     }
 
-    public function testExpressionLanguageBroadcast(): void
+    public function testExpressionLanguageBroadcast()
     {
         ($client = self::createPantherClient())->request('GET', '/artists');
 
@@ -90,7 +90,7 @@ class BroadcastTest extends PantherTestCase
         );
     }
 
-    public function testBroadcastWithProxy(): void
+    public function testBroadcastWithProxy()
     {
         // testing that Artist is updated, even though it's saved as Proxy
         ($client = self::createPantherClient())->request('GET', '/artistFromSong');

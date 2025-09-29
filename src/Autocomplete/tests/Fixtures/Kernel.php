@@ -11,10 +11,9 @@
 
 namespace Symfony\UX\Autocomplete\Tests\Fixtures;
 
+use Composer\InstalledVersions;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\ORM\Mapping\AssociationMapping;
-use Fixtures\Form\CategoryWithCallbackAsCustomValue;
-use Fixtures\Form\CategoryWithPropertyNameAsCustomValue;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -37,6 +36,8 @@ use Symfony\UX\Autocomplete\DependencyInjection\AutocompleteFormTypePass;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomAttributesProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomGroupByProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomProductAutocompleter;
+use Symfony\UX\Autocomplete\Tests\Fixtures\Form\CategoryWithCallbackAsCustomValue;
+use Symfony\UX\Autocomplete\Tests\Fixtures\Form\CategoryWithPropertyNameAsCustomValue;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Form\ProductType;
 use Twig\Environment;
 use Zenstruck\Foundry\ZenstruckFoundryBundle;
@@ -80,6 +81,13 @@ final class Kernel extends BaseKernel
             public function process(ContainerBuilder $container): void
             {
                 $container->removeDefinition('doctrine.orm.listeners.pdo_session_handler_schema_listener');
+
+                if (\PHP_VERSION_ID >= 80400) {
+                    // Workaround for `RuntimeException: Unable to create the Doctrine Proxy directory "". in vendor/symfony/doctrine-bridge/CacheWarmer/ProxyCacheWarmer.php:49`
+                    // when running PHP 8.4 and Doctrine ORM 3.5+.
+                    $container->getDefinition('doctrine.orm.default_configuration')
+                        ->addMethodCall('setProxyDir', ['%doctrine.orm.proxy_dir%']);
+                }
             }
         }, PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
     }
@@ -100,11 +108,9 @@ final class Kernel extends BaseKernel
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
         ]);
 
-        $c->extension('zenstruck_foundry', [
-            'auto_refresh_proxies' => false,
-        ]);
+        $c->extension('zenstruck_foundry', []);
 
-        $config = [
+        $doctrineConfig = [
             'dbal' => ['url' => '%env(resolve:DATABASE_URL)%'],
             'orm' => [
                 'auto_generate_proxy_classes' => true,
@@ -122,11 +128,20 @@ final class Kernel extends BaseKernel
         ];
         if (class_exists(AssociationMapping::class)) {
             // Doctrine ORM >= 3.0
-            $config['orm']['controller_resolver'] = [
+            $doctrineConfig['orm']['controller_resolver'] = [
                 'auto_mapping' => true,
             ];
         }
-        $c->extension('doctrine', $config);
+        if (null !== $doctrineBundleVersion = InstalledVersions::getVersion('doctrine/doctrine-bundle')) {
+            if (version_compare($doctrineBundleVersion, '2.8.0', '>=')) {
+                $doctrineConfig['orm']['enable_lazy_ghost_objects'] = true;
+            }
+            if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=')) {
+                $doctrineConfig['orm']['enable_native_lazy_objects'] = true;
+            }
+        }
+
+        $c->extension('doctrine', $doctrineConfig);
 
         $c->extension('security', [
             'password_hashers' => [
@@ -146,10 +161,6 @@ final class Kernel extends BaseKernel
                     'http_basic' => true,
                 ],
             ],
-        ]);
-
-        $c->extension('zenstruck_foundry', [
-            'auto_refresh_proxies' => false,
         ]);
 
         $services = $c->services();

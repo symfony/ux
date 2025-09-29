@@ -21,7 +21,7 @@ use Symfony\UX\Icons\Tests\Util\InMemoryIconRegistry;
  */
 final class InMemoryIconRegistryTest extends TestCase
 {
-    public function testRegistryConstructor(): void
+    public function testRegistryConstructor()
     {
         $icon = new Icon('foo', ['bar' => 'foobar']);
         $registry = new InMemoryIconRegistry(['foo' => $icon]);
@@ -29,7 +29,7 @@ final class InMemoryIconRegistryTest extends TestCase
         $this->assertSame($icon, $registry->get('foo'));
     }
 
-    public function testRegistryReplaceIcon(): void
+    public function testRegistryReplaceIcon()
     {
         $registry = new InMemoryIconRegistry();
         $foo = new Icon('foo', []);
@@ -45,7 +45,7 @@ final class InMemoryIconRegistryTest extends TestCase
         $this->assertSame($foo, $registry->get('bar'));
     }
 
-    public function testRegistryThrowsExceptionOnUnknownIcon(): void
+    public function testRegistryThrowsExceptionOnUnknownIcon()
     {
         $this->expectException(IconNotFoundException::class);
         $this->expectExceptionMessage('Icon "foo" not found.');

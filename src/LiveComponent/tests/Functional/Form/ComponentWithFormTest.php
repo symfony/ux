@@ -15,12 +15,16 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormWithCollectionTypeComponent;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\User;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Factory\CategoryFixtureEntityFactory;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Form\BlogPostFormType;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
+
+use function Zenstruck\Foundry\Persistence\persist;
+use function Zenstruck\Foundry\Persistence\refresh;
 
 /**
  * @author Jakub Caban <kuba.iluvatar@gmail.com>
@@ -32,7 +36,7 @@ class ComponentWithFormTest extends KernelTestCase
     use LiveComponentTestHelper;
     use ResetDatabase;
 
-    public function testFormValuesRebuildAfterFormChanges(): void
+    public function testFormValuesRebuildAfterFormChanges()
     {
         $browser = $this->browser();
         $crawler = $browser
@@ -113,7 +117,7 @@ class ComponentWithFormTest extends KernelTestCase
         ;
     }
 
-    public function testFormRemembersValidationFromInitialForm(): void
+    public function testFormRemembersValidationFromInitialForm()
     {
         /** @var FormFactoryInterface $formFactory */
         $formFactory = self::getContainer()->get('form.factory');
@@ -156,7 +160,7 @@ class ComponentWithFormTest extends KernelTestCase
         ;
     }
 
-    public function testHandleCheckboxChanges(): void
+    public function testHandleCheckboxChanges()
     {
         $category = CategoryFixtureEntityFactory::createMany(5);
         $id = $category[0]->getId();
@@ -289,7 +293,7 @@ class ComponentWithFormTest extends KernelTestCase
         ;
     }
 
-    public function testLiveCollectionTypeAddButtonsByDefault(): void
+    public function testLiveCollectionTypeAddButtonsByDefault()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_live_collection_type'))->getProps();
 
@@ -306,7 +310,7 @@ class ComponentWithFormTest extends KernelTestCase
         ;
     }
 
-    public function testResetForm(): void
+    public function testResetForm()
     {
         CategoryFixtureEntityFactory::createMany(5);
         $mounted = $this->mountComponent('form_with_many_different_fields_type');
@@ -359,7 +363,7 @@ class ComponentWithFormTest extends KernelTestCase
         ;
     }
 
-    public function testLiveCollectionTypeFieldsAddedAndRemoved(): void
+    public function testLiveCollectionTypeFieldsAddedAndRemoved()
     {
         $dehydratedProps = $this->dehydrateComponent($this->mountComponent('form_with_live_collection_type'))->getProps();
         $updatedProps = [];
@@ -435,7 +439,7 @@ class ComponentWithFormTest extends KernelTestCase
         ;
     }
 
-    public function testDataModelAttributeAutomaticallyAdded(): void
+    public function testDataModelAttributeAutomaticallyAdded()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_collection_type'))->getProps();
 
@@ -449,5 +453,39 @@ class ComponentWithFormTest extends KernelTestCase
             ])
             ->assertElementAttributeContains('form', 'data-model', 'on(change)|*')
         ;
+    }
+
+    public function testFormWithLivePropContainingAnEntityImplementingAnInterface()
+    {
+        $user = persist(User::class, ['username' => 'Fabien']);
+        self::assertInstanceOf(User::class, $user);
+        self::assertEquals(1, $user->id);
+        self::assertEquals('Fabien', $user->username);
+
+        $mounted = $this->mountComponent('form_with_user_interface', [
+            'user' => $user,
+        ]);
+
+        $dehydrated = $this->dehydrateComponent($mounted)->getProps();
+
+        $this->browser()
+            ->post('/_components/form_with_user_interface', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated,
+                        'updated' => [
+                            'user_form.username' => 'Nicolas',
+                            'validatedFields' => ['user_form.username'],
+                        ],
+                    ]),
+                ],
+            ])
+            ->assertStatus(200)
+            ->assertElementAttributeContains('form', 'data-model', 'on(change)|*')
+        ;
+
+        refresh($user);
+        self::assertEquals(1, $user->id);
+        self::assertEquals('Nicolas', $user->username);
     }
 }

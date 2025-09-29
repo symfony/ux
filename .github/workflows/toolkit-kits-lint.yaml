@@ -1,0 +1,50 @@
+name: Toolkit Kits Linting
+
+on:
+    push:
+        paths:
+            - 'src/Toolkit/**'
+            - '.github/workflows/toolkit-kits-lint.yaml'
+    pull_request:
+        paths:
+            - 'src/Toolkit/**'
+            - '.github/workflows/toolkit-kits-lint.yaml'
+
+jobs:
+    get-matrix:
+        runs-on: ubuntu-latest
+        outputs:
+            kits: ${{ steps.set-kits.outputs.kits }}
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set kits output
+              id: set-kits
+              run: |
+                  KITS_JSON=$(find src/Toolkit/kits -mindepth 1 -maxdepth 1 -type d -printf '"%f",' | sed 's/,$//')
+                  echo "kits=[${KITS_JSON}]" >> $GITHUB_OUTPUT
+
+    lint:
+        runs-on: ubuntu-latest
+        needs: get-matrix
+        strategy:
+            fail-fast: false
+            matrix:
+                kit: ${{ fromJson(needs.get-matrix.outputs.kits) }}
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                php-version: 8.1
+
+            - name: Install composer packages
+              uses: ramsey/composer-install@v3
+              with:
+                working-directory: src/Toolkit
+
+            - name: Ensure Twig files are nicely formatted
+              run: php vendor/bin/twig-cs-fixer lint kits/${{ matrix.kit }}
+              working-directory: src/Toolkit

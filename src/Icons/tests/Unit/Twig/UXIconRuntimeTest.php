@@ -22,7 +22,7 @@ use Symfony\UX\Icons\Twig\UXIconRuntime;
  */
 class UXIconRuntimeTest extends TestCase
 {
-    public function testRenderIconIgnoreNotFound(): void
+    public function testRenderIconIgnoreNotFound()
     {
         $renderer = $this->createMock(IconRendererInterface::class);
         $renderer->method('renderIcon')

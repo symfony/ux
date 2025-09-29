@@ -22,7 +22,7 @@ final class LiveComponentRuntimeTest extends KernelTestCase
 {
     use HasBrowser;
 
-    public function testGetComponentUrl(): void
+    public function testGetComponentUrl()
     {
         $runtime = self::getContainer()->get('ux.live_component.twig.component_runtime');
         \assert($runtime instanceof LiveComponentRuntime);

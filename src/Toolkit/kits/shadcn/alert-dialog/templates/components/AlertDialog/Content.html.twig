@@ -1,0 +1,37 @@
+<dialog
+    id="{{ _alert_dialog_id }}"
+    {{ _alert_dialog_open ? 'open' }}
+    class="{{ 'fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent ' ~ attributes.render('class')|tailwind_merge }}"
+    data-alert-dialog-target="dialog"
+    data-action="keydown.esc->alert-dialog#close:prevent"
+    {{ attributes.without('id') }}
+>
+    <div
+        data-alert-dialog-target="overlay"
+        data-transition-enter="transition ease-out duration-100"
+        data-transition-enter-start="transform opacity-0"
+        data-transition-enter-end="transform opacity-100"
+        data-transition-leave="transition ease-in duration-75"
+        data-transition-leave-start="transform opacity-100"
+        data-transition-leave-end="transform opacity-0"
+        class="{{ _alert_dialog_open ? '' : 'hidden' }} fixed inset-0 z-50 bg-black/50"
+    ></div>
+
+    <section
+        tabindex="0"
+        class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0"
+    >
+        <div
+            data-transition-enter="transition ease-out duration-200"
+            data-transition-enter-start="transform opacity-0 scale-95"
+            data-transition-enter-end="transform opacity-100 scale-100"
+            data-transition-leave="transition ease-in duration-75"
+            data-transition-leave-start="transform opacity-100 scale-100"
+            data-transition-leave-end="transform opacity-0 scale-95"
+            class="{{ _alert_dialog_open ? '' : 'hidden' }} bg-background fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg sm:max-w-lg"
+            data-alert-dialog-target="content"
+        >
+            {%- block content %}{% endblock -%}
+        </div>
+    </section>
+</dialog>

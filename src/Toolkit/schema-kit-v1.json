@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Kit schema",
+    "description": "Schema for describing a Kit for the Symfony UX Toolkit.",
+    "type": "object",
+    "required": ["name", "description", "license", "homepage"],
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "The name of the kit."
+        },
+        "description": {
+            "type": "string",
+            "description": "A brief description of the kit."
+        },
+        "license": {
+            "type": "string",
+            "description": "The license under which the kit is distributed."
+        },
+        "homepage": {
+            "type": "string",
+            "format": "uri",
+            "description": "The homepage URL for the kit, typically where users can find more information or documentation."
+        }
+    }
+}

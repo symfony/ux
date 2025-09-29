@@ -12,7 +12,7 @@
             </p>
         </div>
 
-        <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center flex-column-reverse flex-md-row">
             {% if command is not defined or command %}
                 <twig:TerminalCommand
                     aria-label="Composer command to install {{ package.humanName }}"
@@ -22,7 +22,7 @@
             {% endif %}
 
             <twig:DocsLink
-                class="ms-3"
+                class="ms-md-3 align-self-center"
                 size="sm"
                 title="Read the docs"
                 url="{{ package.officialDocsUrl }}"

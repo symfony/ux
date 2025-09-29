@@ -14,16 +14,22 @@ namespace Symfony\UX\Toolkit\Tests\Functional;
 use Spatie\Snapshots\Drivers\HtmlDriver;
 use Spatie\Snapshots\MatchesSnapshots;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\Finder\Finder;
-use Symfony\UX\Toolkit\Asset\Component;
 use Symfony\UX\Toolkit\Kit\Kit;
+use Symfony\UX\Toolkit\Kit\KitContextRunner;
 use Symfony\UX\Toolkit\Kit\KitFactory;
+use Symfony\UX\Toolkit\Kit\KitSynchronizer;
+use Symfony\UX\Toolkit\Recipe\Recipe;
+use Symfony\UX\Toolkit\Recipe\RecipeSynchronizer;
+use Symfony\UX\Toolkit\Recipe\RecipeType;
 use Symfony\UX\Toolkit\Registry\LocalRegistry;
+use Symfony\UX\Toolkit\Tests\TestHelperTrait;
 
 class ComponentsRenderingTest extends WebTestCase
 {
     use MatchesSnapshots;
+    use TestHelperTrait;
 
     private const KITS_DIR = __DIR__.'/../../kits';
 
@@ -32,20 +38,23 @@ class ComponentsRenderingTest extends WebTestCase
      */
     public static function provideTestComponentRendering(): iterable
     {
+        $filesystem = new Filesystem();
+        $kitSynchronizer = new KitSynchronizer($filesystem, new RecipeSynchronizer());
+
         foreach (LocalRegistry::getAvailableKitsName() as $kitName) {
-            $kitDir = Path::join(__DIR__, '../../kits', $kitName, 'docs/components');
-            $docsFinder = (new Finder())->files()->name('*.md')->in($kitDir)->depth(0);
+            $kit = self::createLocalKit($kitName);
+            $kitSynchronizer->synchronize($kit);
 
-            foreach ($docsFinder as $docFile) {
-                $componentName = $docFile->getFilenameWithoutExtension();
+            foreach ($kit->getRecipes(RecipeType::Component) as $recipe) {
+                $examplesFilePath = Path::join($recipe->absolutePath, 'EXAMPLES.md');
 
-                $codeBlockMatchesResult = preg_match_all('/```twig.*?\n(?P<code>.+?)```/s', $docFile->getContents(), $codeBlockMatches);
+                $codeBlockMatchesResult = preg_match_all('/```twig.*?\n(?P<code>.+?)```/s', file_get_contents($examplesFilePath), $codeBlockMatches);
                 if (false === $codeBlockMatchesResult || 0 === $codeBlockMatchesResult) {
-                    throw new \RuntimeException(\sprintf('No Twig code blocks found in file "%s"', $docFile->getRelativePathname()));
+                    throw new \RuntimeException(\sprintf('No Twig code blocks found in file "%s"', $examplesFilePath));
                 }
 
                 foreach ($codeBlockMatches['code'] as $i => $code) {
-                    yield \sprintf('Kit %s, component %s, code #%d', $kitName, $componentName, $i + 1) => [$kitName, $componentName, $code];
+                    yield \sprintf('Kit %s, component %s, code #%d', $kitName, $recipe->name, $i + 1) => [$kitName, $recipe->name, $code];
                 }
             }
         }
@@ -54,16 +63,17 @@ class ComponentsRenderingTest extends WebTestCase
     /**
      * @dataProvider provideTestComponentRendering
      */
-    public function testComponentRendering(string $kitName, string $componentName, string $code): void
+    public function testComponentRendering(string $kitName, string $recipeName, string $code)
     {
         $twig = self::getContainer()->get('twig');
+        /** @var KitContextRunner $kitContextRunner */
         $kitContextRunner = self::getContainer()->get('ux_toolkit.kit.kit_context_runner');
 
         $kit = $this->instantiateKit($kitName);
         $template = $twig->createTemplate($code);
         $renderedCode = $kitContextRunner->runForKit($kit, fn () => $template->render());
 
-        $this->assertCodeRenderedMatchesHtmlSnapshot($kit, $kit->getComponent($componentName), $code, $renderedCode);
+        $this->assertCodeRenderedMatchesHtmlSnapshot($kit, $kit->getRecipe($recipeName), $code, $renderedCode);
     }
 
     private function instantiateKit(string $kitName): Kit
@@ -75,20 +85,21 @@ class ComponentsRenderingTest extends WebTestCase
         return $kitFactory->createKitFromAbsolutePath(Path::join(__DIR__, '../../kits', $kitName));
     }
 
-    private function assertCodeRenderedMatchesHtmlSnapshot(Kit $kit, Component $component, string $code, string $renderedCode): void
+    private function assertCodeRenderedMatchesHtmlSnapshot(Kit $kit, Recipe $recipe, string $code, string $renderedCode): void
     {
-        $info = \sprintf(<<<HTML
-            <!--
-            - Kit: %s
-            - Component: %s
-            - Code:
-            ```twig
-            %s
-            ```
-            - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-            HTML,
-            $kit->name,
-            $component->name,
+        $info = \sprintf(
+            <<<HTML
+                <!--
+                - Kit: %s
+                - Component: %s
+                - Code:
+                ```twig
+                %s
+                ```
+                - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+                HTML,
+            $kit->manifest->name,
+            $recipe->manifest->name,
             trim($code)
         );
 

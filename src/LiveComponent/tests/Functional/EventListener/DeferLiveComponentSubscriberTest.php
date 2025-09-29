@@ -20,7 +20,7 @@ final class DeferLiveComponentSubscriberTest extends KernelTestCase
     use HasBrowser;
     use LiveComponentTestHelper;
 
-    public function testItSetsDeferredTemplateIfLiveIdNotPassed(): void
+    public function testItSetsDeferredTemplateIfLiveIdNotPassed()
     {
         $div = $this->browser()
             ->visit('/render-template/render_deferred_component')
@@ -48,7 +48,7 @@ final class DeferLiveComponentSubscriberTest extends KernelTestCase
         $this->assertSame('Long awaited data', $div->html());
     }
 
-    public function testItIncludesGivenTemplateWhileLoadingDeferredComponent(): void
+    public function testItIncludesGivenTemplateWhileLoadingDeferredComponent()
     {
         $div = $this->browser()
             ->visit('/render-template/render_deferred_component_with_template')
@@ -75,7 +75,7 @@ final class DeferLiveComponentSubscriberTest extends KernelTestCase
         $this->assertStringContainsString('Long awaited data', $div->html());
     }
 
-    public function testItIncludesComponentTemplateBlockAsPlaceholder(): void
+    public function testItIncludesComponentTemplateBlockAsPlaceholder()
     {
         $div = $this->browser()
             ->visit('/render-template/render_deferred_component_with_placeholder')
@@ -86,7 +86,7 @@ final class DeferLiveComponentSubscriberTest extends KernelTestCase
         $this->assertSame('<span class="loading-row"></span><span class="loading-row"></span>', trim($div->html()));
     }
 
-    public function testItDoesNotIncludesPlaceholderWhenRendered(): void
+    public function testItDoesNotIncludesPlaceholderWhenRendered()
     {
         $div = $this->browser()
             ->visit('/render-template/render_component_with_placeholder')
@@ -96,7 +96,7 @@ final class DeferLiveComponentSubscriberTest extends KernelTestCase
         $this->assertStringNotContainsString('<span class="loading-row">', $div->html());
     }
 
-    public function testItAllowsToSetCustomLoadingHtmlTag(): void
+    public function testItAllowsToSetCustomLoadingHtmlTag()
     {
         $crawler = $this->browser()
             ->visit('/render-template/render_deferred_component_with_li_tag')
@@ -108,7 +108,7 @@ final class DeferLiveComponentSubscriberTest extends KernelTestCase
         $this->assertSame(1, $crawler->filter('li')->count());
     }
 
-    public function testLazyComponentIsNotRendered(): void
+    public function testLazyComponentIsNotRendered()
     {
         $crawler = $this->browser()
             ->visit('/render-template/render_lazy_component')
@@ -125,7 +125,7 @@ final class DeferLiveComponentSubscriberTest extends KernelTestCase
     /**
      * @dataProvider provideLoadingValues
      */
-    public function testLazyComponentRenderingDependsOnLazyValue(mixed $lazy, bool $isRendered): void
+    public function testLazyComponentRenderingDependsOnLazyValue(mixed $lazy, bool $isRendered)
     {
         $crawler = $this->browser()
             ->visit('/render-template/render_lazy_component_with_value?loading='.$lazy)
@@ -144,7 +144,7 @@ final class DeferLiveComponentSubscriberTest extends KernelTestCase
         ];
     }
 
-    public function testLazyComponentIsRenderedLaterWithInitialData(): void
+    public function testLazyComponentIsRenderedLaterWithInitialData()
     {
         $crawler = $this->browser()
             ->visit('/render-template/render_lazy_component')
@@ -171,7 +171,7 @@ final class DeferLiveComponentSubscriberTest extends KernelTestCase
         $browser->assertElementAttributeContains('#count', 'value', '7');
     }
 
-    public function testSubscriberDoesNotHandleTwigComponent(): void
+    public function testSubscriberDoesNotHandleTwigComponent()
     {
         $browser = $this->browser()
             ->visit('/render-template/render_lazy_twig_component')

@@ -21,7 +21,7 @@ final class IconsTest extends KernelTestCase
 {
     use HasBrowser;
 
-    public function testCanViewIconFromHomepage(): void
+    public function testCanViewIconFromHomepage()
     {
         $this->browser()
             ->visit('/')
@@ -34,7 +34,7 @@ final class IconsTest extends KernelTestCase
         ;
     }
 
-    public function testCanViewIconIndex(): void
+    public function testCanViewIconIndex()
     {
         $this->browser()
             ->visit('/icons')

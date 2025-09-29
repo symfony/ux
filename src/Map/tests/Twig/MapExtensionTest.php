@@ -30,7 +30,7 @@ class MapExtensionTest extends KernelTestCase
         return TwigAppKernel::class;
     }
 
-    public function testExtensionIsRegistered(): void
+    public function testExtensionIsRegistered()
     {
         /** @var Environment $twig */
         $twig = self::getContainer()->get('twig');
@@ -39,7 +39,7 @@ class MapExtensionTest extends KernelTestCase
         $this->assertInstanceOf(MapExtension::class, $twig->getExtension(MapExtension::class));
     }
 
-    public function testRuntimeIsRegistered(): void
+    public function testRuntimeIsRegistered()
     {
         /** @var Environment $twig */
         $twig = self::getContainer()->get('twig');
@@ -47,7 +47,7 @@ class MapExtensionTest extends KernelTestCase
         $this->assertInstanceOf(MapRuntime::class, $twig->getRuntime(MapRuntime::class));
     }
 
-    public function testMapFunctionWithArray(): void
+    public function testMapFunctionWithArray()
     {
         $map = (new Map())
             ->center(new Point(latitude: 5, longitude: 10))

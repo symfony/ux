@@ -34,7 +34,7 @@ class TwigAppKernel extends Kernel
         return [new FrameworkBundle(), new TwigBundle(), new CropperjsBundle()];
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) {
             $frameworkConfig = [
@@ -45,14 +45,16 @@ class TwigAppKernel extends Kernel
                 'validation' => [
                     'email_validation_mode' => 'html5',
                 ],
+                ...(self::VERSION_ID >= 60200 ? [
+                    'handle_all_throwables' => true,
+                ] : []),
             ];
 
-            if (self::VERSION_ID >= 60200) {
-                $frameworkConfig['handle_all_throwables'] = true;
-            }
-
             $container->loadFromExtension('framework', $frameworkConfig);
-            $container->loadFromExtension('twig', ['default_path' => __DIR__.'/templates', 'strict_variables' => true, 'exception_controller' => null]);
+            $container->loadFromExtension('twig', [
+                'default_path' => __DIR__.'/templates',
+                'strict_variables' => true,
+            ]);
 
             // create a public alias - FormFactoryInterface is removed otherwise
             $container->setAlias('public_form_factory', new Alias(FormFactoryInterface::class, true));

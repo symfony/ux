@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% set example = app.request.attributes.get('_example') %}
+
+{% block title %}
+    {{ example.uxPackage.value }}: {{ example.name }}
+{% endblock %}
+
+{% block navbar_brand_after %}
+   <div class="navbar-collapse">
+       <span class="navbar-text">{{ example.uxPackage.value }}</span>
+   </div>
+{% endblock %}
+
+{% block main %}
+    <div class="container mt-4">
+        <h1>{{ example.name }}</h1>
+        <p>{{ example.description }}</p>
+
+        {% block example %}{% endblock %}
+    </div>
+{% endblock %}

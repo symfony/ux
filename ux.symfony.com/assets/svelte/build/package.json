@@ -2,6 +2,7 @@
     "devDependencies": {
         "@babel/cli": "^7.25.6",
         "@babel/core": "^7.25.2",
+        "tinyglobby": "^0.2.14",
         "svelte": "^3.59.1"
     },
     "license": "MIT",

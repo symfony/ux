@@ -151,7 +151,7 @@ final class UxControllersTwigRuntime implements RuntimeExtensionInterface
 
     private function getJsDelivrUrl(string $package, ?string $version, string $file): string
     {
-        $version = $version ?? 'latest';
+        $version ??= 'latest';
         $package = str_replace('@', '', $package);
 
         return \sprintf('https://cdn.jsdelivr.net/npm/%s@%s/%s', $package, $version, $file);

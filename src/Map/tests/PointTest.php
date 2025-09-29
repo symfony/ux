@@ -28,7 +28,7 @@ class PointTest extends TestCase
     /**
      * @dataProvider provideInvalidPoint
      */
-    public function testInvalidPoint(float $latitude, float $longitude, string $expectedExceptionMessage): void
+    public function testInvalidPoint(float $latitude, float $longitude, string $expectedExceptionMessage)
     {
         self::expectException(InvalidArgumentException::class);
         self::expectExceptionMessage($expectedExceptionMessage);
@@ -36,21 +36,21 @@ class PointTest extends TestCase
         new Point($latitude, $longitude);
     }
 
-    public function testGetLatitude(): void
+    public function testGetLatitude()
     {
         $point = new Point(48.8566, 2.3533);
 
         self::assertSame(48.8566, $point->getLatitude());
     }
 
-    public function testGetLongitude(): void
+    public function testGetLongitude()
     {
         $point = new Point(48.8566, 2.3533);
 
         self::assertSame(2.3533, $point->getLongitude());
     }
 
-    public function testToArray(): void
+    public function testToArray()
     {
         $point = new Point(48.8566, 2.3533);
 

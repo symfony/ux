@@ -124,10 +124,10 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
         $isDebugString = $this->isDebug ? 'true' : 'false';
 
         return <<<EOF
-        $importCode
-        export const eagerControllers = $eagerControllersJson;
-        export const lazyControllers = $lazyControllersExpression;
-        export const isApplicationDebug = $isDebugString;
-        EOF;
+            $importCode
+            export const eagerControllers = $eagerControllersJson;
+            export const lazyControllers = $lazyControllersExpression;
+            export const isApplicationDebug = $isDebugString;
+            EOF;
     }
 }

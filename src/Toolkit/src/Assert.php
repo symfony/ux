@@ -56,10 +56,18 @@ final class Assert
         }
     }
 
-    public static function stimulusControllerName(string $name): void
+    /**
+     * Assert that the NPM package name is valid (ex: "react", "@hotwired/stimulus", etc.).
+     *
+     * @param non-empty-string $name
+     *
+     * @throws \InvalidArgumentException if the NPM package name is invalid
+     */
+    public static function npmPackageName(string $name): void
     {
-        if (1 !== preg_match('/^[a-z][a-z0-9-]*[a-z0-9]$/', $name)) {
-            throw new \InvalidArgumentException(\sprintf('Invalid Stimulus controller name "%s".', $name));
+        // Taken from https://github.com/dword-design/package-name-regex/blob/master/src/index.ts
+        if (1 !== preg_match('/^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/', $name)) {
+            throw new \InvalidArgumentException(\sprintf('Invalid NPM package name "%s".', $name));
         }
     }
 }

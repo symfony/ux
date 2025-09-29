@@ -22,7 +22,7 @@ final class TurboStreamListenRendererTest extends KernelTestCase
      *
      * @param array<mixed> $context
      */
-    public function testRenderTurboStreamListen(string $template, array $context, string $expectedResult): void
+    public function testRenderTurboStreamListen(string $template, array $context, string $expectedResult)
     {
         $twig = self::getContainer()->get('twig');
         self::assertInstanceOf(\Twig\Environment::class, $twig);

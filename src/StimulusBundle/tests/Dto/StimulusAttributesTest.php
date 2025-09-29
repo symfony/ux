@@ -25,21 +25,21 @@ final class StimulusAttributesTest extends TestCase
         $this->stimulusAttributes = new StimulusAttributes(new Environment(new ArrayLoader()));
     }
 
-    public function testAddAction(): void
+    public function testAddAction()
     {
         $this->stimulusAttributes->addAction('foo', 'bar', 'baz', ['qux' => '"']);
         $attributesHtml = (string) $this->stimulusAttributes;
         self::assertSame('data-action="baz->foo#bar" data-foo-qux-param="&quot;"', $attributesHtml);
     }
 
-    public function testAddActionToArrayNoEscapingAttributeValues(): void
+    public function testAddActionToArrayNoEscapingAttributeValues()
     {
         $this->stimulusAttributes->addAction('foo', 'bar', 'baz', ['qux' => '"']);
         $attributesArray = $this->stimulusAttributes->toArray();
         self::assertSame(['data-action' => 'baz->foo#bar', 'data-foo-qux-param' => '"'], $attributesArray);
     }
 
-    public function testAddActionWithMultiple(): void
+    public function testAddActionWithMultiple()
     {
         $this->stimulusAttributes->addAction('my-controller', 'onClick');
         $this->assertSame('data-action="my-controller#onClick"', (string) $this->stimulusAttributes);
@@ -52,7 +52,7 @@ final class StimulusAttributesTest extends TestCase
         );
     }
 
-    public function testAddControllerToStringEscapingAttributeValues(): void
+    public function testAddControllerToStringEscapingAttributeValues()
     {
         $this->stimulusAttributes->addController('foo', ['bar' => '"'], ['baz' => '"']);
         $attributesHtml = (string) $this->stimulusAttributes;
@@ -64,7 +64,7 @@ final class StimulusAttributesTest extends TestCase
         );
     }
 
-    public function testAddControllerToArrayNoEscapingAttributeValues(): void
+    public function testAddControllerToArrayNoEscapingAttributeValues()
     {
         $this->stimulusAttributes->addController('foo', ['bar' => '"'], ['baz' => '"']);
         $attributesArray = $this->stimulusAttributes->toArray();
@@ -101,21 +101,21 @@ final class StimulusAttributesTest extends TestCase
         );
     }
 
-    public function testAddTargetToStringEscapingAttributeValues(): void
+    public function testAddTargetToStringEscapingAttributeValues()
     {
         $this->stimulusAttributes->addTarget('foo', '"');
         $attributesHtml = (string) $this->stimulusAttributes;
         self::assertSame('data-foo-target="&quot;"', $attributesHtml);
     }
 
-    public function testAddTargetToArrayNoEscapingAttributeValues(): void
+    public function testAddTargetToArrayNoEscapingAttributeValues()
     {
         $this->stimulusAttributes->addTarget('foo', '"');
         $attributesArray = $this->stimulusAttributes->toArray();
         self::assertSame(['data-foo-target' => '"'], $attributesArray);
     }
 
-    public function testAddTargetWithMultiple(): void
+    public function testAddTargetWithMultiple()
     {
         $this->stimulusAttributes->addTarget('my-controller', 'myTarget');
         $this->assertSame('data-my-controller-target="myTarget"', (string) $this->stimulusAttributes);
@@ -152,7 +152,7 @@ final class StimulusAttributesTest extends TestCase
     /**
      * @dataProvider provideAddComplexActionData
      */
-    public function testAddComplexAction(string $controllerName, string $actionName, ?string $eventName, string $expectedAction): void
+    public function testAddComplexAction(string $controllerName, string $actionName, ?string $eventName, string $expectedAction)
     {
         $this->stimulusAttributes->addAction($controllerName, $actionName, $eventName);
         $attributesHtml = (string) $this->stimulusAttributes;

@@ -18,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  */
 final class LiveComponentExtensionTest extends KernelTestCase
 {
-    public function testGetComponentUrl(): void
+    public function testGetComponentUrl()
     {
         $rendered = self::getContainer()->get('twig')->render('component_url.html.twig', [
             'date' => new \DateTime('2022-10-06-0'),

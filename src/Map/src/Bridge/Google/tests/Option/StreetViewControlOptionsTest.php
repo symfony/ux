@@ -17,7 +17,7 @@ use Symfony\UX\Map\Bridge\Google\Option\StreetViewControlOptions;
 
 class StreetViewControlOptionsTest extends TestCase
 {
-    public function testToArray(): void
+    public function testToArray()
     {
         $options = new StreetViewControlOptions(
             position: ControlPosition::INLINE_END_BLOCK_CENTER

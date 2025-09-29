@@ -21,7 +21,7 @@ final class WarmCacheCommandTest extends KernelTestCase
 {
     use InteractsWithConsole;
 
-    public function testCanWarmCache(): void
+    public function testCanWarmCache()
     {
         $this->executeConsoleCommand('ux:icons:warm-cache -v')
             ->assertSuccessful()

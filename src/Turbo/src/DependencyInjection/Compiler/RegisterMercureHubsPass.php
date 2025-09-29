@@ -25,7 +25,7 @@ use Symfony\UX\Turbo\Bridge\Mercure\TurboStreamListenRenderer;
  */
 final class RegisterMercureHubsPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         foreach ($container->findTaggedServiceIds('mercure.hub') as $hubId => $tags) {
             $name = str_replace('mercure.hub.', '', $hubId);

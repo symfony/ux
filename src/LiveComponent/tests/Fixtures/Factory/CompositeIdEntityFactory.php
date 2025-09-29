@@ -12,12 +12,12 @@
 namespace Symfony\UX\LiveComponent\Tests\Fixtures\Factory;
 
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\CompositeIdEntity;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 /**
- * @extends PersistentProxyObjectFactory<CompositeIdEntity>
+ * @extends PersistentObjectFactory<CompositeIdEntity>
  */
-class CompositeIdEntityFactory extends PersistentProxyObjectFactory
+class CompositeIdEntityFactory extends PersistentObjectFactory
 {
     public static function class(): string
     {

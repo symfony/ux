@@ -157,7 +157,7 @@ class AutocompleteFormRenderingTest extends KernelTestCase
         ;
     }
 
-    public function testItReturnsErrorWhenSendingMalformedExtraOptions(): void
+    public function testItReturnsErrorWhenSendingMalformedExtraOptions()
     {
         $extraOptionsWithoutChecksum = $this->encodeData(['foo' => 'bar']);
         $extraOptionsWithInvalidChecksum = $this->encodeData(['foo' => 'bar', '@checksum' => 'invalid']);

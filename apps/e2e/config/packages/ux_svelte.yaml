@@ -1,0 +1,2 @@
+svelte:
+    controllers_path: '%kernel.project_dir%/assets/svelte/build/controllers'

@@ -2,15 +2,15 @@ import type { BackendAction, BackendInterface } from '../Backend/Backend';
 import type BackendRequest from '../Backend/BackendRequest';
 import BackendResponse from '../Backend/BackendResponse';
 import { findComponents, registerComponent, unregisterComponent } from '../ComponentRegistry';
-import HookManager from '../HookManager';
-import ExternalMutationTracker from '../Rendering/ExternalMutationTracker';
 import { elementBelongsToThisComponent, getValueFromElement, htmlToElement } from '../dom_utils';
+import HookManager from '../HookManager';
 import { executeMorphdom } from '../morphdom';
+import ExternalMutationTracker from '../Rendering/ExternalMutationTracker';
 import { normalizeModelName } from '../string_utils';
 import type { ElementDriver } from './ElementDriver';
+import type { PluginInterface } from './plugins/PluginInterface';
 import UnsyncedInputsTracker from './UnsyncedInputsTracker';
 import ValueStore from './ValueStore';
-import type { PluginInterface } from './plugins/PluginInterface';
 
 declare const Turbo: any;
 
@@ -328,6 +328,14 @@ export default class Component {
             }
 
             this.processRerender(html, backendResponse);
+            const liveUrl = backendResponse.getLiveUrl();
+            if (liveUrl) {
+                history.replaceState(
+                    history.state,
+                    '',
+                    new URL(liveUrl + window.location.hash, window.location.origin)
+                );
+            }
 
             // finally resolve this promise
             this.backendRequest = null;
@@ -579,7 +587,6 @@ export function proxifyComponent(component: Component): Component {
 
         set(target: Component, property: string, value: any): boolean {
             if (property in target) {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore Ignoring potentially setting private properties
                 target[property as keyof typeof target] = value;
 

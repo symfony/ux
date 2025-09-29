@@ -44,7 +44,7 @@ class ToolkitController extends AbstractController
                         ... and a PHP framework for web projects
                     </twig:Card:Content>
                     <twig:Card:Footer>
-                        <twig:Button as="a" href="https://symfony.com">
+                        <twig:Button as="a" href="https://symfony.com" target="_blank">
                             Visit symfony.com
                         </twig:Button>
                     </twig:Card:Footer>

@@ -39,7 +39,7 @@ final class TemplateCacheWarmerTest extends TestCase
         );
     }
 
-    public function testWarmUpCreatesCacheFile(): void
+    public function testWarmUpCreatesCacheFile()
     {
         $this->assertFileDoesNotExist($this->cacheFile);
 
@@ -48,7 +48,7 @@ final class TemplateCacheWarmerTest extends TestCase
         $this->assertFileExists($this->cacheFile);
     }
 
-    public function testWarmUpCreatesCorrectCacheContent(): void
+    public function testWarmUpCreatesCorrectCacheContent()
     {
         $this->templateCacheWarmer->warmUp($this->cacheDir);
         $adapter = new PhpArrayAdapter($this->cacheFile, new NullAdapter());
@@ -63,7 +63,7 @@ final class TemplateCacheWarmerTest extends TestCase
         );
     }
 
-    public function testWarmUpCreatesReproductibleTemplateMap(): void
+    public function testWarmUpCreatesReproductibleTemplateMap()
     {
         $this->templateCacheWarmer->warmUp($this->cacheDir);
         $adapter = new PhpArrayAdapter($this->cacheFile, new NullAdapter());

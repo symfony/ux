@@ -13,7 +13,6 @@ namespace Symfony\UX\Map;
 
 use Symfony\UX\Map\Exception\InvalidArgumentException;
 use Symfony\UX\Map\Icon\Icon;
-use Symfony\UX\Map\Icon\IconType;
 
 /**
  * Represents a marker on a map.
@@ -23,8 +22,9 @@ use Symfony\UX\Map\Icon\IconType;
 final class Marker implements Element
 {
     /**
-     * @param array<string, mixed> $extra Extra data, can be used by the developer to store additional information and
-     *                                    use them later JavaScript side
+     * @param array<string, mixed> $extra Extra data forwarded to the JavaScript side. It can be used in your custom
+     *                                    Stimulus controller to benefit from greater flexibility and customization.
+     *                                    These data must be serializable to JSON. These data are not used by UX Map.
      */
     public function __construct(
         public readonly Point $position,
