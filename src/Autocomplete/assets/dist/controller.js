@@ -88,7 +88,13 @@ var controller_default = class extends Controller {
     this.resetTomSelect();
   }
   getMaxOptions() {
-    return this.selectElement ? this.selectElement.options.length : 50;
+    if (this.maxOptionsValue) {
+      return this.maxOptionsValue;
+    }
+    if (this.selectElement) {
+      return this.selectElement.options.length;
+    }
+    return 50;
   }
   /**
    * Returns the element, but only if it's a select element.
@@ -342,7 +348,7 @@ createAutocompleteWithRemoteData_fn = function(autocompleteEndpointUrl, minChara
       }
       return query.length >= 3;
     },
-    maxOptions: null,
+    maxOptions: this.getMaxOptions(),
     optgroupField: "group_by",
     // avoid extra filtering after results are returned
     score: (search) => (item) => 1,
@@ -399,6 +405,7 @@ createTomSelect_fn = function(options) {
 };
 controller_default.values = {
   url: String,
+  maxOptions: Number,
   optionsAsHtml: Boolean,
   loadingMoreText: String,
   noResultsFoundText: String,

@@ -25,6 +25,7 @@ interface OptionDataStructure {
 export default class extends Controller {
     static values = {
         url: String,
+        maxOptions: Number,
         optionsAsHtml: Boolean,
         loadingMoreText: String,
         noResultsFoundText: String,
@@ -36,6 +37,7 @@ export default class extends Controller {
     };
 
     declare readonly urlValue: string;
+    declare readonly maxOptionsValue: number;
     declare readonly optionsAsHtmlValue: boolean;
     declare readonly loadingMoreTextValue: string;
     declare readonly noMoreResultsTextValue: string;
@@ -292,7 +294,7 @@ export default class extends Controller {
 
                 return query.length >= 3;
             },
-            maxOptions: null,
+            maxOptions: this.getMaxOptions(),
             optgroupField: 'group_by',
             // avoid extra filtering after results are returned
             score: (search: string) => (item: any) => 1,
@@ -319,7 +321,15 @@ export default class extends Controller {
     }
 
     private getMaxOptions(): number {
-        return this.selectElement ? this.selectElement.options.length : 50;
+        if (this.maxOptionsValue) {
+            return this.maxOptionsValue;
+        }
+
+        if (this.selectElement) {
+            return this.selectElement.options.length;
+        }
+
+        return 50;
     }
 
     #stripTags(string: string): string {

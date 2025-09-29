@@ -216,6 +216,9 @@ e.g. ``FoodAutocompleteField`` from above):
     an autocomplete-Ajax endpoint (e.g. for a custom ``ChoiceType``), then set this
     to change the field into an AJAX-powered select.
 
+``autocomplete_max_options`` (default: ``50``)
+    Limits the maximum number of results displayed in the autocomplete dropdown at once.
+
 ``loading_more_text`` (default: 'Loading more results...')
     Rendered at the bottom of the list while fetching more results. This message is
     automatically translated using the ``AutocompleteBundle`` domain.

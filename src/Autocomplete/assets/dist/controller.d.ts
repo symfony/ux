@@ -12,6 +12,7 @@ declare class export_default extends Controller {
     #private;
     static values: {
         url: StringConstructor;
+        maxOptions: NumberConstructor;
         optionsAsHtml: BooleanConstructor;
         loadingMoreText: StringConstructor;
         noResultsFoundText: StringConstructor;
@@ -22,6 +23,7 @@ declare class export_default extends Controller {
         preload: StringConstructor;
     };
     readonly urlValue: string;
+    readonly maxOptionsValue: number;
     readonly optionsAsHtmlValue: boolean;
     readonly loadingMoreTextValue: string;
     readonly noMoreResultsTextValue: string;

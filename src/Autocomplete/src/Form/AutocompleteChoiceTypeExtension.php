@@ -64,6 +64,10 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             $values['url'] = $form->getConfig()->getAttribute('autocomplete_url');
         }
 
+        if ($options['autocomplete_max_options']) {
+            $values['max-options'] = $options['autocomplete_max_options'];
+        }
+
         if ($options['options_as_html']) {
             $values['options-as-html'] = '';
         }
@@ -142,6 +146,7 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
         $resolver->setDefaults([
             'autocomplete' => false,
             'autocomplete_url' => null,
+            'autocomplete_max_options' => 50,
             'tom_select_options' => [],
             'options_as_html' => false,
             'allow_options_create' => false,
