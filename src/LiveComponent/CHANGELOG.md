@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.7
+
+- Add a `$request` argument to `ComponentWithFormTrait::submitForm()`, to submit the files uploaded with the request like `handleRequest()` does in a controller
+
 ## 3.6
 
 - Export the `ComponentHooks` TypeScript type, to type hook callbacks defined outside of `Component.on()`

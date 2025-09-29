@@ -15,6 +15,7 @@ use Symfony\Component\Form\ChoiceList\View\ChoiceGroupView;
 use Symfony\Component\Form\ClearableErrorsInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Contracts\Translation\TranslatableInterface;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -147,7 +148,12 @@ trait ComponentWithFormTrait
         }
     }
 
-    private function submitForm(bool $validateAll = true): void
+    /**
+     * Submits the form with its current values.
+     *
+     * Pass the current request to also submit the files uploaded with it, like handleRequest() does in a controller.
+     */
+    private function submitForm(bool $validateAll = true, ?Request $request = null): void
     {
         if (null !== $this->formView) {
             // Two scenarios can cause this:
@@ -160,7 +166,19 @@ trait ComponentWithFormTrait
         }
 
         $form = $this->getForm();
-        $form->submit($this->formValues);
+        $values = $this->formValues;
+
+        if (null !== $request) {
+            $name = $form->getName();
+            $files = '' === $name ? $request->files->all() : ($request->files->all()[$name] ?? null);
+
+            // file inputs also send their value (e.g. "C:\fakepath\file.txt") as a model, so files must take precedence
+            if (\is_array($files)) {
+                $values = array_replace_recursive($values, $files);
+            }
+        }
+
+        $form->submit($values);
         $this->shouldAutoSubmitForm = false;
 
         if ($validateAll) {

@@ -1512,6 +1512,8 @@ The files will be available in a regular ``$request->files`` files bag::
         }
     }
 
+To submit the files with a Symfony form, see :ref:`form-file-uploads`.
+
 .. tip::
 
     Remember that in order to send multiple files from a single input you
@@ -1834,6 +1836,60 @@ Next, tell the ``form`` element to use this action:
 Now, when the form is submitted, it will execute the ``save()`` method
 via Ajax. If the form fails validation, it will re-render with the
 errors. And if it's successful, it will redirect.
+
+.. _form-file-uploads:
+
+Uploading Files with a Form
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.7
+
+    The ``$request`` argument of ``submitForm()`` was added in LiveComponent 3.7.
+
+A form with ``FileType`` fields is submitted like in a controller.
+Send the files with the :ref:`files modifier <files>`, and pass the current request to ``submitForm()``.
+The uploaded files are then submitted with the other values, as ``$form->handleRequest($request)`` does in a controller::
+
+    // ...
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\UX\LiveComponent\Attribute\LiveAction;
+
+    class DocumentForm extends AbstractController
+    {
+        // ...
+
+        #[LiveAction]
+        public function save(Request $request)
+        {
+            // the first argument keeps its default value: validate the whole form
+            $this->submitForm(true, $request);
+
+            /** @var Document $document */
+            $document = $this->getForm()->getData();
+
+            // $document->file is an UploadedFile, like after handleRequest()
+            $document->file->move('/path/to/uploads');
+
+            // ...
+        }
+    }
+
+.. code-block:: twig
+
+    {# templates/components/DocumentForm.html.twig #}
+    {# ... #}
+
+    {{ form_start(form, {
+        attr: {
+            'data-action': 'live#action:prevent',
+            'data-live-action-param': 'files|save'
+        }
+    }) }}
+
+File constraints and upload errors (for example, a file larger than ``upload_max_filesize``) are reported on the field, like any other validation error.
+
+Files are only sent with an action that uses the ``files`` modifier.
+On the other requests, for example the re-render after a field changes, the file fields are submitted empty.
 
 Submitting with a Normal Symfony Controller
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
