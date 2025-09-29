@@ -87,11 +87,11 @@ var controller_default = class extends Controller {
   urlValueChanged() {
     this.resetTomSelect();
   }
-  getMaxOptions() {
+  getMaxOptions(hasRemoteData = false) {
     if (this.maxOptionsValue) {
       return this.maxOptionsValue;
     }
-    if (this.selectElement) {
+    if (!hasRemoteData && this.selectElement) {
       return this.selectElement.options.length;
     }
     return 50;
@@ -348,7 +348,7 @@ createAutocompleteWithRemoteData_fn = function(autocompleteEndpointUrl, minChara
       }
       return query.length >= 3;
     },
-    maxOptions: this.getMaxOptions(),
+    maxOptions: this.getMaxOptions(true),
     optgroupField: "group_by",
     // avoid extra filtering after results are returned
     score: (search) => (item) => 1,

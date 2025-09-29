@@ -294,7 +294,7 @@ export default class extends Controller {
 
                 return query.length >= 3;
             },
-            maxOptions: this.getMaxOptions(),
+            maxOptions: this.getMaxOptions(true),
             optgroupField: 'group_by',
             // avoid extra filtering after results are returned
             score: (search: string) => (item: any) => 1,
@@ -320,12 +320,12 @@ export default class extends Controller {
         return this.#createTomSelect(config);
     }
 
-    private getMaxOptions(): number {
+    private getMaxOptions(hasRemoteData: boolean = false): number {
         if (this.maxOptionsValue) {
             return this.maxOptionsValue;
         }
 
-        if (this.selectElement) {
+        if (!hasRemoteData && this.selectElement) {
             return this.selectElement.options.length;
         }
 
