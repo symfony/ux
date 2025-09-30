@@ -1,0 +1,24 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-09-24T20:14:41Z
+
+Thanks!
+
+Wondering if we should not remove this mention entirely ? Symfony 6.3 is not maintained anymore and i'm not sure this is usefull for anyone, but it adds "noise" for the other readers.. wdyt ?
+
+cc @Kocal
+
+---------------------------------------------------------------------------
+
+by quentinRogeret34 at 2025-09-24T20:53:46Z
+
+You're right, it does seem very tied to a specific version that shouldn’t be used anymore 🤔
+I can update my PR to remove this block if that makes more sense
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-09-24T21:51:49Z
+
+I suggest to keep it since we still maintain support for Symfony ^6.3.
+
+However in UX 3.0, we can remove the doc block and the `ux_controller_link_tags()` Twig function (that is already deprecated)
