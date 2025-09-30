@@ -36,12 +36,12 @@
         },
         "importmap": {
             "@hotwired/stimulus": "^3.0.0",
-            "@googlemaps/js-api-loader": "^1.16.6",
+            "@googlemaps/js-api-loader": "^2.0.0",
             "@symfony/ux-google-map": "path:%PACKAGE%/dist/map_controller.js"
         }
     },
     "peerDependencies": {
-        "@googlemaps/js-api-loader": "^1.16.6",
+        "@googlemaps/js-api-loader": "^2.0.0",
         "@hotwired/stimulus": "^3.0.0"
     },
     "peerDependenciesMeta": {
@@ -50,7 +50,7 @@
         }
     },
     "devDependencies": {
-        "@googlemaps/js-api-loader": "^1.16.6",
+        "@googlemaps/js-api-loader": "^2.0.0",
         "@hotwired/stimulus": "^3.0.0",
         "@testing-library/dom": "^10.4.0",
         "@testing-library/jest-dom": "^6.6.3",

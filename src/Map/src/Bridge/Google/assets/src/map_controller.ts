@@ -9,8 +9,8 @@
 
 /// <reference types="google.maps" />
 
-import type { LoaderOptions } from '@googlemaps/js-api-loader';
-import { Loader } from '@googlemaps/js-api-loader';
+import type { APIOptions } from '@googlemaps/js-api-loader';
+import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 import type {
     CircleDefinition,
     Icon,
@@ -39,8 +39,6 @@ type MapOptions = Pick<
     | 'fullscreenControlOptions'
 >;
 
-let _google: typeof google;
-
 // Loading the Google Maps API is an asynchronous operation, so we need to track the loading state to prevent race conditions.
 let _loading = false;
 let _loaded = false;
@@ -65,7 +63,10 @@ export default class extends AbstractMapController<
     google.maps.RectangleOptions,
     google.maps.Rectangle
 > {
-    declare providerOptionsValue: Pick<LoaderOptions, 'apiKey' | 'id' | 'language' | 'region' | 'nonce' | 'retries' | 'url' | 'version' | 'libraries'>;
+    declare providerOptionsValue: Pick<
+        APIOptions,
+        'key' | 'v' | 'language' | 'region' | 'libraries' | 'authReferrerPolicy' | 'mapIds' | 'channel' | 'solutionChannel'
+    >;
 
     declare map: google.maps.Map;
 
@@ -83,32 +84,13 @@ export default class extends AbstractMapController<
         }
 
         _loading = true;
-        _google = { maps: {} as typeof google.maps };
 
         let { libraries = [], ...loaderOptions } = this.providerOptionsValue;
 
-        const loader = new Loader(loaderOptions);
+        setOptions(loaderOptions);
 
-        // We could have used `loader.load()` to correctly load libraries, but this method is deprecated in favor of `loader.importLibrary()`.
-        // But `loader.importLibrary()` is not a 1-1 replacement for `loader.load()`, we need to re-build the `google.maps` object ourselves,
-        // see https://github.com/googlemaps/js-api-loader/issues/837 for more information.
         libraries = ['core', ...libraries.filter((library) => library !== 'core')]; // Ensure 'core' is loaded first
-        const librariesImplementations = await Promise.all(libraries.map((library) => loader.importLibrary(library)));
-        librariesImplementations.map((libraryImplementation, index) => {
-            if (typeof libraryImplementation !== 'object' || libraryImplementation === null) {
-                return;
-            }
-
-            const library = libraries[index];
-
-            // The following libraries are in a sub-namespace
-            if (['marker', 'places', 'geometry', 'journeySharing', 'drawing', 'visualization'].includes(library)) {
-                // @ts-ignore
-                _google.maps[library] = libraryImplementation as any;
-            } else {
-                _google.maps = { ..._google.maps, ...libraryImplementation };
-            }
-        });
+        await Promise.all(libraries.map((library) => importLibrary(library)));
 
         _loading = false;
         _loaded = true;
@@ -142,7 +124,7 @@ export default class extends AbstractMapController<
     }
 
     protected dispatchEvent(name: string, payload: Record<string, unknown> = {}): void {
-        payload.google = _google;
+        payload.google = google;
         this.dispatch(name, {
             prefix: 'ux:map',
             detail: payload,
@@ -158,7 +140,7 @@ export default class extends AbstractMapController<
         options.streetViewControl = typeof options.streetViewControlOptions !== 'undefined';
         options.fullscreenControl = typeof options.fullscreenControlOptions !== 'undefined';
 
-        return new _google.maps.Map(this.element, {
+        return new google.maps.Map(this.element, {
             center,
             zoom,
             minZoom,
@@ -175,7 +157,7 @@ export default class extends AbstractMapController<
     }): google.maps.marker.AdvancedMarkerElement {
         const { '@id': _id, position, title, infoWindow, icon, bridgeOptions = {} } = definition;
 
-        const marker = new _google.maps.marker.AdvancedMarkerElement({
+        const marker = new google.maps.marker.AdvancedMarkerElement({
             position,
             title,
             map: this.map,
@@ -208,7 +190,7 @@ export default class extends AbstractMapController<
     }): google.maps.Polygon {
         const { '@id': _id, points, infoWindow, bridgeOptions = {} } = definition;
 
-        const polygon = new _google.maps.Polygon({
+        const polygon = new google.maps.Polygon({
             paths: points,
             map: this.map,
             ...bridgeOptions,
@@ -232,7 +214,7 @@ export default class extends AbstractMapController<
     }): google.maps.Polyline {
         const { '@id': _id, points, infoWindow, bridgeOptions = {} } = definition;
 
-        const polyline = new _google.maps.Polyline({
+        const polyline = new google.maps.Polyline({
             path: points,
             map: this.map,
             ...bridgeOptions,
@@ -252,7 +234,7 @@ export default class extends AbstractMapController<
     protected doCreateCircle({ definition }: { definition: CircleDefinition<google.maps.CircleOptions, google.maps.InfoWindowOptions> }): google.maps.Circle {
         const { '@id': _id, center, radius, infoWindow, bridgeOptions = {} } = definition;
 
-        const circle = new _google.maps.Circle({
+        const circle = new google.maps.Circle({
             center,
             radius,
             map: this.map,
@@ -277,8 +259,8 @@ export default class extends AbstractMapController<
     }): google.maps.Rectangle {
         const { northEast, southWest, infoWindow, bridgeOptions = {} } = definition;
 
-        const rectangle = new _google.maps.Rectangle({
-            bounds: new _google.maps.LatLngBounds(southWest, northEast),
+        const rectangle = new google.maps.Rectangle({
+            bounds: new google.maps.LatLngBounds(southWest, northEast),
             map: this.map,
             ...bridgeOptions,
         });
@@ -325,7 +307,7 @@ export default class extends AbstractMapController<
             ...bridgeOptions,
         };
 
-        const infoWindow = new _google.maps.InfoWindow(infoWindowOptions);
+        const infoWindow = new google.maps.InfoWindow(infoWindowOptions);
 
         element.addListener('click', (event: google.maps.MapMouseEvent) => {
             if (autoClose) {
