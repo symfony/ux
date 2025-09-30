@@ -112,9 +112,31 @@ the size of all your icons from a single place.
 Icon Color
 ~~~~~~~~~~
 
-Typically, SVG icons use ``fill="currentColor"`` to inherit the color of the containing element.
-You can set the color in CSS on the container or directly on the SVG element/class.
+UX Icons renders SVG icons with ``fill="currentColor"`` (see the `default configuration`_).
 
+This means icons take their color from the CSS ``color`` property, which by default is inherited from the text color of
+the parent element.
+
+.. code-block:: html+twig
+
+    <a href="#" class="text-blue-500">
+        {# icon color: blue #}
+        {{ ux_icon('bi:star') }}
+    </a>
+
+You can set the icon's color using CSS classes, either on the parent container or directly on the icon:
+
+.. code-block:: html+twig
+
+    <div class="text-red-500">
+        {# Inherit color from container (red) #}
+        {{ ux_icon('warning') }}
+
+        {# Override parent with CSS class (blue) #}
+        {{ ux_icon('warning', { class: 'text-blue-500' }) }}
+    </div>
+
+To configure a default class for all icons across your application see the `default configuration`_.
 
 Icon Sets
 ~~~~~~~~~
@@ -674,3 +696,4 @@ Learn more
 .. _`Tabler Icons`: https://github.com/tabler/tabler-icons
 .. _`Creating and Using Templates`: https://symfony.com/doc/current/templates.html
 .. _`How to manage CSS and JavaScript assets in Symfony applications`: https://symfony.com/doc/current/frontend.html
+.. _`default configuration`: https://symfony.com/bundles/ux-icons/current/index.html#full-configuration
