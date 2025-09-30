@@ -1,0 +1,61 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-09-17T17:58:48Z
+
+This is also a massive BC break here, don't you think ? And losing the read-only side of thing ..
+
+DId you try simply setting the color on the icon ?
+
+---------------------------------------------------------------------------
+
+by StevenRenaux at 2025-09-18T07:46:49Z
+
+> This is also a massive BC break here, don't you think ? And losing the read-only side of thing ..
+>
+> DId you try simply setting the color on the icon ?
+
+@smnandre
+I know, and I agree. It was mainly to show where the problem lies. The documentation suggests this is possible, but it's not with this attribute (https://symfony.com/bundles/ux-icons/current/index.html#default-attributes).
+
+Looking at this again this morning, I just found that this is possible with the color attribute and is even perfect in this case.
+https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/color
+> The color attribute is used to provide a potential indirect value, currentColor, for the fill, stroke, stop-color, flood-color,
+> and lighting-color attributes.
+
+Perhaps the documentation should be modified accordingly, and mention that if you want to change the color, you can do it via CSS, as Iconify also mentions in its documentation.
+
+<img width="774" height="93" alt="image" src="https://github.com/user-attachments/assets/cc537a90-0f45-41db-9b7a-2a93eb469ca0" />
+
+```html
+{{ ux_icon('flowbite:clock-outline', {class: 'size-4 text-gray-500'}) }}
+```
+
+Or with this color attribute. And we ultimately avoid the current problem with the fill attribute.
+
+```html
+{{ ux_icon('flowbite:clock-outline', {class: 'size-4', color: 'gray'}) }}
+```
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by StevenRenaux at 2025-09-19T07:29:08Z
+
+Already noticed by another PR https://github.com/symfony/ux/pull/2671
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-09-20T01:20:13Z
+
+Very open if you want to open a PR on the documentation with clear and positive information about this
+
+(please do not only mention Tailwind that's the only thing I'm asking for haha)
+
+poke me if you need any guidance here :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-09-26T09:56:58Z
+
+(thank you @StevenRenaux ! 😃  )
