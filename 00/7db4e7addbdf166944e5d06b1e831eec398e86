@@ -1,0 +1,36 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-09-18T19:58:33Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+ℹ️ No difference in dist packagesFiles.
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by xDeSwa at 2025-09-27T11:13:54Z
+
+@Kocal | @smnandre
+URL change method moved before ReRender function.
+
+Since no backendResponse data changes are made within the ReRender function, changing the URL before the function makes sense. This will avoid any hitches to hook operations and ensure access to the correct URL within the hook.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-09-28T04:28:03Z
+
+Seems ok to me! Can you fix fabbot check ? (remove the merge commit and rebase on 2.x) .. or we won't be able to merge 😅
+
+---------------------------------------------------------------------------
+
+by xDeSwa at 2025-09-28T09:33:55Z
+
+@smnandre is it ok now? thanks
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-09-28T09:50:12Z
+
+Well, i do not see any red in the checks box so .. yeah 😄
