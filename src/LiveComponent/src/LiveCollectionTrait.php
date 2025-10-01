@@ -34,7 +34,7 @@ trait LiveCollectionTrait
         }
 
         $index = [] !== $data ? max(array_keys($data)) + 1 : 0;
-        $propertyAccessor->setValue($this->formValues, $propertyPath."[$index]", []);
+        $propertyAccessor->setValue($this->formValues, $propertyPath."[$index]", $this->setCollectionItemDefaultValue($propertyPath, $index));
     }
 
     #[LiveAction]
@@ -59,5 +59,10 @@ trait LiveCollectionTrait
         }
 
         return $propertyPath;
+    }
+
+    protected function setCollectionItemDefaultValue(string $propertyPath, int $index): iterable
+    {
+        return [];
     }
 }

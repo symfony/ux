@@ -73,6 +73,23 @@ final class LiveCollectionTraitTest extends TestCase
                 ],
             ],
         ];
+        yield 'named parent, default value' => [
+            [
+                'parentName' => [
+                    'collectionNameDefault' => null,
+                ],
+            ],
+            'parentName[collectionNameDefault]',
+            [
+                'parentName' => [
+                    'collectionNameDefault' => [
+                        0 => [
+                            'property' => 'value',
+                        ],
+                    ],
+                ],
+            ],
+        ];
         yield 'named parent, empty array value' => [
             [
                 'parentName' => [
@@ -220,6 +237,17 @@ final class LiveCollectionTraitTest extends TestCase
             protected function instantiateForm(): FormInterface
             {
                 return $this->theForm;
+            }
+
+            protected function setCollectionItemDefaultValue(string $propertyPath, int $index): iterable
+            {
+                if ('[collectionNameDefault]' === $propertyPath) {
+                    return [
+                        'property' => 'value',
+                    ];
+                }
+
+                return [];
             }
         };
         $component->formName = array_key_first($postedFormData);
