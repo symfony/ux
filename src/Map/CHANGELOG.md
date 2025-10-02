@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.31
+
+-  Add `fitBoundsToMarkers` parameter to `ux_map()` Twig function
+
 ## 2.30
 
 -  Ensure compatibility with PHP 8.5
