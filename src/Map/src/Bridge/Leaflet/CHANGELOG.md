@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.31
+
+-  Display a warning when trying to define `bridgeOptions.icon` for a `Marker` that already has an `Icon`
+
 ## 2.30
 
 -  Ensure compatibility with PHP 8.5
