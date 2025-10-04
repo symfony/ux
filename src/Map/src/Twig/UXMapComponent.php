@@ -33,6 +33,8 @@ final class UXMapComponent
 
     public ?Point $center;
 
+    public ?bool $fitBoundsToMarkers;
+
     /**
      * @var Marker[]
      */

@@ -8,6 +8,10 @@
 -  Remove option `title` from `Polygon`, `Polyline`, `Rectangle` and `Circle`, use `infoWindow` instead
 -  Remove property `rawOptions` from `ux:map:*:before-create` events, use `bridgeOptions` instead.
 
+## 2.31
+
+-  Add `fitBoundsToMarkers` parameter to `ux_map()` Twig function
+
 ## 2.30
 
 -  Ensure compatibility with PHP 8.5

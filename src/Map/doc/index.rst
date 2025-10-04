@@ -329,11 +329,16 @@ templates. The function accepts the same arguments as the ``Map`` class:
                 infoWindow: { content: 'Welcome to <b>New York</b>' }
             },
         ],
+        fitBoundsToMarkers: true,
         attributes: {
             class: 'foo',
             style: 'height: 800px; width: 100%; border: 4px solid red; margin-block: 10vh;',
         }
     ) }}
+
+.. versionadded:: 2.31
+
+    `fitBoundsToMarkers` option for the twig function is available since UX Map 2.31.
 
 Twig Component ``<twig:ux:map />``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -354,6 +359,7 @@ Alternatively, you can use the ``<twig:ux:map />`` component.
                 "infoWindow": {"content": "Welcome to <b>New York</b>"}
             }
         ]'
+        :fitBoundsToMarkers="true",
         class="foo"
         style="height: 800px; width: 100%; border: 4px solid red; margin-block: 10vh;"
     />
@@ -363,6 +369,10 @@ The ``<twig:ux:map />`` component requires the `Twig Component`_ package.
 .. code-block:: terminal
 
     $ composer require symfony/ux-twig-component
+
+.. versionadded:: 2.31
+
+    `fitBoundsToMarkers` option for the twig component is available since UX Map 2.31.
 
 Interact with the map
 ~~~~~~~~~~~~~~~~~~~~~

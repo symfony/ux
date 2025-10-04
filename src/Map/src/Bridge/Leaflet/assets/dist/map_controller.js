@@ -221,6 +221,9 @@ var map_controller_default = class extends abstract_map_controller_default {
       this.createInfoWindow({ definition: infoWindow, element: marker2 });
     }
     if (icon2) {
+      if (Object.prototype.hasOwnProperty.call(bridgeOptions, "icon")) {
+        console.warn('[Symfony UX Map] Defining "bridgeOptions.icon" for a marker with a custom icon is not supported and will be ignored.');
+      }
       this.doCreateIcon({ definition: icon2, element: marker2 });
     }
     return marker2;

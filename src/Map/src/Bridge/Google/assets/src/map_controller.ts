@@ -187,6 +187,10 @@ export default class extends AbstractMapController<
         }
 
         if (icon) {
+            if (Object.prototype.hasOwnProperty.call(bridgeOptions, 'content')) {
+                console.warn('[Symfony UX Map] Defining "bridgeOptions.content" for a marker with a custom icon is not supported and will be ignored.');
+            }
+
             this.doCreateIcon({ definition: icon, element: marker });
         }
 

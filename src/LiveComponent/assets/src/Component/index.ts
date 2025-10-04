@@ -327,7 +327,6 @@ export default class Component {
                 return response;
             }
 
-            this.processRerender(html, backendResponse);
             const liveUrl = backendResponse.getLiveUrl();
             if (liveUrl) {
                 history.replaceState(
@@ -336,6 +335,8 @@ export default class Component {
                     new URL(liveUrl + window.location.hash, window.location.origin)
                 );
             }
+
+            this.processRerender(html, backendResponse);
 
             // finally resolve this promise
             this.backendRequest = null;
