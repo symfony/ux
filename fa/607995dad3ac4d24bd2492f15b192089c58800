@@ -1,0 +1,55 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-10-01T14:50:49Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/ker0x/symfony-ux/tree/fix/issue-3116-bridge-options-icon/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/ker0x/symfony-ux/blob/fix/issue-3116-bridge-options-icon/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>13.49 kB</code>
+                    / <code>3.18 kB</code>
+                </td><td>
+                    <code>13.93 kB</code><sup>+3% 📈</sup>
+                    / <code>3.29 kB</code><sup>+3% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/ker0x/symfony-ux/tree/fix/issue-3116-bridge-options-icon/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/ker0x/symfony-ux/blob/fix/issue-3116-bridge-options-icon/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>13.27 kB</code>
+                    / <code>3.43 kB</code>
+                </td><td>
+                    <code>13.7 kB</code><sup>+3% 📈</sup>
+                    / <code>3.52 kB</code><sup>+3% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-10-01T22:02:05Z
+
+Following https://github.com/symfony/ux/issues/3116#issuecomment-3358311885, I suggest instead log a warning message if we saw that the user tried to create an icon from the JavaScript side (through `bridgeOptions`) when `Marker#$icon` is not null
+
+---------------------------------------------------------------------------
+
+by ker0x at 2025-10-02T09:54:36Z
+
+I updated the PR to trigger a warning, as you suggested 👍!
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-10-03T02:02:35Z
+
+Should this be done on the PHP part ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-10-03T06:21:35Z
+
+No because we want to verify that the user, through a Stimulus Controller, tried to add an icon by itself with `bridgeOptions`
