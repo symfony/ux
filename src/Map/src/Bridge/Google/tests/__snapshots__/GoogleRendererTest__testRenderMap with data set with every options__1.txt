@@ -2,7 +2,7 @@
      Run "php vendor/bin/phpunit -d --update-snapshots" to update the snapshot. -->
 <div
   data-controller="symfony--ux-google-map--map"
-  data-symfony--ux-google-map--map-provider-options-value="{&quot;id&quot;:&quot;gmap&quot;,&quot;language&quot;:&quot;fr&quot;,&quot;region&quot;:&quot;FR&quot;,&quot;nonce&quot;:&quot;abcd&quot;,&quot;retries&quot;:10,&quot;url&quot;:&quot;https:\/\/maps.googleapis.com\/maps\/api\/js&quot;,&quot;version&quot;:&quot;quarterly&quot;,&quot;apiKey&quot;:&quot;api_key&quot;}"
+  data-symfony--ux-google-map--map-provider-options-value="{&quot;v&quot;:&quot;quarterly&quot;,&quot;language&quot;:&quot;fr&quot;,&quot;region&quot;:&quot;FR&quot;,&quot;libraries&quot;:[&quot;places&quot;,&quot;geometry&quot;],&quot;authReferrerPolicy&quot;:&quot;origin&quot;,&quot;mapIds&quot;:[&quot;MyMapId1&quot;,&quot;MyMapId2&quot;],&quot;channel&quot;:&quot;my-channel&quot;,&quot;solutionChannel&quot;:&quot;my-solution-channel&quot;,&quot;key&quot;:&quot;api_key&quot;}"
   data-symfony--ux-google-map--map-center-value="{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522}"
   data-symfony--ux-google-map--map-zoom-value="12"
   data-symfony--ux-google-map--map-fit-bounds-to-markers-value="false"

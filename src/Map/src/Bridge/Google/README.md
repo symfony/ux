@@ -26,24 +26,24 @@ npm run watch
 ```dotenv
 UX_MAP_DSN=google://GOOGLE_MAPS_API_KEY@default
 
-# With options
-UX_MAP_DSN=google://GOOGLE_MAPS_API_KEY@default?version=weekly
+# With
+UX_MAP_DSN=google://GOOGLE_MAPS_API_KEY@default?v=weekly
 UX_MAP_DSN=google://GOOGLE_MAPS_API_KEY@default?language=fr&region=FR
 UX_MAP_DSN=google://GOOGLE_MAPS_API_KEY@default?libraries[]=geometry&libraries[]=places
 ```
 
 Available options:
 
-| Option      | Description                                                                                                                        | Default                                                     |
-|-------------|------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------|
-| `id`        | The id of the script tag                                                                                                           | `__googleMapsScriptId`                                      |
-| `language`  | Force language, see [list of supported languages](https://developers.google.com/maps/faq#languagesupport) specified in the browser | The user's preferred language                               |
-| `region`    | Unicode region subtag identifiers compatible with [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1)                           |                                                             |
-| `nonce`     | Use a cryptographic nonce attribute                                                                                                |                                                             |
-| `retries`   | The number of script load retries                                                                                                  | 3                                                           |
-| `url`       | Custom url to load the Google Maps API script                                                                                      | `https://maps.googleapis.com/maps/api/js`                   |
-| `version`   | The release channels or version numbers                                                                                            | `weekly`                                                    |
-| `libraries` | The additional libraries to load, see [list of supported libraries](https://googlemaps.github.io/js-api-loader/types/Library.html) | `['maps', 'marker']`, those two libraries are always loaded |
+| Option               | Description                                                                                                                                                            | Default                                                     |
+|----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------|
+| `v`                  | The version of the Maps JavaScript API to load, could be a [release channels](https://developers.google.com/maps/documentation/javascript/versions) or version numbers | `weekly`                                                    |
+| `language`           | The language to use, see [list of supported languages](https://developers.google.com/maps/faq#languagesupport) specified in the browser                                | The user's preferred language                               |
+| `region`             | The region code to use, unicode region subtag identifiers compatible with [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1)                                       |                                                             |
+| `libraries`          | Additional libraries to load, see [list of supported libraries](https://developers.google.com/maps/documentation/javascript/libraries#available-libraries)             | `['maps', 'marker']`, those two libraries are always loaded |
+| `authReferrerPolicy` | Set the referrer policy for the API requests                                                                                                                           |                                                             |
+| `mapIds`             | An array of map IDs to preload                                                                                                                                         |                                                             |
+| `channel`            | Can be used to track your usage                                                                                                                                        |                                                             |
+| `solutionChannel`    | Used by the Google Maps Platform to track adoption and usage of examples and solutions                                                                                 |                                                             |
 
 ## Map options
 

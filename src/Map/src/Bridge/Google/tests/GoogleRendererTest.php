@@ -39,23 +39,23 @@ class GoogleRendererTest extends RendererTestCase
         $marker3 = new Marker(position: new Point(45.8566, 2.3522), title: 'Dijon', id: 'marker3');
 
         yield 'simple map, with minimum options' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => $map,
         ];
 
         yield 'with every options' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key', id: 'gmap', language: 'fr', region: 'FR', nonce: 'abcd', retries: 10, url: 'https://maps.googleapis.com/maps/api/js', version: 'quarterly'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key', v: 'quarterly', language: 'fr', region: 'FR', libraries: ['places', 'geometry'], authReferrerPolicy: 'origin', mapIds: ['MyMapId1', 'MyMapId2'], channel: 'my-channel', solutionChannel: 'my-solution-channel'),
             'map' => $map,
         ];
 
         yield 'with custom attributes' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => $map,
             'attributes' => ['data-controller' => 'my-custom-controller', 'class' => 'map'],
         ];
 
         yield 'with markers and infoWindows' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => (new Map())
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
@@ -64,7 +64,7 @@ class GoogleRendererTest extends RendererTestCase
         ];
 
         yield 'with all markers removed' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => (new Map())
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
@@ -75,7 +75,7 @@ class GoogleRendererTest extends RendererTestCase
         ];
 
         yield 'with marker remove and new ones added' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => (new Map())
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
@@ -86,7 +86,7 @@ class GoogleRendererTest extends RendererTestCase
         ];
 
         yield 'with polygons and infoWindows' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => (new Map())
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
@@ -95,7 +95,7 @@ class GoogleRendererTest extends RendererTestCase
         ];
 
         yield 'with polylines and infoWindows' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => (new Map())
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
@@ -104,7 +104,7 @@ class GoogleRendererTest extends RendererTestCase
         ];
 
         yield 'with circles and infoWindows' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => (new Map())
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
@@ -113,7 +113,7 @@ class GoogleRendererTest extends RendererTestCase
         ];
 
         yield 'with rectangles and infoWindows' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => (new Map())
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
@@ -122,7 +122,7 @@ class GoogleRendererTest extends RendererTestCase
         ];
 
         yield 'with controls enabled' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => (new Map())
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
@@ -135,7 +135,7 @@ class GoogleRendererTest extends RendererTestCase
         ];
 
         yield 'without controls enabled' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => (new Map())
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
@@ -190,7 +190,7 @@ class GoogleRendererTest extends RendererTestCase
         ];
 
         yield 'with map extra data' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => (new Map())
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)

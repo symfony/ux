@@ -44,15 +44,15 @@ final class GoogleRendererFactory extends AbstractRendererFactory implements Ren
         return new GoogleRenderer(
             $this->stimulus,
             $this->uxIconRenderer,
-            apiKey: $apiKey,
-            id: $dsn->getOption('id'),
+            key: $apiKey,
+            v: $dsn->getOption('v', 'weekly'),
             language: $dsn->getOption('language'),
             region: $dsn->getOption('region'),
-            nonce: $dsn->getOption('nonce'),
-            retries: $dsn->getOption('retries'),
-            url: $dsn->getOption('url'),
-            version: $dsn->getOption('version', 'weekly'),
             libraries: ['maps', 'marker', ...$dsn->getOption('libraries', [])],
+            authReferrerPolicy: $dsn->getOption('authReferrerPolicy'),
+            mapIds: $dsn->getOption('mapIds', []),
+            channel: $dsn->getOption('channel'),
+            solutionChannel: $dsn->getOption('solutionChannel'),
             defaultMapId: $this->defaultMapId,
         );
     }

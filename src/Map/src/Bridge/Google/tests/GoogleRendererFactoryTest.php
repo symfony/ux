@@ -33,18 +33,18 @@ final class GoogleRendererFactoryTest extends RendererFactoryTestCase
     public static function createRenderer(): iterable
     {
         yield [
-            'google://*******************@default/?version=weekly&libraries%5B0%5D=maps&libraries%5B1%5D=marker',
+            'google://*******************@default/?v=weekly&libraries%5B0%5D=maps&libraries%5B1%5D=marker',
             'google://GOOGLE_MAPS_API_KEY@default',
         ];
 
         yield [
-            'google://*******************@default/?version=quartly&libraries%5B0%5D=maps&libraries%5B1%5D=marker',
-            'google://GOOGLE_MAPS_API_KEY@default?version=quartly',
+            'google://*******************@default/?v=quartly&libraries%5B0%5D=maps&libraries%5B1%5D=marker',
+            'google://GOOGLE_MAPS_API_KEY@default?v=quartly',
         ];
 
         yield [
-            'google://*******************@default/?version=quartly&libraries%5B0%5D=maps&libraries%5B1%5D=marker&libraries%5B2%5D=geometry',
-            'google://GOOGLE_MAPS_API_KEY@default?version=quartly&libraries[]=geometry',
+            'google://*******************@default/?v=quartly&libraries%5B0%5D=maps&libraries%5B1%5D=marker&libraries%5B2%5D=geometry',
+            'google://GOOGLE_MAPS_API_KEY@default?v=quartly&libraries[]=geometry',
         ];
     }
 

@@ -1,5 +1,5 @@
 // src/map_controller.ts
-import { Loader } from "@googlemaps/js-api-loader";
+import { importLibrary, setOptions } from "@googlemaps/js-api-loader";
 
 // ../../../../assets/dist/abstract_map_controller.js
 import { Controller } from "@hotwired/stimulus";
@@ -146,7 +146,6 @@ abstract_map_controller_default.values = {
 };
 
 // src/map_controller.ts
-var _google;
 var _loading = false;
 var _loaded = false;
 var _onLoadedCallbacks = [];
@@ -163,22 +162,10 @@ var map_controller_default = class extends abstract_map_controller_default {
       return;
     }
     _loading = true;
-    _google = { maps: {} };
     let { libraries = [], ...loaderOptions } = this.providerOptionsValue;
-    const loader = new Loader(loaderOptions);
+    setOptions(loaderOptions);
     libraries = ["core", ...libraries.filter((library) => library !== "core")];
-    const librariesImplementations = await Promise.all(libraries.map((library) => loader.importLibrary(library)));
-    librariesImplementations.map((libraryImplementation, index) => {
-      if (typeof libraryImplementation !== "object" || libraryImplementation === null) {
-        return;
-      }
-      const library = libraries[index];
-      if (["marker", "places", "geometry", "journeySharing", "drawing", "visualization"].includes(library)) {
-        _google.maps[library] = libraryImplementation;
-      } else {
-        _google.maps = { ..._google.maps, ...libraryImplementation };
-      }
-    });
+    await Promise.all(libraries.map((library) => importLibrary(library)));
     _loading = false;
     _loaded = true;
     onLoaded();
@@ -206,7 +193,7 @@ var map_controller_default = class extends abstract_map_controller_default {
     }
   }
   dispatchEvent(name, payload = {}) {
-    payload.google = _google;
+    payload.google = google;
     this.dispatch(name, {
       prefix: "ux:map",
       detail: payload
@@ -218,7 +205,7 @@ var map_controller_default = class extends abstract_map_controller_default {
     options.mapTypeControl = typeof options.mapTypeControlOptions !== "undefined";
     options.streetViewControl = typeof options.streetViewControlOptions !== "undefined";
     options.fullscreenControl = typeof options.fullscreenControlOptions !== "undefined";
-    return new _google.maps.Map(this.element, {
+    return new google.maps.Map(this.element, {
       center,
       zoom,
       minZoom,
@@ -231,7 +218,7 @@ var map_controller_default = class extends abstract_map_controller_default {
     definition
   }) {
     const { "@id": _id, position, title, infoWindow, icon, bridgeOptions = {} } = definition;
-    const marker = new _google.maps.marker.AdvancedMarkerElement({
+    const marker = new google.maps.marker.AdvancedMarkerElement({
       position,
       title,
       map: this.map,
@@ -255,7 +242,7 @@ var map_controller_default = class extends abstract_map_controller_default {
     definition
   }) {
     const { "@id": _id, points, infoWindow, bridgeOptions = {} } = definition;
-    const polygon = new _google.maps.Polygon({
+    const polygon = new google.maps.Polygon({
       paths: points,
       map: this.map,
       ...bridgeOptions
@@ -272,7 +259,7 @@ var map_controller_default = class extends abstract_map_controller_default {
     definition
   }) {
     const { "@id": _id, points, infoWindow, bridgeOptions = {} } = definition;
-    const polyline = new _google.maps.Polyline({
+    const polyline = new google.maps.Polyline({
       path: points,
       map: this.map,
       ...bridgeOptions
@@ -287,7 +274,7 @@ var map_controller_default = class extends abstract_map_controller_default {
   }
   doCreateCircle({ definition }) {
     const { "@id": _id, center, radius, infoWindow, bridgeOptions = {} } = definition;
-    const circle = new _google.maps.Circle({
+    const circle = new google.maps.Circle({
       center,
       radius,
       map: this.map,
@@ -305,8 +292,8 @@ var map_controller_default = class extends abstract_map_controller_default {
     definition
   }) {
     const { northEast, southWest, infoWindow, bridgeOptions = {} } = definition;
-    const rectangle = new _google.maps.Rectangle({
-      bounds: new _google.maps.LatLngBounds(southWest, northEast),
+    const rectangle = new google.maps.Rectangle({
+      bounds: new google.maps.LatLngBounds(southWest, northEast),
       map: this.map,
       ...bridgeOptions
     });
@@ -336,7 +323,7 @@ var map_controller_default = class extends abstract_map_controller_default {
       position,
       ...bridgeOptions
     };
-    const infoWindow = new _google.maps.InfoWindow(infoWindowOptions);
+    const infoWindow = new google.maps.InfoWindow(infoWindowOptions);
     element.addListener("click", (event) => {
       if (autoClose) {
         this.closeInfoWindowsExcept(infoWindow);

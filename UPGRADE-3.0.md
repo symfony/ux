@@ -31,6 +31,12 @@ class MyLiveComponent {
 *  The Twig function `render_map()` has been removed, use `ux_map()` instead
 *  The option `title` from `Polygon`, `Polyline`, `Rectangle` and `Circle`, has been removed, use option `infoWindow` instead
 *  The property `rawOptions` from `ux:map:*:before-create` events has been removed, use `bridgeOptions` instead
+*  The Google Map Bridge has been upgraded to use `@googlemaps/js-api-loader` version `^2.0.0`:
+    * If you use Symfony AssetMapper without Symfony Flex, run `bin/console importmap:require @googlemaps/js-api-loader@^2.0`
+    * Options configurable through `UX_MAP_DSN` query params have changed:
+        * Option `version` has been renamed to `v`
+        * Options `authReferrerPolicy`, `mapIds`, `channel`, `solutionChannel` have been added
+        * Options `ìd`, `nonce`, `retries`, `url` have been removed
 
 ## Swup
 

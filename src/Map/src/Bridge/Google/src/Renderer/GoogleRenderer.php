@@ -25,23 +25,23 @@ use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 final class GoogleRenderer extends AbstractRenderer
 {
     /**
-     * Parameters are based from https://googlemaps.github.io/js-api-loader/interfaces/LoaderOptions.html documentation.
+     * Parameters are based from https://github.com/googlemaps/js-api-loader/blob/107cf47/src/index.ts#L28-L38 APIOptions interface.
      */
     public function __construct(
         StimulusHelper $stimulusHelper,
         UxIconRenderer $uxIconRenderer,
-        #[\SensitiveParameter] private readonly string $apiKey,
-        private readonly ?string $id = null,
+        #[\SensitiveParameter] private readonly string $key,
+        private readonly ?string $v = null,
         private readonly ?string $language = null,
         private readonly ?string $region = null,
-        private readonly ?string $nonce = null,
-        private readonly ?int $retries = null,
-        private readonly ?string $url = null,
-        private readonly ?string $version = null,
         /**
          * @var array<'core'|'maps'|'places'|'geocoding'|'routes'|'marker'|'geometry'|'elevation'|'streetView'|'journeySharing'|'drawing'|'visualization'>
          */
         private readonly array $libraries = [],
+        private readonly ?string $authReferrerPolicy = null,
+        private readonly array $mapIds = [],
+        private readonly ?string $channel = null,
+        private readonly ?string $solutionChannel = null,
         private readonly ?string $defaultMapId = null,
     ) {
         parent::__construct($stimulusHelper, $uxIconRenderer);
@@ -55,15 +55,15 @@ final class GoogleRenderer extends AbstractRenderer
     protected function getProviderOptions(): array
     {
         return array_filter([
-            'id' => $this->id,
+            'v' => $this->v,
             'language' => $this->language,
             'region' => $this->region,
-            'nonce' => $this->nonce,
-            'retries' => $this->retries,
-            'url' => $this->url,
-            'version' => $this->version,
             'libraries' => $this->libraries,
-        ]) + ['apiKey' => $this->apiKey];
+            'authReferrerPolicy' => $this->authReferrerPolicy,
+            'mapIds' => $this->defaultMapId && !\in_array($this->defaultMapId, $this->mapIds, true) ? [...$this->mapIds, $this->defaultMapId] : $this->mapIds,
+            'channel' => $this->channel,
+            'solutionChannel' => $this->solutionChannel,
+        ]) + ['key' => $this->key];
     }
 
     protected function getDefaultMapOptions(): MapOptionsInterface
@@ -88,16 +88,16 @@ final class GoogleRenderer extends AbstractRenderer
     {
         return \sprintf(
             'google://%s@default/?%s',
-            str_repeat('*', \strlen($this->apiKey)),
+            str_repeat('*', \strlen($this->key)),
             http_build_query(array_filter([
-                'id' => $this->id,
+                'v' => $this->v,
                 'language' => $this->language,
                 'region' => $this->region,
-                'nonce' => $this->nonce,
-                'retries' => $this->retries,
-                'url' => $this->url,
-                'version' => $this->version,
                 'libraries' => $this->libraries,
+                'authReferrerPolicy' => $this->authReferrerPolicy,
+                'mapIds' => $this->mapIds,
+                'channel' => $this->channel,
+                'solutionChannel' => $this->solutionChannel,
             ]))
         );
     }
