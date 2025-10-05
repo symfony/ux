@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-09-30T20:43:52Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/map-google-loader-2.0/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-google-loader-2.0/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>3.42 kB</code>
+                    / <code>900 B</code>
+                </td><td>
+                    <code>3.44 kB</code><sup>0%</sup>
+                    / <code>911 B</code><sup>+1% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/map-google-loader-2.0/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>12.92 kB</code>
+                    / <code>3.11 kB</code>
+                </td><td>
+                    <code>12.36 kB</code><sup>-4% 📉</sup>
+                    / <code>2.95 kB</code><sup>-5% 📉</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
