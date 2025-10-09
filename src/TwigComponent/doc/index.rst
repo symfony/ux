@@ -702,7 +702,7 @@ You can also pass a variable (prop) into your template:
     </div>
 
 To tell the system that ``icon`` and ``type`` are props and not attributes, use the
-``{% props %}`` tag at the top of your template.
+``{% props %}`` tag at the top of your template. You must define the default value for each prop.
 
 .. code-block:: html+twig
 
