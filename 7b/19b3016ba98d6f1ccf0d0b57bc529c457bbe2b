@@ -1,0 +1,30 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-10-10T07:20:58Z
+
+I think the current goal of this text is to behave like a `<figcaption>`, thus I suggest to  keep it, but improve its current display.
+
+cc @javiereguiluz, do you know if Symfony RST is able to handle `<figure>` and `<figcaption>`? Thanks
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2025-10-10T09:27:39Z
+
+No. We just generate simple `<img>`. For example, this RST code:
+
+```rst
+.. image:: /_images/components/console/completion.gif
+    :alt: The terminal completes the command name "secrets:remove" and the argument "SOME_OTHER_SECRET".
+```
+
+When rendering the HTML page (https://symfony.com/doc/current/console.html) it generates this HTML code:
+
+```html
+<img src="/doc/7.3/_images/completion.gif" alt="The terminal completes the command name &quot;secrets:remove&quot; and the argument &quot;SOME_OTHER_SECRET&quot;.">
+```
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-10-10T09:54:33Z
+
+Alright, thanks!
