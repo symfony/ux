@@ -24,7 +24,8 @@ final class ComponentWithEmit
     use DefaultActionTrait;
     use ComponentToolsTrait;
 
-    public $events = [];
+    public array $events = [];
+    public array $dispatchEvents = [];
 
     #[LiveAction]
     public function actionThatEmits(): void
@@ -36,9 +37,13 @@ final class ComponentWithEmit
     #[LiveAction]
     public function actionThatDispatchesABrowserEvent(): void
     {
-        $this->liveResponder->dispatchBrowserEvent(
+        $this->dispatchBrowserEvent(
             'browser-event',
-            ['fooKey' => 'barVal'],
+            [
+                'fooKey' => 'barVal',
+                'barKey' => 'fooVal',
+            ],
         );
+        $this->dispatchEvents = $this->liveResponder->getBrowserEventsToDispatch();
     }
 }

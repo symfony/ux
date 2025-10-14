@@ -3851,6 +3851,23 @@ uses Symfony's test client to render and make requests to your components::
             // Assert that an event was not emitted
             $this->assertComponentNotEmitEvent($testComponent->render(), 'decreaseEvent');
 
+            // dispatch browser events
+            $testComponent
+                ->dispatchBrowserEvent('browserEvent')
+                ->dispatchBrowserEvent('browserEvent', ['amount' => 2, 'unit' => 'kg']) // dispatch a browser event with arguments
+            ;
+
+            // Assert that the event was dispatched
+            $this->assertComponentDispatchBrowserEvent($testComponent->render(), 'browserEvent')
+                // optionally, you can assert that the event was dispatched with specific data...
+                ->withPayload(['amount' => 2, 'unit' => 'kg'])
+                // ... or only with a subset of data
+                ->withPayloadSubset(['amount' => 2])
+            ;
+
+            // Assert that an event was not dispatched
+            $this->assertComponentNotDispatchBrowserEvent($testComponent->render(), 'otherBrowserEvent');
+
             // set live props
             $testComponent
                 ->set('count', 99)

@@ -290,4 +290,76 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
             'foo2' => 'bar2',
         ]);
     }
+
+    public function testAssertComponentDispatchBrowserEvent()
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatDispatchesABrowserEvent');
+
+        $this->assertComponentDispatchBrowserEvent($testComponent, 'browser-event')
+            ->withPayload([
+                'fooKey' => 'barVal',
+                'barKey' => 'fooVal',
+            ]);
+    }
+
+    public function testAssertComponentDispatchBrowserEventFails()
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatDispatchesABrowserEvent');
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('The event "browser-event" payload is different than expected.');
+        $this->assertComponentDispatchBrowserEvent($testComponent, 'browser-event')->withPayload([
+            'fooKey' => 'barVal',
+        ]);
+    }
+
+    public function testComponentDispatchesExpectedPartialBrowserEventData()
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatDispatchesABrowserEvent');
+
+        $this->assertComponentDispatchBrowserEvent($testComponent, 'browser-event')
+            ->withPayloadSubset(['fooKey' => 'barVal'])
+            ->withPayloadSubset(['barKey' => 'fooVal'])
+        ;
+    }
+
+    public function testComponentDoesNotDispatchUnexpectedBrowserEvent()
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatDispatchesABrowserEvent');
+
+        $this->assertComponentNotDispatchBrowserEvent($testComponent, 'browser-event2');
+    }
+
+    public function testComponentDoesNotDispatchUnexpectedBrowserEventFails()
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatDispatchesABrowserEvent');
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('The component "component_with_emit" did dispatch browser event "browser-event".');
+        $this->assertComponentNotDispatchBrowserEvent($testComponent, 'browser-event');
+    }
+
+    public function testComponentDispatchesBrowserEventWithIncorrectDataFails()
+    {
+        $testComponent = $this->createLiveComponent('component_with_emit');
+
+        $testComponent->call('actionThatDispatchesABrowserEvent');
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('The event "browser-event" payload is different than expected.');
+        $this->assertComponentDispatchBrowserEvent($testComponent, 'browser-event')->withPayload([
+            'fooKey' => 'barVal',
+            'fooKey2' => 'barVal2',
+        ]);
+    }
 }
