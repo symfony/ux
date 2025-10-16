@@ -17,7 +17,7 @@
 ## Secondary
 
 ```twig {"preview":true}
-<twig:Button variant="outline">Outline</twig:Button>
+<twig:Button variant="secondary">Secondary</twig:Button>
 ```
 
 ## Destructive
@@ -66,4 +66,14 @@
 <twig:Button disabled>
     <twig:ux:icon name="lucide:loader-2" class="animate-spin" /> Please wait
 </twig:Button>
+```
+
+## Different sizes
+
+```twig {"preview":true}
+<div class="flex items-center gap-2">
+    <twig:Button size="sm">Small</twig:Button>
+    <twig:Button>Default</twig:Button>
+    <twig:Button size="lg">Large</twig:Button>
+</div>
 ```

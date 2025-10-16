@@ -23,8 +23,20 @@ use Symfony\UX\Toolkit\Recipe\Recipe;
 use Symfony\UX\Toolkit\Recipe\RecipeType;
 use Symfony\UX\Toolkit\Registry\RegistryFactory;
 
+use function Symfony\Component\String\s;
+
 class ToolkitService
 {
+    /**
+     * @see https://regex101.com/r/3JXNX7/1
+     */
+    private const RE_API_PROPS = '/{#\s+@prop\s+(?P<name>\w+)\s+(?P<type>[^\s]+)\s+(?P<description>.+?)\s+#}/s';
+
+    /**
+     * @see https://regex101.com/r/jYjXpq/1
+     */
+    private const RE_API_BLOCKS = '/{#\s+@block\s+(?P<name>\w+)\s+(?P<description>.+?)\s+#}/s';
+
     public function __construct(
         #[Autowire(service: 'ux_toolkit.registry.registry_factory')]
         private readonly RegistryFactory $registryFactory,
@@ -140,6 +152,65 @@ class ToolkitService
             ),
             'Manual' => $manual,
         ]);
+    }
+
+    public function renderApiReference(Recipe $recipe): ?string
+    {
+        $return = '';
+
+        foreach ($recipe->getFiles() as $file) {
+            $filePath = Path::join($recipe->absolutePath, $file->sourceRelativePathName);
+            if (!file_exists($filePath)) {
+                continue;
+            }
+
+            $fileContent = s(file_get_contents($filePath));
+
+            // Twig files...
+            if (str_ends_with($file->sourceRelativePathName, '.html.twig')) {
+                $props = $fileContent->match(self::RE_API_PROPS, \PREG_SET_ORDER);
+                $blocks = $fileContent->match(self::RE_API_BLOCKS, \PREG_SET_ORDER);
+
+                if ([] === $props && [] === $blocks) {
+                    continue;
+                }
+
+                $componentName = s($file->sourceRelativePathName)
+                    ->replace('templates/components/', '')
+                    ->replace('.html.twig', '')
+                    ->replace('/', ':')
+                    ->toString();
+
+                $return .= '### '.htmlspecialchars($componentName).\PHP_EOL.\PHP_EOL;
+                if ([] !== $props) {
+                    $return .= "| Prop | Type | Description |\n";
+                    $return .= "| ---- | ---- | ----------- |\n";
+                    foreach ($props as $prop) {
+                        $return .= \sprintf(
+                            "| `%s` | `%s` | %s |\n",
+                            $prop['name'],
+                            str_replace('|', '\|', $prop['type']),
+                            trim(preg_replace('/\s+/', ' ', $prop['description']))
+                        );
+                    }
+                    $return .= \PHP_EOL;
+                }
+                if ([] !== $blocks) {
+                    $return .= "| Block | Description |\n";
+                    $return .= "| ----- | ----------- |\n";
+                    foreach ($blocks as $block) {
+                        $return .= \sprintf(
+                            "| `%s` | %s |\n",
+                            $block['name'],
+                            trim(preg_replace('/\s+/', ' ', $block['description']))
+                        );
+                    }
+                    $return .= \PHP_EOL;
+                }
+            }
+        }
+
+        return $return ?: null;
     }
 
     /**
