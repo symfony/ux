@@ -36,6 +36,8 @@ class ComponentDoc
     {
         $examples = $this->getExamples();
 
+        $apiReference = $this->toolkitService->renderApiReference($this->component);
+
         return $this->adaptPreviewableCodeBlocks(\sprintf(<<<MARKDOWN
             # %s
 
@@ -54,6 +56,7 @@ class ComponentDoc
             ## Examples
 
             %s
+            %s
             MARKDOWN,
             $this->component->manifest->name,
             $this->component->manifest->description,
@@ -64,7 +67,8 @@ class ComponentDoc
                 $acc .= '### '.$exampleTitle.\PHP_EOL.$examples[$exampleTitle].\PHP_EOL;
 
                 return $acc;
-            }, '')
+            }, ''),
+            $apiReference ? '## API Reference'.\PHP_EOL.$apiReference : '',
         ));
     }
 

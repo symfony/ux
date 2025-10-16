@@ -1,4 +1,6 @@
-{%- props variant = 'default', outline = false -%}
+{# @prop variant 'default'|'secondary'|'destructive'|'outline' The variant, default to `default` #}
+{# @block content The default block #}
+{%- props variant = 'default' -%}
 {%- set style = html_cva(
     base: 'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
     variants: {
@@ -11,7 +13,7 @@
     },
 ) -%}
 <div
-    class="{{ style.apply({variant: variant, outline: outline}, attributes.render('class'))|tailwind_merge }}"
+    class="{{ style.apply({variant: variant}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}

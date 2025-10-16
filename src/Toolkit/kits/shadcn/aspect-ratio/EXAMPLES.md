@@ -1,37 +1,40 @@
 # Examples
 
-## Default
+## With 1 / 1 aspect ratio
 
 ```twig {"preview":true,"height":"400px"}
-<twig:AspectRatio ratio="1 / 1" class="max-w-[300px]">
+<twig:AspectRatio ratio="1 / 1" class="max-h-90">
     <img
-        src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&amp;dpr=2&amp;q=80"
-        alt="Landscape photograph by Tobias Tullius"
+        src="https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=1000"
+        alt="Bukchon Hanok Village by Y K"
         class="h-full w-full rounded-md object-cover"
     />
+    <a href="https://unsplash.com/fr/photos/rue-vide-entre-les-maisons--e6Xu27_T50" class="hover:underline">Bukchon Hanok Village by Y K</a>
 </twig:AspectRatio>
 ```
 
-## With a 1 / 1 aspect ratio
+## With 2 / 3 aspect ratio
 
 ```twig {"preview":true,"height":"400px"}
-<twig:AspectRatio ratio="1 / 1" class="max-w-[350px]">
+<twig:AspectRatio ratio="3 / 2" class="max-h-90">
     <img
-        src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&amp;dpr=2&amp;q=80"
-        alt="Landscape photograph by Tobias Tullius"
+        src="https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=1000"
+        alt="Bukchon Hanok Village by Y K"
         class="h-full w-full rounded-md object-cover"
     />
+    <a href="https://unsplash.com/fr/photos/rue-vide-entre-les-maisons--e6Xu27_T50" class="hover:underline">Bukchon Hanok Village by Y K</a>
 </twig:AspectRatio>
 ```
 
-## With a 16 / 9 aspect ratio
+## With 16 / 9 aspect ratio
 
 ```twig {"preview":true,"height":"400px"}
-<twig:AspectRatio ratio="16 / 9" class="max-w-[350px]">
+<twig:AspectRatio ratio="16 / 9" class="max-h-90">
     <img
-        src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&amp;dpr=2&amp;q=80"
-        alt="Landscape photograph by Tobias Tullius"
+        src="https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&w=1000"
+        alt="Bukchon Hanok Village by Y K"
         class="h-full w-full rounded-md object-cover"
     />
+    <a href="https://unsplash.com/fr/photos/rue-vide-entre-les-maisons--e6Xu27_T50" class="hover:underline">Bukchon Hanok Village by Y K</a>
 </twig:AspectRatio>
 ```

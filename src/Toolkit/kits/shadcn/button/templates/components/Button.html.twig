@@ -1,4 +1,8 @@
-{%- props variant = 'default', outline = false, size = 'default', as = 'button' -%}
+{# @prop variant 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The variant, default to `default` #}
+{# @prop size 'default'|'sm'|'lg'|'icon' The size, default to `default` #}
+{# @prop as 'button' The HTML tag to use, default to `button` #}
+{# @block content The default block #}
+{%- props variant = 'default', size = 'default', as = 'button' -%}
 {%- set style = html_cva(
     base: 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
     variants: {
@@ -20,7 +24,7 @@
 ) -%}
 
 <{{ as }}
-    class="{{ style.apply({variant: variant, outline: outline, size: size}, attributes.render('class'))|tailwind_merge }}"
+    class="{{ style.apply({variant: variant, size: size}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}
