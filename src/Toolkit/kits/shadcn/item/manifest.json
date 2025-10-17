@@ -1,0 +1,12 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Item",
+    "description": "A versatile component that you can use to display any content.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "composer": ["symfony/ux-icons", "tales-from-a-dev/twig-tailwind-extra"]
+    }
+}
