@@ -948,6 +948,7 @@ component system from Stimulus:
 
     // assets/controllers/some-custom-controller.js
     // ...
+    import { Controller } from '@hotwired/stimulus';
     import { getComponent } from '@symfony/ux-live-component';
 
     export default class extends Controller {
