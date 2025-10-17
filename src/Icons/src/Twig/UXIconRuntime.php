@@ -12,6 +12,7 @@
 namespace Symfony\UX\Icons\Twig;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\IconRendererInterface;
 use Twig\Extension\RuntimeExtensionInterface;
@@ -45,6 +46,10 @@ final class UXIconRuntime implements RuntimeExtensionInterface
             }
 
             throw $e;
+        } catch (TransportException $e) {
+            $this->logger?->warning($e->getMessage());
+
+            return '';
         }
     }
 

@@ -13,6 +13,7 @@ namespace Symfony\UX\Icons\Tests\Unit\Twig;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\IconRendererInterface;
 use Symfony\UX\Icons\Twig\UXIconRuntime;
@@ -39,5 +40,20 @@ class UXIconRuntimeTest extends TestCase
         $runtime = new UXIconRuntime($renderer, false);
         $this->expectException(IconNotFoundException::class);
         $runtime->renderIcon('not_found');
+    }
+
+    public function testRenderIconReturnsEmptyStringIfConnectionIsNotPossible()
+    {
+        $renderer = $this->createMock(IconRendererInterface::class);
+        $renderer->method('renderIcon')
+            ->willThrowException(new TransportException('Could not resolve host api.iconify.design'));
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())
+            ->method('warning')
+            ->with('Could not resolve host api.iconify.design');
+
+        $runtime = new UXIconRuntime($renderer, true, $logger);
+        $this->assertEquals('', $runtime->renderIcon('tabler:search'));
     }
 }
