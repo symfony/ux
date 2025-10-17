@@ -5,6 +5,10 @@ on:
     tags:
         - 'v2.*.*'
 
+permissions:
+    id-token: write  # Required for OIDC
+    contents: read
+
 jobs:
     release:
         runs-on: ubuntu-latest
@@ -21,15 +25,20 @@ jobs:
           - name: Extract version from tag
             run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
+          # npm 11.5.1 or later is required for OIDC
+          - run: npm install -g npm@latest
+
           - run: npm i -g corepack && corepack enable
           - uses: actions/setup-node@v4
             with:
+              registry-url: 'https://registry.npmjs.org'
               node-version-file: '.nvmrc'
               cache: 'pnpm'
               cache-dependency-path: |
                 pnpm-lock.yaml
                 package.json
                 src/**/package.json
+
           - name: Install root JS dependencies
             run: pnpm install --frozen-lockfile
 
@@ -40,11 +49,6 @@ jobs:
             run: |
               git add .
               git commit -m "Update versions to ${{ env.VERSION }}"
-
-          - name: Configure NPM authentication
-            run: pnpm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
-            env:
-              NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
 
           - name: Publish on NPM
             run: pnpm publish --recursive --access public --no-git-checks
