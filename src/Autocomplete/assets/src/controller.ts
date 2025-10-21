@@ -239,6 +239,7 @@ export default class extends Controller {
                 };
             },
             render: {
+                ...commonConfig.render,
                 item: (item: any) => `<div>${item[labelField]}</div>`,
                 option: (item: any) => `<div>${item[labelField]}</div>`,
             },
