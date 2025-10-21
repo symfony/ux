@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-10-21T06:42:41Z
+
+Thanks for the contribution, that's much appreciated!
+
+I've pushed on your PR some modifications:
+- it was not possible to use `<twig:Spinner class="...">`, the `class` attribute was fully overridden by `{{ ...attributes }}` (looks like the `ComponentAttributes::getIterator()` does not handle `ComponentAttributes::$rendered` property, like `ComponentAttributes::__toString()`) and so the Spinner was not rotating anymore. Using `{{ ...attributes.without('class') }}` fixed the issue
+- I added some examples with size and color
