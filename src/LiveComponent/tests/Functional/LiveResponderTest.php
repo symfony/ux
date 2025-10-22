@@ -49,6 +49,8 @@ final class LiveResponderTest extends KernelTestCase
                 'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertSuccessful()
+            ->assertSee('Event: browser-event')
+            ->assertSee('Payload: {"fooKey":"barVal","barKey":"fooVal"}')
             ->crawler()
         ;
 
@@ -57,7 +59,7 @@ final class LiveResponderTest extends KernelTestCase
         $this->assertNotNull($browserDispatch);
         $browserDispatchData = json_decode($browserDispatch, true);
         $this->assertSame([
-            ['event' => 'browser-event', 'payload' => ['fooKey' => 'barVal']],
+            ['event' => 'browser-event', 'payload' => ['fooKey' => 'barVal', 'barKey' => 'fooVal']],
         ], $browserDispatchData);
     }
 }

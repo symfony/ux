@@ -12,6 +12,7 @@
 namespace Symfony\UX\LiveComponent\Test;
 
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -251,13 +252,48 @@ final class TestLiveComponent
      */
     public function getEmittedEvents(RenderedComponent $render): array
     {
-        $emit = $render->crawler()->filter('[data-live-name-value]')->attr('data-live-events-to-emit-value');
+        $emit = $this->getComponentNameValue($render)->attr('data-live-events-to-emit-value');
 
         if (null === $emit) {
             return [];
         }
 
         return json_decode($emit, associative: true, flags: \JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * @return ?array{data: array<string, int|float|string|bool|null>, event: non-empty-string}
+     */
+    public function getDispatchedBrowserEvent(RenderedComponent $render, string $eventName): ?array
+    {
+        $events = $this->getDispatchedBrowserEvents($render);
+
+        foreach ($events as $event) {
+            if ($event['event'] === $eventName) {
+                return $event;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<array{data: array<string, int|float|string|bool|null>, event: non-empty-string}>
+     */
+    public function getDispatchedBrowserEvents(RenderedComponent $render): array
+    {
+        $dispatch = $this->getComponentNameValue($render)->attr('data-live-events-to-dispatch-value');
+
+        if (null === $dispatch) {
+            return [];
+        }
+
+        return json_decode($dispatch, associative: true, flags: \JSON_THROW_ON_ERROR);
+    }
+
+    private function getComponentNameValue(RenderedComponent $render): Crawler
+    {
+        return $render->crawler()->filter('[data-live-name-value]');
     }
 
     public function getName(): string

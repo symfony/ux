@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\Test;
 
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\UX\LiveComponent\Test\Util\AssertDispatchedEvent;
 use Symfony\UX\LiveComponent\Test\Util\AssertEmittedEvent;
 use Symfony\UX\TwigComponent\ComponentFactory;
 
@@ -58,5 +59,25 @@ trait InteractsWithLiveComponents
     protected function assertComponentNotEmitEvent(TestLiveComponent $testLiveComponent, string $eventName): void
     {
         self::assertNull($testLiveComponent->getEmittedEvent($testLiveComponent->render(), $eventName), \sprintf('The component "%s" did emit event "%s".', $testLiveComponent->getName(), $eventName));
+    }
+
+    protected function assertComponentDispatchBrowserEvent(TestLiveComponent $testLiveComponent, string $expectedEventName): AssertDispatchedEvent
+    {
+        $event = $testLiveComponent->getDispatchedBrowserEvent($testLiveComponent->render(), $expectedEventName);
+
+        self::assertNotNull(
+            $event,
+            \sprintf('The component "%s" did no dispatch browser event "%s".', $testLiveComponent->getName(), $expectedEventName)
+        );
+
+        return new AssertDispatchedEvent($this, $event['event'], $event['payload']);
+    }
+
+    protected function assertComponentNotDispatchBrowserEvent(TestLiveComponent $testLiveComponent, string $eventName): void
+    {
+        self::assertNull(
+            $testLiveComponent->getDispatchedBrowserEvent($testLiveComponent->render(), $eventName),
+            \sprintf('The component "%s" did dispatch browser event "%s".', $testLiveComponent->getName(), $eventName)
+        );
     }
 }
