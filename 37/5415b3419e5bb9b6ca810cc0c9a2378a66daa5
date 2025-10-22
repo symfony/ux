@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by Develog at 2025-10-15T13:10:53Z
+
+I'm asking myself if it's better to create a dedicated component that only have one action that dispatch browser event rather than reuse `ComponentWithEmit.php`
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-10-17T04:41:28Z
+
+Nice!
+
+---------------------------------------------------------------------------
+
+by Develog at 2025-10-21T20:42:02Z
+
+@Kocal I fixed my PR following your review but I have one test that fail and I don't understand why. Do you have any idea ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-10-21T22:36:10Z
+
+Thanks!
+
+The issue comes from Foundry, it has been reported in https://github.com/zenstruck/foundry/pull/1011#issuecomment-3424970522 and https://github.com/zenstruck/foundry/issues/1012
