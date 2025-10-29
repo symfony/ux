@@ -12,11 +12,10 @@
 namespace Symfony\UX\LiveComponent\Tests\Functional\Metadata;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\TypeInfo\Type;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Metadata\UrlMapping;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithUrlBoundProps;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Component\WithUnionType;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\WithUnionIntersectionType;
 
 class LiveComponentMetadataFactoryTest extends KernelTestCase
 {
@@ -50,7 +49,7 @@ class LiveComponentMetadataFactoryTest extends KernelTestCase
         /** @var LiveComponentMetadataFactory $metadataFactory */
         $metadataFactory = self::getContainer()->get('ux.live_component.metadata_factory');
 
-        $class = new \ReflectionClass(WithUnionType::class);
+        $class = new \ReflectionClass(WithUnionIntersectionType::class);
         $propsMetadata = $metadataFactory->createPropMetadatas($class);
 
         $propsMetadataByName = [];
@@ -58,6 +57,7 @@ class LiveComponentMetadataFactoryTest extends KernelTestCase
             $propsMetadataByName[$propMetadata->getName()] = $propMetadata;
         }
 
-        $this->assertEquals(Type::mixed(), $propsMetadataByName['unionProp']->getType());
+        $this->assertEquals('mixed', (string)$propsMetadataByName['unionProp']->getType());
+        $this->assertEquals('mixed', (string)$propsMetadataByName['intersectionProp']->getType());
     }
 }

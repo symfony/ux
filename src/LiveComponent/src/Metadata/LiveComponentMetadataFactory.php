@@ -83,12 +83,13 @@ class LiveComponentMetadataFactory implements ResetInterface
     public function createLivePropMetadata(string $className, string $propertyName, \ReflectionProperty $property, LiveProp $liveProp): LivePropMetadata|LegacyLivePropMetadata
     {
         $reflectionType = $property->getType();
-        if ($reflectionType instanceof \ReflectionUnionType || $reflectionType instanceof \ReflectionIntersectionType) {
-            return new LivePropMetadata($property->getName(), $liveProp, Type::mixed());
-        }
 
         // BC layer when "symfony/type-info" is not available
         if (!method_exists($this->propertyTypeExtractor, 'getType')) {
+            if ($reflectionType instanceof \ReflectionUnionType || $reflectionType instanceof \ReflectionIntersectionType) {
+                return new LegacyLivePropMetadata($property->getName(), $liveProp, 'mixed', true, $reflectionType->allowsNull(), null);
+            }
+
             $infoTypes = $this->propertyTypeExtractor->getTypes($className, $propertyName) ?? [];
 
             $collectionValueType = null;
@@ -122,6 +123,10 @@ class LiveComponentMetadataFactory implements ResetInterface
                 $collectionValueType
             );
         } else {
+            if ($reflectionType instanceof \ReflectionUnionType || $reflectionType instanceof \ReflectionIntersectionType) {
+                return new LivePropMetadata($property->getName(), $liveProp, Type::mixed());
+            }
+
             $infoType = $this->propertyTypeExtractor->getType($className, $property->getName());
 
             if ($infoType instanceof CollectionType) {
