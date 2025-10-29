@@ -1,5 +1,7 @@
 # CHANGELOG
 
+## 2.34
+
 ## 2.33
 
 - Add `fetch_credentials` option to configure the fetch API credentials mode for cross-origin requests.
