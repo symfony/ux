@@ -57,7 +57,7 @@ class LiveComponentMetadataFactoryTest extends KernelTestCase
             $propsMetadataByName[$propMetadata->getName()] = $propMetadata;
         }
 
-        $this->assertEquals('mixed', (string)$propsMetadataByName['unionProp']->getType());
-        $this->assertEquals('mixed', (string)$propsMetadataByName['intersectionProp']->getType());
+        $this->assertEquals('mixed', (string) $propsMetadataByName['unionProp']->getType());
+        $this->assertEquals('mixed', (string) $propsMetadataByName['intersectionProp']->getType());
     }
 }
