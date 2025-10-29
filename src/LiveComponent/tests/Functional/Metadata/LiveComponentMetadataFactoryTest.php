@@ -12,9 +12,11 @@
 namespace Symfony\UX\LiveComponent\Tests\Functional\Metadata;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\TypeInfo\Type;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Metadata\UrlMapping;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithUrlBoundProps;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\WithUnionType;
 
 class LiveComponentMetadataFactoryTest extends KernelTestCase
 {
@@ -41,5 +43,21 @@ class LiveComponentMetadataFactoryTest extends KernelTestCase
         $this->assertNull($propsMetadataByName['maybeBoundProp']->urlMapping());
         $this->assertEquals(new UrlMapping(as: 'q'), $propsMetadataByName['boundPropWithAlias']->urlMapping());
         $this->assertNotNull($propsMetadataByName['boundPropWithCustomAlias']);
+    }
+
+    public function testLivePropUnionType()
+    {
+        /** @var LiveComponentMetadataFactory $metadataFactory */
+        $metadataFactory = self::getContainer()->get('ux.live_component.metadata_factory');
+
+        $class = new \ReflectionClass(WithUnionType::class);
+        $propsMetadata = $metadataFactory->createPropMetadatas($class);
+
+        $propsMetadataByName = [];
+        foreach ($propsMetadata as $propMetadata) {
+            $propsMetadataByName[$propMetadata->getName()] = $propMetadata;
+        }
+
+        $this->assertEquals(Type::mixed(), $propsMetadataByName['unionProp']->getType());
     }
 }
