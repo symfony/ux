@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.32
+
+- Add support for `LiveProp` union types in Live Components.
+  `LiveComponentMetadataFactory` can now create `liveProp` metadata for union types.
+  Note: This feature only works when using a custom `hydrate` and `dehydrate` implementation.
+
 ## 2.31
 
 -  Add browser events assertions in `InteractsWithLiveComponents`:
