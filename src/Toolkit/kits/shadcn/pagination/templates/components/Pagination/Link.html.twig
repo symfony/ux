@@ -1,9 +1,11 @@
-{%- props isActive = false, size = 'icon' -%}
+{# @prop active boolean Whether the link is active or not, default to `false` #}
+{# @block content The default block #}
+{%- props active = false -%}
 <twig:Button
     as="a"
-    variant="{{ isActive ? 'outline' : 'ghost' }}"
-    size="{{ size }}"
-    aria-current="{{ isActive ? 'page' : false }}"
+    variant="{{ active ? 'outline' : 'ghost' }}"
+    size="icon"
+    aria-current="{{ active ? 'page' : false }}"
     {{ ...attributes.without('class') }}
 >
     {{- block(outerBlocks.content) -}}
