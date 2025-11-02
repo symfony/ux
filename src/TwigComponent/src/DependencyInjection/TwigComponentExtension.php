@@ -152,6 +152,8 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
 
         if ($container->getParameter('kernel.debug') && $config['profiler']) {
             $loader->load('debug.php');
+            $container->getDefinition('ux.twig_component.data_collector')
+                ->setArgument(2, $config['profiler_dump_components'] ?? true);
         }
 
         $loader->load('cache.php');
@@ -218,6 +220,10 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                 ->booleanNode('profiler')
                     ->info('Enables the profiler for Twig Component (in debug mode)')
                     ->defaultValue('%kernel.debug%')
+                ->end()
+                ->booleanNode('profiler_dump_components')
+                    ->info('Dump components in the Twig Component profiler panel')
+                    ->defaultTrue()
                 ->end()
                 ->scalarNode('controllers_json')
                     ->setDeprecated('symfony/ux-twig-component', '2.18', 'The "twig_component.controllers_json" config option is deprecated, and will be removed in 3.0.')

@@ -293,10 +293,12 @@
                         <th scope="row">Attributes</th>
                         <td colspan="4">{{ profiler_dump(render.attributes) }}</td>
                     </tr>
+                    {% if render.component is defined %}
                     <tr>
                         <th scope="row">Component</th>
                         <td colspan="4">{{ profiler_dump(render.component) }}</td>
                     </tr>
+                    {% endif %}
                 </tbody>
             </table>
         {% endfor %}

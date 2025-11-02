@@ -37,6 +37,23 @@ class TwigComponentExtensionTest extends TestCase
         $this->compileContainer($container);
 
         $this->assertTrue($container->hasDefinition('ux.twig_component.data_collector'));
+        $this->assertTrue($container->getDefinition('ux.twig_component.data_collector')->getArgument(2));
+    }
+
+    public function testDataCollectorWithDumpComponentsDisabled()
+    {
+        $container = $this->createContainer();
+        $container->setParameter('kernel.debug', true);
+        $container->registerExtension(new TwigComponentExtension());
+        $container->loadFromExtension('twig_component', [
+            'defaults' => [],
+            'anonymous_template_directory' => 'components/',
+            'profiler_dump_components' => false,
+        ]);
+        $this->compileContainer($container);
+
+        $this->assertTrue($container->hasDefinition('ux.twig_component.data_collector'));
+        $this->assertFalse($container->getDefinition('ux.twig_component.data_collector')->getArgument(2));
     }
 
     public function testDataCollectorWithDebugModeCanBeDisabled()
