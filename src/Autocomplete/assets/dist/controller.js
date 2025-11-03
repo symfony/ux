@@ -65,6 +65,9 @@ var controller_default = class extends Controller {
   }
   disconnect() {
     this.stopMutationObserver();
+    if (!this.tomSelect) {
+      return;
+    }
     let currentSelectedValues = [];
     if (this.selectElement) {
       if (this.selectElement.multiple) {
@@ -74,6 +77,7 @@ var controller_default = class extends Controller {
       }
     }
     this.tomSelect.destroy();
+    this.tomSelect = void 0;
     if (this.selectElement) {
       if (this.selectElement.multiple) {
         Array.from(this.selectElement.options).forEach((option) => {
@@ -136,6 +140,9 @@ var controller_default = class extends Controller {
     }
   }
   changeTomSelectDisabledState(isDisabled) {
+    if (!this.tomSelect) {
+      return;
+    }
     this.stopMutationObserver();
     if (isDisabled) {
       this.tomSelect.disable();
@@ -244,11 +251,14 @@ getCommonConfig_fn = function() {
     plugins,
     // clear the text input after selecting a value
     onItemAdd: () => {
-      this.tomSelect.setTextboxValue("");
+      this.tomSelect?.setTextboxValue("");
     },
     closeAfterSelect: true,
     // fix positioning (in the dropdown) of options added through addOption()
     onOptionAdd: (value, data) => {
+      if (!this.tomSelect) {
+        return;
+      }
       let parentElement = this.tomSelect.input;
       let optgroupData = null;
       const optgroup = data[this.tomSelect.settings.optgroupField];
@@ -300,9 +310,9 @@ createAutocompleteWithHtmlContents_fn = function() {
   const config = __privateMethod(this, _instances, mergeConfigs_fn).call(this, commonConfig, {
     maxOptions: this.getMaxOptions(),
     score: (search) => {
-      const scoringFunction = this.tomSelect.getScoreFunction(search);
+      const scoringFunction = this.tomSelect?.getScoreFunction(search);
       return (item) => {
-        return scoringFunction({ ...item, text: __privateMethod(this, _instances, stripTags_fn).call(this, item[labelField]) });
+        return scoringFunction?.({ ...item, text: __privateMethod(this, _instances, stripTags_fn).call(this, item[labelField]) });
       };
     },
     render: {
@@ -345,7 +355,7 @@ createAutocompleteWithRemoteData_fn = function(autocompleteEndpointUrl, minChara
     },
     optgroupField: "group_by",
     // avoid extra filtering after results are returned
-    score: (search) => (item) => 1,
+    score: (_search) => (_item) => 1,
     render: {
       option: (item) => `<div>${item[labelField]}</div>`,
       item: (item) => `<div>${item[labelField]}</div>`,

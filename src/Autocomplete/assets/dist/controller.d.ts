@@ -32,7 +32,7 @@ declare class export_default extends Controller {
     readonly tomSelectOptionsValue: object;
     readonly hasPreloadValue: boolean;
     readonly preloadValue: string;
-    tomSelect: TomSelect;
+    tomSelect: TomSelect | undefined;
     private mutationObserver;
     private isObserving;
     private hasLoadedChoicesPreviously;
