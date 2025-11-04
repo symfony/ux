@@ -77,3 +77,9 @@
     <twig:Button size="lg">Large</twig:Button>
 </div>
 ```
+
+## As link
+
+```twig {"preview":true}
+<twig:Button href="https://example.com">Link</twig:Button>
+```
