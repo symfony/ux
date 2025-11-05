@@ -42,6 +42,11 @@
             "symfony/flex": true,
             "symfony/runtime": true
         },
+        "audit": {
+            "ignore": {
+                "PKSA-365x-2zjk-pt47": "false positive for symfony/http-foundation"
+            }
+        },
         "bump-after-update": true,
         "sort-packages": true
     },
