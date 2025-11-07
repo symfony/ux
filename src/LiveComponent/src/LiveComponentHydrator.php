@@ -222,6 +222,18 @@ final class LiveComponentHydrator
                 $dehydratedUpdatedProps,
             );
 
+            if (0 < \count($updatedWritablePaths)) {
+                try {
+                    $propertyValue = $this->hydrateValue(
+                        $propertyValue,
+                        $propMetadata,
+                        $component,
+                    );
+                } catch (HydrationException $e) {
+                    // swallow this: it's bad data from the user
+                }
+            }
+
             try {
                 $this->propertyAccessor->setValue($component, $propMetadata->getName(), $propertyValue);
             } catch (PropertyAccessExceptionInterface $exception) {

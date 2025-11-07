@@ -12,6 +12,7 @@
 namespace Symfony\UX\LiveComponent\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -20,9 +21,13 @@ use Symfony\Component\TypeInfo\Type;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LegacyLivePropMetadata;
+use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadata;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Metadata\LivePropMetadata;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithHydrateWithProps;
+use Symfony\UX\TwigComponent\ComponentMetadata;
 use Twig\Environment;
+use Twig\Runtime\EscaperRuntime;
 
 final class LiveComponentHydratorTest extends TestCase
 {
@@ -79,6 +84,76 @@ final class LiveComponentHydratorTest extends TestCase
 
             self::assertNull($hydratedValue);
         }
+    }
+
+    public function testHydrateWithIsCalledWithNestedArrayAsProps()
+    {
+        $twigMock = $this->createMock(Environment::class);
+        $twigMock->method('getRuntime')->willReturn(new EscaperRuntime());
+        $hydrator = new LiveComponentHydrator(
+            [],
+            PropertyAccess::createPropertyAccessor(),
+            $this->createMock(LiveComponentMetadataFactory::class),
+            new Serializer(normalizers: [new ObjectNormalizer()]),
+            'foo',
+            $twigMock,
+        );
+        $component = new ComponentWithHydrateWithProps();
+
+        // BC layer when "symfony/type-info" is not available
+        if (!class_exists(Type::class)) {
+            $hydrator->hydrate(
+                $component,
+                [
+                    '@checksum' => 'SNKH1tHUgwgWT8V+Z/A7z126JQ2dWGiG6xVmjx7FbeA=',
+                    'integers' => [
+                        'one' => 1,
+                        'two' => 2,
+                        'three' => 3,
+                    ],
+                ],
+                [
+                    'integers.one' => '4',
+                    'integers.two' => '5',
+                    'integers.three' => '6',
+                ],
+                new LiveComponentMetadata(
+                    new ComponentMetadata([]),
+                    [
+                        new LegacyLivePropMetadata('integers', new LiveProp(writable: true, hydrateWith: 'hydrateIntegers'), typeName: 'array', isBuiltIn: true, allowsNull: false, collectionValueType: new \Symfony\Component\PropertyInfo\Type('int')),
+                    ],
+                ),
+            );
+        } else {
+            $hydrator->hydrate(
+                $component,
+                [
+                    '@checksum' => 'SNKH1tHUgwgWT8V+Z/A7z126JQ2dWGiG6xVmjx7FbeA=',
+                    'integers' => [
+                        'one' => 1,
+                        'two' => 2,
+                        'three' => 3,
+                    ],
+                ],
+                [
+                    'integers.one' => '4',
+                    'integers.two' => '5',
+                    'integers.three' => '6',
+                ],
+                new LiveComponentMetadata(
+                    new ComponentMetadata([]),
+                    [
+                        new LivePropMetadata('integers', new LiveProp(writable: true, hydrateWith: 'hydrateIntegers'), Type::array(Type::int(), Type::string())),
+                    ],
+                ),
+            );
+        }
+
+        self::assertSame([
+            'one' => 4,
+            'two' => 5,
+            'three' => 6,
+        ], $component->integers);
     }
 }
 
