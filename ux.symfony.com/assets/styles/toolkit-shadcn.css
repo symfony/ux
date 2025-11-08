@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@source "../../vendor/symfony/ux-toolkit/kits";
+@source "../../vendor/symfony/ux-toolkit/kits/shadcn";
 
 @custom-variant dark (&:is(.dark *));
 
