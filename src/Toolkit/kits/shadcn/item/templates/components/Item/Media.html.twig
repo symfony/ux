@@ -1,7 +1,7 @@
 {# @prop variant 'default'|'icon'|'image' The variant, default to `default` #}
 {# @block content The default block #}
 {%- props variant = 'default' -%}
-{%- set style = html_cva({
+{%- set style = html_cva(
     base: 'flex shrink-0 items-center justify-center gap-2 group-has-[[data-slot=item-description]]/item:self-start [&_svg]:pointer-events-none group-has-[[data-slot=item-description]]/item:translate-y-0.5',
     variants: {
         variant: {
@@ -10,10 +10,10 @@
             image: 'size-10 rounded-sm overflow-hidden [&_img]:size-full [&_img]:object-cover',
         },
     },
-    defaultVariants: {
+    default_variant: {
         variant: 'default',
     },
-}) -%}
+) -%}
 
 <div
     data-slot="item-media"

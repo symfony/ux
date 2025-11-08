@@ -2,17 +2,9 @@
 {# @prop decorative bool Whether the separator is decorative, default to `true` #}
 {# @block content The default block #}
 {%- props orientation = 'horizontal', decorative = true -%}
-
-<div
-    data-slot="item-separator"
-    data-orientation="{{ orientation }}"
-    class="{{ 'my-0 bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px ' ~ attributes.render('class')|tailwind_merge }}"
-    {% if decorative %}
-        role="none"
-        aria-hidden="true"
-    {% else %}
-        role="separator"
-        aria-orientation="{{ orientation }}"
-    {% endif %}
-    {{ attributes }}
-></div>
+<twig:Separator
+    orientation="{{ orientation }}"
+    decorative="{{ decorative }}"
+    class="{{ ('my-0 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ ...attributes }}
+/>
