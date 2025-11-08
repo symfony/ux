@@ -1,0 +1,9 @@
+{# @block content The default block #}
+<div
+    role="list"
+    data-slot="item-group"
+    class="{{ 'group/item-group flex flex-col ' ~ attributes.render('class')|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

@@ -1,0 +1,33 @@
+{# @prop variant 'default'|'outline'|'muted' The variant, default to `default` #}
+{# @prop size 'default'|'sm' The size, default to `default` #}
+{# @prop as 'div' The HTML tag to use, default to `div` #}
+{# @block content The default block #}
+{%- props variant = 'default', size = 'default', as = 'div' -%}
+{%- set style = html_cva(
+    base: 'group/item flex items-center border border-transparent text-sm rounded-md transition-colors [a]:hover:bg-accent/50 [a]:transition-colors duration-100 flex-wrap outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
+    variants: {
+        variant: {
+            default: 'bg-transparent',
+            outline: 'border-border',
+            muted: 'bg-muted/50',
+        },
+        size: {
+            default: 'p-4 gap-4',
+            sm: 'py-3 px-4 gap-2.5',
+        },
+    },
+    default_variant: {
+        variant: 'default',
+        size: 'default',
+    },
+) -%}
+
+<{{ as }}
+    data-slot="item"
+    data-variant="{{ variant }}"
+    data-size="{{ size }}"
+    class="{{ style.apply({variant: variant, size: size}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</{{ as }}>
