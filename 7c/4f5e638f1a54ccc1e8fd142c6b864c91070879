@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-11-04T17:37:24Z
+
+Thanks Romain that's super appreciated! I'll take a good look at all of this tonight :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-11-08T09:36:43Z
+
+Hey, I was finally able to take some time on your contribution, I did few minor changes, but everything is good:
+1. I re-introduced the `as` tag, I prefer to make it explicit and this behavior is closer to `asChild` from React
+2. I modified some examples to reflect the current Shadcn's Button documentation
