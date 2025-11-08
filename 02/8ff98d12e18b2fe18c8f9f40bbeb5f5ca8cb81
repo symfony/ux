@@ -1,0 +1,8 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-11-08T07:57:58Z
+
+I did some minor fixes, the components were not able to be rendered correctly due to `html_cva()` wrong usage, the syntax between the deprecated `cva()` from UX and `html_cva()` from Twig Extra is different:
+<img width="1129" height="525" alt="image" src="https://github.com/user-attachments/assets/2ae0411b-e074-47c1-9189-545c4a7fecb7" />
+
+But it looks good, thanks @bernard-ng :)
