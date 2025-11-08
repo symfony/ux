@@ -48,7 +48,7 @@
 
 ```twig {"preview":true}
 <twig:Button variant="outline" size="icon">
-    <twig:ux:icon name="lucide:chevron-right" />
+    <twig:ux:icon name="lucide:circle-fading-arrow-up" />
 </twig:Button>
 ```
 
@@ -71,9 +71,30 @@
 ## Different sizes
 
 ```twig {"preview":true}
-<div class="flex items-center gap-2">
-    <twig:Button size="sm">Small</twig:Button>
-    <twig:Button>Default</twig:Button>
-    <twig:Button size="lg">Large</twig:Button>
+<div class="flex flex-col items-start gap-8 sm:flex-row">
+    <div class="flex items-center gap-2">
+        <twig:Button size="sm" variant="outline">Small</twig:Button>
+        <twig:Button size="icon-sm" variant="outline" aria-label="Submit">
+            <twig:ux:icon name="lucide:arrow-up-right" class="size-4" />
+        </twig:Button>
+    </div>
+    <div class="flex items-center gap-2">
+        <twig:Button variant="outline">Default</twig:Button>
+        <twig:Button variant="outline" aria-label="Submit">
+            <twig:ux:icon name="lucide:arrow-up-right" class="size-4" />
+        </twig:Button>
+    </div>
+    <div class="flex items-center gap-2">
+        <twig:Button size="lg" variant="outline">Large</twig:Button>
+        <twig:Button size="icon-lg" variant="outline" aria-label="Submit">
+            <twig:ux:icon name="lucide:arrow-up-right" class="size-4" />
+        </twig:Button>
+    </div>
 </div>
+```
+
+## As link
+
+```twig {"preview":true}
+<twig:Button href="https://example.com">Link</twig:Button>
 ```
