@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.31
+
+- Suport for multiple files drag and drop and peviews
+
 ## 2.30
 
 -  Ensure compatibility with PHP 8.5
