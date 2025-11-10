@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import {Controller} from '@hotwired/stimulus';
+import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     declare readonly inputTarget: HTMLInputElement;
@@ -15,7 +15,15 @@ export default class extends Controller {
     declare readonly previewTargets: HTMLDivElement[];
     declare readonly previewContainerTarget: HTMLDivElement;
 
-    static targets = ['input', 'placeholder', 'preview', 'previewClearButton', 'previewFilename', 'previewImage', 'previewContainer'];
+    static targets = [
+        'input',
+        'placeholder',
+        'preview',
+        'previewClearButton',
+        'previewFilename',
+        'previewImage',
+        'previewContainer'
+    ];
 
     files: Map<string, File> = new Map<string, File>();
 
@@ -58,13 +66,13 @@ export default class extends Controller {
             }
         }
         if (!this.inputTarget || !this.inputTarget.files || this.inputTarget?.files?.length === 0) {
-            this.placeholderTarget.style.display = "block";
+            this.placeholderTarget.style.display = 'block';
             if (!this.isMultiple) {
-                this.inputTarget.style.display = "block";
+                this.inputTarget.style.display = 'block';
             }
         }
 
-        this.dispatchEvent("clear");
+        this.dispatchEvent('clear');
     }
 
     onInputChange() {
@@ -75,14 +83,14 @@ export default class extends Controller {
         }
 
         if (!this.isMultiple && this.files.size > 0) {
-            this.inputTarget.style.display = "none";
+            this.inputTarget.style.display = 'none';
         }
 
         const selectedFiles = this.isMultiple ? Array.from(files) : Array.from(files).slice(0, 1);
         this.addFiles(selectedFiles);
         this.updateFileInput();
         this.renderPreview();
-        this.dispatchEvent("change", files);
+        this.dispatchEvent('change', files);
     }
 
     private renderPreview() {
@@ -106,7 +114,7 @@ export default class extends Controller {
 
     private clearPreviewContainer() {
         const previews = this.previewTargets;
-        previews.slice(1).forEach(el => el.remove());
+        previews.slice(1).forEach((el) => el.remove());
     }
 
     private buildPreview(file: File, element?: HTMLElement): HTMLElement {
@@ -117,7 +125,7 @@ export default class extends Controller {
 
         const fileName = element.querySelector('.dropzone-preview-filename');
         if (fileName) {
-            fileName.textContent = file.name
+            fileName.textContent = file.name;
         }
 
         const button = element.querySelector('.dropzone-preview-button');
@@ -176,6 +184,6 @@ export default class extends Controller {
     }
 
     private dispatchEvent(name: string, payload: any = {}) {
-        this.dispatch(name, {detail: payload, prefix: 'dropzone'});
+        this.dispatch(name, { detail: payload, prefix: 'dropzone' });
     }
 }
