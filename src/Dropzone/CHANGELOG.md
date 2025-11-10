@@ -2,7 +2,7 @@
 
 ## 2.31
 
-- Suport for multiple files drag and drop and peviews
+-  Support for multiple files drag and drop and peviews
 
 ## 2.30
 

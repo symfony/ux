@@ -23,7 +23,9 @@ class MockDataTransfer {
     }
 
     setData() {}
-    getData() { return ''; }
+    getData() {
+        return '';
+    }
     clearData() {
         this.files.length = 0;
     }
