@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import {Controller} from '@hotwired/stimulus';
+import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     declare readonly inputTarget: HTMLInputElement;
@@ -72,7 +72,7 @@ export default class extends Controller {
             }
         }
 
-        this.dispatchEvent("clear");
+        this.dispatchEvent('clear');
     }
 
     onInputChange() {
@@ -184,6 +184,6 @@ export default class extends Controller {
     }
 
     private dispatchEvent(name: string, payload: any = {}) {
-        this.dispatch(name, {detail: payload, prefix: 'dropzone'});
+        this.dispatch(name, { detail: payload, prefix: 'dropzone' });
     }
 }
