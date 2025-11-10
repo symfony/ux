@@ -23,6 +23,7 @@
     display: flex;
     align-items: center;
     max-width: 100%;
+    padding: 10px 0;
 }
 
 .dropzone-preview-image {
@@ -41,7 +42,7 @@
 }
 
 .dropzone-preview-button {
-    position: absolute;
+    position: relative;
     top: 0;
     right: 0;
     z-index: 1;
