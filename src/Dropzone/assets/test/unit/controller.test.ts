@@ -54,6 +54,8 @@ describe('DropzoneController', () => {
                         <button type="button"
                                 class="dropzone-preview-button"
                                 data-dropzone-target="previewClearButton"
+                                data-dropzone-filename-param="0"
+                                data-action="dropzone#clear"
                                 data-testid="button"></button>
 
                         <div class="dropzone-preview-image"
@@ -102,8 +104,8 @@ describe('DropzoneController', () => {
 
         button.click();
 
-        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'none' }));
-        await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'none' }));
+        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'block' }));
+        await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'block' }));
         await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'block' }));
 
         // The event should have been dispatched
