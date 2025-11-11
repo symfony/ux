@@ -998,6 +998,9 @@ Or, to *hide* an element while the component is loading:
     <!-- hide when the component is loading -->
     <span data-loading="hide">Saved!</span>
 
+Note that this is a different concept than showing a placeholder when initially loading the component itself.
+See :ref:`loading content <loading-content>` for more info.
+
 Adding and Removing Classes or Attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
