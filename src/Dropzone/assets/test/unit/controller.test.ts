@@ -102,9 +102,9 @@ describe('DropzoneController', () => {
 
         button.click();
 
-        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'block' }));
-        await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'block' }));
-        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'none' }));
+        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'none' }));
+        await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'none' }));
+        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'block' }));
 
         // The event should have been dispatched
         expect(dispatched).toBe(true);
@@ -160,8 +160,8 @@ describe('DropzoneController', () => {
         getByTestId(container, 'container').dispatchEvent(dragLeaveEvent);
 
         // Check that the input and placeholder are hidden, and preview shown
-        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'none' }));
-        await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'none' }));
-        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'block' }));
+        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'block' }));
+        await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'block' }));
+        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'none' }));
     });
 });

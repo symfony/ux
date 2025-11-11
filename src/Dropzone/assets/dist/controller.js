@@ -131,7 +131,15 @@ var controller_default = class extends Controller {
     this.dispatch(name, { detail: payload, prefix: "dropzone" });
   }
 };
-controller_default.targets = ["input", "placeholder", "preview", "previewClearButton", "previewFilename", "previewImage", "previewContainer"];
+controller_default.targets = [
+  "input",
+  "placeholder",
+  "preview",
+  "previewClearButton",
+  "previewFilename",
+  "previewImage",
+  "previewContainer"
+];
 export {
   controller_default as default
 };
