@@ -96,5 +96,5 @@
 ## As link
 
 ```twig {"preview":true}
-<twig:Button href="https://example.com">Link</twig:Button>
+<twig:Button as="a" href="https://example.com">Link</twig:Button>
 ```
