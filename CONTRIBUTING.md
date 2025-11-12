@@ -77,6 +77,18 @@ and [the Backward Compatibility Promise](https://symfony.com/doc/current/contrib
 When contributing, please make sure to follow these standards and to write tests for your code,
 runnable with `php vendor/bin/simple-phpunit`.
 
+#### Generate snapshots for UX Toolkit
+
+If you make changes to a component template or add a new one, create or update the EXAMPLES.md of the component.
+Then, you can (re)generate new snapshots by running:
+
+```shell
+php vendor/bin/simple-phpunit -d --update-snapshots
+```
+
+> [!IMPORTANT]
+> Snapshots will not reflect changes if you forget to update the EXAMPLES.md.
+
 ### Working with assets
 
 Assets are specific to each Symfony UX package:

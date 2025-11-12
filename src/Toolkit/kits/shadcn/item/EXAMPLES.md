@@ -113,7 +113,7 @@
 ## Icon
 
 ```twig {"preview":true}
-<div class="flex w-full max-w-lg flex-col gap-6"">
+<div class="flex w-full max-w-lg flex-col gap-6">
     <twig:Item variant="outline">
         <twig:Item:Media variant="icon">
             <twig:ux:icon name="lucide:shield-alert" class="size-4" />
@@ -136,7 +136,7 @@
 ## Avatar
 
 ```twig {"preview":true,"height":"400px"}
-<div class="flex w-full max-w-lg flex-col gap-6"">
+<div class="flex w-full max-w-lg flex-col gap-6">
     <twig:Item variant="outline">
         <twig:Item:Media variant="icon">
             <twig:Avatar>
