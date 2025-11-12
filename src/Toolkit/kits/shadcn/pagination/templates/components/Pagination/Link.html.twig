@@ -2,6 +2,7 @@
 {# @block content The default block #}
 {%- props active = false -%}
 <twig:Button
+    as="a"
     variant="{{ active ? 'outline' : 'ghost' }}"
     size="icon"
     aria-current="{{ active ? 'page' : false }}"
