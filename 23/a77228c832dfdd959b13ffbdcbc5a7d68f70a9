@@ -1,0 +1,105 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-09-20T01:37:05Z
+
+@alinceDev
+
+So i checked on the project I work on and .... I'm not a big fan of this idea (but not against the idea of not storing the components ... but)
+
+Multiple data are only visible here in the profiler... and basic scalar data is not something that would take that much memory (at all).
+
+Could you maybe create a repository / share some code (or context) to understand what numver of components (or what amount of inner data) becomes a problem in dev for you ?
+
+I'd rather we change profiling and remove an important feature of it only if we have a concrete example to base this choice on....
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-10-15T13:34:57Z
+
+Since having components dumps in the profiler is useful but could become a mess on memory usage when having too much components, what about introducing a new option `profile_components` (aside the already existing option `profiler`)?
+
+This option could be `true` by default, but in the recipe it could be configured to `false` with a comment explaining the possible performance issues.
+WDYT?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-10-15T17:03:56Z
+
+> Since having components dumps in the profiler is useful but could become a mess on memory usage when having too much components, what about introducing a new option `profile_components` (aside the already existing option `profiler`)?
+>
+> This option could be `true` by default, but in the recipe it could be configured to `false` with a comment explaining the possible performance issues. WDYT?
+
+100%, something I suggested [here](https://github.com/symfony/ux/issues/3074#issuecomment-3332448369) but forgot to move back here (my bad)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-10-27T06:56:04Z
+
+Status: Needs work
+
+---------------------------------------------------------------------------
+
+by alinceDev at 2025-11-02T16:04:32Z
+
+I updated the PR @smnandre @Kocal
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-11-03T05:39:34Z
+
+Also could you add a tests or two, you can find similar ones in tests/Unit/DependencyInjection/TwigComponentExtensionTest.php and tests/Unit/DataCollector/TwigComponentDataCollectorTest.php
+
+---------------------------------------------------------------------------
+
+by alinceDev at 2025-11-09T13:06:44Z
+
+@smnandre I updated the PR, but I don't know what to test in the TwigComponentDataCollectorTest class.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-11-13T07:37:27Z
+
+Hey :)
+
+Thanks for pushed your changes, I just pushed some modifications too:
+- I believe our `twig_components.profiler` configuration should behave like `framework.profiler` from Symfony, thanks to `canBeEnabled()` method:
+```yaml
+# Below some examples where the profiler is enabled
+
+twig_components:
+    profiler: true
+
+twig_components:
+    profiler:
+        enabled: true
+
+twig_components:
+    profiler:
+        enabled: true
+        collect_components: true # or false
+
+twig_components:
+    profiler:
+        collect_components: true # or false
+
+# Below some examples where the profiler is disabled
+
+twig_components:
+    profiler: false
+
+twig_components:
+    profiler:
+        enabled: false
+
+twig_components:
+    profiler:
+        enabled: false
+        collect_components: true # no effect
+
+```
+- I removed the check on `$container->getParameter('kernel.debug')` in `TwigComponentExtension`. AFAIU it does not make sense since we already enable/disable the profiler collection through default value `%kernel.debug%` (from `$config['profiler']['enabled']`, previously `$config['profiler']`).
+  It now behaves like `twig.debug`, `twig.strict_variables`, `doctrine.dbal.profiling_collect_backtrace`, etc...
+- The `TwigComponentDataCollectorTest` test has been improved to ensure that no component instances are collected
+- I added an entry in the CHANGELOG
+
+Let's merge when the CI is green
