@@ -150,8 +150,11 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
         $container->setAlias('console.command.stimulus_component_debug', 'ux.twig_component.command.debug')
             ->setDeprecated('symfony/ux-twig-component', '2.13', '%alias_id%');
 
-        if ($container->getParameter('kernel.debug') && $config['profiler']) {
+        if ($config['profiler']['enabled']) {
             $loader->load('debug.php');
+
+            $container->getDefinition('ux.twig_component.data_collector')
+                ->setArgument(2, $config['profiler']['collect_components']);
         }
 
         $loader->load('cache.php');
@@ -215,9 +218,13 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                 ->scalarNode('anonymous_template_directory')
                     ->info('Defaults to `components`')
                 ->end()
-                ->booleanNode('profiler')
-                    ->info('Enables the profiler for Twig Component (in debug mode)')
-                    ->defaultValue('%kernel.debug%')
+                ->arrayNode('profiler')
+                    ->info('Enables the profiler for Twig Component')
+                    ->canBeEnabled()
+                    ->children()
+                        ->booleanNode('enabled')->defaultValue('%kernel.debug%')->end()
+                        ->booleanNode('collect_components')->info('Collect components instances')->defaultTrue()->end()
+                    ->end()
                 ->end()
                 ->scalarNode('controllers_json')
                     ->setDeprecated('symfony/ux-twig-component', '2.18', 'The "twig_component.controllers_json" config option is deprecated, and will be removed in 3.0.')

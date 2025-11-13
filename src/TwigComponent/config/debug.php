@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\UX\TwigComponent\DataCollector\TwigComponentDataCollector;
 use Symfony\UX\TwigComponent\EventListener\TwigComponentLoggerListener;
 
+use function Symfony\Component\DependencyInjection\Loader\Configurator\abstract_arg;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return static function (ContainerConfigurator $container) {
@@ -27,6 +28,7 @@ return static function (ContainerConfigurator $container) {
         ->args([
             service('ux.twig_component.component_logger_listener'),
             service('twig'),
+            abstract_arg('profiler collect components'),
         ])
         ->tag('data_collector', [
             'template' => '@TwigComponent/Collector/twig_component.html.twig',
