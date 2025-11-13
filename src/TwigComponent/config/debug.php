@@ -28,7 +28,7 @@ return static function (ContainerConfigurator $container) {
         ->args([
             service('ux.twig_component.component_logger_listener'),
             service('twig'),
-            abstract_arg('profiler dump components'),
+            abstract_arg('profiler collect components'),
         ])
         ->tag('data_collector', [
             'template' => '@TwigComponent/Collector/twig_component.html.twig',
