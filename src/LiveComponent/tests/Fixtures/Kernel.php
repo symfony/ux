@@ -163,9 +163,6 @@ final class Kernel extends BaseKernel
                 'url' => '%env(resolve:DATABASE_URL)%',
             ],
             'orm' => [
-                'auto_generate_proxy_classes' => true,
-                'enable_lazy_ghost_objects' => true,
-                'report_fields_where_declared' => true,
                 'validate_xml_mapping' => true,
                 'auto_mapping' => true,
                 'mappings' => [
