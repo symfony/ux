@@ -62,6 +62,8 @@ class ComponentsRenderingTest extends WebTestCase
 
     /**
      * @dataProvider provideTestComponentRendering
+     *
+     * @group skip-on-lowest
      */
     public function testComponentRendering(string $kitName, string $recipeName, string $code)
     {

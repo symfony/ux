@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\Tests\Fixtures;
 
 use Composer\InstalledVersions;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\ORM\Mapping\AssociationMapping;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -162,7 +163,6 @@ final class Kernel extends BaseKernel
                 'url' => '%env(resolve:DATABASE_URL)%',
             ],
             'orm' => [
-                'auto_generate_proxy_classes' => true,
                 'auto_mapping' => true,
                 'mappings' => [
                     'Default' => [
@@ -184,17 +184,22 @@ final class Kernel extends BaseKernel
         ];
 
         if (null !== $doctrineBundleVersion = InstalledVersions::getVersion('doctrine/doctrine-bundle')) {
-            if (version_compare($doctrineBundleVersion, '2.8.0', '>=')) {
-                $doctrineConfig['orm']['enable_lazy_ghost_objects'] = true;
+            if (version_compare($doctrineBundleVersion, '3.0.0', '<')) {
+                $doctrineConfig['orm']['auto_generate_proxy_classes'] = true;
+
+                if (version_compare($doctrineBundleVersion, '2.8.0', '>=')) {
+                    $doctrineConfig['orm']['enable_lazy_ghost_objects'] = true;
+                }
+                if (version_compare($doctrineBundleVersion, '2.12.0', '>=')) {
+                    $doctrineConfig['orm']['controller_resolver']['auto_mapping'] = false;
+                }
             }
+
             // https://github.com/doctrine/DoctrineBundle/pull/1661
             if (version_compare($doctrineBundleVersion, '2.9.0', '>=')) {
                 $doctrineConfig['orm']['report_fields_where_declared'] = true;
                 $doctrineConfig['orm']['validate_xml_mapping'] = true;
                 $doctrineConfig['dbal']['schema_manager_factory'] = 'doctrine.dbal.default_schema_manager_factory';
-            }
-            if (version_compare($doctrineBundleVersion, '2.12.0', '>=')) {
-                $doctrineConfig['orm']['controller_resolver']['auto_mapping'] = false;
             }
             if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=')) {
                 $doctrineConfig['orm']['enable_native_lazy_objects'] = true;

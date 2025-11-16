@@ -82,7 +82,7 @@ final class Kernel extends BaseKernel
             {
                 $container->removeDefinition('doctrine.orm.listeners.pdo_session_handler_schema_listener');
 
-                if (\PHP_VERSION_ID >= 80400) {
+                if (\PHP_VERSION_ID >= 80400 && $container->hasParameter('doctrine.orm.proxy_dir')) {
                     // Workaround for `RuntimeException: Unable to create the Doctrine Proxy directory "". in vendor/symfony/doctrine-bridge/CacheWarmer/ProxyCacheWarmer.php:49`
                     // when running PHP 8.4 and Doctrine ORM 3.5+.
                     $container->getDefinition('doctrine.orm.default_configuration')
@@ -113,7 +113,6 @@ final class Kernel extends BaseKernel
         $doctrineConfig = [
             'dbal' => ['url' => '%env(resolve:DATABASE_URL)%'],
             'orm' => [
-                'auto_generate_proxy_classes' => true,
                 'auto_mapping' => true,
                 'mappings' => [
                     'Test' => [
@@ -126,15 +125,18 @@ final class Kernel extends BaseKernel
                 ],
             ],
         ];
-        if (class_exists(AssociationMapping::class)) {
-            // Doctrine ORM >= 3.0
-            $doctrineConfig['orm']['controller_resolver'] = [
-                'auto_mapping' => true,
-            ];
-        }
+
         if (null !== $doctrineBundleVersion = InstalledVersions::getVersion('doctrine/doctrine-bundle')) {
-            if (version_compare($doctrineBundleVersion, '2.8.0', '>=')) {
-                $doctrineConfig['orm']['enable_lazy_ghost_objects'] = true;
+            if (version_compare($doctrineBundleVersion, '3.0.0', '<')) {
+                $doctrineConfig['orm']['auto_generate_proxy_classes'] = true;
+
+                if (version_compare($doctrineBundleVersion, '2.8.0', '>=')) {
+                    $doctrineConfig['orm']['enable_lazy_ghost_objects'] = true;
+                }
+
+                if (version_compare($doctrineBundleVersion, '2.12.0', '>=')) {
+                    $doctrineConfig['orm']['controller_resolver']['auto_mapping'] = true;
+                }
             }
             if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=')) {
                 $doctrineConfig['orm']['enable_native_lazy_objects'] = true;
