@@ -3,7 +3,7 @@ name: Release on NPM
 on:
   push:
     tags:
-        - 'v2.*.*'
+        - 'v3.*.*'
 
 permissions:
     id-token: write  # Required for OIDC
@@ -15,7 +15,7 @@ jobs:
         steps:
           - uses: actions/checkout@v4
             with:
-              ref: 2.x
+              ref: 3.x
 
           - name: Configure Git
             run: |
@@ -56,4 +56,4 @@ jobs:
           - name: Push changes
             env:
               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            run: git push origin 2.x
+            run: git push origin 3.x
