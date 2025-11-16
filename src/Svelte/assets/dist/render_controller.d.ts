@@ -15,8 +15,8 @@ declare class export_default extends Controller<Element & {
     intro: BooleanConstructor;
   };
   connect(): void;
-  disconnect(): void;
-  _destroyIfExists(): void;
+  disconnect(): Promise<void>;
+  _destroyIfExists(): Promise<void>;
   private dispatchEvent;
 }
 export { export_default as default };

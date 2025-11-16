@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { mount, unmount } from 'svelte';
 import type { SvelteComponent } from 'svelte';
 
 export default class extends Controller<Element & { root?: SvelteComponent }> {
@@ -29,8 +30,8 @@ export default class extends Controller<Element & { root?: SvelteComponent }> {
 
         this._destroyIfExists();
 
-        // @see https://svelte.dev/docs#run-time-client-side-component-api-creating-a-component
-        this.app = new Component({
+        // @see https://svelte.dev/docs/svelte/svelte#mount
+        this.app = mount(Component, {
             target: this.element,
             props: this.props,
             intro: this.intro,
@@ -43,14 +44,14 @@ export default class extends Controller<Element & { root?: SvelteComponent }> {
         });
     }
 
-    disconnect() {
-        this._destroyIfExists();
+    async disconnect() {
+        await this._destroyIfExists();
         this.dispatchEvent('unmount');
     }
 
-    _destroyIfExists() {
+    async _destroyIfExists() {
         if (this.element.root !== undefined) {
-            this.element.root.$destroy();
+            await unmount(this.element.root);
             delete this.element.root;
         }
     }

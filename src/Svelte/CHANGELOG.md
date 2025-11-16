@@ -5,6 +5,7 @@
 - Minimum required Symfony version is now 6.4
 - Minimum required PHP version is now 8.2
 - Remove old compatibility layer with deprecated `StimulusTwigExtension` from WebpackEncoreBundle ^1.0, use StimulusBundle instead
+- Drop support of Svelte 3, only Svelte 5 is supported now
 
 ## 2.30
 

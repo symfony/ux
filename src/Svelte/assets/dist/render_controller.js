@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { mount, unmount } from "svelte";
 var _Class = class extends Controller {
 	connect() {
 		this.element.innerHTML = "";
@@ -7,7 +8,7 @@ var _Class = class extends Controller {
 		this.dispatchEvent("connect");
 		const Component = window.resolveSvelteComponent(this.componentValue);
 		this._destroyIfExists();
-		this.app = new Component({
+		this.app = mount(Component, {
 			target: this.element,
 			props: this.props,
 			intro: this.intro
@@ -15,13 +16,13 @@ var _Class = class extends Controller {
 		this.element.root = this.app;
 		this.dispatchEvent("mount", { component: Component });
 	}
-	disconnect() {
-		this._destroyIfExists();
+	async disconnect() {
+		await this._destroyIfExists();
 		this.dispatchEvent("unmount");
 	}
-	_destroyIfExists() {
+	async _destroyIfExists() {
 		if (this.element.root !== void 0) {
-			this.element.root.$destroy();
+			await unmount(this.element.root);
 			delete this.element.root;
 		}
 	}

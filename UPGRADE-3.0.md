@@ -69,6 +69,13 @@ class MyLiveComponent {
 - The Twig function `ux_controller_link_tags()` has been removed, which requires Symfony AssetMapper >=6.4,
   run `composer require symfony/asset-mapper:>=6.4` if you don't have it installed yet.
 
+## Svelte
+
+- The support for Svelte 3 has been dropped, only Svelte 5 is supported now.
+  Make sure to upgrade your Svelte components accordingly.
+
+    TODO: to complete...
+
 ## Swup
 
 - The package has been removed, see the [previous README](https://raw.githubusercontent.com/symfony/ux/refs/heads/2.x/src/Turbo/README.md)
