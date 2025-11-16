@@ -186,7 +186,7 @@ docker run --rm -it -e DOCS_DIR='/docs' -v ${PWD}:/docs  oskarstark/doctor-rst -
 
 ## Useful commands
 
-To keep your fork up-to-date with the upstream repository and `2.x` branch:
+To keep your fork up-to-date with the upstream repository and `3.x` branch:
 ```shell
 $ git checkout 3.x && \
   git fetch upstream && \

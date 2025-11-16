@@ -4,7 +4,7 @@ Due to its nature, the Symfony UX Toolkit requires a specific setup to develop a
 
 ## Setting up the development environment
 
-First, ensure you have followed the [Symfony UX's Contribution Guide](https://github.com/symfony/ux/blob/2.x/CONTRIBUTING.md) to set up your fork of the main repository, install dependencies, etc.
+First, ensure you have followed the [Symfony UX's Contribution Guide](https://github.com/symfony/ux/blob/3.x/CONTRIBUTING.md) to set up your fork of the main repository, install dependencies, etc.
 
 Then, install the UX Toolkit dependencies:
 ```shell
@@ -14,7 +14,7 @@ composer install
 
 ## Previewing kits
 
-Currently, kits can only be previewed through the Symfony UX Website. Installation instructions can be found in the [Symfony UX Website's `README.md`](https://github.com/symfony/ux/tree/2.x/ux.symfony.com).
+Currently, kits can only be previewed through the Symfony UX Website. Installation instructions can be found in the [Symfony UX Website's `README.md`](https://github.com/symfony/ux/tree/3.x/ux.symfony.com).
 
 Then, run the following commands from the `ux.symfony.com/` directory:
 ```shell

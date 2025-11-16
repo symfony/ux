@@ -899,7 +899,7 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _`Google Maps`: https://github.com/symfony/ux-google-map
 .. _`Leaflet`: https://github.com/symfony/ux-leaflet-map
-.. _`Symfony UX Map Google Maps bridge docs`: https://github.com/symfony/ux/blob/2.x/src/Map/src/Bridge/Google/README.md
-.. _`Symfony UX Map Leaflet bridge docs`: https://github.com/symfony/ux/blob/2.x/src/Map/src/Bridge/Leaflet/README.md
+.. _`Symfony UX Map Google Maps bridge docs`: https://github.com/symfony/ux/blob/3.x/src/Map/src/Bridge/Google/README.md
+.. _`Symfony UX Map Leaflet bridge docs`: https://github.com/symfony/ux/blob/3.x/src/Map/src/Bridge/Leaflet/README.md
 .. _`Twig Component`: https://symfony.com/bundles/ux-twig-component/current/index.html
 .. _`Live Actions`: https://symfony.com/bundles/ux-live-component/current/index.html#actions

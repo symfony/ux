@@ -150,7 +150,7 @@ class CodeBlock
 
     public function getGithubLink(): string
     {
-        return \sprintf('https://github.com/symfony/ux/blob/2.x/ux.symfony.com/%s', $this->filename);
+        return \sprintf('https://github.com/symfony/ux/blob/3.x/ux.symfony.com/%s', $this->filename);
     }
 
     public function getLanguage(): string
