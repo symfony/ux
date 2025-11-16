@@ -13,6 +13,11 @@
 -   The `ComponentTemplateFinder` does not accept a nullable `directory` argument anymore, pass a string instead
 -   Remove old compatibility layer with deprecated `StimulusTwigExtension` from WebpackEncoreBundle ^1.0, use StimulusBundle instead
 
+## 2.32
+
+-  Add option `profiler.collect_components` to control component data collection
+   in the profiler (enabled in debug mode by default)
+
 ## 2.30
 
 -  Ensure compatibility with PHP 8.5

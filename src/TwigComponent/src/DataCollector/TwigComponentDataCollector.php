@@ -35,6 +35,7 @@ final class TwigComponentDataCollector extends AbstractDataCollector implements 
     public function __construct(
         private readonly TwigComponentLoggerListener $logger,
         private readonly Environment $twig,
+        private readonly bool $collectComponents = true,
     ) {
         $this->hasStub = class_exists(ClassStub::class);
     }
@@ -130,11 +131,14 @@ final class TwigComponentDataCollector extends AbstractDataCollector implements 
                     'input_props' => $mountedComponent->getInputProps(),
                     'attributes' => $mountedComponent->getAttributes()->all(),
                     'template_index' => $event->getTemplateIndex(),
-                    'component' => $mountedComponent->getComponent(),
                     'depth' => \count($ongoingRenders),
                     'children' => [],
                     'render_start' => $profile[0],
                 ];
+
+                if ($this->collectComponents) {
+                    $renders[$renderId]['component'] = $mountedComponent->getComponent();
+                }
 
                 if ($parentId = end($ongoingRenders)) {
                     $renders[$parentId]['children'][] = $renderId;

@@ -139,8 +139,11 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
             ->addTag('console.command')
         ;
 
-        if ($container->getParameter('kernel.debug') && $config['profiler']) {
+        if ($config['profiler']['enabled']) {
             $loader->load('debug.php');
+
+            $container->getDefinition('ux.twig_component.data_collector')
+                ->setArgument(2, $config['profiler']['collect_components']);
         }
 
         $loader->load('cache.php');
@@ -195,9 +198,13 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                     ->isRequired()
                     ->info('Defaults to `components`')
                 ->end()
-                ->booleanNode('profiler')
-                    ->info('Enables the profiler for Twig Component (in debug mode)')
-                    ->defaultValue('%kernel.debug%')
+                ->arrayNode('profiler')
+                    ->info('Enables the profiler for Twig Component')
+                    ->canBeEnabled()
+                    ->children()
+                        ->booleanNode('enabled')->defaultValue('%kernel.debug%')->end()
+                        ->booleanNode('collect_components')->info('Collect components instances')->defaultTrue()->end()
+                    ->end()
                 ->end()
             ->end();
 

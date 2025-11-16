@@ -727,7 +727,7 @@ Examples of usage:
     <twig:Button icon="share">Share</twig:Button>
 
     {# both properties "icon" and "type" are passed #}
-    <twig:Button icon="share" type="secondary>Share</twig:Button>
+    <twig:Button icon="share" type="secondary">Share</twig:Button>
 
 .. _embedded-components:
 

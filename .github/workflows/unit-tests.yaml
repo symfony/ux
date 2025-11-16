@@ -34,7 +34,6 @@ jobs:
                 minimum-stability: ['stable']
                 os: ['']
                 include:
-                    # dev packages (probably not needed to have multiple such jobs)
                     -   minimum-stability: 'dev'
                         php-version: '8.5'
                     # lowest deps
@@ -50,12 +49,15 @@ jobs:
                        symfony-version: '6.4.*'
                        os: 'windows-latest'
 
+                    # Explicit Symfony versions
                     -  php-version: '8.2'
-                       symfony-version: '7.4.x-dev' # TODO: change to '7.4' when Symfony 7.4 is released
+                       symfony-version: '^7.4.0-RC1' # TODO: change to '7.4.*' when Symfony 7.4 is released
+
+                    -  php-version: '8.4'
+                       symfony-version: '^8.0.0-RC1' # TODO: change to '8.0.*' when Symfony 8.0 is released
 
                     -  php-version: '8.5'
-                       symfony-version: '8.0.x-dev' # TODO: change to '8.0' when Symfony 8.0 is released
-                       minimum-stability: 'dev' # TODO: remove when Symfony 8.0 is released
+                       symfony-version: '^8.0.0-RC1' # TODO: change to '8.0.*' when Symfony 8.0 is released
 
         env:
             SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=6.4' }}
@@ -69,7 +71,7 @@ jobs:
                   echo COLUMNS=120 >> $GITHUB_ENV
                   echo COMPOSER_MIN_STAB='composer config minimum-stability ${{ matrix.minimum-stability || 'stable' }} --ansi' >> $GITHUB_ENV
                   echo COMPOSER_UP='composer update ${{ matrix.dependency-version == 'lowest' && '--prefer-lowest' || '' }} --no-progress --no-interaction --ansi' >> $GITHUB_ENV
-                  echo PHPUNIT='vendor/bin/simple-phpunit ${{ matrix.os == 'windows-latest' && '--exclude-group transient-on-windows' || '' }}' >> $GITHUB_ENV
+                  echo PHPUNIT='vendor/bin/simple-phpunit ${{ matrix.dependency-version == 'lowest' && '--exclude-group skip-on-lowest' || '' }} ${{ matrix.os == 'windows-latest' && '--exclude-group transient-on-windows' || '' }}' >> $GITHUB_ENV
                   [ 'lowest' = '${{ matrix.dependency-version }}' ] && export SYMFONY_DEPRECATIONS_HELPER=weak
 
                   # Turbo has its own workflow file

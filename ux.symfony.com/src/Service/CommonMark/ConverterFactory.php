@@ -15,9 +15,12 @@ use App\Service\CommonMark\Extension\CodeBlockRenderer\CodeBlockRenderer;
 use App\Service\Toolkit\ToolkitService;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
+use League\CommonMark\Extension\DefaultAttributes\DefaultAttributesExtension;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
 use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
 use League\CommonMark\Extension\Mention\MentionExtension;
+use League\CommonMark\Extension\Table\Table;
+use League\CommonMark\Extension\Table\TableExtension;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 
 /**
@@ -34,6 +37,11 @@ final class ConverterFactory
     public function __invoke(): CommonMarkConverter
     {
         $converter = new CommonMarkConverter([
+            'default_attributes' => [
+                Table::class => [
+                    'class' => 'table',
+                ],
+            ],
             'mentions' => [
                 'github_handle' => [
                     'prefix' => '@',
@@ -49,12 +57,21 @@ final class ConverterFactory
             'external_link' => [
                 'internal_hosts' => ['/(^|\.)symfony\.com$/'],
             ],
+            'table' => [
+                'wrap' => [
+                    'enabled' => true,
+                    'tag' => 'div',
+                    'attributes' => ['class' => 'table-responsive'],
+                ],
+            ],
         ]);
 
         $converter->getEnvironment()
+            ->addExtension(new DefaultAttributesExtension())
             ->addExtension(new ExternalLinkExtension())
             ->addExtension(new MentionExtension())
             ->addExtension(new FrontMatterExtension())
+            ->addExtension(new TableExtension())
             ->addRenderer(FencedCode::class, new CodeBlockRenderer($this->toolkitService))
         ;
 

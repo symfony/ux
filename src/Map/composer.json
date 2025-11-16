@@ -42,7 +42,7 @@
         "symfony/twig-bundle": "^6.4|^7.0|^8.0",
         "symfony/ux-twig-component": "^2.18|^8.0",
         "symfony/ux-icons": "^2.18",
-        "spatie/phpunit-snapshot-assertions": "^4.2.17",
+        "spatie/phpunit-snapshot-assertions": "^4.2.17|^5.2.3",
         "phpunit/phpunit": "^9.6.22"
     },
     "conflict": {

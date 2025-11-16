@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e82ec8d3acbd241b6053440544057691",
+    "content-hash": "2209868b7ecc22527a00053aede12ba8",
     "packages": [
         {
             "name": "composer/semver",
@@ -8315,7 +8315,7 @@
             "dist": {
                 "type": "path",
                 "url": "../src/Toolkit",
-                "reference": "b3964ee22d3402eecae49931fe1faf7b6b691ab5"
+                "reference": "1e2f541d583876c531bf41564c9fb557dc1dfe5e"
             },
             "require": {
                 "php": ">=8.2",
@@ -8329,9 +8329,9 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "^9.6.22",
-                "spatie/phpunit-snapshot-assertions": "^4.2.17",
-                "symfony/finder": "6.4|^7.0|^8.0",
-                "symfony/http-client": "6.4|^7.0|^8.0",
+                "spatie/phpunit-snapshot-assertions": "^4.2.17|^5.2.3",
+                "symfony/finder": "^6.4|^7.0|^8.0",
+                "symfony/http-client": "^6.4|^7.0|^8.0",
                 "symfony/phpunit-bridge": "^7.2|^8.0",
                 "symfony/stopwatch": "^6.4|^7.0|^8.0",
                 "symfony/ux-icons": "^2.18",

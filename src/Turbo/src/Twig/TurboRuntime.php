@@ -36,7 +36,11 @@ final class TurboRuntime implements RuntimeExtensionInterface
      */
     public function renderTurboStreamListen(Environment $env, $topic, ?string $transport = null, array $options = []): string
     {
-        $options['transport'] = $transport ??= $this->defaultTransport;
+        if (\array_key_exists('hub', $options) && $transport !== $options['hub']) {
+            throw new \InvalidArgumentException('When passing the "transport" option, the "hub" key in options is not allowed.');
+        }
+
+        $options['hub'] = $transport ??= $this->defaultTransport;
 
         if (!$this->turboStreamListenRenderers->has($transport)) {
             throw new \InvalidArgumentException(\sprintf('The Turbo stream transport "%s" does not exist.', $transport));

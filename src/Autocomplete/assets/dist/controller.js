@@ -306,6 +306,7 @@ createAutocompleteWithHtmlContents_fn = function() {
       };
     },
     render: {
+      ...commonConfig.render,
       item: (item) => `<div>${item[labelField]}</div>`,
       option: (item) => `<div>${item[labelField]}</div>`
     }

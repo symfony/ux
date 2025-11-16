@@ -6,6 +6,25 @@
 -   Minimum required PHP version is now 8.2
 -   Remove `csrf` argument from `AsLiveComponent` in favor of same-origin/CORS
 
+## 2.31
+
+-  Add browser events assertions in `InteractsWithLiveComponents`:
+```php
+$testComponent = $this->createLiveComponent(name: 'MyComponent');
+
+$renderedComponent = $testComponent->render();
+
+// Assert that the component did dispatch a browser event named 'browser:event'
+$this->assertComponentDispatchBrowserEvent($render, 'browser:event')
+    // optionally, you can assert that the browser event was dispatched with specific data...
+    ->withData(['arg1' => 'foo', 'arg2' => 'bar'])
+    // ... or only with a subset of data
+    ->withDataSubset(['arg1' => 'foo']);
+
+// Assert that the component did not dispatch a browser event named 'another-browser:event'
+$this->assertComponentNotDispatchBrowserEvent($render, 'another-browser:event');
+```
+
 ## 2.30
 
 -  Ensure compatibility with PHP 8.5

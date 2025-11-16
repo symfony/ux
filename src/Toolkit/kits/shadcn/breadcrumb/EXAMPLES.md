@@ -10,7 +10,7 @@
         </twig:Breadcrumb:Item>
         <twig:Breadcrumb:Separator />
         <twig:Breadcrumb:Item>
-            <twig:Breadcrumb:Link href=".">Docs</twig:Breadcrumb:Link>
+            <twig:Breadcrumb:Ellipsis />
         </twig:Breadcrumb:Item>
         <twig:Breadcrumb:Separator />
         <twig:Breadcrumb:Item>
