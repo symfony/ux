@@ -1,0 +1,8 @@
+{# @block content The default block #}
+<h2
+    id="{{ _dialog_title_id }}"
+    class="{{ 'text-lg leading-none font-semibold ' ~ attributes.render('class')|tailwind_merge }}"
+    {{ attributes.without('id') }}
+>
+    {%- block content %}{% endblock -%}
+</h2>
