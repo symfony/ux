@@ -18,7 +18,7 @@ npm add @symfony/ux-leaflet-map@2.23.0
 
 ## Resources
 
--   [Documentation](https://github.com/symfony/ux/tree/2.x/src/Map/src/Bridge/Google)
+-   [Documentation](https://github.com/symfony/ux/tree/3.x/src/Map/src/Bridge/Google)
 -   [Report issues](https://github.com/symfony/ux/issues) and
     [send Pull Requests](https://github.com/symfony/ux/pulls)
     in the [main Symfony UX repository](https://github.com/symfony/ux)

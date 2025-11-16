@@ -753,7 +753,7 @@ the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Tom Select`: https://tom-select.js.org/
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`Tom Select Options`: https://tom-select.js.org/docs/#general-configuration
-.. _`controller.ts`: https://github.com/symfony/ux/blob/2.x/src/Autocomplete/assets/src/controller.ts
+.. _`controller.ts`: https://github.com/symfony/ux/blob/3.x/src/Autocomplete/assets/src/controller.ts
 .. _`Tom Select Render Templates`: https://tom-select.js.org/docs/#render-templates
 .. _`Tom Select Option Group`: https://tom-select.js.org/examples/optgroups/
 .. _`Symfony Form`: https://symfony.com/doc/current/forms.html

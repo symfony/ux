@@ -134,7 +134,7 @@ requires some extra steps.
 
 #. Compile your ``.jsx`` files to pure JavaScript files. This can be done by
    installing Babel and the ``@babel/preset-react`` preset. Example:
-   https://github.com/symfony/ux/blob/2.x/ux.symfony.com/assets/react/build/package.json
+   https://github.com/symfony/ux/blob/3.x/ux.symfony.com/assets/react/build/package.json
 
 #. Point this library at the "built" controllers directory that contains the final
    JavaScript files:
