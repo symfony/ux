@@ -22,13 +22,6 @@ use Symfony\UX\StimulusBundle\Ux\UxPackageMetadata;
 
 class AutoImportLocatorTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        if (!class_exists(ImportMapConfigReader::class)) {
-            $this->markTestSkipped('Test requires AssetMapper >= 6.4.');
-        }
-    }
-
     public function testLocateAutoImportCanHandleAssetMapperPath()
     {
         $assetMapper = $this->createMock(AssetMapperInterface::class);

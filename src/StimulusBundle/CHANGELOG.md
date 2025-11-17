@@ -4,6 +4,7 @@
 
 -   Minimum required Symfony version is now 6.4
 -   Minimum required PHP version is now 8.2
+-   Remove Twig function `ux_controller_link_tags()`, which requires Symfony AssetMapper >=6.4
 
 ## 2.30
 

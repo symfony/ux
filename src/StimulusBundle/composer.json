@@ -21,6 +21,9 @@
         "twig/twig": "^2.15.3|^3.8",
         "symfony/deprecation-contracts": "^2.0|^3.0"
     },
+    "conflict": {
+        "symfony/asset-mapper": "<6.4"
+    },
     "require-dev": {
         "symfony/asset-mapper": "^6.4|^7.0|^8.0",
         "symfony/framework-bundle": "^6.4|^7.0|^8.0",

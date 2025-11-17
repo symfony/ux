@@ -62,6 +62,11 @@ class MyLiveComponent {
         * Options `authReferrerPolicy`, `mapIds`, `channel`, `solutionChannel` have been added
         * Options `ìd`, `nonce`, `retries`, `url` have been removed
 
+## StimulusBundle
+
+* The Twig function `ux_controller_link_tags()` has been removed, which requires Symfony AssetMapper >=6.4,
+  run `composer require symfony/asset-mapper:>=6.4` if you don't have it installed yet.
+
 ## Swup
 
 * The package has been removed, see the [previous README](https://raw.githubusercontent.com/symfony/ux/refs/heads/2.x/src/Turbo/README.md)
