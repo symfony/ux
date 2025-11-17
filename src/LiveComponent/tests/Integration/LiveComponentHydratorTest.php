@@ -1636,6 +1636,23 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->hydrator()->dehydrate($component, $this->createComponentAttributes(), $this->createLiveMetadata($component));
     }
 
+    public function testObjectTypedLivePropCannotBeDehydrated()
+    {
+        $componentClass = new class {
+            #[LiveProp(writable: true)]
+            public object $object;
+        };
+
+        $component = new $componentClass();
+        $component->object = new class {
+        };
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/The "object" property on component ".*" is missing its property-type. Add the ".*" type so the object can be hydrated later./');
+
+        $this->hydrator()->dehydrate($component, $this->createComponentAttributes(), $this->createLiveMetadata($component));
+    }
+
     /**
      * @dataProvider provideInvalidHydrationTests
      */
