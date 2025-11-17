@@ -37,7 +37,7 @@
         "doctrine/orm": "^2.9.4|^3.0",
         "fakerphp/faker": "^1.22",
         "mtdowling/jmespath.php": "^2.6",
-        "symfony/form": "^6.4|^7.0|^8.0",
+        "symfony/form": "^7.2|^8.0",
         "symfony/options-resolver": "^6.4|^7.0|^8.0",
         "symfony/framework-bundle": "^6.4|^7.0|^8.0",
         "symfony/maker-bundle": "^1.40",

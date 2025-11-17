@@ -14,7 +14,6 @@ namespace Symfony\UX\Autocomplete;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\PropertyAccess\PropertyPathInterface;
@@ -26,22 +25,11 @@ use Symfony\UX\Autocomplete\Doctrine\DoctrineRegistryWrapper;
  */
 final class AutocompleteResultsExecutor
 {
-    private PropertyAccessorInterface $propertyAccessor;
-    private ?Security $security;
-
     public function __construct(
         private DoctrineRegistryWrapper $managerRegistry,
-        $propertyAccessor,
-        /* Security $security = null */
+        private PropertyAccessorInterface $propertyAccessor,
+        private ?Security $security = null,
     ) {
-        if ($propertyAccessor instanceof Security) {
-            trigger_deprecation('symfony/ux-autocomplete', '2.8.0', 'Passing a "%s" instance as the second argument of "%s()" is deprecated, pass a "%s" instance instead.', Security::class, __METHOD__, PropertyAccessorInterface::class);
-            $this->security = $propertyAccessor;
-            $this->propertyAccessor = new PropertyAccessor();
-        } else {
-            $this->propertyAccessor = $propertyAccessor;
-            $this->security = \func_num_args() >= 3 ? func_get_arg(2) : null;
-        }
     }
 
     public function fetchResults(EntityAutocompleterInterface $autocompleter, string $query, int $page): AutocompleteResults
