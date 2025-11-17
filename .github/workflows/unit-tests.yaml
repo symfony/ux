@@ -52,12 +52,15 @@ jobs:
                     # Explicit Symfony versions
                     -  php-version: '8.2'
                        symfony-version: '^7.4.0-RC1' # TODO: change to '7.4.*' when Symfony 7.4 is released
+                       minimum-stability: 'RC'
 
                     -  php-version: '8.4'
                        symfony-version: '^8.0.0-RC1' # TODO: change to '8.0.*' when Symfony 8.0 is released
+                       minimum-stability: 'RC'
 
                     -  php-version: '8.5'
                        symfony-version: '^8.0.0-RC1' # TODO: change to '8.0.*' when Symfony 8.0 is released
+                       minimum-stability: 'RC'
 
         env:
             SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=6.4' }}
