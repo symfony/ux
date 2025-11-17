@@ -1,0 +1,34 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-09-24T20:08:44Z
+
+Hmm... the LazyChoiceLoader is only available in Symfony 7.2 :|
+
+https://symfony.com/blog/new-in-symfony-7-2-lazy-choice-loader
+
+What do we do ? Revert (but then the deprecation is a bit strange to be honest...) or bump requirements ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-09-25T07:04:51Z
+
+> Hmm... the LazyChoiceLoader is only available in Symfony 7.2 :|
+>
+> [symfony.com/blog/new-in-symfony-7-2-lazy-choice-loader](https://symfony.com/blog/new-in-symfony-7-2-lazy-choice-loader)
+>
+> What do we do ? Revert (but then the deprecation is a bit strange to be honest...) or bump requirements ?
+
+In the deprecation we mentioned to use the `Symfony\Component\Form\ChoiceList\Loader\LazyChoiceLoader`, which imply to use Symfony Form 7.2.
+Since this version is compatible with Symfony packages 6.4 (https://github.com/symfony/form/blob/7.2/composer.json), we could bump requirements (and add an explicit dependency on `symfony/form`, since the feature is not optional AFAIK?)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-11-17T22:06:15Z
+
+> > Hmm... the LazyChoiceLoader is only available in Symfony 7.2 :|
+> > [symfony.com/blog/new-in-symfony-7-2-lazy-choice-loader](https://symfony.com/blog/new-in-symfony-7-2-lazy-choice-loader)
+> > What do we do ? Revert (but then the deprecation is a bit strange to be honest...) or bump requirements ?
+>
+> In the deprecation we mentioned to use the `Symfony\Component\Form\ChoiceList\Loader\LazyChoiceLoader`, which imply to use Symfony Form 7.2. Since this version is compatible with Symfony packages 6.4 ([symfony/form@`7.2`/composer.json](https://github.com/symfony/form/blob/7.2/composer.json?rgh-link-date=2025-09-25T07%3A04%3A51Z)), we could bump requirements (and add an explicit dependency on `symfony/form`, since the feature is not optional AFAIK?)
+
+Finally I went for another solution. Since the `BaseEntityAutocompleteType` is only registered as a service when `symfony/form` is available, I added a check that throws an exception if `LazyChoiceLoader` does not exist, telling the user to install Symfony Form >= 7.2.
