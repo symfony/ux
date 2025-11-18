@@ -11,15 +11,14 @@
 
 namespace Symfony\UX\Autocomplete\Tests\Unit\Form;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Form\ProductType;
 
 class AsEntityAutocompleteFieldTest extends TestCase
 {
-    /**
-     * @dataProvider provideClassNames
-     */
+    #[DataProvider('provideClassNames')]
     public function testShortName(string $shortName, string $className)
     {
         $this->assertEquals($shortName, AsEntityAutocompleteField::shortName($className));
