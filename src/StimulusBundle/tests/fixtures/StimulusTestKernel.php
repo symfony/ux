@@ -15,7 +15,6 @@ use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
-use Symfony\Component\AssetMapper\ImportMap\ImportMapConfigReader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,7 +59,7 @@ class StimulusTestKernel extends Kernel
                     __DIR__.'/vendor/fake-vendor/ux-package2/Resources/assets/dist' => 'fake-vendor/ux-package2',
                 ],
                 // @legacy
-                'importmap_path' => '%kernel.project_dir%/'.(class_exists(ImportMapConfigReader::class) ? 'importmap.php' : 'legacy/importmap.php'),
+                'importmap_path' => '%kernel.project_dir%/importmap.php',
             ],
             'test' => true,
             ...(self::VERSION_ID >= 60200 ? [

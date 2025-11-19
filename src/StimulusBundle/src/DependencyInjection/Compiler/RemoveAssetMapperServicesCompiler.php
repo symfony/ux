@@ -24,7 +24,6 @@ class RemoveAssetMapperServicesCompiler implements CompilerPassInterface
     public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('asset_mapper')) {
-            $container->removeDefinition('stimulus.ux_controllers_twig_runtime');
             $container->removeDefinition('stimulus.asset_mapper.controllers_map_generator');
             $container->removeDefinition('stimulus.asset_mapper.loader_javascript_compiler');
         }
