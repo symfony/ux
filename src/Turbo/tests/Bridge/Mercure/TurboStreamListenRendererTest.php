@@ -12,16 +12,16 @@
 namespace Symfony\UX\Turbo\Tests\Bridge\Mercure;
 
 use App\Entity\Book;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 
 final class TurboStreamListenRendererTest extends KernelTestCase
 {
     /**
-     * @dataProvider provideTestCases
-     *
      * @param array<mixed> $context
      */
+    #[DataProvider('provideTestCases')]
     public function testRenderTurboStreamListen(string $template, array $context, string $expectedResult)
     {
         $twig = self::getContainer()->get('twig');

@@ -11,19 +11,19 @@
 
 namespace Symfony\UX\Turbo\Tests\Helper;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Turbo\Helper\TurboStream;
 
 class TurboStreamTest extends TestCase
 {
-    /**
-     * @testWith ["append"]
-     *           ["prepend"]
-     *           ["replace"]
-     *           ["update"]
-     *           ["before"]
-     *           ["after"]
-     */
+    #[TestWith(['append'])]
+    #[TestWith(['prepend'])]
+    #[TestWith(['replace'])]
+    #[TestWith(['update'])]
+    #[TestWith(['before'])]
+    #[TestWith(['after'])]
     public function testStream(string $action)
     {
         $this->assertSame(<<<EOHTML
@@ -35,10 +35,8 @@ class TurboStreamTest extends TestCase
         );
     }
 
-    /**
-     * @testWith ["replace"]
-     *           ["update"]
-     */
+    #[TestWith(['replace'])]
+    #[TestWith(['update'])]
     public function testStreamMorph(string $action)
     {
         $this->assertSame(<<<EOHTML
@@ -89,10 +87,9 @@ class TurboStreamTest extends TestCase
     }
 
     /**
-     * @dataProvider customThrowsExceptionDataProvider
-     *
      * @param array<string, string|int|float|null> $attr
      */
+    #[DataProvider('customThrowsExceptionDataProvider')]
     public function testCustomThrowsException(string $action, string $target, string $html, array $attr)
     {
         $this->expectException(\InvalidArgumentException::class);

@@ -3,7 +3,7 @@
 /composer.lock
 /drivers/
 /phpunit.xml
-/.phpunit.result.cache
+/.phpunit.cache
 /tests/app/assets/vendor/
 /tests/app/public/assets/
 /tests/app/public/build/
