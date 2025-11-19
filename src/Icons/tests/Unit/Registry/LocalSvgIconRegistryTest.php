@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Icons\Tests\Unit\Registry;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Icons\Icon;
 use Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
@@ -20,9 +21,7 @@ use Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
  */
 final class LocalSvgIconRegistryTest extends TestCase
 {
-    /**
-     * @dataProvider validSvgProvider
-     */
+    #[DataProvider('validSvgProvider')]
     public function testValidSvgs(string $name, array $expectedAttributes, string $expectedContent)
     {
         $icon = $this->registry()->get($name);
@@ -64,9 +63,7 @@ final class LocalSvgIconRegistryTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidSvgProvider
-     */
+    #[DataProvider('invalidSvgProvider')]
     public function testInvalidSvgs(string $name)
     {
         $this->expectException(\RuntimeException::class);
@@ -82,9 +79,7 @@ final class LocalSvgIconRegistryTest extends TestCase
         yield ['invalid4'];
     }
 
-    /**
-     * @dataProvider provideIconSetPathsCases
-     */
+    #[DataProvider('provideIconSetPathsCases')]
     public function testIconSetPaths(string $name, array $iconSetPaths, ?string $expectedContent)
     {
         $registry = new LocalSvgIconRegistry(
