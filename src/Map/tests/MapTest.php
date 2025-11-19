@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Map\Tests;
 
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Map\Circle;
 use Symfony\UX\Map\Exception\InvalidArgumentException;
@@ -408,14 +409,12 @@ class MapTest extends TestCase
         ], $map->toArray());
     }
 
-    /**
-     * @testWith [-1, null, null, "The \"minZoom\" must be greater than or equal to 0."]
-     *           [null, -1, null, "The \"zoom\" must be greater than or equal to 0."]
-     *           [null, null, -1, "The \"maxZoom\" must be greater than or equal to 0."]
-     *           [5, 2, null, "The \"zoom\" must be greater than or equal to \"minZoom\"."]
-     *           [null, 5, 2, "The \"zoom\" must be less than or equal to \"maxZoom\"."]
-     *           [2.1, null, 2.0, "The \"minZoom\" must be less than or equal to \"maxZoom\"."]
-     */
+    #[TestWith([-1.0, null, null, 'The "minZoom" must be greater than or equal to 0.'])]
+    #[TestWith([null, -1.0, null, 'The "zoom" must be greater than or equal to 0.'])]
+    #[TestWith([null, null, -1.0, 'The "maxZoom" must be greater than or equal to 0.'])]
+    #[TestWith([5.0, 2.0, null, 'The "zoom" must be greater than or equal to "minZoom".'])]
+    #[TestWith([null, 5.0, 2.0, 'The "zoom" must be less than or equal to "maxZoom".'])]
+    #[TestWith([2.1, null, 2.0, 'The "minZoom" must be less than or equal to "maxZoom".'])]
     public function testZoomsValidation(?float $minZoom, ?float $zoom, ?float $maxZoom, string $expectedExceptionMessage)
     {
         self::expectException(InvalidArgumentException::class);

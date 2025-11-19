@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\Map\Tests\Twig;
 
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\Map\Map;
 use Symfony\UX\Map\Point;
@@ -23,8 +22,6 @@ use Twig\Environment;
 
 class MapExtensionTest extends KernelTestCase
 {
-    use ExpectDeprecationTrait;
-
     protected static function getKernelClass(): string
     {
         return TwigAppKernel::class;
