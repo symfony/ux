@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\Tests\Integration\Twig;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\TwigComponent\Twig\PropsNode;
 use Twig\Environment;
@@ -25,9 +26,7 @@ use Twig\Source;
  */
 class ComponentPropsParserTest extends KernelTestCase
 {
-    /**
-     * @dataProvider providePropsData
-     */
+    #[DataProvider('providePropsData')]
     public function testPropsData(string $template, array $props, string $text)
     {
         $loader = new ArrayLoader(['template' => $template]);

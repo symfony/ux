@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\Tests\Unit\DataCollector;
 
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,10 +62,8 @@ class TwigComponentDataCollectorTest extends TestCase
         $this->assertEquals(0.0, $dataCollector->getRenderTime());
     }
 
-    /**
-     * @testWith [true]
-     *           [false]
-     */
+    #[TestWith([true])]
+    #[TestWith([false])]
     public function testLateCollectWithCollectedData(bool $collectComponents)
     {
         $logger = new TwigComponentLoggerListener();

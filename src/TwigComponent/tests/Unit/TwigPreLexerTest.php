@@ -11,24 +11,21 @@
 
 namespace Symfony\UX\TwigComponent\Tests\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\TwigComponent\Twig\TwigPreLexer;
 use Twig\Error\SyntaxError;
 
 final class TwigPreLexerTest extends TestCase
 {
-    /**
-     * @dataProvider getLexTests
-     */
+    #[DataProvider('getLexTests')]
     public function testPreLex(string $input, string $expectedOutput)
     {
         $lexer = new TwigPreLexer();
         $this->assertSame($expectedOutput, $lexer->preLexComponents($input));
     }
 
-    /**
-     * @dataProvider getInvalidSyntaxTests
-     */
+    #[DataProvider('getInvalidSyntaxTests')]
     public function testPreLexThrowsExceptionOnInvalidSyntax(string $input, string $expectedMessage)
     {
         $this->expectException(SyntaxError::class);
