@@ -2,5 +2,7 @@
 /vendor/
 /composer.lock
 /phpunit.xml
-/.phpunit.result.cache
+/.phpunit.cache
+
 /var
+/config/reference.php

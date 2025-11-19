@@ -11,14 +11,13 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Unit\Util;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\LiveComponent\Util\ModelBindingParser;
 
 final class ModelBindingParserTest extends TestCase
 {
-    /**
-     * @dataProvider getModelStringTests
-     */
+    #[DataProvider('getModelStringTests')]
     public function testParseAllValidStrings(string $input, array $expectedBindings)
     {
         $parser = new ModelBindingParser();

@@ -11,8 +11,8 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Unit\EventListener;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\UX\LiveComponent\EventListener\DeferLiveComponentSubscriber;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\Event\PostMountEvent;
@@ -22,8 +22,6 @@ use Symfony\UX\TwigComponent\Event\PostMountEvent;
  */
 class DeferLiveComponentSubscriberTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testLoadingAttributeIsExtracted()
     {
         $subscriber = new DeferLiveComponentSubscriber();
@@ -65,9 +63,7 @@ class DeferLiveComponentSubscriberTest extends TestCase
         $this->assertArrayNotHasKey('loading-tag', $event->getData());
     }
 
-    /**
-     * @dataProvider provideInvalidLoadingValues
-     */
+    #[DataProvider('provideInvalidLoadingValues')]
     public function testInvalidLoadingValuesThrows(mixed $value)
     {
         $subscriber = new DeferLiveComponentSubscriber();

@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
@@ -21,7 +22,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
     use HasBrowser;
     use LiveComponentTestHelper;
 
-    public function getTestData(): iterable
+    public static function getTestData(): iterable
     {
         yield 'Missing header' => [
             'previousLocation' => null,
@@ -229,16 +230,14 @@ class LiveUrlSubscriberTest extends KernelTestCase
         ];
     }
 
-    /**
-     * @dataProvider getTestData
-     */
+    #[DataProvider('getTestData')]
     public function testNewLiveUrlAfterLiveAction(
         ?string $previousLocation,
         ?string $expectedLocation,
-        array $initalComponentData,
+        array $initialComponentData,
         array $args,
     ): void {
-        $component = $this->mountComponent('component_with_url_bound_props', $initalComponentData);
+        $component = $this->mountComponent('component_with_url_bound_props', $initialComponentData);
         $dehydrated = $this->dehydrateComponent($component);
 
         $this->browser()
