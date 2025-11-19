@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Dropzone\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\UX\Dropzone\Tests\Kernel\EmptyAppKernel;
@@ -31,9 +32,7 @@ class DropzoneBundleTest extends TestCase
         yield 'twig' => [new TwigAppKernel('test', true)];
     }
 
-    /**
-     * @dataProvider provideKernels
-     */
+    #[DataProvider('provideKernels')]
     public function testBootKernel(Kernel $kernel)
     {
         $kernel->boot();
