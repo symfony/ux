@@ -11,14 +11,13 @@
 
 namespace Symfony\UX\Toolkit\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Toolkit\Assert;
 
 class AssertTest extends TestCase
 {
-    /**
-     * @dataProvider provideValidKitNames
-     */
+    #[DataProvider('provideValidKitNames')]
     public function testValidKitName(string $name)
     {
         $this->expectNotToPerformAssertions();
@@ -50,9 +49,7 @@ class AssertTest extends TestCase
         yield ['my_kit'];
     }
 
-    /**
-     * @dataProvider provideInvalidKitNames
-     */
+    #[DataProvider('provideInvalidKitNames')]
     public function testInvalidKitName(string $name)
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -82,9 +79,7 @@ class AssertTest extends TestCase
         yield ['.abc'];
     }
 
-    /**
-     * @dataProvider provideValidComponentNames
-     */
+    #[DataProvider('provideValidComponentNames')]
     public function testValidComponentName(string $name)
     {
         $this->expectNotToPerformAssertions();
@@ -106,9 +101,7 @@ class AssertTest extends TestCase
         yield ['Component123:Sub456'];
     }
 
-    /**
-     * @dataProvider provideInvalidComponentNames
-     */
+    #[DataProvider('provideInvalidComponentNames')]
     public function testInvalidComponentName(string $name)
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -143,9 +136,7 @@ class AssertTest extends TestCase
         yield ['123:456'];
     }
 
-    /**
-     * @dataProvider provideValidPhpPackageNames
-     */
+    #[DataProvider('provideValidPhpPackageNames')]
     public function testValidPhpPackageName(string $name)
     {
         $this->expectNotToPerformAssertions();
@@ -159,9 +150,7 @@ class AssertTest extends TestCase
         yield ['tales-from-a-dev/twig-tailwind-extra'];
     }
 
-    /**
-     * @dataProvider provideInvalidPhpPackageNames
-     */
+    #[DataProvider('provideInvalidPhpPackageNames')]
     public function testInvalidPhpPackageName(string $name)
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -178,9 +167,7 @@ class AssertTest extends TestCase
         yield ['twig/html-extra/twig'];
     }
 
-    /**
-     * @dataProvider provideValidNpmPackageNames
-     */
+    #[DataProvider('provideValidNpmPackageNames')]
     public function testValidNpmPackageName(string $name)
     {
         $this->expectNotToPerformAssertions();
@@ -202,9 +189,7 @@ class AssertTest extends TestCase
         yield ['~foo'];
     }
 
-    /**
-     * @dataProvider provideInvalidNpmPackageNames
-     */
+    #[DataProvider('provideInvalidNpmPackageNames')]
     public function testInvalidNpmPackageName(string $name)
     {
         $this->expectException(\InvalidArgumentException::class);

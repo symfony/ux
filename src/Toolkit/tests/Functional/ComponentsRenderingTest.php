@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Toolkit\Tests\Functional;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Spatie\Snapshots\Drivers\HtmlDriver;
 use Spatie\Snapshots\MatchesSnapshots;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -60,11 +62,8 @@ class ComponentsRenderingTest extends WebTestCase
         }
     }
 
-    /**
-     * @dataProvider provideTestComponentRendering
-     *
-     * @group skip-on-lowest
-     */
+    #[DataProvider('provideTestComponentRendering')]
+    #[Group('skip-on-lowest')]
     public function testComponentRendering(string $kitName, string $recipeName, string $code)
     {
         $twig = self::getContainer()->get('twig');
