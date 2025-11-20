@@ -1,0 +1,45 @@
+---------------------------------------------------------------------------
+
+by andyexeter at 2025-11-16T16:37:54Z
+
+@smnandre thanks for the review. Integration test added and suggestions implemented.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-11-17T07:18:57Z
+
+Note: fabbot fails are false-positive and can be ignored (nothing to do here)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-11-17T16:08:51Z
+
+A small rebase would be awesome, some jobs should become green :)
+
+---------------------------------------------------------------------------
+
+by andyexeter at 2025-11-17T17:11:42Z
+
+@Kocal rebased :) Still a few failing checks but these appear unrelated.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-11-17T18:26:53Z
+
+You can ignore the failing checks, that's fine.
+
+There is just a missing CHANGELOG entry and that would be perfect!
+
+Thanks
+
+---------------------------------------------------------------------------
+
+by andyexeter at 2025-11-17T22:08:38Z
+
+What version heading should this change go under?
+
+---------------------------------------------------------------------------
+
+by andyexeter at 2025-11-19T17:03:46Z
+
+@Kocal I've added a line under 2.32 in CHANGELOG, hopefully this is ok :)
