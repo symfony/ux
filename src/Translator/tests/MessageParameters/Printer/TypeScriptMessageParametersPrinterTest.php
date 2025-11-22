@@ -11,14 +11,13 @@
 
 namespace Symfony\UX\Translator\Tests\Printer;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Translator\MessageParameters\Printer\TypeScriptMessageParametersPrinter;
 
 class TypeScriptMessageParametersPrinterTest extends TestCase
 {
-    /**
-     * @dataProvider providePrint
-     */
+    #[DataProvider('providePrint')]
     public function testPrint(array $parameters, string $expectedTypeScriptType)
     {
         $typeScriptMessageParametersPrinter = new TypeScriptMessageParametersPrinter();

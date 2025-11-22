@@ -10,8 +10,6 @@ parameters:
 	# to allow installing with various phsptan versions without reporting old errors here
 	reportUnmatchedIgnoredErrors: false
 	inferPrivatePropertyTypeFromConstructor: true
-	bootstrapFiles:
-		- vendor/bin/.phpunit/phpunit/vendor/autoload.php
 	ignoreErrors:
 		-
 			message: "#^Method .*::test.*\\(\\) has no return type specified\\.$#"

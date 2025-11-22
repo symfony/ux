@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Icons\Tests\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\HttpClient\MockHttpClient;
@@ -279,9 +280,7 @@ class IconifyTest extends TestCase
         $this->assertSame('Font Awesome Solid', $metadata['name']);
     }
 
-    /**
-     * @dataProvider provideChunkCases
-     */
+    #[DataProvider('provideChunkCases')]
     public function testChunk(int $maxQueryLength, string $prefix, array $names, array $chunks)
     {
         $iconify = new Iconify(

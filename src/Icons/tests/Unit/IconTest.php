@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Icons\Tests\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Icons\Icon;
 
@@ -23,17 +24,13 @@ final class IconTest extends TestCase
         $this->assertSame('bar', $icon->getAttributes()['foo']);
     }
 
-    /**
-     * @dataProvider provideIdToName
-     */
+    #[DataProvider('provideIdToName')]
     public function testIdToName(string $id, string $name)
     {
         $this->assertSame($name, Icon::idToName($id));
     }
 
-    /**
-     * @dataProvider provideInvalidIds
-     */
+    #[DataProvider('provideInvalidIds')]
     public function testIdToNameThrowsException(string $id)
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -42,17 +39,13 @@ final class IconTest extends TestCase
         Icon::idToName($id);
     }
 
-    /**
-     * @dataProvider provideNameToId
-     */
+    #[DataProvider('provideNameToId')]
     public function testNameToId(string $name, string $id)
     {
         $this->assertEquals($id, Icon::nameToId($name));
     }
 
-    /**
-     * @dataProvider provideInvalidNames
-     */
+    #[DataProvider('provideInvalidNames')]
     public function testNameToIdThrowsException(string $name)
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -61,41 +54,31 @@ final class IconTest extends TestCase
         Icon::nameToId($name);
     }
 
-    /**
-     * @dataProvider provideValidIds
-     */
+    #[DataProvider('provideValidIds')]
     public function testIsValidIdWithValidIds(string $id)
     {
         $this->assertTrue(Icon::isValidId($id));
     }
 
-    /**
-     * @dataProvider provideInvalidIds
-     */
+    #[DataProvider('provideInvalidIds')]
     public function testIsValidIdWithInvalidIds(string $id)
     {
         $this->assertFalse(Icon::isValidId($id));
     }
 
-    /**
-     * @dataProvider provideValidNames
-     */
+    #[DataProvider('provideValidNames')]
     public function testIsValidNameWithValidNames(string $name)
     {
         $this->assertTrue(Icon::isValidName($name));
     }
 
-    /**
-     * @dataProvider provideInvalidNames
-     */
+    #[DataProvider('provideInvalidNames')]
     public function testIsValidNameWithInvalidNames(string $name)
     {
         $this->assertFalse(Icon::isValidName($name));
     }
 
-    /**
-     * @dataProvider provideInvalidIds
-     */
+    #[DataProvider('provideInvalidIds')]
     public function testInvalidIdToName(string $id)
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -105,18 +88,14 @@ final class IconTest extends TestCase
         Icon::idToName($id);
     }
 
-    /**
-     * @dataProvider provideRenderAttributesTestCases
-     */
+    #[DataProvider('provideRenderAttributesTestCases')]
     public function testRenderAttributes(array $attributes, string $expected)
     {
         $icon = new Icon('', $attributes);
         $this->assertStringStartsWith($expected, $icon->toHtml());
     }
 
-    /**
-     * @dataProvider provideWithAttributesTestCases
-     */
+    #[DataProvider('provideWithAttributesTestCases')]
     public function testWithAttributes(array $attributes, array $withAttributes, array $expected)
     {
         $icon = new Icon('foo', $attributes);

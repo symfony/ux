@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\StimulusBundle\Tests\Twig;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 use Symfony\UX\StimulusBundle\Tests\StimulusIntegrationTestKernel;
@@ -29,9 +30,7 @@ final class StimulusTwigExtensionTest extends TestCase
         $this->twig = $container->get(Environment::class);
     }
 
-    /**
-     * @dataProvider provideRenderStimulusController
-     */
+    #[DataProvider('provideRenderStimulusController')]
     public function testRenderStimulusController(string $controllerName, array $controllerValues, array $controllerClasses, array $controllerOutlets, string $expectedString, array $expectedArray)
     {
         $extension = new StimulusTwigExtension(new StimulusHelper($this->twig));
@@ -140,9 +139,7 @@ final class StimulusTwigExtensionTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideRenderStimulusAction
-     */
+    #[DataProvider('provideRenderStimulusAction')]
     public function testRenderStimulusAction(string $controllerName, ?string $actionName, ?string $eventName, array $parameters, string $expectedString, array $expectedArray)
     {
         $extension = new StimulusTwigExtension(new StimulusHelper($this->twig));
@@ -218,9 +215,7 @@ final class StimulusTwigExtensionTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideRenderStimulusTarget
-     */
+    #[DataProvider('provideRenderStimulusTarget')]
     public function testRenderStimulusTarget(string $controllerName, ?string $targetName, string $expectedString, array $expectedArray)
     {
         $extension = new StimulusTwigExtension(new StimulusHelper($this->twig));

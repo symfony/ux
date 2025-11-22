@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\React\Tests\Twig;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\React\Tests\Kernel\TwigAppKernel;
 use Symfony\UX\React\Twig\ReactComponentExtension;
@@ -41,9 +42,7 @@ class ReactComponentExtensionTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideOptions
-     */
+    #[DataProvider('provideOptions')]
     public function testRenderComponentWithOptions(array $options, string|false $expected)
     {
         $kernel = new TwigAppKernel('test', true);

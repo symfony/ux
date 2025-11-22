@@ -11,15 +11,14 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Unit\Util;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormView;
 use Symfony\UX\LiveComponent\Util\LiveFormUtility;
 
 final class LiveFormUtilityTest extends TestCase
 {
-    /**
-     * @dataProvider getPathsTests
-     */
+    #[DataProvider('getPathsTests')]
     public function testRemovePathsNotInData(array $inputPaths, array $inputData, array $expectedPaths)
     {
         $this->assertEquals($expectedPaths, LiveFormUtility::removePathsNotInData($inputPaths, $inputData));
@@ -63,9 +62,7 @@ final class LiveFormUtilityTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideFormContainsAnyErrorsTests
-     */
+    #[DataProvider('provideFormContainsAnyErrorsTests')]
     public function testDoesFormContainAnyErrors(FormView $formView, bool $expected)
     {
         $this->assertSame($expected, LiveFormUtility::doesFormContainAnyErrors($formView));

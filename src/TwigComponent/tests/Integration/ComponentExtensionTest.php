@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\Tests\Integration;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\TwigComponent\Tests\Fixtures\User;
 use Twig\Environment;
@@ -219,9 +220,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('Hello FOO, 123, and 456', $output);
     }
 
-    /**
-     * @dataProvider renderingAttributesManuallyProvider
-     */
+    #[DataProvider('renderingAttributesManuallyProvider')]
     public function testRenderingAttributesManually(array $attributes, string $expected)
     {
         $actual = trim($this->renderComponent('RenderAttributes', $attributes));
@@ -303,9 +302,7 @@ final class ComponentExtensionTest extends KernelTestCase
         );
     }
 
-    /**
-     * @dataProvider providePrefixedAttributesCases
-     */
+    #[DataProvider('providePrefixedAttributesCases')]
     public function testRenderPrefixedAttributes(string $attributes, bool $expectContains)
     {
         /** @var Environment $twig */
@@ -422,9 +419,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('I have an empty props tag', $output);
     }
 
-    /**
-     * @dataProvider provideUnsafeAttributes
-     */
+    #[DataProvider('provideUnsafeAttributes')]
     public function testHtmlSyntaxEscapesAttributeValues(string $input)
     {
         $output = self::getContainer()->get(Environment::class)->render(
@@ -436,9 +431,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('&lt;scr', $output);
     }
 
-    /**
-     * @dataProvider provideUnsafeAttributes
-     */
+    #[DataProvider('provideUnsafeAttributes')]
     public function testDynamicSyntaxEscapesAttributeValues(string $input)
     {
         $output = self::getContainer()->get(Environment::class)->render(

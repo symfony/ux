@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\Tests\Integration;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -22,9 +23,7 @@ use Twig\Loader\ArrayLoader;
  */
 final class ComponentEventTest extends KernelTestCase
 {
-    /**
-     * @dataProvider provideFooBarSyntaxes
-     */
+    #[DataProvider('provideFooBarSyntaxes')]
     public function testTemplateIsUpdatedByEventListener(string $syntax)
     {
         /** @var Environment $environment */

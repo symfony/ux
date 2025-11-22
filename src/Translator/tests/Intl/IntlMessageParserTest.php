@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Translator\Tests\Intl;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Translator\Intl\ErrorKind;
 use Symfony\UX\Translator\Intl\IntlMessageParser;
@@ -20,9 +21,7 @@ use Symfony\UX\Translator\Intl\Type;
 
 class IntlMessageParserTest extends TestCase
 {
-    /**
-     * @dataProvider provideParse
-     */
+    #[DataProvider('provideParse')]
     public function testIntlMessageParser(string $message, array $expectedAst)
     {
         $intlMessageParser = new IntlMessageParser($message);

@@ -93,6 +93,6 @@ jobs:
               working-directory: src/Turbo
               run: |
                 [ 'lowest' = '${{ matrix.dependency-version }}' ] && export SYMFONY_DEPRECATIONS_HELPER=weak
-                vendor/bin/simple-phpunit
+                vendor/bin/phpunit
               env:
                   SYMFONY_DEPRECATIONS_HELPER: 'max[self]=1'

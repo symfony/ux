@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Toolkit\Tests\Registry;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\Toolkit\Registry\GitHubRegistry;
 use Symfony\UX\Toolkit\Registry\LocalRegistry;
@@ -31,9 +32,7 @@ final class RegistryFactoryTest extends KernelTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideRegistryNames
-     */
+    #[DataProvider('provideRegistryNames')]
     public function testCanCreateRegistry(string $registryName, string $expectedRegistryClass)
     {
         $registryFactory = self::getContainer()->get('ux_toolkit.registry.registry_factory');
@@ -53,9 +52,7 @@ final class RegistryFactoryTest extends KernelTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidRegistryNames
-     */
+    #[DataProvider('provideInvalidRegistryNames')]
     public function testShouldFailIfRegistryIsNotFound(string $registryName)
     {
         $registryFactory = self::getContainer()->get('ux_toolkit.registry.registry_factory');

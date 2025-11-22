@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\StimulusBundle\Tests\Dto;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Twig\Environment;
@@ -149,9 +150,7 @@ final class StimulusAttributesTest extends TestCase
         $this->assertSame(['foo' => 'bar baz'], $this->stimulusAttributes->toArray());
     }
 
-    /**
-     * @dataProvider provideAddComplexActionData
-     */
+    #[DataProvider('provideAddComplexActionData')]
     public function testAddComplexAction(string $controllerName, string $actionName, ?string $eventName, string $expectedAction)
     {
         $this->stimulusAttributes->addAction($controllerName, $actionName, $eventName);

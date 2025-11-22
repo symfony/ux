@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Functional\Util;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
@@ -22,9 +23,7 @@ class RequestPropsExtractorTest extends KernelTestCase
 {
     use LiveComponentTestHelper;
 
-    /**
-     * @dataProvider getQueryStringTests
-     */
+    #[DataProvider('getQueryStringTests')]
     public function testExtractFromQueryString(string $queryString, array $expected, array $attributes = [])
     {
         $extractor = new RequestPropsExtractor($this->hydrator());
@@ -43,7 +42,7 @@ class RequestPropsExtractorTest extends KernelTestCase
         $this->assertEquals($expected, $data);
     }
 
-    public function getQueryStringTests(): iterable
+    public static function getQueryStringTests(): iterable
     {
         yield from [
             'no query string' => ['', []],

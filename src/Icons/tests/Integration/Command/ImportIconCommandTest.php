@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Icons\Tests\Integration\Command;
 
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Zenstruck\Console\Test\InteractsWithConsole;
@@ -25,11 +27,8 @@ final class ImportIconCommandTest extends KernelTestCase
     private const ICON_DIR = __DIR__.'/../../Fixtures/icons';
     private const ICONS = ['uiw/dashboard.svg', 'lucide/circle.svg'];
 
-    /**
-     * @before
-     *
-     * @after
-     */
+    #[Before]
+    #[After]
     public static function cleanup(): void
     {
         $fs = new Filesystem();

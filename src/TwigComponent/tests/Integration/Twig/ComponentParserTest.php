@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\Tests\Integration\Twig;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
@@ -24,9 +25,7 @@ use Twig\TemplateWrapper;
  */
 final class ComponentParserTest extends KernelTestCase
 {
-    /**
-     * @dataProvider provideValidComponentNames
-     */
+    #[DataProvider('provideValidComponentNames')]
     public function testAcceptTwigComponentTagWithValidComponentName(string $name)
     {
         $environment = $this->createEnvironment();
@@ -37,9 +36,7 @@ final class ComponentParserTest extends KernelTestCase
         $this->assertInstanceOf(TemplateWrapper::class, $template);
     }
 
-    /**
-     * @dataProvider provideValidComponentNames
-     */
+    #[DataProvider('provideValidComponentNames')]
     public function testAcceptHtmlComponentTagWithValidComponentName(string $name)
     {
         $environment = $this->createEnvironment();
@@ -50,9 +47,7 @@ final class ComponentParserTest extends KernelTestCase
         $this->assertInstanceOf(TemplateWrapper::class, $template);
     }
 
-    /**
-     * @dataProvider provideValidComponentNames
-     */
+    #[DataProvider('provideValidComponentNames')]
     public function testAcceptHtmlSelfClosingComponentTagWithValidComponentName(string $name)
     {
         $environment = $this->createEnvironment();

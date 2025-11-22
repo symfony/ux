@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\Tests\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Symfony\UX\TwigComponent\ComponentAttributes;
@@ -227,9 +228,7 @@ final class ComponentAttributesTest extends TestCase
         $attributes->render('aria-bar');
     }
 
-    /**
-     * @dataProvider provideSpecialSyntaxAttributeNames
-     */
+    #[DataProvider('provideSpecialSyntaxAttributeNames')]
     public function testAllowsSpecialSyntaxAttributeNames(string $name)
     {
         $attributes = new ComponentAttributes([$name => 'value'], new EscaperRuntime());
@@ -253,9 +252,7 @@ final class ComponentAttributesTest extends TestCase
         new ComponentAttributes([]);
     }
 
-    /**
-     * @dataProvider nameProvider
-     */
+    #[DataProvider('nameProvider')]
     public function testEscapeName(string $input, string $expected)
     {
         $runtime = new EscaperRuntime();
@@ -264,9 +261,7 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame(' '.$expected.'="foo"', (string) $attributes);
     }
 
-    /**
-     * @dataProvider valueProvider
-     */
+    #[DataProvider('valueProvider')]
     public function testEscapeValue(string $input, string $expected)
     {
         $runtime = new EscaperRuntime();

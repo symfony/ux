@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Icons\Tests\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Icon;
@@ -81,9 +82,7 @@ class IconRendererTest extends TestCase
         $this->assertSame('<svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M0 0L12 12"/></svg>', $svg);
     }
 
-    /**
-     * @dataProvider provideRenderIconWithAttributeCascadeCases
-     */
+    #[DataProvider('provideRenderIconWithAttributeCascadeCases')]
     public function testRenderIconWithAttributeCascade(
         array $iconAttributes,
         array $defaultAttributes = [],
@@ -276,11 +275,10 @@ class IconRendererTest extends TestCase
     }
 
     /**
-     * @dataProvider provideAriaHiddenCases
-     *
      * @param string|array{string, array<string, string|bool>} $icon
      * @param array<string, string|bool>                       $attributes
      */
+    #[DataProvider('provideAriaHiddenCases')]
     public function testRenderIconWithAutoAriaHidden(string|array $icon, array $attributes, string $expectedSvg)
     {
         $icon = (array) $icon;
@@ -366,9 +364,8 @@ class IconRendererTest extends TestCase
 
     /**
      * @param array<string, string> $attributes
-     *
-     * @dataProvider provideRenderIconWithIconSetAttributes
      */
+    #[DataProvider('provideRenderIconWithIconSetAttributes')]
     public function testRenderIconWithIconSetAttributes(string $name, array $attributes, string $expectedSvg)
     {
         $registry = $this->createRegistry([

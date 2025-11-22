@@ -11,10 +11,11 @@
 
 namespace Symfony\UX\TwigComponent\Tests\Integration;
 
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
+use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\UX\TwigComponent\ComponentFactory;
-use Symfony\UX\TwigComponent\Tests\Fixtures\Component\BasicComponent;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentA;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentC;
@@ -204,13 +205,11 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->factory()->metadataFor('tabler');
     }
 
-    /**
-     * @testWith ["tabler", "Unknown component \"tabler\". Did you mean this: \"table\"?"]
-     *           ["Basic", "Unknown component \"Basic\". Did you mean this: \"BasicComponent\"?"]
-     *           ["basic", "Unknown component \"basic\". Did you mean this: \"BasicComponent\"?"]
-     *           ["with", "Unknown component \"with\". Did you mean one of these: \"with_attributes\", \"with_exposed_variables\", \"WithSlots\"?"]
-     *           ["anonAnon", "Unknown component \"anonAnon\". And no matching anonymous component template was found."]
-     */
+    #[TestWith(['tabler', 'Unknown component "tabler". Did you mean this: "table"?'])]
+    #[TestWith(['Basic', 'Unknown component "Basic". Did you mean this: "BasicComponent"?'])]
+    #[TestWith(['basic', 'Unknown component "basic". Did you mean this: "BasicComponent"?'])]
+    #[TestWith(['with', 'Unknown component "with". Did you mean one of these: "with_attributes", "with_exposed_variables", "WithSlots"?'])]
+    #[TestWith(['anonAnon', 'Unknown component "anonAnon". And no matching anonymous component template was found.'])]
     public function testCannotGetInvalidComponent(string $name, string $expectedExceptionMessage)
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -225,9 +224,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->assertSame(['propA' => 'A', 'propB' => 'B'], $mountedComponent->getInputProps());
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
+    #[DoesNotPerformAssertions]
     public function testGetComponentWithClassName()
     {
         $factory = $this->factory();

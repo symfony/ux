@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Icons\Tests\Integration\Command;
 
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Zenstruck\Console\Test\InteractsWithConsole;
@@ -29,11 +31,8 @@ final class LockIconsCommandTest extends KernelTestCase
         __DIR__.'/../../Fixtures/icons/lucide/circle-off.svg',
     ];
 
-    /**
-     * @before
-     *
-     * @after
-     */
+    #[Before]
+    #[After]
     public static function cleanup(): void
     {
         $fs = new Filesystem();

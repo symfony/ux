@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\Test\HasBrowser;
@@ -122,9 +123,7 @@ final class DeferLiveComponentSubscriberTest extends KernelTestCase
         $this->assertSame('live:appear->live#$render', $div->attr('data-action'));
     }
 
-    /**
-     * @dataProvider provideLoadingValues
-     */
+    #[DataProvider('provideLoadingValues')]
     public function testLazyComponentRenderingDependsOnLazyValue(mixed $lazy, bool $isRendered)
     {
         $crawler = $this->browser()

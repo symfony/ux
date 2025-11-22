@@ -22,15 +22,12 @@ class LivePropMetadataTest extends TestCase
         $liveProp = new LiveProp(modifier: 'modifyProp');
         $livePropMetadata = new LivePropMetadata('propWithModifier', $liveProp, null, false, false, null);
 
-        $component = $this->getMockBuilder(\stdClass::class)
-            ->addMethods(['modifyProp'])
-            ->getMock();
-
-        $component
-            ->expects($this->once())
-            ->method('modifyProp')
-            ->with($liveProp, 'propWithModifier')
-            ->willReturn($liveProp->withFieldName('customField'));
+        $component = new class {
+            public function modifyProp(LiveProp $liveProp, string $propertyName): LiveProp
+            {
+                return $liveProp->withFieldName('customField');
+            }
+        };
 
         $livePropMetadata = $livePropMetadata->withModifier($component);
 
@@ -53,14 +50,12 @@ class LivePropMetadataTest extends TestCase
         $liveProp = new LiveProp(modifier: 'modifyProp');
         $livePropMetadata = new LivePropMetadata('propWithModifier', $liveProp, null, false, false, null);
 
-        $component = $this->getMockBuilder(\stdClass::class)
-            ->addMethods(['modifyProp'])
-            ->getMock();
-
-        $component
-            ->expects($this->once())
-            ->method('modifyProp')
-            ->willReturn(false);
+        $component = new class {
+            public function modifyProp(LiveProp $liveProp, string $propertyName)
+            {
+                return false;
+            }
+        };
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessageMatches(\sprintf('/Method ".*::modifyProp\(\)" should return an instance of "%s" \(given: "bool"\)\./', preg_quote(LiveProp::class)));

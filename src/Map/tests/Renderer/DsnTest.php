@@ -11,15 +11,14 @@
 
 namespace Symfony\UX\Map\Tests\Renderer;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Map\Exception\InvalidArgumentException;
 use Symfony\UX\Map\Renderer\Dsn;
 
 final class DsnTest extends TestCase
 {
-    /**
-     * @dataProvider constructDsn
-     */
+    #[DataProvider('constructDsn')]
     public function testConstruct(string $dsnString, string $scheme, string $host, ?string $user = null, array $options = [], ?string $path = null)
     {
         $dsn = new Dsn($dsnString);
@@ -77,9 +76,7 @@ final class DsnTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider  invalidDsn
-     */
+    #[DataProvider('invalidDsn')]
     public function testInvalidDsn(string $dsnString, string $exceptionMessage)
     {
         self::expectException(InvalidArgumentException::class);
