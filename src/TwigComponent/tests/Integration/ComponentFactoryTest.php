@@ -149,6 +149,29 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->assertNull($metadata->get('class'));
     }
 
+    public function testLoadingAnonymousComponentWithFallback()
+    {
+        self::bootKernel(['environment' => 'anonymous_directory']);
+
+        $metadata = $this->factory()->metadataFor('Menu');
+
+        $this->assertSame('anonymous/Menu/index.html.twig', $metadata->getTemplate());
+        $this->assertSame('Menu', $metadata->getName());
+        $this->assertNull($metadata->get('class'));
+
+        $metadata = $this->factory()->metadataFor('Menu:Item');
+
+        $this->assertSame('anonymous/Menu/Item.html.twig', $metadata->getTemplate());
+        $this->assertSame('Menu:Item', $metadata->getName());
+        $this->assertNull($metadata->get('class'));
+
+        // Ensure anonymous/Bar.html.twig takes precedence over anonymous/Bar/index.html.twig
+        $metadata = $this->factory()->metadataFor('Bar');
+        $this->assertSame('anonymous/Bar.html.twig', $metadata->getTemplate());
+        $this->assertSame('Bar', $metadata->getName());
+        $this->assertNull($metadata->get('class'));
+    }
+
     public function testAutoNamingInSubDirectory()
     {
         $metadata = $this->factory()->metadataFor('SubDirectory:ComponentInSubDirectory');

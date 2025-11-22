@@ -676,6 +676,43 @@ the subdirectory:
     {# renders as: #}
     <button class="primary">Click Me!</button>
 
+If your anonymous component lives in a directory with the same name, you can
+name the component file ``index.html.twig`` to avoid repetition:
+
+.. code-block:: html+twig
+
+    {# templates/components/Menu/index.html.twig #}
+    <nav {{ attributes.defaults({class: 'menu'}) }}>
+        <ul>
+            {% block content %}{% endblock %}
+        </ul>
+    </nav>
+
+.. code-block:: html+twig
+
+    {# templates/components/Menu/Item.html.twig #}
+    {% props href, label %}
+    <li {{ attributes.defaults({class: 'menu__item'}) }}>
+        <a href="{{ href }}">{% block content %}{{ label }}{% endblock %}</a>
+    </li>
+
+.. code-block:: html+twig
+
+    {# index.html.twig #}
+    ...
+    <twig:Menu>
+        <twig:Menu:Item href="/">Home</twig:Menu:Item>
+        <twig:Menu:Item href="/about">About</twig:Menu:Item>
+    </twig:Menu>
+
+    {# renders as: #}
+    <nav class="menu">
+        <ul>
+            <li class="menu__item"><a href="/">Home</a></li>
+            <li class="menu__item"><a href="/about">About</a></li>
+        </ul>
+    </nav>
+
 Like normal, you can pass extra attributes that will be rendered on the element:
 
 .. code-block:: html+twig
