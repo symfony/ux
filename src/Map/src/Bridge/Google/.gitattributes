@@ -4,4 +4,4 @@
 /assets/vitest.config.mjs export-ignore
 /tests export-ignore
 /.git* export-ignore
-/phpunit.xml.dist export-ignore
+/phpunit.dist.xml export-ignore
