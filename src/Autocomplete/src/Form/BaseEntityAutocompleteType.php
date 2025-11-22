@@ -65,11 +65,14 @@ final class BaseEntityAutocompleteType extends AbstractType
             'security' => false,
             // set the max results number that a query on automatic endpoint return.
             'max_results' => 10,
+            // extra attributes to add to the autocomplete result, either an array or a callable (called with the entity)
+            'additional_attributes' => null,
         ]);
 
         $resolver->setAllowedTypes('security', ['boolean', 'string', 'callable']);
         $resolver->setAllowedTypes('max_results', ['int', 'null']);
         $resolver->setAllowedTypes('filter_query', ['callable', 'null']);
+        $resolver->setAllowedTypes('additional_attributes', ['null', 'callable', 'array']);
         $resolver->setNormalizer('searchable_fields', function (Options $options, ?array $searchableFields) {
             if (null !== $searchableFields && null !== $options['filter_query']) {
                 throw new RuntimeException('Both the searchable_fields and filter_query options cannot be set.');

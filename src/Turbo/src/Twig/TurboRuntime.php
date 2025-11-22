@@ -52,8 +52,6 @@ final class TurboRuntime implements RuntimeExtensionInterface
 
         $renderer = $this->turboStreamListenRenderers->get($transport);
 
-        return $renderer instanceof TurboStreamListenRendererWithOptionsInterface
-            ? $renderer->renderTurboStreamListen($env, $topic, $options) // @phpstan-ignore-line
-            : $renderer->renderTurboStreamListen($env, $topic);
+        return $renderer->renderTurboStreamListen($env, $topic, $options);
     }
 }

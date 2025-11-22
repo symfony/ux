@@ -138,11 +138,28 @@ final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocomp
         return $this->getFormOption('group_by');
     }
 
+    public function getAttributes(object $entity): array
+    {
+        $attributesOption = $this->getFormOption('additional_attributes');
+
+        if (null === $attributesOption) {
+            return [];
+        }
+
+        if (\is_array($attributesOption)) {
+            return $attributesOption;
+        }
+
+        if (\is_callable($attributesOption)) {
+            return $attributesOption($entity);
+        }
+
+        throw new \InvalidArgumentException('The "additional_attributes" option must be either an array or a callable.');
+    }
+
     private function getFormOption(string $name): mixed
     {
         $form = $this->getForm();
-        // Remove when dropping support for ParentEntityAutocompleteType
-        $form = $form->has('autocomplete') ? $form->get('autocomplete') : $form;
         $formOptions = $form->getConfig()->getOptions();
 
         return $formOptions[$name] ?? null;

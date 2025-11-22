@@ -59,7 +59,7 @@ final class AutocompleteResultsExecutor
 
         $results = [];
 
-        if (!method_exists($autocompleter, 'getGroupBy') || null === $groupBy = $autocompleter->getGroupBy()) {
+        if (null === $groupBy = $autocompleter->getGroupBy()) {
             foreach ($paginator as $entity) {
                 $results[] = $this->formatResult($autocompleter, $entity);
             }
@@ -112,13 +112,8 @@ final class AutocompleteResultsExecutor
      */
     private function formatResult(EntityAutocompleterInterface $autocompleter, object $entity): array
     {
-        $attributes = [];
-        if (method_exists($autocompleter, 'getAttributes')) {
-            $attributes = $autocompleter->getAttributes($entity);
-        }
-
         return [
-            ...$attributes,
+            ...$autocompleter->getAttributes($entity),
             'value' => $autocompleter->getValue($entity),
             'text' => $autocompleter->getLabel($entity),
         ];

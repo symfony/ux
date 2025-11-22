@@ -15,7 +15,7 @@ use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Twig\MercureExtension;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 use Symfony\UX\Turbo\Broadcaster\IdAccessor;
-use Symfony\UX\Turbo\Twig\TurboStreamListenRendererWithOptionsInterface;
+use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
@@ -25,7 +25,7 @@ use Twig\Extension\AbstractExtension;
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
  */
-final class TurboStreamListenRenderer implements TurboStreamListenRendererWithOptionsInterface
+final class TurboStreamListenRenderer implements TurboStreamListenRendererInterface
 {
     public function __construct(
         private HubInterface $hub,
@@ -35,12 +35,8 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererWithOp
     ) {
     }
 
-    public function renderTurboStreamListen(Environment $env, $topic /* array $eventSourceOptions = [] */): string
+    public function renderTurboStreamListen(Environment $env, $topic, array $eventSourceOptions = []): string
     {
-        if (\func_num_args() > 2) {
-            $eventSourceOptions = func_get_arg(2);
-        }
-
         $topics = $topic instanceof TopicSet
             ? array_map($this->resolveTopic(...), $topic->getTopics())
             : [$this->resolveTopic($topic)];
@@ -52,7 +48,7 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererWithOp
             $controllerAttributes['topic'] = current($topics);
         }
 
-        if (isset($eventSourceOptions)) {
+        if ([] !== $eventSourceOptions) {
             try {
                 // Mercure >= 0.7: https://github.com/symfony/mercure/pull/123
                 /* @phpstan-ignore-next-line function.alreadyNarrowedType */
