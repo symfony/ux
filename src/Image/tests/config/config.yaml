@@ -1,0 +1,47 @@
+framework:
+  test: true
+  secret: test
+  router:
+    resource: ~
+    utf8: true
+  http_method_override: false
+  php_errors:
+    log: true
+
+twig_component:
+  anonymous_template_directory: "components/"
+  defaults:
+    Symfony\UX\Image\Twig\Components\: components/
+
+twig:
+  default_path: "%kernel.project_dir%/templates"
+  debug: "%kernel.debug%"
+  strict_variables: "%kernel.debug%"
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  Symfony\UX\Image\Service\PreloadManager:
+    public: true
+
+ux_image:
+  provider: placeholder
+  missing_image_placeholder: "404.png"
+  breakpoints:
+    sm: 640
+    md: 768
+    lg: 1024
+    xl: 1280
+    2xl: 1536
+  defaults:
+    fallback: lg
+    fallback_format: auto
+  presets:
+    hero:
+      ratio: "16:9"
+      width: "100vw sm:50vw md:400px"
+      fetchpriority: high
+      preload: true

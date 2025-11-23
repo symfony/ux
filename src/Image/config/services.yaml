@@ -1,0 +1,42 @@
+parameters:
+  env(CLOUDINARY_URL): "https://res.cloudinary.com/your-cloud-name/image/upload"
+  env(FASTLY_URL): "https://www.fastly.io"
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Symfony\UX\Image\:
+    resource: "../src/*"
+    exclude:
+      - "../src/DependencyInjection/"
+
+  Symfony\UX\Image\EventListener\PreloadInjectorSubscriber:
+    tags:
+      - { name: kernel.event_subscriber }
+
+  ux.image.provider_registry:
+    class: Symfony\UX\Image\Provider\ProviderRegistry
+    public: true
+    arguments:
+      $defaultProvider: "%ux_image.provider%"
+
+  Symfony\UX\Image\Provider\ProviderRegistry: "@ux.image.provider_registry"
+
+  Symfony\UX\Image\Twig\Components\Img:
+    tags: ["twig.component"]
+
+  Symfony\UX\Image\Twig\Components\Picture:
+    tags: ["twig.component"]
+
+  Symfony\UX\Image\Service\PreloadManager:
+    public: true
+
+  Symfony\UX\Image\Provider\LiipImagineProvider:
+    arguments:
+      $urlGenerator: "@router"
+      $signer: "@?liip_imagine.cache.signer"
+    tags:
+      - { name: "ux.image.provider" }

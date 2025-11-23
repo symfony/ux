@@ -1,0 +1,90 @@
+ux_image:
+  # Image provider (liip_imagine, cloudinary, etc.)
+  provider: placeholder
+
+  # Path to the image shown when source image is missing
+  missing_image_placeholder: "src/Resources/public/images/image-not-found.png"
+
+  breakpoints:
+    sm: 640
+    md: 768
+    lg: 1024
+    xl: 1280
+    2xl: 1536
+
+  # Default settings for all images
+  defaults:
+    # Image format and quality
+    format: webp # webp, jpg, png, avif
+    quality: 80
+
+    # Loading behavior
+    loading: lazy
+    fetchpriority: auto
+
+    # Image fitting
+    fit: cover
+
+    # Placeholder settings
+    placeholder: none
+
+    # Fallback settings
+    fallback: lg
+    fallback_format: auto
+
+  # Provider-specific configuration
+  providers:
+    liip_imagine:
+      default_filter: "default"
+      defaults:
+        format: webp
+        quality: 80
+
+    cloudinary:
+      base_url: "%env(CLOUDINARY_URL)%"
+      defaults:
+        format: auto
+        quality: auto
+
+    placeholder:
+      defaults:
+        width: 600
+        height: null
+        background: "868e96"
+        text: null
+        text_color: "FFFFFF"
+        ratio: null
+
+    fastly:
+      base_url: "%env(FASTLY_URL)%"
+      defaults:
+        format: webp
+        quality: 85
+      default_transformations:
+        - ["format", "auto"]
+        - ["quality", "85"]
+
+  # Predefined presets for common use cases
+  presets:
+    thumbnail:
+      width: 200
+      height: 200
+      quality: 90
+
+    hero:
+      ratio: "16:9"
+      width: "100vw sm:50vw md:400px"
+      fetchpriority: high
+      preload: true
+
+    avatar:
+      width: 48
+      height: 48
+      placeholder: blur
+
+    product:
+      ratio: "1:1"
+      fit: contain
+      quality: 85
+      placeholder: dominant
+

@@ -1,0 +1,20 @@
+<picture>
+    {% for breakpoint in this.breakpoints %}
+        <source
+            media="{{ breakpoint.media }}"
+            srcset="{{ breakpoint.srcset }}"
+            {% if breakpoint.sizes is defined %}sizes="{{ breakpoint.sizes }}"{% endif %}
+            type="{{ breakpoint.type|default('image/webp') }}"
+        >
+    {% endfor %}
+
+    <img
+        src="{{ fallbackImage }}"
+        {% if alt is defined %}alt="{{ alt }}"{% endif %}
+        {% if this.getHtmlWidth() %}width="{{ this.getHtmlWidth() }}"{% endif %}
+        {% if this.getHtmlHeight() %}height="{{ this.getHtmlHeight() }}"{% endif %}
+        {% if loading is defined and loading %}loading="{{ loading }}"{% endif %}
+        {% if class is defined %}class="{{ class }}"{% endif %}
+        {{ attributes|default('')|raw }}
+    />
+</picture>

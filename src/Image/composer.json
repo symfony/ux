@@ -1,0 +1,80 @@
+{
+  "name": "symfony/ux-image",
+  "type": "symfony-bundle",
+  "description": "A Symfony bundle for responsive images with automatic WebP conversion, smart cropping, and Core Web Vitals optimization",
+  "keywords": [
+    "symfony-ux",
+    "symfony",
+    "image",
+    "responsive",
+    "webp",
+    "optimization",
+    "core web vitals"
+  ],
+  "homepage": "https://symfony.com",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Aleksey Razbakov",
+      "email": "aleksey@razbakov.com"
+    },
+    {
+      "name": "Symfony Community",
+      "homepage": "https://symfony.com/contributors"
+    }
+  ],
+  "require": {
+    "php": ">=8.1",
+    "symfony/framework-bundle": "^6.4|^7.0|^8.0",
+    "symfony/twig-bundle": "^6.4|^7.0|^8.0",
+    "symfony/config": "^6.4|^7.0|^8.0",
+    "symfony/dependency-injection": "^6.4|^7.0|^8.0",
+    "symfony/http-kernel": "^6.4|^7.0|^8.0",
+    "twig/twig": "^3.0",
+    "liip/imagine-bundle": "^2.11",
+    "symfony/options-resolver": "^6.4|^7.0|^8.0",
+    "symfony/ux-twig-component": "^2.21"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.65",
+    "phpunit/phpunit": "^9.5|^10.0",
+    "symfony/browser-kit": "^6.4|^7.0|^8.0",
+    "symfony/css-selector": "^6.4|^7.0|^8.0",
+    "symfony/debug-bundle": "^6.4|^7.0|^8.0",
+    "symfony/phpunit-bridge": "^6.3|^7.0|^8.0",
+    "symfony/yaml": "^6.4|^7.0|^8.0"
+  },
+  "suggest": {
+    "liip/imagine-bundle": "For local image processing using LiipImagineBundle"
+  },
+  "autoload": {
+    "psr-4": {
+      "Symfony\\UX\\Image\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Symfony\\UX\\Image\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "scripts": {
+    "test": "phpunit",
+    "coverage": "phpunit --coverage-html coverage",
+    "review": "php-cs-fixer fix --dry-run --diff",
+    "format": "php-cs-fixer fix"
+  },
+  "conflict": {
+    "symfony/flex": "<1.13",
+    "symfony/ux-twig-component": "<2.21"
+  },
+  "extra": {
+    "thanks": {
+      "name": "symfony/ux",
+      "url": "https://github.com/symfony/ux"
+    }
+  },
+  "minimum-stability": "dev"
+}

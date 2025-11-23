@@ -1,0 +1,13 @@
+liip_imagine:
+  driver: "gd"
+  filter_sets:
+    default:
+      quality: 85
+      filters:
+        auto_rotate: ~
+        strip: ~
+        scale: ~
+        thumbnail: ~
+        upscale: ~
+        relative_resize: ~
+        background: ~

@@ -1,0 +1,12 @@
+<img
+    src="{{ this.getSrcComputed() }}"
+    {% if alt %}alt="{{ alt }}"{% endif %}
+    {% if this.getHtmlWidth() %}width="{{ this.getHtmlWidth() }}"{% endif %}
+    {% if this.getHtmlHeight() %}height="{{ this.getHtmlHeight() }}"{% endif %}
+    {% if loading %}loading="{{ loading }}"{% endif %}
+    {% if fetchpriority %}fetchpriority="{{ fetchpriority }}"{% endif %}
+    {% if class %}class="{{ class }}"{% endif %}
+    {% if this.srcset %}srcset="{{ this.srcset }}"{% endif %}
+    {% if this.sizes %}sizes="{{ this.sizes }}"{% endif %}
+    {{ attributes|default('')|raw }}
+/>
