@@ -187,80 +187,79 @@ final class Transformer
         $sizes = [];
         $breakpointKeys = array_keys($this->breakpoints);
 
-        // Find the largest explicit value for default size (no media query)
-        $largestValue = null;
-        foreach (array_reverse($breakpointKeys) as $key) {
-            if (isset($widths[$key])) {
-                $largestValue = $widths[$key];
-                break;
-            }
-        }
+        // Sort breakpoints by value ascending for max-width logic
+        $sortedBreakpoints = $this->breakpoints;
+        asort($sortedBreakpoints);
+        $sortedKeys = array_keys($sortedBreakpoints);
 
-        // Process breakpoints from largest to smallest
-        $sizeVariants = [];
+        // Iterate from smallest to largest
+        foreach ($sortedKeys as $i => $key) {
+            // Determine the value applicable for the range ENDING at this breakpoint.
+            // For sm (640), the range is 0-640. This corresponds to 'default' width (mobile).
+            // For md (768), the range is 640-768. This corresponds to 'sm' width.
 
-        foreach (array_reverse($breakpointKeys) as $i => $key) {
-            if (isset($widths[$key])) {
-                // Find the next breakpoint that has a value
-                $nextValue = null;
-                for ($j = $i + 1; $j < \count($breakpointKeys); ++$j) {
-                    $nextKey = array_reverse($breakpointKeys)[$j];
-                    if (isset($widths[$nextKey])) {
-                        $nextValue = $widths[$nextKey];
-                        break;
-                    }
-                }
+            $sourceKey = 0 === $i ? 'default' : $sortedKeys[$i - 1];
 
-                // If no next breakpoint value found and we have a default value
-                if (!$nextValue && isset($widths['default'])) {
-                    $nextValue = $widths['default'];
-                }
+            if (isset($widths[$sourceKey])) {
+                $currentValue = $widths[$sourceKey];
 
-                // Add current value to size variants
-                $sizeVariants[] = [
-                    'size' => $this->formatSizeValue($widths[$key]),
-                    'screenMaxWidth' => $this->breakpoints[$key],
-                    'media' => \sprintf('(max-width: %dpx)', $this->breakpoints[$key]),
+                $sizes[] = [
+                    'media' => sprintf('(max-width: %dpx)', $this->breakpoints[$key]),
+                    'value' => $this->formatSizeValue($currentValue),
                 ];
-
-                // If next value is different, add it at this breakpoint
-                if ($nextValue && !$this->isSameValue($widths[$key], $nextValue)) {
-                    $sizeVariants[] = [
-                        'size' => $this->formatSizeValue($nextValue),
-                        'screenMaxWidth' => $this->breakpoints[$key],
-                        'media' => \sprintf('(max-width: %dpx)', $this->breakpoints[$key]),
-                    ];
-                }
             }
         }
 
-        // Sort variants by screen width (largest to smallest)
-        usort($sizeVariants, fn($a, $b) => $b['screenMaxWidth'] - $a['screenMaxWidth']);
+        $optimizedSizes = [];
+        $count = count($sizes);
+        for ($i = 0; $i < $count; $i++) {
+            $current = $sizes[$i];
+            $keep = true;
 
-        // Add size variants to sizes array (media queries come first)
-        foreach ($sizeVariants as $variant) {
-            $sizes[] = $variant['media'] . ' ' . $variant['size'];
+            // Look ahead for same value
+            for ($j = $i + 1; $j < $count; $j++) {
+                $next = $sizes[$j];
+                // Check if the formatted value string is the same
+                if ($current['value'] === $next['value']) {
+                    // Found a larger breakpoint with same value. Current is redundant.
+                    $keep = false;
+                    break;
+                } else {
+                    // Value changed. Current is boundary. Keep it.
+                    break;
+                }
+            }
+
+            if ($keep) {
+                $optimizedSizes[] = $current['media'] . ' ' . $current['value'];
+            }
         }
 
-        // Add default value if it exists and differs from sm breakpoint
-        if (
-            isset($widths['default'])
-            && (!isset($widths['sm']) || !$this->isSameValue($widths['default'], $widths['sm']))
-        ) {
-            $sizes[] = \sprintf(
-                '(max-width: %dpx) %s',
-                $this->breakpoints['sm'],
-                $this->formatSizeValue($widths['default'])
-            );
+        // Find fallback (default)
+        // This corresponds to the range starting at the largest breakpoint.
+        // i.e. widths[largest_breakpoint]
+        $fallback = null;
+        $largestKey = end($sortedKeys);
+        if (isset($widths[$largestKey])) {
+            $fallback = $this->formatSizeValue($widths[$largestKey]);
         }
 
-        // Add the largest value as the default size at the END (no media query)
-        // This is the fallback size that browsers use when no media queries match
-        if ($largestValue) {
-            $sizes[] = $this->formatSizeValue($largestValue);
+        // If fallback matches the last size query, remove that query?
+        // (max-width: 1536) 200px, 200px.
+        if (!empty($optimizedSizes) && $fallback) {
+            $lastSize = end($optimizedSizes);
+            // $lastSize string format: "(max-width: ...) val"
+            // Check if val matches fallback.
+            if (str_ends_with($lastSize, ' ' . $fallback)) {
+                array_pop($optimizedSizes);
+            }
         }
 
-        return implode(', ', array_unique($sizes));
+        if ($fallback) {
+            $optimizedSizes[] = $fallback;
+        }
+
+        return implode(', ', $optimizedSizes);
     }
 
     public function getSrcset(string $src, array $widths, callable $imageCallback): string
@@ -281,11 +280,6 @@ final class Transformer
         }
 
         return implode(', ', $srcset);
-    }
-
-    private function isSameValue(array $value1, array $value2): bool
-    {
-        return $value1['value'] === $value2['value'] && $value1['vw'] === $value2['vw'];
     }
 
     private function formatSizeValue(array $width): string

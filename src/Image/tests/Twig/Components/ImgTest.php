@@ -197,9 +197,9 @@ class ImgTest extends KernelTestCase
         $this->assertStringContainsString('/image.jpg?width=50 50w', $attributes['srcset']);
         $this->assertStringContainsString('/image.jpg?width=100 100w', $attributes['srcset']);
         $this->assertStringContainsString('/image.jpg?width=200 200w', $attributes['srcset']);
-        $this->assertStringContainsString('(max-width: 640px) 50px', $attributes['sizes']);
-        $this->assertStringContainsString('(max-width: 768px) 100px', $attributes['sizes']);
-        $this->assertStringContainsString('(max-width: 1024px) 200px', $attributes['sizes']);
+        $this->assertStringContainsString('(max-width: 768px) 50px', $attributes['sizes']);
+        $this->assertStringContainsString('(max-width: 1024px) 100px', $attributes['sizes']);
+        $this->assertStringContainsString('200px', $attributes['sizes']);
     }
 
     public function testFullscreen(): void

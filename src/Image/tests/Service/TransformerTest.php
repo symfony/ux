@@ -175,7 +175,7 @@ class TransformerTest extends TestCase
                     'xl' => ['value' => 1280, 'vw' => '80'],
                     '2xl' => ['value' => 1536, 'vw' => '80'],
                 ],
-                '(max-width: 1536px) 80vw, (max-width: 1280px) 80vw, (max-width: 1024px) 80vw, (max-width: 768px) 80vw, (max-width: 768px) 100vw, (max-width: 640px) 100vw, 80vw',
+                '(max-width: 768px) 100vw, 80vw',
             ],
             'mixed viewport and fixed widths' => [
                 [
@@ -186,7 +186,7 @@ class TransformerTest extends TestCase
                     'xl' => ['value' => 400, 'vw' => '0'],
                     '2xl' => ['value' => 400, 'vw' => '0'],
                 ],
-                '(max-width: 1536px) 400px, (max-width: 1280px) 400px, (max-width: 1024px) 400px, (max-width: 1024px) 50vw, (max-width: 768px) 50vw, (max-width: 640px) 50vw, 400px',
+                '(max-width: 1024px) 50vw, 400px',
             ],
             'viewport widths with breakpoint transitions' => [
                 [
@@ -197,7 +197,7 @@ class TransformerTest extends TestCase
                     'xl' => ['value' => 1152, 'vw' => '90'],
                     '2xl' => ['value' => 1382, 'vw' => '90'],
                 ],
-                '(max-width: 1536px) 90vw, (max-width: 1280px) 90vw, (max-width: 1280px) 100vw, (max-width: 1024px) 100vw, (max-width: 768px) 100vw, (max-width: 640px) 100vw, 90vw',
+                '(max-width: 1280px) 100vw, 90vw',
             ],
             'fixed to viewport width transition' => [
                 [
@@ -208,7 +208,7 @@ class TransformerTest extends TestCase
                     'xl' => ['value' => 1280, 'vw' => '100'],
                     '2xl' => ['value' => 1536, 'vw' => '100'],
                 ],
-                '(max-width: 1536px) 100vw, (max-width: 1280px) 100vw, (max-width: 1024px) 100vw, (max-width: 1024px) 1000px, (max-width: 768px) 1000px, (max-width: 640px) 1000px, 100vw',
+                '(max-width: 1024px) 1000px, 100vw',
             ],
         ];
     }
