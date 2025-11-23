@@ -166,6 +166,17 @@ class TransformerTest extends TestCase
                 ],
                 '100vw',
             ],
+            'halfscreen' => [
+                [
+                    'default' => ['value' => 320, 'vw' => '50'],
+                    'sm' => ['value' => 320, 'vw' => '50'],
+                    'md' => ['value' => 384, 'vw' => '50'],
+                    'lg' => ['value' => 512, 'vw' => '50'],
+                    'xl' => ['value' => 640, 'vw' => '50'],
+                    '2xl' => ['value' => 768, 'vw' => '50'],
+                ],
+                '50vw',
+            ],
             'default value appears at end (W3C compliant)' => [
                 [
                     'default' => ['value' => 640, 'vw' => '100'],

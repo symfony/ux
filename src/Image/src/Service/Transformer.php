@@ -169,23 +169,7 @@ final class Transformer
 
     public function getSizes(array $widths): string
     {
-        // Special case: if it's just a viewport width with no breakpoints
-        // and all breakpoints have the same vw value
-        if (isset($widths['default']) && '100' === $widths['default']['vw']) {
-            $allSame = true;
-            foreach ($widths as $key => $width) {
-                if ('default' !== $key && isset($width['vw']) && '100' !== $width['vw']) {
-                    $allSame = false;
-                    break;
-                }
-            }
-            if ($allSame) {
-                return '100vw';
-            }
-        }
-
         $sizes = [];
-        $breakpointKeys = array_keys($this->breakpoints);
 
         // Sort breakpoints by value ascending for max-width logic
         $sortedBreakpoints = $this->breakpoints;
