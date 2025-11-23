@@ -334,4 +334,33 @@ class TransformerTest extends TestCase
         $widths = $transformer->getDensityBasedWidths(100, '1x 2x 3x');
         $this->assertEquals([100, 200, 300], $widths);
     }
+
+    /**
+     * Tests that custom breakpoint names work correctly without filling in standard breakpoint names.
+     */
+    public function testCustomBreakpointNames(): void
+    {
+        $transformer = new Transformer([
+            'mobile' => 640,
+            'tablet' => 768,
+            'desktop' => 1024,
+        ]);
+
+        $result = $transformer->parseWidth('mobile:200 tablet:400 desktop:800');
+
+        // Expected: Only custom breakpoints and default
+        $this->assertEquals([
+            'default' => ['value' => 200, 'vw' => '0'],
+            'mobile' => ['value' => 200, 'vw' => '0'],
+            'tablet' => ['value' => 400, 'vw' => '0'],
+            'desktop' => ['value' => 800, 'vw' => '0'],
+        ], $result);
+
+        // Standard breakpoints should NOT be present when using custom names
+        $this->assertArrayNotHasKey('sm', $result);
+        $this->assertArrayNotHasKey('md', $result);
+        $this->assertArrayNotHasKey('lg', $result);
+        $this->assertArrayNotHasKey('xl', $result);
+        $this->assertArrayNotHasKey('2xl', $result);
+    }
 }

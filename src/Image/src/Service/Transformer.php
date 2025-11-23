@@ -16,8 +16,8 @@ namespace Symfony\UX\Image\Service;
  */
 final class Transformer
 {
-    private const BREAKPOINT_ORDER = ['default', 'sm', 'md', 'lg', 'xl', '2xl'];
     private array $breakpoints;
+    private array $breakpointOrder;
 
     public function __construct(array $breakpoints = [
         'sm' => 640,
@@ -28,6 +28,12 @@ final class Transformer
     ])
     {
         $this->breakpoints = $breakpoints;
+
+        // Build dynamic breakpoint order based on provided breakpoints
+        // Sort by value to maintain ascending order
+        $sortedBreakpoints = $breakpoints;
+        asort($sortedBreakpoints);
+        $this->breakpointOrder = ['default', ...array_keys($sortedBreakpoints)];
     }
 
     public function parseWidth(string $width): array
@@ -56,7 +62,7 @@ final class Transformer
                 // Track the smallest breakpoint
                 if (
                     !$smallestBreakpoint
-                    || array_search($breakpoint, self::BREAKPOINT_ORDER) < array_search($smallestBreakpoint, self::BREAKPOINT_ORDER)
+                    || array_search($breakpoint, $this->breakpointOrder) < array_search($smallestBreakpoint, $this->breakpointOrder)
                 ) {
                     $smallestBreakpoint = $breakpoint;
                 }
@@ -75,13 +81,13 @@ final class Transformer
             $vwPercentage = (int) $widths['default']['vw'];
 
             // Pre-calculate all viewport widths up to fixed width transition
-            foreach (self::BREAKPOINT_ORDER as $breakpoint) {
+            foreach ($this->breakpointOrder as $breakpoint) {
                 if ($firstFixedAfterVw && $breakpoint === $firstFixedAfterVw) {
                     // Found fixed width transition point, propagate fixed width to remaining breakpoints
                     $fixedValue = $widths[$firstFixedAfterVw];
-                    foreach (self::BREAKPOINT_ORDER as $nextBreakpoint) {
+                    foreach ($this->breakpointOrder as $nextBreakpoint) {
                         if (
-                            array_search($nextBreakpoint, self::BREAKPOINT_ORDER) >= array_search($breakpoint, self::BREAKPOINT_ORDER)
+                            array_search($nextBreakpoint, $this->breakpointOrder) >= array_search($breakpoint, $this->breakpointOrder)
                             && !isset($widths[$nextBreakpoint])
                         ) {
                             $widths[$nextBreakpoint] = $fixedValue;
@@ -92,7 +98,7 @@ final class Transformer
 
                 if (!isset($widths[$breakpoint])) {
                     $breakpointWidth = 'default' === $breakpoint ?
-                        $this->breakpoints['sm'] :
+                        reset($this->breakpoints) :
                         $this->breakpoints[$breakpoint];
 
                     $pixelWidth = (int) ($breakpointWidth * ($vwPercentage / 100));
@@ -109,15 +115,15 @@ final class Transformer
             $lastValue = $widths['default'];
 
             // Propagate fixed width to all breakpoints
-            foreach (self::BREAKPOINT_ORDER as $breakpoint) {
+            foreach ($this->breakpointOrder as $breakpoint) {
                 if ($firstVwAfterFixed && $breakpoint === $firstVwAfterFixed) {
                     // Found viewport width transition point
                     $vwPercentage = (int) $widths[$breakpoint]['vw'];
 
                     // Calculate viewport widths for remaining breakpoints
-                    foreach (self::BREAKPOINT_ORDER as $vwBreakpoint) {
+                    foreach ($this->breakpointOrder as $vwBreakpoint) {
                         if (
-                            array_search($vwBreakpoint, self::BREAKPOINT_ORDER) >= array_search($breakpoint, self::BREAKPOINT_ORDER)
+                            array_search($vwBreakpoint, $this->breakpointOrder) >= array_search($breakpoint, $this->breakpointOrder)
                             && !isset($widths[$vwBreakpoint])
                         ) {
                             $breakpointWidth = $this->breakpoints[$vwBreakpoint];
@@ -150,7 +156,7 @@ final class Transformer
 
         if ($isVw) {
             $breakpointWidth = 'default' === $breakpoint ?
-                $this->breakpoints['sm'] :
+                reset($this->breakpoints) :
                 $this->breakpoints[$breakpoint];
 
             $pixelWidth = (int) ($breakpointWidth * ($numericValue / 100));
