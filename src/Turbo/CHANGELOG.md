@@ -6,6 +6,10 @@
 -   Minimum required PHP version is now 8.2
 -   Remove old compatibility layer with deprecated `StimulusTwigExtension` from WebpackEncoreBundle ^1.0, use StimulusBundle instead
 
+## 2.32
+
+-  Add support for MercureBundle ^0.4.1 and Mercure ^0.7.0
+
 ## 2.30
 
 -  Ensure compatibility with PHP 8.5

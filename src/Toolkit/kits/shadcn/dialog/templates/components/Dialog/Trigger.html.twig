@@ -1,0 +1,7 @@
+{# @block content The default block #}
+{%- set trigger_attrs = {
+    'data-action': 'click->dialog#open',
+    'data-dialog-target': 'trigger',
+    'aria-haspopup': 'dialog',
+} -%}
+{%- block content %}{% endblock -%}

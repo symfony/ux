@@ -1,0 +1,7 @@
+{# @block content The default block #}
+<header
+    class="{{ 'flex flex-col gap-2 text-center sm:text-left ' ~ attributes.render('class')|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</header>

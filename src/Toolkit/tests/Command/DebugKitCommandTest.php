@@ -36,7 +36,7 @@ class DebugKitCommandTest extends KernelTestCase
                 '| File(s)      | templates/components/Avatar.html.twig                                            |',
                 '|              | templates/components/Avatar/Image.html.twig                                      |',
                 '|              | templates/components/Avatar/Text.html.twig                                       |',
-                '| Dependencies | tales-from-a-dev/twig-tailwind-extra                                             |',
+                '| Dependencies | tales-from-a-dev/twig-tailwind-extra:^1.0.0                                      |',
                 '+--------------+----------------------------------------------------------------------------------+',
             ]))
             ->assertOutputContains(implode(\PHP_EOL, [
@@ -49,7 +49,7 @@ class DebugKitCommandTest extends KernelTestCase
                 '|              | templates/components/Table/Head.html.twig                                        |',
                 '|              | templates/components/Table/Header.html.twig                                      |',
                 '|              | templates/components/Table/Row.html.twig                                         |',
-                '| Dependencies | tales-from-a-dev/twig-tailwind-extra                                             |',
+                '| Dependencies | tales-from-a-dev/twig-tailwind-extra:^1.0.0                                      |',
                 '+--------------+----------------------------------------------------------------------------------+',
             ]));
     }
@@ -70,7 +70,7 @@ class DebugKitCommandTest extends KernelTestCase
                 '| File(s)      | N/A                                                                              |',
                 '| Dependencies | button                                                                           |',
                 '|              | twig/html-extra:^3.12.0                                                          |',
-                '|              | tales-from-a-dev/twig-tailwind-extra                                             |',
+                '|              | tales-from-a-dev/twig-tailwind-extra:^1.0.0                                      |',
                 '|              | tailwindcss:^4.0.0                                                               |',
                 '|              | @tailwindplus/elements:1                                                         |',
                 '|              | @hotwired/stimulus                                                               |',

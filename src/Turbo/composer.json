@@ -45,7 +45,7 @@
         "symfony/debug-bundle": "^6.4|^7.0|^8.0",
         "symfony/form": "^6.4|^7.0|^8.0",
         "symfony/framework-bundle": "^6.4|^7.0|^8.0",
-        "symfony/mercure-bundle": "^0.3.7",
+        "symfony/mercure-bundle": "^0.3.7|^0.4.1",
         "symfony/messenger": "^6.4|^7.0|^8.0",
         "symfony/panther": "^2.2",
         "phpunit/phpunit": "^11.1|^12.0",
