@@ -21,7 +21,8 @@
         "rules": {
             "suspicious": {
                 "noExplicitAny": "off",
-                "noEmptyBlockStatements": "off"
+                "noEmptyBlockStatements": "off",
+                "noPrototypeBuiltins": "off"
             },
             "complexity": {
                 "noStaticOnlyClass": "off",
