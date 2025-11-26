@@ -8,7 +8,13 @@ export default class extends Controller {
         this.dialogTarget.showModal();
 
         if (this.hasTriggerTarget) {
-            this.triggerTarget.setAttribute('aria-expanded', 'true');
+            if (this.dialogTarget.getAnimations().length > 0) {
+                this.dialogTarget.addEventListener('transitionend', () => {
+                    this.triggerTarget.setAttribute('aria-expanded', 'true');
+                })
+            } else {
+                this.triggerTarget.setAttribute('aria-expanded', 'true');
+            }
         }
     }
 
@@ -22,7 +28,13 @@ export default class extends Controller {
         this.dialogTarget.close();
 
         if (this.hasTriggerTarget) {
-            this.triggerTarget.setAttribute('aria-expanded', 'false');
+            if (this.dialogTarget.getAnimations().length > 0) {
+                this.dialogTarget.addEventListener('transitionend', () => {
+                    this.triggerTarget.setAttribute('aria-expanded', 'false');
+                })
+            } else {
+                this.triggerTarget.setAttribute('aria-expanded', 'false');
+            }
         }
     }
 }
