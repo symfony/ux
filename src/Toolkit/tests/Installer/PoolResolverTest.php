@@ -98,7 +98,7 @@ final class PoolResolverTest extends TestCase
         $this->assertEquals([
             new RecipeDependency('button'),
             new PhpPackageDependency('twig/html-extra', new ConstraintVersion('^3.12.0')),
-            new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra'),
+            new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra', new ConstraintVersion('^1.0.0')),
             new NpmPackageDependency('tailwindcss', new ConstraintVersion('^4.0.0')),
             new NpmPackageDependency('@tailwindplus/elements', new ConstraintVersion('1')),
             new ImportmapPackageDependency('@hotwired/stimulus'),
@@ -117,7 +117,7 @@ final class PoolResolverTest extends TestCase
 
         $this->assertEquals([
             'twig/html-extra' => new PhpPackageDependency('twig/html-extra', new ConstraintVersion('^3.12.0')),
-            'tales-from-a-dev/twig-tailwind-extra' => new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra'),
+            'tales-from-a-dev/twig-tailwind-extra' => new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra', new ConstraintVersion('^1.0.0')),
             'another/php-package' => new PhpPackageDependency('another/php-package', new ConstraintVersion('^2.0')),
         ], $pool->getPhpPackageDependencies());
 
