@@ -1,0 +1,15 @@
+{# @prop open boolean Open (or not) the Dialog at initial rendering, default to `false` #}
+{# @prop id string Unique suffix identifier for generating Dialog internal IDs #}
+{# @block content The default block #}
+{%- props open = false, id -%}
+
+{%- set _dialog_id = 'dialog-' ~ id -%}
+{%- set _dialog_title_id = _dialog_id ~ '-title' -%}
+{%- set _dialog_description_id = _dialog_id ~ '-description' -%}
+<div {{ attributes.defaults({
+    'data-controller': 'dialog',
+    'aria-labelledby': _dialog_title_id,
+    'aria-describedby': _dialog_description_id,
+}) }}>
+    {% block content %}{% endblock %}
+</div>

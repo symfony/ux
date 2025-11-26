@@ -22,7 +22,7 @@
 
 ```twig {"preview":true}
 <div class="grid w-full max-w-sm items-center gap-1.5">
-    <twig:Label for="email" class="after:content-['*'] after:ml-0.5 after:text-red-500">Email</twig:Label>
+    <twig:Label for="email" class="gap-0 after:content-['*'] after:ml-0.5 after:text-red-500">Email</twig:Label>
     <twig:Input type="email" id="email" placeholder="Enter your email" />
 </div>
 ```

@@ -4,7 +4,7 @@ export default class extends Controller {
 
     static targets = ['trigger', 'dialog'];
 
-    async open() {
+    open() {
         this.dialogTarget.showModal();
 
         if (this.hasTriggerTarget) {
@@ -18,7 +18,13 @@ export default class extends Controller {
         }
     }
 
-    async close() {
+    closeOnClickOutside({ target }) {
+        if (target === this.dialogTarget) {
+            this.close()
+        }
+    }
+
+    close() {
         this.dialogTarget.close();
 
         if (this.hasTriggerTarget) {
