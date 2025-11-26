@@ -1,0 +1,61 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-11-16T21:55:33Z
+
+Hey, and thanks for the contribution! That's super appreciated 🤗
+
+I don't see any issue with the closing icon, it's well displayed:
+<img width="1115" height="337" alt="image" src="https://github.com/user-attachments/assets/0225eb10-8af9-45ab-b59f-cd2eff2d5afc" />
+
+About the "focus trap" thing, I agree. I didn't see native things and the solution used in by Shadcn/RadixUI seems very complex.
+Can we give a try to https://github.com/focus-trap/focus-trap? It looks like super easy to use.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2025-11-19T08:00:14Z
+
+> Hey, and thanks for the contribution! That's super appreciated 🤗
+>
+> I don't see any issue with the closing icon, it's well displayed: <img alt="image" width="1115" height="337" src="https://private-user-images.githubusercontent.com/2103975/514926591-0225eb10-8af9-45ab-b59f-cd2eff2d5afc.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NjM1Mzg2NTgsIm5iZiI6MTc2MzUzODM1OCwicGF0aCI6Ii8yMTAzOTc1LzUxNDkyNjU5MS0wMjI1ZWIxMC04YWY5LTQ1YWItYjU5Zi1jZDJlZmYyZDVhZmMucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI1MTExOSUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNTExMTlUMDc0NTU4WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9NDIyYjM1NjhlOTNkNTkwMDg1MWE3MWNjYzk4NTI0NDQ2ZDliMzYxNmQ5ZTgzNzU0MDAwMzNjNzUxNzI4N2IzMSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.NE1RH9YObCd-NQWv8FFtQ_hL0c8RsFP8ombPPqHBZ0k">
+>
+> About the "focus trap" thing, I agree. I didn't see native things and the solution used in by Shadcn/RadixUI seems very complex. Can we give a try to https://github.com/focus-trap/focus-trap? It looks like super easy to use.
+>
+> Thanks!
+
+I'll look into improving the focus section.
+
+---------------------------------------------------------------------------
+
+by norkunas at 2025-11-21T12:20:09Z
+
+I think you should remove the `open` attribute from the `<dialog>` element itself, and let to control `dialog-controller` with `data-dialog-open-value="boolean"`, this way focus won't escape outside of dialog
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2025-11-22T18:34:04Z
+
+> About the "focus trap" thing, I agree. I didn't see native things and the solution used in by Shadcn/RadixUI seems very complex. Can we give a try to https://github.com/focus-trap/focus-trap? It looks like super easy to use.
+@Kocal
+
+> I think you should remove the open attribute from the <dialog> element itself, and let to control dialog-controller with data-dialog-open-value="boolean", this way focus won't escape outside of **dialog**
+>
+> Thanks!
+@norkunas
+
+I've made improvements to enable animations using CSS with [@starting-style](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#starting-style), simplifying the HTML and Stimulus controller. Focus is handled by default with the `dialog` element, but some CSS classes conflicted.
+
+I also noticed that when the dialog box opens, the focusable element is now focused. That's great.
+
+I hope you appreciate this improvement :).
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-11-26T23:11:16Z
+
+> I think you should remove the `open` attribute from the `<dialog>` element itself, and let to control `dialog-controller` with `data-dialog-open-value="boolean"`, this way focus won't escape outside of dialog
+
+I liked the fact that you can open the dialog by default, but using `*:backdrop:` CSS classes does not work because `<dialog open>` (at boot page) does not display the backdrop anymore, see. https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#open
+
+I will this `open` attribute
