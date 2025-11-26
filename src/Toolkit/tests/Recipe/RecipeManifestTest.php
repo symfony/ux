@@ -213,7 +213,7 @@ final class RecipeManifestTest extends TestCase
                     },
                     "dependencies": {
                         "composer": [
-                            "tales-from-a-dev/twig-tailwind-extra",
+                            "tales-from-a-dev/twig-tailwind-extra:^1.0.0",
                             "symfony/ux-twig-component:^2.29"
                         ],
                         "npm": [
@@ -236,7 +236,7 @@ final class RecipeManifestTest extends TestCase
         $this->assertSame(['templates/' => 'templates/'], $manifest->copyFiles);
         $this->assertEquals([
             new RecipeDependency('OtherComponent'),
-            new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra', null),
+            new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra', new ConstraintVersion('^1.0.0')),
             new PhpPackageDependency('symfony/ux-twig-component', new ConstraintVersion('^2.29')),
             new NpmPackageDependency('tailwindcss', new ConstraintVersion('^4.0.0')),
             new NpmPackageDependency('@tailwindplus/elements', new ConstraintVersion('1')),

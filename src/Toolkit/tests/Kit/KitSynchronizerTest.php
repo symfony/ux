@@ -40,7 +40,7 @@ final class KitSynchronizerTest extends KernelTestCase
         $this->assertEquals([
             new PhpPackageDependency('twig/extra-bundle'),
             new PhpPackageDependency('twig/html-extra', new ConstraintVersion('^3.12.0')),
-            new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra'),
+            new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra', new ConstraintVersion('^1.0.0')),
         ], $kit->getRecipe('button')->manifest->dependencies);
     }
 }

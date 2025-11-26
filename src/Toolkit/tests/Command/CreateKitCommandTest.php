@@ -79,7 +79,7 @@ class CreateKitCommandTest extends KernelTestCase
                         "composer": [
                             "twig/extra-bundle",
                             "twig/html-extra:^3.12.0",
-                            "tales-from-a-dev/twig-tailwind-extra"
+                            "tales-from-a-dev/twig-tailwind-extra:^1.0.0"
                         ]
                     }
                 }
