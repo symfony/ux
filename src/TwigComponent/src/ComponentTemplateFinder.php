@@ -34,7 +34,7 @@ final class ComponentTemplateFinder implements ComponentTemplateFinderInterface
         }
 
         $template = rtrim($this->directory, '/').'/'.$componentPath.'/index.html.twig';
-        if ($loader->exists($template)) {
+        if ($this->loader->exists($template)) {
             return $template;
         }
 
