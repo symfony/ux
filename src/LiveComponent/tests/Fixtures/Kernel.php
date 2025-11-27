@@ -13,7 +13,6 @@ namespace Symfony\UX\LiveComponent\Tests\Fixtures;
 
 use Composer\InstalledVersions;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\ORM\Mapping\AssociationMapping;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -81,7 +80,7 @@ final class Kernel extends BaseKernel
     protected function build(ContainerBuilder $container): void
     {
         // workaround https://github.com/symfony/symfony/issues/50322
-        $container->addCompilerPass(new class() implements CompilerPassInterface {
+        $container->addCompilerPass(new class implements CompilerPassInterface {
             public function process(ContainerBuilder $container): void
             {
                 $container->removeDefinition('doctrine.orm.listeners.pdo_session_handler_schema_listener');
@@ -190,6 +189,12 @@ final class Kernel extends BaseKernel
                 if (version_compare($doctrineBundleVersion, '2.8.0', '>=')) {
                     $doctrineConfig['orm']['enable_lazy_ghost_objects'] = true;
                 }
+
+                // https://github.com/doctrine/DoctrineBundle/pull/1661
+                if (version_compare($doctrineBundleVersion, '2.9.0', '>=')) {
+                    $doctrineConfig['orm']['report_fields_where_declared'] = true;
+                }
+
                 if (version_compare($doctrineBundleVersion, '2.12.0', '>=')) {
                     $doctrineConfig['orm']['controller_resolver']['auto_mapping'] = false;
                 }
@@ -197,11 +202,16 @@ final class Kernel extends BaseKernel
 
             // https://github.com/doctrine/DoctrineBundle/pull/1661
             if (version_compare($doctrineBundleVersion, '2.9.0', '>=')) {
-                $doctrineConfig['orm']['report_fields_where_declared'] = true;
                 $doctrineConfig['orm']['validate_xml_mapping'] = true;
                 $doctrineConfig['dbal']['schema_manager_factory'] = 'doctrine.dbal.default_schema_manager_factory';
+
+                // https://github.com/doctrine/DoctrineBundle/pull/1962
+                if (version_compare($doctrineBundleVersion, '3.0.0', '<')) {
+                    $doctrineConfig['orm']['report_fields_where_declared'] = true;
+                }
             }
-            if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=')) {
+
+            if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=') && version_compare($doctrineBundleVersion, '4.0.0', '<')) {
                 $doctrineConfig['orm']['enable_native_lazy_objects'] = true;
             }
         }
