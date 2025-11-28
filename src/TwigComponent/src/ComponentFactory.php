@@ -46,6 +46,8 @@ final class ComponentFactory implements ResetInterface
 
     public function metadataFor(string $name): ComponentMetadata
     {
+        $name = $this->classMap[$name] ?? $name;
+
         if ($config = $this->config[$name] ?? null) {
             return new ComponentMetadata($config);
         }
@@ -57,14 +59,6 @@ final class ComponentFactory implements ResetInterface
             ];
 
             return new ComponentMetadata($this->config[$name]);
-        }
-
-        if ($mappedName = $this->classMap[$name] ?? null) {
-            if ($config = $this->config[$mappedName] ?? null) {
-                return new ComponentMetadata($config);
-            }
-
-            throw new \InvalidArgumentException(\sprintf('Unknown component "%s".', $name));
         }
 
         $this->throwUnknownComponentException($name);
