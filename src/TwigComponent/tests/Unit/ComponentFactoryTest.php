@@ -93,4 +93,32 @@ class ComponentFactoryTest extends TestCase
         $this->assertSame('foo', $metadata->getName());
         $this->assertSame('foo.html.twig', $metadata->getTemplate());
     }
+
+    /**
+     * @testWith ["bar"]
+     *           ["Foo\\Bar"]
+     */
+    public function testPrefersClassComponentOverAnonymous(string $name)
+    {
+        $templateFinder = $this->createMock(ComponentTemplateFinderInterface::class);
+        $templateFinder->expects($this->never())
+            ->method('findAnonymousComponentTemplate');
+
+        $factory = new ComponentFactory(
+            $templateFinder,
+            $this->createMock(ServiceLocator::class),
+            $this->createMock(PropertyAccessorInterface::class),
+            $this->createMock(EventDispatcherInterface::class),
+            [
+                'bar' => ['key' => 'bar', 'template' => 'bar.html.twig'],
+            ],
+            ['Foo\\Bar' => 'bar'],
+            $this->createMock(Environment::class),
+        );
+
+        $metadata = $factory->metadataFor($name);
+
+        $this->assertSame('bar', $metadata->getName());
+        $this->assertSame('bar.html.twig', $metadata->getTemplate());
+    }
 }
