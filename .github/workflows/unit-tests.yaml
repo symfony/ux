@@ -36,31 +36,28 @@ jobs:
                 include:
                     -   minimum-stability: 'dev'
                         php-version: '8.5'
+
                     # lowest deps
                     -   php-version: '8.2'
                         dependency-version: 'lowest'
 
-                    # oldest LTS
+                    # 6.4 LTS
                     -  php-version: '8.2'
                        symfony-version: '6.4.*'
 
-                    # oldest LTS + Windows
+                    # 7.4 LTS
                     -  php-version: '8.2'
-                       symfony-version: '6.4.*'
+                       symfony-version: '7.4.*'
+                    -  php-version: '8.2'
+                       symfony-version: '7.4.*'
                        os: 'windows-latest'
 
                     # Explicit Symfony versions
-                    -  php-version: '8.2'
-                       symfony-version: '^7.4.0-RC1' # TODO: change to '7.4.*' when Symfony 7.4 is released
-                       minimum-stability: 'RC'
-
                     -  php-version: '8.4'
-                       symfony-version: '^8.0.0-RC1' # TODO: change to '8.0.*' when Symfony 8.0 is released
-                       minimum-stability: 'RC'
-
+                       symfony-version: '8.0.*'
                     -  php-version: '8.5'
-                       symfony-version: '^8.0.0-RC1' # TODO: change to '8.0.*' when Symfony 8.0 is released
-                       minimum-stability: 'RC'
+                       symfony-version: '8.0.*'
+
 
         env:
             SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=6.4' }}
@@ -120,7 +117,7 @@ jobs:
                   '(cd src/{} \
                   && $COMPOSER_MIN_STAB \
                   && $COMPOSER_UP \
-                  && if [ {} = LiveComponent ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.symfony-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
+                  && if [ {} = LiveComponent ]; then live_component_post_install \"${{ matrix.php-version }}\"; fi \
                   && $PHPUNIT)'"
 
             - name: Run packages tests (Windows)
@@ -135,7 +132,7 @@ jobs:
                     '(cd src/$PACKAGE \
                     && $COMPOSER_MIN_STAB \
                     && $COMPOSER_UP \
-                    && if [ "$PACKAGE" = "LiveComponent" ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.symfony-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
+                    && if [ "$PACKAGE" = "LiveComponent" ]; then live_component_post_install ${{ matrix.php-version }}; fi \
                     && $PHPUNIT)'; then
                     FAILED_PACKAGES="$FAILED_PACKAGES $PACKAGE"
                   fi

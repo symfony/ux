@@ -111,7 +111,7 @@ class Kernel extends BaseKernel
                 }
             }
 
-            if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=')) {
+            if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=') && version_compare($doctrineBundleVersion, '4.0.0', '<')) {
                 $doctrineConfig['orm']['enable_native_lazy_objects'] = true;
             }
         }
