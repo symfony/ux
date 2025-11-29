@@ -124,15 +124,18 @@ final class Kernel extends BaseKernel
                         'alias' => 'Test',
                     ],
                 ],
-                'controller_resolver' => [
-                    'auto_mapping' => false,
-                ],
             ],
         ];
 
         if (null !== $doctrineBundleVersion = InstalledVersions::getVersion('doctrine/doctrine-bundle')) {
             if (version_compare($doctrineBundleVersion, '3.0.0', '<')) {
                 $doctrineConfig['orm']['auto_generate_proxy_classes'] = true;
+
+                // https://github.com/doctrine/DoctrineBundle/pull/1661
+                // https://github.com/doctrine/DoctrineBundle/pull/1962
+                if (version_compare($doctrineBundleVersion, '2.9.0', '>=')) {
+                    $doctrineConfig['orm']['report_fields_where_declared'] = true;
+                }
 
                 if (version_compare($doctrineBundleVersion, '2.12.0', '>=')) {
                     $doctrineConfig['orm']['controller_resolver']['auto_mapping'] = true;
