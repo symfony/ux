@@ -7,6 +7,7 @@
 -   Remove `ParentEntityAutocompleteType` in favor of `BaseEntityAutocompleteType`
 -   Remove `ExtraLazyChoiceLoader` in favor of `Symfony\Component\Form\ChoiceList\Loader\LazyChoiceLoader` from Symfony Form >=7.2
 -   Add parameter `$security` to `AutocompleteResultsExecutor::__construct()`
+-   Remove BC layer for `EntityAutocompleterInterface::getAttributes()` and `EntityAutocompleterInterface::getGroupBy()`
 
 ## 2.30
 
@@ -52,7 +53,7 @@ class IngredientAutocompleteType extends AbstractType
 
 -   Deprecate `ExtraLazyChoiceLoader` in favor of `Symfony\Component\Form\ChoiceList\Loader\LazyChoiceLoader`
 -   Reset TomSelect when updating url attribute #1505
--   Add `getAttributes()` method to define additional attributes for autocomplete results #2541
+-   Add `EntityAutocompleterInterface::getAttributes()` method to define additional attributes for autocomplete results #2541
 
 ## 2.22.0
 

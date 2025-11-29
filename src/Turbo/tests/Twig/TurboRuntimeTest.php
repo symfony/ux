@@ -16,7 +16,6 @@ use Symfony\Contracts\Service\ServiceLocatorTrait;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 use Symfony\UX\Turbo\Twig\TurboRuntime;
 use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
-use Symfony\UX\Turbo\Twig\TurboStreamListenRendererWithOptionsInterface;
 use Twig\Environment;
 
 final class TurboRuntimeTest extends TestCase
@@ -41,7 +40,7 @@ final class TurboRuntimeTest extends TestCase
     {
         $twig = $this->createMock(Environment::class);
         $renderer1 = $this->createMock(TurboStreamListenRendererInterface::class);
-        $renderer2 = $this->createMock(TurboStreamListenRendererWithOptionsInterface::class);
+        $renderer2 = $this->createMock(TurboStreamListenRendererInterface::class);
         $renderer2->expects($this->once())
             ->method('renderTurboStreamListen')
             ->with($twig, 'a_topic', ['hub' => 'hub2'])
