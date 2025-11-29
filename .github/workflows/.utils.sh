@@ -45,8 +45,8 @@ live_component_post_install() {
       return $?
       ;;
     8.4)
-      # Install PropertyInfo 7.3 (deprecate PropertyTypeExtractorInterface::getTypes) and TypeInfo 7.3 (new features and deprecations)
-      composer require symfony/property-info:7.3.* symfony/type-info:7.3.*
+      # Install PropertyInfo 7.4 (deprecate PropertyTypeExtractorInterface::getTypes from 7.3) and TypeInfo 7.4, but for Symfony 8 compatibility
+      composer require symfony/property-info:7.4.* symfony/type-info:7.4.*
       return $?
       ;;
   esac

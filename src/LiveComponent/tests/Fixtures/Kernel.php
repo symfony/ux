@@ -180,9 +180,6 @@ final class Kernel extends BaseKernel
                         'alias' => 'XML',
                     ],
                 ],
-                'controller_resolver' => [
-                    'auto_mapping' => false,
-                ],
             ],
         ];
 
@@ -199,12 +196,6 @@ final class Kernel extends BaseKernel
                 if (version_compare($doctrineBundleVersion, '2.9.0', '>=')) {
                     $doctrineConfig['orm']['report_fields_where_declared'] = true;
                 }
-            }
-
-            // https://github.com/doctrine/DoctrineBundle/pull/1661
-            if (version_compare($doctrineBundleVersion, '2.9.0', '>=')) {
-                $doctrineConfig['orm']['validate_xml_mapping'] = true;
-                $doctrineConfig['dbal']['schema_manager_factory'] = 'doctrine.dbal.default_schema_manager_factory';
             }
 
             if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=') && version_compare($doctrineBundleVersion, '4.0.0', '<')) {
