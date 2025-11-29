@@ -29,18 +29,29 @@ _run_task() {
 }
 export -f _run_task
 
-install_property_info_for_version() {
-  local php_version="$1"
-  local min_stability="$2"
+# Install specific versions of PropertyInfo and TypeInfo based on PHP and Symfony versions
+# To remove in Symfony UX 4.0
+live_component_post_install() {
+  local php_version=$1
 
-  if [ "$php_version" = "8.2" ]; then
-    composer require symfony/property-info:7.1.* symfony/type-info:7.2.*
-  elif [ "$php_version" = "8.3" ]; then
-    composer require symfony/property-info:7.2.* symfony/type-info:7.2.*
-  elif [ "$php_version" = "8.4" ] && [ "$min_stability" = "stable" ]; then
-    composer require symfony/property-info:7.3.* symfony/type-info:7.3.*
-  elif [ "$php_version" = "8.4" ] && [ "$min_stability" = "dev" ]; then
-    composer require symfony/property-info:>=7.3 symfony/type-info:>=7.3
-  fi
+  case "$php_version" in
+    8.1)
+      # no-op, let Composer install the best PropertyInfo version (defined in composer.json), but do not require TypeInfo
+      return 0
+      ;;
+    8.2)
+      # PropertyInfo 7.1 (experimental PropertyTypeExtractorInterface::getType) and TypeInfo 7.2 (lowest non-experimental)
+      composer require symfony/property-info:7.1.* symfony/type-info:7.2.*
+      return $?
+      ;;
+    8.3)
+      # Install PropertyInfo 7.3 (deprecate PropertyTypeExtractorInterface::getTypes) and TypeInfo 7.3 (new features and deprecations)
+      composer require symfony/property-info:7.3.* symfony/type-info:7.3.*
+      return $?
+      ;;
+  esac
+
+  # Install the best TypeInfo version available
+  composer require symfony/type-info
 }
-export -f install_property_info_for_version
+export -f live_component_post_install
