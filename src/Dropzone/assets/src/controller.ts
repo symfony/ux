@@ -22,8 +22,7 @@ export default class extends Controller {
         'previewClearButton',
         'previewFilename',
         'previewImage',
-        'previewContainer'
-    ,
+        'previewContainer',
     ];
 
     files: Map<string, File> = new Map<string, File>();
