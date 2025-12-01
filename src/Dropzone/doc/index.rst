@@ -55,6 +55,18 @@ replacement of the native FileType class::
         // ...
     }
 
+To enable multiple uploads, you can configure it in buildForm method adding "multiple" boolean option::
+
+    // ...
+        ->add(
+            'photo',
+            DropzoneType::class,
+            [
+                'multiple' => true, // Allow multiple file uploads
+            ]
+        )
+    // ...
+
 Customizing the design
 ~~~~~~~~~~~~~~~~~~~~~~
 

@@ -1,8 +1,8 @@
 # CHANGELOG
 
-## 2.31
+## 2.32
 
--  Support for multiple files drag and drop and peviews
+-  Add support for multiple files upload
 
 ## 2.30
 
