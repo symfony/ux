@@ -1,7 +1,8 @@
-vendor
-composer.lock
-.phpunit.result.cache
+/config/reference.php
+/vendor
+/composer.lock
+/.phpunit.result.cache
+/.twig-cs-fixer.cache
 var
-.twig-cs-fixer.cache
 tests/ui/output
 tests/ui/screens
