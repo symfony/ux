@@ -1,3 +1,4 @@
-vendor/
-composer.lock
-phpunit.xml
+/config/reference.php
+/vendor/
+/composer.lock
+/phpunit.xml
