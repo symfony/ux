@@ -1,8 +1,8 @@
 # E2E App
 
-This is a Symfony application designed for end-to-end testing. 
+This is a Symfony application designed for end-to-end testing.
 
-It serves for testing UX packages in a real-world scenario, 
+It serves for testing UX packages in a real-world scenario,
 to ensure they work as expected for multiple Symfony versions and various browsers.
 
 ## Requirements
@@ -16,7 +16,7 @@ to ensure they work as expected for multiple Symfony versions and various browse
 
 ```shell
 docker compose up -d
-symfony php ../.github/build-packages.php
+symfony php ../../.github/build-packages.php
 
 SYMFONY_REQUIRE=6.4.* symfony composer update
 # or...

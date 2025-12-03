@@ -15,8 +15,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="module">
-        import { trans } from '@symfony/ux-translator';
-        import { NUM_OF_APPLES } from '@app/translations';
+        import { trans } from 'app';
 
         const inputApples = document.querySelector('#apples');
 
@@ -24,8 +23,8 @@
             document.querySelector('[data-testid="output"]').innerHTML = `
                 <h2>Output</h2>
                 <ul >
-                    <li>🇬🇧 ${trans(NUM_OF_APPLES, { apples: inputApples.valueAsNumber }, 'messages', 'en')}</li>
-                    <li>🇫🇷 ${trans(NUM_OF_APPLES, { apples: inputApples.valueAsNumber }, 'messages', 'fr')}</li>
+                    <li>🇬🇧 ${trans('num_of_apples', { apples: inputApples.valueAsNumber }, 'messages', 'en')}</li>
+                    <li>🇫🇷 ${trans('num_of_apples', { apples: inputApples.valueAsNumber }, 'messages', 'fr')}</li>
                 </ul>
             `
         }
