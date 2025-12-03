@@ -20,6 +20,7 @@ require __DIR__.'/../vendor/autoload.php';
 
 $kernel = new FrameworkAppKernel('test', true);
 $application = new Application($kernel);
+$application->setAutoExit(false);
 
 // Trigger Symfony Translator and UX Translator cache warmers
-$application->run(new StringInput('cache:clear'));
+$application->run(new StringInput('cache:clear -vv'));
