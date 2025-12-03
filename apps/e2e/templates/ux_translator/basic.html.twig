@@ -11,15 +11,14 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="module">
-        import { trans } from '@symfony/ux-translator';
-        import { HELLO } from '@app/translations';
+        import { trans } from 'app';
 
         function render() {
             document.querySelector('[data-testid="output"]').innerHTML = `
                 <h2>Output</h2>
                 <ul >
-                    <li>🇬🇧 ${trans(HELLO, {}, 'messages', 'en')}</li>
-                    <li>🇫🇷 ${trans(HELLO, {}, 'messages', 'fr')}</li>
+                    <li>🇬🇧 ${trans('hello', {}, 'messages', 'en')}</li>
+                    <li>🇫🇷 ${trans('hello', {}, 'messages', 'fr')}</li>
                 </ul>
             `
         }
