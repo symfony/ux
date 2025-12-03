@@ -724,7 +724,7 @@ a :ref:`custom autocompleter <custom-autocompleter>`:
         {
             "results": [
                 { "value": "1", "text": "Pizza" },
-                { "value": "2", "text":"Banana"}
+                { "value": "2", "text": "Banana"}
             ]
         }
 
