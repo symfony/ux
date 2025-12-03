@@ -1,6 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-
-import * as translator from '../translator.js';
+import { trans } from '../translator.js';
 
 /* stimulusFetch: 'lazy' */
 export default class extends Controller {
@@ -39,7 +38,7 @@ export default class extends Controller {
         });
 
         this.outputsTargets.forEach((target) => {
-            target.textContent = translator.trans(translator[this.messageValue], Object.fromEntries(parameters), 'messages', target.dataset.locale);
+            target.textContent = trans(this.messageValue, Object.fromEntries(parameters), 'messages', target.dataset.locale);
         });
     }
 }
