@@ -1,0 +1,7 @@
+<div>
+    {% with { outerScope } only %}
+        {% block content %}{% endblock %}
+        {% block slot1 %}{% endblock %}
+        {% block slot2 %}{% endblock %}
+    {% endwith %}
+</div>

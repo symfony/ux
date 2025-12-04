@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\TwigComponent\Test\InteractsWithTwigComponents;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentA;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\WithSlots;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Component\WithSlotsAndLimitedScope;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Service\ServiceA;
 
 final class InteractsWithTwigComponentsTest extends KernelTestCase
@@ -87,5 +88,7 @@ final class InteractsWithTwigComponentsTest extends KernelTestCase
     {
         yield ['WithSlots'];
         yield [WithSlots::class];
+        yield ['WithSlotsAndLimitedScope'];
+        yield [WithSlotsAndLimitedScope::class];
     }
 }
