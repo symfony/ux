@@ -1,0 +1,65 @@
+<!--
+- Kit: Shadcn UI
+- Component: Empty
+- Code:
+```twig
+<twig:Empty>
+    <twig:Empty:Header>
+        <twig:Empty:Media>
+            <div class="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:size-12 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
+                <twig:Avatar>
+                    <twig:Avatar:Image src="https://github.com/shadcn.png" alt="@shadcn" />
+                    <twig:Avatar:Text>CN</twig:Avatar:Text>
+                </twig:Avatar>
+                <twig:Avatar>
+                    <twig:Avatar:Image src="https://github.com/maxleiter.png" alt="@maxleiter" />
+                    <twig:Avatar:Text>LR</twig:Avatar:Text>
+                </twig:Avatar>
+                <twig:Avatar>
+                    <twig:Avatar:Image src="https://github.com/evilrabbit.png" alt="@evilrabbit" />
+                    <twig:Avatar:Text>ER</twig:Avatar:Text>
+                </twig:Avatar>
+            </div>
+        </twig:Empty:Media>
+        <twig:Empty:Title>No team members</twig:Empty:Title>
+        <twig:Empty:Description>
+            Invite your team to collaborate on this project.
+        </twig:Empty:Description>
+    </twig:Empty:Header>
+    <twig:Empty:Content>
+        <twig:Button size="sm">
+            <twig:ux:icon name="lucide:plus" class="size-4" />
+            Invite members
+        </twig:Button>
+    </twig:Empty:Content>
+</twig:Empty>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="empty" class="flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center text-balance md:p-12 ">
+<div data-slot="empty-header" class="flex max-w-sm flex-col items-center gap-2 text-center ">
+<div data-slot="empty-icon" data-variant="default" class="flex shrink-0 items-center justify-center mb-2 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 bg-transparent">
+<div class="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:size-12 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
+                <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full " data-slot="avatar"><img class="aspect-square h-full w-full " alt="@shadcn" src="https://github.com/shadcn.png">
+
+                    <span class="flex h-full w-full items-center justify-center rounded-full bg-muted ">CN</span>
+                </span>
+                <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full " data-slot="avatar"><img class="aspect-square h-full w-full " alt="@maxleiter" src="https://github.com/maxleiter.png">
+
+                    <span class="flex h-full w-full items-center justify-center rounded-full bg-muted ">LR</span>
+                </span>
+                <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full " data-slot="avatar"><img class="aspect-square h-full w-full " alt="@evilrabbit" src="https://github.com/evilrabbit.png">
+
+                    <span class="flex h-full w-full items-center justify-center rounded-full bg-muted ">ER</span>
+                </span>
+            </div>
+        </div>
+        <div data-slot="empty-title" class="text-lg font-medium tracking-tight ">No team members</div>
+        <div data-slot="empty-description" class="text-muted-foreground [&amp;&gt;a:hover]:text-primary text-sm/relaxed [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4 ">Invite your team to collaborate on this project.
+        </div>
+    </div>
+    <div data-slot="empty-content" class="flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm text-balance ">
+<button data-slot="button" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground hover:bg-primary/90 h-8 gap-1.5 px-3 has-[&gt;svg]:px-2.5"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7v14"></path></svg>
+            Invite members
+        </button>
+    </div>
+</div>
