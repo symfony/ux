@@ -52,7 +52,7 @@ trait InteractsWithTwigComponents
         $template = \sprintf('{%% component "%s" with data %%}', addslashes($name));
 
         foreach (array_keys($blocks) as $blockName) {
-            $template .= \sprintf('{%% block %1$s %%}{{ blocks.%1$s|raw }}{%% endblock %%}', $blockName);
+            $template .= \sprintf('{%% block %1$s %%}{{ outerScope.blocks.%1$s|raw }}{%% endblock %%}', $blockName);
         }
 
         $template .= '{% endcomponent %}';
