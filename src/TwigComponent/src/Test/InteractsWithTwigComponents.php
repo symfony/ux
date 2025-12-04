@@ -62,7 +62,6 @@ trait InteractsWithTwigComponents
             ->createTemplate($template)
             ->render([
                 'data' => $data,
-                'blocks' => $blocks,
             ])
         );
     }
