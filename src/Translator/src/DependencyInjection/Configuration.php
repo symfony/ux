@@ -28,7 +28,14 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->getRootNode();
         $rootNode
             ->children()
-                ->scalarNode('dump_directory')->defaultValue('%kernel.project_dir%/var/translations')->end()
+                ->scalarNode('dump_directory')
+                    ->info('The directory where translations and TypeScript types are dumped.')
+                    ->defaultValue('%kernel.project_dir%/var/translations')
+                ->end()
+                ->booleanNode('dump_typescript')
+                    ->info('Control if TypeScript types should be dumped alongside translations. Can be useful to disable when not using TypeScript (e.g. AssetMapper in production).')
+                    ->defaultTrue()
+                ->end()
                 ->arrayNode('domains')
                     ->info('List of domains to include/exclude from the generated translations. Prefix with a `!` to exclude a domain.')
                     ->children()

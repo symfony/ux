@@ -106,6 +106,22 @@ including or excluding translation domains in your ``config/packages/ux_translat
             domains: [foo, bar]   # Include only domains 'foo' and 'bar'
             domains: ['!foo', '!bar'] # Include all domains, except 'foo' and 'bar'
 
+Disabling TypeScript types dump
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, TypeScript types definitions are generated alongside the dumped JavaScript translations.
+This provides autocompletion and type-safety when using the ``trans()`` function in your assets.
+
+Even if they are useful when developing, dumping these TypeScript types is useless in production if you use the
+AssetMapper, because these files will never be used.
+
+You can disable the TypeScript types dump by adding the following configuration:
+
+.. code-block:: yaml
+
+    when@prod:
+        ux_translator:
+            dump_typescript: false
 
 Configuring the default locale
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

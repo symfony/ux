@@ -31,7 +31,8 @@ return static function (ContainerConfigurator $container): void {
 
         ->set('ux.translator.translations_dumper', TranslationsDumper::class)
             ->args([
-                null, // Dump directory
+                abstract_arg('dump_directory'),
+                abstract_arg('dump_typescript'),
                 service('ux.translator.message_parameters.extractor.message_parameters_extractor'),
                 service('ux.translator.message_parameters.extractor.intl_message_parameters_extractor'),
                 service('ux.translator.message_parameters.printer.typescript_message_parameters_printer'),
