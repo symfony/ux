@@ -1,0 +1,8 @@
+{# @block content The default block #}
+<div
+    data-slot="field-group"
+    class="{{ 'group/field-group @container/field-group flex w-full flex-col gap-7 data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4 ' ~ attributes.render('class')|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>
