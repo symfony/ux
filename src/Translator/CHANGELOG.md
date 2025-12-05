@@ -49,6 +49,10 @@
 
     **Note:** This is a breaking change, but the UX Translator component is still experimental.
 
+-   Add configuration `ux_translator.dump_typescript`  to enable/disable TypeScript types dumping,
+    default to `true`. Generating TypeScript types is useful when developing,
+    but not in production when using the AssetMapper (which does not use these types).
+
 ## 2.30
 
 -  Ensure compatibility with PHP 8.5
