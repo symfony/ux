@@ -27,9 +27,7 @@
     "symfony": {
         "importmap": {
             "intl-messageformat": "^10.5.11",
-            "@symfony/ux-translator": "path:%PACKAGE%/dist/translator_controller.js",
-            "@app/translations": "path:var/translations/index.js",
-            "@app/translations/configuration": "path:var/translations/configuration.js"
+            "@symfony/ux-translator": "path:%PACKAGE%/dist/translator_controller.js"
         }
     },
     "peerDependencies": {

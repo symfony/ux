@@ -15,8 +15,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="module">
-        import { trans } from '@symfony/ux-translator';
-        import { PUBLISHED_AT } from '@app/translations';
+        import { trans } from 'app';
 
         const inputDate = document.querySelector('#date');
 
@@ -24,8 +23,8 @@
             document.querySelector('[data-testid="output"]').innerHTML = `
                 <h2>Output</h2>
                 <ul >
-                    <li>🇬🇧 ${trans(PUBLISHED_AT, { publication_date: new Date(inputDate.value) }, 'messages', 'en')}</li>
-                    <li>🇫🇷 ${trans(PUBLISHED_AT, { publication_date: new Date(inputDate.value) }, 'messages', 'fr')}</li>
+                    <li>🇬🇧 ${trans('published_at', { publication_date: new Date(inputDate.value) }, 'messages', 'en')}</li>
+                    <li>🇫🇷 ${trans('published_at', { publication_date: new Date(inputDate.value) }, 'messages', 'fr')}</li>
                 </ul>
             `
         }

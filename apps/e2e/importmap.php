@@ -139,12 +139,6 @@ return [
     '@symfony/ux-translator' => [
         'path' => './vendor/symfony/ux-translator/assets/dist/translator_controller.js',
     ],
-    '@app/translations' => [
-        'path' => './var/translations/index.js',
-    ],
-    '@app/translations/configuration' => [
-        'path' => './var/translations/configuration.js',
-    ],
     'typed.js' => [
         'version' => '2.1.0',
     ],
