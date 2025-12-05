@@ -1,0 +1,20 @@
+{# @prop variant 'legend'|'label' The variant, default to `legend` #}
+{# @block content The default block #}
+{%- props variant = 'legend' -%}
+{%- set style = html_cva(
+    base: 'mb-3 font-medium',
+    variants: {
+        variant: {
+            legend: 'text-base',
+            label: 'text-sm',
+        },
+    },
+) %}
+<legend
+    data-slot="field-legend"
+    data-variant="{{ variant }}"
+    class="{{ style.apply({variant: variant}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</legend>
