@@ -33,7 +33,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('%kernel.project_dir%/var/translations')
                 ->end()
                 ->booleanNode('dump_typescript')
-                    ->info('Control if TypeScript types should be dumped alongside translations. Can be useful to disable when not using TypeScript (e.g. AssetMapper in production).')
+                    ->info('Control whether TypeScript types are dumped alongside translations. Disable this if you do not use TypeScript (e.g. in production when using AssetMapper).')
                     ->defaultTrue()
                 ->end()
                 ->arrayNode('domains')
