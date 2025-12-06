@@ -12,6 +12,7 @@
 namespace Symfony\UX\Icons\DependencyInjection;
 
 use Symfony\Component\AssetMapper\Event\PreAssetsCompileEvent;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
@@ -38,10 +39,15 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
                     ->info('The local directory where icons are stored.')
                     ->defaultValue('%kernel.project_dir%/assets/icons')
                 ->end()
-                ->variableNode('default_icon_attributes')
+                ->arrayNode('default_icon_attributes')
                     ->info('Default attributes to add to all icons.')
                     ->defaultValue(['fill' => 'currentColor'])
                     ->example(['class' => 'icon'])
+                    ->normalizeKeys(false)
+                    ->useAttributeAsKey('key')
+                    ->scalarPrototype()
+                        ->cannotBeEmpty()
+                    ->end()
                 ->end()
                 ->arrayNode('icon_sets')
                     ->info('Icon sets configuration.')
@@ -63,7 +69,9 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
                                 ->info('Override default icon attributes for icons in this set.')
                                 ->example(['class' => 'icon icon-acme', 'fill' => 'none'])
                                 ->normalizeKeys(false)
-                                ->variablePrototype()
+                                ->useAttributeAsKey('key')
+                                ->scalarPrototype()
+                                    ->cannotBeEmpty()
                                 ->end()
                             ->end()
                         ->end()
@@ -80,7 +88,8 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
                         'privacy' => 'bi:cookie',
                     ])
                     ->normalizeKeys(false)
-                    ->scalarPrototype()
+                    ->useAttributeAsKey('key')
+                    ->{method_exists(ArrayNodeDefinition::class, 'stringPrototype') ? 'stringPrototype' : 'scalarPrototype'}()
                         ->cannotBeEmpty()
                     ->end()
                 ->end()

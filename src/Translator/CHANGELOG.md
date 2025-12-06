@@ -5,6 +5,59 @@
 -   Minimum required Symfony version is now 6.4
 -   Minimum required PHP version is now 8.2
 
+## 2.32
+
+-   **[BC BREAK]** Refactor API to use string-based translation keys instead of generated constants.
+
+    Translation keys are now simple strings instead of TypeScript constants.
+    The main advantages are:
+    - You can now use **exactly the same translation keys** as in your Symfony PHP code
+    - Simpler and more readable code
+    - No need to memorize generated constant names
+    - No need to import translation constants: smaller files
+    - And you can still get autocompletion and type-safety :rocket:
+
+    **Before:**
+    ```typescript
+    import { trans } from '@symfony/ux-translator';
+    import { SYMFONY_GREAT } from '@app/translations';
+
+    trans(SYMFONY_GREAT);
+    ```
+
+    **After:**
+    ```typescript
+    import { createTranslator } from '@symfony/ux-translator';
+    import { messages } from '../var/translations/index.js';
+
+    const { trans } = createTranslator({ messages });
+    trans('symfony.great');
+    ```
+
+    The global functions (`setLocale`, `getLocale`, `setLocaleFallbacks`, `getLocaleFallbacks`, `throwWhenNotFound`)
+    have been replaced by a new `createTranslator()` factory function that returns an object with these methods.
+
+    **Tree-shaking:** While tree-shaking of individual translation keys is no longer possible, modern build tools,
+    caching strategies, and compression techniques (Brotli, gzip) make this negligible in 2025.
+    A future feature will allow filtering dumped translations by pattern for those who need it,
+    further reducing bundle size.
+
+    **For AssetMapper users:** You can remove the following entries from your `importmap.php`:
+    ```php
+    '@app/translations' => [
+        'path' => './var/translations/index.js',
+    ],
+    '@app/translations/configuration' => [
+        'path' => './var/translations/configuration.js',
+    ],
+    ```
+
+    **Note:** This is a breaking change, but the UX Translator component is still experimental.
+
+-   Add configuration `ux_translator.dump_typescript`  to enable/disable TypeScript types dumping,
+    default to `true`. Generating TypeScript types is useful when developing,
+    but not in production when using the AssetMapper (which does not use these types).
+
 ## 2.30
 
 -  Ensure compatibility with PHP 8.5

@@ -1,4 +1,5 @@
 /assets/node_modules/
+/config/reference.php
 /vendor/
 /composer.lock
 /drivers/
@@ -8,5 +9,3 @@
 /tests/app/public/assets/
 /tests/app/public/build/
 /tests/app/var/
-/vendor/
-node_modules/

@@ -51,12 +51,6 @@ return [
     '@symfony/ux-translator' => [
         'path' => '@symfony/ux-translator/translator_controller.js',
     ],
-    '@app/translations' => [
-        'path' => 'var/translations/index.js',
-    ],
-    '@app/translations/configuration' => [
-        'path' => 'var/translations/configuration.js',
-    ],
     '@symfony/ux-live-component' => [
         'path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js',
     ],

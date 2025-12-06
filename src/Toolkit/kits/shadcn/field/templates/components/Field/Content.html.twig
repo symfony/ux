@@ -1,0 +1,8 @@
+{# @block content The default block #}
+<div
+    data-slot="field-content"
+    class="{{ 'group/field-content flex flex-1 flex-col gap-1.5 leading-snug ' ~ attributes.render('class')|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

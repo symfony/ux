@@ -62,12 +62,12 @@ function format(id, parameters, locale) {
 }
 function getPluralizationRule(number, locale) {
   number = Math.abs(number);
-  let _locale2 = locale;
+  let _locale = locale;
   if (locale === "pt_BR" || locale === "en_US_POSIX") {
     return 0;
   }
-  _locale2 = _locale2.length > 3 ? _locale2.substring(0, _locale2.indexOf("_")) : _locale2;
-  switch (_locale2) {
+  _locale = _locale.length > 3 ? _locale.substring(0, _locale.indexOf("_")) : _locale;
+  switch (_locale) {
     case "af":
     case "bn":
     case "bg":
@@ -189,71 +189,78 @@ function formatIntl(id, parameters, locale) {
 }
 
 // src/translator_controller.ts
-var _locale = null;
-var _localeFallbacks = {};
-var _throwWhenNotFound = false;
-function setLocale(locale) {
-  _locale = locale;
-}
-function getLocale() {
-  return _locale || document.documentElement.getAttribute("data-symfony-ux-translator-locale") || // <html data-symfony-ux-translator-locale="en_US">
+function getDefaultLocale() {
+  return document.documentElement.getAttribute("data-symfony-ux-translator-locale") || // <html data-symfony-ux-translator-locale="en_US">
   (document.documentElement.lang ? document.documentElement.lang.replace("-", "_") : null) || // <html lang="en-US">
   "en";
 }
-function throwWhenNotFound(enabled) {
-  _throwWhenNotFound = enabled;
-}
-function setLocaleFallbacks(localeFallbacks) {
-  _localeFallbacks = localeFallbacks;
-}
-function getLocaleFallbacks() {
-  return _localeFallbacks;
-}
-function trans(message, parameters = {}, domain = "messages", locale = null) {
-  if (typeof domain === "undefined") {
-    domain = "messages";
+function createTranslator({
+  messages,
+  locale = getDefaultLocale(),
+  localeFallbacks = {},
+  throwWhenNotFound = false
+}) {
+  const _messages = messages;
+  const _localeFallbacks = localeFallbacks;
+  let _locale = locale;
+  let _throwWhenNotFound = throwWhenNotFound;
+  function setLocale(locale2) {
+    _locale = locale2;
   }
-  if (typeof locale === "undefined" || null === locale) {
-    locale = getLocale();
+  function getLocale() {
+    return _locale;
   }
-  if (typeof message.translations === "undefined") {
-    return message.id;
+  function setThrowWhenNotFound(throwWhenNotFound2) {
+    _throwWhenNotFound = throwWhenNotFound2;
   }
-  const localesFallbacks = getLocaleFallbacks();
-  const translationsIntl = message.translations[`${domain}+intl-icu`];
-  if (typeof translationsIntl !== "undefined") {
-    while (typeof translationsIntl[locale] === "undefined") {
-      locale = localesFallbacks[locale];
-      if (!locale) {
-        break;
+  function trans(id, parameters = {}, domain = "messages", locale2 = null) {
+    if (typeof domain === "undefined") {
+      domain = "messages";
+    }
+    if (typeof locale2 === "undefined" || null === locale2) {
+      locale2 = _locale;
+    }
+    const message = _messages[id] ?? null;
+    if (message === null) {
+      return id;
+    }
+    const translationsIntl = message.translations[`${domain}+intl-icu`] ?? void 0;
+    if (typeof translationsIntl !== "undefined") {
+      while (typeof translationsIntl[locale2] === "undefined") {
+        locale2 = _localeFallbacks[locale2];
+        if (!locale2) {
+          break;
+        }
+      }
+      if (locale2) {
+        return formatIntl(translationsIntl[locale2], parameters, locale2);
       }
     }
-    if (locale) {
-      return formatIntl(translationsIntl[locale], parameters, locale);
-    }
-  }
-  const translations = message.translations[domain];
-  if (typeof translations !== "undefined") {
-    while (typeof translations[locale] === "undefined") {
-      locale = localesFallbacks[locale];
-      if (!locale) {
-        break;
+    const translations = message.translations[domain] ?? void 0;
+    if (typeof translations !== "undefined") {
+      while (typeof translations[locale2] === "undefined") {
+        locale2 = _localeFallbacks[locale2];
+        if (!locale2) {
+          break;
+        }
+      }
+      if (locale2) {
+        return format(translations[locale2], parameters, locale2);
       }
     }
-    if (locale) {
-      return format(translations[locale], parameters, locale);
+    if (_throwWhenNotFound) {
+      throw new Error(`No translation message found with id "${id}".`);
     }
+    return id;
   }
-  if (_throwWhenNotFound) {
-    throw new Error(`No translation message found with id "${message.id}".`);
-  }
-  return message.id;
+  return {
+    setLocale,
+    getLocale,
+    setThrowWhenNotFound,
+    trans
+  };
 }
 export {
-  getLocale,
-  getLocaleFallbacks,
-  setLocale,
-  setLocaleFallbacks,
-  throwWhenNotFound,
-  trans
+  createTranslator,
+  getDefaultLocale
 };

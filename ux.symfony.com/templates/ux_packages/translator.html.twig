@@ -28,20 +28,20 @@
 {% block demo_content %}
 
         {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
-            message: 'HELLO',
+            message: 'hello',
         } %}
         {% endembed %}
 
         {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
-            message: 'SAY_HELLO',
+            message: 'say_hello',
             parameters: {
                 name: 'Fabien'
             },
         } %}
             {% block parameters %}
                 <div>
-                    <label for="SAY_HELLO-name" class="small opacity-50">Name</label>
-                    <input id="SAY_HELLO-name" class="form-control"
+                    <label for="say_hello-name" class="small opacity-50">Name</label>
+                    <input id="say_hello-name" class="form-control"
                            type="text" name="name" value="Fabien"
                            data-translator-demo-block-target="parameters"
                            data-action="translator-demo-block#render"
@@ -51,7 +51,7 @@
         {% endembed %}
 
         {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
-            message: 'INVITATION_TITLE',
+            message: 'invitation_title',
             parameters: {
                 organizer_gender: 'Fabien',
                 organizer_name: 'Clara',
@@ -59,8 +59,8 @@
         } %}
             {% block parameters %}
                 <div>
-                    <label for="INVITATION_TITLE-organizer_gender" class="small opacity-50">Gender</label>
-                    <select id="INVITATION_TITLE-organizer_gender" class="form-select"
+                    <label for="invitation_title-organizer_gender" class="small opacity-50">Gender</label>
+                    <select id="invitation_title-organizer_gender" class="form-select"
                         name="organizer_gender"
                         data-translator-demo-block-target="parameters"
                         data-action="translator-demo-block#render"
@@ -72,8 +72,8 @@
                     </select>
                 </div>
                 <div>
-                    <label for="INVITATION_TITLE-organizer_name" class="small opacity-50">Name</label>
-                    <input id="INVITATION_TITLE-organizer_name" class="form-control"
+                    <label for="invitation_title-organizer_name" class="small opacity-50">Name</label>
+                    <input id="invitation_title-organizer_name" class="form-control"
                            name="organizer_name"
                            value="Clara"
                            data-translator-demo-block-target="parameters"
@@ -84,15 +84,15 @@
         {% endembed %}
 
         {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
-            message: 'NUM_OF_APPLES',
+            message: 'num_of_apples',
             parameters: {
                 apples: 2
             },
         } %}
             {% block parameters %}
                 <div>
-                    <label for="NUM_OF_APPLES-apples" class="small opacity-50">Count</label>
-                    <input id="NUM_OF_APPLES-apples" class="form-control"
+                    <label for="num_of_apples-apples" class="small opacity-50">Count</label>
+                    <input id="num_of_apples-apples" class="form-control"
                            name="apples" type="number" min="0" max="5" value="2"
                            data-translator-demo-block-target="parameters"
                            data-action="translator-demo-block#render"
@@ -102,15 +102,15 @@
         {% endembed %}
 
         {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
-            message: 'FINISH_PLACE',
+            message: 'finish_place',
             parameters: {
                 place: 2
             },
         } %}
             {% block parameters %}
                 <div>
-                    <label for="FINISH_PLACE-apples" class="small opacity-50">Place</label>
-                    <input id="FINISH_PLACE-apples" class="form-control"
+                    <label for="finish_place-place" class="small opacity-50">Place</label>
+                    <input id="finish_place-place" class="form-control"
                            name="place" type="number" min="0" max="5" value="1"
                            data-translator-demo-block-target="parameters"
                            data-action="translator-demo-block#render"
@@ -120,15 +120,15 @@
         {% endembed %}
 
         {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
-            message: 'PUBLISHED_AT',
+            message: 'published_at',
             parameters: {
                 publication_date: '2023-04-27 08:12'
             },
         } %}
             {% block parameters %}
                 <div>
-                    <label for="PUBLISHED_AT-publication_date" class="small opacity-50">Date</label>
-                    <input id="PUBLISHED_AT-publication_date" class="form-control"
+                    <label for="published_at-publication_date" class="small opacity-50">Date</label>
+                    <input id="published_at-publication_date" class="form-control"
                            name="publication_date" type="datetime-local" value="2023-04-27 08:12"
                            data-translator-demo-block-target="parameters"
                            data-action="translator-demo-block#render"
@@ -138,15 +138,15 @@
         {% endembed %}
 
          {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
-            message: 'PROGRESS',
+            message: 'progress',
             parameters: {
                 progress: 42
             },
         } %}
             {% block parameters %}
                 <div>
-                    <label for="PROGRESS-progress" class="small opacity-50">Place</label>
-                    <input id="PROGRESS-progress" class="form-range"
+                    <label for="progress-progress" class="small opacity-50">Place</label>
+                    <input id="progress-progress" class="form-range"
                            name="progress" type="range" min="0" max="100" value="42"
                            data-translator-demo-block-target="parameters"
                            data-action="translator-demo-block#render"
@@ -156,15 +156,15 @@
         {% endembed %}
 
         {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
-            message: 'VALUE_OF_OBJECT',
+            message: 'value_of_object',
             parameters: {
                 price: 30
             },
         } %}
             {% block parameters %}
                 <div>
-                    <label for="VALUE_OF_OBJECT-price" class="small opacity-50">Price</label>
-                    <input id="VALUE_OF_OBJECT-price" class="form-control"
+                    <label for="value_of_object-price" class="small opacity-50">Price</label>
+                    <input id="value_of_object-price" class="form-control"
                            name="price" type="number" min="1"  value="30" step="0.1"
                            data-translator-demo-block-target="parameters"
                            data-action="translator-demo-block#render"

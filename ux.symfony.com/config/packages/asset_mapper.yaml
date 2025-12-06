@@ -16,6 +16,12 @@ framework:
             - '*/kits/**/*.md'             # UX Toolkit kit documentation
             - '*/kits/**/manifest.json'    # UX Toolkit kit manifest files
         importmap_polyfill: false
+        missing_import_mode: strict
+
+when@prod:
+    framework:
+        asset_mapper:
+            missing_import_mode: warn
 
 react:
     controllers_path: '%kernel.project_dir%/assets/react/dist/controllers'

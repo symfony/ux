@@ -37,6 +37,7 @@ class UxTranslatorExtension extends Extension implements PrependExtensionInterfa
 
         $dumperDefinition = $container->getDefinition('ux.translator.translations_dumper');
         $dumperDefinition->setArgument(0, $config['dump_directory']);
+        $dumperDefinition->setArgument(1, $config['dump_typescript']);
 
         if (isset($config['domains'])) {
             $method = 'inclusive' === $config['domains']['type'] ? 'addIncludedDomain' : 'addExcludedDomain';

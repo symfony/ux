@@ -15,8 +15,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="module">
-        import { trans } from '@symfony/ux-translator';
-        import { VALUE_OF_OBJECT } from '@app/translations';
+        import { trans } from 'app';
 
         const inputPrice = document.querySelector('#price');
 
@@ -24,8 +23,8 @@
             document.querySelector('[data-testid="output"]').innerHTML = `
                 <h2>Output</h2>
                 <ul >
-                    <li>🇬🇧 ${trans(VALUE_OF_OBJECT, { price: inputPrice.value }, 'messages', 'en')}</li>
-                    <li>🇫🇷 ${trans(VALUE_OF_OBJECT, { price: inputPrice.value }, 'messages', 'fr')}</li>
+                    <li>🇬🇧 ${trans('value_of_object', { price: inputPrice.value }, 'messages', 'en')}</li>
+                    <li>🇫🇷 ${trans('value_of_object', { price: inputPrice.value }, 'messages', 'fr')}</li>
                 </ul>
             `
         }

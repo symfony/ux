@@ -1,8 +1,7 @@
 /vendor/
+/config/reference.php
 /composer.lock
 /phpunit.xml
 /.phpunit.cache
 /.twig-cs-fixer.cache
-
 /var
-/config/reference.php
