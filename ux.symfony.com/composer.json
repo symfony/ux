@@ -140,14 +140,5 @@
             "importmap:install": "symfony-cmd",
             "tailwind:build": "symfony-cmd"
         }
-    },
-    "repositories": {
-        "symfony-ux-toolkit": {
-            "type": "path",
-            "url": "../src/Toolkit",
-            "options": {
-                "symlink": true
-            }
-        }
     }
 }
