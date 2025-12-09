@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Autocomplete Dynamic Form Test{% endblock %}
+
+{% block main %}
+    <div class="container mt-4" data-test-id="test-page">
+        <h1>Autocomplete with Dynamic Forms</h1>
+        <p>This test page demonstrates dynamic autocomplete fields within a LiveComponent form.</p>
+
+        {{ component('ProductionForm') }}
+    </div>
+{% endblock %}
