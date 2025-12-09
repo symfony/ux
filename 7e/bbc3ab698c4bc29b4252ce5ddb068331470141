@@ -1,0 +1,80 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-10-31T15:25:20Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/daFish/ux/tree/fix/autocomplete-tomselect-cleanup/src/Autocomplete/assets/dist"><b>Autocomplete</b></a></td></tr><tr>
+                <td><a href="https://github.com/daFish/ux/blob/fix/autocomplete-tomselect-cleanup/src/Autocomplete/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>1.95 kB</code>
+                    / <code>656 B</code>
+                </td><td>
+                    <code>1.96 kB</code><sup>+1% 📈</sup>
+                    / <code>666 B</code><sup>+2% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/daFish/ux/blob/fix/autocomplete-tomselect-cleanup/src/Autocomplete/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>15.02 kB</code>
+                    / <code>3.88 kB</code>
+                </td><td>
+                    <code>15.2 kB</code><sup>+1% 📈</sup>
+                    / <code>3.91 kB</code><sup>+1% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by daFish at 2025-11-01T11:02:05Z
+
+@Kocal I took the chance to add playwright tests. I'll submit another PR with some changes to the documentation to enhance the DX.
+
+---------------------------------------------------------------------------
+
+by daFish at 2025-11-03T06:47:16Z
+
+* removed the browser test because I couldn't find a way to reproduce it here
+* added a simple non-ajax example for Autocomplete
+
+---------------------------------------------------------------------------
+
+by daFish at 2025-11-03T11:24:54Z
+
+Ok, this is weird. I have force-pushed my changes this morning and the PR is still not updated. My changes are still being processed. 🤨
+
+---------------------------------------------------------------------------
+
+by daFish at 2025-11-03T11:28:47Z
+
+Rebased against 2.x and force-pushed again. Works now.
+
+---------------------------------------------------------------------------
+
+by daFish at 2025-11-08T16:24:15Z
+
+@Kocal After several attempts trying to reproduce the behaviour locally, I was unable to provoce it. How shall we move forward?
+
+---------------------------------------------------------------------------
+
+by daFish at 2025-11-16T14:05:11Z
+
+@smnandre The defensive checks can remain IHMO. We tell other developers that all code paths are safe. Yes, it should not happen but we make it explicit that it will not happen. Especially in the callbacks, e.g. `onItemAdd` or `onOptionAdd`. WDYT?
+
+---------------------------------------------------------------------------
+
+by daFish at 2025-12-03T19:22:24Z
+
+I was able to reproduce this locally and will add an E2E test in the coming days. Let's get this over the finishing line.
+
+---------------------------------------------------------------------------
+
+by daFish at 2025-12-05T08:08:04Z
+
+@Kocal @smnandre This can be reviewed again. However, the tests do obviously pass because the fix is in place.
