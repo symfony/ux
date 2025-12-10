@@ -59,14 +59,6 @@ jobs:
                   php-version: 8.2
                   tools: symfony-cli, flex
 
-            - name: Install root PHP dependencies
-              uses: ramsey/composer-install@v3
-              with:
-                  working-directory: ${{ github.workspace }}
-
-            - name: Build root packages
-              run: php .github/build-packages.php
-
             - name: Start Docker containers
               run: docker compose up -d --build
               working-directory: apps/e2e
