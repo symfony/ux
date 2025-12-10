@@ -1,0 +1,28 @@
+{
+    "subtrees": {
+        "stimulus-bundle": "src/StimulusBundle",
+        "ux-autocomplete": "src/Autocomplete",
+        "ux-dropzone": "src/Dropzone",
+        "ux-chartjs": "src/Chartjs",
+        "ux-cropperjs": "src/Cropperjs",
+        "ux-icons": "src/Icons",
+        "ux-lazy-image": "src/LazyImage",
+        "ux-live-component": "src/LiveComponent",
+        "ux-map": {
+            "prefixes": [{ "from": "src/Map", "to": "", "excludes": ["src/Bridge"] }]
+        },
+        "ux-google-map": "src/Map/src/Bridge/Google",
+        "ux-leaflet-map": "src/Map/src/Bridge/Leaflet",
+        "ux-notify": "src/Notify",
+        "ux-react": "src/React",
+        "ux-svelte": "src/Svelte",
+        "ux-toggle-password": "src/TogglePassword",
+        "ux-toolkit": "src/Toolkit",
+        "ux-translator": "src/Translator",
+        "ux-turbo": "src/Turbo",
+        "ux-swup": "src/Swup",
+        "ux-twig-component": "src/TwigComponent",
+        "ux-typed": "src/Typed",
+        "ux-vue": "src/Vue"
+    }
+}

@@ -61,6 +61,7 @@
         "symfony/ux-typed": "^2.29.1",
         "symfony/ux-vue": "^2.29.1",
         "symfony/yaml": "6.4.*|7.3.*",
+        "symfonycasts/dynamic-forms": "^0.2",
         "twig/extra-bundle": "^3.21",
         "twig/twig": "^3.21.1"
     },
