@@ -56,6 +56,9 @@
         "symfony/ux-twig-component": "<2.21"
     },
     "extra": {
+        "branch-alias": {
+            "dev-main": "2.x-dev"
+        },
         "thanks": {
             "name": "symfony/ux",
             "url": "https://github.com/symfony/ux"

@@ -44,6 +44,9 @@
         "twig/twig": "^2.14.7|^3.0.4"
     },
     "extra": {
+        "branch-alias": {
+            "dev-main": "2.x-dev"
+        },
         "thanks": {
             "name": "symfony/ux",
             "url": "https://github.com/symfony/ux"
