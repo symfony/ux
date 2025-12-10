@@ -7,7 +7,8 @@
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "importmap:install": "symfony-cmd"
+            "importmap:install": "symfony-cmd",
+            "foundry:load-fixtures": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"
@@ -69,7 +70,8 @@
         "symfony/debug-bundle": "6.4.*|7.3.*",
         "symfony/maker-bundle": "^1.64",
         "symfony/stopwatch": "6.4.*|7.3.*",
-        "symfony/web-profiler-bundle": "6.4.*|7.3.*"
+        "symfony/web-profiler-bundle": "6.4.*|7.3.*",
+        "zenstruck/foundry": "^2.8"
     },
     "config": {
         "platform": {
