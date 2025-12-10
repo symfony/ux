@@ -24,8 +24,9 @@ class ExampleRepository
     public function __construct()
     {
         $this->examples = [
-            new Example(UxPackage::Autocomplete, 'Autocomplete (without AJAX)', 'An autocomplete component to enhance a simple choice field.', '/ux-autocomplete/without-ajax'),
-            new Example(UxPackage::Autocomplete, 'Autocomplete (custom controller)', 'An autocomplete component with a custom Stimulus controller for AJAX results.', '/ux-autocomplete/custom-controller'),
+            new Example(UxPackage::Autocomplete, 'Autocomplete (with AJAX)', 'An autocomplete form field, by fetching results with AJAX.', '/ux-autocomplete/with-ajax'),
+            new Example(UxPackage::Autocomplete, 'Autocomplete (without AJAX)', 'An autocomplete form field, by using the choses from the choice type field.', '/ux-autocomplete/without-ajax'),
+            new Example(UxPackage::Autocomplete, 'Autocomplete (custom controller)', 'An autocomplete form field, with a custom Stimulus controller for AJAX results.', '/ux-autocomplete/custom-controller'),
             new Example(UxPackage::Map, 'Basic map (Leaflet)', 'A basic map centered on Paris with zoom level 12', '/ux-map/basic?renderer=leaflet'),
             new Example(UxPackage::Map, 'Basic map (Google)', 'A basic map centered on Paris with zoom level 12', '/ux-map/basic?renderer=google'),
             new Example(UxPackage::Map, 'With markers, fit bounds (Leaflet)', 'A map with 2 markers, and the bounds are automatically adjusted to fit both markers', '/ux-map/with-markers-and-fit-bounds-to-markers?renderer=leaflet'),
