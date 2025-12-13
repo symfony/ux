@@ -6,10 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/ux-cropperjs')]
+#[Route('/ux-cropperjs', name: 'app_ux_cropperjs_')]
 final class CropperjsController extends AbstractController
 {
-    #[Route('/')]
+    #[Route('/', name: 'index')]
     public function index(): Response
     {
         return $this->render('ux_cropperjs/index.html.twig', [

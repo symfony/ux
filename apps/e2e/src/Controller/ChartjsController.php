@@ -8,10 +8,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
 
-#[Route('/ux-chartjs')]
+#[Route('/ux-chartjs', name: 'app_ux_chartjs_')]
 final class ChartjsController extends AbstractController
 {
-    #[Route('/without-options')]
+    #[Route('/without-options', name: 'without_options')]
     public function withoutOptions(ChartBuilderInterface $chartBuilder): Response
     {
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
@@ -33,7 +33,7 @@ final class ChartjsController extends AbstractController
         ]);
     }
 
-    #[Route('/with-options')]
+    #[Route('/with-options', name: 'with_options')]
     public function withOptions(ChartBuilderInterface $chartBuilder): Response
     {
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);

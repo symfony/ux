@@ -8,10 +8,10 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/ux-autocomplete')]
+#[Route('/ux-autocomplete', name: 'app_ux_autocomplete_')]
 final class AutocompleteController extends AbstractController
 {
-    #[Route('/without-ajax')]
+    #[Route('/without-ajax', name: 'without_ajax')]
     public function withoutAjax(): Response
     {
         $formBuilder = $this->createFormBuilder();
@@ -47,7 +47,7 @@ final class AutocompleteController extends AbstractController
         ]);
     }
 
-    #[Route('/with-ajax')]
+    #[Route('/with-ajax', name: 'with_ajax')]
     public function withAjax(): Response
     {
         $formBuilder = $this->createFormBuilder();
@@ -60,7 +60,7 @@ final class AutocompleteController extends AbstractController
         ]);
     }
 
-    #[Route('/custom-controller')]
+    #[Route('/custom-controller', name: 'custom_controller')]
     public function customController(): Response
     {
         return $this->render('ux_autocomplete/custom_controller.html.twig');

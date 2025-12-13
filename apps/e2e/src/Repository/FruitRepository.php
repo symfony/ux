@@ -15,4 +15,18 @@ class FruitRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Fruit::class);
     }
+
+    /**
+     * @param positive-int $page
+     * @param positive-int $perPage
+     * @return Fruit[]
+     */
+    public function paginate(int $page, int $perPage): array
+    {
+        return $this->createQueryBuilder('f')
+            ->setFirstResult(($page - 1) * $perPage)
+            ->setMaxResults($perPage)
+            ->getQuery()
+            ->getResult();
+    }
 }

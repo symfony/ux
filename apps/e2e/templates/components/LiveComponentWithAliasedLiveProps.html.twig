@@ -1,0 +1,12 @@
+<div{{ attributes }}>
+    <form>
+        <div>
+            <label for="query" class="form-label">Query:</label>
+            <input id="query" class="form-control" data-model="debounce(250)|query" value="{{ query }}">
+        </div>
+        <div class="mt-3">
+            <label for="category" class="form-label">Category:</label>
+            <input id="category" class="form-control" data-model="debounce(250)|category" value="{{ category }}">
+        </div>
+    </form>
+</div>

@@ -1,0 +1,22 @@
+<div{{ attributes }}>
+    <h2>Page {{ page }}</h2>
+    <ul>
+        {% for fruit in this.fruits %}
+            <li>{{ fruit.name }}</li>
+        {% endfor %}
+    </ul>
+    <div class="pagination-controls">
+        <button
+            type="button"
+            class="btn btn-secondary"
+            {{ this.hasPreviousPage ? '' : 'disabled' }}
+            {{ live_action('goToPreviousPage') }}
+        >Previous</button>
+        <button
+            type="button"
+            class="btn btn-secondary"
+            {{ this.hasNextPage ? '' : 'disabled' }}
+            {{ live_action('goToNextPage') }}
+        >Next</button>
+    </div>
+</div>

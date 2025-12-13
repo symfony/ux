@@ -30,7 +30,7 @@ class ResolveExampleForUrlListener
             return;
         }
 
-        $example = $this->exampleRepository->findOneByUrl($event->getRequest()->getRequestUri());
+        $example = $this->exampleRepository->findOneByRoute($event->getRequest()->attributes->get('_route'));
         $event->getRequest()->attributes->set('_example', $example);
     }
 }
