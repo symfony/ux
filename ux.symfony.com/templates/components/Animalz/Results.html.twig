@@ -1,0 +1,21 @@
+<section {{ attributes }} class="card">
+    <header class="card-header d-flex justify-content-between align-items-center">
+        <span>Results</span>
+        <span class="badge bg-secondary">{{ this.results|length }}</span>
+    </header>
+    <main class="card-body">
+        <div class="d-flex flex-wrap gap-2">
+        {% for result in this.results %}
+            {% set color1 = result.type1.color %}
+            {% set color2 = result.type2 ? result.type2.color : null %}
+            {% set background = color2 is null
+                ? color1
+                : 'linear-gradient(110deg, ' ~ color1 ~ ' 0%, ' ~ color1 ~ ' 40%, ' ~ color2 ~ ' 60%, ' ~ color2 ~ ' 100%)'
+            %}
+            <article style="background: {{ background }}; color: #fff; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.875rem; font-weight: 500;">{{ result.name|capitalize }}</article>
+        {% else %}
+            <p class="text-muted mb-0">No animalz found.</p>
+        {% endfor %}
+        </div>
+    </main>
+</section>

@@ -22,6 +22,19 @@ class LiveDemoRepository
     {
         return [
             new LiveDemo(
+                identifier: 'animalz',
+                name: 'Facet Filtering',
+                description: 'Filter results based on a facet menu, with URL parameters.',
+                author: 'Nayte',
+                publishedAt: '2025-12-12',
+                tags: ['facets', 'filter', 'LiveAction'],
+                longDescription: <<<'EOF'
+                    This demo showcases faceted search with two Live Components working together.
+
+                    Filter a list of animals by their **number of legs**, **weight**, or **natural habitat** using a dynamic facet menu that updates the results in real time.
+                    EOF,
+            ),
+            new LiveDemo(
                 'infinite-scroll-2',
                 name: 'Infinite Scroll - 2/2',
                 description: 'Loading on-scroll, flexible layout grid, colorfull loading animations and... more T-Shirts!',

@@ -1,0 +1,20 @@
+{% extends 'demos/live_demo.html.twig' %}
+
+{% block demo_content %}
+    <div class="row">
+        <div class="col-md-4">
+            <twig:Animalz:FacetMenu />
+        </div>
+        <div class="col-md-8">
+            <twig:Animalz:Results />
+        </div>
+    </div>
+{% endblock %}
+
+{% block code_block_left %}
+    <twig:CodeBlock filename="src/Twig/Components/Animalz/FacetMenu.php" />
+{% endblock %}
+
+{% block code_block_right %}
+    <twig:CodeBlock filename="src/Twig/Components/Animalz/Results.php" />
+{% endblock %}
