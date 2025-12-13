@@ -1,0 +1,12 @@
+<div{{ attributes }}>
+    <button
+        type="button"
+        class="btn btn-primary"
+        {{ live_action('initAddress') }}
+    >Init address</button>
+
+    <hr>
+
+    <h2>Address (<code>print_r</code>)</h2>
+    <output>{{ print_r(address) }}</output>
+</div>

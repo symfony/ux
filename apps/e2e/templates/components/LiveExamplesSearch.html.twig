@@ -1,0 +1,44 @@
+<div{{ attributes }}>
+    <div style="display: grid; grid-template-columns: auto 300px min-content; gap: 0.5rem; align-items: center; margin-bottom: 1rem;">
+        <label for="query" class="form-label mb-0 text-end">Search for examples:</label>
+        <div class="input-group">
+            <span class="input-group-text">
+                <twig:ux:icon name="mdi:search" />
+            </span>
+            <input
+                id="query"
+                placeholder="Results update as you type..."
+                class="form-control"
+                data-model="debounce(250)|query"
+                data-loading="addAttribute(disabled)"
+            />
+        </div>
+        <button
+            type="button"
+            class="btn btn-secondary"
+            {{ query|length == 0 ? 'disabled' }}
+            {{ live_action('clearQuery') }}
+        >Clear</button>
+    </div>
+    <div data-loading="addClass(opacity-50)">
+        {% for package, examples in computed.examplesGroupedByPackage %}
+            {% set package = enum('App\\UxPackage').from(package)  %}
+            <h2 style="margin-top: 2rem;">{{ package.value }} <a href="{{ package.documentationUrl }}" title="{{ package.value }} documentation">📖</a></h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                {% for example in examples %}
+                    <div>
+                        <div class="card" data-testid="card-example">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ example.name }}</h5>
+                                <p class="card-text">{{ example.description }}</p>
+                                <a href="{{ path(example.routeName, example.routeParameters) }}">See example</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            No results found.
+        {% endfor %}
+    </div>
+</div>
