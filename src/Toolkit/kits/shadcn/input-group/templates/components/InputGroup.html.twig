@@ -1,0 +1,18 @@
+{# @block content The default block #}
+{# Icon padding - simpler selectors #}
+{%- set iconStartPadding = 'has-[[data-position=start]]:[&_[data-slot=input-group-control]]:pl-9' -%}
+{%- set iconEndPadding = 'has-[[data-position=end]]:[&_[data-slot=input-group-control]]:pr-9' -%}
+{# Inline addon padding #}
+{%- set addonStartPadding = 'has-[[data-align=inline-start]]:[&_[data-slot=input-group-control]]:pl-2' -%}
+{%- set addonEndPadding = 'has-[[data-align=inline-end]]:[&_[data-slot=input-group-control]]:pr-2' -%}
+{# Block addon layout - auto height and flex-col #}
+{%- set blockLayout = 'has-[[data-align=block-start]]:h-auto has-[[data-align=block-start]]:flex-col has-[[data-align=block-end]]:h-auto has-[[data-align=block-end]]:flex-col' -%}
+{# Focus state on parent when child control is focused #}
+{%- set focusState = 'has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot=input-group-control]:focus-visible]:ring-[3px]' -%}
+<div
+    data-slot="input-group"
+    class="{{ ('group/input-group relative flex h-10 w-full items-center rounded-md border border-input bg-background shadow-xs transition-[color,box-shadow] has-[>textarea]:h-auto ' ~ iconStartPadding ~ ' ' ~ iconEndPadding ~ ' ' ~ addonStartPadding ~ ' ' ~ addonEndPadding ~ ' ' ~ blockLayout ~ ' ' ~ focusState ~ ' ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

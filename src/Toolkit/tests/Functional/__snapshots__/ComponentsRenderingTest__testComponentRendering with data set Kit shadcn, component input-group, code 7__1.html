@@ -1,0 +1,28 @@
+<!--
+- Kit: Shadcn UI
+- Component: Input Group
+- Code:
+```twig
+<div class="max-w-md">
+  <twig:InputGroup>
+    <twig:InputGroup:Textarea
+      id="notes"
+      name="notes"
+      placeholder="Add notes..."
+      rows="3"
+    />
+    <twig:InputGroup:Icon position="end" align="start">
+      {{ ux_icon('lucide:pencil') }}
+    </twig:InputGroup:Icon>
+  </twig:InputGroup>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="max-w-md">
+  <div data-slot="input-group" class="group/input-group relative flex h-10 w-full items-center rounded-md border border-input bg-background shadow-xs transition-[color,box-shadow] has-[&gt;textarea]:h-auto has-[[data-position=start]]:[&amp;_[data-slot=input-group-control]]:pl-9 has-[[data-position=end]]:[&amp;_[data-slot=input-group-control]]:pr-9 has-[[data-align=inline-start]]:[&amp;_[data-slot=input-group-control]]:pl-2 has-[[data-align=inline-end]]:[&amp;_[data-slot=input-group-control]]:pr-2 has-[[data-align=block-start]]:h-auto has-[[data-align=block-start]]:flex-col has-[[data-align=block-end]]:h-auto has-[[data-align=block-end]]:flex-col has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot=input-group-control]:focus-visible]:ring-[3px]">
+<textarea data-slot="input-group-control" class="flex-1 min-h-[80px] w-full resize-none rounded-none border-0 bg-transparent px-3 py-3 text-base shadow-none placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" id="notes" name="notes" placeholder="Add notes..." rows="3"></textarea>
+
+    <span data-slot="input-group-icon" data-position="end" class="pointer-events-none absolute flex text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-4 right-0 pr-3 top-0 pt-3"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497zM15 5l4 4"></path></svg>
+    </span>
+  </div>
+</div>
