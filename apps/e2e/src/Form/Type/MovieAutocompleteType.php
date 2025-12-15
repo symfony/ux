@@ -18,7 +18,7 @@ class MovieAutocompleteType extends AbstractType
     {
         $resolver->setDefaults([
             'autocomplete' => true,
-            'autocomplete_url' => $this->urlGenerator->generate('test_autocomplete_movie'),
+            'autocomplete_url' => $this->urlGenerator->generate('app_test_autocomplete_movie'),
             'tom_select_options' => [
                 'maxOptions' => null,
             ],

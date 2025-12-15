@@ -1,0 +1,27 @@
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+<div{{ attributes }}>
+    {% if isSuccessful %}
+        <div class="alert alert-success">
+            Registration successful!
+        </div>
+    {% else %}
+        {{ form_start(form, {
+            attr: {
+                novalidate: true,
+                'data-action': 'live#action:prevent',
+                'data-live-action-param': 'saveRegistration',
+            }
+        }) }}
+            {{ form_row(form.email) }}
+            {{ form_row(form.password) }}
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+                {{ this.hasValidationErrors ? 'disabled' }}
+            >Register</button>
+
+            {{ form_rest(form) }}
+        {{ form_end(form) }}
+    {% endif %}
+</div>

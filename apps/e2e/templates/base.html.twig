@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Symfony UX's E2E App{% endblock %}</title>
@@ -8,6 +8,10 @@
         {% endblock %}
 
         {% block javascripts %}
+            <script>
+                const theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-bs-theme', theme === 'light' ? 'light' : 'dark');
+            </script>
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>

@@ -17,6 +17,7 @@ enum UxPackage: string
     case ChartJs = 'UX Chart';
     case Cropperjs = 'UX Cropperjs';
     case Icons = 'UX Icons';
+    case LiveComponent = 'UX LiveComponent';
     //case LazyImage = 'UX LazyImage'; // deprecated/removed
     case Map = 'UX Map';
     case Notify = 'UX Notify';
@@ -28,7 +29,6 @@ enum UxPackage: string
     // case Toolkit; // not subject to E2E
     case Translator = 'UX Translator';
     case Turbo = 'UX Turbo';
-    case TwigComponent = 'UX TwigComponent';
     // case Typed; // deprecated
     case Vue = 'UX Vue';
 
@@ -39,6 +39,7 @@ enum UxPackage: string
             self::ChartJs => 'https://ux.symfony.com/chartjs',
             self::Cropperjs => 'https://ux.symfony.com/cropperjs',
             self::Icons => 'https://ux.symfony.com/icons',
+            self::LiveComponent => 'https://ux.symfony.com/live-component',
             self::Map => 'https://ux.symfony.com/map',
             self::Notify => 'https://ux.symfony.com/notify',
             self::React => 'https://ux.symfony.com/react',
@@ -46,7 +47,6 @@ enum UxPackage: string
             self::Svelte => 'https://ux.symfony.com/svelte',
             self::Translator => 'https://ux.symfony.com/translator',
             self::Turbo => 'https://ux.symfony.com/turbo',
-            self::TwigComponent => 'https://ux.symfony.com/twig-component',
             self::Vue => 'https://ux.symfony.com/vue',
         };
     }

@@ -1,0 +1,17 @@
+<div{{ attributes }}>
+    <form>
+        <div>
+            <label for="country" class="form-label">Country:</label>
+            <input id="country" class="form-control" data-model="address.country" value="{{ address.country }}">
+        </div>
+        <div class="mt-3">
+            <label for="city" class="form-label">City:</label>
+            <input id="city" class="form-control" data-model="address.city" value="{{ address.city }}">
+        </div>
+    </form>
+
+    <hr>
+
+    <h2>Address (<code>print_r</code>)</h2>
+    <output>{{ print_r(address) }}</output>
+</div>

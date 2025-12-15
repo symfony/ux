@@ -18,7 +18,7 @@ class VideogameAutocompleteType extends AbstractType
     {
         $resolver->setDefaults([
             'autocomplete' => true,
-            'autocomplete_url' => $this->urlGenerator->generate('test_autocomplete_videogame'),
+            'autocomplete_url' => $this->urlGenerator->generate('app_test_autocomplete_videogame'),
             'tom_select_options' => [
                 'maxOptions' => null,
             ],

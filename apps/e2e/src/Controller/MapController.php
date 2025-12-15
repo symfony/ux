@@ -19,10 +19,10 @@ use Symfony\UX\Map\Polygon;
 use Symfony\UX\Map\Polyline;
 use Symfony\UX\Map\Rectangle;
 
-#[Route('/ux-map')]
+#[Route('/ux-map', name: 'app_ux_map_')]
 final class MapController extends AbstractController
 {
-    #[Route('/basic')]
+    #[Route('/basic', name: 'basic')]
     public function basic(
         #[MapQueryParameter] MapRenderer $renderer
     ): Response {
@@ -34,7 +34,7 @@ final class MapController extends AbstractController
         return $this->render('ux_map/render_map.html.twig', ['map' => $map]);
     }
 
-    #[Route('/with-markers-and-fit-bounds-to-markers')]
+    #[Route('/with-markers-and-fit-bounds-to-markers', name: 'with_markers_and_fit_bounds_to_markers')]
     public function withMarkersAndFitBoundsToMarkers(#[MapQueryParameter] MapRenderer $renderer): Response
     {
         $map = (new Map(rendererName: $renderer->value))
@@ -52,7 +52,7 @@ final class MapController extends AbstractController
         return $this->render('ux_map/render_map.html.twig', ['map' => $map]);
     }
 
-    #[Route('/with-markers-and-zoomed-on-paris')]
+    #[Route('/with-markers-and-zoomed-on-paris', name: 'with_markers_and_zoomed_on_paris')]
     public function withMarkersZoomedOnParis(#[MapQueryParameter] MapRenderer $renderer): Response
     {
         $map = (new Map(rendererName: $renderer->value))
@@ -71,7 +71,7 @@ final class MapController extends AbstractController
         return $this->render('ux_map/render_map.html.twig', ['map' => $map]);
     }
 
-    #[Route('/with-markers-and-info-windows')]
+    #[Route('/with-markers-and-info-windows', name: 'with_markers_and_info_windows')]
     public function withMarkersAndInfoWindows(#[MapQueryParameter] MapRenderer $renderer): Response
     {
         $map = (new Map(rendererName: $renderer->value))
@@ -91,7 +91,7 @@ final class MapController extends AbstractController
         return $this->render('ux_map/render_map.html.twig', ['map' => $map]);
     }
 
-    #[Route('/with-markers-and-custom-icons')]
+    #[Route('/with-markers-and-custom-icons', name: 'with_markers_and_custom_icons')]
     public function withMarkersAndCustomIcons(
         #[MapQueryParameter] MapRenderer $renderer,
         #[Autowire(service: 'asset_mapper.asset_package')] PackageInterface $package,
@@ -119,7 +119,7 @@ final class MapController extends AbstractController
         return $this->render('ux_map/render_map.html.twig', ['map' => $map]);
     }
 
-    #[Route('/with-polygons')]
+    #[Route('/with-polygons', name: 'with_polygons')]
     public function withPolygons(#[MapQueryParameter] MapRenderer $renderer): Response
     {
         $map = (new Map(rendererName: $renderer->value))
@@ -160,7 +160,7 @@ final class MapController extends AbstractController
         return $this->render('ux_map/render_map.html.twig', ['map' => $map]);
     }
 
-    #[Route('/with-polylines')]
+    #[Route('/with-polylines', name: 'with_polylines')]
     public function withPolylines(#[MapQueryParameter] MapRenderer $renderer): Response
     {
         $map = (new Map(rendererName: $renderer->value))
@@ -192,7 +192,7 @@ final class MapController extends AbstractController
         return $this->render('ux_map/render_map.html.twig', ['map' => $map]);
     }
 
-    #[Route('/with-circles')]
+    #[Route('/with-circles', name: 'with_circles')]
     public function withCircles(#[MapQueryParameter] MapRenderer $renderer): Response
     {
         $map = (new Map(rendererName: $renderer->value))
@@ -217,7 +217,7 @@ final class MapController extends AbstractController
         return $this->render('ux_map/render_map.html.twig', ['map' => $map]);
     }
 
-    #[Route('/with-rectangles')]
+    #[Route('/with-rectangles', name: 'with_rectangles')]
     public function withRectangles(#[MapQueryParameter] MapRenderer $renderer): Response
     {
         $map = (new Map(rendererName: $renderer->value))
