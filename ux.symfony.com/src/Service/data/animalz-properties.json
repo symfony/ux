@@ -1,805 +1,805 @@
 [
     {
         "name": "dog",
-        "type": ["NORMAL", "FIGHT"],
+        "type": ["Normal", "Fight"],
         "legs": 4,
         "description": "Loyal companion and versatile working animal."
     },
     {
         "name": "cat",
-        "type": ["NORMAL", "DARK"],
+        "type": ["Normal", "Dark"],
         "legs": 4,
         "description": "Independent and mysterious nocturnal hunter."
     },
     {
         "name": "horse",
-        "type": ["NORMAL"],
+        "type": ["Normal"],
         "legs": 4,
         "description": "Powerful and graceful equine companion."
     },
     {
         "name": "cow",
-        "type": ["NORMAL"],
+        "type": ["Normal"],
         "legs": 4,
         "description": "Gentle bovine providing milk and leather."
     },
     {
         "name": "elephant",
-        "type": ["NORMAL"],
+        "type": ["Normal"],
         "legs": 4,
         "description": "Largest land mammal with incredible memory."
     },
     {
         "name": "giraffe",
-        "type": ["NORMAL"],
+        "type": ["Normal"],
         "legs": 4,
         "description": "Tallest living terrestrial animal."
     },
     {
         "name": "lion",
-        "type": ["NORMAL", "FIGHT"],
+        "type": ["Normal", "Fight"],
         "legs": 4,
         "description": "King of the savanna and apex predator."
     },
     {
         "name": "tiger",
-        "type": ["NORMAL", "FIGHT"],
+        "type": ["Normal", "Fight"],
         "legs": 4,
         "description": "Striped jungle hunter and powerful swimmer."
     },
     {
         "name": "bear",
-        "type": ["NORMAL", "FIGHT"],
+        "type": ["Normal", "Fight"],
         "legs": 4,
         "description": "Powerful omnivore found across many habitats."
     },
     {
         "name": "wolf",
-        "type": ["NORMAL", "FIGHT"],
+        "type": ["Normal", "Fight"],
         "legs": 4,
         "description": "Social pack hunter with keen senses."
     },
     {
         "name": "fox",
-        "type": ["NORMAL", "DARK"],
+        "type": ["Normal", "Dark"],
         "legs": 4,
         "description": "Cunning nocturnal canine with bushy tail."
     },
     {
         "name": "rabbit",
-        "type": ["NORMAL"],
+        "type": ["Normal"],
         "legs": 4,
         "description": "Fluffy herbivore known for rapid reproduction."
     },
     {
         "name": "deer",
-        "type": ["NORMAL"],
+        "type": ["Normal"],
         "legs": 4,
         "description": "Graceful forest dweller with antlers."
     },
     {
         "name": "monkey",
-        "type": ["NORMAL"],
+        "type": ["Normal"],
         "legs": 4,
         "description": "Intelligent primate with prehensile tail."
     },
     {
         "name": "gorilla",
-        "type": ["NORMAL", "FIGHT"],
+        "type": ["Normal", "Fight"],
         "legs": 4,
         "description": "Powerful great ape and gentle giant."
     },
     {
         "name": "hippopotamus",
-        "type": ["NORMAL", "WATER"],
+        "type": ["Normal", "Water"],
         "legs": 4,
         "description": "Massive semi-aquatic African mammal."
     },
     {
         "name": "rhinoceros",
-        "type": ["NORMAL", "FIGHT"],
+        "type": ["Normal", "Fight"],
         "legs": 4,
         "description": "Armored herbivore with distinctive horn."
     },
     {
         "name": "zebra",
-        "type": ["NORMAL"],
+        "type": ["Normal"],
         "legs": 4,
         "description": "Striped equine native to Africa."
     },
     {
         "name": "kangaroo",
-        "type": ["NORMAL", "FIGHT"],
+        "type": ["Normal", "Fight"],
         "legs": 2,
         "description": "Hopping marsupial with powerful legs."
     },
     {
         "name": "koala",
-        "type": ["NORMAL"],
+        "type": ["Normal"],
         "legs": 4,
         "description": "Eucalyptus-eating Australian marsupial."
     },
     {
         "name": "panda",
-        "type": ["NORMAL"],
+        "type": ["Normal"],
         "legs": 4,
         "description": "Bamboo-loving bear from China."
     },
     {
         "name": "snake",
-        "type": ["NORMAL", "POISON"],
+        "type": ["Normal", "Poison"],
         "legs": 0,
         "description": "Legless reptile with forked tongue."
     },
     {
         "name": "turtle",
-        "type": ["NORMAL", "WATER"],
+        "type": ["Normal", "Water"],
         "legs": 4,
         "description": "Shelled reptile with slow pace."
     },
     {
         "name": "crocodile",
-        "type": ["NORMAL", "WATER"],
+        "type": ["Normal", "Water"],
         "legs": 4,
         "description": "Ancient aquatic predator with powerful jaws."
     },
     {
         "name": "fly",
-        "type": ["BUG", "FLYING"],
+        "type": ["Bug", "Flying"],
         "legs": 6,
         "description": "Common flying insect with compound eyes."
     },
     {
         "name": "ant",
-        "type": ["BUG"],
+        "type": ["Bug"],
         "legs": 6,
         "description": "Tiny but incredibly strong social insect."
     },
     {
         "name": "spider",
-        "type": ["BUG", "POISON"],
+        "type": ["Bug", "Poison"],
         "legs": 8,
         "description": "Eight-legged web-spinning predator."
     },
     {
         "name": "bee",
-        "type": ["BUG", "FLYING"],
+        "type": ["Bug", "Flying"],
         "legs": 6,
         "description": "Pollinating insect that produces honey."
     },
     {
         "name": "butterfly",
-        "type": ["BUG", "FLYING"],
+        "type": ["Bug", "Flying"],
         "legs": 6,
         "description": "Colorful winged insect with metamorphosis."
     },
     {
         "name": "mosquito",
-        "type": ["BUG", "FLYING"],
+        "type": ["Bug", "Flying"],
         "legs": 6,
         "description": "Blood-sucking flying pest."
     },
     {
         "name": "cockroach",
-        "type": ["BUG", "DARK"],
+        "type": ["Bug", "Dark"],
         "legs": 6,
         "description": "Resilient nocturnal scavenger insect."
     },
     {
         "name": "beetle",
-        "type": ["BUG"],
+        "type": ["Bug"],
         "legs": 6,
         "description": "Hard-shelled insect in diverse forms."
     },
     {
         "name": "grasshopper",
-        "type": ["GRASS", "BUG"],
+        "type": ["Grass", "Bug"],
         "legs": 6,
         "description": "Jumping insect with powerful hind legs."
     },
     {
         "name": "dragonfly",
-        "type": ["BUG", "FLYING"],
+        "type": ["Bug", "Flying"],
         "legs": 6,
         "description": "Ancient aerial predator with four wings."
     },
     {
         "name": "ladybug",
-        "type": ["BUG", "FLYING"],
+        "type": ["Bug", "Flying"],
         "legs": 6,
         "description": "Spotted beetle beloved by gardeners."
     },
     {
         "name": "wasp",
-        "type": ["FLYING", "POISON"],
+        "type": ["Flying", "Poison"],
         "legs": 6,
         "description": "Stinging insect with narrow waist."
     },
     {
         "name": "millipede",
-        "type": ["BUG"],
+        "type": ["Bug"],
         "legs": 100,
         "description": "Multi-legged arthropod that curls defensively."
     },
     {
         "name": "scorpion",
-        "type": ["FIGHT", "POISON"],
+        "type": ["Fight", "Poison"],
         "legs": 8,
         "description": "Venomous arachnid with curved tail."
     },
     {
         "name": "tick",
-        "type": ["BUG", "POISON"],
+        "type": ["Bug", "Poison"],
         "legs": 8,
         "description": "Blood-feeding parasitic arachnid."
     },
     {
         "name": "flea",
-        "type": ["BUG"],
+        "type": ["Bug"],
         "legs": 6,
         "description": "Tiny jumping blood-sucking parasite."
     },
     {
         "name": "moth",
-        "type": ["BUG", "FLYING"],
+        "type": ["Bug", "Flying"],
         "legs": 6,
         "description": "Nocturnal cousin of the butterfly."
     },
     {
         "name": "cricket",
-        "type": ["BUG", "DARK"],
+        "type": ["Bug", "Dark"],
         "legs": 6,
         "description": "Chirping nocturnal jumping insect."
     },
     {
         "name": "caterpillar",
-        "type": ["BUG"],
+        "type": ["Bug"],
         "legs": 16,
         "description": "Larval stage of butterflies and moths."
     },
     {
         "name": "firefly",
-        "type": ["BUG", "FLYING"],
+        "type": ["Bug", "Flying"],
         "legs": 6,
         "description": "Bioluminescent beetle lighting up nights."
     },
     {
         "name": "mantis",
-        "type": ["BUG", "FIGHT"],
+        "type": ["Bug", "Fight"],
         "legs": 6,
         "description": "Ambush predator with raptorial forelegs."
     },
     {
         "name": "cicada",
-        "type": ["BUG", "FLYING"],
+        "type": ["Bug", "Flying"],
         "legs": 6,
         "description": "Loud singing insect emerging periodically."
     },
     {
         "name": "whale",
-        "type": ["WATER"],
+        "type": ["Water"],
         "legs": 0,
         "description": "Largest animal ever to exist on Earth."
     },
     {
         "name": "dolphin",
-        "type": ["WATER"],
+        "type": ["Water"],
         "legs": 0,
         "description": "Intelligent and playful marine mammal."
     },
     {
         "name": "shark",
-        "type": ["WATER", "FIGHT"],
+        "type": ["Water", "Fight"],
         "legs": 0,
         "description": "Apex ocean predator with keen senses."
     },
     {
         "name": "octopus",
-        "type": ["WATER", "DARK"],
+        "type": ["Water", "Dark"],
         "legs": 8,
         "description": "Intelligent cephalopod with eight arms."
     },
     {
         "name": "jellyfish",
-        "type": ["WATER", "POISON"],
+        "type": ["Water", "Poison"],
         "legs": 24,
         "description": "Translucent drifting cnidarian with stingers."
     },
     {
         "name": "starfish",
-        "type": ["WATER"],
+        "type": ["Water"],
         "legs": 5,
         "description": "Five-armed echinoderm that regenerates limbs."
     },
     {
         "name": "seahorse",
-        "type": ["WATER"],
+        "type": ["Water"],
         "legs": 0,
         "description": "Tiny fish where males carry offspring."
     },
     {
         "name": "crab",
-        "type": ["WATER"],
+        "type": ["Water"],
         "legs": 10,
         "description": "Sideways-walking crustacean with pincers."
     },
     {
         "name": "lobster",
-        "type": ["WATER"],
+        "type": ["Water"],
         "legs": 10,
         "description": "Large marine crustacean considered delicacy."
     },
     {
         "name": "shrimp",
-        "type": ["WATER"],
+        "type": ["Water"],
         "legs": 10,
         "description": "Small swimming crustacean in many cuisines."
     },
     {
         "name": "oyster",
-        "type": ["WATER"],
+        "type": ["Water"],
         "legs": 0,
         "description": "Pearl-producing bivalve mollusk."
     },
     {
         "name": "squid",
-        "type": ["WATER", "DARK"],
+        "type": ["Water", "Dark"],
         "legs": 10,
         "description": "Fast-swimming cephalopod with ten arms."
     },
     {
         "name": "seal",
-        "type": ["WATER", "NORMAL"],
+        "type": ["Water", "Normal"],
         "legs": 4,
         "description": "Playful pinniped found on rocky shores."
     },
     {
         "name": "walrus",
-        "type": ["WATER", "NORMAL"],
+        "type": ["Water", "Normal"],
         "legs": 4,
         "description": "Tusked Arctic marine mammal."
     },
     {
         "name": "orca",
-        "type": ["WATER", "FIGHT"],
+        "type": ["Water", "Fight"],
         "legs": 0,
         "description": "Apex predator also called killer whale."
     },
     {
         "name": "manatee",
-        "type": ["WATER", "GRASS"],
+        "type": ["Water", "Grass"],
         "legs": 2,
         "description": "Gentle herbivorous sea cow."
     },
     {
         "name": "stingray",
-        "type": ["WATER", "POISON"],
+        "type": ["Water", "Poison"],
         "legs": 0,
         "description": "Flat cartilaginous fish with venomous tail."
     },
     {
         "name": "eel",
-        "type": ["WATER", "DARK"],
+        "type": ["Water", "Dark"],
         "legs": 0,
         "description": "Snake-like fish found in many waters."
     },
     {
         "name": "salmon",
-        "type": ["WATER"],
+        "type": ["Water"],
         "legs": 0,
         "description": "Migratory fish returning to spawn upstream."
     },
     {
         "name": "tuna",
-        "type": ["WATER"],
+        "type": ["Water"],
         "legs": 0,
         "description": "Fast-swimming pelagic fish."
     },
     {
         "name": "clownfish",
-        "type": ["WATER"],
+        "type": ["Water"],
         "legs": 0,
         "description": "Colorful reef fish living in anemones."
     },
     {
         "name": "swordfish",
-        "type": ["WATER"],
+        "type": ["Water"],
         "legs": 0,
         "description": "Large predatory fish with elongated bill."
     },
     {
         "name": "urchin",
-        "type": ["WATER", "POISON"],
+        "type": ["Water", "Poison"],
         "legs": 0,
         "description": "Spiny spherical echinoderm."
     },
     {
         "name": "coral",
-        "type": ["WATER", "GRASS"],
+        "type": ["Water", "Grass"],
         "legs": 0,
         "description": "Colonial marine invertebrate building reefs."
     },
     {
         "name": "pigeon",
-        "type": ["FLYING"],
+        "type": ["Flying"],
         "legs": 2,
         "description": "Common urban bird with homing ability."
     },
     {
         "name": "eagle",
-        "type": ["FLYING", "FIGHT"],
+        "type": ["Flying", "Fight"],
         "legs": 2,
         "description": "Majestic raptor with powerful talons."
     },
     {
         "name": "owl",
-        "type": ["FLYING", "DARK"],
+        "type": ["Flying", "Dark"],
         "legs": 2,
         "description": "Nocturnal hunter with rotating head."
     },
     {
         "name": "parrot",
-        "type": ["FLYING"],
+        "type": ["Flying"],
         "legs": 2,
         "description": "Colorful bird that can mimic speech."
     },
     {
         "name": "sparrow",
-        "type": ["FLYING"],
+        "type": ["Flying"],
         "legs": 2,
         "description": "Small common songbird worldwide."
     },
     {
         "name": "crow",
-        "type": ["FLYING"],
+        "type": ["Flying"],
         "legs": 2,
         "description": "Intelligent black bird using tools."
     },
     {
         "name": "seagull",
-        "type": ["FLYING", "WATER"],
+        "type": ["Flying", "Water"],
         "legs": 2,
         "description": "Coastal bird known for scavenging."
     },
     {
         "name": "pelican",
-        "type": ["FLYING", "WATER"],
+        "type": ["Flying", "Water"],
         "legs": 2,
         "description": "Large bird with expandable throat pouch."
     },
     {
         "name": "flamingo",
-        "type": ["FLYING", "WATER"],
+        "type": ["Flying", "Water"],
         "legs": 2,
         "description": "Pink wading bird standing on one leg."
     },
     {
         "name": "swan",
-        "type": ["FLYING", "WATER"],
+        "type": ["Flying", "Water"],
         "legs": 2,
         "description": "Elegant waterfowl symbolizing grace."
     },
     {
         "name": "duck",
-        "type": ["FLYING", "WATER"],
+        "type": ["Flying", "Water"],
         "legs": 2,
         "description": "Dabbling waterfowl with waterproof feathers."
     },
     {
         "name": "goose",
-        "type": ["FLYING", "WATER"],
+        "type": ["Flying", "Water"],
         "legs": 2,
         "description": "Migratory waterfowl flying in formation."
     },
     {
         "name": "chicken",
-        "type": ["NORMAL", "FLYING"],
+        "type": ["Normal", "Flying"],
         "legs": 2,
         "description": "Domesticated fowl raised for eggs and meat."
     },
     {
         "name": "rooster",
-        "type": ["NORMAL", "FIGHT"],
+        "type": ["Normal", "Fight"],
         "legs": 2,
         "description": "Male chicken known for crowing at dawn."
     },
     {
         "name": "turkey",
-        "type": ["NORMAL"],
+        "type": ["Normal"],
         "legs": 2,
         "description": "Large game bird native to Americas."
     },
     {
         "name": "peacock",
-        "type": ["NORMAL"],
+        "type": ["Normal"],
         "legs": 2,
         "description": "Colorful bird with spectacular tail display."
     },
     {
         "name": "penguin",
-        "type": ["WATER", "FLYING"],
+        "type": ["Water", "Flying"],
         "legs": 2,
         "description": "Flightless bird adapted for swimming."
     },
     {
         "name": "ostrich",
-        "type": ["NORMAL", "FLYING"],
+        "type": ["Normal", "Flying"],
         "legs": 2,
         "description": "Largest living bird, flightless runner."
     },
     {
         "name": "hummingbird",
-        "type": ["FLYING"],
+        "type": ["Flying"],
         "legs": 2,
         "description": "Tiny bird that hovers while feeding."
     },
     {
         "name": "woodpecker",
-        "type": ["FLYING"],
+        "type": ["Flying"],
         "legs": 2,
         "description": "Bird that drums on trees for insects."
     },
     {
         "name": "toucan",
-        "type": ["FLYING"],
+        "type": ["Flying"],
         "legs": 2,
         "description": "Tropical bird with oversized colorful bill."
     },
     {
         "name": "falcon",
-        "type": ["FLYING", "FIGHT"],
+        "type": ["Flying", "Fight"],
         "legs": 2,
         "description": "Fastest animal diving at incredible speeds."
     },
     {
         "name": "hawk",
-        "type": ["FLYING", "FIGHT"],
+        "type": ["Flying", "Fight"],
         "legs": 2,
         "description": "Sharp-eyed raptor hunting from above."
     },
     {
         "name": "vulture",
-        "type": ["FLYING"],
+        "type": ["Flying"],
         "legs": 2,
         "description": "Scavenging bird cleaning up carcasses."
     },
     {
         "name": "bat",
-        "type": ["FLYING", "DARK"],
+        "type": ["Flying", "Dark"],
         "legs": 2,
         "description": "Only mammal capable of true flight."
     },
     {
         "name": "flytrap",
-        "type": ["GRASS", "FIGHT"],
+        "type": ["Grass", "Fight"],
         "legs": 2,
         "description": "Iconic carnivorous plant that snaps shut on prey."
     },
     {
         "name": "nepenthes",
-        "type": ["GRASS", "WATER"],
+        "type": ["Grass", "Water"],
         "legs": 1,
         "description": "Passive trap plant with tube-shaped pitfall."
     },
     {
         "name": "sundew",
-        "type": ["GRASS", "DARK"],
+        "type": ["Grass", "Dark"],
         "legs": 1,
         "description": "Carnivorous plant with sticky tentacle-like leaves."
     },
     {
         "name": "rafflesia",
-        "type": ["GRASS", "POISON"],
+        "type": ["Grass", "Poison"],
         "legs": 0,
         "description": "Giant parasitic flower emitting rotting smell."
     },
     {
         "name": "titan",
-        "type": ["GRASS", "DARK"],
+        "type": ["Grass", "Dark"],
         "legs": 1,
         "description": "Massive flower smelling like decaying flesh."
     },
     {
         "name": "banyan",
-        "type": ["GRASS", "DARK"],
+        "type": ["Grass", "Dark"],
         "legs": 100,
         "description": "Tree that wraps and kills its host."
     },
     {
         "name": "cordyceps",
-        "type": ["GRASS", "POISON"],
+        "type": ["Grass", "Poison"],
         "legs": 1,
         "description": "Zombie fungus that controls insect minds."
     },
     {
         "name": "hydnellum",
-        "type": ["GRASS", "DARK"],
+        "type": ["Grass", "Dark"],
         "legs": 1,
         "description": "Fungus oozing blood-red droplets."
     },
     {
         "name": "clathrus",
-        "type": ["GRASS", "DARK"],
+        "type": ["Grass", "Dark"],
         "legs": 5,
         "description": "Tentacle-shaped fungus emerging from egg."
     },
     {
         "name": "dragon",
-        "type": ["FAIRY", "FOSSIL"],
+        "type": ["Fairy", "Fossil"],
         "legs": 4,
         "description": "Legendary fire-breathing winged reptile."
     },
     {
         "name": "unicorn",
-        "type": ["FAIRY"],
+        "type": ["Fairy"],
         "legs": 4,
         "description": "Magical horse with a single spiraling horn."
     },
     {
         "name": "phoenix",
-        "type": ["FAIRY", "FLYING"],
+        "type": ["Fairy", "Flying"],
         "legs": 2,
         "description": "Immortal bird reborn from its own ashes."
     },
     {
         "name": "kraken",
-        "type": ["FAIRY", "WATER"],
+        "type": ["Fairy", "Water"],
         "legs": 8,
         "description": "Colossal sea monster dragging ships underwater."
     },
     {
         "name": "bigfoot",
-        "type": ["FAIRY"],
+        "type": ["Fairy"],
         "legs": 2,
         "description": "Elusive ape-like creature of North American forests."
     },
     {
         "name": "yeti",
-        "type": ["FAIRY"],
+        "type": ["Fairy"],
         "legs": 2,
         "description": "Abominable snowman of the Himalayas."
     },
     {
         "name": "nessie",
-        "type": ["FAIRY", "WATER"],
+        "type": ["Fairy", "Water"],
         "legs": 4,
         "description": "Legendary lake monster of Scottish Loch Ness."
     },
     {
         "name": "chupacabra",
-        "type": ["FAIRY", "DARK"],
+        "type": ["Fairy", "Dark"],
         "legs": 2,
         "description": "Blood-sucking creature terrorizing livestock."
     },
     {
         "name": "mothman",
-        "type": ["FAIRY", "FLYING"],
+        "type": ["Fairy", "Flying"],
         "legs": 2,
         "description": "Winged humanoid harbinger of disaster."
     },
     {
         "name": "jackalope",
-        "type": ["FAIRY"],
+        "type": ["Fairy"],
         "legs": 4,
         "description": "Antlered rabbit of American folklore."
     },
     {
         "name": "thunderbird",
-        "type": ["FAIRY", "FLYING"],
+        "type": ["Fairy", "Flying"],
         "legs": 2,
         "description": "Giant bird creating storms with its wings."
     },
     {
         "name": "kelpie",
-        "type": ["FAIRY", "WATER"],
+        "type": ["Fairy", "Water"],
         "legs": 4,
         "description": "Shape-shifting water horse luring travelers."
     },
     {
         "name": "wendigo",
-        "type": ["FAIRY", "DARK"],
+        "type": ["Fairy", "Dark"],
         "legs": 2,
         "description": "Cannibalistic spirit of frozen wilderness."
     },
     {
         "name": "basilisk",
-        "type": ["FAIRY", "POISON"],
+        "type": ["Fairy", "Poison"],
         "legs": 0,
         "description": "Serpent king whose gaze turns victims to stone."
     },
     {
         "name": "marsupilami",
-        "type": ["FAIRY", "NORMAL"],
+        "type": ["Fairy", "Normal"],
         "legs": 4,
         "description": "Long-tailed spotted creature from Palombia."
     },
     {
         "name": "tyrannosaurus",
-        "type": ["FOSSIL", "FIGHT"],
+        "type": ["Fossil", "Fight"],
         "legs": 2,
         "description": "King of dinosaurs with massive jaws."
     },
     {
         "name": "velociraptor",
-        "type": ["FOSSIL", "FIGHT"],
+        "type": ["Fossil", "Fight"],
         "legs": 2,
         "description": "Swift pack-hunting feathered predator."
     },
     {
         "name": "pterodactyl",
-        "type": ["FOSSIL", "FLYING"],
+        "type": ["Fossil", "Flying"],
         "legs": 2,
         "description": "Flying reptile ruling prehistoric skies."
     },
     {
         "name": "mosasaurus",
-        "type": ["FOSSIL", "WATER"],
+        "type": ["Fossil", "Water"],
         "legs": 4,
         "description": "Massive marine lizard apex predator."
     },
     {
         "name": "triceratops",
-        "type": ["FOSSIL"],
+        "type": ["Fossil"],
         "legs": 4,
         "description": "Three-horned herbivore with bony frill."
     },
     {
         "name": "ammonite",
-        "type": ["FOSSIL", "WATER"],
+        "type": ["Fossil", "Water"],
         "legs": 8,
         "description": "Spiral-shelled ancient cephalopod."
     },
     {
         "name": "mammoth",
-        "type": ["FOSSIL", "NORMAL"],
+        "type": ["Fossil", "Normal"],
         "legs": 4,
         "description": "Woolly elephant of the Ice Age."
     },
     {
         "name": "smilodon",
-        "type": ["FOSSIL", "FIGHT"],
+        "type": ["Fossil", "Fight"],
         "legs": 4,
         "description": "Saber-toothed cat with elongated fangs."
     },
     {
         "name": "stegosaurus",
-        "type": ["FOSSIL"],
+        "type": ["Fossil"],
         "legs": 4,
         "description": "Plated dinosaur with spiked tail."
     },
     {
         "name": "ankylosaurus",
-        "type": ["FOSSIL"],
+        "type": ["Fossil"],
         "legs": 4,
         "description": "Armored dinosaur with club tail."
     },
     {
         "name": "brachiosaurus",
-        "type": ["FOSSIL"],
+        "type": ["Fossil"],
         "legs": 4,
         "description": "Long-necked giant reaching treetops."
     },
     {
         "name": "trilobite",
-        "type": ["FOSSIL", "WATER"],
+        "type": ["Fossil", "Water"],
         "legs": 18,
         "description": "Ancient armored arthropod of Paleozoic seas."
     },
     {
         "name": "dodo",
-        "type": ["FOSSIL", "FLYING"],
+        "type": ["Fossil", "Flying"],
         "legs": 2,
         "description": "Flightless bird driven to extinction."
     },
     {
         "name": "megalodon",
-        "type": ["FOSSIL", "WATER"],
+        "type": ["Fossil", "Water"],
         "legs": 0,
         "description": "Colossal prehistoric shark with giant teeth."
     },
     {
         "name": "archaeopteryx",
-        "type": ["FOSSIL", "FLYING"],
+        "type": ["Fossil", "Flying"],
         "legs": 2,
         "description": "Feathered dinosaur bridging reptiles and birds."
     }

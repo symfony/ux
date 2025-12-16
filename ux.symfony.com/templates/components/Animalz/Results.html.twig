@@ -1,11 +1,12 @@
+{% set results = this.results %}
 <section {{ attributes }} class="card">
     <header class="card-header d-flex justify-content-between align-items-center">
         <span>Results</span>
-        <span class="badge bg-secondary">{{ this.results|length }}</span>
+        <span class="badge bg-secondary">{{ results|length }}</span>
     </header>
     <main class="card-body">
         <div class="d-flex flex-wrap gap-2">
-        {% for result in this.results %}
+        {% for result in results %}
             {% set color1 = result.type1.color %}
             {% set color2 = result.type2 ? result.type2.color : null %}
             {% set background = color2 is null

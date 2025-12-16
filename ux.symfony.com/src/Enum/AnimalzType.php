@@ -15,16 +15,16 @@ namespace App\Enum;
 
 enum AnimalzType: string
 {
-    case Normal = 'NORMAL';
-    case Water = 'WATER';
-    case Flying = 'FLYING';
-    case Bug = 'BUG';
-    case Fight = 'FIGHT';
-    case Dark = 'DARK';
-    case Poison = 'POISON';
-    case Grass = 'GRASS';
-    case Fairy = 'FAIRY';
-    case Fossil = 'FOSSIL';
+    case Normal = 'Normal';
+    case Water = 'Water';
+    case Flying = 'Flying';
+    case Bug = 'Bug';
+    case Fight = 'Fight';
+    case Dark = 'Dark';
+    case Poison = 'Poison';
+    case Grass = 'Grass';
+    case Fairy = 'Fairy';
+    case Fossil = 'Fossil';
 
     public function getColor(): string
     {

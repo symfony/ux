@@ -88,11 +88,11 @@ class AnimalzRepository
 
         return array_map(
             fn (array $item): Animalz => new Animalz(
-                $item['name'],
-                AnimalzType::from($item['type'][0]),
-                isset($item['type'][1]) ? AnimalzType::from($item['type'][1]) : null,
-                $item['legs'],
-                $item['description'],
+                name: $item['name'],
+                type1: AnimalzType::from($item['type'][0]),
+                type2: isset($item['type'][1]) ? AnimalzType::from($item['type'][1]) : null,
+                legs: $item['legs'],
+                description: $item['description'],
             ),
             $data,
         );
