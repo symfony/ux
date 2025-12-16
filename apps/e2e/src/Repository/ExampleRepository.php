@@ -26,6 +26,10 @@ class ExampleRepository
         $this->examples = [
             new Example(UxPackage::Autocomplete, 'Autocomplete (without AJAX)', 'An autocomplete form field, by using the choses from the choice type field.', 'app_ux_autocomplete_without_ajax'),
             new Example(UxPackage::Autocomplete, 'Autocomplete (custom controller)', 'An autocomplete form field, with a custom Stimulus controller for AJAX results.', 'app_ux_autocomplete_custom_controller'),
+            new Example(UxPackage::ChartJs, 'Line chart without options', 'A basic line chart displaying monthly data without additional options.', 'app_ux_chartjs_without_options'),
+            new Example(UxPackage::ChartJs, 'Line chart with options', 'A line chart with custom options (showLines: false) that displays data points without connecting lines.', 'app_ux_chartjs_with_options'),
+            new Example(UxPackage::ChartJs, 'Pie chart', 'A pie chart displaying data distribution across different categories.', 'app_ux_chartjs_pie'),
+            new Example(UxPackage::ChartJs, 'Pie chart with options', 'A pie chart with custom options to control the appearance and behavior.', 'app_ux_chartjs_pie_with_options'),
             new Example(UxPackage::LiveComponent, 'Examples filtering', "On this page, you can filter all examples by query terms, and observe how the UI and URLs update during and after processing.", 'app_home'),
             new Example(UxPackage::LiveComponent, 'Counter', 'A basic counter that you can increment or decrement.', 'app_ux_live_component_counter'),
             new Example(UxPackage::LiveComponent, 'Registration form', 'A registration form with live validation using Symfony Forms and the Validator component.', 'app_ux_live_component_registration_form'),
