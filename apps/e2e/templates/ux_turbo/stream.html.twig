@@ -1,0 +1,20 @@
+{% extends 'example.html.twig' %}
+
+{% block example %}
+    <div>
+        <h2>Turbo Stream Demo</h2>
+        <p>Submit the form to update content with Turbo Streams.</p>
+
+        <div id="form-container">
+            <form method="POST" action="{{ path('app_ux_turbo_stream') }}">
+                <button type="submit" class="btn btn-primary" id="submit-turbo-stream">
+                    Submit form
+                </button>
+            </form>
+        </div>
+
+        <div id="stream-target" class="mt-4">
+            <p>Content before form submission</p>
+        </div>
+    </div>
+{% endblock %}
