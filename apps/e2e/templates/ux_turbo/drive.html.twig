@@ -1,0 +1,15 @@
+{% extends 'example.html.twig' %}
+
+{% block example %}
+    <div>
+        <h2>Turbo Drive Navigation - Page 1</h2>
+        <p>This page was loaded at: <strong id="page-load-time">{{ current_time }}</strong></p>
+        <p>This paragraph should stay visible during navigation (no full page reload).</p>
+
+        <div class="mt-4">
+            <a href="{{ path(app.request.attributes.get('_route'), { page: 2 }) }}" class="btn btn-primary" id="navigate-to-page-2">
+                Navigate to Page 2 (with Turbo Drive)
+            </a>
+        </div>
+    </div>
+{% endblock %}
