@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2209868b7ecc22527a00053aede12ba8",
+    "content-hash": "d70a9a4f812ada89d56ada97e1cd06ef",
     "packages": [
         {
             "name": "composer/semver",
@@ -8312,10 +8312,16 @@
         {
             "name": "symfony/ux-toolkit",
             "version": "3.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/ux-toolkit.git",
+                "reference": "90110324370956ff3a3413e9041c19fae3d3d5bc"
+            },
             "dist": {
-                "type": "path",
-                "url": "../src/Toolkit",
-                "reference": "1e2f541d583876c531bf41564c9fb557dc1dfe5e"
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/ux-toolkit/zipball/90110324370956ff3a3413e9041c19fae3d3d5bc",
+                "reference": "90110324370956ff3a3413e9041c19fae3d3d5bc",
+                "shasum": ""
             },
             "require": {
                 "php": ">=8.2",
@@ -8328,19 +8334,19 @@
                 "twig/twig": "^3.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9.6.22",
-                "spatie/phpunit-snapshot-assertions": "^4.2.17|^5.2.3",
+                "phpunit/phpunit": "^11.1|^12.0",
+                "spatie/phpunit-snapshot-assertions": "^5.2.3",
                 "symfony/finder": "^6.4|^7.0|^8.0",
                 "symfony/http-client": "^6.4|^7.0|^8.0",
-                "symfony/phpunit-bridge": "^7.2|^8.0",
                 "symfony/stopwatch": "^6.4|^7.0|^8.0",
                 "symfony/ux-icons": "^2.18",
-                "tales-from-a-dev/twig-tailwind-extra": "^0.4.0",
+                "tales-from-a-dev/twig-tailwind-extra": "^1.0.0",
                 "twig/extra-bundle": "^3.19|^4.0",
                 "twig/html-extra": "^3.19",
                 "vincentlanglet/twig-cs-fixer": "^3.9",
                 "zenstruck/console-test": "^1.7"
             },
+            "default-branch": true,
             "bin": [
                 "bin/ux-toolkit-kit-create",
                 "bin/ux-toolkit-kit-debug"
@@ -8348,8 +8354,8 @@
             "type": "symfony-bundle",
             "extra": {
                 "thanks": {
-                    "name": "symfony/ux",
-                    "url": "https://github.com/symfony/ux"
+                    "url": "https://github.com/symfony/ux",
+                    "name": "symfony/ux"
                 }
             },
             "autoload": {
@@ -8358,11 +8364,7 @@
                 },
                 "exclude-from-classmap": []
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Symfony\\UX\\Toolkit\\Tests\\": "tests/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -8393,10 +8395,28 @@
                 "twig",
                 "ui"
             ],
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
+            "support": {
+                "source": "https://github.com/symfony/ux-toolkit/tree/3.x"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2025-12-06T20:46:59+00:00"
         },
         {
             "name": "symfony/ux-translator",
@@ -12785,5 +12805,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }

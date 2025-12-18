@@ -17,7 +17,7 @@ async function waitForAutocomplete(page: Page, testId: string) {
 
 test.describe('Autocomplete with Dynamic Forms', () => {
     test.beforeEach(async ({ page }) => {
-        await page.goto('/test/autocomplete-dynamic-form');
+        await page.goto('/test-autocomplete/dynamic-form');
         await expect(page.locator('[data-test-id="test-page"]')).toBeVisible();
     });
 

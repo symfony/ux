@@ -8,17 +8,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/test')]
+#[Route('/test-autocomplete', name: 'app_test_autocomplete_')]
 final class TestAutocompleteController extends AbstractController
 {
-    #[Route('/autocomplete-dynamic-form', name: 'test_autocomplete_dynamic_form')]
+    #[Route('/dynamic-form', name: 'dynamic_form')]
     public function dynamicForm(): Response
     {
         return $this->render('test/autocomplete_dynamic_form.html.twig');
     }
 
-    #[Route('/autocomplete/movie', name: 'test_autocomplete_movie')]
-    public function movieAutocomplete(Request $request): JsonResponse
+    #[Route('/movie', name: 'movie')]
+    public function movie(Request $request): JsonResponse
     {
         $query = $request->query->get('query', '');
 
@@ -39,8 +39,8 @@ final class TestAutocompleteController extends AbstractController
         ]);
     }
 
-    #[Route('/autocomplete/videogame', name: 'test_autocomplete_videogame')]
-    public function videogameAutocomplete(Request $request): JsonResponse
+    #[Route('/videogame', name: 'videogame')]
+    public function videogame(Request $request): JsonResponse
     {
         $query = $request->query->get('query', '');
 

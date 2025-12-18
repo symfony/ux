@@ -17,7 +17,7 @@
 <div class="container-fluid container-xxl px-4 pt-4 px-md-5">
     {% block list %}
         <div style="display: grid; gap: 3rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));">
-            {% for package in packages %}
+            {% for package in packages|filter(p => p.name != 'toolkit') %}
                 <twig:Package:PackageBox package="{{ package }}" titleTag="h2" />
             {% endfor %}
         </div>

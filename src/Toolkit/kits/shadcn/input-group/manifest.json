@@ -1,0 +1,12 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Input Group",
+    "description": "Wraps inputs with optional leading or trailing elements like icons or keyboard hints.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "recipe": ["spinner"]
+    }
+}

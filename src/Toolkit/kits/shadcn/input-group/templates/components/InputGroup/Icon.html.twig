@@ -1,0 +1,25 @@
+{# @prop position 'start'|'end' The icon position, default to `start` #}
+{# @prop align 'center'|'start' The vertical alignment, default to `center` #}
+{# @block content The default block #}
+{%- props position = 'start', align = 'center' -%}
+{%- set style = html_cva(
+    base: "pointer-events-none absolute flex text-muted-foreground [&_svg:not([class*='size-'])]:size-4",
+    variants: {
+        position: {
+            start: 'left-0 pl-3',
+            end: 'right-0 pr-3',
+        },
+        align: {
+            center: 'inset-y-0 items-center',
+            start: 'top-0 pt-3',
+        },
+    },
+) -%}
+<span
+    data-slot="input-group-icon"
+    data-position="{{ position }}"
+    class="{{ style.apply({position: position, align: align}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</span>

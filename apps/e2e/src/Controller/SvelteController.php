@@ -6,10 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/ux-svelte')]
+#[Route('/ux-svelte', name: 'app_ux_svelte_')]
 final class SvelteController extends AbstractController
 {
-    #[Route('/')]
+    #[Route('/', name: 'index')]
     public function index(): Response
     {
         return $this->render('ux_svelte/index.html.twig');
