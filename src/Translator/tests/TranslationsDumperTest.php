@@ -36,14 +36,15 @@ class TranslationsDumperTest extends TestCase
     public function testDump()
     {
         $translationsDumper = new TranslationsDumper(
-            self::$translationsDumpDir,
-            true,
             new MessageParametersExtractor(),
             new IntlMessageParametersExtractor(),
             new TypeScriptMessageParametersPrinter(),
             new Filesystem(),
         );
-        $translationsDumper->dump(...self::getMessageCatalogues());
+        $translationsDumper->dump(
+            catalogues: self::getMessageCatalogues(),
+            dumpDir: self::$translationsDumpDir,
+        );
 
         $this->assertFileExists(self::$translationsDumpDir.'/index.js');
         $this->assertFileExists(self::$translationsDumpDir.'/index.d.ts');
@@ -113,14 +114,16 @@ class TranslationsDumperTest extends TestCase
     public function testShouldNotDumpTypeScriptTypes()
     {
         $translationsDumper = new TranslationsDumper(
-            self::$translationsDumpDir,
-            false,
             new MessageParametersExtractor(),
             new IntlMessageParametersExtractor(),
             new TypeScriptMessageParametersPrinter(),
             new Filesystem(),
         );
-        $translationsDumper->dump(...self::getMessageCatalogues());
+        $translationsDumper->dump(
+            catalogues: self::getMessageCatalogues(),
+            dumpDir: self::$translationsDumpDir,
+            dumpTypeScript: false,
+        );
 
         $this->assertFileExists(self::$translationsDumpDir.'/index.js');
         $this->assertFileDoesNotExist(self::$translationsDumpDir.'/index.d.ts');
@@ -129,16 +132,17 @@ class TranslationsDumperTest extends TestCase
     public function testDumpWithExcludedDomains()
     {
         $translationsDumper = new TranslationsDumper(
-            self::$translationsDumpDir,
-            true,
             new MessageParametersExtractor(),
             new IntlMessageParametersExtractor(),
             new TypeScriptMessageParametersPrinter(),
             new Filesystem(),
         );
-        $translationsDumper->addExcludedDomain('foobar');
 
-        $translationsDumper->dump(...self::getMessageCatalogues());
+        $translationsDumper->dump(
+            catalogues: self::getMessageCatalogues(),
+            dumpDir: self::$translationsDumpDir,
+            excludedDomains: ['foobar'],
+        );
 
         $this->assertFileExists(self::$translationsDumpDir.'/index.js');
         $this->assertStringNotContainsString('foobar', file_get_contents(self::$translationsDumpDir.'/index.js'));
@@ -147,16 +151,17 @@ class TranslationsDumperTest extends TestCase
     public function testDumpIncludedDomains()
     {
         $translationsDumper = new TranslationsDumper(
-            self::$translationsDumpDir,
-            true,
             new MessageParametersExtractor(),
             new IntlMessageParametersExtractor(),
             new TypeScriptMessageParametersPrinter(),
             new Filesystem(),
         );
-        $translationsDumper->addIncludedDomain('messages');
 
-        $translationsDumper->dump(...self::getMessageCatalogues());
+        $translationsDumper->dump(
+            catalogues: self::getMessageCatalogues(),
+            dumpDir: self::$translationsDumpDir,
+            includedDomains: ['messages'],
+        );
 
         $this->assertFileExists(self::$translationsDumpDir.'/index.js');
         $this->assertStringNotContainsString('foobar', file_get_contents(self::$translationsDumpDir.'/index.js'));
@@ -168,16 +173,18 @@ class TranslationsDumperTest extends TestCase
         $this->expectExceptionMessage('You cannot set both "excluded_domains" and "included_domains" at the same time.');
 
         $translationsDumper = new TranslationsDumper(
-            self::$translationsDumpDir,
-            true,
             new MessageParametersExtractor(),
             new IntlMessageParametersExtractor(),
             new TypeScriptMessageParametersPrinter(),
             new Filesystem(),
         );
 
-        $translationsDumper->addIncludedDomain('foobar');
-        $translationsDumper->addExcludedDomain('messages');
+        $translationsDumper->dump(
+            catalogues: self::getMessageCatalogues(),
+            dumpDir: self::$translationsDumpDir,
+            includedDomains: ['foobar'],
+            excludedDomains: ['messages'],
+        );
     }
 
     public function testSetBothExcludedAndIncludedDomains()
@@ -186,15 +193,17 @@ class TranslationsDumperTest extends TestCase
         $this->expectExceptionMessage('You cannot set both "excluded_domains" and "included_domains" at the same time.');
 
         $translationsDumper = new TranslationsDumper(
-            self::$translationsDumpDir,
-            true,
             new MessageParametersExtractor(),
             new IntlMessageParametersExtractor(),
             new TypeScriptMessageParametersPrinter(),
             new Filesystem(),
         );
-        $translationsDumper->addExcludedDomain('foobar');
-        $translationsDumper->addIncludedDomain('messages');
+        $translationsDumper->dump(
+            catalogues: self::getMessageCatalogues(),
+            dumpDir: self::$translationsDumpDir,
+            includedDomains: ['messages'],
+            excludedDomains: ['foobar'],
+        );
     }
 
     /**
