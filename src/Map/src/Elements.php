@@ -64,6 +64,13 @@ abstract class Elements
         return $this;
     }
 
+    public function removeAll(): static
+    {
+        $this->elements->removeAll($this->elements);
+
+        return $this;
+    }
+
     public function toArray(): array
     {
         foreach ($this->elements as $element) {
