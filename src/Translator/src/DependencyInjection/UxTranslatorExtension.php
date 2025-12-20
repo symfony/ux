@@ -35,16 +35,22 @@ class UxTranslatorExtension extends Extension implements PrependExtensionInterfa
         $loader = (new PhpFileLoader($container, new FileLocator(\dirname(__DIR__).'/../config')));
         $loader->load('services.php');
 
-        $dumperDefinition = $container->getDefinition('ux.translator.translations_dumper');
-        $dumperDefinition->setArgument(0, $config['dump_directory']);
-        $dumperDefinition->setArgument(1, $config['dump_typescript']);
+        $includedDomains = [];
+        $excludedDomains = [];
 
         if (isset($config['domains'])) {
-            $method = 'inclusive' === $config['domains']['type'] ? 'addIncludedDomain' : 'addExcludedDomain';
-            foreach ($config['domains']['elements'] as $domainName) {
-                $dumperDefinition->addMethodCall($method, [$domainName]);
+            if ('inclusive' === $config['domains']['type']) {
+                $includedDomains = $config['domains']['elements'];
+            } else {
+                $excludedDomains = $config['domains']['elements'];
             }
         }
+
+        $cacheWarmerDefinition = $container->getDefinition('ux.translator.cache_warmer.translations_cache_warmer');
+        $cacheWarmerDefinition->setArgument(2, $config['dump_directory']);
+        $cacheWarmerDefinition->setArgument(3, $config['dump_typescript']);
+        $cacheWarmerDefinition->setArgument(4, $includedDomains);
+        $cacheWarmerDefinition->setArgument(5, $excludedDomains);
     }
 
     public function prepend(ContainerBuilder $container): void
