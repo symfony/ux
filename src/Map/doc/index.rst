@@ -292,6 +292,22 @@ If you haven't stored the element instance, you can still remove them by passing
     $map->removeCircle('my-circle');
     $map->removeRectangle('my-rectangle');
 
+To remove all instances of a certain element, you can use the `Map::removeAll*()` methods::
+
+    // Add elements
+    $map->addMarker($marker = new Marker(/* ... */));
+    $map->addPolygon($polygon = new Polygon(/* ... */));
+    $map->addPolyline($polyline = new Polyline(/* ... */));
+    $map->addCircle($circle = new Circle(/* ... */));
+    $map->addRectangle($rectangle = new Rectangle(/* ... */));
+
+    // And later, remove those elements
+    $map->removeAllMarkers();
+    $map->removeAllPolygons();
+    $map->removeAllPolylines();
+    $map->removeAllCircles();
+    $map->removeAllRectangles();
+
 Render a map
 ------------
 
