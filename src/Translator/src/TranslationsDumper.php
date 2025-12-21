@@ -42,6 +42,7 @@ class TranslationsDumper
      * @param list<MessageCatalogueInterface> $catalogues
      * @param list<Domain>                    $includedDomains
      * @param list<Domain>                    $excludedDomains
+     * @param list<string>                    $keysPatterns
      */
     public function dump(
         array $catalogues,
@@ -49,10 +50,24 @@ class TranslationsDumper
         bool $dumpTypeScript = true,
         array $includedDomains = [],
         array $excludedDomains = [],
+        array $keysPatterns = [],
     ): void {
         if ($includedDomains && $excludedDomains) {
             throw new \LogicException('You cannot set both "excluded_domains" and "included_domains" at the same time.');
         }
+
+        $includedKeysPatterns = [];
+        $excludedKeysPatterns = [];
+        foreach ($keysPatterns as $pattern) {
+            if (str_starts_with($pattern, '!')) {
+                $excludedKeysPatterns[] = substr($pattern, 1);
+            } else {
+                $includedKeysPatterns[] = $pattern;
+            }
+        }
+
+        $includeKeysRegex = $this->buildPatternRegex($includedKeysPatterns);
+        $excludeKeysRegex = $this->buildPatternRegex($excludedKeysPatterns);
 
         $this->filesystem->mkdir($dumpDir);
         $this->filesystem->remove($fileIndexJs = $dumpDir.'/index.js');
@@ -84,7 +99,7 @@ class TranslationsDumper
             );
         }
 
-        foreach ($this->getTranslations($catalogues, $excludedDomains, $includedDomains) as $translationId => $translationsByDomainAndLocale) {
+        foreach ($this->getTranslations($catalogues, $excludedDomains, $includedDomains, $includeKeysRegex, $excludeKeysRegex) as $translationId => $translationsByDomainAndLocale) {
             $translationId = str_replace('"', '\\"', $translationId);
             $this->filesystem->appendToFile($fileIndexJs, \sprintf(
                 '    "%s": %s,%s',
@@ -117,7 +132,7 @@ class TranslationsDumper
      *
      * @return array<MessageId, array<Domain, array<Locale, string>>>
      */
-    private function getTranslations(array $catalogues, array $excludedDomains, array $includedDomains): array
+    private function getTranslations(array $catalogues, array $excludedDomains, array $includedDomains, ?string $includeKeysRegex, ?string $excludeKeysRegex): array
     {
         $translations = [];
 
@@ -131,6 +146,14 @@ class TranslationsDumper
                     continue;
                 }
                 foreach ($catalogue->all($domain) as $id => $message) {
+                    // Filter by keys patterns
+                    if ($excludeKeysRegex && preg_match($excludeKeysRegex, $id)) {
+                        continue;
+                    }
+                    if ($includeKeysRegex && !preg_match($includeKeysRegex, $id)) {
+                        continue;
+                    }
+
                     $realDomain = $catalogue->has($id, $domain.MessageCatalogueInterface::INTL_DOMAIN_SUFFIX)
                         ? $domain.MessageCatalogueInterface::INTL_DOMAIN_SUFFIX
                         : $domain;
@@ -194,5 +217,47 @@ class TranslationsDumper
         }
 
         return $localesFallbacks;
+    }
+
+    /**
+     * @param list<string> $patterns
+     */
+    private function buildPatternRegex(array $patterns): ?string
+    {
+        if ([] === $patterns) {
+            return null;
+        }
+
+        // Filter empty patterns and deduplicate
+        $patterns = array_reduce($patterns, function (array $carry, string $pattern) {
+            $trimmed = trim($pattern);
+            if ('' !== $trimmed && !\in_array($trimmed, $carry, true)) {
+                $carry[] = $trimmed;
+            }
+
+            return $carry;
+        }, []);
+
+        if ([] === $patterns) {
+            return null;
+        }
+
+        // If a pattern is just '*', match everything
+        if (\in_array('*', $patterns, true)) {
+            return '/^.*$/';
+        }
+
+        $regexPatterns = [];
+        foreach ($patterns as $pattern) {
+            $regexPatterns[] = str_replace('\\*', '.*', preg_quote($pattern, '/'));
+        }
+
+        $compiledRegex = '/^(?:'.implode('|', $regexPatterns).')$/';
+
+        if (false === preg_match($compiledRegex, '')) {
+            throw new \InvalidArgumentException(\sprintf('The patterns "%s" resulted in an invalid regex. Error "%s".', implode('", "', $patterns), preg_last_error_msg()));
+        }
+
+        return $compiledRegex;
     }
 }

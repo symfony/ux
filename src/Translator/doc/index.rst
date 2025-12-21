@@ -98,13 +98,24 @@ including or excluding translation domains in your ``config/packages/ux_translat
 .. code-block:: yaml
 
     ux_translator:
-            domains: ~    # Include all the domains
+        domains: ~    # Include all the domains
 
-            domains: foo  # Include only domain 'foo'
-            domains: '!foo' # Include all domains, except 'foo'
+        domains: foo  # Include only domain 'foo'
+        domains: '!foo' # Include all domains, except 'foo'
 
-            domains: [foo, bar]   # Include only domains 'foo' and 'bar'
-            domains: ['!foo', '!bar'] # Include all domains, except 'foo' and 'bar'
+        domains: [foo, bar]   # Include only domains 'foo' and 'bar'
+        domains: ['!foo', '!bar'] # Include all domains, except 'foo' and 'bar'
+
+You can also filter dumped translations by translation key patterns using wildcards:
+
+.. code-block:: yaml
+
+    ux_translator:
+        keys_patterns: ['app.*', 'user.*']  # Include only keys starting with 'app.' or 'user.'
+        keys_patterns: ['!*.internal', '!debug.*']  # Exclude keys ending with '.internal' or starting with 'debug.'
+        keys_patterns: ['app.*', '!app.internal.*']  # Include 'app.*' but exclude 'app.internal.*'
+
+The wildcard ``*`` matches any characters. You can prefix a pattern with ``!`` to exclude keys matching that pattern.
 
 Disabling TypeScript types dump
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -201,8 +212,8 @@ All your translations (extracted from the configured domains) are included in th
 which means they will be included in your final JavaScript bundle).
 
 However, modern build tools, caching strategies, and compression techniques (Brotli, gzip)
-make this negligible in 2025. Additionally, a future feature will allow filtering dumped
-translations by pattern for those who need to further reduce bundle size.
+make this negligible in 2025. You can use the ``keys_patterns`` configuration option
+to filter dumped translations by pattern if you need to further reduce bundle size.
 
 Backward Compatibility promise
 ------------------------------

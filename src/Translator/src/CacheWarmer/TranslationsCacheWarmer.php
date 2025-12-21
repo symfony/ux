@@ -27,6 +27,7 @@ class TranslationsCacheWarmer implements CacheWarmerInterface
     /**
      * @param list<string> $includedDomains
      * @param list<string> $excludedDomains
+     * @param list<string> $keysPatterns
      */
     public function __construct(
         private TranslatorBagInterface $translatorBag,
@@ -35,6 +36,7 @@ class TranslationsCacheWarmer implements CacheWarmerInterface
         private bool $dumpTypeScript,
         private array $includedDomains,
         private array $excludedDomains,
+        private array $keysPatterns,
     ) {
     }
 
@@ -51,6 +53,7 @@ class TranslationsCacheWarmer implements CacheWarmerInterface
             $this->dumpTypeScript,
             $this->includedDomains,
             $this->excludedDomains,
+            $this->keysPatterns,
         );
 
         // No need to preload anything

@@ -89,6 +89,14 @@ class Configuration implements ConfigurationInterface
                         })
                     ->end()
                 ->end()
+                ->arrayNode('keys_patterns')
+                    ->info('List of translation key patterns to include/exclude from the generated translations. Prefix with a `!` to exclude a pattern. Supports wildcards (e.g., `app.*`, `*.label`).')
+                    ->scalarPrototype()->end()
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(fn ($v) => [$v])
+                    ->end()
+                ->end()
             ->end()
         ;
 
