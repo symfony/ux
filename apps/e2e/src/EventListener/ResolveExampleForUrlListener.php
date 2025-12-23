@@ -19,9 +19,8 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 class ResolveExampleForUrlListener
 {
     public function __construct(
-        private ExampleRepository $exampleRepository
-    )
-    {
+        private ExampleRepository $exampleRepository,
+    ) {
     }
 
     public function __invoke(RequestEvent $event): void

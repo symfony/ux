@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -24,7 +33,7 @@ class Kernel extends BaseKernel implements CompilerPassInterface
             // 2. Create a default map ID on https://developers.google.com/maps/documentation/javascript/map-ids/get-map-id
             // 3. Update the `.env.local` file and define env vars `GOOGLE_MAPS_API_KEY` and `GOOGLE_MAPS_DEFAULT_MAP_ID`
             // 4. Uncomment the line below
-            //MapRenderer::Google->value => 'google://'.$container->resolveEnvPlaceholders('%env(GOOGLE_MAPS_API_KEY)%').'@default',
+            // MapRenderer::Google->value => 'google://'.$container->resolveEnvPlaceholders('%env(GOOGLE_MAPS_API_KEY)%').'@default',
         ]);
     }
 }

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Twig\Components;
 
 use App\Model\Address;
@@ -7,7 +16,6 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
-use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 #[AsLiveComponent]
 final class LiveComponentWithDtoCollection
@@ -27,7 +35,7 @@ final class LiveComponentWithDtoCollection
             return;
         }
 
-        match(count($this->addresses)) {
+        match (\count($this->addresses)) {
             0 => $this->addresses[] = Address::create(
                 country: 'France',
                 city: 'Lyon',
@@ -48,6 +56,6 @@ final class LiveComponentWithDtoCollection
 
     public function canAddAddress(): bool
     {
-        return count($this->addresses) < 2;
+        return \count($this->addresses) < 2;
     }
 }
