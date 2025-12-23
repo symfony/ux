@@ -1,0 +1,18 @@
+// -----------------------------------------------------------------
+// ProductFilter
+// -----------------------------------------------------------------
+
+.ProductFilter {
+  display: grid;
+  gap: 0.5rem;
+
+  .ProductFilter__title {
+    text-transform: uppercase;
+    font-weight: 400;
+    font-size: .8rem;
+    letter-spacing: .2ch;
+    opacity: 0.75;
+    margin-block-end: .15rem;
+    display: block;
+  }
+}

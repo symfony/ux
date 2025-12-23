@@ -1,0 +1,92 @@
+<div {{ attributes }}>
+    <div class="card-body" style="display: grid; gap: 1.5rem;">
+
+        {# Filter: Name #}
+        <div class="ProductFilter">
+            <label for="facet-name" class="ProductFilter__title">Name</label>
+            <input
+                type="text"
+                id="facet-name"
+                class="form-control"
+                data-model="name"
+                placeholder="Search by name..."
+            >
+        </div>
+
+        {# Filter: Habitat #}
+        <div class="ProductFilter">
+            <div class="ProductFilter__title">Habitat</div>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                {% for habitat in this.habitatChoices %}
+                    <div class="form-check">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="facet-habitat-{{ habitat.value }}"
+                            data-model="habitats"
+                            value="{{ habitat.value }}"
+                            {% if habitat in this.habitats %}checked{% endif %}
+                        >
+                        <label class="form-check-label" for="facet-habitat-{{ habitat.value }}">
+                            {{ habitat.name }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {# Filter: Color #}
+        <div class="ProductFilter">
+            <div class="ProductFilter__title">Color</div>
+            <div class="ColorPicker">
+                {% for color in this.colorChoices %}
+                    <label
+                        for="facet-color-{{ color.value }}"
+                        class="ColorPicker__option"
+                        style="--color: {{ color.value }};"
+                    >
+                        <input
+                            type="radio"
+                            id="facet-color-{{ color.value }}"
+                            data-model="color"
+                            value="{{ color.value }}"
+                            {% if this.color == color %}checked{% endif %}
+                        >
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        {# Filter: Legs #}
+        <div class="ProductFilter">
+            <label for="facet-legs" class="ProductFilter__title d-flex justify-content-between">
+                Legs (max.)
+                <span id="facet-legs-value">{{ this.maxLegs ?? this.legsRange.max }}</span>
+            </label>
+            <input
+                type="range"
+                id="facet-legs"
+                class="form-range"
+                data-model="maxLegs"
+                oninput="document.getElementById('facet-legs-value').textContent = this.value"
+                step="1"
+                min="{{ this.legsRange.min }}"
+                max="{{ this.legsRange.max }}"
+                value="{{ this.maxLegs ?? this.legsRange.max }}"
+            >
+        </div>
+
+        {% if this.hasFilters %}
+            <div class="d-flex justify-content-end">
+                <button
+                    class="btn btn-tertiary btn-sm"
+                    data-action="live#action"
+                    data-live-action-param="reset"
+                >
+                    Reset filters
+                </button>
+            </div>
+        {% endif %}
+
+    </div>
+</div>

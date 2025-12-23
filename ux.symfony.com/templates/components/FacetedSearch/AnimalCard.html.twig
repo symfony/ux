@@ -1,0 +1,23 @@
+{% props animal %}
+
+<article {{ attributes.defaults({class: 'AnimalCard'}) }}>
+    <div class="AnimalCard__header">
+        <div class="AnimalCard__colors">
+            {% for color in animal.colors %}
+                <span class="AnimalCard__color" style="background-color: {{ color.value }};"></span>
+            {% endfor %}
+        </div>
+        <div class="AnimalCard__habitats">
+            {% for habitat in animal.habitats %}
+                <twig:ux:icon name="{{ habitat.getIcon() }}" />
+            {% endfor %}
+        </div>
+    </div>
+    <span class="AnimalCard__icon">{{ animal.photo }}</span>
+    <div style="display: grid;  justify-content: space-between;  align-items: center;  gap: 1rem;   grid-template-columns: 1fr 1fr;">
+        <h3 class="AnimalCard__name">{{ animal.name|capitalize }}</h3>
+        <span class="AnimalCard__legs" title="{{ animal.legs }} legs">
+            {{ animal.legs }}
+        </span>
+    </div>
+</article>

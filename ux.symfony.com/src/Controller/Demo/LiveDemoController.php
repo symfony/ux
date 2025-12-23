@@ -93,7 +93,7 @@ class LiveDemoController extends AbstractController
     }
 
     #[Route('/{demo}', name: 'app_demo_live_component_demo')]
-    #[Route('/animalz', name: 'app_demo_live_component_animalz')]
+    #[Route('/faceted-search', name: 'app_demo_live_component_faceted_search')]
     #[Route('/auto-validating-form', name: 'app_demo_live_component_auto_validating_form')]
     #[Route('/chartjs', name: 'app_demo_live_component_chartjs')]
     #[Route('/dependent-form-fields', name: 'app_demo_live_component_dependent_form_fields')]

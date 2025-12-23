@@ -1,0 +1,33 @@
+// -----------------------------------------------------------------
+// ColorPicker
+// -----------------------------------------------------------------
+
+.ColorPicker {
+  gap: 0.5rem;
+  --color: #0d6efd;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(1.5rem, 1fr));
+}
+
+.ColorPicker__option {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 40%;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease-in-out, transform 0.15s ease-in-out;
+  background: var(--color);
+  transform: scale(.75);
+
+  &:has(input:checked) {
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--color) 40%, white), 0 0 0 6px color-mix(in oklch, var(--color) 40%, black);
+  }
+
+  input {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+}
+

@@ -1,0 +1,671 @@
+[
+    {
+        "name": "dog",
+        "emoji": "🐕",
+        "legs": 4,
+        "colors": [
+            "red"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "cat",
+        "emoji": "🐈",
+        "legs": 4,
+        "colors": [
+            "orange"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "horse",
+        "emoji": "🐴",
+        "legs": 4,
+        "colors": [
+            "red"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "cow",
+        "emoji": "🐄",
+        "legs": 4,
+        "colors": [
+            "white",
+            "black"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "elephant",
+        "emoji": "🐘",
+        "legs": 4,
+        "colors": [
+            "gray"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "giraffe",
+        "emoji": "🦒",
+        "legs": 4,
+        "colors": [
+            "yellow",
+            "red"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "lion",
+        "emoji": "🦁",
+        "legs": 4,
+        "colors": [
+            "yellow",
+            "red"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "tiger",
+        "emoji": "🐅",
+        "legs": 4,
+        "colors": [
+            "orange",
+            "black"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "bear",
+        "emoji": "🐻",
+        "legs": 4,
+        "colors": [
+            "red"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "wolf",
+        "emoji": "🐺",
+        "legs": 4,
+        "colors": [
+            "gray"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "fox",
+        "emoji": "🦊",
+        "legs": 4,
+        "colors": [
+            "orange",
+            "white"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "rabbit",
+        "emoji": "🐇",
+        "legs": 4,
+        "colors": [
+            "white"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "deer",
+        "emoji": "🦌",
+        "legs": 4,
+        "colors": [
+            "red"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "monkey",
+        "emoji": "🐒",
+        "legs": 4,
+        "colors": [
+            "red"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "gorilla",
+        "emoji": "🦍",
+        "legs": 4,
+        "colors": [
+            "black"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "hippopotamus",
+        "emoji": "🦛",
+        "legs": 4,
+        "colors": [
+            "gray"
+        ],
+        "habitat": [
+            "land",
+            "water"
+        ]
+    },
+    {
+        "name": "rhinoceros",
+        "emoji": "🦏",
+        "legs": 4,
+        "colors": [
+            "gray"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "zebra",
+        "emoji": "🦓",
+        "legs": 4,
+        "colors": [
+            "white",
+            "black"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "kangaroo",
+        "emoji": "🦘",
+        "legs": 2,
+        "colors": [
+            "red"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "koala",
+        "emoji": "🐨",
+        "legs": 4,
+        "colors": [
+            "gray"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "panda",
+        "emoji": "🐼",
+        "legs": 4,
+        "colors": [
+            "white",
+            "black"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "snake",
+        "emoji": "🐍",
+        "legs": 0,
+        "colors": [
+            "green"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "turtle",
+        "emoji": "🐢",
+        "legs": 4,
+        "colors": [
+            "green"
+        ],
+        "habitat": [
+            "land",
+            "water"
+        ]
+    },
+    {
+        "name": "crocodile",
+        "emoji": "🐊",
+        "legs": 4,
+        "colors": [
+            "green"
+        ],
+        "habitat": [
+            "land",
+            "water"
+        ]
+    },
+    {
+        "name": "ant",
+        "emoji": "🐜",
+        "legs": 6,
+        "colors": [
+            "red"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "spider",
+        "emoji": "🕷️",
+        "legs": 8,
+        "colors": [
+            "black"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "bee",
+        "emoji": "🐝",
+        "legs": 6,
+        "colors": [
+            "yellow",
+            "black"
+        ],
+        "habitat": [
+            "land",
+            "air"
+        ]
+    },
+    {
+        "name": "butterfly",
+        "emoji": "🦋",
+        "legs": 6,
+        "colors": [
+            "blue"
+        ],
+        "habitat": [
+            "land",
+            "air"
+        ]
+    },
+    {
+        "name": "beetle",
+        "emoji": "🪲",
+        "legs": 6,
+        "colors": [
+            "green"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "ladybug",
+        "emoji": "🐞",
+        "legs": 6,
+        "colors": [
+            "red",
+            "black"
+        ],
+        "habitat": [
+            "land",
+            "air"
+        ]
+    },
+    {
+        "name": "caterpillar",
+        "emoji": "🐛",
+        "legs": 16,
+        "colors": [
+            "green"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "whale",
+        "emoji": "🐋",
+        "legs": 0,
+        "colors": [
+            "blue"
+        ],
+        "habitat": "water"
+    },
+    {
+        "name": "dolphin",
+        "emoji": "🐬",
+        "legs": 0,
+        "colors": [
+            "blue"
+        ],
+        "habitat": "water"
+    },
+    {
+        "name": "shark",
+        "emoji": "🦈",
+        "legs": 0,
+        "colors": [
+            "gray"
+        ],
+        "habitat": "water"
+    },
+    {
+        "name": "octopus",
+        "emoji": "🐙",
+        "legs": 8,
+        "colors": [
+            "red"
+        ],
+        "habitat": "water"
+    },
+    {
+        "name": "jellyfish",
+        "emoji": "🪼",
+        "legs": 24,
+        "colors": [
+            "blue",
+            "purple"
+        ],
+        "habitat": "water"
+    },
+    {
+        "name": "crab",
+        "emoji": "🦀",
+        "legs": 10,
+        "colors": [
+            "red"
+        ],
+        "habitat": [
+            "land",
+            "water"
+        ]
+    },
+    {
+        "name": "lobster",
+        "emoji": "🦞",
+        "legs": 10,
+        "colors": [
+            "red"
+        ],
+        "habitat": "water"
+    },
+    {
+        "name": "shrimp",
+        "emoji": "🦐",
+        "legs": 10,
+        "colors": [
+            "orange"
+        ],
+        "habitat": "water"
+    },
+    {
+        "name": "squid",
+        "emoji": "🦑",
+        "legs": 10,
+        "colors": [
+            "orange",
+            "red"
+        ],
+        "habitat": "water"
+    },
+    {
+        "name": "seal",
+        "emoji": "🦭",
+        "legs": 4,
+        "colors": [
+            "gray"
+        ],
+        "habitat": [
+            "land",
+            "water"
+        ]
+    },
+    {
+        "name": "fish",
+        "emoji": "🐠",
+        "legs": 0,
+        "colors": [
+            "yellow",
+            "blue"
+        ],
+        "habitat": "water"
+    },
+    {
+        "name": "pigeon",
+        "emoji": "🕊️",
+        "legs": 2,
+        "colors": [
+            "white"
+        ],
+        "habitat": [
+            "land",
+            "air"
+        ]
+    },
+    {
+        "name": "eagle",
+        "emoji": "🦅",
+        "legs": 2,
+        "colors": [
+            "black"
+        ],
+        "habitat": [
+            "land",
+            "air"
+        ]
+    },
+    {
+        "name": "owl",
+        "emoji": "🦉",
+        "legs": 2,
+        "colors": [
+            "red"
+        ],
+        "habitat": [
+            "land",
+            "air"
+        ]
+    },
+    {
+        "name": "parrot",
+        "emoji": "🦜",
+        "legs": 2,
+        "colors": [
+            "green",
+            "red",
+            "yellow"
+        ],
+        "habitat": [
+            "land",
+            "air"
+        ]
+    },
+    {
+        "name": "sparrow",
+        "emoji": "🐦",
+        "legs": 2,
+        "colors": [
+            "blue"
+        ],
+        "habitat": [
+            "land",
+            "air"
+        ]
+    },
+    {
+        "name": "crow",
+        "emoji": "🐦‍⬛",
+        "legs": 2,
+        "colors": [
+            "black"
+        ],
+        "habitat": [
+            "land",
+            "air"
+        ]
+    },
+    {
+        "name": "flamingo",
+        "emoji": "🦩",
+        "legs": 2,
+        "colors": [
+            "purple"
+        ],
+        "habitat": [
+            "land",
+            "water"
+        ]
+    },
+    {
+        "name": "swan",
+        "emoji": "🦢",
+        "legs": 2,
+        "colors": [
+            "white"
+        ],
+        "habitat": [
+            "water",
+            "air"
+        ]
+    },
+    {
+        "name": "duck",
+        "emoji": "🦆",
+        "legs": 2,
+        "colors": [
+            "green",
+            "red"
+        ],
+        "habitat": [
+            "water",
+            "air"
+        ]
+    },
+    {
+        "name": "goose",
+        "emoji": "🪿",
+        "legs": 2,
+        "colors": [
+            "gray",
+            "white"
+        ],
+        "habitat": [
+            "water",
+            "air"
+        ]
+    },
+    {
+        "name": "chicken",
+        "emoji": "🐔",
+        "legs": 2,
+        "colors": [
+            "white"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "rooster",
+        "emoji": "🐓",
+        "legs": 2,
+        "colors": [
+            "white",
+            "red"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "turkey",
+        "emoji": "🦃",
+        "legs": 2,
+        "colors": [
+            "red"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "peacock",
+        "emoji": "🦚",
+        "legs": 2,
+        "colors": [
+            "blue",
+            "green"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "penguin",
+        "emoji": "🐧",
+        "legs": 2,
+        "colors": [
+            "black",
+            "white"
+        ],
+        "habitat": [
+            "land",
+            "water"
+        ]
+    },
+    {
+        "name": "bat",
+        "emoji": "🦇",
+        "legs": 2,
+        "colors": [
+            "black"
+        ],
+        "habitat": [
+            "land",
+            "air"
+        ]
+    },
+    {
+        "name": "dragon",
+        "emoji": "🐉",
+        "legs": 4,
+        "colors": [
+            "green"
+        ],
+        "habitat": [
+            "land",
+            "air"
+        ]
+    },
+    {
+        "name": "unicorn",
+        "emoji": "🦄",
+        "legs": 4,
+        "colors": [
+            "purple"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "tyrannosaurus",
+        "emoji": "🦖",
+        "legs": 2,
+        "colors": [
+            "green"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "sauropod",
+        "emoji": "🦕",
+        "legs": 4,
+        "colors": [
+            "green"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "mammoth",
+        "emoji": "🦣",
+        "legs": 4,
+        "colors": [
+            "red"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "leopard",
+        "emoji": "🐆",
+        "legs": 4,
+        "colors": [
+            "yellow",
+            "black"
+        ],
+        "habitat": "land"
+    },
+    {
+        "name": "dodo",
+        "emoji": "🦤",
+        "legs": 2,
+        "colors": [
+            "red",
+            "gray"
+        ],
+        "habitat": "land"
+    }
+]

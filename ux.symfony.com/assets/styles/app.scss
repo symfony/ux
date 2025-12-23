@@ -123,11 +123,13 @@ $utilities: map-remove(
 @import "layouts/section";
 
 // Components
+@import "components/AnimalCard";
 @import "components/Badge";
 @import "components/Banner";
 @import "components/Button";
 @import "components/Browser";
 @import "components/Changelog";
+@import "components/ColorPicker";
 @import "components/DataList";
 @import "components/DemoContainer";
 @import "components/DemoCard";
@@ -140,6 +142,7 @@ $utilities: map-remove(
 @import "components/IconSearch";
 @import "components/IconSetCard";
 @import "components/Pagination";
+@import "components/ProductFilter";
 @import "components/ProductGrid";
 @import "components/PackageHeader";
 @import "components/PackageBox";

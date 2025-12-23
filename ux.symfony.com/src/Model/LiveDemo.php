@@ -17,7 +17,7 @@ final class LiveDemo extends Demo
         string $identifier,
         string $name,
         string $description,
-        string $author,
+        string|array $author,
         string $publishedAt,
         array $tags,
         private string $longDescription,

@@ -22,11 +22,11 @@ class LiveDemoRepository
     {
         return [
             new LiveDemo(
-                identifier: 'animalz',
-                name: 'Facet Filtering',
+                identifier: 'faceted-search',
+                name: 'Faceted Search',
                 description: 'Filter results based on a facet menu, with URL parameters.',
-                author: 'Nayte',
-                publishedAt: '2025-12-12',
+                author: ['Nayte', 'smnandre'],
+                publishedAt: '2025-12-24',
                 tags: ['facets', 'filter', 'LiveAction'],
                 longDescription: <<<'EOF'
                     This demo showcases faceted search with two Live Components working together.

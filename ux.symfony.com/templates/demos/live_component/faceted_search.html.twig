@@ -1,0 +1,96 @@
+{% extends 'demos/live_demo.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .animal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .animal-grid > div {
+        }
+    </style>
+{% endblock %}
+
+{% block demo_container %}
+    <div class="container container-xl mb-5">
+        <twig:Browser url="/foo" class="shadow-blur shadow-blur--rainbow" id="browser">
+            <div class="d-flex gap-4 p-4">
+
+                <div style="width: 14rem; flex-shrink: 0; position: sticky; top: 0; align-self: flex-start;">
+                    <twig:FacetedSearch:Filters/>
+                </div>
+
+                <div style="flex: 1; min-width: 0;">
+                    <twig:FacetedSearch:Results/>
+                </div>
+
+            </div>
+        </twig:Browser>
+    </div>
+
+    <section class="py-5">
+        <div class="container container-xxl">
+            <div class="code-description text-center">
+                <h2>So... how does it work?</h2>
+                <p>
+                    Let's focus on two aspects. But first, <code>did you scroll</code> all the way to the end?
+                    <br>
+                    You might have missed some important details about performance... 🍿
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5" style="padding-top: 6rem;">
+        <div class="container container-xxl">
+            <twig:Code:CodeWithExplanationRow filename="src/Twig/Components/FacetedSearch/Filters.php" reversed sticky style="--bs-gutter-x: 4rem;">
+                ## TODO
+
+                sdfsfd sdf sdf sdf sdf sdf
+
+                ### Lorem Ipsum
+
+                sdfsfd sdf sdf sdf sdf sdf
+
+                sdfsfd sdf sdf sdf sdf sdf
+            </twig:Code:CodeWithExplanationRow>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container container-xxl" style="--bs-gutter-x: 4rem;">
+            <twig:Code:CodeWithExplanationRow filename="templates/components/FacetedSearch/Results.html.twig" sticky style="--bs-gutter-x: 4rem;">
+                ## TODO
+
+                sdfsfd sdf sdf sdf sdf sdf
+
+                ### Lorem Ipsum
+
+                sdfsfd sdf sdf sdf sdf sdf
+
+                sdfsfd sdf sdf sdf sdf sdf
+            </twig:Code:CodeWithExplanationRow>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container container-xxl" style="--bs-gutter-x: 4rem;">
+            <twig:Code:CodeWithExplanationRow
+                lineStart="12" lineEnd="24" reversed sticky style="--bs-gutter-x: 4rem;"
+                filename="templates/components/FacetedSearch/AnimalCard.html.twig">
+                ## TODO
+
+                sdfsfd sdf sdf sdf sdf sdf
+
+                ### Lorem Ipsum
+
+                sdfsfd sdf sdf sdf sdf sdf
+
+                sdfsfd sdf sdf sdf sdf sdf
+            </twig:Code:CodeWithExplanationRow>
+        </div>
+    </section>
+{% endblock %}

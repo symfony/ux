@@ -1,0 +1,12 @@
+<div {{ attributes }}>
+
+    <div id="results" class="ProductGrid_items" style="grid-template-columns: repeat(auto-fill, minmax(min(35vw, 10rem), 1fr));">
+        {% for result in this.results %}
+            <twig:FacetedSearch:AnimalCard animal="{{ result }}" />
+        {% else %}
+            <p class="text-muted mb-0">No results.</p>
+        {% endfor %}
+    </div>
+
+</div>
+
