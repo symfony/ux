@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,13 +24,14 @@ final class CropperjsController extends AbstractController
 {
     public function __construct(
         #[Autowire('%kernel.project_dir%/public')]
-        private string $publicDir
-    ) {}
+        private string $publicDir,
+    ) {
+    }
 
     #[Route('/crop', name: 'crop')]
     public function crop(CropperInterface $cropper, Request $request): Response
     {
-        $crop = $cropper->createCrop($this->publicDir . '/images/example.jpg');
+        $crop = $cropper->createCrop($this->publicDir.'/images/example.jpg');
         $crop->setCroppedMaxSize(800, 600);
 
         $form = $this->createFormBuilder(['crop' => $crop])
@@ -50,7 +60,7 @@ final class CropperjsController extends AbstractController
     #[Route('/crop-with-aspect-ratio', name: 'crop_with_aspect_ratio')]
     public function cropWithAspectRatio(CropperInterface $cropper, Request $request): Response
     {
-        $crop = $cropper->createCrop($this->publicDir . '/images/example.jpg');
+        $crop = $cropper->createCrop($this->publicDir.'/images/example.jpg');
         $crop->setCroppedMaxSize(1920, 1080);
 
         $form = $this->createFormBuilder(['crop' => $crop])

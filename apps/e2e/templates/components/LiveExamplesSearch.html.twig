@@ -22,7 +22,7 @@
     </div>
     <div data-loading="addClass(opacity-50)">
         {% for package, examples in computed.examplesGroupedByPackage %}
-            {% set package = enum('App\\UxPackage').from(package)  %}
+            {% set package = enum('App\\UxPackage').from(package) %}
             <h2 style="margin-top: 2rem;">{{ package.value }} <a href="{{ package.documentationUrl }}" title="{{ package.value }} documentation">📖</a></h2>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                 {% for example in examples %}

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Twig\Components;
 
 use App\Model\Address;
@@ -14,7 +23,7 @@ final class LiveComponentWithDtoAndSerializer
     use DefaultActionTrait;
 
     #[LiveProp(url: true, useSerializerForHydration: true)]
-    public Address|null $address = null;
+    public ?Address $address = null;
 
     #[LiveAction]
     public function initAddress(): void
