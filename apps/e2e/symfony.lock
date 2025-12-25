@@ -35,6 +35,18 @@
             "migrations/.gitignore"
         ]
     },
+    "friendsofphp/php-cs-fixer": {
+        "version": "3.92",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "3.0",
+            "ref": "be2103eb4a20942e28a6dd87736669b757132435"
+        },
+        "files": [
+            ".php-cs-fixer.dist.php"
+        ]
+    },
     "symfony/asset-mapper": {
         "version": "7.3",
         "recipe": {
@@ -452,6 +464,15 @@
     },
     "twig/extra-bundle": {
         "version": "v3.21.0"
+    },
+    "vincentlanglet/twig-cs-fixer": {
+        "version": "3.11",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "3.0",
+            "ref": "d42582ae1bce86fd43491d6264c738b0867f8ffe"
+        }
     },
     "zenstruck/foundry": {
         "version": "2.8",
