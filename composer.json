@@ -9,6 +9,7 @@
         "php": ">=8.1",
         "symfony/filesystem": "^6.4|^7.0",
         "symfony/finder": "^6.4|^7.0",
-        "php-cs-fixer/shim": "^3.62"
+        "php-cs-fixer/shim": "^3.62",
+        "vincentlanglet/twig-cs-fixer": "^3.11"
     }
 }

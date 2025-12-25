@@ -27,6 +27,15 @@ $fileHeaderParts = [
         EOF,
 ];
 
+$finder = PhpCsFixer\Finder::create()
+    ->in([__DIR__.'/src', __DIR__.'/apps'])
+    ->append([__FILE__])
+    ->notPath('#/Fixtures/#')
+    ->notPath('#/assets/#')
+    ->notPath('#/var/#')
+    // does not work well with `fully_qualified_strict_types` rule
+    ->notPath('LiveComponent/tests/Integration/LiveComponentHydratorTest.php');
+
 return (new PhpCsFixer\Config())
     ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
     ->setRules([
@@ -47,13 +56,5 @@ return (new PhpCsFixer\Config())
         ],
     ])
     ->setRiskyAllowed(true)
-    ->setFinder(
-        PhpCsFixer\Finder::create()
-            ->in([__DIR__.'/src'])
-            ->append([__FILE__])
-            ->notPath('#/Fixtures/#')
-            ->notPath('#/var/#')
-            // does not work well with `fully_qualified_strict_types` rule
-            ->notPath('LiveComponent/tests/Integration/LiveComponentHydratorTest.php')
-    )
+    ->setFinder($finder)
 ;

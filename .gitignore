@@ -3,6 +3,7 @@ node_modules
 .doctor-rst.cache
 .php-cs-fixer.cache
 .phpunit.result.cache
+.twig-cs-fixer.cache
 
 /composer.lock
 /vendor

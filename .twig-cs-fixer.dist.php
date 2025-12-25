@@ -12,8 +12,15 @@
 $ruleset = new TwigCsFixer\Ruleset\Ruleset();
 $ruleset->addStandard(new TwigCsFixer\Standard\TwigCsFixer());
 
+$finder = new TwigCsFixer\File\Finder();
+$finder->in([__DIR__.'/src', __DIR__.'/apps']);
+$finder->notPath('#/Fixtures/#');
+$finder->notPath('#/assets/#');
+$finder->notPath('#/var/#');
+
 $config = new TwigCsFixer\Config\Config();
 $config->setCacheFile('.twig-cs-fixer.cache');
 $config->setRuleset($ruleset);
+$config->setFinder($finder);
 
 return $config;
