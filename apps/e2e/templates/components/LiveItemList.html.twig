@@ -23,7 +23,7 @@
                         type="button"
                         class="btn btn-danger btn-sm"
                         title="Delete item #{{ key }}"
-                        {{ live_action('deleteItem', { key }) }}
+                        {{ live_action('deleteItem', {key: key}) }}
                     >Delete</button>
                 </li>
             {% endfor %}

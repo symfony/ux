@@ -26,13 +26,15 @@ return static function (ContainerConfigurator $container): void {
             ->args([
                 service('translator'),
                 service('ux.translator.translations_dumper'),
+                abstract_arg('dump_directory'),
+                abstract_arg('dump_typescript'),
+                abstract_arg('included_domains'),
+                abstract_arg('excluded_domains'),
             ])
             ->tag('kernel.cache_warmer')
 
         ->set('ux.translator.translations_dumper', TranslationsDumper::class)
             ->args([
-                abstract_arg('dump_directory'),
-                abstract_arg('dump_typescript'),
                 service('ux.translator.message_parameters.extractor.message_parameters_extractor'),
                 service('ux.translator.message_parameters.extractor.intl_message_parameters_extractor'),
                 service('ux.translator.message_parameters.printer.typescript_message_parameters_printer'),

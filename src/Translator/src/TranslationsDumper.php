@@ -30,12 +30,7 @@ use Symfony\UX\Translator\MessageParameters\Printer\TypeScriptMessageParametersP
  */
 class TranslationsDumper
 {
-    private array $excludedDomains = [];
-    private array $includedDomains = [];
-
     public function __construct(
-        private string $dumpDir,
-        private bool $dumpTypeScript,
         private MessageParametersExtractor $messageParametersExtractor,
         private IntlMessageParametersExtractor $intlMessageParametersExtractor,
         private TypeScriptMessageParametersPrinter $typeScriptMessageParametersPrinter,
@@ -43,11 +38,25 @@ class TranslationsDumper
     ) {
     }
 
-    public function dump(MessageCatalogueInterface ...$catalogues): void
-    {
-        $this->filesystem->mkdir($this->dumpDir);
-        $this->filesystem->remove($fileIndexJs = $this->dumpDir.'/index.js');
-        $this->filesystem->remove($fileIndexDts = $this->dumpDir.'/index.d.ts');
+    /**
+     * @param list<MessageCatalogueInterface> $catalogues
+     * @param list<Domain>                    $includedDomains
+     * @param list<Domain>                    $excludedDomains
+     */
+    public function dump(
+        array $catalogues,
+        string $dumpDir,
+        bool $dumpTypeScript = true,
+        array $includedDomains = [],
+        array $excludedDomains = [],
+    ): void {
+        if ($includedDomains && $excludedDomains) {
+            throw new \LogicException('You cannot set both "excluded_domains" and "included_domains" at the same time.');
+        }
+
+        $this->filesystem->mkdir($dumpDir);
+        $this->filesystem->remove($fileIndexJs = $dumpDir.'/index.js');
+        $this->filesystem->remove($fileIndexDts = $dumpDir.'/index.d.ts');
 
         $this->filesystem->appendToFile(
             $fileIndexJs,
@@ -58,10 +67,10 @@ class TranslationsDumper
                 export const messages = {
 
                 JS,
-                json_encode($this->getLocaleFallbacks(...$catalogues), \JSON_THROW_ON_ERROR)
+                json_encode($this->getLocaleFallbacks($catalogues), \JSON_THROW_ON_ERROR)
             ));
 
-        if ($this->dumpTypeScript) {
+        if ($dumpTypeScript) {
             $this->filesystem->appendToFile(
                 $fileIndexDts,
                 <<<'TS'
@@ -75,7 +84,7 @@ class TranslationsDumper
             );
         }
 
-        foreach ($this->getTranslations(...$catalogues) as $translationId => $translationsByDomainAndLocale) {
+        foreach ($this->getTranslations($catalogues, $excludedDomains, $includedDomains) as $translationId => $translationsByDomainAndLocale) {
             $translationId = str_replace('"', '\\"', $translationId);
             $this->filesystem->appendToFile($fileIndexJs, \sprintf(
                 '    "%s": %s,%s',
@@ -84,7 +93,7 @@ class TranslationsDumper
                 "\n"
             ));
 
-            if ($this->dumpTypeScript) {
+            if ($dumpTypeScript) {
                 $this->filesystem->appendToFile($fileIndexDts, \sprintf(
                     '    "%s": %s;%s',
                     $translationId,
@@ -96,41 +105,29 @@ class TranslationsDumper
 
         $this->filesystem->appendToFile($fileIndexJs, '};'."\n");
 
-        if ($this->dumpTypeScript) {
+        if ($dumpTypeScript) {
             $this->filesystem->appendToFile($fileIndexDts, '};'."\n");
         }
     }
 
-    public function addExcludedDomain(string $domain): void
-    {
-        if ($this->includedDomains) {
-            throw new \LogicException('You cannot set both "excluded_domains" and "included_domains" at the same time.');
-        }
-        $this->excludedDomains[] = $domain;
-    }
-
-    public function addIncludedDomain(string $domain): void
-    {
-        if ($this->excludedDomains) {
-            throw new \LogicException('You cannot set both "excluded_domains" and "included_domains" at the same time.');
-        }
-        $this->includedDomains[] = $domain;
-    }
-
     /**
+     * @param list<MessageCatalogueInterface> $catalogues
+     * @param list<Domain>                    $excludedDomains
+     * @param list<Domain>                    $includedDomains
+     *
      * @return array<MessageId, array<Domain, array<Locale, string>>>
      */
-    private function getTranslations(MessageCatalogueInterface ...$catalogues): array
+    private function getTranslations(array $catalogues, array $excludedDomains, array $includedDomains): array
     {
         $translations = [];
 
         foreach ($catalogues as $catalogue) {
             $locale = $catalogue->getLocale();
             foreach ($catalogue->getDomains() as $domain) {
-                if (\in_array($domain, $this->excludedDomains, true)) {
+                if (\in_array($domain, $excludedDomains, true)) {
                     continue;
                 }
-                if ($this->includedDomains && !\in_array($domain, $this->includedDomains, true)) {
+                if ($includedDomains && !\in_array($domain, $includedDomains, true)) {
                     continue;
                 }
                 foreach ($catalogue->all($domain) as $id => $message) {
@@ -185,7 +182,10 @@ class TranslationsDumper
         );
     }
 
-    private function getLocaleFallbacks(MessageCatalogueInterface ...$catalogues): array
+    /**
+     * @param list<MessageCatalogueInterface> $catalogues
+     */
+    private function getLocaleFallbacks(array $catalogues): array
     {
         $localesFallbacks = [];
 

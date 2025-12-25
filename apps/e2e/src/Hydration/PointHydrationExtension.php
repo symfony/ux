@@ -27,7 +27,8 @@ class PointHydrationExtension implements HydrationExtensionInterface
 
     /**
      * @param TDehydrated $value
-     * @return null|TData
+     *
+     * @return TData|null
      */
     public function hydrate(mixed $value, string $className): ?object
     {
@@ -36,6 +37,7 @@ class PointHydrationExtension implements HydrationExtensionInterface
 
     /**
      * @param TData $object
+     *
      * @return TDehydrated
      */
     public function dehydrate(object $object): mixed

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Repository;
 
 use App\Entity\Fruit;
@@ -19,6 +28,7 @@ class FruitRepository extends ServiceEntityRepository
     /**
      * @param positive-int $page
      * @param positive-int $perPage
+     *
      * @return Fruit[]
      */
     public function paginate(int $page, int $perPage): array

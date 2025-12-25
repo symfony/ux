@@ -18,7 +18,7 @@ enum UxPackage: string
     case Cropperjs = 'UX Cropperjs';
     case Icons = 'UX Icons';
     case LiveComponent = 'UX LiveComponent';
-    //case LazyImage = 'UX LazyImage'; // deprecated/removed
+    // case LazyImage = 'UX LazyImage'; // deprecated/removed
     case Map = 'UX Map';
     case Notify = 'UX Notify';
     case React = 'UX React';
@@ -34,7 +34,7 @@ enum UxPackage: string
 
     public function getDocumentationUrl(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Autocomplete => 'https://ux.symfony.com/autocomplete',
             self::ChartJs => 'https://ux.symfony.com/chartjs',
             self::Cropperjs => 'https://ux.symfony.com/cropperjs',

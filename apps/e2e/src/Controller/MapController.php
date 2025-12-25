@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Controller;
 
 use App\MapRenderer;
@@ -24,7 +33,7 @@ final class MapController extends AbstractController
 {
     #[Route('/basic', name: 'basic')]
     public function basic(
-        #[MapQueryParameter] MapRenderer $renderer
+        #[MapQueryParameter] MapRenderer $renderer,
     ): Response {
         $map = (new Map(rendererName: $renderer->value))
             ->center(new Point(48.8566, 2.3522))
@@ -95,8 +104,7 @@ final class MapController extends AbstractController
     public function withMarkersAndCustomIcons(
         #[MapQueryParameter] MapRenderer $renderer,
         #[Autowire(service: 'asset_mapper.asset_package')] PackageInterface $package,
-    ): Response
-    {
+    ): Response {
         $map = (new Map(rendererName: $renderer->value))
             ->fitBoundsToMarkers()
             ->addMarker(new Marker(

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Twig\Components;
 
 use App\Model\Address;
@@ -14,7 +23,7 @@ final class LiveComponentWithDtoAndCustomHydrationMethods
     use DefaultActionTrait;
 
     #[LiveProp(url: true, hydrateWith: 'hydrateAddress', dehydrateWith: 'dehydrateAddress')]
-    public Address|null $address = null;
+    public ?Address $address = null;
 
     #[LiveAction]
     public function initAddress(): void
@@ -25,7 +34,7 @@ final class LiveComponentWithDtoAndCustomHydrationMethods
         );
     }
 
-    public function dehydrateAddress(Address|null $address): array|null
+    public function dehydrateAddress(?Address $address): ?array
     {
         if (null === $address) {
             return null;
@@ -33,11 +42,11 @@ final class LiveComponentWithDtoAndCustomHydrationMethods
 
         return [
             'x-country' => $address->country,
-            'x-city' => $address->city
+            'x-city' => $address->city,
         ];
     }
 
-    public function hydrateAddress(array|null $data): Address
+    public function hydrateAddress(?array $data): Address
     {
         $address = new Address();
 
