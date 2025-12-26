@@ -49,7 +49,7 @@
         "symfony/phpunit-bridge": "^7.2|^8.0",
         "vincentlanglet/twig-cs-fixer": "^3.9",
         "spatie/phpunit-snapshot-assertions": "^4.2.17|^5.2.3",
-        "phpunit/phpunit": "^9.6.22",
+        "phpunit/phpunit": "^10.5|^11.5",
         "symfony/ux-icons": "^2.18",
         "tales-from-a-dev/twig-tailwind-extra": "^1.0.0"
     },

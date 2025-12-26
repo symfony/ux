@@ -74,6 +74,7 @@ jobs:
                   echo COMPOSER_UP='composer update ${{ matrix.dependency-version == 'lowest' && '--prefer-lowest' || '' }} --no-progress --no-interaction --ansi' >> $GITHUB_ENV
                   echo PHPUNIT='vendor/bin/simple-phpunit ${{ matrix.dependency-version == 'lowest' && '--exclude-group skip-on-lowest' || '' }} ${{ matrix.os == 'windows-latest' && '--exclude-group transient-on-windows' || '' }}' >> $GITHUB_ENV
                   [ 'lowest' = '${{ matrix.dependency-version }}' ] && export SYMFONY_DEPRECATIONS_HELPER=weak
+                  [ '8.1' = '${{ matrix.php-version }}' ] && export SYMFONY_PHPUNIT_VERSION=10.5 || export SYMFONY_PHPUNIT_VERSION=11.5
 
                   # Swup and Typed have no tests, Turbo has its own workflow file
                   EXCLUDED_PACKAGES="Typed|Swup|Turbo"
