@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-12-25T07:52:38Z
+
+Checks are failing
+
+---------------------------------------------------------------------------
+
+by StevenRenaux at 2025-12-25T12:11:10Z
+
+> Thanks for the contribution!
+>
+> Also, please ensure to regenerate snapshots with `vendor/bin/simple-phpunit -d --update-snapshots`
+
+Run in `ux/src/Map` but nothing changed
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-12-25T13:59:29Z
+
+Ah, I think it's caused by how the Map and its bridges communicates and how tests are defined.
+
+IIRC you need to go in Google and Leaflet directory, run the `link` script from the repository root, and run tests with snapshots updating
