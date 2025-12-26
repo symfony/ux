@@ -30,6 +30,7 @@ return static function (ContainerConfigurator $container): void {
                 abstract_arg('dump_typescript'),
                 abstract_arg('included_domains'),
                 abstract_arg('excluded_domains'),
+                abstract_arg('keys_patterns'),
             ])
             ->tag('kernel.cache_warmer')
 

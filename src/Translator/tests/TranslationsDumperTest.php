@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Translator\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -204,6 +205,150 @@ class TranslationsDumperTest extends TestCase
             includedDomains: ['messages'],
             excludedDomains: ['foobar'],
         );
+    }
+
+    public static function keysPatternProvider(): iterable
+    {
+        yield 'included patterns' => [
+            ['symfony.*', 'notification.*'],
+            function (self $test, string $content) {
+                // Should include keys matching patterns
+                $test->assertStringContainsString('symfony.great', $content);
+                $test->assertStringContainsString('symfony.what', $content);
+                $test->assertStringContainsString('notification.comment_created', $content);
+
+                // Should exclude keys not matching patterns
+                $test->assertStringNotContainsString('apples.count', $content);
+                $test->assertStringNotContainsString('animal.dog', $content);
+                $test->assertStringNotContainsString('post.num_comments', $content);
+            },
+        ];
+
+        yield 'excluded patterns' => [
+            ['!apples.*', '!what.*'],
+            function (self $test, string $content) {
+                // Should exclude keys matching exclusion patterns
+                $test->assertStringNotContainsString('apples.count', $content);
+                $test->assertStringNotContainsString('what.count', $content);
+
+                // Should include keys not matching exclusion patterns
+                $test->assertStringContainsString('symfony.great', $content);
+                $test->assertStringContainsString('notification.comment_created', $content);
+                $test->assertStringContainsString('animal.dog', $content);
+            },
+        ];
+
+        yield 'mixed patterns' => [
+            ['symfony.*', 'notification.*', '!*.what*'],
+            function (self $test, string $content) {
+                // Should include symfony.* but exclude *.what*
+                $test->assertStringContainsString('symfony.great', $content);
+                $test->assertStringNotContainsString('symfony.what', $content);
+
+                // Should include notification.*
+                $test->assertStringContainsString('notification.comment_created', $content);
+
+                // Should exclude keys not in inclusion patterns
+                $test->assertStringNotContainsString('apples.count', $content);
+            },
+        ];
+
+        yield 'wildcard patterns' => [
+            ['*.count.*'],
+            function (self $test, string $content) {
+                // Should include keys matching *.count.*
+                $test->assertStringContainsString('apples.count.0', $content);
+                $test->assertStringContainsString('what.count.1', $content);
+
+                // Should exclude keys not matching pattern
+                $test->assertStringNotContainsString('symfony.great', $content);
+                $test->assertStringNotContainsString('notification.comment_created', $content);
+            },
+        ];
+
+        yield 'empty pattern array' => [
+            [],
+            function (self $test, string $content) {
+                // Should include all keys when pattern array is empty
+                $test->assertStringContainsString('symfony.great', $content);
+                $test->assertStringContainsString('symfony.what', $content);
+                $test->assertStringContainsString('notification.comment_created', $content);
+                $test->assertStringContainsString('apples.count', $content);
+                $test->assertStringContainsString('animal.dog', $content);
+                $test->assertStringContainsString('post.num_comments', $content);
+            },
+        ];
+
+        yield 'empty string patterns' => [
+            ['', 'symfony.*', ''],
+            function (self $test, string $content) {
+                // Empty strings should be filtered out, only 'symfony.*' should apply
+                $test->assertStringContainsString('symfony.great', $content);
+                $test->assertStringContainsString('symfony.what', $content);
+
+                // Should exclude keys not matching the valid pattern
+                $test->assertStringNotContainsString('apples.count', $content);
+                $test->assertStringNotContainsString('animal.dog', $content);
+            },
+        ];
+
+        yield 'malformed exclusion pattern' => [
+            ['!'],
+            function (self $test, string $content) {
+                // A single '!' should be treated as invalid and include all keys
+                $test->assertStringContainsString('symfony.great', $content);
+                $test->assertStringContainsString('notification.comment_created', $content);
+                $test->assertStringContainsString('apples.count', $content);
+            },
+        ];
+
+        yield 'patterns with special regex characters in key names' => [
+            ['animal.*'],
+            function (self $test, string $content) {
+                // Should match keys with dashes and underscores
+                $test->assertStringContainsString('animal.dog-cat', $content);
+                $test->assertStringContainsString('animal.dog_cat', $content);
+
+                // Should exclude non-matching keys
+                $test->assertStringNotContainsString('symfony.great', $content);
+            },
+        ];
+
+        yield 'pattern matching keys starting with numeric' => [
+            ['0starts.*'],
+            function (self $test, string $content) {
+                // Should match keys starting with numeric characters
+                $test->assertStringContainsString('0starts.with.numeric', $content);
+
+                // Should exclude non-matching keys
+                $test->assertStringNotContainsString('symfony.great', $content);
+                $test->assertStringNotContainsString('apples.count', $content);
+            },
+        ];
+    }
+
+    /**
+     * @dataProvider keysPatternProvider
+     */
+    #[DataProvider('keysPatternProvider')]
+    public function testDumpWithKeysPatterns(array $keysPatterns, callable $assertions)
+    {
+        $translationsDumper = new TranslationsDumper(
+            new MessageParametersExtractor(),
+            new IntlMessageParametersExtractor(),
+            new TypeScriptMessageParametersPrinter(),
+            new Filesystem(),
+        );
+
+        $translationsDumper->dump(
+            catalogues: self::getMessageCatalogues(),
+            dumpDir: self::$translationsDumpDir,
+            keysPatterns: $keysPatterns,
+        );
+
+        $content = file_get_contents(self::$translationsDumpDir.'/index.js');
+
+        $assertions($this, $content);
     }
 
     /**
