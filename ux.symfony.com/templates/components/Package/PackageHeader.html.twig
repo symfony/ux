@@ -21,12 +21,14 @@
                 />
             {% endif %}
 
-            <twig:DocsLink
-                class="ms-md-3 align-self-center"
-                size="sm"
-                title="Read the docs"
-                url="{{ package.officialDocsUrl }}"
-            />
+            {% if package.shouldShowDocsLink %}
+                <twig:DocsLink
+                    class="ms-md-3 align-self-center"
+                    size="sm"
+                    title="Read the docs"
+                    url="{{ package.officialDocsUrl }}"
+                />
+            {% endif %}
         </div>
     </div>
 </div>
