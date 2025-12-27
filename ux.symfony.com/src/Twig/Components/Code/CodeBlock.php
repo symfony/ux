@@ -88,8 +88,6 @@ class CodeBlock
         $content = $this->getRawSource();
         if ('php' === $this->getLanguage()) {
             $content = SourceCleaner::cleanupPhpFile($content);
-        } elseif ('twig' === $this->getLanguage()) {
-            $content = SourceCleaner::cleanupTwigFile($content);
         }
 
         return $this->splitAndProcessSource($content);
@@ -163,7 +161,7 @@ class CodeBlock
             return $this->language = $this->matchLanguage(substr($ext, 1));
         }
 
-        throw new \RuntimeException('Unable to detect the code language');
+        throw new \RuntimeException('Unable to detect the code language.');
     }
 
     private function matchLanguage(string $extension): ?string

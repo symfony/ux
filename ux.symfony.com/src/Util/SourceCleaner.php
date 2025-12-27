@@ -46,14 +46,6 @@ class SourceCleaner
         return $contents->trim()->toString();
     }
 
-    public static function cleanupTwigFile(string $contents): string
-    {
-        // Remove "Toolkit:$themeName:" prefix
-        $contents = u($contents)->replaceMatches('/Toolkit:.+?:/', '');
-
-        return $contents->trim()->toString();
-    }
-
     public static function processTerminalLines(string $content): string
     {
         $lines = explode("\n", $content);

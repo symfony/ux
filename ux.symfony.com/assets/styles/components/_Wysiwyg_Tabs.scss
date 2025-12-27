@@ -1,0 +1,36 @@
+.Wysiwyg_Tabs {
+}
+
+.Wysiwyg_TabHead {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1rem;
+}
+
+.Wysiwyg_TabControl {
+  border-bottom: 3px solid transparent;
+  color: var(--bs-primary-color);
+  padding: 0 1rem;
+  font-size: .9rem;
+  line-height: 2;
+  font-stretch: semi-condensed;
+  transition: border-color 150ms ease-in-out;
+  margin-bottom: -1px;
+}
+
+.Wysiwyg_TabControl.active {
+  border-color: var(--bs-secondary-color);
+}
+
+.Wysiwyg_TabPanel {
+    position: relative;
+}
+
+.Wysiwyg_TabPanel:not(.active) {
+  display: none;
+}
+
+.Wysiwyg_TabPanel:has(.Toolkit_Preview) {
+    border: 1px solid var(--bs-border-color);
+    border-radius: .75rem;
+}

@@ -12,11 +12,10 @@
 namespace App\Service\Toolkit;
 
 use App\Enum\ToolkitKitId;
-use App\Service\CommonMark\Extension\CodeBlockRenderer\CodeBlockRenderer;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\UriSigner;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\UX\Toolkit\Installer\Pool;
 use Symfony\UX\Toolkit\Installer\PoolResolver;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Recipe\Recipe;
@@ -25,7 +24,7 @@ use Symfony\UX\Toolkit\Registry\RegistryFactory;
 
 use function Symfony\Component\String\s;
 
-class ToolkitService
+readonly class ToolkitService
 {
     /**
      * @see https://regex101.com/r/3JXNX7/1
@@ -39,9 +38,8 @@ class ToolkitService
 
     public function __construct(
         #[Autowire(service: 'ux_toolkit.registry.registry_factory')]
-        private readonly RegistryFactory $registryFactory,
-        private readonly UriSigner $uriSigner,
-        private readonly UrlGeneratorInterface $urlGenerator,
+        private RegistryFactory $registryFactory,
+        private Filesystem $filesystem,
     ) {
     }
 
@@ -75,88 +73,55 @@ class ToolkitService
         return array_filter($kit->getRecipes(RecipeType::Component), fn (Recipe $recipe) => file_exists(Path::join($recipe->absolutePath, 'EXAMPLES.md')));
     }
 
-    public function renderComponentPreviewCodeTabs(ToolkitKitId $kitId, string $code, string $highlightedCode, string $height): string
+    public function resolveRecipePool(Kit $kit, Recipe $component): Pool
     {
-        $previewUrl = $this->urlGenerator->generate('app_toolkit_component_preview', ['kitId' => $kitId->value, 'code' => $code, 'height' => $height], UrlGeneratorInterface::ABSOLUTE_URL);
-        $previewUrl = $this->uriSigner->sign($previewUrl);
-
-        return self::generateTabs([
-            'Preview' => <<<HTML
-                <div class="Toolkit_Loader" style="height: {$height};">
-                    <svg width="18" height="18" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-                    <span>Loading...</span>
-                </div>
-                <iframe class="Toolkit_Preview loading" src="{$previewUrl}" style="height: {$height};" loading="lazy" onload="this.previousElementSibling.style.display = 'none'; this.classList.remove('loading')"></iframe>
-            HTML,
-            'Code' => $highlightedCode,
-        ]);
+        return (new PoolResolver())->resolveForRecipe($kit, $component);
     }
 
-    public function renderInstallationSteps(ToolkitKitId $kitId, Recipe $recipe): string
+    /**
+     * @return non-empty-array<string, string>
+     */
+    public function extractRecipeExamples(Recipe $recipe): array
     {
-        $kit = $this->getKit($kitId);
-        $pool = (new PoolResolver())->resolveForRecipe($kit, $recipe);
+        $examplesMdPath = Path::join($recipe->absolutePath, 'EXAMPLES.md');
+        $markdown = s($this->filesystem->readFile($examplesMdPath));
 
-        $manual = '<p>The UX Toolkit is not mandatory to install a component. You can install it manually by following the next steps:</p>';
-        $manual .= '<ol style="display: grid; gap: 1rem;">';
-        $manual .= '<li><strong>Copy the following file(s) into your Symfony app:</strong>';
-        foreach ($pool->getFiles() as $recipeFullPath => $files) {
-            foreach ($files as $file) {
-                $manual .= \sprintf(
-                    "<details><summary><code>%s</code></summary>\n%s\n</details>",
-                    $file->sourceRelativePathName,
-                    \sprintf("\n```%s\n%s\n```", pathinfo($file->sourceRelativePathName, \PATHINFO_EXTENSION), trim(file_get_contents(Path::join($recipeFullPath, $file->sourceRelativePathName))))
-                );
+        // Remove "# Examples" header
+        $markdown = $markdown->replace('# Examples', '');
+
+        // Split the markdown for each title and content
+        $examples = [];
+        foreach (explode(\PHP_EOL, $markdown) as $line) {
+            if (str_starts_with($line, '## ')) {
+                // This is a new example title
+                $title = trim(substr($line, 2));
+                $examples[$title] = '';
+            } elseif (isset($title)) {
+                // This line belongs to the last example
+                $examples[$title] .= $line.\PHP_EOL;
             }
         }
-        $manual .= '</li>';
 
-        if ($phpPackageDependencies = $pool->getPhpPackageDependencies()) {
-            $manual .= '<li><strong>If necessary, install the following Composer dependencies:</strong>';
-            $manual .= CodeBlockRenderer::highlightCode('shell', '$ composer require '.implode(' ', $phpPackageDependencies), 'margin-bottom: 0');
-            $manual .= '</li>';
+        if ([] === $examples) {
+            throw new \LogicException(\sprintf('No examples found in "%s".', $examplesMdPath));
         }
 
-        $npmPackageDependencies = $pool->getNpmPackageDependencies();
-        $importmapPackageDependencies = $pool->getImportmapPackageDependencies();
-
-        if ($npmPackageDependencies && $importmapPackageDependencies) {
-            $manual .= '<li><strong>If necessary, install the following front dependencies:</strong>';
-            $manual .= CodeBlockRenderer::highlightCode(
-                'shell',
-                '# With npm/yarn/pnpm'.\PHP_EOL
-                    .'$ npm install --save '.implode(' ', $npmPackageDependencies).\PHP_EOL
-                    .'# With importmap (Symfony 6.3+)'.\PHP_EOL
-                    .'$ php bin/console importmap:install '.implode(' ', $importmapPackageDependencies),
-                'margin-bottom: 0'
-            );
-            $manual .= '</li>';
-        } elseif ($npmPackageDependencies) {
-            $manual .= '<li><strong>If necessary, install the following npm dependencies:</strong>';
-            $manual .= CodeBlockRenderer::highlightCode('shell', '$ npm install --save '.implode(' ', $npmPackageDependencies), 'margin-bottom: 0');
-            $manual .= '</li>';
-        } elseif ($importmapPackageDependencies) {
-            $manual .= '<li><strong>If necessary, install the following importmap dependencies:</strong>';
-            $manual .= CodeBlockRenderer::highlightCode('shell', '$ php bin/console importmap:install '.implode(' ', $importmapPackageDependencies), 'margin-bottom: 0');
-            $manual .= '</li>';
+        foreach ($examples as $title => $example) {
+            $examples[$title] = trim($example);
         }
 
-        $manual .= '<li><strong>And the most important, enjoy!</strong></li>';
-        $manual .= '</ol>';
-
-        return self::generateTabs([
-            'Automatic' => \sprintf(
-                '<p>Ensure the Symfony UX Toolkit is installed in your Symfony app:</p>%s<p>Then, run the following command to install the component and its dependencies:</p>%s',
-                CodeBlockRenderer::highlightCode('shell', '$ composer require --dev symfony/ux-toolkit'),
-                CodeBlockRenderer::highlightCode('shell', "$ bin/console ux:install {$recipe->name} --kit {$kitId->value}"),
-            ),
-            'Manual' => $manual,
-        ]);
+        return $examples;
     }
 
-    public function renderApiReference(Recipe $recipe): ?string
+    /**
+     * @return array<string, array{
+     *     props: array<array{name: string, type: string, description: string}>,
+     *     blocks: array<array{name: string, description: string}>
+     * }
+     */
+    public function extractRecipeApiReference(Recipe $recipe): array
     {
-        $return = '';
+        $apiReference = [];
 
         foreach ($recipe->getFiles() as $file) {
             $filePath = Path::join($recipe->absolutePath, $file->sourceRelativePathName);
@@ -181,61 +146,20 @@ class ToolkitService
                     ->replace('/', ':')
                     ->toString();
 
-                $return .= '### '.htmlspecialchars($componentName).\PHP_EOL.\PHP_EOL;
-                if ([] !== $props) {
-                    $return .= "| Prop | Type | Description |\n";
-                    $return .= "| ---- | ---- | ----------- |\n";
-                    foreach ($props as $prop) {
-                        $return .= \sprintf(
-                            "| `%s` | `%s` | %s |\n",
-                            $prop['name'],
-                            str_replace('|', '\|', $prop['type']),
-                            trim(preg_replace('/\s+/', ' ', $prop['description']))
-                        );
-                    }
-                    $return .= \PHP_EOL;
-                }
-                if ([] !== $blocks) {
-                    $return .= "| Block | Description |\n";
-                    $return .= "| ----- | ----------- |\n";
-                    foreach ($blocks as $block) {
-                        $return .= \sprintf(
-                            "| `%s` | %s |\n",
-                            $block['name'],
-                            trim(preg_replace('/\s+/', ' ', $block['description']))
-                        );
-                    }
-                    $return .= \PHP_EOL;
-                }
+                $apiReference[$componentName] = [
+                    'props' => array_map(static fn (array $prop) => [
+                        'name' => $prop['name'],
+                        'type' => $prop['type'],
+                        'description' => trim(preg_replace('/\s+/', ' ', $prop['description'])),
+                    ], $props),
+                    'blocks' => array_map(static fn (array $block) => [
+                        'name' => $block['name'],
+                        'description' => trim(preg_replace('/\s+/', ' ', $block['description'])),
+                    ], $blocks),
+                ];
             }
         }
 
-        return $return ?: null;
-    }
-
-    /**
-     * @param non-empty-array<string, string> $tabs
-     */
-    private static function generateTabs(array $tabs): string
-    {
-        $activeTabId = null;
-        $tabsControls = '';
-        $tabsPanels = '';
-
-        foreach ($tabs as $tabText => $tabContent) {
-            $tabId = hash('xxh3', $tabText);
-            $activeTabId ??= $tabId;
-            $isActive = $activeTabId === $tabId;
-
-            $tabsControls .= \sprintf('<button class="Toolkit_TabControl" data-action="tabs#show" data-tabs-target="control" data-tabs-tab-param="%s" role="tab" aria-selected="%s">%s</button>', $tabId, $isActive ? 'true' : 'false', trim($tabText));
-            $tabsPanels .= \sprintf('<div class="Toolkit_TabPanel %s" data-tabs-target="tab" data-tab="%s" role="tabpanel">%s</div>', $isActive ? 'active' : '', $tabId, $tabContent);
-        }
-
-        return <<<HTML
-<div class="Toolkit_Tabs" data-controller="tabs" data-tabs-tab-value="{$activeTabId}" data-tabs-active-class="active">
-    <nav class="Toolkit_TabHead" role="tablist" style="border-bottom: 1px solid var(--bs-border-color)">{$tabsControls}</nav>
-    <div class="Toolkit_TabBody">{$tabsPanels}</div>
-</div>
-HTML;
+        return $apiReference;
     }
 }

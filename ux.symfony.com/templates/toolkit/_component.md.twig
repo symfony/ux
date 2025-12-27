@@ -1,0 +1,105 @@
+# {{ component.manifest.name }}
+
+{{ component.manifest.description }}
+
+{{ examples|first|raw }}
+
+## Installation
+
+::: tabs
+
+:: tab Automatic
+
+Ensure the Symfony UX Toolkit is installed in your Symfony app:
+```shell
+composer require --dev symfony/ux-toolkit
+```
+
+Then, install the recipe and its dependencies by running:
+```shell
+bin/console ux:install {{ component.manifest.name }} --kit {{ kit_id.value }}
+```
+
+That's it!
+
+:: tab Manual
+
+{% if php_package_dependencies|length > 0 %}
+Install the following Composer dependencies:
+```shell
+composer require {{ php_package_dependencies|join(' ') }}
+```
+{% endif %}
+
+{% if npm_package_dependencies|length > 0 and importmap_package_dependencies|length > 0 %}
+Install the following front dependencies:
+```shell
+# with npm/pnpm/yarn...
+npm install {{ npm_package_dependencies|join(' ') }}
+
+# ...or with Symfony AssetMapper
+php bin/console importmap:require {{ importmap_package_dependencies|join(' ') }}
+```
+{% elseif npm_package_dependencies|length > 0 %}
+Install the following npm/pnpm/yarn dependencies:
+```shell
+npm install {{ npm_package_dependencies|join(' ') }}
+```
+{% elseif importmap_package_dependencies|length > 0 %}
+Install the following Symfony AssetMapper dependencies:
+```shell
+php bin/console importmap:require {{ importmap_package_dependencies|join(' ') }}
+```
+{% endif %}
+
+Copy the following file(s) into your Symfony app:
+
+{% for file in files %}
+```{{ file.language }} {{ {filename: file.path_name, height: '100px'}|json_encode|raw }}
+{{ file.content|trim|raw }}
+```
+{% endfor %}
+
+Happy coding!
+
+:::
+
+## Usage
+
+{{ usage|raw }}
+
+## Examples
+
+{% for example_title, example_code in examples %}
+
+### {{ example_title }}
+
+{{ example_code|raw }}
+
+{% endfor %}
+
+{% if api_reference is not empty %}
+## API Reference
+
+{% for component_name, component_api_reference in api_reference %}
+### {{ component_name }}
+
+{% if component_api_reference.props is not empty %}
+| Prop | Type | Description |
+|------|------|-------------|
+{% for prop in component_api_reference.props %}
+| `{{ prop.name }}` | `{{ prop.type|replace({'|': '\\|'})|raw }}` | {{ prop.description }} |
+{% endfor %}
+{% endif %}
+
+{% if component_api_reference.blocks is not empty %}
+| Block | Description |
+|-------|-------------|
+{% for block in component_api_reference.blocks %}
+| `{{ block.name }}` | {{ block.description }} |
+{% endfor %}
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
