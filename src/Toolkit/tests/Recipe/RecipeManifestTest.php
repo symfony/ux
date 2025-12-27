@@ -218,6 +218,7 @@ final class RecipeManifestTest extends TestCase
                         ],
                         "npm": [
                             "tailwindcss@^4.0.0",
+                            "@tailwindplus/elements",
                             "@tailwindplus/elements@1"
                         ],
                         "importmap": [
@@ -239,6 +240,7 @@ final class RecipeManifestTest extends TestCase
             new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra', new ConstraintVersion('^1.0.0')),
             new PhpPackageDependency('symfony/ux-twig-component', new ConstraintVersion('^2.29')),
             new NpmPackageDependency('tailwindcss', new ConstraintVersion('^4.0.0')),
+            new NpmPackageDependency('@tailwindplus/elements'),
             new NpmPackageDependency('@tailwindplus/elements', new ConstraintVersion('1')),
             new ImportmapPackageDependency('@hotwired/stimulus'),
         ], $manifest->dependencies);

@@ -20,9 +20,7 @@
                 <twig:Code:CodeBlockButtons copyButton="{{ this.copyButton }}" source="{{ this.rawSource }}" link="{{ this.githubLink }}"/>
             </div>
         {% endif %}
-        <div class="Terminal_content" style="height: {{ height }};"
-             data-code-expander-target="codeContent"
-        >
+        <div class="Terminal_content" data-code-expander-target="codeContent">
             {% for piece in this.prepareSource %}
                 {% if piece.highlight ?? true %}
                     <pre><code class="language-{{ this.language }}">

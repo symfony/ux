@@ -22,7 +22,7 @@
         margin-top: 1.5rem;
     }
 
-    a {
+    a:not(.Terminal_title) {
         color: var(--bs-link-color);
         text-decoration: underline;
     }
@@ -35,5 +35,9 @@
 
     .table-responsive .table {
         margin-bottom: 0;
+    }
+
+    .Terminal {
+        margin-bottom: 1rem;
     }
 }

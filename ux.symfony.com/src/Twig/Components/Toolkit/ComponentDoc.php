@@ -13,12 +13,9 @@ namespace App\Twig\Components\Toolkit;
 
 use App\Enum\ToolkitKitId;
 use App\Service\Toolkit\ToolkitService;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\UX\Toolkit\Recipe\Recipe;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-
-use function Symfony\Component\String\s;
 
 #[AsTwigComponent]
 class ComponentDoc
@@ -26,102 +23,79 @@ class ComponentDoc
     public ToolkitKitId $kitId;
     public Recipe $component;
 
+    /**
+     * @see https://regex101.com/r/8L2pPy/1
+     */
+    private const RE_CODE_BLOCK = '/```(?P<language>[a-z]+?)\s*(?P<options>\{.+?\})?\n(?P<code>.+?)```/s';
+
     public function __construct(
-        private readonly Filesystem $filesystem,
         private readonly ToolkitService $toolkitService,
+        private readonly \Twig\Environment $twig,
     ) {
     }
 
-    public function getContent(): string
+    public function getMarkdownContent(): string
     {
-        $examples = $this->getExamples();
+        $kit = $this->toolkitService->getKit($this->kitId);
+        $pool = $this->toolkitService->resolveRecipePool($kit, $this->component);
+        $examples = $this->toolkitService->extractRecipeExamples($this->component);
+        $apiReference = $this->toolkitService->extractRecipeApiReference($this->component);
 
-        $apiReference = $this->toolkitService->renderApiReference($this->component);
-
-        return $this->adaptPreviewableCodeBlocks(\sprintf(<<<MARKDOWN
-            # %s
-
-            %s
-
-            %s
-
-            ## Installation
-
-            %s
-
-            ## Usage
-
-            %s
-
-            ## Examples
-
-            %s
-            %s
-            MARKDOWN,
-            $this->component->manifest->name,
-            $this->component->manifest->description,
-            current($examples),
-            $this->toolkitService->renderInstallationSteps($this->kitId, $this->component),
-            preg_replace('/^```twig.*\n/', '```twig'.\PHP_EOL, current($examples)),
-            array_reduce(array_keys($examples), function (string $acc, string $exampleTitle) use ($examples) {
-                $acc .= '### '.$exampleTitle.\PHP_EOL.$examples[$exampleTitle].\PHP_EOL;
-
-                return $acc;
-            }, ''),
-            $apiReference ? '## API Reference'.\PHP_EOL.$apiReference : '',
-        ));
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function getExamples(): array
-    {
-        $examplesMdPath = Path::join($this->component->absolutePath, 'EXAMPLES.md');
-
-        $markdown = s($this->filesystem->readFile($examplesMdPath));
-
-        // Remove "# Examples" header
-        $markdown = $markdown->replace('# Examples', '');
-
-        // Split the markdown for each title and content
-        $examples = [];
-        foreach (explode(\PHP_EOL, $markdown) as $line) {
-            if (str_starts_with($line, '## ')) {
-                // This is a new example title
-                $title = trim(substr($line, 2));
-                $examples[$title] = '';
-            } elseif (isset($title)) {
-                // This line belongs to the last example
-                $examples[$title] .= $line.\PHP_EOL;
+        $files = [];
+        foreach ($pool->getFiles() as $recipeFullPath => $recipeFiles) {
+            foreach ($recipeFiles as $recipeFile) {
+                $recipeFileSourcePath = Path::join($recipeFullPath, $recipeFile->sourceRelativePathName);
+                $files[] = [
+                    'path_name' => $recipeFile->sourceRelativePathName,
+                    'content' => file_get_contents($recipeFileSourcePath),
+                    'language' => pathinfo($recipeFileSourcePath, \PATHINFO_EXTENSION),
+                ];
             }
         }
 
-        if ([] === $examples) {
-            throw new \LogicException(\sprintf('No examples found in "%s".', $examplesMdPath));
-        }
+        return $this->twig->render('toolkit/_component.md.twig', [
+            'kit_id' => $this->kitId,
+            'component' => $this->component,
+            'files' => $files,
+            'php_package_dependencies' => $pool->getPhpPackageDependencies(),
+            'npm_package_dependencies' => $pool->getNpmPackageDependencies(),
+            'importmap_package_dependencies' => $pool->getImportmapPackageDependencies(),
+            'usage' => current($examples),
+            'examples' => $this->formatExamples($examples),
+            'api_reference' => $apiReference,
+        ]);
+    }
 
-        foreach ($examples as $title => &$example) {
-            $example = trim($example);
+    /**
+     * @param array<string, string> $examples
+     *
+     * @return array<string, string>
+     */
+    private function formatExamples(array $examples): array
+    {
+        foreach ($examples as $title => $example) {
+            $examples[$title] = preg_replace_callback(self::RE_CODE_BLOCK, function (array $matches) {
+                $language = $matches['language'];
+                $options = json_validate($matches['options'] ?? '') ? json_decode($matches['options'], true) : [];
+                $preview = $options['preview'] ?? false;
+                $code = trim($matches['code']);
+
+                if ($preview) {
+                    return $this->twig->render('toolkit/recipe/_previewable_code_block.md.twig', [
+                        'code' => $code,
+                        'language' => $language,
+                        'options' => $options + ['kit' => $this->kitId->value],
+                    ]);
+                }
+
+                return $this->twig->render('toolkit/recipe/_code_block.md.twig', [
+                    'code' => $code,
+                    'language' => $language,
+                    'options' => $options,
+                ]);
+            }, $example);
         }
 
         return $examples;
-    }
-
-    /**
-     * Iterate over code blocks, and add the option "kit" if the option "preview" exists.
-     */
-    private function adaptPreviewableCodeBlocks(string $markdownContent): string
-    {
-        return s($markdownContent)->replaceMatches('/```(?P<lang>[a-z]+) +(?P<options>\{.+?\})\n/', function (array $matches) {
-            $lang = $matches['lang'];
-            $options = json_decode($matches['options'], true, flags: \JSON_THROW_ON_ERROR);
-
-            if ($options['preview'] ?? false) {
-                $options['kit'] = $this->kitId->value;
-            }
-
-            return \sprintf('```%s %s'.\PHP_EOL, $lang, json_encode($options, \JSON_THROW_ON_ERROR));
-        })->toString();
     }
 }
