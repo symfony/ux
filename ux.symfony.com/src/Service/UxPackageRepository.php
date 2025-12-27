@@ -242,7 +242,8 @@ class UxPackageRepository
                 null,
                 null,
                 null,
-                true
+                true,
+                showDocsLink: false
             ),
 
             (new UxPackage(
