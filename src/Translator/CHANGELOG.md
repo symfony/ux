@@ -39,8 +39,8 @@
 
     **Tree-shaking:** While tree-shaking of individual translation keys is no longer possible, modern build tools,
     caching strategies, and compression techniques (Brotli, gzip) make this negligible in 2025.
-    A future feature will allow filtering dumped translations by pattern for those who need it,
-    further reducing bundle size.
+    You can use the `keys_patterns` configuration option to filter dumped translations by pattern
+    for further reducing bundle size.
 
     **For AssetMapper users:** You can remove the following entries from your `importmap.php`:
     ```php
@@ -63,6 +63,8 @@
 -   Add configuration `ux_translator.dump_typescript`  to enable/disable TypeScript types dumping,
     default to `true`. Generating TypeScript types is useful when developing,
     but not in production when using the AssetMapper (which does not use these types).
+
+-   Add `keys_patterns` configuration option to filter dumped translations by key patterns (e.g., `app.*`, `!*.internal`)
 
 ## 2.30
 

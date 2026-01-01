@@ -94,18 +94,19 @@ final class RecipeManifest
                     throw new \InvalidArgumentException(\sprintf('The dependency #%d of type "npm" must be a non-empty string.', $i));
                 }
 
-                // format: "package@version" or "@scope/package@version"
-                if (str_contains($package, '@')) {
-                    if (substr_count($package, '@') > 1) {
-                        $pos = strrpos($package, '@');
-                        $name = substr($package, 0, $pos);
-                        $version = substr($package, $pos + 1);
-                    } else {
-                        [$name, $version] = explode('@', $package, 2);
-                    }
+                // format: "package@version", "@scope/package", "@scope/package@version"
+                $name = $package;
+                $version = null;
+                $versionPos = strrpos($package, '@');
+                if (false !== $versionPos && 0 !== $versionPos) {
+                    $name = substr($package, 0, $versionPos);
+                    $version = substr($package, $versionPos + 1);
+                }
+
+                if (null !== $version) {
                     $dependencies[] = new NpmPackageDependency($name, new ConstraintVersion($version));
                 } else {
-                    $dependencies[] = new NpmPackageDependency($package);
+                    $dependencies[] = new NpmPackageDependency($name);
                 }
             }
 

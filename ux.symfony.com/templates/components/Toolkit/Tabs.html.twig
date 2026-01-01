@@ -1,0 +1,15 @@
+{% props active %}
+{% set _tabs_active_id = active %}
+<div{{ attributes.defaults({
+    class: 'Wysiwyg_Tabs',
+    'data-controller': 'tabs',
+    'data-tabs-tab-value': _tabs_active_id,
+    'data-tabs-active-class': 'active',
+}) }}>
+    <nav class="Wysiwyg_TabHead" role="tablist" style="border-bottom: 1px solid var(--bs-border-color)">
+        {%- block controls %}{% endblock -%}
+    </nav>
+    <div class="Wysiwyg_TabBody">
+        {%- block content %}{% endblock -%}
+    </div>
+</div>

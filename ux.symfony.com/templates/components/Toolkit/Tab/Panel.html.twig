@@ -1,0 +1,9 @@
+{% props target %}
+<div{{ attributes.defaults({
+    class: 'Wysiwyg_TabPanel ' ~ (_tabs_active_id == target ? 'active'),
+    role: 'tabpanel',
+    'data-tabs-target': 'tab',
+    'data-tab': target,
+}) }}>
+    {%- block content %}{% endblock -%}
+</div>

@@ -1,0 +1,23 @@
+.Toolkit_Loader {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .2rem;
+    position: absolute;
+
+    svg {
+        animation: rotating 1s linear infinite;
+    }
+}
+
+.Toolkit_Preview {
+    width: 100%;
+    transition: opacity .250s linear;
+    border-radius: .75rem;
+    opacity: 1;
+
+    &.loading {
+        opacity: 0;
+    }
+}

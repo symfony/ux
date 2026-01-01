@@ -31,6 +31,7 @@ class UxPackage
         private ?string $composerName = null,
         private bool $isDevDependency = false,
         private bool $isDeprecated = false,
+        private bool $showDocsLink = true,
     ) {
     }
 
@@ -136,6 +137,11 @@ class UxPackage
     public function getOfficialDocsUrl(): string
     {
         return $this->officialDocsUrl ??= \sprintf('https://symfony.com/bundles/ux-%s/current/index.html', $this->name);
+    }
+
+    public function shouldShowDocsLink(): bool
+    {
+        return $this->showDocsLink;
     }
 
     public function getCreateString(): ?string

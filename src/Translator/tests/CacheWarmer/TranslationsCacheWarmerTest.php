@@ -46,12 +46,13 @@ final class TranslationsCacheWarmerTest extends TestCase
         $dumpTypeScript = true;
         $includedDomains = [];
         $excludedDomains = [];
+        $keysPatterns = [];
 
         $translationsDumperMock = $this->createMock(TranslationsDumper::class);
         $translationsDumperMock
             ->expects($this->once())
             ->method('dump')
-            ->with($translatorBag->getCatalogues(), $dumpDir, $dumpTypeScript, $includedDomains, $excludedDomains);
+            ->with($translatorBag->getCatalogues(), $dumpDir, $dumpTypeScript, $includedDomains, $excludedDomains, $keysPatterns);
 
         $translationsCacheWarmer = new TranslationsCacheWarmer(
             $translatorBag,
@@ -59,7 +60,8 @@ final class TranslationsCacheWarmerTest extends TestCase
             $dumpDir,
             $dumpTypeScript,
             $includedDomains,
-            $excludedDomains
+            $excludedDomains,
+            $keysPatterns,
         );
 
         $translationsCacheWarmer->warmUp(self::$cacheDir);

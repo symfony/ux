@@ -9,10 +9,6 @@
  * file that was distributed with this source code.
  */
 
-if (!file_exists(__DIR__.'/src')) {
-    exit(0);
-}
-
 $fileHeaderParts = [
     <<<'EOF'
         This file is part of the Symfony package.
@@ -26,6 +22,19 @@ $fileHeaderParts = [
         file that was distributed with this source code.
         EOF,
 ];
+
+$finder = PhpCsFixer\Finder::create()
+    // Some directories may not exist when running Fabbot action, if no files under them were changed.
+    ->in(array_filter([__DIR__.'/src', __DIR__.'/apps'], is_dir(...)))
+    ->append([__FILE__])
+    ->notPath('#/Fixtures/#')
+    ->notPath('#/assets/#')
+    ->notPath('#/var/#')
+    // does not work well with `fully_qualified_strict_types` rule
+    ->notPath('LiveComponent/tests/Integration/LiveComponentHydratorTest.php')
+    // apps/
+    ->notPath(['#config/#', '#public/#', 'importmap.php'])
+;
 
 return (new PhpCsFixer\Config())
     ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
@@ -47,13 +56,5 @@ return (new PhpCsFixer\Config())
         ],
     ])
     ->setRiskyAllowed(true)
-    ->setFinder(
-        PhpCsFixer\Finder::create()
-            ->in([__DIR__.'/src'])
-            ->append([__FILE__])
-            ->notPath('#/Fixtures/#')
-            ->notPath('#/var/#')
-            // does not work well with `fully_qualified_strict_types` rule
-            ->notPath('LiveComponent/tests/Integration/LiveComponentHydratorTest.php')
-    )
+    ->setFinder($finder)
 ;

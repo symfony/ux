@@ -14,7 +14,7 @@
 // Remove Bootstrap variables/overrides
 $theme-colors: map-remove($theme-colors, "info", "light");
 
-// Boostrap remainder of required parts
+// Bootstrap remainder of required parts
 @import "../../vendor/twbs/bootstrap/scss/maps";
 @import "../../vendor/twbs/bootstrap/scss/mixins";
 @import "../../vendor/twbs/bootstrap/scss/utilities";
@@ -152,7 +152,8 @@ $utilities: map-remove(
 @import "components/Terminal";
 @import "components/TerminalCommand";
 @import "components/ThemeSwitcher";
-@import "components/Toolkit_Tabs";
+@import "components/Toolkit";
+@import "components/Wysiwyg_Tabs";
 @import "components/Wysiwyg";
 
 // Utilities

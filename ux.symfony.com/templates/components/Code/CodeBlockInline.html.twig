@@ -1,0 +1,45 @@
+{% set actions -%}
+    <div class="Terminal_actions">
+        <div
+            data-controller="tooltips clipboarder"
+            data-clipboarder-source-value="{{ code }}"
+            class="code-buttons"
+        >
+            <button
+                type="button"
+                class="btn btn-link btn-sm btn-copy"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                title="Copy code"
+                data-action="clipboarder#copy"
+                data-clipboarder-target="button"
+            >
+                <twig:ux:icon name="copy"/>
+            </button>
+        </div>
+
+    </div>
+{%- endset -%}
+
+<div {{ attributes.defaults({
+    class: 'Terminal',
+}) }}>
+    {% if filename %}
+        <div class="Terminal_header py-2 px-3 mb-0 d-flex justify-content-between align-items-center">
+            <a class="Terminal_title">
+                <code>{{ filename }}</code>
+            </a>
+            {{- actions -}}
+        </div>
+    {% endif %}
+    <div class="Terminal_body">
+        {% if not filename %}
+            {{- actions -}}
+        {% endif %}
+        <div class="Terminal_content">
+            <pre><code class="language-{{ language }}">
+                {{- code|highlight(language) -}}
+            </code></pre>
+        </div>
+    </div>
+</div>

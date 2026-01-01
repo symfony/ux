@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @source "../../vendor/symfony/ux-toolkit/kits/shadcn";
 
-@custom-variant dark (&:is(.dark *));
-
 :root {
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
@@ -19,7 +17,7 @@
     --accent: oklch(0.97 0 0);
     --accent-foreground: oklch(0.205 0 0);
     --destructive: oklch(0.577 0.245 27.325);
-    --destructive-foreground: oklch(0.98 0 0);
+    --destructive-foreground: oklch(0.577 0.245 27.325);
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
     --ring: oklch(0.708 0 0);
@@ -115,12 +113,9 @@
 
 @layer base {
     * {
-        border-color: var(--border);
-        outline-color: var(--ring);
+        @apply border-border outline-ring/50;
     }
-
     body {
-        background-color: var(--background);
-        color: var(--foreground);
+        @apply bg-background text-foreground;
     }
 }
