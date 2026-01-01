@@ -1,0 +1,12 @@
+{% props id %}
+<button{{ attributes.defaults({
+    class: 'Wysiwyg_TabControl',
+    role: 'tab',
+    type: 'button',
+    'data-action': 'tabs#show',
+    'data-tabs-target': 'control',
+    'data-tabs-tab-param': id,
+    'aria-selected': _tabs_active_id == id ? 'true' : 'false',
+}) }}>
+    {%- block content %}{% endblock -%}
+</button>

@@ -11,8 +11,9 @@
 
 namespace App\Service\CommonMark;
 
-use App\Service\CommonMark\Extension\CodeBlockRenderer\CodeBlockRenderer;
-use App\Service\Toolkit\ToolkitService;
+use App\Service\CommonMark\Extension\FencedCode\FencedCodeRenderer;
+use App\Service\CommonMark\Extension\Tabs\TabsExtension;
+use App\Service\CommonMark\Extension\ToolkitPreview\ToolkitPreviewExtension;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
 use League\CommonMark\Extension\DefaultAttributes\DefaultAttributesExtension;
@@ -22,15 +23,20 @@ use League\CommonMark\Extension\Mention\MentionExtension;
 use League\CommonMark\Extension\Table\Table;
 use League\CommonMark\Extension\Table\TableExtension;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
+use Symfony\Component\HttpFoundation\UriSigner;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\UX\TwigComponent\ComponentRendererInterface;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
 #[AsDecorator('twig.markdown.league_common_mark_converter_factory')]
-final class ConverterFactory
+final readonly class ConverterFactory
 {
     public function __construct(
-        private readonly ToolkitService $toolkitService,
+        private ComponentRendererInterface $componentRenderer,
+        private UriSigner $uriSigner,
+        private UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -39,7 +45,7 @@ final class ConverterFactory
         $converter = new CommonMarkConverter([
             'default_attributes' => [
                 Table::class => [
-                    'class' => 'table',
+                    'class' => 'table table-hover',
                 ],
             ],
             'mentions' => [
@@ -72,7 +78,9 @@ final class ConverterFactory
             ->addExtension(new MentionExtension())
             ->addExtension(new FrontMatterExtension())
             ->addExtension(new TableExtension())
-            ->addRenderer(FencedCode::class, new CodeBlockRenderer($this->toolkitService))
+            ->addExtension(new TabsExtension())
+            ->addExtension(new ToolkitPreviewExtension($this->uriSigner, $this->urlGenerator))
+            ->addRenderer(FencedCode::class, new FencedCodeRenderer($this->componentRenderer))
         ;
 
         return $converter;
