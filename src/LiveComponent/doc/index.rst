@@ -3306,6 +3306,7 @@ In the ``EditPost`` template, you render the
 
 .. code-block:: html+twig
 
+    {# templates/components/MarkdownTextarea.html.twig #}
     <div {{ attributes }} class="mb-3">
         <textarea
             name="{{ name }}"
