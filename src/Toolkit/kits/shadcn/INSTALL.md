@@ -22,7 +22,7 @@ In your `assets/styles/app.css`, after the TailwindCSS imports, add the followin
     @slot;
   }
   @media (prefers-color-scheme: dark) {
-    &:where(:not(.light *)) {
+    &:where(:not(.light, .light *)) {
       @slot;
     }
   }
@@ -100,7 +100,7 @@ In your `assets/styles/app.css`, after the TailwindCSS imports, add the followin
 }
 
 @media (prefers-color-scheme: dark) {
-    :root:not(.light *) {
+    :root:not(.light, .light *) {
         --background: oklch(0.145 0 0);
         --foreground: oklch(0.985 0 0);
         --card: oklch(0.145 0 0);
