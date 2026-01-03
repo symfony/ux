@@ -140,12 +140,12 @@ class SourceCleaner
         $finalBlockContent = implode("\n    ", $blockLines);
 
         return <<<EOF
-{% extends 'base.html.twig' %}
+            {% extends 'base.html.twig' %}
 
-{% block body %}
-    $finalBlockContent
-{% endblock %}
-EOF;
+            {% block body %}
+                $finalBlockContent
+            {% endblock %}
+            EOF;
     }
 
     /**

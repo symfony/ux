@@ -64,10 +64,10 @@ final class TabsRenderer implements NodeRendererInterface
         }
 
         return <<<HTML
-            <div class="Wysiwyg_Tabs" data-controller="tabs" data-tabs-tab-value="{$activeTabId}" data-tabs-active-class="active">
-                <nav class="Wysiwyg_TabHead" role="tablist" style="border-bottom: 1px solid var(--bs-border-color)">{$tabsControls}</nav>
-                <div class="Wysiwyg_TabBody">{$tabsPanels}</div>
-            </div>
-        HTML;
+                <div class="Wysiwyg_Tabs" data-controller="tabs" data-tabs-tab-value="{$activeTabId}" data-tabs-active-class="active">
+                    <nav class="Wysiwyg_TabHead" role="tablist" style="border-bottom: 1px solid var(--bs-border-color)">{$tabsControls}</nav>
+                    <div class="Wysiwyg_TabBody">{$tabsPanels}</div>
+                </div>
+            HTML;
     }
 }
