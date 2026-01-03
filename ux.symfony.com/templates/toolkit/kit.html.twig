@@ -14,7 +14,7 @@
             height: 675,
             alt: package.humanName ~ ' - Kit ' ~ kit.manifest.name,
         },
-    }
+    },
 } %}
 
 {% block content %}
@@ -27,7 +27,7 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ path('app_toolkit') }}">UX Toolkit</a></li>
-                    <li class="breadcrumb-item"><a href="{{ path('app_toolkit', {'_fragment': 'kits'}) }}">Kits</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_toolkit', {_fragment: 'kits'}) }}">Kits</a></li>
                     <li class="breadcrumb-item active" aria-current="page">{{ kit.manifest.name }}</li>
                 </ol>
             </nav>

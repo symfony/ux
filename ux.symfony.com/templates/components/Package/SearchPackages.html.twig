@@ -4,7 +4,7 @@
 
     <div class="PackageList pt-3" data-loading="addClass(opacity-50)">
         {% for package in computed.packages %}
-            {{ include('components/Package/PackageListItem.html.twig', {package}) }}
+            {{ include('components/Package/PackageListItem.html.twig', {package: package}) }}
          {% else %}
             No packages found "{{ query }}"
         {% endfor %}

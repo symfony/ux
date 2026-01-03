@@ -3,7 +3,7 @@
 {% block package_header %}
     {% component PackageHeader with {
         package: 'translator',
-        eyebrowText: 'JavaScript-enabled Translation'
+        eyebrowText: 'JavaScript-enabled Translation',
     } %}
         {% block title_header %}
             Translations directly imported in <em>JavaScript</em>
@@ -35,7 +35,7 @@
         {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
             message: 'say_hello',
             parameters: {
-                name: 'Fabien'
+                name: 'Fabien',
             },
         } %}
             {% block parameters %}
@@ -86,7 +86,7 @@
         {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
             message: 'num_of_apples',
             parameters: {
-                apples: 2
+                apples: 2,
             },
         } %}
             {% block parameters %}
@@ -104,7 +104,7 @@
         {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
             message: 'finish_place',
             parameters: {
-                place: 2
+                place: 2,
             },
         } %}
             {% block parameters %}
@@ -122,7 +122,7 @@
         {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
             message: 'published_at',
             parameters: {
-                publication_date: '2023-04-27 08:12'
+                publication_date: '2023-04-27 08:12',
             },
         } %}
             {% block parameters %}
@@ -140,7 +140,7 @@
          {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
             message: 'progress',
             parameters: {
-                progress: 42
+                progress: 42,
             },
         } %}
             {% block parameters %}
@@ -158,7 +158,7 @@
         {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
             message: 'value_of_object',
             parameters: {
-                price: 30
+                price: 30,
             },
         } %}
             {% block parameters %}
