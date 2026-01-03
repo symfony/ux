@@ -26,7 +26,7 @@
 
         <div id="live-memory-score" class="LiveMemory-Score {{ game.isEnded ? 'on' : 'hidden' }}">
             {% if game.isEnded %}
-                {{ include('demos/live_memory/components/LiveMemory/Score.html.twig', {game}) }}
+                {{ include('demos/live_memory/components/LiveMemory/Score.html.twig', {game: game}) }}
             {% endif %}
         </div>
     </div>

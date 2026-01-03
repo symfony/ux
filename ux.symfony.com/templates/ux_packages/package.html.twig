@@ -14,12 +14,12 @@
             height: 675,
             alt: package.humanName ~ ' - Component Icon',
         },
-    }
+    },
 } %}
 
 {% block header %}
     {{ include('_header.html.twig', {
-        theme: 'white'
+        theme: 'white',
     }) }}
 {% endblock %}
 
@@ -67,7 +67,7 @@
 
     {% block package_links %}
         {{ include('ux_packages/_package_links.html.twig', {
-            package: package
+            package: package,
         }) }}
     {% endblock %}
 

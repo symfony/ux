@@ -3,7 +3,7 @@
 {% block package_header %}
     {% component PackageHeader with {
         package: 'swup',
-        eyebrowText: 'Slick Page Transitions'
+        eyebrowText: 'Slick Page Transitions',
     } %}
         {% block title_header %}
             Ajax Page Transitions with <em>Swup</em>
@@ -34,7 +34,7 @@
 
             <div class="PackageList">
                 {% for package in results %}
-                    {{ include('components/Package/PackageListItem.html.twig', {package}) }}
+                    {{ include('components/Package/PackageListItem.html.twig', {package: package}) }}
                 {% endfor %}
             </div>
 

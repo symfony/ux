@@ -31,11 +31,11 @@
         variant: ['destructive'],
         outline: ['true'],
         class: 'border-destructive',
-    }]
+    }],
 ) -%}
 
 <button
-    class="{{ style.apply({variant, outline, size}, attributes.render('class'))|tailwind_merge }}"
+    class="{{ style.apply({variant: variant, outline: outline, size: size}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({}).without('class') }}
 >
     {% block content %}{% endblock %}
