@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+// @php-cs-fixer-ignore fully_qualified_strict_types Due to https://github.com/symfony/ux/pull/2768#issuecomment-2905091761
+
 namespace Symfony\UX\LiveComponent\Tests\Integration;
 
 use PHPUnit\Framework\Attributes\DataProvider;

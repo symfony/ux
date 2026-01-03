@@ -419,7 +419,7 @@ likely need to create your own :ref:`custom autocomplete endpoint <custom-autoco
 Managing plugins
 ----------------
 
-`Tom Select Plugins`_ can be configured through the ``tom_select_options.plugins`` option:
+`Tom Select Plugins`_ can be configured through the ``tom_select_options.plugins`` option::
 
     $resolver->setDefaults([
         'class' => Ingredient::class,
