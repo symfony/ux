@@ -1,6 +1,6 @@
 <div {{ attributes.defaults({
     class: 'row mb-5 py-4 position-relative ' ~ (this.sticky|default ? 'align-items-start' : 'align-items-center'),
-    style: '--bs-gutter-x: 4rem'
+    style: '--bs-gutter-x: 4rem',
 }) }}>
     <div class="col-12 col-md-{{ 12 - this.codeCols }} code-description {{ not reversed ? 'order-md-2' }}"
          style="{% if reversed %}padding-inline-end: 0;{% endif %} {{ this.sticky|default ? 'position: sticky; top: 4rem;' }}">
