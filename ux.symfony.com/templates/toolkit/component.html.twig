@@ -3,12 +3,12 @@
 {% set title = 'Component ' ~ component.manifest.name ~ ' - ' ~ kit.manifest.name ~ ' Kit' %}
 {% set description = "Documentation of component #{component.manifest.name}, from the UX Toolkit #{kit.manifest.name}, #{kit.manifest.description}." %}
 {% set meta = {
-    title,
-    description,
+    title: title,
+    description: description,
     canonical: url('app_icons'),
     social: {
-        title,
-        description,
+        title: title,
+        description: description,
         image: {
             url: absolute_url(asset(package.getSocialImage('1200x675'))),
             type: 'image/png',
@@ -16,7 +16,7 @@
             height: 675,
             alt: package.humanName ~ ' - Kit ' ~ kit.manifest.name,
         },
-    }
+    },
 } %}
 
 {% block content %}
@@ -29,7 +29,7 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ path('app_toolkit') }}">UX Toolkit</a></li>
-                    <li class="breadcrumb-item"><a href="{{ path('app_toolkit', {'_fragment': 'kits'}) }}">Kits</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_toolkit', {_fragment: 'kits'}) }}">Kits</a></li>
                     <li class="breadcrumb-item"><a href="{{ path('app_toolkit_kit', {kitId: kit_id.value}) }}">{{ kit.manifest.name }}</a></li>
                     <li class="breadcrumb-item active" aria-current="page">{{ component.manifest.name }}</li>
                 </ol>

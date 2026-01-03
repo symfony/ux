@@ -11,7 +11,7 @@
                 <li>
                     {{ item }}
                     <form class="d-inline" action="{{ path('app_turbo_remove_todo_item', {
-                        id: key
+                        id: key,
                     }) }}">
                         <button type="submit" class="btn btn-link p-0" title="All done!"><twig:ux:icon name="circle-check" /></button>
                     </form>
