@@ -29,9 +29,9 @@ class LiveDemoRepository
                 publishedAt: '2024-06-07',
                 tags: ['grid', 'pagination', 'loading', 'scroll'],
                 longDescription: <<<EOF
-The second and final part of the **Infinite Scroll Serie**, with a new range of (lovely) T-Shirts!
-Now with `automatic loading on scroll`, a new trick and amazing `loading animations`!
-EOF,
+                    The second and final part of the **Infinite Scroll Serie**, with a new range of (lovely) T-Shirts!
+                    Now with `automatic loading on scroll`, a new trick and amazing `loading animations`!
+                    EOF,
             ),
             new LiveDemo(
                 'infinite-scroll',
@@ -41,9 +41,9 @@ EOF,
                 publishedAt: '2024-06-07',
                 tags: ['grid', 'pagination', 'navigation'],
                 longDescription: <<<EOF
-Infinite scroll allows users to continuously load content as they scroll down the page.
-`Part One` of this demo shows how to `append new items` to the page with a [`LiveComponent`](/live-component).
-EOF,
+                    Infinite scroll allows users to continuously load content as they scroll down the page.
+                    `Part One` of this demo shows how to `append new items` to the page with a [`LiveComponent`](/live-component).
+                    EOF,
             ),
             new LiveDemo(
                 'live-memory',
@@ -53,10 +53,10 @@ EOF,
                 publishedAt: '2024-06-07',
                 tags: ['game', 'time', 'events', 'LiveAction'],
                 longDescription: <<<EOF
-A Memorable Game UX with Live Components! Discover how to use Live Components to create a game with a vibrant interface,
- rich interactions and real-time updates. This journey will take you through many features of Live Components, and you'll
-  learn how to use them to create a fun and engaging game.
-EOF,
+                    A Memorable Game UX with Live Components! Discover how to use Live Components to create a game with a vibrant interface,
+                     rich interactions and real-time updates. This journey will take you through many features of Live Components, and you'll
+                      learn how to use them to create a fun and engaging game.
+                    EOF,
             ),
             new LiveDemo(
                 'auto-validating-form',
@@ -66,12 +66,12 @@ EOF,
                 publishedAt: '2022-06-17',
                 tags: ['form', 'validation', 'inline'],
                 longDescription: <<<EOF
-Enter a bad email or leave the password empty, and see how the
-form validates in real time!
+                    Enter a bad email or leave the password empty, and see how the
+                    form validates in real time!
 
-This renders a normal `Symfony` form but with extras added on top,
-all generated from Symfony & Twig.
-EOF,
+                    This renders a normal `Symfony` form but with extras added on top,
+                    all generated from Symfony & Twig.
+                    EOF,
             ),
             new LiveDemo(
                 'form-collection-type',
@@ -81,9 +81,9 @@ EOF,
                 publishedAt: '2022-06-17',
                 tags: ['form', 'collection'],
                 longDescription: <<<EOF
-Unlock the potential of Symfony's [`CollectionType`](https://symfony.com/doc/current/reference/forms/types/collection.html) while writing zero JavaScript.
-This demo shows off adding and removing items entirely in PHP & Twig.
-EOF,
+                    Unlock the potential of Symfony's [`CollectionType`](https://symfony.com/doc/current/reference/forms/types/collection.html) while writing zero JavaScript.
+                    This demo shows off adding and removing items entirely in PHP & Twig.
+                    EOF,
             ),
             new LiveDemo(
                 'dependent-form-fields',
@@ -93,8 +93,8 @@ EOF,
                 publishedAt: '2022-06-17',
                 tags: ['form', 'field', 'events'],
                 longDescription: <<<EOF
-Unleash the power of form events, thanks to [`LiveComponent`](/live-component) and [`DynamicForms`](https://github.com/SymfonyCasts/dynamic-forms).
-EOF,
+                    Unleash the power of form events, thanks to [`LiveComponent`](/live-component) and [`DynamicForms`](https://github.com/SymfonyCasts/dynamic-forms).
+                    EOF,
             ),
             new LiveDemo(
                 'voting',
@@ -104,9 +104,9 @@ EOF,
                 publishedAt: '2022-06-17',
                 tags: ['form', 'LiveAction'],
                 longDescription: <<<EOF
-With each row as its own component, it's easy to add up & down voting + keep track of which items have been voted on.
-This uses a [LiveAction](https://symfony.com/bundles/ux-live-component/current/index.html#actions) to save everything with Ajax.
-EOF,
+                    With each row as its own component, it's easy to add up & down voting + keep track of which items have been voted on.
+                    This uses a [LiveAction](https://symfony.com/bundles/ux-live-component/current/index.html#actions) to save everything with Ajax.
+                    EOF,
             ),
             new LiveDemo(
                 'inline-edit',
@@ -116,9 +116,9 @@ EOF,
                 publishedAt: '2023-02-21',
                 tags: ['form', 'inline', 'LiveAction'],
                 longDescription: <<<EOF
-Inline editing? Simple. Use LiveComponents to track if you're in "edit" mode, let
-the user update any fields on your entity, and save through a `LiveAction`.
-EOF,
+                    Inline editing? Simple. Use LiveComponents to track if you're in "edit" mode, let
+                    the user update any fields on your entity, and save through a `LiveAction`.
+                    EOF,
             ),
             new LiveDemo(
                 'chartjs',
@@ -128,10 +128,10 @@ EOF,
                 publishedAt: '2023-03-16',
                 tags: ['chart', 'data', 'LiveAction', 'stimulus'],
                 longDescription: <<<EOF
-What do you get with Live Components + UX Chart.js + UX Autocomplete?
+                    What do you get with Live Components + UX Chart.js + UX Autocomplete?
 
-An auto-updating chart that you will ❤️.
-EOF,
+                    An auto-updating chart that you will ❤️.
+                    EOF,
             ),
             new LiveDemo(
                 'invoice',
@@ -141,10 +141,10 @@ EOF,
                 publishedAt: '2023-04-20',
                 tags: ['form', 'entity', 'events', 'LiveAction'],
                 longDescription: <<<EOF
-Create or edit an `Invoice` entity along with child components for each related `InvoiceItem` entity.
+                    Create or edit an `Invoice` entity along with child components for each related `InvoiceItem` entity.
 
-Children components emit events to communicate to the parent and everything is saved in a `saveInvoice` LiveAction method.
-EOF,
+                    Children components emit events to communicate to the parent and everything is saved in a `saveInvoice` LiveAction method.
+                    EOF,
             ),
             new LiveDemo(
                 'product-form',
