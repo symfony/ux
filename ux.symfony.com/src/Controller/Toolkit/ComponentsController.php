@@ -75,16 +75,16 @@ class ComponentsController extends AbstractController
         $kit = $this->toolkitService->getKit($kitId);
 
         $template = $twig->createTemplate(<<<HTML
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Preview</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        {{ importmap('toolkit-{$kitId->value}') }}
-    </head>
-    <body class="flex min-h-[{$height}] w-full justify-center p-5 items-center">{$code}</body>
-</html>
-HTML);
+            <html lang="en">
+                <head>
+                    <meta charset="utf-8">
+                    <title>Preview</title>
+                    <meta name="viewport" content="width=device-width, initial-scale=1">
+                    {{ importmap('toolkit-{$kitId->value}') }}
+                </head>
+                <body class="flex min-h-[{$height}] w-full justify-center p-5 items-center">{$code}</body>
+            </html>
+            HTML);
 
         return new Response(
             $kitContextRunner->runForKit($kit, fn () => $twig->render($template)),

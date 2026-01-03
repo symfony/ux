@@ -84,7 +84,7 @@ class LiveDemoController extends AbstractController
     #[Route('/invoice/{id}', name: 'app_demo_live_component_invoice', defaults: ['id' => null])]
     public function invoice(LiveDemoRepository $liveDemoRepository, ?Invoice $invoice = null): Response
     {
-        $invoice = $invoice ?? new Invoice();
+        $invoice ??= new Invoice();
 
         return $this->render('demos/live_component/invoice.html.twig', parameters: [
             'demo' => $liveDemoRepository->find('invoice'),

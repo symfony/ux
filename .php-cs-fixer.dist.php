@@ -23,27 +23,13 @@ $fileHeaderParts = [
         EOF,
 ];
 
-$finder = PhpCsFixer\Finder::create()
-    // Some directories may not exist when running Fabbot action, if no files under them were changed.
-    ->in(array_filter([__DIR__.'/src', __DIR__.'/apps'], is_dir(...)))
-    ->append([__FILE__])
-    ->notPath('#/Fixtures/#')
-    ->notPath('#/assets/#')
-    ->notPath('#/var/#')
-    // does not work well with `fully_qualified_strict_types` rule
-    ->notPath('LiveComponent/tests/Integration/LiveComponentHydratorTest.php')
-    // apps/
-    ->notPath(['#config/#', '#public/#', 'importmap.php'])
-;
-
 return (new PhpCsFixer\Config())
     ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
     ->setRules([
-        '@PHP81Migration' => true, // take lowest version from `git grep -h '"php"' **/composer.json | uniq | sort`
-        '@PHPUnit91Migration:risky' => true,
+        '@PHP8x1Migration' => true, // take lowest version from `git grep -h '"php"' **/composer.json | uniq | sort`
+        '@PHPUnit9x1Migration:risky' => true,
         '@Symfony' => true,
         '@Symfony:risky' => true,
-        'protected_to_private' => false,
         'header_comment' => [
             'header' => implode('', $fileHeaderParts),
             'validator' => implode('', [
@@ -56,5 +42,13 @@ return (new PhpCsFixer\Config())
         ],
     ])
     ->setRiskyAllowed(true)
-    ->setFinder($finder)
+    ->setFinder((new PhpCsFixer\Finder())
+        ->in(__DIR__)
+        ->append([__FILE__])
+        ->notPath('#/Fixtures/#')
+        ->notPath('#/assets/#')
+        ->notPath('#/var/#')
+        // apps/
+        ->notPath(['#config/#', '#public/#', 'importmap.php'])
+    )
 ;
