@@ -50,7 +50,11 @@ tree templates/components
 {% block demo_title %}UX Toolkit{% endblock %}
 
 {% block demo_content %}
-    <iframe src="{{ demoPreviewUrl }}" style="width:100%; height:{{ demoPreviewHeight }};"></iframe>
+    {% apply markdown_to_html %}
+    [toolkit-preview {"kit":"shadcn","height":"400px"}]
+    {{ source ('toolkit/_code_block_right.html.twig') }}
+    [/toolkit-preview]
+    {% endapply %}
 {% endblock %}
 
 {% block package_install %}
