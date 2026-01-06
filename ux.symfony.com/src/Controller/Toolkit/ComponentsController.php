@@ -80,6 +80,18 @@ class ComponentsController extends AbstractController
                     <meta charset="utf-8">
                     <title>Preview</title>
                     <meta name="viewport" content="width=device-width, initial-scale=1">
+                    <script>
+                        const theme = localStorage.getItem('user-theme');
+                        if (theme) {
+                            document.documentElement.classList.add(theme);
+                        }
+                        window.addEventListener('storage', (event) => {
+                            if (event.key === 'user-theme') {
+                                document.documentElement.classList.toggle('dark', event.newValue === 'dark');
+                                document.documentElement.classList.toggle('light', event.newValue === 'light');
+                            }
+                        });
+                    </script>
                     {{ importmap('toolkit-{$kitId->value}') }}
                 </head>
                 <body class="flex min-h-[{$height}] w-full justify-center p-5 items-center">{$code}</body>

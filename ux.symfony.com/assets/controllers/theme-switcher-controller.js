@@ -16,12 +16,10 @@ export default class extends Controller {
         clearTimeout(this.timeout);
 
         this.element.setAttribute('data-switch', theme);
-        localStorage.setItem('user-theme', theme);
 
+        // Small delay to allow CSS transitions during theme switch.
         this.timeout = setTimeout(() => {
-            /**
-             * Small delay to allow CSS transitions during theme switch.
-             */
+            localStorage.setItem('user-theme', theme);
             document.documentElement.setAttribute('data-bs-theme', theme);
         }, 250);
     }
