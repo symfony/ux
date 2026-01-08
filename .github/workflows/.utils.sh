@@ -29,29 +29,33 @@ _run_task() {
 }
 export -f _run_task
 
-# Install specific versions of PropertyInfo and TypeInfo based on PHP and Symfony versions
-# To remove in Symfony UX 4.0
-live_component_post_install() {
-  local php_version=$1
+before_composer_install() {
+  local component=$1
+  local php_version=$2
 
-  case "$php_version" in
-    8.1)
-      # no-op, let Composer install the best PropertyInfo version (defined in composer.json), but do not require TypeInfo
-      return 0
-      ;;
-    8.2)
-      # PropertyInfo 7.1 (experimental PropertyTypeExtractorInterface::getType) and TypeInfo 7.2 (lowest non-experimental)
-      composer require symfony/property-info:7.1.* symfony/type-info:7.2.*
-      return $?
-      ;;
-    8.3)
-      # Install PropertyInfo 7.3 (deprecate PropertyTypeExtractorInterface::getTypes) and TypeInfo 7.3 (new features and deprecations)
-      composer require symfony/property-info:7.3.* symfony/type-info:7.3.*
-      return $?
-      ;;
-  esac
+  # Install specific versions of PropertyInfo and TypeInfo based on PHP version
+  # To remove in Symfony UX 4.0
+  if [[ "$component" == "LiveComponent" ]]; then
+    case "$php_version" in
+      8.1)
+        # no-op, let Composer install the best PropertyInfo version (defined in composer.json), but do not require TypeInfo
+        return 0
+        ;;
+      8.2)
+        # PropertyInfo 7.1 (experimental PropertyTypeExtractorInterface::getType) and TypeInfo 7.2 (lowest non-experimental)
+        composer require symfony/property-info:7.1.* symfony/type-info:7.2.* --no-update
+        return $?
+        ;;
+      8.3)
+        # Install PropertyInfo 7.3 (deprecate PropertyTypeExtractorInterface::getTypes) and TypeInfo 7.3 (new features and deprecations)
+        composer require symfony/property-info:7.3.* symfony/type-info:7.3.* --no-update
+        return $?
+        ;;
+    esac
 
-  # Install the best TypeInfo version available
-  composer require symfony/type-info
+    # Install the best TypeInfo version available
+    composer require symfony/type-info --no-update
+  fi
+
 }
-export -f live_component_post_install
+export -f before_composer_install
