@@ -8,11 +8,15 @@
  */
 
 import { Controller } from '@hotwired/stimulus';
-import { Chart, registerables } from 'chart.js';
+import { Chart, Colors, registerables } from 'chart.js';
 
 // ChartJs 3.x
 if (registerables) {
     Chart.register(...registerables);
+}
+// ChartJs 4.x
+if (Colors) {
+    Chart.register(Colors);
 }
 
 let isChartInitialized = false;
