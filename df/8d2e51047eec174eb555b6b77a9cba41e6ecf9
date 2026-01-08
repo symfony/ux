@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by GromNaN at 2026-01-07T20:53:27Z
+
+PHP 8.4 issue related to https://github.com/symfony/panther/issues/688
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-01-07T23:36:45Z
+
+Other checks are failing (e.g. https://github.com/symfony/ux/actions/runs/20796034910/job/59729700255?pr=3273) but that's not related to your PR, I didn't have time to investigate yet (help welcome 🙏🏻 )
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-01-08T09:44:35Z
+
+You can also ignore "Functional Tests" jobs, IIRC they are flakies, sometimes they work, sometimes they don't. We need to take time to investigate
