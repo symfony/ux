@@ -144,7 +144,7 @@ class InstallCommand extends Command
 
             if (1 === $alternativeRecipesCount && $input->isInteractive()) {
                 $io->warning($message);
-                if ($io->confirm(\sprintf('Do you want to install the recipe "%s" instead?', $alternativeRecipes[0]->manifest->name))) {
+                if ($io->confirm(\sprintf('Do you want to install the recipe "%s" instead?', $alternativeRecipes[0]->name))) {
                     $recipe = $alternativeRecipes[0];
                 } else {
                     return Command::FAILURE;
