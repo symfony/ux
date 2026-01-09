@@ -18,5 +18,6 @@ namespace Symfony\UX\Toolkit\Recipe;
  */
 enum RecipeType: string
 {
+    case Block = 'block';
     case Component = 'component';
 }

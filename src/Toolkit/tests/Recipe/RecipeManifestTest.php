@@ -43,7 +43,7 @@ final class RecipeManifestTest extends TestCase
     public function testFromJsonWithInvalidType()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The recipe type "test" is not supported.');
+        $this->expectExceptionMessage('The recipe type "test" is not supported, valid types are "block", "component".');
 
         RecipeManifest::fromJson(<<<JSON
                 {
