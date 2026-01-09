@@ -1,0 +1,60 @@
+{# @prop side 'top'|'right'|'bottom'|'left' Position du tooltip (défaut: 'top') #}
+{# @prop sideOffset number Distance en pixels par rapport au trigger (défaut: 10) #}
+{# @block content Le contenu du tooltip #}
+{%- props side = 'top', sideOffset = 10 -%}
+
+{%- set margin_attribute = '' -%}
+{%- if side == 'top' -%}
+    {%- set margin_attribute = 'margin-bottom: ' ~ sideOffset ~ 'px' -%}
+{%- elseif side == 'right' -%}
+    {%- set margin_attribute = 'margin-left: ' ~ sideOffset ~ 'px' -%}
+{%- elseif side == 'bottom' -%}
+    {%- set margin_attribute = 'margin-top: ' ~ sideOffset ~ 'px' -%}
+{%- elseif side == 'left' -%}
+    {%- set margin_attribute = 'margin-right: ' ~ sideOffset ~ 'px' -%}
+{%- endif -%}
+
+{%- set style = html_cva(
+    base: 'absolute z-50 rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground pointer-events-none opacity-0 transition-opacity duration-200',
+    variants: {
+        side: {
+            top: 'bottom-full left-1/2 -translate-x-1/2',
+            right: 'left-full top-1/2 -translate-y-1/2',
+            bottom: 'top-full left-1/2 -translate-x-1/2',
+            left: 'right-full top-1/2 -translate-y-1/2',
+        },
+    },
+    default_variant: {
+        side: 'top',
+    },
+) -%}
+
+{# Arrow styles #}
+{%- set arrow_style = html_cva(
+    base: 'absolute h-2 w-2 bg-primary rotate-45',
+    variants: {
+        side: {
+            top: 'bottom-[-4px] left-1/2 -translate-x-1/2',
+            right: 'left-[-4px] top-1/2 -translate-y-1/2',
+            bottom: 'top-[-4px] left-1/2 -translate-x-1/2',
+            left: 'right-[-4px] top-1/2 -translate-y-1/2',
+        },
+    },
+    default_variant: {
+        side: 'top',
+    },
+) -%}
+
+<div
+    data-tooltip-target="content"
+    data-slot="tooltip-content"
+    data-side="{{ side }}"
+    id="tooltip-content"
+    role="tooltip"
+    class="{{ style.apply({side: side}, attributes.render('class'))|tailwind_merge }}"
+    style="{{ margin_attribute }}; {{ attributes.render('style') }}"
+    {{ attributes.without('class', 'style') }}
+>
+    {%- block content %}{% endblock -%}
+    <span class="{{ arrow_style.apply({side: side}) }}"></span>
+</div>

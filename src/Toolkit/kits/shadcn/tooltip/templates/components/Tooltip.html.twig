@@ -1,0 +1,15 @@
+{# @prop delayDuration number Délai en ms avant d'afficher le tooltip (défaut: 500) #}
+{# @prop skipDelayDuration number Délai en ms pour afficher rapidement les tooltips suivants (défaut: 300) #}
+{# @block content Le contenu du tooltip (Trigger + Content) #}
+{%- props delayDuration = 700, skipDelayDuration = 300 -%}
+
+<div
+    data-controller="tooltip"
+    data-tooltip-delay-duration-value="{{ delayDuration }}"
+    data-tooltip-skip-delay-duration-value="{{ skipDelayDuration }}"
+    data-slot="tooltip"
+    class="relative inline-block {{ attributes.render('class')|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

@@ -1,0 +1,13 @@
+{# @prop as string Type d'élément HTML (défaut: 'button') #}
+{# @block content Le contenu du trigger #}
+{%- props as = 'button' -%}
+
+<{{ as }}
+    data-tooltip-target="trigger"
+    data-action="mouseenter->tooltip#show mouseleave->tooltip#hide focusin->tooltip#show focusout->tooltip#hide"
+    aria-describedby="tooltip-content"
+    class="{{ attributes.render('class')|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</{{ as }}>
