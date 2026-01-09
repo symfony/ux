@@ -1,0 +1,81 @@
+<!--
+- Kit: Shadcn UI
+- Component: Tooltip
+- Code:
+```twig
+<div class="flex flex-col gap-4 items-center justify-center">
+    <twig:Tooltip>
+        <twig:Tooltip:Trigger as="span">
+            <twig:Button variant="outline">Top (default)</twig:Button>
+        </twig:Tooltip:Trigger>
+        <twig:Tooltip:Content side="top">
+            Tooltip on top
+        </twig:Tooltip:Content>
+    </twig:Tooltip>
+
+    <div class="flex gap-4">
+        <twig:Tooltip>
+            <twig:Tooltip:Trigger as="span">
+                <twig:Button variant="outline">Left</twig:Button>
+            </twig:Tooltip:Trigger>
+            <twig:Tooltip:Content side="left">
+                Tooltip on left
+            </twig:Tooltip:Content>
+        </twig:Tooltip>
+
+        <twig:Tooltip>
+            <twig:Tooltip:Trigger as="span">
+                <twig:Button variant="outline">Right</twig:Button>
+            </twig:Tooltip:Trigger>
+            <twig:Tooltip:Content side="right">
+                Tooltip on right
+            </twig:Tooltip:Content>
+        </twig:Tooltip>
+    </div>
+
+    <twig:Tooltip>
+        <twig:Tooltip:Trigger as="span">
+            <twig:Button variant="outline">Bottom</twig:Button>
+        </twig:Tooltip:Trigger>
+        <twig:Tooltip:Content side="bottom">
+            Tooltip on bottom
+        </twig:Tooltip:Content>
+    </twig:Tooltip>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex flex-col gap-4 items-center justify-center">
+    <div data-controller="tooltip" data-tooltip-delay-duration-value="700" data-tooltip-skip-delay-duration-value="300" data-slot="tooltip" class="relative inline-block ">
+<span data-tooltip-target="trigger" data-action="mouseenter-&gt;tooltip#show mouseleave-&gt;tooltip#hide focusin-&gt;tooltip#show focusout-&gt;tooltip#hide" aria-describedby="tooltip-content" class=""><button data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[&gt;svg]:px-3">Top (default)</button>
+        </span>
+        <div data-tooltip-target="content" data-slot="tooltip-content" data-side="top" id="tooltip-content" role="tooltip" class="absolute z-50 rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground pointer-events-none opacity-0 transition-opacity duration-200 bottom-full left-1/2 -translate-x-1/2" style="margin-bottom: 10px; ">Tooltip on top
+        <span class="absolute h-2 w-2 bg-primary rotate-45 bottom-[-4px] left-1/2 -translate-x-1/2"></span>
+</div>
+    </div>
+
+    <div class="flex gap-4">
+        <div data-controller="tooltip" data-tooltip-delay-duration-value="700" data-tooltip-skip-delay-duration-value="300" data-slot="tooltip" class="relative inline-block ">
+<span data-tooltip-target="trigger" data-action="mouseenter-&gt;tooltip#show mouseleave-&gt;tooltip#hide focusin-&gt;tooltip#show focusout-&gt;tooltip#hide" aria-describedby="tooltip-content" class=""><button data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[&gt;svg]:px-3">Left</button>
+            </span>
+            <div data-tooltip-target="content" data-slot="tooltip-content" data-side="left" id="tooltip-content" role="tooltip" class="absolute z-50 rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground pointer-events-none opacity-0 transition-opacity duration-200 right-full top-1/2 -translate-y-1/2" style="margin-right: 10px; ">Tooltip on left
+            <span class="absolute h-2 w-2 bg-primary rotate-45 right-[-4px] top-1/2 -translate-y-1/2"></span>
+</div>
+        </div>
+
+        <div data-controller="tooltip" data-tooltip-delay-duration-value="700" data-tooltip-skip-delay-duration-value="300" data-slot="tooltip" class="relative inline-block ">
+<span data-tooltip-target="trigger" data-action="mouseenter-&gt;tooltip#show mouseleave-&gt;tooltip#hide focusin-&gt;tooltip#show focusout-&gt;tooltip#hide" aria-describedby="tooltip-content" class=""><button data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[&gt;svg]:px-3">Right</button>
+            </span>
+            <div data-tooltip-target="content" data-slot="tooltip-content" data-side="right" id="tooltip-content" role="tooltip" class="absolute z-50 rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground pointer-events-none opacity-0 transition-opacity duration-200 left-full top-1/2 -translate-y-1/2" style="margin-left: 10px; ">Tooltip on right
+            <span class="absolute h-2 w-2 bg-primary rotate-45 left-[-4px] top-1/2 -translate-y-1/2"></span>
+</div>
+        </div>
+    </div>
+
+    <div data-controller="tooltip" data-tooltip-delay-duration-value="700" data-tooltip-skip-delay-duration-value="300" data-slot="tooltip" class="relative inline-block ">
+<span data-tooltip-target="trigger" data-action="mouseenter-&gt;tooltip#show mouseleave-&gt;tooltip#hide focusin-&gt;tooltip#show focusout-&gt;tooltip#hide" aria-describedby="tooltip-content" class=""><button data-slot="button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[&gt;svg]:px-3">Bottom</button>
+        </span>
+        <div data-tooltip-target="content" data-slot="tooltip-content" data-side="bottom" id="tooltip-content" role="tooltip" class="absolute z-50 rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground pointer-events-none opacity-0 transition-opacity duration-200 top-full left-1/2 -translate-x-1/2" style="margin-top: 10px; ">Tooltip on bottom
+        <span class="absolute h-2 w-2 bg-primary rotate-45 top-[-4px] left-1/2 -translate-x-1/2"></span>
+</div>
+    </div>
+</div>
