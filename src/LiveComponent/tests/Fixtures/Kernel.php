@@ -90,7 +90,7 @@ final class Kernel extends BaseKernel
 
     protected function configureContainer(ContainerConfigurator $c): void
     {
-        $frameworkConfig = [
+        $c->extension('framework', [
             'csrf_protection' => ['enabled' => false],
             'secret' => 'S3CRET',
             'test' => true,
@@ -106,22 +106,21 @@ final class Kernel extends BaseKernel
             ...(self::VERSION_ID >= 60200 ? [
                 'handle_all_throwables' => true,
             ] : []),
+            ...(self::VERSION_ID >= 60400 && self::VERSION_ID < 70400 ? [
+                'annotations' => ['enabled' => false]
+            ] : []),
+            ...(self::VERSION_ID >= 70300 ? [
+                'session' => [
+                    'storage_factory_id' => 'session.storage.factory.mock_file',
+                    'cookie_secure' => 'auto',
+                    'cookie_samesite' => 'lax',
+                    'handler_id' => null,
+                ]
+            ] : []),
             ...(self::VERSION_ID >= 70300 ? [
                 'property_info' => ['with_constructor_extractor' => false],
             ] : []),
-        ];
-
-        if (self::VERSION_ID >= 60400) {
-            $frameworkConfig['session'] = [
-                'storage_factory_id' => 'session.storage.factory.mock_file',
-                'cookie_secure' => 'auto',
-                'cookie_samesite' => 'lax',
-                'handler_id' => null,
-            ];
-            $frameworkConfig['annotations']['enabled'] = false;
-        }
-
-        $c->extension('framework', $frameworkConfig);
+        ]);
 
         $c->extension('twig', [
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',

@@ -12,7 +12,7 @@ This kit requires TailwindCSS to work:
 
 ## Installation
 
-In your `assets/styles/app.css`, after the TailwindCSS imports, add the following code:
+Modify the file `assets/styles/app.css` with the following content:
 
 ```css
 @import "tailwindcss";

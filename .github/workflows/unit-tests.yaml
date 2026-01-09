@@ -116,8 +116,8 @@ jobs:
                 echo "$PACKAGES" | xargs -n1 | parallel -j +3 "_run_task {} \
                   '(cd src/{} \
                   && $COMPOSER_MIN_STAB \
+                  && before_composer_install \"{}\" \"${{ matrix.php-version }}\" \
                   && $COMPOSER_UP \
-                  && if [ {} = LiveComponent ]; then live_component_post_install \"${{ matrix.php-version }}\"; fi \
                   && $PHPUNIT)'"
 
             - name: Run packages tests (Windows)
@@ -131,8 +131,8 @@ jobs:
                   if ! PACKAGE="$PACKAGE" _run_task_sequential $PACKAGE \
                     '(cd src/$PACKAGE \
                     && $COMPOSER_MIN_STAB \
+                    && before_composer_install $PACKAGE ${{ matrix.php-version }} \
                     && $COMPOSER_UP \
-                    && if [ "$PACKAGE" = "LiveComponent" ]; then live_component_post_install ${{ matrix.php-version }}; fi \
                     && $PHPUNIT)'; then
                     FAILED_PACKAGES="$FAILED_PACKAGES $PACKAGE"
                   fi
