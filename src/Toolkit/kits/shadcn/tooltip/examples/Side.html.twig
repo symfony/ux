@@ -1,0 +1,14 @@
+<div class="flex flex-wrap gap-2">
+    {% for side in ['left', 'top', 'bottom', 'right'] %}
+        <twig:Tooltip id="tooltip-side-{{ side }}">
+            <twig:Tooltip:Trigger>
+                <twig:Button {{ ...trigger_attrs }} variant="outline" class="w-fit">
+                    {{ side|capitalize }}
+                </twig:Button>
+            </twig:Tooltip:Trigger>
+            <twig:Tooltip:Content side="{{ side }}">
+                <p>Add to library</p>
+            </twig:Tooltip:Content>
+        </twig:Tooltip>
+    {% endfor %}
+</div>

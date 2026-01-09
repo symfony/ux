@@ -1,0 +1,30 @@
+<!--
+- Kit: Shadcn UI
+- Component: Tooltip
+- Code:
+```twig
+<div class="text-sm text-muted-foreground">
+    You can use tooltips on
+    <twig:Tooltip>
+        <twig:Tooltip:Trigger as="span" class="underline decoration-dotted">
+            inline text
+        </twig:Tooltip:Trigger>
+        <twig:Tooltip:Content>
+            Like this!
+        </twig:Tooltip:Content>
+    </twig:Tooltip>
+    to provide additional context.
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="text-sm text-muted-foreground">
+    You can use tooltips on
+    <div data-controller="tooltip" data-tooltip-delay-duration-value="700" data-tooltip-skip-delay-duration-value="300" data-slot="tooltip" class="relative inline-block ">
+<span data-tooltip-target="trigger" data-action="mouseenter-&gt;tooltip#show mouseleave-&gt;tooltip#hide focusin-&gt;tooltip#show focusout-&gt;tooltip#hide" aria-describedby="tooltip-content" class="underline decoration-dotted">inline text
+        </span>
+        <div data-tooltip-target="content" data-slot="tooltip-content" data-side="top" id="tooltip-content" role="tooltip" class="absolute z-50 rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground pointer-events-none opacity-0 transition-opacity duration-200 bottom-full left-1/2 -translate-x-1/2" style="margin-bottom: 10px; ">Like this!
+        <span class="absolute h-2 w-2 bg-primary rotate-45 bottom-[-4px] left-1/2 -translate-x-1/2"></span>
+</div>
+    </div>
+    to provide additional context.
+</div>
