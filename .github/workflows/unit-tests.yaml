@@ -122,8 +122,9 @@ jobs:
                 echo "$PACKAGES" | xargs -n1 | parallel -j +3 "_run_task {} \
                   '(cd src/{} \
                   && $COMPOSER_MIN_STAB \
-                  && before_composer_install \"{}\" \"${{ matrix.php-version }}\" \
+                  && before_composer_install \"{}\" \"${{ matrix.php-version }}\" \"${{ matrix.symfony-version }}\" \
                   && $COMPOSER_UP \
+                  && after_composer_install \"{}\" \"${{ matrix.php-version }}\" \"${{ matrix.symfony-version }}\" \
                   && $PHPUNIT)'"
 
             - name: Run packages tests (Windows)
@@ -137,8 +138,9 @@ jobs:
                   if ! PACKAGE="$PACKAGE" _run_task_sequential $PACKAGE \
                     '(cd src/$PACKAGE \
                     && $COMPOSER_MIN_STAB \
-                    && before_composer_install $PACKAGE ${{ matrix.php-version }} \
+                    && before_composer_install $PACKAGE ${{ matrix.php-version }} ${{ matrix.symfony-version }} \
                     && $COMPOSER_UP \
+                    && after_composer_install $PACKAGE ${{ matrix.php-version }} ${{ matrix.symfony-version }} \
                     && $PHPUNIT)'; then
                     FAILED_PACKAGES="$FAILED_PACKAGES $PACKAGE"
                   fi
