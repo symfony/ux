@@ -1314,7 +1314,7 @@ to handle the files and tell the component when the file should be sent:
     <button
         data-action="live#action"
         data-live-action-param="files|my_action"
-    />
+    >Upload</button>
 
 To send a file (or files) with an action use ``files`` modifier.
 Without an argument it will send all pending files to your action.
@@ -1328,11 +1328,11 @@ You can also specify a modifier parameter to choose which files should be upload
         <input type="file" name="multiple[]" multiple />
 
         {# Send only file from first input #}
-        <button data-action="live#action" data-live-action-param="files(my_file)|myAction" />
+        <button data-action="live#action" data-live-action-param="files(my_file)|myAction">Upload</button>
         {# You can chain modifiers to send multiple files #}
-        <button data-action="live#action" data-live-action-param="files(my_file)|files(multiple[])|myAction" />
+        <button data-action="live#action" data-live-action-param="files(my_file)|files(multiple[])|myAction" >Upload</button>
         {# Or send all pending files #}
-        <button data-action="live#action" data-live-action-param="files|myAction" />
+        <button data-action="live#action" data-live-action-param="files|myAction" >Upload</button>
     </p>
 
 The files will be available in a regular ``$request->files`` files bag::
