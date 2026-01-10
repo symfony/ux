@@ -9,7 +9,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { registerReactControllerComponents } from '../../src/register_controller';
-// @ts-ignore
+// @ts-expect-error
 import MyJsxComponent from '../fixtures/MyJsxComponent';
 import MyTsxComponent from '../fixtures/MyTsxComponent';
 

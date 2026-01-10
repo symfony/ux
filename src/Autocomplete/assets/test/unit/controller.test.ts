@@ -667,7 +667,7 @@ describe('AutocompleteController', () => {
         if (null === newTomSelect) {
             throw new Error('Missing TomSelect instance');
         }
-        // @ts-ignore
+        // @ts-expect-error
         newTomSelect.addItem('7');
         expect(selectElement.value).toBe('7');
 
@@ -798,7 +798,7 @@ describe('AutocompleteController', () => {
         if (null === newTomSelect) {
             throw new Error('Missing TomSelect instance');
         }
-        // @ts-ignore
+        // @ts-expect-error
         expect(newTomSelect.control_input.placeholder).toBe('Select a cat');
     });
 

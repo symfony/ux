@@ -31,7 +31,9 @@ class StimulusLazyControllerHandler {
     this.lazyLoadNewControllers(document.documentElement);
   }
   lazyLoadExistingControllers(element) {
-    Array.from(element.querySelectorAll(`[${controllerAttribute}]`)).flatMap(extractControllerNamesFrom).forEach((controllerName) => this.loadLazyController(controllerName));
+    Array.from(element.querySelectorAll(`[${controllerAttribute}]`)).flatMap(extractControllerNamesFrom).forEach((controllerName) => {
+      this.loadLazyController(controllerName);
+    });
   }
   loadLazyController(name) {
     if (!this.lazyControllers[name]) {
@@ -59,9 +61,9 @@ class StimulusLazyControllerHandler {
         switch (type) {
           case "attributes": {
             if (attributeName === controllerAttribute && target.getAttribute(controllerAttribute)) {
-              extractControllerNamesFrom(target).forEach(
-                (controllerName) => this.loadLazyController(controllerName)
-              );
+              extractControllerNamesFrom(target).forEach((controllerName) => {
+                this.loadLazyController(controllerName);
+              });
             }
             break;
           }
