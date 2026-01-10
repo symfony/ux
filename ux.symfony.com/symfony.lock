@@ -5,14 +5,8 @@
     "dflydev/dot-access-data": {
         "version": "v3.0.1"
     },
-    "doctrine/cache": {
-        "version": "2.2.0"
-    },
     "doctrine/collections": {
         "version": "1.6.8"
-    },
-    "doctrine/common": {
-        "version": "3.3.0"
     },
     "doctrine/dbal": {
         "version": "3.3.6"
