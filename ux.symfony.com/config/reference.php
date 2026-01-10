@@ -1,0 +1,1561 @@
+<?php
+
+// This file is auto-generated and is for apps only. Bundles SHOULD NOT rely on its content.
+
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+
+use Symfony\Component\Config\Loader\ParamConfigurator as Param;
+
+/**
+ * This class provides array-shapes for configuring the services and bundles of an application.
+ *
+ * Services declared with the config() method below are autowired and autoconfigured by default.
+ *
+ * This is for apps only. Bundles SHOULD NOT use it.
+ *
+ * Example:
+ *
+ *     ```php
+ *     // config/services.php
+ *     namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+ *
+ *     return App::config([
+ *         'services' => [
+ *             'App\\' => [
+ *                 'resource' => '../src/',
+ *             ],
+ *         ],
+ *     ]);
+ *     ```
+ *
+ * @psalm-type ImportsConfig = list<string|array{
+ *     resource: string,
+ *     type?: string|null,
+ *     ignore_errors?: bool,
+ * }>
+ * @psalm-type ParametersConfig = array<string, scalar|\UnitEnum|array<scalar|\UnitEnum|array<mixed>|null>|null>
+ * @psalm-type ArgumentsType = list<mixed>|array<string, mixed>
+ * @psalm-type CallType = array<string, ArgumentsType>|array{0:string, 1?:ArgumentsType, 2?:bool}|array{method:string, arguments?:ArgumentsType, returns_clone?:bool}
+ * @psalm-type TagsType = list<string|array<string, array<string, mixed>>> // arrays inside the list must have only one element, with the tag name as the key
+ * @psalm-type CallbackType = string|array{0:string|ReferenceConfigurator,1:string}|\Closure|ReferenceConfigurator|ExpressionConfigurator
+ * @psalm-type DeprecationType = array{package: string, version: string, message?: string}
+ * @psalm-type DefaultsType = array{
+ *     public?: bool,
+ *     tags?: TagsType,
+ *     resource_tags?: TagsType,
+ *     autowire?: bool,
+ *     autoconfigure?: bool,
+ *     bind?: array<string, mixed>,
+ * }
+ * @psalm-type InstanceofType = array{
+ *     shared?: bool,
+ *     lazy?: bool|string,
+ *     public?: bool,
+ *     properties?: array<string, mixed>,
+ *     configurator?: CallbackType,
+ *     calls?: list<CallType>,
+ *     tags?: TagsType,
+ *     resource_tags?: TagsType,
+ *     autowire?: bool,
+ *     bind?: array<string, mixed>,
+ *     constructor?: string,
+ * }
+ * @psalm-type DefinitionType = array{
+ *     class?: string,
+ *     file?: string,
+ *     parent?: string,
+ *     shared?: bool,
+ *     synthetic?: bool,
+ *     lazy?: bool|string,
+ *     public?: bool,
+ *     abstract?: bool,
+ *     deprecated?: DeprecationType,
+ *     factory?: CallbackType,
+ *     configurator?: CallbackType,
+ *     arguments?: ArgumentsType,
+ *     properties?: array<string, mixed>,
+ *     calls?: list<CallType>,
+ *     tags?: TagsType,
+ *     resource_tags?: TagsType,
+ *     decorates?: string,
+ *     decoration_inner_name?: string,
+ *     decoration_priority?: int,
+ *     decoration_on_invalid?: 'exception'|'ignore'|null,
+ *     autowire?: bool,
+ *     autoconfigure?: bool,
+ *     bind?: array<string, mixed>,
+ *     constructor?: string,
+ *     from_callable?: CallbackType,
+ * }
+ * @psalm-type AliasType = string|array{
+ *     alias: string,
+ *     public?: bool,
+ *     deprecated?: DeprecationType,
+ * }
+ * @psalm-type PrototypeType = array{
+ *     resource: string,
+ *     namespace?: string,
+ *     exclude?: string|list<string>,
+ *     parent?: string,
+ *     shared?: bool,
+ *     lazy?: bool|string,
+ *     public?: bool,
+ *     abstract?: bool,
+ *     deprecated?: DeprecationType,
+ *     factory?: CallbackType,
+ *     arguments?: ArgumentsType,
+ *     properties?: array<string, mixed>,
+ *     configurator?: CallbackType,
+ *     calls?: list<CallType>,
+ *     tags?: TagsType,
+ *     resource_tags?: TagsType,
+ *     autowire?: bool,
+ *     autoconfigure?: bool,
+ *     bind?: array<string, mixed>,
+ *     constructor?: string,
+ * }
+ * @psalm-type StackType = array{
+ *     stack: list<DefinitionType|AliasType|PrototypeType|array<class-string, ArgumentsType|null>>,
+ *     public?: bool,
+ *     deprecated?: DeprecationType,
+ * }
+ * @psalm-type ServicesConfig = array{
+ *     _defaults?: DefaultsType,
+ *     _instanceof?: InstanceofType,
+ *     ...<string, DefinitionType|AliasType|PrototypeType|StackType|ArgumentsType|null>
+ * }
+ * @psalm-type ExtensionType = array<string, mixed>
+ * @psalm-type FrameworkConfig = array{
+ *     secret?: scalar|null|Param,
+ *     http_method_override?: bool|Param, // Set true to enable support for the '_method' request parameter to determine the intended HTTP method on POST requests. // Default: false
+ *     allowed_http_method_override?: list<string|Param>|null,
+ *     trust_x_sendfile_type_header?: scalar|null|Param, // Set true to enable support for xsendfile in binary file responses. // Default: "%env(bool:default::SYMFONY_TRUST_X_SENDFILE_TYPE_HEADER)%"
+ *     ide?: scalar|null|Param, // Default: "%env(default::SYMFONY_IDE)%"
+ *     test?: bool|Param,
+ *     default_locale?: scalar|null|Param, // Default: "en"
+ *     set_locale_from_accept_language?: bool|Param, // Whether to use the Accept-Language HTTP header to set the Request locale (only when the "_locale" request attribute is not passed). // Default: false
+ *     set_content_language_from_locale?: bool|Param, // Whether to set the Content-Language HTTP header on the Response using the Request locale. // Default: false
+ *     enabled_locales?: list<scalar|null|Param>,
+ *     trusted_hosts?: list<scalar|null|Param>,
+ *     trusted_proxies?: mixed, // Default: ["%env(default::SYMFONY_TRUSTED_PROXIES)%"]
+ *     trusted_headers?: list<scalar|null|Param>,
+ *     error_controller?: scalar|null|Param, // Default: "error_controller"
+ *     handle_all_throwables?: bool|Param, // HttpKernel will handle all kinds of \Throwable. // Default: true
+ *     csrf_protection?: bool|array{
+ *         enabled?: scalar|null|Param, // Default: null
+ *         stateless_token_ids?: list<scalar|null|Param>,
+ *         check_header?: scalar|null|Param, // Whether to check the CSRF token in a header in addition to a cookie when using stateless protection. // Default: false
+ *         cookie_name?: scalar|null|Param, // The name of the cookie to use when using stateless protection. // Default: "csrf-token"
+ *     },
+ *     form?: bool|array{ // Form configuration
+ *         enabled?: bool|Param, // Default: true
+ *         csrf_protection?: array{
+ *             enabled?: scalar|null|Param, // Default: null
+ *             token_id?: scalar|null|Param, // Default: null
+ *             field_name?: scalar|null|Param, // Default: "_token"
+ *             field_attr?: array<string, scalar|null|Param>,
+ *         },
+ *     },
+ *     http_cache?: bool|array{ // HTTP cache configuration
+ *         enabled?: bool|Param, // Default: false
+ *         debug?: bool|Param, // Default: "%kernel.debug%"
+ *         trace_level?: "none"|"short"|"full"|Param,
+ *         trace_header?: scalar|null|Param,
+ *         default_ttl?: int|Param,
+ *         private_headers?: list<scalar|null|Param>,
+ *         skip_response_headers?: list<scalar|null|Param>,
+ *         allow_reload?: bool|Param,
+ *         allow_revalidate?: bool|Param,
+ *         stale_while_revalidate?: int|Param,
+ *         stale_if_error?: int|Param,
+ *         terminate_on_cache_hit?: bool|Param,
+ *     },
+ *     esi?: bool|array{ // ESI configuration
+ *         enabled?: bool|Param, // Default: false
+ *     },
+ *     ssi?: bool|array{ // SSI configuration
+ *         enabled?: bool|Param, // Default: false
+ *     },
+ *     fragments?: bool|array{ // Fragments configuration
+ *         enabled?: bool|Param, // Default: false
+ *         hinclude_default_template?: scalar|null|Param, // Default: null
+ *         path?: scalar|null|Param, // Default: "/_fragment"
+ *     },
+ *     profiler?: bool|array{ // Profiler configuration
+ *         enabled?: bool|Param, // Default: false
+ *         collect?: bool|Param, // Default: true
+ *         collect_parameter?: scalar|null|Param, // The name of the parameter to use to enable or disable collection on a per request basis. // Default: null
+ *         only_exceptions?: bool|Param, // Default: false
+ *         only_main_requests?: bool|Param, // Default: false
+ *         dsn?: scalar|null|Param, // Default: "file:%kernel.cache_dir%/profiler"
+ *         collect_serializer_data?: bool|Param, // Enables the serializer data collector and profiler panel. // Default: false
+ *     },
+ *     workflows?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *         workflows?: array<string, array{ // Default: []
+ *             audit_trail?: bool|array{
+ *                 enabled?: bool|Param, // Default: false
+ *             },
+ *             type?: "workflow"|"state_machine"|Param, // Default: "state_machine"
+ *             marking_store?: array{
+ *                 type?: "method"|Param,
+ *                 property?: scalar|null|Param,
+ *                 service?: scalar|null|Param,
+ *             },
+ *             supports?: list<scalar|null|Param>,
+ *             definition_validators?: list<scalar|null|Param>,
+ *             support_strategy?: scalar|null|Param,
+ *             initial_marking?: list<scalar|null|Param>,
+ *             events_to_dispatch?: list<string|Param>|null,
+ *             places?: list<array{ // Default: []
+ *                 name: scalar|null|Param,
+ *                 metadata?: list<mixed>,
+ *             }>,
+ *             transitions: list<array{ // Default: []
+ *                 name: string|Param,
+ *                 guard?: string|Param, // An expression to block the transition.
+ *                 from?: list<array{ // Default: []
+ *                     place: string|Param,
+ *                     weight?: int|Param, // Default: 1
+ *                 }>,
+ *                 to?: list<array{ // Default: []
+ *                     place: string|Param,
+ *                     weight?: int|Param, // Default: 1
+ *                 }>,
+ *                 weight?: int|Param, // Default: 1
+ *                 metadata?: list<mixed>,
+ *             }>,
+ *             metadata?: list<mixed>,
+ *         }>,
+ *     },
+ *     router?: bool|array{ // Router configuration
+ *         enabled?: bool|Param, // Default: false
+ *         resource: scalar|null|Param,
+ *         type?: scalar|null|Param,
+ *         cache_dir?: scalar|null|Param, // Deprecated: Setting the "framework.router.cache_dir.cache_dir" configuration option is deprecated. It will be removed in version 8.0. // Default: "%kernel.build_dir%"
+ *         default_uri?: scalar|null|Param, // The default URI used to generate URLs in a non-HTTP context. // Default: null
+ *         http_port?: scalar|null|Param, // Default: 80
+ *         https_port?: scalar|null|Param, // Default: 443
+ *         strict_requirements?: scalar|null|Param, // set to true to throw an exception when a parameter does not match the requirements set to false to disable exceptions when a parameter does not match the requirements (and return null instead) set to null to disable parameter checks against requirements 'true' is the preferred configuration in development mode, while 'false' or 'null' might be preferred in production // Default: true
+ *         utf8?: bool|Param, // Default: true
+ *     },
+ *     session?: bool|array{ // Session configuration
+ *         enabled?: bool|Param, // Default: false
+ *         storage_factory_id?: scalar|null|Param, // Default: "session.storage.factory.native"
+ *         handler_id?: scalar|null|Param, // Defaults to using the native session handler, or to the native *file* session handler if "save_path" is not null.
+ *         name?: scalar|null|Param,
+ *         cookie_lifetime?: scalar|null|Param,
+ *         cookie_path?: scalar|null|Param,
+ *         cookie_domain?: scalar|null|Param,
+ *         cookie_secure?: true|false|"auto"|Param, // Default: "auto"
+ *         cookie_httponly?: bool|Param, // Default: true
+ *         cookie_samesite?: null|"lax"|"strict"|"none"|Param, // Default: "lax"
+ *         use_cookies?: bool|Param,
+ *         gc_divisor?: scalar|null|Param,
+ *         gc_probability?: scalar|null|Param,
+ *         gc_maxlifetime?: scalar|null|Param,
+ *         save_path?: scalar|null|Param, // Defaults to "%kernel.cache_dir%/sessions" if the "handler_id" option is not null.
+ *         metadata_update_threshold?: int|Param, // Seconds to wait between 2 session metadata updates. // Default: 0
+ *         sid_length?: int|Param, // Deprecated: Setting the "framework.session.sid_length.sid_length" configuration option is deprecated. It will be removed in version 8.0. No alternative is provided as PHP 8.4 has deprecated the related option.
+ *         sid_bits_per_character?: int|Param, // Deprecated: Setting the "framework.session.sid_bits_per_character.sid_bits_per_character" configuration option is deprecated. It will be removed in version 8.0. No alternative is provided as PHP 8.4 has deprecated the related option.
+ *     },
+ *     request?: bool|array{ // Request configuration
+ *         enabled?: bool|Param, // Default: false
+ *         formats?: array<string, string|list<scalar|null|Param>>,
+ *     },
+ *     assets?: bool|array{ // Assets configuration
+ *         enabled?: bool|Param, // Default: true
+ *         strict_mode?: bool|Param, // Throw an exception if an entry is missing from the manifest.json. // Default: false
+ *         version_strategy?: scalar|null|Param, // Default: null
+ *         version?: scalar|null|Param, // Default: null
+ *         version_format?: scalar|null|Param, // Default: "%%s?%%s"
+ *         json_manifest_path?: scalar|null|Param, // Default: null
+ *         base_path?: scalar|null|Param, // Default: ""
+ *         base_urls?: list<scalar|null|Param>,
+ *         packages?: array<string, array{ // Default: []
+ *             strict_mode?: bool|Param, // Throw an exception if an entry is missing from the manifest.json. // Default: false
+ *             version_strategy?: scalar|null|Param, // Default: null
+ *             version?: scalar|null|Param,
+ *             version_format?: scalar|null|Param, // Default: null
+ *             json_manifest_path?: scalar|null|Param, // Default: null
+ *             base_path?: scalar|null|Param, // Default: ""
+ *             base_urls?: list<scalar|null|Param>,
+ *         }>,
+ *     },
+ *     asset_mapper?: bool|array{ // Asset Mapper configuration
+ *         enabled?: bool|Param, // Default: true
+ *         paths?: array<string, scalar|null|Param>,
+ *         excluded_patterns?: list<scalar|null|Param>,
+ *         exclude_dotfiles?: bool|Param, // If true, any files starting with "." will be excluded from the asset mapper. // Default: true
+ *         server?: bool|Param, // If true, a "dev server" will return the assets from the public directory (true in "debug" mode only by default). // Default: true
+ *         public_prefix?: scalar|null|Param, // The public path where the assets will be written to (and served from when "server" is true). // Default: "/assets/"
+ *         missing_import_mode?: "strict"|"warn"|"ignore"|Param, // Behavior if an asset cannot be found when imported from JavaScript or CSS files - e.g. "import './non-existent.js'". "strict" means an exception is thrown, "warn" means a warning is logged, "ignore" means the import is left as-is. // Default: "warn"
+ *         extensions?: array<string, scalar|null|Param>,
+ *         importmap_path?: scalar|null|Param, // The path of the importmap.php file. // Default: "%kernel.project_dir%/importmap.php"
+ *         importmap_polyfill?: scalar|null|Param, // The importmap name that will be used to load the polyfill. Set to false to disable. // Default: "es-module-shims"
+ *         importmap_script_attributes?: array<string, scalar|null|Param>,
+ *         vendor_dir?: scalar|null|Param, // The directory to store JavaScript vendors. // Default: "%kernel.project_dir%/assets/vendor"
+ *         precompress?: bool|array{ // Precompress assets with Brotli, Zstandard and gzip.
+ *             enabled?: bool|Param, // Default: false
+ *             formats?: list<scalar|null|Param>,
+ *             extensions?: list<scalar|null|Param>,
+ *         },
+ *     },
+ *     translator?: bool|array{ // Translator configuration
+ *         enabled?: bool|Param, // Default: true
+ *         fallbacks?: list<scalar|null|Param>,
+ *         logging?: bool|Param, // Default: false
+ *         formatter?: scalar|null|Param, // Default: "translator.formatter.default"
+ *         cache_dir?: scalar|null|Param, // Default: "%kernel.cache_dir%/translations"
+ *         default_path?: scalar|null|Param, // The default path used to load translations. // Default: "%kernel.project_dir%/translations"
+ *         paths?: list<scalar|null|Param>,
+ *         pseudo_localization?: bool|array{
+ *             enabled?: bool|Param, // Default: false
+ *             accents?: bool|Param, // Default: true
+ *             expansion_factor?: float|Param, // Default: 1.0
+ *             brackets?: bool|Param, // Default: true
+ *             parse_html?: bool|Param, // Default: false
+ *             localizable_html_attributes?: list<scalar|null|Param>,
+ *         },
+ *         providers?: array<string, array{ // Default: []
+ *             dsn?: scalar|null|Param,
+ *             domains?: list<scalar|null|Param>,
+ *             locales?: list<scalar|null|Param>,
+ *         }>,
+ *         globals?: array<string, string|array{ // Default: []
+ *             value?: mixed,
+ *             message?: string|Param,
+ *             parameters?: array<string, scalar|null|Param>,
+ *             domain?: string|Param,
+ *         }>,
+ *     },
+ *     validation?: bool|array{ // Validation configuration
+ *         enabled?: bool|Param, // Default: true
+ *         cache?: scalar|null|Param, // Deprecated: Setting the "framework.validation.cache.cache" configuration option is deprecated. It will be removed in version 8.0.
+ *         enable_attributes?: bool|Param, // Default: true
+ *         static_method?: list<scalar|null|Param>,
+ *         translation_domain?: scalar|null|Param, // Default: "validators"
+ *         email_validation_mode?: "html5"|"html5-allow-no-tld"|"strict"|"loose"|Param, // Default: "html5"
+ *         mapping?: array{
+ *             paths?: list<scalar|null|Param>,
+ *         },
+ *         not_compromised_password?: bool|array{
+ *             enabled?: bool|Param, // When disabled, compromised passwords will be accepted as valid. // Default: true
+ *             endpoint?: scalar|null|Param, // API endpoint for the NotCompromisedPassword Validator. // Default: null
+ *         },
+ *         disable_translation?: bool|Param, // Default: false
+ *         auto_mapping?: array<string, array{ // Default: []
+ *             services?: list<scalar|null|Param>,
+ *         }>,
+ *     },
+ *     annotations?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *     },
+ *     serializer?: bool|array{ // Serializer configuration
+ *         enabled?: bool|Param, // Default: true
+ *         enable_attributes?: bool|Param, // Default: true
+ *         name_converter?: scalar|null|Param,
+ *         circular_reference_handler?: scalar|null|Param,
+ *         max_depth_handler?: scalar|null|Param,
+ *         mapping?: array{
+ *             paths?: list<scalar|null|Param>,
+ *         },
+ *         default_context?: list<mixed>,
+ *         named_serializers?: array<string, array{ // Default: []
+ *             name_converter?: scalar|null|Param,
+ *             default_context?: list<mixed>,
+ *             include_built_in_normalizers?: bool|Param, // Whether to include the built-in normalizers // Default: true
+ *             include_built_in_encoders?: bool|Param, // Whether to include the built-in encoders // Default: true
+ *         }>,
+ *     },
+ *     property_access?: bool|array{ // Property access configuration
+ *         enabled?: bool|Param, // Default: true
+ *         magic_call?: bool|Param, // Default: false
+ *         magic_get?: bool|Param, // Default: true
+ *         magic_set?: bool|Param, // Default: true
+ *         throw_exception_on_invalid_index?: bool|Param, // Default: false
+ *         throw_exception_on_invalid_property_path?: bool|Param, // Default: true
+ *     },
+ *     type_info?: bool|array{ // Type info configuration
+ *         enabled?: bool|Param, // Default: true
+ *         aliases?: array<string, scalar|null|Param>,
+ *     },
+ *     property_info?: bool|array{ // Property info configuration
+ *         enabled?: bool|Param, // Default: true
+ *         with_constructor_extractor?: bool|Param, // Registers the constructor extractor.
+ *     },
+ *     cache?: array{ // Cache configuration
+ *         prefix_seed?: scalar|null|Param, // Used to namespace cache keys when using several apps with the same shared backend. // Default: "_%kernel.project_dir%.%kernel.container_class%"
+ *         app?: scalar|null|Param, // App related cache pools configuration. // Default: "cache.adapter.filesystem"
+ *         system?: scalar|null|Param, // System related cache pools configuration. // Default: "cache.adapter.system"
+ *         directory?: scalar|null|Param, // Default: "%kernel.share_dir%/pools/app"
+ *         default_psr6_provider?: scalar|null|Param,
+ *         default_redis_provider?: scalar|null|Param, // Default: "redis://localhost"
+ *         default_valkey_provider?: scalar|null|Param, // Default: "valkey://localhost"
+ *         default_memcached_provider?: scalar|null|Param, // Default: "memcached://localhost"
+ *         default_doctrine_dbal_provider?: scalar|null|Param, // Default: "database_connection"
+ *         default_pdo_provider?: scalar|null|Param, // Default: null
+ *         pools?: array<string, array{ // Default: []
+ *             adapters?: list<scalar|null|Param>,
+ *             tags?: scalar|null|Param, // Default: null
+ *             public?: bool|Param, // Default: false
+ *             default_lifetime?: scalar|null|Param, // Default lifetime of the pool.
+ *             provider?: scalar|null|Param, // Overwrite the setting from the default provider for this adapter.
+ *             early_expiration_message_bus?: scalar|null|Param,
+ *             clearer?: scalar|null|Param,
+ *         }>,
+ *     },
+ *     php_errors?: array{ // PHP errors handling configuration
+ *         log?: mixed, // Use the application logger instead of the PHP logger for logging PHP errors. // Default: true
+ *         throw?: bool|Param, // Throw PHP errors as \ErrorException instances. // Default: true
+ *     },
+ *     exceptions?: array<string, array{ // Default: []
+ *         log_level?: scalar|null|Param, // The level of log message. Null to let Symfony decide. // Default: null
+ *         status_code?: scalar|null|Param, // The status code of the response. Null or 0 to let Symfony decide. // Default: null
+ *         log_channel?: scalar|null|Param, // The channel of log message. Null to let Symfony decide. // Default: null
+ *     }>,
+ *     web_link?: bool|array{ // Web links configuration
+ *         enabled?: bool|Param, // Default: true
+ *     },
+ *     lock?: bool|string|array{ // Lock configuration
+ *         enabled?: bool|Param, // Default: false
+ *         resources?: array<string, string|list<scalar|null|Param>>,
+ *     },
+ *     semaphore?: bool|string|array{ // Semaphore configuration
+ *         enabled?: bool|Param, // Default: false
+ *         resources?: array<string, scalar|null|Param>,
+ *     },
+ *     messenger?: bool|array{ // Messenger configuration
+ *         enabled?: bool|Param, // Default: false
+ *         routing?: array<string, array{ // Default: []
+ *             senders?: list<scalar|null|Param>,
+ *         }>,
+ *         serializer?: array{
+ *             default_serializer?: scalar|null|Param, // Service id to use as the default serializer for the transports. // Default: "messenger.transport.native_php_serializer"
+ *             symfony_serializer?: array{
+ *                 format?: scalar|null|Param, // Serialization format for the messenger.transport.symfony_serializer service (which is not the serializer used by default). // Default: "json"
+ *                 context?: array<string, mixed>,
+ *             },
+ *         },
+ *         transports?: array<string, string|array{ // Default: []
+ *             dsn?: scalar|null|Param,
+ *             serializer?: scalar|null|Param, // Service id of a custom serializer to use. // Default: null
+ *             options?: list<mixed>,
+ *             failure_transport?: scalar|null|Param, // Transport name to send failed messages to (after all retries have failed). // Default: null
+ *             retry_strategy?: string|array{
+ *                 service?: scalar|null|Param, // Service id to override the retry strategy entirely. // Default: null
+ *                 max_retries?: int|Param, // Default: 3
+ *                 delay?: int|Param, // Time in ms to delay (or the initial value when multiplier is used). // Default: 1000
+ *                 multiplier?: float|Param, // If greater than 1, delay will grow exponentially for each retry: this delay = (delay * (multiple ^ retries)). // Default: 2
+ *                 max_delay?: int|Param, // Max time in ms that a retry should ever be delayed (0 = infinite). // Default: 0
+ *                 jitter?: float|Param, // Randomness to apply to the delay (between 0 and 1). // Default: 0.1
+ *             },
+ *             rate_limiter?: scalar|null|Param, // Rate limiter name to use when processing messages. // Default: null
+ *         }>,
+ *         failure_transport?: scalar|null|Param, // Transport name to send failed messages to (after all retries have failed). // Default: null
+ *         stop_worker_on_signals?: list<scalar|null|Param>,
+ *         default_bus?: scalar|null|Param, // Default: null
+ *         buses?: array<string, array{ // Default: {"messenger.bus.default":{"default_middleware":{"enabled":true,"allow_no_handlers":false,"allow_no_senders":true},"middleware":[]}}
+ *             default_middleware?: bool|string|array{
+ *                 enabled?: bool|Param, // Default: true
+ *                 allow_no_handlers?: bool|Param, // Default: false
+ *                 allow_no_senders?: bool|Param, // Default: true
+ *             },
+ *             middleware?: list<string|array{ // Default: []
+ *                 id: scalar|null|Param,
+ *                 arguments?: list<mixed>,
+ *             }>,
+ *         }>,
+ *     },
+ *     scheduler?: bool|array{ // Scheduler configuration
+ *         enabled?: bool|Param, // Default: false
+ *     },
+ *     disallow_search_engine_index?: bool|Param, // Enabled by default when debug is enabled. // Default: true
+ *     http_client?: bool|array{ // HTTP Client configuration
+ *         enabled?: bool|Param, // Default: true
+ *         max_host_connections?: int|Param, // The maximum number of connections to a single host.
+ *         default_options?: array{
+ *             headers?: array<string, mixed>,
+ *             vars?: array<string, mixed>,
+ *             max_redirects?: int|Param, // The maximum number of redirects to follow.
+ *             http_version?: scalar|null|Param, // The default HTTP version, typically 1.1 or 2.0, leave to null for the best version.
+ *             resolve?: array<string, scalar|null|Param>,
+ *             proxy?: scalar|null|Param, // The URL of the proxy to pass requests through or null for automatic detection.
+ *             no_proxy?: scalar|null|Param, // A comma separated list of hosts that do not require a proxy to be reached.
+ *             timeout?: float|Param, // The idle timeout, defaults to the "default_socket_timeout" ini parameter.
+ *             max_duration?: float|Param, // The maximum execution time for the request+response as a whole.
+ *             bindto?: scalar|null|Param, // A network interface name, IP address, a host name or a UNIX socket to bind to.
+ *             verify_peer?: bool|Param, // Indicates if the peer should be verified in a TLS context.
+ *             verify_host?: bool|Param, // Indicates if the host should exist as a certificate common name.
+ *             cafile?: scalar|null|Param, // A certificate authority file.
+ *             capath?: scalar|null|Param, // A directory that contains multiple certificate authority files.
+ *             local_cert?: scalar|null|Param, // A PEM formatted certificate file.
+ *             local_pk?: scalar|null|Param, // A private key file.
+ *             passphrase?: scalar|null|Param, // The passphrase used to encrypt the "local_pk" file.
+ *             ciphers?: scalar|null|Param, // A list of TLS ciphers separated by colons, commas or spaces (e.g. "RC3-SHA:TLS13-AES-128-GCM-SHA256"...)
+ *             peer_fingerprint?: array{ // Associative array: hashing algorithm => hash(es).
+ *                 sha1?: mixed,
+ *                 pin-sha256?: mixed,
+ *                 md5?: mixed,
+ *             },
+ *             crypto_method?: scalar|null|Param, // The minimum version of TLS to accept; must be one of STREAM_CRYPTO_METHOD_TLSv*_CLIENT constants.
+ *             extra?: array<string, mixed>,
+ *             rate_limiter?: scalar|null|Param, // Rate limiter name to use for throttling requests. // Default: null
+ *             caching?: bool|array{ // Caching configuration.
+ *                 enabled?: bool|Param, // Default: false
+ *                 cache_pool?: string|Param, // The taggable cache pool to use for storing the responses. // Default: "cache.http_client"
+ *                 shared?: bool|Param, // Indicates whether the cache is shared (public) or private. // Default: true
+ *                 max_ttl?: int|Param, // The maximum TTL (in seconds) allowed for cached responses. Null means no cap. // Default: null
+ *             },
+ *             retry_failed?: bool|array{
+ *                 enabled?: bool|Param, // Default: false
+ *                 retry_strategy?: scalar|null|Param, // service id to override the retry strategy. // Default: null
+ *                 http_codes?: array<string, array{ // Default: []
+ *                     code?: int|Param,
+ *                     methods?: list<string|Param>,
+ *                 }>,
+ *                 max_retries?: int|Param, // Default: 3
+ *                 delay?: int|Param, // Time in ms to delay (or the initial value when multiplier is used). // Default: 1000
+ *                 multiplier?: float|Param, // If greater than 1, delay will grow exponentially for each retry: delay * (multiple ^ retries). // Default: 2
+ *                 max_delay?: int|Param, // Max time in ms that a retry should ever be delayed (0 = infinite). // Default: 0
+ *                 jitter?: float|Param, // Randomness in percent (between 0 and 1) to apply to the delay. // Default: 0.1
+ *             },
+ *         },
+ *         mock_response_factory?: scalar|null|Param, // The id of the service that should generate mock responses. It should be either an invokable or an iterable.
+ *         scoped_clients?: array<string, string|array{ // Default: []
+ *             scope?: scalar|null|Param, // The regular expression that the request URL must match before adding the other options. When none is provided, the base URI is used instead.
+ *             base_uri?: scalar|null|Param, // The URI to resolve relative URLs, following rules in RFC 3985, section 2.
+ *             auth_basic?: scalar|null|Param, // An HTTP Basic authentication "username:password".
+ *             auth_bearer?: scalar|null|Param, // A token enabling HTTP Bearer authorization.
+ *             auth_ntlm?: scalar|null|Param, // A "username:password" pair to use Microsoft NTLM authentication (requires the cURL extension).
+ *             query?: array<string, scalar|null|Param>,
+ *             headers?: array<string, mixed>,
+ *             max_redirects?: int|Param, // The maximum number of redirects to follow.
+ *             http_version?: scalar|null|Param, // The default HTTP version, typically 1.1 or 2.0, leave to null for the best version.
+ *             resolve?: array<string, scalar|null|Param>,
+ *             proxy?: scalar|null|Param, // The URL of the proxy to pass requests through or null for automatic detection.
+ *             no_proxy?: scalar|null|Param, // A comma separated list of hosts that do not require a proxy to be reached.
+ *             timeout?: float|Param, // The idle timeout, defaults to the "default_socket_timeout" ini parameter.
+ *             max_duration?: float|Param, // The maximum execution time for the request+response as a whole.
+ *             bindto?: scalar|null|Param, // A network interface name, IP address, a host name or a UNIX socket to bind to.
+ *             verify_peer?: bool|Param, // Indicates if the peer should be verified in a TLS context.
+ *             verify_host?: bool|Param, // Indicates if the host should exist as a certificate common name.
+ *             cafile?: scalar|null|Param, // A certificate authority file.
+ *             capath?: scalar|null|Param, // A directory that contains multiple certificate authority files.
+ *             local_cert?: scalar|null|Param, // A PEM formatted certificate file.
+ *             local_pk?: scalar|null|Param, // A private key file.
+ *             passphrase?: scalar|null|Param, // The passphrase used to encrypt the "local_pk" file.
+ *             ciphers?: scalar|null|Param, // A list of TLS ciphers separated by colons, commas or spaces (e.g. "RC3-SHA:TLS13-AES-128-GCM-SHA256"...).
+ *             peer_fingerprint?: array{ // Associative array: hashing algorithm => hash(es).
+ *                 sha1?: mixed,
+ *                 pin-sha256?: mixed,
+ *                 md5?: mixed,
+ *             },
+ *             crypto_method?: scalar|null|Param, // The minimum version of TLS to accept; must be one of STREAM_CRYPTO_METHOD_TLSv*_CLIENT constants.
+ *             extra?: array<string, mixed>,
+ *             rate_limiter?: scalar|null|Param, // Rate limiter name to use for throttling requests. // Default: null
+ *             caching?: bool|array{ // Caching configuration.
+ *                 enabled?: bool|Param, // Default: false
+ *                 cache_pool?: string|Param, // The taggable cache pool to use for storing the responses. // Default: "cache.http_client"
+ *                 shared?: bool|Param, // Indicates whether the cache is shared (public) or private. // Default: true
+ *                 max_ttl?: int|Param, // The maximum TTL (in seconds) allowed for cached responses. Null means no cap. // Default: null
+ *             },
+ *             retry_failed?: bool|array{
+ *                 enabled?: bool|Param, // Default: false
+ *                 retry_strategy?: scalar|null|Param, // service id to override the retry strategy. // Default: null
+ *                 http_codes?: array<string, array{ // Default: []
+ *                     code?: int|Param,
+ *                     methods?: list<string|Param>,
+ *                 }>,
+ *                 max_retries?: int|Param, // Default: 3
+ *                 delay?: int|Param, // Time in ms to delay (or the initial value when multiplier is used). // Default: 1000
+ *                 multiplier?: float|Param, // If greater than 1, delay will grow exponentially for each retry: delay * (multiple ^ retries). // Default: 2
+ *                 max_delay?: int|Param, // Max time in ms that a retry should ever be delayed (0 = infinite). // Default: 0
+ *                 jitter?: float|Param, // Randomness in percent (between 0 and 1) to apply to the delay. // Default: 0.1
+ *             },
+ *         }>,
+ *     },
+ *     mailer?: bool|array{ // Mailer configuration
+ *         enabled?: bool|Param, // Default: false
+ *         message_bus?: scalar|null|Param, // The message bus to use. Defaults to the default bus if the Messenger component is installed. // Default: null
+ *         dsn?: scalar|null|Param, // Default: null
+ *         transports?: array<string, scalar|null|Param>,
+ *         envelope?: array{ // Mailer Envelope configuration
+ *             sender?: scalar|null|Param,
+ *             recipients?: list<scalar|null|Param>,
+ *             allowed_recipients?: list<scalar|null|Param>,
+ *         },
+ *         headers?: array<string, string|array{ // Default: []
+ *             value?: mixed,
+ *         }>,
+ *         dkim_signer?: bool|array{ // DKIM signer configuration
+ *             enabled?: bool|Param, // Default: false
+ *             key?: scalar|null|Param, // Key content, or path to key (in PEM format with the `file://` prefix) // Default: ""
+ *             domain?: scalar|null|Param, // Default: ""
+ *             select?: scalar|null|Param, // Default: ""
+ *             passphrase?: scalar|null|Param, // The private key passphrase // Default: ""
+ *             options?: array<string, mixed>,
+ *         },
+ *         smime_signer?: bool|array{ // S/MIME signer configuration
+ *             enabled?: bool|Param, // Default: false
+ *             key?: scalar|null|Param, // Path to key (in PEM format) // Default: ""
+ *             certificate?: scalar|null|Param, // Path to certificate (in PEM format without the `file://` prefix) // Default: ""
+ *             passphrase?: scalar|null|Param, // The private key passphrase // Default: null
+ *             extra_certificates?: scalar|null|Param, // Default: null
+ *             sign_options?: int|Param, // Default: null
+ *         },
+ *         smime_encrypter?: bool|array{ // S/MIME encrypter configuration
+ *             enabled?: bool|Param, // Default: false
+ *             repository?: scalar|null|Param, // S/MIME certificate repository service. This service shall implement the `Symfony\Component\Mailer\EventListener\SmimeCertificateRepositoryInterface`. // Default: ""
+ *             cipher?: int|Param, // A set of algorithms used to encrypt the message // Default: null
+ *         },
+ *     },
+ *     secrets?: bool|array{
+ *         enabled?: bool|Param, // Default: true
+ *         vault_directory?: scalar|null|Param, // Default: "%kernel.project_dir%/config/secrets/%kernel.runtime_environment%"
+ *         local_dotenv_file?: scalar|null|Param, // Default: "%kernel.project_dir%/.env.%kernel.runtime_environment%.local"
+ *         decryption_env_var?: scalar|null|Param, // Default: "base64:default::SYMFONY_DECRYPTION_SECRET"
+ *     },
+ *     notifier?: bool|array{ // Notifier configuration
+ *         enabled?: bool|Param, // Default: true
+ *         message_bus?: scalar|null|Param, // The message bus to use. Defaults to the default bus if the Messenger component is installed. // Default: null
+ *         chatter_transports?: array<string, scalar|null|Param>,
+ *         texter_transports?: array<string, scalar|null|Param>,
+ *         notification_on_failed_messages?: bool|Param, // Default: false
+ *         channel_policy?: array<string, string|list<scalar|null|Param>>,
+ *         admin_recipients?: list<array{ // Default: []
+ *             email?: scalar|null|Param,
+ *             phone?: scalar|null|Param, // Default: ""
+ *         }>,
+ *     },
+ *     rate_limiter?: bool|array{ // Rate limiter configuration
+ *         enabled?: bool|Param, // Default: false
+ *         limiters?: array<string, array{ // Default: []
+ *             lock_factory?: scalar|null|Param, // The service ID of the lock factory used by this limiter (or null to disable locking). // Default: "auto"
+ *             cache_pool?: scalar|null|Param, // The cache pool to use for storing the current limiter state. // Default: "cache.rate_limiter"
+ *             storage_service?: scalar|null|Param, // The service ID of a custom storage implementation, this precedes any configured "cache_pool". // Default: null
+ *             policy: "fixed_window"|"token_bucket"|"sliding_window"|"compound"|"no_limit"|Param, // The algorithm to be used by this limiter.
+ *             limiters?: list<scalar|null|Param>,
+ *             limit?: int|Param, // The maximum allowed hits in a fixed interval or burst.
+ *             interval?: scalar|null|Param, // Configures the fixed interval if "policy" is set to "fixed_window" or "sliding_window". The value must be a number followed by "second", "minute", "hour", "day", "week" or "month" (or their plural equivalent).
+ *             rate?: array{ // Configures the fill rate if "policy" is set to "token_bucket".
+ *                 interval?: scalar|null|Param, // Configures the rate interval. The value must be a number followed by "second", "minute", "hour", "day", "week" or "month" (or their plural equivalent).
+ *                 amount?: int|Param, // Amount of tokens to add each interval. // Default: 1
+ *             },
+ *         }>,
+ *     },
+ *     uid?: bool|array{ // Uid configuration
+ *         enabled?: bool|Param, // Default: true
+ *         default_uuid_version?: 7|6|4|1|Param, // Default: 7
+ *         name_based_uuid_version?: 5|3|Param, // Default: 5
+ *         name_based_uuid_namespace?: scalar|null|Param,
+ *         time_based_uuid_version?: 7|6|1|Param, // Default: 7
+ *         time_based_uuid_node?: scalar|null|Param,
+ *     },
+ *     html_sanitizer?: bool|array{ // HtmlSanitizer configuration
+ *         enabled?: bool|Param, // Default: false
+ *         sanitizers?: array<string, array{ // Default: []
+ *             allow_safe_elements?: bool|Param, // Allows "safe" elements and attributes. // Default: false
+ *             allow_static_elements?: bool|Param, // Allows all static elements and attributes from the W3C Sanitizer API standard. // Default: false
+ *             allow_elements?: array<string, mixed>,
+ *             block_elements?: list<string|Param>,
+ *             drop_elements?: list<string|Param>,
+ *             allow_attributes?: array<string, mixed>,
+ *             drop_attributes?: array<string, mixed>,
+ *             force_attributes?: array<string, array<string, string|Param>>,
+ *             force_https_urls?: bool|Param, // Transforms URLs using the HTTP scheme to use the HTTPS scheme instead. // Default: false
+ *             allowed_link_schemes?: list<string|Param>,
+ *             allowed_link_hosts?: list<string|Param>|null,
+ *             allow_relative_links?: bool|Param, // Allows relative URLs to be used in links href attributes. // Default: false
+ *             allowed_media_schemes?: list<string|Param>,
+ *             allowed_media_hosts?: list<string|Param>|null,
+ *             allow_relative_medias?: bool|Param, // Allows relative URLs to be used in media source attributes (img, audio, video, ...). // Default: false
+ *             with_attribute_sanitizers?: list<string|Param>,
+ *             without_attribute_sanitizers?: list<string|Param>,
+ *             max_input_length?: int|Param, // The maximum length allowed for the sanitized input. // Default: 0
+ *         }>,
+ *     },
+ *     webhook?: bool|array{ // Webhook configuration
+ *         enabled?: bool|Param, // Default: false
+ *         message_bus?: scalar|null|Param, // The message bus to use. // Default: "messenger.default_bus"
+ *         routing?: array<string, array{ // Default: []
+ *             service: scalar|null|Param,
+ *             secret?: scalar|null|Param, // Default: ""
+ *         }>,
+ *     },
+ *     remote-event?: bool|array{ // RemoteEvent configuration
+ *         enabled?: bool|Param, // Default: false
+ *     },
+ *     json_streamer?: bool|array{ // JSON streamer configuration
+ *         enabled?: bool|Param, // Default: false
+ *     },
+ * }
+ * @psalm-type TwigConfig = array{
+ *     form_themes?: list<scalar|null|Param>,
+ *     globals?: array<string, array{ // Default: []
+ *         id?: scalar|null|Param,
+ *         type?: scalar|null|Param,
+ *         value?: mixed,
+ *     }>,
+ *     autoescape_service?: scalar|null|Param, // Default: null
+ *     autoescape_service_method?: scalar|null|Param, // Default: null
+ *     base_template_class?: scalar|null|Param, // Deprecated: The child node "base_template_class" at path "twig.base_template_class" is deprecated.
+ *     cache?: scalar|null|Param, // Default: true
+ *     charset?: scalar|null|Param, // Default: "%kernel.charset%"
+ *     debug?: bool|Param, // Default: "%kernel.debug%"
+ *     strict_variables?: bool|Param, // Default: "%kernel.debug%"
+ *     auto_reload?: scalar|null|Param,
+ *     optimizations?: int|Param,
+ *     default_path?: scalar|null|Param, // The default path used to load templates. // Default: "%kernel.project_dir%/templates"
+ *     file_name_pattern?: list<scalar|null|Param>,
+ *     paths?: array<string, mixed>,
+ *     date?: array{ // The default format options used by the date filter.
+ *         format?: scalar|null|Param, // Default: "F j, Y H:i"
+ *         interval_format?: scalar|null|Param, // Default: "%d days"
+ *         timezone?: scalar|null|Param, // The timezone used when formatting dates, when set to null, the timezone returned by date_default_timezone_get() is used. // Default: null
+ *     },
+ *     number_format?: array{ // The default format options for the number_format filter.
+ *         decimals?: int|Param, // Default: 0
+ *         decimal_point?: scalar|null|Param, // Default: "."
+ *         thousands_separator?: scalar|null|Param, // Default: ","
+ *     },
+ *     mailer?: array{
+ *         html_to_text_converter?: scalar|null|Param, // A service implementing the "Symfony\Component\Mime\HtmlToTextConverter\HtmlToTextConverterInterface". // Default: null
+ *     },
+ * }
+ * @psalm-type TwigExtraConfig = array{
+ *     cache?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *     },
+ *     html?: bool|array{
+ *         enabled?: bool|Param, // Default: true
+ *     },
+ *     markdown?: bool|array{
+ *         enabled?: bool|Param, // Default: true
+ *     },
+ *     intl?: bool|array{
+ *         enabled?: bool|Param, // Default: true
+ *     },
+ *     cssinliner?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *     },
+ *     inky?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *     },
+ *     string?: bool|array{
+ *         enabled?: bool|Param, // Default: true
+ *     },
+ * }
+ * @psalm-type TurboConfig = array{
+ *     broadcast?: bool|array{
+ *         enabled?: bool|Param, // Default: true
+ *         entity_template_prefixes?: list<scalar|null|Param>,
+ *         doctrine_orm?: bool|array{ // Enable the Doctrine ORM integration
+ *             enabled?: bool|Param, // Default: true
+ *         },
+ *     },
+ *     default_transport?: scalar|null|Param, // Default: "default"
+ * }
+ * @psalm-type MercureConfig = array{
+ *     hubs?: array<string, array{ // Default: []
+ *         url?: scalar|null|Param, // URL of the hub's publish endpoint
+ *         public_url?: scalar|null|Param, // URL of the hub's public endpoint // Default: null
+ *         jwt?: string|array{ // JSON Web Token configuration.
+ *             value?: scalar|null|Param, // JSON Web Token to use to publish to this hub.
+ *             provider?: scalar|null|Param, // The ID of a service to call to provide the JSON Web Token.
+ *             factory?: scalar|null|Param, // The ID of a service to call to create the JSON Web Token.
+ *             publish?: list<scalar|null|Param>,
+ *             subscribe?: list<scalar|null|Param>,
+ *             secret?: scalar|null|Param, // The JWT Secret to use.
+ *             passphrase?: scalar|null|Param, // The JWT secret passphrase. // Default: ""
+ *             algorithm?: scalar|null|Param, // The algorithm to use to sign the JWT // Default: "hmac.sha256"
+ *         },
+ *         jwt_provider?: scalar|null|Param, // Deprecated: The child node "jwt_provider" at path "mercure.hubs..jwt_provider" is deprecated, use "jwt.provider" instead. // The ID of a service to call to generate the JSON Web Token.
+ *         bus?: scalar|null|Param, // Name of the Messenger bus where the handler for this hub must be registered. Default to the default bus if Messenger is enabled.
+ *     }>,
+ *     default_hub?: scalar|null|Param,
+ *     default_cookie_lifetime?: int|Param, // Default lifetime of the cookie containing the JWT, in seconds. Defaults to the value of "framework.session.cookie_lifetime". // Default: null
+ *     enable_profiler?: bool|Param, // Deprecated: The child node "enable_profiler" at path "mercure.enable_profiler" is deprecated. // Enable Symfony Web Profiler integration.
+ * }
+ * @psalm-type WebProfilerConfig = array{
+ *     toolbar?: bool|array{ // Profiler toolbar configuration
+ *         enabled?: bool|Param, // Default: false
+ *         ajax_replace?: bool|Param, // Replace toolbar on AJAX requests // Default: false
+ *     },
+ *     intercept_redirects?: bool|Param, // Default: false
+ *     excluded_ajax_paths?: scalar|null|Param, // Default: "^/((index|app(_[\\w]+)?)\\.php/)?_wdt"
+ * }
+ * @psalm-type MonologConfig = array{
+ *     use_microseconds?: scalar|null|Param, // Default: true
+ *     channels?: list<scalar|null|Param>,
+ *     handlers?: array<string, array{ // Default: []
+ *         type: scalar|null|Param,
+ *         id?: scalar|null|Param,
+ *         enabled?: bool|Param, // Default: true
+ *         priority?: scalar|null|Param, // Default: 0
+ *         level?: scalar|null|Param, // Default: "DEBUG"
+ *         bubble?: bool|Param, // Default: true
+ *         interactive_only?: bool|Param, // Default: false
+ *         app_name?: scalar|null|Param, // Default: null
+ *         fill_extra_context?: bool|Param, // Default: false
+ *         include_stacktraces?: bool|Param, // Default: false
+ *         process_psr_3_messages?: array{
+ *             enabled?: bool|null|Param, // Default: null
+ *             date_format?: scalar|null|Param,
+ *             remove_used_context_fields?: bool|Param,
+ *         },
+ *         path?: scalar|null|Param, // Default: "%kernel.logs_dir%/%kernel.environment%.log"
+ *         file_permission?: scalar|null|Param, // Default: null
+ *         use_locking?: bool|Param, // Default: false
+ *         filename_format?: scalar|null|Param, // Default: "{filename}-{date}"
+ *         date_format?: scalar|null|Param, // Default: "Y-m-d"
+ *         ident?: scalar|null|Param, // Default: false
+ *         logopts?: scalar|null|Param, // Default: 1
+ *         facility?: scalar|null|Param, // Default: "user"
+ *         max_files?: scalar|null|Param, // Default: 0
+ *         action_level?: scalar|null|Param, // Default: "WARNING"
+ *         activation_strategy?: scalar|null|Param, // Default: null
+ *         stop_buffering?: bool|Param, // Default: true
+ *         passthru_level?: scalar|null|Param, // Default: null
+ *         excluded_404s?: list<scalar|null|Param>,
+ *         excluded_http_codes?: list<array{ // Default: []
+ *             code?: scalar|null|Param,
+ *             urls?: list<scalar|null|Param>,
+ *         }>,
+ *         accepted_levels?: list<scalar|null|Param>,
+ *         min_level?: scalar|null|Param, // Default: "DEBUG"
+ *         max_level?: scalar|null|Param, // Default: "EMERGENCY"
+ *         buffer_size?: scalar|null|Param, // Default: 0
+ *         flush_on_overflow?: bool|Param, // Default: false
+ *         handler?: scalar|null|Param,
+ *         url?: scalar|null|Param,
+ *         exchange?: scalar|null|Param,
+ *         exchange_name?: scalar|null|Param, // Default: "log"
+ *         room?: scalar|null|Param,
+ *         message_format?: scalar|null|Param, // Default: "text"
+ *         api_version?: scalar|null|Param, // Default: null
+ *         channel?: scalar|null|Param, // Default: null
+ *         bot_name?: scalar|null|Param, // Default: "Monolog"
+ *         use_attachment?: scalar|null|Param, // Default: true
+ *         use_short_attachment?: scalar|null|Param, // Default: false
+ *         include_extra?: scalar|null|Param, // Default: false
+ *         icon_emoji?: scalar|null|Param, // Default: null
+ *         webhook_url?: scalar|null|Param,
+ *         exclude_fields?: list<scalar|null|Param>,
+ *         team?: scalar|null|Param,
+ *         notify?: scalar|null|Param, // Default: false
+ *         nickname?: scalar|null|Param, // Default: "Monolog"
+ *         token?: scalar|null|Param,
+ *         region?: scalar|null|Param,
+ *         source?: scalar|null|Param,
+ *         use_ssl?: bool|Param, // Default: true
+ *         user?: mixed,
+ *         title?: scalar|null|Param, // Default: null
+ *         host?: scalar|null|Param, // Default: null
+ *         port?: scalar|null|Param, // Default: 514
+ *         config?: list<scalar|null|Param>,
+ *         members?: list<scalar|null|Param>,
+ *         connection_string?: scalar|null|Param,
+ *         timeout?: scalar|null|Param,
+ *         time?: scalar|null|Param, // Default: 60
+ *         deduplication_level?: scalar|null|Param, // Default: 400
+ *         store?: scalar|null|Param, // Default: null
+ *         connection_timeout?: scalar|null|Param,
+ *         persistent?: bool|Param,
+ *         dsn?: scalar|null|Param,
+ *         hub_id?: scalar|null|Param, // Default: null
+ *         client_id?: scalar|null|Param, // Default: null
+ *         auto_log_stacks?: scalar|null|Param, // Default: false
+ *         release?: scalar|null|Param, // Default: null
+ *         environment?: scalar|null|Param, // Default: null
+ *         message_type?: scalar|null|Param, // Default: 0
+ *         parse_mode?: scalar|null|Param, // Default: null
+ *         disable_webpage_preview?: bool|null|Param, // Default: null
+ *         disable_notification?: bool|null|Param, // Default: null
+ *         split_long_messages?: bool|Param, // Default: false
+ *         delay_between_messages?: bool|Param, // Default: false
+ *         topic?: int|Param, // Default: null
+ *         factor?: int|Param, // Default: 1
+ *         tags?: list<scalar|null|Param>,
+ *         console_formater_options?: mixed, // Deprecated: "monolog.handlers..console_formater_options.console_formater_options" is deprecated, use "monolog.handlers..console_formater_options.console_formatter_options" instead.
+ *         console_formatter_options?: mixed, // Default: []
+ *         formatter?: scalar|null|Param,
+ *         nested?: bool|Param, // Default: false
+ *         publisher?: string|array{
+ *             id?: scalar|null|Param,
+ *             hostname?: scalar|null|Param,
+ *             port?: scalar|null|Param, // Default: 12201
+ *             chunk_size?: scalar|null|Param, // Default: 1420
+ *             encoder?: "json"|"compressed_json"|Param,
+ *         },
+ *         mongo?: string|array{
+ *             id?: scalar|null|Param,
+ *             host?: scalar|null|Param,
+ *             port?: scalar|null|Param, // Default: 27017
+ *             user?: scalar|null|Param,
+ *             pass?: scalar|null|Param,
+ *             database?: scalar|null|Param, // Default: "monolog"
+ *             collection?: scalar|null|Param, // Default: "logs"
+ *         },
+ *         mongodb?: string|array{
+ *             id?: scalar|null|Param, // ID of a MongoDB\Client service
+ *             uri?: scalar|null|Param,
+ *             username?: scalar|null|Param,
+ *             password?: scalar|null|Param,
+ *             database?: scalar|null|Param, // Default: "monolog"
+ *             collection?: scalar|null|Param, // Default: "logs"
+ *         },
+ *         elasticsearch?: string|array{
+ *             id?: scalar|null|Param,
+ *             hosts?: list<scalar|null|Param>,
+ *             host?: scalar|null|Param,
+ *             port?: scalar|null|Param, // Default: 9200
+ *             transport?: scalar|null|Param, // Default: "Http"
+ *             user?: scalar|null|Param, // Default: null
+ *             password?: scalar|null|Param, // Default: null
+ *         },
+ *         index?: scalar|null|Param, // Default: "monolog"
+ *         document_type?: scalar|null|Param, // Default: "logs"
+ *         ignore_error?: scalar|null|Param, // Default: false
+ *         redis?: string|array{
+ *             id?: scalar|null|Param,
+ *             host?: scalar|null|Param,
+ *             password?: scalar|null|Param, // Default: null
+ *             port?: scalar|null|Param, // Default: 6379
+ *             database?: scalar|null|Param, // Default: 0
+ *             key_name?: scalar|null|Param, // Default: "monolog_redis"
+ *         },
+ *         predis?: string|array{
+ *             id?: scalar|null|Param,
+ *             host?: scalar|null|Param,
+ *         },
+ *         from_email?: scalar|null|Param,
+ *         to_email?: list<scalar|null|Param>,
+ *         subject?: scalar|null|Param,
+ *         content_type?: scalar|null|Param, // Default: null
+ *         headers?: list<scalar|null|Param>,
+ *         mailer?: scalar|null|Param, // Default: null
+ *         email_prototype?: string|array{
+ *             id: scalar|null|Param,
+ *             method?: scalar|null|Param, // Default: null
+ *         },
+ *         lazy?: bool|Param, // Default: true
+ *         verbosity_levels?: array{
+ *             VERBOSITY_QUIET?: scalar|null|Param, // Default: "ERROR"
+ *             VERBOSITY_NORMAL?: scalar|null|Param, // Default: "WARNING"
+ *             VERBOSITY_VERBOSE?: scalar|null|Param, // Default: "NOTICE"
+ *             VERBOSITY_VERY_VERBOSE?: scalar|null|Param, // Default: "INFO"
+ *             VERBOSITY_DEBUG?: scalar|null|Param, // Default: "DEBUG"
+ *         },
+ *         channels?: string|array{
+ *             type?: scalar|null|Param,
+ *             elements?: list<scalar|null|Param>,
+ *         },
+ *     }>,
+ * }
+ * @psalm-type DebugConfig = array{
+ *     max_items?: int|Param, // Max number of displayed items past the first level, -1 means no limit. // Default: 2500
+ *     min_depth?: int|Param, // Minimum tree depth to clone all the items, 1 is default. // Default: 1
+ *     max_string_length?: int|Param, // Max length of displayed strings, -1 means no limit. // Default: -1
+ *     dump_destination?: scalar|null|Param, // A stream URL where dumps should be written to. // Default: null
+ *     theme?: "dark"|"light"|Param, // Changes the color of the dump() output when rendered directly on the templating. "dark" (default) or "light". // Default: "dark"
+ * }
+ * @psalm-type TwigComponentConfig = array{
+ *     defaults?: array<string, string|array{ // Default: ["__deprecated__use_old_naming_behavior"]
+ *         template_directory?: scalar|null|Param, // Default: "components"
+ *         name_prefix?: scalar|null|Param, // Default: ""
+ *     }>,
+ *     anonymous_template_directory?: scalar|null|Param, // Defaults to `components`
+ *     profiler?: bool|array{ // Enables the profiler for Twig Component
+ *         enabled?: bool|Param, // Default: "%kernel.debug%"
+ *         collect_components?: bool|Param, // Collect components instances // Default: true
+ *     },
+ *     controllers_json?: scalar|null|Param, // Deprecated: The "twig_component.controllers_json" config option is deprecated, and will be removed in 3.0. // Default: null
+ * }
+ * @psalm-type LiveComponentConfig = array{
+ *     secret?: scalar|null|Param, // The secret used to compute fingerprints and checksums // Default: "%kernel.secret%"
+ * }
+ * @psalm-type LazyImageConfig = array{
+ *     cache?: scalar|null|Param,
+ *     fetch_image_content?: scalar|null|Param, // Default: null
+ * }
+ * @psalm-type DoctrineConfig = array{
+ *     dbal?: array{
+ *         default_connection?: scalar|null|Param,
+ *         types?: array<string, string|array{ // Default: []
+ *             class: scalar|null|Param,
+ *             commented?: bool|Param, // Deprecated: The doctrine-bundle type commenting features were removed; the corresponding config parameter was deprecated in 2.0 and will be dropped in 3.0.
+ *         }>,
+ *         driver_schemes?: array<string, scalar|null|Param>,
+ *         connections?: array<string, array{ // Default: []
+ *             url?: scalar|null|Param, // A URL with connection information; any parameter value parsed from this string will override explicitly set parameters
+ *             dbname?: scalar|null|Param,
+ *             host?: scalar|null|Param, // Defaults to "localhost" at runtime.
+ *             port?: scalar|null|Param, // Defaults to null at runtime.
+ *             user?: scalar|null|Param, // Defaults to "root" at runtime.
+ *             password?: scalar|null|Param, // Defaults to null at runtime.
+ *             override_url?: bool|Param, // Deprecated: The "doctrine.dbal.override_url" configuration key is deprecated.
+ *             dbname_suffix?: scalar|null|Param,
+ *             application_name?: scalar|null|Param,
+ *             charset?: scalar|null|Param,
+ *             path?: scalar|null|Param,
+ *             memory?: bool|Param,
+ *             unix_socket?: scalar|null|Param, // The unix socket to use for MySQL
+ *             persistent?: bool|Param, // True to use as persistent connection for the ibm_db2 driver
+ *             protocol?: scalar|null|Param, // The protocol to use for the ibm_db2 driver (default to TCPIP if omitted)
+ *             service?: bool|Param, // True to use SERVICE_NAME as connection parameter instead of SID for Oracle
+ *             servicename?: scalar|null|Param, // Overrules dbname parameter if given and used as SERVICE_NAME or SID connection parameter for Oracle depending on the service parameter.
+ *             sessionMode?: scalar|null|Param, // The session mode to use for the oci8 driver
+ *             server?: scalar|null|Param, // The name of a running database server to connect to for SQL Anywhere.
+ *             default_dbname?: scalar|null|Param, // Override the default database (postgres) to connect to for PostgreSQL connexion.
+ *             sslmode?: scalar|null|Param, // Determines whether or with what priority a SSL TCP/IP connection will be negotiated with the server for PostgreSQL.
+ *             sslrootcert?: scalar|null|Param, // The name of a file containing SSL certificate authority (CA) certificate(s). If the file exists, the server's certificate will be verified to be signed by one of these authorities.
+ *             sslcert?: scalar|null|Param, // The path to the SSL client certificate file for PostgreSQL.
+ *             sslkey?: scalar|null|Param, // The path to the SSL client key file for PostgreSQL.
+ *             sslcrl?: scalar|null|Param, // The file name of the SSL certificate revocation list for PostgreSQL.
+ *             pooled?: bool|Param, // True to use a pooled server with the oci8/pdo_oracle driver
+ *             MultipleActiveResultSets?: bool|Param, // Configuring MultipleActiveResultSets for the pdo_sqlsrv driver
+ *             use_savepoints?: bool|Param, // Use savepoints for nested transactions
+ *             instancename?: scalar|null|Param, // Optional parameter, complete whether to add the INSTANCE_NAME parameter in the connection. It is generally used to connect to an Oracle RAC server to select the name of a particular instance.
+ *             connectstring?: scalar|null|Param, // Complete Easy Connect connection descriptor, see https://docs.oracle.com/database/121/NETAG/naming.htm.When using this option, you will still need to provide the user and password parameters, but the other parameters will no longer be used. Note that when using this parameter, the getHost and getPort methods from Doctrine\DBAL\Connection will no longer function as expected.
+ *             driver?: scalar|null|Param, // Default: "pdo_mysql"
+ *             platform_service?: scalar|null|Param, // Deprecated: The "platform_service" configuration key is deprecated since doctrine-bundle 2.9. DBAL 4 will not support setting a custom platform via connection params anymore.
+ *             auto_commit?: bool|Param,
+ *             schema_filter?: scalar|null|Param,
+ *             logging?: bool|Param, // Default: true
+ *             profiling?: bool|Param, // Default: true
+ *             profiling_collect_backtrace?: bool|Param, // Enables collecting backtraces when profiling is enabled // Default: false
+ *             profiling_collect_schema_errors?: bool|Param, // Enables collecting schema errors when profiling is enabled // Default: true
+ *             disable_type_comments?: bool|Param,
+ *             server_version?: scalar|null|Param,
+ *             idle_connection_ttl?: int|Param, // Default: 600
+ *             driver_class?: scalar|null|Param,
+ *             wrapper_class?: scalar|null|Param,
+ *             keep_slave?: bool|Param, // Deprecated: The "keep_slave" configuration key is deprecated since doctrine-bundle 2.2. Use the "keep_replica" configuration key instead.
+ *             keep_replica?: bool|Param,
+ *             options?: array<string, mixed>,
+ *             mapping_types?: array<string, scalar|null|Param>,
+ *             default_table_options?: array<string, scalar|null|Param>,
+ *             schema_manager_factory?: scalar|null|Param, // Default: "doctrine.dbal.legacy_schema_manager_factory"
+ *             result_cache?: scalar|null|Param,
+ *             slaves?: array<string, array{ // Default: []
+ *                 url?: scalar|null|Param, // A URL with connection information; any parameter value parsed from this string will override explicitly set parameters
+ *                 dbname?: scalar|null|Param,
+ *                 host?: scalar|null|Param, // Defaults to "localhost" at runtime.
+ *                 port?: scalar|null|Param, // Defaults to null at runtime.
+ *                 user?: scalar|null|Param, // Defaults to "root" at runtime.
+ *                 password?: scalar|null|Param, // Defaults to null at runtime.
+ *                 override_url?: bool|Param, // Deprecated: The "doctrine.dbal.override_url" configuration key is deprecated.
+ *                 dbname_suffix?: scalar|null|Param,
+ *                 application_name?: scalar|null|Param,
+ *                 charset?: scalar|null|Param,
+ *                 path?: scalar|null|Param,
+ *                 memory?: bool|Param,
+ *                 unix_socket?: scalar|null|Param, // The unix socket to use for MySQL
+ *                 persistent?: bool|Param, // True to use as persistent connection for the ibm_db2 driver
+ *                 protocol?: scalar|null|Param, // The protocol to use for the ibm_db2 driver (default to TCPIP if omitted)
+ *                 service?: bool|Param, // True to use SERVICE_NAME as connection parameter instead of SID for Oracle
+ *                 servicename?: scalar|null|Param, // Overrules dbname parameter if given and used as SERVICE_NAME or SID connection parameter for Oracle depending on the service parameter.
+ *                 sessionMode?: scalar|null|Param, // The session mode to use for the oci8 driver
+ *                 server?: scalar|null|Param, // The name of a running database server to connect to for SQL Anywhere.
+ *                 default_dbname?: scalar|null|Param, // Override the default database (postgres) to connect to for PostgreSQL connexion.
+ *                 sslmode?: scalar|null|Param, // Determines whether or with what priority a SSL TCP/IP connection will be negotiated with the server for PostgreSQL.
+ *                 sslrootcert?: scalar|null|Param, // The name of a file containing SSL certificate authority (CA) certificate(s). If the file exists, the server's certificate will be verified to be signed by one of these authorities.
+ *                 sslcert?: scalar|null|Param, // The path to the SSL client certificate file for PostgreSQL.
+ *                 sslkey?: scalar|null|Param, // The path to the SSL client key file for PostgreSQL.
+ *                 sslcrl?: scalar|null|Param, // The file name of the SSL certificate revocation list for PostgreSQL.
+ *                 pooled?: bool|Param, // True to use a pooled server with the oci8/pdo_oracle driver
+ *                 MultipleActiveResultSets?: bool|Param, // Configuring MultipleActiveResultSets for the pdo_sqlsrv driver
+ *                 use_savepoints?: bool|Param, // Use savepoints for nested transactions
+ *                 instancename?: scalar|null|Param, // Optional parameter, complete whether to add the INSTANCE_NAME parameter in the connection. It is generally used to connect to an Oracle RAC server to select the name of a particular instance.
+ *                 connectstring?: scalar|null|Param, // Complete Easy Connect connection descriptor, see https://docs.oracle.com/database/121/NETAG/naming.htm.When using this option, you will still need to provide the user and password parameters, but the other parameters will no longer be used. Note that when using this parameter, the getHost and getPort methods from Doctrine\DBAL\Connection will no longer function as expected.
+ *             }>,
+ *             replicas?: array<string, array{ // Default: []
+ *                 url?: scalar|null|Param, // A URL with connection information; any parameter value parsed from this string will override explicitly set parameters
+ *                 dbname?: scalar|null|Param,
+ *                 host?: scalar|null|Param, // Defaults to "localhost" at runtime.
+ *                 port?: scalar|null|Param, // Defaults to null at runtime.
+ *                 user?: scalar|null|Param, // Defaults to "root" at runtime.
+ *                 password?: scalar|null|Param, // Defaults to null at runtime.
+ *                 override_url?: bool|Param, // Deprecated: The "doctrine.dbal.override_url" configuration key is deprecated.
+ *                 dbname_suffix?: scalar|null|Param,
+ *                 application_name?: scalar|null|Param,
+ *                 charset?: scalar|null|Param,
+ *                 path?: scalar|null|Param,
+ *                 memory?: bool|Param,
+ *                 unix_socket?: scalar|null|Param, // The unix socket to use for MySQL
+ *                 persistent?: bool|Param, // True to use as persistent connection for the ibm_db2 driver
+ *                 protocol?: scalar|null|Param, // The protocol to use for the ibm_db2 driver (default to TCPIP if omitted)
+ *                 service?: bool|Param, // True to use SERVICE_NAME as connection parameter instead of SID for Oracle
+ *                 servicename?: scalar|null|Param, // Overrules dbname parameter if given and used as SERVICE_NAME or SID connection parameter for Oracle depending on the service parameter.
+ *                 sessionMode?: scalar|null|Param, // The session mode to use for the oci8 driver
+ *                 server?: scalar|null|Param, // The name of a running database server to connect to for SQL Anywhere.
+ *                 default_dbname?: scalar|null|Param, // Override the default database (postgres) to connect to for PostgreSQL connexion.
+ *                 sslmode?: scalar|null|Param, // Determines whether or with what priority a SSL TCP/IP connection will be negotiated with the server for PostgreSQL.
+ *                 sslrootcert?: scalar|null|Param, // The name of a file containing SSL certificate authority (CA) certificate(s). If the file exists, the server's certificate will be verified to be signed by one of these authorities.
+ *                 sslcert?: scalar|null|Param, // The path to the SSL client certificate file for PostgreSQL.
+ *                 sslkey?: scalar|null|Param, // The path to the SSL client key file for PostgreSQL.
+ *                 sslcrl?: scalar|null|Param, // The file name of the SSL certificate revocation list for PostgreSQL.
+ *                 pooled?: bool|Param, // True to use a pooled server with the oci8/pdo_oracle driver
+ *                 MultipleActiveResultSets?: bool|Param, // Configuring MultipleActiveResultSets for the pdo_sqlsrv driver
+ *                 use_savepoints?: bool|Param, // Use savepoints for nested transactions
+ *                 instancename?: scalar|null|Param, // Optional parameter, complete whether to add the INSTANCE_NAME parameter in the connection. It is generally used to connect to an Oracle RAC server to select the name of a particular instance.
+ *                 connectstring?: scalar|null|Param, // Complete Easy Connect connection descriptor, see https://docs.oracle.com/database/121/NETAG/naming.htm.When using this option, you will still need to provide the user and password parameters, but the other parameters will no longer be used. Note that when using this parameter, the getHost and getPort methods from Doctrine\DBAL\Connection will no longer function as expected.
+ *             }>,
+ *         }>,
+ *     },
+ *     orm?: array{
+ *         default_entity_manager?: scalar|null|Param,
+ *         auto_generate_proxy_classes?: scalar|null|Param, // Auto generate mode possible values are: "NEVER", "ALWAYS", "FILE_NOT_EXISTS", "EVAL", "FILE_NOT_EXISTS_OR_CHANGED" // Default: false
+ *         enable_lazy_ghost_objects?: bool|Param, // Enables the new implementation of proxies based on lazy ghosts instead of using the legacy implementation // Default: false
+ *         proxy_dir?: scalar|null|Param, // Default: "%kernel.cache_dir%/doctrine/orm/Proxies"
+ *         proxy_namespace?: scalar|null|Param, // Default: "Proxies"
+ *         controller_resolver?: bool|array{
+ *             enabled?: bool|Param, // Default: true
+ *             auto_mapping?: bool|null|Param, // Set to false to disable using route placeholders as lookup criteria when the primary key doesn't match the argument name // Default: null
+ *             evict_cache?: bool|Param, // Set to true to fetch the entity from the database instead of using the cache, if any // Default: false
+ *         },
+ *         entity_managers?: array<string, array{ // Default: []
+ *             query_cache_driver?: string|array{
+ *                 type?: scalar|null|Param, // Default: null
+ *                 id?: scalar|null|Param,
+ *                 pool?: scalar|null|Param,
+ *             },
+ *             metadata_cache_driver?: string|array{
+ *                 type?: scalar|null|Param, // Default: null
+ *                 id?: scalar|null|Param,
+ *                 pool?: scalar|null|Param,
+ *             },
+ *             result_cache_driver?: string|array{
+ *                 type?: scalar|null|Param, // Default: null
+ *                 id?: scalar|null|Param,
+ *                 pool?: scalar|null|Param,
+ *             },
+ *             entity_listeners?: array{
+ *                 entities?: array<string, array{ // Default: []
+ *                     listeners?: array<string, array{ // Default: []
+ *                         events?: list<array{ // Default: []
+ *                             type?: scalar|null|Param,
+ *                             method?: scalar|null|Param, // Default: null
+ *                         }>,
+ *                     }>,
+ *                 }>,
+ *             },
+ *             connection?: scalar|null|Param,
+ *             class_metadata_factory_name?: scalar|null|Param, // Default: "Doctrine\\ORM\\Mapping\\ClassMetadataFactory"
+ *             default_repository_class?: scalar|null|Param, // Default: "Doctrine\\ORM\\EntityRepository"
+ *             auto_mapping?: scalar|null|Param, // Default: false
+ *             naming_strategy?: scalar|null|Param, // Default: "doctrine.orm.naming_strategy.default"
+ *             quote_strategy?: scalar|null|Param, // Default: "doctrine.orm.quote_strategy.default"
+ *             typed_field_mapper?: scalar|null|Param, // Default: "doctrine.orm.typed_field_mapper.default"
+ *             entity_listener_resolver?: scalar|null|Param, // Default: null
+ *             repository_factory?: scalar|null|Param, // Default: "doctrine.orm.container_repository_factory"
+ *             schema_ignore_classes?: list<scalar|null|Param>,
+ *             report_fields_where_declared?: bool|Param, // Set to "true" to opt-in to the new mapping driver mode that was added in Doctrine ORM 2.16 and will be mandatory in ORM 3.0. See https://github.com/doctrine/orm/pull/10455. // Default: false
+ *             validate_xml_mapping?: bool|Param, // Set to "true" to opt-in to the new mapping driver mode that was added in Doctrine ORM 2.14 and will be mandatory in ORM 3.0. See https://github.com/doctrine/orm/pull/6728. // Default: false
+ *             second_level_cache?: array{
+ *                 region_cache_driver?: string|array{
+ *                     type?: scalar|null|Param, // Default: null
+ *                     id?: scalar|null|Param,
+ *                     pool?: scalar|null|Param,
+ *                 },
+ *                 region_lock_lifetime?: scalar|null|Param, // Default: 60
+ *                 log_enabled?: bool|Param, // Default: true
+ *                 region_lifetime?: scalar|null|Param, // Default: 3600
+ *                 enabled?: bool|Param, // Default: true
+ *                 factory?: scalar|null|Param,
+ *                 regions?: array<string, array{ // Default: []
+ *                     cache_driver?: string|array{
+ *                         type?: scalar|null|Param, // Default: null
+ *                         id?: scalar|null|Param,
+ *                         pool?: scalar|null|Param,
+ *                     },
+ *                     lock_path?: scalar|null|Param, // Default: "%kernel.cache_dir%/doctrine/orm/slc/filelock"
+ *                     lock_lifetime?: scalar|null|Param, // Default: 60
+ *                     type?: scalar|null|Param, // Default: "default"
+ *                     lifetime?: scalar|null|Param, // Default: 0
+ *                     service?: scalar|null|Param,
+ *                     name?: scalar|null|Param,
+ *                 }>,
+ *                 loggers?: array<string, array{ // Default: []
+ *                     name?: scalar|null|Param,
+ *                     service?: scalar|null|Param,
+ *                 }>,
+ *             },
+ *             hydrators?: array<string, scalar|null|Param>,
+ *             mappings?: array<string, bool|string|array{ // Default: []
+ *                 mapping?: scalar|null|Param, // Default: true
+ *                 type?: scalar|null|Param,
+ *                 dir?: scalar|null|Param,
+ *                 alias?: scalar|null|Param,
+ *                 prefix?: scalar|null|Param,
+ *                 is_bundle?: bool|Param,
+ *             }>,
+ *             dql?: array{
+ *                 string_functions?: array<string, scalar|null|Param>,
+ *                 numeric_functions?: array<string, scalar|null|Param>,
+ *                 datetime_functions?: array<string, scalar|null|Param>,
+ *             },
+ *             filters?: array<string, string|array{ // Default: []
+ *                 class: scalar|null|Param,
+ *                 enabled?: bool|Param, // Default: false
+ *                 parameters?: array<string, mixed>,
+ *             }>,
+ *             identity_generation_preferences?: array<string, scalar|null|Param>,
+ *         }>,
+ *         resolve_target_entities?: array<string, scalar|null|Param>,
+ *     },
+ * }
+ * @psalm-type DoctrineMigrationsConfig = array{
+ *     migrations_paths?: array<string, scalar|null|Param>,
+ *     services?: array<string, scalar|null|Param>,
+ *     factories?: array<string, scalar|null|Param>,
+ *     storage?: array{ // Storage to use for migration status metadata.
+ *         table_storage?: array{ // The default metadata storage, implemented as a table in the database.
+ *             table_name?: scalar|null|Param, // Default: null
+ *             version_column_name?: scalar|null|Param, // Default: null
+ *             version_column_length?: scalar|null|Param, // Default: null
+ *             executed_at_column_name?: scalar|null|Param, // Default: null
+ *             execution_time_column_name?: scalar|null|Param, // Default: null
+ *         },
+ *     },
+ *     migrations?: list<scalar|null|Param>,
+ *     connection?: scalar|null|Param, // Connection name to use for the migrations database. // Default: null
+ *     em?: scalar|null|Param, // Entity manager name to use for the migrations database (available when doctrine/orm is installed). // Default: null
+ *     all_or_nothing?: scalar|null|Param, // Run all migrations in a transaction. // Default: false
+ *     check_database_platform?: scalar|null|Param, // Adds an extra check in the generated migrations to allow execution only on the same platform as they were initially generated on. // Default: true
+ *     custom_template?: scalar|null|Param, // Custom template path for generated migration classes. // Default: null
+ *     organize_migrations?: scalar|null|Param, // Organize migrations mode. Possible values are: "BY_YEAR", "BY_YEAR_AND_MONTH", false // Default: false
+ *     enable_profiler?: bool|Param, // Whether or not to enable the profiler collector to calculate and visualize migration status. This adds some queries overhead. // Default: false
+ *     transactional?: bool|Param, // Whether or not to wrap migrations in a single transaction. // Default: true
+ * }
+ * @psalm-type MakerConfig = array{
+ *     root_namespace?: scalar|null|Param, // Default: "App"
+ *     generate_final_classes?: bool|Param, // Default: true
+ *     generate_final_entities?: bool|Param, // Default: false
+ * }
+ * @psalm-type NotifyConfig = array{
+ *     mercure_hub?: scalar|null|Param, // Mercube hub service id // Default: "mercure.hub.default"
+ * }
+ * @psalm-type ReactConfig = array{
+ *     controllers_path?: scalar|null|Param, // The path to the directory where React controller components are stored - relevant only when using symfony/asset-mapper. // Default: "%kernel.project_dir%/assets/react/controllers"
+ *     name_glob?: list<scalar|null|Param>,
+ * }
+ * @psalm-type VueConfig = array{
+ *     controllers_path?: scalar|null|Param, // The path to the directory where Vue controller components are stored - relevant only when using symfony/asset-mapper. // Default: "%kernel.project_dir%/assets/vue/controllers"
+ *     name_glob?: list<scalar|null|Param>,
+ * }
+ * @psalm-type SvelteConfig = array{
+ *     controllers_path?: scalar|null|Param, // The path to the directory where Svelte controller components are stored - relevant only when using symfony/asset-mapper. // Default: "%kernel.project_dir%/assets/svelte/controllers"
+ *     name_glob?: list<scalar|null|Param>,
+ * }
+ * @psalm-type UxTranslatorConfig = array{
+ *     dump_directory?: scalar|null|Param, // The directory where translations and TypeScript types are dumped. // Default: "%kernel.project_dir%/var/translations"
+ *     dump_typescript?: bool|Param, // Control whether TypeScript types are dumped alongside translations. Disable this if you do not use TypeScript (e.g. in production when using AssetMapper). // Default: true
+ *     domains?: string|array{ // List of domains to include/exclude from the generated translations. Prefix with a `!` to exclude a domain.
+ *         type?: scalar|null|Param,
+ *         elements?: list<scalar|null|Param>,
+ *     },
+ *     keys_patterns?: list<scalar|null|Param>,
+ * }
+ * @psalm-type StimulusConfig = array{
+ *     controller_paths?: list<scalar|null|Param>,
+ *     controllers_json?: scalar|null|Param, // Default: "%kernel.project_dir%/assets/controllers.json"
+ * }
+ * @psalm-type ZenstruckFoundryConfig = array{
+ *     auto_refresh_proxies?: bool|null|Param, // Deprecated: Since 2.0 auto_refresh_proxies defaults to true and this configuration has no effect. // Whether to auto-refresh proxies by default (https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#auto-refresh) // Default: null
+ *     faker?: array{ // Configure the faker used by your factories.
+ *         locale?: scalar|null|Param, // The default locale to use for faker. // Default: null
+ *         seed?: scalar|null|Param, // Random number generator seed to produce the same fake values every run. // Default: null
+ *         service?: scalar|null|Param, // Service id for custom faker instance. // Default: null
+ *     },
+ *     instantiator?: array{ // Configure the default instantiator used by your object factories.
+ *         use_constructor?: bool|Param, // Use the constructor to instantiate objects. // Default: true
+ *         allow_extra_attributes?: bool|Param, // Whether or not to skip attributes that do not correspond to properties. // Default: false
+ *         always_force_properties?: bool|Param, // Whether or not to skip setters and force set object properties (public/private/protected) directly. // Default: false
+ *         service?: scalar|null|Param, // Service id of your custom instantiator. // Default: null
+ *     },
+ *     global_state?: list<scalar|null|Param>,
+ *     orm?: array{
+ *         auto_persist?: bool|Param, // Automatically persist entities when created. // Default: true
+ *         reset?: array{
+ *             connections?: list<scalar|null|Param>,
+ *             entity_managers?: list<scalar|null|Param>,
+ *             mode?: \Zenstruck\Foundry\ORM\ResetDatabase\ResetDatabaseMode::SCHEMA|\Zenstruck\Foundry\ORM\ResetDatabase\ResetDatabaseMode::MIGRATE|Param, // Reset mode to use with ResetDatabase trait // Default: "schema"
+ *             migrations?: array{
+ *                 configurations?: list<scalar|null|Param>,
+ *             },
+ *         },
+ *     },
+ *     mongo?: array{
+ *         auto_persist?: bool|Param, // Automatically persist documents when created. // Default: true
+ *         reset?: array{
+ *             document_managers?: list<scalar|null|Param>,
+ *         },
+ *     },
+ *     make_factory?: array{
+ *         default_namespace?: scalar|null|Param, // Default namespace where factories will be created by maker. // Default: "Factory"
+ *     },
+ *     make_story?: array{
+ *         default_namespace?: scalar|null|Param, // Default namespace where stories will be created by maker. // Default: "Story"
+ *     },
+ * }
+ * @psalm-type SymfonycastsSassConfig = array{
+ *     root_sass?: list<scalar|null|Param>,
+ *     binary?: scalar|null|Param, // The Sass binary to use // Default: null
+ *     sass_options?: array{
+ *         style?: "compressed"|"expanded"|Param, // The style of the generated CSS: compressed or expanded. // Default: "expanded"
+ *         charset?: bool|Param, // Whether to include the charset declaration in the generated Sass.
+ *         error_css?: bool|Param, // Emit a CSS file when an error occurs.
+ *         source_map?: bool|Param, // Whether to generate source maps. // Default: true
+ *         embed_sources?: bool|Param, // Embed source file contents in source maps.
+ *         embed_source_map?: bool|Param, // Embed source map contents in CSS. // Default: "%kernel.debug%"
+ *         load_path?: list<scalar|null|Param>,
+ *         quiet?: bool|Param, // Don't print warnings.
+ *         quiet_deps?: bool|Param, // Don't print compiler warnings from dependencies.
+ *         stop_on_error?: bool|Param, // Don't compile more files once an error is encountered.
+ *         trace?: bool|Param, // Print full Dart stack traces for exceptions.
+ *     },
+ *     embed_sourcemap?: bool|null|Param, // Deprecated: Option "embed_sourcemap" at "symfonycasts_sass.embed_sourcemap" is deprecated. Use "sass_options.embed_source_map" instead". // Default: null
+ * }
+ * @psalm-type UxIconsConfig = array{
+ *     icon_dir?: scalar|null|Param, // The local directory where icons are stored. // Default: "%kernel.project_dir%/assets/icons"
+ *     default_icon_attributes?: array<string, scalar|null|Param>,
+ *     icon_sets?: array<string, array{ // the icon set prefix (e.g. "acme") // Default: []
+ *         path?: scalar|null|Param, // The local icon set directory path. (cannot be used with 'alias')
+ *         alias?: scalar|null|Param, // The remote icon set identifier. (cannot be used with 'path')
+ *         icon_attributes?: array<string, scalar|null|Param>,
+ *     }>,
+ *     aliases?: array<string, string|Param>,
+ *     iconify?: bool|array{ // Configuration for the remote icon service.
+ *         enabled?: bool|Param, // Default: true
+ *         on_demand?: bool|Param, // Whether to download icons "on demand". // Default: true
+ *         endpoint?: scalar|null|Param, // The endpoint for the Iconify icons API. // Default: "https://api.iconify.design"
+ *     },
+ *     ignore_not_found?: bool|Param, // Ignore error when an icon is not found. Set to 'true' to fail silently. // Default: false
+ * }
+ * @psalm-type UxMapConfig = array{
+ *     renderer?: scalar|null|Param, // Default: null
+ *     google_maps?: array{
+ *         default_map_id?: scalar|null|Param, // Default: null
+ *     },
+ * }
+ * @psalm-type UxToolkitConfig = array<mixed>
+ * @psalm-type SymfonycastsTailwindConfig = array{
+ *     input_css?: list<scalar|null|Param>,
+ *     config_file?: scalar|null|Param, // Path to the tailwind.config.js file // Default: "%kernel.project_dir%/tailwind.config.js"
+ *     binary?: scalar|null|Param, // The tailwind binary to use instead of downloading a new one // Default: null
+ *     binary_version?: scalar|null|Param, // Tailwind CLI version to download - null means the latest version // Default: null
+ *     postcss_config_file?: scalar|null|Param, // Path to PostCSS config file which is passed to the Tailwind CLI // Default: null
+ *     strict_mode?: bool|null|Param, // When enabled, an exception will be thrown if there are no built assets (default: false in `test` env, true otherwise) // Default: null
+ * }
+ * @psalm-type ConfigType = array{
+ *     imports?: ImportsConfig,
+ *     parameters?: ParametersConfig,
+ *     services?: ServicesConfig,
+ *     framework?: FrameworkConfig,
+ *     twig?: TwigConfig,
+ *     twig_extra?: TwigExtraConfig,
+ *     turbo?: TurboConfig,
+ *     mercure?: MercureConfig,
+ *     monolog?: MonologConfig,
+ *     twig_component?: TwigComponentConfig,
+ *     live_component?: LiveComponentConfig,
+ *     lazy_image?: LazyImageConfig,
+ *     doctrine?: DoctrineConfig,
+ *     doctrine_migrations?: DoctrineMigrationsConfig,
+ *     notify?: NotifyConfig,
+ *     react?: ReactConfig,
+ *     vue?: VueConfig,
+ *     svelte?: SvelteConfig,
+ *     ux_translator?: UxTranslatorConfig,
+ *     stimulus?: StimulusConfig,
+ *     symfonycasts_sass?: SymfonycastsSassConfig,
+ *     ux_icons?: UxIconsConfig,
+ *     ux_map?: UxMapConfig,
+ *     ux_toolkit?: UxToolkitConfig,
+ *     symfonycasts_tailwind?: SymfonycastsTailwindConfig,
+ *     "when@dev"?: array{
+ *         imports?: ImportsConfig,
+ *         parameters?: ParametersConfig,
+ *         services?: ServicesConfig,
+ *         framework?: FrameworkConfig,
+ *         twig?: TwigConfig,
+ *         twig_extra?: TwigExtraConfig,
+ *         turbo?: TurboConfig,
+ *         mercure?: MercureConfig,
+ *         web_profiler?: WebProfilerConfig,
+ *         monolog?: MonologConfig,
+ *         debug?: DebugConfig,
+ *         twig_component?: TwigComponentConfig,
+ *         live_component?: LiveComponentConfig,
+ *         lazy_image?: LazyImageConfig,
+ *         doctrine?: DoctrineConfig,
+ *         doctrine_migrations?: DoctrineMigrationsConfig,
+ *         maker?: MakerConfig,
+ *         notify?: NotifyConfig,
+ *         react?: ReactConfig,
+ *         vue?: VueConfig,
+ *         svelte?: SvelteConfig,
+ *         ux_translator?: UxTranslatorConfig,
+ *         stimulus?: StimulusConfig,
+ *         zenstruck_foundry?: ZenstruckFoundryConfig,
+ *         symfonycasts_sass?: SymfonycastsSassConfig,
+ *         ux_icons?: UxIconsConfig,
+ *         ux_map?: UxMapConfig,
+ *         ux_toolkit?: UxToolkitConfig,
+ *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
+ *     },
+ *     "when@prod"?: array{
+ *         imports?: ImportsConfig,
+ *         parameters?: ParametersConfig,
+ *         services?: ServicesConfig,
+ *         framework?: FrameworkConfig,
+ *         twig?: TwigConfig,
+ *         twig_extra?: TwigExtraConfig,
+ *         turbo?: TurboConfig,
+ *         mercure?: MercureConfig,
+ *         monolog?: MonologConfig,
+ *         twig_component?: TwigComponentConfig,
+ *         live_component?: LiveComponentConfig,
+ *         lazy_image?: LazyImageConfig,
+ *         doctrine?: DoctrineConfig,
+ *         doctrine_migrations?: DoctrineMigrationsConfig,
+ *         notify?: NotifyConfig,
+ *         react?: ReactConfig,
+ *         vue?: VueConfig,
+ *         svelte?: SvelteConfig,
+ *         ux_translator?: UxTranslatorConfig,
+ *         stimulus?: StimulusConfig,
+ *         symfonycasts_sass?: SymfonycastsSassConfig,
+ *         ux_icons?: UxIconsConfig,
+ *         ux_map?: UxMapConfig,
+ *         ux_toolkit?: UxToolkitConfig,
+ *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
+ *     },
+ *     "when@test"?: array{
+ *         imports?: ImportsConfig,
+ *         parameters?: ParametersConfig,
+ *         services?: ServicesConfig,
+ *         framework?: FrameworkConfig,
+ *         twig?: TwigConfig,
+ *         twig_extra?: TwigExtraConfig,
+ *         turbo?: TurboConfig,
+ *         mercure?: MercureConfig,
+ *         web_profiler?: WebProfilerConfig,
+ *         monolog?: MonologConfig,
+ *         twig_component?: TwigComponentConfig,
+ *         live_component?: LiveComponentConfig,
+ *         lazy_image?: LazyImageConfig,
+ *         doctrine?: DoctrineConfig,
+ *         doctrine_migrations?: DoctrineMigrationsConfig,
+ *         notify?: NotifyConfig,
+ *         react?: ReactConfig,
+ *         vue?: VueConfig,
+ *         svelte?: SvelteConfig,
+ *         ux_translator?: UxTranslatorConfig,
+ *         stimulus?: StimulusConfig,
+ *         zenstruck_foundry?: ZenstruckFoundryConfig,
+ *         symfonycasts_sass?: SymfonycastsSassConfig,
+ *         ux_icons?: UxIconsConfig,
+ *         ux_map?: UxMapConfig,
+ *         ux_toolkit?: UxToolkitConfig,
+ *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
+ *     },
+ *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
+ *         imports?: ImportsConfig,
+ *         parameters?: ParametersConfig,
+ *         services?: ServicesConfig,
+ *         ...<string, ExtensionType>,
+ *     }>
+ * }
+ */
+final class App
+{
+    /**
+     * @param ConfigType $config
+     *
+     * @psalm-return ConfigType
+     */
+    public static function config(array $config): array
+    {
+        return AppReference::config($config);
+    }
+}
+
+namespace Symfony\Component\Routing\Loader\Configurator;
+
+/**
+ * This class provides array-shapes for configuring the routes of an application.
+ *
+ * Example:
+ *
+ *     ```php
+ *     // config/routes.php
+ *     namespace Symfony\Component\Routing\Loader\Configurator;
+ *
+ *     return Routes::config([
+ *         'controllers' => [
+ *             'resource' => 'routing.controllers',
+ *         ],
+ *     ]);
+ *     ```
+ *
+ * @psalm-type RouteConfig = array{
+ *     path: string|array<string,string>,
+ *     controller?: string,
+ *     methods?: string|list<string>,
+ *     requirements?: array<string,string>,
+ *     defaults?: array<string,mixed>,
+ *     options?: array<string,mixed>,
+ *     host?: string|array<string,string>,
+ *     schemes?: string|list<string>,
+ *     condition?: string,
+ *     locale?: string,
+ *     format?: string,
+ *     utf8?: bool,
+ *     stateless?: bool,
+ * }
+ * @psalm-type ImportConfig = array{
+ *     resource: string,
+ *     type?: string,
+ *     exclude?: string|list<string>,
+ *     prefix?: string|array<string,string>,
+ *     name_prefix?: string,
+ *     trailing_slash_on_root?: bool,
+ *     controller?: string,
+ *     methods?: string|list<string>,
+ *     requirements?: array<string,string>,
+ *     defaults?: array<string,mixed>,
+ *     options?: array<string,mixed>,
+ *     host?: string|array<string,string>,
+ *     schemes?: string|list<string>,
+ *     condition?: string,
+ *     locale?: string,
+ *     format?: string,
+ *     utf8?: bool,
+ *     stateless?: bool,
+ * }
+ * @psalm-type AliasConfig = array{
+ *     alias: string,
+ *     deprecated?: array{package:string, version:string, message?:string},
+ * }
+ * @psalm-type RoutesConfig = array{
+ *     "when@dev"?: array<string, RouteConfig|ImportConfig|AliasConfig>,
+ *     "when@prod"?: array<string, RouteConfig|ImportConfig|AliasConfig>,
+ *     "when@test"?: array<string, RouteConfig|ImportConfig|AliasConfig>,
+ *     ...<string, RouteConfig|ImportConfig|AliasConfig>
+ * }
+ */
+final class Routes
+{
+    /**
+     * @param RoutesConfig $config
+     *
+     * @psalm-return RoutesConfig
+     */
+    public static function config(array $config): array
+    {
+        return $config;
+    }
+}
