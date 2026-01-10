@@ -66,10 +66,12 @@ class StimulusLazyControllerHandler {
     private lazyLoadExistingControllers(element: Element) {
         Array.from(element.querySelectorAll(`[${controllerAttribute}]`))
             .flatMap(extractControllerNamesFrom)
-            .forEach((controllerName) => this.loadLazyController(controllerName));
+            .forEach((controllerName) => {
+                this.loadLazyController(controllerName);
+            });
     }
 
-    private loadLazyController(name: string) {
+    private loadLazyController(name: string): void {
         if (!this.lazyControllers[name]) {
             return;
         }
@@ -106,9 +108,9 @@ class StimulusLazyControllerHandler {
                             attributeName === controllerAttribute &&
                             (target as Element).getAttribute(controllerAttribute)
                         ) {
-                            extractControllerNamesFrom(target as Element).forEach((controllerName) =>
-                                this.loadLazyController(controllerName)
-                            );
+                            extractControllerNamesFrom(target as Element).forEach((controllerName) => {
+                                this.loadLazyController(controllerName);
+                            });
                         }
 
                         break;
@@ -144,6 +146,6 @@ function extractControllerNamesFrom(element: Element): string[] {
 }
 
 function canRegisterController(name: string, application: Application) {
-    // @ts-ignore
+    // @ts-expect-error
     return !application.router.modulesByIdentifier.has(name);
 }

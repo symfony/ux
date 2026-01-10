@@ -1,5 +1,5 @@
 {
-    "//": "This file is used to compile UX packages for use in the browser.",
+    "//": "This file is used to compile UX package for use in the browser.",
     "compilerOptions": {
         "lib": ["dom", "es2015"],
         "module": "es2015",

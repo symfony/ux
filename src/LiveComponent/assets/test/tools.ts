@@ -242,7 +242,6 @@ class MockedAjaxCall {
                 // this should be a simple, top-level property update
                 if (null !== this.expectedUpdatedPropsFromParent) {
                     Object.keys(this.expectedUpdatedPropsFromParent).forEach((key) => {
-                        // @ts-ignore
                         newProps[key] = this.expectedUpdatedPropsFromParent[key];
                     });
                 }
@@ -292,7 +291,7 @@ class MockedAjaxCall {
         });
 
         return new BackendRequest(
-            // @ts-ignore Response doesn't quite match the underlying interface
+            // @ts-expect-error Response doesn't quite match the underlying interface
             promise,
             this.expectedActions.map((action) => action.name),
             Object.keys(this.expectedSentUpdatedData)
@@ -491,7 +490,7 @@ export function getComponent(element: HTMLElement | null) {
         throw new Error('could not find element');
     }
 
-    // @ts-ignore
+    // @ts-expect-error
     const component = element.__component;
     if (!(component instanceof Component)) {
         throw new Error('missing component');

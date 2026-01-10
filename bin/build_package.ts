@@ -70,7 +70,7 @@ async function main() {
         external: Array.from(external),
         format: 'esm',
         platform: 'browser',
-        tsconfig: path.join(import.meta.dirname, '../tsconfig.packages.json'),
+        tsconfig: path.join(packageRoot, 'tsconfig.json'),
         dts: {
             entry: inputFiles.filter(inputFile => !inputFile.endsWith('.css')),
         },
