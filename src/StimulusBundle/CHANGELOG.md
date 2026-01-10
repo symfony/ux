@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.33
+
+-  Change AssetMapper `excluded_patterns` from `**/controllers.json` to `*/controllers.json`
+
 ## 2.30
 
 -  Ensure compatibility with PHP 8.5
