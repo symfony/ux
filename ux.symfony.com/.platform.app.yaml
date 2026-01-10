@@ -1,6 +1,6 @@
 name: app
 
-type: php:8.3
+type: php:8.5
 
 dependencies:
     php:
@@ -47,8 +47,8 @@ hooks:
 
         curl -s https://get.symfony.com/cloud/configurator | (>&2 bash)
 
-        # We don't need to run yarn or npm... 
-        # ...let's skip both build steps  
+        # We don't need to run yarn or npm...
+        # ...let's skip both build steps
         export NO_YARN=1
         export NO_NPM=1
 
@@ -62,7 +62,7 @@ hooks:
         (>&2 symfony-deploy)
 
         php bin/console app:load-data
-        
+
         # needed because StimulusBundle / asset mapper will currently
         # expect this asset mapper directory to exist at runtime
         mkdir -p var/translations
