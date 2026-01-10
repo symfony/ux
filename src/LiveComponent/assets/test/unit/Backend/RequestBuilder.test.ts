@@ -202,10 +202,10 @@ describe('buildRequest', () => {
     // Helper method for FileList mocking
     const getFileList = (length = 1) => {
         const blob = new Blob([''], { type: 'text/html' });
-        // @ts-ignore This is a mock and those are needed to mock a File object
+        // @ts-expect-error This is a mock and those are needed to mock a File object
         // biome-ignore lint/complexity/useLiteralKeys: This is a mock and those are needed to mock a File object
         blob['lastModifiedDate'] = '';
-        // @ts-ignore This is a mock and those are needed to mock a File object
+        // @ts-expect-error This is a mock and those are needed to mock a File object
         // biome-ignore lint/complexity/useLiteralKeys: This is a mock and those are needed to mock a File object
         blob['name'] = 'filename';
         const file = <File>blob;

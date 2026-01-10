@@ -31,6 +31,8 @@ export default class {
         ...args: Parameters<ComponentHookCallback<T>>
     ): void {
         const hooks = this.hooks.get(hookName) || [];
-        hooks.forEach((callback) => callback(...args));
+        hooks.forEach((callback) => {
+            callback(...args);
+        });
     }
 }

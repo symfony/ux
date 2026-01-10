@@ -545,12 +545,14 @@ var HookManager_default = class {
   }
   triggerHook(hookName, ...args) {
     const hooks = this.hooks.get(hookName) || [];
-    hooks.forEach((callback) => callback(...args));
+    hooks.forEach((callback) => {
+      callback(...args);
+    });
   }
 };
 
 // ../../../node_modules/.pnpm/idiomorph@0.3.0/node_modules/idiomorph/dist/idiomorph.esm.js
-var Idiomorph = function() {
+var Idiomorph = (function() {
   "use strict";
   let EMPTY_SET = /* @__PURE__ */ new Set();
   let defaults = {
@@ -1093,7 +1095,7 @@ var Idiomorph = function() {
     morph,
     defaults
   };
-}();
+})();
 
 // src/normalize_attributes_for_comparison.ts
 function normalizeAttributesForComparison(element) {

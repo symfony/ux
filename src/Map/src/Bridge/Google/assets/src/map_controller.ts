@@ -94,7 +94,7 @@ export default class extends AbstractMapController<
         // see https://github.com/googlemaps/js-api-loader/issues/837 for more information.
         libraries = ['core', ...libraries.filter((library) => library !== 'core')]; // Ensure 'core' is loaded first
         const librariesImplementations = await Promise.all(libraries.map((library) => loader.importLibrary(library)));
-        librariesImplementations.map((libraryImplementation, index) => {
+        librariesImplementations.forEach((libraryImplementation, index) => {
             if (typeof libraryImplementation !== 'object' || libraryImplementation === null) {
                 return;
             }
@@ -103,7 +103,7 @@ export default class extends AbstractMapController<
 
             // The following libraries are in a sub-namespace
             if (['marker', 'places', 'geometry', 'journeySharing', 'drawing', 'visualization'].includes(library)) {
-                // @ts-ignore
+                // @ts-expect-error
                 _google.maps[library] = libraryImplementation as any;
             } else {
                 _google.maps = { ..._google.maps, ...libraryImplementation };
@@ -113,7 +113,9 @@ export default class extends AbstractMapController<
         _loading = false;
         _loaded = true;
         onLoaded();
-        _onLoadedCallbacks.forEach((callback) => callback());
+        _onLoadedCallbacks.forEach((callback) => {
+            callback();
+        });
         _onLoadedCallbacks = [];
     }
 
