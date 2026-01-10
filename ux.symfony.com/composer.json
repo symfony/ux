@@ -4,7 +4,7 @@
     "type": "project",
     "homepage": "https://ux.symfony.com",
     "require": {
-        "php": ">=8.3",
+        "php": "~8.5.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "composer/semver": "^3.4.3",
