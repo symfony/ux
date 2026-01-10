@@ -56,7 +56,7 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
                 ],
                 'excluded_patterns' => [
                     '*.d.ts',
-                    '**/controllers.json',
+                    '*/controllers.json',
                 ],
             ],
         ]);
