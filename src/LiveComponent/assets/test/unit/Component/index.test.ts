@@ -18,7 +18,7 @@ const makeTestComponent = (): { component: Component; backend: MockBackend } => 
             this.actions = actions;
 
             return new BackendRequest(
-                // @ts-ignore Response doesn't quite match the underlying interface
+                // @ts-expect-error Response doesn't quite match the underlying interface
                 new Promise((resolve) => resolve(new Response('<div data-live-props-value="{}"></div>'))),
                 [],
                 []
@@ -63,7 +63,7 @@ describe('Component class', () => {
             // it's still not *instantly* resolve - it'll
             expect(backendResponse).toBeNull();
             await waitFor(() => expect(backendResponse).not.toBeNull());
-            // @ts-ignore
+            // @ts-expect-error
             expect(await backendResponse?.getBody()).toEqual('<div data-live-props-value="{}"></div>');
         });
 
@@ -107,20 +107,20 @@ describe('Component class', () => {
         it('calls get() on the component', () => {
             const { proxy } = makeDummyComponent();
             proxy.set('firstName', 'Ryan');
-            // @ts-ignore
+            // @ts-expect-error
             expect(proxy.firstName).toBe('Ryan');
         });
 
         it('calls set() on the component', () => {
             const { proxy } = makeDummyComponent();
-            // @ts-ignore
+            // @ts-expect-error
             proxy.firstName = 'Ryan';
             expect(proxy.getData('firstName')).toBe('Ryan');
         });
 
         it('calls an action on a component', async () => {
             const { proxy, backend } = makeDummyComponent();
-            // @ts-ignore
+            // @ts-expect-error
             proxy.save({ foo: 'bar', secondArg: 'secondValue' });
 
             // ugly: the action delays for 0ms, so we just need a TINy

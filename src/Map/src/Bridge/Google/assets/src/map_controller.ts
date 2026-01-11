@@ -95,7 +95,9 @@ export default class extends AbstractMapController<
         _loading = false;
         _loaded = true;
         onLoaded();
-        _onLoadedCallbacks.forEach((callback) => callback());
+        _onLoadedCallbacks.forEach((callback) => {
+            callback();
+        });
         _onLoadedCallbacks = [];
     }
 

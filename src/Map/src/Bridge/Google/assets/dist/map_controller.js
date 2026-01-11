@@ -36,11 +36,21 @@ var abstract_map_controller_default = class extends Controller {
     this.createCircle = this.createDrawingFactory("circle", this.circles, this.doCreateCircle.bind(this));
     this.createRectangle = this.createDrawingFactory("rectangle", this.rectangles, this.doCreateRectangle.bind(this));
     this.map = this.doCreateMap({ definition: mapDefinition });
-    this.markersValue.forEach((definition) => this.createMarker({ definition }));
-    this.polygonsValue.forEach((definition) => this.createPolygon({ definition }));
-    this.polylinesValue.forEach((definition) => this.createPolyline({ definition }));
-    this.circlesValue.forEach((definition) => this.createCircle({ definition }));
-    this.rectanglesValue.forEach((definition) => this.createRectangle({ definition }));
+    this.markersValue.forEach((definition) => {
+      this.createMarker({ definition });
+    });
+    this.polygonsValue.forEach((definition) => {
+      this.createPolygon({ definition });
+    });
+    this.polylinesValue.forEach((definition) => {
+      this.createPolyline({ definition });
+    });
+    this.circlesValue.forEach((definition) => {
+      this.createCircle({ definition });
+    });
+    this.rectanglesValue.forEach((definition) => {
+      this.createRectangle({ definition });
+    });
     if (this.fitBoundsToMarkersValue) {
       this.doFitBoundsToMarkers();
     }
@@ -169,7 +179,9 @@ var map_controller_default = class extends abstract_map_controller_default {
     _loading = false;
     _loaded = true;
     onLoaded();
-    _onLoadedCallbacks.forEach((callback) => callback());
+    _onLoadedCallbacks.forEach((callback) => {
+      callback();
+    });
     _onLoadedCallbacks = [];
   }
   centerValueChanged() {

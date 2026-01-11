@@ -10,7 +10,7 @@ const createComponent = (element: HTMLElement, name = 'foo-component'): Componen
     const backend: BackendInterface = {
         makeRequest(): BackendRequest {
             return new BackendRequest(
-                // @ts-ignore Response doesn't quite match the underlying interface
+                // @ts-expect-error Response doesn't quite match the underlying interface
                 new Promise((resolve) => resolve(new Response(''))),
                 [],
                 []

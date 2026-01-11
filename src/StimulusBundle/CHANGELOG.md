@@ -6,6 +6,10 @@
 -   Minimum required PHP version is now 8.2
 -   Remove Twig function `ux_controller_link_tags()`, which requires Symfony AssetMapper >=6.4
 
+## 2.33
+
+-  Change AssetMapper `excluded_patterns` from `**/controllers.json` to `*/controllers.json`
+
 ## 2.30
 
 -  Ensure compatibility with PHP 8.5
