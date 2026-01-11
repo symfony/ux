@@ -1,0 +1,38 @@
+---------------------------------------------------------------------------
+
+by jeremyFreeAgent at 2026-01-09T10:59:52Z
+
+I see that we have several blocks available for the same same, (`login-01`, `login-02`, `login-03`, etc.). Don't know how you want that to be used.
+
+Maybe when we run
+```
+symfony console ux:install login --kit shadcn
+```
+it should install all the login blocks?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-01-11T13:04:22Z
+
+Hi, and thanks for the contribution :D
+
+I'm sorry, but I had to undo the changes in `ux.symfony.com`. It didn't match what I had in mind, and reviewing something I'm not 100% sure about myself, would be a pain for both of us... 😅
+
+I kept only what was necessary and made a few changes (JSON schema and an improved error message).
+
+> I see that we have several blocks available for the same same, (`login-01`, `login-02`, `login-03`, etc.). Don't know how you want that to be used.
+>
+> Maybe when we run
+>
+> ```
+> symfony console ux:install login --kit shadcn
+> ```
+>
+> it should install all the login blocks?
+
+The command `ux:install login --kit shadcn` should fail because no recipe will be explicitly named `login`.
+If we allowed multiple `login-*` blocks to be installed, we would have conflicts with the files that need to be copied into the Symfony app.
+
+Recipes block like `login-01`, `login-02`, ... must be installed by running `ux:install login-01 --kit shadcn`, etc.
+
+I will open soon a PR with complete `Block` recipe type support and `login-*` blocks.
