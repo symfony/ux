@@ -9,14 +9,12 @@ on:
         paths-ignore:
             - 'src/*/doc/**'
             - 'src/**/*.md'
-            - 'ux.symfony.com/**'
             - '.github/workflows/app-tests.yaml'
             - '.github/workflows/unit-tests.yaml'
     pull_request:
         paths-ignore:
             - 'src/*/doc/**'
             - 'src/**/*.md'
-            - 'ux.symfony.com/**'
             - '.github/workflows/app-tests.yaml'
             - '.github/workflows/unit-tests.yaml'
 
