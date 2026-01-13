@@ -65,6 +65,12 @@ final class DataModelPropsSubscriber implements EventSubscriberInterface
             $childModel = $binding['child'];
             $parentModel = $binding['parent'];
 
+            // If the data-model attribute contains LiveComponent-specific modifiers, extract the actual property name
+            if (str_contains($parentModel, '|')) {
+                $parentModelParts = explode('|', $parentModel);
+                $parentModel = end($parentModelParts);
+            }
+
             $data[$childModel] = $this->propertyAccessor->getValue($parentMountedComponent->getComponent(), $parentModel);
         }
 
