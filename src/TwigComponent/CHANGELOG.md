@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.33
+
+- Extended support for the `index.html.twig` template fallback when resolving namespaced anonymous components.
+
 ## 2.32
 
 - Add option `profiler.collect_components` to control component data collection
