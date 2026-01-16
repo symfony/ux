@@ -9,7 +9,7 @@
         "map"
     ],
     "homepage": "https://ux.symfony.com/map",
-    "repository": "https://github.com/symfony/ux-leaflet-map",
+    "repository": "https://github.com/symfony/ux",
     "type": "module",
     "files": [
         "dist"

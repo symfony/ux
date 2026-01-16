@@ -9,7 +9,7 @@
         "components"
     ],
     "homepage": "https://ux.symfony.com/live-component",
-    "repository": "https://github.com/symfony/ux-live-component",
+    "repository": "https://github.com/symfony/ux",
     "type": "module",
     "files": [
         "dist"

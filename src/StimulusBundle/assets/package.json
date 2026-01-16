@@ -8,7 +8,7 @@
         "symfony-ux"
     ],
     "homepage": "https://ux.symfony.com/stimulus",
-    "repository": "https://github.com/symfony/stimulus-bundle",
+    "repository": "https://github.com/symfony/ux",
     "type": "module",
     "files": [
         "dist"
