@@ -88,5 +88,4 @@ final class DataModelPropsSubscriberTest extends KernelTestCase
         $this->assertStringContainsString('<textarea data-model="norender|content">default content on mount</textarea>', $html);
         $this->assertStringContainsString('<input data-model="norender|content" value="default content on mount" />', $html);
     }
-
 }
