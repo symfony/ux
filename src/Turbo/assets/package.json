@@ -12,7 +12,7 @@
         "mercure"
     ],
     "homepage": "https://ux.symfony.com/turbo",
-    "repository": "https://github.com/symfony/ux-turbo",
+    "repository": "https://github.com/symfony/ux",
     "type": "module",
     "files": [
         "dist"
