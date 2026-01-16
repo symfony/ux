@@ -3,7 +3,7 @@
     "description": "Easily embed interactive maps in your Symfony application.",
     "private": true,
     "license": "MIT",
-    "version": "2.31.0",
+    "version": "2.32.0",
     "keywords": [
         "symfony-ux",
         "map",
