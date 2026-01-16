@@ -11,7 +11,7 @@
         "maps"
     ],
     "homepage": "https://ux.symfony.com/map",
-    "repository": "https://github.com/symfony/ux-map",
+    "repository": "https://github.com/symfony/ux",
     "type": "module",
     "files": [
         "dist"
