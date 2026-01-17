@@ -4,6 +4,7 @@
 
 -  [Shadcn] Rework templates of `Avatar` recipe
 -  [Shadcn] Rework templates of `Badge` recipe
+-  [Shadcn] Rework templates of `Card` recipe
 
 ## 2.29.0
 
