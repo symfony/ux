@@ -3,6 +3,7 @@
 ## 2.33.0
 
 -  [Shadcn] Rework templates of `Avatar` recipe
+-  [Shadcn] Rework templates of `Badge` recipe
 
 ## 2.29.0
 
