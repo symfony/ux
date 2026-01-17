@@ -1,0 +1,26 @@
+<twig:Dialog id="share_link">
+    <twig:Dialog:Trigger>
+        <twig:Button variant="outline" {{ ...trigger_attrs }}>Share</twig:Button>
+    </twig:Dialog:Trigger>
+    <twig:Dialog:Content class="sm:max-w-md">
+        <twig:Dialog:Header>
+            <twig:Dialog:Title>Share link</twig:Dialog:Title>
+            <twig:Dialog:Description>
+                Anyone who has this link will be able to view this.
+            </twig:Dialog:Description>
+        </twig:Dialog:Header>
+        <div class="flex items-center gap-2">
+            <div class="grid flex-1 gap-2">
+                <twig:Label for="link" class="sr-only">Link</twig:Label>
+                <twig:Input id="link" value="https://ui.shadcn.com/docs/installation" readonly />
+          </div>
+        </div>
+        <twig:Dialog:Footer class="sm:justify-start">
+            <twig:Dialog:Close>
+                <twig:Button type="button" variant="secondary" {{ ...close_attrs }}>
+                    Close
+                </twig:Button>
+            </twig:Dialog:Close>
+        </twig:Dialog:Footer>
+    </twig:Dialog:Content>
+</twig:Dialog>

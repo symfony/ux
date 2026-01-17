@@ -1,0 +1,24 @@
+<div class="w-full max-w-md space-y-6">
+    <twig:Field:Set>
+        <twig:Field:Legend>Address information</twig:Field:Legend>
+        <twig:Field:Description>
+            We need your address to deliver your order.
+        </twig:Field:Description>
+        <twig:Field:Group>
+            <twig:Field>
+                <twig:Field:Label for="street">Street address</twig:Field:Label>
+                <twig:Input id="street" type="text" placeholder="123 Main St" />
+            </twig:Field>
+            <div class="grid grid-cols-2 gap-4">
+                <twig:Field>
+                    <twig:Field:Label for="city">City</twig:Field:Label>
+                    <twig:Input id="city" type="text" placeholder="New York" />
+                </twig:Field>
+                <twig:Field>
+                    <twig:Field:Label for="zip">Postal code</twig:Field:Label>
+                    <twig:Input id="zip" type="text" placeholder="90502" />
+                </twig:Field>
+            </div>
+        </twig:Field:Group>
+    </twig:Field:Set>
+</div>
