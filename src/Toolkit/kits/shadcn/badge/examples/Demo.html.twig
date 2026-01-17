@@ -1,0 +1,32 @@
+<div class="flex flex-col items-center gap-2">
+    <div class="flex w-full flex-wrap gap-2">
+        <twig:Badge>Badge</twig:Badge>
+        <twig:Badge variant="secondary">Secondary</twig:Badge>
+        <twig:Badge variant="destructive">Destructive</twig:Badge>
+        <twig:Badge variant="outline">Outline</twig:Badge>
+    </div>
+    <div class="flex w-full flex-wrap gap-2">
+        <twig:Badge
+            variant="secondary"
+            class="bg-blue-500 text-white dark:bg-blue-600"
+        >
+            <BadgeCheckIcon />
+            Verified
+        </twig:Badge>
+        <twig:Badge class="h-5 min-w-5 rounded-full px-1 font-mono tabular-nums">
+            8
+        </twig:Badge>
+        <twig:Badge
+            class="h-5 min-w-5 rounded-full px-1 font-mono tabular-nums"
+            variant="destructive"
+        >
+            99
+        </twig:Badge>
+        <twig:Badge
+            class="h-5 min-w-5 rounded-full px-1 font-mono tabular-nums"
+            variant="outline"
+        >
+            20+
+        </twig:Badge>
+    </div>
+</div>
