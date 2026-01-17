@@ -12,11 +12,6 @@ The `ICU Message Format`_ is also supported.
 Installation
 ------------
 
-.. note::
-
-    This package works best with WebpackEncore. To use it with AssetMapper, see
-    :ref:`Using with AssetMapper`_.
-
 .. caution::
 
     Before you start, make sure you have `StimulusBundle configured in your app`_.
