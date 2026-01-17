@@ -1,0 +1,27 @@
+<div class="grid w-full max-w-xl items-start gap-4">
+    <twig:Alert>
+        <twig:ux:icon name="tabler:circle-check" class="h-4 w-4" />
+        <twig:Alert:Title>Success! Your changes have been saved</twig:Alert:Title>
+        <twig:Alert:Description>
+            This is an alert with icon, title and description.
+        </twig:Alert:Description>
+    </twig:Alert>
+    <twig:Alert>
+        <twig:ux:icon name="tabler:trash" class="h-4 w-4" />
+        <twig:Alert:Title>
+            This Alert has a title and an icon. No description.
+        </twig:Alert:Title>
+    </twig:Alert>
+    <twig:Alert variant="destructive">
+        <twig:ux:icon name="tabler:alert-circle" class="h-4 w-4" />
+        <twig:Alert:Title>Unable to process your payment.</twig:Alert:Title>
+        <twig:Alert:Description>
+            <p>Please verify your billing information and try again.</p>
+            <ul class="list-inside list-disc text-sm">
+                <li>Check your card details</li>
+                <li>Ensure sufficient funds</li>
+                <li>Verify billing address</li>
+            </ul>
+        </twig:Alert:Description>
+    </twig:Alert>
+</div>

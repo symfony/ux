@@ -1,0 +1,50 @@
+<div class="grid w-full max-w-sm gap-6">
+    <twig:InputGroup>
+        <twig:InputGroup:Input placeholder="Search..." />
+        <twig:InputGroup:Addon>
+            <twig:ux:icon name="lucide:search" class="size-4" />
+        </twig:InputGroup:Addon>
+        <twig:InputGroup:Addon align="inline-end">12 results</twig:InputGroup:Addon>
+    </twig:InputGroup>
+    <twig:InputGroup>
+        <twig:InputGroup:Input placeholder="example.com" class="!pl-1" />
+        <twig:InputGroup:Addon>
+            <twig:InputGroup:Text>https://</twig:InputGroup:Text>
+        </twig:InputGroup:Addon>
+        <twig:InputGroup:Addon align="inline-end">
+            <twig:ux:icon name="tabler:info-circle" class="size-4" title="This is content in (not) a tooltip. (yet!)"/>
+        </twig:InputGroup:Addon>
+    </twig:InputGroup>
+    <twig:InputGroup>
+        <twig:InputGroup:Textarea placeholder="Ask, Search or Chat..." />
+        <twig:InputGroup:Addon align="block-end">
+            <twig:InputGroup:Button
+                variant="outline"
+                class="rounded-full"
+                size="icon-xs"
+            >
+                <twig:ux:icon name="lucide:plus"  />
+            </twig:InputGroup:Button>
+
+            <twig:InputGroup:Text class="ml-auto">52% used</twig:InputGroup:Text>
+            <twig:Separator orientation="vertical" class="!h-4" />
+            <twig:InputGroup:Button
+                variant="default"
+                class="rounded-full"
+                size="icon-xs"
+                disabled
+            >
+                <twig:ux:icon name="tabler:circle-arrow-up-filled" class="size-5" />
+                <span class="sr-only">Send</span>
+            </twig:InputGroup:Button>
+        </twig:InputGroup:Addon>
+    </twig:InputGroup>
+    <twig:InputGroup>
+        <twig:InputGroup:Input placeholder="@shadcn" />
+        <twig:InputGroup:Addon align="inline-end">
+            <div class="bg-primary text-primary-foreground flex size-4 items-center justify-center rounded-full">
+                <twig:ux:icon name="tabler:check" />
+            </div>
+        </twig:InputGroup:Addon>
+    </twig:InputGroup>
+</div>

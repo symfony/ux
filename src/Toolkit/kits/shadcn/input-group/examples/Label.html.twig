@@ -1,0 +1,18 @@
+<div class="grid w-full max-w-sm gap-6" xmlns:twig="http://www.w3.org/1999/html">
+    <twig:InputGroup>
+        <twig:InputGroup:Input id="username" placeholder="symfony" />
+        <twig:InputGroup:Addon>
+            <twig:Label for="username">@</twig:Label>
+        </twig:InputGroup:Addon>
+    </twig:InputGroup>
+
+    <twig:InputGroup>
+        <twig:InputGroup:Input id="email" placeholder="symfony" />
+        <twig:InputGroup:Addon align="block-start">
+            <twig:Label for="email" class="text-foreground">Email</twig:Label>
+            <twig:InputGroup:Button variant="ghost" aria-label="Help" class="ml-auto rounded-full" size="xs">
+                <twig:ux:Icon name="lucide:help-circle" />
+            </twig:InputGroup:Button>
+        </twig:InputGroup:Addon>
+    </twig:InputGroup>
+</div>

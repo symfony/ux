@@ -1,0 +1,31 @@
+<!--
+- Kit: Shadcn UI
+- Component: Kbd
+- Code:
+```twig
+<div class="flex flex-col items-center gap-4">
+    <twig:KbdGroup>
+        <twig:Kbd>⌘</twig:Kbd>
+        <twig:Kbd>⇧</twig:Kbd>
+        <twig:Kbd>⌥</twig:Kbd>
+        <twig:Kbd>⌃</twig:Kbd>
+    </twig:KbdGroup>
+    <twig:KbdGroup>
+        <twig:Kbd>Ctrl</twig:Kbd>
+        <span>+</span>
+        <twig:Kbd>B</twig:Kbd>
+    </twig:KbdGroup>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex flex-col items-center gap-4">
+    <kbd class="inline-flex items-center gap-1"><kbd class="bg-muted text-muted-foreground pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm px-1 font-sans text-xs font-medium select-none [[data-slot=tooltip-content]_&amp;]:bg-background/20 [[data-slot=tooltip-content]_&amp;]:text-background dark:[[data-slot=tooltip-content]_&amp;]:bg-background/10">&acirc;&#140;&#152;</kbd>
+        <kbd class="bg-muted text-muted-foreground pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm px-1 font-sans text-xs font-medium select-none [[data-slot=tooltip-content]_&amp;]:bg-background/20 [[data-slot=tooltip-content]_&amp;]:text-background dark:[[data-slot=tooltip-content]_&amp;]:bg-background/10">&acirc;&#135;&sect;</kbd>
+        <kbd class="bg-muted text-muted-foreground pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm px-1 font-sans text-xs font-medium select-none [[data-slot=tooltip-content]_&amp;]:bg-background/20 [[data-slot=tooltip-content]_&amp;]:text-background dark:[[data-slot=tooltip-content]_&amp;]:bg-background/10">&acirc;&#140;&yen;</kbd>
+        <kbd class="bg-muted text-muted-foreground pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm px-1 font-sans text-xs font-medium select-none [[data-slot=tooltip-content]_&amp;]:bg-background/20 [[data-slot=tooltip-content]_&amp;]:text-background dark:[[data-slot=tooltip-content]_&amp;]:bg-background/10">&acirc;&#140;&#131;</kbd>
+    </kbd>
+    <kbd class="inline-flex items-center gap-1"><kbd class="bg-muted text-muted-foreground pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm px-1 font-sans text-xs font-medium select-none [[data-slot=tooltip-content]_&amp;]:bg-background/20 [[data-slot=tooltip-content]_&amp;]:text-background dark:[[data-slot=tooltip-content]_&amp;]:bg-background/10">Ctrl</kbd>
+        <span>+</span>
+        <kbd class="bg-muted text-muted-foreground pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm px-1 font-sans text-xs font-medium select-none [[data-slot=tooltip-content]_&amp;]:bg-background/20 [[data-slot=tooltip-content]_&amp;]:text-background dark:[[data-slot=tooltip-content]_&amp;]:bg-background/10">B</kbd>
+    </kbd>
+</div>

@@ -1,6 +1,6 @@
 {# @block content The default block #}
 <div
-    class="{{ 'text-2xl font-semibold leading-none tracking-tight ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ 'leading-none font-semibold ' ~ attributes.render('class')|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}
