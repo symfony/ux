@@ -7,6 +7,7 @@
 -  [Shadcn] Rework templates of `card` recipe
 -  [Shadcn] Rework templates of `input-group` recipe
 -  [Shadcn] Rework templates of `table` recipe
+-  [Shadcn] Rework templates of `textarea` recipe
 
 ## 2.29.0
 
