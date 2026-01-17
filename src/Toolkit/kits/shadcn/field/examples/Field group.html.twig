@@ -1,0 +1,39 @@
+<div class="w-full max-w-md">
+    <twig:Field:Group>
+        <twig:Field:Set>
+            <twig:Field:Label>Responses</twig:Field:Label>
+            <twig:Field:Description>
+                Get notified when ChatGPT responds to requests that take time, like research or image generation.
+            </twig:Field:Description>
+            <twig:Field:Group data-slot="checkbox-group">
+                <twig:Field orientation="horizontal">
+                    <twig:Checkbox id="push" checked disabled />
+                    <twig:Field:Label for="push" class="font-normal">
+                        Push notifications
+                    </twig:Field:Label>
+                </twig:Field>
+            </twig:Field:Group>
+        </twig:Field:Set>
+        <twig:Field:Separator />
+        <twig:Field:Set>
+            <twig:Field:Label>Tasks</twig:Field:Label>
+            <twig:Field:Description>
+                Get notified when tasks you've created have updates. <a href="#">Manage tasks</a>
+            </twig:Field:Description>
+            <twig:Field:Group data-slot="checkbox-group">
+                <twig:Field orientation="horizontal">
+                    <twig:Checkbox id="push-tasks" />
+                    <twig:Field:Label for="push-tasks" class="font-normal">
+                        Push notifications
+                    </twig:Field:Label>
+                </twig:Field>
+                <twig:Field orientation="horizontal">
+                    <twig:Checkbox id="email-tasks" />
+                    <twig:Field:Label for="email-tasks" class="font-normal">
+                        Email notifications
+                    </twig:Field:Label>
+                </twig:Field>
+            </twig:Field:Group>
+        </twig:Field:Set>
+    </twig:Field:Group>
+</div>

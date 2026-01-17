@@ -1,0 +1,20 @@
+<twig:Field:Set>
+    <twig:Field:Legend>Profile</twig:Field:Legend>
+    <twig:Field:Description>This appears on invoices and emails.</twig:Field:Description>
+    <twig:Field:Group>
+        <twig:Field>
+            <twig:Field:Label for="name">Full name</twig:Field:Label>
+            <twig:Input id="name" autocomplete="off" placeholder="Evil Rabbit" />
+            <twig:Field:Description>This appears on invoices and emails.</twig:Field:Description>
+        </twig:Field>
+        <twig:Field>
+            <twig:Field:Label for="username">Username</twig:Field:Label>
+            <twig:Input id="username" autocomplete="off" aria-invalid />
+            <twig:Field:Error>Choose another username.</twig:Field:Error>
+        </twig:Field>
+        <twig:Field orientation="horizontal">
+            <twig:Switch id="newsletter" />
+            <twig:Field:Label for="newsletter">Subscribe to the newsletter</twig:Field:Label>
+        </twig:Field>
+    </twig:Field:Group>
+</twig:Field:Set>
