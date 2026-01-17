@@ -2,10 +2,10 @@
 
 ## 2.33.0
 
--  [Shadcn] Rework templates of `Avatar` recipe
--  [Shadcn] Rework templates of `Badge` recipe
--  [Shadcn] Rework templates of `Card` recipe
--  [Shadcn] Rework templates of `Checkbox` recipe
+-  [Shadcn] Rework templates of `avatar` recipe
+-  [Shadcn] Rework templates of `badge` recipe
+-  [Shadcn] Rework templates of `card` recipe
+-  [Shadcn] Rework templates of `input-group` recipe
 
 ## 2.29.0
 

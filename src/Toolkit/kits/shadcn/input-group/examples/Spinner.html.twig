@@ -1,0 +1,33 @@
+<div class="max-w-md flex flex-col gap-4">
+  <twig:InputGroup data-disabled="true">
+    <twig:InputGroup:Input placeholder="Searching..." disabled />
+    <twig:InputGroup:Addon align="inline-end">
+      <twig:Spinner />
+    </twig:InputGroup:Addon>
+  </twig:InputGroup>
+
+  <twig:InputGroup data-disabled="true">
+    <twig:InputGroup:Input placeholder="Processing..." disabled />
+    <twig:InputGroup:Addon>
+      <twig:Spinner />
+    </twig:InputGroup:Addon>
+  </twig:InputGroup>
+
+  <twig:InputGroup data-disabled="true">
+    <twig:InputGroup:Input placeholder="Saving changes..." disabled />
+    <twig:InputGroup:Addon align="inline-end">
+      <twig:InputGroup:Text>Saving...</twig:InputGroup:Text>
+      <twig:Spinner />
+    </twig:InputGroup:Addon>
+  </twig:InputGroup>
+
+  <twig:InputGroup data-disabled="true">
+    <twig:InputGroup:Input placeholder="Refreshing data..." disabled />
+    <twig:InputGroup:Addon>
+      {{ ux_icon('lucide:loader', {class: 'animate-spin'}) }}
+    </twig:InputGroup:Addon>
+    <twig:InputGroup:Addon align="inline-end">
+      <twig:InputGroup:Text class="text-muted-foreground">Please wait...</twig:InputGroup:Text>
+    </twig:InputGroup:Addon>
+  </twig:InputGroup>
+</div>
