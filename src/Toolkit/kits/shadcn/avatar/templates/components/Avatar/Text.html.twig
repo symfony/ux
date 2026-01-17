@@ -1,5 +1,6 @@
 <span
     class="{{ 'flex h-full w-full items-center justify-center rounded-full bg-muted ' ~ attributes.render('class')|tailwind_merge }}"
+    data-slot="avatar-text"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}
