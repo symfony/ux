@@ -20,5 +20,6 @@ final class ParentComponentDataModelWithModifiers2
 {
     use DefaultActionTrait;
 
-    #[LiveProp(writable: true)] public string $content;
+    #[LiveProp(writable: true)]
+    public string $content;
 }
