@@ -61,7 +61,7 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
             }
 
             if (null === $value) {
-                trigger_deprecation('symfony/ux-twig-component', '2.8.0', 'Passing "null" as an attribute value is deprecated and will throw an exception in 3.0.');
+                trigger_deprecation('symfony/ux-twig-component', '2.32.0', 'Passing null as value for the %s attribute will omit the attribute in 3.0. To keep the current result, pass true instead.', $key);
                 $value = true;
             }
 
