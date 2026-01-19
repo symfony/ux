@@ -32,7 +32,7 @@
         "symfony/config": "^5.4|^6.0|^7.0|^8.0",
         "symfony/dependency-injection": "^5.4|^6.0|^7.0|^8.0",
         "symfony/http-kernel": "^5.4|^6.0|^7.0|^8.0",
-        "symfony/stimulus-bundle": "^2.9.1"
+        "symfony/stimulus-bundle": "@dev"
     },
     "require-dev": {
         "symfony/framework-bundle": "^5.4|^6.0|^7.0|^8.0",
@@ -49,5 +49,11 @@
             "url": "https://github.com/symfony/ux"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/StimulusBundle"
+        }
+    ]
 }

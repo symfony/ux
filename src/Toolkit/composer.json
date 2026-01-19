@@ -36,7 +36,7 @@
         "symfony/filesystem": "^6.4|^7.0|^8.0",
         "symfony/framework-bundle": "^6.4|^7.0|^8.0",
         "symfony/twig-bundle": "^6.4|^7.0|^8.0",
-        "symfony/ux-twig-component": "^2.25.1",
+        "symfony/ux-twig-component": "@dev",
         "symfony/yaml": "^6.4|^7.0|^8.0"
     },
     "require-dev": {
@@ -49,7 +49,7 @@
         "symfony/phpunit-bridge": "^7.2|^8.0",
         "spatie/phpunit-snapshot-assertions": "^4.2.17|^5.2.3",
         "phpunit/phpunit": "^9.6.22",
-        "symfony/ux-icons": "^2.18",
+        "symfony/ux-icons": "@dev",
         "tales-from-a-dev/twig-tailwind-extra": "^1.0.0"
     },
     "bin": [
@@ -73,5 +73,15 @@
             "url": "https://github.com/symfony/ux"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Icons"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/TwigComponent"
+        }
+    ]
 }

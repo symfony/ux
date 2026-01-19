@@ -42,28 +42,28 @@
         "symfony/property-info": "6.4.*|7.3.*",
         "symfony/runtime": "6.4.*|7.3.*",
         "symfony/serializer": "6.4.*|7.3.*",
-        "symfony/stimulus-bundle": "^2.29.1",
+        "symfony/stimulus-bundle": "@dev",
         "symfony/twig-bundle": "6.4.*|7.3.*",
-        "symfony/ux-autocomplete": "^2.29.1",
-        "symfony/ux-chartjs": "^2.29.1",
-        "symfony/ux-cropperjs": "^2.29.1",
-        "symfony/ux-dropzone": "^2.29.1",
-        "symfony/ux-google-map": "^2.29.1",
-        "symfony/ux-icons": "^2.29",
-        "symfony/ux-lazy-image": "^2.29.1",
-        "symfony/ux-leaflet-map": "^2.29.1",
-        "symfony/ux-live-component": "^2.29.1",
-        "symfony/ux-map": "^2.29.1",
-        "symfony/ux-notify": "^2.29.1",
-        "symfony/ux-react": "^2.29.1",
-        "symfony/ux-svelte": "^2.29.1",
-        "symfony/ux-swup": "^2.29.1",
-        "symfony/ux-toggle-password": "^2.29.1",
-        "symfony/ux-translator": "^2.29.1",
-        "symfony/ux-turbo": "^2.29.1",
-        "symfony/ux-twig-component": "^2.29",
-        "symfony/ux-typed": "^2.29.1",
-        "symfony/ux-vue": "^2.29.1",
+        "symfony/ux-autocomplete": "@dev",
+        "symfony/ux-chartjs": "@dev",
+        "symfony/ux-cropperjs": "@dev",
+        "symfony/ux-dropzone": "@dev",
+        "symfony/ux-google-map": "@dev",
+        "symfony/ux-icons": "@dev",
+        "symfony/ux-lazy-image": "@dev",
+        "symfony/ux-leaflet-map": "@dev",
+        "symfony/ux-live-component": "@dev",
+        "symfony/ux-map": "@dev",
+        "symfony/ux-notify": "@dev",
+        "symfony/ux-react": "@dev",
+        "symfony/ux-svelte": "@dev",
+        "symfony/ux-swup": "@dev",
+        "symfony/ux-toggle-password": "@dev",
+        "symfony/ux-translator": "@dev",
+        "symfony/ux-turbo": "@dev",
+        "symfony/ux-twig-component": "@dev",
+        "symfony/ux-typed": "@dev",
+        "symfony/ux-vue": "@dev",
         "symfony/yaml": "6.4.*|7.3.*",
         "symfonycasts/dynamic-forms": "^0.2",
         "twig/extra-bundle": "^3.21",
@@ -121,5 +121,91 @@
             "allow-contrib": false,
             "require": "6.4.*|7.3.*"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Autocomplete"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Chartjs"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Cropperjs"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Dropzone"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Icons"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/LazyImage"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/LiveComponent"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Map"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Notify"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/React"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/StimulusBundle"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Svelte"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Swup"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/TogglePassword"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Translator"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Turbo"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/TwigComponent"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Typed"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Vue"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Map/src/Bridge/Google"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Map/src/Bridge/Leaflet"
+        }
+    ]
 }

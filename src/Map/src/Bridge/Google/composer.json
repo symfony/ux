@@ -2,7 +2,11 @@
     "name": "symfony/ux-google-map",
     "type": "symfony-ux-map-bridge",
     "description": "Symfony UX Map GoogleMaps Bridge",
-    "keywords": ["symfony-ux", "google-maps", "map"],
+    "keywords": [
+        "symfony-ux",
+        "google-maps",
+        "map"
+    ],
     "homepage": "https://symfony.com",
     "license": "MIT",
     "authors": [
@@ -17,21 +21,39 @@
     ],
     "require": {
         "php": ">=8.1",
-        "symfony/stimulus-bundle": "^2.18.1",
-        "symfony/ux-map": "^2.19"
+        "symfony/stimulus-bundle": "@dev",
+        "symfony/ux-map": "@dev"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^7.2|^8.0",
-        "symfony/ux-icons": "^2.18",
+        "symfony/ux-icons": "@dev",
         "spatie/phpunit-snapshot-assertions": "^4.2.17|^5.2.3",
         "phpunit/phpunit": "^9.6.22"
     },
     "autoload": {
-        "psr-4": { "Symfony\\UX\\Map\\Bridge\\Google\\": "src/" },
+        "psr-4": {
+            "Symfony\\UX\\Map\\Bridge\\Google\\": "src/"
+        },
         "exclude-from-classmap": []
     },
     "autoload-dev": {
-        "psr-4": { "Symfony\\UX\\Map\\Bridge\\Google\\Tests\\": "tests/" }
+        "psr-4": {
+            "Symfony\\UX\\Map\\Bridge\\Google\\Tests\\": "tests/"
+        }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Icons"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/Map"
+        },
+        {
+            "type": "path",
+            "url": "/var/www/symfony-ux/src/StimulusBundle"
+        }
+    ]
 }
