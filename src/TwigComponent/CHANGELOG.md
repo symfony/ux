@@ -5,10 +5,7 @@
 -  Add option `profiler.collect_components` to control component data collection
    in the profiler (enabled in debug mode by default)
 -  Add support for using directory name as component name for anonymous components
--  Change announced behavior for `null` attribute values: Instead of throwing, 3.0
-   will omit attributes with `null` values. To keep the current result, `true`
-   should be passed instead of `null`.
-
+-  Deprecate using `null` to add an attribute. Starting in `3.0`, passing `true` explicitly sets the attribute, while passing `false` or `null` omits it.
 ## 2.30
 
 -  Ensure compatibility with PHP 8.5
