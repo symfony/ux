@@ -69,6 +69,7 @@ declare class export_default{
     set(name: string, value: any): boolean;
     getOriginalProps(): any;
     getDirtyProps(): any;
+    getPendingProps(): any;
     getUpdatedPropsFromParent(): any;
     flushDirtyPropsToPending(): void;
     reinitializeAllProps(props: any): void;

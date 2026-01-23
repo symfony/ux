@@ -408,7 +408,8 @@ export default class Component {
             newElement,
             this.unsyncedInputsTracker.getUnsyncedInputs(),
             (element: HTMLElement) => getValueFromElement(element, this.valueStore),
-            this.externalMutationTracker
+            this.externalMutationTracker,
+            this.valueStore.getPendingProps(),
         );
         this.externalMutationTracker.start();
 

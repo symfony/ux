@@ -86,6 +86,10 @@ export default class {
         return { ...this.dirtyProps };
     }
 
+    getPendingProps(): any {
+        return { ...this.pendingProps };
+    }
+
     getUpdatedPropsFromParent(): any {
         return { ...this.updatedPropsFromParent };
     }

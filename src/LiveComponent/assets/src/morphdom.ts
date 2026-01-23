@@ -11,12 +11,31 @@ const syncAttributes = (fromEl: Element, toEl: Element): void => {
     }
 };
 
+const syncAttributesExceptValue = (fromEl: Element, toEl: Element): void => {
+    const valueAttributes = ['value', 'checked', 'selected'];
+
+    for (let i = fromEl.attributes.length - 1; i >= 0; i--) {
+        const attr = fromEl.attributes[i];
+        if (!valueAttributes.includes(attr.name) && !toEl.hasAttribute(attr.name)) {
+            fromEl.removeAttribute(attr.name);
+        }
+    }
+
+    for (let i = 0; i < toEl.attributes.length; i++) {
+        const attr = toEl.attributes[i];
+        if (!valueAttributes.includes(attr.name) && fromEl.getAttribute(attr.name) !== attr.value) {
+            fromEl.setAttribute(attr.name, attr.value);
+        }
+    }
+};
+
 export function executeMorphdom(
     rootFromElement: HTMLElement,
     rootToElement: HTMLElement,
     modifiedFieldElements: Array<HTMLElement>,
     getElementValue: (element: HTMLElement) => any,
-    externalMutationTracker: ExternalMutationTracker
+    externalMutationTracker: ExternalMutationTracker,
+    pendingProps: Record<string, any> = {}
 ) {
     /*
      * Handle "data-live-preserve" elements.
@@ -146,10 +165,25 @@ export function executeMorphdom(
                         return false;
                     }
 
-                    // if this field's value has been modified since this HTML was
-                    // requested, set the toEl's value to match the fromEl
+                    const modelDirective = getModelDirectiveFromElement(fromEl, false);
+                    const currentValue = getElementValue(fromEl);
+
+                    // If this field's value has been modified since this HTML was
+                    // requested, preserve the value if it differs from what we sent
                     if (modifiedFieldElements.includes(fromEl)) {
-                        setValueOnElement(toEl, getElementValue(fromEl));
+                        if (modelDirective) {
+                            // For mapped fields, only preserve if DOM value differs from what we sent
+                            const sentValue = pendingProps ? pendingProps[modelDirective.action] : undefined;
+                            if (sentValue !== currentValue) {
+                                // Sync all attributes except value-related ones, then skip
+                                // morphdom to preserve the input value
+                                syncAttributesExceptValue(fromEl, toEl);
+                                return false;
+                            }
+                        } else {
+                            // Unmapped fields: always preserve (original behavior)
+                            setValueOnElement(toEl, currentValue);
+                        }
                     }
 
                     // Special handling for the active element of a model field.
@@ -165,9 +199,9 @@ export function executeMorphdom(
                     if (
                         fromEl === document.activeElement &&
                         fromEl !== document.body &&
-                        null !== getModelDirectiveFromElement(fromEl, false)
+                        modelDirective !== null
                     ) {
-                        setValueOnElement(toEl, getElementValue(fromEl));
+                        setValueOnElement(toEl, currentValue);
                     }
 
                     // handle any external changes to this element

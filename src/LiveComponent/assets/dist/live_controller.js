@@ -1119,7 +1119,22 @@ var syncAttributes = (fromEl, toEl) => {
     toEl.setAttribute(attr.name, attr.value);
   }
 };
-function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, getElementValue, externalMutationTracker) {
+var syncAttributesExceptValue = (fromEl, toEl) => {
+  const valueAttributes = ["value", "checked", "selected"];
+  for (let i = fromEl.attributes.length - 1; i >= 0; i--) {
+    const attr = fromEl.attributes[i];
+    if (!valueAttributes.includes(attr.name) && !toEl.hasAttribute(attr.name)) {
+      fromEl.removeAttribute(attr.name);
+    }
+  }
+  for (let i = 0; i < toEl.attributes.length; i++) {
+    const attr = toEl.attributes[i];
+    if (!valueAttributes.includes(attr.name) && fromEl.getAttribute(attr.name) !== attr.value) {
+      fromEl.setAttribute(attr.name, attr.value);
+    }
+  }
+};
+function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, getElementValue, externalMutationTracker, pendingProps = {}) {
   const originalElementIdsToSwapAfter = [];
   const originalElementsToPreserve = /* @__PURE__ */ new Map();
   const markElementAsNeedingPostMorphSwap = (id, replaceWithClone) => {
@@ -1186,11 +1201,21 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
             fromEl.insertAdjacentElement("afterend", toEl);
             return false;
           }
+          const modelDirective = getModelDirectiveFromElement(fromEl, false);
+          const currentValue = getElementValue(fromEl);
           if (modifiedFieldElements.includes(fromEl)) {
-            setValueOnElement(toEl, getElementValue(fromEl));
+            if (modelDirective) {
+              const sentValue = pendingProps ? pendingProps[modelDirective.action] : void 0;
+              if (sentValue !== currentValue) {
+                syncAttributesExceptValue(fromEl, toEl);
+                return false;
+              }
+            } else {
+              setValueOnElement(toEl, currentValue);
+            }
           }
-          if (fromEl === document.activeElement && fromEl !== document.body && null !== getModelDirectiveFromElement(fromEl, false)) {
-            setValueOnElement(toEl, getElementValue(fromEl));
+          if (fromEl === document.activeElement && fromEl !== document.body && modelDirective !== null) {
+            setValueOnElement(toEl, currentValue);
           }
           const elementChanges = externalMutationTracker.getChangedElement(fromEl);
           if (elementChanges) {
@@ -1768,6 +1793,9 @@ var ValueStore_default = class {
   getDirtyProps() {
     return { ...this.dirtyProps };
   }
+  getPendingProps() {
+    return { ...this.pendingProps };
+  }
   getUpdatedPropsFromParent() {
     return { ...this.updatedPropsFromParent };
   }
@@ -2079,7 +2107,8 @@ var Component = class {
       newElement,
       this.unsyncedInputsTracker.getUnsyncedInputs(),
       (element) => getValueFromElement(element, this.valueStore),
-      this.externalMutationTracker
+      this.externalMutationTracker,
+      this.valueStore.getPendingProps()
     );
     this.externalMutationTracker.start();
     const newProps = this.elementDriver.getComponentProps();
