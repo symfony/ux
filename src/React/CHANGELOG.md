@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.33
+
+-   Add support for React 19.
+
+    Dependencies `react` and `react-dom` need to be updated together to version `^19.0` if you want to use React 19.
+
 ## 2.30
 
 -  Ensure compatibility with PHP 8.5
