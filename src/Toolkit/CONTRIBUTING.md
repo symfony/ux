@@ -42,7 +42,7 @@ A kit is composed of several recipes, each providing Twig components, styles, an
     - A folder for each recipe provided by the kit, e.g., `button/` for the Button recipe
 4. Each recipe directory contains:
     - A `manifest.json` file containing metadata about the recipe: its type, name, description, files to copy, dependencies, etc.
-    - An `EXAMPLES.md` file with usage examples (used by the UX Website)
+    - A folder `examples/` containing Twig files, it is used for Toolkit tests and previews on UX website
     - Based on the "files to copy" setting, the kit may contain subdirectories such as:
         - `templates/components/` for Twig components
         - `assets/controllers/` for Stimulus controllers
@@ -59,7 +59,8 @@ You can then preview your changes by navigating to the relevant sections in the 
 
 Tests use snapshots to ensure that the kits and their recipes work as expected and to prevent regressions.
 
-Snapshots are created from all Twig code examples provided in each recipe's `EXAMPLES.md` file. The Twig code examples are rendered in an isolated environment.
+Snapshots are created from all Twig code examples provided in each recipe's `examples/` folder.
+The Twig code examples are rendered in an isolated environment.
 
 The rendered output is then compared to stored snapshots to ensure that the kit's recipes work as expected.
 

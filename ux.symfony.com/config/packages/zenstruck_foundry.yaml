@@ -1,6 +1,0 @@
-when@dev: &dev
-    # See full configuration: https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#full-default-bundle-configuration
-    zenstruck_foundry:
-        global_state:         []
-
-when@test: *dev

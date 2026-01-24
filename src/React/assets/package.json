@@ -2,18 +2,26 @@
     "name": "@symfony/ux-react",
     "description": "Integration of React in Symfony",
     "license": "MIT",
-    "version": "2.31.0",
+    "version": "2.32.0",
     "keywords": [
         "symfony-ux"
     ],
     "homepage": "https://ux.symfony.com/react",
-    "repository": "https://github.com/symfony/ux-react",
+    "repository": "https://github.com/symfony/ux",
     "type": "module",
     "files": [
         "dist"
     ],
     "main": "dist/register_controller.js",
     "types": "dist/register_controller.d.ts",
+    "config": {
+        "tests": {
+            "peerDependencyVersions": [
+                { "react": "^18.0", "react-dom": "^18.0" },
+                { "react": "^19.0", "react-dom": "^19.0" }
+            ]
+        }
+    },
     "scripts": {
         "build": "tsx ../../../bin/build_package.ts .",
         "watch": "tsx ../../../bin/build_package.ts . --watch",
@@ -35,23 +43,23 @@
         },
         "importmap": {
             "@hotwired/stimulus": "^3.0.0",
-            "react": "^18.0",
-            "react-dom/client": "^18.0",
+            "react": "^18.0 || ^19.0",
+            "react-dom/client": "^18.0 || ^19.0",
             "@symfony/ux-react": "path:%PACKAGE%/dist/loader.js"
         }
     },
     "peerDependencies": {
         "@hotwired/stimulus": "^3.0.0",
-        "react": "^18.0",
-        "react-dom": "^18.0"
+        "react": "^18.0 || ^19.0",
+        "react-dom": "^18.0 || ^19.0"
     },
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
         "@testing-library/dom": "^10.4.0",
         "@testing-library/jest-dom": "^6.6.3",
         "@testing-library/user-event": "^14.6.1",
-        "@types/react": "^18.0",
-        "@types/react-dom": "^18.0",
+        "@types/react": "^18.0 || ^19.0",
+        "@types/react-dom": "^18.0 || ^19.0",
         "@types/webpack-env": "^1.16",
         "@vitejs/plugin-react": "^4.1.0",
         "jsdom": "^26.1.0",

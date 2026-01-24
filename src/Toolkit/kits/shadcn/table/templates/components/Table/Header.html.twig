@@ -1,6 +1,7 @@
 {# @block content The default block #}
 <thead
     class="{{ '[&_tr]:border-b ' ~ attributes.render('class')|tailwind_merge }}"
+    data-slot="table-header"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}

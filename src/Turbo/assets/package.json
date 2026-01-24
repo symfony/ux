@@ -2,7 +2,7 @@
     "name": "@symfony/ux-turbo",
     "description": "Hotwire Turbo integration for Symfony",
     "license": "MIT",
-    "version": "2.31.0",
+    "version": "2.32.0",
     "keywords": [
         "symfony-ux",
         "turbo",
@@ -12,7 +12,7 @@
         "mercure"
     ],
     "homepage": "https://ux.symfony.com/turbo",
-    "repository": "https://github.com/symfony/ux-turbo",
+    "repository": "https://github.com/symfony/ux",
     "type": "module",
     "files": [
         "dist"

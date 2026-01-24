@@ -6,6 +6,12 @@
 -   Minimum required PHP version is now 8.2
 -   Remove old compatibility layer with deprecated `StimulusTwigExtension` from WebpackEncoreBundle ^1.0, use StimulusBundle instead
 
+## 2.33
+
+-   Add support for React 19.
+
+    Dependencies `react` and `react-dom` need to be updated together to version `^19.0` if you want to use React 19.
+
 ## 2.30
 
 -  Ensure compatibility with PHP 8.5
