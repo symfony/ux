@@ -1,7 +1,8 @@
 {# @block content The default block #}
-<p
-    class="{{ 'text-sm [&_p]:leading-relaxed ' ~ attributes.render('class')|tailwind_merge }}"
+<div
+    data-slot="alert-description"
+    class="{{ 'text-muted-foreground text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4 [&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3 ' ~ attributes.render('class')|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}
-</p>
+</div>
