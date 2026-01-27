@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by ker0x at 2026-01-20T13:05:47Z
+
+Can't we rely on the native `details` and `summary` elements rather than adding another stimulus controller?
+
+---------------------------------------------------------------------------
+
+by daFish at 2026-01-20T19:07:23Z
+
+> Can't we rely on the native `details` and `summary` elements rather than adding another stimulus controller?
+
+I have made the changes which simplify the implementation a lot. The commit is a fixup on purpose for now.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-01-26T22:50:48Z
+
+I just pushed a commit that mimic the Shadcn DOM as close as possible (especially CSS classes and `aria-` attributes that are super important).
+
+I removed the `<detail>` implementation for a more classical one, I had some customisation and transition issues.
+
+Claude Opus 4.5 has been able to generate me a correct Stimulus controller.
+
+https://github.com/user-attachments/assets/c3b5c1a6-98f0-46af-95a3-db7ad321efd1
+
+It's getting late, I will review-it tomorrow.
+
+Thanks for initiating this work!
