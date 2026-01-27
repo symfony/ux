@@ -31,9 +31,9 @@
                             placeholder="1234 5678 9012 3456"
                             required
                         />
-                        <Field:Description>
+                        <twig:Field:Description>
                             Enter your 16-digit card number
-                        </Field:Description>
+                        </twig:Field:Description>
                     </twig:Field>
                     <div class="grid grid-cols-3 gap-4">
                         <twig:Field>
@@ -142,9 +142,8 @@
                         </label>
                         <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 " id="checkout-7j9-card-number-uw1" placeholder="1234 5678 9012 3456" required>
 
-                        <description>
-                            Enter your 16-digit card number
-                        </description>
+                        <p data-slot="field-description" class="text-muted-foreground text-sm leading-normal font-normal group-has-[[data-orientation=horizontal]]/field:text-balance last:mt-0 nth-last-2:-mt-1 [[data-variant=legend]+&amp;]:-mt-1.5 [&amp;&gt;a:hover]:text-primary [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4 ">Enter your 16-digit card number
+                        </p>
                     </div>
                     <div class="grid grid-cols-3 gap-4">
                         <div role="group" data-slot="field" data-orientation="vertical" class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-col [&amp;&gt;*]:w-full [&amp;&gt;.sr-only]:w-auto">
