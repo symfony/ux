@@ -74,6 +74,24 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
                                     ->cannotBeEmpty()
                                 ->end()
                             ->end()
+                            ->arrayNode('suffixes')
+                                ->info("Suffix-based attributes (following Iconify naming conventions).\nhttps://iconify.design/docs/libraries/tools/icon-set/themes.html")
+                                ->normalizeKeys(false)
+                                ->useAttributeAsKey('suffix')
+                                ->arrayPrototype()
+                                    ->info('The suffix name (e.g. "solid", "20-solid")')
+                                    ->children()
+                                        ->arrayNode('icon_attributes')
+                                            ->info('Attributes for icons matching this suffix.')
+                                            ->normalizeKeys(false)
+                                            ->useAttributeAsKey('key')
+                                            ->scalarPrototype()
+                                                ->cannotBeEmpty()
+                                            ->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
                         ->end()
                     ->end()
                     ->validate()
@@ -139,6 +157,7 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
         $iconSetAliases = [];
         $iconSetAttributes = [];
         $iconSetPaths = [];
+        $iconSuffixAttributes = [];
         foreach ($mergedConfig['icon_sets'] as $prefix => $config) {
             if (isset($config['icon_attributes'])) {
                 $iconSetAttributes[$prefix] = $config['icon_attributes'];
@@ -148,6 +167,11 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
             }
             if (isset($config['path'])) {
                 $iconSetPaths[$prefix] = $config['path'];
+            }
+            if (isset($config['suffixes'])) {
+                $suffixes = array_map(static fn ($s) => $s['icon_attributes'] ?? [], $config['suffixes']);
+                uksort($suffixes, static fn ($a, $b) => \strlen($b) <=> \strlen($a));
+                $iconSuffixAttributes[$prefix] = $suffixes;
             }
         }
 
@@ -166,6 +190,7 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
             ->setArgument(1, $mergedConfig['default_icon_attributes'])
             ->setArgument(2, $mergedConfig['aliases'])
             ->setArgument(3, $iconSetAttributes)
+            ->setArgument(4, $iconSuffixAttributes)
         ;
 
         $container->getDefinition('.ux_icons.twig_icon_runtime')

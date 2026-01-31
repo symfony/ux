@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.33
+
+- Add support for suffixes
+
 ## 2.30
 
 - Ensure compatibility with PHP 8.5
