@@ -15,9 +15,9 @@ use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\UX\TogglePassword\Form\TogglePasswordTypeExtension;
 
 trigger_deprecation('symfony/ux-toggle-password', '2.29.0', 'The package is deprecated and will be removed in 3.0. Follow the migration steps in https://github.com/symfony/ux/tree/2.x/src/TogglePassword to keep using TogglePassword in your Symfony application.');
