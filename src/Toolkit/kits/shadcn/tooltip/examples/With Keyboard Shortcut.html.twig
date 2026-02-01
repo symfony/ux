@@ -1,0 +1,12 @@
+<twig:Tooltip id="tooltip-with-keyboard-shortcut">
+    <twig:Tooltip:Trigger>
+        <twig:Button {{ ...trigger_attrs }} variant="outline" size="icon-sm">
+            <twig:ux:icon name="lucide:save" />
+        </twig:Button>
+    </twig:Tooltip:Trigger>
+    <twig:Tooltip:Content class="pr-1.5">
+        <div class="flex items-center gap-2">
+            Save Changes <twig:Kbd>S</twig:Kbd>
+        </div>
+    </twig:Tooltip:Content>
+</twig:Tooltip>

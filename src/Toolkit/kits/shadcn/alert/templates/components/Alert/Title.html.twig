@@ -1,7 +1,8 @@
 {# @block content The default block #}
-<h5
-    class="{{ 'mb-1 font-medium leading-none tracking-tight ' ~ attributes.render('class')|tailwind_merge }}"
+<div
+    data-slot="alert-title"
+    class="{{ 'font-medium group-has-[>svg]/alert:col-start-2 [&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3 ' ~ attributes.render('class')|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}
-</h5>
+</div>
