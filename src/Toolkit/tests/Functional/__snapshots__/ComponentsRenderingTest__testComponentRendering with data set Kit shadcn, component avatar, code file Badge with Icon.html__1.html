@@ -6,10 +6,15 @@
 <twig:Avatar>
     <twig:Avatar:Image src="https://github.com/shadcn.png" alt="@shadcn" />
     <twig:Avatar:Fallback>CN</twig:Avatar:Fallback>
+    <twig:Avatar:Badge>
+        <twig:ux:icon name="lucide:plus" />
+    </twig:Avatar:Badge>
 </twig:Avatar>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
 <span data-slot="avatar" data-size="default" class="group/avatar relative flex size-8 shrink-0 overflow-hidden rounded-full select-none data-[size=lg]:size-10 data-[size=sm]:size-6 "><img data-slot="avatar-image" class="aspect-square size-full " alt="@shadcn" src="https://github.com/shadcn.png">
 
     <span data-slot="avatar-fallback" class="bg-muted text-muted-foreground flex size-full items-center justify-center rounded-full text-sm group-data-[size=sm]/avatar:text-xs ">CN</span>
+    <span data-slot="avatar-badge" class="bg-primary text-primary-foreground ring-background absolute right-0 bottom-0 z-10 inline-flex items-center justify-center rounded-full ring-2 select-none group-data-[size=sm]/avatar:size-2 group-data-[size=sm]/avatar:[&amp;&gt;svg]:hidden group-data-[size=default]/avatar:size-2.5 group-data-[size=default]/avatar:[&amp;&gt;svg]:size-2 group-data-[size=lg]/avatar:size-3 group-data-[size=lg]/avatar:[&amp;&gt;svg]:size-2"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7v14"></path></svg>
+    </span>
 </span>

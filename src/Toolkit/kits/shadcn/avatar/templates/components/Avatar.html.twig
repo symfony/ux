@@ -1,6 +1,11 @@
+{# @prop size 'default'|'sm'|'lg' The size, default to `default` #}
+{# @block content The default block #}
+{%- props size = 'default' -%}
+
 <span
-    class="{{ 'relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full ' ~ attributes.render('class')|tailwind_merge }}"
     data-slot="avatar"
+    data-size="{{ size }}"
+    class="{{ 'group/avatar relative flex size-8 shrink-0 overflow-hidden rounded-full select-none data-[size=lg]:size-10 data-[size=sm]:size-6 ' ~ attributes.render('class')|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}
