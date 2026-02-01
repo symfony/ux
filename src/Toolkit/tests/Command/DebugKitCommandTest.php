@@ -34,8 +34,11 @@ class DebugKitCommandTest extends KernelTestCase
             ->assertOutputContains(implode(\PHP_EOL, [
                 '+--------------+------------------------ Recipe: "avatar" ----------------------------------------+',
                 '| File(s)      | templates/components/Avatar.html.twig                                            |',
+                '|              | templates/components/Avatar/Badge.html.twig                                      |',
+                '|              | templates/components/Avatar/Fallback.html.twig                                   |',
+                '|              | templates/components/Avatar/Group.html.twig                                      |',
+                '|              | templates/components/Avatar/GroupCount.html.twig                                 |',
                 '|              | templates/components/Avatar/Image.html.twig                                      |',
-                '|              | templates/components/Avatar/Text.html.twig                                       |',
                 '| Dependencies | tales-from-a-dev/twig-tailwind-extra:^1.0.0                                      |',
                 '+--------------+----------------------------------------------------------------------------------+',
             ]))
