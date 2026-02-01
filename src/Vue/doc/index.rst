@@ -174,7 +174,7 @@ Webpack Encore or Vite. This means that the ``.vue`` file format cannot be used
 with AssetMapper.
 
 If you *do* still want to use Vue with AssetMapper, you can do so by avoiding
-the ``.vue`` file format. For example, https://github.com/symfony/ux/blob/2.x/ux.symfony.com/assets/vue/controllers/PackageSearch.js.
+the ``.vue`` file format. For example, https://github.com/symfony/ux.symfony.com/blob/main/assets/vue/controllers/PackageSearch.js.
 
 Backward Compatibility promise
 ------------------------------
