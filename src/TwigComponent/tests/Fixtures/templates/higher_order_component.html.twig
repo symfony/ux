@@ -1,0 +1,19 @@
+{# Test base Modal component #}
+<twig:Modal>
+    Simple modal content
+</twig:Modal>
+
+{# Test Modal:Confirm wrapper component with default buttons #}
+<twig:Modal:Confirm>
+    Are you sure you want to delete this item?
+</twig:Modal:Confirm>
+
+{# Test Modal:Confirm with custom button text #}
+<twig:Modal:Confirm confirmText="Yes, delete it" cancelText="No, keep it">
+    This action cannot be undone.
+</twig:Modal:Confirm>
+
+{# Test Modal:Confirm with custom attributes passed through #}
+<twig:Modal:Confirm data-controller="modal" id="delete-modal">
+    Confirm deletion?
+</twig:Modal:Confirm>
