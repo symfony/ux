@@ -1407,6 +1407,61 @@ If no variants match, you can define a default set of classes to apply:
         ...
     </div>
 
+Higher-Order Components (Component Wrappers)
+--------------------------------------------
+
+You can create a component that wraps another component to add additional
+markup, behavior, or structure. This is useful when you want to extend a base
+component without modifying it.
+
+This type of component is sometimes called a "Higher-Order Component" (HOC)
+or a "Component Wrapper".
+
+For example, create a base ``Modal`` component:
+
+.. code-block:: html+twig
+
+    {# templates/components/Modal.html.twig #}
+    <div{{ attributes.defaults({class: 'modal'}) }}>
+        <div class="modal-content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+Then create a ``Modal:Confirm`` component that wraps it and adds confirmation buttons:
+
+.. code-block:: html+twig
+
+    {# templates/components/Modal/Confirm.html.twig #}
+    {% props confirmText = 'Confirm', cancelText = 'Cancel' %}
+
+    <twig:Modal {{ ...attributes.defaults({class: 'modal-confirm'}) }}>
+        {{ block(outerBlocks.content) }}
+
+        <div class="modal-actions">
+            <button type="button" class="btn-secondary">{{ cancelText }}</button>
+            <button type="submit" class="btn-primary">{{ confirmText }}</button>
+        </div>
+    </twig:Modal>
+
+Usage:
+
+.. code-block:: html+twig
+
+    <twig:Modal:Confirm>
+        Are you sure you want to delete this item?
+    </twig:Modal:Confirm>
+
+    <twig:Modal:Confirm confirmText="Yes, delete it" data-controller="modal">
+        This action cannot be undone.
+    </twig:Modal:Confirm>
+
+The key parts are:
+
+- **Spread operator** ``{{ ...attributes }}`` - passes attributes to the wrapped component
+- **``outerBlocks``** - forwards content blocks from the wrapper to the wrapped component
+- The wrapper can add its own props (``confirmText``, ``cancelText``) and markup
+
 Test Helpers
 ------------
 
