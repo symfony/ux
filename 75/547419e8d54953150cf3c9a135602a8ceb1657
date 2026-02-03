@@ -1,0 +1,79 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-02-03T22:14:53Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/switch-from-biomejs-to-oxc/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/switch-from-biomejs-to-oxc/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>99.07 kB</code>
+                    / <code>21.35 kB</code>
+                </td><td>
+                    <code>99.07 kB</code><sup>0%</sup>
+                    / <code>21.35 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/switch-from-biomejs-to-oxc/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/switch-from-biomejs-to-oxc/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.96 kB</code>
+                    / <code>1.51 kB</code>
+                </td><td>
+                    <code>7.97 kB</code><sup>0%</sup>
+                    / <code>1.51 kB</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/switch-from-biomejs-to-oxc/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>5.45 kB</code>
+                    / <code>1.47 kB</code>
+                </td><td>
+                    <code>5.47 kB</code><sup>0%</sup>
+                    / <code>1.48 kB</code><sup>+1% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/switch-from-biomejs-to-oxc/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/switch-from-biomejs-to-oxc/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>3.42 kB</code>
+                    / <code>900 B</code>
+                </td><td>
+                    <code>3.43 kB</code><sup>0%</sup>
+                    / <code>894 B</code><sup>-1% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/switch-from-biomejs-to-oxc/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>14.02 kB</code>
+                    / <code>3.29 kB</code>
+                </td><td>
+                    <code>14.11 kB</code><sup>+1% 📈</sup>
+                    / <code>3.29 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/switch-from-biomejs-to-oxc/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/switch-from-biomejs-to-oxc/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>2.84 kB</code>
+                    / <code>793 B</code>
+                </td><td>
+                    <code>2.85 kB</code><sup>0%</sup>
+                    / <code>794 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/switch-from-biomejs-to-oxc/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>13.77 kB</code>
+                    / <code>3.52 kB</code>
+                </td><td>
+                    <code>13.85 kB</code><sup>+1% 📈</sup>
+                    / <code>3.54 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/switch-from-biomejs-to-oxc/src/Translator/assets/dist"><b>Translator</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/switch-from-biomejs-to-oxc/src/Translator/assets/dist/translator_controller.d.ts"><code>translator_controller.d.ts</code></a></td>
+            <td>
+                    <code>2.01 kB</code>
+                    / <code>696 B</code>
+                </td><td>
+                    <code>2.03 kB</code><sup>+1% 📈</sup>
+                    / <code>701 B</code><sup>+1% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
