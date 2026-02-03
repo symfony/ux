@@ -16,10 +16,7 @@ import { defineConfig, devices } from '@playwright/test';
 import { browsers } from './bin/get_browsers.mjs';
 
 export default defineConfig({
-    testMatch: [
-        '**/test/browser/**/*.{test,spec}.ts',
-        '**/test/**/*.browser.{test,spec}.ts',
-    ],
+    testMatch: ['**/test/browser/**/*.{test,spec}.ts', '**/test/**/*.browser.{test,spec}.ts'],
 
     reporter: [
         ['list'],
@@ -34,7 +31,7 @@ export default defineConfig({
 
         screenshot: 'only-on-failure',
         video: 'retain-on-failure',
-        trace: 'retain-on-failure'
+        trace: 'retain-on-failure',
     },
 
     projects: [
@@ -45,7 +42,7 @@ export default defineConfig({
                 channel: 'chrome',
                 launchOptions: {
                     executablePath: browsers['chrome@lowest'].executablePath,
-                }
+                },
             },
         },
         {
@@ -55,7 +52,7 @@ export default defineConfig({
                 channel: 'chrome',
                 launchOptions: {
                     executablePath: browsers['chrome@latest'].executablePath,
-                }
+                },
             },
         },
 
@@ -74,6 +71,6 @@ export default defineConfig({
             use: {
                 ...devices['Desktop Firefox'],
             },
-        }
+        },
     ],
 });

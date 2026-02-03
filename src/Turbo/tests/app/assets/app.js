@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import { Application } from "@hotwired/stimulus";
-import TurboStreamMercureController from "@symfony/ux-turbo/dist/turbo_stream_controller";
+import { Application } from '@hotwired/stimulus';
+import TurboStreamMercureController from '@symfony/ux-turbo/dist/turbo_stream_controller';
 
 const application = Application.start();
-application.register("symfony--ux-turbo--mercure-turbo-stream", TurboStreamMercureController);
+application.register('symfony--ux-turbo--mercure-turbo-stream', TurboStreamMercureController);
 
 console.log('test app initialized');

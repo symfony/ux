@@ -2,8 +2,8 @@
 name: Functional Tests
 
 defaults:
-  run:
-    shell: bash
+    run:
+        shell: bash
 
 on:
     push:
@@ -19,23 +19,23 @@ jobs:
     turbo-tests:
         runs-on: ${{ matrix.os || 'ubuntu-latest' }}
         strategy:
-           fail-fast: false
-           matrix:
-               php-version: ['8.1', '8.2', '8.3', '8.4', '8.5']
-               dependency-version: ['']
-               symfony-version: ['']
-               minimum-stability: ['stable']
-               os: ['']
-               include:
-                   # dev packages (probably not needed to have multiple such jobs)
-                   -   minimum-stability: 'dev'
-                       php-version: '8.5'
-                   # lowest deps
-                   -   php-version: '8.1'
-                       dependency-version: 'lowest'
-                   # LTS version of Symfony
-                   -   php-version: '8.1'
-                       symfony-version: '6.4.*'
+            fail-fast: false
+            matrix:
+                php-version: ['8.1', '8.2', '8.3', '8.4', '8.5']
+                dependency-version: ['']
+                symfony-version: ['']
+                minimum-stability: ['stable']
+                os: ['']
+                include:
+                    # dev packages (probably not needed to have multiple such jobs)
+                    - minimum-stability: 'dev'
+                      php-version: '8.5'
+                    # lowest deps
+                    - php-version: '8.1'
+                      dependency-version: 'lowest'
+                    # LTS version of Symfony
+                    - php-version: '8.1'
+                      symfony-version: '6.4.*'
         env:
             SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=5.4' }}
         services:
@@ -82,8 +82,8 @@ jobs:
             - name: Install JavaScript dependencies
               working-directory: src/Turbo/tests/app
               run: |
-                php public/index.php importmap:install
-                php public/index.php asset-map:compile
+                  php public/index.php importmap:install
+                  php public/index.php asset-map:compile
 
             - name: Create DB
               working-directory: src/Turbo/tests/app
@@ -92,7 +92,7 @@ jobs:
             - name: Run tests
               working-directory: src/Turbo
               run: |
-                [ 'lowest' = '${{ matrix.dependency-version }}' ] && export SYMFONY_DEPRECATIONS_HELPER=weak
-                vendor/bin/simple-phpunit
+                  [ 'lowest' = '${{ matrix.dependency-version }}' ] && export SYMFONY_DEPRECATIONS_HELPER=weak
+                  vendor/bin/simple-phpunit
               env:
                   SYMFONY_DEPRECATIONS_HELPER: 'max[self]=1'

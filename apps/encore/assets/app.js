@@ -19,4 +19,4 @@ registerVueControllerComponents(require.context('./vue/controllers', true, /\.vu
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log(trans('say_hello', { name: 'Fabien' }));
-})
+});

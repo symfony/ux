@@ -282,11 +282,31 @@ export default abstract class<
     protected infoWindows: Array<BridgeInfoWindow> = [];
 
     private isConnected = false;
-    private createMarker: ({ definition }: { definition: MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> }) => BridgeMarker;
-    private createPolygon: ({ definition }: { definition: PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions> }) => BridgePolygon;
-    private createPolyline: ({ definition }: { definition: PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions> }) => BridgePolyline;
-    private createCircle: ({ definition }: { definition: CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions> }) => BridgeCircle;
-    private createRectangle: ({ definition }: { definition: RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions> }) => BridgeRectangle;
+    private createMarker: ({
+        definition,
+    }: {
+        definition: MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions>;
+    }) => BridgeMarker;
+    private createPolygon: ({
+        definition,
+    }: {
+        definition: PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions>;
+    }) => BridgePolygon;
+    private createPolyline: ({
+        definition,
+    }: {
+        definition: PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions>;
+    }) => BridgePolyline;
+    private createCircle: ({
+        definition,
+    }: {
+        definition: CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions>;
+    }) => BridgeCircle;
+    private createRectangle: ({
+        definition,
+    }: {
+        definition: RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions>;
+    }) => BridgeRectangle;
 
     protected abstract dispatchEvent(name: string, payload: Record<string, unknown>): void;
 
@@ -306,7 +326,11 @@ export default abstract class<
         this.createPolygon = this.createDrawingFactory('polygon', this.polygons, this.doCreatePolygon.bind(this));
         this.createPolyline = this.createDrawingFactory('polyline', this.polylines, this.doCreatePolyline.bind(this));
         this.createCircle = this.createDrawingFactory('circle', this.circles, this.doCreateCircle.bind(this));
-        this.createRectangle = this.createDrawingFactory('rectangle', this.rectangles, this.doCreateRectangle.bind(this));
+        this.createRectangle = this.createDrawingFactory(
+            'rectangle',
+            this.rectangles,
+            this.doCreateRectangle.bind(this)
+        );
 
         this.map = this.doCreateMap({ definition: mapDefinition });
         this.markersValue.forEach((definition) => {
@@ -418,27 +442,51 @@ export default abstract class<
     //endregion
 
     //region Abstract factory methods to be implemented by the concrete classes, they are specific to the map provider
-    protected abstract doCreateMap({ definition }: { definition: MapDefinition<MapOptions, BridgeMapOptions> }): BridgeMap;
+    protected abstract doCreateMap({
+        definition,
+    }: {
+        definition: MapDefinition<MapOptions, BridgeMapOptions>;
+    }): BridgeMap;
 
     protected abstract doFitBoundsToMarkers(): void;
 
-    protected abstract doCreateMarker({ definition }: { definition: MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions> }): BridgeMarker;
+    protected abstract doCreateMarker({
+        definition,
+    }: {
+        definition: MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions>;
+    }): BridgeMarker;
 
     protected abstract doRemoveMarker(marker: BridgeMarker): void;
 
-    protected abstract doCreatePolygon({ definition }: { definition: PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions> }): BridgePolygon;
+    protected abstract doCreatePolygon({
+        definition,
+    }: {
+        definition: PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions>;
+    }): BridgePolygon;
 
     protected abstract doRemovePolygon(polygon: BridgePolygon): void;
 
-    protected abstract doCreatePolyline({ definition }: { definition: PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions> }): BridgePolyline;
+    protected abstract doCreatePolyline({
+        definition,
+    }: {
+        definition: PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions>;
+    }): BridgePolyline;
 
     protected abstract doRemovePolyline(polyline: BridgePolyline): void;
 
-    protected abstract doCreateCircle({ definition }: { definition: CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions> }): BridgeCircle;
+    protected abstract doCreateCircle({
+        definition,
+    }: {
+        definition: CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions>;
+    }): BridgeCircle;
 
     protected abstract doRemoveCircle(circle: BridgeCircle): void;
 
-    protected abstract doCreateRectangle({ definition }: { definition: RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions> }): BridgeRectangle;
+    protected abstract doCreateRectangle({
+        definition,
+    }: {
+        definition: RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions>;
+    }): BridgeRectangle;
 
     protected abstract doRemoveRectangle(rectangle: BridgeRectangle): void;
 
@@ -454,11 +502,31 @@ export default abstract class<
     //endregion
 
     //region Private APIs
-    private createDrawingFactory(type: 'marker', draws: typeof this.markers, factory: typeof this.doCreateMarker): typeof this.doCreateMarker;
-    private createDrawingFactory(type: 'polygon', draws: typeof this.polygons, factory: typeof this.doCreatePolygon): typeof this.doCreatePolygon;
-    private createDrawingFactory(type: 'polyline', draws: typeof this.polylines, factory: typeof this.doCreatePolyline): typeof this.doCreatePolyline;
-    private createDrawingFactory(type: 'circle', draws: typeof this.circles, factory: typeof this.doCreateCircle): typeof this.doCreateCircle;
-    private createDrawingFactory(type: 'rectangle', draws: typeof this.rectangles, factory: typeof this.doCreateRectangle): typeof this.doCreateRectangle;
+    private createDrawingFactory(
+        type: 'marker',
+        draws: typeof this.markers,
+        factory: typeof this.doCreateMarker
+    ): typeof this.doCreateMarker;
+    private createDrawingFactory(
+        type: 'polygon',
+        draws: typeof this.polygons,
+        factory: typeof this.doCreatePolygon
+    ): typeof this.doCreatePolygon;
+    private createDrawingFactory(
+        type: 'polyline',
+        draws: typeof this.polylines,
+        factory: typeof this.doCreatePolyline
+    ): typeof this.doCreatePolyline;
+    private createDrawingFactory(
+        type: 'circle',
+        draws: typeof this.circles,
+        factory: typeof this.doCreateCircle
+    ): typeof this.doCreateCircle;
+    private createDrawingFactory(
+        type: 'rectangle',
+        draws: typeof this.rectangles,
+        factory: typeof this.doCreateRectangle
+    ): typeof this.doCreateRectangle;
     private createDrawingFactory<
         Factory extends
             | typeof this.doCreateMarker
@@ -467,7 +535,11 @@ export default abstract class<
             | typeof this.doCreateCircle
             | typeof this.doCreateRectangle,
         Draw extends ReturnType<Factory>,
-    >(type: 'marker' | 'polygon' | 'polyline' | 'circle' | 'rectangle', draws: globalThis.Map<WithIdentifier<any>, Draw>, factory: Factory): Factory {
+    >(
+        type: 'marker' | 'polygon' | 'polyline' | 'circle' | 'rectangle',
+        draws: globalThis.Map<WithIdentifier<any>, Draw>,
+        factory: Factory
+    ): Factory {
         const eventBefore = `${type}:before-create`;
         const eventAfter = `${type}:after-create`;
 

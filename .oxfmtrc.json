@@ -1,0 +1,22 @@
+{
+    "$schema": "./node_modules/oxfmt/configuration_schema.json",
+    "ignorePatterns": [
+        "**/composer.json",
+        "**/vendor",
+        "**/package.json",
+        "**/node_modules",
+        "**/browsers",
+        "apps/**/config/**/*.yaml",
+        "apps/**/assets/**/build",
+        "apps/**/var",
+        "src/**/dist",
+        "src/**/var",
+        "src/**/tests/**/fixtures/**",
+        "src/**/tests/**/__snapshots__/**"
+    ],
+    "printWidth": 120,
+    "tabWidth": 4,
+    "trailingComma": "es5",
+    "bracketSameLine": true,
+    "singleQuote": true
+}

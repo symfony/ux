@@ -2503,7 +2503,7 @@ var LoadingPlugin_default = class {
   }
   getLoadingDirectives(component, element) {
     const loadingDirectives = [];
-    let matchingElements = [...Array.from(element.querySelectorAll("[data-loading]"))];
+    let matchingElements = Array.from(element.querySelectorAll("[data-loading]"));
     matchingElements = matchingElements.filter((elt) => elementBelongsToThisComponent(elt, component));
     if (element.hasAttribute("data-loading")) {
       matchingElements = [element, ...matchingElements];

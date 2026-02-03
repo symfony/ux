@@ -18,9 +18,7 @@
         "build": "tsx ../../../bin/build_package.ts .",
         "watch": "tsx ../../../bin/build_package.ts . --watch",
         "test": "pnpm run test:unit && pnpm run test:browser",
-        "test:unit": "../../../bin/unit_test_package.sh .",
-        "check": "biome check",
-        "ci": "biome ci"
+        "test:unit": "../../../bin/unit_test_package.sh ."
     },
     "symfony": {
         "needsPackageAsADependency": false,
