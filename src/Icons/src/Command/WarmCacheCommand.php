@@ -40,12 +40,12 @@ final class WarmCacheCommand extends Command
         $io->comment('Warming the icon cache...');
 
         $this->warmer->warm(
-            onSuccess: function (string $name) use ($io) {
+            onSuccess: static function (string $name) use ($io) {
                 if ($io->isVerbose()) {
                     $io->writeln(\sprintf(' Warmed icon <comment>%s</comment>.', $name));
                 }
             },
-            onFailure: function (string $name, \Exception $e) use ($io) {
+            onFailure: static function (string $name, \Exception $e) use ($io) {
                 if ($io->isVerbose()) {
                     $io->writeln(\sprintf(' Failed to warm (potential) icon <error>%s</error>.', $name));
                 }

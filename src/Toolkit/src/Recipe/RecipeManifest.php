@@ -59,7 +59,7 @@ final class RecipeManifest
 
         $type = $data['type'] ?? throw new \InvalidArgumentException('Property "type" is required.');
         if (null === $type = RecipeType::tryFrom($type)) {
-            throw new \InvalidArgumentException(\sprintf('The recipe type "%s" is not supported, valid types are "%s".', $data['type'], implode('", "', array_map(fn (RecipeType $type) => $type->value, RecipeType::cases()))));
+            throw new \InvalidArgumentException(\sprintf('The recipe type "%s" is not supported, valid types are "%s".', $data['type'], implode('", "', array_map(static fn (RecipeType $type) => $type->value, RecipeType::cases()))));
         }
 
         $dependencies = [];

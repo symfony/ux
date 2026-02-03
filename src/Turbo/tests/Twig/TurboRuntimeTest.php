@@ -29,7 +29,7 @@ final class TurboRuntimeTest extends TestCase
             ->method('renderTurboStreamListen')
             ->willReturn('rendered-attributes')
         ;
-        $container = new class(['default' => fn () => $renderer]) implements ServiceProviderInterface {
+        $container = new class(['default' => static fn () => $renderer]) implements ServiceProviderInterface {
             use ServiceLocatorTrait;
         };
 
@@ -47,7 +47,7 @@ final class TurboRuntimeTest extends TestCase
             ->with($twig, 'a_topic', ['hub' => 'hub2'])
             ->willReturn('rendered-attributes')
         ;
-        $container = new class(['hub1' => fn () => $renderer1, 'hub2' => fn () => $renderer2]) implements ServiceProviderInterface {
+        $container = new class(['hub1' => static fn () => $renderer1, 'hub2' => static fn () => $renderer2]) implements ServiceProviderInterface {
             use ServiceLocatorTrait;
         };
 
@@ -61,7 +61,7 @@ final class TurboRuntimeTest extends TestCase
 
         $twig = $this->createMock(Environment::class);
         $renderer = $this->createMock(TurboStreamListenRendererInterface::class);
-        $container = new class(['default' => fn () => $renderer]) implements ServiceProviderInterface {
+        $container = new class(['default' => static fn () => $renderer]) implements ServiceProviderInterface {
             use ServiceLocatorTrait;
         };
 

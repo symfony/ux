@@ -106,7 +106,7 @@ final class EntityAutocompleteController
     {
         $extraOptionsWithoutChecksum = array_filter(
             $extraOptions,
-            fn (string $key) => AutocompleteChoiceTypeExtension::CHECKSUM_KEY !== $key,
+            static fn (string $key) => AutocompleteChoiceTypeExtension::CHECKSUM_KEY !== $key,
             \ARRAY_FILTER_USE_KEY,
         );
 

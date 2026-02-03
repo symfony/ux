@@ -44,7 +44,7 @@ class CreateKitCommand extends Command
 
         // Get the kit name
         $question = new Question("What's the name of your kit?");
-        $question->setValidator(function (?string $value) {
+        $question->setValidator(static function (?string $value) {
             if (empty($value)) {
                 throw new \RuntimeException('Kit name cannot be empty.');
             }
@@ -56,7 +56,7 @@ class CreateKitCommand extends Command
 
         // Get the kit homepage
         $question = new Question("What's the Homepage URL of your kit?");
-        $question->setValidator(function (?string $value) {
+        $question->setValidator(static function (?string $value) {
             if (empty($value) || !filter_var($value, \FILTER_VALIDATE_URL)) {
                 throw new \Exception('The homepage URL must be valid.');
             }
@@ -67,7 +67,7 @@ class CreateKitCommand extends Command
 
         // Get the kit license
         $question = new Question('What is the license of your kit?');
-        $question->setValidator(function (string $value) {
+        $question->setValidator(static function (string $value) {
             if (empty($value)) {
                 throw new \Exception('The license cannot be empty.');
             }

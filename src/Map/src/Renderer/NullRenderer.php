@@ -30,7 +30,7 @@ final class NullRenderer implements RendererInterface
     {
         $message = 'You must install at least one bridge package to use the Symfony UX Map component.';
         if ($this->availableBridges) {
-            $message .= \PHP_EOL.'Try running '.implode(' or ', array_map(fn ($name) => \sprintf('"composer require %s"', $name), $this->availableBridges)).'.';
+            $message .= \PHP_EOL.'Try running '.implode(' or ', array_map(static fn ($name) => \sprintf('"composer require %s"', $name), $this->availableBridges)).'.';
         }
 
         throw new LogicException($message);

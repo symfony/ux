@@ -211,7 +211,7 @@ class TranslationsDumperTest extends TestCase
     {
         yield 'included patterns' => [
             ['symfony.*', 'notification.*'],
-            function (self $test, string $content) {
+            static function (self $test, string $content) {
                 // Should include keys matching patterns
                 $test->assertStringContainsString('symfony.great', $content);
                 $test->assertStringContainsString('symfony.what', $content);
@@ -226,7 +226,7 @@ class TranslationsDumperTest extends TestCase
 
         yield 'excluded patterns' => [
             ['!apples.*', '!what.*'],
-            function (self $test, string $content) {
+            static function (self $test, string $content) {
                 // Should exclude keys matching exclusion patterns
                 $test->assertStringNotContainsString('apples.count', $content);
                 $test->assertStringNotContainsString('what.count', $content);
@@ -240,7 +240,7 @@ class TranslationsDumperTest extends TestCase
 
         yield 'mixed patterns' => [
             ['symfony.*', 'notification.*', '!*.what*'],
-            function (self $test, string $content) {
+            static function (self $test, string $content) {
                 // Should include symfony.* but exclude *.what*
                 $test->assertStringContainsString('symfony.great', $content);
                 $test->assertStringNotContainsString('symfony.what', $content);
@@ -255,7 +255,7 @@ class TranslationsDumperTest extends TestCase
 
         yield 'wildcard patterns' => [
             ['*.count.*'],
-            function (self $test, string $content) {
+            static function (self $test, string $content) {
                 // Should include keys matching *.count.*
                 $test->assertStringContainsString('apples.count.0', $content);
                 $test->assertStringContainsString('what.count.1', $content);
@@ -268,7 +268,7 @@ class TranslationsDumperTest extends TestCase
 
         yield 'empty pattern array' => [
             [],
-            function (self $test, string $content) {
+            static function (self $test, string $content) {
                 // Should include all keys when pattern array is empty
                 $test->assertStringContainsString('symfony.great', $content);
                 $test->assertStringContainsString('symfony.what', $content);
@@ -281,7 +281,7 @@ class TranslationsDumperTest extends TestCase
 
         yield 'empty string patterns' => [
             ['', 'symfony.*', ''],
-            function (self $test, string $content) {
+            static function (self $test, string $content) {
                 // Empty strings should be filtered out, only 'symfony.*' should apply
                 $test->assertStringContainsString('symfony.great', $content);
                 $test->assertStringContainsString('symfony.what', $content);
@@ -294,7 +294,7 @@ class TranslationsDumperTest extends TestCase
 
         yield 'malformed exclusion pattern' => [
             ['!'],
-            function (self $test, string $content) {
+            static function (self $test, string $content) {
                 // A single '!' should be treated as invalid and include all keys
                 $test->assertStringContainsString('symfony.great', $content);
                 $test->assertStringContainsString('notification.comment_created', $content);
@@ -304,7 +304,7 @@ class TranslationsDumperTest extends TestCase
 
         yield 'patterns with special regex characters in key names' => [
             ['animal.*'],
-            function (self $test, string $content) {
+            static function (self $test, string $content) {
                 // Should match keys with dashes and underscores
                 $test->assertStringContainsString('animal.dog-cat', $content);
                 $test->assertStringContainsString('animal.dog_cat', $content);
@@ -316,7 +316,7 @@ class TranslationsDumperTest extends TestCase
 
         yield 'pattern matching keys starting with numeric' => [
             ['0starts.*'],
-            function (self $test, string $content) {
+            static function (self $test, string $content) {
                 // Should match keys starting with numeric characters
                 $test->assertStringContainsString('0starts.with.numeric', $content);
 

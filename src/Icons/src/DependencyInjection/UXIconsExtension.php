@@ -77,7 +77,7 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
                         ->end()
                     ->end()
                     ->validate()
-                        ->ifTrue(fn (array $v) => isset($v['path']) && isset($v['alias']))
+                        ->ifTrue(static fn (array $v) => isset($v['path']) && isset($v['alias']))
                         ->thenInvalid('You cannot define both "path" and "alias" for an icon set.')
                     ->end()
                 ->end()

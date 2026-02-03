@@ -420,9 +420,9 @@ class TwigPreLexer
             if (!$inComment && '</twig:block>' === substr($this->input, $this->position, 13)) {
                 if (1 === $depth) {
                     break;
-                } else {
-                    --$depth;
                 }
+
+                --$depth;
             }
 
             if (!$inComment && '{% endblock %}' === substr($this->input, $this->position, 14)) {
@@ -431,9 +431,9 @@ class TwigPreLexer
                     // strlen('{% endblock %}') = 14
                     $this->position += 14;
                     break;
-                } else {
-                    --$depth;
                 }
+
+                --$depth;
             }
 
             if (!$inComment && '<twig:block' === substr($this->input, $this->position, 11)) {
@@ -447,6 +447,7 @@ class TwigPreLexer
             if ("\n" === $this->input[$this->position]) {
                 ++$this->line;
             }
+
             ++$this->position;
         }
 
