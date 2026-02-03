@@ -2,38 +2,38 @@
 
 ## 2.30
 
--  Ensure compatibility with PHP 8.5
+- Ensure compatibility with PHP 8.5
 
 ## 2.29.0
 
--  Add Symfony 8 support
+- Add Symfony 8 support
 
 ## 2.26.0
 
--   Deprecate the package
+- Deprecate the package
 
 ## 2.13.2
 
--   Revert "Change JavaScript package to `type: module`"
+- Revert "Change JavaScript package to `type: module`"
 
 ## 2.13.0
 
--   Change JavaScript package to `type: module`
+- Change JavaScript package to `type: module`
 
 ## 2.9.0
 
--   A TypedBundle was added - which allows for integration with symfony/asset-mapper.
+- A TypedBundle was added - which allows for integration with symfony/asset-mapper.
 
--   Add support for symfony/asset-mapper
+- Add support for symfony/asset-mapper
 
 ## 2.7.0
 
--   Add `assets/src` to `.gitattributes` to exclude source TypeScript files from
-    installing.
+- Add `assets/src` to `.gitattributes` to exclude source TypeScript files from
+  installing.
 
--   TypeScript types are now included.
+- TypeScript types are now included.
 
 ## 2.6.0
 
--   [BC BREAK] The `assets/` directory was moved from `Resources/assets/` to `assets/`. Make
-    sure the path in your `package.json` file is updated accordingly.
+- [BC BREAK] The `assets/` directory was moved from `Resources/assets/` to `assets/`. Make
+  sure the path in your `package.json` file is updated accordingly.

@@ -7,6 +7,7 @@ Please note that not every Shadcn UI component is available in this kit, but we 
 ## Requirements
 
 This kit requires TailwindCSS to work:
+
 - If you use Symfony AssetMapper, you can install TailwindCSS with the [TailwindBundle](https://symfony.com/bundles/TailwindBundle/current/index.html),
 - If you use Webpack Encore, you can follow the [TailwindCSS installation guide for Symfony](https://tailwindcss.com/docs/installation/framework-guides/symfony)
 
@@ -15,7 +16,7 @@ This kit requires TailwindCSS to work:
 Modify the file `assets/styles/app.css` with the following content:
 
 ```css
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @custom-variant dark (&:is(.dark *));
 

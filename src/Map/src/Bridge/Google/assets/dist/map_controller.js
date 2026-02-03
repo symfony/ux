@@ -34,7 +34,11 @@ var abstract_map_controller_default = class extends Controller {
     this.createPolygon = this.createDrawingFactory("polygon", this.polygons, this.doCreatePolygon.bind(this));
     this.createPolyline = this.createDrawingFactory("polyline", this.polylines, this.doCreatePolyline.bind(this));
     this.createCircle = this.createDrawingFactory("circle", this.circles, this.doCreateCircle.bind(this));
-    this.createRectangle = this.createDrawingFactory("rectangle", this.rectangles, this.doCreateRectangle.bind(this));
+    this.createRectangle = this.createDrawingFactory(
+      "rectangle",
+      this.rectangles,
+      this.doCreateRectangle.bind(this)
+    );
     this.map = this.doCreateMap({ definition: mapDefinition });
     this.markersValue.forEach((definition) => {
       this.createMarker({ definition });
@@ -230,7 +234,9 @@ var map_controller_default = class extends abstract_map_controller_default {
       detail: payload
     });
   }
-  doCreateMap({ definition }) {
+  doCreateMap({
+    definition
+  }) {
     const { center, zoom, minZoom, maxZoom, options, bridgeOptions = {} } = definition;
     options.zoomControl = typeof options.zoomControlOptions !== "undefined";
     options.mapTypeControl = typeof options.mapTypeControlOptions !== "undefined";
@@ -261,9 +267,13 @@ var map_controller_default = class extends abstract_map_controller_default {
     }
     if (icon) {
       if (Object.prototype.hasOwnProperty.call(bridgeOptions, "content")) {
-        console.warn('[Symfony UX Map] Defining "bridgeOptions.content" for a marker with a custom icon is not supported and will be ignored.');
+        console.warn(
+          '[Symfony UX Map] Defining "bridgeOptions.content" for a marker with a custom icon is not supported and will be ignored.'
+        );
       } else if (Object.prototype.hasOwnProperty.call(rawOptions, "content")) {
-        console.warn('[Symfony UX Map] Defining "rawOptions.content" for a marker with a custom icon is not supported and will be ignored.');
+        console.warn(
+          '[Symfony UX Map] Defining "rawOptions.content" for a marker with a custom icon is not supported and will be ignored.'
+        );
       }
       this.doCreateIcon({ definition: icon, element: marker });
     }
@@ -314,7 +324,9 @@ var map_controller_default = class extends abstract_map_controller_default {
   doRemovePolyline(polyline) {
     polyline.setMap(null);
   }
-  doCreateCircle({ definition }) {
+  doCreateCircle({
+    definition
+  }) {
     const { "@id": _id, center, radius, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
     const circle = new _google.maps.Circle({
       center,
@@ -416,7 +428,10 @@ var map_controller_default = class extends abstract_map_controller_default {
     }
     return content;
   }
-  doCreateIcon({ definition, element }) {
+  doCreateIcon({
+    definition,
+    element
+  }) {
     const { type, width, height } = definition;
     if (type === IconTypes.Svg) {
       element.content = parser.parseFromString(definition.html, "image/svg+xml").documentElement;

@@ -2,7 +2,7 @@ import { registerVueControllerComponents } from '@symfony/ux-vue';
 import { registerSvelteControllerComponents } from '@symfony/ux-svelte';
 import { registerReactControllerComponents } from '@symfony/ux-react';
 import './bootstrap.js';
-import { trans } from "./translator.js";
+import { trans } from './translator.js';
 
 /*
  * Welcome to your app's main JavaScript file!

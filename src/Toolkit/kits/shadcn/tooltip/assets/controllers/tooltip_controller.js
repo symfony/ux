@@ -8,7 +8,7 @@ export default class extends Controller {
         wrapperSelector: String,
         contentSelector: String,
         arrowSelector: String,
-    }
+    };
     static targets = ['trigger'];
 
     connect() {
@@ -90,24 +90,24 @@ export default class extends Controller {
         let arrowTop = null;
         switch (this.side) {
             case 'left':
-                wrapperLeft = triggerRect.left - contentRect.width - (arrowRect.width / 2) - this.sideOffset;
-                wrapperTop = triggerRect.top - (contentRect.height / 2) + (triggerRect.height / 2);
-                arrowTop = contentRect.height / 2 - (arrowRect.height / 2);
+                wrapperLeft = triggerRect.left - contentRect.width - arrowRect.width / 2 - this.sideOffset;
+                wrapperTop = triggerRect.top - contentRect.height / 2 + triggerRect.height / 2;
+                arrowTop = contentRect.height / 2 - arrowRect.height / 2;
                 break;
             case 'top':
-                wrapperLeft = triggerRect.left - (contentRect.width / 2) + (triggerRect.width / 2);
-                wrapperTop = triggerRect.top - contentRect.height - (arrowRect.height / 2) - this.sideOffset;
-                arrowLeft = contentRect.width / 2 - (arrowRect.width / 2);
+                wrapperLeft = triggerRect.left - contentRect.width / 2 + triggerRect.width / 2;
+                wrapperTop = triggerRect.top - contentRect.height - arrowRect.height / 2 - this.sideOffset;
+                arrowLeft = contentRect.width / 2 - arrowRect.width / 2;
                 break;
             case 'right':
-                wrapperLeft = triggerRect.right + (arrowRect.width / 2) + this.sideOffset;
-                wrapperTop = triggerRect.top - (contentRect.height / 2) + (triggerRect.height / 2);
-                arrowTop = contentRect.height / 2 - (arrowRect.height / 2);
+                wrapperLeft = triggerRect.right + arrowRect.width / 2 + this.sideOffset;
+                wrapperTop = triggerRect.top - contentRect.height / 2 + triggerRect.height / 2;
+                arrowTop = contentRect.height / 2 - arrowRect.height / 2;
                 break;
             case 'bottom':
-                wrapperLeft = triggerRect.left - (contentRect.width / 2) + (triggerRect.width / 2);
-                wrapperTop = triggerRect.bottom + (arrowRect.height / 2) + this.sideOffset;
-                arrowLeft = contentRect.width / 2 - (arrowRect.width / 2);
+                wrapperLeft = triggerRect.left - contentRect.width / 2 + triggerRect.width / 2;
+                wrapperTop = triggerRect.bottom + arrowRect.height / 2 + this.sideOffset;
+                arrowLeft = contentRect.width / 2 - arrowRect.width / 2;
                 break;
         }
 

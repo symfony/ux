@@ -35,7 +35,7 @@ UX_MAP_DSN=google://GOOGLE_MAPS_API_KEY@default?libraries[]=geometry&libraries[]
 Available options:
 
 | Option      | Description                                                                                                                        | Default                                                     |
-|-------------|------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------|
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
 | `id`        | The id of the script tag                                                                                                           | `__googleMapsScriptId`                                      |
 | `language`  | Force language, see [list of supported languages](https://developers.google.com/maps/faq#languagesupport) specified in the browser | The user's preferred language                               |
 | `region`    | Unicode region subtag identifiers compatible with [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1)                           |                                                             |
@@ -102,6 +102,7 @@ $googleOptions = (new GoogleOptions())
 // Add the custom options to the map
 $map->options($googleOptions);
 ```
+
 ## Use cases
 
 Below are some common or advanced use cases when using a map.
@@ -111,17 +112,18 @@ Below are some common or advanced use cases when using a map.
 A common use case is to customize the marker. You can listen to the `ux:map:marker:before-create` event to customize the marker before it is created.
 
 Assuming you have a map with a custom controller:
+
 ```twig
 {{ ux_map(map, {'data-controller': 'my-map' }) }}
 ```
 
 You can create a Stimulus controller to customize the markers before they are created:
+
 ```js
 // assets/controllers/my_map_controller.js
-import {Controller} from "@hotwired/stimulus";
+import { Controller } from '@hotwired/stimulus';
 
-export default class extends Controller
-{
+export default class extends Controller {
     connect() {
         this.element.addEventListener('ux:map:marker:before-create', this._onMarkerBeforeCreate);
     }
@@ -137,22 +139,23 @@ export default class extends Controller
         const { definition, google } = event.detail;
 
         // 1. To use a custom image for the marker
-        const beachFlagImg = document.createElement("img");
+        const beachFlagImg = document.createElement('img');
         // Note: instead of using a hardcoded URL, you can use the `extra` parameter from `new Marker()` (PHP) and access it here with `definition.extra`.
-        beachFlagImg.src = "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
-        definition.bridgeOptions =  {
-            content: beachFlagImg
-        }
+        beachFlagImg.src =
+            'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+        definition.bridgeOptions = {
+            content: beachFlagImg,
+        };
 
         // 2. To use a custom glyph for the marker
         const pinElement = new google.maps.marker.PinElement({
             // Note: instead of using a hardcoded URL, you can use the `extra` parameter from `new Marker()` (PHP) and access it here with `definition.extra`.
             glyph: new URL('https://maps.gstatic.com/mapfiles/place_api/icons/v2/museum_pinlet.svg'),
-            glyphColor: "white",
+            glyphColor: 'white',
         });
         definition.bridgeOptions = {
             content: pinElement.element,
-        }
+        };
     }
 }
 ```

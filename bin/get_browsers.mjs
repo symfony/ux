@@ -1,11 +1,5 @@
 import * as path from 'node:path';
-import {
-    Browser,
-    BrowserTag,
-    detectBrowserPlatform,
-    install,
-    resolveBuildId,
-} from '@puppeteer/browsers';
+import { Browser, BrowserTag, detectBrowserPlatform, install, resolveBuildId } from '@puppeteer/browsers';
 
 const platform = detectBrowserPlatform();
 const installBrowserCommonOpts = {
@@ -30,9 +24,9 @@ export const browsers = {
     }),
 
     'chrome@latest': await install({
-       ...installBrowserCommonOpts,
-       browser: Browser.CHROME,
-       buildId: await resolveBuildId(Browser.CHROME, platform, BrowserTag.STABLE),
+        ...installBrowserCommonOpts,
+        browser: Browser.CHROME,
+        buildId: await resolveBuildId(Browser.CHROME, platform, BrowserTag.STABLE),
     }),
 
     // TODO: I don't find a way to install a specific Firefox version and make it usable

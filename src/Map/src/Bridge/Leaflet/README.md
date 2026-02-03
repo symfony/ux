@@ -72,17 +72,18 @@ Below are some common or advanced use cases when using a map.
 A common use case is to customize the marker. You can listen to the `ux:map:marker:before-create` event to customize the marker before it is created.
 
 Assuming you have a map with a custom controller:
+
 ```twig
 {{ ux_map(map, {'data-controller': 'my-map' }) }}
 ```
 
 You can create a Stimulus controller to customize the markers before they are created:
+
 ```js
 // assets/controllers/my_map_controller.js
-import {Controller} from "@hotwired/stimulus";
+import { Controller } from '@hotwired/stimulus';
 
-export default class extends Controller
-{
+export default class extends Controller {
     connect() {
         this.element.addEventListener('ux:map:marker:before-create', this._onMarkerBeforeCreate);
     }
@@ -99,19 +100,19 @@ export default class extends Controller
 
         // Use a custom icon for the marker
         const redIcon = L.icon({
-          // Note: instead of using a hardcoded URL, you can use the `extra` parameter from `new Marker()` (PHP) and access it here with `definition.extra`.
-          iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-red.png',
-          shadowUrl: 'https://leafletjs.com/examples/custom-icons/leaf-shadow.png',
-          iconSize: [38, 95], // size of the icon
-          shadowSize: [50, 64], // size of the shadow
-          iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
-          shadowAnchor: [4, 62],  // the same for the shadow
-          popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
-        })
+            // Note: instead of using a hardcoded URL, you can use the `extra` parameter from `new Marker()` (PHP) and access it here with `definition.extra`.
+            iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-red.png',
+            shadowUrl: 'https://leafletjs.com/examples/custom-icons/leaf-shadow.png',
+            iconSize: [38, 95], // size of the icon
+            shadowSize: [50, 64], // size of the shadow
+            iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62], // the same for the shadow
+            popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
+        });
 
         definition.bridgeOptions = {
-          icon: redIcon,
-        }
+            icon: redIcon,
+        };
     }
 }
 ```
@@ -135,6 +136,7 @@ $leafletOptions = (new LeafletOptions())
 ### Unable to find `leaflet/dist/leaflet.min.css` file when using Webpack Encore
 
 When using Webpack Encore with the Leaflet bridge, you may encounter the following error:
+
 ```
 Module build failed: Module not found:
 "./node_modules/.pnpm/file+vendor+symfony+ux-leaflet-map+assets_@hotwired+stimulus@3.0.0_leaflet@1.9.4/node_modules/@symfony/ux-leaflet-map/dist/map_controller.js" contains a reference to the file "leaflet/dist/leaflet.min.css".
@@ -152,10 +154,11 @@ The correct path is `leaflet/dist/leaflet.css`, but it is not possible to fix it
 with the Symfony AssetMapper component.
 
 As a workaround, you can configure Webpack Encore to add an alias for the `leaflet/dist/leaflet.min.css` file:
+
 ```js
 Encore.addAliases({
-  'leaflet/dist/leaflet.min.css': 'leaflet/dist/leaflet.css',
-})
+    'leaflet/dist/leaflet.min.css': 'leaflet/dist/leaflet.css',
+});
 ```
 
 ## Resources
