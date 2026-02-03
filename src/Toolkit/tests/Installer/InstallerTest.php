@@ -35,7 +35,7 @@ final class InstallerTest extends KernelTestCase
 
     public function testCanInstallComponent()
     {
-        $installer = new Installer(self::getContainer()->get('filesystem'), fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
+        $installer = new Installer(self::getContainer()->get('filesystem'), static fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
         $kit = $this->createKit('shadcn');
 
         $this->assertFileDoesNotExist($this->tmpDir.'/Button.html.twig');
@@ -52,7 +52,7 @@ final class InstallerTest extends KernelTestCase
     public function testShouldAskIfFileAlreadyExists()
     {
         $askedCount = 0;
-        $installer = new Installer(self::getContainer()->get('filesystem'), function () use (&$askedCount) {
+        $installer = new Installer(self::getContainer()->get('filesystem'), static function () use (&$askedCount) {
             ++$askedCount;
 
             return true;
@@ -74,7 +74,7 @@ final class InstallerTest extends KernelTestCase
 
     public function testCanInstallComponentIfForced()
     {
-        $installer = new Installer(self::getContainer()->get('filesystem'), fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
+        $installer = new Installer(self::getContainer()->get('filesystem'), static fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
         $kit = $this->createKit('shadcn');
 
         $recipe = $kit->getRecipe('button');
@@ -93,7 +93,7 @@ final class InstallerTest extends KernelTestCase
 
     public function testCanInstallComponentAndItsComponentDependencies()
     {
-        $installer = new Installer(self::getContainer()->get('filesystem'), fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
+        $installer = new Installer(self::getContainer()->get('filesystem'), static fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
         $kit = $this->createKit('shadcn');
 
         $expectedFiles = [

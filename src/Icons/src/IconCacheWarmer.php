@@ -32,8 +32,8 @@ final class IconCacheWarmer
      */
     public function warm(?callable $onSuccess = null, ?callable $onFailure = null): void
     {
-        $onSuccess ??= fn (string $name, Icon $icon) => null;
-        $onFailure ??= fn (string $name) => null;
+        $onSuccess ??= static fn (string $name, Icon $icon) => null;
+        $onFailure ??= static fn (string $name) => null;
 
         foreach ($this->icons->icons() as $name) {
             try {

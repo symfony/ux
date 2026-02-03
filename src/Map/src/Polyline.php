@@ -51,7 +51,7 @@ final class Polyline implements Element
     public function toArray(): array
     {
         return [
-            'points' => array_map(fn (Point $point) => $point->toArray(), $this->points),
+            'points' => array_map(static fn (Point $point) => $point->toArray(), $this->points),
             'title' => $this->title,
             'infoWindow' => $this->infoWindow?->toArray(),
             'extra' => $this->extra,

@@ -38,7 +38,7 @@ final class TypeScriptMessageParametersPrinter
                         $value = implode(
                             '|',
                             array_map(
-                                fn (string $val) => 'other' === $val ? 'string' : "'".$val."'",
+                                static fn (string $val) => 'other' === $val ? 'string' : "'".$val."'",
                                 $parameter['values']
                             )
                         );

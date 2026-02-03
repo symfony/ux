@@ -85,7 +85,7 @@ final class AutocompleteResultsExecutor
 
         if ($groupBy instanceof PropertyPathInterface) {
             $accessor = $this->propertyAccessor;
-            $groupBy = function ($choice) use ($accessor, $groupBy) {
+            $groupBy = static function ($choice) use ($accessor, $groupBy) {
                 try {
                     return $accessor->getValue($choice, $groupBy);
                 } catch (UnexpectedTypeException) {
@@ -114,7 +114,7 @@ final class AutocompleteResultsExecutor
             $results[] = $result;
         }
 
-        $optgroups = array_map(fn (string $label) => ['value' => $label, 'label' => $label], array_unique($optgroupLabels));
+        $optgroups = array_map(static fn (string $label) => ['value' => $label, 'label' => $label], array_unique($optgroupLabels));
 
         return new AutocompleteResults($results, $hasNextPage, $optgroups);
     }

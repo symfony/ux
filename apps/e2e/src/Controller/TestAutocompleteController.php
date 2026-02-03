@@ -39,7 +39,7 @@ final class TestAutocompleteController extends AbstractController
             ['value' => 'movie_5', 'text' => 'Pulp Fiction (1994)', 'title' => 'movie Movie #5'],
         ];
 
-        $results = array_filter($movies, function ($movie) use ($query) {
+        $results = array_filter($movies, static function ($movie) use ($query) {
             return '' === $query || false !== stripos($movie['text'], $query);
         });
 
@@ -61,7 +61,7 @@ final class TestAutocompleteController extends AbstractController
             ['value' => 'videogame_5', 'text' => 'Mass Effect 2 (2010)', 'title' => 'videogame Game #5'],
         ];
 
-        $results = array_filter($games, function ($game) use ($query) {
+        $results = array_filter($games, static function ($game) use ($query) {
             return '' === $query || false !== stripos($game['text'], $query);
         });
 

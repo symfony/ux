@@ -54,7 +54,7 @@ class RequestPropsExtractorTest extends KernelTestCase
             'array value' => ['arrayProp[]=foo&arrayProp[]=bar', ['arrayProp' => ['foo', 'bar']]],
             'array value indexed' => ['arrayProp[1]=foo&arrayProp[0]=bar', ['arrayProp' => [1 => 'foo', 0 => 'bar']]],
             'not bound prop' => ['unboundProp=foo', []],
-            'object value' => ['objectProp[address]=foo&objectProp[city]=bar', ['objectProp' => (function () {
+            'object value' => ['objectProp[address]=foo&objectProp[city]=bar', ['objectProp' => (static function () {
                 $address = new Address();
                 $address->address = 'foo';
                 $address->city = 'bar';

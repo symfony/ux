@@ -39,7 +39,7 @@ final class GitHubRegistryTest extends KernelTestCase
         $isHttpClientCalled = false;
         $zipShadcnMain = $this->createZip('repo', 'shadcn', 'main');
 
-        $httpClient = new MockHttpClient(function (string $method, string $url) use ($zipShadcnMain, &$isHttpClientCalled) {
+        $httpClient = new MockHttpClient(static function (string $method, string $url) use ($zipShadcnMain, &$isHttpClientCalled) {
             if ('GET' === $method && 'https://github.com/user/repo/archive/main.zip' === $url) {
                 $isHttpClientCalled = true;
 
@@ -75,7 +75,7 @@ final class GitHubRegistryTest extends KernelTestCase
         $githubRegistry = new GitHubRegistry(
             self::getContainer()->get('ux_toolkit.kit.kit_factory'),
             $this->filesystem,
-            new MockHttpClient(fn () => new MockResponse(
+            new MockHttpClient(static fn () => new MockResponse(
                 'Not found',
                 [
                     'http_code' => 404,

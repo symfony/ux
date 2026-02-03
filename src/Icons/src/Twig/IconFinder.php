@@ -45,7 +45,7 @@ final class IconFinder
         foreach ($this->templateFiles($this->twig->getLoader()) as $file) {
             $contents = file_get_contents($file);
             if (preg_match_all($pattern, $contents, $matches)) {
-                $found[] = array_map(fn ($res) => trim($res, '"\''), $matches[0]);
+                $found[] = array_map(static fn ($res) => trim($res, '"\''), $matches[0]);
             }
         }
         $found = array_merge(...$found);

@@ -37,7 +37,7 @@ class ProductionType extends AbstractType
                     'data-test-id' => 'production-type',
                 ],
             ])
-            ->addDependent('movieSearch', ['type'], function (DependentField $field, ?string $type) {
+            ->addDependent('movieSearch', ['type'], static function (DependentField $field, ?string $type) {
                 if ('movie' !== $type) {
                     return;
                 }
@@ -47,7 +47,7 @@ class ProductionType extends AbstractType
                     'required' => false,
                 ]);
             })
-            ->addDependent('videogameSearch', ['type'], function (DependentField $field, ?string $type) {
+            ->addDependent('videogameSearch', ['type'], static function (DependentField $field, ?string $type) {
                 if ('videogame' !== $type) {
                     return;
                 }

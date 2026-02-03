@@ -141,7 +141,7 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
 
     public function toArray(): array
     {
-        $actions = array_map(function (array $actionData): string {
+        $actions = array_map(static function (array $actionData): string {
             $controllerName = $actionData['controllerName'];
             $actionName = $actionData['actionName'];
             $eventName = $actionData['eventName'];

@@ -90,7 +90,7 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
         $resolver->setAllowedTypes('security', ['boolean', 'string', 'callable']);
         $resolver->setAllowedTypes('max_results', ['int', 'null']);
         $resolver->setAllowedTypes('filter_query', ['callable', 'null']);
-        $resolver->setNormalizer('searchable_fields', function (Options $options, ?array $searchableFields) {
+        $resolver->setNormalizer('searchable_fields', static function (Options $options, ?array $searchableFields) {
             if (null !== $searchableFields && null !== $options['filter_query']) {
                 throw new RuntimeException('Both the searchable_fields and filter_query options cannot be set.');
             }

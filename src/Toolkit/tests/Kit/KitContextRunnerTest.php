@@ -55,8 +55,8 @@ class KitContextRunnerTest extends KernelTestCase
      */
     private function extractComponentFactoryState(ComponentFactory $componentFactory): array
     {
-        $componentTemplateFinder = \Closure::bind(fn (ComponentFactory $componentFactory) => $componentFactory->componentTemplateFinder, null, $componentFactory)($componentFactory);
-        $config = \Closure::bind(fn (ComponentFactory $componentFactory) => $componentFactory->config, null, $componentFactory)($componentFactory);
+        $componentTemplateFinder = \Closure::bind(static fn (ComponentFactory $componentFactory) => $componentFactory->componentTemplateFinder, null, $componentFactory)($componentFactory);
+        $config = \Closure::bind(static fn (ComponentFactory $componentFactory) => $componentFactory->config, null, $componentFactory)($componentFactory);
 
         return ['componentTemplateFinder' => $componentTemplateFinder, 'config' => $config];
     }
