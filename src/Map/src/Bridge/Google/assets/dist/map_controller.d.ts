@@ -11,7 +11,7 @@ declare class export_default extends AbstractMapController<MapOptions, google.ma
     minZoomValueChanged(): void;
     maxZoomValueChanged(): void;
     protected dispatchEvent(name: string, payload?: Record<string, unknown>): void;
-    protected doCreateMap({ definition }: {
+    protected doCreateMap({ definition, }: {
         definition: MapDefinition<MapOptions, google.maps.MapOptions>;
     }): google.maps.Map;
     protected doCreateMarker({ definition, }: {
@@ -26,7 +26,7 @@ declare class export_default extends AbstractMapController<MapOptions, google.ma
         definition: PolylineDefinition<google.maps.PolylineOptions, google.maps.InfoWindowOptions>;
     }): google.maps.Polyline;
     protected doRemovePolyline(polyline: google.maps.Polyline): void;
-    protected doCreateCircle({ definition }: {
+    protected doCreateCircle({ definition, }: {
         definition: CircleDefinition<google.maps.CircleOptions, google.maps.InfoWindowOptions>;
     }): google.maps.Circle;
     protected doRemoveCircle(circle: google.maps.Circle): void;
@@ -40,7 +40,7 @@ declare class export_default extends AbstractMapController<MapOptions, google.ma
     }): google.maps.InfoWindow;
     protected doFitBoundsToMarkers(): void;
     private createTextOrElement;
-    protected doCreateIcon({ definition, element }: {
+    protected doCreateIcon({ definition, element, }: {
         definition: Icon;
         element: google.maps.marker.AdvancedMarkerElement;
     }): void;

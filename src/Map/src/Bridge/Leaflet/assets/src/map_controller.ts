@@ -155,9 +155,13 @@ export default class extends AbstractMapController<
 
         if (icon) {
             if (Object.prototype.hasOwnProperty.call(bridgeOptions, 'icon')) {
-                console.warn('[Symfony UX Map] Defining "bridgeOptions.icon" for a marker with a custom icon is not supported and will be ignored.');
+                console.warn(
+                    '[Symfony UX Map] Defining "bridgeOptions.icon" for a marker with a custom icon is not supported and will be ignored.'
+                );
             } else if (Object.prototype.hasOwnProperty.call(rawOptions, 'icon')) {
-                console.warn('[Symfony UX Map] Defining "rawOptions.icon" for a marker with a custom icon is not supported and will be ignored.');
+                console.warn(
+                    '[Symfony UX Map] Defining "rawOptions.icon" for a marker with a custom icon is not supported and will be ignored.'
+                );
             }
 
             this.doCreateIcon({ definition: icon, element: marker });
@@ -170,7 +174,11 @@ export default class extends AbstractMapController<
         marker.remove();
     }
 
-    protected doCreatePolygon({ definition }: { definition: PolygonDefinition<PolygonOptions, PopupOptions> }): L.Polygon {
+    protected doCreatePolygon({
+        definition,
+    }: {
+        definition: PolygonDefinition<PolygonOptions, PopupOptions>;
+    }): L.Polygon {
         const { '@id': _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
 
         const polygon = L.polygon(points, { ...rawOptions, ...bridgeOptions }).addTo(this.map);
@@ -193,7 +201,11 @@ export default class extends AbstractMapController<
         polygon.remove();
     }
 
-    protected doCreatePolyline({ definition }: { definition: PolylineDefinition<PolylineOptions, PopupOptions> }): L.Polyline {
+    protected doCreatePolyline({
+        definition,
+    }: {
+        definition: PolylineDefinition<PolylineOptions, PopupOptions>;
+    }): L.Polyline {
         const { '@id': _id, points, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
 
         const polyline = L.polyline(points, { ...rawOptions, ...bridgeOptions }).addTo(this.map);
@@ -239,7 +251,11 @@ export default class extends AbstractMapController<
         circle.remove();
     }
 
-    protected doCreateRectangle({ definition }: { definition: RectangleDefinition<RectangleOptions, PopupOptions> }): L.Rectangle {
+    protected doCreateRectangle({
+        definition,
+    }: {
+        definition: RectangleDefinition<RectangleOptions, PopupOptions>;
+    }): L.Rectangle {
         const { '@id': _id, southWest, northEast, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
 
         const rectangle = L.rectangle(

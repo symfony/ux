@@ -6,6 +6,7 @@
 To keep the same functionality in your Symfony application, follow these migration steps:
 
 1. Remove the `symfony/ux-toggle-password` package from your project:
+
 ```bash
 composer remove symfony/ux-toggle-password
 ```
@@ -16,7 +17,8 @@ composer remove symfony/ux-toggle-password
 > These files are provided as a reference.
 > You can customize them to fit your needs, and even simplify the implementation if you don't need all the features.
 
-  - `src/Form/Extension/TogglePasswordTypeExtension.php`
+- `src/Form/Extension/TogglePasswordTypeExtension.php`
+
 ```php
 <?php
 
@@ -120,13 +122,17 @@ final class TogglePasswordTypeExtension extends AbstractTypeExtension
     }
 }
 ```
-  - `template/form_theme.html.twig`, and follow the [How to work with form themes](https://symfony.com/doc/current/form/form_themes.html) documentation to register it.
+
+- `template/form_theme.html.twig`, and follow the [How to work with form themes](https://symfony.com/doc/current/form/form_themes.html) documentation to register it.
+
 ```twig
 {%- block toggle_password_widget -%}
     <div class="{{ toggle_container_classes|join(' ') }}">{{ block('password_widget') }}</div>
 {%- endblock toggle_password_widget -%}
 ```
-  - `assets/controllers/toggle_password_controller.js`
+
+- `assets/controllers/toggle_password_controller.js`
+
 ```javascript
 import { Controller } from '@hotwired/stimulus';
 import '../styles/toggle_password.css';
@@ -196,7 +202,9 @@ export default class extends Controller {
     }
 }
 ```
-  - `assets/styles/toggle_password.css`
+
+- `assets/styles/toggle_password.css`
+
 ```css
 .toggle-password-container {
     position: relative;
@@ -248,10 +256,10 @@ Help Symfony by [sponsoring][3] its development!
 
 ## Resources
 
--   [Documentation](https://symfony.com/bundles/ux-toggle-password/current/index.html)
--   [Report issues](https://github.com/symfony/ux/issues) and
-    [send Pull Requests](https://github.com/symfony/ux/pulls)
-    in the [main Symfony UX repository](https://github.com/symfony/ux)
+- [Documentation](https://symfony.com/bundles/ux-toggle-password/current/index.html)
+- [Report issues](https://github.com/symfony/ux/issues) and
+  [send Pull Requests](https://github.com/symfony/ux/pulls)
+  in the [main Symfony UX repository](https://github.com/symfony/ux)
 
 [1]: https://symfony.com/backers
 [2]: https://mercure.rocks

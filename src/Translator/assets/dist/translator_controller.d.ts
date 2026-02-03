@@ -9,11 +9,12 @@ type ParametersType = Record<string, string | number | Date> | NoParametersType;
 type RemoveIntlIcuSuffix<T> = T extends `${infer U}+intl-icu` ? U : T;
 type DomainsOf<M> = M extends Message<infer Translations, LocaleType> ? keyof Translations : never;
 type LocaleOf<M> = M extends Message<TranslationsType, infer Locale> ? Locale : never;
-type ParametersOf<M, D extends DomainType> = M extends Message<infer Translations, LocaleType>
-    ? Translations[D] extends { parameters: infer Parameters }
-        ? Parameters
-        : never
-    : never;
+type ParametersOf<M, D extends DomainType> =
+    M extends Message<infer Translations, LocaleType>
+        ? Translations[D] extends { parameters: infer Parameters }
+            ? Parameters
+            : never
+        : never;
 
 interface Message<Translations extends TranslationsType, Locale extends LocaleType> {
     translations: {

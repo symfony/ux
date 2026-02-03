@@ -1,0 +1,25 @@
+{
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
+    "plugins": null,
+    "categories": {},
+    "rules": {},
+    "env": {
+        "builtin": true,
+        "es2021": true
+    },
+    "globals": {},
+    "ignorePatterns": [
+        "**/composer.json",
+        "**/vendor",
+        "**/package.json",
+        "**/node_modules",
+        "**/browsers",
+        "apps/**/config/**/*.yaml",
+        "apps/**/assets/**/build",
+        "apps/**/var",
+        "src/**/dist",
+        "src/**/var",
+        "src/**/tests/**/fixtures/**",
+        "src/**/tests/**/__snapshots__/**"
+    ]
+}

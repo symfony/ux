@@ -35,11 +35,11 @@ declare class export_default extends AbstractMapController<MapOptions, MapOption
         definition: MarkerDefinition<MarkerOptions, PopupOptions>;
     }): L.Marker;
     protected doRemoveMarker(marker: L.Marker): void;
-    protected doCreatePolygon({ definition }: {
+    protected doCreatePolygon({ definition, }: {
         definition: PolygonDefinition<PolylineOptions, PopupOptions>;
     }): L.Polygon;
     protected doRemovePolygon(polygon: L.Polygon): void;
-    protected doCreatePolyline({ definition }: {
+    protected doCreatePolyline({ definition, }: {
         definition: PolylineDefinition<PolylineOptions, PopupOptions>;
     }): L.Polyline;
     protected doRemovePolyline(polyline: L.Polyline): void;
@@ -47,7 +47,7 @@ declare class export_default extends AbstractMapController<MapOptions, MapOption
         definition: CircleDefinition<CircleOptions, PopupOptions>;
     }): L.Circle;
     protected doRemoveCircle(circle: L.Circle): void;
-    protected doCreateRectangle({ definition }: {
+    protected doCreateRectangle({ definition, }: {
         definition: RectangleDefinition<PolylineOptions, PopupOptions>;
     }): L.Rectangle;
     protected doRemoveRectangle(rectangle: L.Rectangle): void;

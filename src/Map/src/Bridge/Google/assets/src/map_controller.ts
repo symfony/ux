@@ -65,7 +65,10 @@ export default class extends AbstractMapController<
     google.maps.RectangleOptions,
     google.maps.Rectangle
 > {
-    declare providerOptionsValue: Pick<LoaderOptions, 'apiKey' | 'id' | 'language' | 'region' | 'nonce' | 'retries' | 'url' | 'version' | 'libraries'>;
+    declare providerOptionsValue: Pick<
+        LoaderOptions,
+        'apiKey' | 'id' | 'language' | 'region' | 'nonce' | 'retries' | 'url' | 'version' | 'libraries'
+    >;
 
     declare map: google.maps.Map;
 
@@ -151,7 +154,11 @@ export default class extends AbstractMapController<
         });
     }
 
-    protected doCreateMap({ definition }: { definition: MapDefinition<MapOptions, google.maps.MapOptions> }): google.maps.Map {
+    protected doCreateMap({
+        definition,
+    }: {
+        definition: MapDefinition<MapOptions, google.maps.MapOptions>;
+    }): google.maps.Map {
         const { center, zoom, minZoom, maxZoom, options, bridgeOptions = {} } = definition;
 
         // We assume the following control options are enabled if their options are set
@@ -191,9 +198,13 @@ export default class extends AbstractMapController<
 
         if (icon) {
             if (Object.prototype.hasOwnProperty.call(bridgeOptions, 'content')) {
-                console.warn('[Symfony UX Map] Defining "bridgeOptions.content" for a marker with a custom icon is not supported and will be ignored.');
+                console.warn(
+                    '[Symfony UX Map] Defining "bridgeOptions.content" for a marker with a custom icon is not supported and will be ignored.'
+                );
             } else if (Object.prototype.hasOwnProperty.call(rawOptions, 'content')) {
-                console.warn('[Symfony UX Map] Defining "rawOptions.content" for a marker with a custom icon is not supported and will be ignored.');
+                console.warn(
+                    '[Symfony UX Map] Defining "rawOptions.content" for a marker with a custom icon is not supported and will be ignored.'
+                );
             }
 
             this.doCreateIcon({ definition: icon, element: marker });
@@ -270,7 +281,11 @@ export default class extends AbstractMapController<
         polyline.setMap(null);
     }
 
-    protected doCreateCircle({ definition }: { definition: CircleDefinition<google.maps.CircleOptions, google.maps.InfoWindowOptions> }): google.maps.Circle {
+    protected doCreateCircle({
+        definition,
+    }: {
+        definition: CircleDefinition<google.maps.CircleOptions, google.maps.InfoWindowOptions>;
+    }): google.maps.Circle {
         const { '@id': _id, center, radius, title, infoWindow, rawOptions = {}, bridgeOptions = {} } = definition;
 
         const circle = new _google.maps.Circle({
@@ -336,7 +351,12 @@ export default class extends AbstractMapController<
         element,
     }: {
         definition: Omit<InfoWindowDefinition<google.maps.InfoWindowOptions>, 'position'>;
-        element: google.maps.marker.AdvancedMarkerElement | google.maps.Polygon | google.maps.Polyline | google.maps.Circle | google.maps.Rectangle;
+        element:
+            | google.maps.marker.AdvancedMarkerElement
+            | google.maps.Polygon
+            | google.maps.Polyline
+            | google.maps.Circle
+            | google.maps.Rectangle;
     }): google.maps.InfoWindow {
         const { headerContent, content, opened, autoClose, rawOptions = {}, bridgeOptions = {} } = definition;
 
@@ -421,7 +441,13 @@ export default class extends AbstractMapController<
         return content;
     }
 
-    protected doCreateIcon({ definition, element }: { definition: Icon; element: google.maps.marker.AdvancedMarkerElement }): void {
+    protected doCreateIcon({
+        definition,
+        element,
+    }: {
+        definition: Icon;
+        element: google.maps.marker.AdvancedMarkerElement;
+    }): void {
         const { type, width, height } = definition;
 
         if (type === IconTypes.Svg) {

@@ -31,7 +31,11 @@ var abstract_map_controller_default = class extends Controller {
     this.createPolygon = this.createDrawingFactory("polygon", this.polygons, this.doCreatePolygon.bind(this));
     this.createPolyline = this.createDrawingFactory("polyline", this.polylines, this.doCreatePolyline.bind(this));
     this.createCircle = this.createDrawingFactory("circle", this.circles, this.doCreateCircle.bind(this));
-    this.createRectangle = this.createDrawingFactory("rectangle", this.rectangles, this.doCreateRectangle.bind(this));
+    this.createRectangle = this.createDrawingFactory(
+      "rectangle",
+      this.rectangles,
+      this.doCreateRectangle.bind(this)
+    );
     this.map = this.doCreateMap({ definition: mapDefinition });
     this.markersValue.forEach((definition) => {
       this.createMarker({ definition });
