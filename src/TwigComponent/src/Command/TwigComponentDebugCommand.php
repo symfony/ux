@@ -232,9 +232,9 @@ class TwigComponentDebugCommand extends Command
             ['Properties', implode("\n", $this->getComponentProperties($metadata))],
         ]);
 
-        $logMethod = function (\ReflectionMethod $m) {
+        $logMethod = static function (\ReflectionMethod $m) {
             $params = array_map(
-                fn (\ReflectionParameter $p) => '$'.$p->getName(),
+                static fn (\ReflectionParameter $p) => '$'.$p->getName(),
                 $m->getParameters(),
             );
 

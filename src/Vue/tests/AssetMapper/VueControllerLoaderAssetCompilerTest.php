@@ -27,7 +27,7 @@ class VueControllerLoaderAssetCompilerTest extends TestCase
                 $this->equalTo(realpath(__DIR__.'/../fixtures/vue/controllers/MyVueController.js')),
                 $this->equalTo(realpath(__DIR__.'/../fixtures/vue/controllers/subdir/DeeperVueController.js')),
             ))
-            ->willReturnCallback(function ($sourcePath) {
+            ->willReturnCallback(static function ($sourcePath) {
                 if (str_contains($sourcePath, 'MyVueController')) {
                     return new MappedAsset(
                         'MyVueController.js',

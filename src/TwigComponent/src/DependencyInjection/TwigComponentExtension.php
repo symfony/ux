@@ -174,7 +174,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
 
         $rootNode
             ->validate()
-            ->always(function ($v) {
+            ->always(static function ($v) {
                 if (!isset($v['anonymous_template_directory'])) {
                     trigger_deprecation('symfony/twig-component-bundle', '2.13', 'Not setting the "twig_component.anonymous_template_directory" config option is deprecated. It will default to "components" in 3.0.');
                     $v['anonymous_template_directory'] = null;
@@ -188,7 +188,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                     ->defaultValue([self::DEPRECATED_DEFAULT_KEY])
                     ->useAttributeAsKey('namespace')
                     ->validate()
-                        ->always(function ($v) {
+                        ->always(static function ($v) {
                             foreach ($v as $namespace => $defaults) {
                                 if (!str_ends_with($namespace, '\\')) {
                                     throw new InvalidConfigurationException(\sprintf('The twig_component.defaults namespace "%s" is invalid: it must end in a "\".', $namespace));
@@ -201,7 +201,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                     ->arrayPrototype()
                         ->beforeNormalization()
                             ->ifString()
-                            ->then(function (string $v) {
+                            ->then(static function (string $v) {
                                 return ['template_directory' => $v];
                             })
                         ->end()

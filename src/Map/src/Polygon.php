@@ -53,8 +53,8 @@ final class Polygon implements Element
     {
         return [
             'points' => current($this->points) instanceof Point
-                ? array_map(fn (Point $point) => $point->toArray(), $this->points)
-                : array_map(fn (array $path) => array_map(fn (Point $point) => $point->toArray(), $path), $this->points),
+                ? array_map(static fn (Point $point) => $point->toArray(), $this->points)
+                : array_map(static fn (array $path) => array_map(static fn (Point $point) => $point->toArray(), $path), $this->points),
             'title' => $this->title,
             'infoWindow' => $this->infoWindow?->toArray(),
             'extra' => $this->extra,
@@ -81,7 +81,7 @@ final class Polygon implements Element
 
         $polygon['points'] = isset($polygon['points'][0]['lat'], $polygon['points'][0]['lng'])
             ? array_map(Point::fromArray(...), $polygon['points'])
-            : array_map(fn (array $points) => array_map(Point::fromArray(...), $points), $polygon['points']);
+            : array_map(static fn (array $points) => array_map(Point::fromArray(...), $points), $polygon['points']);
 
         if (isset($polygon['infoWindow'])) {
             $polygon['infoWindow'] = InfoWindow::fromArray($polygon['infoWindow']);

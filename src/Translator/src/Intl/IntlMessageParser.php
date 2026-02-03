@@ -82,12 +82,12 @@ final class IntlMessageParser
             ) {
                 if ($expectingCloseTag) {
                     break;
-                } else {
-                    return $this->error(
-                        ErrorKind::UNMATCHED_CLOSING_TAG,
-                        new Location(clone $this->position, clone $this->position)
-                    );
                 }
+
+                return $this->error(
+                    ErrorKind::UNMATCHED_CLOSING_TAG,
+                    new Location(clone $this->position, clone $this->position)
+                );
             } elseif (
                 60 === $char /* `<` */
                 && !$this->ignoreTag
@@ -267,11 +267,11 @@ final class IntlMessageParser
             || (125 === $ch /* `}` */ && $nestingLevel > 0)
         ) {
             return null;
-        } else {
-            $this->bump();
-
-            return Utils::fromCodePoint($ch);
         }
+
+        $this->bump();
+
+        return Utils::fromCodePoint($ch);
     }
 
     /**
@@ -473,32 +473,32 @@ final class IntlMessageParser
                             ],
                             'err' => null,
                         ];
-                    } else {
-                        if (0 === s($skeleton)->length()) {
-                            return $this->error(ErrorKind::EXPECT_DATE_TIME_SKELETON, $location);
-                        }
-
-                        $dateTimePattern = $skeleton;
-
-                        $style = [
-                            'type' => SkeletonType::DATE_TIME,
-                            'pattern' => $dateTimePattern,
-                            'location' => $styleAndLocation['styleLocation'],
-                            'parsedOptions' => [],
-                        ];
-
-                        $type = 'date' === $argType ? Type::DATE : Type::TIME;
-
-                        return [
-                            'val' => [
-                                'type' => $type,
-                                'value' => $value,
-                                'location' => $location,
-                                'style' => $style,
-                            ],
-                            'err' => null,
-                        ];
                     }
+
+                    if (0 === s($skeleton)->length()) {
+                        return $this->error(ErrorKind::EXPECT_DATE_TIME_SKELETON, $location);
+                    }
+
+                    $dateTimePattern = $skeleton;
+
+                    $style = [
+                        'type' => SkeletonType::DATE_TIME,
+                        'pattern' => $dateTimePattern,
+                        'location' => $styleAndLocation['styleLocation'],
+                        'parsedOptions' => [],
+                    ];
+
+                    $type = 'date' === $argType ? Type::DATE : Type::TIME;
+
+                    return [
+                        'val' => [
+                            'type' => $type,
+                            'value' => $value,
+                            'location' => $location,
+                            'style' => $style,
+                        ],
+                        'err' => null,
+                    ];
                 }
 
                 // Regular style or no style.
@@ -593,21 +593,20 @@ final class IntlMessageParser
                         ],
                         'err' => null,
                     ];
-                } else {
-                    return [
-                        'val' => [
-                            'type' => Type::PLURAL,
-                            'value' => $value,
-                            'offset' => $pluralOffset,
-                            'options' => $optionsResult['val'],
-                            'pluralType' => 'plural' === $argType ? 'cardinal' : 'ordinal',
-                            'location' => $location,
-                        ],
-                        'err' => null,
-                    ];
                 }
 
-                // no break
+                return [
+                    'val' => [
+                        'type' => Type::PLURAL,
+                        'value' => $value,
+                        'offset' => $pluralOffset,
+                        'options' => $optionsResult['val'],
+                        'pluralType' => 'plural' === $argType ? 'cardinal' : 'ordinal',
+                        'location' => $location,
+                    ],
+                    'err' => null,
+                ];
+
             default:
                 return $this->error(
                     ErrorKind::INVALID_ARGUMENT_TYPE,
@@ -962,11 +961,11 @@ final class IntlMessageParser
             $this->bumpTo($index);
 
             return true;
-        } else {
-            $this->bumpTo($this->messageLength);
-
-            return false;
         }
+
+        $this->bumpTo($this->messageLength);
+
+        return false;
     }
 
     /**

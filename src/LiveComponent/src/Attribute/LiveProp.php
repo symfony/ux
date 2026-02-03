@@ -152,7 +152,7 @@ final class LiveProp
             return [];
         }
 
-        return array_values(array_filter($this->writable, function ($item) {
+        return array_values(array_filter($this->writable, static function ($item) {
             return self::IDENTITY !== $item;
         }));
     }

@@ -303,35 +303,35 @@ final class LiveComponentHydrator
                 }
 
                 return $this->serializer->denormalize($value, $type, 'json', $propMetadata->serializationContext());
-            } else {
-                $type = $propMetadata->getType();
-
-                if (null === $type) {
-                    throw new \LogicException(\sprintf('The "%s::%s" object should be hydrated with the Serializer, but no type could be guessed.', $parentObject::class, $propMetadata->getName()));
-                }
-
-                if (null === $value && $type->isNullable()) {
-                    return null;
-                }
-
-                $isCollection = false;
-                foreach (TypeHelper::traverse($type) as $t) {
-                    if ($t instanceof CollectionType) {
-                        $isCollection = true;
-                        $type = $t->getCollectionValueType();
-
-                        break;
-                    }
-                }
-
-                while ($type instanceof WrappingTypeInterface) {
-                    $type = $type->getWrappedType();
-                }
-
-                $typeString = $type.($isCollection ? '[]' : '');
-
-                return $this->serializer->denormalize($value, $typeString, 'json', $propMetadata->serializationContext());
             }
+
+            $type = $propMetadata->getType();
+
+            if (null === $type) {
+                throw new \LogicException(\sprintf('The "%s::%s" object should be hydrated with the Serializer, but no type could be guessed.', $parentObject::class, $propMetadata->getName()));
+            }
+
+            if (null === $value && $type->isNullable()) {
+                return null;
+            }
+
+            $isCollection = false;
+            foreach (TypeHelper::traverse($type) as $t) {
+                if ($t instanceof CollectionType) {
+                    $isCollection = true;
+                    $type = $t->getCollectionValueType();
+
+                    break;
+                }
+            }
+
+            while ($type instanceof WrappingTypeInterface) {
+                $type = $type->getWrappedType();
+            }
+
+            $typeString = $type.($isCollection ? '[]' : '');
+
+            return $this->serializer->denormalize($value, $typeString, 'json', $propMetadata->serializationContext());
         }
 
         // no type? no hydration
@@ -362,40 +362,39 @@ final class LiveComponentHydrator
             }
 
             return $this->hydrateObjectValue($value, $propMetadata->getType(), $propMetadata->allowsNull(), $propMetadata->getFormat(), $parentObject::class, $propMetadata->getName(), $parentObject);
-        } else {
-            $collectionValueType = null;
-            foreach (TypeHelper::traverse($type) as $t) {
-                if ($t instanceof CollectionType) {
-                    $collectionValueType = $t->getCollectionValueType();
+        }
+        $collectionValueType = null;
+        foreach (TypeHelper::traverse($type) as $t) {
+            if ($t instanceof CollectionType) {
+                $collectionValueType = $t->getCollectionValueType();
+
+                break;
+            }
+        }
+
+        if ($collectionValueType) {
+            foreach (TypeHelper::traverse($collectionValueType) as $t) {
+                if ($t instanceof ObjectType) {
+                    foreach ($value as $key => $objectItem) {
+                        $value[$key] = $this->hydrateObjectValue($objectItem, $t->getClassName(), true, $propMetadata->getFormat(), $parentObject::class, \sprintf('%s.%s', $propMetadata->getName(), $key), $parentObject);
+                    }
 
                     break;
                 }
             }
-
-            if ($collectionValueType) {
-                foreach (TypeHelper::traverse($collectionValueType) as $t) {
-                    if ($t instanceof ObjectType) {
-                        foreach ($value as $key => $objectItem) {
-                            $value[$key] = $this->hydrateObjectValue($objectItem, $t->getClassName(), true, $propMetadata->getFormat(), $parentObject::class, \sprintf('%s.%s', $propMetadata->getName(), $key), $parentObject);
-                        }
-
-                        break;
-                    }
-                }
-            }
-
-            if (\is_string($value) && $type->isIdentifiedBy(TypeIdentifier::INT, TypeIdentifier::FLOAT, TypeIdentifier::BOOL)) {
-                return self::coerceStringValue($value, $type, $type->isNullable());
-            }
-
-            foreach (TypeHelper::traverse($type) as $t) {
-                if ($t instanceof ObjectType) {
-                    return $this->hydrateObjectValue($value, $t->getClassName(), $type->isNullable(), $propMetadata->getFormat(), $parentObject::class, $propMetadata->getName(), $parentObject);
-                }
-            }
-
-            return $value;
         }
+
+        if (\is_string($value) && $type->isIdentifiedBy(TypeIdentifier::INT, TypeIdentifier::FLOAT, TypeIdentifier::BOOL)) {
+            return self::coerceStringValue($value, $type, $type->isNullable());
+        }
+
+        foreach (TypeHelper::traverse($type) as $t) {
+            if ($t instanceof ObjectType) {
+                return $this->hydrateObjectValue($value, $t->getClassName(), $type->isNullable(), $propMetadata->getFormat(), $parentObject::class, $propMetadata->getName(), $parentObject);
+            }
+        }
+
+        return $value;
     }
 
     public function addChecksumToData(array $data): array
@@ -618,15 +617,14 @@ final class LiveComponentHydrator
             // is set correctly (needed for hydration later)
 
             return $this->dehydrateObjectValue($value, $propMetadata->getType(), $propMetadata->getFormat(), $parentObject);
-        } else {
-            foreach ($propMetadata->getType() ? TypeHelper::traverse($propMetadata->getType()) : [] as $t) {
-                if ($t instanceof ObjectType) {
-                    return $this->dehydrateObjectValue($value, $t->getClassName(), $propMetadata->getFormat(), $parentObject);
-                }
-            }
-
-            throw new \LogicException(\sprintf('The "%s" property on component "%s" is missing its property-type. Add the "%s" type so the object can be hydrated later.', $propMetadata->getName(), $parentObject::class, $value::class));
         }
+        foreach ($propMetadata->getType() ? TypeHelper::traverse($propMetadata->getType()) : [] as $t) {
+            if ($t instanceof ObjectType) {
+                return $this->dehydrateObjectValue($value, $t->getClassName(), $propMetadata->getFormat(), $parentObject);
+            }
+        }
+
+        throw new \LogicException(\sprintf('The "%s" property on component "%s" is missing its property-type. Add the "%s" type so the object can be hydrated later.', $propMetadata->getName(), $parentObject::class, $value::class));
     }
 
     private function dehydrateObjectValue(object $value, string $classType, ?string $dateFormat, object $parentObject): mixed
@@ -667,7 +665,7 @@ final class LiveComponentHydrator
     {
         // enum
         if (is_a($className, \BackedEnum::class, true)) {
-            if ($allowsNull && !\in_array($value, array_map(fn (\BackedEnum $e) => $e->value, $className::cases()))) {
+            if ($allowsNull && !\in_array($value, array_map(static fn (\BackedEnum $e) => $e->value, $className::cases()))) {
                 return null;
             }
 

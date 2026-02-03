@@ -27,7 +27,7 @@ class ReactControllerLoaderAssetCompilerTest extends TestCase
                 $this->equalTo(realpath(__DIR__.'/../fixtures/react/controllers/MyReactController.js')),
                 $this->equalTo(realpath(__DIR__.'/../fixtures/react/controllers/subdir/DeeperReactController.js')),
             ))
-            ->willReturnCallback(function ($sourcePath) {
+            ->willReturnCallback(static function ($sourcePath) {
                 if (str_contains($sourcePath, 'MyReactController')) {
                     return new MappedAsset(
                         'MyReactController.js',

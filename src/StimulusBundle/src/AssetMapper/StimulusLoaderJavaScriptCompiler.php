@@ -95,7 +95,7 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
                 } else {
                     // import $relativeImportPath and also the auto-imports
                     // and use a Promise.all() to wait for all of them
-                    $lazyControllers[] = \sprintf('%s: () => Promise.all([import(%s), %s]).then((ret) => ret[0])', json_encode($name), $relativeImportPath, implode(', ', array_map(fn ($path) => "import($path)", $autoImportPaths)));
+                    $lazyControllers[] = \sprintf('%s: () => Promise.all([import(%s), %s]).then((ret) => ret[0])', json_encode($name), $relativeImportPath, implode(', ', array_map(static fn ($path) => "import($path)", $autoImportPaths)));
                 }
 
                 continue;

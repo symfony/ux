@@ -42,7 +42,7 @@ class ComponentValidationErrors implements \Countable
      */
     public function getAll(string $propertyPath): array
     {
-        return array_map(function (ConstraintViolation $violation) {
+        return array_map(static function (ConstraintViolation $violation) {
             return $violation->getMessage();
         }, $this->errors[$propertyPath] ?? []);
     }

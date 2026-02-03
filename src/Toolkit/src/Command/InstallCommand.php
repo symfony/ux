@@ -106,7 +106,7 @@ class InstallCommand extends Command
             }
             // If more than one kit is available, we ask the user which one to use
             if (($availableKitsCount = \count($availableKits)) > 1) {
-                $kitName = $io->choice(null === $recipeName ? 'Which Kit do you want to use?' : \sprintf('The recipe "%s" exists in multiple Kits. Which one do you want to use?', $recipeName), array_map(fn (Kit $kit) => $kit->manifest->name, $availableKits));
+                $kitName = $io->choice(null === $recipeName ? 'Which Kit do you want to use?' : \sprintf('The recipe "%s" exists in multiple Kits. Which one do you want to use?', $recipeName), array_map(static fn (Kit $kit) => $kit->manifest->name, $availableKits));
 
                 foreach ($availableKits as $availableKit) {
                     if ($availableKit->manifest->name === $kitName) {
@@ -133,7 +133,7 @@ class InstallCommand extends Command
 
         if (null === $recipeName) {
             // Ask for the recipe name if not provided
-            $recipeName = $io->choice('Which recipe do you want to install?', array_map(fn (Recipe $recipe) => $recipe->manifest->name, $kit->getRecipes()));
+            $recipeName = $io->choice('Which recipe do you want to install?', array_map(static fn (Recipe $recipe) => $recipe->manifest->name, $kit->getRecipes()));
             $recipe = $kit->getRecipe(name: $recipeName);
         } elseif (null === $recipe = $kit->getRecipe($recipeName)) {
             // Suggest alternatives if recipe does not exist
@@ -150,7 +150,7 @@ class InstallCommand extends Command
                     return Command::FAILURE;
                 }
             } elseif ($alternativeRecipesCount > 0) {
-                $io->warning(\sprintf('%s'."\n".'Possible alternatives: "%s"', $message, implode('", "', array_map(fn (Recipe $r) => $r->name, $alternativeRecipes))));
+                $io->warning(\sprintf('%s'."\n".'Possible alternatives: "%s"', $message, implode('", "', array_map(static fn (Recipe $r) => $r->name, $alternativeRecipes))));
 
                 return Command::FAILURE;
             } else {
@@ -174,7 +174,7 @@ class InstallCommand extends Command
         $this->io->success('The recipe has been installed.');
 
         $this->io->section('Installed files');
-        $this->io->listing(array_map(fn (File $file) => Path::join($destinationPath, $file->sourceRelativePathName), $installationReport->newFiles));
+        $this->io->listing(array_map(static fn (File $file) => Path::join($destinationPath, $file->sourceRelativePathName), $installationReport->newFiles));
 
         if ([] !== $installationReport->suggestedPhpPackages || [] !== $installationReport->suggestedNpmPackages || [] !== $installationReport->suggestedImportmapPackages) {
             $this->io->section('Next steps');
@@ -226,7 +226,7 @@ class InstallCommand extends Command
             }
         }
 
-        usort($alternativeRecipes, fn (Recipe $recipeA, Recipe $recipeB) => strcmp($recipeA->name, $recipeB->name));
+        usort($alternativeRecipes, static fn (Recipe $recipeA, Recipe $recipeB) => strcmp($recipeA->name, $recipeB->name));
 
         return $alternativeRecipes;
     }

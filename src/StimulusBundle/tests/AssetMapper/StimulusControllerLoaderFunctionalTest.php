@@ -42,10 +42,10 @@ class StimulusControllerLoaderFunctionalTest extends WebTestCase
 
         if (class_exists(ImportMapConfigReader::class)) {
             // filter out items ending in .css
-            $importMapJsKeys = array_filter($importMapKeys, function ($key) {
+            $importMapJsKeys = array_filter($importMapKeys, static function ($key) {
                 return '.css' !== substr($key, -4);
             });
-            $importMapCssKeys = array_filter($importMapKeys, function ($key) {
+            $importMapCssKeys = array_filter($importMapKeys, static function ($key) {
                 return '.css' === substr($key, -4);
             });
             sort($importMapJsKeys);
@@ -92,7 +92,7 @@ class StimulusControllerLoaderFunctionalTest extends WebTestCase
             ], array_values($importMapCssKeys));
 
             // "app" is the entry. So, all non-lazy controllers should be preloaded:
-            $preLoadHrefs = $crawler->filter('link[rel="modulepreload"]')->each(function ($link) {
+            $preLoadHrefs = $crawler->filter('link[rel="modulepreload"]')->each(static function ($link) {
                 return $link->attr('href');
             });
             $this->assertCount(12, $preLoadHrefs);
@@ -135,7 +135,7 @@ class StimulusControllerLoaderFunctionalTest extends WebTestCase
             ], $importMapKeys);
 
             // "app" & loader.js are pre-loaded. So, all non-lazy controllers should be preloaded:
-            $preLoadHrefs = $crawler->filter('link[rel="modulepreload"]')->each(function ($link) {
+            $preLoadHrefs = $crawler->filter('link[rel="modulepreload"]')->each(static function ($link) {
                 return $link->attr('href');
             });
             $this->assertCount(10, $preLoadHrefs);
