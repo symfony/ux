@@ -1,6 +1,26 @@
 # CHANGELOG
 
-## 2.32
+## 2.33
+
+- Add `fetch_credentials` option to configure the fetch API credentials mode for cross-origin requests.
+  This is useful when embedding a Live Component from a different domain that requires cookie-based authentication (e.g., JWT stored in cookies).
+
+    Global configuration in `config/packages/live_component.yaml`:
+
+    ```yaml
+    live_component:
+        fetch_credentials: 'include' # 'same-origin' (default), 'include', or 'omit'
+    ```
+
+    Per-component override via the `#[AsLiveComponent]` attribute:
+
+    ```php
+    #[AsLiveComponent(fetchCredentials: 'include')]
+    class MyComponent
+    {
+        // ...
+    }
+    ```
 
 - Add support for `LiveProp` union types in Live Components.
   `LiveComponentMetadataFactory` can now create `liveProp` metadata for union types.

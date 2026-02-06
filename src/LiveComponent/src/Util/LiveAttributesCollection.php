@@ -95,6 +95,11 @@ final class LiveAttributesCollection
         $this->attributes['data-live-request-method-value'] = $requestMethod;
     }
 
+    public function setFetchCredentials(string $fetchCredentials): void
+    {
+        $this->attributes['data-live-fetch-credentials-value'] = $fetchCredentials;
+    }
+
     public function setQueryUrlMapping(array $queryUrlMapping): void
     {
         $this->attributes['data-live-query-mapping-value'] = $queryUrlMapping;

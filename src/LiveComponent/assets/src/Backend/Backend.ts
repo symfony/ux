@@ -25,8 +25,8 @@ export interface BackendAction {
 export default class implements BackendInterface {
     private readonly requestBuilder: RequestBuilder;
 
-    constructor(url: string, method: 'get' | 'post' = 'post') {
-        this.requestBuilder = new RequestBuilder(url, method);
+    constructor(url: string, method: 'get' | 'post' = 'post', credentials: RequestCredentials = 'same-origin') {
+        this.requestBuilder = new RequestBuilder(url, method, credentials);
     }
 
     makeRequest(

@@ -191,6 +191,10 @@ declare class LiveControllerDefault extends Controller<HTMLElement> implements L
             type: StringConstructor;
             default: string;
         };
+        fetchCredentials: {
+            type: StringConstructor;
+            default: string;
+        };
     };
     readonly nameValue: string;
     readonly urlValue: string;
@@ -214,6 +218,7 @@ declare class LiveControllerDefault extends Controller<HTMLElement> implements L
     readonly debounceValue: number;
     readonly fingerprintValue: string;
     readonly requestMethodValue: 'get' | 'post';
+    readonly fetchCredentialsValue: RequestCredentials;
     private proxiedComponent;
     private mutationObserver;
     component: Component;
