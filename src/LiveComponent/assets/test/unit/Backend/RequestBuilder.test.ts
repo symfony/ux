@@ -270,4 +270,25 @@ describe('buildRequest', () => {
         expect(body.get('otherFile')).toBeInstanceOf(File);
         expect(body.getAll('otherFile').length).toEqual(1);
     });
+
+    it('sets fetchCredentials to "include" when specified', () => {
+        const builder = new RequestBuilder('/_components', 'get', 'include');
+        const { fetchOptions } = builder.buildRequest({ firstName: 'Ryan' }, [], { firstName: 'Kevin' }, {}, {}, {});
+
+        expect(fetchOptions.credentials).toEqual('include');
+    });
+
+    it('defaults fetchCredentials to "same-origin" when not specified', () => {
+        const builder = new RequestBuilder('/_components', 'get');
+        const { fetchOptions } = builder.buildRequest({ firstName: 'Ryan' }, [], { firstName: 'Kevin' }, {}, {}, {});
+
+        expect(fetchOptions.credentials).toEqual('same-origin');
+    });
+
+    it('sets fetchCredentials to "omit" when specified', () => {
+        const builder = new RequestBuilder('/_components', 'post', 'omit');
+        const { fetchOptions } = builder.buildRequest({ firstName: 'Ryan' }, [], { firstName: 'Kevin' }, {}, {}, {});
+
+        expect(fetchOptions.credentials).toEqual('omit');
+    });
 });

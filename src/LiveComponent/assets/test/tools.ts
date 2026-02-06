@@ -482,6 +482,7 @@ export function initComponent(props: any = {}, controllerValues: any = {}) {
         ${controllerValues.eventEmit ? `data-live-events-to-emit-value="${dataToJsonAttribute(controllerValues.eventEmit)}"` : ''}
         ${controllerValues.browserDispatch ? `data-live-events-to-dispatch-value="${dataToJsonAttribute(controllerValues.browserDispatch)}"` : ''}
         ${controllerValues.queryMapping ? `data-live-query-mapping-value="${dataToJsonAttribute(controllerValues.queryMapping)}"` : ''}
+        ${controllerValues.fetchCredentials ? `data-live-fetch-credentials-value="${controllerValues.fetchCredentials}"` : ''}
     `;
 }
 

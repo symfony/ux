@@ -45,6 +45,7 @@ class LiveControllerAttributesCreator
         private UrlGeneratorInterface $urlGenerator,
         private LiveResponder $liveResponder,
         private TemplateMap $templateMap,
+        private string $defaultFetchCredentials = 'same-origin',
     ) {
     }
 
@@ -99,6 +100,13 @@ class LiveControllerAttributesCreator
         // set attribute if needed
         if ('post' !== $requestMethod) {
             $attributesCollection->setRequestMethod($requestMethod);
+        }
+
+        // Use component-specific fetchCredentials if set, otherwise use global default
+        $fetchCredentials = $liveMetadata->getComponentMetadata()?->get('fetch_credentials') ?? $this->defaultFetchCredentials;
+        // set attribute if needed
+        if ('same-origin' !== $fetchCredentials) {
+            $attributesCollection->setFetchCredentials($fetchCredentials);
         }
 
         if ($liveMetadata->hasQueryStringBindings($mounted->getComponent())) {
