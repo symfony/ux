@@ -13,6 +13,7 @@
         },
         "ux-google-map": "src/Map/src/Bridge/Google",
         "ux-leaflet-map": "src/Map/src/Bridge/Leaflet",
+        "ux-native": "src/Native",
         "ux-notify": "src/Notify",
         "ux-react": "src/React",
         "ux-svelte": "src/Svelte",
