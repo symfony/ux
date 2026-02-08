@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2026-01-17T08:48:18Z
+
+Hi @Phil23
+
+Could you add a few tests for the edge cases... that will mainly be used to decide once and keep the same behaviour afterward.
+
+```twig
+<twig:Acme:Foo:Index />
+
+<twig:Acme:Foo:index />
+
+<twig:Acme:Index:index />
+
+```
+
+( depending on the various possibilities (there is or not a template, caps / lower) )
+
+Also let's add a line in the CHANGELOG (the one in the src/TwigComponent directory)
+
+Minor/personal note here: this will work (and thank you for this PR by the way 🤝 )..
+
+... I would still not recommand "officially" this trick to bundle maintainers.. or I would recommand them to not abuse it, and keep it "inside" their component structure instead of using this for the "main ones" -- button for instance..
+... as the differences with how the Twig and Live component are handled could lead to frustrations I guess.
+
+---------------------------------------------------------------------------
+
+by Phil23 at 2026-01-19T08:57:11Z
+
+@smnandre Thank you for the feedback.
+
+I added several edge cases to the unit test.
+
+I also added the changelog entry. I wasn't sure about the version number, though.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-01-19T19:54:19Z
+
+Thank you for this nice first PR  @Phil23  🎉
