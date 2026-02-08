@@ -25,7 +25,7 @@
 
     <twig:Item variant="outline">
         <twig:Item:Media>
-            <div class="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2">
+            <div class="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
                 <twig:Avatar class="hidden sm:flex">
                     <twig:Avatar:Fallback class="bg-red-200">A</twig:Avatar:Fallback>
                 </twig:Avatar>
@@ -55,7 +55,7 @@
 <div class="flex w-full max-w-lg flex-col gap-6">
     <div data-slot="item" data-variant="outline" data-size="default" class="group/item flex items-center border text-sm rounded-md transition-colors [a]:hover:bg-accent/50 [a]:transition-colors duration-100 flex-wrap outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] border-border p-4 gap-4">
 <div data-slot="item-media" data-variant="icon" class="flex shrink-0 items-center justify-center gap-2 group-has-[[data-slot=item-description]]/item:self-start [&amp;_svg]:pointer-events-none group-has-[[data-slot=item-description]]/item:translate-y-0.5 size-8 border rounded-sm bg-muted [&amp;_svg:not([class*='size-'])]:size-4">
-<span data-slot="avatar" data-size="default" class="group/avatar relative flex size-8 shrink-0 overflow-hidden rounded-full select-none data-[size=lg]:size-10 data-[size=sm]:size-6 size-10"><img data-slot="avatar-image" class="aspect-square size-full " alt="ER" src="https://github.com/evilrabbit.png">
+<span data-slot="avatar" data-size="default" class="size-8 rounded-full after:rounded-full data-[size=lg]:size-10 data-[size=sm]:size-6 after:border-border group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten size-10"><img data-slot="avatar-image" class="hidden rounded-full aspect-square size-full object-cover " onload="this.classList.remove('hidden'); this.closest('[data-slot=avatar]')?.querySelector('[data-slot=avatar-fallback]')?.classList.add('hidden');" alt="ER" src="https://github.com/evilrabbit.png">
 
             </span>
         </div>
@@ -72,12 +72,12 @@
 
     <div data-slot="item" data-variant="outline" data-size="default" class="group/item flex items-center border text-sm rounded-md transition-colors [a]:hover:bg-accent/50 [a]:transition-colors duration-100 flex-wrap outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] border-border p-4 gap-4">
 <div data-slot="item-media" data-variant="default" class="flex shrink-0 items-center justify-center gap-2 group-has-[[data-slot=item-description]]/item:self-start [&amp;_svg]:pointer-events-none group-has-[[data-slot=item-description]]/item:translate-y-0.5 bg-transparent">
-<div class="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2">
-                <span data-slot="avatar" data-size="default" class="group/avatar relative flex size-8 shrink-0 overflow-hidden rounded-full select-none data-[size=lg]:size-10 data-[size=sm]:size-6 hidden sm:flex"><span data-slot="avatar-fallback" class="bg-muted text-muted-foreground flex size-full items-center justify-center rounded-full text-sm group-data-[size=sm]/avatar:text-xs bg-red-200">A</span>
+<div class="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
+                <span data-slot="avatar" data-size="default" class="size-8 rounded-full after:rounded-full data-[size=lg]:size-10 data-[size=sm]:size-6 after:border-border group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten hidden sm:flex"><span data-slot="avatar-fallback" class="bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs bg-red-200">A</span>
                 </span>
-                <span data-slot="avatar" data-size="default" class="group/avatar relative flex size-8 shrink-0 overflow-hidden rounded-full select-none data-[size=lg]:size-10 data-[size=sm]:size-6 hidden sm:flex"><span data-slot="avatar-fallback" class="bg-muted text-muted-foreground flex size-full items-center justify-center rounded-full text-sm group-data-[size=sm]/avatar:text-xs bg-red-300">B</span>
+                <span data-slot="avatar" data-size="default" class="size-8 rounded-full after:rounded-full data-[size=lg]:size-10 data-[size=sm]:size-6 after:border-border group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten hidden sm:flex"><span data-slot="avatar-fallback" class="bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs bg-red-300">B</span>
                 </span>
-                <span data-slot="avatar" data-size="default" class="group/avatar relative flex size-8 shrink-0 overflow-hidden rounded-full select-none data-[size=lg]:size-10 data-[size=sm]:size-6 hidden sm:flex"><span data-slot="avatar-fallback" class="bg-muted text-muted-foreground flex size-full items-center justify-center rounded-full text-sm group-data-[size=sm]/avatar:text-xs bg-red-400">C</span>
+                <span data-slot="avatar" data-size="default" class="size-8 rounded-full after:rounded-full data-[size=lg]:size-10 data-[size=sm]:size-6 after:border-border group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten hidden sm:flex"><span data-slot="avatar-fallback" class="bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs bg-red-400">C</span>
                 </span>
             </div>
         </div>
