@@ -1,5 +1,6 @@
 <img
     data-slot="avatar-image"
-    class="{{ 'aspect-square size-full ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ 'hidden rounded-full aspect-square size-full object-cover ' ~ attributes.render('class')|tailwind_merge }}"
+    onload="this.classList.remove('hidden'); this.closest('[data-slot=avatar]')?.querySelector('[data-slot=avatar-fallback]')?.classList.add('hidden');"
     {{ attributes.defaults({alt: ''}) }}
 />
