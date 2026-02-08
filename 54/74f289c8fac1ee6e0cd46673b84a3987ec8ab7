@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+
+by GromNaN at 2026-02-06T19:15:31Z
+
+This revealed some other failing tests.
+
+Status: need work
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-02-06T19:20:05Z
+
+@GromNaN all occurences of the same problem: ResetDatabaseMode
+
+But already thanks for this!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-02-06T22:20:05Z
+
+Oooh, I thought https://github.com/symfony/ux/pull/3325 was enough, thanks!
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2026-02-07T09:21:44Z
+
+Tests have passed ✅
+
+![](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjVzcTdzYnlxdnFuaXAweTc0M2xtczY5dm9ra3ZmaW04YjBnOGYyZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/KEVNWkmWm6dm8/giphy.gif)
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2026-02-07T09:25:45Z
+
+> Oooh, I thought #3325 was enough, thanks!
+
+Your PR did not prevent installing incompatible symfony 5.4 packages.
