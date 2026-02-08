@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-02-06T08:52:06Z
+
+Thanks for the contribution!
+I've been pretty busy lately, but I'll try to take a look at it next week!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-02-08T16:18:01Z
+
+I just fixed some templates, IDK if my (new) setup was wrong, but some visuals were broken
+
+Also, I've finally implemented the fallback behavior:
+
+[Capture vidéo du 2026-02-08 17-16-14.webm](https://github.com/user-attachments/assets/c8ba4811-88fc-4528-b0cb-dba57c805ebb)
+
+Opened https://github.com/symfony/ux.symfony.com/pull/13 for updating the examples
