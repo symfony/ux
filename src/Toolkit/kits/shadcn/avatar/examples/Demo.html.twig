@@ -1,21 +1,30 @@
-<div class="flex flex-row flex-wrap items-center gap-12">
+<div class="flex flex-row flex-wrap items-center gap-6 md:gap-12">
     <twig:Avatar>
-        <twig:Avatar:Image src="https://avatars.githubusercontent.com/u/47313?v=4" alt="Fabien Potencier" />
+        <twig:Avatar:Image
+            src="https://github.com/shadcn.png"
+            alt="@shadcn"
+            class="grayscale"
+        />
+        <twig:Avatar:Fallback>CN</twig:Avatar:Fallback>
     </twig:Avatar>
-
-    <twig:Avatar class="rounded-lg">
-        <twig:Avatar:Image src="https://avatars.githubusercontent.com/u/47313?v=4" alt="Fabien Potencier" />
+    <twig:Avatar>
+        <twig:Avatar:Image src="https://github.com/evilrabbit.png" alt="@evilrabbit" />
+        <twig:Avatar:Fallback>ER</twig:Avatar:Fallback>
+        <twig:Avatar:Badge class="bg-green-600 dark:bg-green-800" />
     </twig:Avatar>
-
-    <div class="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2">
+    <twig:Avatar:Group class="grayscale">
         <twig:Avatar>
-            <twig:Avatar:Text class="bg-red-200">A</twig:Avatar:Text>
+            <twig:Avatar:Image src="https://github.com/shadcn.png" alt="@shadcn" />
+            <twig:Avatar:Fallback>CN</twig:Avatar:Fallback>
         </twig:Avatar>
         <twig:Avatar>
-            <twig:Avatar:Text class="bg-red-300">B</twig:Avatar:Text>
+            <twig:Avatar:Image src="https://github.com/maxleiter.png" alt="@maxleiter" />
+            <twig:Avatar:Fallback>LR</twig:Avatar:Fallback>
         </twig:Avatar>
         <twig:Avatar>
-            <twig:Avatar:Text class="bg-red-400">C</twig:Avatar:Text>
+            <twig:Avatar:Image src="https://github.com/evilrabbit.png" alt="@evilrabbit" />
+            <twig:Avatar:Fallback>ER</twig:Avatar:Fallback>
         </twig:Avatar>
-    </div>
+        <twig:Avatar:GroupCount>+3</twig:Avatar:GroupCount>
+    </twig:Avatar:Group>
 </div>

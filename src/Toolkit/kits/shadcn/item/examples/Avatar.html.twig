@@ -20,15 +20,15 @@
 
     <twig:Item variant="outline">
         <twig:Item:Media>
-            <div class="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2">
+            <div class="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
                 <twig:Avatar class="hidden sm:flex">
-                    <twig:Avatar:Text class="bg-red-200">A</twig:Avatar:Text>
+                    <twig:Avatar:Fallback class="bg-red-200">A</twig:Avatar:Fallback>
                 </twig:Avatar>
                 <twig:Avatar class="hidden sm:flex">
-                    <twig:Avatar:Text class="bg-red-300">B</twig:Avatar:Text>
+                    <twig:Avatar:Fallback class="bg-red-300">B</twig:Avatar:Fallback>
                 </twig:Avatar>
                 <twig:Avatar class="hidden sm:flex">
-                    <twig:Avatar:Text class="bg-red-400">C</twig:Avatar:Text>
+                    <twig:Avatar:Fallback class="bg-red-400">C</twig:Avatar:Fallback>
                 </twig:Avatar>
             </div>
         </twig:Item:Media>
