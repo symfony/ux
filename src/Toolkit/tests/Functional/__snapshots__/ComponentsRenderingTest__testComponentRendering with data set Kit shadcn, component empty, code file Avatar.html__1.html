@@ -12,7 +12,7 @@
                     alt="@shadcn"
                     class="grayscale"
                 />
-                <twig:Avatar:Text>LR</twig:Avatar:Text>
+                <twig:Avatar:Fallback>LR</twig:Avatar:Fallback>
             </twig:Avatar>
         </twig:Empty:Media>
         <twig:Empty:Title>User offline</twig:Empty:Title>
@@ -29,9 +29,9 @@
 <div data-slot="empty" class="flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center text-balance md:p-12 ">
 <div data-slot="empty-header" class="flex max-w-sm flex-col items-center gap-2 text-center ">
 <div data-slot="empty-icon" data-variant="default" class="flex shrink-0 items-center justify-center mb-2 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 bg-transparent">
-<span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full size-12" data-slot="avatar"><img class="aspect-square h-full w-full grayscale" data-slot="avatar-image" alt="@shadcn" src="https://github.com/shadcn.png">
+<span data-slot="avatar" data-size="default" class="size-8 rounded-full after:rounded-full data-[size=lg]:size-10 data-[size=sm]:size-6 after:border-border group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten size-12"><img data-slot="avatar-image" class="hidden rounded-full aspect-square size-full object-cover grayscale" onload="this.classList.remove('hidden'); this.closest('[data-slot=avatar]')?.querySelector('[data-slot=avatar-fallback]')?.classList.add('hidden');" alt="@shadcn" src="https://github.com/shadcn.png">
 
-                <span class="flex h-full w-full items-center justify-center rounded-full bg-muted " data-slot="avatar-text">LR</span>
+                <span data-slot="avatar-fallback" class="bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs ">LR</span>
             </span>
         </div>
         <div data-slot="empty-title" class="text-lg font-medium tracking-tight ">User offline</div>

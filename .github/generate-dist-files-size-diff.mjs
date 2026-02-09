@@ -55,7 +55,7 @@ function computeDiffPercent(from, to) {
         return 0;
     }
 
-    return Math.round((from - to) / from * -100);
+    return Math.round(((from - to) / from) * -100);
 }
 
 /**
@@ -90,56 +90,63 @@ export function main() {
      *     }>
      * }>}
      */
-    const packagesFiles = [...new Set([...Object.keys(pr), ...Object.keys(base)])]
-        .sort()
-        .reduce((acc, file) => {
-            const beforeSize = base[file]?.size || 0;
-            const afterSize = pr[file]?.size || 0;
-            const beforeSizeGz = base[file]?.size_gz || 0;
-            const afterSizeGz = pr[file]?.size_gz || 0;
+    const packagesFiles = [...new Set([...Object.keys(pr), ...Object.keys(base)])].sort().reduce((acc, file) => {
+        const beforeSize = base[file]?.size || 0;
+        const afterSize = pr[file]?.size || 0;
+        const beforeSizeGz = base[file]?.size_gz || 0;
+        const afterSizeGz = pr[file]?.size_gz || 0;
 
-            if (beforeSize !== afterSize) {
-                const isBridge = file.includes('src/Bridge'); // we assume that's enough for now
-                const packageName = file.split('/')[1];
-                const bridgeName = isBridge ? file.split('/')[4] : '';
-                const key = isBridge ? `${packageName} (Bridge ${bridgeName})` : packageName;
-                if (!acc.has(key)) {
-                    acc.set(key, {
-                        meta: {
-                            packageName,
-                            bridgeName,
-                            url: isBridge ? `${repoUrl}/tree/${process.env.HEAD_REF}/src/${packageName}/src/Bridge/${bridgeName}/assets/dist` : `${repoUrl}/tree/${process.env.HEAD_REF}/src/${packageName}/assets/dist`,
-                        }, files: new Set(),
-                    });
-                }
-
-                const added = !base[file] && pr[file];
-                const removed = base[file] && !pr[file];
-
-                acc.get(key).files.add({
-                    state: added ? 'added' : (removed ? 'removed' : 'changed'),
-                    before: { size: beforeSize, sizeGz: beforeSizeGz },
-                    after: { size: afterSize, sizeGz: afterSizeGz },
-                    diffPercent: {
-                        size: removed ? -100 : (added ? 100 : computeDiffPercent(beforeSize, afterSize)),
-                        sizeGz: removed ? -100 : (added ? 100 : computeDiffPercent(beforeSizeGz, afterSizeGz)),
-                    },
+        if (beforeSize !== afterSize) {
+            const isBridge = file.includes('src/Bridge'); // we assume that's enough for now
+            const packageName = file.split('/')[1];
+            const bridgeName = isBridge ? file.split('/')[4] : '';
+            const key = isBridge ? `${packageName} (Bridge ${bridgeName})` : packageName;
+            if (!acc.has(key)) {
+                acc.set(key, {
                     meta: {
-                        fileNameShort: file.replace(isBridge ? `src/${file.split('/')[1]}/src/Bridge/${file.split('/')[4]}/assets/dist/` : `src/${file.split('/')[1]}/assets/dist/`, ''),
-                        fileNameUrl: `${repoUrl}/blob/${process.env.HEAD_REF}/${file}`,
+                        packageName,
+                        bridgeName,
+                        url: isBridge
+                            ? `${repoUrl}/tree/${process.env.HEAD_REF}/src/${packageName}/src/Bridge/${bridgeName}/assets/dist`
+                            : `${repoUrl}/tree/${process.env.HEAD_REF}/src/${packageName}/assets/dist`,
                     },
+                    files: new Set(),
                 });
             }
 
-            return acc;
-        }, new Map);
+            const added = !base[file] && pr[file];
+            const removed = base[file] && !pr[file];
+
+            acc.get(key).files.add({
+                state: added ? 'added' : removed ? 'removed' : 'changed',
+                before: { size: beforeSize, sizeGz: beforeSizeGz },
+                after: { size: afterSize, sizeGz: afterSizeGz },
+                diffPercent: {
+                    size: removed ? -100 : added ? 100 : computeDiffPercent(beforeSize, afterSize),
+                    sizeGz: removed ? -100 : added ? 100 : computeDiffPercent(beforeSizeGz, afterSizeGz),
+                },
+                meta: {
+                    fileNameShort: file.replace(
+                        isBridge
+                            ? `src/${file.split('/')[1]}/src/Bridge/${file.split('/')[4]}/assets/dist/`
+                            : `src/${file.split('/')[1]}/assets/dist/`,
+                        ''
+                    ),
+                    fileNameUrl: `${repoUrl}/blob/${process.env.HEAD_REF}/${file}`,
+                },
+            });
+        }
+
+        return acc;
+    }, new Map());
 
     if (packagesFiles.size === 0) {
         output += 'ℹ️ No difference in dist packagesFiles.\n';
         return output;
     }
 
-    output += 'Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.\n';
+    output +=
+        'Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.\n';
     output += 'Please review the changes and make sure they are expected.\n\n';
     output += `<table>
     <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
@@ -150,15 +157,17 @@ export function main() {
             output += `<tr>
                 <td><a href="${file.meta.fileNameUrl}"><code>${file.meta.fileNameShort}</code></a></td>
             `;
-            output += file.state === 'added' 
-                ? `<td><em>Added</em></td>`
-                : `<td>
+            output +=
+                file.state === 'added'
+                    ? `<td><em>Added</em></td>`
+                    : `<td>
                     <code>${formatBytes(file.before.size)}</code>
                     / <code>${formatBytes(file.before.sizeGz)}</code> 
-                </td>`; 
-            output += file.state === 'removed'
-                ? `<td><em>Removed</em></td>`
-                : `<td>
+                </td>`;
+            output +=
+                file.state === 'removed'
+                    ? `<td><em>Removed</em></td>`
+                    : `<td>
                     <code>${formatBytes(file.after.size)}</code>${file.state === 'changed' ? `<sup>${formatDiffPercent(file.diffPercent.size)}</sup>` : ''}
                     / <code>${formatBytes(file.after.sizeGz)}</code>${file.state === 'changed' ? `<sup>${formatDiffPercent(file.diffPercent.sizeGz)}</sup>` : ''}
                 </td>`;

@@ -15,33 +15,33 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+    check:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
 
-      - run: npm i -g corepack && corepack enable
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'pnpm'
-          cache-dependency-path: |
-            pnpm-lock.yaml
-            **/package.json
+            - run: npm i -g corepack && corepack enable
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: '.nvmrc'
+                  cache: 'pnpm'
+                  cache-dependency-path: |
+                      pnpm-lock.yaml
+                      **/package.json
 
-      - name: Install root JS dependencies
-        run: pnpm install --frozen-lockfile
+            - name: Install root JS dependencies
+              run: pnpm install --frozen-lockfile
 
-      - name: Build
-        run: pnpm run build
+            - name: Build
+              run: pnpm run build
 
-      - name: Check if JS dist files are current
-        run: |
-          if ! git diff --quiet; then
-            echo "The Git workspace is unclean! Changes detected:"
-            git status --porcelain
-            git diff
-            exit 1
-          else
-            echo "The Git workspace is clean. No changes detected."
-          fi
+            - name: Check if JS dist files are current
+              run: |
+                  if ! git diff --quiet; then
+                    echo "The Git workspace is unclean! Changes detected:"
+                    git status --porcelain
+                    git diff
+                    exit 1
+                  else
+                    echo "The Git workspace is clean. No changes detected."
+                  fi

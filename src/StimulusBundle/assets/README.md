@@ -9,7 +9,7 @@ Read more at [symfony/ux#2708](https://github.com/symfony/ux/issues/2708).
 
 ## Resources
 
--   [Documentation](https://symfony.com/bundles/StimulusBundle/current/index.html)
--   [Report issues](https://github.com/symfony/ux/issues) and
-    [send Pull Requests](https://github.com/symfony/ux/pulls)
-    in the [main Symfony UX repository](https://github.com/symfony/ux)
+- [Documentation](https://symfony.com/bundles/StimulusBundle/current/index.html)
+- [Report issues](https://github.com/symfony/ux/issues) and
+  [send Pull Requests](https://github.com/symfony/ux/pulls)
+  in the [main Symfony UX repository](https://github.com/symfony/ux)

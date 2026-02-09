@@ -9,15 +9,15 @@
             <div class="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:size-12 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
                 <twig:Avatar>
                     <twig:Avatar:Image src="https://github.com/shadcn.png" alt="@shadcn" />
-                    <twig:Avatar:Text>CN</twig:Avatar:Text>
+                    <twig:Avatar:Fallback>CN</twig:Avatar:Fallback>
                 </twig:Avatar>
                 <twig:Avatar>
                     <twig:Avatar:Image src="https://github.com/maxleiter.png" alt="@maxleiter" />
-                    <twig:Avatar:Text>LR</twig:Avatar:Text>
+                    <twig:Avatar:Fallback>LR</twig:Avatar:Fallback>
                 </twig:Avatar>
                 <twig:Avatar>
                     <twig:Avatar:Image src="https://github.com/evilrabbit.png" alt="@evilrabbit" />
-                    <twig:Avatar:Text>ER</twig:Avatar:Text>
+                    <twig:Avatar:Fallback>ER</twig:Avatar:Fallback>
                 </twig:Avatar>
             </div>
         </twig:Empty:Media>
@@ -39,17 +39,17 @@
 <div data-slot="empty-header" class="flex max-w-sm flex-col items-center gap-2 text-center ">
 <div data-slot="empty-icon" data-variant="default" class="flex shrink-0 items-center justify-center mb-2 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 bg-transparent">
 <div class="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:size-12 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
-                <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full " data-slot="avatar"><img class="aspect-square h-full w-full " data-slot="avatar-image" alt="@shadcn" src="https://github.com/shadcn.png">
+                <span data-slot="avatar" data-size="default" class="size-8 rounded-full after:rounded-full data-[size=lg]:size-10 data-[size=sm]:size-6 after:border-border group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten "><img data-slot="avatar-image" class="hidden rounded-full aspect-square size-full object-cover " onload="this.classList.remove('hidden'); this.closest('[data-slot=avatar]')?.querySelector('[data-slot=avatar-fallback]')?.classList.add('hidden');" alt="@shadcn" src="https://github.com/shadcn.png">
 
-                    <span class="flex h-full w-full items-center justify-center rounded-full bg-muted " data-slot="avatar-text">CN</span>
+                    <span data-slot="avatar-fallback" class="bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs ">CN</span>
                 </span>
-                <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full " data-slot="avatar"><img class="aspect-square h-full w-full " data-slot="avatar-image" alt="@maxleiter" src="https://github.com/maxleiter.png">
+                <span data-slot="avatar" data-size="default" class="size-8 rounded-full after:rounded-full data-[size=lg]:size-10 data-[size=sm]:size-6 after:border-border group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten "><img data-slot="avatar-image" class="hidden rounded-full aspect-square size-full object-cover " onload="this.classList.remove('hidden'); this.closest('[data-slot=avatar]')?.querySelector('[data-slot=avatar-fallback]')?.classList.add('hidden');" alt="@maxleiter" src="https://github.com/maxleiter.png">
 
-                    <span class="flex h-full w-full items-center justify-center rounded-full bg-muted " data-slot="avatar-text">LR</span>
+                    <span data-slot="avatar-fallback" class="bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs ">LR</span>
                 </span>
-                <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full " data-slot="avatar"><img class="aspect-square h-full w-full " data-slot="avatar-image" alt="@evilrabbit" src="https://github.com/evilrabbit.png">
+                <span data-slot="avatar" data-size="default" class="size-8 rounded-full after:rounded-full data-[size=lg]:size-10 data-[size=sm]:size-6 after:border-border group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten "><img data-slot="avatar-image" class="hidden rounded-full aspect-square size-full object-cover " onload="this.classList.remove('hidden'); this.closest('[data-slot=avatar]')?.querySelector('[data-slot=avatar-fallback]')?.classList.add('hidden');" alt="@evilrabbit" src="https://github.com/evilrabbit.png">
 
-                    <span class="flex h-full w-full items-center justify-center rounded-full bg-muted " data-slot="avatar-text">ER</span>
+                    <span data-slot="avatar-fallback" class="bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs ">ER</span>
                 </span>
             </div>
         </div>

@@ -148,27 +148,27 @@ declare abstract class export_default<MapOptions, BridgeMapOptions, BridgeMap, B
     polylinesValueChanged(): void;
     circlesValueChanged(): void;
     rectanglesValueChanged(): void;
-    protected abstract doCreateMap({ definition }: {
+    protected abstract doCreateMap({ definition, }: {
         definition: MapDefinition<MapOptions, BridgeMapOptions>;
     }): BridgeMap;
     protected abstract doFitBoundsToMarkers(): void;
-    protected abstract doCreateMarker({ definition }: {
+    protected abstract doCreateMarker({ definition, }: {
         definition: MarkerDefinition<BridgeMarkerOptions, BridgeInfoWindowOptions>;
     }): BridgeMarker;
     protected abstract doRemoveMarker(marker: BridgeMarker): void;
-    protected abstract doCreatePolygon({ definition }: {
+    protected abstract doCreatePolygon({ definition, }: {
         definition: PolygonDefinition<BridgePolygonOptions, BridgeInfoWindowOptions>;
     }): BridgePolygon;
     protected abstract doRemovePolygon(polygon: BridgePolygon): void;
-    protected abstract doCreatePolyline({ definition }: {
+    protected abstract doCreatePolyline({ definition, }: {
         definition: PolylineDefinition<BridgePolylineOptions, BridgeInfoWindowOptions>;
     }): BridgePolyline;
     protected abstract doRemovePolyline(polyline: BridgePolyline): void;
-    protected abstract doCreateCircle({ definition }: {
+    protected abstract doCreateCircle({ definition, }: {
         definition: CircleDefinition<BridgeCircleOptions, BridgeInfoWindowOptions>;
     }): BridgeCircle;
     protected abstract doRemoveCircle(circle: BridgeCircle): void;
-    protected abstract doCreateRectangle({ definition }: {
+    protected abstract doCreateRectangle({ definition, }: {
         definition: RectangleDefinition<BridgeRectangleOptions, BridgeInfoWindowOptions>;
     }): BridgeRectangle;
     protected abstract doRemoveRectangle(rectangle: BridgeRectangle): void;

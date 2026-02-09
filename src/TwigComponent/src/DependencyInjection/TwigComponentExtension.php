@@ -167,7 +167,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                     ->isRequired()
                     ->useAttributeAsKey('namespace')
                     ->validate()
-                        ->always(function ($v) {
+                        ->always(static function ($v) {
                             foreach ($v as $namespace => $defaults) {
                                 if (!str_ends_with($namespace, '\\')) {
                                     throw new InvalidConfigurationException(\sprintf('The twig_component.defaults namespace "%s" is invalid: it must end in a "\".', $namespace));
@@ -180,7 +180,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                     ->arrayPrototype()
                         ->beforeNormalization()
                             ->ifString()
-                            ->then(function (string $v) {
+                            ->then(static function (string $v) {
                                 return ['template_directory' => $v];
                             })
                         ->end()

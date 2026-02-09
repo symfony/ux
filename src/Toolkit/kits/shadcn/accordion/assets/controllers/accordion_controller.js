@@ -159,7 +159,7 @@ export default class extends Controller {
      * @returns {boolean}
      */
     #isDisabled(item) {
-        return item.hasAttribute('disabled')
+        return item.hasAttribute('disabled');
     }
 
     /**

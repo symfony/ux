@@ -31,7 +31,11 @@ var abstract_map_controller_default = class extends Controller {
     this.createPolygon = this.createDrawingFactory("polygon", this.polygons, this.doCreatePolygon.bind(this));
     this.createPolyline = this.createDrawingFactory("polyline", this.polylines, this.doCreatePolyline.bind(this));
     this.createCircle = this.createDrawingFactory("circle", this.circles, this.doCreateCircle.bind(this));
-    this.createRectangle = this.createDrawingFactory("rectangle", this.rectangles, this.doCreateRectangle.bind(this));
+    this.createRectangle = this.createDrawingFactory(
+      "rectangle",
+      this.rectangles,
+      this.doCreateRectangle.bind(this)
+    );
     this.map = this.doCreateMap({ definition: mapDefinition });
     this.markersValue.forEach((definition) => {
       this.createMarker({ definition });
@@ -232,7 +236,9 @@ var map_controller_default = class extends abstract_map_controller_default {
     }
     if (icon2) {
       if (Object.prototype.hasOwnProperty.call(bridgeOptions, "icon")) {
-        console.warn('[Symfony UX Map] Defining "bridgeOptions.icon" for a marker with a custom icon is not supported and will be ignored.');
+        console.warn(
+          '[Symfony UX Map] Defining "bridgeOptions.icon" for a marker with a custom icon is not supported and will be ignored.'
+        );
       }
       this.doCreateIcon({ definition: icon2, element: marker2 });
     }
@@ -241,7 +247,9 @@ var map_controller_default = class extends abstract_map_controller_default {
   doRemoveMarker(marker2) {
     marker2.remove();
   }
-  doCreatePolygon({ definition }) {
+  doCreatePolygon({
+    definition
+  }) {
     const { "@id": _id, points, infoWindow, bridgeOptions = {} } = definition;
     const polygon2 = L.polygon(points, { ...bridgeOptions }).addTo(this.map);
     if (infoWindow) {
@@ -252,7 +260,9 @@ var map_controller_default = class extends abstract_map_controller_default {
   doRemovePolygon(polygon2) {
     polygon2.remove();
   }
-  doCreatePolyline({ definition }) {
+  doCreatePolyline({
+    definition
+  }) {
     const { "@id": _id, points, infoWindow, bridgeOptions = {} } = definition;
     const polyline2 = L.polyline(points, { ...bridgeOptions }).addTo(this.map);
     if (infoWindow) {
@@ -274,7 +284,9 @@ var map_controller_default = class extends abstract_map_controller_default {
   doRemoveCircle(circle2) {
     circle2.remove();
   }
-  doCreateRectangle({ definition }) {
+  doCreateRectangle({
+    definition
+  }) {
     const { "@id": _id, southWest, northEast, infoWindow, bridgeOptions = {} } = definition;
     const rectangle2 = L.rectangle(
       [

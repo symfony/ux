@@ -27,7 +27,7 @@ class SvelteControllerLoaderAssetCompilerTest extends TestCase
                 $this->equalTo(realpath(__DIR__.'/../fixtures/svelte/controllers/MySvelteController.js')),
                 $this->equalTo(realpath(__DIR__.'/../fixtures/svelte/controllers/subdir/DeeperSvelteController.js')),
             ))
-            ->willReturnCallback(function ($sourcePath) {
+            ->willReturnCallback(static function ($sourcePath) {
                 if (str_contains($sourcePath, 'MySvelteController')) {
                     return new MappedAsset(
                         'MySvelteController.js',

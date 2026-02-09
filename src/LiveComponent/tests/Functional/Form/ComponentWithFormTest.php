@@ -202,7 +202,7 @@ class ComponentWithFormTest extends KernelTestCase
             ],
         ], $dehydratedProps['form']);
 
-        $getUrl = function (array $props, ?array $updatedProps = null) {
+        $getUrl = static function (array $props, ?array $updatedProps = null) {
             $url = '/_components/form_with_many_different_fields_type?props='.urlencode(json_encode($props));
             if (null !== $updatedProps) {
                 $url .= '&updated='.urlencode(json_encode($updatedProps));
@@ -376,7 +376,7 @@ class ComponentWithFormTest extends KernelTestCase
                     ]),
                 ],
             ])
-            ->use(function (Crawler $crawler) use (&$updatedProps) {
+            ->use(static function (Crawler $crawler) use (&$updatedProps) {
                 // mimic user typing
                 $updatedProps = [
                     'blog_post_form.content' => 'changed description by user',

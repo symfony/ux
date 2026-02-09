@@ -156,11 +156,11 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
         ]);
 
         // if autocomplete_url is passed, then HTML options are already supported
-        $resolver->setNormalizer('options_as_html', function (Options $options, $value) {
+        $resolver->setNormalizer('options_as_html', static function (Options $options, $value) {
             return null === $options['autocomplete_url'] ? $value : false;
         });
 
-        $resolver->setNormalizer('preload', function (Options $options, $value) {
+        $resolver->setNormalizer('preload', static function (Options $options, $value) {
             if (\is_bool($value)) {
                 $value = $value ? 'true' : 'false';
             }

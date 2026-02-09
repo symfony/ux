@@ -28,7 +28,7 @@ final class TypeHelper
      */
     public static function accepts(Type $type, mixed $value): bool
     {
-        $parentAccepts = function (Type $_type0, mixed $_value0): bool {
+        $parentAccepts = static function (Type $_type0, mixed $_value0): bool {
             $specification = static function (Type $_type1) use (&$specification, $_value0): bool {
                 if ($_type1 instanceof WrappingTypeInterface) {
                     return $_type1->wrappedTypeIsSatisfiedBy($specification);

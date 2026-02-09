@@ -1,8 +1,8 @@
 name: Unit Tests
 
 defaults:
-  run:
-    shell: bash
+    run:
+        shell: bash
 
 on:
     push:
@@ -32,30 +32,29 @@ jobs:
                 minimum-stability: ['stable']
                 os: ['']
                 include:
-                    -   minimum-stability: 'dev'
-                        php-version: '8.5'
+                    - minimum-stability: 'dev'
+                      php-version: '8.5'
 
                     # lowest deps
-                    -   php-version: '8.2'
-                        dependency-version: 'lowest'
+                    - php-version: '8.2'
+                      dependency-version: 'lowest'
 
                     # 6.4 LTS
-                    -  php-version: '8.2'
-                       symfony-version: '6.4.*'
+                    - php-version: '8.2'
+                      symfony-version: '6.4.*'
 
                     # 7.4 LTS
-                    -  php-version: '8.2'
-                       symfony-version: '7.4.*'
-                    -  php-version: '8.2'
-                       symfony-version: '7.4.*'
-                       os: 'windows-latest'
+                    - php-version: '8.2'
+                      symfony-version: '7.4.*'
+                    - php-version: '8.2'
+                      symfony-version: '7.4.*'
+                      os: 'windows-latest'
 
                     # Explicit Symfony versions
-                    -  php-version: '8.4'
-                       symfony-version: '8.0.*'
-                    -  php-version: '8.5'
-                       symfony-version: '8.0.*'
-
+                    - php-version: '8.4'
+                      symfony-version: '8.0.*'
+                    - php-version: '8.5'
+                      symfony-version: '8.0.*'
 
         env:
             SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=6.4' }}
@@ -82,14 +81,14 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                php-version: ${{ matrix.php-version }}
-                extensions: ${{ matrix.os == 'windows-latest' && 'pdo_sqlite,sqlite3,fileinfo,gd,zip' || '' }}
-                tools: flex
+                  php-version: ${{ matrix.php-version }}
+                  extensions: ${{ matrix.os == 'windows-latest' && 'pdo_sqlite,sqlite3,fileinfo,gd,zip' || '' }}
+                  tools: flex
 
-            -   name: Get composer cache directory
-                id: composer-cache
-                run: |
-                    echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+            - name: Get composer cache directory
+              id: composer-cache
+              run: |
+                  echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
             - name: Cache packages dependencies
               uses: actions/cache@v4
@@ -110,36 +109,36 @@ jobs:
             - name: Run packages tests (Unix)
               if: matrix.os != 'windows-latest'
               run: |
-                source .github/workflows/.utils.sh
-                echo "$PACKAGES" | xargs -n1 | parallel -j +3 "_run_task {} \
-                  '(cd src/{} \
-                  && $COMPOSER_MIN_STAB \
-                  && before_composer_install \"{}\" \"${{ matrix.php-version }}\" \
-                  && $COMPOSER_UP \
-                  && $PHPUNIT)'"
+                  source .github/workflows/.utils.sh
+                  echo "$PACKAGES" | xargs -n1 | parallel -j +3 "_run_task {} \
+                    '(cd src/{} \
+                    && $COMPOSER_MIN_STAB \
+                    && before_composer_install \"{}\" \"${{ matrix.php-version }}\" \
+                    && $COMPOSER_UP \
+                    && $PHPUNIT)'"
 
             - name: Run packages tests (Windows)
               if: matrix.os == 'windows-latest'
               run: |
-                source .github/workflows/.utils.sh
+                  source .github/workflows/.utils.sh
 
-                # parallel is not available on Windows, so we need to run the tests sequentially
-                FAILED_PACKAGES=""
-                for PACKAGE in $PACKAGES; do
-                  if ! PACKAGE="$PACKAGE" _run_task_sequential $PACKAGE \
-                    '(cd src/$PACKAGE \
-                    && $COMPOSER_MIN_STAB \
-                    && before_composer_install $PACKAGE ${{ matrix.php-version }} \
-                    && $COMPOSER_UP \
-                    && $PHPUNIT)'; then
-                    FAILED_PACKAGES="$FAILED_PACKAGES $PACKAGE"
+                  # parallel is not available on Windows, so we need to run the tests sequentially
+                  FAILED_PACKAGES=""
+                  for PACKAGE in $PACKAGES; do
+                    if ! PACKAGE="$PACKAGE" _run_task_sequential $PACKAGE \
+                      '(cd src/$PACKAGE \
+                      && $COMPOSER_MIN_STAB \
+                      && before_composer_install $PACKAGE ${{ matrix.php-version }} \
+                      && $COMPOSER_UP \
+                      && $PHPUNIT)'; then
+                      FAILED_PACKAGES="$FAILED_PACKAGES $PACKAGE"
+                    fi
+                  done
+
+                  if [ -n "$FAILED_PACKAGES" ]; then
+                    echo "The following packages failed:$FAILED_PACKAGES"
+                    exit 1
                   fi
-                done
-
-                if [ -n "$FAILED_PACKAGES" ]; then
-                  echo "The following packages failed:$FAILED_PACKAGES"
-                  exit 1
-                fi
     js:
         runs-on: ubuntu-latest
         steps:
@@ -148,12 +147,12 @@ jobs:
             - run: npm i -g corepack && corepack enable
             - uses: actions/setup-node@v4
               with:
-                node-version-file: '.nvmrc'
-                cache: 'pnpm'
-                cache-dependency-path: |
-                  pnpm-lock.yaml
-                  package.json
-                  src/**/package.json
+                  node-version-file: '.nvmrc'
+                  cache: 'pnpm'
+                  cache-dependency-path: |
+                      pnpm-lock.yaml
+                      package.json
+                      src/**/package.json
 
             - name: Install root JS dependencies
               run: pnpm install --frozen-lockfile

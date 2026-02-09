@@ -154,7 +154,9 @@ export default class extends AbstractMapController<
 
         if (icon) {
             if (Object.prototype.hasOwnProperty.call(bridgeOptions, 'icon')) {
-                console.warn('[Symfony UX Map] Defining "bridgeOptions.icon" for a marker with a custom icon is not supported and will be ignored.');
+                console.warn(
+                    '[Symfony UX Map] Defining "bridgeOptions.icon" for a marker with a custom icon is not supported and will be ignored.'
+                );
             }
 
             this.doCreateIcon({ definition: icon, element: marker });
@@ -167,7 +169,11 @@ export default class extends AbstractMapController<
         marker.remove();
     }
 
-    protected doCreatePolygon({ definition }: { definition: PolygonDefinition<PolygonOptions, PopupOptions> }): L.Polygon {
+    protected doCreatePolygon({
+        definition,
+    }: {
+        definition: PolygonDefinition<PolygonOptions, PopupOptions>;
+    }): L.Polygon {
         const { '@id': _id, points, infoWindow, bridgeOptions = {} } = definition;
 
         const polygon = L.polygon(points, { ...bridgeOptions }).addTo(this.map);
@@ -183,7 +189,11 @@ export default class extends AbstractMapController<
         polygon.remove();
     }
 
-    protected doCreatePolyline({ definition }: { definition: PolylineDefinition<PolylineOptions, PopupOptions> }): L.Polyline {
+    protected doCreatePolyline({
+        definition,
+    }: {
+        definition: PolylineDefinition<PolylineOptions, PopupOptions>;
+    }): L.Polyline {
         const { '@id': _id, points, infoWindow, bridgeOptions = {} } = definition;
 
         const polyline = L.polyline(points, { ...bridgeOptions }).addTo(this.map);
@@ -215,7 +225,11 @@ export default class extends AbstractMapController<
         circle.remove();
     }
 
-    protected doCreateRectangle({ definition }: { definition: RectangleDefinition<RectangleOptions, PopupOptions> }): L.Rectangle {
+    protected doCreateRectangle({
+        definition,
+    }: {
+        definition: RectangleDefinition<RectangleOptions, PopupOptions>;
+    }): L.Rectangle {
         const { '@id': _id, southWest, northEast, infoWindow, bridgeOptions = {} } = definition;
 
         const rectangle = L.rectangle(

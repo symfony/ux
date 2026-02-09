@@ -69,7 +69,7 @@ class ComponentsRenderingTest extends WebTestCase
 
         $kit = $this->instantiateKit($kitName);
         $template = $twig->createTemplate($code);
-        $renderedCode = $kitContextRunner->runForKit($kit, fn () => $template->render());
+        $renderedCode = $kitContextRunner->runForKit($kit, static fn () => $template->render());
 
         $this->assertCodeRenderedMatchesHtmlSnapshot($kit, $kit->getRecipe($recipeName), $code, $renderedCode);
     }

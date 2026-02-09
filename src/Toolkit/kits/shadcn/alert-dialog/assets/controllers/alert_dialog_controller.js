@@ -1,7 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-
     static targets = ['trigger', 'dialog'];
 
     async open() {
@@ -11,7 +10,7 @@ export default class extends Controller {
             if (this.dialogTarget.getAnimations().length > 0) {
                 this.dialogTarget.addEventListener('transitionend', () => {
                     this.triggerTarget.setAttribute('aria-expanded', 'true');
-                })
+                });
             } else {
                 this.triggerTarget.setAttribute('aria-expanded', 'true');
             }
@@ -25,7 +24,7 @@ export default class extends Controller {
             if (this.dialogTarget.getAnimations().length > 0) {
                 this.dialogTarget.addEventListener('transitionend', () => {
                     this.triggerTarget.setAttribute('aria-expanded', 'false');
-                })
+                });
             } else {
                 this.triggerTarget.setAttribute('aria-expanded', 'false');
             }

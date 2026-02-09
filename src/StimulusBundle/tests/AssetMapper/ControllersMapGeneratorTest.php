@@ -26,7 +26,7 @@ class ControllersMapGeneratorTest extends TestCase
         $mapper = $this->createMock(AssetMapperInterface::class);
         $mapper->expects($this->any())
             ->method('getAssetFromSourcePath')
-            ->willReturnCallback(function ($path) {
+            ->willReturnCallback(static function ($path) {
                 if (str_ends_with($path, 'package-controller-first.js')) {
                     $logicalPath = 'fake-vendor/ux-package1/package-controller-first.js';
                 } elseif (str_ends_with($path, 'package-controller-second.js')) {
@@ -55,7 +55,7 @@ class ControllersMapGeneratorTest extends TestCase
         $autoImportLocator = $this->createMock(AutoImportLocator::class);
         $autoImportLocator->expects($this->any())
             ->method('locateAutoImport')
-            ->willReturnCallback(function ($path) {
+            ->willReturnCallback(static function ($path) {
                 return new MappedControllerAutoImport('/path/to'.$path, false);
             });
 

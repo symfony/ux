@@ -180,7 +180,7 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
             ->get('/render-template/render_with_absolute_url?count=1')
             ->assertSuccessful()
             ->assertContains('Count: 1')
-            ->use(function (Crawler $crawler) use (&$props) {
+            ->use(static function (Crawler $crawler) use (&$props) {
                 $div = $crawler->filter('div')->first();
                 $props = json_decode($div->attr('data-live-props-value'), true);
             })

@@ -1,16 +1,16 @@
 packages:
-  - src/*/assets
-  - src/*/src/Bridge/*/assets
+    - src/*/assets
+    - src/*/src/Bridge/*/assets
 
 linkWorkspacePackages: true
 
 packageExtensions:
     '@symfony/ux-google-map':
-      dependencies:
-        '@symfony/ux-map': 'workspace:*'
+        dependencies:
+            '@symfony/ux-map': 'workspace:*'
 
     '@symfony/ux-leaflet-map':
-      dependencies:
-        '@symfony/ux-map': 'workspace:*'
+        dependencies:
+            '@symfony/ux-map': 'workspace:*'
 
 minimumReleaseAge: 1440

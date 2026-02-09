@@ -97,7 +97,7 @@ class ExampleRepository
         if (null !== $query) {
             $query = strtolower($query);
             $examples = array_filter($examples,
-                fn (Example $example) => false !== mb_stripos($example->uxPackage->name.' '.$example->name.' '.$example->description, $query)
+                static fn (Example $example) => false !== mb_stripos($example->uxPackage->name.' '.$example->name.' '.$example->description, $query)
             );
         }
 

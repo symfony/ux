@@ -65,8 +65,8 @@ class IconTest extends TestCase
         $refl = new \ReflectionClass(SvgIcon::class);
         $customizationMethods = array_diff(
             array_map(
-                fn (\ReflectionMethod $method) => $method->name,
-                array_filter($refl->getMethods(\ReflectionMethod::IS_PUBLIC), fn (\ReflectionMethod $method) => SvgIcon::class === $method->getDeclaringClass()->getName())
+                static fn (\ReflectionMethod $method) => $method->name,
+                array_filter($refl->getMethods(\ReflectionMethod::IS_PUBLIC), static fn (\ReflectionMethod $method) => SvgIcon::class === $method->getDeclaringClass()->getName())
             ),
             ['toArray', 'fromArray']
         );

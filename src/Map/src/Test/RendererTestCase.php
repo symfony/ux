@@ -78,9 +78,8 @@ abstract class RendererTestCase extends TestCase
                 throw new \LogicException(\sprintf('Failed to parse the rendered HTML for property "%s".', $property));
             } elseif (0 === $matchesResult) {
                 throw new \LogicException(\sprintf('It looks like the property "%s" is missing from "Map::toArray()" normalization.', $property));
-            } else {
-                $htmlAttributes[$property] = $matches[1];
             }
+            $htmlAttributes[$property] = $matches[1];
         }
 
         // Check that each property has a computed "@id" attribute

@@ -125,7 +125,7 @@ AssetMapper requires some extra steps.
 
 #. Compile your ``.svelte`` files to pure JavaScript files. This can be done by
    using the ``svelte/compiler`` library, but is a bit of a non-standard process.
-   For an example, see https://github.com/symfony/ux/blob/3.x/ux.symfony.com/assets/svelte/build/build.js.
+   For an example, see https://github.com/symfony/ux.symfony.com/blob/main/assets/svelte/build/build.js.
 
 #. Point this library at the "built" controllers directory that contains the final
    JavaScript files:

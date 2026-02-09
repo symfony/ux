@@ -1,0 +1,10 @@
+{% props confirmText = 'Confirm', cancelText = 'Cancel' %}
+
+<twig:Modal {{ ...attributes.defaults({class: 'modal-confirm'}) }}>
+    {{ block(outerBlocks.content) }}
+    
+    <div class="modal-actions">
+        <button type="button" class="btn-secondary">{{ cancelText }}</button>
+        <button type="submit" class="btn-primary">{{ confirmText }}</button>
+    </div>
+</twig:Modal>

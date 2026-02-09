@@ -7,7 +7,7 @@ import * as path from 'node:path';
 import { parseArgs } from 'node:util';
 import { globSync } from 'tinyglobby';
 import { build } from 'tsup';
-import { readPackageJSON } from "pkg-types";
+import { readPackageJSON } from 'pkg-types';
 
 const args = parseArgs({
     allowPositionals: true,
@@ -35,7 +35,9 @@ async function main() {
 
     const packageData = await readPackageJSON(path.join(packageRoot, 'package.json'));
     const isStimulusBundle = '@symfony/stimulus-bundle' === packageData.name;
-    const isReactOrVueOrSvelte = ['@symfony/ux-react', '@symfony/ux-vue', '@symfony/ux-svelte'].some(name => packageData.name.startsWith(name));
+    const isReactOrVueOrSvelte = ['@symfony/ux-react', '@symfony/ux-vue', '@symfony/ux-svelte'].some((name) =>
+        packageData.name.startsWith(name)
+    );
 
     const inputCssFile = packageData?.config?.css_source;
     const inputFiles = [
@@ -72,7 +74,7 @@ async function main() {
         platform: 'browser',
         tsconfig: path.join(packageRoot, 'tsconfig.json'),
         dts: {
-            entry: inputFiles.filter(inputFile => !inputFile.endsWith('.css')),
+            entry: inputFiles.filter((inputFile) => !inputFile.endsWith('.css')),
         },
         watch: isWatch,
         splitting: false,
@@ -90,7 +92,7 @@ async function main() {
                  */
                 name: 'symfony-ux:minify-css',
                 async renderChunk(code, chunkInfo) {
-                    if (!/\.css$/.test(chunkInfo.path)) {
+                    if (!chunkInfo.path.endsWith('.css')) {
                         return null;
                     }
 
@@ -106,7 +108,7 @@ async function main() {
                     return {
                         code: result.code.toString(),
                         map: result.map ? result.map.toString() : null,
-                    }
+                    };
                 },
             },
 
@@ -128,8 +130,8 @@ async function main() {
 
                         console.info(`[Symfony UX] Renamed ${writtenFile.name} to ${newName}`);
                     }
-                }
-            }
+                },
+            },
         ],
     });
 }

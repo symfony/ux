@@ -207,7 +207,7 @@ final class SearchIconCommand extends Command
 
         $prefixes = array_keys($this->iconify->getIconSets());
         if ($input->getArgument('prefix')) {
-            $prefixes = array_filter($prefixes, fn ($prefix) => str_contains($prefix, $input->getArgument('prefix')));
+            $prefixes = array_filter($prefixes, static fn ($prefix) => str_contains($prefix, $input->getArgument('prefix')));
         }
 
         $suggestions->suggestValues($prefixes);

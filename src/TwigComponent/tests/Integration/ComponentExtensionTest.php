@@ -445,12 +445,37 @@ final class ComponentExtensionTest extends KernelTestCase
 
     public static function provideUnsafeAttributes(): iterable
     {
-        return array_map(fn ($s) => (array) $s, [
+        return array_map(static fn ($s) => (array) $s, [
             '"><script>alert("XSS")</script>',
             '\"><script>alert(\"XSS\")</script>',
             "'><script>alert(\"XSS\")</script>",
             "\'><script>alert(\"XSS\")</script>",
         ]);
+    }
+
+    public function testHigherOrderComponentWithAttributeDefaults()
+    {
+        $output = self::getContainer()->get(Environment::class)->render('higher_order_component.html.twig');
+
+        // Test base Modal component
+        $this->assertStringContainsString('<div class="modal">', $output);
+        $this->assertStringContainsString('Simple modal content', $output);
+
+        // Test Modal:Confirm adds confirmation buttons with default text and default class
+        $this->assertStringContainsString('Are you sure you want to delete this item?', $output);
+        $this->assertStringContainsString('<button type="button" class="btn-secondary">Cancel</button>', $output);
+        $this->assertStringContainsString('<button type="submit" class="btn-primary">Confirm</button>', $output);
+        $this->assertStringContainsString('<div class="modal modal-confirm">', $output);
+
+        // Test Modal:Confirm with custom button text
+        $this->assertStringContainsString('This action cannot be undone.', $output);
+        $this->assertStringContainsString('<button type="button" class="btn-secondary">No, keep it</button>', $output);
+        $this->assertStringContainsString('<button type="submit" class="btn-primary">Yes, delete it</button>', $output);
+
+        // Test Modal:Confirm passes attributes through to base Modal
+        $this->assertStringContainsString('data-controller="modal"', $output);
+        $this->assertStringContainsString('id="delete-modal"', $output);
+        $this->assertStringContainsString('Confirm deletion?', $output);
     }
 
     private function renderComponent(string $name, array $data = []): string

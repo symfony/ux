@@ -69,7 +69,7 @@ final class UXMapBundle extends AbstractBundle
         if (str_starts_with($config['renderer'], 'null://')) {
             $container->services()
                 ->set('ux_map.renderer_factory.null', NullRendererFactory::class)
-                ->arg(0, array_map(fn ($name) => 'symfony/ux-'.$name.'-map', array_keys(self::$bridges)))
+                ->arg(0, array_map(static fn ($name) => 'symfony/ux-'.$name.'-map', array_keys(self::$bridges)))
                 ->tag('ux_map.renderer_factory');
         }
 

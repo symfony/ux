@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-    defineProps({
-        name: String
-    });
+defineProps({
+    name: String,
+});
 </script>

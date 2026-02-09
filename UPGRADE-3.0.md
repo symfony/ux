@@ -12,7 +12,8 @@ the [Symfony documentation](https://symfony.com/doc/6.4/setup/upgrade_major.html
 
 ## Autocomplete
 
-* The class `ParentEntityAutocompleteType` has been removed in favor of `BaseEntityAutocompleteType`:
+- The class `ParentEntityAutocompleteType` has been removed in favor of `BaseEntityAutocompleteType`:
+
 ```diff
 -use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
 +use Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType;
@@ -30,18 +31,19 @@ the [Symfony documentation](https://symfony.com/doc/6.4/setup/upgrade_major.html
     }
 ```
 
-* The class `ExtraLazyChoiceLoader` has been removed in favor of
+- The class `ExtraLazyChoiceLoader` has been removed in favor of
   `Symfony\Component\Form\ChoiceList\Loader\LazyChoiceLoader` from Symfony Form >=7.2,
   run `composer require symfony/form:>=7.2"` if you don't have it installed yet.
 
 ## LazyImage
 
-* The package has been removed, see the [previous README](https://raw.githubusercontent.com/symfony/ux/refs/heads/2.x/src/LazyImage/README.md)
+- The package has been removed, see the [previous README](https://raw.githubusercontent.com/symfony/ux/refs/heads/2.x/src/LazyImage/README.md)
   for migration steps
 
 ## LiveComponent
 
-* Remove `csrf` argument from `AsLiveComponent` in favor of same-origin/CORS:
+- Remove `csrf` argument from `AsLiveComponent` in favor of same-origin/CORS:
+
 ```diff
 - #[AsLiveComponent(csrf: true)]
 + #[AsLiveComponent]
@@ -52,34 +54,35 @@ class MyLiveComponent {
 
 ## Map
 
-*  The Twig function `render_map()` has been removed, use `ux_map()` instead
-*  The option `title` from `Polygon`, `Polyline`, `Rectangle` and `Circle`, has been removed, use option `infoWindow` instead
-*  The property `rawOptions` from `ux:map:*:before-create` events has been removed, use `bridgeOptions` instead
-*  The Google Map Bridge has been upgraded to use `@googlemaps/js-api-loader` version `^2.0.0`:
-    * If you use Symfony AssetMapper without Symfony Flex, run `bin/console importmap:require @googlemaps/js-api-loader@^2.0`
-    * Options configurable through `UX_MAP_DSN` query params have changed:
-        * Option `version` has been renamed to `v`
-        * Options `authReferrerPolicy`, `mapIds`, `channel`, `solutionChannel` have been added
-        * Options `ìd`, `nonce`, `retries`, `url` have been removed
+- The Twig function `render_map()` has been removed, use `ux_map()` instead
+- The option `title` from `Polygon`, `Polyline`, `Rectangle` and `Circle`, has been removed, use option `infoWindow` instead
+- The property `rawOptions` from `ux:map:*:before-create` events has been removed, use `bridgeOptions` instead
+- The Google Map Bridge has been upgraded to use `@googlemaps/js-api-loader` version `^2.0.0`:
+    - If you use Symfony AssetMapper without Symfony Flex, run `bin/console importmap:require @googlemaps/js-api-loader@^2.0`
+    - Options configurable through `UX_MAP_DSN` query params have changed:
+        - Option `version` has been renamed to `v`
+        - Options `authReferrerPolicy`, `mapIds`, `channel`, `solutionChannel` have been added
+        - Options `ìd`, `nonce`, `retries`, `url` have been removed
 
 ## StimulusBundle
 
-* The Twig function `ux_controller_link_tags()` has been removed, which requires Symfony AssetMapper >=6.4,
+- The Twig function `ux_controller_link_tags()` has been removed, which requires Symfony AssetMapper >=6.4,
   run `composer require symfony/asset-mapper:>=6.4` if you don't have it installed yet.
 
 ## Swup
 
-* The package has been removed, see the [previous README](https://raw.githubusercontent.com/symfony/ux/refs/heads/2.x/src/Turbo/README.md)
+- The package has been removed, see the [previous README](https://raw.githubusercontent.com/symfony/ux/refs/heads/2.x/src/Turbo/README.md)
   for migration steps
 
 ## TogglePassword
 
-* The package has been removed, see the [previous README](https://raw.githubusercontent.com/symfony/ux/refs/heads/2.x/src/TogglePassword/README.md)
+- The package has been removed, see the [previous README](https://raw.githubusercontent.com/symfony/ux/refs/heads/2.x/src/TogglePassword/README.md)
   for migration steps
 
 ## TwigComponent
 
-* The configuration `twig_component.defaults` is now mandatory and must contain at least one namespace/directory pair:
+- The configuration `twig_component.defaults` is now mandatory and must contain at least one namespace/directory pair:
+
 ```diff
 # config/packages/twig_component.yaml
 twig_component:
@@ -89,7 +92,8 @@ twig_component:
 +       App\Twig\Components\: 'components/'
 ```
 
-* Remove method `PreCreateForRenderEvent::getProps()` in favor of `PreCreateForRenderEvent::getInputProps()`
+- Remove method `PreCreateForRenderEvent::getProps()` in favor of `PreCreateForRenderEvent::getInputProps()`
+
 ```diff
 class HookIntoTwigPreCreateForRenderSubscriber implements EventSubscriberInterface
 {
@@ -106,9 +110,10 @@ class HookIntoTwigPreCreateForRenderSubscriber implements EventSubscriberInterfa
 }
 ```
 
-* Remove `cva` Twig function in favor of [`html_cva` Twig function from `twig/html-extra:^3.12`](https://twig.symfony.com/html_cva)
+- Remove `cva` Twig function in favor of [`html_cva` Twig function from `twig/html-extra:^3.12`](https://twig.symfony.com/html_cva)
 
 **Before:**
+
 ```twig
 {% set alert = cva({
     base: 'alert',
@@ -131,7 +136,9 @@ class HookIntoTwigPreCreateForRenderSubscriber implements EventSubscriberInterfa
      {% block content %}{% endblock %}
 </div>
 ```
+
 **After:**
+
 ```twig
 {% set alert = html_cva(
     base: 'alert',
@@ -156,5 +163,5 @@ class HookIntoTwigPreCreateForRenderSubscriber implements EventSubscriberInterfa
 
 ## Typed
 
-* The package has been removed, see the [previous README](https://raw.githubusercontent.com/symfony/ux/refs/heads/2.x/src/Typed/README.md)
+- The package has been removed, see the [previous README](https://raw.githubusercontent.com/symfony/ux/refs/heads/2.x/src/Typed/README.md)
   for migration steps

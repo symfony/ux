@@ -90,7 +90,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
     {
         $container->registerAttributeForAutoconfiguration(
             AsLiveComponent::class,
-            function (ChildDefinition $definition, AsLiveComponent $attribute) {
+            static function (ChildDefinition $definition, AsLiveComponent $attribute) {
                 $definition
                     ->addTag('twig.component', array_filter($attribute->serviceConfig(), static fn ($v) => null !== $v && '' !== $v))
                     ->addTag('controller.service_arguments')

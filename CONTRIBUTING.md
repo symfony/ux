@@ -92,28 +92,31 @@ php vendor/bin/simple-phpunit -d --update-snapshots
 ### Working with assets
 
 Assets are specific to each Symfony UX package:
-  - They are located in the `assets/` directory of each package and can be either TypeScript or CSS files, all compiled through [tsup](https://github.com/egoist/tsup)
-  - Assets are mentioned in the `package.json` file of each package
-  - Assets **must be** compiled before committing changes
-  - Assets **must be** compatible with the [Symfony AssetMapper](https://symfony.com/doc/current/frontend/asset_mapper.html) and [Symfony Webpack Encore](https://symfony.com/doc/current/frontend/encore/index.html)
+
+- They are located in the `assets/` directory of each package and can be either TypeScript or CSS files, all compiled through [tsup](https://github.com/egoist/tsup)
+- Assets are mentioned in the `package.json` file of each package
+- Assets **must be** compiled before committing changes
+- Assets **must be** compatible with the [Symfony AssetMapper](https://symfony.com/doc/current/frontend/asset_mapper.html) and [Symfony Webpack Encore](https://symfony.com/doc/current/frontend/encore/index.html)
 
 To help you with assets, you can run the following commands in a specific package directory (e.g., `src/Map/assets/`):
-  - `pnpm run build`: build (compile) assets from the package
-  - `pnpm run watch`: watch for modifications and rebuild assets from the package
-  - `pnpm run test`: run the tests from the package
-  - `pnpm run test:unit`: run the unit tests from the package
-  - `pnpm run test:browser`: run the browser tests from the package in a headless browser
-  - `pnpm run test:browser:ui`: run the browser tests from the package in interactive mode, allowing you to see the tests running in a browser window and debug them if needed
-  - `pnpm run check`: run the formatter, linter, and sort imports, and fail if any modifications are needed
-  - `pnpm run check --write`: run the formatter, linter, and import sorting, and write modifications
+
+- `pnpm run build`: build (compile) assets from the package
+- `pnpm run watch`: watch for modifications and rebuild assets from the package
+- `pnpm run test`: run the tests from the package
+- `pnpm run test:unit`: run the unit tests from the package
+- `pnpm run test:browser`: run the browser tests from the package in a headless browser
+- `pnpm run test:browser:ui`: run the browser tests from the package in interactive mode, allowing you to see the tests running in a browser window and debug them if needed
 
 Thanks to [PNPM Workspaces](https://pnpm.io/workspaces), you can also run these commands from the root directory of the project:
-  - `pnpm run build`: build (compile) assets from **all** packages
-  - `pnpm run test`: run the tests from **all** packages
-  - `pnpm run test:unit`: run the unit tests from **all** packages
-  - `pnpm run test:browser`: run the browser tests from **all** packages in a headless browser
-  - `pnpm run check`: run the formatter, linter, and sort imports for **all** packages, and fail if any modifications are needed
-  - `pnpm run check --write`: run the formatter, linter, and import sorting for **all** packages, and write modifications
+
+- `pnpm run build`: build (compile) assets from **all** packages
+- `pnpm run test`: run the tests from **all** packages
+- `pnpm run test:unit`: run the unit tests from **all** packages
+- `pnpm run test:browser`: run the browser tests from **all** packages in a headless browser
+- `pnpm run fmt:check`: run the code formatter for **all** packages, and **fail** if any modifications are needed
+- `pnpm run fmt`: run the code formatter for **all** packages, and **write** modifications
+- `pnpm run lint`: run the linter for **all** packages
+- `pnpm run lint:fix`: run the linter for **all** packages, and **fix** any fixable issues
 
 > [!IMPORTANT]
 > Always run `pnpm run build` before committing your changes to ensure assets are properly compiled.
@@ -125,10 +128,11 @@ and test files are located in the `assets/test/unit/` directory of each UX packa
 for example: `src/Vue/assets/test/unit/render_controller.test.ts`.
 
 **Running tests:**
+
 - At the project's root, you can run the following commands:
-  - `pnpm run test:unit`: runs the unit tests for **all** UX packages
+    - `pnpm run test:unit`: runs the unit tests for **all** UX packages
 - Inside the `assets/` directory of each UX package, you can run the following commands:
-  - `pnpm run test:unit`: runs the unit tests for the package
+    - `pnpm run test:unit`: runs the unit tests for the package
 
 > [!IMPORTANT]
 > The command `pnpm run test:unit` ensures that each possible combination of dependencies is tested
@@ -149,15 +153,17 @@ Test files are located in the `assets/test/browser/` directory of each UX packag
 for example: `src/Vue/assets/test/browser/vue.test.ts`.
 
 **Setup:**
+
 1. Ensure you have followed the steps in the [Setting up the development environment](#setting-up-the-development-environment) section
 2. Read and follow the instructions in the [`apps/e2e/README.md`](./apps/e2e/README.md) file
 
 **Running tests:**
+
 - At the project's root, you can run the following commands:
-  - `pnpm run test:browser`: runs the browser tests for **all** UX packages using a headless browser
+    - `pnpm run test:browser`: runs the browser tests for **all** UX packages using a headless browser
 - Inside the `assets/` directory of each UX package, you can run the following commands:
-  - `pnpm run test:browser`: runs browser tests for the package using a headless browser
-  - `pnpm run test:browser:ui`: runs the browser tests in interactive mode, allowing you to see the tests running in a browser window and debug them if needed
+    - `pnpm run test:browser`: runs browser tests for the package using a headless browser
+    - `pnpm run test:browser:ui`: runs the browser tests in interactive mode, allowing you to see the tests running in a browser window and debug them if needed
 
 > [!IMPORTANT]
 > Due to their nature, E2E tests may be slower to run than unit tests.
@@ -165,6 +171,7 @@ for example: `src/Vue/assets/test/browser/vue.test.ts`.
 
 > [!TIP]
 > If tests are failing locally, try running them in headed mode to see what's happening:
+>
 > ```shell
 > $ pnpm run test:browser:ui
 > ```
@@ -187,6 +194,7 @@ docker run --rm -it -e DOCS_DIR='/docs' -v ${PWD}:/docs  oskarstark/doctor-rst -
 ## Useful commands
 
 To keep your fork up-to-date with the upstream repository and `3.x` branch:
+
 ```shell
 $ git checkout 3.x && \
   git fetch upstream && \
@@ -195,6 +203,7 @@ $ git checkout 3.x && \
 ```
 
 To rebase your branch on top of the `3.x` branch:
+
 ```shell
 $ git checkout my-feature-branch && \
   git rebase upstream/3.x && \

@@ -201,7 +201,7 @@ class TranslationsDumper
         return \sprintf(
             'Message<{ %s }, %s>',
             implode(', ', $typeScriptParametersType),
-            implode('|', array_map(fn (string $locale) => "'$locale'", array_unique($locales))),
+            implode('|', array_map(static fn (string $locale) => "'$locale'", array_unique($locales))),
         );
     }
 
@@ -229,7 +229,7 @@ class TranslationsDumper
         }
 
         // Filter empty patterns and deduplicate
-        $patterns = array_reduce($patterns, function (array $carry, string $pattern) {
+        $patterns = array_reduce($patterns, static function (array $carry, string $pattern) {
             $trimmed = trim($pattern);
             if ('' !== $trimmed && !\in_array($trimmed, $carry, true)) {
                 $carry[] = $trimmed;

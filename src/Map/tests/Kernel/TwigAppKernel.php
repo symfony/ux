@@ -35,7 +35,7 @@ class TwigAppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $loader->load(function (ContainerBuilder $container) {
+        $loader->load(static function (ContainerBuilder $container) {
             $container->loadFromExtension('framework', [
                 'secret' => '$ecret',
                 'test' => true,
