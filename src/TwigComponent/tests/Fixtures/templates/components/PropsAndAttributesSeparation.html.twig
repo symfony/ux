@@ -1,0 +1,15 @@
+{% props propA, propB, propC = 'default' %}
+
+<div {{ attributes }}>
+    <p>propA={{ propA }}</p>
+    <p>propB={{ propB }}</p>
+    <p>propC={{ propC }}</p>
+    <p>has-propA-attr={{ attributes.has('propA') ? 'yes' : 'no' }}</p>
+    <p>has-propB-attr={{ attributes.has('propB') ? 'yes' : 'no' }}</p>
+    <p>has-propC-attr={{ attributes.has('propC') ? 'yes' : 'no' }}</p>
+    <p>has-class-attr={{ attributes.has('class') ? 'yes' : 'no' }}</p>
+    <p>has-extra-attr={{ attributes.has('data-extra') ? 'yes' : 'no' }}</p>
+    <p>propA-in-context={{ propA is defined ? 'yes' : 'no' }}</p>
+    <p>propB-in-context={{ propB is defined ? 'yes' : 'no' }}</p>
+    <p>propC-in-context={{ propC is defined ? 'yes' : 'no' }}</p>
+</div>
