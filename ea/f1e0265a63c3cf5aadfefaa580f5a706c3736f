@@ -1,0 +1,6 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-02-11T15:01:20Z
+
+It does, but for computing the property access path IIRC.
+But the PropertyAccessor also handles different data types other than object, that's why I think it couldn't cache these calls, when we could.
