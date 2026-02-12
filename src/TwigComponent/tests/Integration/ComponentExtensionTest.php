@@ -513,6 +513,117 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('Confirm deletion?', $output);
     }
 
+    public function testPropsAreRemovedFromAttributesInSingleCall()
+    {
+        $output = $this->renderComponent('PropsAndAttributesSeparation', [
+            'propA' => 'valueA',
+            'propB' => 'valueB',
+            'propC' => 'valueC',
+            'class' => 'my-class',
+            'data-extra' => 'extra-value',
+        ]);
+
+        // Props should be available as template variables
+        $this->assertStringContainsString('propA=valueA', $output);
+        $this->assertStringContainsString('propB=valueB', $output);
+        $this->assertStringContainsString('propC=valueC', $output);
+
+        // Props should NOT be in attributes anymore
+        $this->assertStringContainsString('has-propA-attr=no', $output);
+        $this->assertStringContainsString('has-propB-attr=no', $output);
+        $this->assertStringContainsString('has-propC-attr=no', $output);
+
+        // Non-prop attributes should still be in attributes
+        $this->assertStringContainsString('has-class-attr=yes', $output);
+        $this->assertStringContainsString('has-extra-attr=yes', $output);
+
+        // Props should be defined in context
+        $this->assertStringContainsString('propA-in-context=yes', $output);
+        $this->assertStringContainsString('propB-in-context=yes', $output);
+        $this->assertStringContainsString('propC-in-context=yes', $output);
+
+        // Non-prop attributes should be rendered in the div
+        $this->assertStringContainsString('class="my-class"', $output);
+        $this->assertStringContainsString('data-extra="extra-value"', $output);
+    }
+
+    /**
+     * Test that extra attributes (non-props) are correctly cleaned from context.
+     *
+     * This is a regression test for the optimization that iterates directly over
+     * attributes->all() instead of iterating over the entire context.
+     */
+    public function testExtraAttributesAreCleanedFromContext()
+    {
+        $output = $this->renderComponent('PropsAndAttributesSeparation', [
+            'propA' => 'A',
+            'propB' => 'B',
+            'class' => 'test-class',
+            'data-extra' => 'test-extra',
+            'id' => 'test-id',
+        ]);
+
+        // Props should be available
+        $this->assertStringContainsString('propA=A', $output);
+        $this->assertStringContainsString('propB=B', $output);
+        $this->assertStringContainsString('propC=default', $output);
+
+        // All non-prop attributes should be in the attributes object
+        $this->assertStringContainsString('class="test-class"', $output);
+        $this->assertStringContainsString('data-extra="test-extra"', $output);
+        $this->assertStringContainsString('id="test-id"', $output);
+    }
+
+    /**
+     * Test that props with default values work correctly when not provided.
+     */
+    public function testPropsWithDefaultValuesWhenNotProvided()
+    {
+        $output = $this->renderComponent('PropsAndAttributesSeparation', [
+            'propA' => 'A',
+            'propB' => 'B',
+            // propC is not provided, should use default
+            'class' => 'some-class',
+        ]);
+
+        $this->assertStringContainsString('propA=A', $output);
+        $this->assertStringContainsString('propB=B', $output);
+        $this->assertStringContainsString('propC=default', $output);
+
+        // propC should not be in attributes
+        $this->assertStringContainsString('has-propC-attr=no', $output);
+    }
+
+    /**
+     * Test that attributes passed to a component do not leak into template context.
+     *
+     * This is a regression test for the optimization that directly iterates over
+     * attributes->all() to unset context variables, ensuring non-prop attributes
+     * are properly cleaned from the context.
+     */
+    public function testAttributesDoNotLeakToTemplateContext()
+    {
+        $output = $this->renderComponent('AttributesNotLeakingToContext', [
+            'name' => 'test-name',
+            'class' => 'my-class',
+            'style' => 'color: red;',
+            'data-foo' => 'bar',
+        ]);
+
+        // The prop should be available
+        $this->assertStringContainsString('name=test-name', $output);
+
+        // The attributes should be rendered in the HTML
+        $this->assertStringContainsString('class="my-class"', $output);
+        $this->assertStringContainsString('style="color: red;"', $output);
+        $this->assertStringContainsString('data-foo="bar"', $output);
+
+        // But the attribute names should NOT be defined as template variables
+        $this->assertStringContainsString('class-var-defined=no', $output);
+        $this->assertStringContainsString('style-var-defined=no', $output);
+        $this->assertStringContainsString('data_foo-var-defined=no', $output);
+    }
+
     private function renderComponent(string $name, array $data = []): string
     {
         return self::getContainer()->get(Environment::class)->render('render_component.html.twig', [
