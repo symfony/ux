@@ -1,5 +1,5 @@
-{# @prop errors array A list of errors (string or objects with a `message` field), defaults to `[]` #}
-{# @block content The default block #}
+{# @prop errors array A list of error messages (strings or objects with a `message` property), defaults to `[]` #}
+{# @block content Custom error content, overrides the `errors` prop if provided #}
 {%- props errors = [] -%}
 {%- set slot_content -%}{%- block content %}{% endblock -%}{%- endset -%}
 {%- set slot_content = slot_content|trim -%}
