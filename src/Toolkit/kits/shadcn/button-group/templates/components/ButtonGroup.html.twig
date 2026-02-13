@@ -1,5 +1,5 @@
-{# @prop orientation 'horizontal'|'vertical' The orientation, default to `horizontal` #}
-{# @block content The default block #}
+{# @prop orientation 'horizontal'|'vertical' The layout direction of the button group, defaults to `horizontal` #}
+{# @block content The grouped buttons and/or separators #}
 {%- props orientation = 'horizontal' -%}
 {%- set style = html_cva(
     base: 'flex w-fit items-stretch [&>*]:focus-visible:z-10 [&>*]:focus-visible:relative [&>[data-slot=select-trigger]:not([class*=\'w-\'])]:w-fit [&>input]:flex-1 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md has-[>[data-slot=button-group]]:gap-2',

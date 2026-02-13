@@ -1,7 +1,7 @@
-{# @prop type 'button'|'submit' The type, default to `button` #}
-{# @prop variant 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The variant, default to `default` #}
-{# @prop size 'default'|'sm'|'lg'|'icon'|'icon-sm'|'icon-lg' The size, default to `default` #}
-{# @block content The default block #}
+{# @prop type 'button'|'submit' The button type, defaults to `button` #}
+{# @prop variant 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The visual style variant, defaults to `ghost` #}
+{# @prop size 'default'|'sm'|'lg'|'icon'|'icon-sm'|'icon-lg' The button size, defaults to `xs` #}
+{# @block content The button label and/or icon #}
 {%- props type = 'button', variant = 'ghost', size = 'xs' -%}
 {%- set style = html_cva(
     base: 'text-sm shadow-none flex gap-2 items-center',

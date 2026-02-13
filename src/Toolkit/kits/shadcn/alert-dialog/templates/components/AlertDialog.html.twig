@@ -1,5 +1,5 @@
-{# @prop id string Unique suffix identifier for generating AlertDialog internal IDs #}
-{# @block content The default block #}
+{# @prop id string Unique identifier used to generate internal AlertDialog IDs #}
+{# @block content The dialog structure, typically includes `AlertDialog:Trigger` and `AlertDialog:Content` #}
 {%- props id -%}
 
 {%- set _alert_dialog_id = 'alert-dialog-' ~ id -%}
