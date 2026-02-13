@@ -1,4 +1,4 @@
-{# @block content The default block #}
+{# @block content The pagination items, typically multiple `Pagination:Item` components #}
 <ul {{ attributes.without('class') }}
     class="{{ 'flex flex-row items-center gap-1 ' ~ attributes.render('class')|tailwind_merge }}"
 >
