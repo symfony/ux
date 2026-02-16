@@ -70,6 +70,8 @@ return static function (ContainerConfigurator $container): void {
                 service('.ux_icons.icon_registry'),
                 abstract_arg('default_icon_attributes'),
                 abstract_arg('icon_aliases'),
+                abstract_arg('icon_set_attributes'),
+                abstract_arg('icon_suffix_attributes'),
             ])
 
         ->alias(IconRendererInterface::class, '.ux_icons.icon_renderer')
