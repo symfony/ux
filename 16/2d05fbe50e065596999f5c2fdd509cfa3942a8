@@ -1,0 +1,43 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-02-06T09:31:22Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/fix-3322/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/fix-3322/src/LiveComponent/assets/dist/live_controller.d.ts"><code>live_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.96 kB</code>
+                    / <code>1.96 kB</code>
+                </td><td>
+                    <code>8.12 kB</code><sup>+2% 📈</sup>
+                    / <code>1.98 kB</code><sup>+1% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/fix-3322/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>99.07 kB</code>
+                    / <code>21.35 kB</code>
+                </td><td>
+                    <code>99.31 kB</code><sup>0%</sup>
+                    / <code>21.41 kB</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-02-15T12:36:01Z
+
+Does it work for you @Zerewan ?
+
+---------------------------------------------------------------------------
+
+by Zerewan at 2026-02-16T16:07:44Z
+
+@Kocal it works perfectly.
