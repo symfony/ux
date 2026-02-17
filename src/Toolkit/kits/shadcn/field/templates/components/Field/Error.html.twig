@@ -1,4 +1,4 @@
-{# @prop errors array A list of error messages (strings or objects with a `message` property), defaults to `[]` #}
+{# @prop errors array A list of error messages (strings or objects with a `message` property). Defaults to `[]` #}
 {# @block content Custom error content, overrides the `errors` prop if provided #}
 {%- props errors = [] -%}
 {%- set slot_content -%}{%- block content %}{% endblock -%}{%- endset -%}
