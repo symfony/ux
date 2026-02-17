@@ -1,6 +1,6 @@
 {# @prop value string Unique value for this accordion item #}
-{# @prop open boolean Whether the item is open by default, default to `false` #}
-{# @prop disabled boolean Whether the item is disabled, default to `false` #}
+{# @prop open boolean Whether the item is open by default. Defaults to `false` #}
+{# @prop disabled boolean Whether the item is disabled. Defaults to `false` #}
 {# @block content The item content, typically an `Accordion:Trigger` and `Accordion:Content` #}
 {%- props value, open = false, disabled = false -%}
 {%- set _accordion_item_is_open = open or (_accordion_default_value == value or (_accordion_default_value is iterable and value in defaultValue)) -%}
