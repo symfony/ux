@@ -1,6 +1,6 @@
 {# @block content The table footer rows, typically `Table:Row` components #}
 <tfoot
-    class="{{ 'border-t bg-muted/50 font-medium [&>tr]:last:border-b-0 ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ ('border-t bg-muted/50 font-medium [&>tr]:last:border-b-0 ' ~ attributes.render('class'))|tailwind_merge }}"
     data-slot="table-footer"
     {{ attributes }}
 >

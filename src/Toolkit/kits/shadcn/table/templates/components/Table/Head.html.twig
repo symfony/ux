@@ -1,6 +1,6 @@
 {# @block content The header cell content #}
 <th
-    class="{{ 'text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ ('text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] ' ~ attributes.render('class'))|tailwind_merge }}"
     data-slot="table-head"
     {{ attributes }}
 >

@@ -18,7 +18,7 @@
     <div
         role="alert"
         data-slot="field-error"
-        class="{{ 'text-destructive text-sm font-normal ' ~ attributes.render('class')|tailwind_merge }}"
+        class="{{ ('text-destructive text-sm font-normal ' ~ attributes.render('class'))|tailwind_merge }}"
         {{ attributes }}
     >
         {%- if slot_content != '' -%}

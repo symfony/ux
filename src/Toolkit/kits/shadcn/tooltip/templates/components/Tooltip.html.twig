@@ -9,7 +9,7 @@
 {%- set _tooltip_arrow_id = id ~ '_arrow' -%}
 {%- set _tooltip_delay_duration = delayDuration -%}
 <div
-    class="{{ 'relative inline-block ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ ('relative inline-block ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
         id: _tooltip_id,
         'data-slot': 'tooltip',
