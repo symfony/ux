@@ -14,7 +14,7 @@
     }).without('class') }}
 >
     <div class="min-h-0 min-w-0 overflow-hidden">
-        <div class="{{ 'pt-0 pb-2.5 [&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3 [&_p:not(:last-child)]:mb-4 ' ~ attributes.render('class')|tailwind_merge }}">
+        <div class="{{ ('pt-0 pb-2.5 [&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3 [&_p:not(:last-child)]:mb-4 ' ~ attributes.render('class'))|tailwind_merge }}">
             {%- block content %}{% endblock -%}
         </div>
     </div>

@@ -9,7 +9,7 @@
 {%- set _accordion_item_trigger_id = _accordion_item_id ~ '-trigger' -%}
 {%- set _accordion_item_disabled = disabled -%}
 <div
-    class="{{ 'not-last:border-b group ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ ('not-last:border-b group ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
         'data-slot': 'accordion-item',
         'data-accordion-target': 'item',

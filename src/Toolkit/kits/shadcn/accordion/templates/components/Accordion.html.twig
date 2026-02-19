@@ -9,7 +9,7 @@
 {%- set _accordion_default_value = defaultValue -%}
 {%- set _accordion_orientationn = orientation -%}
 <div
-    class="{{ 'flex w-full flex-col ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ ('flex w-full flex-col ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
         id: _accordion_id,
         'data-slot': 'accordion',
