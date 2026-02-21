@@ -527,8 +527,8 @@ Doctrine entity objects are a special case for ``LiveProp``::
 
 .. note::
 
-    If you have a ``mount`` method declared in your component, it's required to
-    manually hydrate the prop::
+    If you're using entities as ``LiveProp`` and having a ``mount`` method declared in
+    your component, it's required to manually hydrate the corresponding prop::
 
     public function mount(Post $post)
     {
