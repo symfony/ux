@@ -3872,6 +3872,13 @@ uses Symfony's test client to render and make requests to your components::
             $testComponent
                 ->call('processUpload', files: ['file' => new UploadedFile(...)]);
 
+            // call live action with multiple files uploads
+            $testComponent
+                ->call('processUpload', files: ['multiple' => [
+                    new UploadedFile(...),
+                    new UploadedFile(...),
+                ]]);
+
             // emit live events
             $testComponent
                 ->emit('increaseEvent')
