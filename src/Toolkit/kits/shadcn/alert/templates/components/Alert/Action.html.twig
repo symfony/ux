@@ -1,7 +1,7 @@
-{# @block content The default block #}
+{# @block content The action element, typically a button or link positioned at the top-right #}
 <div
     data-slot="alert-action"
-    class="{{ 'absolute top-2 right-2 ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ ('absolute top-2 right-2 ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}

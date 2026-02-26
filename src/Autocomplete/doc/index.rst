@@ -664,7 +664,7 @@ interface.
     +
     +       $qb = $repository->createQueryBuilder('o');
     +
-    +       if ($productAttributesToBeExcluded !== []) {
+    +       if ($excludedFoods !== []) {
     +           $qb
     +               ->andWhere($qb->expr()->notIn('o.id', $excludedFoods));
     +               ->setParameter('excludedFoods', $excludedFoods)

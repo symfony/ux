@@ -1,7 +1,7 @@
-{# @block content The default block #}
+{# @block content The title text of the alert dialog #}
 <h2
     id="{{ _alert_dialog_title_id }}"
-    class="{{ 'text-lg font-semibold ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ ('text-lg font-semibold ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.without('id') }}
 >
     {%- block content %}{% endblock -%}

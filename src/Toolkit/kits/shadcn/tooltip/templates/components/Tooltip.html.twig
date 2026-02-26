@@ -1,6 +1,6 @@
-{# @prop id string Unique identifier for the Tooltip #}
-{# @prop delayDuration number Delay duration in milliseconds before showing the tooltip, default to `0` #}
-{# @block content The default block #}
+{# @prop id string Unique identifier for the tooltip #}
+{# @prop delayDuration number Delay in milliseconds before showing the tooltip. Defaults to `0` #}
+{# @block content The tooltip structure, typically includes `Tooltip:Trigger` and `Tooltip:Content` #}
 {%- props id, delayDuration = 0 -%}
 {%- set _tooltip_id = id -%}
 {%- set _tooltip_trigger_id = id ~ '_trigger' -%}
@@ -9,7 +9,7 @@
 {%- set _tooltip_arrow_id = id ~ '_arrow' -%}
 {%- set _tooltip_delay_duration = delayDuration -%}
 <div
-    class="{{ 'relative inline-block ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ ('relative inline-block ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
         id: _tooltip_id,
         'data-slot': 'tooltip',

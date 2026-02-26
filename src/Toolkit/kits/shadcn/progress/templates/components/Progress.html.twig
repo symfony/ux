@@ -1,7 +1,7 @@
-{# @prop value integer The progress value between 0 and 100, default to `0` #}
+{# @prop value integer The progress percentage (0-100). Defaults to `0` #}
 {%- props value = 0 -%}
 <div
-    class="{{ 'relative h-4 w-full overflow-hidden rounded-full bg-secondary ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ ('relative h-4 w-full overflow-hidden rounded-full bg-secondary ' ~ attributes.render('class'))|tailwind_merge }}"
     role="progressbar"
     aria-valuemin="0"
     aria-valuemax="100"

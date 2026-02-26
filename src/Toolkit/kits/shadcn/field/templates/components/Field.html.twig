@@ -1,5 +1,5 @@
-{# @prop orientation 'vertical'|'horizontal'|'responsive' The orientation of the field, default to `vertical` #}
-{# @block content The default block #}
+{# @prop orientation 'vertical'|'horizontal'|'responsive' The layout direction of the field. Defaults to `vertical` #}
+{# @block content The field content, typically includes `Field:Label` and form input(s) #}
 {%- props orientation = 'vertical' -%}
 {%- set style = html_cva(
     base: 'group/field flex w-full gap-3 data-[invalid=true]:text-destructive',

@@ -5,6 +5,10 @@
 - Minimum required Symfony version is now 6.4
 - Minimum required PHP version is now 8.2
 
+## 2.33
+
+- Add support for suffixes
+
 ## 2.30
 
 - Ensure compatibility with PHP 8.5

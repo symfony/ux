@@ -404,6 +404,172 @@ class IconRendererTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider provideRenderIconWithSuffixCases
+     */
+    public function testRenderIconWithSuffixes(string $name, string $expectedSvg)
+    {
+        $registry = $this->createRegistry([
+            'heroicons:arrow-right' => '<path d="outline"/>',
+            'heroicons:arrow-right-solid' => '<path d="solid"/>',
+            'heroicons:arrow-right-20-solid' => '<path d="20-solid"/>',
+        ]);
+        $iconSuffixAttributes = [
+            'heroicons' => [
+                '20-solid' => ['class' => 'icon-20 icon-solid'],
+                'solid' => ['class' => 'icon-solid'],
+                '' => ['class' => 'icon-outline'],
+            ],
+        ];
+        $iconRenderer = new IconRenderer($registry, [], [], [], $iconSuffixAttributes);
+
+        $svg = $iconRenderer->renderIcon($name);
+        $svg = str_replace(' aria-hidden="true"', '', $svg);
+        $this->assertSame($expectedSvg, $svg);
+    }
+
+    public static function provideRenderIconWithSuffixCases(): iterable
+    {
+        yield 'no suffix matches empty string suffix' => [
+            'heroicons:arrow-right',
+            '<svg class="icon-outline"><path d="outline"/></svg>',
+        ];
+        yield 'solid suffix matches' => [
+            'heroicons:arrow-right-solid',
+            '<svg class="icon-solid"><path d="solid"/></svg>',
+        ];
+        yield 'longest suffix wins (20-solid over solid)' => [
+            'heroicons:arrow-right-20-solid',
+            '<svg class="icon-20 icon-solid"><path d="20-solid"/></svg>',
+        ];
+    }
+
+    public function testRenderIconWithSuffixAttributeCascade()
+    {
+        $registry = $this->createRegistry([
+            'heroicons:arrow-solid' => ['<path d="solid"/>', ['ico' => 'ICON']],
+        ]);
+        $defaultAttributes = ['def' => 'DEF'];
+        $iconSetsAttributes = ['heroicons' => ['set' => 'SET']];
+        $iconSuffixAttributes = [
+            'heroicons' => [
+                'solid' => ['suf' => 'SUF'],
+            ],
+        ];
+        $iconRenderer = new IconRenderer($registry, $defaultAttributes, [], $iconSetsAttributes, $iconSuffixAttributes);
+
+        $svg = $iconRenderer->renderIcon('heroicons:arrow-solid', ['ren' => 'REN']);
+        $svg = str_replace(' aria-hidden="true"', '', $svg);
+
+        $this->assertSame('<svg ico="ICON" def="DEF" set="SET" suf="SUF" ren="REN">', substr($svg, 0, strpos($svg, '>') + 1));
+    }
+
+    public function testRenderIconWithSuffixOverwritesCascade()
+    {
+        $registry = $this->createRegistry([
+            'heroicons:arrow-solid' => '<path d="solid"/>',
+        ]);
+        $defaultAttributes = ['class' => 'default'];
+        $iconSetsAttributes = ['heroicons' => ['class' => 'icon-set']];
+        $iconSuffixAttributes = [
+            'heroicons' => [
+                'solid' => ['class' => 'icon-solid'],
+            ],
+        ];
+        $iconRenderer = new IconRenderer($registry, $defaultAttributes, [], $iconSetsAttributes, $iconSuffixAttributes);
+
+        $svg = $iconRenderer->renderIcon('heroicons:arrow-solid');
+        $svg = str_replace(' aria-hidden="true"', '', $svg);
+
+        $this->assertSame('<svg class="icon-solid"><path d="solid"/></svg>', $svg);
+    }
+
+    public function testRenderIconWithSuffixAndRenderTimeOverwrite()
+    {
+        $registry = $this->createRegistry([
+            'heroicons:arrow-solid' => '<path d="solid"/>',
+        ]);
+        $iconSuffixAttributes = [
+            'heroicons' => [
+                'solid' => ['class' => 'icon-solid'],
+            ],
+        ];
+        $iconRenderer = new IconRenderer($registry, [], [], [], $iconSuffixAttributes);
+
+        $svg = $iconRenderer->renderIcon('heroicons:arrow-solid', ['class' => 'custom']);
+        $svg = str_replace(' aria-hidden="true"', '', $svg);
+
+        $this->assertSame('<svg class="custom"><path d="solid"/></svg>', $svg);
+    }
+
+    public function testRenderIconWithoutSuffixesRemainsBackwardsCompatible()
+    {
+        $registry = $this->createRegistry([
+            'heroicons:arrow' => '<path d="arrow"/>',
+        ]);
+        $iconRenderer = new IconRenderer($registry, ['class' => 'icon'], [], ['heroicons' => ['fill' => 'none']]);
+
+        $svg = $iconRenderer->renderIcon('heroicons:arrow');
+        $svg = str_replace(' aria-hidden="true"', '', $svg);
+
+        $this->assertSame('<svg class="icon" fill="none"><path d="arrow"/></svg>', $svg);
+    }
+
+    public function testRenderIconWithSuffixAndAliases()
+    {
+        $registry = $this->createRegistry([
+            'heroicons:arrow-solid' => '<path d="solid"/>',
+        ]);
+        $iconAliases = ['arrow' => 'heroicons:arrow-solid'];
+        $iconSuffixAttributes = [
+            'heroicons' => [
+                'solid' => ['class' => 'icon-solid'],
+            ],
+        ];
+        $iconRenderer = new IconRenderer($registry, [], $iconAliases, [], $iconSuffixAttributes);
+
+        $svg = $iconRenderer->renderIcon('arrow');
+        $svg = str_replace(' aria-hidden="true"', '', $svg);
+
+        $this->assertSame('<svg class="icon-solid"><path d="solid"/></svg>', $svg);
+    }
+
+    public function testRenderIconWithNoMatchingSuffix()
+    {
+        $registry = $this->createRegistry([
+            'heroicons:arrow-unknown' => '<path d="unknown"/>',
+        ]);
+        $iconSuffixAttributes = [
+            'heroicons' => [
+                'solid' => ['class' => 'icon-solid'],
+            ],
+        ];
+        $iconRenderer = new IconRenderer($registry, ['class' => 'default'], [], [], $iconSuffixAttributes);
+
+        $svg = $iconRenderer->renderIcon('heroicons:arrow-unknown');
+        $svg = str_replace(' aria-hidden="true"', '', $svg);
+
+        $this->assertSame('<svg class="default"><path d="unknown"/></svg>', $svg);
+    }
+
+    public function testRenderIconWithSuffixOnIconSetWithoutSuffixes()
+    {
+        $registry = $this->createRegistry([
+            'other:icon-solid' => '<path d="solid"/>',
+        ]);
+        $iconSuffixAttributes = [
+            'heroicons' => [
+                'solid' => ['class' => 'icon-solid'],
+            ],
+        ];
+        $iconRenderer = new IconRenderer($registry, [], [], [], $iconSuffixAttributes);
+
+        $svg = $iconRenderer->renderIcon('other:icon-solid');
+        $svg = str_replace(' aria-hidden="true"', '', $svg);
+
+        $this->assertSame('<svg><path d="solid"/></svg>', $svg);
+    }
+
     private function createRegistry(array $icons): IconRegistryInterface
     {
         $registryIcons = [];

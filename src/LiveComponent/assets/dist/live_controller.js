@@ -29,9 +29,10 @@ var BackendRequest_default = class {
 
 // src/Backend/RequestBuilder.ts
 var RequestBuilder_default = class {
-  constructor(url, method = "post") {
+  constructor(url, method = "post", credentials = "same-origin") {
     this.url = url;
     this.method = method;
+    this.credentials = credentials;
   }
   buildRequest(props, actions, updated, children, updatedPropsFromParent, files) {
     const splitUrl = this.url.split("?");
@@ -39,6 +40,7 @@ var RequestBuilder_default = class {
     const [, queryString] = splitUrl;
     const params = new URLSearchParams(queryString || "");
     const fetchOptions = {};
+    fetchOptions.credentials = this.credentials;
     fetchOptions.headers = {
       Accept: "application/vnd.live-component+html",
       "X-Requested-With": "XMLHttpRequest",
@@ -106,8 +108,8 @@ var RequestBuilder_default = class {
 
 // src/Backend/Backend.ts
 var Backend_default = class {
-  constructor(url, method = "post") {
-    this.requestBuilder = new RequestBuilder_default(url, method);
+  constructor(url, method = "post", credentials = "same-origin") {
+    this.requestBuilder = new RequestBuilder_default(url, method, credentials);
   }
   makeRequest(props, actions, updated, children, updatedPropsFromParent, files) {
     const { url, fetchOptions } = this.requestBuilder.buildRequest(
@@ -3080,9 +3082,10 @@ _LiveControllerDefault.values = {
   eventsToDispatch: { type: Array, default: [] },
   debounce: { type: Number, default: 150 },
   fingerprint: { type: String, default: "" },
-  requestMethod: { type: String, default: "post" }
+  requestMethod: { type: String, default: "post" },
+  fetchCredentials: { type: String, default: "same-origin" }
 };
-_LiveControllerDefault.backendFactory = (controller) => new Backend_default(controller.urlValue, controller.requestMethodValue);
+_LiveControllerDefault.backendFactory = (controller) => new Backend_default(controller.urlValue, controller.requestMethodValue, controller.fetchCredentialsValue);
 var LiveControllerDefault = _LiveControllerDefault;
 export {
   Component,

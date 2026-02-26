@@ -3701,6 +3701,40 @@ You can also control the type of the generated URL:
           use DefaultActionTrait;
       }
 
+Configuring Fetch Credentials
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.33
+
+    The ``fetchCredentials`` option was added in LiveComponents 2.33.
+
+By default, Live components use the ``same-origin`` credentials policy for fetch requests,
+which only sends credentials (cookies, HTTP authentication) for same-origin requests.
+
+If your component needs to make cross-origin requests with credentials (e.g., when using
+subdomains or different domains), you can configure the ``fetchCredentials`` option:
+
+.. code-block:: diff
+
+      // src/Twig/Components/RandomNumber.php
+      use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+      use Symfony\UX\LiveComponent\DefaultActionTrait;
+
+    - #[AsLiveComponent]
+    + #[AsLiveComponent(fetchCredentials: 'include')]
+      class RandomNumber
+      {
+          use DefaultActionTrait;
+      }
+
+The ``fetchCredentials`` option accepts three values:
+
+* ``same-origin`` (default): Send credentials for same-origin requests only
+* ``include``: Always send credentials, even for cross-origin requests
+* ``omit``: Never send credentials
+
+This corresponds directly to the `credentials option of the fetch() API`_.
+
 Add a Hook on LiveProp Update
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -3837,6 +3871,13 @@ uses Symfony's test client to render and make requests to your components::
             // call live action with file uploads
             $testComponent
                 ->call('processUpload', files: ['file' => new UploadedFile(...)]);
+
+            // call live action with multiple files uploads
+            $testComponent
+                ->call('processUpload', files: ['multiple' => [
+                    new UploadedFile(...),
+                    new UploadedFile(...),
+                ]]);
 
             // emit live events
             $testComponent
@@ -4004,3 +4045,4 @@ promise. However, any internal implementation in the JavaScript files
 .. _`@symfony/ux-live-component npm package`: https://www.npmjs.com/package/@symfony/ux-live-component
 .. _`Symfony TypeInfo`: https://symfony.com/doc/current/components/type_info.html
 .. _`Symfony PropertyInfo`: https://symfony.com/doc/current/components/property_info.html
+.. _`credentials option of the fetch() API`: https://developer.mozilla.org/en-US/docs/Web/API/fetch#credentials

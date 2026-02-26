@@ -1,7 +1,7 @@
-{# @block content The default block #}
+{# @block content The dialog content, typically includes `AlertDialog:Header` and `AlertDialog:Footer` #}
 <dialog
     id="{{ _alert_dialog_id }}"
-    class="{{ 'text-foreground bg-background fixed top-[50%] left-[50%] z-50 max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] scale-95 gap-4 rounded-lg border p-6 opacity-0 shadow-lg transition-all transition-discrete duration-200 backdrop:transition-discrete backdrop:duration-150 open:grid open:scale-100 open:opacity-100 open:backdrop:bg-black/50 sm:max-w-lg starting:open:scale-95 starting:open:opacity-0 ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ ('text-foreground bg-background fixed top-[50%] left-[50%] z-50 max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] scale-95 gap-4 rounded-lg border p-6 opacity-0 shadow-lg transition-all transition-discrete duration-200 backdrop:transition-discrete backdrop:duration-150 open:grid open:scale-100 open:opacity-100 open:backdrop:bg-black/50 sm:max-w-lg starting:open:scale-95 starting:open:opacity-0 ' ~ attributes.render('class'))|tailwind_merge }}"
     data-alert-dialog-target="dialog"
     data-action="keydown.esc->alert-dialog#close:prevent"
     {{ attributes.without('id') }}

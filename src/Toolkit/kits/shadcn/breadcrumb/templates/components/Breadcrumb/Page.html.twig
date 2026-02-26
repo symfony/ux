@@ -1,6 +1,6 @@
-{# @block content The default block #}
+{# @block content The current page text (non-clickable) #}
 <span
-    class="{{ 'font-normal text-foreground ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ ('font-normal text-foreground ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}
     role="link"
     aria-disabled="true"

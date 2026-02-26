@@ -27,6 +27,7 @@ final class AsLiveComponent extends AsTwigComponent
     public string $route;
     public string $method;
     public int $urlReferenceType;
+    public ?string $fetchCredentials;
 
     private ?string $defaultAction;
 
@@ -39,6 +40,7 @@ final class AsLiveComponent extends AsTwigComponent
      * @param string                   $route             The route used to render the component & handle actions
      * @param string                   $method            The HTTP method to use
      * @param UrlGeneratorInterface::* $urlReferenceType  Which type of URL should be generated for the given route
+     * @param string|null              $fetchCredentials  The fetch credentials mode to use ('same-origin', 'include', 'omit'), null to use the global default
      */
     public function __construct(
         ?string $name = null,
@@ -46,9 +48,10 @@ final class AsLiveComponent extends AsTwigComponent
         ?string $defaultAction = null,
         bool $exposePublicProps = true,
         string $attributesVar = 'attributes',
-        string|bool $route = 'ux_live_component',
+        string $route = 'ux_live_component',
         string $method = 'post',
-        int|string $urlReferenceType = UrlGeneratorInterface::ABSOLUTE_PATH,
+        int $urlReferenceType = UrlGeneratorInterface::ABSOLUTE_PATH,
+        ?string $fetchCredentials = null,
     ) {
         parent::__construct($name, $template, $exposePublicProps, $attributesVar);
 
@@ -56,9 +59,14 @@ final class AsLiveComponent extends AsTwigComponent
         $this->route = $route;
         $this->method = strtolower($method);
         $this->urlReferenceType = $urlReferenceType;
+        $this->fetchCredentials = $fetchCredentials;
 
-        if (!\in_array($this->method, ['get', 'post'])) {
+        if (!\in_array($this->method, ['get', 'post'], true)) {
             throw new \UnexpectedValueException('$method must be either \'get\' or \'post\'.');
+        }
+
+        if (null !== $fetchCredentials && !\in_array($fetchCredentials, ['same-origin', 'include', 'omit'], true)) {
+            throw new \UnexpectedValueException('$fetchCredentials must be either \'same-origin\', \'include\' or \'omit\'.');
         }
     }
 
@@ -73,6 +81,7 @@ final class AsLiveComponent extends AsTwigComponent
             'route' => $this->route,
             'method' => $this->method,
             'url_reference_type' => $this->urlReferenceType,
+            'fetch_credentials' => $this->fetchCredentials,
         ]);
     }
 

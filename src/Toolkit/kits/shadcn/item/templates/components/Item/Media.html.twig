@@ -1,5 +1,5 @@
-{# @prop variant 'default'|'icon'|'image' The variant, default to `default` #}
-{# @block content The default block #}
+{# @prop variant 'default'|'icon'|'image' The media display style. Defaults to `default` #}
+{# @block content The visual element, typically an icon or image #}
 {%- props variant = 'default' -%}
 {%- set style = html_cva(
     base: 'flex shrink-0 items-center justify-center gap-2 group-has-[[data-slot=item-description]]/item:self-start [&_svg]:pointer-events-none group-has-[[data-slot=item-description]]/item:translate-y-0.5',

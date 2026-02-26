@@ -631,4 +631,25 @@ describe('LiveController rendering Tests', () => {
         // verify the selectedIndex of the select option 2 is 0
         expect(selectOption2.selectedIndex).toBe(0);
     });
+
+    it('can render with fetchCredentials set to "include"', async () => {
+        const test = await createTest(
+            { firstName: 'Ryan' },
+            (data: any) => `
+            <div ${initComponent(data, { fetchCredentials: 'include' })}>
+                <span>Name: ${data.firstName}</span>
+                <button data-action="live#$render">Reload</button>
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.firstName = 'Kevin';
+        });
+
+        getByText(test.element, 'Reload').click();
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Name: Kevin'));
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ firstName: 'Kevin' });
+    });
 });

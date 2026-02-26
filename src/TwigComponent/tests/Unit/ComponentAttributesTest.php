@@ -66,9 +66,10 @@ final class ComponentAttributesTest extends TestCase
 
     public function testCanGetWithout()
     {
-        $attributes = new ComponentAttributes(['class' => 'foo', 'style' => 'color:black;'], new EscaperRuntime());
+        $attributes = new ComponentAttributes(['class' => 'foo', 'style' => 'color:black;', 'data-foo' => 'bar'], new EscaperRuntime());
 
-        $this->assertSame(['class' => 'foo'], $attributes->without('style')->all());
+        $this->assertSame(['class' => 'foo', 'data-foo' => 'bar'], $attributes->without('style')->all());
+        $this->assertSame(['class' => 'foo'], $attributes->without('style', 'data-foo')->all());
     }
 
     public function testCanAddStimulusControllerViaStimulusAttributes()

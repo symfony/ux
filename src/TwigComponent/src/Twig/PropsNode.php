@@ -30,36 +30,40 @@ class PropsNode extends Node
 
     public function compile(Compiler $compiler): void
     {
-        $compiler
-            ->addDebugInfo($this)
-            ->write('$propsNames = [];')
-        ;
+        $compiler->addDebugInfo($this);
 
-        if (!$this->getAttribute('names')) {
+        if (!$propsNames = $this->getAttribute('names')) {
+            $compiler->write('$propsNames = [];');
+
             return;
         }
+
+        $compiler
+            ->write('$propsNames = [\''.implode("', '", $propsNames).'\'];')
+            ->raw("\n")
+            ->write('$context[\'attributes\'] = $context[\'attributes\']->without(...$propsNames);')
+            ->raw("\n")
+        ;
 
         foreach ($this->getAttribute('names') as $name) {
             $compiler
                 ->write('if (isset($context[\'__props\'][\''.$name.'\'])) {')
                 ->raw("\n")
+                ->indent()
                 ->write('$componentClass = isset($context[\'this\']) ? get_debug_type($context[\'this\']) : "";')
                 ->raw("\n")
                 ->write('throw new \Twig\Error\RuntimeError(\'Cannot define prop "'.$name.'" in template "'.$this->getTemplateName().'". Property already defined in component class "\'.$componentClass.\'".\');')
                 ->raw("\n")
+                ->outdent()
                 ->write('}')
                 ->raw("\n")
             ;
 
-            $compiler
-                ->write('$propsNames[] = \''.$name.'\';')
-                ->write("\n")
-                ->write('$context[\'attributes\'] = $context[\'attributes\']->remove(\''.$name.'\');')
-                ->write("\n")
-                ->write('if (!isset($context[\''.$name.'\'])) {');
+            $compiler->write('if (!isset($context[\''.$name.'\'])) {');
 
             if (!$this->hasNode($name)) {
                 $compiler
+                    ->write("\n")
                     ->indent()
                     ->write('throw new \Twig\Error\RuntimeError("'.$name.' should be defined for component '.$this->getTemplateName().'.");')
                     ->write("\n")
@@ -97,18 +101,10 @@ class PropsNode extends Node
         }
 
         $compiler
-            ->write('$attributesKeys = array_keys($context[\'attributes\']->all());')
-            ->raw("\n")
-            ->write('foreach ($context as $key => $value) {')
-            ->raw("\n")
-            ->indent()
-            ->write('if (in_array($key, $attributesKeys) && !in_array($key, $propsNames)) {')
+            ->write('foreach ($context[\'attributes\']->all() as $key => $value) {')
             ->raw("\n")
             ->indent()
             ->raw('unset($context[$key]);')
-            ->raw("\n")
-            ->outdent()
-            ->write('}')
             ->raw("\n")
             ->outdent()
             ->write('}')

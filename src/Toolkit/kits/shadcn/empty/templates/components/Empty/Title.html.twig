@@ -1,7 +1,7 @@
-{# @block content The default block #}
+{# @block content The title text of the empty state #}
 <div
     data-slot="empty-title"
-    class="{{ 'text-lg font-medium tracking-tight ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ ('text-lg font-medium tracking-tight ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}

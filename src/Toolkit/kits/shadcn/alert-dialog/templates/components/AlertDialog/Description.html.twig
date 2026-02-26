@@ -1,7 +1,7 @@
-{# @block content The default block #}
+{# @block content The descriptive text explaining the alert dialog purpose #}
 <p
     id="{{ _alert_dialog_description_id }}"
-    class="{{ 'text-muted-foreground text-sm ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ ('text-muted-foreground text-sm ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.without('id') }}
 >
     {%- block content %}{% endblock -%}

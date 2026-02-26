@@ -1,5 +1,5 @@
-{# @prop variant 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The variant, default to `default` #}
-{# @block content The default block #}
+{# @prop variant 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The button style variant. Defaults to `default` #}
+{# @block content The action button label #}
 {%- props variant = 'default' -%}
 <twig:Button variant="{{ variant }}" {{ ...attributes }}>
     {{- block(outerBlocks.content) -}}

@@ -1,6 +1,6 @@
-{# @block content The default block #}
+{# @block content The header area, typically contains `AlertDialog:Title` and `AlertDialog:Description` #}
 <header
-    class="{{ 'flex flex-col gap-2 text-center sm:text-left ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ ('flex flex-col gap-2 text-center sm:text-left ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}

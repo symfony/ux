@@ -4,6 +4,6 @@
     'data-slot': 'spinner',
     'aria-label': label,
     role: 'status',
-    class: 'size-4 animate-spin ' ~ attributes.render('class')|tailwind_merge,
-    ...attributes.without('class'),
+    class: ('size-4 animate-spin ' ~ attributes.render('class'))|tailwind_merge,
+    ...attributes,
 }) }}

@@ -203,4 +203,27 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         $this->assertArrayHasKey('count', $props);
         $this->assertSame($props['count'], 2);
     }
+
+    public function testFetchCredentials()
+    {
+        $div = $this->browser()
+            ->visit('/render-template/render_with_fetch_credentials')
+            ->assertSuccessful()
+            ->assertContains('Count: 0')
+            ->crawler()
+            ->filter('div')
+        ;
+
+        $props = json_decode($div->attr('data-live-props-value'), true);
+
+        $this->assertSame('live', $div->attr('data-controller'));
+        $this->assertSame('/_components/with_fetch_credentials', $div->attr('data-live-url-value'));
+        $this->assertSame('include', $div->attr('data-live-fetch-credentials-value'));
+        $this->assertCount(3, $props);
+        $this->assertArrayHasKey('@checksum', $props);
+        $this->assertArrayHasKey('@attributes', $props);
+        $this->assertArrayHasKey('id', $props['@attributes']);
+        $this->assertArrayHasKey('count', $props);
+        $this->assertSame($props['count'], 0);
+    }
 }

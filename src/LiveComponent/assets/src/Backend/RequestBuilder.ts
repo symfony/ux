@@ -3,10 +3,12 @@ import type { BackendAction, ChildrenFingerprints } from './Backend';
 export default class {
     private url: string;
     private method: 'get' | 'post';
+    private credentials: RequestCredentials;
 
-    constructor(url: string, method: 'get' | 'post' = 'post') {
+    constructor(url: string, method: 'get' | 'post' = 'post', credentials: RequestCredentials = 'same-origin') {
         this.url = url;
         this.method = method;
+        this.credentials = credentials;
     }
 
     buildRequest(
@@ -23,6 +25,7 @@ export default class {
         const params = new URLSearchParams(queryString || '');
 
         const fetchOptions: RequestInit = {};
+        fetchOptions.credentials = this.credentials;
         fetchOptions.headers = {
             Accept: 'application/vnd.live-component+html',
             'X-Requested-With': 'XMLHttpRequest',
