@@ -382,6 +382,46 @@ use the full path of the template where the macro is defined:
         {{ message_formatter('...') }}
     </twig:Alert>
 
+Dynamic Templates
+-----------------
+
+.. versionadded:: 2.33
+
+    The ability to dynamically resolve templates via the ``FromMethod`` attribute was added.
+
+Sometimes, you need to render a different template based on the component's state or props (e.g., a desktop vs. mobile version of a search dropdown).
+
+Instead of a static string, you can pass a ``FromMethod`` instance to the ``template`` option of the ``AsTwigComponent`` attribute. This tells Symfony to call the specified method to determine the template path at runtime::
+
+    // src/Twig/Components/SearchForm.php
+    namespace App\Twig\Components;
+
+    use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+    use Symfony\UX\TwigComponent\Attribute\FromMethod;
+
+    #[AsTwigComponent(template: new FromMethod('getDynamicTemplate'))]
+    class SearchForm
+    {
+        public string $theme = 'desktop';
+
+        public function getDynamicTemplate(): string
+        {
+            return 'mobile' === $this->theme
+                ? 'components/SearchForm/mobile.html.twig'
+                : 'components/SearchForm/desktop.html.twig';
+        }
+    }
+
+Now, you can switch the template by passing the ``theme`` prop:
+
+.. code-block:: html+twig
+
+    {# Renders components/SearchForm/mobile.html.twig #}
+    <twig:SearchForm theme="mobile" />
+
+    {# Renders components/SearchForm/desktop.html.twig #}
+    <twig:SearchForm theme="desktop" />
+
 Fetching Services
 -----------------
 

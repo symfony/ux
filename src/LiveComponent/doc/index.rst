@@ -75,6 +75,36 @@ Want some demos? Check out https://ux.symfony.com/live-component#demo
         {
             // ...
 
+Dynamic Templates
+-----------------
+
+.. versionadded:: 2.33
+
+    Live components support dynamic template resolution using the ``FromMethod`` attribute, just like standard Twig components.
+
+This is particularly useful for complex live components that need to switch views based on user interaction::
+
+    // src/Twig/Components/ChatWindow.php
+    namespace App\Twig\Components;
+
+    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+    use Symfony\UX\LiveComponent\DefaultActionTrait;
+    use Symfony\UX\TwigComponent\Attribute\FromMethod;
+
+    #[AsLiveComponent(template: new FromMethod('resolveTemplate'))]
+    class ChatWindow
+    {
+        use DefaultActionTrait;
+
+        public bool $isMinimized = false;
+
+        public function resolveTemplate(): string
+        {
+            return $this->isMinimized 
+                ? 'components/chat/minimized.html.twig' 
+                : 'components/chat/expanded.html.twig';
+        }
+    }
 
 Installation
 ------------
