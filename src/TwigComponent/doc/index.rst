@@ -382,6 +382,35 @@ use the full path of the template where the macro is defined:
         {{ message_formatter('...') }}
     </twig:Alert>
 
+Dynamic Templates
+-----------------
+
+.. versionadded:: 2.33
+
+    The ability to dynamically resolve templates via the ``FromMethod`` attribute was added.
+
+Sometimes, you need to render a different template based on the component state.
+
+It is possible to reference a component method by passing ``FromMethod`` to the ``template`` option of ``AsTwigComponent``, which will be used to compute the template to use before rendering the component::
+
+    namespace App\Twig\Components;
+
+    use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+    use Symfony\UX\TwigComponent\Attribute\FromMethod;
+
+    #[AsTwigComponent(template: new FromMethod('getTemplate'))]
+    class SearchResults
+    {
+        public string $layout = 'rows';
+
+        public function getTemplate(): string
+        {
+            return 'rows' === $this->layout
+                ? 'components/SearchResults/rows.html.twig'
+                : 'components/SearchResults/grid.html.twig';
+        }
+    }
+
 Fetching Services
 -----------------
 

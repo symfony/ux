@@ -41,6 +41,21 @@ final class PreRenderEvent extends Event
         private array $variables,
     ) {
         $this->template = $this->metadata->getTemplate();
+
+        if ($method = $this->metadata->getTemplateFromMethod()) {
+            $component = $this->mounted->getComponent();
+
+            if (!\is_callable($callback = [$component, $method])) {
+                throw new \LogicException(\sprintf('The template method "%s" does not exist or is not callable on component "%s".', $method, get_debug_type($component)));
+            }
+
+            $this->template = $callback();
+
+            if (!\is_string($this->template)) {
+                throw new \LogicException(\sprintf('The template method "%s" must return a string on component "%s".', $method, get_debug_type($component)));
+            }
+        }
+
         $this->parentTemplateForEmbedded = $this->template;
     }
 
