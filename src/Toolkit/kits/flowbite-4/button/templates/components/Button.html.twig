@@ -1,0 +1,46 @@
+{# @prop variant 'brand'|'secondary'|'tertiary'|'success'|'danger'|'warning'|'dark'|'ghost'|'outline'|'outline-brand'|'outline-success'|'outline-danger'|'outline-warning' The visual style variant. Defaults to `brand` #}
+{# @prop size 'default'|'xs'|'sm'|'lg'|'xl'|'icon'|'icon-xs'|'icon-sm' The button size. Defaults to `default` #}
+{# @prop shape 'rounded'|'pill' The badge shape. Defaults to `rounded` #}
+{# @prop as 'button' The HTML tag to render. Defaults to `button` #}
+{# @block content The button label and/or icon #}
+{%- props variant = 'brand', size = 'default', shape = 'rounded', as = 'button' -%}
+{%- set style = html_cva(
+    base: "inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs",
+    variants: {
+        variant: {
+            brand:'text-white bg-brand hover:bg-brand-strong focus:ring-brand-medium',
+            secondary:'text-body bg-neutral-secondary-medium border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-neutral-tertiary',
+            tertiary:'text-body bg-neutral-primary-soft border-default hover:bg-neutral-secondary-medium hover:text-heading focus:ring-neutral-tertiary-soft',
+            success:'text-white bg-success hover:bg-success-strong focus:ring-success-medium',
+            danger:'text-white bg-danger hover:bg-danger-strong focus:ring-danger-medium',
+            warning:'text-white bg-warning hover:bg-warning-strong focus:ring-warning-medium',
+            dark:'text-white bg-dark hover:bg-dark-strong focus:ring-neutral-tertiary',
+            ghost:'text-heading bg-transparent hover:bg-neutral-secondary-medium focus:ring-neutral-tertiary',
+            outline:'text-body bg-neutral-primary border-default hover:bg-neutral-secondary-soft hover:text-heading focus:ring-neutral-tertiary',
+            'outline-brand':'text-fg-brand bg-neutral-primary border-brand hover:bg-brand hover:text-white focus:ring-brand-subtle',
+            'outline-success':'text-success bg-neutral-primary border-success hover:bg-success hover:text-white focus:ring-neutral-tertiary',
+            'outline-danger':'text-danger bg-neutral-primary border-danger hover:bg-danger hover:text-white focus:ring-neutral-tertiary',
+            'outline-warning':'text-warning bg-neutral-primary border-warning hover:bg-warning hover:text-white focus:ring-neutral-tertiary',
+        },
+        size: {
+            default: 'leading-5 text-sm px-4 py-2.5',
+            xs: 'leading-5 text-xs px-3 py-1.5',
+            sm: 'leading-5 text-sm px-3 py-2',
+            lg: 'text-base px-5 py-3',
+            xl: 'text-base px-6 py-3.5',
+            icon: 'w-10 h-10',
+            'icon-xs': 'w-8 h-8',
+            'icon-sm': 'w-9 h-9',
+        },
+        shape: {
+            rounded: 'rounded-base',
+            pill: 'rounded-full',
+        },
+    },
+) -%}
+<{{ as }}
+    class="{{ style.apply({variant: variant, size: size, shape: shape}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</{{ as }}>
