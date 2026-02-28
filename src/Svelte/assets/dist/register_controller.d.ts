@@ -1,11 +1,9 @@
-import { SvelteComponent } from 'svelte';
-
+import { SvelteComponent } from "svelte";
 declare global {
-    function resolveSvelteComponent(name: string): typeof SvelteComponent<any>;
-    interface Window {
-        resolveSvelteComponent(name: string): typeof SvelteComponent<any>;
-    }
+  function resolveSvelteComponent(name: string): typeof SvelteComponent<any>;
+  interface Window {
+    resolveSvelteComponent(name: string): typeof SvelteComponent<any>;
+  }
 }
 declare function registerSvelteControllerComponents(context: __WebpackModuleApi.RequireContext): void;
-
 export { registerSvelteControllerComponents };
