@@ -1,0 +1,7 @@
+{# @block content The table caption text #}
+<caption
+    class="{{ ('p-5 text-lg font-medium text-left rtl:text-right text-heading ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</caption>
