@@ -5,24 +5,20 @@
 
     <twig:Card:Content>
         <div class="mb-4">
-            <label for="email" class="block mb-2.5 text-sm font-medium text-heading">Your email</label>
-            <input type="email" id="email"
-                   class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
-                   placeholder="example@company.com" required/>
+            <twig:Label for="email" class="mb-2.5">Your email</twig:Label>
+            <twig:Input type="email" id="email" placeholder="example@company.com" required />
         </div>
 
         <div>
-            <label for="password" class="block mb-2.5 text-sm font-medium text-heading">Your password</label>
-            <input type="password" id="password"
-                   class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
-                   placeholder="•••••••••" required/>
+            <twig:Label for="password" class="mb-2.5">Your password</twig:Label>
+            <twig:Input type="password" id="password" placeholder="•••••••••" required />
         </div>
 
         <div class="flex items-start mt-6">
             <div class="flex items-center">
                 <input id="checkbox-remember" type="checkbox" value=""
                        class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft">
-                <label for="checkbox-remember" class="ms-2 text-sm font-medium text-heading">Remember me</label>
+                <twig:Label for="checkbox-remember" class="ms-2">Remember me</twig:Label>
             </div>
             <a href="#" class="ms-auto text-sm font-medium text-fg-brand hover:underline">Lost Password?</a>
         </div>
