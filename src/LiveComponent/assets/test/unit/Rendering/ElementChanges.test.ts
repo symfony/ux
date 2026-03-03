@@ -74,4 +74,16 @@ describe('ElementChanges', () => {
         expect(element.style.color).toBe('blue');
         expect(element.getAttribute('data-foo')).toBe('baz');
     });
+
+    it('applies styles correctly when !important is used', async () => {
+        const element = document.createElement('div');
+        const changes = new ElementChanges();
+        changes.addStyle('z-index', '999 !important', null);
+        changes.addStyle('color', 'red ! IMPORTANT', null);
+        changes.applyToElement(element);
+        expect(element.style.getPropertyValue('z-index')).toBe('999');
+        expect(element.style.getPropertyPriority('z-index')).toBe('important');
+        expect(element.style.getPropertyValue('color')).toBe('red');
+        expect(element.style.getPropertyPriority('color')).toBe('important');
+    });
 });
