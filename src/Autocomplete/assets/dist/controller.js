@@ -73,13 +73,9 @@ var _Class = class extends Controller {
 		this.resetTomSelect();
 	}
 	getMaxOptions(hasRemoteData = false) {
-    if (this.maxOptionsValue) {
-      return this.maxOptionsValue;
-    }
-    if (!hasRemoteData && this.selectElement) {
-      return this.selectElement.options.length;
-    }
-    return 50;
+		if (this.maxOptionsValue) return this.maxOptionsValue;
+		if (!hasRemoteData && this.selectElement) return this.selectElement.options.length;
+		return 50;
 	}
 	get selectElement() {
 		if (!(this.element instanceof HTMLSelectElement)) return null;
@@ -279,8 +275,8 @@ function _createAutocompleteWithRemoteData(autocompleteEndpointUrl, minCharacter
 			return query.length >= 3;
 		},
 		maxOptions: this.getMaxOptions(true),
-    optgroupField: "group_by",
-    score: (_search) => (_item) => 1,
+		optgroupField: "group_by",
+		score: (_search) => (_item) => 1,
 		render: {
 			option: (item) => `<div>${item[labelField]}</div>`,
 			item: (item) => `<div>${item[labelField]}</div>`,
@@ -332,8 +328,8 @@ function _createTomSelect(options) {
 	return tomSelect;
 }
 _Class.values = {
-  url: String,
-  maxOptions: Number,
+	url: String,
+	maxOptions: Number,
 	optionsAsHtml: Boolean,
 	loadingMoreText: String,
 	noResultsFoundText: String,
