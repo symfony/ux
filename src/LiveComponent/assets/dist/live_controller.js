@@ -1048,7 +1048,8 @@ var ElementChanges = class {
 		element.classList.add(...this.addedClasses);
 		element.classList.remove(...this.removedClasses);
 		this.styleChanges.getChangedItems().forEach((change) => {
-			element.style.setProperty(change.name, change.value);
+			if (/!\s*important/i.test(change.value)) element.style.setProperty(change.name, change.value.replace(/!\s*important/i, "").trim(), "important");
+			else element.style.setProperty(change.name, change.value);
 		});
 		this.styleChanges.getRemovedItems().forEach((styleName) => {
 			element.style.removeProperty(styleName);

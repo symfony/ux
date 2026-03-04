@@ -67,8 +67,12 @@ export default class ElementChanges {
         element.classList.remove(...this.removedClasses);
 
         this.styleChanges.getChangedItems().forEach((change) => {
-            element.style.setProperty(change.name, change.value);
-            return;
+            // https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration/setProperty
+            if (/!\s*important/i.test(change.value)) {
+                element.style.setProperty(change.name, change.value.replace(/!\s*important/i, '').trim(), 'important');
+            } else {
+                element.style.setProperty(change.name, change.value);
+            }
         });
 
         this.styleChanges.getRemovedItems().forEach((styleName) => {
