@@ -28,7 +28,14 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->getRootNode();
         $rootNode
             ->children()
-                ->scalarNode('dump_directory')->defaultValue('%kernel.project_dir%/var/translations')->end()
+                ->scalarNode('dump_directory')
+                    ->info('The directory where translations and TypeScript types are dumped.')
+                    ->defaultValue('%kernel.project_dir%/var/translations')
+                ->end()
+                ->booleanNode('dump_typescript')
+                    ->info('Control whether TypeScript types are dumped alongside translations. Disable this if you do not use TypeScript (e.g. in production when using AssetMapper).')
+                    ->defaultTrue()
+                ->end()
                 ->arrayNode('domains')
                     ->info('List of domains to include/exclude from the generated translations. Prefix with a `!` to exclude a domain.')
                     ->children()
@@ -45,14 +52,14 @@ class Configuration implements ConfigurationInterface
                     ->canBeUnset()
                     ->beforeNormalization()
                         ->ifString()
-                        ->then(fn ($v) => ['elements' => [$v]])
+                        ->then(static fn ($v) => ['elements' => [$v]])
                     ->end()
                     ->beforeNormalization()
-                        ->ifTrue(function ($v) { return \is_array($v) && is_numeric(key($v)); })
-                        ->then(function ($v) { return ['elements' => $v]; })
+                        ->ifTrue(static function ($v) { return \is_array($v) && is_numeric(key($v)); })
+                        ->then(static function ($v) { return ['elements' => $v]; })
                     ->end()
                     ->validate()
-                        ->always(function ($v) {
+                        ->always(static function ($v) {
                             $isExclusive = null;
                             $elements = [];
                             if (isset($v['type'])) {
@@ -80,6 +87,14 @@ class Configuration implements ConfigurationInterface
 
                             return ['type' => $isExclusive ? 'exclusive' : 'inclusive', 'elements' => array_unique($elements)];
                         })
+                    ->end()
+                ->end()
+                ->arrayNode('keys_patterns')
+                    ->info('List of translation key patterns to include/exclude from the generated translations. Prefix with a `!` to exclude a pattern. Supports wildcards (e.g., `app.*`, `*.label`).')
+                    ->scalarPrototype()->end()
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(static fn ($v) => [$v])
                     ->end()
                 ->end()
             ->end()

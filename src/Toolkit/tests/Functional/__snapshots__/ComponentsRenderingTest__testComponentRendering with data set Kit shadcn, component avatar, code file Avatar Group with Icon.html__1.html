@@ -1,0 +1,41 @@
+<!--
+- Kit: Shadcn UI
+- Component: Avatar
+- Code:
+```twig
+<twig:Avatar:Group class="grayscale">
+    <twig:Avatar>
+        <twig:Avatar:Image src="https://github.com/shadcn.png" alt="@shadcn" />
+        <twig:Avatar:Fallback>CN</twig:Avatar:Fallback>
+    </twig:Avatar>
+    <twig:Avatar>
+        <twig:Avatar:Image src="https://github.com/maxleiter.png" alt="@maxleiter" />
+        <twig:Avatar:Fallback>LR</twig:Avatar:Fallback>
+    </twig:Avatar>
+    <twig:Avatar>
+        <twig:Avatar:Image src="https://github.com/evilrabbit.png" alt="@evilrabbit" />
+        <twig:Avatar:Fallback>ER</twig:Avatar:Fallback>
+    </twig:Avatar>
+    <twig:Avatar:GroupCount>
+        <twig:ux:icon name="lucide:plus" />
+    </twig:Avatar:GroupCount>
+</twig:Avatar:Group>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="avatar-group" class="*:data-[slot=avatar]:ring-background group/avatar-group flex -space-x-2 *:data-[slot=avatar]:ring-2 grayscale">
+<span data-slot="avatar" data-size="default" class="size-8 rounded-full after:rounded-full data-[size=lg]:size-10 data-[size=sm]:size-6 after:border-border group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten"><img data-slot="avatar-image" class="hidden rounded-full aspect-square size-full object-cover" onload="this.classList.remove('hidden'); this.closest('[data-slot=avatar]')?.querySelector('[data-slot=avatar-fallback]')?.classList.add('hidden');" alt="@shadcn" src="https://github.com/shadcn.png">
+
+        <span data-slot="avatar-fallback" class="bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs">CN</span>
+    </span>
+    <span data-slot="avatar" data-size="default" class="size-8 rounded-full after:rounded-full data-[size=lg]:size-10 data-[size=sm]:size-6 after:border-border group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten"><img data-slot="avatar-image" class="hidden rounded-full aspect-square size-full object-cover" onload="this.classList.remove('hidden'); this.closest('[data-slot=avatar]')?.querySelector('[data-slot=avatar-fallback]')?.classList.add('hidden');" alt="@maxleiter" src="https://github.com/maxleiter.png">
+
+        <span data-slot="avatar-fallback" class="bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs">LR</span>
+    </span>
+    <span data-slot="avatar" data-size="default" class="size-8 rounded-full after:rounded-full data-[size=lg]:size-10 data-[size=sm]:size-6 after:border-border group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten"><img data-slot="avatar-image" class="hidden rounded-full aspect-square size-full object-cover" onload="this.classList.remove('hidden'); this.closest('[data-slot=avatar]')?.querySelector('[data-slot=avatar-fallback]')?.classList.add('hidden');" alt="@evilrabbit" src="https://github.com/evilrabbit.png">
+
+        <span data-slot="avatar-fallback" class="bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs">ER</span>
+    </span>
+    <div data-slot="avatar-group-count" class="bg-muted text-muted-foreground size-8 rounded-full text-sm group-has-data-[size=lg]/avatar-group:size-10 group-has-data-[size=sm]/avatar-group:size-6 [&amp;&gt;svg]:size-4 group-has-data-[size=lg]/avatar-group:[&amp;&gt;svg]:size-5 group-has-data-[size=sm]/avatar-group:[&amp;&gt;svg]:size-3 ring-background relative flex shrink-0 items-center justify-center ring-2">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7v14"></path></svg>
+    </div>
+</div>

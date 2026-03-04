@@ -1,0 +1,10 @@
+{# @prop orientation 'horizontal'|'vertical' The separator orientation. Defaults to `horizontal` #}
+{# @prop decorative bool Whether the separator is purely decorative (not semantic). Defaults to `true` #}
+{# @block content Optional custom separator content #}
+{%- props orientation = 'horizontal', decorative = true -%}
+<twig:Separator
+    orientation="{{ orientation }}"
+    decorative="{{ decorative }}"
+    class="{{ ('my-0 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ ...attributes }}
+/>

@@ -1,5 +1,6 @@
+{# @block content The footer area, typically contains actions or additional information #}
 <div
-    class="{{ 'flex items-center p-6 pt-0 ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ ('flex items-center p-6 pt-0 ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}

@@ -1,0 +1,8 @@
+{# @block content The header area, typically contains title and actions #}
+<div
+    data-slot="item-header"
+    class="{{ ('flex basis-full items-center justify-between gap-2 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

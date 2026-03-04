@@ -21,12 +21,12 @@ Start the test app:
 
 ## Convenient endpoints:
 
--   `http://localhost:8000`: basic features
--   `http://localhost:8000/chat`: chat using Turbo Streams
--   `http://localhost:8000/books`: broadcast
--   `http://localhost:8000/authors`: broadcast
--   `http://localhost:8000/artists`: broadcast
--   `http://localhost:8000/songs`: broadcast
+- `http://localhost:8000`: basic features
+- `http://localhost:8000/chat`: chat using Turbo Streams
+- `http://localhost:8000/books`: broadcast
+- `http://localhost:8000/authors`: broadcast
+- `http://localhost:8000/artists`: broadcast
+- `http://localhost:8000/songs`: broadcast
 
 ## Run tests
 

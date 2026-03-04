@@ -1,0 +1,34 @@
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+<div {{ attributes }}>
+    {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_label(form.type) }}
+            {{ form_widget(form.type) }}
+            {{ form_errors(form.type) }}
+        </div>
+
+        {% if form.movieSearch is defined %}
+            <div class="mb-3">
+                {{ form_label(form.movieSearch) }}
+                {{ form_widget(form.movieSearch) }}
+                {{ form_errors(form.movieSearch) }}
+            </div>
+        {% endif %}
+
+        {% if form.videogameSearch is defined %}
+            <div class="mb-3">
+                {{ form_label(form.videogameSearch) }}
+                {{ form_widget(form.videogameSearch) }}
+                {{ form_errors(form.videogameSearch) }}
+            </div>
+        {% endif %}
+
+        <div class="mb-3">
+            {{ form_label(form.title) }}
+            {{ form_widget(form.title) }}
+            {{ form_errors(form.title) }}
+        </div>
+
+        <button type="submit" class="btn btn-primary" data-test-id="submit-button">Submit</button>
+    {{ form_end(form) }}
+</div>

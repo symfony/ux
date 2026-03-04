@@ -12,6 +12,7 @@
 namespace Symfony\UX\Icons\DependencyInjection;
 
 use Symfony\Component\AssetMapper\Event\PreAssetsCompileEvent;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
@@ -38,10 +39,15 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
                     ->info('The local directory where icons are stored.')
                     ->defaultValue('%kernel.project_dir%/assets/icons')
                 ->end()
-                ->variableNode('default_icon_attributes')
+                ->arrayNode('default_icon_attributes')
                     ->info('Default attributes to add to all icons.')
                     ->defaultValue(['fill' => 'currentColor'])
                     ->example(['class' => 'icon'])
+                    ->normalizeKeys(false)
+                    ->useAttributeAsKey('key')
+                    ->scalarPrototype()
+                        ->cannotBeEmpty()
+                    ->end()
                 ->end()
                 ->arrayNode('icon_sets')
                     ->info('Icon sets configuration.')
@@ -63,13 +69,33 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
                                 ->info('Override default icon attributes for icons in this set.')
                                 ->example(['class' => 'icon icon-acme', 'fill' => 'none'])
                                 ->normalizeKeys(false)
-                                ->variablePrototype()
+                                ->useAttributeAsKey('key')
+                                ->scalarPrototype()
+                                    ->cannotBeEmpty()
+                                ->end()
+                            ->end()
+                            ->arrayNode('suffixes')
+                                ->info("Suffix-based attributes (following Iconify naming conventions).\nhttps://iconify.design/docs/libraries/tools/icon-set/themes.html")
+                                ->normalizeKeys(false)
+                                ->useAttributeAsKey('suffix')
+                                ->arrayPrototype()
+                                    ->info('The suffix name (e.g. "solid", "20-solid")')
+                                    ->children()
+                                        ->arrayNode('icon_attributes')
+                                            ->info('Attributes for icons matching this suffix.')
+                                            ->normalizeKeys(false)
+                                            ->useAttributeAsKey('key')
+                                            ->scalarPrototype()
+                                                ->cannotBeEmpty()
+                                            ->end()
+                                        ->end()
+                                    ->end()
                                 ->end()
                             ->end()
                         ->end()
                     ->end()
                     ->validate()
-                        ->ifTrue(fn (array $v) => isset($v['path']) && isset($v['alias']))
+                        ->ifTrue(static fn (array $v) => isset($v['path']) && isset($v['alias']))
                         ->thenInvalid('You cannot define both "path" and "alias" for an icon set.')
                     ->end()
                 ->end()
@@ -80,7 +106,8 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
                         'privacy' => 'bi:cookie',
                     ])
                     ->normalizeKeys(false)
-                    ->scalarPrototype()
+                    ->useAttributeAsKey('key')
+                    ->{method_exists(ArrayNodeDefinition::class, 'stringPrototype') ? 'stringPrototype' : 'scalarPrototype'}()
                         ->cannotBeEmpty()
                     ->end()
                 ->end()
@@ -130,6 +157,7 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
         $iconSetAliases = [];
         $iconSetAttributes = [];
         $iconSetPaths = [];
+        $iconSuffixAttributes = [];
         foreach ($mergedConfig['icon_sets'] as $prefix => $config) {
             if (isset($config['icon_attributes'])) {
                 $iconSetAttributes[$prefix] = $config['icon_attributes'];
@@ -139,6 +167,11 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
             }
             if (isset($config['path'])) {
                 $iconSetPaths[$prefix] = $config['path'];
+            }
+            if (isset($config['suffixes'])) {
+                $suffixes = array_map(static fn ($s) => $s['icon_attributes'] ?? [], $config['suffixes']);
+                uksort($suffixes, static fn ($a, $b) => \strlen($b) <=> \strlen($a));
+                $iconSuffixAttributes[$prefix] = $suffixes;
             }
         }
 
@@ -157,6 +190,7 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
             ->setArgument(1, $mergedConfig['default_icon_attributes'])
             ->setArgument(2, $mergedConfig['aliases'])
             ->setArgument(3, $iconSetAttributes)
+            ->setArgument(4, $iconSuffixAttributes)
         ;
 
         $container->getDefinition('.ux_icons.twig_icon_runtime')

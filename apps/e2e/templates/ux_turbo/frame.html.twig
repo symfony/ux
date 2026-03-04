@@ -1,0 +1,21 @@
+{% extends 'example.html.twig' %}
+
+{% block example %}
+    <div>
+        <h2>Turbo Frame Demo</h2>
+        <p>The frame below will navigate independently from the rest of the page.</p>
+
+        <turbo-frame id="demo-frame">
+            <div class="alert alert-info">
+                <p id="frame-initial-content">This is the initial frame content.</p>
+                <a href="{{ path('app_ux_turbo_frame_content') }}" class="btn btn-primary" id="load-frame-content">
+                    Load content in frame
+                </a>
+            </div>
+        </turbo-frame>
+
+        <div class="mt-4">
+            <p id="content-outside-frame">This content is outside the frame and will not change when navigating inside the frame.</p>
+        </div>
+    </div>
+{% endblock %}

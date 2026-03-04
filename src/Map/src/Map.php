@@ -133,6 +133,13 @@ final class Map
         return $this;
     }
 
+    public function removeAllMarkers(): self
+    {
+        $this->markers->removeAll();
+
+        return $this;
+    }
+
     public function addPolygon(Polygon $polygon): self
     {
         $this->polygons->add($polygon);
@@ -143,6 +150,13 @@ final class Map
     public function removePolygon(Polygon|string $polygonOrId): self
     {
         $this->polygons->remove($polygonOrId);
+
+        return $this;
+    }
+
+    public function removeAllPolygons(): self
+    {
+        $this->polygons->removeAll();
 
         return $this;
     }
@@ -161,6 +175,13 @@ final class Map
         return $this;
     }
 
+    public function removeAllPolylines(): self
+    {
+        $this->polylines->removeAll();
+
+        return $this;
+    }
+
     public function addCircle(Circle $circle): self
     {
         $this->circles->add($circle);
@@ -175,6 +196,13 @@ final class Map
         return $this;
     }
 
+    public function removeAllCircles(): self
+    {
+        $this->circles->removeAll();
+
+        return $this;
+    }
+
     public function addRectangle(Rectangle $rectangle): self
     {
         $this->rectangles->add($rectangle);
@@ -185,6 +213,13 @@ final class Map
     public function removeRectangle(Rectangle|string $rectangleOrId): self
     {
         $this->rectangles->remove($rectangleOrId);
+
+        return $this;
+    }
+
+    public function removeAllRectangles(): self
+    {
+        $this->rectangles->removeAll();
 
         return $this;
     }

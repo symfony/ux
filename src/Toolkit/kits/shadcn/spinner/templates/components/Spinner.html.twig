@@ -1,0 +1,9 @@
+{%- props label = 'Loading' -%}
+
+{{ ux_icon('lucide:loader-2', {
+    'data-slot': 'spinner',
+    'aria-label': label,
+    role: 'status',
+    class: ('size-4 animate-spin ' ~ attributes.render('class'))|tailwind_merge,
+    ...attributes,
+}) }}

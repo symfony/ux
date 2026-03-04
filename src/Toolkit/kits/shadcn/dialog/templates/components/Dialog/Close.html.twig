@@ -1,0 +1,5 @@
+{# @block content The close trigger element (e.g., a `Button`) that closes the dialog when clicked #}
+{%- set close_attrs = {
+    'data-action': 'click->dialog#close',
+} -%}
+{%- block content %}{% endblock -%}

@@ -23,6 +23,11 @@ final class IntlMessageParametersExtractor implements ExtractorInterface
 {
     public function extract(string $message): array
     {
+        // Early return if there is no parameter-like pattern in the message
+        if (!str_contains($message, '{')) {
+            return [];
+        }
+
         $parameters = [];
 
         $intlMessageParser = new IntlMessageParser($message);

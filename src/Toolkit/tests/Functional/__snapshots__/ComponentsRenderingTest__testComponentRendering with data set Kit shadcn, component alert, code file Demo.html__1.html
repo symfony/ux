@@ -1,0 +1,37 @@
+<!--
+- Kit: Shadcn UI
+- Component: Alert
+- Code:
+```twig
+<div class="grid w-full max-w-xl items-start gap-4">
+    <twig:Alert class="max-w-md">
+        <twig:ux:icon name="lucide:circle-check" />
+        <twig:Alert:Title>Payment successful</twig:Alert:Title>
+        <twig:Alert:Description>
+            Your payment of $29.99 has been processed. A receipt has been sent to your email address.
+        </twig:Alert:Description>
+    </twig:Alert>
+    <twig:Alert class="max-w-md">
+        <twig:ux:icon name="lucide:circle-alert" />
+        <twig:Alert:Title>New feature available</twig:Alert:Title>
+        <twig:Alert:Description>
+            We've added dark mode support. You can enable it in your account settings.
+        </twig:Alert:Description>
+    </twig:Alert>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="grid w-full max-w-xl items-start gap-4">
+    <div data-slot="alert" role="alert" class="grid gap-0.5 rounded-lg border px-2.5 py-2 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[&gt;svg]:grid-cols-[auto_1fr] has-[&gt;svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4 w-full relative group/alert bg-card text-card-foreground max-w-md">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m9 12l2 2l4-4"></path></g></svg>
+        <div data-slot="alert-title" class="font-medium group-has-[&gt;svg]/alert:col-start-2 [&amp;_a]:hover:text-foreground [&amp;_a]:underline [&amp;_a]:underline-offset-3">Payment successful</div>
+        <div data-slot="alert-description" class="text-muted-foreground text-sm text-balance md:text-pretty [&amp;_p:not(:last-child)]:mb-4 [&amp;_a]:hover:text-foreground [&amp;_a]:underline [&amp;_a]:underline-offset-3">Your payment of $29.99 has been processed. A receipt has been sent to your email address.
+        </div>
+    </div>
+    <div data-slot="alert" role="alert" class="grid gap-0.5 rounded-lg border px-2.5 py-2 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[&gt;svg]:grid-cols-[auto_1fr] has-[&gt;svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4 w-full relative group/alert bg-card text-card-foreground max-w-md">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4m0 4h.01"></path></g></svg>
+        <div data-slot="alert-title" class="font-medium group-has-[&gt;svg]/alert:col-start-2 [&amp;_a]:hover:text-foreground [&amp;_a]:underline [&amp;_a]:underline-offset-3">New feature available</div>
+        <div data-slot="alert-description" class="text-muted-foreground text-sm text-balance md:text-pretty [&amp;_p:not(:last-child)]:mb-4 [&amp;_a]:hover:text-foreground [&amp;_a]:underline [&amp;_a]:underline-offset-3">We've added dark mode support. You can enable it in your account settings.
+        </div>
+    </div>
+</div>

@@ -7,7 +7,8 @@
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "importmap:install": "symfony-cmd"
+            "importmap:install": "symfony-cmd",
+            "foundry:load-fixtures": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"
@@ -37,7 +38,10 @@
         "symfony/http-client": "6.4.*|7.3.*",
         "symfony/intl": "6.4.*|7.3.*",
         "symfony/monolog-bundle": "^3.10",
+        "symfony/property-access": "6.4.*|7.3.*",
+        "symfony/property-info": "6.4.*|7.3.*",
         "symfony/runtime": "6.4.*|7.3.*",
+        "symfony/serializer": "6.4.*|7.3.*",
         "symfony/stimulus-bundle": "^2.29.1",
         "symfony/twig-bundle": "6.4.*|7.3.*",
         "symfony/ux-autocomplete": "^2.29.1",
@@ -61,6 +65,7 @@
         "symfony/ux-typed": "^2.29.1",
         "symfony/ux-vue": "^2.29.1",
         "symfony/yaml": "6.4.*|7.3.*",
+        "symfonycasts/dynamic-forms": "^0.2",
         "twig/extra-bundle": "^3.21",
         "twig/twig": "^3.21.1"
     },
@@ -68,7 +73,8 @@
         "symfony/debug-bundle": "6.4.*|7.3.*",
         "symfony/maker-bundle": "^1.64",
         "symfony/stopwatch": "6.4.*|7.3.*",
-        "symfony/web-profiler-bundle": "6.4.*|7.3.*"
+        "symfony/web-profiler-bundle": "6.4.*|7.3.*",
+        "zenstruck/foundry": "^2.8"
     },
     "config": {
         "platform": {
@@ -78,6 +84,11 @@
             "php-http/discovery": true,
             "symfony/flex": true,
             "symfony/runtime": true
+        },
+        "audit": {
+            "ignore": {
+                "PKSA-365x-2zjk-pt47": "false positive for symfony/http-foundation"
+            }
         },
         "bump-after-update": true,
         "sort-packages": true

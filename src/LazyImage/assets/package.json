@@ -2,12 +2,12 @@
     "name": "@symfony/ux-lazy-image",
     "description": "Lazy image loader and utilities for Symfony",
     "license": "MIT",
-    "version": "2.30.0",
+    "version": "2.32.0",
     "keywords": [
         "symfony-ux"
     ],
     "homepage": "https://ux.symfony.com/lazy-image",
-    "repository": "https://github.com/symfony/ux-lazy-image",
+    "repository": "https://github.com/symfony/ux",
     "type": "module",
     "files": [
         "dist"
@@ -15,12 +15,10 @@
     "main": "dist/controller.js",
     "types": "dist/controller.d.ts",
     "scripts": {
-        "build": "tsx ../../../bin/build_package.ts .",
-        "watch": "tsx ../../../bin/build_package.ts . --watch",
+        "build": "node ../../../bin/build_package.ts .",
+        "watch": "node ../../../bin/build_package.ts . --watch",
         "test": "pnpm run test:unit",
-        "test:unit": "../../../bin/unit_test_package.sh .",
-        "check": "biome check",
-        "ci": "biome ci"
+        "test:unit": "../../../bin/unit_test_package.sh ."
     },
     "symfony": {
         "controllers": {
@@ -45,7 +43,6 @@
         "@testing-library/user-event": "^14.6.1",
         "jsdom": "^26.1.0",
         "tslib": "^2.8.1",
-        "tsx": "^4.20.3",
         "typescript": "^5.8.3",
         "vitest": "^3.2.4"
     }

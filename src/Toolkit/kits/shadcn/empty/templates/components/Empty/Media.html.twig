@@ -1,0 +1,24 @@
+{# @prop variant 'default'|'icon' The media display style. Defaults to `default` #}
+{# @block content The visual element, typically an icon or illustration #}
+{%- props variant = 'default' -%}
+{%- set style = html_cva(
+    base: 'flex shrink-0 items-center justify-center mb-2 [&_svg]:pointer-events-none [&_svg]:shrink-0',
+    variants: {
+        variant: {
+            default: 'bg-transparent',
+            icon: "bg-muted text-foreground flex size-10 shrink-0 items-center justify-center rounded-lg [&_svg:not([class*='size-'])]:size-6",
+        },
+    },
+    default_variant: {
+        variant: 'default',
+    },
+) -%}
+
+<div
+    data-slot="empty-icon"
+    data-variant="{{ variant }}"
+    class="{{ style.apply({variant: variant}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

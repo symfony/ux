@@ -40,18 +40,17 @@
         "symfony/yaml": "^6.4|^7.0|^8.0"
     },
     "require-dev": {
-        "symfony/finder": "6.4|^7.0|^8.0",
+        "symfony/finder": "^6.4|^7.0|^8.0",
         "twig/extra-bundle": "^3.19|^4.0",
         "twig/html-extra": "^3.19",
         "zenstruck/console-test": "^1.7",
-        "symfony/http-client": "6.4|^7.0|^8.0",
+        "symfony/http-client": "^6.4|^7.0|^8.0",
         "symfony/stopwatch": "^6.4|^7.0|^8.0",
         "symfony/phpunit-bridge": "^7.2|^8.0",
-        "vincentlanglet/twig-cs-fixer": "^3.9",
-        "spatie/phpunit-snapshot-assertions": "^4.2.17",
+        "spatie/phpunit-snapshot-assertions": "^4.2.17|^5.2.3",
         "phpunit/phpunit": "^9.6.22",
         "symfony/ux-icons": "^2.18",
-        "tales-from-a-dev/twig-tailwind-extra": "^0.4.0"
+        "tales-from-a-dev/twig-tailwind-extra": "^1.0.0"
     },
     "bin": [
         "bin/ux-toolkit-kit-create",

@@ -1,0 +1,8 @@
+{# @block content The initial textarea value #}
+<textarea
+    data-slot="input-group-control"
+    class="{{ ('flex-1 min-h-[80px] w-full resize-none rounded-none border-0 bg-transparent px-3 py-3 text-base shadow-none placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</textarea>

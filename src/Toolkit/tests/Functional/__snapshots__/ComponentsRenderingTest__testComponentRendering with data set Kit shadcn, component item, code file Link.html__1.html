@@ -1,0 +1,51 @@
+<!--
+- Kit: Shadcn UI
+- Component: Item
+- Code:
+```twig
+<div class="grid w-full max-w-sm items-center gap-1.5">
+    <twig:Item as="a" href="#">
+        <twig:Item:Content>
+            <twig:Item:Title>Visit our documentation</twig:Item:Title>
+            <twig:Item:Description>
+                Learn how to get started with our components.
+            </twig:Item:Description>
+        </twig:Item:Content>
+        <twig:Item:Actions>
+            <twig:ux:icon name="lucide:chevron-right" class="size-4" />
+        </twig:Item:Actions>
+    </twig:Item>
+    <twig:Item variant="outline" as="a" href="#" target="_blank" rel="noopener noreferrer">
+        <twig:Item:Content>
+            <twig:Item:Title>External resource</twig:Item:Title>
+            <twig:Item:Description>
+                Opens in a new tab with security attributes.
+            </twig:Item:Description>
+        </twig:Item:Content>
+        <twig:Item:Actions>
+            <twig:ux:icon name="lucide:external-link" class="size-4" />
+        </twig:Item:Actions>
+    </twig:Item>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="grid w-full max-w-sm items-center gap-1.5">
+    <a data-slot="item" data-variant="default" data-size="default" class="group/item flex items-center border border-transparent text-sm rounded-md transition-colors [a]:hover:bg-accent/50 [a]:transition-colors duration-100 flex-wrap outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] bg-transparent p-4 gap-4" href="#"><div data-slot="item-content" class="flex flex-1 flex-col gap-1 [&amp;+[data-slot=item-content]]:flex-none">
+<div data-slot="item-title" class="flex w-fit items-center gap-2 text-sm leading-snug font-medium">Visit our documentation</div>
+            <p data-slot="item-description" class="text-muted-foreground line-clamp-2 text-sm leading-normal font-normal text-balance [&amp;&gt;a:hover]:text-primary [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4">Learn how to get started with our components.
+            </p>
+        </div>
+        <div data-slot="item-actions" class="flex items-center gap-2">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
+        </div>
+    </a>
+    <a data-slot="item" data-variant="outline" data-size="default" class="group/item flex items-center border text-sm rounded-md transition-colors [a]:hover:bg-accent/50 [a]:transition-colors duration-100 flex-wrap outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] border-border p-4 gap-4" href="#" target="_blank" rel="noopener noreferrer"><div data-slot="item-content" class="flex flex-1 flex-col gap-1 [&amp;+[data-slot=item-content]]:flex-none">
+<div data-slot="item-title" class="flex w-fit items-center gap-2 text-sm leading-snug font-medium">External resource</div>
+            <p data-slot="item-description" class="text-muted-foreground line-clamp-2 text-sm leading-normal font-normal text-balance [&amp;&gt;a:hover]:text-primary [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4">Opens in a new tab with security attributes.
+            </p>
+        </div>
+        <div data-slot="item-actions" class="flex items-center gap-2">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h6v6m-11 5L21 3m-3 10v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+        </div>
+    </a>
+</div>

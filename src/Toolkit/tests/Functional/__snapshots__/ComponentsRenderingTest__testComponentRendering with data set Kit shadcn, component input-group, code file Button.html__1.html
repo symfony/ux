@@ -1,0 +1,72 @@
+<!--
+- Kit: Shadcn UI
+- Component: Input Group
+- Code:
+```twig
+<div class="grid w-full max-w-sm gap-6" xmlns:twig="http://www.w3.org/1999/html">
+    <twig:InputGroup>
+        <twig:InputGroup:Input placeholder="https://twitter.com/symfony" readonly />
+        <twig:InputGroup:Addon align="inline-end">
+            <twig:InputGroup:Button title="Copy to clipboard">
+                <twig:ux:Icon name="lucide:copy" />
+            </twig:InputGroup:Button>
+        </twig:InputGroup:Addon>
+    </twig:InputGroup>
+
+    <twig:InputGroup class="[--radius:9999px]">
+        <twig:InputGroup:Input placeholder="https://" />
+        <twig:InputGroup:Addon>
+            <twig:InputGroup:Button variant="secondary" size="icon-xs">
+                <twig:ux:Icon name="lucide:info" />
+            </twig:InputGroup:Button>
+        </twig:InputGroup:Addon>
+        <twig:InputGroup:Addon align="inline-end">
+            <twig:InputGroup:Button title="Copy to clipboard">
+                <twig:ux:Icon name="lucide:star" />
+            </twig:InputGroup:Button>
+        </twig:InputGroup:Addon>
+    </twig:InputGroup>
+
+    <twig:InputGroup>
+        <twig:InputGroup:Input placeholder="Type to search..." />
+        <twig:InputGroup:Addon align="inline-end">
+            <twig:InputGroup:Button variant="secondary">
+                Search
+            </twig:InputGroup:Button>
+        </twig:InputGroup:Addon>
+    </twig:InputGroup>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="grid w-full max-w-sm gap-6" xmlns:twig="http://www.w3.org/1999/html">
+    <div data-slot="input-group" class="group/input-group border-input dark:bg-input/30 relative flex w-full items-center rounded-md border shadow-xs transition-[color,box-shadow] outline-none h-9 min-w-0 has-[&gt;textarea]:h-auto has-[&gt;[data-align=inline-start]]:[&amp;&gt;input]:pl-2 has-[&gt;[data-align=inline-end]]:[&amp;&gt;input]:pr-2 has-[&gt;[data-align=block-start]]:h-auto has-[&gt;[data-align=block-start]]:flex-col has-[&gt;[data-align=block-start]]:[&amp;&gt;input]:pb-3 has-[&gt;[data-align=block-end]]:h-auto has-[&gt;[data-align=block-end]]:flex-col has-[&gt;[data-align=block-end]]:[&amp;&gt;input]:pt-3 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot=input-group-control]:focus-visible]:ring-[3px] has-[[data-slot][aria-invalid=true]]:ring-destructive/20 has-[[data-slot][aria-invalid=true]]:border-destructive dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40">
+<input data-slot="input-group-control" class="flex-1 h-full w-full rounded-none border-0 bg-transparent px-3 py-2 text-sm shadow-none file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50" placeholder="https://twitter.com/symfony" readonly>
+
+        <div data-slot="input-group-addon" data-align="inline-end" role="group" class="text-muted-foreground flex h-auto items-center justify-center gap-2 text-sm font-medium select-none [&amp;_svg:not([class*='size-'])]:size-4 group-data-[disabled=true]/input-group:opacity-50 order-last pr-3">
+<button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 border border-transparent bg-clip-padding font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground h-6 gap-1 px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&amp;_svg:not([class*='size-'])]:size-3 shadow-none flex rounded-[calc(var(--radius)-5px)] [&amp;&gt;svg:not([class*='size-'])]:size-3.5 has-[&gt;svg]:px-2" type="button" title="Copy to clipboard"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></g></svg>
+            </button>
+        </div>
+    </div>
+
+    <div data-slot="input-group" class="group/input-group border-input dark:bg-input/30 relative flex w-full items-center rounded-md border shadow-xs transition-[color,box-shadow] outline-none h-9 min-w-0 has-[&gt;textarea]:h-auto has-[&gt;[data-align=inline-start]]:[&amp;&gt;input]:pl-2 has-[&gt;[data-align=inline-end]]:[&amp;&gt;input]:pr-2 has-[&gt;[data-align=block-start]]:h-auto has-[&gt;[data-align=block-start]]:flex-col has-[&gt;[data-align=block-start]]:[&amp;&gt;input]:pb-3 has-[&gt;[data-align=block-end]]:h-auto has-[&gt;[data-align=block-end]]:flex-col has-[&gt;[data-align=block-end]]:[&amp;&gt;input]:pt-3 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot=input-group-control]:focus-visible]:ring-[3px] has-[[data-slot][aria-invalid=true]]:ring-destructive/20 has-[[data-slot][aria-invalid=true]]:border-destructive dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40 [--radius:9999px]">
+<input data-slot="input-group-control" class="flex-1 h-full w-full rounded-none border-0 bg-transparent px-3 py-2 text-sm shadow-none file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50" placeholder="https://">
+
+        <div data-slot="input-group-addon" data-align="inline-start" role="group" class="text-muted-foreground flex h-auto items-center justify-center gap-2 text-sm font-medium select-none [&amp;_svg:not([class*='size-'])]:size-4 group-data-[disabled=true]/input-group:opacity-50 order-first pl-3">
+<button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground size-6 in-data-[slot=button-group]:rounded-lg [&amp;_svg:not([class*='size-'])]:size-3 shadow-none flex gap-2 rounded-[calc(var(--radius)-5px)] p-0 has-[&gt;svg]:p-0" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4m0-4h.01"></path></g></svg>
+            </button>
+        </div>
+        <div data-slot="input-group-addon" data-align="inline-end" role="group" class="text-muted-foreground flex h-auto items-center justify-center gap-2 text-sm font-medium select-none [&amp;_svg:not([class*='size-'])]:size-4 group-data-[disabled=true]/input-group:opacity-50 order-last pr-3">
+<button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 border border-transparent bg-clip-padding font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground h-6 gap-1 px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&amp;_svg:not([class*='size-'])]:size-3 shadow-none flex rounded-[calc(var(--radius)-5px)] [&amp;&gt;svg:not([class*='size-'])]:size-3.5 has-[&gt;svg]:px-2" type="button" title="Copy to clipboard"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.12 2.12 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.12 2.12 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.12 2.12 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.12 2.12 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.12 2.12 0 0 0 1.597-1.16z"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <div data-slot="input-group" class="group/input-group border-input dark:bg-input/30 relative flex w-full items-center rounded-md border shadow-xs transition-[color,box-shadow] outline-none h-9 min-w-0 has-[&gt;textarea]:h-auto has-[&gt;[data-align=inline-start]]:[&amp;&gt;input]:pl-2 has-[&gt;[data-align=inline-end]]:[&amp;&gt;input]:pr-2 has-[&gt;[data-align=block-start]]:h-auto has-[&gt;[data-align=block-start]]:flex-col has-[&gt;[data-align=block-start]]:[&amp;&gt;input]:pb-3 has-[&gt;[data-align=block-end]]:h-auto has-[&gt;[data-align=block-end]]:flex-col has-[&gt;[data-align=block-end]]:[&amp;&gt;input]:pt-3 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot=input-group-control]:focus-visible]:ring-[3px] has-[[data-slot][aria-invalid=true]]:ring-destructive/20 has-[[data-slot][aria-invalid=true]]:border-destructive dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40">
+<input data-slot="input-group-control" class="flex-1 h-full w-full rounded-none border-0 bg-transparent px-3 py-2 text-sm shadow-none file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50" placeholder="Type to search...">
+
+        <div data-slot="input-group-addon" data-align="inline-end" role="group" class="text-muted-foreground flex h-auto items-center justify-center gap-2 text-sm font-medium select-none [&amp;_svg:not([class*='size-'])]:size-4 group-data-[disabled=true]/input-group:opacity-50 order-last pr-3">
+<button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 border border-transparent bg-clip-padding font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground h-6 gap-1 px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&amp;_svg:not([class*='size-'])]:size-3 shadow-none flex rounded-[calc(var(--radius)-5px)] [&amp;&gt;svg:not([class*='size-'])]:size-3.5 has-[&gt;svg]:px-2" type="button">Search
+            </button>
+        </div>
+    </div>
+</div>

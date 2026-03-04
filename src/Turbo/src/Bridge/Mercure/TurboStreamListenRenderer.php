@@ -19,6 +19,7 @@ use Symfony\UX\Turbo\Twig\TurboStreamListenRendererWithOptionsInterface;
 use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Renders the attributes to load the "mercure-turbo-stream" controller.
@@ -64,7 +65,11 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererWithOp
 
         if (isset($eventSourceOptions)) {
             try {
-                $mercure = $this->twig->getExtension(MercureExtension::class);
+                // Mercure >= 0.7: https://github.com/symfony/mercure/pull/123
+                /* @phpstan-ignore-next-line function.alreadyNarrowedType */
+                $mercure = is_subclass_of(MercureExtension::class, AbstractExtension::class)
+                    ? $this->twig->getExtension(MercureExtension::class) /* @phpstan-ignore argument.templateType */
+                    : $this->twig->getRuntime(MercureExtension::class);
 
                 if ($eventSourceOptions['withCredentials'] ?? false) {
                     $eventSourceOptions['subscribe'] ??= $topics;

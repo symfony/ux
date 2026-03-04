@@ -1,0 +1,33 @@
+<div class="grid w-full max-w-sm gap-6" xmlns:twig="http://www.w3.org/1999/html">
+    <twig:InputGroup>
+        <twig:InputGroup:Input placeholder="https://twitter.com/symfony" readonly />
+        <twig:InputGroup:Addon align="inline-end">
+            <twig:InputGroup:Button title="Copy to clipboard">
+                <twig:ux:Icon name="lucide:copy" />
+            </twig:InputGroup:Button>
+        </twig:InputGroup:Addon>
+    </twig:InputGroup>
+
+    <twig:InputGroup class="[--radius:9999px]">
+        <twig:InputGroup:Input placeholder="https://" />
+        <twig:InputGroup:Addon>
+            <twig:InputGroup:Button variant="secondary" size="icon-xs">
+                <twig:ux:Icon name="lucide:info" />
+            </twig:InputGroup:Button>
+        </twig:InputGroup:Addon>
+        <twig:InputGroup:Addon align="inline-end">
+            <twig:InputGroup:Button title="Copy to clipboard">
+                <twig:ux:Icon name="lucide:star" />
+            </twig:InputGroup:Button>
+        </twig:InputGroup:Addon>
+    </twig:InputGroup>
+
+    <twig:InputGroup>
+        <twig:InputGroup:Input placeholder="Type to search..." />
+        <twig:InputGroup:Addon align="inline-end">
+            <twig:InputGroup:Button variant="secondary">
+                Search
+            </twig:InputGroup:Button>
+        </twig:InputGroup:Addon>
+    </twig:InputGroup>
+</div>

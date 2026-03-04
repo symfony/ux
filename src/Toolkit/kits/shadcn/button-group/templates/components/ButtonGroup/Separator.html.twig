@@ -1,0 +1,9 @@
+{# @prop orientation 'horizontal'|'vertical' The separator orientation. Defaults to `vertical` #}
+{# @block content Optional custom separator content #}
+{%- props orientation = 'vertical' -%}
+<twig:Separator
+    orientation="{{ orientation }}"
+    data-slot="button-group-separator"
+    class="bg-input relative m-0! self-stretch {{ orientation == 'vertical' ? 'h-auto' }} {{ attributes.render('class')|tailwind_merge }}"
+    {{ ...attributes }}
+/>

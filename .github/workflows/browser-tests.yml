@@ -9,14 +9,12 @@ on:
         paths-ignore:
             - 'src/*/doc/**'
             - 'src/**/*.md'
-            - 'ux.symfony.com/**'
             - '.github/workflows/app-tests.yaml'
             - '.github/workflows/unit-tests.yaml'
     pull_request:
         paths-ignore:
             - 'src/*/doc/**'
             - 'src/**/*.md'
-            - 'ux.symfony.com/**'
             - '.github/workflows/app-tests.yaml'
             - '.github/workflows/unit-tests.yaml'
 
@@ -34,16 +32,16 @@ jobs:
         env:
             SYMFONY_REQUIRE: '${{ matrix.symfony }}.*'
         steps:
-            -   uses: actions/checkout@v4
+            - uses: actions/checkout@v4
 
-            -   run: npm i -g corepack && corepack enable
-            -   uses: actions/setup-node@v4
-                with:
-                    node-version-file: '.nvmrc'
-                    cache: 'pnpm'
-                    cache-dependency-path: |
-                        pnpm-lock.yaml
-                        package.json
+            - run: npm i -g corepack && corepack enable
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: '.nvmrc'
+                  cache: 'pnpm'
+                  cache-dependency-path: |
+                      pnpm-lock.yaml
+                      package.json
 
             - name: Install root JS dependencies
               run: pnpm install --frozen-lockfile
@@ -73,8 +71,6 @@ jobs:
 
             - name: Configure E2E app
               run: |
-                  echo 'APP_ENV=prod' >> .env.local
-                  echo 'APP_DEBUG=0' >> .env.local
                   echo 'APP_SECRET=df4c071596e64cc75a349456f2887ae2419ae650' >> .env.local
               working-directory: apps/e2e
 
@@ -83,11 +79,12 @@ jobs:
               with:
                   working-directory: apps/e2e
                   dependency-versions: highest
-                  composer-options: --no-dev
                   custom-cache-suffix: symfony-${{ matrix.symfony }}
 
             - name: Prepare E2E app
               run: |
+                  echo 'APP_ENV=prod' >> .env.local
+                  echo 'APP_DEBUG=0' >> .env.local
                   symfony composer dump-autoload --classmap-authoritative --no-dev
                   symfony composer dump-env
                   symfony console asset-map:compile

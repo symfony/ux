@@ -1,0 +1,47 @@
+<div class="flex w-full max-w-lg flex-col gap-6">
+    <twig:Item variant="outline">
+        <twig:Item:Media variant="icon">
+            <twig:Avatar class="size-10">
+                <twig:Avatar:Image src="https://github.com/evilrabbit.png" alt="ER" />
+            </twig:Avatar>
+        </twig:Item:Media>
+        <twig:Item:Content>
+            <twig:Item:Title>Evil Rabbit</twig:Item:Title>
+            <twig:Item:Description>
+                Last seen 5 months ago
+            </twig:Item:Description>
+        </twig:Item:Content>
+        <twig:Item:Actions>
+            <twig:Button size="icon-sm" variant="outline" class="rounded-full" aria-label="Invite">
+                <twig:ux:icon name="lucide:plus" class="size-4" />
+            </twig:Button>
+        </twig:Item:Actions>
+    </twig:Item>
+
+    <twig:Item variant="outline">
+        <twig:Item:Media>
+            <div class="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
+                <twig:Avatar class="hidden sm:flex">
+                    <twig:Avatar:Fallback class="bg-red-200">A</twig:Avatar:Fallback>
+                </twig:Avatar>
+                <twig:Avatar class="hidden sm:flex">
+                    <twig:Avatar:Fallback class="bg-red-300">B</twig:Avatar:Fallback>
+                </twig:Avatar>
+                <twig:Avatar class="hidden sm:flex">
+                    <twig:Avatar:Fallback class="bg-red-400">C</twig:Avatar:Fallback>
+                </twig:Avatar>
+            </div>
+        </twig:Item:Media>
+        <twig:Item:Content>
+            <twig:Item:Title>No Team Members</twig:Item:Title>
+            <twig:Item:Description>
+                Invite your team to collaborate on this project.
+            </twig:Item:Description>
+        </twig:Item:Content>
+        <twig:Item:Actions>
+            <twig:Button size="sm" variant="outline">
+                Invite
+            </twig:Button>
+        </twig:Item:Actions>
+    </twig:Item>
+</div>

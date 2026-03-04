@@ -202,10 +202,10 @@ describe('buildRequest', () => {
     // Helper method for FileList mocking
     const getFileList = (length = 1) => {
         const blob = new Blob([''], { type: 'text/html' });
-        // @ts-ignore This is a mock and those are needed to mock a File object
+        // @ts-expect-error This is a mock and those are needed to mock a File object
         // biome-ignore lint/complexity/useLiteralKeys: This is a mock and those are needed to mock a File object
         blob['lastModifiedDate'] = '';
-        // @ts-ignore This is a mock and those are needed to mock a File object
+        // @ts-expect-error This is a mock and those are needed to mock a File object
         // biome-ignore lint/complexity/useLiteralKeys: This is a mock and those are needed to mock a File object
         blob['name'] = 'filename';
         const file = <File>blob;
@@ -269,5 +269,26 @@ describe('buildRequest', () => {
         expect(body.getAll('file[]').length).toEqual(3);
         expect(body.get('otherFile')).toBeInstanceOf(File);
         expect(body.getAll('otherFile').length).toEqual(1);
+    });
+
+    it('sets fetchCredentials to "include" when specified', () => {
+        const builder = new RequestBuilder('/_components', 'get', 'include');
+        const { fetchOptions } = builder.buildRequest({ firstName: 'Ryan' }, [], { firstName: 'Kevin' }, {}, {}, {});
+
+        expect(fetchOptions.credentials).toEqual('include');
+    });
+
+    it('defaults fetchCredentials to "same-origin" when not specified', () => {
+        const builder = new RequestBuilder('/_components', 'get');
+        const { fetchOptions } = builder.buildRequest({ firstName: 'Ryan' }, [], { firstName: 'Kevin' }, {}, {}, {});
+
+        expect(fetchOptions.credentials).toEqual('same-origin');
+    });
+
+    it('sets fetchCredentials to "omit" when specified', () => {
+        const builder = new RequestBuilder('/_components', 'post', 'omit');
+        const { fetchOptions } = builder.buildRequest({ firstName: 'Ryan' }, [], { firstName: 'Kevin' }, {}, {}, {});
+
+        expect(fetchOptions.credentials).toEqual('omit');
     });
 });

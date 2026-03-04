@@ -48,7 +48,7 @@ export default class extends Controller {
     declare readonly tomSelectOptionsValue: object;
     declare readonly hasPreloadValue: boolean;
     declare readonly preloadValue: string;
-    tomSelect: TomSelect;
+    tomSelect: TomSelect | undefined;
 
     private mutationObserver: MutationObserver;
     private isObserving = false;
@@ -100,6 +100,10 @@ export default class extends Controller {
     disconnect() {
         this.stopMutationObserver();
 
+        if (!this.tomSelect) {
+            return;
+        }
+
         // TomSelect.destroy() resets the element to its original HTML. This
         // causes the selected value to be lost. We store it.
         let currentSelectedValues: string[] = [];
@@ -116,6 +120,7 @@ export default class extends Controller {
         }
 
         this.tomSelect.destroy();
+        this.tomSelect = undefined;
 
         if (this.selectElement) {
             if (this.selectElement.multiple) {
@@ -165,11 +170,15 @@ export default class extends Controller {
             plugins,
             // clear the text input after selecting a value
             onItemAdd: () => {
-                this.tomSelect.setTextboxValue('');
+                this.tomSelect?.setTextboxValue('');
             },
             closeAfterSelect: true,
             // fix positioning (in the dropdown) of options added through addOption()
             onOptionAdd: (value: string, data: { [key: string]: any }) => {
+                if (!this.tomSelect) {
+                    return;
+                }
+
                 let parentElement = this.tomSelect.input as Element;
                 let optgroupData = null;
 
@@ -234,13 +243,14 @@ export default class extends Controller {
         const config = this.#mergeConfigs(commonConfig, {
             maxOptions: this.getMaxOptions(),
             score: (search: string) => {
-                const scoringFunction = this.tomSelect.getScoreFunction(search);
+                const scoringFunction = this.tomSelect?.getScoreFunction(search);
                 return (item: any) => {
                     // strip HTML tags from each option's searchable text
-                    return scoringFunction({ ...item, text: this.#stripTags(item[labelField]) });
+                    return scoringFunction?.({ ...item, text: this.#stripTags(item[labelField]) });
                 };
             },
             render: {
+                ...commonConfig.render,
                 item: (item: any) => `<div>${item[labelField]}</div>`,
                 option: (item: any) => `<div>${item[labelField]}</div>`,
             },
@@ -297,7 +307,7 @@ export default class extends Controller {
             maxOptions: this.getMaxOptions(true),
             optgroupField: 'group_by',
             // avoid extra filtering after results are returned
-            score: (search: string) => (item: any) => 1,
+            score: (_search: string) => (_item: any) => 1,
             render: {
                 option: (item: any) => `<div>${item[labelField]}</div>`,
                 item: (item: any) => `<div>${item[labelField]}</div>`,
@@ -449,6 +459,10 @@ export default class extends Controller {
     }
 
     private changeTomSelectDisabledState(isDisabled: boolean): void {
+        if (!this.tomSelect) {
+            return;
+        }
+
         this.stopMutationObserver();
         if (isDisabled) {
             this.tomSelect.disable();

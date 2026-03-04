@@ -12,11 +12,6 @@ The `ICU Message Format`_ is also supported.
 Installation
 ------------
 
-.. note::
-
-    This package works best with WebpackEncore. To use it with AssetMapper, see
-    :ref:`Using with AssetMapper <using-with-asset-mapper>`.
-
 .. caution::
 
     Before you start, make sure you have `StimulusBundle configured in your app`_.
@@ -26,18 +21,6 @@ Install the bundle using Composer and Symfony Flex:
 .. code-block:: terminal
 
     $ composer require symfony/ux-translator
-
-If you're using WebpackEncore, install your assets and restart Encore (not
-needed if you're using AssetMapper):
-
-.. code-block:: terminal
-
-    $ npm install --force
-    $ npm run watch
-
-.. note::
-
-    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-translator npm package`_
 
 After installing the bundle, the following file should be created, thanks to the Symfony Flex recipe:
 
@@ -54,13 +37,43 @@ After installing the bundle, the following file should be created, thanks to the
      * If you use TypeScript, you can rename this file to "translator.ts" to take advantage of types checking.
      */
 
-    import { trans, getLocale, setLocale, setLocaleFallbacks } from '@symfony/ux-translator';
-    import { localeFallbacks } from '../var/translations/configuration';
+    import { createTranslator } from '@symfony/ux-translator';
+    import { messages, localeFallbacks } from '../var/translations/index.js';
 
-    setLocaleFallbacks(localeFallbacks);
+    const translator = createTranslator({
+        messages,
+        localeFallbacks,
+    });
 
-    export { trans }
-    export * from '../var/translations';
+    // Allow you to use `import { trans } from './translator';` in your assets
+    export const { trans } = translator;
+
+Using with WebpackEncore
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you're using WebpackEncore, install your assets and restart Encore (not
+needed if you're using AssetMapper):
+
+.. code-block:: terminal
+
+    $ npm install --force
+    $ npm run watch
+
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-translator npm package`_
+
+Using with AssetMapper
+~~~~~~~~~~~~~~~~~~~~~~
+
+Using this library with AssetMapper is possible.
+
+When installing with AssetMapper, Flex will add a new item to your ``importmap.php``
+file::
+
+    '@symfony/ux-translator' => [
+        'path' => './vendor/symfony/ux-translator/assets/dist/translator_controller.js',
+    ],
 
 Usage
 -----
@@ -68,8 +81,8 @@ Usage
 When warming up the Symfony cache, your translations will be dumped as JavaScript into the ``var/translations/`` directory.
 For a better developer experience, TypeScript types definitions are also generated aside those JavaScript files.
 
-Then, you will be able to import those JavaScript translations in your assets.
-Don't worry about your final bundle size, only the translations you use will be included in your final bundle, thanks to the `tree shaking <https://webpack.js.org/guides/tree-shaking/>`_.
+Then, you will be able to import the ``trans()`` function in your assets and use translation keys as simple strings,
+exactly as you would in your Symfony PHP code.
 
 Configuring the dumped translations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -80,21 +93,49 @@ including or excluding translation domains in your ``config/packages/ux_translat
 .. code-block:: yaml
 
     ux_translator:
-            domains: ~    # Include all the domains
+        domains: ~    # Include all the domains
 
-            domains: foo  # Include only domain 'foo'
-            domains: '!foo' # Include all domains, except 'foo'
+        domains: foo  # Include only domain 'foo'
+        domains: '!foo' # Include all domains, except 'foo'
 
-            domains: [foo, bar]   # Include only domains 'foo' and 'bar'
-            domains: ['!foo', '!bar'] # Include all domains, except 'foo' and 'bar'
+        domains: [foo, bar]   # Include only domains 'foo' and 'bar'
+        domains: ['!foo', '!bar'] # Include all domains, except 'foo' and 'bar'
 
+You can also filter dumped translations by translation key patterns using wildcards:
+
+.. code-block:: yaml
+
+    ux_translator:
+        keys_patterns: ['app.*', 'user.*']  # Include only keys starting with 'app.' or 'user.'
+        keys_patterns: ['!*.internal', '!debug.*']  # Exclude keys ending with '.internal' or starting with 'debug.'
+        keys_patterns: ['app.*', '!app.internal.*']  # Include 'app.*' but exclude 'app.internal.*'
+
+The wildcard ``*`` matches any characters. You can prefix a pattern with ``!`` to exclude keys matching that pattern.
+
+Disabling TypeScript types dump
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, TypeScript types definitions are generated alongside the dumped JavaScript translations.
+This provides autocompletion and type-safety when using the ``trans()`` function in your assets.
+
+Even if they are useful when developing, dumping these TypeScript types is useless in production if you use the
+AssetMapper, because these files will never be used.
+
+You can disable the TypeScript types dump by adding the following configuration:
+
+.. code-block:: yaml
+
+    when@prod:
+        ux_translator:
+            dump_typescript: false
 
 Configuring the default locale
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By default, the default locale is ``en`` (English) that you can configure through many ways (in order of priority):
 
-#. With ``setLocale('de')`` or ``setLocale('de_AT')`` from ``@symfony/ux-translator`` package
+#. By passing the locale directly to the ``createTranslator()`` function
+#. With ``setLocale('de')`` or ``setLocale('de_AT')`` from your ``assets/translator.js`` file
 #. Or with ``<html data-symfony-ux-translator-locale="{{ app.request.locale }}">`` attribute (e.g., ``de_AT`` or ``de`` using Symfony locale format)
 #. Or with ``<html lang="{{ app.request.locale|replace({ '_': '-' }) }}">`` attribute (e.g., ``de-AT`` or ``de`` following the `W3C specification on language codes`_)
 
@@ -103,86 +144,71 @@ Detecting missing translations
 
 By default, the translator will return the translation key if the translation is missing.
 
-You can change this behavior by calling ``throwWhenNotFound(true)``:
+You can change this behavior by calling ``setThrowWhenNotFound(true)``:
 
 .. code-block:: diff
 
       // assets/translator.js
 
-    - import { trans, getLocale, setLocale, setLocaleFallbacks } from '@symfony/ux-translator';
-    + import { trans, getLocale, setLocale, setLocaleFallbacks, throwWhenNotFound } from '@symfony/ux-translator';
-      import { localeFallbacks } from '../var/translations/configuration';
+      import { createTranslator } from '@symfony/ux-translator';
+      import { messages, localeFallbacks } from '../var/translations/index.js';
 
-      setLocaleFallbacks(localeFallbacks);
-    + throwWhenNotFound(true)
+      const translator = createTranslator({
+          messages,
+          localeFallbacks,
+    +     throwWhenNotFound: true, // either when creating the translator
+      });
 
-      export { trans }
-      export * from '../var/translations';
+    + // Or later in your code
+      export const { trans, setThrowWhenNotFound } = translator;
 
 Importing and using translations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you use the Symfony Flex recipe, you can import the ``trans()`` function and your translations in your assets from the file ``assets/translator.js``.
+If you use the Symfony Flex recipe, you can import the ``trans()`` function from the file ``assets/translator.js``.
 
-Translations are available as named exports, by using the translation's id transformed in uppercase snake-case (e.g.: ``my.translation`` becomes ``MY_TRANSLATION``),
-so you can import them like this:
+You can then use translation keys as simple strings, exactly as you would in your Symfony PHP code:
 
 .. code-block:: javascript
 
     // assets/my_file.js
 
-    import {
-        trans,
-        TRANSLATION_SIMPLE,
-        TRANSLATION_WITH_PARAMETERS,
-        TRANSLATION_MULTI_DOMAINS,
-        TRANSLATION_MULTI_LOCALES,
-    } from './translator';
+    import { trans } from './translator';
 
     // No parameters, uses the default domain ("messages") and the default locale
-    trans(TRANSLATION_SIMPLE);
+    trans('translation.simple');
 
     // Two parameters "count" and "foo", uses the default domain ("messages") and the default locale
-    trans(TRANSLATION_WITH_PARAMETERS, { count: 123, foo: 'bar' });
+    trans('translation.with.parameters', { count: 123, foo: 'bar' });
 
     // No parameters, uses the default domain ("messages") and the default locale
-    trans(TRANSLATION_MULTI_DOMAINS);
+    trans('translation.multi.domains');
     // Same as above, but uses the "domain2" domain
-    trans(TRANSLATION_MULTI_DOMAINS, {}, 'domain2');
+    trans('translation.multi.domains', {}, 'domain2');
     // Same as above, but uses the "domain3" domain
-    trans(TRANSLATION_MULTI_DOMAINS, {}, 'domain3');
+    trans('translation.multi.domains', {}, 'domain3');
 
     // No parameters, uses the default domain ("messages") and the default locale
-    trans(TRANSLATION_MULTI_LOCALES);
+    trans('translation.multi.locales');
     // Same as above, but uses the "fr" locale
-    trans(TRANSLATION_MULTI_LOCALES, {}, 'messages', 'fr');
+    trans('translation.multi.locales', {}, 'messages', 'fr');
     // Same as above, but uses the "it" locale
-    trans(TRANSLATION_MULTI_LOCALES, {}, 'messages', 'it');
+    trans('translation.multi.locales', {}, 'messages', 'it');
 
-.. _using-with-asset-mapper:
+You will get autocompletion and type-safety for translation keys, parameters, domains, and locales.
 
-Using with AssetMapper
-----------------------
+Q&A
+---
 
-Using this library with AssetMapper is possible, but is currently experimental
-and may not be ready yet for production.
+What about bundle size?
+~~~~~~~~~~~~~~~~~~~~~~~
 
-When installing with AssetMapper, Flex will add a few new items to your ``importmap.php``
-file. 2 of the new items are::
+All your translations (extracted from the configured domains) are included in the generated ``var/translations/index.js`` file,
+which means they will be included in your final JavaScript bundle).
 
-    '@app/translations' => [
-        'path' => 'var/translations/index.js',
-    ],
-    '@app/translations/configuration' => [
-        'path' => 'var/translations/configuration.js',
-    ],
-
-These are then imported in your ``assets/translator.js`` file. This setup is
-very similar to working with WebpackEncore. However, the ``var/translations/index.js``
-file contains *every* translation in your app, which is not ideal for production
-and may even leak translations only meant for admin areas. Encore solves this via
-tree-shaking, but the AssetMapper component does not. There is not, yet, a way to
-solve this properly with the AssetMapper component.
+However, modern build tools, caching strategies, and compression techniques (Brotli, gzip)
+make this negligible in 2025. You can use the ``keys_patterns`` configuration option
+to filter dumped translations by pattern if you need to further reduce bundle size.
 
 Backward Compatibility promise
 ------------------------------

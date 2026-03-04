@@ -1,0 +1,63 @@
+<!--
+- Kit: Shadcn UI
+- Component: Dialog
+- Code:
+```twig
+<twig:Dialog id="delete_account">
+    <twig:Dialog:Trigger>
+        <twig:Button variant="outline" {{ ...trigger_attrs }}>Open Dialog</twig:Button>
+    </twig:Dialog:Trigger>
+    <twig:Dialog:Content class="sm:max-w-[425px]">
+        <twig:Dialog:Header>
+            <twig:Dialog:Title>Edit profile</twig:Dialog:Title>
+            <twig:Dialog:Description>
+                Make changes to your profile here. Click save when you&apos;re done.
+            </twig:Dialog:Description>
+        </twig:Dialog:Header>
+        <div class="grid gap-4">
+            <div class="grid gap-3">
+                <twig:Label for="name">Name</twig:Label>
+                <twig:Input id="name" name="name" value="Pedro Duarte" />
+            </div>
+            <div class="grid gap-3">
+                <twig:Label for="username">Username</twig:Label>
+                <twig:Input id="username" name="username" value="@peduarte" />
+            </div>
+        </div>
+        <twig:Dialog:Footer>
+            <twig:Dialog:Close>
+                <twig:Button variant="outline" {{ ...close_attrs }}>Cancel</twig:Button>
+            </twig:Dialog:Close>
+            <twig:Button type="submit">Save changes</twig:Button>
+        </twig:Dialog:Footer>
+    </twig:Dialog:Content>
+</twig:Dialog>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-controller="dialog" aria-labelledby="dialog-delete_account-title" aria-describedby="dialog-delete_account-description">
+    <button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] [&amp;_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2" data-action="click-&gt;dialog#open" data-dialog-target="trigger" aria-haspopup="dialog">Open Dialog</button>
+        <dialog id="dialog-delete_account" class="text-foreground bg-background fixed top-[50%] left-[50%] z-50 max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] scale-95 gap-4 rounded-lg border p-6 opacity-0 shadow-lg transition-all transition-discrete duration-200 backdrop:transition-discrete backdrop:duration-150 open:grid open:scale-100 open:opacity-100 open:backdrop:bg-black/50 starting:open:scale-95 starting:open:opacity-0 sm:max-w-[425px]" data-dialog-target="dialog" data-action="keydown.esc-&gt;dialog#close:prevent click-&gt;dialog#closeOnClickOutside"><header class="flex flex-col gap-2 text-center sm:text-left"><h2 id="dialog-delete_account-title" class="text-lg leading-none font-semibold">Edit profile</h2>
+            <p id="dialog-delete_account-description" class="text-muted-foreground text-sm">Make changes to your profile here. Click save when you're done.
+            </p>
+        </header>
+        <div class="grid gap-4">
+            <div class="grid gap-3">
+                <label class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50" for="name">Name</label>
+                <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="name" name="name" value="Pedro Duarte">
+
+            </div>
+            <div class="grid gap-3">
+                <label class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50" for="username">Username</label>
+                <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="username" name="username" value="@peduarte">
+
+            </div>
+        </div>
+        <footer class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"><button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] [&amp;_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2" data-action="click-&gt;dialog#close">Cancel</button>
+                        <button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] [&amp;_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none bg-primary text-primary-foreground [a]:hover:bg-primary/80 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2" type="submit">Save changes</button>
+        </footer>
+            <button type="button" class="ring-offset-background focus:ring-ring absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4" data-action="click-&gt;dialog#close">
+            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"></path></svg>
+            <span class="sr-only">Close</span>
+        </button>
+    </dialog>
+</div>

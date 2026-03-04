@@ -1,0 +1,31 @@
+<!--
+- Kit: Shadcn UI
+- Component: Card
+- Code:
+```twig
+<twig:Card>
+    <twig:Card:Header>
+        <twig:Card:Title>Card Title</twig:Card:Title>
+        <twig:Card:Description>Card Description</twig:Card:Description>
+    </twig:Card:Header>
+    <twig:Card:Content>
+        <p>Card Content</p>
+    </twig:Card:Content>
+    <twig:Card:Footer>
+        <p>Card Footer</p>
+    </twig:Card:Footer>
+</twig:Card>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+<div class="flex flex-col space-y-1.5 p-6">
+<div class="leading-none font-semibold">Card Title</div>
+        <div class="text-muted-foreground text-sm">Card Description</div>
+    </div>
+    <div class="p-6 pt-0">
+<p>Card Content</p>
+    </div>
+    <div class="flex items-center p-6 pt-0">
+<p>Card Footer</p>
+    </div>
+</div>

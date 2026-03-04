@@ -59,7 +59,7 @@ final class RecipeManifest
 
         $type = $data['type'] ?? throw new \InvalidArgumentException('Property "type" is required.');
         if (null === $type = RecipeType::tryFrom($type)) {
-            throw new \InvalidArgumentException(\sprintf('The recipe type "%s" is not supported.', $data['type']));
+            throw new \InvalidArgumentException(\sprintf('The recipe type "%s" is not supported, valid types are "%s".', $data['type'], implode('", "', array_map(static fn (RecipeType $type) => $type->value, RecipeType::cases()))));
         }
 
         $dependencies = [];
@@ -94,18 +94,19 @@ final class RecipeManifest
                     throw new \InvalidArgumentException(\sprintf('The dependency #%d of type "npm" must be a non-empty string.', $i));
                 }
 
-                // format: "package@version" or "@scope/package@version"
-                if (str_contains($package, '@')) {
-                    if (substr_count($package, '@') > 1) {
-                        $pos = strrpos($package, '@');
-                        $name = substr($package, 0, $pos);
-                        $version = substr($package, $pos + 1);
-                    } else {
-                        [$name, $version] = explode('@', $package, 2);
-                    }
+                // format: "package@version", "@scope/package", "@scope/package@version"
+                $name = $package;
+                $version = null;
+                $versionPos = strrpos($package, '@');
+                if (false !== $versionPos && 0 !== $versionPos) {
+                    $name = substr($package, 0, $versionPos);
+                    $version = substr($package, $versionPos + 1);
+                }
+
+                if (null !== $version) {
                     $dependencies[] = new NpmPackageDependency($name, new ConstraintVersion($version));
                 } else {
-                    $dependencies[] = new NpmPackageDependency($package);
+                    $dependencies[] = new NpmPackageDependency($name);
                 }
             }
 

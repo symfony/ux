@@ -41,8 +41,6 @@ Enjoy your new component!
 .. image:: images/alert-example.png
     :alt: Example of the Alert Component
 
-    Example of the Alert Component
-
 This brings the familiar "component" system from client-side frameworks
 into Symfony. Combine this with `Live Components`_, to create
 an interactive frontend with automatic, Ajax-powered rendering.
@@ -678,6 +676,43 @@ the subdirectory:
     {# renders as: #}
     <button class="primary">Click Me!</button>
 
+If your anonymous component lives in a directory with the same name, you can
+name the component file ``index.html.twig`` to avoid repetition:
+
+.. code-block:: html+twig
+
+    {# templates/components/Menu/index.html.twig #}
+    <nav {{ attributes.defaults({class: 'menu'}) }}>
+        <ul>
+            {% block content %}{% endblock %}
+        </ul>
+    </nav>
+
+.. code-block:: html+twig
+
+    {# templates/components/Menu/Item.html.twig #}
+    {% props href, label %}
+    <li {{ attributes.defaults({class: 'menu__item'}) }}>
+        <a href="{{ href }}">{% block content %}{{ label }}{% endblock %}</a>
+    </li>
+
+.. code-block:: html+twig
+
+    {# index.html.twig #}
+    ...
+    <twig:Menu>
+        <twig:Menu:Item href="/">Home</twig:Menu:Item>
+        <twig:Menu:Item href="/about">About</twig:Menu:Item>
+    </twig:Menu>
+
+    {# renders as: #}
+    <nav class="menu">
+        <ul>
+            <li class="menu__item"><a href="/">Home</a></li>
+            <li class="menu__item"><a href="/about">About</a></li>
+        </ul>
+    </nav>
+
 Like normal, you can pass extra attributes that will be rendered on the element:
 
 .. code-block:: html+twig
@@ -702,12 +737,14 @@ You can also pass a variable (prop) into your template:
     </div>
 
 To tell the system that ``icon`` and ``type`` are props and not attributes, use the
-``{% props %}`` tag at the top of your template.
+``{% props %}`` tag at the top of your template. Props are required by default, but
+it is possible to set a default value with ``=``:
 
 .. code-block:: html+twig
 
     {# templates/components/Button.html.twig #}
-    {% props icon = null, type = 'primary' %}
+    {# prop "icon" is required, but prop "type" has a default value to "primary" #}
+    {% props icon, type = 'primary' %}
 
     <button {{ attributes.defaults({class: 'btn btn-'~type}) }}>
         {% block content %}{% endblock %}
@@ -715,6 +752,19 @@ To tell the system that ``icon`` and ``type`` are props and not attributes, use 
             <span class="fa-solid fa-{{ icon }}"></span>
         {% endif %}
     </button>
+
+Examples of usage:
+
+.. code-block:: html+twig
+
+    {# property "icon" is missing, an exception is thrown #}
+    <twig:Button>Share</twig:Button>
+
+    {# property "icon" is passed, property "type" use its default value "primary" #}
+    <twig:Button icon="share">Share</twig:Button>
+
+    {# both properties "icon" and "type" are passed #}
+    <twig:Button icon="share" type="secondary">Share</twig:Button>
 
 .. _embedded-components:
 
@@ -1357,6 +1407,61 @@ If no variants match, you can define a default set of classes to apply:
         ...
     </div>
 
+Higher-Order Components (Component Wrappers)
+--------------------------------------------
+
+You can create a component that wraps another component to add additional
+markup, behavior, or structure. This is useful when you want to extend a base
+component without modifying it.
+
+This type of component is sometimes called a "Higher-Order Component" (HOC)
+or a "Component Wrapper".
+
+For example, create a base ``Modal`` component:
+
+.. code-block:: html+twig
+
+    {# templates/components/Modal.html.twig #}
+    <div{{ attributes.defaults({class: 'modal'}) }}>
+        <div class="modal-content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+Then create a ``Modal:Confirm`` component that wraps it and adds confirmation buttons:
+
+.. code-block:: html+twig
+
+    {# templates/components/Modal/Confirm.html.twig #}
+    {% props confirmText = 'Confirm', cancelText = 'Cancel' %}
+
+    <twig:Modal {{ ...attributes.defaults({class: 'modal-confirm'}) }}>
+        {{ block(outerBlocks.content) }}
+
+        <div class="modal-actions">
+            <button type="button" class="btn-secondary">{{ cancelText }}</button>
+            <button type="submit" class="btn-primary">{{ confirmText }}</button>
+        </div>
+    </twig:Modal>
+
+Usage:
+
+.. code-block:: html+twig
+
+    <twig:Modal:Confirm>
+        Are you sure you want to delete this item?
+    </twig:Modal:Confirm>
+
+    <twig:Modal:Confirm confirmText="Yes, delete it" data-controller="modal">
+        This action cannot be undone.
+    </twig:Modal:Confirm>
+
+The key parts are:
+
+- **Spread operator** ``{{ ...attributes }}`` - passes attributes to the wrapped component
+- **``outerBlocks``** - forwards content blocks from the wrapper to the wrapped component
+- The wrapper can add its own props (``confirmText``, ``cancelText``) and markup
+
 Test Helpers
 ------------
 
@@ -1745,6 +1850,105 @@ by a colon, and then the component path Button.
 The component must be located in the bundle's ``templates/components/`` directory. For
 example, the component referenced as ``<twig:Acme:Button>`` should have its template
 file at ``templates/components/Button.html.twig`` within the Acme bundle.
+
+Advanced Usage & Edge Cases
+---------------------------
+
+This section covers advanced scenarios and potential pitfalls you might encounter
+when working with TwigComponent.
+
+Readonly Components and Immutability
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+While the ``readonly`` modifier in PHP is generally a best practice for immutability,
+it can cause unexpected issues with TwigComponent's property assignment system.
+
+When you mark a component class or its properties as ``readonly``, the component
+system may not be able to set props passed during rendering. This is because
+TwigComponent sets property values **after** instantiation, but ``readonly``
+properties can only be set once during object construction.
+
+Consider this example that **will cause an error**::
+
+    // src/Twig/Components/UserProfile.php
+    namespace App\Twig\Components;
+
+    use App\Entity\User;
+    use App\Service\UserService;
+    use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+    #[AsTwigComponent]
+    final readonly class UserProfile // ❌ readonly class
+    {
+        public User $user; // ❌ will cause "must not be accessed before initialization"
+
+        public function __construct(
+            private UserService $userService
+        ) {
+        }
+
+        public function getBio(): ?string
+        {
+            return $this->userService->getBio($this->user);
+        }
+    }
+
+.. code-block:: html+twig
+
+    {# This will throw an error about $user not being initialized #}
+    <twig:UserProfile :user="app.user" />
+
+The error occurs because:
+
+1. The component is instantiated with its constructor dependencies
+2. The ``user`` property is not yet initialized
+3. TwigComponent tries to set the ``user`` prop, but fails because the class is ``readonly``
+4. When the template tries to access ``$user``, it hasn't been initialized
+
+You have several options to work with readonly components:
+
+**Option 1: Make individual properties readonly instead of the entire class** (Recommended)::
+
+    #[AsTwigComponent]
+    final class UserProfile // ✅ class is not readonly
+    {
+        public User $user; // ✅ property can be set by the component system
+
+        public function __construct(
+            private readonly UserService $userService // ✅ only the service is readonly
+        ) {
+        }
+    }
+
+**Option 1: Use mount() to manually assign properties**::
+
+    #[AsTwigComponent]
+    final readonly class UserProfile
+    {
+        public User $user;
+
+        public function __construct(
+            private UserService $userService
+        ) {
+        }
+
+        public function mount(User $user): void
+        {
+            $this->user = $user;  // ✅ Manually assign during mount
+        }
+
+        public function getBio(): ?string
+        {
+            return $this->userService->getBio($this->user);
+        }
+    }
+
+.. note::
+
+    The ``readonly`` modifier works best on constructor-injected dependencies
+    (like services) rather than on props that are passed when rendering the component.
+    As a general rule: use ``readonly`` for your *services*, but not for your
+    *component class* or *public properties* that receive props.
 
 Debugging Components
 --------------------

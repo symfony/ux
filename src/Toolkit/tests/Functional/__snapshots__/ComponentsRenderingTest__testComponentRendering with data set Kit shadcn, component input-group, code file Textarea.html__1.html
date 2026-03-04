@@ -1,0 +1,54 @@
+<!--
+- Kit: Shadcn UI
+- Component: Input Group
+- Code:
+```twig
+<div class="grid w-full max-w-md gap-4">
+    <twig:InputGroup>
+        <twig:InputGroup:Textarea
+            id="textarea-code-32"
+            placeholder="console.log('Hello, world!');"
+            class="min-h-[200px]"
+        />
+        <twig:InputGroup:Addon align="block-end" class="border-t">
+            <twig:InputGroup:Text>Line 1, Column 1</twig:InputGroup:Text>
+            <twig:InputGroup:Button size="sm" class="ml-auto" variant="default">
+                Run <twig:ux:icon name="lucide:corner-down-left" />
+            </twig:InputGroup:Button>
+        </twig:InputGroup:Addon>
+        <twig:InputGroup:Addon align="block-start" class="border-b">
+            <twig:InputGroup:Text class="font-mono font-medium">
+                <twig:ux:icon name="ri:javascript-fill" />
+                script.js
+            </twig:InputGroup:Text>
+            <twig:InputGroup:Button class="ml-auto" size="icon-xs">
+                <twig:ux:icon name="lucide:refresh-ccw" />
+            </twig:InputGroup:Button>
+            <twig:InputGroup:Button variant="ghost" size="icon-xs">
+                <twig:ux:icon name="lucide:copy" />
+            </twig:InputGroup:Button>
+        </twig:InputGroup:Addon>
+    </twig:InputGroup>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="grid w-full max-w-md gap-4">
+    <div data-slot="input-group" class="group/input-group border-input dark:bg-input/30 relative flex w-full items-center rounded-md border shadow-xs transition-[color,box-shadow] outline-none h-9 min-w-0 has-[&gt;textarea]:h-auto has-[&gt;[data-align=inline-start]]:[&amp;&gt;input]:pl-2 has-[&gt;[data-align=inline-end]]:[&amp;&gt;input]:pr-2 has-[&gt;[data-align=block-start]]:h-auto has-[&gt;[data-align=block-start]]:flex-col has-[&gt;[data-align=block-start]]:[&amp;&gt;input]:pb-3 has-[&gt;[data-align=block-end]]:h-auto has-[&gt;[data-align=block-end]]:flex-col has-[&gt;[data-align=block-end]]:[&amp;&gt;input]:pt-3 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot=input-group-control]:focus-visible]:ring-[3px] has-[[data-slot][aria-invalid=true]]:ring-destructive/20 has-[[data-slot][aria-invalid=true]]:border-destructive dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40">
+<textarea data-slot="input-group-control" class="flex-1 w-full resize-none rounded-none border-0 bg-transparent px-3 py-3 text-base shadow-none placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm min-h-[200px]" id="textarea-code-32" placeholder="console.log('Hello, world!');"></textarea>
+
+        <div data-slot="input-group-addon" data-align="block-end" role="group" class="text-muted-foreground flex h-auto items-center gap-2 text-sm font-medium select-none [&amp;_svg:not([class*='size-'])]:size-4 group-data-[disabled=true]/input-group:opacity-50 order-last w-full justify-start px-3 pb-3 [&amp;.border-t]:pt-3 border-t">
+<span data-slot="input-group-text" class="text-muted-foreground flex items-center gap-2 text-sm [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=size-])]:size-4">Line 1, Column 1</span>
+            <button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 border border-transparent bg-clip-padding font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none bg-primary text-primary-foreground [a]:hover:bg-primary/80 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5 ml-auto" type="button">Run <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M20 4v7a4 4 0 0 1-4 4H4"></path><path d="m9 10l-5 5l5 5"></path></g></svg>
+            </button>
+        </div>
+        <div data-slot="input-group-addon" data-align="block-start" role="group" class="text-muted-foreground flex h-auto items-center gap-2 text-sm font-medium select-none [&amp;_svg:not([class*='size-'])]:size-4 group-data-[disabled=true]/input-group:opacity-50 order-first w-full justify-start px-3 pt-3 [&amp;.border-b]:pb-3 border-b">
+<span data-slot="input-group-text" class="text-muted-foreground flex items-center gap-2 text-sm [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=size-])]:size-4 font-mono font-medium"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="currentColor" d="M6 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3zm7.334 13.055q1.08.87 2.156.858q.66 0 1.012-.242a.75.75 0 0 0 .341-.66a.97.97 0 0 0-.34-.748q-.352-.307-1.332-.616q-1.177-.34-1.815-.88q-.626-.54-.638-1.507q0-.913.792-1.529q.77-.616 1.97-.616q1.672 0 2.683.814l-.77 1.199a2.6 2.6 0 0 0-.935-.462a3.2 3.2 0 0 0-.946-.165q-.57 0-.913.209q-.34.21-.34.55q0 .374.417.638q.42.254 1.43.561q1.221.363 1.738.968t.517 1.54q0 .957-.737 1.65q-.726.682-2.112.715q-1.815 0-3.036-1.089zm-5.53.638q.352.22.847.22q.517 0 .858-.297q.34-.308.341-1.067v-5.302h1.485v5.588q-.033 1.298-.748 1.87a2.5 2.5 0 0 1-.891.484a3.3 3.3 0 0 1-.935.143q-.825 0-1.463-.286q-.682-.307-1.144-1.089l1.034-.847q.285.385.616.583"></path></svg>
+                script.js
+            </span>
+            <button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&amp;_svg:not([class*='size-'])]:size-3 ml-auto" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9a9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5m-5 4a9 9 0 0 0 9 9a9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 16h5v5"></path></g></svg>
+            </button>
+            <button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground size-6 in-data-[slot=button-group]:rounded-lg [&amp;_svg:not([class*='size-'])]:size-3 shadow-none flex gap-2 rounded-[calc(var(--radius)-5px)] p-0 has-[&gt;svg]:p-0" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></g></svg>
+            </button>
+        </div>
+    </div>
+</div>

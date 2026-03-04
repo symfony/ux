@@ -29,18 +29,75 @@ _run_task() {
 }
 export -f _run_task
 
-install_property_info_for_version() {
-  local php_version="$1"
-  local min_stability="$2"
+before_composer_install() {
+  local component=$1
+  local php_version=$2
+  local symfony_version=$3
 
-  if [ "$php_version" = "8.2" ]; then
-    composer require symfony/property-info:7.1.* symfony/type-info:7.2.*
-  elif [ "$php_version" = "8.3" ]; then
-    composer require symfony/property-info:7.2.* symfony/type-info:7.2.*
-  elif [ "$php_version" = "8.4" ] && [ "$min_stability" = "stable" ]; then
-    composer require symfony/property-info:7.3.* symfony/type-info:7.3.*
-  elif [ "$php_version" = "8.4" ] && [ "$min_stability" = "dev" ]; then
-    composer require symfony/property-info:>=7.3 symfony/type-info:>=7.3
+  # Install specific versions of PropertyInfo and TypeInfo based on PHP version
+  # To remove in Symfony UX 4.0
+  if [[ "$component" == "LiveComponent" ]]; then
+    case "$php_version" in
+      8.1)
+        # no-op, let Composer install the best PropertyInfo version (defined in composer.json), but do not require TypeInfo
+        return 0
+        ;;
+      8.2)
+        # PropertyInfo 7.1 (experimental PropertyTypeExtractorInterface::getType) and TypeInfo 7.2 (lowest non-experimental)
+        composer require symfony/property-info:7.1.* symfony/type-info:7.2.* --no-update
+        return $?
+        ;;
+      8.3)
+        # Install PropertyInfo 7.3 (deprecate PropertyTypeExtractorInterface::getTypes) and TypeInfo 7.3 (new features and deprecations)
+        composer require symfony/property-info:7.3.* symfony/type-info:7.3.* --no-update
+        return $?
+        ;;
+    esac
+
+    # Install the best TypeInfo version available
+    composer require symfony/type-info --no-update
+  fi
+
+  # When testing with Symfony 8 and PHP 8.4+, we have issue with spatie/phpunit-snapshot-assertions:
+  # - version ^4 is not compatible with Symfony 8
+  # - version ^5 is compatible with Symfony 8, but requires PHPUnit 10+
+  # PHPUnit 10+ is not really "usable", it's not compatible with PHPUnit Bridge, and there is no native deprecations handling.
+  # To remove in Symfony UX 3.0
+  if [[ "$symfony_version" == "8.0.*" ]]; then
+    if grep -q '"spatie/phpunit-snapshot-assertions"' composer.json; then
+      composer remove symfony/phpunit-bridge --dev --no-update
+      composer require phpunit/phpunit:^11 --dev --no-update
+      cp phpunit11.dist.xml phpunit.dist.xml
+      if [ ! -f tests/bootstrap.php ]; then
+        cat > tests/bootstrap.php <<'PHP'
+<?php
+
+use Symfony\Component\ErrorHandler\ErrorHandler;
+use Symfony\Component\Filesystem\Filesystem;
+
+require __DIR__.'/../vendor/autoload.php';
+
+// @see https://github.com/symfony/symfony/issues/53812
+ErrorHandler::register(null, false);
+PHP
+      fi
+    fi
   fi
 }
-export -f install_property_info_for_version
+export -f before_composer_install
+
+after_composer_install() {
+  local component=$1
+  local php_version=$2
+  local symfony_version=$3
+
+  # To remove in Symfony UX 3.0
+  if [[ "$symfony_version" == "8.0.*" ]]; then
+    if grep -q '"spatie/phpunit-snapshot-assertions"' composer.json; then
+      # The Symfony PHPUnit bridge was previously removed to allow PHPUnit 11 installation.
+      # Creating a symlink to "phpunit" as "simple-phpunit" makes things easier for unit-tests.yaml workflow.
+      ln -s phpunit vendor/bin/simple-phpunit
+    fi
+  fi
+}
+export -f after_composer_install

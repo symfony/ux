@@ -1,0 +1,120 @@
+<!--
+- Kit: Shadcn UI
+- Component: Field
+- Code:
+```twig
+<div class="w-full max-w-md">
+    <twig:Field:Group>
+        <twig:Field:Set>
+            <twig:Field:Legend variant="label">
+                Show these items on the desktop
+            </twig:Field:Legend>
+            <twig:Field:Description>
+                Select the items you want to show on the desktop.
+            </twig:Field:Description>
+            <twig:Field:Group class="gap-3">
+                <twig:Field orientation="horizontal">
+                    <twig:Checkbox id="finder-pref-9k2-hard-disks-ljj" />
+                    <twig:Field:Label
+                        for="finder-pref-9k2-hard-disks-ljj"
+                        class="font-normal"
+                        checked
+                    >
+                        Hard disks
+                    </twig:Field:Label>
+                </twig:Field>
+                <twig:Field orientation="horizontal">
+                    <twig:Checkbox id="finder-pref-9k2-external-disks-1yg" />
+                    <twig:Field:Label
+                        for="finder-pref-9k2-external-disks-1yg"
+                        class="font-normal"
+                    >
+                        External disks
+                    </twig:Field:Label>
+                </twig:Field>
+                <twig:Field orientation="horizontal">
+                    <twig:Checkbox id="finder-pref-9k2-cds-dvds-fzt" />
+                    <twig:Field:Label
+                        for="finder-pref-9k2-cds-dvds-fzt"
+                        class="font-normal"
+                    >
+                        CDs, DVDs, and iPods
+                    </twig:Field:Label>
+                </twig:Field>
+                <twig:Field orientation="horizontal">
+                    <twig:Checkbox id="finder-pref-9k2-connected-servers-6l2" />
+                    <twig:Field:Label
+                        for="finder-pref-9k2-connected-servers-6l2"
+                        class="font-normal"
+                    >
+                        Connected servers
+                    </twig:Field:Label>
+                </twig:Field>
+            </twig:Field:Group>
+        </twig:Field:Set>
+        <twig:Field:Separator />
+        <twig:Field orientation="horizontal">
+            <twig:Checkbox id="finder-pref-9k2-sync-folders-nep" checked />
+            <twig:Field:Content>
+                <twig:Field:Label for="finder-pref-9k2-sync-folders-nep">
+                    Sync Desktop & Documents folders
+                </twig:Field:Label>
+                <twig:Field:Description>
+                    Your Desktop & Documents folders are being synced with iCloud Drive. You can access them from other devices.
+                </twig:Field:Description>
+            </twig:Field:Content>
+        </twig:Field>
+    </twig:Field:Group>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="w-full max-w-md">
+    <div data-slot="field-group" class="group/field-group @container/field-group flex w-full flex-col gap-7 data-[slot=checkbox-group]:gap-3 [&amp;&gt;[data-slot=field-group]]:gap-4">
+<fieldset data-slot="field-set" class="flex flex-col gap-6 has-[&gt;[data-slot=checkbox-group]]:gap-3 has-[&gt;[data-slot=radio-group]]:gap-3">
+<legend data-slot="field-legend" data-variant="label" class="mb-3 font-medium text-sm">Show these items on the desktop
+            </legend>
+            <p data-slot="field-description" class="text-muted-foreground text-sm leading-normal font-normal group-has-[[data-orientation=horizontal]]/field:text-balance last:mt-0 nth-last-2:-mt-1 [[data-variant=legend]+&amp;]:-mt-1.5 [&amp;&gt;a:hover]:text-primary [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4">Select the items you want to show on the desktop.
+            </p>
+            <div data-slot="field-group" class="group/field-group @container/field-group flex w-full flex-col data-[slot=checkbox-group]:gap-3 [&amp;&gt;[data-slot=field-group]]:gap-4 gap-3">
+<div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-row items-center [&amp;&gt;[data-slot=field-label]]:flex-auto has-[&gt;[data-slot=field-content]]:items-start has-[&gt;[data-slot=field-content]]:[&amp;&gt;[role=checkbox],[role=radio]]:mt-px">
+<input type="checkbox" class="peer size-4 inline-block align-middle accent-primary" data-slot="checkbox" id="finder-pref-9k2-hard-disks-ljj">
+
+                    <label class="flex items-center gap-2 text-sm leading-none select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 font-normal" data-slot="field-label" for="finder-pref-9k2-hard-disks-ljj" checked>Hard disks
+                    </label>
+                </div>
+                <div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-row items-center [&amp;&gt;[data-slot=field-label]]:flex-auto has-[&gt;[data-slot=field-content]]:items-start has-[&gt;[data-slot=field-content]]:[&amp;&gt;[role=checkbox],[role=radio]]:mt-px">
+<input type="checkbox" class="peer size-4 inline-block align-middle accent-primary" data-slot="checkbox" id="finder-pref-9k2-external-disks-1yg">
+
+                    <label class="flex items-center gap-2 text-sm leading-none select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 font-normal" data-slot="field-label" for="finder-pref-9k2-external-disks-1yg">External disks
+                    </label>
+                </div>
+                <div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-row items-center [&amp;&gt;[data-slot=field-label]]:flex-auto has-[&gt;[data-slot=field-content]]:items-start has-[&gt;[data-slot=field-content]]:[&amp;&gt;[role=checkbox],[role=radio]]:mt-px">
+<input type="checkbox" class="peer size-4 inline-block align-middle accent-primary" data-slot="checkbox" id="finder-pref-9k2-cds-dvds-fzt">
+
+                    <label class="flex items-center gap-2 text-sm leading-none select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 font-normal" data-slot="field-label" for="finder-pref-9k2-cds-dvds-fzt">CDs, DVDs, and iPods
+                    </label>
+                </div>
+                <div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-row items-center [&amp;&gt;[data-slot=field-label]]:flex-auto has-[&gt;[data-slot=field-content]]:items-start has-[&gt;[data-slot=field-content]]:[&amp;&gt;[role=checkbox],[role=radio]]:mt-px">
+<input type="checkbox" class="peer size-4 inline-block align-middle accent-primary" data-slot="checkbox" id="finder-pref-9k2-connected-servers-6l2">
+
+                    <label class="flex items-center gap-2 text-sm leading-none select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 font-normal" data-slot="field-label" for="finder-pref-9k2-connected-servers-6l2">Connected servers
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+        <div data-slot="field-separator" data-content="false" class="relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2">
+    <div class="shrink-0 bg-border h-[1px] w-full absolute inset-0 top-1/2" role="none"></div>
+</div>
+
+        <div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-row items-center [&amp;&gt;[data-slot=field-label]]:flex-auto has-[&gt;[data-slot=field-content]]:items-start has-[&gt;[data-slot=field-content]]:[&amp;&gt;[role=checkbox],[role=radio]]:mt-px">
+<input type="checkbox" class="peer size-4 inline-block align-middle accent-primary" data-slot="checkbox" id="finder-pref-9k2-sync-folders-nep" checked>
+
+            <div data-slot="field-content" class="group/field-content flex flex-1 flex-col gap-1.5 leading-snug">
+<label class="items-center text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-[&gt;[data-slot=field]]:w-full has-[&gt;[data-slot=field]]:flex-col has-[&gt;[data-slot=field]]:rounded-md has-[&gt;[data-slot=field]]:border [&amp;&gt;*]:data-[slot=field]:p-4 has-data-[state=checked]:bg-primary/5 has-data-[state=checked]:border-primary dark:has-data-[state=checked]:bg-primary/10" data-slot="field-label" for="finder-pref-9k2-sync-folders-nep">Sync Desktop &amp; Documents folders
+                </label>
+                <p data-slot="field-description" class="text-muted-foreground text-sm leading-normal font-normal group-has-[[data-orientation=horizontal]]/field:text-balance last:mt-0 nth-last-2:-mt-1 [[data-variant=legend]+&amp;]:-mt-1.5 [&amp;&gt;a:hover]:text-primary [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4">Your Desktop &amp; Documents folders are being synced with iCloud Drive. You can access them from other devices.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

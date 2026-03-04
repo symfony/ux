@@ -1,0 +1,44 @@
+<!--
+- Kit: Shadcn UI
+- Component: Empty
+- Code:
+```twig
+<twig:Empty>
+    <twig:Empty:Header>
+        <twig:Empty:Media>
+            <twig:Avatar class="size-12">
+                <twig:Avatar:Image
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                    class="grayscale"
+                />
+                <twig:Avatar:Fallback>LR</twig:Avatar:Fallback>
+            </twig:Avatar>
+        </twig:Empty:Media>
+        <twig:Empty:Title>User offline</twig:Empty:Title>
+        <twig:Empty:Description>
+            This user is currently offline. You can leave a message to notify them or try again later.
+        </twig:Empty:Description>
+    </twig:Empty:Header>
+    <twig:Empty:Content>
+        <twig:Button size="sm">Leave message</twig:Button>
+    </twig:Empty:Content>
+</twig:Empty>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="empty" class="flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center text-balance md:p-12">
+<div data-slot="empty-header" class="flex max-w-sm flex-col items-center gap-2 text-center">
+<div data-slot="empty-icon" data-variant="default" class="flex shrink-0 items-center justify-center mb-2 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 bg-transparent">
+<span data-slot="avatar" data-size="default" class="rounded-full after:rounded-full data-[size=lg]:size-10 data-[size=sm]:size-6 after:border-border group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten size-12"><img data-slot="avatar-image" class="hidden rounded-full aspect-square size-full object-cover grayscale" onload="this.classList.remove('hidden'); this.closest('[data-slot=avatar]')?.querySelector('[data-slot=avatar-fallback]')?.classList.add('hidden');" alt="@shadcn" src="https://github.com/shadcn.png">
+
+                <span data-slot="avatar-fallback" class="bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs">LR</span>
+            </span>
+        </div>
+        <div data-slot="empty-title" class="text-lg font-medium tracking-tight">User offline</div>
+        <div data-slot="empty-description" class="text-muted-foreground [&amp;&gt;a:hover]:text-primary text-sm/relaxed [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4">This user is currently offline. You can leave a message to notify them or try again later.
+        </div>
+    </div>
+    <div data-slot="empty-content" class="flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm text-balance">
+<button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 border border-transparent bg-clip-padding font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none bg-primary text-primary-foreground [a]:hover:bg-primary/80 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5">Leave message</button>
+    </div>
+</div>

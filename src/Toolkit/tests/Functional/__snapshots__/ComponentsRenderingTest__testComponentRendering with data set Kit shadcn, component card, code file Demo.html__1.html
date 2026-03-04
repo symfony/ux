@@ -1,0 +1,84 @@
+<!--
+- Kit: Shadcn UI
+- Component: Card
+- Code:
+```twig
+<twig:Card class="w-full max-w-sm">
+    <twig:Card:Header>
+        <twig:Card:Title>Login to your account</twig:Card:Title>
+        <twig:Card:Description>
+            Enter your email below to login to your account
+        </twig:Card:Description>
+    </twig:Card:Header>
+    <twig:Card:Content>
+        <form>
+            <div class="flex flex-col gap-6">
+                <div class="grid gap-2">
+                    <twig:Label for="email">Email</twig:Label>
+                    <twig:Input
+                        id="email"
+                        type="email"
+                        placeholder="m@example.com"
+                        required
+                    />
+                </div>
+                <div class="grid gap-2">
+                    <div class="flex items-center">
+                        <twig:Label for="password">Password</twig:Label>
+                        <a
+                            href="#"
+                            class="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                        >
+                            Forgot your password?
+                        </a>
+                    </div>
+                    <twig:Input id="password" type="password" required />
+                </div>
+            </div>
+        </form>
+    </twig:Card:Content>
+    <twig:Card:Footer class="flex-col gap-2">
+        <twig:Button type="submit" class="w-full">
+            Login
+        </twig:Button>
+        <twig:Button variant="outline" class="w-full">
+            Login with Google
+        </twig:Button>
+    </twig:Card:Footer>
+</twig:Card>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-sm">
+<div class="flex flex-col space-y-1.5 p-6">
+<div class="leading-none font-semibold">Login to your account</div>
+        <div class="text-muted-foreground text-sm">Enter your email below to login to your account
+        </div>
+    </div>
+    <div class="p-6 pt-0">
+<form>
+            <div class="flex flex-col gap-6">
+                <div class="grid gap-2">
+                    <label class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50" for="email">Email</label>
+                    <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="email" type="email" placeholder="m@example.com" required>
+
+                </div>
+                <div class="grid gap-2">
+                    <div class="flex items-center">
+                        <label class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50" for="password">Password</label>
+                        <a href="#" class="ml-auto inline-block text-sm underline-offset-4 hover:underline">
+                            Forgot your password?
+                        </a>
+                    </div>
+                    <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="password" type="password" required>
+
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="flex items-center p-6 pt-0 flex-col gap-2">
+<button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] [&amp;_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none bg-primary text-primary-foreground [a]:hover:bg-primary/80 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 w-full" type="submit">Login
+        </button>
+        <button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] [&amp;_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 w-full">Login with Google
+        </button>
+    </div>
+</div>

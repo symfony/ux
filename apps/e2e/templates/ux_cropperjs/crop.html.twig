@@ -1,0 +1,26 @@
+{% extends 'example.html.twig' %}
+
+{% block example %}
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            {% if croppedImageData %}
+                <div class="alert alert-success mb-4" id="crop-success">
+                    <h5>Image cropped successfully!</h5>
+                    <p>Here is your cropped image:</p>
+                    <img src="data:image/jpeg;base64,{{ croppedImageData }}"
+                         alt="Cropped image"
+                         id="cropped-result"
+                         class="img-fluid border"
+                         style="max-width: 100%;">
+                </div>
+            {% endif %}
+
+            {{ form_start(form, {attr: {'data-turbo': 'false'}}) }}
+                {{ form_row(form.crop) }}
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary" id="crop-submit">Crop Image</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

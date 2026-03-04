@@ -57,7 +57,7 @@ final class Kit
     public function getRecipes(?RecipeType $type = null): array
     {
         if (null !== $type) {
-            $this->recipes = array_filter($this->recipes, fn (Recipe $recipe) => $recipe->manifest->type === $type);
+            return array_filter($this->recipes, static fn (Recipe $recipe) => $recipe->manifest->type === $type);
         }
 
         return $this->recipes;

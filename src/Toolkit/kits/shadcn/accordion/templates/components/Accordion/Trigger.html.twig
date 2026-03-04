@@ -1,0 +1,21 @@
+{# @block content The clickable trigger label that toggles the accordion item #}
+<h3 class="flex" data-orientation="{{ _accordion_orientationn }}">
+    <button
+        class="{{ ('focus-visible:ring-ring/50 focus-visible:border-ring focus-visible:after:border-ring **:data-[slot=accordion-trigger-icon]:text-muted-foreground group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4 ' ~ attributes.render('class'))|tailwind_merge }}"
+        {{ attributes.defaults({
+            type: 'button',
+            id: _accordion_item_trigger_id,
+            'data-slot': 'accordion-trigger',
+            'data-accordion-target': 'trigger',
+            'data-action': 'click->accordion#toggle keydown->accordion#handleKeydown',
+            disabled: _accordion_item_disabled,
+            'data-orientation': _accordion_orientationn,
+            'aria-expanded': _accordion_item_is_open ? 'true' : 'false',
+            'aria-controls': _accordion_item_content_id,
+        }) }}
+    >
+        {%- block content %}{% endblock -%}
+        <twig:ux:icon name="lucide:chevron-down" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" />
+        <twig:ux:icon name="lucide:chevron-up" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" />
+    </button>
+</h3>

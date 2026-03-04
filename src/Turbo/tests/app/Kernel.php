@@ -84,7 +84,6 @@ class Kernel extends BaseKernel
                 'url' => 'sqlite:///%kernel.project_dir%/var/turbo.db',
             ],
             'orm' => [
-                'auto_generate_proxy_classes' => true,
                 'auto_mapping' => true,
                 'mappings' => [
                     'App' => [
@@ -99,15 +98,20 @@ class Kernel extends BaseKernel
         ];
 
         if (null !== $doctrineBundleVersion = InstalledVersions::getVersion('doctrine/doctrine-bundle')) {
-            if (version_compare($doctrineBundleVersion, '2.8.0', '>=')) {
-                $doctrineConfig['orm']['enable_lazy_ghost_objects'] = true;
-            }
-            // https://github.com/doctrine/DoctrineBundle/pull/1661
-            if (version_compare($doctrineBundleVersion, '2.9.0', '>=')) {
-                $doctrineConfig['orm']['report_fields_where_declared'] = true;
+            if (version_compare($doctrineBundleVersion, '3.0.0', '<')) {
+                $doctrineConfig['orm']['auto_generate_proxy_classes'] = true;
+
+                // https://github.com/doctrine/DoctrineBundle/pull/1661
+                if (version_compare($doctrineBundleVersion, '2.9.0', '>=')) {
+                    $doctrineConfig['orm']['report_fields_where_declared'] = true;
+                }
+
+                if (version_compare($doctrineBundleVersion, '2.12.0', '>=')) {
+                    $doctrineConfig['orm']['controller_resolver']['auto_mapping'] = true;
+                }
             }
 
-            if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=')) {
+            if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=') && version_compare($doctrineBundleVersion, '4.0.0', '<')) {
                 $doctrineConfig['orm']['enable_native_lazy_objects'] = true;
             }
         }

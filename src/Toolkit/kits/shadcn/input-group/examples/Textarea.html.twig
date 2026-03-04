@@ -1,0 +1,27 @@
+<div class="grid w-full max-w-md gap-4">
+    <twig:InputGroup>
+        <twig:InputGroup:Textarea
+            id="textarea-code-32"
+            placeholder="console.log('Hello, world!');"
+            class="min-h-[200px]"
+        />
+        <twig:InputGroup:Addon align="block-end" class="border-t">
+            <twig:InputGroup:Text>Line 1, Column 1</twig:InputGroup:Text>
+            <twig:InputGroup:Button size="sm" class="ml-auto" variant="default">
+                Run <twig:ux:icon name="lucide:corner-down-left" />
+            </twig:InputGroup:Button>
+        </twig:InputGroup:Addon>
+        <twig:InputGroup:Addon align="block-start" class="border-b">
+            <twig:InputGroup:Text class="font-mono font-medium">
+                <twig:ux:icon name="ri:javascript-fill" />
+                script.js
+            </twig:InputGroup:Text>
+            <twig:InputGroup:Button class="ml-auto" size="icon-xs">
+                <twig:ux:icon name="lucide:refresh-ccw" />
+            </twig:InputGroup:Button>
+            <twig:InputGroup:Button variant="ghost" size="icon-xs">
+                <twig:ux:icon name="lucide:copy" />
+            </twig:InputGroup:Button>
+        </twig:InputGroup:Addon>
+    </twig:InputGroup>
+</div>

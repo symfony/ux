@@ -5,4 +5,9 @@
         Event: {{ event.event }}<br>
         Data: {{ event.data|json_encode|raw }}<br>
     {% endfor %}
+
+    {% for event in dispatchEvents %}
+        Event: {{ event.event }}<br>
+        Payload: {{ event.payload|json_encode|raw }}<br>
+    {% endfor %}
 </div>

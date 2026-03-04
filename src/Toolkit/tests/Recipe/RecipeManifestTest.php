@@ -43,7 +43,7 @@ final class RecipeManifestTest extends TestCase
     public function testFromJsonWithInvalidType()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The recipe type "test" is not supported.');
+        $this->expectExceptionMessage('The recipe type "test" is not supported, valid types are "block", "component".');
 
         RecipeManifest::fromJson(<<<JSON
                 {
@@ -213,11 +213,12 @@ final class RecipeManifestTest extends TestCase
                     },
                     "dependencies": {
                         "composer": [
-                            "tales-from-a-dev/twig-tailwind-extra",
+                            "tales-from-a-dev/twig-tailwind-extra:^1.0.0",
                             "symfony/ux-twig-component:^2.29"
                         ],
                         "npm": [
                             "tailwindcss@^4.0.0",
+                            "@tailwindplus/elements",
                             "@tailwindplus/elements@1"
                         ],
                         "importmap": [
@@ -236,9 +237,10 @@ final class RecipeManifestTest extends TestCase
         $this->assertSame(['templates/' => 'templates/'], $manifest->copyFiles);
         $this->assertEquals([
             new RecipeDependency('OtherComponent'),
-            new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra', null),
+            new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra', new ConstraintVersion('^1.0.0')),
             new PhpPackageDependency('symfony/ux-twig-component', new ConstraintVersion('^2.29')),
             new NpmPackageDependency('tailwindcss', new ConstraintVersion('^4.0.0')),
+            new NpmPackageDependency('@tailwindplus/elements'),
             new NpmPackageDependency('@tailwindplus/elements', new ConstraintVersion('1')),
             new ImportmapPackageDependency('@hotwired/stimulus'),
         ], $manifest->dependencies);

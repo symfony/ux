@@ -15,8 +15,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="module">
-        import { trans } from '@symfony/ux-translator';
-        import { PROGRESS } from '@app/translations';
+        import { trans } from 'app';
 
         const inputProgress = document.querySelector('#progress');
 
@@ -24,8 +23,8 @@
             document.querySelector('[data-testid="output"]').innerHTML = `
                 <h2>Output</h2>
                 <ul >
-                    <li>🇬🇧 ${trans(PROGRESS, { progress: inputProgress.value }, 'messages', 'en')}</li>
-                    <li>🇫🇷 ${trans(PROGRESS, { progress: inputProgress.value }, 'messages', 'fr')}</li>
+                    <li>🇬🇧 ${trans('progress', { progress: inputProgress.value }, 'messages', 'en')}</li>
+                    <li>🇫🇷 ${trans('progress', { progress: inputProgress.value }, 'messages', 'fr')}</li>
                 </ul>
             `
         }

@@ -1,0 +1,12 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Spinner",
+    "description": "An indicator that can be used to show a loading state.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "composer": ["symfony/ux-icons", "tales-from-a-dev/twig-tailwind-extra:^1.0.0"]
+    }
+}

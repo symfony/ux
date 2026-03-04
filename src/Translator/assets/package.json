@@ -2,12 +2,12 @@
     "name": "@symfony/ux-translator",
     "description": "Symfony Translator for JavaScript",
     "license": "MIT",
-    "version": "2.30.0",
+    "version": "2.32.0",
     "keywords": [
         "symfony-ux"
     ],
     "homepage": "https://ux.symfony.com/translator",
-    "repository": "https://github.com/symfony/ux-translator",
+    "repository": "https://github.com/symfony/ux",
     "type": "module",
     "files": [
         "dist"
@@ -15,21 +15,17 @@
     "main": "dist/translator_controller.js",
     "types": "dist/translator_controller.d.ts",
     "scripts": {
-        "build": "tsx ../../../bin/build_package.ts .",
-        "watch": "tsx ../../../bin/build_package.ts . --watch",
+        "build": "node ../../../bin/build_package.ts .",
+        "watch": "node ../../../bin/build_package.ts . --watch",
         "test": "pnpm run test:unit && pnpm run test:browser",
         "test:unit": "../../../bin/unit_test_package.sh .",
         "test:browser": "playwright test",
-        "test:browser:ui": "playwright test --ui",
-        "check": "biome check",
-        "ci": "biome ci"
+        "test:browser:ui": "playwright test --ui"
     },
     "symfony": {
         "importmap": {
             "intl-messageformat": "^10.5.11",
-            "@symfony/ux-translator": "path:%PACKAGE%/dist/translator_controller.js",
-            "@app/translations": "path:var/translations/index.js",
-            "@app/translations/configuration": "path:var/translations/configuration.js"
+            "@symfony/ux-translator": "path:%PACKAGE%/dist/translator_controller.js"
         }
     },
     "peerDependencies": {
@@ -47,7 +43,6 @@
         "intl-messageformat": "^10.5.11",
         "jsdom": "^26.1.0",
         "tslib": "^2.8.1",
-        "tsx": "^4.20.3",
         "typescript": "^5.8.3",
         "vitest": "^3.2.4"
     }

@@ -20,10 +20,10 @@ Help Symfony by [sponsoring][3] its development!
 
 ## Resources
 
--   [Documentation](https://symfony.com/bundles/ux-react/current/index.html)
--   [Report issues](https://github.com/symfony/ux/issues) and
-    [send Pull Requests](https://github.com/symfony/ux/pulls)
-    in the [main Symfony UX repository](https://github.com/symfony/ux)
+- [Documentation](https://symfony.com/bundles/ux-react/current/index.html)
+- [Report issues](https://github.com/symfony/ux/issues) and
+  [send Pull Requests](https://github.com/symfony/ux/pulls)
+  in the [main Symfony UX repository](https://github.com/symfony/ux)
 
 [1]: https://symfony.com/backers
 [2]: https://mercure.rocks

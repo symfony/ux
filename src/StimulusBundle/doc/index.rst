@@ -418,7 +418,7 @@ is running in debug mode.
 
 .. tip::
 
-    For AssetMapper 6.3 only, you also need a ``{{ ux_controller_link_tags() }``
+    For AssetMapper 6.3 only, you also need a ``{{ ux_controller_link_tags() }}``
     in ``base.html.twig``. This is not needed in AssetMapper 6.4+.
 
 With WebpackEncoreBundle

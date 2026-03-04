@@ -112,9 +112,31 @@ the size of all your icons from a single place.
 Icon Color
 ~~~~~~~~~~
 
-Typically, SVG icons use ``fill="currentColor"`` to inherit the color of the containing element.
-You can set the color in CSS on the container or directly on the SVG element/class.
+UX Icons renders SVG icons with ``fill="currentColor"`` (see the `default configuration`_).
 
+This means icons take their color from the CSS ``color`` property, which by default is inherited from the text color of
+the parent element.
+
+.. code-block:: html+twig
+
+    <a href="#" class="text-blue-500">
+        {# icon color: blue #}
+        {{ ux_icon('bi:star') }}
+    </a>
+
+You can set the icon's color using CSS classes, either on the parent container or directly on the icon:
+
+.. code-block:: html+twig
+
+    <div class="text-red-500">
+        {# Inherit color from container (red) #}
+        {{ ux_icon('warning') }}
+
+        {# Override parent with CSS class (blue) #}
+        {{ ux_icon('warning', { class: 'text-blue-500' }) }}
+    </div>
+
+To configure a default class for all icons across your application see the `default configuration`_.
 
 Icon Sets
 ~~~~~~~~~
@@ -421,6 +443,60 @@ Now, you can use the ``dots`` alias in your templates:
     {# same as: #}
     <twig:ux:icon name="clarity:ellipsis-horizontal-line" />
 
+Icon Set Suffixes
+~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.33
+
+    Icon Set Suffixes feature was added in 2.33.
+
+Some icon sets like `Heroicons`_ use suffixes to denote icon variants
+(e.g. ``arrow-right-solid``, ``arrow-right-16-solid``, ``arrow-right-20-solid``).
+You can configure suffix-based attributes to automatically apply different
+attributes depending on the icon name suffix:
+
+.. code-block:: yaml
+
+    # config/packages/ux_icons.yaml
+    ux_icons:
+        icon_sets:
+            heroicons:
+                icon_attributes:
+                    data-slot: 'icon'
+                suffixes:
+                    16-solid:
+                        icon_attributes:
+                            fill: 'currentColor'
+                    20-solid:
+                        icon_attributes:
+                            fill: 'currentColor'
+                    solid:
+                        icon_attributes:
+                            fill: 'currentColor'
+                    '':
+                        icon_attributes:
+                            stroke: 'currentColor'
+                            stroke-width: 1.5
+                            fill: 'none'
+
+With this configuration, all icons in the ``heroicons`` set will have
+``data-slot="icon"`` (from ``icon_attributes``), plus the suffix-specific attributes:
+
+- ``heroicons:arrow-right-16-solid`` will have ``data-slot="icon"`` and ``fill="currentColor"`` (matches the ``16-solid`` suffix)
+- ``heroicons:arrow-right-20-solid`` will have ``data-slot="icon"`` and ``fill="currentColor"`` (matches the ``20-solid`` suffix)
+- ``heroicons:arrow-right-solid`` will have ``data-slot="icon"`` and ``fill="currentColor"`` (matches the ``solid`` suffix)
+- ``heroicons:arrow-right`` will have ``data-slot="icon"``, ``stroke="currentColor"``, ``stroke-width="1.5"`` and ``fill="none"`` (no suffix matches, falls back to ``''``)
+
+Suffixes are automatically sorted by length (longest first) to ensure that
+more specific suffixes like ``16-solid`` or ``20-solid`` take precedence over
+``solid``.
+
+.. note::
+
+    The empty string suffix (``''``) acts as a fallback for icons that don't
+    match any other suffix. This is different from ``icon_attributes``, which
+    applies to **all** icons in the set regardless of suffix matching.
+
 Errors
 ------
 
@@ -649,6 +725,23 @@ Full Configuration
                     stroke: 'none'      # Add a new attribute
                     fill: false         # Use "false" to remove a default attribute
 
+                # Suffix-based attributes (following Iconify naming conventions)
+                suffixes:
+                    16-solid:
+                        icon_attributes:
+                            fill: 'currentColor'
+                    20-solid:
+                        icon_attributes:
+                            fill: 'currentColor'
+                    solid:
+                        icon_attributes:
+                            fill: 'currentColor'
+                    '':
+                        icon_attributes:
+                            stroke: 'currentColor'
+                            stroke-width: 1.5
+                            fill: 'none'
+
 Learn more
 ----------
 
@@ -674,3 +767,4 @@ Learn more
 .. _`Tabler Icons`: https://github.com/tabler/tabler-icons
 .. _`Creating and Using Templates`: https://symfony.com/doc/current/templates.html
 .. _`How to manage CSS and JavaScript assets in Symfony applications`: https://symfony.com/doc/current/frontend.html
+.. _`default configuration`: https://symfony.com/bundles/ux-icons/current/index.html#full-configuration

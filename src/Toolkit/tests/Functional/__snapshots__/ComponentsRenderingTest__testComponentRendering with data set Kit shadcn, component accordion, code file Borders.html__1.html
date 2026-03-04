@@ -1,0 +1,81 @@
+<!--
+- Kit: Shadcn UI
+- Component: Accordion
+- Code:
+```twig
+{% set items = [
+    {
+        value: 'billing',
+        trigger: 'How does billing work?',
+        content:
+        'We offer monthly and annual subscription plans. Billing is charged at the beginning of each cycle, and you can cancel anytime. All plans include automatic backups, 24/7 support, and unlimited team members.',
+    },
+    {
+        value: 'security',
+        trigger: 'Is my data secure?',
+        content:
+        'Yes. We use end-to-end encryption, SOC 2 Type II compliance, and regular third-party security audits. All data is encrypted at rest and in transit using industry-standard protocols.',
+    },
+    {
+        value: 'integration',
+        trigger: 'What integrations do you support?',
+        content:
+        'We integrate with 500+ popular tools including Slack, Zapier, Salesforce, HubSpot, and more. You can also build custom integrations using our REST API and webhooks.',
+    },
+] %}
+
+<twig:Accordion
+    id="accordion-borders"
+    class="max-w-lg rounded-lg border"
+    defaultValue="{{ ['billing'] }}"
+>
+    {% for item in items %}
+        <twig:Accordion:Item
+            key="{{ item.value }}"
+            value="{{ item.value }}"
+            class="border-b px-4 last:border-b-0"
+        >
+            <twig:Accordion:Trigger>{{ item.trigger }}</twig:Accordion:Trigger>
+            <twig:Accordion:Content>{{ item.content }}</twig:Accordion:Content>
+        </twig:Accordion:Item>
+    {% endfor %}
+</twig:Accordion>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full flex-col max-w-lg rounded-lg border" id="accordion-borders" data-slot="accordion" data-controller="accordion" data-accordion-multiple-value="false" data-accordion-orientation-value="vertical" data-orientation="vertical">        <div class="not-last:border-b group border-b px-4 last:border-b-0" data-slot="accordion-item" data-accordion-target="item" data-value="billing" data-open="true" key="billing">
+<h3 class="flex" data-orientation="vertical">
+    <button class="focus-visible:ring-ring/50 focus-visible:border-ring focus-visible:after:border-ring **:data-[slot=accordion-trigger-icon]:text-muted-foreground group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4" type="button" id="accordion-borders-billing-trigger" data-slot="accordion-trigger" data-accordion-target="trigger" data-action="click-&gt;accordion#toggle keydown-&gt;accordion#handleKeydown" data-orientation="vertical" aria-expanded="true" aria-controls="accordion-borders-billing-content">How does billing work?<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+</h3>
+            <div class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out " id="accordion-borders-billing-content" data-slot="accordion-content" data-accordion-target="content" role="region" aria-labelledby="accordion-borders-billing-trigger" aria-hidden="false" data-open="true" style="grid-template-rows: 1fr;">
+    <div class="min-h-0 min-w-0 overflow-hidden">
+        <div class="pt-0 pb-2.5 [&amp;_a]:hover:text-foreground [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_p:not(:last-child)]:mb-4">We offer monthly and annual subscription plans. Billing is charged at the beginning of each cycle, and you can cancel anytime. All plans include automatic backups, 24/7 support, and unlimited team members.</div>
+    </div>
+</div>
+        </div>
+            <div class="not-last:border-b group border-b px-4 last:border-b-0" data-slot="accordion-item" data-accordion-target="item" data-value="security" data-closed="true" key="security">
+<h3 class="flex" data-orientation="vertical">
+    <button class="focus-visible:ring-ring/50 focus-visible:border-ring focus-visible:after:border-ring **:data-[slot=accordion-trigger-icon]:text-muted-foreground group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4" type="button" id="accordion-borders-security-trigger" data-slot="accordion-trigger" data-accordion-target="trigger" data-action="click-&gt;accordion#toggle keydown-&gt;accordion#handleKeydown" data-orientation="vertical" aria-expanded="false" aria-controls="accordion-borders-security-content">Is my data secure?<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+</h3>
+            <div class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out hidden" id="accordion-borders-security-content" data-slot="accordion-content" data-accordion-target="content" role="region" aria-labelledby="accordion-borders-security-trigger" aria-hidden="true" data-closed="true" style="grid-template-rows: 0fr;">
+    <div class="min-h-0 min-w-0 overflow-hidden">
+        <div class="pt-0 pb-2.5 [&amp;_a]:hover:text-foreground [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_p:not(:last-child)]:mb-4">Yes. We use end-to-end encryption, SOC 2 Type II compliance, and regular third-party security audits. All data is encrypted at rest and in transit using industry-standard protocols.</div>
+    </div>
+</div>
+        </div>
+            <div class="not-last:border-b group border-b px-4 last:border-b-0" data-slot="accordion-item" data-accordion-target="item" data-value="integration" data-closed="true" key="integration">
+<h3 class="flex" data-orientation="vertical">
+    <button class="focus-visible:ring-ring/50 focus-visible:border-ring focus-visible:after:border-ring **:data-[slot=accordion-trigger-icon]:text-muted-foreground group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4" type="button" id="accordion-borders-integration-trigger" data-slot="accordion-trigger" data-accordion-target="trigger" data-action="click-&gt;accordion#toggle keydown-&gt;accordion#handleKeydown" data-orientation="vertical" aria-expanded="false" aria-controls="accordion-borders-integration-content">What integrations do you support?<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+</h3>
+            <div class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out hidden" id="accordion-borders-integration-content" data-slot="accordion-content" data-accordion-target="content" role="region" aria-labelledby="accordion-borders-integration-trigger" aria-hidden="true" data-closed="true" style="grid-template-rows: 0fr;">
+    <div class="min-h-0 min-w-0 overflow-hidden">
+        <div class="pt-0 pb-2.5 [&amp;_a]:hover:text-foreground [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_p:not(:last-child)]:mb-4">We integrate with 500+ popular tools including Slack, Zapier, Salesforce, HubSpot, and more. You can also build custom integrations using our REST API and webhooks.</div>
+    </div>
+</div>
+        </div>
+    </div>

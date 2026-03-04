@@ -206,6 +206,7 @@ e.g. ``FoodAutocompleteField`` from above):
 ``tom_select_options`` (default: ``[]``)
     Use this to set custom `Tom Select Options`_. If you need to set
     an option using JavaScript, see `Extending Tom Select`_.
+    Read also about `Managing plugins`_.
 
 ``options_as_html`` (default: ``false``)
     Set to ``true`` if your options (e.g. ``choice_label``) contain HTML. Not
@@ -417,6 +418,36 @@ all of the options - separated by the ``delimiter`` - will be sent as a string.
 
 You *can* add autocompletion to this via the ``autocomplete_url`` option - but you'll
 likely need to create your own :ref:`custom autocomplete endpoint <custom-autocomplete-endpoint>`.
+
+Managing plugins
+----------------
+
+`Tom Select Plugins`_ can be configured through the ``tom_select_options.plugins`` option::
+
+    $resolver->setDefaults([
+        'class' => Ingredient::class,
+        'tom_select_options' => [
+            'plugins' => [
+                // Enable Input Autogrow plugin
+                'input_autogrow',
+
+                // Enable Dropdown Header plugin, with custom configuration
+                'dropdown_header' => [
+                    'title' => 'Select an ingredient',
+                ],
+
+                // Force natively-enabled plugins (by UX Autocomplete) to be disabled
+                'clear_button' => false,
+                'remove_button' => false,
+            ],
+        ],
+    ]);
+
+.. note::
+
+    Some configuration could not be supported through the `tom_select_options.plugins` option,
+    for example when a plugin requires a JavaScript function as configuration value.
+    In that case, you must use the `Extending Tom Select`_ approach to configure plugins.
 
 Customizing the AJAX URL/Route
 ------------------------------
@@ -636,7 +667,7 @@ interface.
     +
     +       $qb = $repository->createQueryBuilder('o');
     +
-    +       if ($productAttributesToBeExcluded !== []) {
+    +       if ($excludedFoods !== []) {
     +           $qb
     +               ->andWhere($qb->expr()->notIn('o.id', $excludedFoods));
     +               ->setParameter('excludedFoods', $excludedFoods)
@@ -696,7 +727,7 @@ a :ref:`custom autocompleter <custom-autocompleter>`:
         {
             "results": [
                 { "value": "1", "text": "Pizza" },
-                { "value": "2", "text":"Banana"}
+                { "value": "2", "text": "Banana"}
             ]
         }
 
@@ -761,3 +792,4 @@ the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Tom Select Option Group`: https://tom-select.js.org/examples/optgroups/
 .. _`Symfony Form`: https://symfony.com/doc/current/forms.html
 .. _`@symfony/ux-autocomplete npm package`: https://www.npmjs.com/package/@symfony/ux-autocomplete
+.. _`Tom Select Plugins`: https://tom-select.js.org/plugins/

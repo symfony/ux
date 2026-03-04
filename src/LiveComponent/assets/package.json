@@ -2,14 +2,14 @@
     "name": "@symfony/ux-live-component",
     "description": "Live Component: bring server-side re-rendering & model binding to any element.",
     "license": "MIT",
-    "version": "2.30.0",
+    "version": "2.32.0",
     "keywords": [
         "symfony-ux",
         "twig",
         "components"
     ],
     "homepage": "https://ux.symfony.com/live-component",
-    "repository": "https://github.com/symfony/ux-live-component",
+    "repository": "https://github.com/symfony/ux",
     "type": "module",
     "files": [
         "dist"
@@ -20,14 +20,12 @@
         "css_source": "src/live.css"
     },
     "scripts": {
-        "build": "tsx ../../../bin/build_package.ts .",
-        "watch": "tsx ../../../bin/build_package.ts . --watch",
+        "build": "node ../../../bin/build_package.ts .",
+        "watch": "node ../../../bin/build_package.ts . --watch",
         "test": "pnpm run test:unit && pnpm run test:browser",
         "test:unit": "../../../bin/unit_test_package.sh .",
         "test:browser": "playwright test",
-        "test:browser:ui": "playwright test --ui",
-        "check": "biome check",
-        "ci": "biome ci"
+        "test:browser:ui": "playwright test --ui"
     },
     "symfony": {
         "controllers": {
@@ -60,7 +58,6 @@
         "jsdom": "^26.1.0",
         "node-fetch": "^2.6.1",
         "tslib": "^2.8.1",
-        "tsx": "^4.20.3",
         "typescript": "^5.8.3",
         "vitest": "^3.2.4"
     }

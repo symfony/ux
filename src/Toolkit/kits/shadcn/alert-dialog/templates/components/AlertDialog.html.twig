@@ -1,6 +1,7 @@
-{%- props open = false, id -%}
+{# @prop id string Unique identifier used to generate internal AlertDialog IDs #}
+{# @block content The dialog structure, typically includes `AlertDialog:Trigger` and `AlertDialog:Content` #}
+{%- props id -%}
 
-{%- set _alert_dialog_open = open %}
 {%- set _alert_dialog_id = 'alert-dialog-' ~ id -%}
 {%- set _alert_dialog_title_id = _alert_dialog_id ~ '-title' -%}
 {%- set _alert_dialog_description_id = _alert_dialog_id ~ '-description' -%}

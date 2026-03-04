@@ -41,7 +41,7 @@ final class BatchActionControllerTest extends KernelTestCase
             ])
             ->assertSuccessful()
             ->assertSee('initial')
-            ->use(function (Crawler $crawler, KernelBrowser $browser) {
+            ->use(static function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
@@ -56,7 +56,7 @@ final class BatchActionControllerTest extends KernelTestCase
             })
             ->assertSee('initial')
             ->assertSee('first')
-            ->use(function (Crawler $crawler, KernelBrowser $browser) {
+            ->use(static function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
@@ -96,7 +96,7 @@ final class BatchActionControllerTest extends KernelTestCase
             ])
             ->assertSuccessful()
             ->assertSee('count: 0')
-            ->use(function (Crawler $crawler, KernelBrowser $browser) {
+            ->use(static function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('div')->first();
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
@@ -134,7 +134,7 @@ final class BatchActionControllerTest extends KernelTestCase
             ])
             ->assertSuccessful()
             ->interceptRedirects()
-            ->use(function (Crawler $crawler, KernelBrowser $browser) {
+            ->use(static function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
@@ -170,7 +170,7 @@ final class BatchActionControllerTest extends KernelTestCase
             ])
             ->assertSuccessful()
             ->interceptRedirects()
-            ->use(function (Crawler $crawler, KernelBrowser $browser) {
+            ->use(static function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
@@ -208,7 +208,7 @@ final class BatchActionControllerTest extends KernelTestCase
             ])
             ->assertSuccessful()
             ->expectException(\RuntimeException::class, 'Exception message')
-            ->use(function (Crawler $crawler, KernelBrowser $browser) {
+            ->use(static function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
@@ -242,7 +242,7 @@ final class BatchActionControllerTest extends KernelTestCase
             ])
             ->assertSuccessful()
             ->expectException(NotFoundHttpException::class, 'The action "nonLive" either doesn\'t exist or is not allowed')
-            ->use(function (Crawler $crawler, KernelBrowser $browser) {
+            ->use(static function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 

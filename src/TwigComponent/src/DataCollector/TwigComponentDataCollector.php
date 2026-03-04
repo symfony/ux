@@ -35,6 +35,7 @@ final class TwigComponentDataCollector extends AbstractDataCollector implements 
     public function __construct(
         private readonly TwigComponentLoggerListener $logger,
         private readonly Environment $twig,
+        private readonly bool $collectComponents = true,
     ) {
         $this->hasStub = class_exists(ClassStub::class);
     }
@@ -130,11 +131,14 @@ final class TwigComponentDataCollector extends AbstractDataCollector implements 
                     'input_props' => $mountedComponent->getInputProps(),
                     'attributes' => $mountedComponent->getAttributes()->all(),
                     'template_index' => $event->getTemplateIndex(),
-                    'component' => $mountedComponent->getComponent(),
                     'depth' => \count($ongoingRenders),
                     'children' => [],
                     'render_start' => $profile[0],
                 ];
+
+                if ($this->collectComponents) {
+                    $renders[$renderId]['component'] = $mountedComponent->getComponent();
+                }
 
                 if ($parentId = end($ongoingRenders)) {
                     $renders[$parentId]['children'][] = $renderId;
@@ -164,14 +168,14 @@ final class TwigComponentDataCollector extends AbstractDataCollector implements 
         }
 
         // Sort by render count DESC
-        uasort($components, fn ($a, $b) => $b['render_count'] <=> $a['render_count']);
+        uasort($components, static fn ($a, $b) => $b['render_count'] <=> $a['render_count']);
 
         $this->data['components'] = $components;
         $this->data['component_count'] = \count($components);
 
         $this->data['renders'] = $renders;
         $this->data['render_count'] = \count($renders);
-        $rootRenders = array_filter($renders, fn (array $r) => 0 === $r['depth']);
+        $rootRenders = array_filter($renders, static fn (array $r) => 0 === $r['depth']);
         $this->data['render_time'] = array_sum(array_column($rootRenders, 'render_time'));
 
         $this->data['peak_memory_usage'] = max([0, ...array_column($renders, 'render_memory')]);

@@ -39,7 +39,7 @@ class UxControllersTwigRuntimeTest extends TestCase
         $assetMapper = $this->createMock(AssetMapperInterface::class);
         $assetMapper->expects($this->any())
             ->method('getAsset')
-            ->willReturnCallback(function ($path) {
+            ->willReturnCallback(static function ($path) {
                 if (str_starts_with($path, 'in/asset/mapper')) {
                     return new MappedAsset(basename($path), publicPath: '/assets/mapper/'.basename($path));
                 }

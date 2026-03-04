@@ -90,7 +90,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
     {
         $container->registerAttributeForAutoconfiguration(
             AsLiveComponent::class,
-            function (ChildDefinition $definition, AsLiveComponent $attribute) {
+            static function (ChildDefinition $definition, AsLiveComponent $attribute) {
                 $definition
                     ->addTag('twig.component', array_filter($attribute->serviceConfig(), static fn ($v) => null !== $v && '' !== $v))
                     ->addTag('controller.service_arguments')
@@ -221,6 +221,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
                 new Reference('router'),
                 new Reference('ux.live_component.live_responder'),
                 new Reference('ux.live_component.twig.template_mapper'),
+                $config['fetch_credentials'],
             ])
         ;
 
@@ -293,6 +294,11 @@ final class LiveComponentExtension extends Extension implements PrependExtension
                     ->end()
                     ->cannotBeEmpty()
                     ->defaultValue('%kernel.secret%')
+                ->end()
+                ->enumNode('fetch_credentials')
+                    ->info('The default fetch credentials mode for all Live Components (\'same-origin\', \'include\', \'omit\')')
+                    ->values(['same-origin', 'include', 'omit'])
+                    ->defaultValue('same-origin')
                 ->end()
             ->end()
         ;

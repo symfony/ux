@@ -1,0 +1,78 @@
+<!--
+- Kit: Shadcn UI
+- Component: Accordion
+- Code:
+```twig
+<twig:Accordion id="accordion-disabled" class="max-w-lg">
+    <twig:Accordion:Item value="item-1">
+        <twig:Accordion:Trigger>Can I access my account history?</twig:Accordion:Trigger>
+        <twig:Accordion:Content>
+            Yes, you can view your complete account history including all
+            transactions, plan changes, and support tickets in the Account History
+            section of your dashboard.
+        </twig:Accordion:Content>
+    </twig:Accordion:Item>
+    <twig:Accordion:Item value="item-2" disabled>
+        <twig:Accordion:Trigger>Premium feature information</twig:Accordion:Trigger>
+        <twig:Accordion:Content>
+            This section contains information about premium features. Upgrade your
+            plan to access this content.
+        </twig:Accordion:Content>
+    </twig:Accordion:Item>
+    <twig:Accordion:Item value="item-3">
+        <twig:Accordion:Trigger>How do I update my email address?</twig:Accordion:Trigger>
+        <twig:Accordion:Content>
+            You can update your email address in your account settings.
+            You&apos;ll receive a verification email at your new address to
+            confirm the change.
+        </twig:Accordion:Content>
+    </twig:Accordion:Item>
+</twig:Accordion>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full flex-col max-w-lg" id="accordion-disabled" data-slot="accordion" data-controller="accordion" data-accordion-multiple-value="false" data-accordion-orientation-value="vertical" data-orientation="vertical">
+<div class="not-last:border-b group" data-slot="accordion-item" data-accordion-target="item" data-value="item-1" data-closed="true">
+<h3 class="flex" data-orientation="vertical">
+    <button class="focus-visible:ring-ring/50 focus-visible:border-ring focus-visible:after:border-ring **:data-[slot=accordion-trigger-icon]:text-muted-foreground group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4" type="button" id="accordion-disabled-item-1-trigger" data-slot="accordion-trigger" data-accordion-target="trigger" data-action="click-&gt;accordion#toggle keydown-&gt;accordion#handleKeydown" data-orientation="vertical" aria-expanded="false" aria-controls="accordion-disabled-item-1-content">Can I access my account history?<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+</h3>
+        <div class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out hidden" id="accordion-disabled-item-1-content" data-slot="accordion-content" data-accordion-target="content" role="region" aria-labelledby="accordion-disabled-item-1-trigger" aria-hidden="true" data-closed="true" style="grid-template-rows: 0fr;">
+    <div class="min-h-0 min-w-0 overflow-hidden">
+        <div class="pt-0 pb-2.5 [&amp;_a]:hover:text-foreground [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_p:not(:last-child)]:mb-4">Yes, you can view your complete account history including all
+            transactions, plan changes, and support tickets in the Account History
+            section of your dashboard.
+        </div>
+    </div>
+</div>
+    </div>
+    <div class="not-last:border-b group" data-slot="accordion-item" data-accordion-target="item" data-value="item-2" data-closed="true" aria-disabled="true">
+<h3 class="flex" data-orientation="vertical">
+    <button class="focus-visible:ring-ring/50 focus-visible:border-ring focus-visible:after:border-ring **:data-[slot=accordion-trigger-icon]:text-muted-foreground group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4" type="button" id="accordion-disabled-item-2-trigger" data-slot="accordion-trigger" data-accordion-target="trigger" data-action="click-&gt;accordion#toggle keydown-&gt;accordion#handleKeydown" disabled data-orientation="vertical" aria-expanded="false" aria-controls="accordion-disabled-item-2-content">Premium feature information<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+</h3>
+        <div class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out hidden" id="accordion-disabled-item-2-content" data-slot="accordion-content" data-accordion-target="content" role="region" aria-labelledby="accordion-disabled-item-2-trigger" aria-hidden="true" data-closed="true" style="grid-template-rows: 0fr;">
+    <div class="min-h-0 min-w-0 overflow-hidden">
+        <div class="pt-0 pb-2.5 [&amp;_a]:hover:text-foreground [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_p:not(:last-child)]:mb-4">This section contains information about premium features. Upgrade your
+            plan to access this content.
+        </div>
+    </div>
+</div>
+    </div>
+    <div class="not-last:border-b group" data-slot="accordion-item" data-accordion-target="item" data-value="item-3" data-closed="true">
+<h3 class="flex" data-orientation="vertical">
+    <button class="focus-visible:ring-ring/50 focus-visible:border-ring focus-visible:after:border-ring **:data-[slot=accordion-trigger-icon]:text-muted-foreground group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4" type="button" id="accordion-disabled-item-3-trigger" data-slot="accordion-trigger" data-accordion-target="trigger" data-action="click-&gt;accordion#toggle keydown-&gt;accordion#handleKeydown" data-orientation="vertical" aria-expanded="false" aria-controls="accordion-disabled-item-3-content">How do I update my email address?<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+</h3>
+        <div class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out hidden" id="accordion-disabled-item-3-content" data-slot="accordion-content" data-accordion-target="content" role="region" aria-labelledby="accordion-disabled-item-3-trigger" aria-hidden="true" data-closed="true" style="grid-template-rows: 0fr;">
+    <div class="min-h-0 min-w-0 overflow-hidden">
+        <div class="pt-0 pb-2.5 [&amp;_a]:hover:text-foreground [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_p:not(:last-child)]:mb-4">You can update your email address in your account settings.
+            You'll receive a verification email at your new address to
+            confirm the change.
+        </div>
+    </div>
+</div>
+    </div>
+</div>

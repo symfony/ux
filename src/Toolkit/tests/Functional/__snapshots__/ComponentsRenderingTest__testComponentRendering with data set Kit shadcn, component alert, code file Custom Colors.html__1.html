@@ -1,0 +1,20 @@
+<!--
+- Kit: Shadcn UI
+- Component: Alert
+- Code:
+```twig
+<twig:Alert class="max-w-md border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-50">
+    <twig:ux:icon name="lucide:triangle-alert" />
+    <twig:Alert:Title>Your subscription will expire in 3 days.</twig:Alert:Title>
+    <twig:Alert:Description>
+        Renew now to avoid service interruption or upgrade to a paid plan to continue using the service.
+    </twig:Alert:Description>
+</twig:Alert>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="alert" role="alert" class="grid gap-0.5 rounded-lg border px-2.5 py-2 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[&gt;svg]:grid-cols-[auto_1fr] has-[&gt;svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4 w-full relative group/alert max-w-md border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-50">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4m0 4h.01"></path></svg>
+    <div data-slot="alert-title" class="font-medium group-has-[&gt;svg]/alert:col-start-2 [&amp;_a]:hover:text-foreground [&amp;_a]:underline [&amp;_a]:underline-offset-3">Your subscription will expire in 3 days.</div>
+    <div data-slot="alert-description" class="text-muted-foreground text-sm text-balance md:text-pretty [&amp;_p:not(:last-child)]:mb-4 [&amp;_a]:hover:text-foreground [&amp;_a]:underline [&amp;_a]:underline-offset-3">Renew now to avoid service interruption or upgrade to a paid plan to continue using the service.
+    </div>
+</div>

@@ -69,6 +69,16 @@ class LeafletRendererTest extends RendererTestCase
                 ->removeMarker('marker2'),
         ];
 
+        yield 'with all markers removed with removeAllMarkers()' => [
+            'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
+            'map' => (new Map())
+                ->center(new Point(48.8566, 2.3522))
+                ->zoom(12)
+                ->addMarker($marker1)
+                ->addMarker($marker2)
+                ->removeAllMarkers(),
+        ];
+
         yield 'with marker remove and new ones added' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
             'map' => (new Map())
@@ -89,6 +99,16 @@ class LeafletRendererTest extends RendererTestCase
                 ->addPolygon(new Polygon(points: [new Point(1.1, 2.2), new Point(3.3, 4.4), new Point(5.5, 6.6)], infoWindow: new InfoWindow(content: 'Polygon'), id: 'polygon2')),
         ];
 
+        yield 'with all polygons removed with removeAllPolygons()' => [
+            'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
+            'map' => (new Map())
+                ->center(new Point(48.8566, 2.3522))
+                ->zoom(12)
+                ->addPolygon(new Polygon(points: [new Point(48.8566, 2.3522), new Point(48.8566, 2.3522), new Point(48.8566, 2.3522)]))
+                ->addPolygon(new Polygon(points: [new Point(1.1, 2.2), new Point(3.3, 4.4), new Point(5.5, 6.6)], infoWindow: new InfoWindow(content: 'Polygon')))
+                ->removeAllPolygons(),
+        ];
+
         yield 'with polylines and infoWindows' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
             'map' => (new Map())
@@ -98,6 +118,16 @@ class LeafletRendererTest extends RendererTestCase
                 ->addPolyline(new Polyline(points: [new Point(1.1, 2.2), new Point(3.3, 4.4), new Point(5.5, 6.6)], infoWindow: new InfoWindow(content: 'Polyline'), id: 'polyline2')),
         ];
 
+        yield 'with all polylines removed with removeAllPolylines()' => [
+            'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
+            'map' => (new Map())
+                ->center(new Point(48.8566, 2.3522))
+                ->zoom(12)
+                ->addPolyline(new Polyline(points: [new Point(48.8566, 2.3522), new Point(48.8566, 2.3522), new Point(48.8566, 2.3522)]))
+                ->addPolyline(new Polyline(points: [new Point(1.1, 2.2), new Point(3.3, 4.4), new Point(5.5, 6.6)], infoWindow: new InfoWindow(content: 'Polyline')))
+                ->removeAllPolylines(),
+        ];
+
         yield 'with circles and infoWindows' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
             'map' => (new Map())
@@ -105,6 +135,16 @@ class LeafletRendererTest extends RendererTestCase
                 ->zoom(12)
                 ->addCircle(new Circle(center: new Point(48.8566, 2.3522), radius: 1000000, id: 'circle1'))
                 ->addCircle(new Circle(center: new Point(1.1, 2.2), radius: 500, infoWindow: new InfoWindow(content: 'Circle'), id: 'circle2')),
+        ];
+
+        yield 'with all circles removed with removeAllCircles()' => [
+            'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
+            'map' => (new Map())
+                ->center(new Point(48.8566, 2.3522))
+                ->zoom(12)
+                ->addCircle(new Circle(center: new Point(48.8566, 2.3522), radius: 500, infoWindow: new InfoWindow(content: 'Circle')))
+                ->addCircle(new Circle(center: new Point(1.1, 2.2), radius: 1000, infoWindow: new InfoWindow(content: 'Circle')))
+                ->removeAllCircles(),
         ];
 
         yield 'with rectangles and infoWindows' => [
@@ -123,6 +163,16 @@ class LeafletRendererTest extends RendererTestCase
                     infoWindow: new InfoWindow(content: 'Rectangle'),
                     id: 'rectangle2'
                 )),
+        ];
+
+        yield 'with all rectangles removed with removeAllRectangles()' => [
+            'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
+            'map' => (new Map())
+                ->center(new Point(48.8566, 2.3522))
+                ->zoom(12)
+                ->addRectangle(new Rectangle(southWest: new Point(48.8566, 2.3522), northEast: new Point(48.8566, 2.3522), infoWindow: new InfoWindow(content: 'Rectangle')))
+                ->addRectangle(new Rectangle(southWest: new Point(1.1, 2.2), northEast: new Point(3.3, 4.4), infoWindow: new InfoWindow(content: 'Rectangle')))
+                ->removeAllRectangles(),
         ];
 
         yield 'markers with icons' => [

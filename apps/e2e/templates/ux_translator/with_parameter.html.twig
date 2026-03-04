@@ -15,8 +15,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="module">
-        import { trans } from '@symfony/ux-translator';
-        import { SAY_HELLO } from '@app/translations';
+        import { trans } from 'app';
 
         const inputName = document.querySelector('#name');
 
@@ -24,8 +23,8 @@
             document.querySelector('[data-testid="output"]').innerHTML = `
                 <h2>Output</h2>
                 <ul >
-                    <li>🇬🇧 ${trans(SAY_HELLO, { name: inputName.value }, 'messages', 'en')}</li>
-                    <li>🇫🇷 ${trans(SAY_HELLO, { name: inputName.value }, 'messages', 'fr')}</li>
+                    <li>🇬🇧 ${trans('say_hello', { name: inputName.value }, 'messages', 'en')}</li>
+                    <li>🇫🇷 ${trans('say_hello', { name: inputName.value }, 'messages', 'fr')}</li>
                 </ul>
             `
         }

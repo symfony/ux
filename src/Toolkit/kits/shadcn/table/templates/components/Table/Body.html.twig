@@ -1,5 +1,7 @@
+{# @block content The table body rows, typically `Table:Row` components #}
 <tbody
-    class="{{ '[&_tr:last-child]:border-0 ' ~ attributes.render('class')|tailwind_merge }}"
+    class="{{ ('[&_tr:last-child]:border-0 ' ~ attributes.render('class'))|tailwind_merge }}"
+    data-slot="table-body"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}

@@ -1,0 +1,8 @@
+{# @block content The descriptive text explaining the empty state #}
+<div
+    data-slot="empty-description"
+    class="{{ ('text-muted-foreground [&>a:hover]:text-primary text-sm/relaxed [&>a]:underline [&>a]:underline-offset-4 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

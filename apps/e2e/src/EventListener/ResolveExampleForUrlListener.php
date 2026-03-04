@@ -19,9 +19,8 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 class ResolveExampleForUrlListener
 {
     public function __construct(
-        private ExampleRepository $exampleRepository
-    )
-    {
+        private ExampleRepository $exampleRepository,
+    ) {
     }
 
     public function __invoke(RequestEvent $event): void
@@ -30,7 +29,7 @@ class ResolveExampleForUrlListener
             return;
         }
 
-        $example = $this->exampleRepository->findOneByUrl($event->getRequest()->getRequestUri());
+        $example = $this->exampleRepository->findOneByRoute($event->getRequest()->attributes->get('_route'));
         $event->getRequest()->attributes->set('_example', $example);
     }
 }

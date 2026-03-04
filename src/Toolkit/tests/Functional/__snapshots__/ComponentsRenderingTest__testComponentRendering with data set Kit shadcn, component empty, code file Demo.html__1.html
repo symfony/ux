@@ -1,0 +1,37 @@
+<!--
+- Kit: Shadcn UI
+- Component: Empty
+- Code:
+```twig
+<twig:Empty class="border border-dashed">
+    <twig:Empty:Header>
+        <twig:Empty:Media variant="icon">
+            <twig:ux:icon name="tabler:cloud" class="size-5" />
+        </twig:Empty:Media>
+        <twig:Empty:Title>Cloud storage empty</twig:Empty:Title>
+        <twig:Empty:Description>
+            Upload files to your cloud storage to access them anywhere.
+        </twig:Empty:Description>
+    </twig:Empty:Header>
+    <twig:Empty:Content>
+        <twig:Button variant="outline" size="sm">
+            Upload files
+        </twig:Button>
+    </twig:Empty:Content>
+</twig:Empty>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="empty" class="flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg p-6 text-center text-balance md:p-12 border border-dashed">
+<div data-slot="empty-header" class="flex max-w-sm flex-col items-center gap-2 text-center">
+<div data-slot="empty-icon" data-variant="icon" class="flex shrink-0 items-center justify-center mb-2 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 bg-muted text-foreground size-10 rounded-lg [&amp;_svg:not([class*='size-'])]:size-6">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6.657 18C4.085 18 2 15.993 2 13.517s2.085-4.482 4.657-4.482c.393-1.762 1.794-3.2 3.675-3.773c1.88-.572 3.956-.193 5.444 1c1.488 1.19 2.162 3.007 1.77 4.769h.99c1.913 0 3.464 1.56 3.464 3.486s-1.551 3.487-3.465 3.487H6.657"></path></svg>
+        </div>
+        <div data-slot="empty-title" class="text-lg font-medium tracking-tight">Cloud storage empty</div>
+        <div data-slot="empty-description" class="text-muted-foreground [&amp;&gt;a:hover]:text-primary text-sm/relaxed [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4">Upload files to your cloud storage to access them anywhere.
+        </div>
+    </div>
+    <div data-slot="empty-content" class="flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm text-balance">
+<button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 border bg-clip-padding font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5">Upload files
+        </button>
+    </div>
+</div>

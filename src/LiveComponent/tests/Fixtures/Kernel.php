@@ -80,7 +80,7 @@ final class Kernel extends BaseKernel
     protected function build(ContainerBuilder $container): void
     {
         // workaround https://github.com/symfony/symfony/issues/50322
-        $container->addCompilerPass(new class() implements CompilerPassInterface {
+        $container->addCompilerPass(new class implements CompilerPassInterface {
             public function process(ContainerBuilder $container): void
             {
                 $container->removeDefinition('doctrine.orm.listeners.pdo_session_handler_schema_listener');
@@ -90,7 +90,7 @@ final class Kernel extends BaseKernel
 
     protected function configureContainer(ContainerConfigurator $c): void
     {
-        $frameworkConfig = [
+        $c->extension('framework', [
             'csrf_protection' => ['enabled' => false],
             'secret' => 'S3CRET',
             'test' => true,
@@ -106,22 +106,21 @@ final class Kernel extends BaseKernel
             ...(self::VERSION_ID >= 60200 ? [
                 'handle_all_throwables' => true,
             ] : []),
+            ...(self::VERSION_ID >= 60400 && self::VERSION_ID < 70400 ? [
+                'annotations' => ['enabled' => false]
+            ] : []),
+            ...(self::VERSION_ID >= 70300 ? [
+                'session' => [
+                    'storage_factory_id' => 'session.storage.factory.mock_file',
+                    'cookie_secure' => 'auto',
+                    'cookie_samesite' => 'lax',
+                    'handler_id' => null,
+                ]
+            ] : []),
             ...(self::VERSION_ID >= 70300 ? [
                 'property_info' => ['with_constructor_extractor' => false],
             ] : []),
-        ];
-
-        if (self::VERSION_ID >= 60400) {
-            $frameworkConfig['session'] = [
-                'storage_factory_id' => 'session.storage.factory.mock_file',
-                'cookie_secure' => 'auto',
-                'cookie_samesite' => 'lax',
-                'handler_id' => null,
-            ];
-            $frameworkConfig['annotations']['enabled'] = false;
-        }
-
-        $c->extension('framework', $frameworkConfig);
+        ]);
 
         $c->extension('twig', [
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
@@ -162,7 +161,6 @@ final class Kernel extends BaseKernel
                 'url' => '%env(resolve:DATABASE_URL)%',
             ],
             'orm' => [
-                'auto_generate_proxy_classes' => true,
                 'auto_mapping' => true,
                 'mappings' => [
                     'Default' => [
@@ -184,19 +182,35 @@ final class Kernel extends BaseKernel
         ];
 
         if (null !== $doctrineBundleVersion = InstalledVersions::getVersion('doctrine/doctrine-bundle')) {
-            if (version_compare($doctrineBundleVersion, '2.8.0', '>=')) {
-                $doctrineConfig['orm']['enable_lazy_ghost_objects'] = true;
+            if (version_compare($doctrineBundleVersion, '3.0.0', '<')) {
+                $doctrineConfig['orm']['auto_generate_proxy_classes'] = true;
+
+                if (version_compare($doctrineBundleVersion, '2.8.0', '>=')) {
+                    $doctrineConfig['orm']['enable_lazy_ghost_objects'] = true;
+                }
+
+                // https://github.com/doctrine/DoctrineBundle/pull/1661
+                if (version_compare($doctrineBundleVersion, '2.9.0', '>=')) {
+                    $doctrineConfig['orm']['report_fields_where_declared'] = true;
+                }
+
+                if (version_compare($doctrineBundleVersion, '2.12.0', '>=')) {
+                    $doctrineConfig['orm']['controller_resolver']['auto_mapping'] = false;
+                }
             }
+
             // https://github.com/doctrine/DoctrineBundle/pull/1661
             if (version_compare($doctrineBundleVersion, '2.9.0', '>=')) {
-                $doctrineConfig['orm']['report_fields_where_declared'] = true;
                 $doctrineConfig['orm']['validate_xml_mapping'] = true;
                 $doctrineConfig['dbal']['schema_manager_factory'] = 'doctrine.dbal.default_schema_manager_factory';
+
+                // https://github.com/doctrine/DoctrineBundle/pull/1962
+                if (version_compare($doctrineBundleVersion, '3.0.0', '<')) {
+                    $doctrineConfig['orm']['report_fields_where_declared'] = true;
+                }
             }
-            if (version_compare($doctrineBundleVersion, '2.12.0', '>=')) {
-                $doctrineConfig['orm']['controller_resolver']['auto_mapping'] = false;
-            }
-            if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=')) {
+
+            if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=') && version_compare($doctrineBundleVersion, '4.0.0', '<')) {
                 $doctrineConfig['orm']['enable_native_lazy_objects'] = true;
             }
         }

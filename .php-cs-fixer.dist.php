@@ -9,10 +9,6 @@
  * file that was distributed with this source code.
  */
 
-if (!file_exists(__DIR__.'/src')) {
-    exit(0);
-}
-
 $fileHeaderParts = [
     <<<'EOF'
         This file is part of the Symfony package.
@@ -30,11 +26,10 @@ $fileHeaderParts = [
 return (new PhpCsFixer\Config())
     ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
     ->setRules([
-        '@PHP81Migration' => true, // take lowest version from `git grep -h '"php"' **/composer.json | uniq | sort`
-        '@PHPUnit91Migration:risky' => true,
+        '@PHP8x1Migration' => true, // take lowest version from `git grep -h '"php"' **/composer.json | uniq | sort`
+        '@PHPUnit9x1Migration:risky' => true,
         '@Symfony' => true,
         '@Symfony:risky' => true,
-        'protected_to_private' => false,
         'header_comment' => [
             'header' => implode('', $fileHeaderParts),
             'validator' => implode('', [
@@ -47,13 +42,13 @@ return (new PhpCsFixer\Config())
         ],
     ])
     ->setRiskyAllowed(true)
-    ->setFinder(
-        PhpCsFixer\Finder::create()
-            ->in([__DIR__.'/src'])
-            ->append([__FILE__])
-            ->notPath('#/Fixtures/#')
-            ->notPath('#/var/#')
-            // does not work well with `fully_qualified_strict_types` rule
-            ->notPath('LiveComponent/tests/Integration/LiveComponentHydratorTest.php')
+    ->setFinder((new PhpCsFixer\Finder())
+        ->in(__DIR__)
+        ->append([__FILE__])
+        ->notPath('#/Fixtures/#')
+        ->notPath('#/assets/#')
+        ->notPath('#/var/#')
+        // apps/
+        ->notPath(['#config/#', '#public/#', 'importmap.php'])
     )
 ;

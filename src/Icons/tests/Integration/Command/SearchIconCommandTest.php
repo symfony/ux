@@ -44,11 +44,11 @@ final class SearchIconCommandTest extends KernelTestCase
         $this->consoleCommand('ux:icons:search box')
             ->execute()
             ->assertSuccessful()
-            ->assertOutputContains('BoxIcons')
-            ->assertOutputContains('bx ')
-            ->assertOutputContains('BoxIcons Solid')
+            ->assertOutputContains('Boxicons')
+            ->assertOutputContains('boxicons ')
+            ->assertOutputContains('BoxIcons v2 Solid')
             ->assertOutputContains('bxs ')
-            ->assertOutputContains('BoxIcons Logo')
+            ->assertOutputContains('Boxicons Brands')
             ->assertOutputContains('bxl ')
             ->assertStatusCode(0);
     }

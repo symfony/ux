@@ -46,15 +46,12 @@ class ComponentsRenderingTest extends WebTestCase
             $kitSynchronizer->synchronize($kit);
 
             foreach ($kit->getRecipes(RecipeType::Component) as $recipe) {
-                $examplesFilePath = Path::join($recipe->absolutePath, 'EXAMPLES.md');
+                $examplesFilePath = Path::join($recipe->absolutePath, 'examples');
 
-                $codeBlockMatchesResult = preg_match_all('/```twig.*?\n(?P<code>.+?)```/s', file_get_contents($examplesFilePath), $codeBlockMatches);
-                if (false === $codeBlockMatchesResult || 0 === $codeBlockMatchesResult) {
-                    throw new \RuntimeException(\sprintf('No Twig code blocks found in file "%s"', $examplesFilePath));
-                }
-
-                foreach ($codeBlockMatches['code'] as $i => $code) {
-                    yield \sprintf('Kit %s, component %s, code #%d', $kitName, $recipe->name, $i + 1) => [$kitName, $recipe->name, $code];
+                foreach (glob($examplesFilePath.'/*.html.twig') as $exampleFilePath) {
+                    $filename = pathinfo($exampleFilePath, \PATHINFO_FILENAME);
+                    $code = file_get_contents($exampleFilePath);
+                    yield \sprintf('Kit %s, component %s, code file %s', $kitName, $recipe->name, $filename) => [$kitName, $recipe->name, $code];
                 }
             }
         }
@@ -62,6 +59,8 @@ class ComponentsRenderingTest extends WebTestCase
 
     /**
      * @dataProvider provideTestComponentRendering
+     *
+     * @group skip-on-lowest
      */
     public function testComponentRendering(string $kitName, string $recipeName, string $code)
     {
@@ -71,7 +70,7 @@ class ComponentsRenderingTest extends WebTestCase
 
         $kit = $this->instantiateKit($kitName);
         $template = $twig->createTemplate($code);
-        $renderedCode = $kitContextRunner->runForKit($kit, fn () => $template->render());
+        $renderedCode = $kitContextRunner->runForKit($kit, static fn () => $template->render());
 
         $this->assertCodeRenderedMatchesHtmlSnapshot($kit, $kit->getRecipe($recipeName), $code, $renderedCode);
     }

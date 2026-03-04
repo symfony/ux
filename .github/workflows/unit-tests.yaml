@@ -1,21 +1,19 @@
 name: Unit Tests
 
 defaults:
-  run:
-    shell: bash
+    run:
+        shell: bash
 
 on:
     push:
         paths-ignore:
             - 'src/*/doc/**'
             - 'src/**/*.md'
-            - 'ux.symfony.com/**'
             - '.github/workflows/app-tests.yaml'
     pull_request:
         paths-ignore:
             - 'src/*/doc/**'
             - 'src/**/*.md'
-            - 'ux.symfony.com/**'
             - '.github/workflows/app-tests.yaml'
 
 concurrency:
@@ -34,24 +32,31 @@ jobs:
                 minimum-stability: ['stable']
                 os: ['']
                 include:
-                    # dev packages (probably not needed to have multiple such jobs)
-                    -   minimum-stability: 'dev'
-                        php-version: '8.5'
+                    - minimum-stability: 'dev'
+                      php-version: '8.5'
+
                     # lowest deps
-                    -   php-version: '8.1'
-                        dependency-version: 'lowest'
+                    - php-version: '8.1'
+                      dependency-version: 'lowest'
+
                     # LTS version of Symfony
-                    -   php-version: '8.1'
-                        symfony-version: '6.4.*'
-                    -   php-version: '8.1'
-                        symfony-version: '6.4.*'
-                        os: 'windows-latest'
+                    - php-version: '8.1'
+                      symfony-version: '6.4.*'
+                    - php-version: '8.1'
+                      symfony-version: '6.4.*'
+                      os: 'windows-latest'
+
+                    - php-version: '8.2'
+                      symfony-version: '7.4.*'
+                    - php-version: '8.2'
+                      symfony-version: '7.4.*'
+                      os: 'windows-latest'
+
                     # Explicit Symfony versions
-                    -  php-version: '8.2'
-                       symfony-version: '7.4.x-dev' # TODO: change to '7.4' when Symfony 7.4 is released
-                    -  php-version: '8.5'
-                       symfony-version: '8.0.x-dev' # TODO: change to '8.0' when Symfony 8.0 is released
-                       minimum-stability: 'dev' # TODO: remove when Symfony 8.0 is released
+                    - php-version: '8.4'
+                      symfony-version: '8.0.*'
+                    - php-version: '8.5'
+                      symfony-version: '8.0.*'
 
         env:
             SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=5.4' }} # TODO: To change to '>=6.4' in 3.x
@@ -65,7 +70,7 @@ jobs:
                   echo COLUMNS=120 >> $GITHUB_ENV
                   echo COMPOSER_MIN_STAB='composer config minimum-stability ${{ matrix.minimum-stability || 'stable' }} --ansi' >> $GITHUB_ENV
                   echo COMPOSER_UP='composer update ${{ matrix.dependency-version == 'lowest' && '--prefer-lowest' || '' }} --no-progress --no-interaction --ansi' >> $GITHUB_ENV
-                  echo PHPUNIT='vendor/bin/simple-phpunit ${{ matrix.os == 'windows-latest' && '--exclude-group transient-on-windows' || '' }}' >> $GITHUB_ENV
+                  echo PHPUNIT='vendor/bin/simple-phpunit ${{ matrix.dependency-version == 'lowest' && '--exclude-group skip-on-lowest' || '' }} ${{ matrix.os == 'windows-latest' && '--exclude-group transient-on-windows' || '' }}' >> $GITHUB_ENV
                   [ 'lowest' = '${{ matrix.dependency-version }}' ] && export SYMFONY_DEPRECATIONS_HELPER=weak
 
                   # Swup and Typed have no tests, Turbo has its own workflow file
@@ -83,14 +88,14 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                php-version: ${{ matrix.php-version }}
-                extensions: ${{ matrix.os == 'windows-latest' && 'pdo_sqlite,sqlite3,fileinfo,gd' || '' }}
-                tools: flex
+                  php-version: ${{ matrix.php-version }}
+                  extensions: ${{ matrix.os == 'windows-latest' && 'pdo_sqlite,sqlite3,fileinfo,gd,zip' || '' }}
+                  tools: flex
 
-            -   name: Get composer cache directory
-                id: composer-cache
-                run: |
-                    echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+            - name: Get composer cache directory
+              id: composer-cache
+              run: |
+                  echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
             - name: Cache packages dependencies
               uses: actions/cache@v4
@@ -111,36 +116,38 @@ jobs:
             - name: Run packages tests (Unix)
               if: matrix.os != 'windows-latest'
               run: |
-                source .github/workflows/.utils.sh
-                echo "$PACKAGES" | xargs -n1 | parallel -j +3 "_run_task {} \
-                  '(cd src/{} \
-                  && $COMPOSER_MIN_STAB \
-                  && $COMPOSER_UP \
-                  && if [ {} = LiveComponent ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
-                  && $PHPUNIT)'"
+                  source .github/workflows/.utils.sh
+                  echo "$PACKAGES" | xargs -n1 | parallel -j +3 "_run_task {} \
+                    '(cd src/{} \
+                    && $COMPOSER_MIN_STAB \
+                    && before_composer_install \"{}\" \"${{ matrix.php-version }}\" \"${{ matrix.symfony-version }}\" \
+                    && $COMPOSER_UP \
+                    && after_composer_install \"{}\" \"${{ matrix.php-version }}\" \"${{ matrix.symfony-version }}\" \
+                    && $PHPUNIT)'"
 
             - name: Run packages tests (Windows)
               if: matrix.os == 'windows-latest'
               run: |
-                source .github/workflows/.utils.sh
+                  source .github/workflows/.utils.sh
 
-                # parallel is not available on Windows, so we need to run the tests sequentially
-                FAILED_PACKAGES=""
-                for PACKAGE in $PACKAGES; do
-                  if ! PACKAGE="$PACKAGE" _run_task_sequential $PACKAGE \
-                    '(cd src/$PACKAGE \
-                    && $COMPOSER_MIN_STAB \
-                    && $COMPOSER_UP \
-                    && if [ "$PACKAGE" = "LiveComponent" ]; then install_property_info_for_version \"${{ matrix.php-version }}\" \"${{ matrix.minimum-stability }}\"; fi \
-                    && $PHPUNIT)'; then
-                    FAILED_PACKAGES="$FAILED_PACKAGES $PACKAGE"
+                  # parallel is not available on Windows, so we need to run the tests sequentially
+                  FAILED_PACKAGES=""
+                  for PACKAGE in $PACKAGES; do
+                    if ! PACKAGE="$PACKAGE" _run_task_sequential $PACKAGE \
+                      '(cd src/$PACKAGE \
+                      && $COMPOSER_MIN_STAB \
+                      && before_composer_install $PACKAGE ${{ matrix.php-version }} ${{ matrix.symfony-version }} \
+                      && $COMPOSER_UP \
+                      && after_composer_install $PACKAGE ${{ matrix.php-version }} ${{ matrix.symfony-version }} \
+                      && $PHPUNIT)'; then
+                      FAILED_PACKAGES="$FAILED_PACKAGES $PACKAGE"
+                    fi
+                  done
+
+                  if [ -n "$FAILED_PACKAGES" ]; then
+                    echo "The following packages failed:$FAILED_PACKAGES"
+                    exit 1
                   fi
-                done
-
-                if [ -n "$FAILED_PACKAGES" ]; then
-                  echo "The following packages failed:$FAILED_PACKAGES"
-                  exit 1
-                fi
     js:
         runs-on: ubuntu-latest
         steps:
@@ -149,12 +156,12 @@ jobs:
             - run: npm i -g corepack && corepack enable
             - uses: actions/setup-node@v4
               with:
-                node-version-file: '.nvmrc'
-                cache: 'pnpm'
-                cache-dependency-path: |
-                  pnpm-lock.yaml
-                  package.json
-                  src/**/package.json
+                  node-version-file: '.nvmrc'
+                  cache: 'pnpm'
+                  cache-dependency-path: |
+                      pnpm-lock.yaml
+                      package.json
+                      src/**/package.json
 
             - name: Install root JS dependencies
               run: pnpm install --frozen-lockfile

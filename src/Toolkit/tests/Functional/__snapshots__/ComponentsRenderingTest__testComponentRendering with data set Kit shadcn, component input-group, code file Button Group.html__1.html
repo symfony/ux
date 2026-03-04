@@ -1,0 +1,43 @@
+<!--
+- Kit: Shadcn UI
+- Component: Input Group
+- Code:
+```twig
+<div class="grid w-full max-w-sm gap-6" xmlns:twig="http://www.w3.org/1999/html">
+
+    <twig:ButtonGroup>
+        <twig:ButtonGroup:Text>
+            <Label for="url">https://</Label>
+        </twig:ButtonGroup:Text>
+        <twig:InputGroup>
+            <twig:InputGroup:Input id="url" placeholder="example.com" />
+            <twig:InputGroup:Addon align="inline-end">
+                <twig:ux:icon name="lucide:link-2" />
+            </twig:InputGroup:Addon>
+        </twig:InputGroup>
+        <twig:ButtonGroup:Text>
+            .com
+        </twig:ButtonGroup:Text>
+    </twig:ButtonGroup>
+
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="grid w-full max-w-sm gap-6" xmlns:twig="http://www.w3.org/1999/html">
+
+    <div role="group" data-slot="button-group" data-orientation="horizontal" class="flex w-fit items-stretch [&amp;&gt;*]:focus-visible:z-10 [&amp;&gt;*]:focus-visible:relative [&amp;&gt;[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&amp;&gt;input]:flex-1 has-[select[aria-hidden=true]:last-child]:[&amp;&gt;[data-slot=select-trigger]:last-of-type]:rounded-r-md has-[&gt;[data-slot=button-group]]:gap-2 [&amp;&gt;*:not(:first-child)]:rounded-l-none [&amp;&gt;*:not(:first-child)]:border-l-0 [&amp;&gt;*:not(:last-child)]:rounded-r-none">
+<div data-slot="button-group-text" class="bg-muted flex items-center gap-2 rounded-md border px-4 text-sm font-medium shadow-xs [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4">
+<label for="url">https://</label>
+        </div>
+        <div data-slot="input-group" class="group/input-group border-input dark:bg-input/30 relative flex w-full items-center rounded-md border shadow-xs transition-[color,box-shadow] outline-none h-9 min-w-0 has-[&gt;textarea]:h-auto has-[&gt;[data-align=inline-start]]:[&amp;&gt;input]:pl-2 has-[&gt;[data-align=inline-end]]:[&amp;&gt;input]:pr-2 has-[&gt;[data-align=block-start]]:h-auto has-[&gt;[data-align=block-start]]:flex-col has-[&gt;[data-align=block-start]]:[&amp;&gt;input]:pb-3 has-[&gt;[data-align=block-end]]:h-auto has-[&gt;[data-align=block-end]]:flex-col has-[&gt;[data-align=block-end]]:[&amp;&gt;input]:pt-3 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot=input-group-control]:focus-visible]:ring-[3px] has-[[data-slot][aria-invalid=true]]:ring-destructive/20 has-[[data-slot][aria-invalid=true]]:border-destructive dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40">
+<input data-slot="input-group-control" class="flex-1 h-full w-full rounded-none border-0 bg-transparent px-3 py-2 text-sm shadow-none file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50" id="url" placeholder="example.com">
+
+            <div data-slot="input-group-addon" data-align="inline-end" role="group" class="text-muted-foreground flex h-auto items-center justify-center gap-2 text-sm font-medium select-none [&amp;_svg:not([class*='size-'])]:size-4 group-data-[disabled=true]/input-group:opacity-50 order-last pr-3">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17H7A5 5 0 0 1 7 7h2m6 0h2a5 5 0 1 1 0 10h-2m-7-5h8"></path></svg>
+            </div>
+        </div>
+        <div data-slot="button-group-text" class="bg-muted flex items-center gap-2 rounded-md border px-4 text-sm font-medium shadow-xs [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4">.com
+        </div>
+    </div>
+
+</div>

@@ -56,7 +56,7 @@ final class RequestPropsExtractor
                             }
                         } else {
                             $type = $livePropMetadata->getType();
-                            if (null !== $type && (!$type->isSatisfiedBy(fn (Type $t): bool => $t instanceof BuiltinType) || $type->isIdentifiedBy(TypeIdentifier::ARRAY))) {
+                            if (null !== $type && (!$type->isSatisfiedBy(static fn (Type $t): bool => $t instanceof BuiltinType) || $type->isIdentifiedBy(TypeIdentifier::ARRAY))) {
                                 // Cast empty string to empty array for objects and arrays
                                 $value = [];
                             }
@@ -94,10 +94,10 @@ final class RequestPropsExtractor
                 \in_array($propType, [null, 'mixed'])
                 || $livePropMetadata->isBuiltIn() && ('\is_'.$propType)($value)
                 || !$livePropMetadata->isBuiltIn() && $value instanceof $propType;
-        } else {
-            $type = $livePropMetadata->getType();
-
-            return null === $type || TypeHelper::accepts($type, $value);
         }
+
+        $type = $livePropMetadata->getType();
+
+        return null === $type || TypeHelper::accepts($type, $value);
     }
 }

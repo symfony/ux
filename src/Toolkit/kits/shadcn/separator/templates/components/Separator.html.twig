@@ -1,3 +1,5 @@
+{# @prop orientation 'horizontal'|'vertical' The separator orientation. Defaults to `horizontal` #}
+{# @prop decorative boolean Whether the separator is purely decorative (not semantic). Defaults to `true` #}
 {%- props orientation = 'horizontal', decorative = true -%}
 {%- set style = html_cva(
     base: 'shrink-0 bg-border',
@@ -14,5 +16,4 @@
         role: decorative ? 'none' : 'separator',
         'aria-orientation': decorative ? false : orientation,
     }) }}
->
-</div>
+></div>

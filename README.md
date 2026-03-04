@@ -21,10 +21,10 @@ or with [Webpack Encore](https://github.com/symfony/webpack-encore)
 
 ## Resources
 
--   [Install Symfony UX](https://symfony.com/doc/current/frontend/ux.html).
--   [List of UX Packages and their documentation](https://symfony.com/bundles/StimulusBundle/current/index.html#the-ux-packages).
--   [Symfony UX Official Demo](https://ux.symfony.com).
--   Watch the [Stimulus Screencast on SymfonyCasts](https://symfonycasts.com/screencast/stimulus).
+- [Install Symfony UX](https://symfony.com/doc/current/frontend/ux.html).
+- [List of UX Packages and their documentation](https://symfony.com/bundles/StimulusBundle/current/index.html#the-ux-packages).
+- [Symfony UX Official Demo](https://ux.symfony.com).
+- Watch the [Stimulus Screencast on SymfonyCasts](https://symfonycasts.com/screencast/stimulus).
 
 ## Let's build an amazing ecosystem together
 

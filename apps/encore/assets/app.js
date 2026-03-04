@@ -11,12 +11,12 @@ import './bootstrap.js';
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
-import { THIS_FIELD_IS_MISSING, trans } from './translator';
+import { trans } from './translator';
 
 registerReactControllerComponents(require.context('./react/controllers', true, /\.(j|t)sx?$/));
 registerSvelteControllerComponents(require.context('./svelte/controllers', true, /\.svelte$/));
 registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log(trans(THIS_FIELD_IS_MISSING));
-})
+    console.log(trans('say_hello', { name: 'Fabien' }));
+});

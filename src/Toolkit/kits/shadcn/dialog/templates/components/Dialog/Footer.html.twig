@@ -1,0 +1,7 @@
+{# @block content The footer area, typically contains action buttons #}
+<footer
+    class="{{ ('flex flex-col-reverse gap-2 sm:flex-row sm:justify-end ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</footer>

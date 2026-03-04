@@ -1,0 +1,84 @@
+<!--
+- Kit: Shadcn UI
+- Component: Accordion
+- Code:
+```twig
+<twig:Card class="w-full max-w-md">
+    <twig:Card:Header>
+        <twig:Card:Title>FAQ</twig:Card:Title>
+        <twig:Card:Description>Frequently asked questions</twig:Card:Description>
+    </twig:Card:Header>
+    <twig:Card:Content>
+        <twig:Accordion id="accordion-faq">
+            <twig:Accordion:Item value="q1">
+                <twig:Accordion:Trigger>What is your return policy?</twig:Accordion:Trigger>
+                <twig:Accordion:Content>
+                    You can return any item within 30 days of purchase for a full refund.
+                </twig:Accordion:Content>
+            </twig:Accordion:Item>
+            <twig:Accordion:Item value="q2">
+                <twig:Accordion:Trigger>How long does shipping take?</twig:Accordion:Trigger>
+                <twig:Accordion:Content>
+                    Standard shipping takes 5-7 business days. Express shipping is available for 2-3 days delivery.
+                </twig:Accordion:Content>
+            </twig:Accordion:Item>
+            <twig:Accordion:Item value="q3">
+                <twig:Accordion:Trigger>Do you ship internationally?</twig:Accordion:Trigger>
+                <twig:Accordion:Content>
+                    Yes, we ship to over 50 countries worldwide. Shipping rates vary by location.
+                </twig:Accordion:Content>
+            </twig:Accordion:Item>
+        </twig:Accordion>
+    </twig:Card:Content>
+</twig:Card>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-md">
+<div class="flex flex-col space-y-1.5 p-6">
+<div class="leading-none font-semibold">FAQ</div>
+        <div class="text-muted-foreground text-sm">Frequently asked questions</div>
+    </div>
+    <div class="p-6 pt-0">
+<div class="flex w-full flex-col" id="accordion-faq" data-slot="accordion" data-controller="accordion" data-accordion-multiple-value="false" data-accordion-orientation-value="vertical" data-orientation="vertical">
+<div class="not-last:border-b group" data-slot="accordion-item" data-accordion-target="item" data-value="q1" data-closed="true">
+<h3 class="flex" data-orientation="vertical">
+    <button class="focus-visible:ring-ring/50 focus-visible:border-ring focus-visible:after:border-ring **:data-[slot=accordion-trigger-icon]:text-muted-foreground group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4" type="button" id="accordion-faq-q1-trigger" data-slot="accordion-trigger" data-accordion-target="trigger" data-action="click-&gt;accordion#toggle keydown-&gt;accordion#handleKeydown" data-orientation="vertical" aria-expanded="false" aria-controls="accordion-faq-q1-content">What is your return policy?<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+</h3>
+                <div class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out hidden" id="accordion-faq-q1-content" data-slot="accordion-content" data-accordion-target="content" role="region" aria-labelledby="accordion-faq-q1-trigger" aria-hidden="true" data-closed="true" style="grid-template-rows: 0fr;">
+    <div class="min-h-0 min-w-0 overflow-hidden">
+        <div class="pt-0 pb-2.5 [&amp;_a]:hover:text-foreground [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_p:not(:last-child)]:mb-4">You can return any item within 30 days of purchase for a full refund.
+                </div>
+    </div>
+</div>
+            </div>
+            <div class="not-last:border-b group" data-slot="accordion-item" data-accordion-target="item" data-value="q2" data-closed="true">
+<h3 class="flex" data-orientation="vertical">
+    <button class="focus-visible:ring-ring/50 focus-visible:border-ring focus-visible:after:border-ring **:data-[slot=accordion-trigger-icon]:text-muted-foreground group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4" type="button" id="accordion-faq-q2-trigger" data-slot="accordion-trigger" data-accordion-target="trigger" data-action="click-&gt;accordion#toggle keydown-&gt;accordion#handleKeydown" data-orientation="vertical" aria-expanded="false" aria-controls="accordion-faq-q2-content">How long does shipping take?<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+</h3>
+                <div class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out hidden" id="accordion-faq-q2-content" data-slot="accordion-content" data-accordion-target="content" role="region" aria-labelledby="accordion-faq-q2-trigger" aria-hidden="true" data-closed="true" style="grid-template-rows: 0fr;">
+    <div class="min-h-0 min-w-0 overflow-hidden">
+        <div class="pt-0 pb-2.5 [&amp;_a]:hover:text-foreground [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_p:not(:last-child)]:mb-4">Standard shipping takes 5-7 business days. Express shipping is available for 2-3 days delivery.
+                </div>
+    </div>
+</div>
+            </div>
+            <div class="not-last:border-b group" data-slot="accordion-item" data-accordion-target="item" data-value="q3" data-closed="true">
+<h3 class="flex" data-orientation="vertical">
+    <button class="focus-visible:ring-ring/50 focus-visible:border-ring focus-visible:after:border-ring **:data-[slot=accordion-trigger-icon]:text-muted-foreground group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4" type="button" id="accordion-faq-q3-trigger" data-slot="accordion-trigger" data-accordion-target="trigger" data-action="click-&gt;accordion#toggle keydown-&gt;accordion#handleKeydown" data-orientation="vertical" aria-expanded="false" aria-controls="accordion-faq-q3-content">Do you ship internationally?<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+</h3>
+                <div class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out hidden" id="accordion-faq-q3-content" data-slot="accordion-content" data-accordion-target="content" role="region" aria-labelledby="accordion-faq-q3-trigger" aria-hidden="true" data-closed="true" style="grid-template-rows: 0fr;">
+    <div class="min-h-0 min-w-0 overflow-hidden">
+        <div class="pt-0 pb-2.5 [&amp;_a]:hover:text-foreground [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_p:not(:last-child)]:mb-4">Yes, we ship to over 50 countries worldwide. Shipping rates vary by location.
+                </div>
+    </div>
+</div>
+            </div>
+        </div>
+    </div>
+</div>

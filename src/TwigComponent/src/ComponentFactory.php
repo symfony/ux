@@ -28,6 +28,7 @@ use Twig\Runtime\EscaperRuntime;
 final class ComponentFactory implements ResetInterface
 {
     private array $mountMethods = [];
+    private array $writableProperties = [];
 
     /**
      * @param array<string, array>        $config
@@ -98,7 +99,7 @@ final class ComponentFactory implements ResetInterface
         if (!$componentMetadata->isAnonymous()) {
             // set data that wasn't set in mount on the component directly
             foreach ($data as $property => $value) {
-                if ($this->propertyAccessor->isWritable($component, $property)) {
+                if ($this->writableProperties[$componentMetadata->getName()][$property] ??= $this->propertyAccessor->isWritable($component, $property)) {
                     $this->propertyAccessor->setValue($component, $property, $value);
                     unset($data[$property]);
                 }
@@ -241,5 +242,6 @@ final class ComponentFactory implements ResetInterface
     public function reset(): void
     {
         $this->mountMethods = [];
+        $this->writableProperties = [];
     }
 }

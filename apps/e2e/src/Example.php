@@ -17,7 +17,8 @@ final readonly class Example
         public UxPackage $uxPackage,
         public string $name,
         public string $description,
-        public string $url
+        public string $routeName,
+        public array $routeParameters = [],
     ) {
     }
 }

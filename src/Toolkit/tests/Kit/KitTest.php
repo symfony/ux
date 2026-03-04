@@ -49,9 +49,15 @@ final class KitTest extends TestCase
             __DIR__.'/table',
             new RecipeManifest(RecipeType::Component, 'Table', 'Description', []),
         ));
+        $kit->addRecipe(new Recipe(
+            'login',
+            __DIR__.'/Login',
+            new RecipeManifest(RecipeType::Block, 'Login', 'Description', []),
+        ));
 
-        $this->assertCount(2, $kit->getRecipes());
+        $this->assertCount(3, $kit->getRecipes());
         $this->assertCount(2, $kit->getRecipes(type: RecipeType::Component));
+        $this->assertCount(1, $kit->getRecipes(type: RecipeType::Block));
     }
 
     public function testShouldFailIfComponentIsAlreadyRegisteredInTheKit()

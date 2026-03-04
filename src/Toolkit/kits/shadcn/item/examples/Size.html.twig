@@ -1,0 +1,27 @@
+<div class="flex w-full max-w-md flex-col gap-6">
+    <twig:Item variant="outline">
+        <twig:Item:Content>
+            <twig:Item:Title>Basic Item</twig:Item:Title>
+            <twig:Item:Description>
+                A simple item with title and description.
+            </twig:Item:Description>
+        </twig:Item:Content>
+        <twig:Item:Actions>
+            <twig:Button variant="outline" size="sm">
+                Action
+            </twig:Button>
+        </twig:Item:Actions>
+    </twig:Item>
+
+    <twig:Item variant="outline" size="sm" as="a" href="#">
+        <twig:Item:Media>
+            <twig:ux:icon name="lucide:badge-check" class="size-5" />
+        </twig:Item:Media>
+        <twig:Item:Content>
+            <twig:Item:Title>Your profile has been verified.</twig:Item:Title>
+        </twig:Item:Content>
+        <twig:Item:Actions>
+            <twig:ux:icon name="lucide:chevron-right" class="size-4" />
+        </twig:Item:Actions>
+    </twig:Item>
+</div>

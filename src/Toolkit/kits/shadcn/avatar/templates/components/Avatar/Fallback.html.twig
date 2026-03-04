@@ -1,0 +1,8 @@
+{# @block content The fallback content displayed when no image is available, typically initials #}
+<span
+    data-slot="avatar-fallback"
+    class="{{ ('bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</span>

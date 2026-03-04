@@ -18,9 +18,9 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
@@ -56,7 +56,7 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
                 ],
                 'excluded_patterns' => [
                     '*.d.ts',
-                    '**/controllers.json',
+                    '*/controllers.json',
                 ],
             ],
         ]);

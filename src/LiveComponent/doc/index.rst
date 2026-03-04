@@ -948,6 +948,7 @@ component system from Stimulus:
 
     // assets/controllers/some-custom-controller.js
     // ...
+    import { Controller } from '@hotwired/stimulus';
     import { getComponent } from '@symfony/ux-live-component';
 
     export default class extends Controller {
@@ -996,6 +997,9 @@ Or, to *hide* an element while the component is loading:
 
     <!-- hide when the component is loading -->
     <span data-loading="hide">Saved!</span>
+
+Note that this is a different concept than showing a placeholder when initially loading the component itself.
+See :ref:`loading content <loading-content>` for more info.
 
 Adding and Removing Classes or Attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1310,7 +1314,7 @@ to handle the files and tell the component when the file should be sent:
     <button
         data-action="live#action"
         data-live-action-param="files|my_action"
-    />
+    >Upload</button>
 
 To send a file (or files) with an action use ``files`` modifier.
 Without an argument it will send all pending files to your action.
@@ -1324,11 +1328,11 @@ You can also specify a modifier parameter to choose which files should be upload
         <input type="file" name="multiple[]" multiple />
 
         {# Send only file from first input #}
-        <button data-action="live#action" data-live-action-param="files(my_file)|myAction" />
+        <button data-action="live#action" data-live-action-param="files(my_file)|myAction">Upload</button>
         {# You can chain modifiers to send multiple files #}
-        <button data-action="live#action" data-live-action-param="files(my_file)|files(multiple[])|myAction" />
+        <button data-action="live#action" data-live-action-param="files(my_file)|files(multiple[])|myAction" >Upload</button>
         {# Or send all pending files #}
-        <button data-action="live#action" data-live-action-param="files|myAction" />
+        <button data-action="live#action" data-live-action-param="files|myAction" >Upload</button>
     </p>
 
 The files will be available in a regular ``$request->files`` files bag::
@@ -3302,6 +3306,7 @@ In the ``EditPost`` template, you render the
 
 .. code-block:: html+twig
 
+    {# templates/components/MarkdownTextarea.html.twig #}
     <div {{ attributes }} class="mb-3">
         <textarea
             name="{{ name }}"
@@ -3696,6 +3701,40 @@ You can also control the type of the generated URL:
           use DefaultActionTrait;
       }
 
+Configuring Fetch Credentials
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.33
+
+    The ``fetchCredentials`` option was added in LiveComponents 2.33.
+
+By default, Live components use the ``same-origin`` credentials policy for fetch requests,
+which only sends credentials (cookies, HTTP authentication) for same-origin requests.
+
+If your component needs to make cross-origin requests with credentials (e.g., when using
+subdomains or different domains), you can configure the ``fetchCredentials`` option:
+
+.. code-block:: diff
+
+      // src/Twig/Components/RandomNumber.php
+      use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+      use Symfony\UX\LiveComponent\DefaultActionTrait;
+
+    - #[AsLiveComponent]
+    + #[AsLiveComponent(fetchCredentials: 'include')]
+      class RandomNumber
+      {
+          use DefaultActionTrait;
+      }
+
+The ``fetchCredentials`` option accepts three values:
+
+* ``same-origin`` (default): Send credentials for same-origin requests only
+* ``include``: Always send credentials, even for cross-origin requests
+* ``omit``: Never send credentials
+
+This corresponds directly to the `credentials option of the fetch() API`_.
+
 Add a Hook on LiveProp Update
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -3833,6 +3872,13 @@ uses Symfony's test client to render and make requests to your components::
             $testComponent
                 ->call('processUpload', files: ['file' => new UploadedFile(...)]);
 
+            // call live action with multiple files uploads
+            $testComponent
+                ->call('processUpload', files: ['multiple' => [
+                    new UploadedFile(...),
+                    new UploadedFile(...),
+                ]]);
+
             // emit live events
             $testComponent
                 ->emit('increaseEvent')
@@ -3849,6 +3895,23 @@ uses Symfony's test client to render and make requests to your components::
 
             // Assert that an event was not emitted
             $this->assertComponentNotEmitEvent($testComponent->render(), 'decreaseEvent');
+
+            // dispatch browser events
+            $testComponent
+                ->dispatchBrowserEvent('browserEvent')
+                ->dispatchBrowserEvent('browserEvent', ['amount' => 2, 'unit' => 'kg']) // dispatch a browser event with arguments
+            ;
+
+            // Assert that the event was dispatched
+            $this->assertComponentDispatchBrowserEvent($testComponent->render(), 'browserEvent')
+                // optionally, you can assert that the event was dispatched with specific data...
+                ->withPayload(['amount' => 2, 'unit' => 'kg'])
+                // ... or only with a subset of data
+                ->withPayloadSubset(['amount' => 2])
+            ;
+
+            // Assert that an event was not dispatched
+            $this->assertComponentNotDispatchBrowserEvent($testComponent->render(), 'otherBrowserEvent');
 
             // set live props
             $testComponent
@@ -3982,3 +4045,4 @@ promise. However, any internal implementation in the JavaScript files
 .. _`@symfony/ux-live-component npm package`: https://www.npmjs.com/package/@symfony/ux-live-component
 .. _`Symfony TypeInfo`: https://symfony.com/doc/current/components/type_info.html
 .. _`Symfony PropertyInfo`: https://symfony.com/doc/current/components/property_info.html
+.. _`credentials option of the fetch() API`: https://developer.mozilla.org/en-US/docs/Web/API/fetch#credentials

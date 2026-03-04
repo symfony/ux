@@ -81,7 +81,7 @@ class MakeAutocompleteField extends AbstractMaker
 
         $question = new Question('The class name of the entity you want to autocomplete');
         $question->setAutocompleterValues($entities);
-        $question->setValidator(function ($choice) use ($entities) {
+        $question->setValidator(static function ($choice) use ($entities) {
             return Validator::entityExists($choice, $entities);
         });
 

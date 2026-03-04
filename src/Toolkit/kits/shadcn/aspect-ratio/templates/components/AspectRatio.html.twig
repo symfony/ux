@@ -1,3 +1,6 @@
+{# @prop ratio string The aspect ratio (e.g., `16 / 9`, `4 / 3`, `1 / 1`) #}
+{# @prop style string Additional inline CSS styles #}
+{# @block content The content to display within the aspect ratio container #}
 {%- props ratio, style = '' -%}
 <div
     style="aspect-ratio: {{ ratio }}; {{ style }}"

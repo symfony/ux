@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error
 import { Idiomorph } from 'idiomorph/dist/idiomorph.esm.js';
 import { cloneHTMLElement, getModelDirectiveFromElement, setValueOnElement } from './dom_utils';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
@@ -121,23 +121,23 @@ export function executeMorphdom(
                     // We assume fromEl is an Alpine component if it has `__x` property.
                     // If it's the case, then we should morph `fromEl` to `ToEl` (thanks to https://alpinejs.dev/plugins/morph)
                     // in order to keep the component state and UI in sync.
-                    // @ts-ignore
+                    // @ts-expect-error
                     if (typeof fromEl.__x !== 'undefined') {
-                        // @ts-ignore
+                        // @ts-expect-error
                         if (!window.Alpine) {
                             throw new Error(
                                 'Unable to access Alpine.js though the global window.Alpine variable. Please make sure Alpine.js is loaded before Symfony UX LiveComponent.'
                             );
                         }
 
-                        // @ts-ignore
+                        // @ts-expect-error
                         if (typeof window.Alpine.morph !== 'function') {
                             throw new Error(
                                 'Unable to access Alpine.js morph function. Please make sure the Alpine.js Morph plugin is installed and loaded, see https://alpinejs.dev/plugins/morph for more information.'
                             );
                         }
 
-                        // @ts-ignore
+                        // @ts-expect-error
                         window.Alpine.morph(fromEl.__x, toEl);
                     }
 

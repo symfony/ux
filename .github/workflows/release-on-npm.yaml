@@ -1,55 +1,59 @@
 name: Release on NPM
 
 on:
-  push:
-    tags:
-        - 'v2.*.*'
+    push:
+        tags:
+            - 'v2.*.*'
+
+permissions:
+    id-token: write # Required for OIDC
+    contents: read
 
 jobs:
     release:
         runs-on: ubuntu-latest
         steps:
-          - uses: actions/checkout@v4
-            with:
-              ref: 2.x
+            - uses: actions/checkout@v4
+              with:
+                  ref: 2.x
 
-          - name: Configure Git
-            run: |
-              git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-              git config --global user.name "github-actions[bot]"
+            - name: Configure Git
+              run: |
+                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git config --global user.name "github-actions[bot]"
 
-          - name: Extract version from tag
-            run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+            - name: Extract version from tag
+              run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
-          - run: npm i -g corepack && corepack enable
-          - uses: actions/setup-node@v4
-            with:
-              node-version-file: '.nvmrc'
-              cache: 'pnpm'
-              cache-dependency-path: |
-                pnpm-lock.yaml
-                package.json
-                src/**/package.json
-          - name: Install root JS dependencies
-            run: pnpm install --frozen-lockfile
+            - run: npm i -g corepack && corepack enable
+            - uses: actions/setup-node@v4
+              with:
+                  registry-url: 'https://registry.npmjs.org'
+                  node-version-file: '.nvmrc'
+                  cache: 'pnpm'
+                  cache-dependency-path: |
+                      pnpm-lock.yaml
+                      package.json
+                      src/**/package.json
 
-          - name: Update version of JS packages
-            run: pnpm version ${{ env.VERSION }} --no-git-tag-version --workspaces --no-workspaces-update
+              # npm 11.5.1 or later is required for OIDC
+            - run: npm install -g npm@latest
 
-          - name: Commit changes
-            run: |
-              git add .
-              git commit -m "Update versions to ${{ env.VERSION }}"
+            - name: Install root JS dependencies
+              run: pnpm install --frozen-lockfile
 
-          - name: Configure NPM authentication
-            run: pnpm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
-            env:
-              NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
+            - name: Update version of JS packages
+              run: pnpm version ${{ env.VERSION }} --no-git-tag-version --workspaces --no-workspaces-update
 
-          - name: Publish on NPM
-            run: pnpm publish --recursive --access public --no-git-checks
+            - name: Commit changes
+              run: |
+                  git add .
+                  git commit -m "Update versions to ${{ env.VERSION }}"
 
-          - name: Push changes
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            run: git push origin 2.x
+            - name: Publish on NPM
+              run: pnpm publish --recursive --access public --no-git-checks
+
+            - name: Push changes
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: git push origin 2.x
