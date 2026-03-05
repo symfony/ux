@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\UX\LiveComponent\DependencyInjection\Compiler\ComponentDefaultActionPass;
+use Symfony\UX\LiveComponent\DependencyInjection\Compiler\LiveComponentPass;
 use Symfony\UX\LiveComponent\DependencyInjection\Compiler\OptionalDependencyPass;
 
 /**
@@ -29,6 +30,7 @@ final class LiveComponentBundle extends Bundle
         // must run before Symfony\Component\Serializer\DependencyInjection\SerializerPass
         $container->addCompilerPass(new OptionalDependencyPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 100);
         $container->addCompilerPass(new ComponentDefaultActionPass());
+        $container->addCompilerPass(new LiveComponentPass());
     }
 
     public function getPath(): string
