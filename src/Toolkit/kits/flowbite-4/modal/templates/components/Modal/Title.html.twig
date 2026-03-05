@@ -1,0 +1,8 @@
+{# @block content The title text of the modal #}
+<h3
+    id="{{ _modal_title_id }}"
+    class="{{ ('text-lg font-medium text-heading ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.without('id') }}
+>
+    {%- block content %}{% endblock -%}
+</h3>
