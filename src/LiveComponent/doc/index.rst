@@ -84,25 +84,33 @@ Dynamic Templates
 
 This is particularly useful for complex live components that need to switch views based on user interaction::
 
-    // src/Twig/Components/ChatWindow.php
+    // src/Twig/Components/CheckoutWizard.php
     namespace App\Twig\Components;
 
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\DefaultActionTrait;
     use Symfony\UX\TwigComponent\Attribute\FromMethod;
 
-    #[AsLiveComponent(template: new FromMethod('resolveTemplate'))]
-    class ChatWindow
+    #[AsLiveComponent('checkout_wizard', template: new FromMethod('getStepTemplate'))]
+    class CheckoutWizard
     {
-        use DefaultActionTrait;
+        #[LiveProp]
+        public int $currentStep = 1;
 
-        public bool $isMinimized = false;
-
-        public function resolveTemplate(): string
+        #[LiveAction]
+        public function nextStep(): void
         {
-            return $this->isMinimized 
-                ? 'components/chat/minimized.html.twig' 
-                : 'components/chat/expanded.html.twig';
+            $this->currentStep++;
+        }
+
+        public function getStepTemplate(): string
+        {
+            return match ($this->currentStep) {
+                1 => 'components/checkout/step_1_address.html.twig',
+                2 => 'components/checkout/step_2_shipping.html.twig',
+                3 => 'components/checkout/step_3_payment.html.twig',
+                default => 'components/checkout/summary.html.twig',
+            };
         }
     }
 

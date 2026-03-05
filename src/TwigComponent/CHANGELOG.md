@@ -3,7 +3,7 @@
 ## 2.33
 
 - Extended support for the `index.html.twig` template fallback when resolving namespaced anonymous components
-- Add support for dynamic template resolution with `AsTwigComponent(template: FromMethod('getTemplate'))`
+- Add support for dynamic template resolution with `AsTwigComponent(template: FromMethod('getCustomFuntion'))`
 
 ## 2.32
 

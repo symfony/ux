@@ -389,38 +389,28 @@ Dynamic Templates
 
     The ability to dynamically resolve templates via the ``FromMethod`` attribute was added.
 
-Sometimes, you need to render a different template based on the component's state or props (e.g., a desktop vs. mobile version of a search dropdown).
+Sometimes, you need to render a different template based on the component's state or props.
 
 Instead of a static string, you can pass a ``FromMethod`` instance to the ``template`` option of the ``AsTwigComponent`` attribute. This tells Symfony to call the specified method to determine the template path at runtime::
 
-    // src/Twig/Components/SearchForm.php
+    // src/Twig/Components/UserProfile.php
     namespace App\Twig\Components;
 
     use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
     use Symfony\UX\TwigComponent\Attribute\FromMethod;
 
-    #[AsTwigComponent(template: new FromMethod('getDynamicTemplate'))]
-    class SearchForm
+    #[AsTwigComponent('user_profile', template: new FromMethod('getTemplateForRole'))]
+    class UserProfile
     {
-        public string $theme = 'desktop';
-
-        public function getDynamicTemplate(): string
+        public function getTemplateForRole(): string
         {
-            return 'mobile' === $this->theme
-                ? 'components/SearchForm/mobile.html.twig'
-                : 'components/SearchForm/desktop.html.twig';
+            if ($this->isGranted('ROLE_ADMIN')) {
+                return 'components/user_profile/admin_dashboard.html.twig';
+            }
+
+            return 'components/user_profile/public_card.html.twig';
         }
     }
-
-Now, you can switch the template by passing the ``theme`` prop:
-
-.. code-block:: html+twig
-
-    {# Renders components/SearchForm/mobile.html.twig #}
-    <twig:SearchForm theme="mobile" />
-
-    {# Renders components/SearchForm/desktop.html.twig #}
-    <twig:SearchForm theme="desktop" />
 
 Fetching Services
 -----------------

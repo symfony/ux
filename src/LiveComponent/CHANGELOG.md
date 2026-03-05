@@ -22,7 +22,7 @@
     }
     ```
 
-- Add support for dynamic template resolution with AsLiveComponent(template: FromMethod('customFunction')
+- Add support for dynamic template resolution with `AsLiveComponent(template: FromMethod('customFunction'))`
 
 ## 2.31
 

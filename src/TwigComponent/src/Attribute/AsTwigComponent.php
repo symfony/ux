@@ -76,7 +76,6 @@ class AsTwigComponent
         ];
 
         if ($this->template instanceof FromMethod) {
-            $config['template'] = '';
             $config['template_from_method'] = $this->template->method;
         } else {
             $config['template'] = $this->template;

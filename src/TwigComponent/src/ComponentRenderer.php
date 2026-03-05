@@ -122,25 +122,6 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
             $metadata->getAttributesVar() => $mounted->getAttributes(),
         ]);
 
-        $template = $metadata->getTemplate();
-
-        // FIRST: method template check
-        if ($method = $metadata->getTemplateFromMethod()) {
-            if (!method_exists($component, $method) || !\is_callable([$component, $method])) {
-                throw new \LogicException(\sprintf('The template method "%s" does not exist or is not callable on component "%s".', $method, get_debug_type($component)));
-            }
-
-            $template = $component->$method();
-
-            if (!\is_string($template)) {
-                throw new \LogicException(\sprintf('The template method "%s" must return a string.', $method));
-            }
-        }
-
-        if ($template) {
-            $event->setTemplate($template);
-        }
-
         $this->dispatcher->dispatch($event);
 
         $event->setVariables([
