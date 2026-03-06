@@ -1,0 +1,14 @@
+{# @prop defaultValue string define the open Tabs at initial rendering. Defaults to `` #}
+{# @prop orientation 'horizontal'|'vertical' define the visual orientation. Defaults to `horizontal` #}
+{# @block content The default block #}
+{%- props defaultValue = '', orientation = 'horizontal' -%}
+
+<div
+    data-controller="tabs"
+    data-tabs-active-tab-value="{{ defaultValue }}"
+    data-orientation="{{ orientation }}"
+    class="{{ ('gap-4 group/tabs flex data-[orientation=horizontal]:flex-col ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {% block content %}{% endblock %}
+</div>
