@@ -1,0 +1,7 @@
+{# @block content The pagination items, typically multiple `Pagination:Item` components #}
+<ul
+    class="{{ ('flex -space-x-px text-sm rounded-base [&_a]:h-10 [&_*]:rounded-none [&>*:first-child]:[&_*]:rounded-s-base [&>*:last-child]:[&_*]:rounded-e-base ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</ul>
