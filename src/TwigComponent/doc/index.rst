@@ -389,26 +389,25 @@ Dynamic Templates
 
     The ability to dynamically resolve templates via the ``FromMethod`` attribute was added.
 
-Sometimes, you need to render a different template based on the component's state or props.
+Sometimes, you need to render a different template based on the component state.
 
-Instead of a static string, you can pass a ``FromMethod`` instance to the ``template`` option of the ``AsTwigComponent`` attribute. This tells Symfony to call the specified method to determine the template path at runtime::
+It is possible to reference a component method by passing ``FromMethod`` to the ``template`` option of ``AsTwigComponent``, which will be used to compute the template to use before rendering the component::
 
-    // src/Twig/Components/UserProfile.php
     namespace App\Twig\Components;
 
     use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
     use Symfony\UX\TwigComponent\Attribute\FromMethod;
 
-    #[AsTwigComponent('user_profile', template: new FromMethod('getTemplateForRole'))]
-    class UserProfile
+    #[AsTwigComponent(template: new FromMethod('getTemplate'))]
+    class SearchResults
     {
-        public function getTemplateForRole(): string
-        {
-            if ($this->isGranted('ROLE_ADMIN')) {
-                return 'components/user_profile/admin_dashboard.html.twig';
-            }
+        public string $layout = 'rows';
 
-            return 'components/user_profile/public_card.html.twig';
+        public function getTemplate(): string
+        {
+            return 'rows' === $this->layout
+                ? 'components/SearchResults/rows.html.twig'
+                : 'components/SearchResults/grid.html.twig';
         }
     }
 
