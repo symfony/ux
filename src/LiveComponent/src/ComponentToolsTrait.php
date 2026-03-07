@@ -50,4 +50,26 @@ trait ComponentToolsTrait
     {
         $this->liveResponder->dispatchBrowserEvent($eventName, $payload);
     }
+
+    /**
+     * Stops the data-poll loop in the frontend for a specific action.
+     *
+     * @param string $actionName The name of the action to stop. Defaults to the main render loop ('$render').
+     */
+    protected function stopPoll(string $actionName = '$render'): void
+    {
+        $this->dispatchBrowserEvent('live:stop-poll', [
+            'action' => $actionName,
+        ]);
+    }
+
+    /**
+     * Stops all active data-poll loops in the frontend for this component.
+     */
+    protected function stopAllPolls(): void
+    {
+        $this->dispatchBrowserEvent('live:stop-poll', [
+            'isAll' => true,
+        ]);
+    }
 }

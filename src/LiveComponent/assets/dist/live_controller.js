@@ -1961,27 +1961,70 @@ var PageUnloadingPlugin_default = class {
 var PollingDirector_default = class {
 	constructor(component) {
 		this.isPollingActive = true;
+		this.polls = [];
 		this.pollingIntervals = [];
+		this.isPageVisible = true;
+		this.isComponentIntersecting = true;
+		this.memoryCounts = {};
 		this.component = component;
+		this.isPageVisible = !document.hidden;
+		this.visibilityChangeListener = () => {
+			this.isPageVisible = !document.hidden;
+			this.evaluatePollingStates();
+		};
+		document.addEventListener("visibilitychange", this.visibilityChangeListener);
+		if (typeof IntersectionObserver !== "undefined") {
+			this.observer = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					this.isComponentIntersecting = entry.isIntersecting;
+					this.evaluatePollingStates();
+				});
+			});
+			this.observer.observe(this.component.element);
+		}
 	}
-	addPoll(actionName, duration) {
-		this.polls.push({
+	addPoll(actionName, duration, limit = 0, visibilityMode = false) {
+		const pollConfig = {
 			actionName,
-			duration
-		});
-		if (this.isPollingActive) this.initiatePoll(actionName, duration);
+			duration,
+			limit,
+			count: this.memoryCounts[actionName] || 0,
+			visibilityMode
+		};
+		this.polls.push(pollConfig);
+		if (this.isPollingActive) this.evaluatePollingStates();
 	}
 	startAllPolling() {
 		if (this.isPollingActive) return;
 		this.isPollingActive = true;
-		this.polls.forEach(({ actionName, duration }) => {
-			this.initiatePoll(actionName, duration);
+		this.evaluatePollingStates();
+	}
+	evaluatePollingStates() {
+		if (!this.isPollingActive) return;
+		this.polls.forEach((poll) => {
+			if (poll.limit > 0 && poll.count >= poll.limit) return;
+			let shouldRun = true;
+			if (poll.visibilityMode === "page") shouldRun = this.isPageVisible;
+			else if (poll.visibilityMode === "component") shouldRun = this.isPageVisible && this.isComponentIntersecting;
+			const isRunning = this.pollingIntervals.some((i) => i.actionName === poll.actionName);
+			if (shouldRun && !isRunning) this.initiatePoll(poll);
+			else if (!shouldRun && isRunning) this.stopPolling(poll.actionName);
 		});
 	}
 	stopAllPolling() {
 		this.isPollingActive = false;
-		this.pollingIntervals.forEach((interval) => {
-			clearInterval(interval);
+		this.pollingIntervals.forEach(({ timer }) => {
+			window.clearInterval(timer);
+		});
+		this.pollingIntervals = [];
+	}
+	stopPolling(actionName) {
+		this.pollingIntervals = this.pollingIntervals.filter(({ actionName: intervalAction, timer }) => {
+			if (intervalAction === actionName) {
+				window.clearInterval(timer);
+				return false;
+			}
+			return true;
 		});
 	}
 	clearPolling() {
@@ -1989,18 +2032,25 @@ var PollingDirector_default = class {
 		this.polls = [];
 		this.startAllPolling();
 	}
-	initiatePoll(actionName, duration) {
-		let callback;
-		if (actionName === "$render") callback = () => {
-			this.component.render();
-		};
-		else callback = () => {
-			this.component.action(actionName, {}, 0);
-		};
+	initiatePoll(poll) {
+		let callback = poll.actionName === "$render" ? () => this.component.render() : () => this.component.action(poll.actionName, {}, 0);
 		const timer = window.setInterval(() => {
 			callback();
-		}, duration);
-		this.pollingIntervals.push(timer);
+			if (poll.limit > 0) {
+				poll.count++;
+				this.memoryCounts[poll.actionName] = poll.count;
+				if (poll.count >= poll.limit) this.stopPolling(poll.actionName);
+			}
+		}, poll.duration);
+		this.pollingIntervals.push({
+			actionName: poll.actionName,
+			timer
+		});
+	}
+	destroy() {
+		document.removeEventListener("visibilitychange", this.visibilityChangeListener);
+		if (this.observer) this.observer.disconnect();
+		this.stopAllPolling();
 	}
 };
 var PollingPlugin_default = class {
@@ -2012,14 +2062,19 @@ var PollingPlugin_default = class {
 			this.pollingDirector.startAllPolling();
 		});
 		component.on("disconnect", () => {
-			this.pollingDirector.stopAllPolling();
+			this.pollingDirector.destroy();
 		});
 		component.on("render:finished", () => {
 			this.initializePolling();
 		});
+		this.element.addEventListener("live:stop-poll", ((event) => {
+			const actionToStop = event.detail?.action;
+			if (actionToStop) this.pollingDirector.stopPolling(actionToStop);
+			else this.pollingDirector.stopAllPolling();
+		}));
 	}
-	addPoll(actionName, duration) {
-		this.pollingDirector.addPoll(actionName, duration);
+	addPoll(actionName, duration, limit, visibilityMode = false) {
+		this.pollingDirector.addPoll(actionName, duration, limit, visibilityMode);
 	}
 	clearPolling() {
 		this.pollingDirector.clearPolling();
@@ -2030,15 +2085,27 @@ var PollingPlugin_default = class {
 		const rawPollConfig = this.element.dataset.poll;
 		parseDirectives(rawPollConfig || "$render").forEach((directive) => {
 			let duration = 2e3;
+			let limit = 0;
+			let visibilityMode = false;
 			directive.modifiers.forEach((modifier) => {
 				switch (modifier.name) {
 					case "delay":
 						if (modifier.value) duration = Number.parseInt(modifier.value);
 						break;
+					case "limit":
+						if (modifier.value) {
+							const parsed = Number.parseInt(modifier.value, 10);
+							limit = Number.isNaN(parsed) || parsed <= 0 ? 0 : parsed;
+						}
+						break;
+					case "visible":
+						if (modifier.value === "page") visibilityMode = "page";
+						else visibilityMode = "component";
+						break;
 					default: console.warn(`Unknown modifier "${modifier.name}" in data-poll "${rawPollConfig}".`);
 				}
 			});
-			this.addPoll(directive.action, duration);
+			this.addPoll(directive.action, duration, limit, visibilityMode);
 		});
 	}
 };

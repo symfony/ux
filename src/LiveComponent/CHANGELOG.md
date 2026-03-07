@@ -22,6 +22,8 @@
     }
     ```
 
+- Add `limit` and `visible` modifiers to `data-poll`, alongside new `stopPoll()` and `stopAllPolls()` methods
+
 ## 2.31
 
 - Add browser events assertions in `InteractsWithLiveComponents`:
