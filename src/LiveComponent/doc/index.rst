@@ -2537,6 +2537,60 @@ You can also trigger a specific "action" instead of a normal re-render:
         #}
     >
 
+Advanced Polling Modifiers
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can further control polling behavior using the ``limit`` and ``visible`` modifiers:
+
+* ``limit(n)``: Stops polling after exactly ``n`` successful requests (default is ``0``, which means infinite).
+* ``visible`` (or ``visible(component)``): Pauses polling when the component is not visible on the screen or when the browser tab is hidden. It resumes automatically without resetting the limit counter when visible again.
+* ``visible(page)``: Pauses polling only when the browser tab is in the background.
+
+.. code-block:: html+twig
+
+    <div
+        {{ attributes }}
+        {# Poll every 1 second, stop after 5 times, and only run when visible on screen #}
+        data-poll="delay(1000)|limit(5)|visible|$render"
+    >
+
+Stopping a Poll from PHP
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can dynamically stop a polling loop from your component's PHP class by using the ``ComponentToolsTrait`` and calling ``$this->stopPoll()``::
+
+    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+    use Symfony\UX\LiveComponent\Attribute\LiveAction;
+    use Symfony\UX\LiveComponent\ComponentToolsTrait;
+    use Symfony\UX\LiveComponent\DefaultActionTrait;
+
+    #[AsLiveComponent]
+    class ProgressComponent
+    {
+        use DefaultActionTrait;
+        use ComponentToolsTrait;
+
+        public bool $isFinished = false;
+
+        #[LiveAction]
+        public function checkProgress(): void
+        {
+            // ... do some work
+
+            if ($this->isFinished) {
+                // Stops the specific 'checkProgress' polling loop
+                $this->stopPoll('checkProgress');
+
+                // Alternatively, stop the default render polling:
+                // $this->stopPoll();
+
+                // Or stop ALL active polling loops on this component:
+                // $this->stopAllPolls();
+            }
+        }
+    }
+
+
 Changing the URL when a LiveProp changes
 ----------------------------------------
 

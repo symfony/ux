@@ -16,16 +16,32 @@ export default class implements PluginInterface {
             this.pollingDirector.startAllPolling();
         });
         component.on('disconnect', () => {
-            this.pollingDirector.stopAllPolling();
+            // Clean up intervals, observers, and event listeners to prevent memory leaks
+            this.pollingDirector.destroy();
         });
         component.on('render:finished', () => {
             // re-start polling, in case polling changed
             this.initializePolling();
         });
+
+        // Listen for the stop-poll event dispatched from the server (PHP)
+        this.element.addEventListener('live:stop-poll', ((event: CustomEvent) => {
+            const actionToStop = event.detail?.action;
+            if (actionToStop) {
+                this.pollingDirector.stopPolling(actionToStop);
+            } else {
+                this.pollingDirector.stopAllPolling();
+            }
+        }) as EventListener);
     }
 
-    addPoll(actionName: string, duration: number): void {
-        this.pollingDirector.addPoll(actionName, duration);
+    addPoll(
+        actionName: string,
+        duration: number,
+        limit: number,
+        visibilityMode: 'component' | 'page' | false = false
+    ): void {
+        this.pollingDirector.addPoll(actionName, duration, limit, visibilityMode);
     }
 
     clearPolling(): void {
@@ -44,6 +60,8 @@ export default class implements PluginInterface {
 
         directives.forEach((directive) => {
             let duration = 2000;
+            let limit = 0;
+            let visibilityMode: 'component' | 'page' | false = false; // Default: runs always in the background (BC)
 
             directive.modifiers.forEach((modifier) => {
                 switch (modifier.name) {
@@ -51,14 +69,28 @@ export default class implements PluginInterface {
                         if (modifier.value) {
                             duration = Number.parseInt(modifier.value);
                         }
-
+                        break;
+                    case 'limit':
+                        if (modifier.value) {
+                            const parsed = Number.parseInt(modifier.value, 10);
+                            // Fallback to 0 (infinite) if NaN or negative
+                            limit = Number.isNaN(parsed) || parsed <= 0 ? 0 : parsed;
+                        }
+                        break;
+                    case 'visible':
+                        if (modifier.value === 'page') {
+                            visibilityMode = 'page';
+                        } else {
+                            // Default to 'component' if only "visible" or "visible(component)" is provided
+                            visibilityMode = 'component';
+                        }
                         break;
                     default:
                         console.warn(`Unknown modifier "${modifier.name}" in data-poll "${rawPollConfig}".`);
                 }
             });
 
-            this.addPoll(directive.action, duration);
+            this.addPoll(directive.action, duration, limit, visibilityMode);
         });
     }
 }
