@@ -435,8 +435,12 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
 
         const finalValue = getValueFromElement(element, this.component.valueStore);
 
+        // Check if the value has been completely cleared by the user
+        const isEmpty = finalValue === '' || finalValue === null || finalValue === undefined;
+
         if (isTextualInputElement(element) || isTextareaElement(element)) {
             if (
+                !isEmpty && // Only check min_length if the value is not empty
                 modelBinding.minLength !== null &&
                 typeof finalValue === 'string' &&
                 finalValue.length < modelBinding.minLength
@@ -445,6 +449,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
             }
 
             if (
+                !isEmpty && // Only check max_length if the value is not empty
                 modelBinding.maxLength !== null &&
                 typeof finalValue === 'string' &&
                 finalValue.length > modelBinding.maxLength
@@ -454,14 +459,18 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         }
 
         if (isNumericalInputElement(element)) {
-            const numericValue = Number(finalValue);
+            // An empty input converts to 0 via Number(""), which could incorrectly trigger min_value rules.
+            // Therefore, we bypass validation for numeric fields if they are empty.
+            if (!isEmpty) {
+                const numericValue = Number(finalValue);
 
-            if (modelBinding.minValue !== null && numericValue < modelBinding.minValue) {
-                return;
-            }
+                if (modelBinding.minValue !== null && numericValue < modelBinding.minValue) {
+                    return;
+                }
 
-            if (modelBinding.maxValue !== null && numericValue > modelBinding.maxValue) {
-                return;
+                if (modelBinding.maxValue !== null && numericValue > modelBinding.maxValue) {
+                    return;
+                }
             }
         }
 

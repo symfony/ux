@@ -3038,21 +3038,26 @@ var _LiveControllerDefault = class _LiveControllerDefault extends Controller {
       }
     }
     const finalValue = getValueFromElement(element, this.component.valueStore);
+    const isEmpty = finalValue === "" || finalValue === null || finalValue === void 0;
     if (isTextualInputElement(element) || isTextareaElement(element)) {
-      if (modelBinding.minLength !== null && typeof finalValue === "string" && finalValue.length < modelBinding.minLength) {
+      if (!isEmpty && // Only check min_length if the value is not empty
+      modelBinding.minLength !== null && typeof finalValue === "string" && finalValue.length < modelBinding.minLength) {
         return;
       }
-      if (modelBinding.maxLength !== null && typeof finalValue === "string" && finalValue.length > modelBinding.maxLength) {
+      if (!isEmpty && // Only check max_length if the value is not empty
+      modelBinding.maxLength !== null && typeof finalValue === "string" && finalValue.length > modelBinding.maxLength) {
         return;
       }
     }
     if (isNumericalInputElement(element)) {
-      const numericValue = Number(finalValue);
-      if (modelBinding.minValue !== null && numericValue < modelBinding.minValue) {
-        return;
-      }
-      if (modelBinding.maxValue !== null && numericValue > modelBinding.maxValue) {
-        return;
+      if (!isEmpty) {
+        const numericValue = Number(finalValue);
+        if (modelBinding.minValue !== null && numericValue < modelBinding.minValue) {
+          return;
+        }
+        if (modelBinding.maxValue !== null && numericValue > modelBinding.maxValue) {
+          return;
+        }
       }
     }
     this.component.set(modelBinding.modelName, finalValue, modelBinding.shouldRender, modelBinding.debounce);
