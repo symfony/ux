@@ -1,10 +1,15 @@
-<twig:Alert class="max-w-lg">
-    <twig:ux:icon name="lucide:circle-alert" />
-    <twig:Alert:Title>Heads up!</twig:Alert:Title>
+<twig:Alert
+    variant="brand | danger | success | warning | dark"
+    border=" none | bordered | accent"
+>
+    <twig:block name="icon">
+        <twig:ux:icon name="flowbite:info-circle-outline" class="shrink-0" aria-hidden="true" />
+    </twig:block>
+    <twig:Alert:Title>Info alert!</twig:Alert:Title>
     <twig:Alert:Description>
         You can add components to your app using the cli.
     </twig:Alert:Description>
     <twig:Alert:Action>
-        <twig:Button variant="outline">Enable</twig:Button>
+        <twig:Button size="sm">Enable</twig:Button>
     </twig:Alert:Action>
 </twig:Alert>

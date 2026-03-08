@@ -2,7 +2,7 @@
 {# @prop borderless boolean Whether to hide the table borders. Defaults to `false` #}
 {%- props borderless = false -%}
 <table
-    data-border="{{ borderless ? 'borderless':'bordered' }}"
+    data-border="{{ borderless ? 'borderless' : 'bordered' }}"
     class="{{ ('w-full text-sm text-left rtl:text-right text-body group/table ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}
 >

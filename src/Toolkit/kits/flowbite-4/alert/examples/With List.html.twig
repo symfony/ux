@@ -1,6 +1,8 @@
 <div class="grid w-full max-w-xl items-start gap-4">
     <twig:Alert variant="success">
-        <twig:ux:icon name="flowbite:info-circle-outline" aria-hidden="true" />
+        <twig:block name="icon">
+            <twig:ux:icon name="flowbite:info-circle-outline" class="shrink-0" aria-hidden="true" />
+        </twig:block>
         <twig:Alert:Title>Ensure that these requirements are met:</twig:Alert:Title>
         <twig:Alert:Description>
             <ul class="my-2 list-disc list-outside space-y-1 ps-2.5">
@@ -10,12 +12,14 @@
             </ul>
         </twig:Alert:Description>
         <twig:Alert:Action>
-            <a href="#">See recomandation here</a>
+            <a href="#">See recommendation here</a>
         </twig:Alert:Action>
     </twig:Alert>
 
     <twig:Alert variant="warning">
-        <twig:ux:icon name="flowbite:info-circle-outline" aria-hidden="true" />
+        <twig:block name="icon">
+            <twig:ux:icon name="flowbite:info-circle-outline" class="shrink-0" aria-hidden="true" />
+        </twig:block>
         <twig:Alert:Title>Ensure that these requirements are met:</twig:Alert:Title>
         <twig:Alert:Description>
             <ul class="my-2 list-disc list-outside space-y-1 ps-2.5">
@@ -25,12 +29,14 @@
             </ul>
         </twig:Alert:Description>
         <twig:Alert:Action>
-            <a href="#">See recomandation here</a>
+            <a href="#">See recommendation here</a>
         </twig:Alert:Action>
     </twig:Alert>
 
     <twig:Alert variant="danger">
-        <twig:ux:icon name="flowbite:info-circle-outline" aria-hidden="true" />
+        <twig:block name="icon">
+            <twig:ux:icon name="flowbite:info-circle-outline" class="shrink-0" aria-hidden="true" />
+        </twig:block>
         <twig:Alert:Title>Ensure that these requirements are met:</twig:Alert:Title>
         <twig:Alert:Description>
             <ul class="my-2 list-disc list-outside space-y-1 ps-2.5">
@@ -40,7 +46,7 @@
             </ul>
         </twig:Alert:Description>
         <twig:Alert:Action>
-            <a href="#">See recomandation here</a>
+            <a href="#">See recommendation here</a>
         </twig:Alert:Action>
     </twig:Alert>
 </div>

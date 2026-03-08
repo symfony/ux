@@ -1,0 +1,67 @@
+<!--
+- Kit: Flowbite v4
+- Component: Skeleton
+- Code:
+```twig
+<twig:Card class="animate-pulse" role="status">
+    <twig:Card:Header>
+        <twig:Skeleton class="flex items-center justify-center h-48 max-w-sm" shape="rounded" role="status">
+            <twig:ux:icon name="flowbite:image-outline" class="w-11 h-11 text-fg-disabled" aria-hidden="true" />
+            <span class="sr-only">Loading...</span>
+        </twig:Skeleton>
+    </twig:Card:Header>
+
+    <twig:Card:Content>
+        <twig:Skeleton class="h-2.5 w-48 mb-4" />
+
+        <div class="space-y-2.5">
+            <twig:Skeleton class="h-2" />
+            <twig:Skeleton class="h-2" />
+            <twig:Skeleton class="h-2" />
+        </div>
+
+        <div class="flex items-center mt-4">
+            <twig:ux:icon name="flowbite:user-circle-outline" class="w-8 h-8 text-fg-disabled me-3" aria-hidden="true" />
+            <div>
+                <twig:Skeleton class="h-2.5 w-32 mb-2" />
+                <twig:Skeleton class="w-48 h-2" />
+            </div>
+        </div>
+        <span class="sr-only">Loading...</span>
+    </twig:Card:Content>
+</twig:Card>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="bg-neutral-primary-soft text-body block p-6 border border-default rounded-base shadow-xs animate-pulse" role="status">
+<div class="pb-6">
+<div class="animate-pulse bg-neutral-quaternary rounded-base flex items-center justify-center h-48 max-w-sm" role="status">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="w-11 h-11 text-fg-disabled" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 16l5-7l6 6.5m6.5 2.5L16 13l-4.286 6M14 10h.01M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1"></path></svg>
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <div>
+<div class="animate-pulse bg-neutral-quaternary rounded-full h-2.5 w-48 mb-4"></div>
+
+
+        <div class="space-y-2.5">
+            <div class="animate-pulse bg-neutral-quaternary rounded-full h-2"></div>
+
+            <div class="animate-pulse bg-neutral-quaternary rounded-full h-2"></div>
+
+            <div class="animate-pulse bg-neutral-quaternary rounded-full h-2"></div>
+
+        </div>
+
+        <div class="flex items-center mt-4">
+            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-fg-disabled me-3" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18m0 0a8.95 8.95 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.95 8.95 0 0 0 12 21m3-11a3 3 0 1 1-6 0a3 3 0 0 1 6 0"></path></svg>
+            <div>
+                <div class="animate-pulse bg-neutral-quaternary rounded-full h-2.5 w-32 mb-2"></div>
+
+                <div class="animate-pulse bg-neutral-quaternary rounded-full w-48 h-2"></div>
+
+            </div>
+        </div>
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>

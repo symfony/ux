@@ -1,7 +1,7 @@
 {# @prop variant 'brand'|'alternative'|'gray'|'danger'|'success'|'warning' The visual style variant. Defaults to `brand` #}
 {# @prop size 'default'|'lg' The badge size. Defaults to `default` #}
-{# @prop shape 'default'|'pill' The badge shape. Defaults to `default` #}
-{# @prop border 'none'|'border' The badge border. Defaults to `none` #}
+{# @prop shape 'rounded'|'pill' The badge shape. Defaults to `rounded` #}
+{# @prop border 'none'|'bordered' The badge border. Defaults to `none` #}
 {# @prop as 'div' The HTML tag to render. Defaults to `div` #}
 {# @block content The badge label or content #}
 {%- props variant = 'brand', size = 'default', shape = 'rounded', border = 'none', as = 'div' -%}
@@ -27,12 +27,12 @@
         border: {
             none: '',
             bordered: 'border',
-        }
+        },
     },
 
 ) -%}
 <{{ as }}
-    class="{{ style.apply({variant, size, shape, border}, attributes.render('class'))|tailwind_merge }}"
+    class="{{ style.apply({variant: variant, size: size, shape: shape, border: border}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}

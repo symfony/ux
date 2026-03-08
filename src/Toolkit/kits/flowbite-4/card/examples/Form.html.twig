@@ -1,0 +1,33 @@
+<twig:Card class="w-full max-w-sm">
+    <twig:Card:Header>
+        <twig:Card:Title as="h5">Sign in to our platform</twig:Card:Title>
+    </twig:Card:Header>
+
+    <twig:Card:Content>
+        <div class="mb-4">
+            <twig:Label for="email" class="mb-2.5">Your email</twig:Label>
+            <twig:Input type="email" id="email" placeholder="example@company.com" required />
+        </div>
+
+        <div>
+            <twig:Label for="password" class="mb-2.5">Your password</twig:Label>
+            <twig:Input type="password" id="password" placeholder="•••••••••" required />
+        </div>
+
+        <div class="flex items-start mt-6">
+            <div class="flex items-center">
+                <twig:Checkbox id="checkbox-remember" value="" />
+                <twig:Label for="checkbox-remember" class="ms-2">Remember me</twig:Label>
+            </div>
+            <a href="#" class="ms-auto text-sm font-medium text-fg-brand hover:underline">Lost Password?</a>
+        </div>
+    </twig:Card:Content>
+
+    <twig:Card:Footer>
+        <twig:Button type="submit" class="w-full mb-3">
+            Login to your account
+        </twig:Button>
+
+        <div class="text-sm font-medium text-body">Not registered? <a href="#" class="text-fg-brand hover:underline">Create account</a></div>
+    </twig:Card:Footer>
+</twig:Card>

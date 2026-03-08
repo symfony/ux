@@ -1,0 +1,21 @@
+<!--
+- Kit: Flowbite v4
+- Component: Input
+- Code:
+```twig
+<div class="relative inline-flex">
+    <twig:Input type="text" id="text" placeholder="Search..." class="rounded-e-none" />
+    <twig:Button type="button" size="sm" class="rounded-s-0">
+        <twig:ux:icon name="tabler:search" class="size-4 me-1" aria-hidden="true" />
+        Search
+    </twig:Button>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="relative inline-flex">
+    <input class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full shadow-xs placeholder:text-body [&amp;:disabled:not([readonly])]:text-fg-disabled aria-invalid:bg-danger-soft aria-invalid:border-danger-subtle aria-invalid:text-fg-danger-strong aria-invalid:focus:ring-danger aria-invalid:focus:border-danger aria-invalid:placeholder:text-fg-danger-strong rounded-e-none" type="text" id="text" placeholder="Search...">
+
+    <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs text-white bg-brand hover:bg-brand-strong focus:ring-brand-medium text-sm px-3 py-2 rounded-base rounded-s-0" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 me-1" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0-14 0m18 11l-6-6"></path></svg>
+        Search
+    </button>
+</div>

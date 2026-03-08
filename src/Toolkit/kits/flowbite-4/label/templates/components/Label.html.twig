@@ -1,12 +1,12 @@
-{# @prop variant 'default'|'invalid' The visual style variant. Defaults to `brand` #}
+{# @prop variant 'default'|'invalid' The visual style variant. Defaults to `default` #}
 {# @block content The label text for a form control #}
 {%- props variant = 'default' -%}
 {%- set style = html_cva(
-    base: "block text-sm font-medium",
+    base: 'block text-sm font-medium',
     variants: {
         variant: {
-            default:'text-heading',
-            invalid:'text-fg-danger-strong',
+            default: 'text-heading',
+            invalid: 'text-fg-danger-strong',
         },
     },
 ) -%}

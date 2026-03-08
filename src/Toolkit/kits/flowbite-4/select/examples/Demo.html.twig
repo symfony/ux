@@ -1,7 +1,10 @@
-<twig:Select class="max-w-xs">
-    <option value="apple">Apple</option>
-    <option value="banana">Banana</option>
-    <option value="blueberry">Blueberry</option>
-    <option value="grapes">Grapes</option>
-    <option value="pineapple">Pineapple</option>
-</twig:Select>
+<form class="w-full max-w-sm">
+    <twig:Label for="countries" class="mb-2.5">Select an option</twig:Label>
+    <twig:Select id="countries">
+        <option selected>Choose a country</option>
+        <option value="US">United States</option>
+        <option value="CA">Canada</option>
+        <option value="FR">France</option>
+        <option value="DE">Germany</option>
+    </twig:Select>
+</form>

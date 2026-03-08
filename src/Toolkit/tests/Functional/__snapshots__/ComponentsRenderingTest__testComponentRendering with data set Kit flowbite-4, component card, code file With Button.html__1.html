@@ -1,0 +1,38 @@
+<!--
+- Kit: Flowbite v4
+- Component: Card
+- Code:
+```twig
+<twig:Card class="max-w-sm">
+    <twig:Card:Header>
+        <twig:Card:Title as="h5">Noteworthy technology acquisitions 2021</twig:Card:Title>
+    </twig:Card:Header>
+
+    <twig:Card:Content>
+        <p>Here are the biggest technology acquisitions of 2025 so far, in reverse chronological order.</p>
+    </twig:Card:Content>
+
+    <twig:Card:Footer>
+        <twig:Button as="a" href="#">
+            Read more
+            <twig:ux:icon name="flowbite:arrow-right-outline" class="w-4 h-4 ms-1.5 -me-0.5" aria-hidden="true"/>
+        </twig:Button>
+    </twig:Card:Footer>
+</twig:Card>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="bg-neutral-primary-soft text-body block p-6 border border-default rounded-base shadow-xs max-w-sm">
+<div class="pb-6">
+<h5 class="text-2xl font-semibold tracking-tight text-heading leading-8">Noteworthy technology acquisitions 2021</h5>
+    </div>
+
+    <div>
+<p>Here are the biggest technology acquisitions of 2025 so far, in reverse chronological order.</p>
+    </div>
+
+    <div class="pt-6">
+<a class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs text-white bg-brand hover:bg-brand-strong focus:ring-brand-medium text-sm px-4 py-2.5 rounded-base" href="#">Read more
+            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="w-4 h-4 ms-1.5 -me-0.5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m14 0l-4 4m4-4l-4-4"></path></svg>
+        </a>
+    </div>
+</div>

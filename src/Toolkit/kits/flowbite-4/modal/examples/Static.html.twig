@@ -1,6 +1,6 @@
 <twig:Modal id="delete_account">
     <twig:Modal:Trigger>
-        <twig:Button variant="outline" {{ ...trigger_attrs }}>Open Modal</twig:Button>
+        <twig:Button variant="outline" {{ ...modal_trigger_attrs }}>Open Modal</twig:Button>
     </twig:Modal:Trigger>
 
     <twig:Modal:Content class="max-w-[600px]" backdrop="static">
@@ -17,7 +17,7 @@
         <twig:Modal:Footer>
             <twig:Button type="submit">I accept</twig:Button>
             <twig:Modal:Close>
-                <twig:Button variant="outline" {{ ...close_attrs }}>Decline</twig:Button>
+                <twig:Button variant="outline" {{ ...modal_close_attrs }}>Decline</twig:Button>
             </twig:Modal:Close>
         </twig:Modal:Footer>
     </twig:Modal:Content>

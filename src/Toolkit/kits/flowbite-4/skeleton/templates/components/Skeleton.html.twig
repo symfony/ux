@@ -6,11 +6,11 @@
         shape: {
             rounded: 'rounded-base',
             pill: 'rounded-full',
-        }
+        },
     },
 ) -%}
 <div
-    class="{{ style.apply({shape}, attributes.render('class'))|tailwind_merge }}"
+    class="{{ style.apply({shape: shape}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}

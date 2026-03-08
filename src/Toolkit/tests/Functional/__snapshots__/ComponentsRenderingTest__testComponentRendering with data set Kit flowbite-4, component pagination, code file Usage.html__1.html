@@ -1,0 +1,48 @@
+<!--
+- Kit: Flowbite v4
+- Component: Pagination
+- Code:
+```twig
+<twig:Pagination>
+    <twig:Pagination:Content>
+        <twig:Pagination:Item>
+            <twig:Pagination:Previous href="#" />
+        </twig:Pagination:Item>
+        <twig:Pagination:Item>
+            <twig:Pagination:Link href="#">1</twig:Pagination:Link>
+        </twig:Pagination:Item>
+        <twig:Pagination:Item>
+            <twig:Pagination:Link href="#" active>2</twig:Pagination:Link>
+        </twig:Pagination:Item>
+        <twig:Pagination:Item>
+            <twig:Pagination:Link href="#">3</twig:Pagination:Link>
+        </twig:Pagination:Item>
+        <twig:Pagination:Item>
+            <twig:Pagination:Next href="#" />
+        </twig:Pagination:Item>
+    </twig:Pagination:Content>
+</twig:Pagination>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<nav class="flex items-center space-x-4" role="navigation"><ul class="flex -space-x-px text-sm rounded-base [&amp;_a]:h-10 [&amp;_*]:rounded-none [&amp;&gt;*:first-child]:[&amp;_*]:rounded-s-base [&amp;&gt;*:last-child]:[&amp;_*]:rounded-e-base">
+<li>
+<a class="inline-flex items-center justify-center box-border border font-medium focus:ring-4 focus:outline-none shadow-xs text-body bg-neutral-secondary-medium border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-neutral-tertiary text-sm px-4 py-2.5 rounded-base" href="#" aria-label="Go to previous page">        <span>Previous</span>
+    </a>
+
+        </li>
+        <li>
+<a class="inline-flex items-center justify-center box-border border font-medium focus:ring-4 focus:outline-none shadow-xs text-body bg-neutral-secondary-medium border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-neutral-tertiary w-10 h-10 rounded-base" href="#">1</a>
+        </li>
+        <li>
+<a class="inline-flex items-center justify-center box-border border font-medium focus:ring-4 focus:outline-none shadow-xs border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-neutral-tertiary w-10 h-10 rounded-base text-fg-brand bg-neutral-tertiary-medium" aria-current="page" href="#">2</a>
+        </li>
+        <li>
+<a class="inline-flex items-center justify-center box-border border font-medium focus:ring-4 focus:outline-none shadow-xs text-body bg-neutral-secondary-medium border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-neutral-tertiary w-10 h-10 rounded-base" href="#">3</a>
+        </li>
+        <li>
+<a class="inline-flex items-center justify-center box-border border font-medium focus:ring-4 focus:outline-none shadow-xs text-body bg-neutral-secondary-medium border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-neutral-tertiary text-sm px-4 py-2.5 rounded-base" href="#" aria-label="Go to next page">        <span>Next</span>
+    </a>
+
+        </li>
+    </ul>
+</nav>

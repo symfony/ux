@@ -1,6 +1,6 @@
 {# @prop highlight 'none'|'hover'|'striped' The visual row style highlight. Defaults to `hover` #}
 {# @block content The table body rows, typically `Table:Row` components #}
-{% props highlight="hover" %}
+{% props highlight = 'hover' %}
 {%- set style = html_cva(
     base: '[&>tr]:bg-neutral-primary-soft group-data-[border=bordered]/table:[&>tr]:border-b group-data-[border=bordered]/table:[&>tr]:border-default [&>tr]:transition-colors',
     variants: {

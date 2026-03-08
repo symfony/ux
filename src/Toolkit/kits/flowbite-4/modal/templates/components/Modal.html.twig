@@ -7,6 +7,7 @@
 {%- set _modal_title_id = _modal_id ~ '-title' -%}
 <div {{ attributes.defaults({
     'data-controller': 'modal',
+    'data-modal-open-value': open,
     'aria-labelledby': _modal_title_id,
 }) }}>
     {% block content %}{% endblock %}

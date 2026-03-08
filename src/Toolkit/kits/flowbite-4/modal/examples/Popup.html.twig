@@ -1,6 +1,6 @@
 <twig:Modal id="share_link">
     <twig:Modal:Trigger>
-        <twig:Button variant="outline-danger" {{ ...trigger_attrs }}>Delete</twig:Button>
+        <twig:Button variant="outline-danger" {{ ...modal_trigger_attrs }}>Delete</twig:Button>
     </twig:Modal:Trigger>
 
     <twig:Modal:Content class="sm:max-w-md" :showCloseButton="false">
@@ -14,7 +14,7 @@
                 </twig:Button>
 
                 <twig:Modal:Close>
-                    <twig:Button variant="outline" {{ ...close_attrs }}>
+                    <twig:Button variant="outline" {{ ...modal_close_attrs }}>
                         No, cancel
                     </twig:Button>
                 </twig:Modal:Close>

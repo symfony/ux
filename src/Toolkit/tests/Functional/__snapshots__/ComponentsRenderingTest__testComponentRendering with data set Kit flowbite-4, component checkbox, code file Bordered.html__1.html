@@ -1,0 +1,55 @@
+<!--
+- Kit: Flowbite v4
+- Component: Checkbox
+- Code:
+```twig
+<div class="grid gap-6 md:grid-cols-2">
+
+    <div class="flex items-center mb-4">
+        <twig:Label for="default" class="flex justify-between space-x-2.5 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
+            <div class="p-4">
+                <twig:ux:icon name="flowbite:server-outline" class="w-7 h-7 text-body mb-1.5" aria-hidden="true" />
+                <p class="select-none w-full text-sm font-medium text-heading">16GB unified memory</p>
+                <p class="select-none text-sm text-body">Seamlessly handle multitasking, large apps.</p>
+            </div>
+            <twig:Checkbox id="default" class="mt-4 me-4"/>
+        </twig:Label>
+    </div>
+
+    <div class="flex items-center mb-4">
+        <twig:Label for="checked" class="flex justify-between space-x-2.5 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
+            <div class="p-4">
+                <twig:ux:icon name="flowbite:database-outline" class="w-7 h-7 text-body mb-1.5" aria-hidden="true" />
+                <p class="select-none w-full text-sm font-medium text-heading">1TB SSD storage</p>
+                <p class="select-none text-sm text-body">Get ultra-fast storage with 1TB of SSD space</p>
+            </div>
+            <twig:Checkbox id="checked" class="mt-4 me-4" checked/>
+        </twig:Label>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="grid gap-6 md:grid-cols-2">
+
+    <div class="flex items-center mb-4">
+        <label class="text-sm font-medium text-heading flex justify-between space-x-2.5 bg-neutral-primary-soft border border-default rounded-base shadow-xs" for="default"><div class="p-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="w-7 h-7 text-body mb-1.5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1M5 12h14M5 12a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1m-2 3h.01M14 15h.01M17 9h.01M14 9h.01"></path></svg>
+                <p class="select-none w-full text-sm font-medium text-heading">16GB unified memory</p>
+                <p class="select-none text-sm text-body">Seamlessly handle multitasking, large apps.</p>
+            </div>
+            <input type="checkbox" class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft disabled:border-light accent-brand mt-4 me-4" id="default">
+
+        </label>
+    </div>
+
+    <div class="flex items-center mb-4">
+        <label class="text-sm font-medium text-heading flex justify-between space-x-2.5 bg-neutral-primary-soft border border-default rounded-base shadow-xs" for="checked"><div class="p-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="w-7 h-7 text-body mb-1.5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 6c0 1.657-3.134 3-7 3S5 7.657 5 6m14 0c0-1.657-3.134-3-7-3S5 4.343 5 6m14 0v6M5 6v6m0 0c0 1.657 3.134 3 7 3s7-1.343 7-3M5 12v6c0 1.657 3.134 3 7 3s7-1.343 7-3v-6"></path></svg>
+                <p class="select-none w-full text-sm font-medium text-heading">1TB SSD storage</p>
+                <p class="select-none text-sm text-body">Get ultra-fast storage with 1TB of SSD space</p>
+            </div>
+            <input type="checkbox" class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft disabled:border-light accent-brand mt-4 me-4" id="checked" checked>
+
+        </label>
+    </div>
+</div>

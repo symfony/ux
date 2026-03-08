@@ -1,0 +1,18 @@
+<!--
+- Kit: Flowbite v4
+- Component: Indicator
+- Code:
+```twig
+<twig:Button class="relative">
+    <twig:ux:icon name="flowbite:inbox-full-outline" class="size-4 me-1.5 -ms-0.5" aria-hidden="true" />
+    <span class="sr-only">Notifications</span>
+    Messages
+    <twig:Indicator variant="danger" size="lg" class="absolute -top-2 -end-2 border-2 border-buffer">8</twig:Indicator>
+</twig:Button>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs text-white bg-brand hover:bg-brand-strong focus:ring-brand-medium text-sm px-4 py-2.5 rounded-base relative"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 me-1.5 -ms-0.5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 13h3.439a.99.99 0 0 1 .908.6a3.978 3.978 0 0 0 7.306 0a.99.99 0 0 1 .908-.6H20M4 13v6a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-6M4 13l2-9h12l2 9M9 7h6m-7 3h8"></path></svg>
+    <span class="sr-only">Notifications</span>
+    Messages
+    <span class="inline-flex items-center justify-center text-xs font-bold rounded-full bg-danger text-white size-6 absolute -top-2 -end-2 border-2 border-buffer">8</span>
+</button>

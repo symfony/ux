@@ -1,0 +1,26 @@
+<!--
+- Kit: Flowbite v4
+- Component: Select
+- Code:
+```twig
+<form class="w-full max-w-sm">
+    <twig:Label for="countries" class="mb-2.5">Select an option</twig:Label>
+    <twig:Select id="countries">
+        <option selected>Choose a country</option>
+        <option value="US">United States</option>
+        <option value="CA">Canada</option>
+        <option value="FR">France</option>
+        <option value="DE">Germany</option>
+    </twig:Select>
+</form>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<form class="w-full max-w-sm">
+    <label class="block text-sm font-medium text-heading mb-2.5" for="countries">Select an option</label>
+    <select class="block w-full px-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body disabled:text-fg-disabled" id="countries"><option selected>Choose a country</option>
+        <option value="US">United States</option>
+        <option value="CA">Canada</option>
+        <option value="FR">France</option>
+        <option value="DE">Germany</option>
+    </select>
+</form>

@@ -14,13 +14,13 @@
         },
         size: {
             default: 'size-3',
-            lg: 'size-6'
-        }
+            lg: 'size-6',
+        },
     },
 
 ) -%}
 <span
-    class="{{ style.apply({variant, size}, attributes.render('class'))|tailwind_merge }}"
+    class="{{ style.apply({variant: variant, size: size}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}
