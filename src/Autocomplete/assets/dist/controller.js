@@ -261,9 +261,12 @@ function _createAutocompleteWithRemoteData(autocompleteEndpointUrl, minCharacter
 		},
 		load: function(query, callback) {
 			const url = this.getUrl(query);
+			const dropdown = this.dropdown_content;
+			const scroll = dropdown ? dropdown.scrollTop : 0;
 			fetch(url).then((response) => response.json()).then((json) => {
 				this.setNextUrl(query, json.next_page);
 				callback(json.results.options || json.results, json.results.optgroups || []);
+				if (dropdown) dropdown.scrollTop = scroll;
 			}).catch(() => callback([], []));
 		},
 		shouldLoad: (query) => {

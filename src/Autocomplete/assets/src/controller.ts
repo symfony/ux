@@ -272,12 +272,17 @@ export default class extends Controller {
             // the 'this.XXX' calls inside this method fail
             load: function (query: string, callback: TomLoadCallback) {
                 const url = this.getUrl(query);
+                const dropdown = this.dropdown_content;
+                const scroll = dropdown ? dropdown.scrollTop : 0;
                 fetch(url)
                     .then((response) => response.json())
                     // important: next_url must be set before invoking callback()
                     .then((json) => {
                         this.setNextUrl(query, json.next_page);
                         callback(json.results.options || json.results, json.results.optgroups || []);
+                        if (dropdown) {
+                            dropdown.scrollTop = scroll;
+                        }
                     })
                     .catch(() => callback([], []));
             },
