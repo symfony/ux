@@ -1,0 +1,45 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2026-03-03T20:47:51Z
+
+Well, i'm sorry @xDeSwa but if this is not a BC i'm now 100% I never got what BC mean :(
+
+---------------------------------------------------------------------------
+
+by xDeSwa at 2026-03-03T21:03:53Z
+
+> Well, i'm sorry @xDeSwa but if this is not a BC i'm now 100% I never got what BC mean :(
+
+I completely understand your concern, and you're right. The initial approach was indeed risky for BC. That's precisely why, based on @Kocal's suggestion, we pivoted to the FromMethod attribute in the current version. This keeps everything fully backward compatible while still adding the dynamic template feature.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-03-03T22:40:44Z
+
+@xDeSwa Hey.. I am sorry if it sounded otherwise, this was not about _this_ MR.
+
+My gut tells me we keep stacking features on 2.x. Features that I suspect no one will maintain in a few month/years.
+It takes one (great) PR to add a feature... at least two years of maintenance before we can change it.
+
+(please believe me, I am _**thrilled**_ when people open PRs, contribute, bring ideas, or propose new features here)
+
+Imagine this. Maybe, _just maybe_, someone here may soon have some OSS time paid by their employer (and please do note the word _maybe_ here)..
+
+_**If**_ that happens, do you think a full day of work, every week, is better spent on UX 3.x, modern web APIs, incredibly cool things we could build with the Filesystem API, the Invoker API, WebAuth, View Transitions, and globally the entire Baseline 2025 new features _x_ PHP 8.5+ features, recent Symfony DI sugar, AI integrations, etc etc...
+
+Or....  🥁  ... should it be spent maintaining a major version released five years ago, supporting browsers that companies now consider major security risks, from a time when Yarn was trending and Less was still a thing?
+
+If that ever becomes reality.. well
+Let's say I am not a big fan of the past..... all my mistakes live there 😅
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-03-03T22:42:38Z
+
+(sorry if it does sound AI... I am the only and very proud author of this last punchline hahaha)
+
+---------------------------------------------------------------------------
+
+by xDeSwa at 2026-03-07T21:38:24Z
+
+@Kocal all done check again please.
