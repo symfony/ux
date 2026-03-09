@@ -75,6 +75,28 @@ Want some demos? Check out https://ux.symfony.com/live-component#demo
         {
             // ...
 
+Dynamic Templates
+-----------------
+
+.. versionadded:: 2.33
+
+    Live components support dynamic template resolution using the ``FromMethod`` attribute, just like standard Twig components.
+
+This is particularly useful for complex live components that need to switch views based on user interaction::
+
+    #[AsLiveComponent(template: new FromMethod('getTemplate'))]
+    class SearchResults
+    {
+        #[LiveProp(writable: true)]
+        public string $layout = 'rows';
+
+        public function getTemplate(): string
+        {
+            return 'rows' === $this->layout
+                ? 'components/SearchResults/rows.html.twig'
+                : 'components/SearchResults/grid.html.twig';
+        }
+    }
 
 Installation
 ------------

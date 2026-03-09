@@ -36,7 +36,9 @@ class AsTwigComponent
         private ?string $name = null,
 
         /**
-         * The template path of the component (ie: components/Button.html.twig).
+         * The template path of the component (ie: components/Button.html.twig)
+         * or a reference to a component method to resolve the template dynamically
+         * (ie: FromMethod('customFunction')).
          *
          * With the default configuration, the template path is resolved using
          * the component's name.
@@ -46,7 +48,7 @@ class AsTwigComponent
          *
          * @see https://symfony.com/bundles/ux-twig-component#component-template-path
          */
-        private ?string $template = null,
+        private string|FromMethod|null $template = null,
 
         /**
          * Whether to expose every public property as a Twig variable.
@@ -67,12 +69,19 @@ class AsTwigComponent
      */
     public function serviceConfig(): array
     {
-        return [
+        $config = [
             'key' => $this->name,
-            'template' => $this->template,
             'expose_public_props' => $this->exposePublicProps,
             'attributes_var' => $this->attributesVar,
         ];
+
+        if ($this->template instanceof FromMethod) {
+            $config['template_from_method'] = $this->template->method;
+        } else {
+            $config['template'] = $this->template;
+        }
+
+        return $config;
     }
 
     /**
