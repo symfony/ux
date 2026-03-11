@@ -74,7 +74,8 @@ class LiveComponentMetadataFactory implements ResetInterface
                 continue;
             }
 
-            $metadatas[$propertyName] = $this->createLivePropMetadata($class->getName(), $propertyName, $property, $attribute->newInstance());
+            $declaringClassName = $property->getDeclaringClass()->getName();
+            $metadatas[$propertyName] = $this->createLivePropMetadata($declaringClassName, $propertyName, $property, $attribute->newInstance());
         }
 
         return array_values($metadatas);
