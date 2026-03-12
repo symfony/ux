@@ -2365,7 +2365,7 @@ To validate only on "change", use the ``on(change)`` modifier:
     <input
         type="email"
         data-model="on(change)|user.email"
-        class="{{ _errors.has('post.content') ? 'is-invalid' : '' }}"
+        class="{{ _errors.has('user.email') ? 'is-invalid' : '' }}"
     >
 
 Deferring / Lazy Loading Components
