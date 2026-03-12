@@ -14,7 +14,7 @@
     style="position: absolute; left: 0px; top: 0px; will-change: transform;"
 >
     <div
-        class="{{ ('invisible open:visible transition-all duration-200 open:opacity-100 open:scale-100 opacity-0 scale-95 bg-foreground text-background z-50 w-fit max-w-xs rounded-md px-3 py-1.5 text-xs ' ~ attributes.render('class'))|tailwind_merge }}"
+        class="{{ ('invisible hidden open:visible open:flex transition-all duration-200 open:opacity-100 open:scale-100 opacity-0 scale-95 bg-foreground text-background z-50 w-fit max-w-xs rounded-md px-3 py-1.5 text-xs ' ~ attributes.render('class'))|tailwind_merge }}"
         {{ attributes.defaults({
             id: _tooltip_content_id,
             role: 'tooltip',
