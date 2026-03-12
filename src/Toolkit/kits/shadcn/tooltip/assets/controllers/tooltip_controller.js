@@ -9,7 +9,7 @@ export default class extends Controller {
         contentSelector: String,
         arrowSelector: String,
     };
-    static targets = ['trigger'];
+    static targets = ['trigger', 'wrapper'];
 
     connect() {
         this.initialized = false;
@@ -36,6 +36,15 @@ export default class extends Controller {
 
         if (this.wrapperElement && this.wrapperElement.parentNode === document.body) {
             this.element.appendChild(this.wrapperElement);
+        }
+    }
+
+    wrapperTargetConnected() {
+        // This case appear when live component rerender.
+        // Because original wrapper is moved on body, the Smart rerender algorithm recreate a new wrapper.
+        if (this.wrapperElement) {
+            this.wrapperElement.remove();
+            this.connect();
         }
     }
 
