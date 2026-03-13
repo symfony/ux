@@ -23,6 +23,7 @@
     ```
 
 - Add support for dynamic template resolution with `AsLiveComponent(template: FromMethod('customFunction'))`
+- Add `debug:live-component` command
 
 ## 2.31
 
