@@ -1,0 +1,34 @@
+---------------------------------------------------------------------------
+
+by mbuliard at 2026-03-10T09:22:31Z
+
+@Kocal Thanks for the review !
+I added the `LiveMetadataFactory` in the command as you suggested but I had to tweak the `LiveComponentMetadata->getAllLivePropsMetadata` to work without an actual component.
+
+I also don't see a way to compute the name of a component in the LiveComponentPass without using directly TwigComponent configurations, that's why I added the `$definition->addTag('twig.component', $tag);` in TwigComponentPass, to set the tag with the name computed.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-03-12T20:50:15Z
+
+> I also don't see a way to compute the name of a component in the LiveComponentPass without using directly TwigComponent configurations, that's why I added the `$definition->addTag('twig.component', $tag);` in TwigComponentPass, to set the tag with the name computed.
+
+Ah, I see!
+Well, I'm not fan about your solution because it adds a second tag to the service definition, and we also try to keep our tags "small" (they already contain a lot of data)
+<img width="444" height="364" alt="image" src="https://github.com/user-attachments/assets/723ea00e-f696-4e59-b06d-3353a1f53012" />
+
+Instead, since LiveComponent requires TwigComponent 2.33 (not released yet), can you rebase and maybe add a new method on `ComponentFactory` to get the components configuration? We use this class in `LiveComponentMetadataFactory`.
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by mbuliard at 2026-03-13T16:23:09Z
+
+@Kocal Thanks ! I figured out a simpler way to find component by name through the LiveComponentMetadataFactory, let me know what you think.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-03-13T20:12:03Z
+
+Perfect!
