@@ -1,13 +1,14 @@
-{# @prop open boolean Whether the dialog is open on initial render. Defaults to `false` #}
 {# @prop id string Unique identifier used to generate internal Dialog IDs #}
+{# @prop open boolean Whether the dialog is open on initial render. Defaults to `false` #}
 {# @block content The dialog structure, typically includes `Dialog:Trigger` and `Dialog:Content` #}
-{%- props open = false, id -%}
+{%- props id, open = false -%}
 
 {%- set _dialog_id = 'dialog-' ~ id -%}
 {%- set _dialog_title_id = _dialog_id ~ '-title' -%}
 {%- set _dialog_description_id = _dialog_id ~ '-description' -%}
 <div {{ attributes.defaults({
     'data-controller': 'dialog',
+    'data-dialog-open-value': open,
     'aria-labelledby': _dialog_title_id,
     'aria-describedby': _dialog_description_id,
 }) }}>
