@@ -150,7 +150,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
         $container->setAlias('console.command.stimulus_component_debug', 'ux.twig_component.command.debug')
             ->setDeprecated('symfony/ux-twig-component', '2.13', '%alias_id%');
 
-        if ($config['profiler']['enabled']) {
+        if ($this->isConfigEnabled($container, $config['profiler'])) {
             $loader->load('debug.php');
 
             $container->getDefinition('ux.twig_component.data_collector')
