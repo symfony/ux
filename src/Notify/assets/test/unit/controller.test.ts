@@ -47,12 +47,10 @@ describe('NotifyController', () => {
     const removeEventListenerMock = vi.fn();
     const closeMock = vi.fn();
 
-    global.EventSource = vi.fn().mockImplementation(() => {
-        return {
-            addEventListener: addEventListenerMock,
-            removeEventListener: removeEventListenerMock,
-            close: closeMock,
-        };
+    global.EventSource = vi.fn(function () {
+        this.addEventListener = addEventListenerMock;
+        this.removeEventListener = removeEventListenerMock;
+        this.close = closeMock;
     });
 
     global.Notification = {};
