@@ -1,0 +1,35 @@
+---------------------------------------------------------------------------
+
+by kachnitel at 2026-03-11T07:35:25Z
+
+## Example
+```php
+// A trait that exposes a private property (e.g. ComponentWithFormTrait)
+trait HasFormTrait
+{
+    #[ExposeInTemplate(name: 'form', getter: 'getFormView()')]
+    private ?FormView $formView = null;
+
+    #[LiveProp(writable: true, fieldName: 'getFormName()')]
+    public array $formValues = [];
+}
+
+// A base component that uses the trait directly — works fine before and after
+#[AsLiveComponent]
+class AdminEntityForm extends AbstractController
+{
+    use DefaultActionTrait;
+    use HasFormTrait;
+}
+
+// A child component that extends the base — broken before this fix
+#[AsLiveComponent]
+class PurchaseOrder extends AdminEntityForm
+{
+    // Does NOT re-declare: use HasFormTrait;
+    // Before: Variable "form" does not exist in PurchaseOrder template
+    // Before: formValues LiveProp registered without fieldName callable,
+    //         causing "Invalid model name purchase_order_form.status" in JS
+    // After:  both work correctly
+}
+```
