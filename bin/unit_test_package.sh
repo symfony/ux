@@ -24,10 +24,11 @@ PROJECT_DIR=$(dirname "$SCRIPT_DIR")
 # Flag to track if any test fails
 all_tests_passed=true
 
-# Check if we have at least two arguments
-if [ $# -ne 2 ]; then
-    echo "No arguments supplied, please provide the package's path and the test type (e.g. --unit or --browser)"
-    echo "Usage: $0 <package_path> <test_type> [args...]"
+# Check for required arguments
+if [ $# -ne 1 ]; then
+    echo "No arguments supplied, please provide the package's path"
+    echo "Usage: $0 <package_path> [args...]"
+    exit 1
 fi
 
 location="$(realpath "$PWD/$1")"

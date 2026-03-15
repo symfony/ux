@@ -39,7 +39,7 @@ class LiveComponentMetadata
     /**
      * @return list<LivePropMetadata|LegacyLivePropMetadata>
      */
-    public function getAllLivePropsMetadata(object $component): iterable
+    public function getAllLivePropsMetadata(?object $component): iterable
     {
         foreach ($this->livePropsMetadata as $livePropMetadata) {
             yield $livePropMetadata->withModifier($component);

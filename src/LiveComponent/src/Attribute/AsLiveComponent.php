@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\Attribute;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\FromMethod;
 
 /**
  * An attribute to register a LiveComponent.
@@ -33,7 +34,7 @@ final class AsLiveComponent extends AsTwigComponent
 
     /**
      * @param string|null              $name              The component name (ie: TodoList)
-     * @param string|null              $template          The template path of the component (ie: components/TodoList.html.twig).
+     * @param string|FromMethod|null   $template          The template path of the component (ie: components/TodoList.html.twig), or a reference to a component's method (ie: FromMethod('getTemplate')
      * @param string|null              $defaultAction     The default action to call when the component is mounted (ie: __invoke)
      * @param bool                     $exposePublicProps Whether to expose every public property as a Twig variable
      * @param string                   $attributesVar     The name of the special "attributes" variable in the template
@@ -44,7 +45,7 @@ final class AsLiveComponent extends AsTwigComponent
      */
     public function __construct(
         ?string $name = null,
-        ?string $template = null,
+        string|FromMethod|null $template = null,
         ?string $defaultAction = null,
         bool $exposePublicProps = true,
         string $attributesVar = 'attributes',

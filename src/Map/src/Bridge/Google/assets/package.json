@@ -17,8 +17,8 @@
     "main": "dist/map_controller.js",
     "types": "dist/map_controller.d.ts",
     "scripts": {
-        "build": "tsx ../../../../../../bin/build_package.ts .",
-        "watch": "tsx ../../../../../../bin/build_package.ts . --watch",
+        "build": "node ../../../../../../bin/build_package.ts .",
+        "watch": "node ../../../../../../bin/build_package.ts . --watch",
         "test": "pnpm run test:browser",
         "test:browser": "playwright test",
         "test:browser:ui": "playwright test --ui"
@@ -54,11 +54,8 @@
         "@testing-library/jest-dom": "^6.6.3",
         "@testing-library/user-event": "^14.6.1",
         "@types/google.maps": "^3.55.9",
-        "@vitest/browser": "^3.2.4",
         "jsdom": "^26.1.0",
         "tslib": "^2.8.1",
-        "tsx": "^4.20.3",
-        "typescript": "^5.8.3",
-        "vitest": "^3.2.4"
+        "typescript": "^5.8.3"
     }
 }

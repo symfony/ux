@@ -139,7 +139,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
             ->addTag('console.command')
         ;
 
-        if ($config['profiler']['enabled']) {
+        if ($this->isConfigEnabled($container, $config['profiler'])) {
             $loader->load('debug.php');
 
             $container->getDefinition('ux.twig_component.data_collector')

@@ -37,6 +37,14 @@ final class ComponentMetadata
     }
 
     /**
+     * @return string|null The method name to fetch the template dynamically
+     */
+    public function getTemplateFromMethod(): ?string
+    {
+        return $this->config['template_from_method'] ?? null;
+    }
+
+    /**
      * @return class-string The Component's FQCN
      */
     public function getClass(): string

@@ -107,8 +107,11 @@ final class LivePropMetadata
      * If a modifier is specified, a modified clone is returned.
      * Otherwise, the metadata is returned as it is.
      */
-    public function withModifier(object $component): self
+    public function withModifier(?object $component): self
     {
+        if (null === $component) {
+            return $this;
+        }
         if (null === ($modifier = $this->liveProp->modifier())) {
             return $this;
         }

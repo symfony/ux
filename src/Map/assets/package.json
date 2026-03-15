@@ -19,8 +19,8 @@
     "main": "dist/abstract_map_controller.js",
     "types": "dist/abstract_map_controller.d.ts",
     "scripts": {
-        "build": "tsx ../../../bin/build_package.ts .",
-        "watch": "tsx ../../../bin/build_package.ts . --watch",
+        "build": "node ../../../bin/build_package.ts .",
+        "watch": "node ../../../bin/build_package.ts . --watch",
         "test": "pnpm run test:unit",
         "test:unit": "../../../bin/unit_test_package.sh ."
     },
@@ -40,8 +40,7 @@
         "@testing-library/user-event": "^14.6.1",
         "jsdom": "^26.1.0",
         "tslib": "^2.8.1",
-        "tsx": "^4.20.3",
         "typescript": "^5.8.3",
-        "vitest": "^3.2.4"
+        "vitest": "^4.1.0"
     }
 }

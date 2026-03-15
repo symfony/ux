@@ -11,7 +11,7 @@ import { format } from './formatters/formatter';
 import { formatIntl } from './formatters/intl-formatter';
 import type { DomainsOf, LocaleOf, LocaleType, MessageId, Messages, ParametersOf, RemoveIntlIcuSuffix } from './types';
 
-export * from './types.d';
+export type * from './types.d';
 
 export function getDefaultLocale(): LocaleType {
     return (
