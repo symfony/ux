@@ -22,11 +22,11 @@ describe('TurboStreamController', () => {
     let container: HTMLElement;
 
     beforeEach(() => {
-        global.EventSource = vi.fn(() => ({
-            addEventListener: vi.fn(),
-            removeEventListener: vi.fn(),
-            close: vi.fn(),
-        }));
+        global.EventSource = vi.fn(function () {
+            this.addEventListener = vi.fn();
+            this.removeEventListener = vi.fn();
+            this.close = vi.fn();
+        });
 
         container = mountDOM(
             '<div data-testid="turbo-stream-mercure" data-controller="symfony--ux-turbo--mercure-turbo-stream" data-symfony--ux-turbo--mercure-turbo-stream-hub-value="https://example.com/.well-known/mercure" data-symfony--ux-turbo--mercure-turbo-stream-topic-value="foo"></div>'

@@ -53,11 +53,9 @@
         "@testing-library/jest-dom": "^6.6.3",
         "@testing-library/user-event": "^14.6.1",
         "@types/leaflet": "^1.9.12",
-        "@vitest/browser": "^3.2.4",
         "jsdom": "^26.1.0",
         "leaflet": "^1.9.4",
         "tslib": "^2.8.1",
-        "typescript": "^5.8.3",
-        "vitest": "^3.2.4"
+        "typescript": "^5.8.3"
     }
 }

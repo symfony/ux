@@ -3,6 +3,7 @@
 ## 2.33.0
 
 - [Shadcn] Add `accordion` recipe
+- [Shadcn] Add `tabs` recipe
 - [Shadcn] Add `tooltip` recipe
 - [Shadcn] Rework templates of `alert` recipe
 - [Shadcn] Rework templates of `avatar` recipe

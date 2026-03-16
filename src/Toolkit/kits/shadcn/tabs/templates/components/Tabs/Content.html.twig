@@ -1,0 +1,21 @@
+{# @prop value string Unique suffix identifier for generating Tabs internal IDs #}
+{# @block content The default block #}
+{%- props value -%}
+
+{%- set _tab_id = 'tab-' ~ value -%}
+{%- set _tab_title_id = _tab_id ~ '-title' -%}
+{%- set _tab_description_id = _tab_id ~ '-description' -%}
+{%- set open = defaultValue is same as(value) -%}
+<div
+    id="{{ _tab_description_id }}"
+    data-slot="tabs-content"
+    data-tabs-target="tab"
+    data-tab-id="{{ value }}"
+    role="tabpanel"
+    aria-labelledby="{{ _tab_title_id }}"
+    data-state="{{ open ? 'active' : 'inactive' }}"
+    class="{{ ('text-sm flex-1 outline-none data-[state=inactive]:hidden ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

@@ -57,7 +57,7 @@
         "tom-select": "^2.2.2",
         "tslib": "^2.8.1",
         "typescript": "^5.8.3",
-        "vitest": "^3.2.4",
+        "vitest": "^4.1.0",
         "vitest-fetch-mock": "^0.2.2"
     }
 }
