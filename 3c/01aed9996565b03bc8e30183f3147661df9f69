@@ -1,0 +1,57 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-02-12T20:07:30Z
+
+Interesting, I'm not seeing such performance improvements on my side.
+
+Ran `blackfire run symfony console cache:clear` on my test app with 3,130 translations keys for 8 locales:
+<img width="1530" height="902" alt="image" src="https://github.com/user-attachments/assets/07d8bb8e-af98-4465-b523-c4c94f017877" />
+
+---------------------------------------------------------------------------
+
+by mkrauser at 2026-02-13T14:13:23Z
+
+I dug a little further, but unfortunatelly I don't have blackfire available.
+
+I have ~4k translations-keys for 2 locales on a very powerful machine (M4 MacBook Pro) with php 8.5. I added a stopwatch to time every iteration of the loop.
+The first ~100 Iterations take at about 5ms each and then it is getting slower and slower. The last iterations take about 150ms each with the occasional 500ms inbetween. It seems that the fileAppend-Call  is getting a bit slower with every iteration.
+I don't know exactly why this happens to that extend. My Team has the same problem, so maybe our dev-setup slows down things.
+
+Nevertheless, IMHO it makes sense to bulk-write here. Every call to fileAppend checks, if the directory exists, sets and resets the error-handler and then opens the file, do the writing and closes the file... just to do it again in the next iteration.
+
+Without this patch it just took 137s vs. 238.60ms (just for the TranslationsCacheWarmer)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-02-13T15:40:47Z
+
+Thank you for the additional information, maybe my _benchmark_ was wrong, I will double-check.
+
+> Nevertheless, IMHO it makes sense to bulk-write here. Every call to fileAppend checks, if the directory exists, sets and resets the error-handler and then opens the file, do the writing and closes the file... just to do it again in the next iteration.
+
+TBH I'm not very sure, when working on https://github.com/symfony/ux/pull/3208, I was like "maybe perfs could be improved if I write little by little in the file, and so the memory does not explode", but I may be wrong. Especially if I/O is slow.
+
+And maybe we shouldn't care about the memory consumption while warming the cache? But I remember that some systems are limited with slow RAM, we should be careful.
+
+I'm currently creating new Blackfire profiles.
+
+**EDIT:** See the [Blackfire comparaison](https://app.blackfire.io/profiles/compare/a804a697-24d2-45b1-bd97-75c7ef914a6f...b1b5d19b-6a54-4722-aac6-4d635331eb50/graph?settings%5Bdimension%5D=wt&settings%5Bdisplay%5D=focused&settings%5BtabPane%5D=nodes&selected=Symfony%5CUX%5CTranslator%5CTranslationsDumper%3A%3Adump&callname=Symfony%5CUX%5CTranslator%5CTranslationsDumper%3A%3Adump). Dumping my translations on my lab project lasts ~3 seconds less, but that's mainly and randomly due to `getTranslationsTypeScriptTypeDefinition()` - which is not related to your changes:
+<img width="1515" height="648" alt="image" src="https://github.com/user-attachments/assets/91fbe756-e1c3-46de-b7a8-8c032da73ce5" />
+
+I'm using a M1 Pro and I won't have access to a M4 Pro until monday. Do you run your `cache:clear` in a Docker container or something equivalent?
+
+---------------------------------------------------------------------------
+
+by mkrauser at 2026-02-14T09:09:09Z
+
+> Do you run your `cache:clear` in a Docker container or something equivalent?
+
+No, I'm doing it directly on the host. But the directory is "bind-mounted" in a docker-container.
+I just checked, and indeed that was slowing down the file-writes, even if the command is executed on the host-system. If I stop the docker containers it runs faster (50s), but still not fast for some reason.
+
+I'll try to narrow it down further.
+
+I also checked the Memory-Usage on my System with ~4k translations and 2 locales.
+
+~2M without the patch
+~4M with the patch
