@@ -1,0 +1,152 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-02-14T20:30:19Z
+
+Also, please fix GitHub Copilot issues, thanks! :D
+
+---------------------------------------------------------------------------
+
+by zairigimad at 2026-02-15T11:00:23Z
+
+Hi @Kocal , thanks for the feedbacks , i will try to address this asap, we started with this code 1 year ago, i will try to align it with the latest symfony Ux packages
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-02-20T09:48:55Z
+
+Thanks! Let me know if you need help on something (either here or on SF slack)
+
+---------------------------------------------------------------------------
+
+by zairigimad at 2026-02-24T15:32:35Z
+
+> Thanks! Let me know if you need help on something (either here or on SF slack)
+
+Hello @Kocal , I did fix the feedbacks and tests , but i see that some other components tests UX toolkit , and UX Icons are failing wich make the Units tests failing, i don't know if there is a fix in another branch , i did rebase but the same error occurs with this two tests.
+
+let me know if there is other things you see that should be addressed
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-03-02T13:14:47Z
+
+Hello,
+Is there a reason why this feature wasn't included directly in Turbo bundle as shown at https://github.com/hotwired/turbo-rails?
+
+The creation of a Stimulus controller is included in the maker bundle: https://github.com/symfony/maker-bundle/blob/1.x/templates/stimulus/Controller.tpl.php. The creation of a bridge controller could also be included in the maker bundle.
+
+In any case, it was a great initiative on your part.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-03-03T21:31:51Z
+
+I'm _very_ **very** sorry it took me so long to comment here.
+
+---
+
+Please know I am not the first to think that @zairigimad might need some help adapting the code to the current UX usage and conventions....
+
+In fact, the first person to think that was...  @zairigimad _himself_.
+
+...
+
+A year-ish ago, after Slack discussions on Hotwire Native (discussions he started sharing experimental feedback)... he came to Ryan and me with motivation, great spirit, and a clear vision.
+
+I think the only thing I managed to tell him in the following weeks was to focus on everything _**but**_ that part in his project (ux usage, conventions..) Because it was not important.. at all.
+
+For personal reasons not relevant here, I stepped away from it _completely_. Worse, I may have added some (involontary but real) pressure before disappearing, ~~adding~~ stacking feature ideas and implementation constraints.
+
+He continued. I kept a side eye on it, but I wont' pretend more than that :/
+
+...
+
+@zairigimad has been a positive and constructive voice around Symfony for some times now... especially around UX. And I know more than one Symfony Core Team members who met him or talked to him and came back _**genuinely**_ enthusiastic.
+
+I cannot stress enough how happy I am to be there and attend his talk about [Native in Paris](https://live.symfony.com/2026-paris/schedule#du-web-au-mobile-avec-symfony-hotwire-native)
+ later this month.
+
+So please, if there are things here to change or fix because of technicalities, wrong direction, or decisions that did not help, please put that _on me_. I do promise I will handle them.
+
+--
+
+To @zairigimad : welcome here mate!  I cannot wait to see the impact you'lll have around here :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-03-03T21:44:27Z
+
+@seb-jean because that's a three stages rocket here, and Hotwire did not present it otherwise :)
+
+<img width="356" height="93" alt="image" src="https://github.com/user-attachments/assets/9dfd75b4-19b4-46f5-a77a-976747f7d662" />
+
+Turbo users may not want all what comes with Native, as much Stimulus users may not need or want Turbo, as much Symfony components are mostly released independantly, even when mostly used in a Symfony-framework context :)
+
+Inversely, using Native forces some deps...that we have no reason to bump Stimulus or Turbo versions... as long they work perfectly.
+
+And I'm pretty sure (well, I am certain) some major and vastly used [admin](https://packagist.org/packages/easycorp/easyadmin-bundle), [ecommerce](https://packagist.org/packages/sylius/sylius) or [admin](https://packagist.org/packages/sonata-project/admin-bundle) (yeah i know that's twice "admin" but ... 👼 ) solutions in the PHP ecosystem do count on a symfony/* package to enforce their promise :)
+
+Now, the real question is: **IF** (it's a major _**if**_).. **_IF_** we improved the install DX of UX components drastically... would this really be a problem/question ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-03-03T21:48:43Z
+
+@Kocal what an impressive review you made here... another (not needed but still impressive) reminder how you've handled things here like a chef for so many months... 🙇
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-03-16T23:51:14Z
+
+@zairigimad as you can see, I've just squashed your commits and pushed some more when playing with UX Native.
+
+Can you take a look to the documentation and tell me if things work as you except? Thanks!
+
+We still need to figure out why https://github.com/symfony/ux/actions/runs/23171224512/job/67323296530?pr=3338 fails 😫
+
+... 🛌🏻😴
+
+---------------------------------------------------------------------------
+
+by zairigimad at 2026-03-16T23:53:24Z
+
+> @zairigimad as you can see, I've just squashed your commits and pushed some more when playing with UX Native.
+>
+> Can you take a look to the documentation and tell me if things work as you except? Thanks!
+>
+> We still need to figure out why https://github.com/symfony/ux/actions/runs/23171224512/job/67323296530?pr=3338 fails 😫
+>
+> ... 🛌🏻😴
+
+sure thank you, i will check the Documentation and see if i can fix the CI
+
+---------------------------------------------------------------------------
+
+by zairigimad at 2026-03-17T00:20:17Z
+
+> @zairigimad as you can see, I've just squashed your commits and pushed some more when playing with UX Native.
+>
+> Can you take a look to the documentation and tell me if things work as you except? Thanks!
+>
+> We still need to figure out why https://github.com/symfony/ux/actions/runs/23171224512/job/67323296530?pr=3338 fails 😫
+>
+> ... 🛌🏻😴
+
+I think the CI is ok now, the only one it fails is related to Autocomplete , sometimes it passes sometimes no !
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-03-17T07:35:42Z
+
+> > @zairigimad as you can see, I've just squashed your commits and pushed some more when playing with UX Native.
+> > Can you take a look to the documentation and tell me if things work as you except? Thanks!
+> > We still need to figure out why [symfony/ux/actions/runs/23171224512/job/67323296530?pr=3338](https://github.com/symfony/ux/actions/runs/23171224512/job/67323296530?pr=3338) fails 😫
+> > ... 🛌🏻😴
+>
+> I think the CI is ok now,
+
+Perfect, thank you! But that's weird, other UX packages (that does not require spatie snapshot package) does not require phpunit/phpunit, only the bridge... 🤔
+
+> the only one it fails is related to Autocomplete , sometimes it passes sometimes no !
+
+Yeah that's a known flaky, that's fine
