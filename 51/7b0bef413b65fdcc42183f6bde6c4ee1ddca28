@@ -1,0 +1,8 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-03-19T21:21:22Z
+
+> prevent file: installs from forcing React 18 in user projects that require React 19.
+
+This is not correct, devDependencies from a package are purely ignored when installing a package inside a project, users already have the ability to install React 19 if they want.
+Your change only affect the UX repository test suite.
