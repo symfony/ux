@@ -21,13 +21,13 @@
         "@puppeteer/browsers": "^2.13.0",
         "@testing-library/dom": "^10.4.1",
         "@testing-library/jest-dom": "^6.9.1",
+        "@tsdown/css": "^0.21.4",
         "@types/node": "^22.19.11",
-        "lightningcss": "^1.31.1",
         "oxfmt": "^0.41.0",
         "oxlint": "^1.56.0",
         "pkg-types": "^2.3.0",
         "tinyglobby": "^0.2.15",
-        "tsdown": "^0.20.3",
+        "tsdown": "^0.21.4",
         "vitest": "^4.1.0"
     }
 }
