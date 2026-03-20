@@ -1,7 +1,7 @@
 # Symfony UX Svelte
 
 Symfony UX Svelte integrates [Svelte](https://svelte.dev/) into Symfony applications.
-It provides tools to render Svelte 3 components from Twig.
+It provides tools to render Svelte 3 or 4 components from Twig.
 
 **This repository is a READ-ONLY sub-tree split**. See
 https://github.com/symfony/ux to create issues or submit pull requests.

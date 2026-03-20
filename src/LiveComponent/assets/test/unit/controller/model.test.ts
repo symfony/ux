@@ -1137,4 +1137,93 @@ describe('LiveController data-model Tests', () => {
         await userEvent.type(input, '30');
         await waitFor(() => expect(test.element).toHaveTextContent('Age: 30'));
     });
+
+    it('bypasses min_length validation and updates model when input is cleared', async () => {
+        const test = await createTest(
+            { username: 'starting_name' }, // Set an initial value
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <input data-model="min_length(3)|username" value="${data.username}" />
+                Username: ${data.username}
+            </div>
+        `
+        );
+
+        // 1. First, try entering an invalid value (2 characters)
+        const input = test.queryByDataModel('username');
+        await userEvent.clear(input);
+        await userEvent.type(input, 'ab');
+
+        // Model SHOULD NOT be updated, state should remain the same
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ username: 'starting_name' });
+
+        // 2. Now completely clear the input
+        // An empty value ('') should bypass the min_length rule and be sent to the server
+        test.expectsAjaxCall().expectUpdatedData({ username: '' });
+
+        await userEvent.clear(input);
+
+        // FIX: Ensure the old value is completely gone from the DOM to confirm re-render
+        await waitFor(() => expect(test.element).not.toHaveTextContent('starting_name'));
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ username: '' });
+    });
+
+    it('bypasses min_value validation and updates model when number input is cleared', async () => {
+        const test = await createTest(
+            { age: '30' }, // Set a valid initial value
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <input data-model="min_value(18)|age" type="number" value="${data.age}" />
+                Age: ${data.age}
+            </div>
+        `
+        );
+
+        // 1. First, enter an invalid value (<18)
+        const input = test.queryByDataModel('age');
+        await userEvent.clear(input);
+        await userEvent.type(input, '15');
+
+        // Model SHOULD NOT be updated
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ age: '30' });
+
+        // 2. Completely clear the input
+        test.expectsAjaxCall().expectUpdatedData({ age: '' });
+
+        await userEvent.clear(input);
+
+        // FIX: Ensure the old value '30' is no longer in the DOM
+        await waitFor(() => expect(test.element).not.toHaveTextContent('Age: 30'));
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ age: '' });
+    });
+
+    it('bypasses max_length validation and updates model when input is cleared', async () => {
+        const test = await createTest(
+            { username: 'starting_name' }, // Set an initial value
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <input data-model="max_length(5)|username" value="${data.username}" />
+                Username: ${data.username}
+            </div>
+        `
+        );
+
+        // 1. First, try entering an invalid value (6 characters)
+        const input = test.queryByDataModel('username');
+        await userEvent.clear(input);
+        await userEvent.type(input, 'abcdef');
+
+        // Model SHOULD NOT be updated, state should remain the same
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ username: 'starting_name' });
+
+        // 2. Now completely clear the input
+        // An empty value ('') should bypass the max_length rule and be sent to the server
+        test.expectsAjaxCall().expectUpdatedData({ username: '' });
+
+        await userEvent.clear(input);
+
+        // FIX: Ensure the old value is completely gone from the DOM to confirm re-render
+        await waitFor(() => expect(test.element).not.toHaveTextContent('starting_name'));
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ username: '' });
+    });
 });

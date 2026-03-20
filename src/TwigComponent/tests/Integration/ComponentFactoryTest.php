@@ -258,7 +258,7 @@ final class ComponentFactoryTest extends KernelTestCase
     #[TestWith(['tabler', 'Unknown component "tabler". Did you mean this: "table"?'])]
     #[TestWith(['Basic', 'Unknown component "Basic". Did you mean this: "BasicComponent"?'])]
     #[TestWith(['basic', 'Unknown component "basic". Did you mean this: "BasicComponent"?'])]
-    #[TestWith(['with', 'Unknown component "with". Did you mean one of these: "with_attributes", "with_exposed_variables", "WithSlots"?'])]
+    #[TestWith(['with', 'Unknown component "with". Did you mean one of these: "with_attributes", "WithExposedTraitChild", "WithExposedTraitParent", "with_exposed_variables", "WithSlots"?'])]
     #[TestWith(['anonAnon', 'Unknown component "anonAnon". And no matching anonymous component template was found.'])]
     public function testCannotGetInvalidComponent(string $name, string $expectedExceptionMessage)
     {

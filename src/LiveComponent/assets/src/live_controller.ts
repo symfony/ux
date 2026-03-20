@@ -435,8 +435,11 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
 
         const finalValue = getValueFromElement(element, this.component.valueStore);
 
+        const finalValueIsEmpty = finalValue === '' || finalValue === null || finalValue === undefined;
+
         if (isTextualInputElement(element) || isTextareaElement(element)) {
             if (
+                !finalValueIsEmpty &&
                 modelBinding.minLength !== null &&
                 typeof finalValue === 'string' &&
                 finalValue.length < modelBinding.minLength
@@ -445,6 +448,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
             }
 
             if (
+                !finalValueIsEmpty &&
                 modelBinding.maxLength !== null &&
                 typeof finalValue === 'string' &&
                 finalValue.length > modelBinding.maxLength
@@ -454,14 +458,18 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         }
 
         if (isNumericalInputElement(element)) {
-            const numericValue = Number(finalValue);
+            // An empty input converts to 0 via Number(""), which could incorrectly trigger min_value rules.
+            // Therefore, we bypass validation for numeric fields if they are empty.
+            if (!finalValueIsEmpty) {
+                const numericValue = Number(finalValue);
 
-            if (modelBinding.minValue !== null && numericValue < modelBinding.minValue) {
-                return;
-            }
+                if (modelBinding.minValue !== null && numericValue < modelBinding.minValue) {
+                    return;
+                }
 
-            if (modelBinding.maxValue !== null && numericValue > modelBinding.maxValue) {
-                return;
+                if (modelBinding.maxValue !== null && numericValue > modelBinding.maxValue) {
+                    return;
+                }
             }
         }
 

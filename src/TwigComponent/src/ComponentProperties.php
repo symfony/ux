@@ -112,19 +112,38 @@ final class ComponentProperties
         $refClass = new \ReflectionClass($class);
 
         $properties = [];
-        foreach ($refClass->getProperties() as $property) {
-            if (!$attributes = $property->getAttributes(ExposeInTemplate::class)) {
-                continue;
+        // Walk the full class hierarchy so that private properties declared in
+        // traits used by *parent* classes are also discovered.
+        //
+        // PHP's ReflectionClass::getProperties() called on a child class does
+        // not return private properties from traits used in ancestor classes —
+        // those are only visible when getProperties() is called on the exact
+        // class that declares "use TraitName".  Iterating up via getParentClass()
+        // and deduplicating by property name gives us the complete picture.
+        $seenPropertyNames = [];
+        $currentClass = $refClass;
+        while (false !== $currentClass) {
+            foreach ($currentClass->getProperties() as $property) {
+                if (isset($seenPropertyNames[$property->name])) {
+                    // Already processed from a more-derived class; skip.
+                    continue;
+                }
+                $seenPropertyNames[$property->name] = true;
+
+                if (!$attributes = $property->getAttributes(ExposeInTemplate::class)) {
+                    continue;
+                }
+                $attribute = $attributes[0]->newInstance();
+                $properties[$property->name] = [
+                    'name' => $attribute->name ?? $property->name,
+                    'getter' => $attribute->getter ? rtrim($attribute->getter, '()') : null,
+                ];
+                if ($attribute->destruct) {
+                    unset($properties[$property->name]['name']);
+                    $properties[$property->name]['destruct'] = true;
+                }
             }
-            $attribute = $attributes[0]->newInstance();
-            $properties[$property->name] = [
-                'name' => $attribute->name ?? $property->name,
-                'getter' => $attribute->getter ? rtrim($attribute->getter, '()') : null,
-            ];
-            if ($attribute->destruct) {
-                unset($properties[$property->name]['name']);
-                $properties[$property->name]['destruct'] = true;
-            }
+            $currentClass = $currentClass->getParentClass();
         }
 
         $methods = [];
