@@ -14,7 +14,6 @@ namespace App\Factory;
 use App\Entity\Fruit;
 use Zenstruck\Foundry\Object\Instantiator;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**
  * @extends PersistentObjectFactory<Fruit>

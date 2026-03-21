@@ -1,0 +1,19 @@
+.note-card {
+    transition:
+        transform 0.15s ease-in-out,
+        box-shadow 0.15s ease-in-out;
+}
+
+.note-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.12);
+}
+
+.note-card .card-body {
+    min-height: 120px;
+}
+
+.category-badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+}

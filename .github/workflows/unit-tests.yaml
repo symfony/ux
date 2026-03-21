@@ -8,12 +8,16 @@ on:
     push:
         paths-ignore:
             - '.github/workflows/app-tests.yaml'
+            - '.github/workflows/demo-native.yaml'
+            - 'apps/demo-native/**'
             - 'apps/e2e/**'
             - 'src/*/doc/**'
             - 'src/**/*.md'
     pull_request:
         paths-ignore:
             - '.github/workflows/app-tests.yaml'
+            - '.github/workflows/demo-native.yaml'
+            - 'apps/demo-native/**'
             - 'apps/e2e/**'
             - 'src/*/doc/**'
             - 'src/**/*.md'

@@ -1,0 +1,3 @@
+http:
+    port: 9888
+    no_tls: true

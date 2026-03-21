@@ -21,10 +21,6 @@ that wrap your web application in a native shell. This bundle provides tools to:
 Installation
 ------------
 
-.. caution::
-
-    Before you start, make sure you have `StimulusBundle configured in your app`_.
-
 Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
@@ -357,4 +353,3 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Hotwire Native`: https://native.hotwired.dev/
 .. _`Hotwire Native Bridge`: https://native.hotwired.dev/reference/bridge-installation
 .. _`Hotwire Native Bridge documentation`: https://native.hotwired.dev/reference/bridge-installation
-.. _`StimulusBundle configured in your app`: https://symfony.com/bundles/StimulusBundle/current/index.html

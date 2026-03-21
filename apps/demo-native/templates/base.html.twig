@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}Notes{% endblock %} — MyNotes</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>📝</text></svg>">
+        {% block stylesheets %}{% endblock %}
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    <body class="bg-light">
+        {% if not ux_is_native() %}
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+                <div class="container">
+                    <a class="navbar-brand fw-bold" href="{{ path('app_notes') }}">
+                        📝 MyNotes
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="mainNav">
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'app_notes' ? 'active' }}" href="{{ path('app_notes') }}">
+                                    Home
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'app_settings' ? 'active' }}" href="{{ path('app_settings') }}">
+                                    Settings
+                                </a>
+                            </li>
+                        </ul>
+                        <a href="{{ path('app_note_new') }}" class="btn btn-outline-light btn-sm">
+                            + New Note
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        {% endif %}
+
+        <main class="container pb-4">
+            {% block body %}{% endblock %}
+        </main>
+
+        {% if not ux_is_native() %}
+            <footer class="text-center text-muted py-4 border-top bg-white mt-auto">
+                <small>MyNotes Demo — Powered by <a href="https://symfony.com/bundles/ux-native/current/index.html" class="text-decoration-none">Symfony UX Native</a> &amp; <a href="https://native.hotwired.dev/" class="text-decoration-none">Hotwire Native</a></small>
+            </footer>
+        {% endif %}
+    </body>
+</html>

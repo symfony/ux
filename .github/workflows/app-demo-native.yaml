@@ -1,0 +1,86 @@
+name: App Demo Native
+
+on:
+    push:
+        paths:
+            - '.github/workflows/demo-native.yaml'
+            - 'apps/demo-native/**'
+            - 'src/Native/**'
+            - 'src/StimulusBundle/**'
+            - '!src/*/doc/**'
+            - '!src/**/*.md'
+    pull_request:
+        paths-ignore:
+            - '.github/workflows/demo-native.yaml'
+            - 'apps/demo-native/**'
+            - 'src/Native/**'
+            - 'src/StimulusBundle/**'
+            - '!src/*/doc/**'
+            - '!src/**/*.md'
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+                  tools: symfony-cli, flex
+
+            - name: Install root dependencies
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: ${{ github.workspace }}
+
+            - name: Build root packages
+              run: php .github/build-packages.php
+
+            - name: Install demo-native dependencies
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: apps/demo-native
+                  dependency-versions: highest
+
+            - name: Clear and warm up cache
+              run: php bin/console cache:clear
+              working-directory: apps/demo-native
+
+            - name: Dump native configuration files
+              run: php bin/console ux-native:dump
+              working-directory: apps/demo-native
+
+            - name: Start Symfony server
+              run: symfony server:start -d --port=9888 --no-tls
+              working-directory: apps/demo-native
+
+            - name: Test homepage returns 200
+              run: curl --fail-with-body http://127.0.0.1:9888/
+
+            - name: Test note detail returns 200
+              run: curl --fail-with-body http://127.0.0.1:9888/notes/1
+
+            - name: Test new note page returns 200
+              run: curl --fail-with-body http://127.0.0.1:9888/notes/new
+
+            - name: Test edit note page returns 200
+              run: curl --fail-with-body http://127.0.0.1:9888/notes/1/edit
+
+            - name: Test settings page returns 200
+              run: curl --fail-with-body http://127.0.0.1:9888/settings
+
+            - name: Test native config JSON returns 200
+              run: curl --fail-with-body http://127.0.0.1:9888/config/ios_v1.json
+
+            - name: Validate native config contains modal rule
+              run: curl -s http://127.0.0.1:9888/config/ios_v1.json | jq -e '[.rules[] | select(.properties.context == "modal")] | length > 0'
+
+            - name: Stop Symfony server
+              if: always()
+              run: symfony server:stop
+              working-directory: apps/demo-native
