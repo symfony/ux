@@ -22,19 +22,6 @@
             "src/Repository/.gitignore"
         ]
     },
-    "doctrine/doctrine-migrations-bundle": {
-        "version": "3.4",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "3.1",
-            "ref": "1d01ec03c6ecbd67c3375c5478c9a423ae5d6a33"
-        },
-        "files": [
-            "config/packages/doctrine_migrations.yaml",
-            "migrations/.gitignore"
-        ]
-    },
     "symfony/asset-mapper": {
         "version": "7.3",
         "recipe": {

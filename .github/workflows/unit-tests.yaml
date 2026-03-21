@@ -7,14 +7,16 @@ defaults:
 on:
     push:
         paths-ignore:
+            - '.github/workflows/app-tests.yaml'
+            - 'apps/e2e/**'
             - 'src/*/doc/**'
             - 'src/**/*.md'
-            - '.github/workflows/app-tests.yaml'
     pull_request:
         paths-ignore:
+            - '.github/workflows/app-tests.yaml'
+            - 'apps/e2e/**'
             - 'src/*/doc/**'
             - 'src/**/*.md'
-            - '.github/workflows/app-tests.yaml'
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
