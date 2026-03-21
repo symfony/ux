@@ -11,7 +11,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Download artifacts
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@484a0b528fb4d7bd804637ccb632e47a0e638317
               with:
                   name: dist-size-diff
                   run-id: ${{ github.event.workflow_run.id }}
@@ -23,7 +23,7 @@ jobs:
                   echo "pr-number=$(cat ./pr-number)" >> $GITHUB_OUTPUT
 
             - name: Comment on the pull request (if success)
-              uses: marocchino/sticky-pull-request-comment@v2
+              uses: marocchino/sticky-pull-request-comment@5a61de79c6a3f3f961d6e3ceea2efe7b4cd01f32
               with:
                   number: ${{ steps.read-pr-number.outputs.pr-number }}
                   path: ./diff.md
