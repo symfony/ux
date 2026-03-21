@@ -13,12 +13,13 @@ namespace App\Factory;
 
 use App\Entity\Fruit;
 use Zenstruck\Foundry\Object\Instantiator;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**
- * @extends PersistentProxyObjectFactory<Fruit>
+ * @extends PersistentObjectFactory<Fruit>
  */
-final class FruitFactory extends PersistentProxyObjectFactory
+final class FruitFactory extends PersistentObjectFactory
 {
     public static function class(): string
     {

@@ -3,10 +3,12 @@ name: Dist Files Unbuilt
 on:
     push:
         paths-ignore:
+            - 'apps/**'
             - 'src/*/doc/**'
             - 'src/**/*.md'
     pull_request:
         paths-ignore:
+            - 'apps/**'
             - 'src/*/doc/**'
             - 'src/**/*.md'
 

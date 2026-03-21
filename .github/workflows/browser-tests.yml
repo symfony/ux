@@ -7,16 +7,16 @@ defaults:
 on:
     push:
         paths-ignore:
-            - 'src/*/doc/**'
-            - 'src/**/*.md'
             - '.github/workflows/app-tests.yaml'
             - '.github/workflows/unit-tests.yaml'
+            - 'src/*/doc/**'
+            - 'src/**/*.md'
     pull_request:
         paths-ignore:
-            - 'src/*/doc/**'
-            - 'src/**/*.md'
             - '.github/workflows/app-tests.yaml'
             - '.github/workflows/unit-tests.yaml'
+            - 'src/*/doc/**'
+            - 'src/**/*.md'
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -28,7 +28,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                symfony: ['6.4', '7.3']
+                symfony: ['6.4', '7.4', '8.0']
         env:
             SYMFONY_REQUIRE: '${{ matrix.symfony }}.*'
         steps:
@@ -54,7 +54,7 @@ jobs:
 
             - uses: shivammathur/setup-php@93cb3149d228516dfca679606c5060ee44f46437
               with:
-                  php-version: 8.2
+                  php-version: ${{ matrix.symfony >= '8.0' && '8.4' || '8.2' }}
                   tools: symfony-cli, flex
 
             - name: Install root PHP dependencies
@@ -107,6 +107,7 @@ jobs:
                       src/**/assets/.playwright-report/
                       src/**/assets/.playwright-output/
                   retention-days: 7
+                  include-hidden-files: true
 
             - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
               if: ${{ always() && steps.browser-tests.conclusion == 'failure' }}

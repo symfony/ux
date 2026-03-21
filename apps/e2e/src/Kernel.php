@@ -15,10 +15,11 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 class Kernel extends BaseKernel implements CompilerPassInterface
 {
-    use MicroKernelTrait;
+    use MicroKernelTrait { MicroKernelTrait::configureRoutes as doConfigureRoutes; }
 
     public function process(ContainerBuilder $container): void
     {
@@ -35,5 +36,19 @@ class Kernel extends BaseKernel implements CompilerPassInterface
             // 4. Uncomment the line below
             // MapRenderer::Google->value => 'google://'.$container->resolveEnvPlaceholders('%env(GOOGLE_MAPS_API_KEY)%').'@default',
         ]);
+    }
+
+    public function configureRoutes(RoutingConfigurator $routes): void
+    {
+        $this->doConfigureRoutes($routes);
+
+        $extension = self::VERSION_ID < 70000 ? 'xml' : 'php';
+
+        $routes->import('@FrameworkBundle/Resources/config/routing/errors.'.$extension)->prefix('/_error');
+
+        if ('dev' === $this->environment) {
+            $routes->import('@WebProfilerBundle/Resources/config/routing/profiler.'.$extension)->prefix('/_profiler');
+            $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.'.$extension)->prefix('/_wdt');
+        }
     }
 }
