@@ -75,7 +75,7 @@ class GoogleRendererTest extends RendererTestCase
         ];
 
         yield 'with all markers removed with removeAllMarkers()' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => (new Map())
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
@@ -105,7 +105,7 @@ class GoogleRendererTest extends RendererTestCase
         ];
 
         yield 'with all polygons removed with removeAllPolygons()' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => (new Map())
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
@@ -124,7 +124,7 @@ class GoogleRendererTest extends RendererTestCase
         ];
 
         yield 'with all polylines removed with removeAllPolylines()' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => (new Map())
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
@@ -143,7 +143,7 @@ class GoogleRendererTest extends RendererTestCase
         ];
 
         yield 'with all circles removed with removeAllCircles()' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => (new Map())
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
@@ -162,7 +162,7 @@ class GoogleRendererTest extends RendererTestCase
         ];
 
         yield 'with all rectangles removed with removeAllRectangles()' => [
-            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), apiKey: 'api_key'),
+            'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
             'map' => (new Map())
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
