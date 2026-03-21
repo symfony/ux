@@ -21,7 +21,7 @@ jobs:
         name: Validate packages definition
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
             - name: Check all composer.json have label "symfony-ux"
               if: always()
@@ -128,10 +128,10 @@ jobs:
         name: JavaScript Formatting
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
             - run: npm i -g corepack && corepack enable
-            - uses: actions/setup-node@v4
+            - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
               with:
                   node-version-file: '.nvmrc'
                   cache: 'pnpm'
@@ -145,10 +145,10 @@ jobs:
         name: JavaScript Linting
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
             - run: npm i -g corepack && corepack enable
-            - uses: actions/setup-node@v4
+            - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
               with:
                   node-version-file: '.nvmrc'
                   cache: 'pnpm'
@@ -178,7 +178,7 @@ jobs:
                     - symfony-version: '6.4.*'
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
             - name: Configure environment
               run: |
@@ -194,7 +194,7 @@ jobs:
                   echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
 
             - name: Setup PHP
-              uses: shivammathur/setup-php@v2
+              uses: shivammathur/setup-php@93cb3149d228516dfca679606c5060ee44f46437
               with:
                   php-version: '8.2'
                   tools: flex
@@ -205,7 +205,7 @@ jobs:
                   echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
             - name: Cache packages dependencies
-              uses: actions/cache@v4
+              uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7
               with:
                   path: ${{ steps.composer-cache.outputs.dir }}
                   key: ${{ runner.os }}-composer-packages-${{ matrix.php-version }}-${{ matrix.dependency-version }}-${{ matrix.symfony-version }}-${{ matrix.minimum-stability }}-${{ hashFiles('src/**/composer.json') }}
@@ -213,7 +213,7 @@ jobs:
                       ${{ runner.os }}-composer-packages-${{ matrix.php-version }}-${{ matrix.dependency-version }}-${{ matrix.symfony-version }}-${{ matrix.minimum-stability }}
 
             - name: Install root dependencies
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@2b6adcf6fa51986b4a64e960e812c1bf5a38f237
               with:
                   working-directory: ${{ github.workspace }}
 

@@ -13,7 +13,7 @@ jobs:
     release:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
               with:
                   ref: 3.x
 
@@ -26,7 +26,7 @@ jobs:
               run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
             - run: npm i -g corepack && corepack enable
-            - uses: actions/setup-node@v4
+            - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
               with:
                   registry-url: 'https://registry.npmjs.org'
                   node-version-file: '.nvmrc'

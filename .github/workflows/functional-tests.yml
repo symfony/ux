@@ -53,16 +53,16 @@ jobs:
 
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
             - name: Setup PHP
-              uses: shivammathur/setup-php@v2
+              uses: shivammathur/setup-php@93cb3149d228516dfca679606c5060ee44f46437
               with:
                   php-version: ${{ matrix.php-version }}
                   tools: flex
 
             - name: Install root dependencies
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@2b6adcf6fa51986b4a64e960e812c1bf5a38f237
               with:
                   working-directory: ${{ github.workspace }}
 
@@ -74,7 +74,7 @@ jobs:
               working-directory: src/Turbo
 
             - name: Install dependencies with composer
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@2b6adcf6fa51986b4a64e960e812c1bf5a38f237
               with:
                   working-directory: src/Turbo
                   dependency-versions: ${{ matrix.dependency-version }}
