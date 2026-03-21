@@ -125,7 +125,7 @@ jobs:
                   done
 
     code-format-js:
-        name: JavaScript Coding Style
+        name: JavaScript Formatting
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -142,7 +142,7 @@ jobs:
             - run: pnpm run fmt:check
 
     code-linting-js:
-        name: JavaScript Coding Style
+        name: JavaScript Linting
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4

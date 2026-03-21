@@ -1,5 +1,5 @@
-import { eagerControllers, isApplicationDebug, lazyControllers } from "./controllers.js";
 import { Application } from "@hotwired/stimulus";
+import { eagerControllers, isApplicationDebug, lazyControllers } from "./controllers.js";
 const controllerAttribute = "data-controller";
 const loadControllers = (application, eagerControllers, lazyControllers) => {
 	for (const name in eagerControllers) registerController(name, eagerControllers[name], application);

@@ -1,5 +1,4 @@
 import { Controller } from "@hotwired/stimulus";
-import "leaflet/dist/leaflet.min.css";
 import * as L from "leaflet";
 import { CircleOptions, ControlPosition, MapOptions, MarkerOptions, PolylineOptions, PopupOptions } from "leaflet";
 type Point = {
