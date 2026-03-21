@@ -32,10 +32,10 @@ jobs:
         env:
             SYMFONY_REQUIRE: '${{ matrix.symfony }}.*'
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
             - run: npm i -g corepack && corepack enable
-            - uses: actions/setup-node@v4
+            - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
               with:
                   node-version-file: '.nvmrc'
                   cache: 'pnpm'
@@ -52,13 +52,13 @@ jobs:
             - name: Install browsers with Playwright
               run: pnpm exec playwright install firefox ffmpeg
 
-            - uses: shivammathur/setup-php@v2
+            - uses: shivammathur/setup-php@93cb3149d228516dfca679606c5060ee44f46437
               with:
                   php-version: 8.2
                   tools: symfony-cli, flex
 
             - name: Install root PHP dependencies
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@2b6adcf6fa51986b4a64e960e812c1bf5a38f237
               with:
                   working-directory: ${{ github.workspace }}
 
@@ -75,7 +75,7 @@ jobs:
               working-directory: apps/e2e
 
             - name: Install E2E PHP dependencies
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@2b6adcf6fa51986b4a64e960e812c1bf5a38f237
               with:
                   working-directory: apps/e2e
                   dependency-versions: highest
@@ -99,7 +99,7 @@ jobs:
               run: pnpm run test:browser
               id: browser-tests
 
-            - uses: actions/upload-artifact@v4
+            - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
               if: ${{ always() && steps.browser-tests.conclusion == 'failure' }}
               with:
                   name: Playwright report and output (${{ matrix.symfony }})
@@ -108,7 +108,7 @@ jobs:
                       src/**/assets/.playwright-output/
                   retention-days: 7
 
-            - uses: actions/upload-artifact@v4
+            - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
               if: ${{ always() && steps.browser-tests.conclusion == 'failure' }}
               with:
                   name: Symfony logs (${{ matrix.symfony }})

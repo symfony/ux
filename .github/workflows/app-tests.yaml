@@ -27,18 +27,18 @@ jobs:
                     - name: External, from "npm add"
                       ux-packages-source: js-packages
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
             - run: npm i -g corepack && corepack enable
 
-            - uses: actions/setup-node@v4
+            - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
               with:
                   node-version-file: '.nvmrc'
 
-            - uses: shivammathur/setup-php@v2
+            - uses: shivammathur/setup-php@93cb3149d228516dfca679606c5060ee44f46437
 
             - name: Install root dependencies
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@2b6adcf6fa51986b4a64e960e812c1bf5a38f237
               with:
                   working-directory: ${{ github.workspace }}
 
@@ -47,7 +47,7 @@ jobs:
 
             # We always install PHP deps because of the UX Translator, which requires `var/translations` to exists
             - name: Install PHP dependencies
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@2b6adcf6fa51986b4a64e960e812c1bf5a38f237
               with:
                   working-directory: apps/encore
                   dependency-versions: highest
