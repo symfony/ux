@@ -1,0 +1,303 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-03-20T07:44:23Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/Autocomplete/assets/dist"><b>Autocomplete</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Autocomplete/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>12.93 kB</code>
+                    / <code>3.45 kB</code>
+                </td><td>
+                    <code>12.93 kB</code><sup>0%</sup>
+                    / <code>3.45 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/Chartjs/assets/dist"><b>Chartjs</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Chartjs/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>1.95 kB</code>
+                    / <code>770 B</code>
+                </td><td>
+                    <code>1.96 kB</code><sup>0%</sup>
+                    / <code>770 B</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/Cropperjs/assets/dist"><b>Cropperjs</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Cropperjs/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>945 B</code>
+                    / <code>470 B</code>
+                </td><td>
+                    <code>946 B</code><sup>0%</sup>
+                    / <code>472 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Cropperjs/assets/dist/style.min.css"><code>style.min.css</code></a></td>
+            <td>
+                    <code>32 B</code>
+                    / <code>66 B</code>
+                </td><td>
+                    <code>33 B</code><sup>+3% 📈</sup>
+                    / <code>67 B</code><sup>+2% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/Dropzone/assets/dist"><b>Dropzone</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Dropzone/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>2.72 kB</code>
+                    / <code>797 B</code>
+                </td><td>
+                    <code>2.72 kB</code><sup>0%</sup>
+                    / <code>797 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Dropzone/assets/dist/style.min.css"><code>style.min.css</code></a></td>
+            <td>
+                    <code>944 B</code>
+                    / <code>468 B</code>
+                </td><td>
+                    <code>945 B</code><sup>0%</sup>
+                    / <code>471 B</code><sup>+1% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/LazyImage/assets/dist"><b>LazyImage</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/LazyImage/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>903 B</code>
+                    / <code>458 B</code>
+                </td><td>
+                    <code>904 B</code><sup>0%</sup>
+                    / <code>457 B</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/LiveComponent/assets/dist/live.min.css"><code>live.min.css</code></a></td>
+            <td>
+                    <code>74 B</code>
+                    / <code>80 B</code>
+                </td><td>
+                    <code>75 B</code><sup>+1% 📈</sup>
+                    / <code>81 B</code><sup>+1% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>82.61 kB</code>
+                    / <code>18.37 kB</code>
+                </td><td>
+                    <code>82.61 kB</code><sup>0%</sup>
+                    / <code>18.37 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>4.92 kB</code>
+                    / <code>1.4 kB</code>
+                </td><td>
+                    <code>4.92 kB</code><sup>0%</sup>
+                    / <code>1.4 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>12.9 kB</code>
+                    / <code>3.19 kB</code>
+                </td><td>
+                    <code>12.9 kB</code><sup>0%</sup>
+                    / <code>3.19 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>9.96 kB</code>
+                    / <code>1.86 kB</code>
+                </td><td>
+                    <code>9.92 kB</code><sup>0%</sup>
+                    / <code>1.84 kB</code><sup>-1% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>12.45 kB</code>
+                    / <code>3.36 kB</code>
+                </td><td>
+                    <code>12.45 kB</code><sup>0%</sup>
+                    / <code>3.36 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/Notify/assets/dist"><b>Notify</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Notify/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>1.91 kB</code>
+                    / <code>807 B</code>
+                </td><td>
+                    <code>1.91 kB</code><sup>0%</sup>
+                    / <code>808 B</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/React/assets/dist"><b>React</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/React/assets/dist/components.js"><code>components.js</code></a></td>
+            <td>
+                    <code>45 B</code>
+                    / <code>69 B</code>
+                </td><td>
+                    <code>46 B</code><sup>+2% 📈</sup>
+                    / <code>69 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/React/assets/dist/loader.js"><code>loader.js</code></a></td>
+            <td>
+                    <code>544 B</code>
+                    / <code>312 B</code>
+                </td><td>
+                    <code>545 B</code><sup>0%</sup>
+                    / <code>312 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/React/assets/dist/register_controller.js"><code>register_controller.js</code></a></td>
+            <td>
+                    <code>935 B</code>
+                    / <code>453 B</code>
+                </td><td>
+                    <code>936 B</code><sup>0%</sup>
+                    / <code>452 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/React/assets/dist/render_controller.js"><code>render_controller.js</code></a></td>
+            <td>
+                    <code>1.23 kB</code>
+                    / <code>524 B</code>
+                </td><td>
+                    <code>1.23 kB</code><sup>0%</sup>
+                    / <code>524 B</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/StimulusBundle/assets/dist"><b>StimulusBundle</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/StimulusBundle/assets/dist/controllers.js"><code>controllers.js</code></a></td>
+            <td>
+                    <code>156 B</code>
+                    / <code>118 B</code>
+                </td><td>
+                    <code>157 B</code><sup>+1% 📈</sup>
+                    / <code>118 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/StimulusBundle/assets/dist/loader.js"><code>loader.js</code></a></td>
+            <td>
+                    <code>2.87 kB</code>
+                    / <code>948 B</code>
+                </td><td>
+                    <code>2.87 kB</code><sup>0%</sup>
+                    / <code>948 B</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/Svelte/assets/dist"><b>Svelte</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Svelte/assets/dist/components.js"><code>components.js</code></a></td>
+            <td>
+                    <code>45 B</code>
+                    / <code>69 B</code>
+                </td><td>
+                    <code>46 B</code><sup>+2% 📈</sup>
+                    / <code>69 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Svelte/assets/dist/loader.js"><code>loader.js</code></a></td>
+            <td>
+                    <code>552 B</code>
+                    / <code>313 B</code>
+                </td><td>
+                    <code>553 B</code><sup>0%</sup>
+                    / <code>313 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Svelte/assets/dist/register_controller.js"><code>register_controller.js</code></a></td>
+            <td>
+                    <code>530 B</code>
+                    / <code>303 B</code>
+                </td><td>
+                    <code>531 B</code><sup>0%</sup>
+                    / <code>303 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Svelte/assets/dist/render_controller.js"><code>render_controller.js</code></a></td>
+            <td>
+                    <code>1.05 kB</code>
+                    / <code>492 B</code>
+                </td><td>
+                    <code>1.05 kB</code><sup>0%</sup>
+                    / <code>493 B</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/Swup/assets/dist"><b>Swup</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Swup/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>1.71 kB</code>
+                    / <code>652 B</code>
+                </td><td>
+                    <code>1.71 kB</code><sup>0%</sup>
+                    / <code>653 B</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/TogglePassword/assets/dist"><b>TogglePassword</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/TogglePassword/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>2.64 kB</code>
+                    / <code>1.07 kB</code>
+                </td><td>
+                    <code>2.64 kB</code><sup>0%</sup>
+                    / <code>1.07 kB</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/TogglePassword/assets/dist/style.min.css"><code>style.min.css</code></a></td>
+            <td>
+                    <code>311 B</code>
+                    / <code>216 B</code>
+                </td><td>
+                    <code>312 B</code><sup>0%</sup>
+                    / <code>218 B</code><sup>+1% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/Translator/assets/dist"><b>Translator</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Translator/assets/dist/translator_controller.js"><code>translator_controller.js</code></a></td>
+            <td>
+                    <code>7.17 kB</code>
+                    / <code>2.19 kB</code>
+                </td><td>
+                    <code>7.17 kB</code><sup>0%</sup>
+                    / <code>2.19 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/Turbo/assets/dist"><b>Turbo</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Turbo/assets/dist/turbo_controller.d.ts"><code>turbo_controller.d.ts</code></a></td>
+            <td>
+                    <code>163 B</code>
+                    / <code>147 B</code>
+                </td><td>
+                    <code>137 B</code><sup>-16% 📉</sup>
+                    / <code>139 B</code><sup>-5% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Turbo/assets/dist/turbo_controller.js"><code>turbo_controller.js</code></a></td>
+            <td>
+                    <code>182 B</code>
+                    / <code>152 B</code>
+                </td><td>
+                    <code>183 B</code><sup>+1% 📈</sup>
+                    / <code>151 B</code><sup>-1% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Turbo/assets/dist/turbo_stream_controller.js"><code>turbo_stream_controller.js</code></a></td>
+            <td>
+                    <code>1.11 kB</code>
+                    / <code>545 B</code>
+                </td><td>
+                    <code>1.11 kB</code><sup>0%</sup>
+                    / <code>545 B</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/Typed/assets/dist"><b>Typed</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Typed/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>1.8 kB</code>
+                    / <code>639 B</code>
+                </td><td>
+                    <code>1.8 kB</code><sup>0%</sup>
+                    / <code>638 B</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/update-tsdown/src/Vue/assets/dist"><b>Vue</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Vue/assets/dist/components.js"><code>components.js</code></a></td>
+            <td>
+                    <code>45 B</code>
+                    / <code>69 B</code>
+                </td><td>
+                    <code>46 B</code><sup>+2% 📈</sup>
+                    / <code>69 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Vue/assets/dist/loader.js"><code>loader.js</code></a></td>
+            <td>
+                    <code>597 B</code>
+                    / <code>327 B</code>
+                </td><td>
+                    <code>598 B</code><sup>0%</sup>
+                    / <code>327 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Vue/assets/dist/register_controller.js"><code>register_controller.js</code></a></td>
+            <td>
+                    <code>1.3 kB</code>
+                    / <code>587 B</code>
+                </td><td>
+                    <code>1.3 kB</code><sup>0%</sup>
+                    / <code>587 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/update-tsdown/src/Vue/assets/dist/render_controller.js"><code>render_controller.js</code></a></td>
+            <td>
+                    <code>1.06 kB</code>
+                    / <code>432 B</code>
+                </td><td>
+                    <code>1.06 kB</code><sup>0%</sup>
+                    / <code>432 B</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
