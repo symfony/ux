@@ -2,7 +2,7 @@
     "name": "@symfony/ux-cropperjs",
     "description": "Cropper.js integration for Symfony",
     "license": "MIT",
-    "version": "2.32.0",
+    "version": "2.33.0",
     "keywords": [
         "symfony-ux"
     ],
