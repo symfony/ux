@@ -407,6 +407,7 @@ class IconRendererTest extends TestCase
     /**
      * @dataProvider provideRenderIconWithSuffixCases
      */
+    #[DataProvider('provideRenderIconWithSuffixCases')]
     public function testRenderIconWithSuffixes(string $name, string $expectedSvg)
     {
         $registry = $this->createRegistry([

@@ -46,11 +46,6 @@ before_composer_install() {
         composer require symfony/property-info:7.1.* symfony/type-info:7.2.* --no-update
         return $?
         ;;
-      8.4)
-        # Install PropertyInfo 7.4 (deprecate PropertyTypeExtractorInterface::getTypes from 7.3) and TypeInfo 7.4, but for Symfony 8 compatibility
-        composer require symfony/property-info:7.4.* symfony/type-info:7.4.* --no-update
-        return $?
-        ;;
     esac
 
     # Install the best TypeInfo version available
