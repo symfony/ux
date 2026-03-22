@@ -38,6 +38,11 @@ return static function (ContainerConfigurator $container) {
         'secret' => 'test',
         'http_method_override' => true,
         'handle_all_throwables' => true,
+        'router' => [
+            'utf8' => true,
+            'resource' => __DIR__.'/routes.php',
+            'type' => 'php',
+        ],
         'assets' => [
             'enabled' => true,
         ],
