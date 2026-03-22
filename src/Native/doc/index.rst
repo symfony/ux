@@ -126,7 +126,7 @@ a ``Configuration`` object::
     use Symfony\UX\Native\Configuration\Rule;
 
     #[AsNativeConfigurationProvider]
-    final class AppNativeConfiguration
+    class AppNativeConfiguration
     {
         #[AsNativeConfiguration('/config/ios_v1.json')]
         public function iosV1(): Configuration
@@ -191,7 +191,7 @@ configuration::
     use Symfony\UX\Native\Configuration\Configuration;
     use Symfony\UX\Native\Configuration\Rule;
 
-    final class IosConfigurationFactory
+    class IosConfigurationFactory
     {
         public static function v1(): Configuration
         {
