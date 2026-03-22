@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Notes{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">My Notes</h1>
+        <a href="{{ path('app_note_new') }}" class="btn btn-primary">
+            + New Note
+        </a>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    <div class="row g-3">
+        {% for note in notes %}
+            <div class="col-md-6 col-lg-4">
+                <a href="{{ path('app_note_show', {id: note.id}) }}" class="text-decoration-none">
+                    <div class="card note-card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title text-dark mb-0">{{ note.title }}</h5>
+                                <span class="badge bg-{{ note.color }} category-badge">{{ note.category }}</span>
+                            </div>
+                            <p class="card-text text-muted small mt-2">{{ note.content|u.truncate(80, '...') }}</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0">
+                            <small class="text-muted">{{ note.date }}</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

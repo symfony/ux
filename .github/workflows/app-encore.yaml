@@ -1,4 +1,4 @@
-name: App Tests
+name: App Encore
 
 on:
     push:
@@ -15,8 +15,7 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    encore-app:
-        name: 'Encore (${{ matrix.name}})'
+    test:
         runs-on: ubuntu-latest
         strategy:
             fail-fast: false
