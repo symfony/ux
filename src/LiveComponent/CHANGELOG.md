@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.35
+
+- Allow Symfony UX 3.x packages
+
 ## 2.33
 
 - Add `fetch_credentials` option to configure the fetch API credentials mode for cross-origin requests.

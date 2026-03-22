@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.35
+
+- Allow Symfony UX 3.x packages
+
 ## 2.31
 
 - Display a warning when trying to define `bridgeOptions.content` for a `Marker` that already has an `Icon`
