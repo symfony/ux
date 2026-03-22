@@ -51,10 +51,6 @@ jobs:
               run: php bin/console cache:clear
               working-directory: apps/demo-native
 
-            - name: Dump native configuration files
-              run: php bin/console ux-native:dump
-              working-directory: apps/demo-native
-
             - name: Start Symfony server
               run: symfony server:start -d --port=9888 --no-tls
               working-directory: apps/demo-native
