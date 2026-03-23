@@ -20,6 +20,7 @@ use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Bundle\AcmeBundle\AcmeBundle;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
+use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -33,6 +34,7 @@ final class Kernel extends BaseKernel
         yield new FrameworkBundle();
         yield new TwigBundle();
         yield new TwigComponentBundle();
+        yield new TwigExtraBundle();
         yield new AcmeBundle();
     }
 

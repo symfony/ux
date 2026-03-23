@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.35
+
+Add support for `AttributeValueInterface` from `twig/html-extra:^3.24.0` in `ComponentAttributes`
+
 ## 2.33
 
 - Extended support for the `index.html.twig` template fallback when resolving namespaced anonymous components

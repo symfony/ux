@@ -13,6 +13,7 @@ namespace Symfony\UX\TwigComponent;
 
 use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Symfony\WebpackEncoreBundle\Dto\AbstractStimulusDto;
+use Twig\Extra\Html\HtmlAttr\AttributeValueInterface;
 use Twig\Runtime\EscaperRuntime;
 
 /**
@@ -63,6 +64,10 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
             if (null === $value) {
                 trigger_deprecation('symfony/ux-twig-component', '2.8.0', 'Passing "null" as an attribute value is deprecated and will throw an exception in 3.0.');
                 $value = true;
+            }
+
+            if ($value instanceof AttributeValueInterface) {
+                $value = $value->getValue();
             }
 
             if (!\is_scalar($value) && !($value instanceof \Stringable)) {
