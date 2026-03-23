@@ -1,6 +1,15 @@
 <twig:Dialog id="delete_account">
     <twig:Dialog:Trigger>
-        <twig:Button variant="outline" {{ ...dialog_trigger_attrs }}>Open Dialog</twig:Button>
+        <twig:Tooltip id="tooltip-alert-dialog">
+            <twig:Tooltip:Trigger>
+                <twig:Button variant="outline" {{ ...dialog_trigger_attrs|html_attr_merge(tooltip_trigger_attrs) }}>
+                    Edit Profile
+                </twig:Button>
+            </twig:Tooltip:Trigger>
+            <twig:Tooltip:Content>
+                <p>A super useful tooltip</p>
+            </twig:Tooltip:Content>
+        </twig:Tooltip>
     </twig:Dialog:Trigger>
     <twig:Dialog:Content class="sm:max-w-[425px]">
         <twig:Dialog:Header>

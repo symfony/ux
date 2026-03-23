@@ -3,9 +3,18 @@
 - Component: Dialog
 - Code:
 ```twig
-<twig:Dialog id="delete_account" open>
+<twig:Dialog id="delete_account">
     <twig:Dialog:Trigger>
-        <twig:Button variant="outline" {{ ...dialog_trigger_attrs }}>Open Dialog</twig:Button>
+        <twig:Tooltip id="tooltip-alert-dialog">
+            <twig:Tooltip:Trigger>
+                <twig:Button variant="outline" {{ ...dialog_trigger_attrs|html_attr_merge(tooltip_trigger_attrs) }}>
+                    Edit Profile
+                </twig:Button>
+            </twig:Tooltip:Trigger>
+            <twig:Tooltip:Content>
+                <p>A super useful tooltip</p>
+            </twig:Tooltip:Content>
+        </twig:Tooltip>
     </twig:Dialog:Trigger>
     <twig:Dialog:Content class="sm:max-w-[425px]">
         <twig:Dialog:Header>
@@ -34,8 +43,17 @@
 </twig:Dialog>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div data-controller="dialog" data-dialog-open-value aria-labelledby="dialog-delete_account-title" aria-describedby="dialog-delete_account-description">
-    <button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] [&amp;_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2" data-action="click-&gt;dialog#open" data-dialog-target="trigger" aria-haspopup="dialog">Open Dialog</button>
+<div data-controller="dialog" aria-labelledby="dialog-delete_account-title" aria-describedby="dialog-delete_account-description">
+    <div class="relative inline-block" id="tooltip-alert-dialog" data-slot="tooltip" data-controller="tooltip" data-tooltip-delay-duration-value="0" data-tooltip-wrapper-selector-value="#tooltip-alert-dialog_wrapper" data-tooltip-content-selector-value="#tooltip-alert-dialog_content" data-tooltip-arrow-selector-value="#tooltip-alert-dialog_arrow">
+<button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] [&amp;_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2" data-action="click-&gt;dialog#open mouseenter-&gt;tooltip#show mouseleave-&gt;tooltip#hide focus-&gt;tooltip#show blur-&gt;tooltip#hide" data-dialog-target="trigger" aria-haspopup="dialog" id="tooltip-alert-dialog_trigger" aria-describedby="tooltip-alert-dialog_content" data-tooltip-target="trigger">Edit Profile
+                </button>
+                        <div id="tooltip-alert-dialog_wrapper" data-slot="tooltip-wrapper" data-side="top" data-side-offset="0" data-tooltip-target="wrapper" role="presentation" class="isolate z-50" style="position: absolute; left: 0px; top: 0px; will-change: transform;">
+    <div class="invisible open:visible transition-all duration-200 open:opacity-100 open:scale-100 opacity-0 scale-95 bg-foreground text-background z-50 w-fit max-w-xs rounded-md px-3 py-1.5 text-xs" id="tooltip-alert-dialog_content" role="tooltip" data-slot="tooltip-content" data-side="top" data-tooltip-target="content">
+<p>A super useful tooltip</p>
+            <div id="tooltip-alert-dialog_arrow" data-side="top" data-tooltip-target="arrow" aria-hidden="true" class="bg-foreground fill-foreground z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px] data-[side=bottom]:top-1 data-[side=left]:top-1/2! data-[side=left]:-right-1 data-[side=left]:-translate-y-1/2 data-[side=right]:top-1/2! data-[side=right]:-left-1 data-[side=right]:-translate-y-1/2 data-[side=top]:-bottom-2.5" style="position: absolute;"></div>
+    </div>
+</div>
+        </div>
         <dialog id="dialog-delete_account" class="text-foreground bg-background fixed top-[50%] left-[50%] z-50 max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] scale-95 gap-4 rounded-lg border p-6 opacity-0 shadow-lg transition-all transition-discrete duration-200 backdrop:transition-discrete backdrop:duration-150 open:grid open:scale-100 open:opacity-100 open:backdrop:bg-black/50 starting:open:scale-95 starting:open:opacity-0 sm:max-w-[425px]" data-dialog-target="dialog" data-action="keydown.esc-&gt;dialog#close:prevent click-&gt;dialog#closeOnClickOutside"><header class="flex flex-col gap-2 text-center sm:text-left"><h2 id="dialog-delete_account-title" class="text-lg leading-none font-semibold">Edit profile</h2>
             <p id="dialog-delete_account-description" class="text-muted-foreground text-sm">Make changes to your profile here. Click save when you're done.
             </p>

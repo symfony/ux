@@ -2,7 +2,7 @@
     {% for side in ['left', 'top', 'bottom', 'right'] %}
         <twig:Tooltip id="tooltip-side-{{ side }}">
             <twig:Tooltip:Trigger>
-                <twig:Button {{ ...trigger_attrs }} variant="outline" class="w-fit">
+                <twig:Button {{ ...tooltip_trigger_attrs }} variant="outline" class="w-fit">
                     {{ side|capitalize }}
                 </twig:Button>
             </twig:Tooltip:Trigger>

@@ -1,6 +1,15 @@
-<twig:AlertDialog id="delete_account" open>
+<twig:AlertDialog id="delete_account_with_tooltip">
     <twig:AlertDialog:Trigger>
-        <twig:Button variant="outline" {{ ...alert_dialog_trigger_attrs }}>Show Dialog</twig:Button>
+        <twig:Tooltip id="tooltip-alert-dialog">
+            <twig:Tooltip:Trigger>
+                <twig:Button variant="outline" {{ ...alert_dialog_trigger_attrs|html_attr_merge(tooltip_trigger_attrs) }}>
+                    Delete Account
+                </twig:Button>
+            </twig:Tooltip:Trigger>
+            <twig:Tooltip:Content>
+                <p>This will permanently delete your account</p>
+            </twig:Tooltip:Content>
+        </twig:Tooltip>
     </twig:AlertDialog:Trigger>
     <twig:AlertDialog:Content>
         <twig:AlertDialog:Header>
