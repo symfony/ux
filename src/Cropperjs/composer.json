@@ -32,6 +32,7 @@
         "intervention/image": "^2.5",
         "symfony/config": "^6.4|^7.0|^8.0",
         "symfony/dependency-injection": "^6.4|^7.0|^8.0",
+        "symfony/deprecation-contracts": "^2.5|^3",
         "symfony/form": "^6.4|^7.0|^8.0",
         "symfony/http-kernel": "^6.4|^7.0|^8.0",
         "symfony/options-resolver": "^6.4|^7.0|^8.0",

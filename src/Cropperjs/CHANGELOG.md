@@ -5,6 +5,10 @@
 - Minimum required Symfony version is now 6.4
 - Minimum required PHP version is now 8.2
 
+## 2.34
+
+- Deprecate calling `Crop::getCroppedImage()` and `Crop::getCroppedThumbnail()` without explicitly passing `true` for the $applyRotation parameter. It will always be `true` in 3.0
+
 ## 2.30
 
 - Ensure compatibility with PHP 8.5

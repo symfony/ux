@@ -60,7 +60,7 @@ final class LiveRegistrationForm
             ->add('password', PasswordType::class, [
                 'constraints' => [
                     new Assert\NotBlank(),
-                    new Assert\Length(['min' => 8]),
+                    new Assert\Length(min: 8),
                 ],
                 // prevent password from being emptied on re-render
                 'always_empty' => false,

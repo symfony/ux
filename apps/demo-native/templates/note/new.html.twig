@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Note{% endblock %}
+
+{% block body %}
+    <h1 class="h3 mb-4">New Note</h1>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <form method="post" action="{{ path('app_note_new') }}">
+                <div class="mb-3">
+                    <label for="note_title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="note_title" name="title" required placeholder="Enter a title...">
+                </div>
+
+                <div class="mb-3">
+                    <label for="note_content" class="form-label">Content</label>
+                    <textarea class="form-control" id="note_content" name="content" rows="5" required placeholder="Write your note..."></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="note_category" class="form-label">Category</label>
+                    <select class="form-select" id="note_category" name="category">
+                        <option value="Personal">Personal</option>
+                        <option value="Work">Work</option>
+                        <option value="Reading">Reading</option>
+                        <option value="Health">Health</option>
+                    </select>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Create Note</button>
+                    <a href="{{ path('app_notes') }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

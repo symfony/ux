@@ -21,6 +21,6 @@ return static function (ContainerConfigurator $container): void {
         ->args([
             service('.ux_native.configuration_builder'),
         ])
-        ->tag('kernel.event_listener', ['event' => 'kernel.request', 'method' => 'onKernelRequest'])
+        ->tag('kernel.event_listener', ['event' => 'kernel.request', 'method' => 'onKernelRequest', 'priority' => 33])
     ;
 };

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ note.title }}{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_notes') }}">Notes</a></li>
+            <li class="breadcrumb-item active">{{ note.title }}</li>
+        </ol>
+    </nav>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <h1 class="h3 mb-0">{{ note.title }}</h1>
+                <span class="badge bg-{{ note.color }} category-badge fs-6">{{ note.category }}</span>
+            </div>
+
+            <p class="text-muted small mb-4">
+                Created on {{ note.date }}
+            </p>
+
+            <div class="mb-4" style="white-space: pre-line;">{{ note.content }}</div>
+
+            <div class="d-flex gap-2">
+                <a href="{{ path('app_note_edit', {id: note.id}) }}" class="btn btn-outline-primary">
+                    Edit
+                </a>
+                <a href="{{ path('app_notes') }}" class="btn btn-outline-secondary">
+                    Back to list
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

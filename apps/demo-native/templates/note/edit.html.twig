@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit — {{ note.title }}{% endblock %}
+
+{% block body %}
+    <h1 class="h3 mb-4">Edit Note</h1>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <form method="post" action="{{ path('app_note_edit', {id: note.id}) }}">
+                <div class="mb-3">
+                    <label for="note_title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="note_title" name="title" required value="{{ note.title }}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="note_content" class="form-label">Content</label>
+                    <textarea class="form-control" id="note_content" name="content" rows="5" required>{{ note.content }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="note_category" class="form-label">Category</label>
+                    <select class="form-select" id="note_category" name="category">
+                        {% for cat in ['Personal', 'Work', 'Reading', 'Health'] %}
+                            <option value="{{ cat }}" {{ note.category == cat ? 'selected' }}>{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <a href="{{ path('app_note_show', {id: note.id}) }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

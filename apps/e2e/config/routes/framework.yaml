@@ -1,5 +1,0 @@
-when@dev:
-    _errors:
-        # .xml to keep compatibility with Symfony 6.4
-        resource: '@FrameworkBundle/Resources/config/routing/errors.xml'
-        prefix: /_error
