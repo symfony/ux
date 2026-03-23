@@ -1,0 +1,15 @@
+{%- set dialog_trigger_attrs = {
+    'data-action': 'click->dialog#open'|html_attr_type('sst'),
+    'data-no-html-attr-type': 'dialog',
+    'data-html-attr-type-cst': 'dialog'|html_attr_type('cst'),
+} -%}
+{%- set tooltip_trigger_attrs = {
+    'data-action': 'mouseenter->tooltip#show mouseleave->tooltip#hide focus->tooltip#show blur->tooltip#hide'|html_attr_type('sst'),
+    'data-no-html-attr-type': 'trigger',
+    'data-html-attr-type-cst': 'trigger'|html_attr_type('cst'),
+} -%}
+
+<twig:Button
+    {{ ...{}|html_attr_merge(dialog_trigger_attrs, tooltip_trigger_attrs) }}
+    label="A beautiful button"
+/>
