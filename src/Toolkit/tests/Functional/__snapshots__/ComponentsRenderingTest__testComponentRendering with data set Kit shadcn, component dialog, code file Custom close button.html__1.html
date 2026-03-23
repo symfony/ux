@@ -5,7 +5,7 @@
 ```twig
 <twig:Dialog id="share_link">
     <twig:Dialog:Trigger>
-        <twig:Button variant="outline" {{ ...trigger_attrs }}>Share</twig:Button>
+        <twig:Button variant="outline" {{ ...dialog_trigger_attrs }}>Share</twig:Button>
     </twig:Dialog:Trigger>
     <twig:Dialog:Content class="sm:max-w-md">
         <twig:Dialog:Header>
@@ -22,7 +22,7 @@
         </div>
         <twig:Dialog:Footer class="sm:justify-start">
             <twig:Dialog:Close>
-                <twig:Button type="button" variant="secondary" {{ ...close_attrs }}>
+                <twig:Button type="button" variant="secondary" {{ ...dialog_close_attrs }}>
                     Close
                 </twig:Button>
             </twig:Dialog:Close>

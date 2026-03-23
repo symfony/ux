@@ -41,8 +41,8 @@
     },
     "require-dev": {
         "symfony/finder": "^6.4|^7.0|^8.0",
-        "twig/extra-bundle": "^3.19|^4.0",
-        "twig/html-extra": "^3.19",
+        "twig/extra-bundle": "^3.24|^4.0",
+        "twig/html-extra": "^3.24",
         "zenstruck/console-test": "^1.7",
         "symfony/http-client": "^6.4|^7.0|^8.0",
         "symfony/stopwatch": "^6.4|^7.0|^8.0",
