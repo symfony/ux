@@ -27,11 +27,6 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 final class MakeNativeBridgeController extends AbstractMaker
 {
-    private const REQUIRED_PACKAGES = [
-        '@symfony/stimulus-bundle',
-        '@hotwired/hotwire-native-bridge',
-    ];
-
     public function __construct(
         private string $projectDir,
     ) {
@@ -66,8 +61,6 @@ final class MakeNativeBridgeController extends AbstractMaker
 
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void
     {
-        $this->ensurePackagesExist($io);
-
         $controllerName = $input->getArgument('name');
         if (!$controllerName) {
             $controllerName = $io->ask('What name do you want for your Hotwire Native Bridge controller?', 'bridge', static function ($name) {
