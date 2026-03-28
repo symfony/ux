@@ -55,7 +55,7 @@ final class DataModelPropsSubscriberTest extends KernelTestCase
         $this->assertStringContainsString('<input data-model="content" value="default content on mount" />', $html);
     }
 
-    public function testRadioGroupPreservesValueAndSetsChecked(): void
+    public function testRadioGroupPreservesValueAndSetsChecked()
     {
         /** @var ComponentRenderer $renderer */
         $renderer = self::getContainer()->get('ux.twig_component.component_renderer');
@@ -78,7 +78,7 @@ final class DataModelPropsSubscriberTest extends KernelTestCase
         $this->assertStringNotContainsString('value="c" type="radio" checked', $html);
     }
 
-    public function testCheckboxGroupPreservesValueAndSetsChecked(): void
+    public function testCheckboxGroupPreservesValueAndSetsChecked()
     {
         /** @var ComponentRenderer $renderer */
         $renderer = self::getContainer()->get('ux.twig_component.component_renderer');
@@ -99,7 +99,7 @@ final class DataModelPropsSubscriberTest extends KernelTestCase
         $this->assertStringContainsString('value="c" type="checkbox" checked', $html);
     }
 
-    public function testBooleanCheckboxSetsCheckedWithoutValueOverwrite(): void
+    public function testBooleanCheckboxSetsCheckedWithoutValueOverwrite()
     {
         /** @var ComponentRenderer $renderer */
         $renderer = self::getContainer()->get('ux.twig_component.component_renderer');
