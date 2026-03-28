@@ -64,8 +64,21 @@ final class DataModelPropsSubscriber implements EventSubscriberInterface
         foreach ($bindings as $binding) {
             $childModel = $binding['child'];
             $parentModel = $binding['parent'];
+            $propValue = $this->propertyAccessor->getValue($parentMountedComponent->getComponent(), $parentModel);
 
-            $data[$childModel] = $this->propertyAccessor->getValue($parentMountedComponent->getComponent(), $parentModel);
+            if ('value' === $childModel && \array_key_exists('value', $data)) {
+                // Radio or checkbox group: an explicit option value was passed (e.g. value="a").
+                // Preserve it and derive the checked state from the parent prop instead.
+                $data['checked'] = \is_array($propValue)
+                    ? \in_array($data['value'], $propValue, false)
+                    : ($data['value'] == $propValue);
+            } elseif ('value' === $childModel && isset($data['type']) && 'checkbox' === $data['type']) {
+                // Boolean checkbox: type="checkbox" declared at call site but no explicit value.
+                // Set checked directly from the boolean prop; do not write a value attribute.
+                $data['checked'] = (bool) $propValue;
+            } else {
+                $data[$childModel] = $propValue;
+            }
         }
 
         $event->setData($data);
