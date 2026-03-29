@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bc5cb150b1af8efe6b21caa35f11e11d",
+    "content-hash": "d85bce6cb348472df8f8e039d0dddd54",
     "packages": [
         {
             "name": "composer/semver",
@@ -3038,16 +3038,16 @@
         },
         {
             "name": "symfony/ux-native",
-            "version": "v2.33.0",
+            "version": "v2.34.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-native.git",
-                "reference": "aa57f06f80bca41cc4cfbc29db72ddcf0172447c"
+                "reference": "502c89d8cf4e9e5cc22e3bcc05742c7f0ad5abf9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-native/zipball/aa57f06f80bca41cc4cfbc29db72ddcf0172447c",
-                "reference": "aa57f06f80bca41cc4cfbc29db72ddcf0172447c",
+                "url": "https://api.github.com/repos/symfony/ux-native/zipball/502c89d8cf4e9e5cc22e3bcc05742c7f0ad5abf9",
+                "reference": "502c89d8cf4e9e5cc22e3bcc05742c7f0ad5abf9",
                 "shasum": ""
             },
             "require": {
@@ -3055,7 +3055,8 @@
                 "symfony/asset": "^6.4|^7.0|^8.0",
                 "symfony/filesystem": "^6.4|^7.0|^8.0",
                 "symfony/process": "^6.4|^7.0|^8.0",
-                "symfony/stimulus-bundle": "^2.18.1"
+                "symfony/stimulus-bundle": "^2.18.1",
+                "symfony/ux-turbo": "^2.18.1"
             },
             "require-dev": {
                 "phpunit/phpunit": "^9.6.22",
@@ -3094,7 +3095,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-native/tree/v2.33.0"
+                "source": "https://github.com/symfony/ux-native/tree/v2.34.0"
             },
             "funding": [
                 {
@@ -3114,7 +3115,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-03-17T08:06:13+00:00"
+            "time": "2026-03-22T22:15:09+00:00"
         },
         {
             "name": "symfony/ux-turbo",
