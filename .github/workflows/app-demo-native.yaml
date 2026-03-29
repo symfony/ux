@@ -26,30 +26,26 @@ jobs:
     test:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
-            - uses: shivammathur/setup-php@v2
+            - uses: shivammathur/setup-php@93cb3149d228516dfca679606c5060ee44f46437
               with:
                   php-version: '8.4'
                   tools: symfony-cli, flex
 
-            - name: Install root dependencies
-              uses: ramsey/composer-install@v3
+            - name: Install root PHP dependencies
+              uses: ramsey/composer-install@2b6adcf6fa51986b4a64e960e812c1bf5a38f237
               with:
                   working-directory: ${{ github.workspace }}
 
-            - name: Build root packages
+            - name: Build root PHP packages
               run: php .github/build-packages.php
 
-            - name: Install demo-native dependencies
-              uses: ramsey/composer-install@v3
+            - name: Install app dependencies
+              uses: ramsey/composer-install@2b6adcf6fa51986b4a64e960e812c1bf5a38f237
               with:
                   working-directory: apps/demo-native
                   dependency-versions: highest
-
-            - name: Clear and warm up cache
-              run: php bin/console cache:clear
-              working-directory: apps/demo-native
 
             - name: Start Symfony server
               run: symfony server:start -d --port=9888 --no-tls

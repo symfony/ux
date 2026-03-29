@@ -229,6 +229,9 @@
             "config/packages/ux_map.yaml"
         ]
     },
+    "symfony/ux-native": {
+        "version": "2.x-dev"
+    },
     "symfony/ux-notify": {
         "version": "v2.23.0"
     },

@@ -62,7 +62,7 @@ jobs:
               with:
                   working-directory: ${{ github.workspace }}
 
-            - name: Build root packages
+            - name: Build root PHP packages
               run: php .github/build-packages.php
 
             - name: Start Docker containers

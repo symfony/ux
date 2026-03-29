@@ -177,4 +177,7 @@ return [
         'version' => '5.3.7',
         'type' => 'css',
     ],
+    '@hotwired/hotwire-native-bridge' => [
+        'version' => '1.2.2',
+    ],
 ];
