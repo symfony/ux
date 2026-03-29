@@ -1,0 +1,31 @@
+{# @prop variant 'default'|'outline' The visual style variant. Defaults to `default` #}
+{# @prop size 'default'|'sm'|'lg' The toggle size. Defaults to `default` #}
+{# @prop pressed boolean Whether the toggle is initially pressed. Defaults to `false` #}
+{# @block content The toggle label and/or icon #}
+{%- props variant = 'default', size = 'default', pressed = false -%}
+{%- set style = html_cva(
+    base: "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted hover:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-pressed:bg-accent aria-pressed:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+    variants: {
+        variant: {
+            default: 'bg-transparent',
+            outline: 'border border-input bg-transparent shadow-xs hover:bg-accent hover:text-accent-foreground',
+        },
+        size: {
+            default: 'h-9 min-w-9 px-2',
+            sm: 'h-8 min-w-8 px-1.5',
+            lg: 'h-10 min-w-10 px-2.5',
+        },
+    },
+) -%}
+<button
+    type="button"
+    class="{{ style.apply({variant: variant, size: size}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'toggle',
+        'data-controller': 'toggle',
+        'data-action': 'click->toggle#toggle',
+        'aria-pressed': pressed ? 'true' : 'false',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</button>
