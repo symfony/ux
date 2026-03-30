@@ -94,6 +94,10 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
         $values['create-option-text'] = $this->trans($options['create_option_text']);
         $values['preload'] = $options['preload'];
 
+        if ($options['reset_on_focus']) {
+            $values['reset-on-focus'] = '';
+        }
+
         foreach ($values as $name => $value) {
             $attr['data-'.$controllerName.'-'.$name.'-value'] = $value;
         }
@@ -152,6 +156,7 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             'min_characters' => null,
             'max_results' => 10,
             'preload' => 'focus',
+            'reset_on_focus' => false,
             'extra_options' => [],
         ]);
 

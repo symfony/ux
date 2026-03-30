@@ -54,6 +54,16 @@ class ProductType extends AbstractType
                     'createOnBlur' => true,
                 ],
             ])
+            ->add('portionSizeResetOnFocus', ChoiceType::class, [
+                'choices' => [
+                    'small' => 's',
+                    'medium' => 'm',
+                    'large' => 'l',
+                ],
+                'autocomplete' => true,
+                'reset_on_focus' => true,
+                'mapped' => false,
+            ])
         ;
     }
 
