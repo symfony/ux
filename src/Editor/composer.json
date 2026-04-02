@@ -1,0 +1,39 @@
+{
+    "name": "symfony/ux-editor",
+    "type": "symfony-bundle",
+    "description": "One Symfony UX form field over multiple content-authoring editors",
+    "keywords": ["symfony-ux", "editor", "wysiwyg", "block-editor", "page-builder"],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {"name": "Symfony Community", "homepage": "https://symfony.com/contributors"}
+    ],
+    "autoload": {
+        "psr-4": {"Symfony\\UX\\Editor\\": "src/"},
+        "exclude-from-classmap": ["src/Bridge/*/vendor/", "src/Bridge/*/tests/"]
+    },
+    "autoload-dev": {"psr-4": {"Symfony\\UX\\Editor\\Tests\\": "tests/"}},
+    "require": {
+        "php": ">=8.4",
+        "symfony/stimulus-bundle": "^2.18.1|^3.0",
+        "symfony/form": "^7.4|^8.0",
+        "symfony/options-resolver": "^7.4|^8.0",
+        "symfony/html-sanitizer": "^7.4|^8.0"
+    },
+    "require-dev": {
+        "doctrine/orm": "^3.0",
+        "doctrine/dbal": "^3.0|^4.0",
+        "phpunit/phpunit": "^11.1|^12.0",
+        "symfony/asset-mapper": "^7.4|^8.0",
+        "symfony/framework-bundle": "^7.4|^8.0",
+        "symfony/twig-bundle": "^7.4|^8.0",
+        "symfony/security-csrf": "^7.4|^8.0",
+        "symfony/ux-live-component": "^2.21|^3.0",
+        "symfony/ux-twig-component": "^2.21|^3.0"
+    },
+    "extra": {
+        "branch-alias": {"dev-feat/ux-editor-core": "0.1.x-dev"},
+        "thanks": {"name": "symfony/ux", "url": "https://github.com/symfony/ux"}
+    },
+    "minimum-stability": "dev"
+}
