@@ -6,6 +6,10 @@
 - Minimum required PHP version is now 8.2
 - Remove old compatibility layer with deprecated `StimulusTwigExtension` from WebpackEncoreBundle ^1.0, use StimulusBundle instead
 
+## 2.35
+
+- Allow Symfony UX 3.x packages
+
 ## 2.30
 
 - Ensure compatibility with PHP 8.5

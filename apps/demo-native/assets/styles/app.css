@@ -1,3 +1,7 @@
+[data-bridge-components~='button'] [data-controller~='bridge-button'] {
+    display: none;
+}
+
 .note-card {
     transition:
         transform 0.15s ease-in-out,

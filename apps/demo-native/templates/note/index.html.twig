@@ -4,8 +4,14 @@
 
 {% block body %}
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0">My Notes</h1>
-        <a href="{{ path('app_note_new') }}" class="btn btn-primary">
+    {% if not ux_is_native() %}
+         <h1 class="h3 mb-0">My Notes</h1>
+    {% endif %}
+        <a
+            href="{{ path('app_note_new') }}" class="btn btn-primary"
+            {{ stimulus_controller('bridge_button') }}
+            data-bridge-title="{{ button_label|default('+ New Note') }}"
+        >
             + New Note
         </a>
     </div>

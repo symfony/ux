@@ -5,6 +5,10 @@
 - Minimum required Symfony version is now 6.4
 - Minimum required PHP version is now 8.2
 
+## 2.35
+
+- Allow Symfony UX 3.x packages
+
 ## 2.31
 
 - Display a warning when trying to define `bridgeOptions.icon` for a `Marker` that already has an `Icon`

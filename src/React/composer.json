@@ -29,7 +29,7 @@
     },
     "require": {
         "php": ">=8.2",
-        "symfony/stimulus-bundle": "^2.9.1"
+        "symfony/stimulus-bundle": "^2.9.1|^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.1|^12.0",

@@ -7,6 +7,10 @@
 - Remove old compatibility layer with deprecated `StimulusTwigExtension` from WebpackEncoreBundle ^1.0, use StimulusBundle instead
 - Remove BC layer for `TurboStreamListenRendererInterface::renderTurboStreamListen()` `$eventSourceOptions` parameter
 
+## 2.35
+
+- Allow Symfony UX 3.x packages
+
 ## 2.32
 
 - Add support for MercureBundle ^0.4.1 and Mercure ^0.7.0

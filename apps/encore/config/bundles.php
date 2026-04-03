@@ -20,4 +20,5 @@ return [
     Symfony\UX\Translator\UxTranslatorBundle::class => ['all' => true],
     Symfony\UX\Turbo\TurboBundle::class => ['all' => true],
     Symfony\UX\Vue\VueBundle::class => ['all' => true],
+    Symfony\UX\Native\UXNativeBundle::class => ['all' => true],
 ];

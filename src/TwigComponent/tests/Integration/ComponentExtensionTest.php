@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\TwigComponent\Tests\Fixtures\User;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
+use Twig\Extra\Html\HtmlAttr\AttributeValueInterface;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -587,6 +588,21 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('class-var-defined=no', $output);
         $this->assertStringContainsString('style-var-defined=no', $output);
         $this->assertStringContainsString('data_foo-var-defined=no', $output);
+    }
+
+    public function testPropsWithHtmlAttrMergeFilter()
+    {
+        if (!interface_exists(AttributeValueInterface::class)) {
+            $this->markTestSkipped('Test requires Twig HTML extra >= 3.24.');
+        }
+
+        $output = self::getContainer()->get(Environment::class)->render('html_attr_merge.html.twig');
+
+        $this->assertStringContainsString('class="primary"', $output);
+        $this->assertStringContainsString('data-action="click-&gt;dialog#open mouseenter-&gt;tooltip#show mouseleave-&gt;tooltip#hide focus-&gt;tooltip#show blur-&gt;tooltip#hide"', $output);
+        // When no HTML Attr Type has been defined, the very last takes precedence
+        $this->assertStringContainsString('data-no-html-attr-type="trigger"', $output);
+        $this->assertStringContainsString('data-html-attr-type-cst="dialog, trigger"', $output);
     }
 
     private function renderComponent(string $name, array $data = []): string

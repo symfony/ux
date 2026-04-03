@@ -1,0 +1,27 @@
+<twig:AlertDialog id="delete_account_with_tooltip">
+    <twig:AlertDialog:Trigger>
+        <twig:Tooltip id="tooltip-alert-dialog">
+            <twig:Tooltip:Trigger>
+                <twig:Button variant="outline" {{ ...alert_dialog_trigger_attrs|html_attr_merge(tooltip_trigger_attrs) }}>
+                    Delete Account
+                </twig:Button>
+            </twig:Tooltip:Trigger>
+            <twig:Tooltip:Content>
+                <p>This will permanently delete your account</p>
+            </twig:Tooltip:Content>
+        </twig:Tooltip>
+    </twig:AlertDialog:Trigger>
+    <twig:AlertDialog:Content>
+        <twig:AlertDialog:Header>
+            <twig:AlertDialog:Title>Are you absolutely sure?</twig:AlertDialog:Title>
+            <twig:AlertDialog:Description>
+                This action cannot be undone. This will permanently delete your
+                account and remove your data from our servers.
+            </twig:AlertDialog:Description>
+        </twig:AlertDialog:Header>
+        <twig:AlertDialog:Footer>
+            <twig:AlertDialog:Cancel>Cancel</twig:AlertDialog:Cancel>
+            <twig:AlertDialog:Action>Continue</twig:AlertDialog:Action>
+        </twig:AlertDialog:Footer>
+    </twig:AlertDialog:Content>
+</twig:AlertDialog>

@@ -5,6 +5,15 @@
 - Minimum required Symfony version is now 6.4
 - Minimum required PHP version is now 8.2
 
+## 2.35
+
+- [Shadcn] Use `html_attr_type` filter from `twig/html-extra:^3.24` for composable trigger attributes
+- [Shadcn] Rename `trigger_attrs` to `alert_dialog_trigger_attrs` in `AlertDialog:Trigger`
+- [Shadcn] Rename `trigger_attrs` to `dialog_trigger_attrs` in `Dialog:Trigger`
+- [Shadcn] Rename `close_attrs` to `dialog_close_attrs` in `Dialog:Close`
+- [Shadcn] Rename `trigger_attrs` to `tooltip_trigger_attrs` in `Tooltip:Trigger`
+- Allow Symfony UX 3.x packages
+
 ## 2.33.0
 
 - [Shadcn] Add `accordion` recipe

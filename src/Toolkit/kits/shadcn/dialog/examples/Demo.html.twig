@@ -1,6 +1,6 @@
 <twig:Dialog id="delete_account">
     <twig:Dialog:Trigger>
-        <twig:Button variant="outline" {{ ...trigger_attrs }}>Open Dialog</twig:Button>
+        <twig:Button variant="outline" {{ ...dialog_trigger_attrs }}>Open Dialog</twig:Button>
     </twig:Dialog:Trigger>
     <twig:Dialog:Content class="sm:max-w-[425px]">
         <twig:Dialog:Header>
@@ -21,7 +21,7 @@
         </div>
         <twig:Dialog:Footer>
             <twig:Dialog:Close>
-                <twig:Button variant="outline" {{ ...close_attrs }}>Cancel</twig:Button>
+                <twig:Button variant="outline" {{ ...dialog_close_attrs }}>Cancel</twig:Button>
             </twig:Dialog:Close>
             <twig:Button type="submit">Save changes</twig:Button>
         </twig:Dialog:Footer>

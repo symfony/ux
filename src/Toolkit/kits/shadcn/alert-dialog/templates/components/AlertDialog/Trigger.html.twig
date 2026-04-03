@@ -1,6 +1,6 @@
 {# @block content The trigger element (e.g., a `Button`) that opens the dialog when clicked #}
-{%- set trigger_attrs = {
-    'data-action': 'click->alert-dialog#open',
+{%- set alert_dialog_trigger_attrs = {
+    'data-action': 'click->alert-dialog#open'|html_attr_type('sst'),
     'data-alert-dialog-target': 'trigger',
     'aria-haspopup': 'dialog',
     'aria-expanded': 'false',

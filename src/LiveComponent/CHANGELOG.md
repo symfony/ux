@@ -6,6 +6,10 @@
 - Minimum required PHP version is now 8.2
 - Remove `csrf` argument from `AsLiveComponent` in favor of same-origin/CORS
 
+## 2.35
+
+- Allow Symfony UX 3.x packages
+
 ## 2.33
 
 - Add `fetch_credentials` option to configure the fetch API credentials mode for cross-origin requests.

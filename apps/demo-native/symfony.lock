@@ -113,7 +113,7 @@
         ]
     },
     "symfony/ux-native": {
-        "version": "2.x-dev"
+        "version": "v2.34.0"
     },
     "symfony/ux-turbo": {
         "version": "2.33",

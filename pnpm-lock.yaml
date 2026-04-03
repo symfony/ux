@@ -304,6 +304,15 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
+  src/Native/assets:
+    devDependencies:
+      '@hotwired/hotwire-native-bridge':
+        specifier: 1.2.2
+        version: 1.2.2(@hotwired/stimulus@3.2.2)
+      '@hotwired/stimulus':
+        specifier: ^3.0.0
+        version: 3.2.2
+
   src/Notify/assets:
     devDependencies:
       '@hotwired/stimulus':
@@ -1045,6 +1054,11 @@ packages:
 
   '@googlemaps/js-api-loader@2.0.0':
     resolution: {integrity: sha512-KRE1QA5awHXr+odGOMkoKKYok5vMnpr7s+jU+1Y/v7+M7/2db5InfsfrhOGxnJRRig4L9ga7RuPf7P9fLxg1TA==}
+
+  '@hotwired/hotwire-native-bridge@1.2.2':
+    resolution: {integrity: sha512-P74kFtXjpY1wV/YneZBOrWJmddLGiKBRj73JB1UgUEOfsM69xpGJbwY0sotFyJgevs2YrBgP9yDNw/uEica2VQ==}
+    peerDependencies:
+      '@hotwired/stimulus': ^3.2.2
 
   '@hotwired/stimulus-webpack-helpers@1.0.1':
     resolution: {integrity: sha512-wa/zupVG0eWxRYJjC1IiPBdt3Lruv0RqGN+/DTMmUWUyMAEB27KXmVY6a8YpUVTM7QwVuaLNGW4EqDgrS2upXQ==}
@@ -3618,6 +3632,10 @@ snapshots:
   '@googlemaps/js-api-loader@2.0.0':
     dependencies:
       '@types/google.maps': 3.58.1
+
+  '@hotwired/hotwire-native-bridge@1.2.2(@hotwired/stimulus@3.2.2)':
+    dependencies:
+      '@hotwired/stimulus': 3.2.2
 
   '@hotwired/stimulus-webpack-helpers@1.0.1(@hotwired/stimulus@3.2.2)':
     dependencies:

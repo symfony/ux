@@ -1,7 +1,7 @@
 {
     "type": "project",
     "license": "proprietary",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
         "php": ">=8.4",
@@ -14,10 +14,10 @@
         "symfony/flex": "^2.10",
         "symfony/framework-bundle": "8.0.*",
         "symfony/runtime": "8.0.*",
-        "symfony/stimulus-bundle": "^2.33",
+        "symfony/stimulus-bundle": "2.x-dev",
         "symfony/twig-bundle": "8.0.*",
-        "symfony/ux-native": "^2.33",
-        "symfony/ux-turbo": "^2.33",
+        "symfony/ux-native": "2.x-dev",
+        "symfony/ux-turbo": "2.x-dev",
         "symfony/yaml": "8.0.*",
         "twig/extra-bundle": "^3.24",
         "twig/string-extra": "^3.24",
