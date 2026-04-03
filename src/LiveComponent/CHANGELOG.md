@@ -3,6 +3,7 @@
 ## 3.1
 
 - Use `aria-busy` attribute during component re-render
+- Include field paths and violation messages in `UnprocessableEntityHttpException` thrown by `submitForm()` when validation fails
 
 ## 3.0.0
 

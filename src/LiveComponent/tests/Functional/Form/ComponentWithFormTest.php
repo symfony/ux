@@ -14,6 +14,7 @@ namespace Symfony\UX\LiveComponent\Tests\Functional\Form;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormWithCollectionTypeComponent;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\User;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Factory\CategoryFixtureEntityFactory;
@@ -487,5 +488,41 @@ class ComponentWithFormTest extends KernelTestCase
         refresh($user);
         self::assertEquals(1, $user->id);
         self::assertEquals('Nicolas', $user->username);
+    }
+
+    public function testSubmitFormExceptionMessageContainsFieldPathsAndMessages()
+    {
+        $mounted = $this->mountComponent('form_with_collection_type');
+        $dehydratedProps = $this->dehydrateComponent($mounted)->getProps();
+
+        $exception = null;
+
+        try {
+            $this->browser()
+                ->throwExceptions()
+                ->post('/_components/form_with_collection_type/save', [
+                    'body' => [
+                        'data' => json_encode([
+                            'props' => $dehydratedProps,
+                            'updated' => [
+                                'blog_post_form.title' => '',
+                                'blog_post_form.content' => 'too short',
+                                'blog_post_form.comments' => [['content' => '']],
+                            ],
+                        ]),
+                    ],
+                ])
+            ;
+        } catch (UnprocessableEntityHttpException $e) {
+            $exception = $e;
+        }
+
+        $this->assertNotNull($exception);
+        $this->assertStringContainsString('title', $exception->getMessage());
+        $this->assertStringContainsString('content', $exception->getMessage());
+        $this->assertStringContainsString('The title field should not be blank', $exception->getMessage());
+        $this->assertStringContainsString('The content field is too short', $exception->getMessage());
+        $this->assertStringContainsString('blog_post_form.comments.0.content', $exception->getMessage());
+        $this->assertStringContainsString('The comment content field should not be blank', $exception->getMessage());
     }
 }
