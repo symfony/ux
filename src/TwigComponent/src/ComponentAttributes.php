@@ -62,14 +62,17 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
                 && !preg_match(self::ALPINE_REGEX, $key)
                 && !preg_match(self::VUE_REGEX, $key)
             ) {
-            continue;
-        }
+                continue;
+            }
 
-        if ($value instanceof AttributeValueInterface) {
-            $value = $value->getValue();
-        }
+            if ($value instanceof AttributeValueInterface) {
+                $value = $value->getValue();
+                if (null === $value) {
+                    continue;
+                }
+            }
 
-        if (!\is_scalar($value) && !($value instanceof \Stringable)) {
+            if (!\is_scalar($value) && !($value instanceof \Stringable)) {
                 throw new \LogicException(\sprintf('A "%s" prop was passed when creating the component. No matching "%s" property or mount() argument was found, so we attempted to use this as an HTML attribute. But, the value is not a scalar (it\'s a "%s"). Did you mean to pass this to your component or is there a typo on its name?', $key, $key, get_debug_type($value)));
             }
 

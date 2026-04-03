@@ -13,7 +13,6 @@ namespace Symfony\UX\Cropperjs\Tests\Model;
 
 use Intervention\Image\ImageManager;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\UX\Cropperjs\Model\Crop;
 
 /**
@@ -21,7 +20,6 @@ use Symfony\UX\Cropperjs\Model\Crop;
  */
 class CropTest extends TestCase
 {
-    use ExpectDeprecationTrait;
     private string $testImagePath;
 
     protected function setUp(): void
@@ -75,18 +73,6 @@ class CropTest extends TestCase
         $this->assertSame(100, imagesy($image));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testGetCroppedImageWithApplyRotationFalseTriggersDeprecation()
-    {
-        $crop = $this->createCrop();
-
-        $this->expectDeprecation('Since symfony/ux-cropperjs 2.34: Not passing "true" to the "$applyRotation" argument of "Symfony\UX\Cropperjs\Model\Crop::getCroppedImage()" is deprecated. Rotation will be applied by default in Symfony UX 3.0.');
-
-        $crop->getCroppedImage(applyRotation: false);
-    }
-
     public function testGetCroppedThumbnailWithRotation()
     {
         $crop = $this->createCrop(rotate: 90);
@@ -107,17 +93,5 @@ class CropTest extends TestCase
         $image = imagecreatefromstring($result);
         $this->assertSame(200, imagesx($image));
         $this->assertSame(100, imagesy($image));
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testGetCroppedThumbnailWithApplyRotationFalseTriggersDeprecation()
-    {
-        $crop = $this->createCrop();
-
-        $this->expectDeprecation('Since symfony/ux-cropperjs 2.34: Not passing "true" to the "$applyRotation" argument of "Symfony\UX\Cropperjs\Model\Crop::getCroppedThumbnail()" is deprecated. Rotation will be applied by default in Symfony UX 3.0.');
-
-        $crop->getCroppedThumbnail(200, 200, applyRotation: false);
     }
 }
