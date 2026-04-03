@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.35
+
+- Allow Symfony UX 3.x packages
+
 ## 2.30
 
 - Ensure compatibility with PHP 8.5

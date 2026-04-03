@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.35
+
+- Allow Symfony UX 3.x packages
+
 ## 2.32
 
 - Add `Map::removeAllMarkers()`, `Map::removeAllPolygons()`, `Map::removeAllPolylines()`, `Map::removeAllCircles()` and `Map::removeAllRectangles()` methods

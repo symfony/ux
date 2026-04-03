@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.35
+
+- Allow Symfony UX 3.x packages
+
 ## 2.32
 
 - Add support for MercureBundle ^0.4.1 and Mercure ^0.7.0

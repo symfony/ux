@@ -2,7 +2,8 @@
 
 ## 2.35
 
-Add support for `AttributeValueInterface` from `twig/html-extra:^3.24.0` in `ComponentAttributes`
+- Add support for `AttributeValueInterface` from `twig/html-extra:^3.24.0` in `ComponentAttributes`
+- Allow Symfony UX 3.x packages
 
 ## 2.33
 
