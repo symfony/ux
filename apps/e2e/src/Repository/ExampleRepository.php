@@ -24,6 +24,7 @@ class ExampleRepository
     public function __construct()
     {
         $this->examples = [
+            new Example(UxPackage::Autocomplete, 'Autocomplete (with AJAX)', 'An autocomplete form field, by fetching results with AJAX.', 'app_ux_autocomplete_with_ajax'),
             new Example(UxPackage::Autocomplete, 'Autocomplete (without AJAX)', 'An autocomplete form field, by using the choses from the choice type field.', 'app_ux_autocomplete_without_ajax'),
             new Example(UxPackage::Autocomplete, 'Autocomplete (custom controller)', 'An autocomplete form field, with a custom Stimulus controller for AJAX results.', 'app_ux_autocomplete_custom_controller'),
             new Example(UxPackage::ChartJs, 'Line chart without options', 'A basic line chart displaying monthly data without additional options.', 'app_ux_chartjs_without_options'),
