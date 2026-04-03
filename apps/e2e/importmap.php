@@ -61,7 +61,7 @@ return [
         'type' => 'css',
     ],
     '@googlemaps/js-api-loader' => [
-        'version' => '1.16.10',
+        'version' => '2.0.2',
     ],
     '@symfony/ux-google-map' => [
         'path' => './vendor/symfony/ux-google-map/assets/dist/map_controller.js',
