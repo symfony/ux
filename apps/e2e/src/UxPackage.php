@@ -18,18 +18,14 @@ enum UxPackage: string
     case Cropperjs = 'UX Cropperjs';
     case Icons = 'UX Icons';
     case LiveComponent = 'UX LiveComponent';
-    // case LazyImage = 'UX LazyImage'; // deprecated/removed
     case Map = 'UX Map';
     case Notify = 'UX Notify';
     case React = 'UX React';
     case StimulusBundle = 'UX StimulusBundle';
     case Svelte = 'UX Svelte';
-    // case Swup; // deprecated/removed
-    // case TogglePassword; // deprecated/removed
     // case Toolkit; // not subject to E2E
     case Translator = 'UX Translator';
     case Turbo = 'UX Turbo';
-    // case Typed; // deprecated
     case Vue = 'UX Vue';
 
     public function getDocumentationUrl(): string

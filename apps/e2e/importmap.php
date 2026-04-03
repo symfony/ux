@@ -100,27 +100,6 @@ return [
     '@symfony/ux-svelte' => [
         'path' => './vendor/symfony/ux-svelte/assets/dist/loader.js',
     ],
-    '@swup/fade-theme' => [
-        'version' => '1.0.5',
-    ],
-    '@swup/slide-theme' => [
-        'version' => '1.0.5',
-    ],
-    '@swup/forms-plugin' => [
-        'version' => '2.0.1',
-    ],
-    '@swup/plugin' => [
-        'version' => '2.0.2',
-    ],
-    'swup' => [
-        'version' => '3.1.1',
-    ],
-    'delegate-it' => [
-        'version' => '6.0.1',
-    ],
-    '@swup/debug-plugin' => [
-        'version' => '3.0.0',
-    ],
     'intl-messageformat' => [
         'version' => '10.7.16',
     ],

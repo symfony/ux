@@ -268,18 +268,6 @@
             "assets/icons/symfony.svg"
         ]
     },
-    "symfony/ux-lazy-image": {
-        "version": "2.29",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "2.18",
-            "ref": "f6554b7efe60280645ac979c80700f66b8432131"
-        },
-        "files": [
-            "config/packages/lazy_image.yaml"
-        ]
-    },
     "symfony/ux-leaflet-map": {
         "version": "2.29",
         "recipe": {
@@ -343,12 +331,6 @@
             "assets/svelte/controllers/Hello.svelte"
         ]
     },
-    "symfony/ux-swup": {
-        "version": "v2.29.1"
-    },
-    "symfony/ux-toggle-password": {
-        "version": "v2.29.1"
-    },
     "symfony/ux-translator": {
         "version": "2.29",
         "recipe": {
@@ -387,9 +369,6 @@
         "files": [
             "config/packages/twig_component.yaml"
         ]
-    },
-    "symfony/ux-typed": {
-        "version": "v2.29.1"
     },
     "symfony/ux-vue": {
         "version": "2.29",
