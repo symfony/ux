@@ -1,0 +1,27 @@
+<twig:Modal id="delete_account" open>
+    <twig:Modal:Trigger>
+        <twig:Button variant="outline" {{ ...modal_trigger_attrs }}>Open Modal</twig:Button>
+    </twig:Modal:Trigger>
+
+    <twig:Modal:Content>
+        <twig:Modal:Header>
+            <twig:Modal:Title>Edit profile</twig:Modal:Title>
+        </twig:Modal:Header>
+
+        <twig:Modal:Body>
+            <p class="leading-relaxed text-body">
+                With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
+            </p>
+            <p class="leading-relaxed text-body">
+                The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could personally affect them.
+            </p>
+        </twig:Modal:Body>
+
+        <twig:Modal:Footer>
+            <twig:Button type="submit">I accept</twig:Button>
+            <twig:Modal:Close>
+                <twig:Button variant="outline" {{ ...modal_close_attrs }}>Decline</twig:Button>
+            </twig:Modal:Close>
+        </twig:Modal:Footer>
+    </twig:Modal:Content>
+</twig:Modal>

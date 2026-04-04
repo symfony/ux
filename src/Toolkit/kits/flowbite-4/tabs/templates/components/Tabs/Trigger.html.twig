@@ -1,0 +1,23 @@
+{# @prop value string Unique suffix identifier for generating Tabs internal IDs #}
+{# @block content The default block #}
+{%- props value -%}
+
+{%- set _tab_id = 'tab-' ~ value -%}
+{%- set _tab_content_id = _tab_id ~ '-description' -%}
+{%- set open = defaultValue is same as(value) -%}
+<li class="me-2" role="presentation">
+    <button
+        id="{{ _tab_id }}"
+        data-action="click->tabs#open"
+        data-tabs-target="trigger"
+        data-tab-id="{{ value }}"
+        role="tab"
+        aria-controls="{{ _tab_content_id }}"
+        aria-selected="{{ open ? 'true' : 'false' }}"
+        data-state="{{ open ? 'active' : 'inactive' }}"
+        class="{{ ('inline-flex items-center p-4 disabled:text-fg-disabled disabled:cursor-not-allowed group-data-[variant=default]/tabs-list:hover:text-heading group-data-[variant=default]/tabs-list:hover:bg-neutral-secondary-soft group-data-[variant=default]/tabs-list:rounded-t-base data-[state=active]:text-fg-brand group-data-[variant=default]/tabs-list:data-[state=active]:bg-neutral-secondary-soft group-data-[variant=line]/tabs-list:hover:text-fg-brand group-data-[variant=line]/tabs-list:border-b group-data-[variant=line]/tabs-list:border-transparent group-data-[variant=line]/tabs-list:hover:border-fg-brand group-data-[variant=line]/tabs-list:data-[state=active]:border-brand group-data-[variant=pill]/tabs-list:rounded-base group-data-[variant=pill]/tabs-list:py-2.5 group-data-[variant=pill]/tabs-list:hover:bg-neutral-secondary-soft group-data-[variant=pill]/tabs-list:hover:text-heading group-data-[variant=pill]/tabs-list:data-[state=active]:bg-brand group-data-[variant=pill]/tabs-list:data-[state=active]:text-white [&_svg:not([class*=\'size-\'])]:size-4 whitespace-nowrap transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 ' ~ attributes.render('class'))|tailwind_merge }}"
+        {{ attributes }}
+    >
+        {%- block content -%}{%- endblock -%}
+    </button>
+</li>

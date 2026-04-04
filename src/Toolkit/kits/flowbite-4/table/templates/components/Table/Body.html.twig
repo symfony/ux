@@ -1,0 +1,19 @@
+{# @prop highlight 'none'|'hover'|'striped' The visual row style highlight. Defaults to `hover` #}
+{# @block content The table body rows, typically `Table:Row` components #}
+{% props highlight = 'hover' %}
+{%- set style = html_cva(
+    base: '[&>tr]:bg-neutral-primary-soft group-data-[border=bordered]/table:[&>tr]:border-b group-data-[border=bordered]/table:[&>tr]:border-default [&>tr]:transition-colors',
+    variants: {
+        highlight: {
+            none: '',
+            hover: '[&>tr]:hover:bg-neutral-secondary-medium',
+            striped: '[&>tr]:odd:bg-neutral-primary [&>tr]:even:bg-neutral-secondary-soft',
+        },
+    },
+) -%}
+<tbody
+    class="{{ style.apply({highlight: highlight}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</tbody>

@@ -1,0 +1,7 @@
+{# @block content The trigger element (e.g., a `Button`) that opens the modal when clicked #}
+{%- set modal_trigger_attrs = {
+    'data-action': 'click->modal#open'|html_attr_type('sst'),
+    'data-modal-target': 'trigger',
+    'aria-haspopup': 'dialog',
+} -%}
+{%- block content %}{% endblock -%}

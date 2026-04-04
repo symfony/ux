@@ -1,0 +1,26 @@
+<!--
+- Kit: Flowbite v4
+- Component: Indicator
+- Code:
+```twig
+<div class="flex justify-center gap-4">
+    <twig:Indicator variant="brand" />
+    <twig:Indicator variant="gray" />
+    <twig:Indicator variant="danger" />
+    <twig:Indicator variant="success" />
+    <twig:Indicator variant="warning" />
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex justify-center gap-4">
+    <span class="inline-flex items-center justify-center text-xs font-bold rounded-full bg-brand text-white size-3"></span>
+
+    <span class="inline-flex items-center justify-center text-xs font-bold rounded-full bg-neutral-quaternary text-heading size-3"></span>
+
+    <span class="inline-flex items-center justify-center text-xs font-bold rounded-full bg-danger text-white size-3"></span>
+
+    <span class="inline-flex items-center justify-center text-xs font-bold rounded-full bg-success text-white size-3"></span>
+
+    <span class="inline-flex items-center justify-center text-xs font-bold rounded-full bg-warning text-white size-3"></span>
+
+</div>

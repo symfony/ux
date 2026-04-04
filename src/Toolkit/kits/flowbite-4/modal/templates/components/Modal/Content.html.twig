@@ -1,0 +1,21 @@
+{# @prop showCloseButton boolean Whether to display the close button in the top-right corner. Defaults to `true` #}
+{# @prop backdrop 'dynamic'|'static' To prevent the modal from closing when clicking outside. Defaults to `dynamic` #}
+{# @block content The modal content, typically includes `Modal:Header` and optionally `Modal:Footer` #}
+{%- props showCloseButton = true, backdrop = 'dynamic' -%}
+
+<dialog
+    id="{{ _modal_id }}"
+    tabindex="-1"
+    aria-hidden="true"
+    class="{{ ('relative bg-neutral-primary-soft text-body border border-default rounded-base shadow-sm p-4 md:p-6 m-auto z-50 backdrop:transition-discrete backdrop:duration-150 open:backdrop:bg-dark-backdrop/70 ' ~ attributes.render('class'))|tailwind_merge }}"
+    data-modal-target="modal"
+    data-action="keydown.esc->modal#close:prevent {{ backdrop is not same as('static') ? 'click->modal#closeOnClickOutside' }}"
+>
+    {%- block content %}{% endblock -%}
+    {% if showCloseButton %}
+        <twig:Button type="button" variant="ghost" size="icon-xs" class="absolute top-4 right-4" data-action="click->modal#close">
+            <twig:ux:icon name="flowbite:close-outline" class="size-4" />
+            <span class="sr-only">Close</span>
+        </twig:Button>
+    {% endif %}
+</dialog>

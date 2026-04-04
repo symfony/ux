@@ -1,0 +1,17 @@
+{# @prop shape 'rounded'|'pill' The badge shape. Defaults to `pill` #}
+{%- props shape = 'pill' -%}
+{%- set style = html_cva(
+    base: 'animate-pulse bg-neutral-quaternary',
+    variants: {
+        shape: {
+            rounded: 'rounded-base',
+            pill: 'rounded-full',
+        },
+    },
+) -%}
+<div
+    class="{{ style.apply({shape: shape}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

@@ -1,0 +1,7 @@
+{# @block content The card content, typically includes `Card:Content` with `Card:Header`, and/or `Card:Footer` #}
+<div
+    class="{{ ('bg-neutral-primary-soft text-body block p-6 border border-default rounded-base shadow-xs ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

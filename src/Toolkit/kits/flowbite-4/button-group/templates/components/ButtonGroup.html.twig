@@ -1,0 +1,21 @@
+{# @prop orientation 'horizontal'|'vertical' The layout direction of the button group. Defaults to `horizontal` #}
+{# @block content The grouped buttons and/or separators #}
+{%- props orientation = 'horizontal' -%}
+{%- set style = html_cva(
+    base: 'inline-flex rounded-base shadow-xs -space-x-px [&>*]:rounded-none',
+    variants: {
+        orientation: {
+            horizontal: '[&>*:first-child]:rounded-s-base [&>*:last-child]:rounded-e-base',
+            vertical: 'flex-col [&>*:first-child]:rounded-t-base [&>*:last-child]:rounded-b-base',
+        },
+    },
+) -%}
+
+<div
+    role="group"
+    data-orientation="{{ orientation }}"
+    class="{{ style.apply({orientation: orientation}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

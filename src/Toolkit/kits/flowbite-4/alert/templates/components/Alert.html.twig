@@ -1,0 +1,44 @@
+{# @prop variant 'brand'|'danger'|'success'|'warning'|'dark' The visual style variant. Defaults to `brand` #}
+{# @prop border 'none'|'bordered'|'accent' The visual border style. Defaults to `none` #}
+{# @prop dismissible boolean Whether the alert can be dismissible. Defaults to `false` #}
+{# @block content The alert content, typically includes `Alert:Title` and `Alert:Description` #}
+{# @block icon The alert icon, typically includes `twig:ux:icon` #}
+{%- props variant = 'brand', border = 'none', dismissible = false -%}
+{%- set style = html_cva(
+    base: "flex gap-2 text-sm p-4 rounded-base border-transparent *:[svg:not([class*='size-'])]:size-4 [&_a]:hover:no-underline [&_a]:underline group/alert",
+    variants: {
+        border: {
+            none: '',
+            bordered: 'border',
+            accent: 'border-t-4',
+        },
+        variant: {
+            brand: 'text-fg-brand-strong bg-brand-softer border-brand-subtle',
+            danger: 'text-fg-danger-strong bg-danger-soft border-danger-subtle',
+            success: 'text-fg-success-strong bg-success-soft border-success-subtle',
+            warning: 'text-fg-warning bg-warning-soft border-warning-subtle',
+            dark: 'text-heading bg-neutral-secondary-medium border-default-medium',
+        },
+    },
+) -%}
+
+<div
+    role="alert"
+    class="{{ style.apply({variant: variant, border: border}, attributes.render('class'))|tailwind_merge }}"
+    {% if dismissible %}
+    data-controller="alert"
+    data-alert-target="alert"
+    {% endif %}
+    {{ attributes }}
+>
+    {%- block icon %}{% endblock -%}
+    <div>
+        {%- block content %}{% endblock -%}
+    </div>
+    {% if dismissible %}
+        <button type="button" class="ms-auto -mx-1.5 -my-1.5 rounded focus:ring-2 focus:ring-[currentColor]/20 hover:bg-[currentColor]/10 inline-flex items-center justify-center h-8 w-8 shrink-0" data-action="click->alert#close" aria-label="Close">
+            <span class="sr-only">Close</span>
+            <twig:ux:icon name="flowbite:close-outline" class="size-4" />
+        </button>
+    {% endif %}
+</div>

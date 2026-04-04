@@ -1,0 +1,7 @@
+{# @block content The descriptive text of the alert #}
+<div
+    class="{{ (' ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

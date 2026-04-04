@@ -1,0 +1,45 @@
+<!--
+- Kit: Flowbite v4
+- Component: Kbd
+- Code:
+```twig
+<div>
+    <twig:Kbd>
+        <twig:ux:icon name="flowbite:caret-up-solid" class="h-3 w-3" aria-hidden="true" />
+        <span class="sr-only">Arrow key up</span>
+    </twig:Kbd>
+
+    <twig:Kbd>
+        <twig:ux:icon name="flowbite:caret-down-solid" class="h-3 w-3" aria-hidden="true" />
+        <span class="sr-only">Arrow key down</span>
+    </twig:Kbd>
+
+    <twig:Kbd>
+        <twig:ux:icon name="flowbite:caret-left-solid" class="h-3 w-3" aria-hidden="true" />
+        <span class="sr-only">Arrow key left</span>
+    </twig:Kbd>
+
+    <twig:Kbd>
+        <twig:ux:icon name="flowbite:caret-right-solid" class="h-3 w-3" aria-hidden="true" />
+        <span class="sr-only">Arrow key right</span>
+    </twig:Kbd>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div>
+    <kbd class="inline-flex items-center px-2 py-1.5 text-xs font-semibold text-heading bg-neutral-tertiary border border-default-medium rounded-base"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="h-3 w-3" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M5.575 13.729C4.501 15.033 5.43 17 7.12 17h9.762c1.69 0 2.618-1.967 1.544-3.271l-4.881-5.927a2 2 0 0 0-3.088 0l-4.88 5.927Z" clip-rule="evenodd"></path></svg>
+        <span class="sr-only">Arrow key up</span>
+    </kbd>
+
+    <kbd class="inline-flex items-center px-2 py-1.5 text-xs font-semibold text-heading bg-neutral-tertiary border border-default-medium rounded-base"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="h-3 w-3" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M18.425 10.271C19.499 8.967 18.57 7 16.88 7H7.12c-1.69 0-2.618 1.967-1.544 3.271l4.881 5.927a2 2 0 0 0 3.088 0z" clip-rule="evenodd"></path></svg>
+        <span class="sr-only">Arrow key down</span>
+    </kbd>
+
+    <kbd class="inline-flex items-center px-2 py-1.5 text-xs font-semibold text-heading bg-neutral-tertiary border border-default-medium rounded-base"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="h-3 w-3" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M13.729 5.575c1.304-1.074 3.27-.146 3.27 1.544v9.762c0 1.69-1.966 2.618-3.27 1.544l-5.927-4.881a2 2 0 0 1 0-3.088z" clip-rule="evenodd"></path></svg>
+        <span class="sr-only">Arrow key left</span>
+    </kbd>
+
+    <kbd class="inline-flex items-center px-2 py-1.5 text-xs font-semibold text-heading bg-neutral-tertiary border border-default-medium rounded-base"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="h-3 w-3" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M10.271 5.575C8.967 4.501 7 5.43 7 7.12v9.762c0 1.69 1.967 2.618 3.271 1.544l5.927-4.881a2 2 0 0 0 0-3.088l-5.927-4.88Z" clip-rule="evenodd"></path></svg>
+        <span class="sr-only">Arrow key right</span>
+    </kbd>
+</div>

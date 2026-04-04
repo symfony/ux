@@ -1,0 +1,18 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Tabs",
+    "description": "Use the following default tabs component example to show a list of links that the user can navigate from on your website.",
+    "copy-files": {
+        "assets/": "assets/",
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "composer": [
+            "symfony/ux-icons",
+            "twig/extra-bundle",
+            "twig/html-extra:^3.12.0",
+            "tales-from-a-dev/twig-tailwind-extra:^1.0.0"
+        ]
+    }
+}

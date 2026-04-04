@@ -1,0 +1,23 @@
+<!--
+- Kit: Flowbite v4
+- Component: Badge
+- Code:
+```twig
+<div class="flex justify-center gap-4">
+    <twig:Badge as="a" href="https://ux.symfony.com/" target="_blank" variant="brand" border="bordered">Brand</twig:Badge>
+    <twig:Badge as="a" href="https://ux.symfony.com/" target="_blank" variant="alternative" border="bordered">Alternative</twig:Badge>
+    <twig:Badge as="a" href="https://ux.symfony.com/" target="_blank" variant="gray" border="bordered">Gray</twig:Badge>
+    <twig:Badge as="a" href="https://ux.symfony.com/" target="_blank" variant="danger" border="bordered">Danger</twig:Badge>
+    <twig:Badge as="a" href="https://ux.symfony.com/" target="_blank" variant="success" border="bordered">Success</twig:Badge>
+    <twig:Badge as="a" href="https://ux.symfony.com/" target="_blank" variant="warning" border="bordered">Warning</twig:Badge>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex justify-center gap-4">
+    <a class="inline-flex items-center justify-center font-medium bg-brand-softer text-fg-brand-strong border-brand-subtle [a&amp;]:hover:bg-brand-soft px-1.5 py-0.5 text-xs rounded border" href="https://ux.symfony.com/" target="_blank">Brand</a>
+    <a class="inline-flex items-center justify-center font-medium bg-neutral-primary-soft text-heading border-default [a&amp;]:hover:bg-neutral-secondary-medium px-1.5 py-0.5 text-xs rounded border" href="https://ux.symfony.com/" target="_blank">Alternative</a>
+    <a class="inline-flex items-center justify-center font-medium bg-neutral-secondary-medium text-heading border-default-medium [a&amp;]:hover:bg-neutral-tertiary-medium px-1.5 py-0.5 text-xs rounded border" href="https://ux.symfony.com/" target="_blank">Gray</a>
+    <a class="inline-flex items-center justify-center font-medium bg-danger-soft text-fg-danger-strong border-danger-subtle [a&amp;]:hover:bg-danger-medium px-1.5 py-0.5 text-xs rounded border" href="https://ux.symfony.com/" target="_blank">Danger</a>
+    <a class="inline-flex items-center justify-center font-medium bg-success-soft text-fg-success-strong border-success-subtle [a&amp;]:hover:bg-success-medium px-1.5 py-0.5 text-xs rounded border" href="https://ux.symfony.com/" target="_blank">Success</a>
+    <a class="inline-flex items-center justify-center font-medium bg-warning-soft text-fg-warning border-warning-subtle [a&amp;]:hover:bg-warning-medium px-1.5 py-0.5 text-xs rounded border" href="https://ux.symfony.com/" target="_blank">Warning</a>
+</div>
