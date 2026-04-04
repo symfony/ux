@@ -1,0 +1,26 @@
+<!--
+- Kit: Shadcn UI
+- Component: Toggle
+- Code:
+```twig
+<div class="flex flex-wrap items-center gap-2">
+    <twig:Toggle variant="outline" aria-label="Toggle small" size="sm">
+        Small
+    </twig:Toggle>
+    <twig:Toggle variant="outline" aria-label="Toggle default" size="default">
+        Default
+    </twig:Toggle>
+    <twig:Toggle variant="outline" aria-label="Toggle large" size="lg">
+        Large
+    </twig:Toggle>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex flex-wrap items-center gap-2">
+    <button type="button" class="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-pressed:bg-accent aria-pressed:text-accent-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border border-input bg-transparent shadow-xs hover:bg-accent hover:text-accent-foreground h-8 min-w-8 px-1.5" data-slot="toggle" data-controller="toggle" data-action="click-&gt;toggle#toggle" aria-pressed="false" aria-label="Toggle small">Small
+    </button>
+    <button type="button" class="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-pressed:bg-accent aria-pressed:text-accent-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border border-input bg-transparent shadow-xs hover:bg-accent hover:text-accent-foreground h-9 min-w-9 px-2" data-slot="toggle" data-controller="toggle" data-action="click-&gt;toggle#toggle" aria-pressed="false" aria-label="Toggle default">Default
+    </button>
+    <button type="button" class="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-pressed:bg-accent aria-pressed:text-accent-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border border-input bg-transparent shadow-xs hover:bg-accent hover:text-accent-foreground h-10 min-w-10 px-2.5" data-slot="toggle" data-controller="toggle" data-action="click-&gt;toggle#toggle" aria-pressed="false" aria-label="Toggle large">Large
+    </button>
+</div>
