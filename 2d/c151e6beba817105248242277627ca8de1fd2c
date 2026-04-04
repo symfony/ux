@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by MrYamous at 2026-04-04T10:56:40Z
+
+> Oops, nice catch!
+>
+> Shouldn't we **always** apply the rotation like the deprecation message told us? Meaning, we can remove the `$applyRotation` parameter
+
+At first look, I didn't like the idea of implicit rotation based on whether or not related options were present.
+But in the end, I figure that this parameter doesn't really add much.
+I'm going to make the change
