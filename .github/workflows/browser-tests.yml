@@ -54,13 +54,13 @@ jobs:
             - name: Install browsers with Playwright
               run: pnpm exec playwright install firefox ffmpeg
 
-            - uses: shivammathur/setup-php@93cb3149d228516dfca679606c5060ee44f46437
+            - uses: shivammathur/setup-php@690cb7c9d81dbfe51eba732cfca0a00ca42db777
               with:
                   php-version: ${{ matrix.symfony >= '8.0' && '8.4' || '8.2' }}
                   tools: symfony-cli, flex
 
             - name: Install root PHP dependencies
-              uses: ramsey/composer-install@2b6adcf6fa51986b4a64e960e812c1bf5a38f237
+              uses: ramsey/composer-install@5c2bcf28d7b060ef3c601d7b476d5430a7b46c27
               with:
                   working-directory: ${{ github.workspace }}
 
@@ -77,7 +77,7 @@ jobs:
               working-directory: apps/e2e
 
             - name: Install E2E PHP dependencies
-              uses: ramsey/composer-install@2b6adcf6fa51986b4a64e960e812c1bf5a38f237
+              uses: ramsey/composer-install@5c2bcf28d7b060ef3c601d7b476d5430a7b46c27
               with:
                   working-directory: apps/e2e
                   dependency-versions: highest
