@@ -92,7 +92,7 @@ jobs:
                   echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
 
             - name: Setup PHP
-              uses: shivammathur/setup-php@93cb3149d228516dfca679606c5060ee44f46437
+              uses: shivammathur/setup-php@690cb7c9d81dbfe51eba732cfca0a00ca42db777
               with:
                   php-version: ${{ matrix.php-version }}
                   extensions: ${{ matrix.os == 'windows-latest' && 'pdo_sqlite,sqlite3,fileinfo,gd,zip' || '' }}
