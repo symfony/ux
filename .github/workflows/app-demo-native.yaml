@@ -2,6 +2,8 @@ name: App Demo Native
 
 on:
     push:
+        branches-ignore:
+            - 'dependabot/**'
         paths:
             - '.github/workflows/demo-native.yaml'
             - 'apps/demo-native/**'

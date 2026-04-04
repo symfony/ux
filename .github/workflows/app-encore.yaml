@@ -2,6 +2,8 @@ name: App Encore
 
 on:
     push:
+        branches-ignore:
+            - 'dependabot/**'
         paths-ignore:
             - 'src/*/doc/**'
             - 'src/**/*.md'

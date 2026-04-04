@@ -6,6 +6,8 @@ defaults:
 
 on:
     push:
+        branches-ignore:
+            - 'dependabot/**'
         paths-ignore:
             - '.github/workflows/app-tests.yaml'
             - '.github/workflows/demo-native.yaml'
