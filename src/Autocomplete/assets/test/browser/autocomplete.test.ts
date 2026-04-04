@@ -6,8 +6,9 @@ test('Can display and interact with AJAX-based autocomplete field', async ({ pag
     await expect(page.locator('css=.ts-wrapper'), 'TomSelect has not been initialized.').toBeVisible();
     await expect(page.locator('css=select[id="form_favorite_fruit"]')).toHaveValue('');
 
+    const responsePromise = page.waitForResponse('**/autocomplete/fruit_autocomplete_field?query=');
     await page.getByRole('combobox', { name: 'Favorite fruit' }).click();
-    await page.waitForResponse('**/autocomplete/fruit_autocomplete_field?query=');
+    await responsePromise;
     await page.getByRole('option', { name: 'Apple' }).click();
     await expect(page.locator('css=select[id="form_favorite_fruit"]')).toHaveValue('apple');
 
