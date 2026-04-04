@@ -1,0 +1,7 @@
+{# @block content The header row(s), typically a `Table:Row` with `Table:Head` cells #}
+<thead
+    class="{{ ('text-sm text-body rounded-base group-data-[border=bordered]/table:bg-neutral-secondary-soft group-data-[border=bordered]/table:border-b group-data-[border=bordered]/table:border-default ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</thead>

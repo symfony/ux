@@ -1,0 +1,39 @@
+{# @prop variant 'brand'|'alternative'|'gray'|'danger'|'success'|'warning' The visual style variant. Defaults to `brand` #}
+{# @prop size 'default'|'lg' The badge size. Defaults to `default` #}
+{# @prop shape 'rounded'|'pill' The badge shape. Defaults to `rounded` #}
+{# @prop border 'none'|'bordered' The badge border. Defaults to `none` #}
+{# @prop as 'div' The HTML tag to render. Defaults to `div` #}
+{# @block content The badge label or content #}
+{%- props variant = 'brand', size = 'default', shape = 'rounded', border = 'none', as = 'div' -%}
+{%- set style = html_cva(
+    base: 'inline-flex items-center justify-center font-medium',
+    variants: {
+        variant: {
+            brand: 'bg-brand-softer text-fg-brand-strong border-brand-subtle [a&]:hover:bg-brand-soft',
+            alternative: 'bg-neutral-primary-soft text-heading border-default [a&]:hover:bg-neutral-secondary-medium',
+            gray: 'bg-neutral-secondary-medium text-heading border-default-medium [a&]:hover:bg-neutral-tertiary-medium',
+            danger: 'bg-danger-soft text-fg-danger-strong border-danger-subtle [a&]:hover:bg-danger-medium',
+            success: 'bg-success-soft text-fg-success-strong border-success-subtle [a&]:hover:bg-success-medium',
+            warning: 'bg-warning-soft text-fg-warning border-warning-subtle [a&]:hover:bg-warning-medium',
+        },
+        size: {
+            default: 'px-1.5 py-0.5 text-xs',
+            lg: 'px-2 py-1 text-sm',
+        },
+        shape: {
+            rounded: 'rounded',
+            pill: 'rounded-full',
+        },
+        border: {
+            none: '',
+            bordered: 'border',
+        },
+    },
+
+) -%}
+<{{ as }}
+    class="{{ style.apply({variant: variant, size: size, shape: shape, border: border}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</{{ as }}>

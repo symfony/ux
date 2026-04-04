@@ -1,0 +1,13 @@
+{% props asIcon = false %}
+
+<twig:Pagination:Link
+    aria-label="Go to previous page"
+    size="{{ asIcon ? 'icon' : 'default' }}"
+    {{ ...attributes }}
+>
+    {% if asIcon %}
+        <twig:ux:icon name="flowbite:chevron-left-outline" class="size-4" />
+    {% else %}
+        <span>Previous</span>
+    {% endif %}
+</twig:Pagination:Link>

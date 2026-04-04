@@ -1,0 +1,18 @@
+{# @prop variant 'default'|'invalid' The visual style variant. Defaults to `default` #}
+{# @block content The label text for a form control #}
+{%- props variant = 'default' -%}
+{%- set style = html_cva(
+    base: 'block text-sm font-medium',
+    variants: {
+        variant: {
+            default: 'text-heading',
+            invalid: 'text-fg-danger-strong',
+        },
+    },
+) -%}
+<label
+    class="{{ style.apply({variant: variant}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</label>

@@ -1,0 +1,8 @@
+{# @block content The title text of the card #}
+{%- props as = 'span' -%}
+<{{ as }}
+    class="{{ ('text-2xl font-semibold tracking-tight text-heading leading-8 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</{{ as }}>

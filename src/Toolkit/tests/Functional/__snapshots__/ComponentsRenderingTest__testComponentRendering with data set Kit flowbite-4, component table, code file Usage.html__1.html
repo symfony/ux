@@ -1,0 +1,45 @@
+<!--
+- Kit: Flowbite v4
+- Component: Table
+- Code:
+```twig
+<twig:Table>
+    <twig:Table:Caption>A list of your recent invoices.</twig:Table:Caption>
+    <twig:Table:Header>
+        <twig:Table:Row>
+            <twig:Table:Head>Invoice</twig:Table:Head>
+            <twig:Table:Head>Status</twig:Table:Head>
+            <twig:Table:Head>Method</twig:Table:Head>
+            <twig:Table:Head class="text-right">Amount</twig:Table:Head>
+        </twig:Table:Row>
+    </twig:Table:Header>
+    <twig:Table:Body>
+        <twig:Table:Row>
+            <twig:Table:Cell class="font-medium">INV001</twig:Table:Cell>
+            <twig:Table:Cell>Paid</twig:Table:Cell>
+            <twig:Table:Cell>Credit Card</twig:Table:Cell>
+            <twig:Table:Cell class="text-right">$250.00</twig:Table:Cell>
+        </twig:Table:Row>
+    </twig:Table:Body>
+</twig:Table>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<table data-border="bordered" class="w-full text-sm text-left rtl:text-right text-body group/table">
+<caption class="p-5 text-lg font-medium text-left rtl:text-right text-heading">A list of your recent invoices.</caption>
+    <thead class="text-sm text-body rounded-base group-data-[border=bordered]/table:bg-neutral-secondary-soft group-data-[border=bordered]/table:border-b group-data-[border=bordered]/table:border-default">
+<tr>
+<th class="px-6 py-3 font-medium">Invoice</th>
+            <th class="px-6 py-3 font-medium">Status</th>
+            <th class="px-6 py-3 font-medium">Method</th>
+            <th class="px-6 py-3 font-medium text-right">Amount</th>
+        </tr>
+    </thead>
+    <tbody class="[&amp;&gt;tr]:bg-neutral-primary-soft group-data-[border=bordered]/table:[&amp;&gt;tr]:border-b group-data-[border=bordered]/table:[&amp;&gt;tr]:border-default [&amp;&gt;tr]:transition-colors [&amp;&gt;tr]:hover:bg-neutral-secondary-medium">
+<tr>
+<td class="px-6 py-4 font-medium">INV001</td>
+            <td class="px-6 py-4">Paid</td>
+            <td class="px-6 py-4">Credit Card</td>
+            <td class="px-6 py-4 text-right">$250.00</td>
+        </tr>
+    </tbody>
+</table>

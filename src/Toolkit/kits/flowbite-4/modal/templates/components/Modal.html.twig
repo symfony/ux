@@ -1,0 +1,14 @@
+{# @prop open boolean Whether the modal is open on initial render. Defaults to `false` #}
+{# @prop id string Unique identifier used to generate internal Modal IDs #}
+{# @block content The modal structure, typically includes `Modal:Trigger` and `Modal:Content` #}
+{%- props open = false, id -%}
+
+{%- set _modal_id = 'modal-' ~ id -%}
+{%- set _modal_title_id = _modal_id ~ '-title' -%}
+<div {{ attributes.defaults({
+    'data-controller': 'modal',
+    'data-modal-open-value': open,
+    'aria-labelledby': _modal_title_id,
+}) }}>
+    {% block content %}{% endblock %}
+</div>

@@ -3,16 +3,15 @@
 {%- props value -%}
 
 {%- set _tab_id = 'tab-' ~ value -%}
-{%- set _tab_title_id = _tab_id ~ '-title' -%}
-{%- set _tab_description_id = _tab_id ~ '-description' -%}
+{%- set _tab_content_id = _tab_id ~ '-description' -%}
 {%- set open = defaultValue is same as(value) -%}
 <div
-    id="{{ _tab_description_id }}"
+    id="{{ _tab_content_id }}"
     data-slot="tabs-content"
     data-tabs-target="tab"
     data-tab-id="{{ value }}"
     role="tabpanel"
-    aria-labelledby="{{ _tab_title_id }}"
+    aria-labelledby="{{ _tab_id }}"
     data-state="{{ open ? 'active' : 'inactive' }}"
     class="{{ ('text-sm flex-1 outline-none data-[state=inactive]:hidden ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}

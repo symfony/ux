@@ -1,0 +1,7 @@
+{# @block content The keyboard key text (e.g., "Ctrl", "⌘", "Enter") #}
+<kbd
+    class="{{ ('inline-flex items-center px-2 py-1.5 text-xs font-semibold text-heading bg-neutral-tertiary border border-default-medium rounded-base ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</kbd>

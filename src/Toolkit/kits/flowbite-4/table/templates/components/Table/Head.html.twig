@@ -1,0 +1,7 @@
+{# @block content The header cell content #}
+<th
+        class="{{ ('px-6 py-3 font-medium ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</th>

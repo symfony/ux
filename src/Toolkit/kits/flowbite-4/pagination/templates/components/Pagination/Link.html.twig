@@ -1,0 +1,15 @@
+{# @prop active boolean Whether this is the current page. Defaults to `false` #}
+{# @block content The page number or navigation icon #}
+{%- props active = false -%}
+<twig:Button
+    as="a"
+    variant="secondary"
+    shape="rounded"
+    size="icon"
+    aria-current="{{ active ? 'page' : false }}"
+    href="#"
+    class="{{ active ? 'text-fg-brand bg-neutral-tertiary-medium' : '' }}"
+    {{ ...attributes.without('class') }}
+>
+    {{- block(outerBlocks.content) -}}
+</twig:Button>

@@ -1,0 +1,24 @@
+<div class="grid gap-6 md:grid-cols-2">
+
+    <div class="flex items-center mb-4">
+        <twig:Label for="default" class="flex justify-between space-x-2.5 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
+            <div class="p-4">
+                <twig:ux:icon name="flowbite:server-outline" class="w-7 h-7 text-body mb-1.5" aria-hidden="true" />
+                <p class="select-none w-full text-sm font-medium text-heading">16GB unified memory</p>
+                <p class="select-none text-sm text-body">Seamlessly handle multitasking, large apps.</p>
+            </div>
+            <twig:Radio id="default" value="default" class="mt-4 me-4" name="radio-bordered"/>
+        </twig:Label>
+    </div>
+
+    <div class="flex items-center mb-4">
+        <twig:Label for="checked" class="flex justify-between space-x-2.5 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
+            <div class="p-4">
+                <twig:ux:icon name="flowbite:database-outline" class="w-7 h-7 text-body mb-1.5" aria-hidden="true" />
+                <p class="select-none w-full text-sm font-medium text-heading">1TB SSD storage</p>
+                <p class="select-none text-sm text-body">Get ultra-fast storage with 1TB of SSD space</p>
+            </div>
+            <twig:Radio id="checked" value="checked" class="mt-4 me-4" name="radio-bordered" checked/>
+        </twig:Label>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+{# @block content The table footer rows, typically `Table:Row` components #}
+<tfoot
+    class="{{ ('font-semibold text-heading ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</tfoot>

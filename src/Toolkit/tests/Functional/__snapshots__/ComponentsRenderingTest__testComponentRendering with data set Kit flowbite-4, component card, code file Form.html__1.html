@@ -1,0 +1,76 @@
+<!--
+- Kit: Flowbite v4
+- Component: Card
+- Code:
+```twig
+<twig:Card class="w-full max-w-sm">
+    <twig:Card:Header>
+        <twig:Card:Title as="h5">Sign in to our platform</twig:Card:Title>
+    </twig:Card:Header>
+
+    <twig:Card:Content>
+        <div class="mb-4">
+            <twig:Label for="email" class="mb-2.5">Your email</twig:Label>
+            <twig:Input type="email" id="email" placeholder="example@company.com" required />
+        </div>
+
+        <div>
+            <twig:Label for="password" class="mb-2.5">Your password</twig:Label>
+            <twig:Input type="password" id="password" placeholder="•••••••••" required />
+        </div>
+
+        <div class="flex items-start mt-6">
+            <div class="flex items-center">
+                <twig:Checkbox id="checkbox-remember" value="" />
+                <twig:Label for="checkbox-remember" class="ms-2">Remember me</twig:Label>
+            </div>
+            <a href="#" class="ms-auto text-sm font-medium text-fg-brand hover:underline">Lost Password?</a>
+        </div>
+    </twig:Card:Content>
+
+    <twig:Card:Footer>
+        <twig:Button type="submit" class="w-full mb-3">
+            Login to your account
+        </twig:Button>
+
+        <div class="text-sm font-medium text-body">Not registered? <a href="#" class="text-fg-brand hover:underline">Create account</a></div>
+    </twig:Card:Footer>
+</twig:Card>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="bg-neutral-primary-soft text-body block p-6 border border-default rounded-base shadow-xs w-full max-w-sm">
+<div class="pb-6">
+<h5 class="text-2xl font-semibold tracking-tight text-heading leading-8">Sign in to our platform</h5>
+    </div>
+
+    <div>
+<div class="mb-4">
+            <label class="block text-sm font-medium text-heading mb-2.5" for="email">Your email</label>
+            <input class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full shadow-xs placeholder:text-body [&amp;:disabled:not([readonly])]:text-fg-disabled aria-invalid:bg-danger-soft aria-invalid:border-danger-subtle aria-invalid:text-fg-danger-strong aria-invalid:focus:ring-danger aria-invalid:focus:border-danger aria-invalid:placeholder:text-fg-danger-strong" type="email" id="email" placeholder="example@company.com" required>
+
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-heading mb-2.5" for="password">Your password</label>
+            <input class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full shadow-xs placeholder:text-body [&amp;:disabled:not([readonly])]:text-fg-disabled aria-invalid:bg-danger-soft aria-invalid:border-danger-subtle aria-invalid:text-fg-danger-strong aria-invalid:focus:ring-danger aria-invalid:focus:border-danger aria-invalid:placeholder:text-fg-danger-strong" type="password" id="password" placeholder="&acirc;&#128;&cent;&acirc;&#128;&cent;&acirc;&#128;&cent;&acirc;&#128;&cent;&acirc;&#128;&cent;&acirc;&#128;&cent;&acirc;&#128;&cent;&acirc;&#128;&cent;&acirc;&#128;&cent;" required>
+
+        </div>
+
+        <div class="flex items-start mt-6">
+            <div class="flex items-center">
+                <input type="checkbox" class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft disabled:border-light accent-brand" id="checkbox-remember" value="">
+
+                <label class="block text-sm font-medium text-heading ms-2" for="checkbox-remember">Remember me</label>
+            </div>
+            <a href="#" class="ms-auto text-sm font-medium text-fg-brand hover:underline">Lost Password?</a>
+        </div>
+    </div>
+
+    <div class="pt-6">
+<button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs text-white bg-brand hover:bg-brand-strong focus:ring-brand-medium text-sm px-4 py-2.5 rounded-base w-full mb-3" type="submit">Login to your account
+        </button>
+
+        <div class="text-sm font-medium text-body">Not registered? <a href="#" class="text-fg-brand hover:underline">Create account</a>
+</div>
+    </div>
+</div>

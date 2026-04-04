@@ -1,0 +1,58 @@
+<!--
+- Kit: Flowbite v4
+- Component: Tabs
+- Code:
+```twig
+<twig:Tabs defaultValue="dashboard" class="max-w-[800px] w-full">
+    <twig:Tabs:List variant="line">
+        <twig:Tabs:Trigger value="profile">
+            <twig:ux:icon name="flowbite:user-circle-outline" class="size-4 me-2" aria-hidden="true"/>
+            Profile
+        </twig:Tabs:Trigger>
+        <twig:Tabs:Trigger value="dashboard">
+            <twig:ux:icon name="flowbite:grid-outline" class="size-4 me-2" aria-hidden="true"/>
+            Dashboard
+        </twig:Tabs:Trigger>
+        <twig:Tabs:Trigger value="settings">
+            <twig:ux:icon name="flowbite:adjustments-vertical-outline" class="size-4 me-2" aria-hidden="true"/>
+            Settings
+        </twig:Tabs:Trigger>
+        <twig:Tabs:Trigger value="contacts">
+            <twig:ux:icon name="flowbite:user-headset-outline" class="size-4 me-2" aria-hidden="true"/>
+            Contacts
+        </twig:Tabs:Trigger>
+        <twig:Tabs:Trigger value="disabled" disabled>
+            Disabled
+        </twig:Tabs:Trigger>
+    </twig:Tabs:List>
+</twig:Tabs>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-controller="tabs" data-tabs-active-tab-value="dashboard" data-orientation="horizontal" class="gap-4 group/tabs flex data-[orientation=horizontal]:flex-col max-w-[800px] w-full">
+    <ul role="tablist" data-variant="line" class="group/tabs-list flex flex-wrap -mb-px group-data-[orientation=vertical]/tabs:space-y-4 group-data-[orientation=vertical]/tabs:flex-col border-b border-default">
+    <li class="me-2" role="presentation">
+    <button id="tab-profile" data-action="click-&gt;tabs#open" data-tabs-target="trigger" data-tab-id="profile" role="tab" aria-controls="tab-profile-description" aria-selected="false" data-state="inactive" class="inline-flex items-center p-4 disabled:text-fg-disabled disabled:cursor-not-allowed group-data-[variant=default]/tabs-list:hover:text-heading group-data-[variant=default]/tabs-list:hover:bg-neutral-secondary-soft group-data-[variant=default]/tabs-list:rounded-t-base data-[state=active]:text-fg-brand group-data-[variant=default]/tabs-list:data-[state=active]:bg-neutral-secondary-soft group-data-[variant=line]/tabs-list:hover:text-fg-brand group-data-[variant=line]/tabs-list:border-b group-data-[variant=line]/tabs-list:border-transparent group-data-[variant=line]/tabs-list:hover:border-fg-brand group-data-[variant=line]/tabs-list:data-[state=active]:border-brand group-data-[variant=pill]/tabs-list:rounded-base group-data-[variant=pill]/tabs-list:py-2.5 group-data-[variant=pill]/tabs-list:hover:bg-neutral-secondary-soft group-data-[variant=pill]/tabs-list:hover:text-heading group-data-[variant=pill]/tabs-list:data-[state=active]:bg-brand group-data-[variant=pill]/tabs-list:data-[state=active]:text-white [&amp;_svg:not([class*='size-'])]:size-4 whitespace-nowrap transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start disabled:pointer-events-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 me-2" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18m0 0a8.95 8.95 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.95 8.95 0 0 0 12 21m3-11a3 3 0 1 1-6 0a3 3 0 0 1 6 0"></path></svg>
+            Profile
+        </button>
+</li>
+        <li class="me-2" role="presentation">
+    <button id="tab-dashboard" data-action="click-&gt;tabs#open" data-tabs-target="trigger" data-tab-id="dashboard" role="tab" aria-controls="tab-dashboard-description" aria-selected="true" data-state="active" class="inline-flex items-center p-4 disabled:text-fg-disabled disabled:cursor-not-allowed group-data-[variant=default]/tabs-list:hover:text-heading group-data-[variant=default]/tabs-list:hover:bg-neutral-secondary-soft group-data-[variant=default]/tabs-list:rounded-t-base data-[state=active]:text-fg-brand group-data-[variant=default]/tabs-list:data-[state=active]:bg-neutral-secondary-soft group-data-[variant=line]/tabs-list:hover:text-fg-brand group-data-[variant=line]/tabs-list:border-b group-data-[variant=line]/tabs-list:border-transparent group-data-[variant=line]/tabs-list:hover:border-fg-brand group-data-[variant=line]/tabs-list:data-[state=active]:border-brand group-data-[variant=pill]/tabs-list:rounded-base group-data-[variant=pill]/tabs-list:py-2.5 group-data-[variant=pill]/tabs-list:hover:bg-neutral-secondary-soft group-data-[variant=pill]/tabs-list:hover:text-heading group-data-[variant=pill]/tabs-list:data-[state=active]:bg-brand group-data-[variant=pill]/tabs-list:data-[state=active]:text-white [&amp;_svg:not([class*='size-'])]:size-4 whitespace-nowrap transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start disabled:pointer-events-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 me-2" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.143 4H4.857A.857.857 0 0 0 4 4.857v4.286c0 .473.384.857.857.857h4.286A.857.857 0 0 0 10 9.143V4.857A.857.857 0 0 0 9.143 4m10 0h-4.286a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286A.857.857 0 0 0 20 9.143V4.857A.857.857 0 0 0 19.143 4m-10 10H4.857a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286a.857.857 0 0 0 .857-.857v-4.286A.857.857 0 0 0 9.143 14m10 0h-4.286a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286a.857.857 0 0 0 .857-.857v-4.286a.857.857 0 0 0-.857-.857"></path></svg>
+            Dashboard
+        </button>
+</li>
+        <li class="me-2" role="presentation">
+    <button id="tab-settings" data-action="click-&gt;tabs#open" data-tabs-target="trigger" data-tab-id="settings" role="tab" aria-controls="tab-settings-description" aria-selected="false" data-state="inactive" class="inline-flex items-center p-4 disabled:text-fg-disabled disabled:cursor-not-allowed group-data-[variant=default]/tabs-list:hover:text-heading group-data-[variant=default]/tabs-list:hover:bg-neutral-secondary-soft group-data-[variant=default]/tabs-list:rounded-t-base data-[state=active]:text-fg-brand group-data-[variant=default]/tabs-list:data-[state=active]:bg-neutral-secondary-soft group-data-[variant=line]/tabs-list:hover:text-fg-brand group-data-[variant=line]/tabs-list:border-b group-data-[variant=line]/tabs-list:border-transparent group-data-[variant=line]/tabs-list:hover:border-fg-brand group-data-[variant=line]/tabs-list:data-[state=active]:border-brand group-data-[variant=pill]/tabs-list:rounded-base group-data-[variant=pill]/tabs-list:py-2.5 group-data-[variant=pill]/tabs-list:hover:bg-neutral-secondary-soft group-data-[variant=pill]/tabs-list:hover:text-heading group-data-[variant=pill]/tabs-list:data-[state=active]:bg-brand group-data-[variant=pill]/tabs-list:data-[state=active]:text-white [&amp;_svg:not([class*='size-'])]:size-4 whitespace-nowrap transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start disabled:pointer-events-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 me-2" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M6 4v10m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v2m6-16v2m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v10m6-16v10m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v2"></path></svg>
+            Settings
+        </button>
+</li>
+        <li class="me-2" role="presentation">
+    <button id="tab-contacts" data-action="click-&gt;tabs#open" data-tabs-target="trigger" data-tab-id="contacts" role="tab" aria-controls="tab-contacts-description" aria-selected="false" data-state="inactive" class="inline-flex items-center p-4 disabled:text-fg-disabled disabled:cursor-not-allowed group-data-[variant=default]/tabs-list:hover:text-heading group-data-[variant=default]/tabs-list:hover:bg-neutral-secondary-soft group-data-[variant=default]/tabs-list:rounded-t-base data-[state=active]:text-fg-brand group-data-[variant=default]/tabs-list:data-[state=active]:bg-neutral-secondary-soft group-data-[variant=line]/tabs-list:hover:text-fg-brand group-data-[variant=line]/tabs-list:border-b group-data-[variant=line]/tabs-list:border-transparent group-data-[variant=line]/tabs-list:hover:border-fg-brand group-data-[variant=line]/tabs-list:data-[state=active]:border-brand group-data-[variant=pill]/tabs-list:rounded-base group-data-[variant=pill]/tabs-list:py-2.5 group-data-[variant=pill]/tabs-list:hover:bg-neutral-secondary-soft group-data-[variant=pill]/tabs-list:hover:text-heading group-data-[variant=pill]/tabs-list:data-[state=active]:bg-brand group-data-[variant=pill]/tabs-list:data-[state=active]:text-white [&amp;_svg:not([class*='size-'])]:size-4 whitespace-nowrap transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start disabled:pointer-events-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 me-2" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.079 6.839a3 3 0 0 0-4.255.1M13 20h1.083A3.916 3.916 0 0 0 18 16.083V9A6 6 0 1 0 6 9v7m7 4v-1a1 1 0 0 0-1-1h-1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1m-7-4v-6H5a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2zm12-6h1a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-1z"></path></svg>
+            Contacts
+        </button>
+</li>
+        <li class="me-2" role="presentation">
+    <button id="tab-disabled" data-action="click-&gt;tabs#open" data-tabs-target="trigger" data-tab-id="disabled" role="tab" aria-controls="tab-disabled-description" aria-selected="false" data-state="inactive" class="inline-flex items-center p-4 disabled:text-fg-disabled disabled:cursor-not-allowed group-data-[variant=default]/tabs-list:hover:text-heading group-data-[variant=default]/tabs-list:hover:bg-neutral-secondary-soft group-data-[variant=default]/tabs-list:rounded-t-base data-[state=active]:text-fg-brand group-data-[variant=default]/tabs-list:data-[state=active]:bg-neutral-secondary-soft group-data-[variant=line]/tabs-list:hover:text-fg-brand group-data-[variant=line]/tabs-list:border-b group-data-[variant=line]/tabs-list:border-transparent group-data-[variant=line]/tabs-list:hover:border-fg-brand group-data-[variant=line]/tabs-list:data-[state=active]:border-brand group-data-[variant=pill]/tabs-list:rounded-base group-data-[variant=pill]/tabs-list:py-2.5 group-data-[variant=pill]/tabs-list:hover:bg-neutral-secondary-soft group-data-[variant=pill]/tabs-list:hover:text-heading group-data-[variant=pill]/tabs-list:data-[state=active]:bg-brand group-data-[variant=pill]/tabs-list:data-[state=active]:text-white [&amp;_svg:not([class*='size-'])]:size-4 whitespace-nowrap transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start disabled:pointer-events-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" disabled>Disabled
+        </button>
+</li>
+    </ul>
+</div>

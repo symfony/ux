@@ -1,0 +1,18 @@
+<!--
+- Kit: Flowbite v4
+- Component: Input
+- Code:
+```twig
+<div class="grid w-full max-w-sm items-center gap-1.5">
+    <twig:Label for="text" variant="invalid">Your name</twig:Label>
+    <twig:Input type="text" id="text" aria-invalid="true" placeholder="Error input" />
+    <p class="text-sm text-fg-danger-strong"><span class="font-medium">Oh, snapp!</span> Some error message.</p>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="grid w-full max-w-sm items-center gap-1.5">
+    <label class="block text-sm font-medium text-fg-danger-strong" for="text">Your name</label>
+    <input class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full shadow-xs placeholder:text-body [&amp;:disabled:not([readonly])]:text-fg-disabled aria-invalid:bg-danger-soft aria-invalid:border-danger-subtle aria-invalid:text-fg-danger-strong aria-invalid:focus:ring-danger aria-invalid:focus:border-danger aria-invalid:placeholder:text-fg-danger-strong" type="text" id="text" aria-invalid="true" placeholder="Error input">
+
+    <p class="text-sm text-fg-danger-strong"><span class="font-medium">Oh, snapp!</span> Some error message.</p>
+</div>
