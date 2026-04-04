@@ -37,7 +37,7 @@ jobs:
             - uses: shivammathur/setup-php@93cb3149d228516dfca679606c5060ee44f46437
 
             - name: Install root PHP dependencies
-              uses: ramsey/composer-install@2b6adcf6fa51986b4a64e960e812c1bf5a38f237
+              uses: ramsey/composer-install@5c2bcf28d7b060ef3c601d7b476d5430a7b46c27
               with:
                   working-directory: ${{ github.workspace }}
 
@@ -46,7 +46,7 @@ jobs:
 
             # We always install PHP deps because of the UX Translator, which requires `var/translations` to exists
             - name: Install app dependencies
-              uses: ramsey/composer-install@2b6adcf6fa51986b4a64e960e812c1bf5a38f237
+              uses: ramsey/composer-install@5c2bcf28d7b060ef3c601d7b476d5430a7b46c27
               with:
                   working-directory: apps/encore
                   dependency-versions: highest

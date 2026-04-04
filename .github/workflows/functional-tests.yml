@@ -62,7 +62,7 @@ jobs:
                   tools: flex
 
             - name: Install root dependencies
-              uses: ramsey/composer-install@2b6adcf6fa51986b4a64e960e812c1bf5a38f237
+              uses: ramsey/composer-install@5c2bcf28d7b060ef3c601d7b476d5430a7b46c27
               with:
                   working-directory: ${{ github.workspace }}
 
@@ -74,7 +74,7 @@ jobs:
               working-directory: src/Turbo
 
             - name: Install dependencies with composer
-              uses: ramsey/composer-install@2b6adcf6fa51986b4a64e960e812c1bf5a38f237
+              uses: ramsey/composer-install@5c2bcf28d7b060ef3c601d7b476d5430a7b46c27
               with:
                   working-directory: src/Turbo
                   dependency-versions: ${{ matrix.dependency-version }}
