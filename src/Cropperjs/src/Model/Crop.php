@@ -55,11 +55,8 @@ class Crop
         $this->filename = $filename;
     }
 
-    public function getCroppedThumbnail(int $maxWidth, int $maxHeight, string $format = 'jpg', int $quality = 80, bool $applyRotation = false): string
+    public function getCroppedThumbnail(int $maxWidth, int $maxHeight, string $format = 'jpg', int $quality = 80): string
     {
-        if (\func_num_args() < 5 || false === $applyRotation) {
-            trigger_deprecation('symfony/ux-cropperjs', '2.34', 'Not passing "true" to the "$applyRotation" argument of "%s()" is deprecated. Rotation will be applied by default in Symfony UX 3.0.', __METHOD__);
-        }
         $image = $this->createCroppedImage();
 
         $image->resize($maxWidth, $maxHeight, static function ($constraint) {
@@ -67,7 +64,7 @@ class Crop
             $constraint->upsize();
         });
 
-        if ($applyRotation && !empty($this->options['rotate'])) {
+        if (!empty($this->options['rotate'])) {
             $image->rotate(-1 * $this->options['rotate']);
         }
 
@@ -76,11 +73,8 @@ class Crop
         return $image->getEncoded();
     }
 
-    public function getCroppedImage(string $format = 'jpg', int $quality = 80, bool $applyRotation = false): string
+    public function getCroppedImage(string $format = 'jpg', int $quality = 80): string
     {
-        if (\func_num_args() < 3 || false === $applyRotation) {
-            trigger_deprecation('symfony/ux-cropperjs', '2.34', 'Not passing "true" to the "$applyRotation" argument of "%s()" is deprecated. Rotation will be applied by default in Symfony UX 3.0.', __METHOD__);
-        }
         $image = $this->createCroppedImage();
 
         // Max size
@@ -91,7 +85,7 @@ class Crop
             });
         }
 
-        if ($applyRotation && !empty($this->options['rotate'])) {
+        if (!empty($this->options['rotate'])) {
             $image->rotate(-1 * $this->options['rotate']);
         }
 
