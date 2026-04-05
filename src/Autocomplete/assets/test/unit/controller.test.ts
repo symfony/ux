@@ -1206,4 +1206,103 @@ describe('AutocompleteController', () => {
         // but the absence of "already initialized" error is the key indicator)
         expect(newSelect).toBeInTheDocument();
     });
+
+    it('reloads options on focus when resetOnFocus is enabled', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                data-testid="main-element"
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+                data-autocomplete-reset-on-focus-value="true"
+            ></select>
+        `);
+
+        // first focus: initial load
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: [
+                    { value: 1, text: 'pizza' },
+                    { value: 2, text: 'popcorn' },
+                ],
+            })
+        );
+
+        const controlInput = tomSelect.control_input;
+
+        userEvent.click(controlInput);
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(2);
+        });
+
+        expect(fetchMock.requests().length).toEqual(1);
+        expect(fetchMock.requests()[0].url).toEqual('/path/to/autocomplete?query=');
+
+        // simulate blur then re-focus: should reload
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: [
+                    { value: 1, text: 'pizza' },
+                    { value: 2, text: 'popcorn' },
+                    { value: 3, text: 'salad' },
+                ],
+            })
+        );
+
+        // trigger TomSelect's focus event which calls our onFocus callback
+        tomSelect.trigger('focus');
+        await waitFor(() => {
+            expect(fetchMock.requests().length).toEqual(2);
+        });
+
+        expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=');
+
+        // open the dropdown to render the new options
+        tomSelect.open();
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(3);
+        });
+    });
+
+    it('does not reload options on focus when resetOnFocus is not set', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                data-testid="main-element"
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+            ></select>
+        `);
+
+        // first focus: initial load (preload: 'focus' is the default)
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: [
+                    { value: 1, text: 'pizza' },
+                    { value: 2, text: 'popcorn' },
+                ],
+            })
+        );
+
+        const controlInput = tomSelect.control_input;
+
+        userEvent.click(controlInput);
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(2);
+        });
+
+        expect(fetchMock.requests().length).toEqual(1);
+
+        // blur and re-focus: should NOT make a new request
+        tomSelect.blur();
+        await shortDelay(10);
+
+        userEvent.click(controlInput);
+        await shortDelay(50);
+
+        // still only 1 request — no reload on re-focus
+        expect(fetchMock.requests().length).toEqual(1);
+    });
 });

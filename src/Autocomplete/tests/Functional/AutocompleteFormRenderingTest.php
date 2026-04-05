@@ -38,6 +38,9 @@ class AutocompleteFormRenderingTest extends KernelTestCase
             ->assertElementAttributeContains('#product_portionSize', 'data-controller', 'symfony--ux-autocomplete--autocomplete')
             ->assertElementAttributeContains('#product_tags', 'data-controller', 'symfony--ux-autocomplete--autocomplete')
             ->assertElementAttributeContains('#product_tags', 'data-symfony--ux-autocomplete--autocomplete-tom-select-options-value', 'createOnBlur')
+
+            ->assertElementAttributeContains('#product_portionSizeResetOnFocus', 'data-controller', 'symfony--ux-autocomplete--autocomplete')
+            ->assertElementAttributeContains('#product_portionSizeResetOnFocus', 'data-symfony--ux-autocomplete--autocomplete-reset-on-focus-value', '')
         ;
     }
 
