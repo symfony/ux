@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-03-30T17:53:19Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/zairigimad/ux/tree/fix/autocomplete-3415/src/Autocomplete/assets/dist"><b>Autocomplete</b></a></td></tr><tr>
+                <td><a href="https://github.com/zairigimad/ux/blob/fix/autocomplete-3415/src/Autocomplete/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>1.83 kB</code>
+                    / <code>655 B</code>
+                </td><td>
+                    <code>1.91 kB</code><sup>+4% 📈</sup>
+                    / <code>667 B</code><sup>+2% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/zairigimad/ux/blob/fix/autocomplete-3415/src/Autocomplete/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>12.93 kB</code>
+                    / <code>3.45 kB</code>
+                </td><td>
+                    <code>13.3 kB</code><sup>+3% 📈</sup>
+                    / <code>3.55 kB</code><sup>+3% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by brianfreytag at 2026-03-31T12:55:47Z
+
+Thanks for the clarification on the default functionality and I agree that an additional option here is the best solution.
+
+I do want to clarify that it's not just on "focus" or "change" events, it's when the reset `X` is pressed as well to clear the input. Would it not make sense that the default functionality of "clear" would be to actually reset the select options than maintain the cached version? I guess in my mind, if I'm clearing the input, I'm trying to go back to the original state whether I begin a new search or decide I want to scroll this time.
+
+This question to ask, I suppose, is, "Should the default value for reset_on_focus be `true` in instances of the "clear" button?" and is this something to take up with the TomSelect folks or a "workaround" on the Symfony side?
