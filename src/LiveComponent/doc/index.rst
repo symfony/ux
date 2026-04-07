@@ -1105,6 +1105,38 @@ was just changed using the ``model()`` modifier:
     <!-- multiple modifiers & child properties -->
     <span data-loading="model(user.email)|delay|addClass(opacity-50)">...</span>
 
+Styling and Accessibility with ``aria-busy``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+While a component is re-rendering or an action is being processed, Live
+Components automatically set the ``aria-busy="true"`` attribute on the
+component's root element. Once the request is finished, the attribute is
+removed.
+
+This has two benefits:
+
+* **Accessibility**: assistive technologies (like screen readers) can
+  announce that the region is busy, giving users feedback that content is
+  updating.
+* **Styling**: you can target the loading state directly in CSS without
+  using ``data-loading`` directives, for example with Tailwind's
+  ``aria-busy:`` modifier:
+
+.. code-block:: html+twig
+
+    <div {{ attributes }} class="aria-busy:opacity-50">
+        ...
+    </div>
+
+Or in plain CSS:
+
+.. code-block:: css
+
+    [aria-busy="true"] {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
 .. _actions:
 
 Actions
