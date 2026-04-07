@@ -1,6 +1,10 @@
 Symfony UX Svelte
 =================
 
+.. warning::
+
+    **Deprecated: This package has been deprecated in 2.x and will be removed in the next major version.**
+
 Symfony UX Svelte is a Symfony bundle integrating `Svelte`_ in
 Symfony applications. It is part of `the Symfony UX initiative`_.
 

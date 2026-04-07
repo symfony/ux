@@ -18,6 +18,8 @@ use Symfony\Component\AssetMapper\MappedAsset;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 
+trigger_deprecation('symfony/ux-svelte', '2.35.0', 'The package is deprecated and will be removed in 3.0.');
+
 /**
  * Compiles the components.js file to dynamically import the Svelte controller components.
  *

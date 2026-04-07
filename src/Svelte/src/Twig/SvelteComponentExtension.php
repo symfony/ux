@@ -16,6 +16,8 @@ use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
+trigger_deprecation('symfony/ux-svelte', '2.35.0', 'The package is deprecated and will be removed in 3.0.');
+
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
  * @author Thomas Choquet <thomas.choquet.pro@gmail.com>
