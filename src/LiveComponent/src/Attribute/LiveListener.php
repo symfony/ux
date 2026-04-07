@@ -22,11 +22,14 @@ namespace Symfony\UX\LiveComponent\Attribute;
 #[\Attribute(\Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
 class LiveListener extends LiveAction
 {
+    private string $eventName;
+
     /**
-     * @param string $eventName The name of the event to listen to (e.g. "itemUpdated")
+     * @param string|\BackedEnum $eventName The name of the event to listen to (e.g. "itemUpdated")
      */
-    public function __construct(private string $eventName)
+    public function __construct(string|\BackedEnum $eventName)
     {
+        $this->eventName = $eventName instanceof \BackedEnum ? $eventName->value : $eventName;
     }
 
     public function getEventName(): string
