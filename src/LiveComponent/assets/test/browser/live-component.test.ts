@@ -12,8 +12,9 @@ test('Can filters examples from homepage', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Clear' })).toBeDisabled();
 
     // Filter examples by "autocomplete"
+    let responsePromise = page.waitForResponse('/_components/LiveExamplesSearch');
     await page.getByRole('textbox', { name: 'Search for examples:' }).fill('autocomplete');
-    await page.waitForResponse('/_components/LiveExamplesSearch');
+    await responsePromise;
 
     await expect(page.getByRole('heading', { name: 'UX Autocomplete' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'UX Map' })).not.toBeVisible();
@@ -22,8 +23,9 @@ test('Can filters examples from homepage', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Clear' })).toBeEnabled();
 
     // Filter examples by "map"
+    responsePromise = page.waitForResponse('/_components/LiveExamplesSearch');
     await page.getByRole('textbox', { name: 'Search for examples:' }).fill('map');
-    await page.waitForResponse('/_components/LiveExamplesSearch');
+    await responsePromise;
 
     await expect(page.getByRole('heading', { name: 'UX Autocomplete' })).not.toBeVisible();
     await expect(page.getByRole('heading', { name: 'UX Map' })).toBeVisible();
@@ -32,10 +34,11 @@ test('Can filters examples from homepage', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Clear' })).toBeEnabled();
 
     // Filter examples by a non-existing term
+    responsePromise = page.waitForResponse('/_components/LiveExamplesSearch');
     await page
         .getByRole('textbox', { name: 'Search for examples:' })
         .fill("Les chaussettes de l'archiduchesse sont-elles sèches ou archi-sèches ?");
-    await page.waitForResponse('/_components/LiveExamplesSearch');
+    await responsePromise;
 
     await expect(page.getByText('No results found.')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'UX Autocomplete' })).not.toBeVisible();
@@ -44,8 +47,9 @@ test('Can filters examples from homepage', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Clear' })).toBeEnabled();
 
     // Reset the filter
+    responsePromise = page.waitForResponse('/_components/LiveExamplesSearch/clearQuery');
     await page.getByRole('button', { name: 'Clear' }).click();
-    await page.waitForResponse('/_components/LiveExamplesSearch/clearQuery');
+    await responsePromise;
 
     await expect(page.getByRole('heading', { name: 'UX Autocomplete' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'UX Map' })).toBeVisible();
@@ -62,20 +66,23 @@ test('Can mutate a LiveProp(url: true), the state must be persisted in the URL, 
     await expect(page).toHaveURL('/ux-live-component/counter');
 
     // Increment the counter
+    let responsePromise = page.waitForResponse('/_components/LiveCounter/increment');
     await page.getByRole('button', { name: '+' }).click();
-    await page.waitForResponse('/_components/LiveCounter/increment');
+    await responsePromise;
     await expect(page.getByTestId('value')).toHaveText('1');
     await expect(page).toHaveURL('/ux-live-component/counter?value=1');
 
     // Increment the counter again
+    responsePromise = page.waitForResponse('/_components/LiveCounter/increment');
     await page.getByRole('button', { name: '+' }).click();
-    await page.waitForResponse('/_components/LiveCounter/increment');
+    await responsePromise;
     await expect(page.getByTestId('value')).toHaveText('2');
     await expect(page).toHaveURL('/ux-live-component/counter?value=2');
 
     // Decrement the counter
+    responsePromise = page.waitForResponse('/_components/LiveCounter/decrement');
     await page.getByRole('button', { name: '-' }).click();
-    await page.waitForResponse('/_components/LiveCounter/decrement');
+    await responsePromise;
     await expect(page.getByTestId('value')).toHaveText('1');
     await expect(page).toHaveURL('/ux-live-component/counter?value=1');
 
@@ -103,8 +110,9 @@ test('Can mutate a LiveProp(url: new UrlMapping(mapPath: true)), the state must 
     await expect(buttonNext).toBeEnabled();
 
     // Go to next page
+    let responsePromise = page.waitForResponse('/_components/LiveFruitsPagination/goToNextPage');
     await buttonNext.click();
-    await page.waitForResponse('/_components/LiveFruitsPagination/goToNextPage');
+    await responsePromise;
     await expect(page.getByRole('heading', { name: 'Page 2' })).toBeVisible();
     await expect(page.getByText('Kiwi')).toBeVisible();
     await expect(page.getByText('Lemon')).toBeVisible();
@@ -116,8 +124,9 @@ test('Can mutate a LiveProp(url: new UrlMapping(mapPath: true)), the state must 
     await expect(page).toHaveURL('/ux-live-component/fruits/2');
 
     // Go to next page
+    responsePromise = page.waitForResponse('/_components/LiveFruitsPagination/goToNextPage');
     await buttonNext.click();
-    await page.waitForResponse('/_components/LiveFruitsPagination/goToNextPage');
+    await responsePromise;
     await expect(page.getByRole('heading', { name: 'Page 3' })).toBeVisible();
     await expect(page.getByText('Peach')).toBeVisible();
     await expect(page.getByText('Pineapple')).toBeVisible();
@@ -129,8 +138,9 @@ test('Can mutate a LiveProp(url: new UrlMapping(mapPath: true)), the state must 
     await expect(page).toHaveURL('/ux-live-component/fruits/3');
 
     // Go back to previous page
+    responsePromise = page.waitForResponse('/_components/LiveFruitsPagination/goToPreviousPage');
     await buttonPrevious.click();
-    await page.waitForResponse('/_components/LiveFruitsPagination/goToPreviousPage');
+    await responsePromise;
     await expect(page.getByRole('heading', { name: 'Page 2' })).toBeVisible();
     await expect(page.getByText('Kiwi')).toBeVisible();
     await expect(page.getByText('Lemon')).toBeVisible();
@@ -183,8 +193,9 @@ test('Can mutate a LiveProp(url: new UrlMapping(mapPath: true)), the state must 
     await expect(page).toHaveURL('/ux-live-component/fruits/2?foo=bar');
 
     // Go to next page
+    const responsePromise = page.waitForResponse('/_components/LiveFruitsPagination/goToNextPage');
     await buttonNext.click();
-    await page.waitForResponse('/_components/LiveFruitsPagination/goToNextPage');
+    await responsePromise;
     await expect(page.getByRole('heading', { name: 'Page 3' })).toBeVisible();
     await expect(page.getByText('Peach')).toBeVisible();
     await expect(page.getByText('Pineapple')).toBeVisible();
@@ -204,49 +215,55 @@ test('Form auto-validation', async ({ page }) => {
     const buttonSubmit = page.getByRole('button', { name: 'Register' });
 
     // Let's submit the form without filling in any values
+    let responsePromise = page.waitForResponse('/_components/LiveRegistrationForm/saveRegistration');
     await buttonSubmit.click();
-    await page.waitForResponse('/_components/LiveRegistrationForm/saveRegistration');
+    await responsePromise;
 
     await expect(page.getByText('This value should not be blank.')).toHaveCount(2);
     await expect(buttonSubmit).toBeDisabled();
 
     // Fill the email only (with an invalid value)
+    responsePromise = page.waitForResponse('/_components/LiveRegistrationForm');
     await fieldEmail.fill('invalid-email');
     await fieldEmail.blur();
-    await page.waitForResponse('/_components/LiveRegistrationForm');
+    await responsePromise;
 
     await expect(page.getByText('This value is not a valid email address.')).toHaveCount(1);
     await expect(page.getByText('This value should not be blank.')).toHaveCount(1);
     await expect(buttonSubmit).toBeDisabled();
 
     // Fill the email with a valid value
+    responsePromise = page.waitForResponse('/_components/LiveRegistrationForm');
     await fieldEmail.fill('hugo@alliau.me');
     await fieldEmail.blur();
-    await page.waitForResponse('/_components/LiveRegistrationForm');
+    await responsePromise;
 
     await expect(page.getByText('This value is not a valid email address.')).toHaveCount(0);
     await expect(page.getByText('This value should not be blank.')).toHaveCount(1);
     await expect(buttonSubmit).toBeDisabled();
 
     // Fill the password with a too short value
+    responsePromise = page.waitForResponse('/_components/LiveRegistrationForm');
     await fieldPassword.fill('short');
     await fieldPassword.blur();
-    await page.waitForResponse('/_components/LiveRegistrationForm');
+    await responsePromise;
 
     await expect(page.getByText('This value is too short. It should have 8 characters or more.')).toHaveCount(1);
     await expect(page.getByRole('button', { name: 'Register' })).toBeDisabled();
 
     // Fill the password with a valid value
+    responsePromise = page.waitForResponse('/_components/LiveRegistrationForm');
     await fieldPassword.fill('a-very-secure-password');
     await fieldPassword.blur();
-    await page.waitForResponse('/_components/LiveRegistrationForm');
+    await responsePromise;
 
     await expect(page.getByText('This value is too short. It should have 8 characters or more.')).toHaveCount(0);
     await expect(buttonSubmit).toBeEnabled();
 
     // Submit the form
+    responsePromise = page.waitForResponse('/_components/LiveRegistrationForm/saveRegistration');
     await buttonSubmit.click();
-    await page.waitForResponse('/_components/LiveRegistrationForm/saveRegistration');
+    await responsePromise;
 
     await expect(page.getByText('Registration successful!')).toBeVisible();
 });
@@ -270,8 +287,9 @@ App\\Model\\Address Object
     await expect(page).toHaveURL('/ux-live-component/with-dto');
 
     // Update country
+    let responsePromise = page.waitForResponse('/_components/LiveComponentWithDto');
     await fieldCountry.fill('South Korea');
-    await page.waitForResponse('/_components/LiveComponentWithDto');
+    await responsePromise;
 
     await expect(fieldCountry).toHaveValue('South Korea');
     await expect(fieldCity).toHaveValue('Lyon');
@@ -285,8 +303,9 @@ App\\Model\\Address Object
     await expect(page).toHaveURL('/ux-live-component/with-dto?address%5Bcountry%5D=South+Korea&address%5Bcity%5D=Lyon');
 
     // Update city
+    responsePromise = page.waitForResponse('/_components/LiveComponentWithDto');
     await fieldCity.fill('Seoul');
-    await page.waitForResponse('/_components/LiveComponentWithDto');
+    await responsePromise;
 
     await expect(fieldCountry).toHaveValue('South Korea');
     await expect(fieldCity).toHaveValue('Seoul');
@@ -339,8 +358,9 @@ App\\Model\\Address Object
 `);
 
     // Update city
+    const responsePromise = page.waitForResponse('/_components/LiveComponentWithDto');
     await fieldCity.fill('Milan');
-    await page.waitForResponse('/_components/LiveComponentWithDto');
+    await responsePromise;
 
     await expect(fieldCountry).toHaveValue('Italy');
     await expect(fieldCity).toHaveValue('Milan');
@@ -371,8 +391,9 @@ Array
     await expect(page).toHaveURL('/ux-live-component/with-dto-collection');
 
     // Add first address
+    let responsePromise = page.waitForResponse('/_components/LiveComponentWithDtoCollection/addAddress');
     await buttonAddAddress.click();
-    await page.waitForResponse('/_components/LiveComponentWithDtoCollection/addAddress');
+    await responsePromise;
 
     await expect(output).toHaveText(`
 Array
@@ -390,8 +411,9 @@ Array
     );
 
     // Add second address
+    responsePromise = page.waitForResponse('/_components/LiveComponentWithDtoCollection/addAddress');
     await buttonAddAddress.click();
-    await page.waitForResponse('/_components/LiveComponentWithDtoCollection/addAddress');
+    await responsePromise;
 
     await expect(output).toHaveText(`
 Array
@@ -415,8 +437,9 @@ Array
     );
 
     // Reset
+    responsePromise = page.waitForResponse('/_components/LiveComponentWithDtoCollection/reset');
     await page.getByRole('button', { name: 'Reset' }).click();
-    await page.waitForResponse('/_components/LiveComponentWithDtoCollection/reset');
+    await responsePromise;
 
     await expect(output).toHaveText(`
 Array
@@ -429,8 +452,9 @@ Array
 test('With a DTO as a LiveProp, with the Symfony Serializer', async ({ page }) => {
     await page.goto('/ux-live-component/with-dto-and-serializer');
 
+    const responsePromise = page.waitForResponse('/_components/LiveComponentWithDtoAndSerializer/initAddress');
     await page.getByRole('button', { name: 'Init address' }).click();
-    await page.waitForResponse('/_components/LiveComponentWithDtoAndSerializer/initAddress');
+    await responsePromise;
 
     await expect(page.locator('output')).toHaveText(`
 App\\Model\\Address Object
@@ -447,8 +471,11 @@ App\\Model\\Address Object
 test('With a DTO as a LiveProp, with custom methods to hydrate/dehydrate the DTO', async ({ page }) => {
     await page.goto('/ux-live-component/with-dto-and-custom-hydration-methods');
 
+    const responsePromise = page.waitForResponse(
+        '/_components/LiveComponentWithDtoAndCustomHydrationMethods/initAddress'
+    );
     await page.getByRole('button', { name: 'Init address' }).click();
-    await page.waitForResponse('/_components/LiveComponentWithDtoAndCustomHydrationMethods/initAddress');
+    await responsePromise;
 
     await expect(page.locator('output')).toHaveText(`
 App\\Model\\Address Object
@@ -465,8 +492,9 @@ App\\Model\\Address Object
 test('With a DTO as a LiveProp, with custom hydration extension', async ({ page }) => {
     await page.goto('/ux-live-component/with-dto-and-hydration-extension');
 
+    const responsePromise = page.waitForResponse('/_components/LiveComponentWithDtoAndHydrationExtension/initPoint');
     await page.getByRole('button', { name: 'Init point' }).click();
-    await page.waitForResponse('/_components/LiveComponentWithDtoAndHydrationExtension/initPoint');
+    await responsePromise;
 
     await expect(page.locator('output')).toHaveText(`
 App\\Model\\Point Object
@@ -489,24 +517,28 @@ test('Item list, can add item, modify item, remove a specific item or all items 
     await expect(page.getByText('No items.')).toBeVisible();
 
     // Add one item
+    let responsePromise = page.waitForResponse('/_components/LiveItemList/addItem');
     await buttonAddItem.click();
-    await page.waitForResponse('/_components/LiveItemList/addItem');
+    await responsePromise;
 
     await expect(page).toHaveURL('/ux-live-component/item-list?items%5B0%5D=');
     await expect(page.getByText('No items.')).not.toBeVisible();
     await expect(page.getByRole('textbox', { name: 'Item #0' })).toHaveValue('');
 
+    responsePromise = page.waitForResponse('/_components/LiveItemList');
     await page.getByRole('textbox', { name: 'Item #0' }).fill('The first item');
-    await page.waitForResponse('/_components/LiveItemList');
+    await responsePromise;
 
     await expect(page).toHaveURL('/ux-live-component/item-list?items%5B0%5D=The+first+item');
     await expect(page.getByRole('textbox', { name: 'Item #0' })).toHaveValue('The first item');
 
     // Add two more items
+    responsePromise = page.waitForResponse('/_components/LiveItemList/addItem');
     await buttonAddItem.click();
-    await page.waitForResponse('/_components/LiveItemList/addItem');
+    await responsePromise;
+    responsePromise = page.waitForResponse('/_components/LiveItemList/addItem');
     await buttonAddItem.click();
-    await page.waitForResponse('/_components/LiveItemList/addItem');
+    await responsePromise;
 
     await expect(page).toHaveURL(
         '/ux-live-component/item-list?items%5B0%5D=The+first+item&items%5B1%5D=&items%5B2%5D='
@@ -516,8 +548,9 @@ test('Item list, can add item, modify item, remove a specific item or all items 
     await expect(page.getByRole('textbox', { name: 'Item #2' })).toHaveValue('');
 
     // Fill the last item
+    responsePromise = page.waitForResponse('/_components/LiveItemList');
     await page.getByRole('textbox', { name: 'Item #2' }).fill('The last item');
-    await page.waitForResponse('/_components/LiveItemList');
+    await responsePromise;
 
     await expect(page).toHaveURL(
         '/ux-live-component/item-list?items%5B0%5D=The+first+item&items%5B1%5D=&items%5B2%5D=The+last+item'
@@ -525,16 +558,18 @@ test('Item list, can add item, modify item, remove a specific item or all items 
     await expect(page.getByRole('textbox', { name: 'Item #2' })).toHaveValue('The last item');
 
     // Delete the 2nd item
+    responsePromise = page.waitForResponse('/_components/LiveItemList/deleteItem');
     await page.getByTitle('Delete item #1').click();
-    await page.waitForResponse('/_components/LiveItemList/deleteItem');
+    await responsePromise;
 
     await expect(page).toHaveURL('/ux-live-component/item-list?items%5B0%5D=The+first+item&items%5B2%5D=The+last+item');
     await expect(page.getByRole('textbox', { name: 'Item #0' })).toHaveValue('The first item');
     await expect(page.getByRole('textbox', { name: 'Item #2' })).toHaveValue('The last item');
 
     // Delete all items
+    responsePromise = page.waitForResponse('/_components/LiveItemList/deleteItems');
     await buttonDeleteAll.click();
-    await page.waitForResponse('/_components/LiveItemList/deleteItems');
+    await responsePromise;
 
     await expect(page).toHaveURL('/ux-live-component/item-list');
     await expect(page.getByText('No items.')).toBeVisible();
@@ -547,14 +582,16 @@ test('LiveProp should be aliased', async ({ page }) => {
     const fieldCategory = page.getByRole('textbox', { name: 'Category' });
 
     // Fill "query"
+    let responsePromise = page.waitForResponse('/_components/LiveComponentWithAliasedLiveProps');
     await fieldQuery.fill('Symfony is great!');
-    await page.waitForResponse('/_components/LiveComponentWithAliasedLiveProps');
+    await responsePromise;
 
     await expect(page).toHaveURL('/ux-live-component/with-aliased-live-props?q=Symfony+is+great%21&cat=');
 
     // Fill "category"
+    responsePromise = page.waitForResponse('/_components/LiveComponentWithAliasedLiveProps');
     await fieldCategory.fill('Web development');
-    await page.waitForResponse('/_components/LiveComponentWithAliasedLiveProps');
+    await responsePromise;
 
     await expect(page).toHaveURL(
         '/ux-live-component/with-aliased-live-props?q=Symfony+is+great%21&cat=Web+development'

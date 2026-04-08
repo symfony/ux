@@ -36,7 +36,7 @@ async function main() {
 
     const packageData = await readPackageJSON(path.join(packageRoot, 'package.json'));
     const isStimulusBundle = '@symfony/stimulus-bundle' === packageData.name;
-    const isReactOrVueOrSvelte = ['@symfony/ux-react', '@symfony/ux-vue', '@symfony/ux-svelte'].some((name) =>
+    const isReactOrVue = ['@symfony/ux-react', '@symfony/ux-vue'].some((name) =>
         packageData.name.startsWith(name)
     );
 
@@ -44,7 +44,7 @@ async function main() {
     const inputFiles = [
         ...globSync('src/*controller.ts'),
         ...(isStimulusBundle ? ['src/loader.ts', 'src/controllers.ts'] : []),
-        ...(isReactOrVueOrSvelte ? ['src/loader.ts', 'src/components.ts'] : []),
+        ...(isReactOrVue ? ['src/loader.ts', 'src/components.ts'] : []),
         ...(inputCssFile ? [inputCssFile] : []),
     ];
 
@@ -55,7 +55,7 @@ async function main() {
         // The "controllers.js" is generated on-the-fly by StimulusLoaderJavaScriptCompiler
         ...(isStimulusBundle ? ['./controllers.js'] : []),
         // The "components.js" files are generated on-the-fly by *ControllerLoaderAssetCompiler
-        ...(isReactOrVueOrSvelte ? ['./components.js'] : []),
+        ...(isReactOrVue ? ['./components.js'] : []),
     ]);
 
     const outDir = path.join(packageRoot, 'dist');
@@ -83,8 +83,8 @@ async function main() {
                   },
               }
             : {}),
-        // Prevent esbuild to inline relative and "external" imports (like "./components.js" for React, Vue, Svelte).
-        unbundle: isStimulusBundle || isReactOrVueOrSvelte,
+        // Prevent esbuild to inline relative and "external" imports (like "./components.js" for React, Vue).
+        unbundle: isStimulusBundle || isReactOrVue,
         deps: {
             neverBundle: Array.from(external),
             onlyBundle: ['idiomorph'],

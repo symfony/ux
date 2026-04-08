@@ -19,6 +19,7 @@ declare class export_default extends Controller {
     minCharacters: NumberConstructor;
     tomSelectOptions: ObjectConstructor;
     preload: StringConstructor;
+    resetOnFocus: BooleanConstructor;
   };
   readonly urlValue: string;
   readonly optionsAsHtmlValue: boolean;
@@ -31,6 +32,7 @@ declare class export_default extends Controller {
   readonly tomSelectOptionsValue: object;
   readonly hasPreloadValue: boolean;
   readonly preloadValue: string;
+  readonly resetOnFocusValue: boolean;
   tomSelect: TomSelect | undefined;
   private mutationObserver;
   private isObserving;

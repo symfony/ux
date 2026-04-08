@@ -6,6 +6,8 @@ defaults:
 
 on:
     push:
+        branches-ignore:
+            - 'dependabot/**'
         paths-ignore:
             - '.github/workflows/app-tests.yaml'
             - '.github/workflows/demo-native.yaml'
@@ -80,12 +82,17 @@ jobs:
                   # Turbo has its own workflow file
                   EXCLUDED_PACKAGES="Turbo"
 
+                  # Exclude deprecated packages when testing against lowest dependencies
+                  #if [ "${{ matrix.dependency-version }}" = "lowest" ]; then
+                  #  EXCLUDED_PACKAGES="$EXCLUDED_PACKAGES"
+                  #fi
+
                   PACKAGES=$(find src/ -mindepth 2 -type f -name composer.json -not -path "*/vendor/*" -printf '%h\n' | sed 's/^src\///' | grep -Ev "$EXCLUDED_PACKAGES" | sort |  tr '\n' ' ')
                   echo "Packages: $PACKAGES"
                   echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
 
             - name: Setup PHP
-              uses: shivammathur/setup-php@93cb3149d228516dfca679606c5060ee44f46437
+              uses: shivammathur/setup-php@690cb7c9d81dbfe51eba732cfca0a00ca42db777
               with:
                   php-version: ${{ matrix.php-version }}
                   extensions: ${{ matrix.os == 'windows-latest' && 'pdo_sqlite,sqlite3,fileinfo,gd,zip' || '' }}
@@ -105,7 +112,7 @@ jobs:
                       ${{ runner.os }}-composer-packages-${{ matrix.php-version }}-${{ matrix.dependency-version }}-${{ matrix.symfony-version }}-${{ matrix.minimum-stability }}
 
             - name: Install root dependencies
-              uses: ramsey/composer-install@2b6adcf6fa51986b4a64e960e812c1bf5a38f237
+              uses: ramsey/composer-install@5c2bcf28d7b060ef3c601d7b476d5430a7b46c27
               with:
                   working-directory: ${{ github.workspace }}
 

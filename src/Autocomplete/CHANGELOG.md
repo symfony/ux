@@ -9,6 +9,10 @@
 - Add parameter `$security` to `AutocompleteResultsExecutor::__construct()`
 - Remove BC layer for `EntityAutocompleterInterface::getAttributes()` and `EntityAutocompleterInterface::getGroupBy()`
 
+## 2.35
+
+- Add `reset_on_focus` option to clear and reload options when the autocomplete field regains focus
+
 ## 2.30
 
 - Ensure compatibility with PHP 8.5

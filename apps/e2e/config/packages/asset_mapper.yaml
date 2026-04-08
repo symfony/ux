@@ -6,8 +6,6 @@ framework:
         excluded_patterns:
             - '*/assets/react/src/**'
             - '*/assets/react/node_modules/**'
-            - '*/assets/svelte/src/**'
-            - '*/assets/svelte/node_modules/**'
         missing_import_mode: strict
         importmap_polyfill: false
 

@@ -15,7 +15,6 @@
         "ux-native": "src/Native",
         "ux-notify": "src/Notify",
         "ux-react": "src/React",
-        "ux-svelte": "src/Svelte",
         "ux-toolkit": "src/Toolkit",
         "ux-translator": "src/Translator",
         "ux-turbo": "src/Turbo",

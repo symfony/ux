@@ -59,16 +59,6 @@
     },
     "overrides": [
         {
-            "includes": ["**/*.svelte"],
-            "linter": {
-                "rules": {
-                    "style": {
-                        "useConst": "off"
-                    }
-                }
-            }
-        },
-        {
             "includes": ["src/Map/**/*map_controller.ts"],
             "formatter": {
                 "lineWidth": 160

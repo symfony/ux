@@ -55,7 +55,6 @@
         "symfony/ux-native": "3.x-dev",
         "symfony/ux-notify": "3.x-dev",
         "symfony/ux-react": "3.x-dev",
-        "symfony/ux-svelte": "3.x-dev",
         "symfony/ux-translator": "3.x-dev",
         "symfony/ux-turbo": "3.x-dev",
         "symfony/ux-twig-component": "3.x-dev",

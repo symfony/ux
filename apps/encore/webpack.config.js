@@ -30,8 +30,6 @@ Encore
 
     .enableVueLoader()
 
-    .enableSvelte()
-
     .enableReactPreset()
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
@@ -81,5 +79,4 @@ Encore
 //.autoProvidejQuery()
 
 const config = Encore.getWebpackConfig();
-// config.resolve.conditionNames = (config.resolve.conditionNames || []).concat(['svelte']);
 module.exports = config;

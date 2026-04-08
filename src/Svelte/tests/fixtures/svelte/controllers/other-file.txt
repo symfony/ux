@@ -1,1 +1,0 @@
-Other file - not a Svelte file.

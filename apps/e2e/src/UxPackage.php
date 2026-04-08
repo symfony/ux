@@ -23,7 +23,7 @@ enum UxPackage: string
     case Notify = 'UX Notify';
     case React = 'UX React';
     case StimulusBundle = 'UX StimulusBundle';
-    case Svelte = 'UX Svelte';
+    // case Svelte = 'UX Svelte'; deprecated/removed
     // case Swup; // deprecated/removed
     // case TogglePassword; // deprecated/removed
     // case Toolkit; // not subject to E2E
@@ -44,7 +44,6 @@ enum UxPackage: string
             self::Notify => 'https://ux.symfony.com/notify',
             self::React => 'https://ux.symfony.com/react',
             self::StimulusBundle => 'https://ux.symfony.com/stimulus',
-            self::Svelte => 'https://ux.symfony.com/svelte',
             self::Translator => 'https://ux.symfony.com/translator',
             self::Turbo => 'https://ux.symfony.com/turbo',
             self::Vue => 'https://ux.symfony.com/vue',

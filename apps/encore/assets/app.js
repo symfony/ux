@@ -5,7 +5,6 @@
  * (and its CSS file) in your base layout (base.html.twig).
  */
 import { registerVueControllerComponents } from '@symfony/ux-vue';
-import { registerSvelteControllerComponents } from '@symfony/ux-svelte';
 import { registerReactControllerComponents } from '@symfony/ux-react';
 import './bootstrap.js';
 
@@ -14,7 +13,6 @@ import './styles/app.css';
 import { trans } from './translator';
 
 registerReactControllerComponents(require.context('./react/controllers', true, /\.(j|t)sx?$/));
-registerSvelteControllerComponents(require.context('./svelte/controllers', true, /\.svelte$/));
 registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
 
 document.addEventListener('DOMContentLoaded', () => {

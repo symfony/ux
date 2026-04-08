@@ -290,6 +290,16 @@ function _createAutocompleteWithRemoteData(autocompleteEndpointUrl, minCharacter
 				return `<div class="create">${this.createOptionTextValue.replace("%placeholder%", `<strong>${escapeData(data.input)}</strong>`)}</div>`;
 			}
 		},
+		onFocus: () => {
+			if (this.resetOnFocusValue && this.tomSelect) {
+				if (this.tomSelect.control_input.value.trim() === "") {
+					this.tomSelect.clearOptions();
+					this.tomSelect.loadedSearches = {};
+					if (typeof this.tomSelect["clearPagination"] === "function") this.tomSelect["clearPagination"]();
+					this.tomSelect.load("");
+				}
+			}
+		},
 		preload: this.preload
 	});
 	return _assertClassBrand(_Class_brand, this, _createTomSelect).call(this, config);
@@ -333,6 +343,7 @@ _Class.values = {
 	createOptionText: String,
 	minCharacters: Number,
 	tomSelectOptions: Object,
-	preload: String
+	preload: String,
+	resetOnFocus: Boolean
 };
 export { _Class as default };
