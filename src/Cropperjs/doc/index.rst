@@ -62,6 +62,9 @@ create a Crop object, and use this object inside a standard form::
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
+                // Use options to rotate the cropped image or thumbnail
+                $crop->setOptions('{"rotate": 90}');
+
                 // Get the cropped image data (as a string)
                 $crop->getCroppedImage();
 
