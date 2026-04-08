@@ -1,0 +1,161 @@
+<!--
+- Kit: Flowbite v4
+- Component: Dropdown
+- Code:
+```twig
+<div class="flex flex-wrap items-center gap-4">
+    <twig:Dropdown id="placement-top" placement="top">
+        <twig:Dropdown:Trigger>
+            <twig:Button {{ ...dropdown_trigger_attrs }}>
+                Dropdown top
+                <twig:ux:icon name="flowbite:chevron-up-outline" class="size-6" aria-hidden="true" />
+            </twig:Button>
+        </twig:Dropdown:Trigger>
+        <twig:Dropdown:Content>
+            <twig:Dropdown:Group>
+                <twig:Dropdown:Item href="#">Dashboard</twig:Dropdown:Item>
+                <twig:Dropdown:Item href="#">Settings</twig:Dropdown:Item>
+                <twig:Dropdown:Item href="#">Earnings</twig:Dropdown:Item>
+            </twig:Dropdown:Group>
+        </twig:Dropdown:Content>
+    </twig:Dropdown>
+
+    <twig:Dropdown id="placement-right" placement="right">
+        <twig:Dropdown:Trigger>
+            <twig:Button {{ ...dropdown_trigger_attrs }}>
+                Dropdown right
+                <twig:ux:icon name="flowbite:chevron-right-outline" class="size-6" aria-hidden="true" />
+            </twig:Button>
+        </twig:Dropdown:Trigger>
+        <twig:Dropdown:Content>
+            <twig:Dropdown:Group>
+                <twig:Dropdown:Item href="#">Dashboard</twig:Dropdown:Item>
+                <twig:Dropdown:Item href="#">Settings</twig:Dropdown:Item>
+                <twig:Dropdown:Item href="#">Earnings</twig:Dropdown:Item>
+            </twig:Dropdown:Group>
+        </twig:Dropdown:Content>
+    </twig:Dropdown>
+
+    <twig:Dropdown id="placement-bottom" placement="bottom">
+        <twig:Dropdown:Trigger>
+            <twig:Button {{ ...dropdown_trigger_attrs }}>
+                Dropdown bottom
+                <twig:ux:icon name="flowbite:chevron-down-outline" class="size-6" aria-hidden="true" />
+            </twig:Button>
+        </twig:Dropdown:Trigger>
+        <twig:Dropdown:Content>
+            <twig:Dropdown:Group>
+                <twig:Dropdown:Item href="#">Dashboard</twig:Dropdown:Item>
+                <twig:Dropdown:Item href="#">Settings</twig:Dropdown:Item>
+                <twig:Dropdown:Item href="#">Earnings</twig:Dropdown:Item>
+            </twig:Dropdown:Group>
+        </twig:Dropdown:Content>
+    </twig:Dropdown>
+
+    <twig:Dropdown id="placement-left" placement="left">
+        <twig:Dropdown:Trigger>
+            <twig:Button {{ ...dropdown_trigger_attrs }}>
+                <twig:ux:icon name="flowbite:chevron-left-outline" class="size-6" aria-hidden="true" />
+                Dropdown left
+            </twig:Button>
+        </twig:Dropdown:Trigger>
+        <twig:Dropdown:Content>
+            <twig:Dropdown:Group>
+                <twig:Dropdown:Item href="#">Dashboard</twig:Dropdown:Item>
+                <twig:Dropdown:Item href="#">Settings</twig:Dropdown:Item>
+                <twig:Dropdown:Item href="#">Earnings</twig:Dropdown:Item>
+            </twig:Dropdown:Group>
+        </twig:Dropdown:Content>
+    </twig:Dropdown>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex flex-wrap items-center gap-4">
+    <div class="relative inline-block" data-controller="dropdown" data-dropdown-placement-value="top" data-dropdown-trigger-type-value="click" data-dropdown-delay-value="300" data-dropdown-offset-distance-value="10">
+    <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs text-white bg-brand hover:bg-brand-strong focus:ring-brand-medium text-sm px-4 py-2.5 rounded-base" data-dropdown-target="trigger" id="dropdown-placement-top-trigger" aria-expanded="false" aria-controls="dropdown-placement-top">Dropdown top
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-6" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m16 14l-4-4l-4 4"></path></svg>
+            </button>
+                
+<div id="dropdown-placement-top" data-dropdown-target="content" role="menu" aria-labelledby="dropdown-placement-top-trigger" class="z-10 bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-fit min-w-44 divide-y divide-default-medium hidden">
+<ul class="p-2 text-sm text-body font-medium" role="group">
+<li role="none">
+    <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#">Dashboard</a>
+</li>
+                
+<li role="none">
+    <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#">Settings</a>
+</li>
+                
+<li role="none">
+    <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#">Earnings</a>
+</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="relative inline-block" data-controller="dropdown" data-dropdown-placement-value="right" data-dropdown-trigger-type-value="click" data-dropdown-delay-value="300" data-dropdown-offset-distance-value="10">
+    <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs text-white bg-brand hover:bg-brand-strong focus:ring-brand-medium text-sm px-4 py-2.5 rounded-base" data-dropdown-target="trigger" id="dropdown-placement-right-trigger" aria-expanded="false" aria-controls="dropdown-placement-right">Dropdown right
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-6" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m10 16l4-4l-4-4"></path></svg>
+            </button>
+                
+<div id="dropdown-placement-right" data-dropdown-target="content" role="menu" aria-labelledby="dropdown-placement-right-trigger" class="z-10 bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-fit min-w-44 divide-y divide-default-medium hidden">
+<ul class="p-2 text-sm text-body font-medium" role="group">
+<li role="none">
+    <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#">Dashboard</a>
+</li>
+                
+<li role="none">
+    <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#">Settings</a>
+</li>
+                
+<li role="none">
+    <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#">Earnings</a>
+</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="relative inline-block" data-controller="dropdown" data-dropdown-placement-value="bottom" data-dropdown-trigger-type-value="click" data-dropdown-delay-value="300" data-dropdown-offset-distance-value="10">
+    <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs text-white bg-brand hover:bg-brand-strong focus:ring-brand-medium text-sm px-4 py-2.5 rounded-base" data-dropdown-target="trigger" id="dropdown-placement-bottom-trigger" aria-expanded="false" aria-controls="dropdown-placement-bottom">Dropdown bottom
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-6" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 10l4 4l4-4"></path></svg>
+            </button>
+                
+<div id="dropdown-placement-bottom" data-dropdown-target="content" role="menu" aria-labelledby="dropdown-placement-bottom-trigger" class="z-10 bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-fit min-w-44 divide-y divide-default-medium hidden">
+<ul class="p-2 text-sm text-body font-medium" role="group">
+<li role="none">
+    <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#">Dashboard</a>
+</li>
+                
+<li role="none">
+    <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#">Settings</a>
+</li>
+                
+<li role="none">
+    <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#">Earnings</a>
+</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="relative inline-block" data-controller="dropdown" data-dropdown-placement-value="left" data-dropdown-trigger-type-value="click" data-dropdown-delay-value="300" data-dropdown-offset-distance-value="10">
+    <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs text-white bg-brand hover:bg-brand-strong focus:ring-brand-medium text-sm px-4 py-2.5 rounded-base" data-dropdown-target="trigger" id="dropdown-placement-left-trigger" aria-expanded="false" aria-controls="dropdown-placement-left"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-6" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14 8l-4 4l4 4"></path></svg>
+                Dropdown left
+            </button>
+                
+<div id="dropdown-placement-left" data-dropdown-target="content" role="menu" aria-labelledby="dropdown-placement-left-trigger" class="z-10 bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-fit min-w-44 divide-y divide-default-medium hidden">
+<ul class="p-2 text-sm text-body font-medium" role="group">
+<li role="none">
+    <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#">Dashboard</a>
+</li>
+                
+<li role="none">
+    <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#">Settings</a>
+</li>
+                
+<li role="none">
+    <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#">Earnings</a>
+</li>
+            </ul>
+        </div>
+    </div>
+</div>

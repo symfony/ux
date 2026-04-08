@@ -1,0 +1,12 @@
+{# @block content The dropdown menu content, typically includes `Dropdown:Group`, `Dropdown:Header` #}
+
+<div
+    id="{{ _dropdown_id }}"
+    data-dropdown-target="content"
+    role="menu"
+    aria-labelledby="{{ _dropdown_trigger_id }}"
+    class="{{ ('z-10 bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-fit min-w-44 divide-y divide-default-medium hidden ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

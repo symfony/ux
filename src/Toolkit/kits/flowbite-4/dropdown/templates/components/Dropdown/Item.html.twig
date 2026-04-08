@@ -1,0 +1,20 @@
+{# @prop string as The item tag. Defaults to `a` #}
+{# @block content The item label #}
+
+{%- props as = 'a' -%}
+
+{% set attributesDefaults = {} %}
+{% if as == 'button' %}
+    {% set attributesDefaults = {type: 'button'} %}
+{% endif %}
+
+<li role="none">
+    <{{ as }}
+        role="menuitem"
+        tabindex="-1"
+        class="{{ ('inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded ' ~ attributes.render('class'))|tailwind_merge }}"
+        {{ attributes.defaults(attributesDefaults) }}
+    >
+        {%- block content %}{% endblock -%}
+    </{{ as }}>
+</li>

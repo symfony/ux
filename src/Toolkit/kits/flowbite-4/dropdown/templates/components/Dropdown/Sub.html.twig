@@ -1,0 +1,31 @@
+{# @prop id string Unique identifier for generating internal IDs #}
+{# @prop placement 'bottom'|'top'|'left'|'right'|'left-start'|'left-end'|'right-start'|'right-end'|'bottom-start'|'bottom-end'|'top-start'|'top-end' The dropdown placement relative to the trigger. Defaults to `right-start` #}
+{# @prop triggerType 'click'|'hover' The dropdown trigger type. Defaults to `click` #}
+{# @prop int delay The dropdown delay. Defaults to `300` #}
+{# @prop int offsetDistance The dropdown content offset. Defaults to `10` #}
+{# @block content The dropdown structure (Dropdown:SubTrigger and Dropdown:Content) #}
+
+{% if __context is defined and __context.id is defined %}
+    {% set id = null %}
+{% endif %}
+
+{%- props id, placement = 'right-start', triggerType = 'click', delay = 300, offsetDistance = 10 -%}
+
+{%- set _dropdown_id = 'dropdown-sub-' ~ id -%}
+{%- set _dropdown_trigger_id = _dropdown_id ~ '-trigger' -%}
+
+<li role="none">
+    <div
+        class="{{ ('relative ' ~ attributes.render('class'))|tailwind_merge }}"
+        {{ attributes.defaults({
+            'data-controller': 'dropdown',
+            'data-dropdown-placement-value': placement,
+            'data-dropdown-trigger-type-value': triggerType,
+            'data-dropdown-open-value': false,
+            'data-dropdown-delay-value': delay,
+            'data-dropdown-offset-distance-value': offsetDistance,
+        }) }}
+    >
+        {% block content %}{% endblock %}
+    </div>
+</li>

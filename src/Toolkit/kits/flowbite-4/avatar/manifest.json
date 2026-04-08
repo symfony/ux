@@ -1,0 +1,17 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Avatar",
+    "description": "Use the avatar component to show a visual representation of a user profile using an image element or SVG object based on multiple styles and sizes",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "composer": [
+            "twig/extra-bundle",
+            "twig/html-extra:^3.12.0",
+            "tales-from-a-dev/twig-tailwind-extra:^1.0.0",
+            "symfony/ux-icons"
+        ]
+    }
+}

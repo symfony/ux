@@ -1,0 +1,21 @@
+<twig:Dropdown id="user-dropdown" placement="bottom-start">
+    <twig:Dropdown:Trigger>
+        <twig:Avatar class="cursor-pointer" {{ ...dropdown_trigger_attrs }}>
+            <twig:Avatar:Image src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="Default avatar" />
+            <twig:Avatar:Fallback>JL</twig:Avatar:Fallback>
+        </twig:Avatar>
+    </twig:Dropdown:Trigger>
+
+    <twig:Dropdown:Content>
+        <twig:Dropdown:Header>
+            <div class="font-medium">Bonnie Green</div>
+            <div class="truncate">name@flowbite.com</div>
+        </twig:Dropdown:Header>
+        <twig:Dropdown:Group>
+            <twig:Dropdown:Item>Dashboard</twig:Dropdown:Item>
+            <twig:Dropdown:Item>Settings</twig:Dropdown:Item>
+            <twig:Dropdown:Item>Earnings</twig:Dropdown:Item>
+            <twig:Dropdown:Item class="text-fg-danger">Sign out</twig:Dropdown:Item>
+        </twig:Dropdown:Group>
+    </twig:Dropdown:Content>
+</twig:Dropdown>

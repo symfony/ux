@@ -1,0 +1,9 @@
+{# @block content The list of `Dropdown:Item` elements #}
+
+<ul
+    class="{{ ('p-2 text-sm text-body font-medium ' ~ attributes.render('class'))|tailwind_merge }}"
+    role="group"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</ul>

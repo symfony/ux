@@ -1,0 +1,26 @@
+{# @block content The trigger label that toggles the sub dropdown when clicked #}
+
+{% set _subtrigger_icons = {
+    right: 'flowbite:chevron-right-outline',
+    top: 'flowbite:chevron-up-outline',
+    bottom: 'flowbite:chevron-down-outline',
+} %}
+{% set _subtrigger_icon = _subtrigger_icons[placement|split('-')|first] ?? null %}
+
+<button
+    data-dropdown-target="trigger"
+    id="{{ _dropdown_trigger_id }}"
+    type="button"
+    role="menuitem"
+    tabindex="-1"
+    aria-expanded="false"
+    aria-haspopup="menu"
+    aria-controls="{{ _dropdown_id }}"
+    class="{{ ('inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+    {% if _subtrigger_icon %}
+        <twig:ux:icon :name="_subtrigger_icon" class="size-4 ms-auto" aria-hidden="true" />
+    {% endif %}
+</button>

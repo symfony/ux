@@ -1,0 +1,9 @@
+{# @block content The header content (e.g., user name, email) #}
+
+<div
+    role="none"
+    class="{{ ('m-2 p-2 text-sm text-body bg-neutral-secondary-strong border-0 rounded ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

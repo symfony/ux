@@ -1,0 +1,10 @@
+{# @block content The trigger element (e.g., a `Button`) that toggles the dropdown when clicked #}
+
+{%- set dropdown_trigger_attrs = {
+    'data-dropdown-target': 'trigger',
+    id: _dropdown_trigger_id,
+    'aria-expanded': 'false',
+    'aria-controls': _dropdown_id,
+} -%}
+
+{%- block content %}{% endblock -%}
