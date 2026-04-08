@@ -36,9 +36,7 @@ async function main() {
 
     const packageData = await readPackageJSON(path.join(packageRoot, 'package.json'));
     const isStimulusBundle = '@symfony/stimulus-bundle' === packageData.name;
-    const isReactOrVue = ['@symfony/ux-react', '@symfony/ux-vue'].some((name) =>
-        packageData.name.startsWith(name)
-    );
+    const isReactOrVue = ['@symfony/ux-react', '@symfony/ux-vue'].some((name) => packageData.name.startsWith(name));
 
     const inputCssFile = packageData?.config?.css_source;
     const inputFiles = [
