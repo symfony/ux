@@ -3,6 +3,7 @@
 ## 2.35
 
 - Allow Symfony UX 3.x packages
+- Deprecate the package
 
 ## 2.30
 
