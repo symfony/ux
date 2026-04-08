@@ -326,6 +326,7 @@ function getModelDirectiveFromElement(element, throwOnMissing = true) {
 	const dataModelDirectives = getAllModelDirectiveFromElements(element);
 	if (dataModelDirectives.length > 0) return dataModelDirectives[0];
 	if (element.getAttribute("name")) {
+		if (element.hasAttribute("data-live-ignore")) return null;
 		const formElement = element.closest("form");
 		if (formElement && "model" in formElement.dataset) {
 			const directive = parseDirectives(formElement.dataset.model || "*")[0];

@@ -277,6 +277,15 @@ describe('getModelDirectiveFromInput', () => {
         expect(directive).toBeNull();
     });
 
+    it('returns null if data-live-ignore is present on element with name', () => {
+        const formElement = htmlToElement('<form data-model="*"></form>');
+        const element = htmlToElement('<input name="user[firstName]" data-live-ignore>');
+        formElement.appendChild(element);
+
+        const directive = getModelDirectiveFromElement(element);
+        expect(directive).toBeNull();
+    });
+
     it('throws error if no data-model found', () => {
         const element = htmlToElement('<input>');
 
