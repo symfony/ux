@@ -68,6 +68,10 @@ create a Crop object, and use this object inside a standard form::
                 // Create a thumbnail of the cropped image (as a string)
                 $crop->getCroppedThumbnail(200, 150);
 
+                // Starting from 2.34, use options to rotate the cropped image or thumbnail
+                $crop->setOptions('{"rotate": 90}');
+                $crop->getCroppedImage(applyRotation: true);
+
                 // ...
             }
 
@@ -78,6 +82,10 @@ create a Crop object, and use this object inside a standard form::
     }
 
 These ``cropper_options`` can be any `the Cropper.js options`_.
+
+.. versionadded:: 2.34
+
+    The ability to rotate a cropped image or thumbnail was introduced in UX Cropper.js 2.34.
 
 Once created in PHP, a crop form is a normal form, meaning you can
 display it using Twig as you would normally with any form:
