@@ -30,6 +30,7 @@
         "symfony/deprecation-contracts": "^2.5|^3.0",
         "symfony/property-access": "^7.4|^8.0",
         "symfony/property-info": "^7.4|^8.0",
+        "symfony/type-info": "^7.4|^8.0",
         "symfony/stimulus-bundle": "^2.9|^3.0",
         "symfony/ux-twig-component": "^2.33.0|^3.0",
         "twig/twig": "^3.10.3"
@@ -57,8 +58,7 @@
         "zenstruck/foundry": "^2.7"
     },
     "conflict": {
-        "symfony/config": "<6.4",
-        "symfony/type-info": "<7.2"
+        "symfony/config": "<6.4"
     },
     "config": {
         "sort-packages": true

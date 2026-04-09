@@ -28,29 +28,3 @@ _run_task() {
     exit $?
 }
 export -f _run_task
-
-before_composer_install() {
-  local component=$1
-  local php_version=$2
-
-  # Install specific versions of PropertyInfo and TypeInfo based on PHP version
-  # To remove in Symfony UX 4.0
-  if [[ "$component" == "LiveComponent" ]]; then
-    case "$php_version" in
-      8.2)
-        # no-op, let Composer install the best PropertyInfo version (defined in composer.json), but do not require TypeInfo
-        return 0
-        ;;
-      8.3)
-        # PropertyInfo 7.1 (experimental PropertyTypeExtractorInterface::getType) and TypeInfo 7.2 (lowest non-experimental)
-        composer require symfony/property-info:7.1.* symfony/type-info:7.2.* --no-update
-        return $?
-        ;;
-    esac
-
-    # Install the best TypeInfo version available
-    composer require symfony/type-info --no-update
-  fi
-
-}
-export -f before_composer_install

@@ -12,7 +12,6 @@
 namespace Symfony\UX\LiveComponent\Metadata;
 
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
-use Symfony\Component\PropertyInfo\Type as LegacyType;
 use Symfony\Component\TypeInfo\Exception\UnsupportedException;
 use Symfony\Component\TypeInfo\Type;
 use Symfony\Component\TypeInfo\Type\CollectionType;
@@ -34,11 +33,8 @@ class LiveComponentMetadataFactory implements ResetInterface
     public function __construct(
         private ComponentFactory $componentFactory,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
-        private ?TypeResolver $typeResolver = null,
+        private TypeResolver $typeResolver,
     ) {
-        if (method_exists($this->propertyTypeExtractor, 'getType') && !$this->typeResolver) {
-            throw new \LogicException('Symfony TypeInfo is required to use LiveProps. Try running "composer require symfony/type-info".');
-        }
     }
 
     public function getMetadata(string $name): LiveComponentMetadata
@@ -56,7 +52,7 @@ class LiveComponentMetadataFactory implements ResetInterface
     }
 
     /**
-     * @return list<LivePropMetadata|LegacyLivePropMetadata>
+     * @return list<LivePropMetadata>
      *
      * @internal
      */
@@ -81,47 +77,11 @@ class LiveComponentMetadataFactory implements ResetInterface
         return array_values($metadatas);
     }
 
-    public function createLivePropMetadata(string $className, string $propertyName, \ReflectionProperty $property, LiveProp $liveProp): LivePropMetadata|LegacyLivePropMetadata
+    public function createLivePropMetadata(string $className, string $propertyName, \ReflectionProperty $property, LiveProp $liveProp): LivePropMetadata
     {
         $reflectionType = $property->getType();
         if ($reflectionType instanceof \ReflectionUnionType || $reflectionType instanceof \ReflectionIntersectionType) {
             throw new \LogicException(\sprintf('Union or intersection types are not supported for LiveProps. You may want to change the type of property "%s" in "%s".', $property->getName(), $property->getDeclaringClass()->getName()));
-        }
-
-        // BC layer when "symfony/type-info" is not available
-        if (!method_exists($this->propertyTypeExtractor, 'getType')) {
-            $infoTypes = $this->propertyTypeExtractor->getTypes($className, $propertyName) ?? [];
-
-            $collectionValueType = null;
-            foreach ($infoTypes as $infoType) {
-                if ($infoType->isCollection()) {
-                    foreach ($infoType->getCollectionValueTypes() as $valueType) {
-                        $collectionValueType = $valueType;
-                        break;
-                    }
-                }
-            }
-
-            if (null === $reflectionType && null === $collectionValueType && isset($infoTypes[0])) {
-                // If it's an "advanced" type (like a Collection), let's use the PropertyTypeExtractor to get the Type
-                $infoType = LegacyType::BUILTIN_TYPE_OBJECT === $infoTypes[0]->getBuiltinType() ? $infoTypes[0]->getClassName() : $infoTypes[0]->getBuiltinType();
-                $isTypeBuiltIn = null === $infoTypes[0]->getClassName();
-                $isTypeNullable = $infoTypes[0]->isNullable();
-            } else {
-                // Otherwise, we can use the ReflectionType to get the Type
-                $infoType = $reflectionType?->getName();
-                $isTypeBuiltIn = $reflectionType?->isBuiltin() ?? false;
-                $isTypeNullable = $reflectionType?->allowsNull() ?? true;
-            }
-
-            return new LegacyLivePropMetadata(
-                $property->getName(),
-                $liveProp,
-                $infoType,
-                $isTypeBuiltIn,
-                $isTypeNullable,
-                $collectionValueType
-            );
         }
 
         $infoType = $this->propertyTypeExtractor->getType($className, $property->getName());

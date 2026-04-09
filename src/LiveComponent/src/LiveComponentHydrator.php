@@ -18,7 +18,6 @@ use Symfony\Component\PropertyAccess\Exception\UninitializedPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
-use Symfony\Component\PropertyInfo\Type as LegacyType;
 use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -32,12 +31,10 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Exception\HydrationException;
 use Symfony\UX\LiveComponent\Hydration\HydrationExtensionInterface;
-use Symfony\UX\LiveComponent\Metadata\LegacyLivePropMetadata;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadata;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Metadata\LivePropMetadata;
 use Symfony\UX\LiveComponent\Util\DehydratedProps;
-use Symfony\UX\LiveComponent\Util\TypeHelper;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Twig\Environment;
 use Twig\Runtime\EscaperRuntime;
@@ -256,7 +253,7 @@ final class LiveComponentHydrator
      *
      * @throws SerializerExceptionInterface
      */
-    public function hydrateValue(mixed $value, LivePropMetadata|LegacyLivePropMetadata $propMetadata, object $parentObject): mixed
+    public function hydrateValue(mixed $value, LivePropMetadata $propMetadata, object $parentObject): mixed
     {
         if ($propMetadata->hydrateMethod()) {
             if (!method_exists($parentObject, $propMetadata->hydrateMethod())) {
@@ -277,34 +274,6 @@ final class LiveComponentHydrator
                 throw new \LogicException(\sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the given serializer does not implement DenormalizerInterface.', $propMetadata->getName(), $parentObject::class));
             }
 
-            // BC layer when "symfony/type-info" is not available
-            if ($propMetadata instanceof LegacyLivePropMetadata) {
-                if ($propMetadata->collectionValueType()) {
-                    $builtInType = $propMetadata->collectionValueType()->getBuiltinType();
-                    if (LegacyType::BUILTIN_TYPE_OBJECT === $builtInType) {
-                        $type = $propMetadata->collectionValueType()->getClassName().'[]';
-                    } else {
-                        $type = $builtInType.'[]';
-                    }
-                } else {
-                    $type = $propMetadata->getType();
-                }
-
-                if (null === $type) {
-                    throw new \LogicException(\sprintf('The "%s::%s" object should be hydrated with the Serializer, but no type could be guessed.', $parentObject::class, $propMetadata->getName()));
-                }
-
-                if (null === $type) {
-                    throw new \LogicException(\sprintf('The "%s::%s" object should be hydrated with the Serializer, but no type could be guessed.', $parentObject::class, $propMetadata->getName()));
-                }
-
-                if (null === $value && $propMetadata->allowsNull()) {
-                    return null;
-                }
-
-                return $this->serializer->denormalize($value, $type, 'json', $propMetadata->serializationContext());
-            }
-
             $type = $propMetadata->getType();
 
             if (null === $type) {
@@ -316,7 +285,7 @@ final class LiveComponentHydrator
             }
 
             $isCollection = false;
-            foreach (TypeHelper::traverse($type) as $t) {
+            foreach ($type->traverse() as $t) {
                 if ($t instanceof CollectionType) {
                     $isCollection = true;
                     $type = $t->getCollectionValueType();
@@ -344,27 +313,9 @@ final class LiveComponentHydrator
         }
 
         // BC layer when "symfony/type-info" is not available
-        if ($propMetadata instanceof LegacyLivePropMetadata) {
-            if ($propMetadata->collectionValueType() && LegacyType::BUILTIN_TYPE_OBJECT === $propMetadata->collectionValueType()->getBuiltinType()) {
-                $collectionClass = $propMetadata->collectionValueType()->getClassName();
-                foreach ($value as $key => $objectItem) {
-                    $value[$key] = $this->hydrateObjectValue($objectItem, $collectionClass, true, $propMetadata->getFormat(), $parentObject::class, \sprintf('%s.%s', $propMetadata->getName(), $key), $parentObject);
-                }
-            }
-
-            if (\is_string($value) && $propMetadata->isBuiltIn() && \in_array($propMetadata->getType(), ['int', 'float', 'bool'], true)) {
-                return self::coerceStringValue($value, $propMetadata->getType(), $propMetadata->allowsNull());
-            }
-
-            // for all other built-ins: int, boolean, array, return as is
-            if ($propMetadata->isBuiltIn()) {
-                return $value;
-            }
-
-            return $this->hydrateObjectValue($value, $propMetadata->getType(), $propMetadata->allowsNull(), $propMetadata->getFormat(), $parentObject::class, $propMetadata->getName(), $parentObject);
-        }
         $collectionValueType = null;
-        foreach (TypeHelper::traverse($type) as $t) {
+
+        foreach ($type->traverse() as $t) {
             if ($t instanceof CollectionType) {
                 $collectionValueType = $t->getCollectionValueType();
 
@@ -373,7 +324,7 @@ final class LiveComponentHydrator
         }
 
         if ($collectionValueType) {
-            foreach (TypeHelper::traverse($collectionValueType) as $t) {
+            foreach ($collectionValueType->traverse() as $t) {
                 if ($t instanceof ObjectType) {
                     foreach ($value as $key => $objectItem) {
                         $value[$key] = $this->hydrateObjectValue($objectItem, $t->getClassName(), true, $propMetadata->getFormat(), $parentObject::class, \sprintf('%s.%s', $propMetadata->getName(), $key), $parentObject);
@@ -388,7 +339,7 @@ final class LiveComponentHydrator
             return self::coerceStringValue($value, $type, $type->isNullable());
         }
 
-        foreach (TypeHelper::traverse($type) as $t) {
+        foreach ($type->traverse() as $t) {
             if ($t instanceof ObjectType) {
                 return $this->hydrateObjectValue($value, $t->getClassName(), $type->isNullable(), $propMetadata->getFormat(), $parentObject::class, $propMetadata->getName(), $parentObject);
             }
@@ -529,7 +480,7 @@ final class LiveComponentHydrator
         return $propertyValue;
     }
 
-    private function dehydrateValue(mixed $value, LivePropMetadata|LegacyLivePropMetadata $propMetadata, object $parentObject): mixed
+    private function dehydrateValue(mixed $value, LivePropMetadata $propMetadata, object $parentObject): mixed
     {
         if ($method = $propMetadata->dehydrateMethod()) {
             if (!method_exists($parentObject, $method)) {
@@ -558,41 +509,27 @@ final class LiveComponentHydrator
         }
 
         if (\is_array($value)) {
-            // BC layer when "symfony/type-info" is not available
-            if ($propMetadata instanceof LegacyLivePropMetadata) {
-                if ($propMetadata->collectionValueType() && LegacyType::BUILTIN_TYPE_OBJECT === $propMetadata->collectionValueType()->getBuiltinType()) {
-                    $collectionClass = $propMetadata->collectionValueType()->getClassName();
+            $collectionValueType = null;
+
+            foreach ($propMetadata->getType() ? $propMetadata->getType()->traverse() : [] as $t) {
+                if ($t instanceof CollectionType) {
+                    $collectionValueType = $t->getCollectionValueType();
+
+                    break;
+                }
+            }
+
+            foreach ($collectionValueType ? $collectionValueType->traverse() : [] as $t) {
+                if ($t instanceof ObjectType) {
                     foreach ($value as $key => $objectItem) {
-                        if (!$objectItem instanceof $collectionClass) {
-                            throw new \LogicException(\sprintf('The LiveProp "%s" on component "%s" is an array. We determined the array is full of "%s" objects, but at least one key had a different value of "%s".', $propMetadata->getName(), $parentObject::class, $collectionClass, get_debug_type($objectItem)));
+                        if (!$t->accepts($objectItem)) {
+                            throw new \LogicException(\sprintf('The LiveProp "%s" on component "%s" is an array. We determined the array is full of "%s" objects, but at least one key had a different value of "%s".', $propMetadata->getName(), $parentObject::class, $t->getClassName(), get_debug_type($objectItem)));
                         }
 
-                        $value[$key] = $this->dehydrateObjectValue($objectItem, $collectionClass, $propMetadata->getFormat(), $parentObject);
+                        $value[$key] = $this->dehydrateObjectValue($objectItem, $t->getClassName(), $propMetadata->getFormat(), $parentObject);
                     }
-                }
-            } else {
-                $collectionValueType = null;
 
-                foreach ($propMetadata->getType() ? TypeHelper::traverse($propMetadata->getType()) : [] as $t) {
-                    if ($t instanceof CollectionType) {
-                        $collectionValueType = $t->getCollectionValueType();
-
-                        break;
-                    }
-                }
-
-                foreach ($collectionValueType ? TypeHelper::traverse($collectionValueType) : [] as $t) {
-                    if ($t instanceof ObjectType) {
-                        foreach ($value as $key => $objectItem) {
-                            if (!TypeHelper::accepts($t, $objectItem)) {
-                                throw new \LogicException(\sprintf('The LiveProp "%s" on component "%s" is an array. We determined the array is full of "%s" objects, but at least one key had a different value of "%s".', $propMetadata->getName(), $parentObject::class, $t->getClassName(), get_debug_type($objectItem)));
-                            }
-
-                            $value[$key] = $this->dehydrateObjectValue($objectItem, $t->getClassName(), $propMetadata->getFormat(), $parentObject);
-                        }
-
-                        break;
-                    }
+                    break;
                 }
             }
 
@@ -607,18 +544,7 @@ final class LiveComponentHydrator
             throw new \LogicException(\sprintf('Unable to dehydrate value of type "%s" for property "%s" on component "%s". Change this to a simpler type of an object that can be dehydrated. Or set the hydrateWith/dehydrateWith options in LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer.', get_debug_type($value), $propMetadata->getName(), $parentObject::class));
         }
 
-        // BC layer when "symfony/type-info" is not available
-        if ($propMetadata instanceof LegacyLivePropMetadata) {
-            if (!$propMetadata->getType() || $propMetadata->isBuiltIn()) {
-                throw new \LogicException(\sprintf('The "%s" property on component "%s" is missing its property-type. Add the "%s" type so the object can be hydrated later.', $propMetadata->getName(), $parentObject::class, $value::class));
-            }
-
-            // at this point, we have an object and can assume $propMetadata->getType()
-            // is set correctly (needed for hydration later)
-
-            return $this->dehydrateObjectValue($value, $propMetadata->getType(), $propMetadata->getFormat(), $parentObject);
-        }
-        foreach ($propMetadata->getType() ? TypeHelper::traverse($propMetadata->getType()) : [] as $t) {
+        foreach ($propMetadata->getType() ? $propMetadata->getType()->traverse() : [] as $t) {
             if ($t instanceof ObjectType) {
                 return $this->dehydrateObjectValue($value, $t->getClassName(), $propMetadata->getFormat(), $parentObject);
             }
@@ -749,7 +675,7 @@ final class LiveComponentHydrator
      * we need to set the "name" key on the "options" array, even if "name"
      * isn't explicitly a writable path.
      */
-    private function calculateWritablePaths(LivePropMetadata|LegacyLivePropMetadata $propMetadata, mixed $propertyValue, DehydratedProps $props, string $frontendPropName, string $componentClass): array
+    private function calculateWritablePaths(LivePropMetadata $propMetadata, mixed $propertyValue, DehydratedProps $props, string $frontendPropName, string $componentClass): array
     {
         $writablePaths = $propMetadata->writablePaths();
         if (\is_array($propertyValue) && $propMetadata->isIdentityWritable()) {
@@ -808,7 +734,7 @@ final class LiveComponentHydrator
      * A special hook that will be called if the LiveProp was changed
      * and $onUpdated argument is set on its attribute.
      */
-    private function processOnUpdatedHook(object $component, string $frontendName, LivePropMetadata|LegacyLivePropMetadata $propMetadata, DehydratedProps $dehydratedUpdatedProps, DehydratedProps $dehydratedOriginalProps): void
+    private function processOnUpdatedHook(object $component, string $frontendName, LivePropMetadata $propMetadata, DehydratedProps $dehydratedUpdatedProps, DehydratedProps $dehydratedOriginalProps): void
     {
         $onUpdated = $propMetadata->onUpdated();
         if (\is_string($onUpdated)) {
