@@ -17,7 +17,6 @@ use Symfony\Component\TypeInfo\Type\BuiltinType;
 use Symfony\Component\TypeInfo\TypeIdentifier;
 use Symfony\UX\LiveComponent\Exception\HydrationException;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
-use Symfony\UX\LiveComponent\Metadata\LegacyLivePropMetadata;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadata;
 use Symfony\UX\LiveComponent\Metadata\LivePropMetadata;
 
@@ -49,17 +48,10 @@ final class RequestPropsExtractor
                 $frontendName = $livePropMetadata->calculateFieldName($component, $livePropMetadata->getName());
                 if (null !== ($value = $parameters[$queryMapping->as ?? $frontendName] ?? null)) {
                     if ('' === $value) {
-                        // BC layer when "symfony/type-info" is not available
-                        if ($livePropMetadata instanceof LegacyLivePropMetadata) {
-                            if (!$livePropMetadata->isBuiltIn() || 'array' === $livePropMetadata->getType()) {
-                                $value = [];
-                            }
-                        } else {
-                            $type = $livePropMetadata->getType();
-                            if (null !== $type && (!$type->isSatisfiedBy(static fn (Type $t): bool => $t instanceof BuiltinType) || $type->isIdentifiedBy(TypeIdentifier::ARRAY))) {
-                                // Cast empty string to empty array for objects and arrays
-                                $value = [];
-                            }
+                        $type = $livePropMetadata->getType();
+                        if (null !== $type && (!$type->isSatisfiedBy(static fn (Type $t): bool => $t instanceof BuiltinType) || $type->isIdentifiedBy(TypeIdentifier::ARRAY))) {
+                            // Cast empty string to empty array for objects and arrays
+                            $value = [];
                         }
                     }
 
@@ -80,24 +72,10 @@ final class RequestPropsExtractor
         return $data;
     }
 
-    private function isValueTypeConsistent(mixed $value, LivePropMetadata|LegacyLivePropMetadata $livePropMetadata): bool
+    private function isValueTypeConsistent(mixed $value, LivePropMetadata $livePropMetadata): bool
     {
-        // BC layer when "symfony/type-info" is not available
-        if ($livePropMetadata instanceof LegacyLivePropMetadata) {
-            $propType = $livePropMetadata->getType();
-
-            if ($livePropMetadata->allowsNull() && null === $value) {
-                return true;
-            }
-
-            return
-                \in_array($propType, [null, 'mixed'])
-                || $livePropMetadata->isBuiltIn() && ('\is_'.$propType)($value)
-                || !$livePropMetadata->isBuiltIn() && $value instanceof $propType;
-        }
-
         $type = $livePropMetadata->getType();
 
-        return null === $type || TypeHelper::accepts($type, $value);
+        return null === $type || $type->accepts($value);
     }
 }
