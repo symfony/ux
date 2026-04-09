@@ -34,7 +34,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php-version: ['8.2', '8.3', '8.4', '8.5']
+                php-version: ['8.4', '8.5']
                 dependency-version: ['']
                 symfony-version: ['']
                 minimum-stability: ['stable']
@@ -44,17 +44,17 @@ jobs:
                       php-version: '8.5'
 
                     # lowest deps
-                    - php-version: '8.2'
+                    - php-version: '8.4'
                       dependency-version: 'lowest'
 
                     # 6.4 LTS
-                    - php-version: '8.2'
+                    - php-version: '8.4'
                       symfony-version: '6.4.*'
 
                     # 7.4 LTS
-                    - php-version: '8.2'
+                    - php-version: '8.4'
                       symfony-version: '7.4.*'
-                    - php-version: '8.2'
+                    - php-version: '8.4'
                       symfony-version: '7.4.*'
                       os: 'windows-latest'
 

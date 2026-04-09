@@ -6,7 +6,7 @@ upgrade, make sure to resolve all deprecation notices. Read more about this in
 the [Symfony documentation](https://symfony.com/doc/6.4/setup/upgrade_major.html#upgrade-major-symfony-deprecations).
 
 > [!NOTE]
-> Requires PHP `8.2` or higher.
+> Requires PHP `8.4` or higher.
 >
 > Requires Symfony `6.4` or higher.
 

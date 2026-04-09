@@ -111,7 +111,7 @@ class Kernel extends BaseKernel
                 }
             }
 
-            if (\PHP_VERSION_ID >= 80400 && version_compare($doctrineBundleVersion, '2.15.0', '>=') && version_compare($doctrineBundleVersion, '4.0.0', '<')) {
+            if (version_compare($doctrineBundleVersion, '2.15.0', '>=') && version_compare($doctrineBundleVersion, '4.0.0', '<')) {
                 $doctrineConfig['orm']['enable_native_lazy_objects'] = true;
             }
         }
@@ -203,17 +203,17 @@ class Kernel extends BaseKernel
     public function books(Request $request, EntityManagerInterface $doctrine, Environment $twig): Response
     {
         if ($request->isMethod('POST')) {
-            if ($id = $request->get('id')) {
+            if ($id = $request->request->get('id')) {
                 if (!($book = $doctrine->find(Book::class, $id))) {
                     throw new NotFoundHttpException();
                 }
             } else {
                 $book = new Book();
             }
-            if ($title = $request->get('title')) {
+            if ($title = $request->request->getString('title')) {
                 $book->title = $title;
             }
-            if ($remove = $request->get('remove')) {
+            if ($request->request->getBoolean('remove')) {
                 $doctrine->remove($book);
             } else {
                 $doctrine->persist($book);
@@ -228,21 +228,21 @@ class Kernel extends BaseKernel
     public function songs(Request $request, EntityManagerInterface $doctrine, Environment $twig): Response
     {
         if ($request->isMethod('POST')) {
-            if ($id = $request->get('id')) {
+            if ($id = $request->request->get('id')) {
                 if (!($song = $doctrine->find(Song::class, $id))) {
                     throw new NotFoundHttpException();
                 }
             } else {
                 $song = new Song();
             }
-            if ($title = $request->get('title')) {
+            if ($title = $request->request->getString('title')) {
                 $song->title = $title;
-                $artistId = $request->get('artistId');
+                $artistId = $request->request->get('artistId');
                 if ($artistId > 0) {
                     $song->artist = $doctrine->find(Artist::class, $artistId);
                 }
             }
-            if ($request->get('remove')) {
+            if ($request->request->get('remove')) {
                 $doctrine->remove($song);
             } else {
                 $doctrine->persist($song);
@@ -257,17 +257,17 @@ class Kernel extends BaseKernel
     public function artists(Request $request, EntityManagerInterface $doctrine, Environment $twig): Response
     {
         if ($request->isMethod('POST')) {
-            if ($id = $request->get('id')) {
+            if ($id = $request->request->get('id')) {
                 if (!($artist = $doctrine->find(Artist::class, $id))) {
                     throw new NotFoundHttpException();
                 }
             } else {
                 $artist = new Artist();
             }
-            if ($name = $request->get('name')) {
+            if ($name = $request->request->getString('name')) {
                 $artist->name = $name;
             }
-            if ($remove = $request->get('remove')) {
+            if ($request->request->get('remove')) {
                 $doctrine->remove($artist);
             } else {
                 $doctrine->persist($artist);
@@ -281,7 +281,7 @@ class Kernel extends BaseKernel
 
     public function artist(Request $request, EntityManagerInterface $doctrine, Environment $twig): Response
     {
-        $id = $request->get('id');
+        $id = $request->request->get('id');
 
         if (!($artist = $doctrine->find(Artist::class, $id))) {
             throw new NotFoundHttpException();
@@ -296,7 +296,7 @@ class Kernel extends BaseKernel
         if ($request->isMethod('POST')) {
             // on first post, create the objects
             // on second, update the artist
-            $id = $request->get('id');
+            $id = $request->request->get('id');
             if (!$id) {
                 $artist = new Artist();
                 $artist->name = 'testing artist';

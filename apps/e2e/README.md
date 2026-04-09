@@ -8,7 +8,7 @@ to ensure they work as expected for multiple Symfony versions and various browse
 ## Requirements
 
 - Symfony CLI
-- PHP 8.2 or higher
+- PHP 8.4 or higher
 - Docker and Docker Compose
 - Composer
 
