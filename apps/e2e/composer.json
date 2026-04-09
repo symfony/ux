@@ -18,7 +18,7 @@
         ]
     },
     "require": {
-        "php": ">=8.2.0",
+        "php": ">=8.4.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/dbal": "^3.10.1|^4.4.3",

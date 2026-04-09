@@ -28,7 +28,7 @@
         }
     },
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.4",
         "symfony/stimulus-bundle": "^2.9.1|^3.0"
     },
     "require-dev": {

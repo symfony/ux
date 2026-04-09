@@ -41,7 +41,7 @@ $ git remote add upstream git@github.com:symfony/ux.git
 
 To set up the development environment, you need the following tools:
 
-- **[PHP](https://www.php.net/downloads.php) 8.2 or higher** - Required for running Symfony components
+- **[PHP](https://www.php.net/downloads.php) 8.4 or higher** - Required for running Symfony components
 - **[Composer](https://getcomposer.org/download/)** - PHP dependency manager
 - **[Node.js](https://nodejs.org/en/download/package-manager) 22.18 or higher** - Required for asset compilation
 - **[Corepack](https://github.com/nodejs/corepack)** - Package manager manager (comes with Node.js 16+)

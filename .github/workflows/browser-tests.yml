@@ -56,7 +56,7 @@ jobs:
 
             - uses: shivammathur/setup-php@690cb7c9d81dbfe51eba732cfca0a00ca42db777
               with:
-                  php-version: ${{ matrix.symfony >= '8.0' && '8.4' || '8.2' }}
+                  php-version: ${{ matrix.symfony >= '8.0' && '8.5' || '8.4' }}
                   tools: symfony-cli, flex
 
             - name: Install root PHP dependencies
