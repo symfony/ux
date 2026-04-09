@@ -37,9 +37,9 @@ jobs:
                       dependency-version: 'lowest'
                     # LTS version of Symfony
                     - php-version: '8.4'
-                      symfony-version: '6.4.*'
+                      symfony-version: '7.4.*'
         env:
-            SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=5.4' }}
+            SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=7.4' }}
         services:
             mercure:
                 image: dunglas/mercure

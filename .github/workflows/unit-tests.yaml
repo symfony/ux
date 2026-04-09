@@ -47,10 +47,6 @@ jobs:
                     - php-version: '8.4'
                       dependency-version: 'lowest'
 
-                    # 6.4 LTS
-                    - php-version: '8.4'
-                      symfony-version: '6.4.*'
-
                     # 7.4 LTS
                     - php-version: '8.4'
                       symfony-version: '7.4.*'
@@ -64,8 +60,12 @@ jobs:
                     - php-version: '8.5'
                       symfony-version: '8.0.*'
 
+                    - php-version: '8.5'
+                      symfony-version: '8.0.*'
+                      os: 'windows-latest'
+
         env:
-            SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=6.4' }}
+            SYMFONY_REQUIRE: ${{ matrix.symfony-version || '>=7.4' }}
             # https://github.com/spatie/phpunit-snapshot-assertions#usage-in-ci
             CREATE_SNAPSHOTS: false
         steps:

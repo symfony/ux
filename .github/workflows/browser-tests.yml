@@ -30,7 +30,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                symfony: ['6.4', '7.4', '8.0']
+                symfony: ['7.4', '8.0']
         env:
             SYMFONY_REQUIRE: '${{ matrix.symfony }}.*'
         steps:

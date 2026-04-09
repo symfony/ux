@@ -2,7 +2,7 @@
 
 ## 3.0.0
 
-- Minimum required Symfony version is now 6.4
+- Minimum required Symfony version is now 7.4
 - Minimum required PHP version is now 8.4
 - The configuration `twig_component.defaults` could not be nullable anymore
 - Remove method `PreCreateForRenderEvent::getProps()` in favor of `PreCreateForRenderEvent::getInputProps()`

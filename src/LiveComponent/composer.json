@@ -28,8 +28,8 @@
     "require": {
         "php": ">=8.4",
         "symfony/deprecation-contracts": "^2.5|^3.0",
-        "symfony/property-access": "^6.4|^7.0|^8.0",
-        "symfony/property-info": "^6.4|^7.0|^8.0",
+        "symfony/property-access": "^7.4|^8.0",
+        "symfony/property-info": "^7.4|^8.0",
         "symfony/stimulus-bundle": "^2.9|^3.0",
         "symfony/ux-twig-component": "^2.33.0|^3.0",
         "twig/twig": "^3.10.3"
@@ -42,24 +42,23 @@
         "doctrine/persistence": "^2.5.2|^3.0|^4.0",
         "phpdocumentor/reflection-docblock": "^5.6.2",
         "phpunit/phpunit": "^11.1|^12.0",
-        "symfony/config": "^6.4|^7.0|^8.0",
-        "symfony/dependency-injection": "^6.4|^7.0|^8.0",
-        "symfony/expression-language": "^6.4|^7.0|^8.0",
-        "symfony/form": "^6.4|^7.0|^8.0",
-        "symfony/framework-bundle": "^6.4|^7.0|^8.0",
-        "symfony/options-resolver": "^6.4|^7.0|^8.0",
-        "symfony/security-bundle": "^6.4|^7.0|^8.0",
-        "symfony/serializer": "^6.4|^7.0|^8.0",
-        "symfony/twig-bundle": "^6.4|^7.0|^8.0",
-        "symfony/uid": "^6.4|^7.0|^8.0",
-        "symfony/validator": "^6.4|^7.0|^8.0",
+        "symfony/config": "^7.4|^8.0",
+        "symfony/dependency-injection": "^7.4|^8.0",
+        "symfony/expression-language": "^7.4|^8.0",
+        "symfony/form": "^7.4|^8.0",
+        "symfony/framework-bundle": "^7.4|^8.0",
+        "symfony/options-resolver": "^7.4|^8.0",
+        "symfony/security-bundle": "^7.4|^8.0",
+        "symfony/serializer": "^7.4|^8.0",
+        "symfony/twig-bundle": "^7.4|^8.0",
+        "symfony/uid": "^7.4|^8.0",
+        "symfony/validator": "^7.4|^8.0",
         "zenstruck/browser": "^1.9",
-        "zenstruck/foundry": "^2.0"
+        "zenstruck/foundry": "^2.7"
     },
     "conflict": {
         "symfony/config": "<6.4",
-        "symfony/type-info": "<7.2",
-        "symfony/property-info": "~7.0.0"
+        "symfony/type-info": "<7.2"
     },
     "config": {
         "sort-packages": true
