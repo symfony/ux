@@ -36,14 +36,14 @@
     },
     "require": {
         "php": ">=8.4",
-        "symfony/framework-bundle": "^6.4|^7.0|^8.0",
-        "symfony/twig-bundle": "^6.4|^7.0|^8.0"
+        "symfony/framework-bundle": "^7.4|^8.0",
+        "symfony/twig-bundle": "^7.4|^8.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.1|^12.0",
-        "symfony/asset-mapper": "^6.4|^7.0|^8.0",
-        "symfony/console": "^6.4|^7.0|^8.0",
-        "symfony/http-client": "^6.4|^7.0|^8.0",
+        "symfony/asset-mapper": "^7.4|^8.0",
+        "symfony/console": "^7.4|^8.0",
+        "symfony/http-client": "^7.4|^8.0",
         "symfony/ux-twig-component": "^2.14|^3.0",
         "zenstruck/console-test": "^1.5",
         "psr/log": "^2|^3"

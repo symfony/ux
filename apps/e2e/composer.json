@@ -26,23 +26,23 @@
         "doctrine/orm": "^3.5.2",
         "phpdocumentor/reflection-docblock": "^5.6.2",
         "phpstan/phpdoc-parser": "^2.2",
-        "symfony/asset": "6.4.*|7.4.*|8.0.*",
-        "symfony/asset-mapper": "6.4.*|7.4.*|8.0.*",
-        "symfony/console": "6.4.*|7.4.*|8.0.*",
-        "symfony/dotenv": "6.4.*|7.4.*|8.0.*",
-        "symfony/expression-language": "6.4.*|7.4.*|8.0.*",
+        "symfony/asset": "7.4.*|8.0.*",
+        "symfony/asset-mapper": "7.4.*|8.0.*",
+        "symfony/console": "7.4.*|8.0.*",
+        "symfony/dotenv": "7.4.*|8.0.*",
+        "symfony/expression-language": "7.4.*|8.0.*",
         "symfony/flex": "^2.8.1",
-        "symfony/form": "6.4.*|7.4.*|8.0.*",
-        "symfony/framework-bundle": "6.4.*|7.4.*|8.0.*",
-        "symfony/http-client": "6.4.*|7.4.*|8.0.*",
-        "symfony/intl": "6.4.*|7.4.*|8.0.*",
+        "symfony/form": "7.4.*|8.0.*",
+        "symfony/framework-bundle": "7.4.*|8.0.*",
+        "symfony/http-client": "7.4.*|8.0.*",
+        "symfony/intl": "7.4.*|8.0.*",
         "symfony/monolog-bundle": "^3.10|^4.0",
-        "symfony/property-access": "6.4.*|7.4.*|8.0.*",
-        "symfony/property-info": "6.4.*|7.4.*|8.0.*",
-        "symfony/runtime": "6.4.*|7.4.*|8.0.*",
-        "symfony/serializer": "6.4.*|7.4.*|8.0.*",
+        "symfony/property-access": "7.4.*|8.0.*",
+        "symfony/property-info": "7.4.*|8.0.*",
+        "symfony/runtime": "7.4.*|8.0.*",
+        "symfony/serializer": "7.4.*|8.0.*",
         "symfony/stimulus-bundle": "3.x-dev",
-        "symfony/twig-bundle": "6.4.*|7.4.*|8.0.*",
+        "symfony/twig-bundle": "7.4.*|8.0.*",
         "symfony/ux-autocomplete": "3.x-dev",
         "symfony/ux-chartjs": "3.x-dev",
         "symfony/ux-cropperjs": "3.x-dev",
@@ -59,16 +59,16 @@
         "symfony/ux-turbo": "3.x-dev",
         "symfony/ux-twig-component": "3.x-dev",
         "symfony/ux-vue": "3.x-dev",
-        "symfony/yaml": "6.4.*|7.4.*|8.0.*",
+        "symfony/yaml": "7.4.*|8.0.*",
         "symfonycasts/dynamic-forms": "^0.2",
         "twig/extra-bundle": "^3.21",
         "twig/twig": "^3.21.1"
     },
     "require-dev": {
-        "symfony/debug-bundle": "6.4.*|7.4.*|8.0.*",
+        "symfony/debug-bundle": "7.4.*|8.0.*",
         "symfony/maker-bundle": "^1.64",
-        "symfony/stopwatch": "6.4.*|7.4.*|8.0.*",
-        "symfony/web-profiler-bundle": "6.4.*|7.4.*|8.0.*",
+        "symfony/stopwatch": "7.4.*|8.0.*",
+        "symfony/web-profiler-bundle": "7.4.*|8.0.*",
         "zenstruck/foundry": "^2.8"
     },
     "config": {
@@ -116,7 +116,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.4.*|7.4.*|8.0.*"
+            "require": "7.4.*|8.0.*"
         }
     }
 }

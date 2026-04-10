@@ -33,11 +33,11 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^11.1|^12.0",
-        "symfony/asset-mapper": "^6.4|^7.0|^8.0",
-        "symfony/finder": "^6.4|^7.0|^8.0",
-        "symfony/framework-bundle": "^6.4|^7.0|^8.0",
-        "symfony/twig-bundle": "^6.4|^7.0|^8.0",
-        "symfony/var-dumper": "^6.4|^7.0|^8.0"
+        "symfony/asset-mapper": "^7.4|^8.0",
+        "symfony/finder": "^7.4|^8.0",
+        "symfony/framework-bundle": "^7.4|^8.0",
+        "symfony/twig-bundle": "^7.4|^8.0",
+        "symfony/var-dumper": "^7.4|^8.0"
     },
     "extra": {
         "thanks": {

@@ -29,16 +29,16 @@
     },
     "require": {
         "php": ">=8.4",
-        "symfony/console": "^6.4|^7.0|^8.0",
-        "symfony/filesystem": "^6.4|^7.0|^8.0",
-        "symfony/string": "^6.4|^7.0|^8.0",
-        "symfony/translation": "^6.4|^7.0|^8.0"
+        "symfony/console": "^7.4|^8.0",
+        "symfony/filesystem": "^7.4|^8.0",
+        "symfony/string": "^7.4|^8.0",
+        "symfony/translation": "^7.4|^8.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.1|^12.0",
-        "symfony/framework-bundle": "^6.4|^7.0|^8.0",
-        "symfony/var-dumper": "^6.4|^7.0|^8.0",
-        "symfony/yaml": "^6.4|^7.0|^8.0"
+        "symfony/framework-bundle": "^7.4|^8.0",
+        "symfony/var-dumper": "^7.4|^8.0",
+        "symfony/yaml": "^7.4|^8.0"
     },
     "extra": {
         "thanks": {

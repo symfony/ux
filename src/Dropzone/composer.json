@@ -29,17 +29,17 @@
     },
     "require": {
         "php": ">=8.4",
-        "symfony/config": "^6.4|^7.0|^8.0",
-        "symfony/dependency-injection": "^6.4|^7.0|^8.0",
-        "symfony/form": "^6.4|^7.0|^8.0",
-        "symfony/http-kernel": "^6.4|^7.0|^8.0",
-        "symfony/options-resolver": "^6.4|^7.0|^8.0"
+        "symfony/config": "^7.4|^8.0",
+        "symfony/dependency-injection": "^7.4|^8.0",
+        "symfony/form": "^7.4|^8.0",
+        "symfony/http-kernel": "^7.4|^8.0",
+        "symfony/options-resolver": "^7.4|^8.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.1|^12.0",
-        "symfony/framework-bundle": "^6.4|^7.0|^8.0",
-        "symfony/twig-bundle": "^6.4|^7.0|^8.0",
-        "symfony/var-dumper": "^6.4|^7.0|^8.0",
+        "symfony/framework-bundle": "^7.4|^8.0",
+        "symfony/twig-bundle": "^7.4|^8.0",
+        "symfony/var-dumper": "^7.4|^8.0",
         "twig/twig": "^2.14.7|^3.0.4"
     },
     "extra": {

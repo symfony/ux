@@ -2,7 +2,7 @@
 
 ## 3.0.0
 
-- Minimum required Symfony version is now 6.4
+- Minimum required Symfony version is now 7.4
 - Minimum required PHP version is now 8.4
 - Remove old compatibility layer with deprecated `StimulusTwigExtension` from WebpackEncoreBundle ^1.0, use StimulusBundle instead
 - Remove BC layer for `TurboStreamListenRendererInterface::renderTurboStreamListen()` `$eventSourceOptions` parameter

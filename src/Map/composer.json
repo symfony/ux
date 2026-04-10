@@ -36,10 +36,10 @@
         "symfony/stimulus-bundle": "^2.18.1|^3.0"
     },
     "require-dev": {
-        "symfony/asset-mapper": "^6.4|^7.0|^8.0",
-        "symfony/framework-bundle": "^6.4|^7.0|^8.0",
+        "symfony/asset-mapper": "^7.4|^8.0",
+        "symfony/framework-bundle": "^7.4|^8.0",
         "phpunit/phpunit": "^11.1|^12.0",
-        "symfony/twig-bundle": "^6.4|^7.0|^8.0",
+        "symfony/twig-bundle": "^7.4|^8.0",
         "symfony/ux-twig-component": "^2.18|^3.0",
         "symfony/ux-icons": "^2.18|^3.0",
         "spatie/phpunit-snapshot-assertions": "^5.2.3"

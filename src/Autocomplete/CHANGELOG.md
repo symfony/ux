@@ -2,7 +2,7 @@
 
 ## 3.0.0
 
-- Minimum required Symfony version is now 6.4
+- Minimum required Symfony version is now 7.4
 - Minimum required PHP version is now 8.4
 - Remove `ParentEntityAutocompleteType` in favor of `BaseEntityAutocompleteType`
 - Remove `ExtraLazyChoiceLoader` in favor of `Symfony\Component\Form\ChoiceList\Loader\LazyChoiceLoader` from Symfony Form >=7.2
