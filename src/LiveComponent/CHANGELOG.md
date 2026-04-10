@@ -5,6 +5,8 @@
 - Minimum required Symfony version is now 7.4
 - Minimum required PHP version is now 8.4
 - Remove `csrf` argument from `AsLiveComponent` in favor of same-origin/CORS
+- Remove compatibility layer with Symfony PropertyInfo <7.1
+- Remove `LegacyLivePropMetadata`
 
 ## 2.35
 
