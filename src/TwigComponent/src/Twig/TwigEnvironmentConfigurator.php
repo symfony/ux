@@ -19,6 +19,8 @@ use Twig\Runtime\EscaperRuntime;
 
 /**
  * @final
+ *
+ * @internal since symfony/ux-twig-component 2.36, this class will be removed once symfony/twig-bundle >= 8.1 is required
  */
 class TwigEnvironmentConfigurator
 {
@@ -30,8 +32,6 @@ class TwigEnvironmentConfigurator
     public function configure(Environment $environment): void
     {
         $this->decorated->configure($environment);
-
-        $environment->setLexer(new ComponentLexer($environment));
 
         if (class_exists(EscaperRuntime::class)) {
             $environment->getRuntime(EscaperRuntime::class)->addSafeClass(ComponentAttributes::class, ['html']);

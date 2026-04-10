@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\DependencyInjection;
 
+use Symfony\Bundle\TwigBundle\DependencyInjection\Compiler\SafeClassPass;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -30,6 +31,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\CacheWarmer\TwigComponentCacheWarmer;
 use Symfony\UX\TwigComponent\Command\TwigComponentDebugCommand;
+use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentProperties;
 use Symfony\UX\TwigComponent\ComponentRenderer;
@@ -123,11 +125,17 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
             ->addTag('twig.runtime')
         ;
 
-        $container->register('ux.twig_component.twig.lexer', ComponentLexer::class);
+        $container->register('ux.twig_component.twig.lexer', ComponentLexer::class)
+            ->setArguments([new Reference('twig')]);
 
-        $container->register('ux.twig_component.twig.environment_configurator', TwigEnvironmentConfigurator::class)
-            ->setDecoratedService(new Reference('twig.configurator.environment'))
-            ->setArguments([new Reference('ux.twig_component.twig.environment_configurator.inner')]);
+        if (class_exists(SafeClassPass::class)) {
+            $container->register(ComponentAttributes::class)
+                ->addResourceTag('twig.safe_class', ['strategy' => 'html']);
+        } else {
+            $container->register('ux.twig_component.twig.environment_configurator', TwigEnvironmentConfigurator::class)
+                ->setDecoratedService(new Reference('twig.configurator.environment'))
+                ->setArguments([new Reference('ux.twig_component.twig.environment_configurator.inner')]);
+        }
 
         $container->register('ux.twig_component.command.debug', TwigComponentDebugCommand::class)
             ->setArguments([

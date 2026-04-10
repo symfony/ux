@@ -28,8 +28,12 @@ final class TwigComponentPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        $componentConfig = [];
+        if ($container->hasDefinition('twig') && $container->hasDefinition('ux.twig_component.twig.lexer')) {
+            $container->getDefinition('twig')
+                ->addMethodCall('setLexer', [new Reference('ux.twig_component.twig.lexer')]);
+        }
 
+        $componentConfig = [];
         $componentReferences = [];
         $componentClassMap = [];
         $componentNames = [];
