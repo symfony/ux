@@ -1,0 +1,114 @@
+<!--
+- Kit: Flowbite v4
+- Component: Textarea
+- Code:
+```twig
+<form class="w-full">
+    <div class="w-full mb-4 border border-default-medium rounded-base bg-neutral-secondary-medium shadow-xs">
+        <div class="flex items-center justify-between px-3 py-2 border-b border-default-medium">
+            <div class="flex flex-wrap items-center divide-default-medium sm:divide-x sm:rtl:divide-x-reverse">
+                <div class="flex items-center space-x-1 rtl:space-x-reverse sm:pe-4">
+                    <twig:Button type="button" size="icon-sm" variant="ghost" class="shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading">
+                        <twig:ux:icon name="flowbite:paper-clip-outline" class="size-5" aria-hidden="true"/>
+                        <span class="sr-only">Attach file</span>
+                    </twig:Button>
+                    <twig:Button type="button" size="icon-sm" variant="ghost" class="shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading">
+                        <twig:ux:icon name="flowbite:map-pin-alt-outline" class="size-5" aria-hidden="true"/>
+                        <span class="sr-only">Embed map</span>
+                    </twig:Button>
+                    <twig:Button type="button" size="icon-sm" variant="ghost" class="shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading">
+                        <twig:ux:icon name="flowbite:file-image-outline" class="size-5" aria-hidden="true"/>
+                        <span class="sr-only">Upload image</span>
+                    </twig:Button>
+                    <twig:Button type="button" size="icon-sm" variant="ghost" class="shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading">
+                        <twig:ux:icon name="flowbite:file-code-outline" class="size-5" aria-hidden="true"/>
+                        <span class="sr-only">Format code</span>
+                    </twig:Button>
+                    <twig:Button type="button" size="icon-sm" variant="ghost" class="shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading">
+                        <twig:ux:icon name="flowbite:face-grin-outline" class="size-5" aria-hidden="true"/>
+                        <span class="sr-only">Add emoji</span>
+                    </twig:Button>
+                </div>
+                <div class="flex flex-wrap items-center space-x-1 rtl:space-x-reverse sm:ps-4">
+                    <twig:Button type="button" size="icon-sm" variant="ghost" class="shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading">
+                        <twig:ux:icon name="flowbite:ordered-list-outline" class="size-5" aria-hidden="true"/>
+                        <span class="sr-only">Add list</span>
+                    </twig:Button>
+                    <twig:Button type="button" size="icon-sm" variant="ghost" class="shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading">
+                        <twig:ux:icon name="flowbite:adjustments-vertical-outline" class="size-5"
+                                      aria-hidden="true"/>
+                        <span class="sr-only">Settings</span>
+                    </twig:Button>
+                    <twig:Button type="button" size="icon-sm" variant="ghost" class="shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading">
+                        <twig:ux:icon name="flowbite:calendar-edit-outline" class="size-5" aria-hidden="true"/>
+                        <span class="sr-only">Timeline</span>
+                    </twig:Button>
+                    <twig:Button type="button" size="icon-sm" variant="ghost" class="shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading">
+                        <twig:ux:icon name="flowbite:download-outline" class="size-5" aria-hidden="true"/>
+                        <span class="sr-only">Download</span>
+                    </twig:Button>
+                </div>
+            </div>
+            <twig:Button type="button" size="icon-sm" variant="ghost" class="shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading">
+                <twig:ux:icon name="flowbite:expand-outline" class="size-5" aria-hidden="true"/>
+                <span class="sr-only">Full screen</span>
+            </twig:Button>
+        </div>
+        <div class="px-4 py-2 bg-neutral-secondary-medium rounded-b-base">
+            <label for="editor" class="sr-only">Publish post</label>
+            <twig:Textarea id="editor" rows="8" class="px-0 border-0 shadow-none focus:ring-0"
+                           placeholder="Write an article..." required/>
+        </div>
+    </div>
+    <twig:Button type="submit">Publish post</twig:Button>
+</form>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<form class="w-full">
+    <div class="w-full mb-4 border border-default-medium rounded-base bg-neutral-secondary-medium shadow-xs">
+        <div class="flex items-center justify-between px-3 py-2 border-b border-default-medium">
+            <div class="flex flex-wrap items-center divide-default-medium sm:divide-x sm:rtl:divide-x-reverse">
+                <div class="flex items-center space-x-1 rtl:space-x-reverse sm:pe-4">
+                    <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none bg-transparent focus:ring-neutral-tertiary shadow-none w-9 h-9 rounded-base shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8v8a5 5 0 1 0 10 0V6.5a3.5 3.5 0 1 0-7 0V15a2 2 0 0 0 4 0V8"></path></svg>
+                        <span class="sr-only">Attach file</span>
+                    </button>
+                    <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none bg-transparent focus:ring-neutral-tertiary shadow-none w-9 h-9 rounded-base shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 13a3 3 0 1 0 0-6a3 3 0 0 0 0 6"></path><path d="M17.8 13.938h-.011a7 7 0 1 0-11.464.144h-.016l.14.171q.15.19.3.371L12 21l5.13-6.248q.291-.314.54-.659z"></path></g></svg>
+                        <span class="sr-only">Embed map</span>
+                    </button>
+                    <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none bg-transparent focus:ring-neutral-tertiary shadow-none w-9 h-9 rounded-base shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><g fill="none"><path fill="currentColor" d="M16 18H8l2.5-6l2 4l1.5-2zm-1-8.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0"></path><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m14-4v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1M8 18h8l-2-4l-1.5 2l-2-4zm7-8.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0"></path></g></svg>
+                        <span class="sr-only">Upload image</span>
+                    </button>
+                    <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none bg-transparent focus:ring-neutral-tertiary shadow-none w-9 h-9 rounded-base shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m5 4l-2 2l2 2m4-4l2 2l-2 2m5-12v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1"></path></svg>
+                        <span class="sr-only">Format code</span>
+                    </button>
+                    <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none bg-transparent focus:ring-neutral-tertiary shadow-none w-9 h-9 rounded-base shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.99 9H15M8.99 9H9m12 3a9 9 0 1 1-18 0a9 9 0 0 1 18 0M7 13c0 1 .507 2.397 1.494 3.216a5.5 5.5 0 0 0 7.022 0C16.503 15.397 17 14 17 13c0 0-1.99 1-4.995 1S7 13 7 13"></path></svg>
+                        <span class="sr-only">Add emoji</span>
+                    </button>
+                </div>
+                <div class="flex flex-wrap items-center space-x-1 rtl:space-x-reverse sm:ps-4">
+                    <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none bg-transparent focus:ring-neutral-tertiary shadow-none w-9 h-9 rounded-base shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6h8m-8 6h8m-8 6h8M4 16a2 2 0 1 1 3.321 1.5L4 20h5M4 5l2-1v6m-2 0h4"></path></svg>
+                        <span class="sr-only">Add list</span>
+                    </button>
+                    <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none bg-transparent focus:ring-neutral-tertiary shadow-none w-9 h-9 rounded-base shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M6 4v10m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v2m6-16v2m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v10m6-16v10m0 0a2 2 0 1 0 0 4m0-4a2 2 0 1 1 0 4m0 0v2"></path></svg>
+                        <span class="sr-only">Settings</span>
+                    </button>
+                    <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none bg-transparent focus:ring-neutral-tertiary shadow-none w-9 h-9 rounded-base shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m11.5 11.5l2.071 1.994M4 10h5m11 0h-1.5M12 7V4M7 7V4m10 3V4m-7 13H8v-2l5.227-5.292a1.46 1.46 0 0 1 2.065 2.065zm-5 3h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1"></path></svg>
+                        <span class="sr-only">Timeline</span>
+                    </button>
+                    <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none bg-transparent focus:ring-neutral-tertiary shadow-none w-9 h-9 rounded-base shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V4M7 14H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-2m-1-5l-4 5l-4-5m9 8h.01"></path></svg>
+                        <span class="sr-only">Download</span>
+                    </button>
+                </div>
+            </div>
+            <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none bg-transparent focus:ring-neutral-tertiary shadow-none w-9 h-9 rounded-base shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 4H4m0 0v4m0-4l5 5m7-5h4m0 0v4m0-4l-5 5M8 20H4m0 0v-4m0 4l5-5m7 5h4m0 0v-4m0 4l-5-5"></path></svg>
+                <span class="sr-only">Full screen</span>
+            </button>
+        </div>
+        <div class="px-4 py-2 bg-neutral-secondary-medium rounded-b-base">
+            <label for="editor" class="sr-only">Publish post</label>
+            <textarea class="bg-neutral-secondary-medium border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full p-3.5 placeholder:text-body px-0 border-0 shadow-none focus:ring-0" id="editor" rows="8" placeholder="Write an article..." required></textarea>
+
+        </div>
+    </div>
+    <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs text-white bg-brand hover:bg-brand-strong focus:ring-brand-medium text-sm px-4 py-2.5 rounded-base" type="submit">Publish post</button>
+</form>

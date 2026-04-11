@@ -3,7 +3,14 @@
 - Component: Textarea
 - Code:
 ```twig
-<twig:Textarea placeholder="Type your message here." />
+<form class="w-full">
+    <twig:Label for="message" class="mb-2.5">Your message</twig:Label>
+    <twig:Textarea id="message" rows="4" placeholder="Write your thoughts here..." />
+</form>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<textarea class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full p-3.5 shadow-xs placeholder:text-body" placeholder="Type your message here."></textarea>
+<form class="w-full">
+    <label class="block text-sm font-medium text-heading mb-2.5" for="message">Your message</label>
+    <textarea class="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full p-3.5 shadow-xs placeholder:text-body" id="message" rows="4" placeholder="Write your thoughts here..."></textarea>
+
+</form>

@@ -1,0 +1,62 @@
+<!--
+- Kit: Flowbite v4
+- Component: Textarea
+- Code:
+```twig
+<form class="w-full">
+    <div class="w-full mb-4 border border-default-medium rounded-base bg-neutral-secondary-medium shadow-xs">
+        <div class="px-4 py-2 bg-neutral-secondary-medium rounded-t-base">
+            <label for="comment" class="sr-only">Your comment</label>
+            <twig:Textarea id="comment" rows="4" class="px-0 border-0 shadow-none focus:ring-0" placeholder="Write a comment..." required />
+        </div>
+        <div class="flex items-center px-3 py-2 border-t border-default-medium">
+            <twig:Button type="submit" size="sm">Post comment</twig:Button>
+            <div class="flex ps-0 space-x-1 rtl:space-x-reverse sm:ps-2">
+                <twig:Button type="button" size="icon-sm" variant="ghost" class="shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading">
+                    <twig:ux:icon name="flowbite:face-grin-outline" class="size-5" aria-hidden="true" />
+                    <span class="sr-only">Add emoji</span>
+                </twig:Button>
+                <twig:Button type="button" size="icon-sm" variant="ghost" class="shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading">
+                    <twig:ux:icon name="flowbite:paper-clip-outline" class="size-5" aria-hidden="true" />
+                    <span class="sr-only">Attach file</span>
+                </twig:Button>
+                <twig:Button type="button" size="icon-sm" variant="ghost" class="shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading">
+                    <twig:ux:icon name="flowbite:map-pin-alt-outline" class="size-5" aria-hidden="true" />
+                    <span class="sr-only">Set location</span>
+                </twig:Button>
+                <twig:Button type="button" size="icon-sm" variant="ghost" class="shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading">
+                    <twig:ux:icon name="flowbite:file-image-outline" class="size-5" aria-hidden="true" />
+                    <span class="sr-only">Upload image</span>
+                </twig:Button>
+            </div>
+        </div>
+    </div>
+</form>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<form class="w-full">
+    <div class="w-full mb-4 border border-default-medium rounded-base bg-neutral-secondary-medium shadow-xs">
+        <div class="px-4 py-2 bg-neutral-secondary-medium rounded-t-base">
+            <label for="comment" class="sr-only">Your comment</label>
+            <textarea class="bg-neutral-secondary-medium border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full p-3.5 placeholder:text-body px-0 border-0 shadow-none focus:ring-0" id="comment" rows="4" placeholder="Write a comment..." required></textarea>
+
+        </div>
+        <div class="flex items-center px-3 py-2 border-t border-default-medium">
+            <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs text-white bg-brand hover:bg-brand-strong focus:ring-brand-medium text-sm px-3 py-2 rounded-base" type="submit">Post comment</button>
+            <div class="flex ps-0 space-x-1 rtl:space-x-reverse sm:ps-2">
+                <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none bg-transparent focus:ring-neutral-tertiary shadow-none w-9 h-9 rounded-base shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.99 9H15M8.99 9H9m12 3a9 9 0 1 1-18 0a9 9 0 0 1 18 0M7 13c0 1 .507 2.397 1.494 3.216a5.5 5.5 0 0 0 7.022 0C16.503 15.397 17 14 17 13c0 0-1.99 1-4.995 1S7 13 7 13"></path></svg>
+                    <span class="sr-only">Add emoji</span>
+                </button>
+                <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none bg-transparent focus:ring-neutral-tertiary shadow-none w-9 h-9 rounded-base shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8v8a5 5 0 1 0 10 0V6.5a3.5 3.5 0 1 0-7 0V15a2 2 0 0 0 4 0V8"></path></svg>
+                    <span class="sr-only">Attach file</span>
+                </button>
+                <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none bg-transparent focus:ring-neutral-tertiary shadow-none w-9 h-9 rounded-base shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 13a3 3 0 1 0 0-6a3 3 0 0 0 0 6"></path><path d="M17.8 13.938h-.011a7 7 0 1 0-11.464.144h-.016l.14.171q.15.19.3.371L12 21l5.13-6.248q.291-.314.54-.659z"></path></g></svg>
+                    <span class="sr-only">Set location</span>
+                </button>
+                <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none bg-transparent focus:ring-neutral-tertiary shadow-none w-9 h-9 rounded-base shrink-0 text-body cursor-pointer hover:bg-neutral-tertiary-medium hover:text-heading" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-5" aria-hidden="true"><g fill="none"><path fill="currentColor" d="M16 18H8l2.5-6l2 4l1.5-2zm-1-8.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0"></path><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m14-4v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1M8 18h8l-2-4l-1.5 2l-2-4zm7-8.5a.5.5 0 1 1-1 0a.5.5 0 0 1 1 0"></path></g></svg>
+                    <span class="sr-only">Upload image</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
