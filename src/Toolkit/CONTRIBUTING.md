@@ -74,7 +74,7 @@ To update the snapshots, run the following command from the `src/Toolkit/` direc
 rm -fr tests/Functional/__snapshots__
 
 # Run tests and update snapshots
-php vendor/bin/simple-phpunit -d --update-snapshots
+php vendor/bin/phpunit -d --update-snapshots
 
 # Add the updated snapshots to git
 git add tests/Functional/__snapshots__
