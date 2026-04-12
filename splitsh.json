@@ -2,6 +2,7 @@
     "subtrees": {
         "stimulus-bundle": "src/StimulusBundle",
         "ux-autocomplete": "src/Autocomplete",
+        "ux-calendar-link": "src/CalendarLink",
         "ux-dropzone": "src/Dropzone",
         "ux-chartjs": "src/Chartjs",
         "ux-cropperjs": "src/Cropperjs",
