@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\UX\StimulusBundle\StimulusBundle;
 use Symfony\UX\Turbo\TurboBundle;
+use Symfony\UX\Turbo\TurboFrame;
 
 /**
  * Minimal kernel used by Turbo PHPUnit tests.
@@ -82,12 +83,21 @@ final class FrameworkAppKernel extends Kernel
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
         $routes->add('turbo_request', '/turboRequest')->controller('kernel::turboRequest');
+        $routes->add('turbo_frame_request', '/turboFrameRequest')->controller('kernel::turboFrameRequest');
     }
 
     public function turboRequest(Request $request): Response
     {
         return new JsonResponse([
             'preferred_format' => $request->getPreferredFormat(),
+        ]);
+    }
+
+    public function turboFrameRequest(TurboFrame $turboFrame): Response
+    {
+        return new JsonResponse([
+            'turbo_is_frame_request' => $turboFrame->isFrameRequest(),
+            'turbo_frame_request_id' => $turboFrame->getRequestId(),
         ]);
     }
 }

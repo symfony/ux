@@ -232,27 +232,45 @@ The content of a frame can be lazy loaded:
         </turbo-frame>
     {% endblock %}
 
-In your controller, you can detect if the request has been triggered by
-a Turbo Frame, and retrieve the ID of this frame::
+Detecting Turbo Frame Requests
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Inject the ``TurboFrame`` service to detect whether the current request
+was triggered by a Turbo Frame and retrieve the frame's ID::
 
     // src/Controller/MyController.php
     namespace App\Controller;
 
-    use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Annotation\Route;
+    use Symfony\UX\Turbo\TurboFrame;
 
     class MyController
     {
         #[Route('/')]
-        public function home(Request $request): Response
+        public function home(TurboFrame $turboFrame): Response
         {
-            // Get the frame ID (will be null if the request hasn't been triggered by a Turbo Frame)
-            $frameId = $request->headers->get('Turbo-Frame');
+            if ($turboFrame->isFrameRequest()) {
+                // The request was triggered by a Turbo Frame.
+                // Render a partial response for the frame only.
+                $frameId = $turboFrame->getRequestId(); // e.g. "product_details"
+            }
 
             // ...
         }
     }
+
+You can also use the ``turbo_is_frame_request()`` and ``turbo_frame_request_id()``
+Twig functions directly in your templates:
+
+.. code-block:: html+twig
+
+    {% if turbo_is_frame_request() %}
+        {# Render a partial response for the frame #}
+        <p>Frame ID: {{ turbo_frame_request_id() }}</p>
+    {% else %}
+        {# Render the full page #}
+    {% endif %}
 
 <twig:Turbo:Frame> Twig Component
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

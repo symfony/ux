@@ -18,6 +18,7 @@ use Symfony\UX\Turbo\Broadcaster\ImuxBroadcaster;
 use Symfony\UX\Turbo\Broadcaster\TwigBroadcaster;
 use Symfony\UX\Turbo\Doctrine\BroadcastListener;
 use Symfony\UX\Turbo\Request\RequestListener;
+use Symfony\UX\Turbo\TurboFrame;
 use Symfony\UX\Turbo\Twig\TurboRuntime;
 use Symfony\UX\Turbo\Twig\TwigExtension;
 
@@ -26,6 +27,13 @@ use Symfony\UX\Turbo\Twig\TwigExtension;
  */
 return static function (ContainerConfigurator $container): void {
     $container->services()
+
+        ->set('turbo.frame', TurboFrame::class)
+            ->args([service('request_stack')])
+            ->public()
+
+        ->alias(TurboFrame::class, 'turbo.frame')
+            ->public()
 
         ->set('turbo.broadcaster.imux', ImuxBroadcaster::class)
             ->args([tagged_iterator('turbo.broadcaster')])
@@ -54,6 +62,7 @@ return static function (ContainerConfigurator $container): void {
             ->args([
                 tagged_locator('turbo.renderer.stream_listen', 'transport'),
                 abstract_arg('default_transport'),
+                service('turbo.frame'),
             ])
             ->tag('twig.runtime')
 
