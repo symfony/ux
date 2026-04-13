@@ -1,0 +1,20 @@
+{# @prop title string The tooltip text content #}
+{# @prop placement 'top'|'right'|'bottom'|'left' The tooltip position. Defaults to `top` #}
+{# @prop html bool Whether the tooltip content contains HTML. Defaults to `false` #}
+{# @prop trigger 'hover focus'|'hover'|'focus'|'click'|'manual' How the tooltip is triggered. Defaults to `hover focus` #}
+{# @prop customClass string|null Additional CSS class for the tooltip popup. Defaults to `null` #}
+{# @prop as 'span' The HTML tag wrapping the trigger element. Defaults to `span` #}
+{# @block content The trigger element that the tooltip is attached to #}
+{%- props title, placement = 'top', html = false, trigger = 'hover focus', customClass = null, as = 'span' -%}
+<{{ as }}
+    data-bs-toggle="tooltip"
+    data-bs-title="{{ title }}"
+    data-bs-placement="{{ placement }}"
+    {% if html %}data-bs-html="true"{% endif %}
+    {% if trigger != 'hover focus' %}data-bs-trigger="{{ trigger }}"{% endif %}
+    {% if customClass %}data-bs-custom-class="{{ customClass }}"{% endif %}
+    data-controller="tooltip"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</{{ as }}>

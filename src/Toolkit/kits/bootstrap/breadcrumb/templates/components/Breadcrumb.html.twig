@@ -1,0 +1,8 @@
+{# @prop divider string|null Custom divider character. Defaults to `null` (uses Bootstrap default "/") #}
+{# @block content The breadcrumb items, typically multiple `Breadcrumb:Item` components #}
+{%- props divider = null -%}
+<nav aria-label="breadcrumb" {{ attributes }}>
+    <ol class="{{ ('breadcrumb ' ~ attributes.render('class'))|trim }}"{{ divider is not null ? ' style="--bs-breadcrumb-divider: \'' ~ divider ~ '\';"' }}>
+        {%- block content %}{% endblock -%}
+    </ol>
+</nav>

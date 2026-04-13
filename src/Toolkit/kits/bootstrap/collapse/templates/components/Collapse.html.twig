@@ -1,0 +1,19 @@
+{# @prop id string Unique identifier for the collapsible element #}
+{# @prop open bool Whether the content is visible by default. Defaults to `false` #}
+{# @prop horizontal bool Whether to collapse horizontally instead of vertically. Defaults to `false` #}
+{# @block content The collapsible content #}
+{%- props id, open = false, horizontal = false -%}
+{%- set classes = ['collapse'] -%}
+{%- if open -%}
+    {%- set classes = classes|merge(['show']) -%}
+{%- endif -%}
+{%- if horizontal -%}
+    {%- set classes = classes|merge(['collapse-horizontal']) -%}
+{%- endif -%}
+<div
+    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    id="{{ id }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

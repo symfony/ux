@@ -1,0 +1,19 @@
+{# @prop active bool Whether this is the current/active page. Defaults to `false` #}
+{# @prop href string|null The link URL. Ignored when active. Defaults to `null` #}
+{# @block content The breadcrumb item label #}
+{%- props active = false, href = null -%}
+{%- set classes = ['breadcrumb-item'] -%}
+{%- if active -%}
+    {%- set classes = classes|merge(['active']) -%}
+{%- endif -%}
+<li
+    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    {{ active ? 'aria-current="page"' }}
+    {{ attributes }}
+>
+    {%- if not active and href -%}
+        <a href="{{ href }}">{%- block content %}{% endblock -%}</a>
+    {%- else -%}
+        {{ block('content') }}
+    {%- endif -%}
+</li>

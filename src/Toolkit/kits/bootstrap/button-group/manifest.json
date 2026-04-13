@@ -1,0 +1,14 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "ButtonGroup",
+    "description": "A group of buttons displayed together in a horizontal or vertical layout.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "recipe": ["button"],
+        "composer": ["twig/extra-bundle", "twig/html-extra:^3.12.0"],
+        "importmap": ["bootstrap/dist/css/bootstrap.min.css"]
+    }
+}

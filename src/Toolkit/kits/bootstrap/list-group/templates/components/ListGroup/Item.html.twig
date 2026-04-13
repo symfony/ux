@@ -1,0 +1,29 @@
+{# @prop variant 'default'|'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark' The contextual color variant. Defaults to `default` #}
+{# @prop active bool Whether the item is active. Defaults to `false` #}
+{# @prop disabled bool Whether the item is disabled. Defaults to `false` #}
+{# @prop action bool Whether the item is interactive (hover/active states). Defaults to `false` #}
+{# @prop as 'li' The HTML tag to render. Use `a` or `button` for action items. Defaults to `li` #}
+{# @block content The item content #}
+{%- props variant = 'default', active = false, disabled = false, action = false, as = 'li' -%}
+{%- set classes = ['list-group-item'] -%}
+{%- if variant != 'default' -%}
+    {%- set classes = classes|merge(['list-group-item-' ~ variant]) -%}
+{%- endif -%}
+{%- if active -%}
+    {%- set classes = classes|merge(['active']) -%}
+{%- endif -%}
+{%- if disabled -%}
+    {%- set classes = classes|merge(['disabled']) -%}
+{%- endif -%}
+{%- if action -%}
+    {%- set classes = classes|merge(['list-group-item-action']) -%}
+{%- endif -%}
+<{{ as }}
+    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    {{ active ? 'aria-current="true"' }}
+    {{ disabled and as != 'button' ? 'aria-disabled="true"' }}
+    {{ disabled and as == 'button' ? 'disabled' }}
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</{{ as }}>

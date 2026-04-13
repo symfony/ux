@@ -1,0 +1,15 @@
+{# @prop variant 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark'|'link'|'outline-primary'|'outline-secondary'|'outline-success'|'outline-danger'|'outline-warning'|'outline-info'|'outline-light'|'outline-dark' The visual style variant. Defaults to `primary` #}
+{# @prop size 'default'|'sm'|'lg' The button size. Defaults to `default` #}
+{# @prop as 'button' The HTML tag to render. Defaults to `button` #}
+{# @block content The button label and/or icon #}
+{%- props variant = 'primary', size = 'default', as = 'button' -%}
+{%- set classes = ['btn', 'btn-' ~ variant] -%}
+{%- if size != 'default' -%}
+    {%- set classes = classes|merge(['btn-' ~ size]) -%}
+{%- endif -%}
+<{{ as }}
+    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</{{ as }}>

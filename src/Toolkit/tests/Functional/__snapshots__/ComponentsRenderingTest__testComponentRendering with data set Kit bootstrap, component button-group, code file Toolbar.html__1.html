@@ -1,0 +1,29 @@
+<!--
+- Kit: Bootstrap
+- Component: ButtonGroup
+- Code:
+```twig
+<twig:ButtonGroup:Toolbar aria-label="Toolbar with button groups">
+    <twig:ButtonGroup class="me-2" aria-label="First group">
+        <twig:Button variant="primary">1</twig:Button>
+        <twig:Button variant="primary">2</twig:Button>
+        <twig:Button variant="primary">3</twig:Button>
+    </twig:ButtonGroup>
+    <twig:ButtonGroup class="me-2" aria-label="Second group">
+        <twig:Button variant="secondary">4</twig:Button>
+        <twig:Button variant="secondary">5</twig:Button>
+    </twig:ButtonGroup>
+</twig:ButtonGroup:Toolbar>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+<div class="btn-group me-2" role="group" aria-label="First group">
+<button class="btn btn-primary">1</button>
+        <button class="btn btn-primary">2</button>
+        <button class="btn btn-primary">3</button>
+    </div>
+    <div class="btn-group me-2" role="group" aria-label="Second group">
+<button class="btn btn-secondary">4</button>
+        <button class="btn btn-secondary">5</button>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+{# @prop variant 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark' The color variant. Defaults to `primary` #}
+{# @prop type 'border'|'grow' The spinner type. Defaults to `border` #}
+{# @prop size 'default'|'sm' The spinner size. Defaults to `default` #}
+{# @prop label string The visually hidden label. Defaults to `Loading...` #}
+{%- props variant = 'primary', type = 'border', size = 'default', label = 'Loading...' -%}
+{%- set classes = ['spinner-' ~ type, 'text-' ~ variant] -%}
+{%- if size == 'sm' -%}
+    {%- set classes = classes|merge(['spinner-' ~ type ~ '-sm']) -%}
+{%- endif -%}
+<div
+    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    role="status"
+    {{ attributes }}
+>
+    <span class="visually-hidden">{{ label }}</span>
+</div>

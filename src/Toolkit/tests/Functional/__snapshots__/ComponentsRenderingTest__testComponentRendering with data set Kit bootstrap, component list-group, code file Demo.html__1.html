@@ -1,0 +1,19 @@
+<!--
+- Kit: Bootstrap
+- Component: ListGroup
+- Code:
+```twig
+<twig:ListGroup>
+    <twig:ListGroup:Item active>An active item</twig:ListGroup:Item>
+    <twig:ListGroup:Item>A second item</twig:ListGroup:Item>
+    <twig:ListGroup:Item>A third item</twig:ListGroup:Item>
+    <twig:ListGroup:Item disabled>A disabled item</twig:ListGroup:Item>
+</twig:ListGroup>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<ul class="list-group">
+<li class="list-group-item active" aria-current="true">An active item</li>
+    <li class="list-group-item">A second item</li>
+    <li class="list-group-item">A third item</li>
+    <li class="list-group-item disabled" aria-disabled="true">A disabled item</li>
+</ul>

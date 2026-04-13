@@ -1,0 +1,41 @@
+<!--
+- Kit: Bootstrap
+- Component: ButtonGroup
+- Code:
+```twig
+<div class="d-flex flex-column gap-2 align-items-start">
+    <twig:ButtonGroup size="lg" aria-label="Large button group">
+        <twig:Button variant="outline-primary">Left</twig:Button>
+        <twig:Button variant="outline-primary">Middle</twig:Button>
+        <twig:Button variant="outline-primary">Right</twig:Button>
+    </twig:ButtonGroup>
+    <twig:ButtonGroup aria-label="Default button group">
+        <twig:Button variant="outline-primary">Left</twig:Button>
+        <twig:Button variant="outline-primary">Middle</twig:Button>
+        <twig:Button variant="outline-primary">Right</twig:Button>
+    </twig:ButtonGroup>
+    <twig:ButtonGroup size="sm" aria-label="Small button group">
+        <twig:Button variant="outline-primary">Left</twig:Button>
+        <twig:Button variant="outline-primary">Middle</twig:Button>
+        <twig:Button variant="outline-primary">Right</twig:Button>
+    </twig:ButtonGroup>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column gap-2 align-items-start">
+    <div class="btn-group btn-group-lg" role="group" aria-label="Large button group">
+<button class="btn btn-outline-primary">Left</button>
+        <button class="btn btn-outline-primary">Middle</button>
+        <button class="btn btn-outline-primary">Right</button>
+    </div>
+    <div class="btn-group" role="group" aria-label="Default button group">
+<button class="btn btn-outline-primary">Left</button>
+        <button class="btn btn-outline-primary">Middle</button>
+        <button class="btn btn-outline-primary">Right</button>
+    </div>
+    <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+<button class="btn btn-outline-primary">Left</button>
+        <button class="btn btn-outline-primary">Middle</button>
+        <button class="btn btn-outline-primary">Right</button>
+    </div>
+</div>

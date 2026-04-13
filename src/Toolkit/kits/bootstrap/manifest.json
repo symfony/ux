@@ -1,0 +1,7 @@
+{
+    "$schema": "../../schema-kit-v1.json",
+    "name": "Bootstrap",
+    "description": "Components based on the Bootstrap library, the most popular HTML, CSS, and JS framework.",
+    "license": "MIT",
+    "homepage": "https://ux.symfony.com/toolkit/kits/bootstrap"
+}

@@ -1,0 +1,35 @@
+{# @prop value number The current progress value. Defaults to `0` #}
+{# @prop min number The minimum value. Defaults to `0` #}
+{# @prop max number The maximum value. Defaults to `100` #}
+{# @prop label string|null Accessible label for the progress bar. Defaults to `null` #}
+{# @prop variant 'default'|'success'|'info'|'warning'|'danger' The color variant. Defaults to `default` #}
+{# @prop striped bool Whether to display a striped pattern. Defaults to `false` #}
+{# @prop animated bool Whether to animate the stripes. Defaults to `false` #}
+{# @prop stacked bool Whether this bar is inside a `Progress:Stacked` container. Defaults to `false` #}
+{# @block content Optional label text displayed inside the bar #}
+{%- props value = 0, min = 0, max = 100, label = null, variant = 'default', striped = false, animated = false, stacked = false -%}
+{%- set percentage = ((value - min) / (max - min) * 100)|round -%}
+{%- set barClasses = ['progress-bar'] -%}
+{%- if variant != 'default' -%}
+    {%- set barClasses = barClasses|merge(['text-bg-' ~ variant]) -%}
+{%- endif -%}
+{%- if striped or animated -%}
+    {%- set barClasses = barClasses|merge(['progress-bar-striped']) -%}
+{%- endif -%}
+{%- if animated -%}
+    {%- set barClasses = barClasses|merge(['progress-bar-animated']) -%}
+{%- endif -%}
+<div
+    class="{{ ('progress ' ~ attributes.render('class'))|trim }}"
+    role="progressbar"
+    {% if label %}aria-label="{{ label }}"{% endif %}
+    aria-valuenow="{{ value }}"
+    aria-valuemin="{{ min }}"
+    aria-valuemax="{{ max }}"
+    {% if stacked %}style="width: {{ percentage }}%"{% endif %}
+    {{ attributes }}
+>
+    <div class="{{ barClasses|join(' ') }}"{% if not stacked %} style="width: {{ percentage }}%"{% endif %}>
+        {%- block content %}{% endblock -%}
+    </div>
+</div>

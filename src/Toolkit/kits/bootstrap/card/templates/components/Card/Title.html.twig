@@ -1,0 +1,8 @@
+{# @block content The card title text #}
+{%- props -%}
+<h5
+    class="{{ ('card-title ' ~ attributes.render('class'))|trim }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</h5>

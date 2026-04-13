@@ -1,0 +1,15 @@
+{# @block content The clickable header label that toggles the accordion item #}
+{%- props -%}
+<h2 class="accordion-header">
+    <button
+        class="{{ ('accordion-button' ~ (not _accordion_item_is_open ? ' collapsed' : '') ~ ' ' ~ attributes.render('class'))|trim }}"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#{{ _accordion_item_id }}-collapse"
+        aria-expanded="{{ _accordion_item_is_open ? 'true' : 'false' }}"
+        aria-controls="{{ _accordion_item_id }}-collapse"
+        {{ attributes }}
+    >
+        {%- block content %}{% endblock -%}
+    </button>
+</h2>

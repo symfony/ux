@@ -1,0 +1,15 @@
+{# @prop orientation 'horizontal'|'vertical' The layout direction. Defaults to `horizontal` #}
+{# @prop size 'default'|'sm'|'lg' The size of all buttons in the group. Defaults to `default` #}
+{# @block content The grouped buttons #}
+{%- props orientation = 'horizontal', size = 'default' -%}
+{%- set classes = [orientation == 'vertical' ? 'btn-group-vertical' : 'btn-group'] -%}
+{%- if size != 'default' -%}
+    {%- set classes = classes|merge(['btn-group-' ~ size]) -%}
+{%- endif -%}
+<div
+    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    role="group"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

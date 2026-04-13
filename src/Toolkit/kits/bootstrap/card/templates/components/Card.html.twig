@@ -1,0 +1,8 @@
+{# @block content The card content, typically includes `Card:Header`, `Card:Body`, and `Card:Footer` #}
+{%- props -%}
+<div
+    class="{{ ('card ' ~ attributes.render('class'))|trim }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

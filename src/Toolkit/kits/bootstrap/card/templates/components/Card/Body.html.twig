@@ -1,0 +1,8 @@
+{# @block content The card body content #}
+{%- props -%}
+<div
+    class="{{ ('card-body ' ~ attributes.render('class'))|trim }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

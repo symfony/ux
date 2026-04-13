@@ -1,0 +1,29 @@
+<!--
+- Kit: Bootstrap
+- Component: Card
+- Code:
+```twig
+<div style="max-width: 18rem;">
+    <twig:Card>
+        <twig:Card:Header>Featured</twig:Card:Header>
+        <twig:Card:Body>
+            <twig:Card:Title>Special title treatment</twig:Card:Title>
+            <twig:Card:Text>With supporting text below as a natural lead-in to additional content.</twig:Card:Text>
+            <twig:Button>Go somewhere</twig:Button>
+        </twig:Card:Body>
+        <twig:Card:Footer class="text-body-secondary">2 days ago</twig:Card:Footer>
+    </twig:Card>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div style="max-width: 18rem;">
+    <div class="card">
+<div class="card-header">Featured</div>
+        <div class="card-body">
+<h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <button class="btn btn-primary">Go somewhere</button>
+        </div>
+        <div class="card-footer text-body-secondary">2 days ago</div>
+    </div>
+</div>

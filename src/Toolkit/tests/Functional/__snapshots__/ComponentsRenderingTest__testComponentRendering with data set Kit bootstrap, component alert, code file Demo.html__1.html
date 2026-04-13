@@ -1,0 +1,20 @@
+<!--
+- Kit: Bootstrap
+- Component: Alert
+- Code:
+```twig
+<div class="d-flex flex-column gap-2">
+    <twig:Alert variant="primary">A simple primary alert.</twig:Alert>
+    <twig:Alert variant="success">A simple success alert.</twig:Alert>
+    <twig:Alert variant="danger">A simple danger alert.</twig:Alert>
+    <twig:Alert variant="warning" dismissible>A dismissible warning alert.</twig:Alert>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column gap-2">
+    <div class="alert alert-primary" role="alert">A simple primary alert.</div>
+    <div class="alert alert-success" role="alert">A simple success alert.</div>
+    <div class="alert alert-danger" role="alert">A simple danger alert.</div>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">A dismissible warning alert.    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+</div>

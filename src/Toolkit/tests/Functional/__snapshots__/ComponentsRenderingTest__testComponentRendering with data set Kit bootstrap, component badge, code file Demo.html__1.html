@@ -1,0 +1,19 @@
+<!--
+- Kit: Bootstrap
+- Component: Badge
+- Code:
+```twig
+<div class="d-flex flex-wrap align-items-center gap-2">
+    <twig:Badge>Primary</twig:Badge>
+    <twig:Badge variant="secondary">Secondary</twig:Badge>
+    <twig:Badge variant="success">Success</twig:Badge>
+    <twig:Badge variant="danger" pill>Pill Danger</twig:Badge>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap align-items-center gap-2">
+    <span class="badge text-bg-primary">Primary</span>
+    <span class="badge text-bg-secondary">Secondary</span>
+    <span class="badge text-bg-success">Success</span>
+    <span class="badge text-bg-danger rounded-pill">Pill Danger</span>
+</div>

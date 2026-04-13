@@ -1,0 +1,10 @@
+{# @prop href string The link URL #}
+{# @block content The link text #}
+{%- props href -%}
+<a
+    href="{{ href }}"
+    class="{{ ('card-link ' ~ attributes.render('class'))|trim }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</a>

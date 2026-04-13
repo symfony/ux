@@ -1,0 +1,13 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "ListGroup",
+    "description": "A flexible component for displaying a series of content items in a list format.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "composer": ["twig/extra-bundle", "twig/html-extra:^3.12.0"],
+        "importmap": ["bootstrap/dist/css/bootstrap.min.css"]
+    }
+}

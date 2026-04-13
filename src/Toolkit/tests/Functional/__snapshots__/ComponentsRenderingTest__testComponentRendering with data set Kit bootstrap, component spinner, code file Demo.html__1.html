@@ -1,0 +1,31 @@
+<!--
+- Kit: Bootstrap
+- Component: Spinner
+- Code:
+```twig
+<div class="d-flex flex-wrap align-items-center gap-3">
+    <twig:Spinner />
+    <twig:Spinner variant="success" />
+    <twig:Spinner type="grow" variant="danger" />
+    <twig:Spinner size="sm" />
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap align-items-center gap-3">
+    <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+</div>
+
+    <div class="spinner-border text-success" role="status">
+    <span class="visually-hidden">Loading...</span>
+</div>
+
+    <div class="spinner-grow text-danger" role="status">
+    <span class="visually-hidden">Loading...</span>
+</div>
+
+    <div class="spinner-border text-primary spinner-border-sm" role="status">
+    <span class="visually-hidden">Loading...</span>
+</div>
+
+</div>

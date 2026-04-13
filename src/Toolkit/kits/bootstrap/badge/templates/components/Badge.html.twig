@@ -1,0 +1,14 @@
+{# @prop variant 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark' The visual style variant. Defaults to `primary` #}
+{# @prop pill bool Whether to use rounded-pill style. Defaults to `false` #}
+{# @block content The badge content #}
+{%- props variant = 'primary', pill = false -%}
+{%- set classes = ['badge', 'text-bg-' ~ variant] -%}
+{%- if pill -%}
+    {%- set classes = classes|merge(['rounded-pill']) -%}
+{%- endif -%}
+<span
+    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</span>

@@ -1,0 +1,12 @@
+{# @prop value string Unique value for this accordion item #}
+{# @prop open bool Whether the item is open by default. Defaults to `false` #}
+{# @block content The item content, typically an `Accordion:Header` and `Accordion:Body` #}
+{%- props value, open = false -%}
+{%- set _accordion_item_id = _accordion_id ~ '-' ~ value -%}
+{%- set _accordion_item_is_open = open -%}
+<div
+    class="{{ ('accordion-item ' ~ attributes.render('class'))|trim }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

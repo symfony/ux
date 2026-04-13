@@ -1,0 +1,9 @@
+{# @block content The toolbar content, typically multiple `ButtonGroup` components #}
+{%- props -%}
+<div
+    class="{{ ('btn-toolbar ' ~ attributes.render('class'))|trim }}"
+    role="toolbar"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

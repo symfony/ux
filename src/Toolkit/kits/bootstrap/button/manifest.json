@@ -1,0 +1,13 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Button",
+    "description": "A clickable element that triggers actions or events, supporting various styles and states.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "composer": ["twig/extra-bundle", "twig/html-extra:^3.12.0"],
+        "importmap": ["bootstrap/dist/css/bootstrap.min.css"]
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Badge",
+    "description": "A small labeling component for counts, statuses, or categories.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "composer": ["twig/extra-bundle", "twig/html-extra:^3.12.0"],
+        "importmap": ["bootstrap/dist/css/bootstrap.min.css"]
+    }
+}

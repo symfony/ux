@@ -1,0 +1,8 @@
+{# @block content The overlay content on top of a card image #}
+{%- props -%}
+<div
+    class="{{ ('card-img-overlay ' ~ attributes.render('class'))|trim }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

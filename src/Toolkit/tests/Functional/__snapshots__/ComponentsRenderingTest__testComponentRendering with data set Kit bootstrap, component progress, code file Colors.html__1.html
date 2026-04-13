@@ -1,0 +1,31 @@
+<!--
+- Kit: Bootstrap
+- Component: Progress
+- Code:
+```twig
+<div class="d-flex flex-column gap-3">
+    <twig:Progress value="25" variant="success" label="Success" />
+    <twig:Progress value="50" variant="info" label="Info" />
+    <twig:Progress value="75" variant="warning" label="Warning" />
+    <twig:Progress value="100" variant="danger" label="Danger" />
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column gap-3">
+    <div class="progress" role="progressbar" aria-label="Success" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+    <div class="progress-bar text-bg-success" style="width: 25%"></div>
+</div>
+
+    <div class="progress" role="progressbar" aria-label="Info" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+    <div class="progress-bar text-bg-info" style="width: 50%"></div>
+</div>
+
+    <div class="progress" role="progressbar" aria-label="Warning" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+    <div class="progress-bar text-bg-warning" style="width: 75%"></div>
+</div>
+
+    <div class="progress" role="progressbar" aria-label="Danger" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+    <div class="progress-bar text-bg-danger" style="width: 100%"></div>
+</div>
+
+</div>

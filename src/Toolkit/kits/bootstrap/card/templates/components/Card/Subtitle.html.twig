@@ -1,0 +1,8 @@
+{# @block content The card subtitle text #}
+{%- props -%}
+<h6
+    class="{{ ('card-subtitle mb-2 text-body-secondary ' ~ attributes.render('class'))|trim }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</h6>

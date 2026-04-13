@@ -1,0 +1,18 @@
+{# @prop id string Unique identifier for the Accordion #}
+{# @prop flush bool Whether to remove the default background and borders. Defaults to `false` #}
+{# @prop alwaysOpen bool Whether multiple items can stay open at once. Defaults to `false` #}
+{# @block content The accordion items, typically multiple `Accordion:Item` components #}
+{%- props id, flush = false, alwaysOpen = false -%}
+{%- set _accordion_id = id -%}
+{%- set _accordion_always_open = alwaysOpen -%}
+{%- set classes = ['accordion'] -%}
+{%- if flush -%}
+    {%- set classes = classes|merge(['accordion-flush']) -%}
+{%- endif -%}
+<div
+    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    id="{{ _accordion_id }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

@@ -1,0 +1,11 @@
+{# @prop position 'top'|'bottom'|'overlay' Image position. Defaults to `top` #}
+{# @prop src string The image source URL #}
+{# @prop alt string The image alt text. Defaults to `''` #}
+{%- props position = 'top', src, alt = '' -%}
+{%- set classMap = {top: 'card-img-top', bottom: 'card-img-bottom', overlay: 'card-img'} -%}
+<img
+    src="{{ src }}"
+    alt="{{ alt }}"
+    class="{{ (classMap[position] ~ ' ' ~ attributes.render('class'))|trim }}"
+    {{ attributes }}
+/>

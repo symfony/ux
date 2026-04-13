@@ -1,0 +1,11 @@
+{# @block content The collapsible content of the accordion item #}
+{%- props -%}
+<div
+    id="{{ _accordion_item_id }}-collapse"
+    class="accordion-collapse collapse{{ _accordion_item_is_open ? ' show' : '' }}"
+    {% if not _accordion_always_open %}data-bs-parent="#{{ _accordion_id }}"{% endif %}
+>
+    <div class="{{ ('accordion-body ' ~ attributes.render('class'))|trim }}" {{ attributes }}>
+        {%- block content %}{% endblock -%}
+    </div>
+</div>

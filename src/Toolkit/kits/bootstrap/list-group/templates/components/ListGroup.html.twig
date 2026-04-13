@@ -1,0 +1,24 @@
+{# @prop flush bool Whether to remove outer borders and rounded corners. Defaults to `false` #}
+{# @prop numbered bool Whether to use numbered list items. Defaults to `false` #}
+{# @prop horizontal bool|string Whether to lay out items horizontally. Pass `true` or a breakpoint (`sm`, `md`, `lg`, `xl`, `xxl`). Defaults to `false` #}
+{# @prop as 'ul' The HTML tag to render. Use `div` for action items, `ol` for numbered. Defaults to `ul` #}
+{# @block content The list group items #}
+{%- props flush = false, numbered = false, horizontal = false, as = 'ul' -%}
+{%- set classes = ['list-group'] -%}
+{%- if flush -%}
+    {%- set classes = classes|merge(['list-group-flush']) -%}
+{%- endif -%}
+{%- if numbered -%}
+    {%- set classes = classes|merge(['list-group-numbered']) -%}
+{%- endif -%}
+{%- if horizontal is same as(true) -%}
+    {%- set classes = classes|merge(['list-group-horizontal']) -%}
+{%- elseif horizontal -%}
+    {%- set classes = classes|merge(['list-group-horizontal-' ~ horizontal]) -%}
+{%- endif -%}
+<{{ as }}
+    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</{{ as }}>

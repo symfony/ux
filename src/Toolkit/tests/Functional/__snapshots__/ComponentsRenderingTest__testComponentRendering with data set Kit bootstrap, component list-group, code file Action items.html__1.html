@@ -1,0 +1,19 @@
+<!--
+- Kit: Bootstrap
+- Component: ListGroup
+- Code:
+```twig
+<twig:ListGroup as="div">
+    <twig:ListGroup:Item as="a" action active href="#">Active link</twig:ListGroup:Item>
+    <twig:ListGroup:Item as="a" action href="#">A second link</twig:ListGroup:Item>
+    <twig:ListGroup:Item as="a" action href="#">A third link</twig:ListGroup:Item>
+    <twig:ListGroup:Item as="a" action disabled href="#">A disabled link</twig:ListGroup:Item>
+</twig:ListGroup>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="list-group">
+<a class="list-group-item active list-group-item-action" aria-current="true" href="#">Active link</a>
+    <a class="list-group-item list-group-item-action" href="#">A second link</a>
+    <a class="list-group-item list-group-item-action" href="#">A third link</a>
+    <a class="list-group-item disabled list-group-item-action" aria-disabled="true" href="#">A disabled link</a>
+</div>

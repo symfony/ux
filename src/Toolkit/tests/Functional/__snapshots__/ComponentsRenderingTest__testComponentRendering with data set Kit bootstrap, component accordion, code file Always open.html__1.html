@@ -1,0 +1,35 @@
+<!--
+- Kit: Bootstrap
+- Component: Accordion
+- Code:
+```twig
+<twig:Accordion id="always-open-accordion" alwaysOpen>
+    <twig:Accordion:Item value="1" open>
+        <twig:Accordion:Header>Accordion Item #1</twig:Accordion:Header>
+        <twig:Accordion:Body>This item stays open when other items are opened.</twig:Accordion:Body>
+    </twig:Accordion:Item>
+    <twig:Accordion:Item value="2" open>
+        <twig:Accordion:Header>Accordion Item #2</twig:Accordion:Header>
+        <twig:Accordion:Body>This item also stays open independently.</twig:Accordion:Body>
+    </twig:Accordion:Item>
+</twig:Accordion>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="accordion" id="always-open-accordion">
+<div class="accordion-item">
+<h2 class="accordion-header">
+    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#always-open-accordion-1-collapse" aria-expanded="true" aria-controls="always-open-accordion-1-collapse">Accordion Item #1</button>
+</h2>
+        <div id="always-open-accordion-1-collapse" class="accordion-collapse collapse show">
+    <div class="accordion-body">This item stays open when other items are opened.</div>
+</div>
+    </div>
+    <div class="accordion-item">
+<h2 class="accordion-header">
+    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#always-open-accordion-2-collapse" aria-expanded="true" aria-controls="always-open-accordion-2-collapse">Accordion Item #2</button>
+</h2>
+        <div id="always-open-accordion-2-collapse" class="accordion-collapse collapse show">
+    <div class="accordion-body">This item also stays open independently.</div>
+</div>
+    </div>
+</div>

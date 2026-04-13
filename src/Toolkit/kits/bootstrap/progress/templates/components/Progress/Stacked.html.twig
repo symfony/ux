@@ -1,0 +1,5 @@
+{# @block content Multiple `Progress` components displayed as stacked bars #}
+{%- props -%}
+<div class="{{ ('progress-stacked ' ~ attributes.render('class'))|trim }}" {{ attributes }}>
+    {%- block content %}{% endblock -%}
+</div>

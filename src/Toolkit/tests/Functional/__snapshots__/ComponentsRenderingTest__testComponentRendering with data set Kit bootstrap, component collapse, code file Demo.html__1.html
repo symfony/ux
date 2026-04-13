@@ -1,0 +1,22 @@
+<!--
+- Kit: Bootstrap
+- Component: Collapse
+- Code:
+```twig
+<twig:Collapse:Trigger target="#collapseDemo" class="btn btn-primary mb-2">
+    Toggle content
+</twig:Collapse:Trigger>
+<twig:Collapse id="collapseDemo">
+    <div class="card card-body">
+        Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+    </div>
+</twig:Collapse>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<button data-bs-toggle="collapse" data-bs-target="#collapseDemo" aria-expanded="false" aria-controls="collapseDemo" class="btn btn-primary mb-2">Toggle content
+</button>
+<div class="collapse" id="collapseDemo">
+<div class="card card-body">
+        Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+    </div>
+</div>
