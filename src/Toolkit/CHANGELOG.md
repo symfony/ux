@@ -11,6 +11,7 @@
 - Minimum required PHP version is now 8.4
 - [Shadcn] Add `radio-group` recipe
 - [Shadcn] Add `collapsible` recipe
+- [Shadcn] Add `typography` recipe
 
 ## 2.35
 
