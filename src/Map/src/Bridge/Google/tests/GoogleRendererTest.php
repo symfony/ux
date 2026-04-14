@@ -31,7 +31,7 @@ class GoogleRendererTest extends RendererTestCase
 {
     public static function provideTestRenderMap(): iterable
     {
-        $map = (new Map())
+        $map = new Map()
             ->center(new Point(48.8566, 2.3522))
             ->zoom(12);
         $marker1 = new Marker(position: new Point(48.8566, 2.3522), title: 'Paris', id: 'marker1');
@@ -56,7 +56,7 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'with markers and infoWindows' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addMarker(new Marker(position: new Point(48.8566, 2.3522), title: 'Paris', id: 'marker1'))
@@ -65,7 +65,7 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'with all markers removed' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addMarker($marker1)
@@ -76,7 +76,7 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'with all markers removed with removeAllMarkers()' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addMarker($marker1)
@@ -86,7 +86,7 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'with marker remove and new ones added' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addMarker($marker3)
@@ -97,7 +97,7 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'with polygons and infoWindows' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addPolygon(new Polygon(points: [new Point(48.8566, 2.3522), new Point(48.8566, 2.3522), new Point(48.8566, 2.3522)]))
@@ -106,7 +106,7 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'with all polygons removed with removeAllPolygons()' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addPolygon(new Polygon(points: [new Point(48.8566, 2.3522), new Point(48.8566, 2.3522), new Point(48.8566, 2.3522)]))
@@ -116,7 +116,7 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'with polylines and infoWindows' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addPolyline(new Polyline(points: [new Point(48.8566, 2.3522), new Point(48.8566, 2.3522), new Point(48.8566, 2.3522)]))
@@ -125,7 +125,7 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'with all polylines removed with removeAllPolylines()' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addPolyline(new Polyline(points: [new Point(48.8566, 2.3522), new Point(48.8566, 2.3522), new Point(48.8566, 2.3522)]))
@@ -135,7 +135,7 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'with circles and infoWindows' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addCircle(new Circle(center: new Point(48.8566, 2.3522), radius: 500, infoWindow: new InfoWindow(content: 'Circle')))
@@ -144,7 +144,7 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'with all circles removed with removeAllCircles()' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addCircle(new Circle(center: new Point(48.8566, 2.3522), radius: 500, infoWindow: new InfoWindow(content: 'Circle')))
@@ -154,7 +154,7 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'with rectangles and infoWindows' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addRectangle(new Rectangle(southWest: new Point(48.8566, 2.3522), northEast: new Point(48.8566, 2.3522), infoWindow: new InfoWindow(content: 'Rectangle')))
@@ -163,7 +163,7 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'with all rectangles removed with removeAllRectangles()' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addRectangle(new Rectangle(southWest: new Point(48.8566, 2.3522), northEast: new Point(48.8566, 2.3522), infoWindow: new InfoWindow(content: 'Rectangle')))
@@ -173,7 +173,7 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'with controls enabled' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->options(new GoogleOptions(
@@ -186,7 +186,7 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'without controls enabled' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->options(new GoogleOptions(
@@ -199,14 +199,14 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'with default map id' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), 'my_api_key', defaultMapId: 'DefaultMapId'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12),
         ];
 
         yield 'with default map id, when passing options (except the "mapId")' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), 'my_api_key', defaultMapId: 'DefaultMapId'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->options(new GoogleOptions()),
@@ -214,7 +214,7 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'with default map id overridden by option "mapId"' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), 'my_api_key', defaultMapId: 'DefaultMapId'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->options(new GoogleOptions(mapId: 'CustomMapId')),
@@ -231,7 +231,7 @@ class GoogleRendererTest extends RendererTestCase
                 }),
                 'my_api_key'
             ),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addMarker(new Marker(position: new Point(48.8566, 2.3522), title: 'Paris', icon: Icon::url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/geo-alt.svg')->width(32)->height(32)))
@@ -241,7 +241,7 @@ class GoogleRendererTest extends RendererTestCase
 
         yield 'with map extra data' => [
             'renderer' => new GoogleRenderer(new StimulusHelper(null), new UxIconRenderer(null), key: 'api_key'),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->extra([

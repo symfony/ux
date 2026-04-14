@@ -40,7 +40,7 @@ final class KitSynchronizer
 
     private function synchronizeRecipes(Kit $kit): void
     {
-        $finder = (new Finder())
+        $finder = new Finder()
             ->in($kit->absolutePath)
             ->files()
             ->depth('== 1')

@@ -46,7 +46,7 @@ class MapExtensionTest extends KernelTestCase
 
     public function testMapFunctionWithArray()
     {
-        $map = (new Map())
+        $map = new Map()
             ->center(new Point(latitude: 5, longitude: 10))
             ->zoom(4);
         $attributes = ['data-foo' => 'bar'];

@@ -110,7 +110,7 @@ class AsTwigComponent
      */
     protected static function attributeMethodsFor(string $attribute, object|string $component): \Traversable
     {
-        foreach ((new \ReflectionClass($component))->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+        foreach (new \ReflectionClass($component)->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
             if ($method->getAttributes($attribute, \ReflectionAttribute::IS_INSTANCEOF)[0] ?? null) {
                 yield $method;
             }

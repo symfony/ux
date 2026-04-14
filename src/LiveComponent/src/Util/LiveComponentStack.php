@@ -45,7 +45,7 @@ final class LiveComponentStack extends ComponentStack
 
     private function isLiveComponent(string $classname): bool
     {
-        return [] !== (new \ReflectionClass($classname))->getAttributes(AsLiveComponent::class);
+        return [] !== new \ReflectionClass($classname)->getAttributes(AsLiveComponent::class);
     }
 
     public function getCurrentComponent(): ?MountedComponent

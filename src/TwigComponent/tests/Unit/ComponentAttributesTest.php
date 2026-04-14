@@ -54,7 +54,7 @@ final class ComponentAttributesTest extends TestCase
             (string) $attributes->defaults(['class' => 'bar', 'style' => 'font-size: 10;'])
         );
 
-        $this->assertSame(['class' => 'foo'], (new ComponentAttributes([], new EscaperRuntime()))->defaults(['class' => 'foo'])->all());
+        $this->assertSame(['class' => 'foo'], new ComponentAttributes([], new EscaperRuntime())->defaults(['class' => 'foo'])->all());
     }
 
     public function testCanGetOnly()

@@ -14,7 +14,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 require __DIR__.'/../vendor/autoload.php';
 
-(new Filesystem())->remove(__DIR__.'/../var');
+new Filesystem()->remove(__DIR__.'/../var');
 
 // @see https://github.com/symfony/symfony/issues/53812
 ErrorHandler::register(null, false);

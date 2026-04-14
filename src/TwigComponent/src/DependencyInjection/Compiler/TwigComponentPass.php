@@ -114,7 +114,7 @@ final class TwigComponentPass implements CompilerPassInterface
     private function getMountMethods(string $component): array
     {
         $preMount = $mount = $postMount = [];
-        foreach ((new \ReflectionClass($component))->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+        foreach (new \ReflectionClass($component)->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
             foreach ($method->getAttributes(PreMount::class) as $attribute) {
                 $preMount[$method->getName()] = $attribute->newInstance()->priority;
             }

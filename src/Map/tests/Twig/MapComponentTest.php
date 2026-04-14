@@ -26,7 +26,7 @@ class MapComponentTest extends KernelTestCase
 
     public function testRenderMapComponent()
     {
-        $map = (new Map())
+        $map = new Map()
             ->center(new Point(latitude: 5, longitude: 10))
             ->zoom(4);
         $attributes = ['data-foo' => 'bar'];

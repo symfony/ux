@@ -62,7 +62,7 @@ class MapFactoryTest extends TestCase
 
     public function testToArrayFromArray()
     {
-        $map = (new Map())
+        $map = new Map()
             ->center(new Point(48.8566, 2.3522))
             ->zoom(12)
             ->addMarker(new Marker(

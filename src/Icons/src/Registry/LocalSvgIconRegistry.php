@@ -72,6 +72,6 @@ final class LocalSvgIconRegistry implements IconRegistryInterface
     {
         $filename = \sprintf('%s/%s.svg', $this->iconDir, $name);
 
-        (new Filesystem())->dumpFile($filename, $svg);
+        new Filesystem()->dumpFile($filename, $svg);
     }
 }

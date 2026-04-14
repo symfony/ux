@@ -35,7 +35,7 @@ final class MapController extends AbstractController
     public function basic(
         #[MapQueryParameter] MapRenderer $renderer,
     ): Response {
-        $map = (new Map(rendererName: $renderer->value))
+        $map = new Map(rendererName: $renderer->value)
             ->center(new Point(48.8566, 2.3522))
             ->zoom(12)
         ;
@@ -46,7 +46,7 @@ final class MapController extends AbstractController
     #[Route('/with-markers-and-fit-bounds-to-markers', name: 'with_markers_and_fit_bounds_to_markers')]
     public function withMarkersAndFitBoundsToMarkers(#[MapQueryParameter] MapRenderer $renderer): Response
     {
-        $map = (new Map(rendererName: $renderer->value))
+        $map = new Map(rendererName: $renderer->value)
             ->fitBoundsToMarkers()
             ->addMarker(new Marker(
                 position: new Point(48.8566, 2.3522),
@@ -64,7 +64,7 @@ final class MapController extends AbstractController
     #[Route('/with-markers-and-zoomed-on-paris', name: 'with_markers_and_zoomed_on_paris')]
     public function withMarkersZoomedOnParis(#[MapQueryParameter] MapRenderer $renderer): Response
     {
-        $map = (new Map(rendererName: $renderer->value))
+        $map = new Map(rendererName: $renderer->value)
             ->center(new Point(48.8566, 2.3522))
             ->zoom(10)
             ->addMarker(new Marker(
@@ -83,7 +83,7 @@ final class MapController extends AbstractController
     #[Route('/with-markers-and-info-windows', name: 'with_markers_and_info_windows')]
     public function withMarkersAndInfoWindows(#[MapQueryParameter] MapRenderer $renderer): Response
     {
-        $map = (new Map(rendererName: $renderer->value))
+        $map = new Map(rendererName: $renderer->value)
             ->fitBoundsToMarkers()
             ->addMarker(new Marker(
                 position: new Point(48.8566, 2.3522),
@@ -105,7 +105,7 @@ final class MapController extends AbstractController
         #[MapQueryParameter] MapRenderer $renderer,
         #[Autowire(service: 'asset_mapper.asset_package')] PackageInterface $package,
     ): Response {
-        $map = (new Map(rendererName: $renderer->value))
+        $map = new Map(rendererName: $renderer->value)
             ->fitBoundsToMarkers()
             ->addMarker(new Marker(
                 position: new Point(48.8566, 2.3522),
@@ -130,7 +130,7 @@ final class MapController extends AbstractController
     #[Route('/with-polygons', name: 'with_polygons')]
     public function withPolygons(#[MapQueryParameter] MapRenderer $renderer): Response
     {
-        $map = (new Map(rendererName: $renderer->value))
+        $map = new Map(rendererName: $renderer->value)
             ->center(new Point(48.8566, 2.3522))
             ->zoom(5)
             ->addPolygon(new Polygon(
@@ -171,7 +171,7 @@ final class MapController extends AbstractController
     #[Route('/with-polylines', name: 'with_polylines')]
     public function withPolylines(#[MapQueryParameter] MapRenderer $renderer): Response
     {
-        $map = (new Map(rendererName: $renderer->value))
+        $map = new Map(rendererName: $renderer->value)
             ->center(new Point(48.8566, 2.3522))
             ->zoom(5)
             ->addPolyline(new Polyline(
@@ -203,7 +203,7 @@ final class MapController extends AbstractController
     #[Route('/with-circles', name: 'with_circles')]
     public function withCircles(#[MapQueryParameter] MapRenderer $renderer): Response
     {
-        $map = (new Map(rendererName: $renderer->value))
+        $map = new Map(rendererName: $renderer->value)
             ->center(new Point(48.8566, 2.3522))
             ->zoom(5)
             ->addCircle(new Circle(
@@ -228,7 +228,7 @@ final class MapController extends AbstractController
     #[Route('/with-rectangles', name: 'with_rectangles')]
     public function withRectangles(#[MapQueryParameter] MapRenderer $renderer): Response
     {
-        $map = (new Map(rendererName: $renderer->value))
+        $map = new Map(rendererName: $renderer->value)
             ->center(new Point(48.8566, 2.3522))
             ->zoom(5)
             ->addRectangle(new Rectangle(
