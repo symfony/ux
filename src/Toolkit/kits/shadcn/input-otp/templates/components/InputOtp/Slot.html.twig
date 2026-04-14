@@ -1,0 +1,8 @@
+<input
+    type="text"
+    inputmode="numeric"
+    maxlength="1"
+    class="{{ ('relative flex h-10 w-10 items-center justify-center rounded-md border border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 ' ~ attributes.render('class'))|tailwind_merge }}"
+    data-slot="input-otp-slot"
+    {{ attributes }}
+>

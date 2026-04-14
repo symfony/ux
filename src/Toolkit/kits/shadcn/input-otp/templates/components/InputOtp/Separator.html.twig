@@ -1,0 +1,8 @@
+<span
+    role="separator"
+    class="{{ ('text-muted-foreground ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'input-otp-separator',
+    }) }}
+    aria-hidden="true"
+>-</span>

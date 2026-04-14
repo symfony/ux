@@ -1,0 +1,9 @@
+{# @block content The OTP slot inputs, typically multiple `InputOtp:Slot` components #}
+<div
+    class="{{ ('flex items-center gap-2 has-[:disabled]:opacity-50 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'input-otp',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

@@ -1,0 +1,25 @@
+<!--
+- Kit: Shadcn UI
+- Component: Input OTP
+- Code:
+```twig
+<twig:InputOtp>
+    <twig:InputOtp:Slot name="otp[0]" />
+    <twig:InputOtp:Slot name="otp[1]" />
+    <twig:InputOtp:Slot name="otp[2]" />
+    <twig:InputOtp:Separator />
+    <twig:InputOtp:Slot name="otp[3]" />
+    <twig:InputOtp:Slot name="otp[4]" />
+    <twig:InputOtp:Slot name="otp[5]" />
+</twig:InputOtp>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex items-center gap-2 has-[:disabled]:opacity-50" data-slot="input-otp">
+<input type="text" inputmode="numeric" maxlength="1" class="relative flex h-10 w-10 items-center justify-center rounded-md border border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50" data-slot="input-otp-slot" name="otp[0]">
+    <input type="text" inputmode="numeric" maxlength="1" class="relative flex h-10 w-10 items-center justify-center rounded-md border border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50" data-slot="input-otp-slot" name="otp[1]">
+    <input type="text" inputmode="numeric" maxlength="1" class="relative flex h-10 w-10 items-center justify-center rounded-md border border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50" data-slot="input-otp-slot" name="otp[2]">
+    <span role="separator" class="text-muted-foreground" data-slot="input-otp-separator" aria-hidden="true">-</span>
+    <input type="text" inputmode="numeric" maxlength="1" class="relative flex h-10 w-10 items-center justify-center rounded-md border border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50" data-slot="input-otp-slot" name="otp[3]">
+    <input type="text" inputmode="numeric" maxlength="1" class="relative flex h-10 w-10 items-center justify-center rounded-md border border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50" data-slot="input-otp-slot" name="otp[4]">
+    <input type="text" inputmode="numeric" maxlength="1" class="relative flex h-10 w-10 items-center justify-center rounded-md border border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50" data-slot="input-otp-slot" name="otp[5]">
+</div>
