@@ -1,0 +1,10 @@
+{# @block content The element that reveals the hover card on hover or focus #}
+<span
+    class="{{ ('inline-block cursor-default ' ~ attributes.render('class'))|tailwind_merge }}"
+    tabindex="0"
+    {{ attributes.defaults({
+        'data-slot': 'hover-card-trigger',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</span>

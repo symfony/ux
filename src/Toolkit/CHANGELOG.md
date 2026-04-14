@@ -12,6 +12,7 @@
 - [Shadcn] Add `native-select` recipe
 - [Shadcn] Add `slider` recipe
 - [Shadcn] Add `scroll-area` recipe
+- [Shadcn] Add `hover-card` recipe
 
 ## 2.35
 

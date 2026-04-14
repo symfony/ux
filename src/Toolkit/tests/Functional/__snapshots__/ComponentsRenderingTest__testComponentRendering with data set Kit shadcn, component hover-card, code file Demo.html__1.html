@@ -1,0 +1,33 @@
+<!--
+- Kit: Shadcn UI
+- Component: Hover Card
+- Code:
+```twig
+<twig:HoverCard>
+    <twig:HoverCard:Trigger class="underline-offset-4 underline">@nextjs</twig:HoverCard:Trigger>
+    <twig:HoverCard:Content class="w-80">
+        <div class="flex justify-between gap-4">
+            <div class="size-10 rounded-full bg-muted"></div>
+            <div class="space-y-1">
+                <h4 class="text-sm font-semibold">@nextjs</h4>
+                <p class="text-sm">The React Framework — created and maintained by @vercel.</p>
+                <div class="flex items-center pt-2">
+                    <span class="text-xs text-muted-foreground">Joined December 2021</span>
+                </div>
+            </div>
+        </div>
+    </twig:HoverCard:Content>
+</twig:HoverCard>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<span class="group/hover-card relative inline-block" data-slot="hover-card"><span class="inline-block cursor-default underline-offset-4 underline" tabindex="0" data-slot="hover-card-trigger">@nextjs</span>    <span role="tooltip" class="invisible opacity-0 group-hover/hover-card:visible group-hover/hover-card:opacity-100 group-focus-within/hover-card:visible group-focus-within/hover-card:opacity-100 transition-opacity absolute left-1/2 top-full z-50 mt-2 -translate-x-1/2 rounded-md border bg-popover p-4 text-sm text-popover-foreground shadow-md outline-none w-80" data-slot="hover-card-content"><div class="flex justify-between gap-4">
+            <div class="size-10 rounded-full bg-muted"></div>
+            <div class="space-y-1">
+                <h4 class="text-sm font-semibold">@nextjs</h4>
+                <p class="text-sm">The React Framework &acirc;&#128;&#148; created and maintained by @vercel.</p>
+                <div class="flex items-center pt-2">
+                    <span class="text-xs text-muted-foreground">Joined December 2021</span>
+                </div>
+            </div>
+        </div>
+    </span></span>
