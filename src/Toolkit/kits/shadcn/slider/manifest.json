@@ -1,0 +1,12 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Slider",
+    "description": "An input that allows the user to select a value from a given range.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "composer": ["tales-from-a-dev/twig-tailwind-extra:^1.0.0"]
+    }
+}

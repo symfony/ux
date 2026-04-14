@@ -1,0 +1,14 @@
+<div class="flex flex-col gap-6 w-80">
+    <div class="flex flex-col gap-2">
+        <twig:Label for="volume">Volume</twig:Label>
+        <twig:Slider id="volume" name="volume" min="0" max="100" value="33" />
+    </div>
+    <div class="flex flex-col gap-2">
+        <twig:Label for="brightness">Brightness</twig:Label>
+        <twig:Slider id="brightness" name="brightness" min="0" max="100" step="5" value="75" />
+    </div>
+    <div class="flex flex-col gap-2">
+        <twig:Label for="disabled">Disabled</twig:Label>
+        <twig:Slider id="disabled" name="disabled" min="0" max="100" value="50" disabled />
+    </div>
+</div>
