@@ -1,3 +1,5 @@
 <twig:Tooltip title="<em>Tooltip</em> with <u>HTML</u>" html>
-    <twig:Button variant="secondary">Hover me</twig:Button>
+    <twig:Tooltip:Trigger>
+        <twig:Button variant="secondary" {{ ...tooltip_trigger_attrs }}>Hover me</twig:Button>
+    </twig:Tooltip:Trigger>
 </twig:Tooltip>

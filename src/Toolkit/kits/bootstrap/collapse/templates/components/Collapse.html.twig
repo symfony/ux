@@ -1,22 +1,15 @@
 {# @prop id string Unique identifier for the collapsible element #}
 {# @prop open bool Whether the content is visible by default. Defaults to `false` #}
 {# @prop horizontal bool Whether to collapse horizontally instead of vertically. Defaults to `false` #}
-{# @block content The collapsible content #}
+{# @block content The collapse structure, typically includes `Collapse:Trigger` and `Collapse:Content` #}
 {%- props id, open = false, horizontal = false -%}
-{%- set style = html_cva(
-    base: 'collapse',
-    variants: {
-        open: {
-            true: 'show',
-        },
-        horizontal: {
-            true: 'collapse-horizontal',
-        },
-    },
-) -%}
+{%- set _collapse_id = id -%}
+{%- set _collapse_is_open = open -%}
+{%- set _collapse_horizontal = horizontal -%}
 <div
-    class="{{ style.apply({open, horizontal}, attributes.render('class')) }}"
-    id="{{ id }}"
+    {{ attributes.defaults({
+        'data-controller': 'collapse',
+    }) }}
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}

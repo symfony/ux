@@ -1,8 +1,12 @@
-<twig:Collapse:Trigger target="#collapseOpen" expanded class="btn btn-outline-primary mb-2">
-    Toggle content
-</twig:Collapse:Trigger>
 <twig:Collapse id="collapseOpen" open>
-    <div class="card card-body">
-        This content is visible by default and can be hidden by clicking the trigger.
-    </div>
+    <twig:Collapse:Trigger>
+        <twig:Button variant="outline-primary" class="mb-2" {{ ...collapse_trigger_attrs }}>
+            Toggle content
+        </twig:Button>
+    </twig:Collapse:Trigger>
+    <twig:Collapse:Content>
+        <div class="card card-body">
+            This content is visible by default and can be hidden by clicking the trigger.
+        </div>
+    </twig:Collapse:Content>
 </twig:Collapse>

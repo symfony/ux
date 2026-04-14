@@ -1,8 +1,12 @@
-<twig:Collapse:Trigger target="#collapseDemo" class="btn btn-primary mb-2">
-    Toggle content
-</twig:Collapse:Trigger>
 <twig:Collapse id="collapseDemo">
-    <div class="card card-body">
-        Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
-    </div>
+    <twig:Collapse:Trigger>
+        <twig:Button class="mb-2" {{ ...collapse_trigger_attrs }}>
+            Toggle content
+        </twig:Button>
+    </twig:Collapse:Trigger>
+    <twig:Collapse:Content>
+        <div class="card card-body">
+            Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+        </div>
+    </twig:Collapse:Content>
 </twig:Collapse>

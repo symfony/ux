@@ -1,0 +1,17 @@
+{# @block content The element that triggers the tooltip on hover/focus #}
+{%- set tooltip_trigger_attrs = {
+    'data-controller': 'tooltip',
+    'data-bs-toggle': 'tooltip',
+    'data-bs-title': _tooltip_title,
+    'data-bs-placement': _tooltip_placement,
+} -%}
+{%- if _tooltip_html -%}
+    {%- set tooltip_trigger_attrs = tooltip_trigger_attrs|merge({'data-bs-html': 'true'}) -%}
+{%- endif -%}
+{%- if _tooltip_trigger != 'hover focus' -%}
+    {%- set tooltip_trigger_attrs = tooltip_trigger_attrs|merge({'data-bs-trigger': _tooltip_trigger}) -%}
+{%- endif -%}
+{%- if _tooltip_custom_class -%}
+    {%- set tooltip_trigger_attrs = tooltip_trigger_attrs|merge({'data-bs-custom-class': _tooltip_custom_class}) -%}
+{%- endif -%}
+{%- block content %}{% endblock -%}

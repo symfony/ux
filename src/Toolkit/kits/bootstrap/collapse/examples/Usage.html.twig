@@ -1,6 +1,8 @@
-<twig:Collapse:Trigger target="#myCollapse" class="btn btn-primary mb-2">
-    Toggle
-</twig:Collapse:Trigger>
 <twig:Collapse id="myCollapse">
-    <div class="card card-body">Collapsible content goes here.</div>
+    <twig:Collapse:Trigger>
+        <twig:Button class="mb-2" {{ ...collapse_trigger_attrs }}>Toggle</twig:Button>
+    </twig:Collapse:Trigger>
+    <twig:Collapse:Content>
+        <div class="card card-body">Collapsible content goes here.</div>
+    </twig:Collapse:Content>
 </twig:Collapse>

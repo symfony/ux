@@ -6,6 +6,7 @@
 {%- set _accordion_item_is_open = open -%}
 <div
     class="{{ ('accordion-item ' ~ attributes.render('class'))|trim }}"
+    data-accordion-target="item"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}

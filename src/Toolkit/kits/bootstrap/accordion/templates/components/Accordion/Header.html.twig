@@ -12,8 +12,8 @@
     <button
         class="{{ style.apply({collapsed: not _accordion_item_is_open}, attributes.render('class')) }}"
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#{{ _accordion_item_id }}-collapse"
+        data-action="click->accordion#toggle"
+        data-accordion-target="header"
         aria-expanded="{{ _accordion_item_is_open ? 'true' : 'false' }}"
         aria-controls="{{ _accordion_item_id }}-collapse"
         {{ attributes }}

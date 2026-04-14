@@ -1,0 +1,23 @@
+{# @block content The collapsible content #}
+{%- set style = html_cva(
+    base: 'collapse',
+    variants: {
+        open: {
+            true: 'show',
+        },
+        horizontal: {
+            true: 'collapse-horizontal',
+        },
+    },
+) -%}
+{%- props -%}
+<div
+    class="{{ style.apply({open: _collapse_is_open, horizontal: _collapse_horizontal}, attributes.render('class')) }}"
+    {{ attributes.defaults({
+        id: _collapse_id ~ '-content',
+        'data-collapse-target': 'content',
+    }) }}
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

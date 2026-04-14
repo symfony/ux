@@ -1,10 +1,14 @@
-<twig:Collapse:Trigger target="#collapseHorizontal" class="btn btn-primary mb-2">
-    Toggle horizontal collapse
-</twig:Collapse:Trigger>
-<div style="min-height: 120px;">
-    <twig:Collapse id="collapseHorizontal" horizontal>
-        <div class="card card-body" style="width: 300px;">
-            This is some placeholder content for a horizontal collapse. It's hidden by default and shown when triggered.
-        </div>
-    </twig:Collapse>
-</div>
+<twig:Collapse id="collapseHorizontal" horizontal>
+    <twig:Collapse:Trigger>
+        <twig:Button class="mb-2" {{ ...collapse_trigger_attrs }}>
+            Toggle horizontal collapse
+        </twig:Button>
+    </twig:Collapse:Trigger>
+    <div style="min-height: 120px;">
+        <twig:Collapse:Content>
+            <div class="card card-body" style="width: 300px;">
+                This is some placeholder content for a horizontal collapse. It's hidden by default and shown when triggered.
+            </div>
+        </twig:Collapse:Content>
+    </div>
+</twig:Collapse>
