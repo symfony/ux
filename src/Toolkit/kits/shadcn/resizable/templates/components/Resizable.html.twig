@@ -1,0 +1,22 @@
+{# @prop direction 'both'|'horizontal'|'vertical' Which axis can be resized. Defaults to `both` #}
+{# @block content The content of the resizable panel #}
+{%- props direction = 'both' -%}
+{%- set style = html_cva(
+    base: 'overflow-auto rounded-md border bg-background',
+    variants: {
+        direction: {
+            both: 'resize min-h-24 min-w-48',
+            horizontal: 'resize-x min-w-48',
+            vertical: 'resize-y min-h-24',
+        },
+    },
+) -%}
+<div
+    class="{{ style.apply({direction: direction}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'resizable',
+        'data-direction': direction,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

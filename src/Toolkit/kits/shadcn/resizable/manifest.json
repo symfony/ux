@@ -1,0 +1,12 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Resizable",
+    "description": "A panel that can be resized horizontally or vertically using the browser native resize handle.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "composer": ["tales-from-a-dev/twig-tailwind-extra:^1.0.0"]
+    }
+}
