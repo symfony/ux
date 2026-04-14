@@ -1,0 +1,23 @@
+<twig:Popover>
+    <twig:Popover:Trigger class="h-9 rounded-md border border-input bg-background px-4 shadow-xs hover:bg-accent">
+        Dimensions
+    </twig:Popover:Trigger>
+    <twig:Popover:Content class="w-80">
+        <div class="grid gap-4">
+            <div class="space-y-1">
+                <h4 class="text-sm font-medium leading-none">Dimensions</h4>
+                <p class="text-xs text-muted-foreground">Set the dimensions for the layer.</p>
+            </div>
+            <div class="grid gap-2">
+                <div class="grid grid-cols-3 items-center gap-4">
+                    <twig:Label for="popover-width">Width</twig:Label>
+                    <input id="popover-width" class="col-span-2 h-8 rounded-md border px-2 text-sm" value="100%" />
+                </div>
+                <div class="grid grid-cols-3 items-center gap-4">
+                    <twig:Label for="popover-height">Height</twig:Label>
+                    <input id="popover-height" class="col-span-2 h-8 rounded-md border px-2 text-sm" value="25px" />
+                </div>
+            </div>
+        </div>
+    </twig:Popover:Content>
+</twig:Popover>

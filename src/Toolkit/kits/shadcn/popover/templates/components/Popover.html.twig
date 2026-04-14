@@ -1,0 +1,9 @@
+{# @block content A `Popover:Trigger` and a `Popover:Content` #}
+<details
+    class="{{ ('group/popover relative inline-block ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'popover',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</details>

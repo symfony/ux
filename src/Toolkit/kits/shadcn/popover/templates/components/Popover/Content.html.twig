@@ -1,0 +1,10 @@
+{# @block content The content revealed when the popover is open #}
+<div
+    role="dialog"
+    class="{{ ('absolute left-1/2 top-full z-50 mt-2 w-72 -translate-x-1/2 rounded-md border bg-popover p-4 text-sm text-popover-foreground shadow-md outline-none ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'popover-content',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>
