@@ -10,6 +10,7 @@
 - Minimum required Symfony version is now 7.4
 - Minimum required PHP version is now 8.4
 - [Shadcn] Add `radio-group` recipe
+- [Shadcn] Add `collapsible` recipe
 
 ## 2.35
 

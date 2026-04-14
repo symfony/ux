@@ -1,0 +1,29 @@
+<!--
+- Kit: Shadcn UI
+- Component: Collapsible
+- Code:
+```twig
+<twig:Collapsible open class="w-80 space-y-2">
+    <div class="flex items-center justify-between gap-4">
+        <h4 class="text-sm font-semibold">@peduarte starred 3 repositories</h4>
+        <twig:Collapsible:Trigger class="size-8 justify-center rounded-md border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground">
+            <span class="sr-only">Toggle</span>
+        </twig:Collapsible:Trigger>
+    </div>
+    <div class="rounded-md border px-4 py-3 font-mono text-sm">@radix-ui/primitives</div>
+    <twig:Collapsible:Content class="space-y-2">
+        <div class="rounded-md border px-4 py-3 font-mono text-sm">@radix-ui/colors</div>
+        <div class="rounded-md border px-4 py-3 font-mono text-sm">@stitches/react</div>
+    </twig:Collapsible:Content>
+</twig:Collapsible>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<details class="group w-80 space-y-2" data-slot="collapsible" open><div class="flex items-center justify-between gap-4">
+        <h4 class="text-sm font-semibold">@peduarte starred 3 repositories</h4>
+        <summary class="inline-flex cursor-pointer items-center gap-2 text-sm font-medium outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 size-8 justify-center rounded-md border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground" data-slot="collapsible-trigger"><span class="sr-only">Toggle</span>
+        </summary>    </div>
+    <div class="rounded-md border px-4 py-3 font-mono text-sm">@radix-ui/primitives</div>
+    <div class="mt-2 text-sm space-y-2" data-slot="collapsible-content">
+<div class="rounded-md border px-4 py-3 font-mono text-sm">@radix-ui/colors</div>
+        <div class="rounded-md border px-4 py-3 font-mono text-sm">@stitches/react</div>
+    </div></details>

@@ -1,0 +1,9 @@
+{# @block content The content revealed when the collapsible is open #}
+<div
+    class="{{ ('mt-2 text-sm ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'collapsible-content',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>
