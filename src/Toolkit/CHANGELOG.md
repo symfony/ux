@@ -9,6 +9,7 @@
 
 - Minimum required Symfony version is now 7.4
 - Minimum required PHP version is now 8.4
+- [Shadcn] Add `native-select` recipe
 
 ## 2.35
 

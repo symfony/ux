@@ -1,0 +1,9 @@
+{# @block content The `<option>` elements #}
+<select
+    class="{{ ('flex h-9 w-fit items-center rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'native-select',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</select>
