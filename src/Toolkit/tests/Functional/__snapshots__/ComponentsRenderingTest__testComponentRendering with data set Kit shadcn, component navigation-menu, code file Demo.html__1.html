@@ -1,0 +1,61 @@
+<!--
+- Kit: Shadcn UI
+- Component: Navigation Menu
+- Code:
+```twig
+<twig:NavigationMenu>
+    <twig:NavigationMenu:List>
+        <twig:NavigationMenu:Item>
+            <twig:NavigationMenu:Trigger>Getting started</twig:NavigationMenu:Trigger>
+            <twig:NavigationMenu:Content class="w-[420px]">
+                <div class="grid gap-1">
+                    <a class="rounded-md p-3 hover:bg-accent" href="/docs/install">
+                        <div class="text-sm font-medium">Installation</div>
+                        <p class="text-xs text-muted-foreground">How to install the Toolkit.</p>
+                    </a>
+                    <a class="rounded-md p-3 hover:bg-accent" href="/docs/primitives">
+                        <div class="text-sm font-medium">Primitives</div>
+                        <p class="text-xs text-muted-foreground">Building blocks of the Toolkit.</p>
+                    </a>
+                </div>
+            </twig:NavigationMenu:Content>
+        </twig:NavigationMenu:Item>
+        <twig:NavigationMenu:Item>
+            <twig:NavigationMenu:Trigger>Components</twig:NavigationMenu:Trigger>
+            <twig:NavigationMenu:Content>
+                <ul class="grid gap-1">
+                    <li><a class="block rounded-md p-2 hover:bg-accent" href="/docs/components/alert">Alert</a></li>
+                    <li><a class="block rounded-md p-2 hover:bg-accent" href="/docs/components/button">Button</a></li>
+                    <li><a class="block rounded-md p-2 hover:bg-accent" href="/docs/components/dialog">Dialog</a></li>
+                </ul>
+            </twig:NavigationMenu:Content>
+        </twig:NavigationMenu:Item>
+        <twig:NavigationMenu:Item>
+            <twig:NavigationMenu:Link href="/docs">Documentation</twig:NavigationMenu:Link>
+        </twig:NavigationMenu:Item>
+    </twig:NavigationMenu:List>
+</twig:NavigationMenu>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<nav class="relative flex max-w-max flex-1 items-center justify-center" data-slot="navigation-menu" aria-label="Main"><ul class="group flex flex-1 list-none items-center justify-center gap-1" data-slot="navigation-menu-list">
+<li class="group/nav-item relative" data-slot="navigation-menu-item">
+<button type="button" class="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50" data-slot="navigation-menu-trigger">Getting started</button>            <div class="invisible opacity-0 group-hover/nav-item:visible group-hover/nav-item:opacity-100 group-focus-within/nav-item:visible group-focus-within/nav-item:opacity-100 transition-opacity absolute left-0 top-full z-50 mt-1.5 min-w-48 rounded-md border bg-popover p-2 text-popover-foreground shadow-md w-[420px]" data-slot="navigation-menu-content">
+<div class="grid gap-1">
+                    <a class="rounded-md p-3 hover:bg-accent" href="/docs/install">
+                        <div class="text-sm font-medium">Installation</div>
+                        <p class="text-xs text-muted-foreground">How to install the Toolkit.</p>
+                    </a>
+                    <a class="rounded-md p-3 hover:bg-accent" href="/docs/primitives">
+                        <div class="text-sm font-medium">Primitives</div>
+                        <p class="text-xs text-muted-foreground">Building blocks of the Toolkit.</p>
+                    </a>
+                </div>
+            </div>        </li>        <li class="group/nav-item relative" data-slot="navigation-menu-item">
+<button type="button" class="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50" data-slot="navigation-menu-trigger">Components</button>            <div class="invisible opacity-0 group-hover/nav-item:visible group-hover/nav-item:opacity-100 group-focus-within/nav-item:visible group-focus-within/nav-item:opacity-100 transition-opacity absolute left-0 top-full z-50 mt-1.5 min-w-48 rounded-md border bg-popover p-2 text-popover-foreground shadow-md" data-slot="navigation-menu-content">
+<ul class="grid gap-1">
+                    <li><a class="block rounded-md p-2 hover:bg-accent" href="/docs/components/alert">Alert</a></li>
+                    <li><a class="block rounded-md p-2 hover:bg-accent" href="/docs/components/button">Button</a></li>
+                    <li><a class="block rounded-md p-2 hover:bg-accent" href="/docs/components/dialog">Dialog</a></li>
+                </ul>
+            </div>        </li>        <li class="group/nav-item relative" data-slot="navigation-menu-item">
+<a href="/docs" class="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50" data-slot="navigation-menu-link">Documentation</a>        </li>    </ul></nav>

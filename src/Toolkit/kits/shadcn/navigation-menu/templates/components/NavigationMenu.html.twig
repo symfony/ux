@@ -1,0 +1,10 @@
+{# @block content A `NavigationMenu:List` containing `NavigationMenu:Item` children #}
+<nav
+    class="{{ ('relative flex max-w-max flex-1 items-center justify-center ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'navigation-menu',
+        'aria-label': 'Main',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</nav>

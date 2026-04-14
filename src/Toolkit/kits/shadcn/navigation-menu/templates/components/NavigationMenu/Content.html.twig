@@ -1,0 +1,9 @@
+{# @block content The submenu revealed on hover or focus #}
+<div
+    class="{{ ('invisible opacity-0 group-hover/nav-item:visible group-hover/nav-item:opacity-100 group-focus-within/nav-item:visible group-focus-within/nav-item:opacity-100 transition-opacity absolute left-0 top-full z-50 mt-1.5 min-w-48 rounded-md border bg-popover p-2 text-popover-foreground shadow-md ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'navigation-menu-content',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

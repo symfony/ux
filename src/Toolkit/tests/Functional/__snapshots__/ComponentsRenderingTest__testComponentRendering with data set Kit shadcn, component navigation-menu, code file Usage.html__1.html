@@ -1,0 +1,21 @@
+<!--
+- Kit: Shadcn UI
+- Component: Navigation Menu
+- Code:
+```twig
+<twig:NavigationMenu>
+    <twig:NavigationMenu:List>
+        <twig:NavigationMenu:Item>
+            <twig:NavigationMenu:Link href="/">Home</twig:NavigationMenu:Link>
+        </twig:NavigationMenu:Item>
+        <twig:NavigationMenu:Item>
+            <twig:NavigationMenu:Link href="/docs">Docs</twig:NavigationMenu:Link>
+        </twig:NavigationMenu:Item>
+    </twig:NavigationMenu:List>
+</twig:NavigationMenu>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<nav class="relative flex max-w-max flex-1 items-center justify-center" data-slot="navigation-menu" aria-label="Main"><ul class="group flex flex-1 list-none items-center justify-center gap-1" data-slot="navigation-menu-list">
+<li class="group/nav-item relative" data-slot="navigation-menu-item">
+<a href="/" class="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50" data-slot="navigation-menu-link">Home</a>        </li>        <li class="group/nav-item relative" data-slot="navigation-menu-item">
+<a href="/docs" class="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50" data-slot="navigation-menu-link">Docs</a>        </li>    </ul></nav>

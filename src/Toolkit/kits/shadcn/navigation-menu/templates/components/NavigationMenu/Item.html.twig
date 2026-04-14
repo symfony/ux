@@ -1,0 +1,9 @@
+{# @block content The trigger and optional submenu content #}
+<li
+    class="{{ ('group/nav-item relative ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'navigation-menu-item',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</li>

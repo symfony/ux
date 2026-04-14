@@ -6,11 +6,12 @@
 - Minimum required PHP version is now 8.4
 - [Shadcn] Add `input-otp` recipe
 - [Shadcn] Add `resizable` recipe
+- [Shadcn] Add `navigation-menu` recipe
 
 ## 2.35
 
 - [Flowbite] Add Flowbite v4 kit
- - [Shadcn] Add `toggle` recipe
+- [Shadcn] Add `toggle` recipe
 - [Shadcn] Use `html_attr_type` filter from `twig/html-extra:^3.24` for composable trigger attributes
 - [Shadcn] Rename `trigger_attrs` to `alert_dialog_trigger_attrs` in `AlertDialog:Trigger`
 - [Shadcn] Rename `trigger_attrs` to `dialog_trigger_attrs` in `Dialog:Trigger`

@@ -1,0 +1,32 @@
+<twig:NavigationMenu>
+    <twig:NavigationMenu:List>
+        <twig:NavigationMenu:Item>
+            <twig:NavigationMenu:Trigger>Getting started</twig:NavigationMenu:Trigger>
+            <twig:NavigationMenu:Content class="w-[420px]">
+                <div class="grid gap-1">
+                    <a class="rounded-md p-3 hover:bg-accent" href="/docs/install">
+                        <div class="text-sm font-medium">Installation</div>
+                        <p class="text-xs text-muted-foreground">How to install the Toolkit.</p>
+                    </a>
+                    <a class="rounded-md p-3 hover:bg-accent" href="/docs/primitives">
+                        <div class="text-sm font-medium">Primitives</div>
+                        <p class="text-xs text-muted-foreground">Building blocks of the Toolkit.</p>
+                    </a>
+                </div>
+            </twig:NavigationMenu:Content>
+        </twig:NavigationMenu:Item>
+        <twig:NavigationMenu:Item>
+            <twig:NavigationMenu:Trigger>Components</twig:NavigationMenu:Trigger>
+            <twig:NavigationMenu:Content>
+                <ul class="grid gap-1">
+                    <li><a class="block rounded-md p-2 hover:bg-accent" href="/docs/components/alert">Alert</a></li>
+                    <li><a class="block rounded-md p-2 hover:bg-accent" href="/docs/components/button">Button</a></li>
+                    <li><a class="block rounded-md p-2 hover:bg-accent" href="/docs/components/dialog">Dialog</a></li>
+                </ul>
+            </twig:NavigationMenu:Content>
+        </twig:NavigationMenu:Item>
+        <twig:NavigationMenu:Item>
+            <twig:NavigationMenu:Link href="/docs">Documentation</twig:NavigationMenu:Link>
+        </twig:NavigationMenu:Item>
+    </twig:NavigationMenu:List>
+</twig:NavigationMenu>
