@@ -11,6 +11,7 @@
 - Minimum required PHP version is now 8.4
 - [Shadcn] Add `native-select` recipe
 - [Shadcn] Add `slider` recipe
+- [Shadcn] Add `scroll-area` recipe
 
 ## 2.35
 

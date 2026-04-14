@@ -1,0 +1,9 @@
+{# @block content The scrollable content #}
+<div
+    class="{{ ('relative overflow-auto [&::-webkit-scrollbar]:w-2.5 [&::-webkit-scrollbar]:h-2.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-muted-foreground/50 scrollbar-thin ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'scroll-area',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>
