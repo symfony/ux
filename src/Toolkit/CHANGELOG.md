@@ -12,6 +12,7 @@
 - [Shadcn] Add `radio-group` recipe
 - [Shadcn] Add `collapsible` recipe
 - [Shadcn] Add `typography` recipe
+- [Shadcn] Add `toggle-group` recipe
 
 ## 2.35
 
@@ -47,7 +48,6 @@
 ## 2.29.0
 
 - Add Symfony 8 support
-
 ## 2.25
 
 - Package added
