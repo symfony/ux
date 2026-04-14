@@ -1,8 +1,16 @@
 {# @block content The clickable header label that toggles the accordion item #}
 {%- props -%}
+{%- set style = html_cva(
+    base: 'accordion-button',
+    variants: {
+        collapsed: {
+            true: 'collapsed',
+        },
+    },
+) -%}
 <h2 class="accordion-header">
     <button
-        class="{{ ('accordion-button' ~ (not _accordion_item_is_open ? ' collapsed' : '') ~ ' ' ~ attributes.render('class'))|trim }}"
+        class="{{ style.apply({collapsed: not _accordion_item_is_open}, attributes.render('class')) }}"
         type="button"
         data-bs-toggle="collapse"
         data-bs-target="#{{ _accordion_item_id }}-collapse"

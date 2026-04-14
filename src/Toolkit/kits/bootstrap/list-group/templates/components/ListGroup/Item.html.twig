@@ -5,21 +5,33 @@
 {# @prop as 'li' The HTML tag to render. Use `a` or `button` for action items. Defaults to `li` #}
 {# @block content The item content #}
 {%- props variant = 'default', active = false, disabled = false, action = false, as = 'li' -%}
-{%- set classes = ['list-group-item'] -%}
-{%- if variant != 'default' -%}
-    {%- set classes = classes|merge(['list-group-item-' ~ variant]) -%}
-{%- endif -%}
-{%- if active -%}
-    {%- set classes = classes|merge(['active']) -%}
-{%- endif -%}
-{%- if disabled -%}
-    {%- set classes = classes|merge(['disabled']) -%}
-{%- endif -%}
-{%- if action -%}
-    {%- set classes = classes|merge(['list-group-item-action']) -%}
-{%- endif -%}
+{%- set style = html_cva(
+    base: 'list-group-item',
+    variants: {
+        variant: {
+            default: '',
+            primary: 'list-group-item-primary',
+            secondary: 'list-group-item-secondary',
+            success: 'list-group-item-success',
+            danger: 'list-group-item-danger',
+            warning: 'list-group-item-warning',
+            info: 'list-group-item-info',
+            light: 'list-group-item-light',
+            dark: 'list-group-item-dark',
+        },
+        active: {
+            true: 'active',
+        },
+        disabled: {
+            true: 'disabled',
+        },
+        action: {
+            true: 'list-group-item-action',
+        },
+    },
+) -%}
 <{{ as }}
-    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    class="{{ style.apply({variant, active, disabled, action}, attributes.render('class')) }}"
     {{ active ? 'aria-current="true"' }}
     {{ disabled and as != 'button' ? 'aria-disabled="true"' }}
     {{ disabled and as == 'button' ? 'disabled' }}

@@ -2,12 +2,26 @@
 {# @prop pill bool Whether to use rounded-pill style. Defaults to `false` #}
 {# @block content The badge content #}
 {%- props variant = 'primary', pill = false -%}
-{%- set classes = ['badge', 'text-bg-' ~ variant] -%}
-{%- if pill -%}
-    {%- set classes = classes|merge(['rounded-pill']) -%}
-{%- endif -%}
+{%- set style = html_cva(
+    base: 'badge',
+    variants: {
+        variant: {
+            primary: 'text-bg-primary',
+            secondary: 'text-bg-secondary',
+            success: 'text-bg-success',
+            danger: 'text-bg-danger',
+            warning: 'text-bg-warning',
+            info: 'text-bg-info',
+            light: 'text-bg-light',
+            dark: 'text-bg-dark',
+        },
+        pill: {
+            true: 'rounded-pill',
+        },
+    },
+) -%}
 <span
-    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    class="{{ style.apply({variant, pill}, attributes.render('class')) }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}

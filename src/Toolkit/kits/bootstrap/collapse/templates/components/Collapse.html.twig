@@ -3,15 +3,19 @@
 {# @prop horizontal bool Whether to collapse horizontally instead of vertically. Defaults to `false` #}
 {# @block content The collapsible content #}
 {%- props id, open = false, horizontal = false -%}
-{%- set classes = ['collapse'] -%}
-{%- if open -%}
-    {%- set classes = classes|merge(['show']) -%}
-{%- endif -%}
-{%- if horizontal -%}
-    {%- set classes = classes|merge(['collapse-horizontal']) -%}
-{%- endif -%}
+{%- set style = html_cva(
+    base: 'collapse',
+    variants: {
+        open: {
+            true: 'show',
+        },
+        horizontal: {
+            true: 'collapse-horizontal',
+        },
+    },
+) -%}
 <div
-    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    class="{{ style.apply({open, horizontal}, attributes.render('class')) }}"
     id="{{ id }}"
     {{ attributes }}
 >

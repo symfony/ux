@@ -2,12 +2,16 @@
 {# @prop href string|null The link URL. Ignored when active. Defaults to `null` #}
 {# @block content The breadcrumb item label #}
 {%- props active = false, href = null -%}
-{%- set classes = ['breadcrumb-item'] -%}
-{%- if active -%}
-    {%- set classes = classes|merge(['active']) -%}
-{%- endif -%}
+{%- set style = html_cva(
+    base: 'breadcrumb-item',
+    variants: {
+        active: {
+            true: 'active',
+        },
+    },
+) -%}
 <li
-    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    class="{{ style.apply({active}, attributes.render('class')) }}"
     {{ active ? 'aria-current="page"' }}
     {{ attributes }}
 >

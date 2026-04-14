@@ -2,12 +2,22 @@
 {# @prop size 'default'|'sm'|'lg' The size of all buttons in the group. Defaults to `default` #}
 {# @block content The grouped buttons #}
 {%- props orientation = 'horizontal', size = 'default' -%}
-{%- set classes = [orientation == 'vertical' ? 'btn-group-vertical' : 'btn-group'] -%}
-{%- if size != 'default' -%}
-    {%- set classes = classes|merge(['btn-group-' ~ size]) -%}
-{%- endif -%}
+{%- set style = html_cva(
+    base: '',
+    variants: {
+        orientation: {
+            horizontal: 'btn-group',
+            vertical: 'btn-group-vertical',
+        },
+        size: {
+            default: '',
+            sm: 'btn-group-sm',
+            lg: 'btn-group-lg',
+        },
+    },
+) -%}
 <div
-    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    class="{{ style.apply({orientation, size}, attributes.render('class')) }}"
     role="group"
     {{ attributes }}
 >

@@ -5,12 +5,16 @@
 {%- props id, flush = false, alwaysOpen = false -%}
 {%- set _accordion_id = id -%}
 {%- set _accordion_always_open = alwaysOpen -%}
-{%- set classes = ['accordion'] -%}
-{%- if flush -%}
-    {%- set classes = classes|merge(['accordion-flush']) -%}
-{%- endif -%}
+{%- set style = html_cva(
+    base: 'accordion',
+    variants: {
+        flush: {
+            true: 'accordion-flush',
+        },
+    },
+) -%}
 <div
-    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    class="{{ style.apply({flush}, attributes.render('class')) }}"
     id="{{ _accordion_id }}"
     {{ attributes }}
 >

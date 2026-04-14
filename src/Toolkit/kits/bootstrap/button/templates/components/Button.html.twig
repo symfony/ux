@@ -3,12 +3,37 @@
 {# @prop as 'button' The HTML tag to render. Defaults to `button` #}
 {# @block content The button label and/or icon #}
 {%- props variant = 'primary', size = 'default', as = 'button' -%}
-{%- set classes = ['btn', 'btn-' ~ variant] -%}
-{%- if size != 'default' -%}
-    {%- set classes = classes|merge(['btn-' ~ size]) -%}
-{%- endif -%}
+{%- set style = html_cva(
+    base: 'btn',
+    variants: {
+        variant: {
+            primary: 'btn-primary',
+            secondary: 'btn-secondary',
+            success: 'btn-success',
+            danger: 'btn-danger',
+            warning: 'btn-warning',
+            info: 'btn-info',
+            light: 'btn-light',
+            dark: 'btn-dark',
+            link: 'btn-link',
+            'outline-primary': 'btn-outline-primary',
+            'outline-secondary': 'btn-outline-secondary',
+            'outline-success': 'btn-outline-success',
+            'outline-danger': 'btn-outline-danger',
+            'outline-warning': 'btn-outline-warning',
+            'outline-info': 'btn-outline-info',
+            'outline-light': 'btn-outline-light',
+            'outline-dark': 'btn-outline-dark',
+        },
+        size: {
+            default: '',
+            sm: 'btn-sm',
+            lg: 'btn-lg',
+        },
+    },
+) -%}
 <{{ as }}
-    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    class="{{ style.apply({variant, size}, attributes.render('class')) }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}

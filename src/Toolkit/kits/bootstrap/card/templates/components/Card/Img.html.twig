@@ -2,10 +2,19 @@
 {# @prop src string The image source URL #}
 {# @prop alt string The image alt text. Defaults to `''` #}
 {%- props position = 'top', src, alt = '' -%}
-{%- set classMap = {top: 'card-img-top', bottom: 'card-img-bottom', overlay: 'card-img'} -%}
+{%- set style = html_cva(
+    base: '',
+    variants: {
+        position: {
+            top: 'card-img-top',
+            bottom: 'card-img-bottom',
+            overlay: 'card-img',
+        },
+    },
+) -%}
 <img
     src="{{ src }}"
     alt="{{ alt }}"
-    class="{{ (classMap[position] ~ ' ' ~ attributes.render('class'))|trim }}"
+    class="{{ style.apply({position}, attributes.render('class')) }}"
     {{ attributes }}
 />

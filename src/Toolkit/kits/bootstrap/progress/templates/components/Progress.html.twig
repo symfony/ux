@@ -9,16 +9,24 @@
 {# @block content Optional label text displayed inside the bar #}
 {%- props value = 0, min = 0, max = 100, label = null, variant = 'default', striped = false, animated = false, stacked = false -%}
 {%- set percentage = ((value - min) / (max - min) * 100)|round -%}
-{%- set barClasses = ['progress-bar'] -%}
-{%- if variant != 'default' -%}
-    {%- set barClasses = barClasses|merge(['text-bg-' ~ variant]) -%}
-{%- endif -%}
-{%- if striped or animated -%}
-    {%- set barClasses = barClasses|merge(['progress-bar-striped']) -%}
-{%- endif -%}
-{%- if animated -%}
-    {%- set barClasses = barClasses|merge(['progress-bar-animated']) -%}
-{%- endif -%}
+{%- set barStyle = html_cva(
+    base: 'progress-bar',
+    variants: {
+        variant: {
+            default: '',
+            success: 'text-bg-success',
+            info: 'text-bg-info',
+            warning: 'text-bg-warning',
+            danger: 'text-bg-danger',
+        },
+        striped: {
+            true: 'progress-bar-striped',
+        },
+        animated: {
+            true: 'progress-bar-animated progress-bar-striped',
+        },
+    },
+) -%}
 <div
     class="{{ ('progress ' ~ attributes.render('class'))|trim }}"
     role="progressbar"
@@ -29,7 +37,7 @@
     {% if stacked %}style="width: {{ percentage }}%"{% endif %}
     {{ attributes }}
 >
-    <div class="{{ barClasses|join(' ') }}"{% if not stacked %} style="width: {{ percentage }}%"{% endif %}>
+    <div class="{{ barStyle.apply({variant, striped, animated}) }}"{% if not stacked %} style="width: {{ percentage }}%"{% endif %}>
         {%- block content %}{% endblock -%}
     </div>
 </div>

@@ -2,12 +2,26 @@
 {# @prop dismissible bool Whether the alert can be dismissed. Defaults to `false` #}
 {# @block content The alert content #}
 {%- props variant = 'primary', dismissible = false -%}
-{%- set classes = ['alert', 'alert-' ~ variant] -%}
-{%- if dismissible -%}
-    {%- set classes = classes|merge(['alert-dismissible', 'fade', 'show']) -%}
-{%- endif -%}
+{%- set style = html_cva(
+    base: 'alert',
+    variants: {
+        variant: {
+            primary: 'alert-primary',
+            secondary: 'alert-secondary',
+            success: 'alert-success',
+            danger: 'alert-danger',
+            warning: 'alert-warning',
+            info: 'alert-info',
+            light: 'alert-light',
+            dark: 'alert-dark',
+        },
+        dismissible: {
+            true: 'alert-dismissible fade show',
+        },
+    },
+) -%}
 <div
-    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    class="{{ style.apply({variant, dismissible}, attributes.render('class')) }}"
     role="alert"
     {{ attributes }}
 >

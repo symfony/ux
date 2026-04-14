@@ -3,12 +3,23 @@
 {# @prop size 'default'|'sm' The spinner size. Defaults to `default` #}
 {# @prop label string The visually hidden label. Defaults to `Loading...` #}
 {%- props variant = 'primary', type = 'border', size = 'default', label = 'Loading...' -%}
-{%- set classes = ['spinner-' ~ type, 'text-' ~ variant] -%}
-{%- if size == 'sm' -%}
-    {%- set classes = classes|merge(['spinner-' ~ type ~ '-sm']) -%}
-{%- endif -%}
+{%- set style = html_cva(
+    base: '',
+    variants: {
+        variant: {
+            primary: 'text-primary',
+            secondary: 'text-secondary',
+            success: 'text-success',
+            danger: 'text-danger',
+            warning: 'text-warning',
+            info: 'text-info',
+            light: 'text-light',
+            dark: 'text-dark',
+        },
+    },
+) -%}
 <div
-    class="{{ (classes|join(' ') ~ ' ' ~ attributes.render('class'))|trim }}"
+    class="{{ style.apply({variant}, ('spinner-' ~ type ~ (size == 'sm' ? ' spinner-' ~ type ~ '-sm' : '') ~ ' ' ~ attributes.render('class'))|trim) }}"
     role="status"
     {{ attributes }}
 >
