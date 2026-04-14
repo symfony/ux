@@ -1,0 +1,11 @@
+{# @prop name string The name shared by all radio inputs in the same group #}
+{# @prop value string The value submitted when this item is selected #}
+{%- props name, value -%}
+<input
+    type="radio"
+    name="{{ name }}"
+    value="{{ value }}"
+    class="{{ ('peer size-4 inline-block align-middle rounded-full accent-primary ' ~ attributes.render('class'))|tailwind_merge }}"
+    data-slot="radio-group-item"
+    {{ attributes }}
+>

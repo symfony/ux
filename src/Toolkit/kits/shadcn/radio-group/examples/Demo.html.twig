@@ -1,0 +1,14 @@
+<twig:RadioGroup>
+    <div class="flex items-center gap-3">
+        <twig:RadioGroup:Item id="notify-all" name="notify" value="all" checked />
+        <twig:Label for="notify-all">All new messages</twig:Label>
+    </div>
+    <div class="flex items-center gap-3">
+        <twig:RadioGroup:Item id="notify-mentions" name="notify" value="mentions" />
+        <twig:Label for="notify-mentions">Direct messages and mentions</twig:Label>
+    </div>
+    <div class="flex items-center gap-3">
+        <twig:RadioGroup:Item id="notify-none" name="notify" value="none" disabled />
+        <twig:Label for="notify-none">Nothing</twig:Label>
+    </div>
+</twig:RadioGroup>
