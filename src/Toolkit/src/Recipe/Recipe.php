@@ -42,7 +42,7 @@ final class Recipe
     public function getFiles(): iterable
     {
         foreach ($this->manifest->copyFiles as $source => $destination) {
-            $finder = (new Finder())->in(Path::join($this->absolutePath, $source))->sortByName()->files();
+            $finder = new Finder()->in(Path::join($this->absolutePath, $source))->sortByName()->files();
 
             foreach ($finder as $file) {
                 yield new File(Path::join($source, $file->getRelativePathname()), Path::join($destination, $file->getRelativePathname()));

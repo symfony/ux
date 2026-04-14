@@ -578,7 +578,7 @@ final class LiveComponentHydrator
         }
 
         $dehydratedObjectValues = [];
-        foreach ((new PropertyInfoExtractor([new ReflectionExtractor()]))->getProperties($classType) as $property) {
+        foreach (new PropertyInfoExtractor([new ReflectionExtractor()])->getProperties($classType) as $property) {
             $propertyValue = $this->propertyAccessor->getValue($value, $property);
             $propMetadata = $this->liveComponentMetadataFactory->createLivePropMetadata($classType, $property, new \ReflectionProperty($classType, $property), new LiveProp());
             $dehydratedObjectValues[$property] = $this->dehydrateValue($propertyValue, $propMetadata, $parentObject);

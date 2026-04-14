@@ -25,11 +25,11 @@ final class ConstraintVersionTest extends TestCase
 
     public function testCanBeCompared()
     {
-        $this->assertTrue((new ConstraintVersion('1.2.3'))->isHigherThan(new ConstraintVersion('1.2.2')));
-        $this->assertFalse((new ConstraintVersion('1.2.3'))->isHigherThan(new ConstraintVersion('1.2.4')));
-        $this->assertTrue((new ConstraintVersion('1.2.3'))->isHigherThan(new ConstraintVersion('1.1.99')));
-        $this->assertFalse((new ConstraintVersion('1.2.3'))->isHigherThan(new ConstraintVersion('1.2.3')));
-        $this->assertTrue((new ConstraintVersion('1.2.3'))->isHigherThan(new ConstraintVersion('0.99.99')));
-        $this->assertFalse((new ConstraintVersion('1.2.3'))->isHigherThan(new ConstraintVersion('2.0.0')));
+        $this->assertTrue(new ConstraintVersion('1.2.3')->isHigherThan(new ConstraintVersion('1.2.2')));
+        $this->assertFalse(new ConstraintVersion('1.2.3')->isHigherThan(new ConstraintVersion('1.2.4')));
+        $this->assertTrue(new ConstraintVersion('1.2.3')->isHigherThan(new ConstraintVersion('1.1.99')));
+        $this->assertFalse(new ConstraintVersion('1.2.3')->isHigherThan(new ConstraintVersion('1.2.3')));
+        $this->assertTrue(new ConstraintVersion('1.2.3')->isHigherThan(new ConstraintVersion('0.99.99')));
+        $this->assertFalse(new ConstraintVersion('1.2.3')->isHigherThan(new ConstraintVersion('2.0.0')));
     }
 }

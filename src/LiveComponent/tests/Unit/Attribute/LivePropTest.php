@@ -21,21 +21,21 @@ final class LivePropTest extends TestCase
 {
     public function testHydrateWithMethod()
     {
-        $this->assertSame('someMethod', (new LiveProp(false, 'someMethod'))->hydrateMethod());
-        $this->assertSame('someMethod', (new LiveProp(false, 'someMethod()'))->hydrateMethod());
+        $this->assertSame('someMethod', new LiveProp(false, 'someMethod')->hydrateMethod());
+        $this->assertSame('someMethod', new LiveProp(false, 'someMethod()')->hydrateMethod());
     }
 
     public function testDehydrateWithMethod()
     {
-        $this->assertSame('someMethod', (new LiveProp(false, null, 'someMethod'))->dehydrateMethod());
-        $this->assertSame('someMethod', (new LiveProp(false, null, 'someMethod()'))->dehydrateMethod());
+        $this->assertSame('someMethod', new LiveProp(false, null, 'someMethod')->dehydrateMethod());
+        $this->assertSame('someMethod', new LiveProp(false, null, 'someMethod()')->dehydrateMethod());
     }
 
     public function testCanCallCalculateFieldNameAsString()
     {
         $component = new class {};
 
-        $this->assertSame('field', (new LiveProp(false, null, null, false, [], 'field'))->calculateFieldName($component, 'fallback'));
+        $this->assertSame('field', new LiveProp(false, null, null, false, [], 'field')->calculateFieldName($component, 'fallback'));
     }
 
     public function testCanCallCalculateFieldNameAsMethod()
@@ -47,14 +47,14 @@ final class LivePropTest extends TestCase
             }
         };
 
-        $this->assertSame('foo', (new LiveProp(false, null, null, false, [], 'fieldName()'))->calculateFieldName($component, 'fallback'));
+        $this->assertSame('foo', new LiveProp(false, null, null, false, [], 'fieldName()')->calculateFieldName($component, 'fallback'));
     }
 
     public function testCanCallCalculateFieldNameWhenNotSet()
     {
         $component = new class {};
 
-        $this->assertSame('fallback', (new LiveProp())->calculateFieldName($component, 'fallback'));
+        $this->assertSame('fallback', new LiveProp()->calculateFieldName($component, 'fallback'));
     }
 
     public function testIsIdentityWritableAndWritablePaths()

@@ -35,7 +35,7 @@ final class TurboStreamListenRendererTest extends KernelTestCase
      */
     public static function provideTestCases(): iterable
     {
-        $newEscape = (new \ReflectionClass(StimulusAttributes::class))->hasMethod('escape');
+        $newEscape = new \ReflectionClass(StimulusAttributes::class)->hasMethod('escape');
 
         $book = new Book();
         $book->id = 123;

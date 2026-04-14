@@ -30,7 +30,7 @@ class LeafletRendererTest extends RendererTestCase
 {
     public static function provideTestRenderMap(): iterable
     {
-        $map = (new Map())
+        $map = new Map()
             ->center(new Point(48.8566, 2.3522))
             ->zoom(12);
 
@@ -51,7 +51,7 @@ class LeafletRendererTest extends RendererTestCase
 
         yield 'with markers and infoWindows' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addMarker($marker1)
@@ -60,7 +60,7 @@ class LeafletRendererTest extends RendererTestCase
 
         yield 'with all markers removed' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addMarker($marker1)
@@ -71,7 +71,7 @@ class LeafletRendererTest extends RendererTestCase
 
         yield 'with all markers removed with removeAllMarkers()' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addMarker($marker1)
@@ -81,7 +81,7 @@ class LeafletRendererTest extends RendererTestCase
 
         yield 'with marker remove and new ones added' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addMarker($marker3)
@@ -92,7 +92,7 @@ class LeafletRendererTest extends RendererTestCase
 
         yield 'with polygons and infoWindows' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addPolygon(new Polygon(points: [new Point(48.8566, 2.3522), new Point(48.8566, 2.3522), new Point(48.8566, 2.3522)], id: 'polygon1'))
@@ -101,7 +101,7 @@ class LeafletRendererTest extends RendererTestCase
 
         yield 'with all polygons removed with removeAllPolygons()' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addPolygon(new Polygon(points: [new Point(48.8566, 2.3522), new Point(48.8566, 2.3522), new Point(48.8566, 2.3522)]))
@@ -111,7 +111,7 @@ class LeafletRendererTest extends RendererTestCase
 
         yield 'with polylines and infoWindows' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addPolyline(new Polyline(points: [new Point(48.8566, 2.3522), new Point(48.8566, 2.3522), new Point(48.8566, 2.3522)], id: 'polyline1'))
@@ -120,7 +120,7 @@ class LeafletRendererTest extends RendererTestCase
 
         yield 'with all polylines removed with removeAllPolylines()' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addPolyline(new Polyline(points: [new Point(48.8566, 2.3522), new Point(48.8566, 2.3522), new Point(48.8566, 2.3522)]))
@@ -130,7 +130,7 @@ class LeafletRendererTest extends RendererTestCase
 
         yield 'with circles and infoWindows' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addCircle(new Circle(center: new Point(48.8566, 2.3522), radius: 1000000, id: 'circle1'))
@@ -139,7 +139,7 @@ class LeafletRendererTest extends RendererTestCase
 
         yield 'with all circles removed with removeAllCircles()' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addCircle(new Circle(center: new Point(48.8566, 2.3522), radius: 500, infoWindow: new InfoWindow(content: 'Circle')))
@@ -149,7 +149,7 @@ class LeafletRendererTest extends RendererTestCase
 
         yield 'with rectangles and infoWindows' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addRectangle(new Rectangle(
@@ -167,7 +167,7 @@ class LeafletRendererTest extends RendererTestCase
 
         yield 'with all rectangles removed with removeAllRectangles()' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addRectangle(new Rectangle(southWest: new Point(48.8566, 2.3522), northEast: new Point(48.8566, 2.3522), infoWindow: new InfoWindow(content: 'Rectangle')))
@@ -184,7 +184,7 @@ class LeafletRendererTest extends RendererTestCase
                         return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">...</svg>';
                     }
                 })),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->addMarker(new Marker(position: new Point(48.8566, 2.3522), title: 'Paris', icon: Icon::url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/geo-alt.svg')->width(32)->height(32)))
@@ -194,7 +194,7 @@ class LeafletRendererTest extends RendererTestCase
 
         yield 'with map extra data' => [
             'renderer' => new LeafletRenderer(new StimulusHelper(null), new UxIconRenderer(null)),
-            'map' => (new Map())
+            'map' => new Map()
                 ->center(new Point(48.8566, 2.3522))
                 ->zoom(12)
                 ->extra(['key1' => 'value1', 'key2' => 'value2']),

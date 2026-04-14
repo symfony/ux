@@ -99,7 +99,7 @@ final class GitHubRegistryTest extends KernelTestCase
         $folderName = \sprintf('%s-%s', $repo, $version);
         $zip = new \ZipArchive();
         $zip->open($zipPath = \sprintf('%s/%s.zip', $this->tmpDir, $folderName), \ZipArchive::CREATE);
-        foreach ((new Finder())->files()->in($kitPath) as $file) {
+        foreach (new Finder()->files()->in($kitPath) as $file) {
             $zip->addFile($file->getPathname(), Path::join($folderName, $file->getRelativePathname()));
         }
         $zip->close();

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Symfony package.
  *
@@ -32,7 +30,7 @@ final class ConfigurationDumperTest extends TestCase
 
     protected function tearDown(): void
     {
-        (new Filesystem())->remove($this->outputDir);
+        new Filesystem()->remove($this->outputDir);
     }
 
     public function testExecuteCallsBuildAndReturnsSuccess()

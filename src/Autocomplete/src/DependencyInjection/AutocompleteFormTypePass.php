@@ -44,7 +44,7 @@ class AutocompleteFormTypePass implements CompilerPassInterface
             }
             $alias = $this->getAlias($serviceId, $serviceDefinition, $tag);
 
-            $wrappedDefinition = (new ChildDefinition('ux.autocomplete.wrapped_entity_type_autocompleter'))
+            $wrappedDefinition = new ChildDefinition('ux.autocomplete.wrapped_entity_type_autocompleter')
                 // the "formType" string
                 ->replaceArgument(0, $serviceDefinition->getClass())
                 ->addTag(self::ENTITY_AUTOCOMPLETER_TAG, ['alias' => $alias])

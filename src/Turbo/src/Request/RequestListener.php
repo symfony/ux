@@ -23,6 +23,6 @@ final class RequestListener
 {
     public function __invoke(): void
     {
-        (new Request())->setFormat(TurboBundle::STREAM_FORMAT, TurboBundle::STREAM_MEDIA_TYPE);
+        new Request()->setFormat(TurboBundle::STREAM_FORMAT, TurboBundle::STREAM_MEDIA_TYPE);
     }
 }

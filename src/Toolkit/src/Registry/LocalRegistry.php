@@ -54,7 +54,7 @@ final class LocalRegistry implements RegistryInterface
     public static function getAvailableKitsName(): array
     {
         $availableKitsName = [];
-        $finder = (new Finder())->directories()->in(self::$kitsDir)->sortByName()->depth(0);
+        $finder = new Finder()->directories()->in(self::$kitsDir)->sortByName()->depth(0);
 
         foreach ($finder as $directory) {
             $kitName = $directory->getRelativePathname();

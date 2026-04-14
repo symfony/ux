@@ -46,7 +46,7 @@ final class ComputedPropertiesProxy
             return $this->cache[$method];
         }
 
-        if ((new \ReflectionMethod($this->component, $method))->getNumberOfRequiredParameters()) {
+        if (new \ReflectionMethod($this->component, $method)->getNumberOfRequiredParameters()) {
             throw new \LogicException('Cannot use computed methods for methods with required parameters.');
         }
 

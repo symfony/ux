@@ -52,7 +52,7 @@ final class IconFinder
 
         // Extract prefix-less SVG files from the root of the icon directory
         if (is_dir($this->iconDirectory)) {
-            $icons = (new Finder())->files()->in($this->iconDirectory)->depth(0)->name('*.svg');
+            $icons = new Finder()->files()->in($this->iconDirectory)->depth(0)->name('*.svg');
             foreach ($icons as $icon) {
                 $found[] = $icon->getBasename('.svg');
             }
@@ -72,7 +72,7 @@ final class IconFinder
                 $paths = [...$paths, ...$loader->getPaths($namespace)];
             }
             if ($paths) {
-                foreach ((new Finder())->files()->in($paths)->name('*.twig') as $file) {
+                foreach (new Finder()->files()->in($paths)->name('*.twig') as $file) {
                     yield (string) $file;
                 }
             }

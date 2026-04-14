@@ -27,12 +27,12 @@ final class TurboController extends AbstractController
     ): Response {
         if (2 === $page) {
             return $this->render('ux_turbo/drive_page_2.html.twig', [
-                'current_time' => (new \DateTimeImmutable())->format(\DateTimeInterface::RFC3339_EXTENDED),
+                'current_time' => new \DateTimeImmutable()->format(\DateTimeInterface::RFC3339_EXTENDED),
             ]);
         }
 
         return $this->render('ux_turbo/drive.html.twig', [
-            'current_time' => (new \DateTimeImmutable())->format(\DateTimeInterface::RFC3339_EXTENDED),
+            'current_time' => new \DateTimeImmutable()->format(\DateTimeInterface::RFC3339_EXTENDED),
         ]);
     }
 

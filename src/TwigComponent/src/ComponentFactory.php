@@ -157,7 +157,7 @@ final class ComponentFactory implements ResetInterface
             return;
         }
 
-        $mount = $this->mountMethods[$component::class] ??= (new \ReflectionClass($component))->getMethod('mount');
+        $mount = $this->mountMethods[$component::class] ??= new \ReflectionClass($component)->getMethod('mount');
 
         $parameters = [];
         foreach ($mount->getParameters() as $refParameter) {
