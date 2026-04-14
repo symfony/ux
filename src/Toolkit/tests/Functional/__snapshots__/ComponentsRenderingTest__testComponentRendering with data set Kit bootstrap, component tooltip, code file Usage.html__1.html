@@ -4,9 +4,10 @@
 - Code:
 ```twig
 <twig:Tooltip title="This is a tooltip">
-    <twig:Button variant="primary">Hover me</twig:Button>
+    <twig:Tooltip:Trigger>
+        <twig:Button variant="primary" {{ ...tooltip_trigger_attrs }}>Hover me</twig:Button>
+    </twig:Tooltip:Trigger>
 </twig:Tooltip>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<span data-bs-toggle="tooltip" data-bs-title="This is a tooltip" data-bs-placement="top" data-controller="tooltip"><button class="btn btn-primary">Hover me</button>
-</span>
+<button class="btn btn-primary" data-controller="tooltip" data-bs-toggle="tooltip" data-bs-title="This is a tooltip" data-bs-placement="top">Hover me</button>

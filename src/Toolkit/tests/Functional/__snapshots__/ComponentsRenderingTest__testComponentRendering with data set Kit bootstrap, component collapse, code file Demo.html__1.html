@@ -3,20 +3,26 @@
 - Component: Collapse
 - Code:
 ```twig
-<twig:Collapse:Trigger target="#collapseDemo" class="btn btn-primary mb-2">
-    Toggle content
-</twig:Collapse:Trigger>
 <twig:Collapse id="collapseDemo">
-    <div class="card card-body">
-        Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
-    </div>
+    <twig:Collapse:Trigger>
+        <twig:Button class="mb-2" {{ ...collapse_trigger_attrs }}>
+            Toggle content
+        </twig:Button>
+    </twig:Collapse:Trigger>
+    <twig:Collapse:Content>
+        <div class="card card-body">
+            Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+        </div>
+    </twig:Collapse:Content>
 </twig:Collapse>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<button data-bs-toggle="collapse" data-bs-target="#collapseDemo" aria-expanded="false" aria-controls="collapseDemo" class="btn btn-primary mb-2">Toggle content
-</button>
-<div class="collapse" id="collapseDemo">
+<div data-controller="collapse">
+<button class="btn btn-primary mb-2" data-action="click-&gt;collapse#toggle" data-collapse-target="trigger" aria-expanded="false" aria-controls="collapseDemo-content">Toggle content
+        </button>
+        <div class="collapse" id="collapseDemo-content" data-collapse-target="content">
 <div class="card card-body">
-        Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+            Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+        </div>
     </div>
 </div>

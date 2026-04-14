@@ -15,21 +15,16 @@
 </twig:Accordion>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div class="accordion accordion-flush" id="flush-accordion">
-<div class="accordion-item">
+<div class="accordion accordion-flush" id="flush-accordion" data-controller="accordion" data-accordion-always-open-value="false">
+<div class="accordion-item" data-accordion-target="item">
 <h2 class="accordion-header">
-    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-accordion-1-collapse" aria-expanded="true" aria-controls="flush-accordion-1-collapse">Accordion Item #1</button>
-</h2>
-        <div id="flush-accordion-1-collapse" class="accordion-collapse collapse show" data-bs-parent="#flush-accordion">
+    <button class="accordion-button" type="button" data-action="click-&gt;accordion#toggle" data-accordion-target="header" aria-expanded="true" aria-controls="flush-accordion-1-collapse">Accordion Item #1</button>
+</h2>        <div id="flush-accordion-1-collapse" class="accordion-collapse collapse show" data-accordion-target="body">
     <div class="accordion-body">Flush accordion content for item #1.</div>
-</div>
-    </div>
-    <div class="accordion-item">
+</div>    </div>    <div class="accordion-item" data-accordion-target="item">
 <h2 class="accordion-header">
-    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-accordion-2-collapse" aria-expanded="false" aria-controls="flush-accordion-2-collapse">Accordion Item #2</button>
-</h2>
-        <div id="flush-accordion-2-collapse" class="accordion-collapse collapse" data-bs-parent="#flush-accordion">
+    <button class="accordion-button collapsed" type="button" data-action="click-&gt;accordion#toggle" data-accordion-target="header" aria-expanded="false" aria-controls="flush-accordion-2-collapse">Accordion Item #2</button>
+</h2>        <div id="flush-accordion-2-collapse" class="accordion-collapse collapse" data-accordion-target="body">
     <div class="accordion-body">Flush accordion content for item #2.</div>
-</div>
-    </div>
+</div>    </div>
 </div>

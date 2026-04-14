@@ -3,24 +3,29 @@
 - Component: Collapse
 - Code:
 ```twig
-<twig:Collapse:Trigger target="#collapseHorizontal" class="btn btn-primary mb-2">
-    Toggle horizontal collapse
-</twig:Collapse:Trigger>
-<div style="min-height: 120px;">
-    <twig:Collapse id="collapseHorizontal" horizontal>
-        <div class="card card-body" style="width: 300px;">
-            This is some placeholder content for a horizontal collapse. It's hidden by default and shown when triggered.
-        </div>
-    </twig:Collapse>
-</div>
+<twig:Collapse id="collapseHorizontal" horizontal>
+    <twig:Collapse:Trigger>
+        <twig:Button class="mb-2" {{ ...collapse_trigger_attrs }}>
+            Toggle horizontal collapse
+        </twig:Button>
+    </twig:Collapse:Trigger>
+    <div style="min-height: 120px;">
+        <twig:Collapse:Content>
+            <div class="card card-body" style="width: 300px;">
+                This is some placeholder content for a horizontal collapse. It's hidden by default and shown when triggered.
+            </div>
+        </twig:Collapse:Content>
+    </div>
+</twig:Collapse>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<button data-bs-toggle="collapse" data-bs-target="#collapseHorizontal" aria-expanded="false" aria-controls="collapseHorizontal" class="btn btn-primary mb-2">Toggle horizontal collapse
-</button>
-<div style="min-height: 120px;">
-    <div class="collapse collapse-horizontal" id="collapseHorizontal">
+<div data-controller="collapse">
+<button class="btn btn-primary mb-2" data-action="click-&gt;collapse#toggle" data-collapse-target="trigger" aria-expanded="false" aria-controls="collapseHorizontal-content">Toggle horizontal collapse
+        </button>
+        <div style="min-height: 120px;">
+        <div class="collapse collapse-horizontal" id="collapseHorizontal-content" data-collapse-target="content">
 <div class="card card-body" style="width: 300px;">
-            This is some placeholder content for a horizontal collapse. It's hidden by default and shown when triggered.
-        </div>
-    </div>
+                This is some placeholder content for a horizontal collapse. It's hidden by default and shown when triggered.
+            </div>
+        </div>    </div>
 </div>

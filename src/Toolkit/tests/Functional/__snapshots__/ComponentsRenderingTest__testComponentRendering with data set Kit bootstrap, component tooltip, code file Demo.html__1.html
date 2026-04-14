@@ -5,27 +5,31 @@
 ```twig
 <div class="d-flex flex-wrap gap-3">
     <twig:Tooltip title="Default tooltip on top">
-        <twig:Button variant="secondary">Top</twig:Button>
+        <twig:Tooltip:Trigger>
+            <twig:Button variant="secondary" {{ ...tooltip_trigger_attrs }}>Top</twig:Button>
+        </twig:Tooltip:Trigger>
     </twig:Tooltip>
     <twig:Tooltip title="Tooltip on right" placement="right">
-        <twig:Button variant="secondary">Right</twig:Button>
+        <twig:Tooltip:Trigger>
+            <twig:Button variant="secondary" {{ ...tooltip_trigger_attrs }}>Right</twig:Button>
+        </twig:Tooltip:Trigger>
     </twig:Tooltip>
     <twig:Tooltip title="Tooltip on bottom" placement="bottom">
-        <twig:Button variant="secondary">Bottom</twig:Button>
+        <twig:Tooltip:Trigger>
+            <twig:Button variant="secondary" {{ ...tooltip_trigger_attrs }}>Bottom</twig:Button>
+        </twig:Tooltip:Trigger>
     </twig:Tooltip>
     <twig:Tooltip title="Tooltip on left" placement="left">
-        <twig:Button variant="secondary">Left</twig:Button>
+        <twig:Tooltip:Trigger>
+            <twig:Button variant="secondary" {{ ...tooltip_trigger_attrs }}>Left</twig:Button>
+        </twig:Tooltip:Trigger>
     </twig:Tooltip>
 </div>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
 <div class="d-flex flex-wrap gap-3">
-    <span data-bs-toggle="tooltip" data-bs-title="Default tooltip on top" data-bs-placement="top" data-controller="tooltip"><button class="btn btn-secondary">Top</button>
-    </span>
-    <span data-bs-toggle="tooltip" data-bs-title="Tooltip on right" data-bs-placement="right" data-controller="tooltip"><button class="btn btn-secondary">Right</button>
-    </span>
-    <span data-bs-toggle="tooltip" data-bs-title="Tooltip on bottom" data-bs-placement="bottom" data-controller="tooltip"><button class="btn btn-secondary">Bottom</button>
-    </span>
-    <span data-bs-toggle="tooltip" data-bs-title="Tooltip on left" data-bs-placement="left" data-controller="tooltip"><button class="btn btn-secondary">Left</button>
-    </span>
-</div>
+    <button class="btn btn-secondary" data-controller="tooltip" data-bs-toggle="tooltip" data-bs-title="Default tooltip on top" data-bs-placement="top">Top</button>
+                <button class="btn btn-secondary" data-controller="tooltip" data-bs-toggle="tooltip" data-bs-title="Tooltip on right" data-bs-placement="right">Right</button>
+                <button class="btn btn-secondary" data-controller="tooltip" data-bs-toggle="tooltip" data-bs-title="Tooltip on bottom" data-bs-placement="bottom">Bottom</button>
+                <button class="btn btn-secondary" data-controller="tooltip" data-bs-toggle="tooltip" data-bs-title="Tooltip on left" data-bs-placement="left">Left</button>
+            </div>

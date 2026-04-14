@@ -3,20 +3,26 @@
 - Component: Collapse
 - Code:
 ```twig
-<twig:Collapse:Trigger target="#collapseOpen" expanded class="btn btn-outline-primary mb-2">
-    Toggle content
-</twig:Collapse:Trigger>
 <twig:Collapse id="collapseOpen" open>
-    <div class="card card-body">
-        This content is visible by default and can be hidden by clicking the trigger.
-    </div>
+    <twig:Collapse:Trigger>
+        <twig:Button variant="outline-primary" class="mb-2" {{ ...collapse_trigger_attrs }}>
+            Toggle content
+        </twig:Button>
+    </twig:Collapse:Trigger>
+    <twig:Collapse:Content>
+        <div class="card card-body">
+            This content is visible by default and can be hidden by clicking the trigger.
+        </div>
+    </twig:Collapse:Content>
 </twig:Collapse>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<button data-bs-toggle="collapse" data-bs-target="#collapseOpen" aria-expanded="true" aria-controls="collapseOpen" class="btn btn-outline-primary mb-2">Toggle content
-</button>
-<div class="collapse show" id="collapseOpen">
+<div data-controller="collapse">
+<button class="btn btn-outline-primary mb-2" data-action="click-&gt;collapse#toggle" data-collapse-target="trigger" aria-expanded="true" aria-controls="collapseOpen-content">Toggle content
+        </button>
+        <div class="collapse show" id="collapseOpen-content" data-collapse-target="content">
 <div class="card card-body">
-        This content is visible by default and can be hidden by clicking the trigger.
+            This content is visible by default and can be hidden by clicking the trigger.
+        </div>
     </div>
 </div>
