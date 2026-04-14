@@ -42,6 +42,31 @@ final class LiveCollectionTraitTest extends TestCase
         self::assertSame($expectedFormData[$component->formName], $component->formValues);
     }
 
+    public function testAddCollectionItemDoesNotReusePreviouslyRemovedIndex()
+    {
+        $component = $this->createComponent([
+            '' => [
+                'items' => [
+                    0 => [],
+                    1 => [],
+                    2 => [],
+                ],
+            ],
+        ]);
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+        $component->removeCollectionItem($propertyAccessor, 'items', 2);
+        $component->addCollectionItem($propertyAccessor, 'items');
+
+        self::assertSame([
+            'items' => [
+                0 => [],
+                1 => [],
+                3 => [],
+            ],
+        ], $component->formValues);
+    }
+
     public static function provideAddedItems(): iterable
     {
         yield 'unnamed parent form' => [

@@ -3,6 +3,9 @@
 ## 3.5
 
 - Add `LiveResponse::downloadUrl()` and `LiveResponse::downloadFile()` to trigger a file download from a `LiveAction`, pointing the browser at a URL or sending the contents with the response, while the component keeps its state
+- Fix `LiveCollectionTrait::addCollectionItem()` reusing an index previously
+  freed by `removeCollectionItem()`, which caused a newly added item to be
+  rebound to the removed entity when used with a Doctrine collection.
 
 ## 3.1
 
