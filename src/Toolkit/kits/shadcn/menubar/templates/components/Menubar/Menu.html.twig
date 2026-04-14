@@ -1,0 +1,9 @@
+{# @block content A `Menubar:Trigger` and a `Menubar:Content` #}
+<div
+    class="{{ ('group/menubar-menu relative ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'menubar-menu',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

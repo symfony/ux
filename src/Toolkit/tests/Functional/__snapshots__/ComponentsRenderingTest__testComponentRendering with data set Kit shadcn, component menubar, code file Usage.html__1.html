@@ -1,0 +1,30 @@
+<!--
+- Kit: Shadcn UI
+- Component: Menubar
+- Code:
+```twig
+<twig:Menubar>
+    <twig:Menubar:Menu>
+        <twig:Menubar:Trigger>File</twig:Menubar:Trigger>
+        <twig:Menubar:Content>
+            <twig:Menubar:Item>New Tab</twig:Menubar:Item>
+            <twig:Menubar:Item>New Window</twig:Menubar:Item>
+        </twig:Menubar:Content>
+    </twig:Menubar:Menu>
+    <twig:Menubar:Menu>
+        <twig:Menubar:Trigger>Edit</twig:Menubar:Trigger>
+        <twig:Menubar:Content>
+            <twig:Menubar:Item>Undo</twig:Menubar:Item>
+            <twig:Menubar:Item>Redo</twig:Menubar:Item>
+        </twig:Menubar:Content>
+    </twig:Menubar:Menu>
+</twig:Menubar>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div role="menubar" class="flex h-9 items-center space-x-1 rounded-md border bg-background p-1 shadow-xs" data-slot="menubar">
+<div class="group/menubar-menu relative" data-slot="menubar-menu">
+<button type="button" role="menuitem" class="flex cursor-default select-none items-center rounded-sm px-3 py-1 text-sm font-medium outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground group-hover/menubar-menu:bg-accent group-hover/menubar-menu:text-accent-foreground group-focus-within/menubar-menu:bg-accent" data-slot="menubar-trigger">File</button>        <div role="menu" class="invisible opacity-0 group-hover/menubar-menu:visible group-hover/menubar-menu:opacity-100 group-focus-within/menubar-menu:visible group-focus-within/menubar-menu:opacity-100 transition-opacity absolute left-0 top-full z-50 mt-1 min-w-[12rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md" data-slot="menubar-content">
+<button type="button" role="menuitem" class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50" data-slot="menubar-item">New Tab</button>            <button type="button" role="menuitem" class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50" data-slot="menubar-item">New Window</button>        </div>    </div>    <div class="group/menubar-menu relative" data-slot="menubar-menu">
+<button type="button" role="menuitem" class="flex cursor-default select-none items-center rounded-sm px-3 py-1 text-sm font-medium outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground group-hover/menubar-menu:bg-accent group-hover/menubar-menu:text-accent-foreground group-focus-within/menubar-menu:bg-accent" data-slot="menubar-trigger">Edit</button>        <div role="menu" class="invisible opacity-0 group-hover/menubar-menu:visible group-hover/menubar-menu:opacity-100 group-focus-within/menubar-menu:visible group-focus-within/menubar-menu:opacity-100 transition-opacity absolute left-0 top-full z-50 mt-1 min-w-[12rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md" data-slot="menubar-content">
+<button type="button" role="menuitem" class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50" data-slot="menubar-item">Undo</button>            <button type="button" role="menuitem" class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50" data-slot="menubar-item">Redo</button>        </div>    </div>
+</div>

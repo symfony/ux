@@ -1,0 +1,10 @@
+{# @block content The menu items revealed on hover or focus #}
+<div
+    role="menu"
+    class="{{ ('invisible opacity-0 group-hover/menubar-menu:visible group-hover/menubar-menu:opacity-100 group-focus-within/menubar-menu:visible group-focus-within/menubar-menu:opacity-100 transition-opacity absolute left-0 top-full z-50 mt-1 min-w-[12rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'menubar-content',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

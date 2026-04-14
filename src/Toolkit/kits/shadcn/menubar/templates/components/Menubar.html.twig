@@ -1,0 +1,10 @@
+{# @block content A list of `Menubar:Menu` children #}
+<div
+    role="menubar"
+    class="{{ ('flex h-9 items-center space-x-1 rounded-md border bg-background p-1 shadow-xs ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'menubar',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>
