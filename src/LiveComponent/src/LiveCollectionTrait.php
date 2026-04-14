@@ -14,6 +14,7 @@ namespace Symfony\UX\LiveComponent;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
 /**
  * @author Gábor Egyed <gabor.egyed@gmail.com>
@@ -21,6 +22,14 @@ use Symfony\UX\LiveComponent\Attribute\LiveArg;
 trait LiveCollectionTrait
 {
     use ComponentWithFormTrait;
+
+    /**
+     * Indexes removed from each collection, so an added item never takes one: the form would bind it to the item removed at that index.
+     *
+     * @var array<string, list<int>>
+     */
+    #[LiveProp]
+    public array $liveCollectionRemovedKeys = [];
 
     #[LiveAction]
     public function addCollectionItem(PropertyAccessorInterface $propertyAccessor, #[LiveArg] string $name): void
@@ -33,7 +42,8 @@ trait LiveCollectionTrait
             $data = [];
         }
 
-        $index = [] !== $data ? max(array_keys($data)) + 1 : 0;
+        $usedKeys = array_merge(array_keys($data), $this->liveCollectionRemovedKeys[$name] ?? []);
+        $index = [] !== $usedKeys ? max($usedKeys) + 1 : 0;
         $propertyAccessor->setValue($this->formValues, $propertyPath."[$index]", []);
     }
 
@@ -44,6 +54,8 @@ trait LiveCollectionTrait
         $data = $propertyAccessor->getValue($this->formValues, $propertyPath);
         unset($data[$index]);
         $propertyAccessor->setValue($this->formValues, $propertyPath, $data);
+
+        $this->liveCollectionRemovedKeys[$name][] = $index;
     }
 
     private function fieldNameToPropertyPath(string $collectionFieldName, string $rootFormName): string
