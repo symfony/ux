@@ -1,0 +1,12 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Form",
+    "description": "A set of layout wrappers to build accessible forms with field, label, description and error message slots.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "composer": ["tales-from-a-dev/twig-tailwind-extra:^1.0.0"]
+    }
+}

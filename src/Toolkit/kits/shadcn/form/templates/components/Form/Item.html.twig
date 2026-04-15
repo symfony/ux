@@ -1,0 +1,9 @@
+{# @block content A `Form:Label`, a form control, an optional `Form:Description` and an optional `Form:Message` #}
+<div
+    class="{{ ('grid gap-2 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'form-item',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

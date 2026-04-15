@@ -1,0 +1,16 @@
+<twig:Form class="w-full max-w-md">
+    <twig:Form:Item>
+        <twig:Form:Label for="form-demo-email">Email</twig:Form:Label>
+        <twig:Input id="form-demo-email" name="email" type="email" placeholder="you@example.com" />
+        <twig:Form:Description>We'll never share your email with anyone else.</twig:Form:Description>
+    </twig:Form:Item>
+    <twig:Form:Item>
+        <twig:Form:Label for="form-demo-bio">Bio</twig:Form:Label>
+        <twig:Textarea id="form-demo-bio" name="bio" placeholder="Tell us a bit about yourself" />
+        <twig:Form:Message>Bio is required.</twig:Form:Message>
+    </twig:Form:Item>
+    <div class="flex justify-end gap-2">
+        <twig:Button type="button" variant="outline">Cancel</twig:Button>
+        <twig:Button type="submit">Save</twig:Button>
+    </div>
+</twig:Form>

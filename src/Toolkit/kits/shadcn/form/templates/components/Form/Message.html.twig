@@ -1,0 +1,9 @@
+{# @block content The validation error message #}
+<p
+    class="{{ ('text-sm font-medium text-destructive ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'form-message',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</p>

@@ -1,0 +1,12 @@
+{# @prop for string The id of the form control this label belongs to #}
+{# @block content The label text #}
+{%- props for -%}
+<label
+    for="{{ for }}"
+    class="{{ ('text-sm font-medium leading-none group-has-[[data-slot=form-message]]:text-destructive ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'form-label',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</label>
