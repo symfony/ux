@@ -1,0 +1,9 @@
+{# @block content A `Drawer:Trigger` and a `Drawer:Content` #}
+<details
+    class="{{ ('group/drawer ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'drawer',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</details>

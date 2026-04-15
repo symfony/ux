@@ -1,0 +1,9 @@
+{# @block content The drawer description #}
+<p
+    class="{{ ('text-sm text-muted-foreground ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'drawer-description',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</p>

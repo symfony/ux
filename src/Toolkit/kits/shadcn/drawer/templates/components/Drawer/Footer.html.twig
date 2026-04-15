@@ -1,0 +1,9 @@
+{# @block content The drawer footer content, typically action buttons #}
+<div
+    class="{{ ('mt-auto flex flex-col gap-2 p-4 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'drawer-footer',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

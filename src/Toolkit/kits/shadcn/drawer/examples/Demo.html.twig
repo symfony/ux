@@ -1,0 +1,25 @@
+<twig:Drawer>
+    <twig:Drawer:Trigger class="h-9 rounded-md border border-input bg-background px-4 shadow-xs hover:bg-accent">
+        Open drawer
+    </twig:Drawer:Trigger>
+    <twig:Drawer:Content class="mx-auto max-w-sm">
+        <twig:Drawer:Header>
+            <twig:Drawer:Title>Move goal</twig:Drawer:Title>
+            <twig:Drawer:Description>Set your daily activity goal.</twig:Drawer:Description>
+        </twig:Drawer:Header>
+        <div class="p-4 pb-0">
+            <div class="flex items-center justify-center space-x-2">
+                <twig:Button variant="outline" size="icon" class="h-8 w-8 shrink-0 rounded-full">−</twig:Button>
+                <div class="flex-1 text-center">
+                    <div class="text-5xl font-bold tracking-tighter">350</div>
+                    <div class="text-xs text-muted-foreground uppercase">calories / day</div>
+                </div>
+                <twig:Button variant="outline" size="icon" class="h-8 w-8 shrink-0 rounded-full">+</twig:Button>
+            </div>
+        </div>
+        <twig:Drawer:Footer>
+            <twig:Button>Submit</twig:Button>
+            <twig:Button variant="outline">Cancel</twig:Button>
+        </twig:Drawer:Footer>
+    </twig:Drawer:Content>
+</twig:Drawer>

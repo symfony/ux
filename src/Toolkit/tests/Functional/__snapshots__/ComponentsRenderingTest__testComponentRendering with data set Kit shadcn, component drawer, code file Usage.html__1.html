@@ -1,0 +1,23 @@
+<!--
+- Kit: Shadcn UI
+- Component: Drawer
+- Code:
+```twig
+<twig:Drawer>
+    <twig:Drawer:Trigger class="h-9 rounded-md border border-input bg-background px-4 shadow-xs hover:bg-accent">
+        Open drawer
+    </twig:Drawer:Trigger>
+    <twig:Drawer:Content>
+        <twig:Drawer:Header>
+            <twig:Drawer:Title>Are you absolutely sure?</twig:Drawer:Title>
+            <twig:Drawer:Description>This action cannot be undone.</twig:Drawer:Description>
+        </twig:Drawer:Header>
+    </twig:Drawer:Content>
+</twig:Drawer>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<details class="group/drawer" data-slot="drawer"><summary class="list-none cursor-pointer outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 inline-flex items-center justify-center h-9 rounded-md border border-input bg-background px-4 shadow-xs hover:bg-accent" data-slot="drawer-trigger">Open drawer
+    </summary>    <div role="dialog" aria-modal="true" class="fixed inset-x-0 bottom-0 z-50 mt-24 flex max-h-[80vh] flex-col rounded-t-[10px] border bg-background p-4 shadow-lg outline-none" data-slot="drawer-content">
+    <div aria-hidden="true" class="mx-auto mb-4 h-1.5 w-12 rounded-full bg-muted"></div>
+<div class="grid gap-1.5 p-4 text-center sm:text-left" data-slot="drawer-header">
+<h2 class="text-lg font-semibold leading-none tracking-tight" data-slot="drawer-title">Are you absolutely sure?</h2>            <p class="text-sm text-muted-foreground" data-slot="drawer-description">This action cannot be undone.</p>        </div>    </div></details>

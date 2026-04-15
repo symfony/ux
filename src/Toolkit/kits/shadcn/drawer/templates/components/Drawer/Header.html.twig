@@ -1,0 +1,9 @@
+{# @block content The drawer header content #}
+<div
+    class="{{ ('grid gap-1.5 p-4 text-center sm:text-left ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'drawer-header',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

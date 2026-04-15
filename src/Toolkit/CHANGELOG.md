@@ -15,6 +15,7 @@
 - [Shadcn] Add `toggle-group` recipe
 - [Shadcn] Add `form` recipe
 - [Shadcn] Add `sheet` recipe
+- [Shadcn] Add `drawer` recipe
 
 ## 2.35
 
