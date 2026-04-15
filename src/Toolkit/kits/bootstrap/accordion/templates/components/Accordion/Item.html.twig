@@ -6,7 +6,10 @@
 {%- set _accordion_item_is_open = open -%}
 <div
     class="{{ ('accordion-item ' ~ attributes.render('class'))|trim }}"
-    data-accordion-target="item"
+    {{ attributes.defaults({
+        'data-controller': 'collapse',
+        'data-collapse-parent-value': not _accordion_always_open ? '#' ~ _accordion_id : '',
+    }) }}
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}

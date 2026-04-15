@@ -3,7 +3,7 @@
 <div
     id="{{ _accordion_item_id }}-collapse"
     class="accordion-collapse collapse{{ _accordion_item_is_open ? ' show' : '' }}"
-    data-accordion-target="body"
+    data-collapse-target="content"
 >
     <div class="{{ ('accordion-body ' ~ attributes.render('class'))|trim }}" {{ attributes }}>
         {%- block content %}{% endblock -%}

@@ -4,13 +4,18 @@ import { Collapse } from 'bootstrap';
 export default class extends Controller {
     static targets = ['trigger', 'content'];
 
+    static values = {
+        parent: { type: String, default: '' },
+    };
+
     connect() {
         this._collapse = new Collapse(this.contentTarget, {
             toggle: false,
+            parent: this.parentValue ? document.querySelector(this.parentValue) : undefined,
         });
 
-        this.contentTarget.addEventListener('shown.bs.collapse', this._onShown.bind(this));
-        this.contentTarget.addEventListener('hidden.bs.collapse', this._onHidden.bind(this));
+        this.contentTarget.addEventListener('show.bs.collapse', this._onShown.bind(this));
+        this.contentTarget.addEventListener('hide.bs.collapse', this._onHidden.bind(this));
 
         // Sync initial state
         if (this.contentTarget.classList.contains('show')) {
@@ -19,8 +24,8 @@ export default class extends Controller {
     }
 
     disconnect() {
-        this.contentTarget.removeEventListener('shown.bs.collapse', this._onShown.bind(this));
-        this.contentTarget.removeEventListener('hidden.bs.collapse', this._onHidden.bind(this));
+        this.contentTarget.removeEventListener('show.bs.collapse', this._onShown.bind(this));
+        this.contentTarget.removeEventListener('hide.bs.collapse', this._onHidden.bind(this));
         this._collapse?.dispose();
     }
 
@@ -47,6 +52,7 @@ export default class extends Controller {
     _updateTriggers(expanded) {
         for (const trigger of this.triggerTargets) {
             trigger.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+            trigger.classList.toggle('collapsed', !expanded);
         }
     }
 }

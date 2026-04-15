@@ -11,9 +11,9 @@
 </twig:Accordion>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div class="accordion" id="my-accordion" data-controller="accordion" data-accordion-always-open-value="false"><div class="accordion-item" data-accordion-target="item">
+<div class="accordion" id="my-accordion"><div class="accordion-item" data-controller="collapse" data-collapse-parent-value="#my-accordion">
 <h2 class="accordion-header">
-    <button class="accordion-button" type="button" data-action="click-&gt;accordion#toggle" data-accordion-target="header" aria-expanded="true" aria-controls="my-accordion-1-collapse">Section title</button>
-</h2>        <div id="my-accordion-1-collapse" class="accordion-collapse collapse show" data-accordion-target="body">
+    <button class="accordion-button" type="button" data-action="click-&gt;collapse#toggle" data-collapse-target="trigger" aria-expanded="true" aria-controls="my-accordion-1-collapse">Section title</button>
+</h2>        <div id="my-accordion-1-collapse" class="accordion-collapse collapse show" data-collapse-target="content">
     <div class="accordion-body">Section content goes here.</div>
 </div>    </div></div>
