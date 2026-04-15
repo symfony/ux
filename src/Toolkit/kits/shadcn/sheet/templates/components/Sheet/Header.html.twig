@@ -1,0 +1,9 @@
+{# @block content The sheet header content #}
+<div
+    class="{{ ('flex flex-col gap-1.5 text-center sm:text-left ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'sheet-header',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

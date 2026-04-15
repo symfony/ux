@@ -14,6 +14,7 @@
 - [Shadcn] Add `typography` recipe
 - [Shadcn] Add `toggle-group` recipe
 - [Shadcn] Add `form` recipe
+- [Shadcn] Add `sheet` recipe
 
 ## 2.35
 

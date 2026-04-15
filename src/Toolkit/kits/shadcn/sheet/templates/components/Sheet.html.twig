@@ -1,0 +1,13 @@
+{# @prop side 'left'|'right'|'top'|'bottom' Which edge the sheet slides from. Defaults to `right` #}
+{# @block content A `Sheet:Trigger` and a `Sheet:Content` #}
+{%- props side = 'right' -%}
+{%- set _sheet_side = side -%}
+<details
+    class="{{ ('group/sheet ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'sheet',
+        'data-side': side,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</details>

@@ -1,0 +1,25 @@
+{# @block content The sheet content #}
+{%- set style = html_cva(
+    base: 'fixed z-50 bg-background p-6 shadow-lg outline-none flex flex-col gap-4',
+    variants: {
+        side: {
+            right: 'inset-y-0 right-0 h-full w-3/4 sm:max-w-sm border-l',
+            left: 'inset-y-0 left-0 h-full w-3/4 sm:max-w-sm border-r',
+            top: 'inset-x-0 top-0 border-b',
+            bottom: 'inset-x-0 bottom-0 border-t',
+        },
+    },
+    default_variant: {
+        side: 'right',
+    },
+) -%}
+<div
+    role="dialog"
+    aria-modal="true"
+    class="{{ style.apply({side: _sheet_side ?? 'right'}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'sheet-content',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

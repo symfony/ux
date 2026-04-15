@@ -1,0 +1,9 @@
+{# @block content The sheet description #}
+<p
+    class="{{ ('text-sm text-muted-foreground ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'sheet-description',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</p>
