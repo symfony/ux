@@ -59,7 +59,7 @@ return (new PhpCsFixer\Config())
                     $relativePathname = $file->getRelativePathname();
 
                     if (
-                        str_contains($relativePathname, '/Tests/') // don't touch test files, as massive change with little benefit - as outside of public contract anyway
+                        str_contains($relativePathname, '/tests/') // don't touch test files, as massive change with little benefit - as outside of public contract anyway
                         || str_contains($relativePathname, '/Test/') // public namespace not following the rule, do not mistake it with `/Tests/`
                     ) {
                         return false;
