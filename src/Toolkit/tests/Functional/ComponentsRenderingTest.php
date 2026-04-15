@@ -18,6 +18,7 @@ use Spatie\Snapshots\MatchesSnapshots;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Finder\Finder;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Kit\KitContextRunner;
 use Symfony\UX\Toolkit\Kit\KitFactory;
@@ -48,12 +49,12 @@ class ComponentsRenderingTest extends WebTestCase
             $kitSynchronizer->synchronize($kit);
 
             foreach ($kit->getRecipes(RecipeType::Component) as $recipe) {
-                $examplesFilePath = Path::join($recipe->absolutePath, 'examples');
-
-                foreach (glob($examplesFilePath.'/*.html.twig') as $exampleFilePath) {
-                    $filename = pathinfo($exampleFilePath, \PATHINFO_FILENAME);
-                    $code = file_get_contents($exampleFilePath);
-                    yield \sprintf('Kit %s, component %s, code file %s', $kitName, $recipe->name, $filename) => [$kitName, $recipe->name, $code];
+                $finder = Finder::create()
+                    ->in(Path::join($recipe->absolutePath, 'examples'))
+                    ->name('*.html.twig')
+                    ->notName('Usage.html.twig');
+                foreach ($finder as $file) {
+                    yield \sprintf('Kit %s, component %s, code file %s', $kitName, $recipe->name, $file->getFilename()) => [$kitName, $recipe->name, $file->getContents()];
                 }
             }
         }
