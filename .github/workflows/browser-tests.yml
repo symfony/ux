@@ -31,6 +31,7 @@ jobs:
             fail-fast: false
             matrix:
                 symfony: ['7.4', '8.0']
+                browser: ['chrome-lowest', 'chrome-latest', 'firefox-latest']
         env:
             SYMFONY_REQUIRE: '${{ matrix.symfony }}.*'
         steps:
@@ -44,6 +45,12 @@ jobs:
                   cache-dependency-path: |
                       pnpm-lock.yaml
                       package.json
+
+            - name: Cache custom browsers
+              uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+              with:
+                  path: ./browsers
+                  key: ${{ runner.os }}-browsers-${{ matrix.browser }}-${{ hashFiles('bin/get_browsers.mjs') }}
 
             - name: Install root JS dependencies
               run: pnpm install --frozen-lockfile
@@ -98,7 +105,7 @@ jobs:
               working-directory: apps/e2e
 
             - name: Run browser tests
-              run: pnpm run test:browser
+              run: pnpm run test:browser --project ${{ matrix.browser }}
               id: browser-tests
 
             - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
