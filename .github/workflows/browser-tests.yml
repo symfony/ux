@@ -108,7 +108,7 @@ jobs:
               run: pnpm run test:browser --project ${{ matrix.browser }}
               id: browser-tests
 
-            - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+            - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
               if: ${{ always() && steps.browser-tests.conclusion == 'failure' }}
               with:
                   name: Playwright report and output (${{ matrix.symfony }})
@@ -118,7 +118,7 @@ jobs:
                   retention-days: 7
                   include-hidden-files: true
 
-            - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+            - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
               if: ${{ always() && steps.browser-tests.conclusion == 'failure' }}
               with:
                   name: Symfony logs (${{ matrix.symfony }})
