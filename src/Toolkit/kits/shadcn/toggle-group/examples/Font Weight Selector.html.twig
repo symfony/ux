@@ -1,0 +1,27 @@
+<div class="w-auto">
+    <twig:Field>
+        <twig:Field:Label>Font Weight</twig:Field:Label>
+        <twig:ToggleGroup variant="outline" size="lg" type="single" class="gap-2 shadow-none" data-toggle-group-label-selector-value="#font-weight-label">
+            <twig:ToggleGroup:Item aria-label="Light" class="flex size-16 flex-col items-center justify-center rounded-xl">
+                <span class="text-2xl leading-none font-light">Aa</span>
+                <span class="text-xs text-muted-foreground">Light</span>
+            </twig:ToggleGroup:Item>
+            <twig:ToggleGroup:Item aria-label="Normal" pressed class="flex size-16 flex-col items-center justify-center rounded-xl">
+                <span class="text-2xl leading-none font-normal">Aa</span>
+                <span class="text-xs text-muted-foreground">Normal</span>
+            </twig:ToggleGroup:Item>
+            <twig:ToggleGroup:Item aria-label="Medium" class="flex size-16 flex-col items-center justify-center rounded-xl">
+                <span class="text-2xl leading-none font-medium">Aa</span>
+                <span class="text-xs text-muted-foreground">Medium</span>
+            </twig:ToggleGroup:Item>
+            <twig:ToggleGroup:Item aria-label="Bold" class="flex size-16 flex-col items-center justify-center rounded-xl">
+                <span class="text-2xl leading-none font-bold">Aa</span>
+                <span class="text-xs text-muted-foreground">Bold</span>
+            </twig:ToggleGroup:Item>
+        </twig:ToggleGroup>
+        <twig:Field:Description>
+            Use <code class="rounded-md bg-muted px-1 py-0.5 font-mono">font-<span id="font-weight-label">normal</span></code> to set the font weight.
+        </twig:Field:Description>
+    </twig:Field>
+
+</div>

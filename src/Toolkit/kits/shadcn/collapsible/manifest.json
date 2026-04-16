@@ -4,6 +4,7 @@
     "name": "Collapsible",
     "description": "An interactive component which expands and collapses a section of content.",
     "copy-files": {
+        "assets/": "assets/",
         "templates/": "templates/"
     },
     "dependencies": {

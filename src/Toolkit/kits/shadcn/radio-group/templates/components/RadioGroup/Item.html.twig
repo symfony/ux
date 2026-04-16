@@ -1,11 +1,16 @@
 {# @prop name string The name shared by all radio inputs in the same group #}
 {# @prop value string The value submitted when this item is selected #}
 {%- props name, value -%}
-<input
-    type="radio"
-    name="{{ name }}"
-    value="{{ value }}"
-    class="{{ ('peer size-4 inline-block align-middle rounded-full accent-primary ' ~ attributes.render('class'))|tailwind_merge }}"
-    data-slot="radio-group-item"
-    {{ attributes }}
->
+<label class="{{ ('relative inline-flex size-4 shrink-0 items-center justify-center cursor-pointer group-data-[disabled=true]/field:cursor-not-allowed group-data-[disabled=true]/field:opacity-50 ' ~ attributes.render('class'))|tailwind_merge }}">
+    <input
+        type="radio"
+        name="{{ name }}"
+        value="{{ value }}"
+        class="peer sr-only"
+        {{ attributes.defaults({
+            'data-slot': 'radio-group-item',
+        }) }}
+    >
+    <span class="flex size-4 cursor-pointer items-center justify-center rounded-full border border-input outline-none peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-aria-invalid:border-destructive peer-aria-invalid:ring-[3px] peer-aria-invalid:ring-destructive/20 dark:bg-input/30 dark:peer-aria-invalid:border-destructive/50 dark:peer-aria-invalid:ring-destructive/40 peer-checked:border-primary peer-checked:bg-primary dark:peer-checked:bg-primary"></span>
+    <span class="pointer-events-none absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 scale-0 rounded-full bg-primary-foreground transition-transform peer-checked:scale-100"></span>
+</label>

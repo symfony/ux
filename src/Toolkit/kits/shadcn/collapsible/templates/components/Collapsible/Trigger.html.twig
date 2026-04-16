@@ -1,9 +1,9 @@
-{# @block content The clickable label that toggles the collapsible #}
-<summary
-    class="{{ ('inline-flex cursor-pointer items-center gap-2 rounded-md text-sm font-medium outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.defaults({
-        'data-slot': 'collapsible-trigger',
-    }) }}
->
-    {%- block content %}{% endblock -%}
-</summary>
+{# @block content The clickable element that toggles the collapsible (e.g., a `Button`) #}
+{%- set collapsible_trigger_attrs = {
+    'data-slot': 'collapsible-trigger',
+    'data-collapsible-target': 'trigger',
+    'data-action': 'click->collapsible#toggle'|html_attr_type('sst'),
+    'aria-expanded': _collapsible_open ? 'true' : 'false',
+    'data-state': _collapsible_open ? 'open' : 'closed',
+} -%}
+{%- block content %}{% endblock -%}

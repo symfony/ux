@@ -1,0 +1,77 @@
+<!--
+- Kit: Shadcn UI
+- Component: Radio Group
+- Code:
+```twig
+<twig:RadioGroup class="max-w-sm">
+    <twig:Field:Label for="plus-plan" class="border border-input rounded-md has-[:checked]:bg-primary/5 has-[:checked]:border-primary/20 dark:has-[:checked]:bg-primary/10">
+        <twig:Field orientation="horizontal" class="p-3">
+            <twig:Field:Content>
+                <twig:Field:Title>Plus</twig:Field:Title>
+                <twig:Field:Description>For individuals and small teams.</twig:Field:Description>
+            </twig:Field:Content>
+            <twig:RadioGroup:Item id="plus-plan" name="plan" value="plus" checked />
+        </twig:Field>
+    </twig:Field:Label>
+    <twig:Field:Label for="pro-plan" class="border border-input rounded-md has-[:checked]:bg-primary/5 has-[:checked]:border-primary/20 dark:has-[:checked]:bg-primary/10">
+        <twig:Field orientation="horizontal" class="p-3">
+            <twig:Field:Content>
+                <twig:Field:Title>Pro</twig:Field:Title>
+                <twig:Field:Description>For growing businesses.</twig:Field:Description>
+            </twig:Field:Content>
+            <twig:RadioGroup:Item id="pro-plan" name="plan" value="pro" />
+        </twig:Field>
+    </twig:Field:Label>
+    <twig:Field:Label for="enterprise-plan" class="border border-input rounded-md has-[:checked]:bg-primary/5 has-[:checked]:border-primary/20 dark:has-[:checked]:bg-primary/10">
+        <twig:Field orientation="horizontal" class="p-3">
+            <twig:Field:Content>
+                <twig:Field:Title>Enterprise</twig:Field:Title>
+                <twig:Field:Description>For large teams and enterprises.</twig:Field:Description>
+            </twig:Field:Content>
+            <twig:RadioGroup:Item id="enterprise-plan" name="plan" value="enterprise" />
+        </twig:Field>
+    </twig:Field:Label>
+</twig:RadioGroup>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div role="radiogroup" class="grid w-full gap-2 max-w-sm" data-slot="radio-group">
+<label class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 border border-input rounded-md has-[:checked]:bg-primary/5 has-[:checked]:border-primary/20 dark:has-[:checked]:bg-primary/10" data-slot="field-label" for="plus-plan"><div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-row items-center [&amp;&gt;[data-slot=field-label]]:flex-auto has-[&gt;[data-slot=field-content]]:items-start has-[&gt;[data-slot=field-content]]:[&amp;&gt;[role=checkbox],[role=radio]]:mt-px p-3">
+<div data-slot="field-content" class="group/field-content flex flex-1 flex-col gap-1.5 leading-snug">
+<div data-slot="field-label" class="flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50">Plus</div>
+                <p data-slot="field-description" class="text-muted-foreground text-sm leading-normal font-normal group-has-[[data-orientation=horizontal]]/field:text-balance last:mt-0 nth-last-2:-mt-1 [[data-variant=legend]+&amp;]:-mt-1.5 [&amp;&gt;a:hover]:text-primary [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4">For individuals and small teams.</p>
+            </div>
+            <label class="relative inline-flex size-4 shrink-0 items-center justify-center cursor-pointer group-data-[disabled=true]/field:cursor-not-allowed group-data-[disabled=true]/field:opacity-50">
+    <input type="radio" name="plan" value="plus" class="peer sr-only" data-slot="radio-group-item" id="plus-plan" checked>
+    <span class="flex size-4 cursor-pointer items-center justify-center rounded-full border border-input outline-none peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-aria-invalid:border-destructive peer-aria-invalid:ring-[3px] peer-aria-invalid:ring-destructive/20 dark:bg-input/30 dark:peer-aria-invalid:border-destructive/50 dark:peer-aria-invalid:ring-destructive/40 peer-checked:border-primary peer-checked:bg-primary dark:peer-checked:bg-primary"></span>
+    <span class="pointer-events-none absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 scale-0 rounded-full bg-primary-foreground transition-transform peer-checked:scale-100"></span>
+</label>
+
+        </div>
+    </label>
+    <label class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 border border-input rounded-md has-[:checked]:bg-primary/5 has-[:checked]:border-primary/20 dark:has-[:checked]:bg-primary/10" data-slot="field-label" for="pro-plan"><div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-row items-center [&amp;&gt;[data-slot=field-label]]:flex-auto has-[&gt;[data-slot=field-content]]:items-start has-[&gt;[data-slot=field-content]]:[&amp;&gt;[role=checkbox],[role=radio]]:mt-px p-3">
+<div data-slot="field-content" class="group/field-content flex flex-1 flex-col gap-1.5 leading-snug">
+<div data-slot="field-label" class="flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50">Pro</div>
+                <p data-slot="field-description" class="text-muted-foreground text-sm leading-normal font-normal group-has-[[data-orientation=horizontal]]/field:text-balance last:mt-0 nth-last-2:-mt-1 [[data-variant=legend]+&amp;]:-mt-1.5 [&amp;&gt;a:hover]:text-primary [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4">For growing businesses.</p>
+            </div>
+            <label class="relative inline-flex size-4 shrink-0 items-center justify-center cursor-pointer group-data-[disabled=true]/field:cursor-not-allowed group-data-[disabled=true]/field:opacity-50">
+    <input type="radio" name="plan" value="pro" class="peer sr-only" data-slot="radio-group-item" id="pro-plan">
+    <span class="flex size-4 cursor-pointer items-center justify-center rounded-full border border-input outline-none peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-aria-invalid:border-destructive peer-aria-invalid:ring-[3px] peer-aria-invalid:ring-destructive/20 dark:bg-input/30 dark:peer-aria-invalid:border-destructive/50 dark:peer-aria-invalid:ring-destructive/40 peer-checked:border-primary peer-checked:bg-primary dark:peer-checked:bg-primary"></span>
+    <span class="pointer-events-none absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 scale-0 rounded-full bg-primary-foreground transition-transform peer-checked:scale-100"></span>
+</label>
+
+        </div>
+    </label>
+    <label class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 border border-input rounded-md has-[:checked]:bg-primary/5 has-[:checked]:border-primary/20 dark:has-[:checked]:bg-primary/10" data-slot="field-label" for="enterprise-plan"><div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-row items-center [&amp;&gt;[data-slot=field-label]]:flex-auto has-[&gt;[data-slot=field-content]]:items-start has-[&gt;[data-slot=field-content]]:[&amp;&gt;[role=checkbox],[role=radio]]:mt-px p-3">
+<div data-slot="field-content" class="group/field-content flex flex-1 flex-col gap-1.5 leading-snug">
+<div data-slot="field-label" class="flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50">Enterprise</div>
+                <p data-slot="field-description" class="text-muted-foreground text-sm leading-normal font-normal group-has-[[data-orientation=horizontal]]/field:text-balance last:mt-0 nth-last-2:-mt-1 [[data-variant=legend]+&amp;]:-mt-1.5 [&amp;&gt;a:hover]:text-primary [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4">For large teams and enterprises.</p>
+            </div>
+            <label class="relative inline-flex size-4 shrink-0 items-center justify-center cursor-pointer group-data-[disabled=true]/field:cursor-not-allowed group-data-[disabled=true]/field:opacity-50">
+    <input type="radio" name="plan" value="enterprise" class="peer sr-only" data-slot="radio-group-item" id="enterprise-plan">
+    <span class="flex size-4 cursor-pointer items-center justify-center rounded-full border border-input outline-none peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-aria-invalid:border-destructive peer-aria-invalid:ring-[3px] peer-aria-invalid:ring-destructive/20 dark:bg-input/30 dark:peer-aria-invalid:border-destructive/50 dark:peer-aria-invalid:ring-destructive/40 peer-checked:border-primary peer-checked:bg-primary dark:peer-checked:bg-primary"></span>
+    <span class="pointer-events-none absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 scale-0 rounded-full bg-primary-foreground transition-transform peer-checked:scale-100"></span>
+</label>
+
+        </div>
+    </label>
+</div>

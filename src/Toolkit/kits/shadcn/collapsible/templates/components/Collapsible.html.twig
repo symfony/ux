@@ -1,12 +1,15 @@
 {# @prop open boolean Whether the collapsible is open by default. Defaults to `false` #}
 {# @block content The collapsible content, typically a `Collapsible:Trigger` and a `Collapsible:Content` #}
 {%- props open = false -%}
-<details
+{%- set _collapsible_open = open -%}
+<div
     class="{{ ('group ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
         'data-slot': 'collapsible',
+        'data-controller': 'collapsible',
+        'data-collapsible-open-value': open ? 'true' : 'false',
+        'data-state': open ? 'open' : 'closed',
     }) }}
-    {{ open ? 'open' : '' }}
 >
     {%- block content %}{% endblock -%}
-</details>
+</div>

@@ -1,0 +1,40 @@
+<twig:Card class="mx-auto w-full max-w-xs">
+    <twig:Card:Header>
+        <twig:Card:Title>Radius</twig:Card:Title>
+        <twig:Card:Description>Set the corner radius of the element.</twig:Card:Description>
+    </twig:Card:Header>
+    <twig:Card:Content>
+        <twig:Collapsible class="flex items-start gap-2">
+            <div class="w-full space-y-2">
+                <div class="grid grid-cols-2 gap-2">
+                    <twig:Field>
+                        <twig:Field:Label for="radius-1" class="sr-only">Radius X</twig:Field:Label>
+                        <twig:Input id="radius-1" placeholder="0" value="0" />
+                    </twig:Field>
+                    <twig:Field>
+                        <twig:Field:Label for="radius-2" class="sr-only">Radius Y</twig:Field:Label>
+                        <twig:Input id="radius-2" placeholder="0" value="0" />
+                    </twig:Field>
+                </div>
+                <twig:Collapsible:Content>
+                    <div class="grid grid-cols-2 gap-2">
+                        <twig:Field>
+                            <twig:Field:Label for="radius-3" class="sr-only">Radius X</twig:Field:Label>
+                            <twig:Input id="radius-3" placeholder="0" value="0" />
+                        </twig:Field>
+                        <twig:Field>
+                            <twig:Field:Label for="radius-4" class="sr-only">Radius Y</twig:Field:Label>
+                            <twig:Input id="radius-4" placeholder="0" value="0" />
+                        </twig:Field>
+                    </div>
+                </twig:Collapsible:Content>
+            </div>
+            <twig:Collapsible:Trigger>
+                <twig:Button variant="outline" size="icon" class="group" {{ ...collapsible_trigger_attrs }}>
+                    <twig:ux:icon name="lucide:maximize" class="size-4 group-data-[state=open]:hidden" />
+                    <twig:ux:icon name="lucide:minimize" class="size-4 hidden group-data-[state=open]:block" />
+                </twig:Button>
+            </twig:Collapsible:Trigger>
+        </twig:Collapsible>
+    </twig:Card:Content>
+</twig:Card>

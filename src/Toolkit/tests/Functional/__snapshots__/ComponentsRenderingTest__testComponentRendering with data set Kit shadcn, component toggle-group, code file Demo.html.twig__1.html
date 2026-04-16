@@ -1,0 +1,26 @@
+<!--
+- Kit: Shadcn UI
+- Component: Toggle Group
+- Code:
+```twig
+<twig:ToggleGroup variant="outline">
+    <twig:ToggleGroup:Item aria-label="Toggle bold">
+        <twig:ux:icon name="lucide:bold" class="size-4" />
+    </twig:ToggleGroup:Item>
+    <twig:ToggleGroup:Item aria-label="Toggle italic">
+        <twig:ux:icon name="lucide:italic" class="size-4" />
+    </twig:ToggleGroup:Item>
+    <twig:ToggleGroup:Item aria-label="Toggle underline">
+        <twig:ux:icon name="lucide:underline" class="size-4" />
+    </twig:ToggleGroup:Item>
+</twig:ToggleGroup>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div role="group" class="group/toggle-group flex w-fit items-center rounded-lg shadow-xs" data-slot="toggle-group" data-controller="toggle-group" data-toggle-group-type-value="multiple" data-variant="outline" data-size="default">
+<button type="button" class="inline-flex items-center justify-center gap-2 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted hover:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground aria-pressed:bg-accent aria-pressed:text-accent-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 first:rounded-s-lg last:rounded-e-lg border border-input shadow-none not-first:-ml-px h-9 min-w-9 px-2" data-slot="toggle-group-item" data-controller="toggle" data-action="click-&gt;toggle#toggle click-&gt;toggle-group#toggle" data-toggle-pressed-value="false" data-variant="outline" data-size="default" aria-pressed="false" data-state="inactive" aria-label="Toggle bold"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"></path></svg>
+    </button>
+    <button type="button" class="inline-flex items-center justify-center gap-2 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted hover:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground aria-pressed:bg-accent aria-pressed:text-accent-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 first:rounded-s-lg last:rounded-e-lg border border-input shadow-none not-first:-ml-px h-9 min-w-9 px-2" data-slot="toggle-group-item" data-controller="toggle" data-action="click-&gt;toggle#toggle click-&gt;toggle-group#toggle" data-toggle-pressed-value="false" data-variant="outline" data-size="default" aria-pressed="false" data-state="inactive" aria-label="Toggle italic"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 4h-9m4 16H5M15 4L9 20"></path></svg>
+    </button>
+    <button type="button" class="inline-flex items-center justify-center gap-2 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted hover:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground aria-pressed:bg-accent aria-pressed:text-accent-foreground [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 first:rounded-s-lg last:rounded-e-lg border border-input shadow-none not-first:-ml-px h-9 min-w-9 px-2" data-slot="toggle-group-item" data-controller="toggle" data-action="click-&gt;toggle#toggle click-&gt;toggle-group#toggle" data-toggle-pressed-value="false" data-variant="outline" data-size="default" aria-pressed="false" data-state="inactive" aria-label="Toggle underline"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 4v6a6 6 0 0 0 12 0V4M4 20h16"></path></svg>
+    </button>
+</div>

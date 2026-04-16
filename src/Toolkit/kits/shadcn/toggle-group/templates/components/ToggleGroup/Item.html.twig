@@ -4,11 +4,11 @@
 {%- set _item_variant = _toggle_group_variant ?? 'default' -%}
 {%- set _item_size = _toggle_group_size ?? 'default' -%}
 {%- set style = html_cva(
-    base: "inline-flex items-center justify-center gap-2 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted hover:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-pressed:bg-accent aria-pressed:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 first:rounded-l-md last:rounded-r-md",
+    base: "inline-flex items-center justify-center gap-2 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted hover:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground aria-pressed:bg-accent aria-pressed:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 first:rounded-s-lg last:rounded-e-lg",
     variants: {
         variant: {
-            default: 'bg-transparent',
-            outline: 'border border-input bg-transparent shadow-none first:border-l last:border-r border-y border-l-0 border-r-0 [&:not(:first-child)]:border-l-0',
+            default: '',
+            outline: 'border border-input shadow-none not-first:-ml-px',
         },
         size: {
             default: 'h-9 min-w-9 px-2',
@@ -23,10 +23,12 @@
     {{ attributes.defaults({
         'data-slot': 'toggle-group-item',
         'data-controller': 'toggle',
-        'data-action': 'click->toggle#toggle',
+        'data-action': 'click->toggle#toggle click->toggle-group#toggle',
+        'data-toggle-pressed-value': pressed ? 'true' : 'false',
         'data-variant': _item_variant,
         'data-size': _item_size,
         'aria-pressed': pressed ? 'true' : 'false',
+        'data-state': pressed ? 'active' : 'inactive',
     }) }}
 >
     {%- block content %}{% endblock -%}
