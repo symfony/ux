@@ -1,0 +1,168 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-04-14T11:39:44Z
+
+Hi, Symfony UX 3.0 has been released, and the `2.x` branch is no longer maintained.
+
+Could you please retarget this PR to the `3.x` branch instead? That way we can review and merge it in the currently supported version.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-04-14T18:28:13Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/DcgRG/ux/tree/toolkit-flowbite-dropdown/src/LazyImage/assets/dist"><b>LazyImage</b></a></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/LazyImage/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>395 B</code>
+                    / <code>257 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/LazyImage/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>904 B</code>
+                    / <code>457 B</code>
+                </td><td><em>Removed</em></td></tr><tr><td colspan="3"><a href="https://github.com/DcgRG/ux/tree/toolkit-flowbite-dropdown/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.6 kB</code>
+                    / <code>1.49 kB</code>
+                </td><td>
+                    <code>7.29 kB</code><sup>-4% 📉</sup>
+                    / <code>1.46 kB</code><sup>-2% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>4.92 kB</code>
+                    / <code>1.4 kB</code>
+                </td><td>
+                    <code>4.65 kB</code><sup>-5% 📉</sup>
+                    / <code>1.26 kB</code><sup>-10% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/DcgRG/ux/tree/toolkit-flowbite-dropdown/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>10.56 kB</code>
+                    / <code>1.92 kB</code>
+                </td><td>
+                    <code>10.26 kB</code><sup>-3% 📉</sup>
+                    / <code>1.9 kB</code><sup>-1% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>12.9 kB</code>
+                    / <code>3.19 kB</code>
+                </td><td>
+                    <code>11.25 kB</code><sup>-13% 📉</sup>
+                    / <code>2.84 kB</code><sup>-11% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/DcgRG/ux/tree/toolkit-flowbite-dropdown/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>9.92 kB</code>
+                    / <code>1.84 kB</code>
+                </td><td>
+                    <code>9.61 kB</code><sup>-3% 📉</sup>
+                    / <code>1.81 kB</code><sup>-2% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>12.45 kB</code>
+                    / <code>3.36 kB</code>
+                </td><td>
+                    <code>11.38 kB</code><sup>-9% 📉</sup>
+                    / <code>3.17 kB</code><sup>-6% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/DcgRG/ux/tree/toolkit-flowbite-dropdown/src/Svelte/assets/dist"><b>Svelte</b></a></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Svelte/assets/dist/components.d.ts"><code>components.d.ts</code></a></td>
+            <td>
+                    <code>200 B</code>
+                    / <code>150 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Svelte/assets/dist/components.js"><code>components.js</code></a></td>
+            <td>
+                    <code>46 B</code>
+                    / <code>69 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Svelte/assets/dist/loader.d.ts"><code>loader.d.ts</code></a></td>
+            <td>
+                    <code>435 B</code>
+                    / <code>217 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Svelte/assets/dist/loader.js"><code>loader.js</code></a></td>
+            <td>
+                    <code>553 B</code>
+                    / <code>313 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Svelte/assets/dist/register_controller.d.ts"><code>register_controller.d.ts</code></a></td>
+            <td>
+                    <code>384 B</code>
+                    / <code>235 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Svelte/assets/dist/register_controller.js"><code>register_controller.js</code></a></td>
+            <td>
+                    <code>531 B</code>
+                    / <code>303 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Svelte/assets/dist/render_controller.d.ts"><code>render_controller.d.ts</code></a></td>
+            <td>
+                    <code>629 B</code>
+                    / <code>353 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Svelte/assets/dist/render_controller.js"><code>render_controller.js</code></a></td>
+            <td>
+                    <code>1.05 kB</code>
+                    / <code>493 B</code>
+                </td><td><em>Removed</em></td></tr><tr><td colspan="3"><a href="https://github.com/DcgRG/ux/tree/toolkit-flowbite-dropdown/src/Swup/assets/dist"><b>Swup</b></a></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Swup/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>1012 B</code>
+                    / <code>360 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Swup/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>1.71 kB</code>
+                    / <code>653 B</code>
+                </td><td><em>Removed</em></td></tr><tr><td colspan="3"><a href="https://github.com/DcgRG/ux/tree/toolkit-flowbite-dropdown/src/TogglePassword/assets/dist"><b>TogglePassword</b></a></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/TogglePassword/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>896 B</code>
+                    / <code>355 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/TogglePassword/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>2.64 kB</code>
+                    / <code>1.07 kB</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/TogglePassword/assets/dist/style.min.css"><code>style.min.css</code></a></td>
+            <td>
+                    <code>312 B</code>
+                    / <code>218 B</code>
+                </td><td><em>Removed</em></td></tr><tr><td colspan="3"><a href="https://github.com/DcgRG/ux/tree/toolkit-flowbite-dropdown/src/Typed/assets/dist"><b>Typed</b></a></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Typed/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>1.9 kB</code>
+                    / <code>501 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/DcgRG/ux/blob/toolkit-flowbite-dropdown/src/Typed/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>1.8 kB</code>
+                    / <code>638 B</code>
+                </td><td><em>Removed</em></td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-04-16T06:43:24Z
+
+Thank you @DcgRG for this incredible work!
+
+I just pushed some corrections, can you take care about https://github.com/symfony/ux/pull/3459#discussion_r3091137188 and https://github.com/symfony/ux/pull/3459#discussion_r3091137199 please? I'm not sure about the first one, and I'm too lazy for the last one... 😅
+
+Thanks!
