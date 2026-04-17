@@ -1,0 +1,28 @@
+<!--
+- Kit: Flowbite v4
+- Component: Avatar
+- Code:
+```twig
+<div class="flex items-center justify-center gap-4">
+    <twig:Avatar>
+        <twig:Avatar:Fallback />
+    </twig:Avatar>
+    <twig:Avatar>
+        <twig:Avatar:Fallback>JL</twig:Avatar:Fallback>
+    </twig:Avatar>
+    <twig:Avatar shape="rounded">
+        <twig:Avatar:Fallback>JL</twig:Avatar:Fallback>
+    </twig:Avatar>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex items-center justify-center gap-4">
+    <span data-size="md" class="group/avatar relative inline-flex shrink-0 select-none overflow-hidden size-10 rounded-full"><span data-avatar-fallback class="bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg">        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M12 4a4 4 0 1 0 0 8a4 4 0 0 0 0-8m-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4z" clip-rule="evenodd"></path></svg>
+    </span>
+
+    </span>
+    <span data-size="md" class="group/avatar relative inline-flex shrink-0 select-none overflow-hidden size-10 rounded-full"><span data-avatar-fallback class="bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg">JL</span>
+    </span>
+    <span data-size="md" class="group/avatar relative inline-flex shrink-0 select-none overflow-hidden size-10 rounded-base"><span data-avatar-fallback class="bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg">JL</span>
+    </span>
+</div>

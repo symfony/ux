@@ -1,0 +1,71 @@
+<!--
+- Kit: Flowbite v4
+- Component: Avatar
+- Code:
+```twig
+<div class="flex items-center justify-center gap-6">
+    <div class="relative">
+        <twig:Avatar>
+            <twig:Avatar:Image src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="Online user" />
+            <twig:Avatar:Fallback>JL</twig:Avatar:Fallback>
+        </twig:Avatar>
+        <twig:Indicator class="absolute top-0 right-0 border-2 border-buffer" variant="success"/>
+    </div>
+    <div class="relative">
+        <twig:Avatar shape="rounded">
+            <twig:Avatar:Image src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="Offline user" />
+            <twig:Avatar:Fallback>JL</twig:Avatar:Fallback>
+        </twig:Avatar>
+        <twig:Indicator class="absolute -top-1 -right-1 border-2 border-buffer" variant="danger"/>
+    </div>
+    <div class="relative">
+        <twig:Avatar>
+            <twig:Avatar:Image src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="Online user" />
+            <twig:Avatar:Fallback>JL</twig:Avatar:Fallback>
+        </twig:Avatar>
+        <twig:Indicator class="absolute bottom-0 right-0 border-2 border-buffer" variant="success"/>
+    </div>
+    <div class="relative">
+        <twig:Avatar shape="rounded">
+            <twig:Avatar:Image src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="Online user" />
+            <twig:Avatar:Fallback>JL</twig:Avatar:Fallback>
+        </twig:Avatar>
+        <twig:Indicator class="absolute -bottom-1 -right-1 border-2 border-buffer" variant="success"/>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex items-center justify-center gap-6">
+    <div class="relative">
+        <span data-size="md" class="group/avatar relative inline-flex shrink-0 select-none overflow-hidden size-10 rounded-full"><img data-avatar-image class="hidden rounded-[inherit] aspect-square size-full object-cover" onload="this.classList.remove('hidden'); this.closest('.group\\/avatar')?.querySelector('[data-avatar-fallback]')?.classList.add('hidden');" alt="Online user" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg">
+
+            <span data-avatar-fallback class="bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg">JL</span>
+        </span>
+        <span class="inline-flex items-center justify-center text-xs font-bold rounded-full bg-success text-white size-3 absolute top-0 right-0 border-2 border-buffer"></span>
+
+    </div>
+    <div class="relative">
+        <span data-size="md" class="group/avatar relative inline-flex shrink-0 select-none overflow-hidden size-10 rounded-base"><img data-avatar-image class="hidden rounded-[inherit] aspect-square size-full object-cover" onload="this.classList.remove('hidden'); this.closest('.group\\/avatar')?.querySelector('[data-avatar-fallback]')?.classList.add('hidden');" alt="Offline user" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg">
+
+            <span data-avatar-fallback class="bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg">JL</span>
+        </span>
+        <span class="inline-flex items-center justify-center text-xs font-bold rounded-full bg-danger text-white size-3 absolute -top-1 -right-1 border-2 border-buffer"></span>
+
+    </div>
+    <div class="relative">
+        <span data-size="md" class="group/avatar relative inline-flex shrink-0 select-none overflow-hidden size-10 rounded-full"><img data-avatar-image class="hidden rounded-[inherit] aspect-square size-full object-cover" onload="this.classList.remove('hidden'); this.closest('.group\\/avatar')?.querySelector('[data-avatar-fallback]')?.classList.add('hidden');" alt="Online user" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg">
+
+            <span data-avatar-fallback class="bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg">JL</span>
+        </span>
+        <span class="inline-flex items-center justify-center text-xs font-bold rounded-full bg-success text-white size-3 absolute bottom-0 right-0 border-2 border-buffer"></span>
+
+    </div>
+    <div class="relative">
+        <span data-size="md" class="group/avatar relative inline-flex shrink-0 select-none overflow-hidden size-10 rounded-base"><img data-avatar-image class="hidden rounded-[inherit] aspect-square size-full object-cover" onload="this.classList.remove('hidden'); this.closest('.group\\/avatar')?.querySelector('[data-avatar-fallback]')?.classList.add('hidden');" alt="Online user" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg">
+
+            <span data-avatar-fallback class="bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg">JL</span>
+        </span>
+        <span class="inline-flex items-center justify-center text-xs font-bold rounded-full bg-success text-white size-3 absolute -bottom-1 -right-1 border-2 border-buffer"></span>
+
+    </div>
+</div>

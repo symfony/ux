@@ -1,0 +1,79 @@
+<!--
+- Kit: Flowbite v4
+- Component: Avatar
+- Code:
+```twig
+<div class="flex flex-col items-center gap-6">
+    <twig:Avatar:Group>
+        <twig:Avatar>
+            <twig:Avatar:Image src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="" />
+            <twig:Avatar:Fallback>JL</twig:Avatar:Fallback>
+        </twig:Avatar>
+        <twig:Avatar>
+            <twig:Avatar:Image src="https://flowbite.com/docs/images/people/profile-picture-2.jpg" alt="" />
+            <twig:Avatar:Fallback>BG</twig:Avatar:Fallback>
+        </twig:Avatar>
+        <twig:Avatar>
+            <twig:Avatar:Image src="https://flowbite.com/docs/images/people/profile-picture-3.jpg" alt="" />
+            <twig:Avatar:Fallback>TL</twig:Avatar:Fallback>
+        </twig:Avatar>
+        <twig:Avatar>
+            <twig:Avatar:Image src="https://flowbite.com/docs/images/people/profile-picture-4.jpg" alt="" />
+            <twig:Avatar:Fallback>RL</twig:Avatar:Fallback>
+        </twig:Avatar>
+    </twig:Avatar:Group>
+
+    <twig:Avatar:Group>
+        <twig:Avatar>
+            <twig:Avatar:Image src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="" />
+            <twig:Avatar:Fallback>JL</twig:Avatar:Fallback>
+        </twig:Avatar>
+        <twig:Avatar>
+            <twig:Avatar:Image src="https://flowbite.com/docs/images/people/profile-picture-2.jpg" alt="" />
+            <twig:Avatar:Fallback>BG</twig:Avatar:Fallback>
+        </twig:Avatar>
+        <twig:Avatar>
+            <twig:Avatar:Image src="https://flowbite.com/docs/images/people/profile-picture-3.jpg" alt="" />
+            <twig:Avatar:Fallback>TL</twig:Avatar:Fallback>
+        </twig:Avatar>
+        <twig:Avatar:GroupCount as="a" href="#">+99</twig:Avatar:GroupCount>
+    </twig:Avatar:Group>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex flex-col items-center gap-6">
+    <div class="group/avatar-group flex -space-x-4 rtl:space-x-reverse *:border-2 *:border-buffer">
+<span data-size="md" class="group/avatar relative inline-flex shrink-0 select-none overflow-hidden size-10 rounded-full"><img data-avatar-image class="hidden rounded-[inherit] aspect-square size-full object-cover" onload="this.classList.remove('hidden'); this.closest('.group\\/avatar')?.querySelector('[data-avatar-fallback]')?.classList.add('hidden');" alt="" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg">
+
+            <span data-avatar-fallback class="bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg">JL</span>
+        </span>
+        <span data-size="md" class="group/avatar relative inline-flex shrink-0 select-none overflow-hidden size-10 rounded-full"><img data-avatar-image class="hidden rounded-[inherit] aspect-square size-full object-cover" onload="this.classList.remove('hidden'); this.closest('.group\\/avatar')?.querySelector('[data-avatar-fallback]')?.classList.add('hidden');" alt="" src="https://flowbite.com/docs/images/people/profile-picture-2.jpg">
+
+            <span data-avatar-fallback class="bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg">BG</span>
+        </span>
+        <span data-size="md" class="group/avatar relative inline-flex shrink-0 select-none overflow-hidden size-10 rounded-full"><img data-avatar-image class="hidden rounded-[inherit] aspect-square size-full object-cover" onload="this.classList.remove('hidden'); this.closest('.group\\/avatar')?.querySelector('[data-avatar-fallback]')?.classList.add('hidden');" alt="" src="https://flowbite.com/docs/images/people/profile-picture-3.jpg">
+
+            <span data-avatar-fallback class="bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg">TL</span>
+        </span>
+        <span data-size="md" class="group/avatar relative inline-flex shrink-0 select-none overflow-hidden size-10 rounded-full"><img data-avatar-image class="hidden rounded-[inherit] aspect-square size-full object-cover" onload="this.classList.remove('hidden'); this.closest('.group\\/avatar')?.querySelector('[data-avatar-fallback]')?.classList.add('hidden');" alt="" src="https://flowbite.com/docs/images/people/profile-picture-4.jpg">
+
+            <span data-avatar-fallback class="bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg">RL</span>
+        </span>
+    </div>
+
+    <div class="group/avatar-group flex -space-x-4 rtl:space-x-reverse *:border-2 *:border-buffer">
+<span data-size="md" class="group/avatar relative inline-flex shrink-0 select-none overflow-hidden size-10 rounded-full"><img data-avatar-image class="hidden rounded-[inherit] aspect-square size-full object-cover" onload="this.classList.remove('hidden'); this.closest('.group\\/avatar')?.querySelector('[data-avatar-fallback]')?.classList.add('hidden');" alt="" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg">
+
+            <span data-avatar-fallback class="bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg">JL</span>
+        </span>
+        <span data-size="md" class="group/avatar relative inline-flex shrink-0 select-none overflow-hidden size-10 rounded-full"><img data-avatar-image class="hidden rounded-[inherit] aspect-square size-full object-cover" onload="this.classList.remove('hidden'); this.closest('.group\\/avatar')?.querySelector('[data-avatar-fallback]')?.classList.add('hidden');" alt="" src="https://flowbite.com/docs/images/people/profile-picture-2.jpg">
+
+            <span data-avatar-fallback class="bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg">BG</span>
+        </span>
+        <span data-size="md" class="group/avatar relative inline-flex shrink-0 select-none overflow-hidden size-10 rounded-full"><img data-avatar-image class="hidden rounded-[inherit] aspect-square size-full object-cover" onload="this.classList.remove('hidden'); this.closest('.group\\/avatar')?.querySelector('[data-avatar-fallback]')?.classList.add('hidden');" alt="" src="https://flowbite.com/docs/images/people/profile-picture-3.jpg">
+
+            <span data-avatar-fallback class="bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg">TL</span>
+        </span>
+        <a class="relative flex items-center justify-center size-10 text-xs font-medium text-white bg-dark-strong rounded-full hover:bg-dark group-has-data-[size=xs]/avatar-group:size-6 group-has-data-[size=sm]/avatar-group:size-8 group-has-data-[size=lg]/avatar-group:size-12 group-has-data-[size=xl]/avatar-group:size-14 group-has-data-[size=2xl]/avatar-group:size-16" href="#">+99</a>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+{# @prop string as The avatar group tag. Defaults to `div` #}
+{# @block content The count indicator, e.g. "+99" #}
+{%- props as = 'div' -%}
+
+<{{ as }}
+    class="{{ ('relative flex items-center justify-center size-10 text-xs font-medium text-white bg-dark-strong rounded-full hover:bg-dark group-has-data-[size=xs]/avatar-group:size-6 group-has-data-[size=sm]/avatar-group:size-8 group-has-data-[size=lg]/avatar-group:size-12 group-has-data-[size=xl]/avatar-group:size-14 group-has-data-[size=2xl]/avatar-group:size-16 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</{{ as }}>

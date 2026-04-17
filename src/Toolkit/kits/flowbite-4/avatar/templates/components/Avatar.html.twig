@@ -1,0 +1,39 @@
+{# @prop size 'xs'|'sm'|'md'|'lg'|'xl'|'2xl' The avatar size. Defaults to `md` #}
+{# @prop shape 'circle'|'rounded' The avatar shape. Defaults to `circle` #}
+{# @prop border 'none'|'bordered' Whether to show a ring border. Defaults to `none` #}
+{# @block content The avatar content, typically `Avatar:Image` and `Avatar:Fallback` #}
+{%- props size = 'md', shape = 'circle', border = 'none' -%}
+
+{%- set style = html_cva(
+    base: 'group/avatar relative inline-flex shrink-0 select-none overflow-hidden',
+    variants: {
+        size: {
+            xs: 'size-6',
+            sm: 'size-8',
+            md: 'size-10',
+            lg: 'size-12',
+            xl: 'size-14',
+            '2xl': 'size-16',
+        },
+        shape: {
+            circle: 'rounded-full',
+            rounded: 'rounded-base',
+        },
+        border: {
+            bordered: 'p-1 ring-2 ring-default',
+        },
+    },
+    compound_variants: [{
+        size: ['xs'],
+        shape: ['rounded'],
+        class: 'rounded-sm',
+    }],
+) -%}
+
+<span
+    data-size="{{ size }}"
+    class="{{ style.apply({size: size, shape: shape, border: border}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</span>

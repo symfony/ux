@@ -1,0 +1,42 @@
+<twig:Dropdown id="header">
+    <twig:Dropdown:Trigger>
+        <twig:Button {{ ...dropdown_trigger_attrs }}>
+            Dropdown button
+            <twig:ux:icon name="flowbite:chevron-down-outline" class="size-4" aria-hidden="true" />
+        </twig:Button>
+    </twig:Dropdown:Trigger>
+
+    <twig:Dropdown:Content>
+        <twig:Dropdown:Header class="flex items-center space-x-1.5">
+            <twig:Avatar>
+                <twig:Avatar:Image src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="Bonnie image" />
+                <twig:Avatar:Fallback>BG</twig:Avatar:Fallback>
+            </twig:Avatar>
+            <div class="text-sm">
+                <div class="font-medium text-heading">Bonnie Green</div>
+                <div class="truncate text-body">name@flowbite.com</div>
+            </div>
+            <twig:Badge border="bordered">PRO</twig:Badge>
+        </twig:Dropdown:Header>
+        <twig:Dropdown:Group>
+            <twig:Dropdown:Item href="#">
+                <twig:ux:icon name="flowbite:user-outline" class="size-4 me-2" aria-hidden="true" />
+                Dashboard
+            </twig:Dropdown:Item>
+            <twig:Dropdown:Item href="#">
+                <twig:ux:icon name="flowbite:adjustments-horizontal-outline" class="size-4 me-2" aria-hidden="true" />
+                Settings
+            </twig:Dropdown:Item>
+            <twig:Dropdown:Item href="#">
+                <twig:ux:icon name="flowbite:lock-outline" class="size-4 me-2" aria-hidden="true" />
+                Privacy
+            </twig:Dropdown:Item>
+        </twig:Dropdown:Group>
+        <twig:Dropdown:Group>
+            <twig:Dropdown:Item class="text-fg-danger" href="#">
+                <twig:ux:icon name="flowbite:arrow-left-to-bracket-outline" class="size-4 me-2" aria-hidden="true" />
+                Sign out
+            </twig:Dropdown:Item>
+        </twig:Dropdown:Group>
+    </twig:Dropdown:Content>
+</twig:Dropdown>

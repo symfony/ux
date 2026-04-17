@@ -1,0 +1,7 @@
+{# @block content The grouped avatars, typically multiple `Avatar` components #}
+<div
+    class="{{ ('group/avatar-group flex -space-x-4 rtl:space-x-reverse *:border-2 *:border-buffer ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>
