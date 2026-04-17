@@ -11,16 +11,13 @@
 {%- set _dropdown_id = 'dropdown-' ~ id -%}
 {%- set _dropdown_trigger_id = _dropdown_id ~ '-trigger' -%}
 
-<div
-    class="{{ ('relative inline-block ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.defaults({
+<div {{ attributes.defaults({
         'data-controller': 'dropdown',
         'data-dropdown-placement-value': placement,
         'data-dropdown-trigger-type-value': triggerType,
         'data-dropdown-open-value': open,
         'data-dropdown-delay-value': delay,
         'data-dropdown-offset-distance-value': offsetDistance,
-    }) }}
->
-    {% block content %}{% endblock %}
+    }) }}>
+    {%- block content %}{% endblock -%}
 </div>

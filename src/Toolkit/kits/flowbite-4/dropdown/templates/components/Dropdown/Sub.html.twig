@@ -13,19 +13,10 @@
 
 {%- set _dropdown_id = 'dropdown-sub-' ~ id -%}
 {%- set _dropdown_trigger_id = _dropdown_id ~ '-trigger' -%}
+{%- set _dropdown_content = block('content') -%}
 
 <li role="none">
-    <div
-        class="{{ ('relative ' ~ attributes.render('class'))|tailwind_merge }}"
-        {{ attributes.defaults({
-            'data-controller': 'dropdown',
-            'data-dropdown-placement-value': placement,
-            'data-dropdown-trigger-type-value': triggerType,
-            'data-dropdown-open-value': false,
-            'data-dropdown-delay-value': delay,
-            'data-dropdown-offset-distance-value': offsetDistance,
-        }) }}
-    >
-        {% block content %}{% endblock %}
-    </div>
+    <twig:Dropdown :id="id" :placement="placement" :triggerType="triggerType" :delay="delay" :offsetDistance="offsetDistance" {{ ...attributes }}>
+        {{- _dropdown_content|raw -}}
+    </twig:Dropdown>
 </li>
