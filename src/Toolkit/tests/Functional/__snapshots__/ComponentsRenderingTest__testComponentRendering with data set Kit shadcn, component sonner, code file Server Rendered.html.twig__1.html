@@ -1,0 +1,26 @@
+<!--
+- Kit: Shadcn UI
+- Component: Sonner
+- Code:
+```twig
+<twig:Sonner closeButton="true">
+    <twig:Toast type="success" title="Profile saved" description="Your changes have been applied." duration="0" />
+    <twig:Toast type="info" title="Welcome back, Alice!" duration="0" />
+</twig:Sonner>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="sonner" dir="ltr" data-sonner-position-value="top-right" data-sonner-expand-value="false" data-sonner-rich-colors-value="false" data-sonner-close-button-value="true" data-sonner-duration-value="4000" data-sonner-gap-value="14" data-sonner-visible-toasts-value="3" data-sonner-dir-value="ltr" data-sonner-theme-value="system" data-controller="sonner">
+    <section aria-label="Notifications" aria-live="polite">
+        <ol class="fixed z-[100] m-1 h-0 w-[360px] list-none overflow-visible p-4 top-0 right-0" style="pointer-events: none;" data-sonner-target="list" tabindex="-1">
+        </ol>
+    </section><li class="group flex w-full items-start gap-3 rounded-lg border bg-background p-4 text-foreground shadow-lg transition-[transform,opacity] duration-300 pointer-events-auto absolute left-0 right-0" data-slot="toast" data-state="closed" data-type="success" role="status" aria-live="polite" aria-atomic="true" data-duration="0">
+    <div data-slot="toast-content" class="flex-1 space-y-1">
+        <div data-slot="toast-title" class="text-sm font-semibold leading-snug">Profile saved</div>            <div data-slot="toast-description" class="text-sm text-muted-foreground">Your changes have been applied.</div>    </div>
+</li>
+
+    <li class="group flex w-full items-start gap-3 rounded-lg border bg-background p-4 text-foreground shadow-lg transition-[transform,opacity] duration-300 pointer-events-auto absolute left-0 right-0" data-slot="toast" data-state="closed" data-type="info" role="status" aria-live="polite" aria-atomic="true" data-duration="0">
+    <div data-slot="toast-content" class="flex-1 space-y-1">
+        <div data-slot="toast-title" class="text-sm font-semibold leading-snug">Welcome back, Alice!</div>    </div>
+</li>
+
+</div>

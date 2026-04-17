@@ -1,0 +1,49 @@
+{# @prop position 'top-left'|'top-center'|'top-right'|'bottom-left'|'bottom-center'|'bottom-right' Position of the notification region. Defaults to `bottom-right` #}
+{# @prop expand boolean Whether toasts expand on hover instead of stacking. Defaults to `false` #}
+{# @prop richColors boolean Whether to use semantic colors for toast types. Defaults to `false` #}
+{# @prop closeButton boolean Whether to show a close button on every toast. Defaults to `false` #}
+{# @prop duration int Auto-dismiss duration in milliseconds. Defaults to `4000` #}
+{# @prop gap int Pixel gap between stacked toasts. Defaults to `14` #}
+{# @prop visibleToasts int Maximum number of visible stacked toasts. Defaults to `3` #}
+{# @prop dir 'ltr'|'rtl'|'auto' Text direction. Defaults to `ltr` #}
+{# @prop theme 'light'|'dark'|'system' Color theme. Defaults to `system` #}
+{# @block content Optional trigger button(s) or server-rendered `<twig:Toast>` components #}
+{%- props position = 'top-right', expand = false, richColors = false, closeButton = false, duration = 4000, gap = 14, visibleToasts = 3, dir = 'ltr', theme = 'system' -%}
+{%- set _positionClass = {
+    'top-left': 'top-0 left-0',
+    'top-center': 'top-0 left-1/2 -translate-x-1/2',
+    'top-right': 'top-0 right-0',
+    'bottom-left': 'bottom-0 left-0',
+    'bottom-center': 'bottom-0 left-1/2 -translate-x-1/2',
+    'bottom-right': 'bottom-0 right-0',
+}[position] -%}
+{# Consume the consumer-supplied `class` here so it lands on the visible `<ol>` region, not the structural host, and is not re-emitted by `attributes.defaults()` below. #}
+{%- set _listClass = ('fixed z-[100] m-1 h-0 w-[360px] list-none overflow-visible p-4 ' ~ _positionClass ~ ' ' ~ attributes.render('class'))|tailwind_merge -%}
+<div
+    data-slot="sonner"
+    dir="{{ dir }}"
+    data-sonner-position-value="{{ position }}"
+    data-sonner-expand-value="{{ expand ? 'true' : 'false' }}"
+    data-sonner-rich-colors-value="{{ richColors ? 'true' : 'false' }}"
+    data-sonner-close-button-value="{{ closeButton ? 'true' : 'false' }}"
+    data-sonner-duration-value="{{ duration }}"
+    data-sonner-gap-value="{{ gap }}"
+    data-sonner-visible-toasts-value="{{ visibleToasts }}"
+    data-sonner-dir-value="{{ dir }}"
+    data-sonner-theme-value="{{ theme }}"
+    {{ attributes.defaults({'data-controller': 'sonner'}) }}
+>
+    <section
+        aria-label="Notifications"
+        aria-live="polite"
+    >
+        <ol
+            class="{{ _listClass }}"
+            style="pointer-events: none;"
+            data-sonner-target="list"
+            tabindex="-1"
+        >
+        </ol>
+    </section>
+    {%- block content %}{% endblock -%}
+</div>
