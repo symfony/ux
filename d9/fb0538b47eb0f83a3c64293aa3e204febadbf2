@@ -1,0 +1,35 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-04-14T11:42:00Z
+
+Hi, Symfony UX 3.0 has been released, and the `2.x` branch is no longer maintained.
+
+Could you please retarget this PR to the `3.x` branch instead? That way we can review and merge it in the currently supported version.
+
+Thanks!
+
+Status: Needs Work
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-04-14T14:01:47Z
+
+Thanks! The branch is already based on 3.x. I've updated the PR target accordingly.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-04-14T21:39:24Z
+
+I just merged https://github.com/symfony/ux/pull/3470 to fix the Fabbot check, can you rebase a second time please? 🙏🏻
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-04-15T13:10:58Z
+
+I rebased
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-04-16T14:38:57Z
+
+I added a changelog entry for 3.1
