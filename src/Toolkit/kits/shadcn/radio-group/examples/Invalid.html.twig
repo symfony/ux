@@ -1,0 +1,18 @@
+<twig:Field:Set class="w-full max-w-xs">
+    <twig:Field:Legend variant="label">Notification Preferences</twig:Field:Legend>
+    <twig:Field:Description>Choose how you want to receive notifications.</twig:Field:Description>
+    <twig:RadioGroup>
+        <twig:Field orientation="horizontal" data-invalid="true">
+            <twig:RadioGroup:Item id="invalid-email" name="notifications" value="email" checked aria-invalid="true" />
+            <twig:Field:Label for="invalid-email" class="font-normal">Email only</twig:Field:Label>
+        </twig:Field>
+        <twig:Field orientation="horizontal" data-invalid="true">
+            <twig:RadioGroup:Item id="invalid-sms" name="notifications" value="sms" aria-invalid="true" />
+            <twig:Field:Label for="invalid-sms" class="font-normal">SMS only</twig:Field:Label>
+        </twig:Field>
+        <twig:Field orientation="horizontal" data-invalid="true">
+            <twig:RadioGroup:Item id="invalid-both" name="notifications" value="both" aria-invalid="true" />
+            <twig:Field:Label for="invalid-both" class="font-normal">Both Email &amp; SMS</twig:Field:Label>
+        </twig:Field>
+    </twig:RadioGroup>
+</twig:Field:Set>

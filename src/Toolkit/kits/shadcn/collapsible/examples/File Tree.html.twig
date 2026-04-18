@@ -1,0 +1,140 @@
+<twig:Card class="mx-auto w-full max-w-sm">
+    <twig:Card:Header class="p-2.5">
+        <div class="flex items-center gap-1.5 text-sm font-medium">
+            <twig:ux:icon name="lucide:panel-left" class="size-4" />
+            Explorer
+        </div>
+    </twig:Card:Header>
+    <twig:Card:Content class="p-2.5 pt-0">
+        <div class="flex flex-col gap-0.5">
+            {# Folder: components #}
+            <twig:Collapsible>
+                <twig:Collapsible:Trigger>
+                    <twig:Button variant="ghost" class="group w-full justify-start gap-1.5 h-7 px-2 text-sm" {{ ...collapsible_trigger_attrs }}>
+                        <twig:ux:icon name="lucide:chevron-right" class="size-3.5 transition-transform group-data-[state=open]:rotate-90" />
+                        <twig:ux:icon name="lucide:folder" class="size-3.5 text-muted-foreground" />
+                        components
+                    </twig:Button>
+                </twig:Collapsible:Trigger>
+                <twig:Collapsible:Content>
+                    <div class="ml-4 flex flex-col gap-0.5">
+                        <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                            <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                            button.tsx
+                        </twig:Button>
+                        <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                            <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                            card.tsx
+                        </twig:Button>
+                    </div>
+                </twig:Collapsible:Content>
+            </twig:Collapsible>
+
+            {# Folder: lib #}
+            <twig:Collapsible>
+                <twig:Collapsible:Trigger>
+                    <twig:Button variant="ghost" class="group w-full justify-start gap-1.5 h-7 px-2 text-sm" {{ ...collapsible_trigger_attrs }}>
+                        <twig:ux:icon name="lucide:chevron-right" class="size-3.5 transition-transform group-data-[state=open]:rotate-90" />
+                        <twig:ux:icon name="lucide:folder" class="size-3.5 text-muted-foreground" />
+                        lib
+                    </twig:Button>
+                </twig:Collapsible:Trigger>
+                <twig:Collapsible:Content>
+                    <div class="ml-4 flex flex-col gap-0.5">
+                        <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                            <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                            utils.ts
+                        </twig:Button>
+                    </div>
+                </twig:Collapsible:Content>
+            </twig:Collapsible>
+
+            {# Folder: hooks #}
+            <twig:Collapsible>
+                <twig:Collapsible:Trigger>
+                    <twig:Button variant="ghost" class="group w-full justify-start gap-1.5 h-7 px-2 text-sm" {{ ...collapsible_trigger_attrs }}>
+                        <twig:ux:icon name="lucide:chevron-right" class="size-3.5 transition-transform group-data-[state=open]:rotate-90" />
+                        <twig:ux:icon name="lucide:folder" class="size-3.5 text-muted-foreground" />
+                        hooks
+                    </twig:Button>
+                </twig:Collapsible:Trigger>
+                <twig:Collapsible:Content>
+                    <div class="ml-4 flex flex-col gap-0.5">
+                        <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                            <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                            use-toast.ts
+                        </twig:Button>
+                    </div>
+                </twig:Collapsible:Content>
+            </twig:Collapsible>
+
+            {# Folder: types #}
+            <twig:Collapsible>
+                <twig:Collapsible:Trigger>
+                    <twig:Button variant="ghost" class="group w-full justify-start gap-1.5 h-7 px-2 text-sm" {{ ...collapsible_trigger_attrs }}>
+                        <twig:ux:icon name="lucide:chevron-right" class="size-3.5 transition-transform group-data-[state=open]:rotate-90" />
+                        <twig:ux:icon name="lucide:folder" class="size-3.5 text-muted-foreground" />
+                        types
+                    </twig:Button>
+                </twig:Collapsible:Trigger>
+                <twig:Collapsible:Content>
+                    <div class="ml-4 flex flex-col gap-0.5">
+                        <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                            <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                            index.d.ts
+                        </twig:Button>
+                    </div>
+                </twig:Collapsible:Content>
+            </twig:Collapsible>
+
+            {# Folder: public #}
+            <twig:Collapsible>
+                <twig:Collapsible:Trigger>
+                    <twig:Button variant="ghost" class="group w-full justify-start gap-1.5 h-7 px-2 text-sm" {{ ...collapsible_trigger_attrs }}>
+                        <twig:ux:icon name="lucide:chevron-right" class="size-3.5 transition-transform group-data-[state=open]:rotate-90" />
+                        <twig:ux:icon name="lucide:folder" class="size-3.5 text-muted-foreground" />
+                        public
+                    </twig:Button>
+                </twig:Collapsible:Trigger>
+                <twig:Collapsible:Content>
+                    <div class="ml-4 flex flex-col gap-0.5">
+                        <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                            <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                            favicon.ico
+                        </twig:Button>
+                    </div>
+                </twig:Collapsible:Content>
+            </twig:Collapsible>
+
+            {# Root files #}
+            <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                app.tsx
+            </twig:Button>
+            <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                layout.tsx
+            </twig:Button>
+            <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                globals.css
+            </twig:Button>
+            <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                package.json
+            </twig:Button>
+            <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                tsconfig.json
+            </twig:Button>
+            <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                README.md
+            </twig:Button>
+            <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                .gitignore
+            </twig:Button>
+        </div>
+    </twig:Card:Content>
+</twig:Card>

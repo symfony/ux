@@ -1,0 +1,88 @@
+<!--
+- Kit: Shadcn UI
+- Component: Collapsible
+- Code:
+```twig
+<twig:Card class="mx-auto w-full max-w-xs">
+    <twig:Card:Header>
+        <twig:Card:Title>Radius</twig:Card:Title>
+        <twig:Card:Description>Set the corner radius of the element.</twig:Card:Description>
+    </twig:Card:Header>
+    <twig:Card:Content>
+        <twig:Collapsible class="flex items-start gap-2">
+            <div class="w-full space-y-2">
+                <div class="grid grid-cols-2 gap-2">
+                    <twig:Field>
+                        <twig:Field:Label for="radius-1" class="sr-only">Radius X</twig:Field:Label>
+                        <twig:Input id="radius-1" placeholder="0" value="0" />
+                    </twig:Field>
+                    <twig:Field>
+                        <twig:Field:Label for="radius-2" class="sr-only">Radius Y</twig:Field:Label>
+                        <twig:Input id="radius-2" placeholder="0" value="0" />
+                    </twig:Field>
+                </div>
+                <twig:Collapsible:Content>
+                    <div class="grid grid-cols-2 gap-2">
+                        <twig:Field>
+                            <twig:Field:Label for="radius-3" class="sr-only">Radius X</twig:Field:Label>
+                            <twig:Input id="radius-3" placeholder="0" value="0" />
+                        </twig:Field>
+                        <twig:Field>
+                            <twig:Field:Label for="radius-4" class="sr-only">Radius Y</twig:Field:Label>
+                            <twig:Input id="radius-4" placeholder="0" value="0" />
+                        </twig:Field>
+                    </div>
+                </twig:Collapsible:Content>
+            </div>
+            <twig:Collapsible:Trigger>
+                <twig:Button variant="outline" size="icon" class="group" {{ ...collapsible_trigger_attrs }}>
+                    <twig:ux:icon name="lucide:maximize" class="size-4 group-data-[state=open]:hidden" />
+                    <twig:ux:icon name="lucide:minimize" class="size-4 hidden group-data-[state=open]:block" />
+                </twig:Button>
+            </twig:Collapsible:Trigger>
+        </twig:Collapsible>
+    </twig:Card:Content>
+</twig:Card>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="rounded-lg border bg-card text-card-foreground shadow-sm mx-auto w-full max-w-xs">
+<div class="flex flex-col space-y-1.5 p-6">
+<div class="leading-none font-semibold">Radius</div>
+        <div class="text-muted-foreground text-sm">Set the corner radius of the element.</div>
+    </div>
+    <div class="p-6 pt-0">
+<div class="group flex items-start gap-2" data-slot="collapsible" data-controller="collapsible" data-collapsible-open-value="false" data-state="closed">
+<div class="w-full space-y-2">
+                <div class="grid grid-cols-2 gap-2">
+                    <div role="group" data-slot="field" data-orientation="vertical" class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-col [&amp;&gt;*]:w-full [&amp;&gt;.sr-only]:w-auto">
+<label class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 sr-only" data-slot="field-label" for="radius-1">Radius X</label>
+                        <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="radius-1" placeholder="0" value="0">
+
+                    </div>
+                    <div role="group" data-slot="field" data-orientation="vertical" class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-col [&amp;&gt;*]:w-full [&amp;&gt;.sr-only]:w-auto">
+<label class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 sr-only" data-slot="field-label" for="radius-2">Radius Y</label>
+                        <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="radius-2" placeholder="0" value="0">
+
+                    </div>
+                </div>
+                <div data-slot="collapsible-content" data-collapsible-target="content" aria-hidden="true" data-state="closed" hidden="">
+<div class="grid grid-cols-2 gap-2">
+                        <div role="group" data-slot="field" data-orientation="vertical" class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-col [&amp;&gt;*]:w-full [&amp;&gt;.sr-only]:w-auto">
+<label class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 sr-only" data-slot="field-label" for="radius-3">Radius X</label>
+                            <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="radius-3" placeholder="0" value="0">
+
+                        </div>
+                        <div role="group" data-slot="field" data-orientation="vertical" class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-col [&amp;&gt;*]:w-full [&amp;&gt;.sr-only]:w-auto">
+<label class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 sr-only" data-slot="field-label" for="radius-4">Radius Y</label>
+                            <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="radius-4" placeholder="0" value="0">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] [&amp;_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground size-8 group" data-collapsible-target="trigger" data-action="click-&gt;collapsible#toggle" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 group-data-[state=open]:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3m8 0h3a2 2 0 0 0 2-2v-3"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 hidden group-data-[state=open]:block" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3M3 16h3a2 2 0 0 1 2 2v3m8 0v-3a2 2 0 0 1 2-2h3"></path></svg>
+                </button>
+                    </div>
+    </div>
+</div>

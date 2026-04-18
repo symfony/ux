@@ -1,0 +1,11 @@
+{# @block content The content revealed when the collapsible is open #}
+<div{{ attributes.defaults({
+        'data-slot': 'collapsible-content',
+        'data-collapsible-target': 'content',
+        'aria-hidden': not _collapsible_open ? 'true' : 'false',
+        'data-state': _collapsible_open ? 'open' : 'closed',
+        ...(not _collapsible_open ? {hidden: ''} : {}),
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

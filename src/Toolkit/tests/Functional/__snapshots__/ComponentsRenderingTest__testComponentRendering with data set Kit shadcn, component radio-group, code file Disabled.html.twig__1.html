@@ -1,0 +1,50 @@
+<!--
+- Kit: Shadcn UI
+- Component: Radio Group
+- Code:
+```twig
+<twig:RadioGroup class="w-fit">
+    <twig:Field orientation="horizontal" data-disabled="true" class="opacity-50">
+        <twig:RadioGroup:Item id="disabled-1" name="disabled-example" value="option1" disabled />
+        <twig:Field:Label for="disabled-1" class="font-normal">Disabled</twig:Field:Label>
+    </twig:Field>
+    <twig:Field orientation="horizontal">
+        <twig:RadioGroup:Item id="disabled-2" name="disabled-example" value="option2" checked />
+        <twig:Field:Label for="disabled-2" class="font-normal">Option 2</twig:Field:Label>
+    </twig:Field>
+    <twig:Field orientation="horizontal">
+        <twig:RadioGroup:Item id="disabled-3" name="disabled-example" value="option3" />
+        <twig:Field:Label for="disabled-3" class="font-normal">Option 3</twig:Field:Label>
+    </twig:Field>
+</twig:RadioGroup>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div role="radiogroup" class="grid gap-2 w-fit" data-slot="radio-group">
+<div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-row items-center [&amp;&gt;[data-slot=field-label]]:flex-auto has-[&gt;[data-slot=field-content]]:items-start has-[&gt;[data-slot=field-content]]:[&amp;&gt;[role=checkbox],[role=radio]]:mt-px opacity-50" data-disabled="true">
+<label class="relative inline-flex size-4 shrink-0 items-center justify-center cursor-pointer group-data-[disabled=true]/field:cursor-not-allowed group-data-[disabled=true]/field:opacity-50">
+    <input type="radio" name="disabled-example" value="option1" class="peer sr-only" data-slot="radio-group-item" id="disabled-1" disabled>
+    <span class="flex size-4 cursor-pointer items-center justify-center rounded-full border border-input outline-none peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-aria-invalid:border-destructive peer-aria-invalid:ring-[3px] peer-aria-invalid:ring-destructive/20 dark:bg-input/30 dark:peer-aria-invalid:border-destructive/50 dark:peer-aria-invalid:ring-destructive/40 peer-checked:border-primary peer-checked:bg-primary dark:peer-checked:bg-primary"></span>
+    <span class="pointer-events-none absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 scale-0 rounded-full bg-primary-foreground transition-transform peer-checked:scale-100"></span>
+</label>
+
+        <label class="flex items-center gap-2 text-sm leading-none select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 font-normal" data-slot="field-label" for="disabled-1">Disabled</label>
+    </div>
+    <div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-row items-center [&amp;&gt;[data-slot=field-label]]:flex-auto has-[&gt;[data-slot=field-content]]:items-start has-[&gt;[data-slot=field-content]]:[&amp;&gt;[role=checkbox],[role=radio]]:mt-px">
+<label class="relative inline-flex size-4 shrink-0 items-center justify-center cursor-pointer group-data-[disabled=true]/field:cursor-not-allowed group-data-[disabled=true]/field:opacity-50">
+    <input type="radio" name="disabled-example" value="option2" class="peer sr-only" data-slot="radio-group-item" id="disabled-2" checked>
+    <span class="flex size-4 cursor-pointer items-center justify-center rounded-full border border-input outline-none peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-aria-invalid:border-destructive peer-aria-invalid:ring-[3px] peer-aria-invalid:ring-destructive/20 dark:bg-input/30 dark:peer-aria-invalid:border-destructive/50 dark:peer-aria-invalid:ring-destructive/40 peer-checked:border-primary peer-checked:bg-primary dark:peer-checked:bg-primary"></span>
+    <span class="pointer-events-none absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 scale-0 rounded-full bg-primary-foreground transition-transform peer-checked:scale-100"></span>
+</label>
+
+        <label class="flex items-center gap-2 text-sm leading-none select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 font-normal" data-slot="field-label" for="disabled-2">Option 2</label>
+    </div>
+    <div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-3 data-[invalid=true]:text-destructive flex-row items-center [&amp;&gt;[data-slot=field-label]]:flex-auto has-[&gt;[data-slot=field-content]]:items-start has-[&gt;[data-slot=field-content]]:[&amp;&gt;[role=checkbox],[role=radio]]:mt-px">
+<label class="relative inline-flex size-4 shrink-0 items-center justify-center cursor-pointer group-data-[disabled=true]/field:cursor-not-allowed group-data-[disabled=true]/field:opacity-50">
+    <input type="radio" name="disabled-example" value="option3" class="peer sr-only" data-slot="radio-group-item" id="disabled-3">
+    <span class="flex size-4 cursor-pointer items-center justify-center rounded-full border border-input outline-none peer-focus-visible:border-ring peer-focus-visible:ring-[3px] peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-aria-invalid:border-destructive peer-aria-invalid:ring-[3px] peer-aria-invalid:ring-destructive/20 dark:bg-input/30 dark:peer-aria-invalid:border-destructive/50 dark:peer-aria-invalid:ring-destructive/40 peer-checked:border-primary peer-checked:bg-primary dark:peer-checked:bg-primary"></span>
+    <span class="pointer-events-none absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 scale-0 rounded-full bg-primary-foreground transition-transform peer-checked:scale-100"></span>
+</label>
+
+        <label class="flex items-center gap-2 text-sm leading-none select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 font-normal" data-slot="field-label" for="disabled-3">Option 3</label>
+    </div>
+</div>
