@@ -1,0 +1,99 @@
+<!--
+- Kit: Shadcn UI
+- Component: Combobox
+- Code:
+```twig
+{% set packages = [
+    {label: 'Stimulus', choices: [
+        {value: 'twig-component', label: 'UX Twig Component'},
+        {value: 'live-component', label: 'UX Live Component'},
+        {value: 'autocomplete', label: 'UX Autocomplete'},
+        {value: 'turbo', label: 'UX Turbo'},
+    ]},
+    {label: 'Frontend Frameworks', choices: [
+        {value: 'react', label: 'UX React'},
+        {value: 'vue', label: 'UX Vue'},
+        {value: 'svelte', label: 'UX Svelte'},
+    ]},
+    {label: 'UI & Visualization', choices: [
+        {value: 'icons', label: 'UX Icons'},
+        {value: 'chartjs', label: 'UX Chart.js'},
+        {value: 'map', label: 'UX Map'},
+    ]},
+] %}
+<twig:Combobox
+    id="package-grouped"
+    placeholder="Select package..."
+    searchPlaceholder="Search packages..."
+    :choices="packages"
+/>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="combobox" data-controller="combobox" data-combobox-value-value="" data-combobox-placeholder-value="Select package...">
+    <button type="button" role="combobox" aria-expanded="false" aria-controls="package-grouped_listbox" aria-haspopup="listbox" data-combobox-target="trigger" data-slot="combobox-trigger" data-action="click-&gt;combobox#toggle keydown-&gt;combobox#onTriggerKeydown" class="flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+        <span data-combobox-target="label" class="text-muted-foreground">Select package...</span>
+        <span class="flex shrink-0 items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 shrink-0 opacity-50" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 15l5 5l5-5M7 9l5-5l5 5"></path></svg>
+        </span>
+    </button>
+
+    
+    <div id="package-grouped_popover" data-combobox-target="popover" data-slot="combobox-content" data-state="closed" hidden class="z-50 min-w-32 overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-md">
+        <div class="flex items-center border-b border-border px-3" data-slot="combobox-input-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="mr-2 size-4 shrink-0 opacity-50" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m21 21l-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></g></svg>
+            <input type="text" role="searchbox" aria-controls="package-grouped_listbox" aria-autocomplete="list" placeholder="Search packages..." data-combobox-target="search" data-action="input-&gt;combobox#onSearch keydown-&gt;combobox#onSearchKeydown" class="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50">
+        </div>
+        <div id="package-grouped_listbox" role="listbox" data-slot="combobox-list" class="max-h-[300px] overflow-x-hidden overflow-y-auto p-1">
+                                                <div role="group" aria-labelledby="package-grouped_group_0" data-combobox-target="group" data-slot="combobox-group">
+                        <div id="package-grouped_group_0" data-slot="combobox-group-label" class="px-2 py-1.5 text-xs font-medium text-muted-foreground">Stimulus</div>
+                                                    <div role="option" id="package-grouped_option_0_0" data-combobox-target="option" data-value="twig-component" data-label="UX Twig Component" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                                UX Twig Component
+                            </div>
+                                                    <div role="option" id="package-grouped_option_0_1" data-combobox-target="option" data-value="live-component" data-label="UX Live Component" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                                UX Live Component
+                            </div>
+                                                    <div role="option" id="package-grouped_option_0_2" data-combobox-target="option" data-value="autocomplete" data-label="UX Autocomplete" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                                UX Autocomplete
+                            </div>
+                                                    <div role="option" id="package-grouped_option_0_3" data-combobox-target="option" data-value="turbo" data-label="UX Turbo" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                                UX Turbo
+                            </div>
+                                            </div>
+                                    <div role="group" aria-labelledby="package-grouped_group_1" data-combobox-target="group" data-slot="combobox-group">
+                        <div id="package-grouped_group_1" data-slot="combobox-group-label" class="px-2 py-1.5 text-xs font-medium text-muted-foreground">Frontend Frameworks</div>
+                                                    <div role="option" id="package-grouped_option_1_0" data-combobox-target="option" data-value="react" data-label="UX React" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                                UX React
+                            </div>
+                                                    <div role="option" id="package-grouped_option_1_1" data-combobox-target="option" data-value="vue" data-label="UX Vue" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                                UX Vue
+                            </div>
+                                                    <div role="option" id="package-grouped_option_1_2" data-combobox-target="option" data-value="svelte" data-label="UX Svelte" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                                UX Svelte
+                            </div>
+                                            </div>
+                                    <div role="group" aria-labelledby="package-grouped_group_2" data-combobox-target="group" data-slot="combobox-group">
+                        <div id="package-grouped_group_2" data-slot="combobox-group-label" class="px-2 py-1.5 text-xs font-medium text-muted-foreground">UI &amp; Visualization</div>
+                                                    <div role="option" id="package-grouped_option_2_0" data-combobox-target="option" data-value="icons" data-label="UX Icons" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                                UX Icons
+                            </div>
+                                                    <div role="option" id="package-grouped_option_2_1" data-combobox-target="option" data-value="chartjs" data-label="UX Chart.js" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                                UX Chart.js
+                            </div>
+                                                    <div role="option" id="package-grouped_option_2_2" data-combobox-target="option" data-value="map" data-label="UX Map" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                                UX Map
+                            </div>
+                                            </div>
+                                        <div data-combobox-target="empty" data-slot="combobox-empty" hidden class="py-6 text-center text-sm text-muted-foreground">No results found.</div>
+        </div>
+    </div>
+</div>

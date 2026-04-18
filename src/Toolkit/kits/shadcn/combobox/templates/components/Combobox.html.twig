@@ -1,0 +1,159 @@
+{# @prop id string Unique identifier for ARIA references and internal element IDs. #}
+{# @prop name string|null If set, renders a hidden input for form submission. Defaults to `null`. #}
+{# @prop value string The initially selected value. Must match a choices entry. Defaults to `''`. #}
+{# @prop choices array List of choices: `[{value: '...', label: '...'}]` or grouped `[{label: '...', choices: [{value: '...', label: '...'}]}]`. Defaults to `[]`. #}
+{# @prop placeholder string Text shown on the trigger when nothing is selected. Defaults to `'Select option...'`. #}
+{# @prop searchPlaceholder string Placeholder inside the search input. Defaults to `'Search...'`. #}
+{# @prop emptyMessage string Shown when the filter matches nothing. Defaults to `'No results found.'`. #}
+{# @prop disabled boolean Whether the widget is disabled. Defaults to `false`. #}
+{# @prop required boolean Adds required to the hidden input (only applies when name is set). Defaults to `false`. #}
+{# @prop clearable boolean Shows a clear button when a value is selected. Defaults to `false`. #}
+{%- props id, name = null, value = '', choices = [], placeholder = 'Select option...', searchPlaceholder = 'Search...', emptyMessage = 'No results found.', disabled = false, required = false, clearable = false -%}
+
+{%- set _is_grouped = choices is not empty and choices|first.choices is defined -%}
+{%- set _selected_label = '' -%}
+{%- if _is_grouped -%}
+    {%- for group in choices -%}
+        {%- for choice in group.choices -%}
+            {%- if choice.value == value -%}{%- set _selected_label = choice.label -%}{%- endif -%}
+        {%- endfor -%}
+    {%- endfor -%}
+{%- else -%}
+    {%- for choice in choices -%}
+        {%- if choice.value == value -%}{%- set _selected_label = choice.label -%}{%- endif -%}
+    {%- endfor -%}
+{%- endif -%}
+
+<div
+    data-slot="combobox"
+    data-controller="combobox"
+    data-combobox-value-value="{{ value }}"
+    data-combobox-placeholder-value="{{ placeholder }}"
+    {{ attributes }}
+>
+    <button
+        type="button"
+        role="combobox"
+        aria-expanded="false"
+        aria-controls="{{ id }}_listbox"
+        aria-haspopup="listbox"
+        data-combobox-target="trigger"
+        data-slot="combobox-trigger"
+        data-action="click->combobox#toggle keydown->combobox#onTriggerKeydown"
+        class="{{ ('flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50')|tailwind_merge }}"
+        {% if disabled %}disabled{% endif %}
+    >
+        <span
+            data-combobox-target="label"
+            class="{{ _selected_label ? '' : 'text-muted-foreground' }}"
+        >{{ _selected_label ?: placeholder }}</span>
+        <span class="flex shrink-0 items-center gap-1">
+            {% if clearable %}
+                <span
+                    aria-label="Clear selection"
+                    data-combobox-target="clearButton"
+                    data-action="click->combobox#clear"
+                    data-slot="combobox-clear"
+                    {% if not _selected_label %}hidden{% endif %}
+                    class="rounded-sm opacity-50 hover:opacity-100"
+                ><twig:ux:icon name="lucide:x" class="size-4 shrink-0" /></span>
+            {% endif %}
+            <twig:ux:icon name="lucide:chevrons-up-down" class="size-4 shrink-0 opacity-50" />
+        </span>
+    </button>
+
+    {% if name is not null %}
+        <input
+            type="hidden"
+            name="{{ name }}"
+            value="{{ value }}"
+            data-combobox-target="hiddenInput"
+            {% if required %}required{% endif %}
+        />
+    {% endif %}
+
+    <div
+        id="{{ id }}_popover"
+        data-combobox-target="popover"
+        data-slot="combobox-content"
+        data-state="closed"
+        hidden
+        class="z-50 min-w-32 overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-md"
+    >
+        <div class="flex items-center border-b border-border px-3" data-slot="combobox-input-wrapper">
+            <twig:ux:icon name="lucide:search" class="mr-2 size-4 shrink-0 opacity-50" />
+            <input
+                type="text"
+                role="searchbox"
+                aria-controls="{{ id }}_listbox"
+                aria-autocomplete="list"
+                placeholder="{{ searchPlaceholder }}"
+                data-combobox-target="search"
+                data-action="input->combobox#onSearch keydown->combobox#onSearchKeydown"
+                class="{{ ('flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50')|tailwind_merge }}"
+            />
+        </div>
+        <div
+            id="{{ id }}_listbox"
+            role="listbox"
+            data-slot="combobox-list"
+            class="max-h-[300px] overflow-x-hidden overflow-y-auto p-1"
+        >
+            {% if _is_grouped %}
+                {% for group in choices %}
+                    <div
+                        role="group"
+                        aria-labelledby="{{ id }}_group_{{ loop.index0 }}"
+                        data-combobox-target="group"
+                        data-slot="combobox-group"
+                    >
+                        <div
+                            id="{{ id }}_group_{{ loop.index0 }}"
+                            data-slot="combobox-group-label"
+                            class="px-2 py-1.5 text-xs font-medium text-muted-foreground"
+                        >{{ group.label }}</div>
+                        {% for choice in group.choices %}
+                            <div
+                                role="option"
+                                id="{{ id }}_option_{{ loop.parent.loop.index0 }}_{{ loop.index0 }}"
+                                data-combobox-target="option"
+                                data-value="{{ choice.value }}"
+                                data-label="{{ choice.label }}"
+                                data-slot="combobox-item"
+                                aria-selected="{{ choice.value == value ? 'true' : 'false' }}"
+                                data-action="click->combobox#onSelect mouseenter->combobox#onOptionHover"
+                                class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground"
+                            >
+                                <twig:ux:icon name="lucide:check" class="size-4 {{ choice.value == value ? 'opacity-100' : 'opacity-0' }}" />
+                                {{ choice.label }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                {% for choice in choices %}
+                    <div
+                        role="option"
+                        id="{{ id }}_option_{{ loop.index0 }}"
+                        data-combobox-target="option"
+                        data-value="{{ choice.value }}"
+                        data-label="{{ choice.label }}"
+                        data-slot="combobox-item"
+                        aria-selected="{{ choice.value == value ? 'true' : 'false' }}"
+                        data-action="click->combobox#onSelect mouseenter->combobox#onOptionHover"
+                        class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground"
+                    >
+                        <twig:ux:icon name="lucide:check" class="size-4 {{ choice.value == value ? 'opacity-100' : 'opacity-0' }}" />
+                        {{ choice.label }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div
+                data-combobox-target="empty"
+                data-slot="combobox-empty"
+                hidden
+                class="py-6 text-center text-sm text-muted-foreground"
+            >{{ emptyMessage }}</div>
+        </div>
+    </div>
+</div>

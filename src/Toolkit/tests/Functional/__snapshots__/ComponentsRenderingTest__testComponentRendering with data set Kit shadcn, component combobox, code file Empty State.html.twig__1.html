@@ -1,0 +1,45 @@
+<!--
+- Kit: Shadcn UI
+- Component: Combobox
+- Code:
+```twig
+{% set frameworks = [
+    {value: 'next', label: 'Next.js'},
+    {value: 'sveltekit', label: 'SvelteKit'},
+] %}
+<twig:Combobox
+    id="framework-empty"
+    placeholder="Select framework..."
+    searchPlaceholder="Search framework..."
+    emptyMessage="No frameworks found. Try a different search."
+    :choices="frameworks"
+/>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="combobox" data-controller="combobox" data-combobox-value-value="" data-combobox-placeholder-value="Select framework...">
+    <button type="button" role="combobox" aria-expanded="false" aria-controls="framework-empty_listbox" aria-haspopup="listbox" data-combobox-target="trigger" data-slot="combobox-trigger" data-action="click-&gt;combobox#toggle keydown-&gt;combobox#onTriggerKeydown" class="flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+        <span data-combobox-target="label" class="text-muted-foreground">Select framework...</span>
+        <span class="flex shrink-0 items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 shrink-0 opacity-50" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 15l5 5l5-5M7 9l5-5l5 5"></path></svg>
+        </span>
+    </button>
+
+    
+    <div id="framework-empty_popover" data-combobox-target="popover" data-slot="combobox-content" data-state="closed" hidden class="z-50 min-w-32 overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-md">
+        <div class="flex items-center border-b border-border px-3" data-slot="combobox-input-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="mr-2 size-4 shrink-0 opacity-50" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m21 21l-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></g></svg>
+            <input type="text" role="searchbox" aria-controls="framework-empty_listbox" aria-autocomplete="list" placeholder="Search framework..." data-combobox-target="search" data-action="input-&gt;combobox#onSearch keydown-&gt;combobox#onSearchKeydown" class="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50">
+        </div>
+        <div id="framework-empty_listbox" role="listbox" data-slot="combobox-list" class="max-h-[300px] overflow-x-hidden overflow-y-auto p-1">
+                                                <div role="option" id="framework-empty_option_0" data-combobox-target="option" data-value="next" data-label="Next.js" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Next.js
+                    </div>
+                                    <div role="option" id="framework-empty_option_1" data-combobox-target="option" data-value="sveltekit" data-label="SvelteKit" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        SvelteKit
+                    </div>
+                                        <div data-combobox-target="empty" data-slot="combobox-empty" hidden class="py-6 text-center text-sm text-muted-foreground">No frameworks found. Try a different search.</div>
+        </div>
+    </div>
+</div>

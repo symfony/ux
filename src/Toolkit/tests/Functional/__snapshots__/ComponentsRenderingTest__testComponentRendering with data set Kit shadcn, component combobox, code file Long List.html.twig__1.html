@@ -1,0 +1,289 @@
+<!--
+- Kit: Shadcn UI
+- Component: Combobox
+- Code:
+```twig
+{% set languages = [
+    {value: 'php', label: 'PHP'},
+    {value: 'javascript', label: 'JavaScript'},
+    {value: 'typescript', label: 'TypeScript'},
+    {value: 'python', label: 'Python'},
+    {value: 'ruby', label: 'Ruby'},
+    {value: 'go', label: 'Go'},
+    {value: 'rust', label: 'Rust'},
+    {value: 'java', label: 'Java'},
+    {value: 'kotlin', label: 'Kotlin'},
+    {value: 'swift', label: 'Swift'},
+    {value: 'csharp', label: 'C#'},
+    {value: 'cpp', label: 'C++'},
+    {value: 'c', label: 'C'},
+    {value: 'scala', label: 'Scala'},
+    {value: 'elixir', label: 'Elixir'},
+    {value: 'erlang', label: 'Erlang'},
+    {value: 'haskell', label: 'Haskell'},
+    {value: 'ocaml', label: 'OCaml'},
+    {value: 'fsharp', label: 'F#'},
+    {value: 'clojure', label: 'Clojure'},
+    {value: 'dart', label: 'Dart'},
+    {value: 'r', label: 'R'},
+    {value: 'matlab', label: 'MATLAB'},
+    {value: 'perl', label: 'Perl'},
+    {value: 'lua', label: 'Lua'},
+    {value: 'julia', label: 'Julia'},
+    {value: 'groovy', label: 'Groovy'},
+    {value: 'shell', label: 'Shell'},
+    {value: 'powershell', label: 'PowerShell'},
+    {value: 'sql', label: 'SQL'},
+    {value: 'html', label: 'HTML'},
+    {value: 'css', label: 'CSS'},
+    {value: 'sass', label: 'Sass'},
+    {value: 'less', label: 'Less'},
+    {value: 'graphql', label: 'GraphQL'},
+    {value: 'yaml', label: 'YAML'},
+    {value: 'toml', label: 'TOML'},
+    {value: 'json', label: 'JSON'},
+    {value: 'xml', label: 'XML'},
+    {value: 'markdown', label: 'Markdown'},
+    {value: 'latex', label: 'LaTeX'},
+    {value: 'zig', label: 'Zig'},
+    {value: 'nim', label: 'Nim'},
+    {value: 'crystal', label: 'Crystal'},
+    {value: 'reason', label: 'ReasonML'},
+    {value: 'elm', label: 'Elm'},
+    {value: 'purescript', label: 'PureScript'},
+    {value: 'coffeescript', label: 'CoffeeScript'},
+    {value: 'objective-c', label: 'Objective-C'},
+    {value: 'vba', label: 'VBA'},
+    {value: 'cobol', label: 'COBOL'},
+] %}
+<twig:Combobox
+    id="language"
+    placeholder="Select language..."
+    searchPlaceholder="Search languages..."
+    :choices="languages"
+/>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="combobox" data-controller="combobox" data-combobox-value-value="" data-combobox-placeholder-value="Select language...">
+    <button type="button" role="combobox" aria-expanded="false" aria-controls="language_listbox" aria-haspopup="listbox" data-combobox-target="trigger" data-slot="combobox-trigger" data-action="click-&gt;combobox#toggle keydown-&gt;combobox#onTriggerKeydown" class="flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+        <span data-combobox-target="label" class="text-muted-foreground">Select language...</span>
+        <span class="flex shrink-0 items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 shrink-0 opacity-50" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 15l5 5l5-5M7 9l5-5l5 5"></path></svg>
+        </span>
+    </button>
+
+    
+    <div id="language_popover" data-combobox-target="popover" data-slot="combobox-content" data-state="closed" hidden class="z-50 min-w-32 overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-md">
+        <div class="flex items-center border-b border-border px-3" data-slot="combobox-input-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="mr-2 size-4 shrink-0 opacity-50" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m21 21l-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></g></svg>
+            <input type="text" role="searchbox" aria-controls="language_listbox" aria-autocomplete="list" placeholder="Search languages..." data-combobox-target="search" data-action="input-&gt;combobox#onSearch keydown-&gt;combobox#onSearchKeydown" class="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50">
+        </div>
+        <div id="language_listbox" role="listbox" data-slot="combobox-list" class="max-h-[300px] overflow-x-hidden overflow-y-auto p-1">
+                                                <div role="option" id="language_option_0" data-combobox-target="option" data-value="php" data-label="PHP" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        PHP
+                    </div>
+                                    <div role="option" id="language_option_1" data-combobox-target="option" data-value="javascript" data-label="JavaScript" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        JavaScript
+                    </div>
+                                    <div role="option" id="language_option_2" data-combobox-target="option" data-value="typescript" data-label="TypeScript" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        TypeScript
+                    </div>
+                                    <div role="option" id="language_option_3" data-combobox-target="option" data-value="python" data-label="Python" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Python
+                    </div>
+                                    <div role="option" id="language_option_4" data-combobox-target="option" data-value="ruby" data-label="Ruby" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Ruby
+                    </div>
+                                    <div role="option" id="language_option_5" data-combobox-target="option" data-value="go" data-label="Go" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Go
+                    </div>
+                                    <div role="option" id="language_option_6" data-combobox-target="option" data-value="rust" data-label="Rust" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Rust
+                    </div>
+                                    <div role="option" id="language_option_7" data-combobox-target="option" data-value="java" data-label="Java" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Java
+                    </div>
+                                    <div role="option" id="language_option_8" data-combobox-target="option" data-value="kotlin" data-label="Kotlin" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Kotlin
+                    </div>
+                                    <div role="option" id="language_option_9" data-combobox-target="option" data-value="swift" data-label="Swift" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Swift
+                    </div>
+                                    <div role="option" id="language_option_10" data-combobox-target="option" data-value="csharp" data-label="C#" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        C#
+                    </div>
+                                    <div role="option" id="language_option_11" data-combobox-target="option" data-value="cpp" data-label="C++" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        C++
+                    </div>
+                                    <div role="option" id="language_option_12" data-combobox-target="option" data-value="c" data-label="C" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        C
+                    </div>
+                                    <div role="option" id="language_option_13" data-combobox-target="option" data-value="scala" data-label="Scala" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Scala
+                    </div>
+                                    <div role="option" id="language_option_14" data-combobox-target="option" data-value="elixir" data-label="Elixir" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Elixir
+                    </div>
+                                    <div role="option" id="language_option_15" data-combobox-target="option" data-value="erlang" data-label="Erlang" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Erlang
+                    </div>
+                                    <div role="option" id="language_option_16" data-combobox-target="option" data-value="haskell" data-label="Haskell" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Haskell
+                    </div>
+                                    <div role="option" id="language_option_17" data-combobox-target="option" data-value="ocaml" data-label="OCaml" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        OCaml
+                    </div>
+                                    <div role="option" id="language_option_18" data-combobox-target="option" data-value="fsharp" data-label="F#" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        F#
+                    </div>
+                                    <div role="option" id="language_option_19" data-combobox-target="option" data-value="clojure" data-label="Clojure" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Clojure
+                    </div>
+                                    <div role="option" id="language_option_20" data-combobox-target="option" data-value="dart" data-label="Dart" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Dart
+                    </div>
+                                    <div role="option" id="language_option_21" data-combobox-target="option" data-value="r" data-label="R" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        R
+                    </div>
+                                    <div role="option" id="language_option_22" data-combobox-target="option" data-value="matlab" data-label="MATLAB" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        MATLAB
+                    </div>
+                                    <div role="option" id="language_option_23" data-combobox-target="option" data-value="perl" data-label="Perl" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Perl
+                    </div>
+                                    <div role="option" id="language_option_24" data-combobox-target="option" data-value="lua" data-label="Lua" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Lua
+                    </div>
+                                    <div role="option" id="language_option_25" data-combobox-target="option" data-value="julia" data-label="Julia" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Julia
+                    </div>
+                                    <div role="option" id="language_option_26" data-combobox-target="option" data-value="groovy" data-label="Groovy" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Groovy
+                    </div>
+                                    <div role="option" id="language_option_27" data-combobox-target="option" data-value="shell" data-label="Shell" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Shell
+                    </div>
+                                    <div role="option" id="language_option_28" data-combobox-target="option" data-value="powershell" data-label="PowerShell" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        PowerShell
+                    </div>
+                                    <div role="option" id="language_option_29" data-combobox-target="option" data-value="sql" data-label="SQL" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        SQL
+                    </div>
+                                    <div role="option" id="language_option_30" data-combobox-target="option" data-value="html" data-label="HTML" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        HTML
+                    </div>
+                                    <div role="option" id="language_option_31" data-combobox-target="option" data-value="css" data-label="CSS" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        CSS
+                    </div>
+                                    <div role="option" id="language_option_32" data-combobox-target="option" data-value="sass" data-label="Sass" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Sass
+                    </div>
+                                    <div role="option" id="language_option_33" data-combobox-target="option" data-value="less" data-label="Less" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Less
+                    </div>
+                                    <div role="option" id="language_option_34" data-combobox-target="option" data-value="graphql" data-label="GraphQL" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        GraphQL
+                    </div>
+                                    <div role="option" id="language_option_35" data-combobox-target="option" data-value="yaml" data-label="YAML" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        YAML
+                    </div>
+                                    <div role="option" id="language_option_36" data-combobox-target="option" data-value="toml" data-label="TOML" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        TOML
+                    </div>
+                                    <div role="option" id="language_option_37" data-combobox-target="option" data-value="json" data-label="JSON" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        JSON
+                    </div>
+                                    <div role="option" id="language_option_38" data-combobox-target="option" data-value="xml" data-label="XML" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        XML
+                    </div>
+                                    <div role="option" id="language_option_39" data-combobox-target="option" data-value="markdown" data-label="Markdown" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Markdown
+                    </div>
+                                    <div role="option" id="language_option_40" data-combobox-target="option" data-value="latex" data-label="LaTeX" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        LaTeX
+                    </div>
+                                    <div role="option" id="language_option_41" data-combobox-target="option" data-value="zig" data-label="Zig" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Zig
+                    </div>
+                                    <div role="option" id="language_option_42" data-combobox-target="option" data-value="nim" data-label="Nim" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Nim
+                    </div>
+                                    <div role="option" id="language_option_43" data-combobox-target="option" data-value="crystal" data-label="Crystal" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Crystal
+                    </div>
+                                    <div role="option" id="language_option_44" data-combobox-target="option" data-value="reason" data-label="ReasonML" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        ReasonML
+                    </div>
+                                    <div role="option" id="language_option_45" data-combobox-target="option" data-value="elm" data-label="Elm" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Elm
+                    </div>
+                                    <div role="option" id="language_option_46" data-combobox-target="option" data-value="purescript" data-label="PureScript" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        PureScript
+                    </div>
+                                    <div role="option" id="language_option_47" data-combobox-target="option" data-value="coffeescript" data-label="CoffeeScript" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        CoffeeScript
+                    </div>
+                                    <div role="option" id="language_option_48" data-combobox-target="option" data-value="objective-c" data-label="Objective-C" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        Objective-C
+                    </div>
+                                    <div role="option" id="language_option_49" data-combobox-target="option" data-value="vba" data-label="VBA" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        VBA
+                    </div>
+                                    <div role="option" id="language_option_50" data-combobox-target="option" data-value="cobol" data-label="COBOL" data-slot="combobox-item" aria-selected="false" data-action="click-&gt;combobox#onSelect mouseenter-&gt;combobox#onOptionHover" class="relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[active]:bg-accent data-[active]:text-accent-foreground">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 opacity-0" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                        COBOL
+                    </div>
+                                        <div data-combobox-target="empty" data-slot="combobox-empty" hidden class="py-6 text-center text-sm text-muted-foreground">No results found.</div>
+        </div>
+    </div>
+</div>
