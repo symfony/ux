@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.1.0
+
+- Add a minimal layout for Turbo Frame responses, allowing `head` content like meta tags to work properly
+
 ## 3.0.0
 
 - Minimum required Symfony version is now 7.4

@@ -332,6 +332,51 @@ You can even watch changes happening in the browser by using:
 `Read the Turbo Frames documentation`_ to learn
 everything you can do using Turbo Frames.
 
+Minimal Frame Layout
+^^^^^^^^^^^^^^^^^^^^
+
+When a Turbo Frame request is made, the response only needs to contain the
+matching ``<turbo-frame>`` element — serving the full application layout is
+wasteful. For this reason, frame responses are typically rendered without any
+layout at all. However, this optimisation has a drawback: it prevents the
+response from including ``<head>`` content such as page-specific meta tags.
+
+To solve this, UX Turbo provides a minimal layout template that keeps the
+response lightweight while still allowing you to populate the ``<head>``
+block. Use it by extending ``@Turbo/layouts/frame.html.twig`` in templates
+that are rendered in response to Turbo Frame requests:
+
+.. code-block:: html+twig
+
+    {# templates/blog/child.html.twig #}
+    {% extends '@Turbo/layouts/frame.html.twig' %}
+
+    {% block head %}
+        {{ turbo_exempts_page_from_cache() }}
+    {% endblock %}
+
+    {% block body %}
+        <twig:Turbo:Frame id="the_frame_id">
+            A placeholder.
+        </twig:Turbo:Frame>
+    {% endblock %}
+
+This renders a minimal HTML document:
+
+.. code-block:: html
+
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta name="turbo-cache-control" content="no-cache">
+        </head>
+        <body>
+            <turbo-frame id="the_frame_id">
+                A placeholder.
+            </turbo-frame>
+        </body>
+    </html>
+
 Coming Alive with Turbo Streams
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
