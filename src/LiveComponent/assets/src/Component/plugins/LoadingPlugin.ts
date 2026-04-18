@@ -38,9 +38,9 @@ export default class implements PluginInterface {
         backendRequest: BackendRequest | null
     ) {
         if (isLoading) {
-            this.addAttributes(targetElement, ['busy']);
+            targetElement.setAttribute('aria-busy', 'true');
         } else {
-            this.removeAttributes(targetElement, ['busy']);
+            targetElement.removeAttribute('aria-busy');
         }
 
         this.getLoadingDirectives(component, targetElement).forEach(({ element, directives }) => {

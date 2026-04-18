@@ -44,7 +44,7 @@ describe('Component parent -> child initialization and rendering tests', () => {
         });
 
         test.component.render();
-        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
+        await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
     });
 
     it('removes missing child component on re-render', async () => {
@@ -69,8 +69,8 @@ describe('Component parent -> child initialization and rendering tests', () => {
         expect(findChildren(test.component).length).toEqual(1);
         test.component.render();
         // wait for child to disappear
-        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
-        await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
+        await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
+        await waitFor(() => expect(test.element).not.toHaveAttribute('aria-busy'));
         expect(test.element).not.toHaveTextContent('Child Component');
         expect(findChildren(test.component).length).toEqual(0);
     });
@@ -97,8 +97,8 @@ describe('Component parent -> child initialization and rendering tests', () => {
         expect(findChildren(test.component).length).toEqual(0);
         test.component.render();
         // wait for child to disappear
-        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
-        await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
+        await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
+        await waitFor(() => expect(test.element).not.toHaveAttribute('aria-busy'));
         expect(test.element).toHaveTextContent('Child Component');
         expect(findChildren(test.component).length).toEqual(1);
     });
@@ -131,8 +131,8 @@ describe('Component parent -> child initialization and rendering tests', () => {
         expect(test.element).toHaveTextContent('Original Child Component');
         test.component.render();
         // wait for Ajax call
-        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
-        await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
+        await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
+        await waitFor(() => expect(test.element).not.toHaveAttribute('aria-busy'));
         // child component is STILL here: the new rendering was ignored
         expect(test.element).toHaveTextContent('Original Child Component');
         expect(test.element).toContainHTML('data-new="bar"');
@@ -280,7 +280,7 @@ describe('Component parent -> child initialization and rendering tests', () => {
         });
         test.component.render();
         // wait for parent Ajax call to start
-        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
+        await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
 
         // E) Expect the child to re-render
         // after the parent Ajax call has finished, but shortly before it's
@@ -294,7 +294,7 @@ describe('Component parent -> child initialization and rendering tests', () => {
             .willReturn(childTemplate);
 
         // wait for parent Ajax call to finish
-        await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
+        await waitFor(() => expect(test.element).not.toHaveAttribute('aria-busy'));
         // sanity check
         expect(test.element).toHaveTextContent('Using Original child: no');
 
@@ -302,8 +302,8 @@ describe('Component parent -> child initialization and rendering tests', () => {
         expect(childComponent.fingerprint).toEqual('updated fingerprint');
 
         // wait for child to start and stop loading
-        await waitFor(() => expect(childComponent.element).toHaveAttribute('busy'));
-        await waitFor(() => expect(childComponent.element).not.toHaveAttribute('busy'));
+        await waitFor(() => expect(childComponent.element).toHaveAttribute('aria-busy', 'true'));
+        await waitFor(() => expect(childComponent.element).not.toHaveAttribute('aria-busy'));
 
         // child component re-rendered and there are a few important things here
         // 1) the toUppercase prop was changed by the parent and that change remains
@@ -345,8 +345,8 @@ describe('Component parent -> child initialization and rendering tests', () => {
         });
         test.component.render();
         // wait for parent Ajax call to start/finish
-        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
-        await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
+        await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
+        await waitFor(() => expect(test.element).not.toHaveAttribute('aria-busy'));
 
         // no child Ajax call made: we simply use the new child's content
         expect(test.element).toHaveTextContent('New Child');
@@ -429,8 +429,8 @@ describe('Component parent -> child initialization and rendering tests', () => {
         await test.component.render();
 
         // wait for child to start and stop loading
-        await waitFor(() => expect(getByTestId(test.element, 'child-component-1')).not.toHaveAttribute('busy'));
-        await waitFor(() => expect(getByTestId(test.element, 'child-component-2')).not.toHaveAttribute('busy'));
+        await waitFor(() => expect(getByTestId(test.element, 'child-component-1')).not.toHaveAttribute('aria-busy'));
+        await waitFor(() => expect(getByTestId(test.element, 'child-component-2')).not.toHaveAttribute('aria-busy'));
 
         expect(test.element).toHaveTextContent('Child number: 1 value "New value for child 1"');
         expect(test.element).toHaveTextContent('Child number: 2 value "New value for child 2"');

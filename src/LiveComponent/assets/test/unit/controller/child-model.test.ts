@@ -55,7 +55,7 @@ describe('Component parent -> child data-model binding tests', () => {
         await userEvent.type(test.queryByDataModel('value'), 'ice cream');
 
         // wait for parent to start/stop loading
-        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
+        await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
         await waitFor(() => expect(test.element).toHaveTextContent('Food Name ice cream'));
     });
 
@@ -93,7 +93,7 @@ describe('Component parent -> child data-model binding tests', () => {
         await userEvent.type(test.queryByDataModel('value'), 'ice cream');
 
         // wait for parent to start/stop loading
-        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
+        await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
         await waitFor(() => expect(test.element).toHaveTextContent('Food Name ice cream'));
     });
 
@@ -120,10 +120,10 @@ describe('Component parent -> child data-model binding tests', () => {
         // wait for parent model to be set
         await waitFor(() => expect(test.component.getData('foodName')).toEqual('ice cream'));
         // but it never triggers an Ajax call, because the norender modifier
-        expect(test.element).not.toHaveAttribute('busy');
+        expect(test.element).not.toHaveAttribute('aria-busy');
         // wait for a potential Ajax call to start
         await new Promise((resolve) => setTimeout(resolve, 50));
-        expect(test.element).not.toHaveAttribute('busy');
+        expect(test.element).not.toHaveAttribute('aria-busy');
     });
 
     it('start and stops model binding as child is added/removed', async () => {
@@ -161,7 +161,7 @@ describe('Component parent -> child data-model binding tests', () => {
         await userEvent.type(inputElement, 'ice cream');
 
         // wait for parent to start/stop loading
-        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
+        await waitFor(() => expect(test.element).toHaveAttribute('aria-busy', 'true'));
         await waitFor(() => expect(test.element).toHaveTextContent('Food Name ice cream'));
 
         // remove child component
@@ -172,6 +172,6 @@ describe('Component parent -> child data-model binding tests', () => {
         await userEvent.type(inputElement, ' sandwich');
         // wait for a potential Ajax call to start
         await new Promise((resolve) => setTimeout(resolve, 50));
-        expect(test.element).not.toHaveAttribute('busy');
+        expect(test.element).not.toHaveAttribute('aria-busy');
     });
 });

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.1
+
+- Use `aria-busy` attribute during component re-render
+
 ## 3.0.0
 
 - Minimum required Symfony version is now 7.4
