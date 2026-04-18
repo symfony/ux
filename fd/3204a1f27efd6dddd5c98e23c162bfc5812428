@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-04-14T11:41:48Z
+
+Hi, Symfony UX 3.0 has been released, and the `2.x` branch is no longer maintained.
+
+Could you please retarget this PR to the `3.x` branch instead? That way we can review and merge it in the currently supported version.
+
+Thanks!
+
+Status: Needs Work
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-14T12:12:51Z
+
+Done! Rebased onto `3.x` and retargeted the PR. Thanks for the heads-up about the 3.0 release — and for the quick triage! 🙌
+
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-04-14T12:13:00Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+ℹ️ No difference in dist packagesFiles.
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-15T18:31:58Z
+
+Thanks for the review @Kocal! I've added a new *Styling and Accessibility with `aria-busy`* section under Loading States and a changelog entry mentioning the potential BC break for anyone relying on the undocumented `busy` attribute. Let me know if you'd like me to tweak the wording! 🙌
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-04-16T05:28:41Z
+
+Also, JS tests must be fixed, and JS dist files needs to be rebuilt.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-16T06:25:57Z
+
+Done! I've moved the changelog entry to 3.1, fixed the remaining `busy` references in `child.test.ts` and `child-model.test.ts`, and rebuilt the dist files. CI is all green now ✅
