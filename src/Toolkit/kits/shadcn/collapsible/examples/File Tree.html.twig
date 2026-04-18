@@ -18,13 +18,51 @@
                 </twig:Collapsible:Trigger>
                 <twig:Collapsible:Content>
                     <div class="ml-4 flex flex-col gap-0.5">
+                        {# Nested folder: components/ui #}
+                        <twig:Collapsible>
+                            <twig:Collapsible:Trigger>
+                                <twig:Button variant="ghost" class="group w-full justify-start gap-1.5 h-7 px-2 text-sm" {{ ...collapsible_trigger_attrs }}>
+                                    <twig:ux:icon name="lucide:chevron-right" class="size-3.5 transition-transform group-data-[state=open]:rotate-90" />
+                                    <twig:ux:icon name="lucide:folder" class="size-3.5 text-muted-foreground" />
+                                    ui
+                                </twig:Button>
+                            </twig:Collapsible:Trigger>
+                            <twig:Collapsible:Content>
+                                <div class="ml-4 flex flex-col gap-0.5">
+                                    <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                                        <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                                        button.tsx
+                                    </twig:Button>
+                                    <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                                        <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                                        card.tsx
+                                    </twig:Button>
+                                    <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                                        <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                                        dialog.tsx
+                                    </twig:Button>
+                                    <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                                        <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                                        input.tsx
+                                    </twig:Button>
+                                    <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                                        <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                                        select.tsx
+                                    </twig:Button>
+                                    <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                                        <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                                        table.tsx
+                                    </twig:Button>
+                                </div>
+                            </twig:Collapsible:Content>
+                        </twig:Collapsible>
                         <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
                             <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
-                            button.tsx
+                            login-form.tsx
                         </twig:Button>
                         <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
                             <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
-                            card.tsx
+                            register-form.tsx
                         </twig:Button>
                     </div>
                 </twig:Collapsible:Content>
@@ -45,6 +83,14 @@
                             <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
                             utils.ts
                         </twig:Button>
+                        <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                            <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                            cn.ts
+                        </twig:Button>
+                        <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                            <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                            api.ts
+                        </twig:Button>
                     </div>
                 </twig:Collapsible:Content>
             </twig:Collapsible>
@@ -62,7 +108,15 @@
                     <div class="ml-4 flex flex-col gap-0.5">
                         <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
                             <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
-                            use-toast.ts
+                            use-media-query.ts
+                        </twig:Button>
+                        <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                            <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                            use-debounce.ts
+                        </twig:Button>
+                        <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                            <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                            use-local-storage.ts
                         </twig:Button>
                     </div>
                 </twig:Collapsible:Content>
@@ -83,6 +137,10 @@
                             <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
                             index.d.ts
                         </twig:Button>
+                        <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                            <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                            api.d.ts
+                        </twig:Button>
                     </div>
                 </twig:Collapsible:Content>
             </twig:Collapsible>
@@ -101,6 +159,14 @@
                         <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
                             <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
                             favicon.ico
+                        </twig:Button>
+                        <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                            <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                            logo.svg
+                        </twig:Button>
+                        <twig:Button variant="ghost" class="w-full justify-start gap-1.5 h-7 px-2 text-sm">
+                            <twig:ux:icon name="lucide:file" class="size-3.5 text-muted-foreground" />
+                            images
                         </twig:Button>
                     </div>
                 </twig:Collapsible:Content>
