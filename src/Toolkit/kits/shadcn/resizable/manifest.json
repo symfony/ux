@@ -1,0 +1,13 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Resizable",
+    "description": "A split-pane layout with draggable handles to redistribute space between panels.",
+    "copy-files": {
+        "assets/": "assets/",
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "composer": ["tales-from-a-dev/twig-tailwind-extra:^1.0.0"]
+    }
+}

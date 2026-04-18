@@ -1,0 +1,17 @@
+{# @prop withHandle bool Show a visible grip icon on the handle. Defaults to `false` #}
+{%- props withHandle = false -%}
+<div
+    class="{{ ('relative flex items-center justify-center bg-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring group-data-[orientation=horizontal]/resizable:w-px group-data-[orientation=horizontal]/resizable:h-full group-data-[orientation=horizontal]/resizable:cursor-col-resize group-data-[orientation=vertical]/resizable:h-px group-data-[orientation=vertical]/resizable:w-full group-data-[orientation=vertical]/resizable:cursor-row-resize ' ~ attributes.render('class'))|tailwind_merge }}"
+    tabindex="0"
+    role="separator"
+    {{ attributes.defaults({
+        'data-slot': 'resizable-handle',
+        'data-resizable-target': 'handle',
+    }) }}
+>
+    {% if withHandle %}
+        <div class="z-10 flex items-center justify-center rounded-sm border bg-border group-data-[orientation=horizontal]/resizable:h-4 group-data-[orientation=horizontal]/resizable:w-3 group-data-[orientation=vertical]/resizable:h-3 group-data-[orientation=vertical]/resizable:w-4">
+            <twig:ux:icon name="lucide:grip-vertical" class="size-2.5 group-data-[orientation=vertical]/resizable:rotate-90" aria-hidden="true" />
+        </div>
+    {% endif %}
+</div>
