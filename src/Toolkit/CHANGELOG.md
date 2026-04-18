@@ -4,6 +4,7 @@
 
 - [Flowbite] Add `avatar` recipe
 - [Flowbite] Add `dropdown` recipe
+- [Shadcn] Add `hover-card` recipe
 - [Shadcn] Add `resizable` recipe
 
 ## 3.0.0

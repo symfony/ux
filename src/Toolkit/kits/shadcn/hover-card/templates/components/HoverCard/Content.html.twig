@@ -1,0 +1,10 @@
+{# @block content The content revealed on hover #}
+<span
+    role="tooltip"
+    class="{{ ('invisible opacity-0 in-data-[state=open]:visible in-data-[state=open]:opacity-100 transition-opacity absolute left-1/2 top-full z-50 mt-2 w-64 -translate-x-1/2 rounded-md border bg-popover p-4 text-sm text-popover-foreground shadow-md outline-none ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'hover-card-content',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</span>

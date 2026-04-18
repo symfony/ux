@@ -1,0 +1,7 @@
+{# @block content The element that reveals the hover card on hover or focus #}
+{%- set hover_card_trigger_attrs = {
+    'data-slot': 'hover-card-trigger',
+    tabindex: 0,
+    'data-action': 'focus->hover-card#show blur->hover-card#hide'|html_attr_type('sst'),
+} -%}
+{%- block content %}{% endblock -%}
