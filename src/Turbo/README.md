@@ -12,7 +12,7 @@ or any other transports to broadcast DOM changes to all currently connected user
 You're in a hurry? Take a look at [the chat example](https://symfony.com/bundles/ux-turbo/current/index.html#chat-example)
 to discover the full potential of Symfony UX Turbo.
 
-Or watch the [Turbo Screencast on SymfonyCasts](https://symfonycasts.com/screencast/turbo).
+Or watch the [Symfony UX Turbo screencast series](https://symfonycasts.com/screencast/turbo).
 
 **This repository is a READ-ONLY sub-tree split**. See
 https://github.com/symfony/ux to create issues or submit pull requests.
