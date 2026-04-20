@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import "leaflet/dist/leaflet.min.css";
-import * as L from "leaflet";
+import * as LeafletModule from "leaflet";
 const IconTypes = {
 	Url: "url",
 	Svg: "svg",
@@ -143,17 +143,92 @@ _Class.values = {
 	options: Object,
 	extra: Object
 };
+function detectVersion(mod) {
+	return parseInt(String(mod?.version ?? ""), 10) >= 2 ? 2 : 1;
+}
+function buildLegacyNamespace(mod) {
+	const m = mod;
+	const factory = (Ctor) => (...args) => new Ctor(...args);
+	const control = ((options) => new m.Control(options));
+	control.attribution = factory(m.Control.Attribution);
+	control.zoom = factory(m.Control.Zoom);
+	control.layers = factory(m.Control.Layers);
+	control.scale = factory(m.Control.Scale);
+	return {
+		...m,
+		map: (container, options) => new m.Map(container, options),
+		tileLayer: factory(m.TileLayer),
+		marker: factory(m.Marker),
+		icon: factory(m.Icon),
+		divIcon: factory(m.DivIcon),
+		popup: factory(m.Popup),
+		polygon: factory(m.Polygon),
+		polyline: factory(m.Polyline),
+		circle: factory(m.Circle),
+		rectangle: factory(m.Rectangle),
+		latLngBounds: factory(m.LatLngBounds),
+		control,
+		Map: m.Map,
+		Marker: m.Marker,
+		TileLayer: m.TileLayer,
+		Icon: m.Icon,
+		DivIcon: m.DivIcon,
+		Popup: m.Popup,
+		Polygon: m.Polygon,
+		Polyline: m.Polyline,
+		Circle: m.Circle,
+		Rectangle: m.Rectangle
+	};
+}
+function createAdapter(mod) {
+	if (detectVersion(mod) === 1) return createV1Adapter(mod);
+	return createV2Adapter(mod);
+}
+function createV1Adapter(mod) {
+	const m = mod;
+	return {
+		createMap: (container, options) => m.map(container, options),
+		createTileLayer: (url, options) => m.tileLayer(url, options),
+		createMarker: (latlng, options) => m.marker(latlng, options),
+		createIcon: (options) => m.icon(options),
+		createDivIcon: (options) => m.divIcon(options),
+		createPopup: (options) => m.popup(options),
+		createPolygon: (latlngs, options) => m.polygon(latlngs, options),
+		createPolyline: (latlngs, options) => m.polyline(latlngs, options),
+		createCircle: (latlng, options) => m.circle(latlng, options),
+		createRectangle: (bounds, options) => m.rectangle(bounds, options),
+		createAttributionControl: (options) => m.control.attribution(options),
+		createZoomControl: (options) => m.control.zoom(options),
+		legacyNamespace: m
+	};
+}
+function createV2Adapter(mod) {
+	const m = mod;
+	return {
+		createMap: (container, options) => new m.Map(container, options),
+		createTileLayer: (url, options) => new m.TileLayer(url, options),
+		createMarker: (latlng, options) => new m.Marker(latlng, options),
+		createIcon: (options) => new m.Icon(options),
+		createDivIcon: (options) => new m.DivIcon(options),
+		createPopup: (options) => new m.Popup(options),
+		createPolygon: (latlngs, options) => new m.Polygon(latlngs, options),
+		createPolyline: (latlngs, options) => new m.Polyline(latlngs, options),
+		createCircle: (latlng, options) => new m.Circle(latlng, options),
+		createRectangle: (bounds, options) => new m.Rectangle(bounds, options),
+		createAttributionControl: (options) => new m.Control.Attribution(options),
+		createZoomControl: (options) => new m.Control.Zoom(options),
+		legacyNamespace: buildLegacyNamespace(mod)
+	};
+}
+const adapter = createAdapter(LeafletModule);
+const defaultMarkerIcon = adapter.createDivIcon({
+	html: "<svg xmlns=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\" fill-rule=\"evenodd\" stroke-linecap=\"round\" clip-rule=\"evenodd\" viewBox=\"0 0 500 820\"><defs><linearGradient id=\"__sf_ux_map_gradient_marker_fill\" x1=\"0\" x2=\"1\" y1=\"0\" y2=\"0\" gradientTransform=\"matrix(0 -37.57 37.57 0 416.45 541)\" gradientUnits=\"userSpaceOnUse\"><stop offset=\"0\" stop-color=\"#126FC6\"/><stop offset=\"1\" stop-color=\"#4C9CD1\"/></linearGradient><linearGradient id=\"__sf_ux_map_gradient_marker_border\" x1=\"0\" x2=\"1\" y1=\"0\" y2=\"0\" gradientTransform=\"matrix(0 -19.05 19.05 0 414.48 522.49)\" gradientUnits=\"userSpaceOnUse\"><stop offset=\"0\" stop-color=\"#2E6C97\"/><stop offset=\"1\" stop-color=\"#3883B7\"/></linearGradient></defs><circle cx=\"252.31\" cy=\"266.24\" r=\"83.99\" fill=\"#fff\"/><path fill=\"url(#__sf_ux_map_gradient_marker_fill)\" stroke=\"url(#__sf_ux_map_gradient_marker_border)\" stroke-width=\"1.1\" d=\"M416.54 503.61c-6.57 0-12.04 5.7-12.04 11.87 0 2.78 1.56 6.3 2.7 8.74l9.3 17.88 9.26-17.88c1.13-2.43 2.74-5.79 2.74-8.74 0-6.18-5.38-11.87-11.96-11.87Zm0 7.16a4.69 4.69 0 1 1-.02 9.4 4.69 4.69 0 0 1 .02-9.4Z\" transform=\"translate(-7889.1 -9807.44) scale(19.54)\"/></svg>",
+	iconSize: [25, 41],
+	iconAnchor: [12.5, 41],
+	popupAnchor: [0, -41],
+	className: ""
+});
 var map_controller_default = class extends _Class {
-	connect() {
-		L.Marker.prototype.options.icon = L.divIcon({
-			html: "<svg xmlns=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\" fill-rule=\"evenodd\" stroke-linecap=\"round\" clip-rule=\"evenodd\" viewBox=\"0 0 500 820\"><defs><linearGradient id=\"__sf_ux_map_gradient_marker_fill\" x1=\"0\" x2=\"1\" y1=\"0\" y2=\"0\" gradientTransform=\"matrix(0 -37.57 37.57 0 416.45 541)\" gradientUnits=\"userSpaceOnUse\"><stop offset=\"0\" stop-color=\"#126FC6\"/><stop offset=\"1\" stop-color=\"#4C9CD1\"/></linearGradient><linearGradient id=\"__sf_ux_map_gradient_marker_border\" x1=\"0\" x2=\"1\" y1=\"0\" y2=\"0\" gradientTransform=\"matrix(0 -19.05 19.05 0 414.48 522.49)\" gradientUnits=\"userSpaceOnUse\"><stop offset=\"0\" stop-color=\"#2E6C97\"/><stop offset=\"1\" stop-color=\"#3883B7\"/></linearGradient></defs><circle cx=\"252.31\" cy=\"266.24\" r=\"83.99\" fill=\"#fff\"/><path fill=\"url(#__sf_ux_map_gradient_marker_fill)\" stroke=\"url(#__sf_ux_map_gradient_marker_border)\" stroke-width=\"1.1\" d=\"M416.54 503.61c-6.57 0-12.04 5.7-12.04 11.87 0 2.78 1.56 6.3 2.7 8.74l9.3 17.88 9.26-17.88c1.13-2.43 2.74-5.79 2.74-8.74 0-6.18-5.38-11.87-11.96-11.87Zm0 7.16a4.69 4.69 0 1 1-.02 9.4 4.69 4.69 0 0 1 .02-9.4Z\" transform=\"translate(-7889.1 -9807.44) scale(19.54)\"/></svg>",
-			iconSize: [25, 41],
-			iconAnchor: [12.5, 41],
-			popupAnchor: [0, -41],
-			className: ""
-		});
-		super.connect();
-	}
 	centerValueChanged() {
 		if (this.map && this.hasCenterValue && this.centerValue && this.hasZoomValue && this.zoomValue) this.map.setView(this.centerValue, this.zoomValue);
 	}
@@ -167,7 +242,7 @@ var map_controller_default = class extends _Class {
 		if (this.map && this.hasMaxZoomValue && this.maxZoomValue) this.map.setMaxZoom(this.maxZoomValue);
 	}
 	dispatchEvent(name, payload = {}) {
-		payload.L = L;
+		payload.L = adapter.legacyNamespace;
 		this.dispatch(name, {
 			prefix: "ux:map",
 			detail: payload
@@ -175,7 +250,7 @@ var map_controller_default = class extends _Class {
 	}
 	doCreateMap({ definition }) {
 		const { center, zoom, minZoom, maxZoom, options, bridgeOptions = {} } = definition;
-		const map = L.map(this.element, {
+		const map = adapter.createMap(this.element, {
 			center: center === null ? void 0 : center,
 			zoom: zoom === null ? void 0 : zoom,
 			minZoom: minZoom === null ? void 0 : minZoom,
@@ -185,27 +260,30 @@ var map_controller_default = class extends _Class {
 			...options,
 			...bridgeOptions
 		});
-		if (options.tileLayer) L.tileLayer(options.tileLayer.url, {
+		if (options.tileLayer) adapter.createTileLayer(options.tileLayer.url, {
 			attribution: options.tileLayer.attribution,
 			...options.tileLayer.options
 		}).addTo(map);
-		if (typeof options.attributionControlOptions !== "undefined") L.control.attribution({ ...options.attributionControlOptions }).addTo(map);
-		if (typeof options.zoomControlOptions !== "undefined") L.control.zoom({ ...options.zoomControlOptions }).addTo(map);
+		if (typeof options.attributionControlOptions !== "undefined") adapter.createAttributionControl({ ...options.attributionControlOptions }).addTo(map);
+		if (typeof options.zoomControlOptions !== "undefined") adapter.createZoomControl({ ...options.zoomControlOptions }).addTo(map);
 		return map;
 	}
 	doCreateMarker({ definition }) {
 		const { "@id": _id, position, title, infoWindow, icon, bridgeOptions = {} } = definition;
-		const marker = L.marker(position, {
+		const hasBridgeIcon = Object.prototype.hasOwnProperty.call(bridgeOptions, "icon");
+		const markerOptions = {
 			title: title || void 0,
 			riseOnHover: true,
+			...hasBridgeIcon || icon ? {} : { icon: defaultMarkerIcon },
 			...bridgeOptions
-		}).addTo(this.map);
+		};
+		const marker = adapter.createMarker(position, markerOptions).addTo(this.map);
 		if (infoWindow) this.createInfoWindow({
 			definition: infoWindow,
 			element: marker
 		});
 		if (icon) {
-			if (Object.prototype.hasOwnProperty.call(bridgeOptions, "icon")) console.warn("[Symfony UX Map] Defining \"bridgeOptions.icon\" for a marker with a custom icon is not supported and will be ignored.");
+			if (hasBridgeIcon) console.warn("[Symfony UX Map] Defining \"bridgeOptions.icon\" for a marker with a custom icon is not supported and will be ignored.");
 			this.doCreateIcon({
 				definition: icon,
 				element: marker
@@ -218,7 +296,7 @@ var map_controller_default = class extends _Class {
 	}
 	doCreatePolygon({ definition }) {
 		const { "@id": _id, points, infoWindow, bridgeOptions = {} } = definition;
-		const polygon = L.polygon(points, { ...bridgeOptions }).addTo(this.map);
+		const polygon = adapter.createPolygon(points, { ...bridgeOptions }).addTo(this.map);
 		if (infoWindow) this.createInfoWindow({
 			definition: infoWindow,
 			element: polygon
@@ -230,7 +308,7 @@ var map_controller_default = class extends _Class {
 	}
 	doCreatePolyline({ definition }) {
 		const { "@id": _id, points, infoWindow, bridgeOptions = {} } = definition;
-		const polyline = L.polyline(points, { ...bridgeOptions }).addTo(this.map);
+		const polyline = adapter.createPolyline(points, { ...bridgeOptions }).addTo(this.map);
 		if (infoWindow) this.createInfoWindow({
 			definition: infoWindow,
 			element: polyline
@@ -242,7 +320,7 @@ var map_controller_default = class extends _Class {
 	}
 	doCreateCircle({ definition }) {
 		const { "@id": _id, center, radius, infoWindow, bridgeOptions = {} } = definition;
-		const circle = L.circle(center, {
+		const circle = adapter.createCircle(center, {
 			radius,
 			...bridgeOptions
 		}).addTo(this.map);
@@ -257,7 +335,7 @@ var map_controller_default = class extends _Class {
 	}
 	doCreateRectangle({ definition }) {
 		const { "@id": _id, southWest, northEast, infoWindow, bridgeOptions = {} } = definition;
-		const rectangle = L.rectangle([[southWest.lat, southWest.lng], [northEast.lat, northEast.lng]], { ...bridgeOptions }).addTo(this.map);
+		const rectangle = adapter.createRectangle([[southWest.lat, southWest.lng], [northEast.lat, northEast.lng]], { ...bridgeOptions }).addTo(this.map);
 		if (infoWindow) this.createInfoWindow({
 			definition: infoWindow,
 			element: rectangle
@@ -283,21 +361,23 @@ var map_controller_default = class extends _Class {
 	}
 	doCreateIcon({ definition, element }) {
 		const { type, width, height } = definition;
+		const iconSize = [width, height];
+		const className = "";
 		let icon;
-		if (type === IconTypes.Svg) icon = L.divIcon({
+		if (type === IconTypes.Svg) icon = adapter.createDivIcon({
 			html: definition.html,
-			iconSize: [width, height],
-			className: ""
+			iconSize,
+			className
 		});
-		else if (type === IconTypes.UxIcon) icon = L.divIcon({
+		else if (type === IconTypes.UxIcon) icon = adapter.createDivIcon({
 			html: definition._generated_html,
-			iconSize: [width, height],
-			className: ""
+			iconSize,
+			className
 		});
-		else if (type === IconTypes.Url) icon = L.icon({
+		else if (type === IconTypes.Url) icon = adapter.createIcon({
 			iconUrl: definition.url,
-			iconSize: [width, height],
-			className: ""
+			iconSize,
+			className
 		});
 		else throw new Error(`Unsupported icon type: ${type}.`);
 		element.setIcon(icon);

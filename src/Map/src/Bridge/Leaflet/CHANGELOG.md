@@ -2,6 +2,12 @@
 
 ## 3.0.0
 
+- Add support for Leaflet 2.x (additive, non-breaking): the controller now
+  detects the installed Leaflet major at runtime and adapts its calls
+  accordingly. The `event.detail.L` consumer contract is preserved on both
+  versions via a synthesized v1-flavored namespace when Leaflet 2 is
+  installed. The `leaflet` peer dependency range is widened to
+  `^1.9.0 || ^2.0.0`.
 - Minimum required Symfony version is now 7.4
 - Minimum required PHP version is now 8.4
 
