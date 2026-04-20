@@ -78,10 +78,6 @@ Want some demos? Check out https://ux.symfony.com/live-component#demo
 Dynamic Templates
 -----------------
 
-.. versionadded:: 2.33
-
-    Live components support dynamic template resolution using the ``FromMethod`` attribute, just like standard Twig components.
-
 This is particularly useful for complex live components that need to switch views based on user interaction::
 
     #[AsLiveComponent(template: new FromMethod('getTemplate'))]
@@ -409,10 +405,6 @@ This can be useful along with a button that triggers a render on click:
 Input Model Validation Modifiers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 2.28
-
-    Modifiers to validate ``<input>`` value were added in UX LiveComponent 2.28.
-
 Input model validation modifiers help to reduce unnecessary server requests and provide
 a lightweight form of frontend validation, for example:
 
@@ -565,10 +557,6 @@ library. Make sure it is installed in you application:
 .. code-block:: terminal
 
     $ composer require phpdocumentor/reflection-docblock
-
-.. versionadded:: 2.26
-
-    Support for `Symfony TypeInfo`_ component was added in LiveComponents 2.26.
 
 To get rid of deprecations about ``PropertyInfoExtractor::getTypes()`` from the `Symfony PropertyInfo`_ component,
 ensure to upgrade ``symfony/property-info`` to at least 7.1, which requires **PHP 8.2**::
@@ -1176,12 +1164,6 @@ the work::
         // ...
     }
 
-.. versionadded:: 2.16
-
-    The ``data-live-action-param`` attribute way of specifying the action
-    was added in Live Components 2.16. Previously, this was done with
-    ``data-action-name``.
-
 To call this, trigger the ``action`` method on the ``live`` Stimulus
 controller and pass ``resetMax`` as a `Stimulus action parameter`_ called
 ``action``:
@@ -1254,12 +1236,6 @@ This means that, for example, you can use action autowiring::
 
 Actions & Arguments
 ~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.16
-
-    The ``data-live-{NAME}-param`` attribute way of specifying action
-    arguments was added in Live Components 2.16. Previously, this was done
-    inside the ``data-action-name`` attribute.
 
 You can also pass arguments to your action by adding each as a
 `Stimulus action parameter`_:
@@ -2474,10 +2450,6 @@ You can define some content to be rendered while the component is loading, eithe
 inside the component template (the ``placeholder`` macro) or from the calling template
 (the ``loading-template`` attribute and the ``loadingContent`` block).
 
-.. versionadded:: 2.16
-
-    Defining a placeholder macro into the component template was added in Live Components 2.16.
-
 In the component template, define a ``placeholder`` macro, outside of the
 component's main content. This macro will be called when the component is deferred:
 
@@ -2668,11 +2640,6 @@ And you only set the ``query`` value, then your URL will be updated to
 Controlling the Query Parameter Name
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 2.17
-
-    The ``as`` option was added in LiveComponents 2.17.
-
-
 Instead of using the prop's field name as the query parameter name, you can use the ``as`` option in your ``LiveProp``
 definition::
 
@@ -2724,10 +2691,6 @@ This way you can also use the component multiple times in the same page and avoi
     <twig:SearchModule alias="q1" />
     <twig:SearchModule alias="q2" />
 
-.. versionadded:: 2.26
-
-   The property name is passed into the modifier function since LiveComponents 2.26.
-
 The ``modifier`` function can also take the name of the property as a secondary parameter.
 It can be used to perform more generic operations inside of the modifier that can be reused for multiple props::
 
@@ -2767,10 +2730,6 @@ The ``query`` value will appear in the URL like ``/search?query=my+important+que
 
 Map the parameter to path instead of query
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.28
-
-    The ``mapPath`` option was added in LiveComponents 2.28.
 
 Instead of setting the ``LiveProp`` as a query parameter, it can be set as route parameter
 by passing the ``mapPath`` option to the ``UrlMapping`` defined for the ``LiveProp``::
@@ -2858,11 +2817,6 @@ Emitting an Event
 ~~~~~~~~~~~~~~~~~
 
 There are three ways to emit an event:
-
-.. versionadded:: 2.16
-
-    The ``data-live-event-param`` attribute was added in Live Components 2.16.
-    Previously, it was called ``data-event``.
 
 1. From Twig:
 
@@ -3758,10 +3712,6 @@ You can also control the type of the generated URL:
 Configuring Fetch Credentials
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 2.33
-
-    The ``fetchCredentials`` option was added in LiveComponents 2.33.
-
 By default, Live components use the ``same-origin`` credentials policy for fetch requests,
 which only sends credentials (cookies, HTTP authentication) for same-origin requests.
 
@@ -3837,11 +3787,6 @@ the change of one specific key::
 
 Set LiveProp Options Dynamically
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.17
-
-    The ``modifier`` option was added in LiveComponents 2.17.
-
 
 If you need to configure a LiveProp's options dynamically, you can use the ``modifier`` option to use a custom
 method in your component that returns a modified version of your LiveProp::
@@ -4097,6 +4042,5 @@ promise. However, any internal implementation in the JavaScript files
 .. _`setting the locale in the request`: https://symfony.com/doc/current/translation.html#translation-locale
 .. _`Stimulus action parameter`: https://stimulus.hotwired.dev/reference/actions#action-parameters
 .. _`@symfony/ux-live-component npm package`: https://www.npmjs.com/package/@symfony/ux-live-component
-.. _`Symfony TypeInfo`: https://symfony.com/doc/current/components/type_info.html
 .. _`Symfony PropertyInfo`: https://symfony.com/doc/current/components/property_info.html
 .. _`credentials option of the fetch() API`: https://developer.mozilla.org/en-US/docs/Web/API/fetch#credentials

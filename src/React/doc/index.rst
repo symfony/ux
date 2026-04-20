@@ -102,10 +102,6 @@ For example:
 Permanent components
 ~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 2.21
-
-    The ability to mark a component ``permanent`` was added in UX React 2.21.
-
 The controller responsible to render the React components can be configured
 to keep the React component mounted when the root element is removed from
 the DOM, using the ``permanent`` option.

@@ -136,10 +136,6 @@ Or, create the field by hand::
         }
     }
 
-.. versionadded:: 2.13
-
-    ``BaseEntityAutocompleteType`` is a new replacement for ``ParentEntityAutocompleteType``.
-
 There are 3 important things:
 
 #. The class needs the ``#[AsEntityAutocompleteField]`` attribute so that
@@ -286,10 +282,6 @@ to the options above, you can also pass:
 
 Passing Extra Options to the Ajax-powered Autocomplete
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.14
-
-    The ability to pass extra options was added in Autocomplete 2.14.
 
 Autocomplete field options are **not preserved** when the field is rendered
 on an Ajax call. So, features like exclude some options based on the current
@@ -626,10 +618,6 @@ discussed in the next section.
 
 Passing Extra Options to the Autocompleter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.14
-
-    The ability to pass extra options was added in Autocomplete 2.14.
 
 If you need to pass extra options to the autocompleter, you can do so by
 implementing the ``\Symfony\UX\Autocomplete\OptionsAwareEntityAutocompleterInterface``
