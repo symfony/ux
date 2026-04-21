@@ -385,10 +385,6 @@ use the full path of the template where the macro is defined:
 Dynamic Templates
 -----------------
 
-.. versionadded:: 2.33
-
-    The ability to dynamically resolve templates via the ``FromMethod`` attribute was added.
-
 Sometimes, you need to render a different template based on the component state.
 
 It is possible to reference a component method by passing ``FromMethod`` to the ``template`` option of ``AsTwigComponent``, which will be used to compute the template to use before rendering the component::
@@ -942,11 +938,6 @@ components, that can be done via the ``outerScope...`` variable:
         {{ outerScope.this.someProp }} {# references a "someProp" prop from SuccessAlert #}
     {% endcomponent %}
 
-.. versionadded:: 2.13
-
-    The ability to refer to the scope of higher components via the ``outerScope``
-    variable was added in 2.13.
-
 You can keep referring to components higher up as well. Just add another ``outerScope``.
 Remember though that the ``outerScope`` reference only starts once you're INSIDE the (embedded) component.
 
@@ -1128,10 +1119,6 @@ the exception of *class*. For ``class``, the defaults are prepended:
 Render
 ~~~~~~
 
-.. versionadded:: 2.15
-
-    The ability to *render* attributes was added in TwigComponents 2.15.
-
 You can take full control over the attributes that are rendered by using the
 ``render()`` method.
 
@@ -1240,10 +1227,6 @@ Exclude specific attributes:
 
 Nested Attributes
 ~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.17
-
-    The Nested Attributes feature was added in TwigComponents 2.17.
 
 You can have attributes that aren't meant to be used on the *root* element
 but one of its *descendants*. This is useful for, say, a dialog component where
@@ -1761,10 +1744,6 @@ components into their projects.
 
 Anonymous Components
 ~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.20
-
-    The bundle convention for Anonymous components was added in TwigComponents 2.20.
 
 Using a component from a third-party bundle is just as straightforward as using
 one from your own application. Once the bundle is installed and configured, you

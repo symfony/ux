@@ -257,10 +257,6 @@ a Turbo Frame, and retrieve the ID of this frame::
 <twig:Turbo:Frame> Twig Component
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. versionadded:: 2.22
-
-    The ``<twig:Turbo:Frame>`` Twig Component was added in Turbo 2.22.
-
 Simple example:
 
 .. code-block:: html+twig

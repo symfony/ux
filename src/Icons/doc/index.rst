@@ -415,10 +415,6 @@ Now, all icons will have the ``fill`` attribute set to ``currentColor`` by defau
 Icon Aliases
 ~~~~~~~~~~~~
 
-.. versionadded:: 2.20
-
-    Icon Aliases feature was added in 2.20.
-
 Aliases are custom names you can define to refer to any icon. They are useful for
 creating shortcuts to icons you frequently use in your templates:
 
@@ -445,10 +441,6 @@ Now, you can use the ``dots`` alias in your templates:
 
 Icon Set Suffixes
 ~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.33
-
-    Icon Set Suffixes feature was added in 2.33.
 
 Some icon sets like `Heroicons`_ use suffixes to denote icon variants
 (e.g. ``arrow-right-solid``, ``arrow-right-16-solid``, ``arrow-right-20-solid``).
