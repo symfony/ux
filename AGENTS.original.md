@@ -2,8 +2,8 @@
 
 ## Project Overview
 
-Monorepo of PHP (Symfony bundles) + TypeScript/JS (Stimulus controllers) packages.
-Each package: `src/<Package>/`, PHP in `src/`, JS in `assets/`.
+Symfony UX is a monorepo of PHP (Symfony bundles) + TypeScript/JS (Stimulus controllers) packages.
+Each package lives under `src/<Package>/` with PHP code in `src/` and JS assets in `assets/`.
 Package manager: **pnpm** (v10, via Corepack). Node 22. PHP >= 8.1.
 
 ## Build Commands
@@ -88,13 +88,13 @@ php vendor/bin/twig-cs-fixer lint
 ## PHP Code Style
 
 - **Ruleset**: `@Symfony` + `@Symfony:risky` via PHP-CS-Fixer (`.php-cs-fixer.dist.php`)
-- **`declare(strict_types=1)`**: not enforced globally; follow file conventions
+- **`declare(strict_types=1)`**: not enforced globally, but follow existing file conventions
 - **Namespaces**: PSR-4, e.g. `Symfony\UX\Autocomplete\...`
-- **Classes**: prefer `final`. PascalCase. No `readonly` classes.
-- **Methods**: camelCase, typed params + return types
-- **Properties**: typed, constructor promotion + `readonly` where appropriate
-- **Imports**: one `use` per line, grouped (classes, traits, interfaces). No aliasing unless conflicts.
-- **File header**: every PHP file needs Symfony license header (auto-fixed by CS fixer):
+- **Classes**: prefer `final` classes. Use PascalCase. No `readonly` classes.
+- **Methods**: camelCase, always typed parameters and return types
+- **Properties**: typed, use constructor promotion and `readonly` where appropriate
+- **Imports**: one `use` per line, grouped (PHP classes, then traits, then interfaces). No aliasing unless conflicts.
+- **File header**: every PHP file must have the Symfony license header comment (auto-fixed by CS fixer):
     ```php
     /*
      * This file is part of the Symfony package.
@@ -106,17 +106,17 @@ php vendor/bin/twig-cs-fixer lint
      */
     ```
 - **Error handling**: throw specific exceptions (InvalidArgumentException, LogicException, RuntimeException). No generic `\Exception`.
-- **Doc comments**: `@author` on classes. PHPDoc only when types can't express contract (generics, union details). No duplicate type info.
+- **Doc comments**: use `@author` on classes. PHPDoc only when types can't express the contract (generics, union details). Don't duplicate type info already in signatures.
 
 ## TypeScript/JS Code Style
 
 - **Formatter**: oxfmt (`.oxfmtrc.json`)
 - **Linter**: oxlint (`.oxlintrc.json`), default rules
 - **Module system**: ESM (`"type": "module"`)
-- **Imports**: named imports preferred, `type` keyword for type-only (`import type { ... }`)
-- **Naming**: camelCase vars/funcs, PascalCase classes/interfaces/types
-- **Stimulus controllers**: extend `Controller` from `@hotwired/stimulus`, `static values = {}` pattern, `declare readonly` for value props
-- **Tests**: Vitest + `@testing-library/dom` + `@testing-library/jest-dom`. Playwright for browser.
+- **Imports**: named imports preferred, `type` keyword for type-only imports (`import type { ... }`)
+- **Naming**: camelCase for variables/functions, PascalCase for classes/interfaces/types
+- **Stimulus controllers**: extend `Controller` from `@hotwired/stimulus`, use `static values = {}` pattern, `declare readonly` for value properties
+- **Tests**: Vitest with `@testing-library/dom` + `@testing-library/jest-dom` matchers. Playwright for browser tests.
 
 ## Repository Structure
 
@@ -146,17 +146,18 @@ apps/
 
 ## Important Notes
 
-- **Dist files committed**: after TS source change, run `pnpm run build` + commit `dist/`.
-- **pnpm workspaces**: `src/*/assets` and `src/*/src/Bridge/*/assets`.
-- **Peer dependency matrix**: JS unit tests may run against multiple peer dep versions (via `bin/unit_test_package.sh`).
-- **PHPStan**: only configured for `src/Turbo` (`phpstan.dist.neon`).
-- **Snapshot tests**: Toolkit uses PHPUnit snapshots — update with `php vendor/bin/simple-phpunit -d --update-snapshots`.
+- **Dist files are committed**: after changing TS source, run `pnpm run build` and commit the `dist/` output.
+- **pnpm workspaces**: packages are `src/*/assets` and `src/*/src/Bridge/*/assets`.
+- **Peer dependency matrix**: JS unit tests may run against multiple versions of peer deps (handled by `bin/unit_test_package.sh`).
+- **PHPStan**: currently only configured for `src/Turbo` (`phpstan.dist.neon`).
+- **Snapshot tests**: some packages (Toolkit) use PHPUnit snapshots — update with `php vendor/bin/simple-phpunit -d --update-snapshots`.
 
 ## Before committing
 
-1. Write tests for new features/bug fixes; all tests pass locally, when applicable (pure JS change → skip PHP tests).
-2. Run `oxfmt` + `oxlint` (non-PHP code style/lint clean),
-3. Run `php-cs-fixer` (PHP code style clean),
-4. Run `twig-cs-fixer` (Twig formatted),
-5. Run all tests for affected package(s) (PHPUnit, Vitest, Playwright):
-    1. JS unit-tests: `package.json` can be modified to test against multiple peer dep versions — don't commit temp `package.json` changes.
+1. Ensure to have written tests for any new features or bug fixes, and that all tests pass locally, if it makes sense to do so (e.g. for a pure JS change, running PHP tests is not required).
+2. Run `oxfmt` and `oxlint` to ensure non-PHP code style and linting are clean,
+3. Run `php-cs-fixer` to ensure PHP code style is clean,
+4. Run `twig-cs-fixer` to ensure Twig templates are properly formatted,
+5. Run all tests for the affected package(s) (PHPUnit, Vitest, Playwright) to ensure no regressions:
+    1. Be careful with JS unit-tests, the `package.json` can be modified to run tests against multiple versions of peer dependencies,
+       so make sure to not accidentally commit temporary changes to `package.json`
