@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-04-22T18:19:20Z
+
+I just found out the `single` type is not working correctly. I'm merging, and will fix it in another PR
