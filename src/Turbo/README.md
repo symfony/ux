@@ -29,23 +29,6 @@ infrastructure for you!
 
 Help Symfony by [sponsoring][3] its development!
 
-## Running the Tests
-
-Configure test environment (working directory: `src/Turbo`):
-
-```bash
-composer update
-docker compose up -d
-cd tests/app
-php public/index.php doctrine:schema:create
-```
-
-Run tests (working directory: `src/Turbo`):
-
-```bash
-vendor/bin/simple-phpunit
-```
-
 ## Resources
 
 - [Documentation](https://symfony.com/bundles/ux-turbo/current/index.html)

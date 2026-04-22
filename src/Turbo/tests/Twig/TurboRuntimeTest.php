@@ -22,7 +22,7 @@ final class TurboRuntimeTest extends TestCase
 {
     public function testRenderTurboStreamListen()
     {
-        $twig = $this->createMock(Environment::class);
+        $twig = $this->createStub(Environment::class);
         $renderer = $this->createMock(TurboStreamListenRendererInterface::class);
         $renderer->expects($this->once())
             ->method('renderTurboStreamListen')
@@ -38,8 +38,8 @@ final class TurboRuntimeTest extends TestCase
 
     public function testRenderTurboStreamListenWithMultipleHubs()
     {
-        $twig = $this->createMock(Environment::class);
-        $renderer1 = $this->createMock(TurboStreamListenRendererInterface::class);
+        $twig = $this->createStub(Environment::class);
+        $renderer1 = $this->createStub(TurboStreamListenRendererInterface::class);
         $renderer2 = $this->createMock(TurboStreamListenRendererInterface::class);
         $renderer2->expects($this->once())
             ->method('renderTurboStreamListen')
@@ -58,8 +58,8 @@ final class TurboRuntimeTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        $twig = $this->createMock(Environment::class);
-        $renderer = $this->createMock(TurboStreamListenRendererInterface::class);
+        $twig = $this->createStub(Environment::class);
+        $renderer = $this->createStub(TurboStreamListenRendererInterface::class);
         $container = new class(['default' => static fn () => $renderer]) implements ServiceProviderInterface {
             use ServiceLocatorTrait;
         };

@@ -4,7 +4,6 @@ parameters:
 		- .
 	excludePaths:
 		- vendor/*
-		- tests/app/var/*
 		# The Symfony Configuration API isn't good enough to be analysed
 		- src/DependencyInjection/Configuration.php
 	# to allow installing with various phsptan versions without reporting old errors here

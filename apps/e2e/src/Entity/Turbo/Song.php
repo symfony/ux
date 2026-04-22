@@ -9,18 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Entity;
+namespace App\Entity\Turbo;
 
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
-/**
- * @author Rick Kuipers <rick@levelup-it.com>
- */
-#[Broadcast]
+#[Broadcast(topics: ['@="songs_by_artist_" ~ (entity.artist ? entity.artist.id : null)', 'songs'])]
 #[ORM\Entity]
-class Artist
+class Song
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
@@ -28,11 +24,8 @@ class Artist
     public ?int $id = null;
 
     #[ORM\Column]
-    public string $name = '';
+    public string $title = '';
 
-    /**
-     * @var Collection<int, Song>
-     */
-    #[ORM\OneToMany(targetEntity: Song::class, mappedBy: 'artist')]
-    public Collection $songs;
+    #[ORM\ManyToOne(targetEntity: Artist::class, inversedBy: 'songs')]
+    public ?Artist $artist = null;
 }

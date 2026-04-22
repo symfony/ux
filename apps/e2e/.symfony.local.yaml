@@ -1,3 +1,6 @@
 http:
     port: 9876
     no_tls: true
+
+workers:
+    docker_compose: ~

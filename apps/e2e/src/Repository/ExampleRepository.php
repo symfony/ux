@@ -38,6 +38,9 @@ class ExampleRepository
             new Example(UxPackage::Turbo, 'Turbo Drive navigation', 'Navigate between pages without full page reload using Turbo Drive.', 'app_ux_turbo_drive'),
             new Example(UxPackage::Turbo, 'Turbo Frame', 'A scoped section that navigates independently from the rest of the page.', 'app_ux_turbo_frame'),
             new Example(UxPackage::Turbo, 'Turbo Stream after form submit', 'Update page content with Turbo Streams after a form submission.', 'app_ux_turbo_stream'),
+            new Example(UxPackage::Turbo, 'Turbo Broadcast — Books', 'Create, update and remove a Doctrine entity, broadcasted to all clients via Mercure.', 'app_ux_turbo_broadcast_books'),
+            new Example(UxPackage::Turbo, 'Turbo Broadcast — Artists & Songs', 'Broadcast updates using Expression Language topics, scoped per artist.', 'app_ux_turbo_broadcast_artists'),
+            new Example(UxPackage::Turbo, 'Turbo Broadcast — Artist via Song', 'Broadcast updates of a Doctrine entity stored as a Proxy.', 'app_ux_turbo_broadcast_artist_from_song'),
             new Example(UxPackage::LiveComponent, 'Registration form', 'A registration form with live validation using Symfony Forms and the Validator component.', 'app_ux_live_component_registration_form'),
             new Example(UxPackage::LiveComponent, 'Paginated fruits list', 'A paginated list of fruits, where the current page is persisted in the URL as a path parameter.', 'app_ux_live_component_fruits'),
             new Example(UxPackage::LiveComponent, 'With DTO', 'A live component that uses a DTO to encapsulate its state.', 'app_ux_live_component_with_dto'),
@@ -110,12 +113,11 @@ class ExampleRepository
 
     public function findOneByRoute(string $routeName): ?Example
     {
-        foreach ($this->examples as $example) {
-            if ($example->routeName === $routeName) {
-                return $example;
-            }
-        }
+        return array_find($this->examples, static fn ($example) => $example->routeName === $routeName);
+    }
 
-        return null;
+    public function findOneByName(string $name): ?Example
+    {
+        return array_find($this->examples, static fn ($example) => $example->name === $name);
     }
 }

@@ -1,6 +1,8 @@
 {% block create %}
-    <twig:Turbo:Stream:Append target="#artists">
-        <div id="artist_{{ id }}"><a href="{{ path('artist', {id: id}) }}">{{ entity.name }} (#{{ id }})</a></div>
+    <twig:Turbo:Stream:Append target="#artists-list">
+        <div id="artist_{{ id }}" class="artist-item">
+            <a href="{{ path('app_ux_turbo_broadcast_artist', {id: id}) }}">{{ entity.name }} (#{{ id }})</a>
+        </div>
     </twig:Turbo:Stream:Append>
 {% endblock %}
 

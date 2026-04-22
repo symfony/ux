@@ -24,6 +24,6 @@ return [
     Symfony\UX\React\ReactBundle::class => ['all' => true],
     Symfony\UX\Translator\UxTranslatorBundle::class => ['all' => true],
     Symfony\UX\Vue\VueBundle::class => ['all' => true],
-    Zenstruck\Foundry\ZenstruckFoundryBundle::class => ['dev' => true, 'test' => true],
+    Zenstruck\Foundry\ZenstruckFoundryBundle::class => ['all' => true],
     Symfony\UX\Native\UXNativeBundle::class => ['all' => true],
 ];
