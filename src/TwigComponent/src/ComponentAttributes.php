@@ -49,7 +49,7 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
             }
 
             if (null === $value) {
-                throw new RuntimeException('Attribute values cannot be null. If you want to remove an attribute, use the "remove()" method.');
+                throw new RuntimeException(\sprintf('Attribute "%s" value cannot be null. If you want to remove an attribute, use the "remove()" method.', $key));
             }
 
             if (false === $value) {
