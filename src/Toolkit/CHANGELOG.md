@@ -4,6 +4,9 @@
 
 - [Toolkit] Add `avatar` recipe
 - [Toolkit] Add `dropdown` recipe
+- [Shadcn] Add `form` recipe
+- [Shadcn] Add `sheet` recipe
+- [Shadcn] Add `drawer` recipe
 
 ## 3.0.0
 
@@ -13,9 +16,6 @@
 - [Shadcn] Add `collapsible` recipe
 - [Shadcn] Add `typography` recipe
 - [Shadcn] Add `toggle-group` recipe
-- [Shadcn] Add `form` recipe
-- [Shadcn] Add `sheet` recipe
-- [Shadcn] Add `drawer` recipe
 
 ## 2.35
 
