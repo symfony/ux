@@ -1,9 +1,19 @@
+{# @prop open boolean Whether the drawer is open on initial render. Defaults to `false` #}
 {# @block content A `Drawer:Trigger` and a `Drawer:Content` #}
-<details
+{%- props open = false -%}
+{%- set _drawer_open = open -%}
+<div
     class="{{ ('group/drawer ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
         'data-slot': 'drawer',
+        'data-controller': 'drawer',
+        'data-drawer-open-value': open ? 'true' : 'false',
+        'data-action': [
+            'click@window->drawer#handleOutsideClick',
+            'keydown.esc@window->drawer#handleEscape',
+        ]|join(' ')|html_attr_type('sst'),
+        'data-state': open ? 'open' : 'closed',
     }) }}
 >
     {%- block content %}{% endblock -%}
-</details>
+</div>

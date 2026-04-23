@@ -4,6 +4,7 @@
     "name": "Sheet",
     "description": "A panel that slides in from the edge of the screen to display supplementary content.",
     "copy-files": {
+        "assets/": "assets/",
         "templates/": "templates/"
     },
     "dependencies": {

@@ -19,6 +19,10 @@
     class="{{ style.apply({side: _sheet_side ?? 'right'}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
         'data-slot': 'sheet-content',
+        'data-sheet-target': 'content',
+        'aria-hidden': not _sheet_open ? 'true' : 'false',
+        'data-state': _sheet_open ? 'open' : 'closed',
+        ...(not _sheet_open ? {hidden: ''} : {}),
     }) }}
 >
     {%- block content %}{% endblock -%}

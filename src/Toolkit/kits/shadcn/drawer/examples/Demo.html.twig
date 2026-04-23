@@ -1,6 +1,6 @@
 <twig:Drawer>
-    <twig:Drawer:Trigger class="h-9 rounded-md border border-input bg-background px-4 shadow-xs hover:bg-accent">
-        Open drawer
+    <twig:Drawer:Trigger>
+        <twig:Button variant="outline" {{ ...drawer_trigger_attrs }}>Open drawer</twig:Button>
     </twig:Drawer:Trigger>
     <twig:Drawer:Content class="mx-auto max-w-sm">
         <twig:Drawer:Header>

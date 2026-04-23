@@ -1,6 +1,6 @@
 <twig:Sheet side="left">
-    <twig:Sheet:Trigger class="h-9 rounded-md border border-input bg-background px-4 shadow-xs hover:bg-accent">
-        Open left sheet
+    <twig:Sheet:Trigger>
+        <twig:Button variant="outline" {{ ...sheet_trigger_attrs }}>Open left sheet</twig:Button>
     </twig:Sheet:Trigger>
     <twig:Sheet:Content>
         <twig:Sheet:Header>

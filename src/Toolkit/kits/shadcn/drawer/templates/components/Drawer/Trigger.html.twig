@@ -1,9 +1,10 @@
-{# @block content The clickable trigger #}
-<summary
-    class="{{ ('list-none cursor-pointer outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 rounded-md inline-flex items-center justify-center ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.defaults({
-        'data-slot': 'drawer-trigger',
-    }) }}
->
-    {%- block content %}{% endblock -%}
-</summary>
+{# @block content The clickable trigger (e.g., a `Button`) that opens the drawer #}
+{%- set drawer_trigger_attrs = {
+    'data-slot': 'drawer-trigger',
+    'data-drawer-target': 'trigger',
+    'data-action': 'click->drawer#toggle'|html_attr_type('sst'),
+    'aria-haspopup': 'dialog',
+    'aria-expanded': _drawer_open ? 'true' : 'false',
+    'data-state': _drawer_open ? 'open' : 'closed',
+} -%}
+{%- block content %}{% endblock -%}

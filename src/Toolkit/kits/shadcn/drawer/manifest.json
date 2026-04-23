@@ -4,6 +4,7 @@
     "name": "Drawer",
     "description": "A bottom-anchored panel that reveals supplementary content on demand.",
     "copy-files": {
+        "assets/": "assets/",
         "templates/": "templates/"
     },
     "dependencies": {

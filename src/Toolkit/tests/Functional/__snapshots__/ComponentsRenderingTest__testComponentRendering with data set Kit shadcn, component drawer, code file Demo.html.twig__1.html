@@ -4,8 +4,8 @@
 - Code:
 ```twig
 <twig:Drawer>
-    <twig:Drawer:Trigger class="h-9 rounded-md border border-input bg-background px-4 shadow-xs hover:bg-accent">
-        Open drawer
+    <twig:Drawer:Trigger>
+        <twig:Button variant="outline" {{ ...drawer_trigger_attrs }}>Open drawer</twig:Button>
     </twig:Drawer:Trigger>
     <twig:Drawer:Content class="mx-auto max-w-sm">
         <twig:Drawer:Header>
@@ -30,8 +30,9 @@
 </twig:Drawer>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<details class="group/drawer" data-slot="drawer"><summary class="list-none cursor-pointer outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 inline-flex items-center justify-center h-9 rounded-md border border-input bg-background px-4 shadow-xs hover:bg-accent" data-slot="drawer-trigger">Open drawer
-    </summary>    <div role="dialog" aria-modal="true" class="fixed inset-x-0 bottom-0 z-50 mt-24 flex max-h-[80vh] flex-col rounded-t-[10px] border bg-background p-4 shadow-lg outline-none mx-auto max-w-sm" data-slot="drawer-content">
+<div class="group/drawer" data-slot="drawer" data-controller="drawer" data-drawer-open-value="false" data-action="click@window-&gt;drawer#handleOutsideClick keydown.esc@window-&gt;drawer#handleEscape" data-state="closed">
+<button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] [&amp;_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2" data-drawer-target="trigger" data-action="click-&gt;drawer#toggle" aria-haspopup="dialog" aria-expanded="false" data-state="closed">Open drawer</button>
+        <div role="dialog" aria-modal="true" class="fixed inset-x-0 bottom-0 z-50 mt-24 flex max-h-[80vh] flex-col rounded-t-[10px] border bg-background p-4 shadow-lg outline-none mx-auto max-w-sm" data-slot="drawer-content" data-drawer-target="content" aria-hidden="true" data-state="closed" hidden="">
     <div aria-hidden="true" class="mx-auto mb-4 h-1.5 w-12 rounded-full bg-muted"></div>
 <div class="grid gap-1.5 p-4 text-center sm:text-left" data-slot="drawer-header">
 <h2 class="text-lg font-semibold leading-none tracking-tight" data-slot="drawer-title">Move goal</h2>            <p class="text-sm text-muted-foreground" data-slot="drawer-description">Set your daily activity goal.</p>        </div>        <div class="p-4 pb-0">
@@ -47,4 +48,5 @@
         <div class="mt-auto flex flex-col gap-2 p-4" data-slot="drawer-footer">
 <button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] [&amp;_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none bg-primary text-primary-foreground [a]:hover:bg-primary/80 h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2">Submit</button>
             <button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border bg-clip-padding text-sm font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] [&amp;_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2">Cancel</button>
-        </div>    </div></details>
+        </div>    </div>
+</div>
