@@ -89,6 +89,48 @@ describe('LiveController Error Handling', () => {
         expect(test.element).toHaveTextContent('Original component text');
     });
 
+    it('closing the error modal twice does not throw', async () => {
+        const test = await createTest(
+            {},
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <button data-action="live#action" data-live-action-param="save">Save</button>
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall()
+            .serverWillReturnCustomResponse(500, '<html><body><h1>Boom</h1></body></html>')
+            .expectActionCalled('save');
+
+        getByText(test.element, 'Save').click();
+
+        await waitFor(() => expect(getErrorElement()).not.toBeNull());
+
+        const modal = getErrorElement() as HTMLElement;
+        modal.click();
+
+        // The close handler holds a reference to the modal, so a second close (a quick
+        // double-click, or Escape landing right after a click) runs on an element that is
+        // already detached. Browsers throw NoModificationAllowedError when `outerHTML` is
+        // assigned on a parent-less element; jsdom allows it, so assert on the assignment
+        // itself rather than on an exception that cannot happen here.
+        let outerHtmlAssigned = false;
+        Object.defineProperty(modal, 'outerHTML', {
+            configurable: true,
+            get: () => '',
+            set: () => {
+                outerHtmlAssigned = true;
+            },
+        });
+
+        modal.click();
+
+        expect(outerHtmlAssigned).toBe(false);
+
+        expect(getErrorElement()).toBeNull();
+    });
+
     it('triggers response:error hook', async () => {
         const test = await createTest(
             {},
