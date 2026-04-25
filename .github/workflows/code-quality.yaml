@@ -133,7 +133,7 @@ jobs:
             - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
             - run: npm i -g corepack && corepack enable
-            - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+            - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
               with:
                   node-version-file: '.nvmrc'
                   cache: 'pnpm'
@@ -150,7 +150,7 @@ jobs:
             - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
             - run: npm i -g corepack && corepack enable
-            - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+            - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
               with:
                   node-version-file: '.nvmrc'
                   cache: 'pnpm'
