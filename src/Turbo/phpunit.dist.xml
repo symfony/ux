@@ -15,9 +15,7 @@
         <env name="SHELL_VERBOSITY" value="-1"/>
         <env name="APP_ENV" value="test" force="true" />
         <env name="APP_DEBUG" value="true" force="true" />
-        <env name="KERNEL_CLASS" value="App\Kernel"/>
-        <server name="PANTHER_WEB_SERVER_DIR" value="./tests/app/public"/>
-        <server name="PANTHER_DEVTOOLS" value="0"/>
+        <env name="KERNEL_CLASS" value="Symfony\UX\Turbo\Tests\Kernel\FrameworkAppKernel"/>
     </php>
 
     <testsuites>

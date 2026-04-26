@@ -1,0 +1,15 @@
+{% extends 'example.html.twig' %}
+
+{% block example %}
+    <h2 class="h4 mb-1">
+        Artist {{ artist.name }}
+        <small class="text-muted">#{{ artist.id }}</small>
+    </h2>
+
+    <div class="card mt-3">
+        <div class="card-header">Songs</div>
+        <div class="card-body">
+            <div id="songs-list" {{ turbo_stream_listen('songs_by_artist_' ~ artist.id) }}></div>
+        </div>
+    </div>
+{% endblock %}

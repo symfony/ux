@@ -29,7 +29,16 @@ class ResolveExampleForUrlListener
             return;
         }
 
-        $example = $this->exampleRepository->findOneByRoute($event->getRequest()->attributes->get('_route'));
-        $event->getRequest()->attributes->set('_example', $example);
+        $request = $event->getRequest();
+        $example = null;
+
+        if ($request->attributes->has('example')) {
+            $example = $this->exampleRepository->findOneByName($request->attributes->get('example'));
+            $request->attributes->remove('example');
+        }
+        if (!$example) {
+            $example = $this->exampleRepository->findOneByRoute($request->attributes->get('_route'));
+        }
+        $request->attributes->set('_example', $example);
     }
 }

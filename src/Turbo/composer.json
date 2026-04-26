@@ -29,7 +29,6 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\": "tests/app/",
             "Symfony\\UX\\Turbo\\Tests\\": "tests/"
         }
     },
@@ -48,18 +47,14 @@
         "symfony/framework-bundle": "^7.4|^8.0",
         "symfony/mercure-bundle": "^0.3.7|^0.4.1",
         "symfony/messenger": "^7.4|^8.0",
-        "symfony/panther": "^2.2",
         "phpunit/phpunit": "^11.1|^12.0",
-        "symfony/process": "^7.4|^8.0",
         "symfony/property-access": "^7.4|^8.0",
         "symfony/security-core": "^7.4|^8.0",
         "symfony/stopwatch": "^7.4|^8.0",
         "symfony/ux-twig-component": "^2.21|^3.0",
         "symfony/twig-bundle": "^7.4|^8.0",
         "symfony/web-profiler-bundle": "^7.4|^8.0",
-        "symfony/expression-language": "^7.4|^8.0",
-        "dbrekelmans/bdi": "dev-main",
-        "php-webdriver/webdriver": "^1.15"
+        "symfony/expression-language": "^7.4|^8.0"
     },
     "conflict": {
         "symfony/flex": "<1.13"

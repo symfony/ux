@@ -75,12 +75,19 @@ jobs:
               run: php .github/build-packages.php
 
             - name: Start Docker containers
-              run: docker compose up -d --build
+              run: docker compose up -d --build --wait
+              working-directory: apps/e2e
+
+            - name: Show running Docker containers
+              run: |
+                  docker compose ps -a
+                  docker compose logs
               working-directory: apps/e2e
 
             - name: Configure E2E app
               run: |
                   echo 'APP_SECRET=df4c071596e64cc75a349456f2887ae2419ae650' >> .env.local
+                  echo 'APP_ENV=prod' >> .env.local
               working-directory: apps/e2e
 
             - name: Install E2E PHP dependencies
@@ -89,13 +96,10 @@ jobs:
                   working-directory: apps/e2e
                   dependency-versions: highest
                   custom-cache-suffix: symfony-${{ matrix.symfony }}
+                  composer-options: '--no-dev --optimize-autoloader --classmap-authoritative'
 
-            - name: Prepare E2E app
+            - name: Optimize E2E app
               run: |
-                  echo 'APP_ENV=prod' >> .env.local
-                  echo 'APP_DEBUG=0' >> .env.local
-                  symfony composer dump-autoload --classmap-authoritative --no-dev
-                  symfony composer dump-env
                   symfony console asset-map:compile
                   symfony console ux:icons:warm-cache
               working-directory: apps/e2e
@@ -111,7 +115,7 @@ jobs:
             - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
               if: ${{ always() && steps.browser-tests.conclusion == 'failure' }}
               with:
-                  name: Playwright report and output (${{ matrix.symfony }})
+                  name: Playwright report and output (${{ matrix.symfony }}, ${{ matrix.browser }})
                   path: |
                       src/**/assets/.playwright-report/
                       src/**/assets/.playwright-output/
@@ -121,6 +125,6 @@ jobs:
             - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
               if: ${{ always() && steps.browser-tests.conclusion == 'failure' }}
               with:
-                  name: Symfony logs (${{ matrix.symfony }})
+                  name: Symfony logs (${{ matrix.symfony }}, ${{ matrix.browser }})
                   path: apps/e2e/var/log/
                   retention-days: 7

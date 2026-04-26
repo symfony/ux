@@ -1,0 +1,41 @@
+{% extends 'example.html.twig' %}
+
+{% block example %}
+    <h2 class="h4 mb-3">Turbo Broadcast — Books (basic CRUD via Mercure)</h2>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Live list</div>
+                <div class="card-body">
+                    <div id="books-list" {{ turbo_stream_listen('App\\Entity\\Turbo\\Book') }}></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Create / update / remove</div>
+                <div class="card-body">
+                    <turbo-frame id="api">
+                        <form method="post" enctype="application/x-www-form-urlencoded">
+                            <div class="mb-3">
+                                <label for="book-id" class="form-label">ID</label>
+                                <input id="book-id" class="form-control" placeholder="ID" name="id">
+                            </div>
+                            <div class="mb-3">
+                                <label for="book-title" class="form-label">Title</label>
+                                <input id="book-title" class="form-control" placeholder="Title" name="title">
+                            </div>
+                            <div class="form-check mb-3">
+                                <input id="book-remove" class="form-check-input" type="checkbox" name="remove" value="remove">
+                                <label class="form-check-label" for="book-remove">Remove</label>
+                            </div>
+                            <button id="book-submit" type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </turbo-frame>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

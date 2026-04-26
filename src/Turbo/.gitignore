@@ -5,7 +5,3 @@
 /drivers/
 /phpunit.xml
 /.phpunit.cache
-/tests/app/assets/vendor/
-/tests/app/public/assets/
-/tests/app/public/build/
-/tests/app/var/

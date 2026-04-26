@@ -9,14 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Entity;
+namespace App\Entity\Turbo;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
-/**
- * @author Kévin Dunglas <kevin@dunglas.fr>
- */
 #[Broadcast]
 #[ORM\Entity]
 class Book

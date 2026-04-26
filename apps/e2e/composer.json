@@ -62,14 +62,14 @@
         "symfony/yaml": "7.4.*|8.0.*",
         "symfonycasts/dynamic-forms": "^0.2",
         "twig/extra-bundle": "^3.21",
-        "twig/twig": "^3.21.1"
+        "twig/twig": "^3.21.1",
+        "zenstruck/foundry": "^2.8"
     },
     "require-dev": {
         "symfony/debug-bundle": "7.4.*|8.0.*",
         "symfony/maker-bundle": "^1.64",
         "symfony/stopwatch": "7.4.*|8.0.*",
-        "symfony/web-profiler-bundle": "7.4.*|8.0.*",
-        "zenstruck/foundry": "^2.8"
+        "symfony/web-profiler-bundle": "7.4.*|8.0.*"
     },
     "config": {
         "allow-plugins": {

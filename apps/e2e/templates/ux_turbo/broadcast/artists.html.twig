@@ -1,0 +1,39 @@
+{% extends 'example.html.twig' %}
+
+{% block example %}
+    <h2 class="h4 mb-3">Turbo Broadcast — Artists (expression language topics)</h2>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Live list</div>
+                <div class="card-body">
+                    <div id="artists-list" {{ turbo_stream_listen('App\\Entity\\Turbo\\Artist') }}></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Create / update / remove</div>
+                <div class="card-body">
+                    <form method="post" enctype="application/x-www-form-urlencoded">
+                        <div class="mb-3">
+                            <label for="artist-id" class="form-label">ID</label>
+                            <input id="artist-id" class="form-control" placeholder="ID" name="id">
+                        </div>
+                        <div class="mb-3">
+                            <label for="artist-name" class="form-label">Name</label>
+                            <input id="artist-name" class="form-control" placeholder="Name" name="name">
+                        </div>
+                        <div class="form-check mb-3">
+                            <input id="artist-remove" class="form-check-input" type="checkbox" name="remove" value="remove">
+                            <label class="form-check-label" for="artist-remove">Remove</label>
+                        </div>
+                        <button id="artist-submit" type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
