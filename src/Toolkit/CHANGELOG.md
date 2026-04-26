@@ -2,8 +2,8 @@
 
 ## 3.1
 
-- [Toolkit] Add `avatar` recipe
-- [Toolkit] Add `dropdown` recipe
+- [Flowbite] Add `avatar` recipe
+- [Flowbite] Add `dropdown` recipe
 - [Shadcn] Add `resizable` recipe
 
 ## 3.0.0
