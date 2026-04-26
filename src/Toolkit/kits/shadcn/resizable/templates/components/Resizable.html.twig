@@ -1,0 +1,14 @@
+{# @prop orientation 'horizontal'|'vertical' Layout direction. Defaults to `horizontal` #}
+{# @block content One or more `Resizable:Panel` separated by `Resizable:Handle` #}
+{%- props orientation = 'horizontal' -%}
+<div
+    class="{{ ('group/resizable flex h-full w-full ' ~ (orientation == 'vertical' ? 'flex-col ' : '') ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-slot': 'resizable',
+        'data-controller': 'resizable',
+        'data-resizable-orientation-value': orientation,
+        'data-orientation': orientation,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

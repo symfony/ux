@@ -1,0 +1,38 @@
+<!--
+- Kit: Shadcn UI
+- Component: Resizable
+- Code:
+```twig
+<twig:Resizable orientation="horizontal" class="max-w-md rounded-lg border h-[200px]">
+    <twig:Resizable:Panel>
+        <div class="flex h-full items-center justify-center p-6">
+            <span class="font-semibold">Sidebar</span>
+        </div>
+    </twig:Resizable:Panel>
+    <twig:Resizable:Handle withHandle />
+    <twig:Resizable:Panel>
+        <div class="flex h-full items-center justify-center p-6">
+            <span class="font-semibold">Content</span>
+        </div>
+    </twig:Resizable:Panel>
+</twig:Resizable>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="group/resizable flex w-full max-w-md rounded-lg border h-[200px]" data-slot="resizable" data-controller="resizable" data-resizable-orientation-value="horizontal" data-orientation="horizontal">
+<div class="overflow-auto" style="flex: 1 1 0%;" data-slot="resizable-panel" data-resizable-target="panel">
+<div class="flex h-full items-center justify-center p-6">
+            <span class="font-semibold">Sidebar</span>
+        </div>
+    </div>
+    <div class="relative flex items-center justify-center bg-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring group-data-[orientation=horizontal]/resizable:w-px group-data-[orientation=horizontal]/resizable:h-full group-data-[orientation=horizontal]/resizable:cursor-col-resize group-data-[orientation=vertical]/resizable:h-px group-data-[orientation=vertical]/resizable:w-full group-data-[orientation=vertical]/resizable:cursor-row-resize" tabindex="0" role="separator" data-slot="resizable-handle" data-resizable-target="handle">
+            <div class="z-10 flex items-center justify-center rounded-sm border bg-border group-data-[orientation=horizontal]/resizable:h-4 group-data-[orientation=horizontal]/resizable:w-3 group-data-[orientation=vertical]/resizable:h-3 group-data-[orientation=vertical]/resizable:w-4">
+            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-2.5 group-data-[orientation=vertical]/resizable:rotate-90" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="9" cy="12" r="1"></circle><circle cx="9" cy="5" r="1"></circle><circle cx="9" cy="19" r="1"></circle><circle cx="15" cy="12" r="1"></circle><circle cx="15" cy="5" r="1"></circle><circle cx="15" cy="19" r="1"></circle></g></svg>
+        </div>
+    </div>
+
+    <div class="overflow-auto" style="flex: 1 1 0%;" data-slot="resizable-panel" data-resizable-target="panel">
+<div class="flex h-full items-center justify-center p-6">
+            <span class="font-semibold">Content</span>
+        </div>
+    </div>
+</div>
