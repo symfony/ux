@@ -313,6 +313,13 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         plugins.forEach((plugin) => {
             this.component.addPlugin(plugin);
         });
+
+        this.component.on('render:started', (html, backendResponse, controls) => {
+            this.dispatchEvent('render:started', { html, backendResponse, controls });
+        });
+        this.component.on('render:finished', () => {
+            this.dispatchEvent('render:finished');
+        });
     }
 
     private connectComponent() {
