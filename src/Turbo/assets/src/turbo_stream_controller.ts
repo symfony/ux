@@ -12,6 +12,7 @@ import { connectStreamSource, disconnectStreamSource } from '@hotwired/turbo';
 
 /**
  * @author Kévin Dunglas <kevin@dunglas.fr>
+ * @deprecated Use turbo_stream_from() or the <twig:Turbo:Stream:From> Twig component instead.
  */
 export default class extends Controller {
     static values = {
@@ -32,6 +33,9 @@ export default class extends Controller {
     declare readonly hasTopicsValue: boolean;
 
     initialize() {
+        console.warn(
+            '[Symfony UX] The "mercure-turbo-stream" Stimulus controller is deprecated since Symfony UX 3.1 and will be removed in 4.0. Use turbo_stream_from() or the <twig:Turbo:Stream:From> Twig component instead.'
+        );
         const errorMessages: string[] = [];
         if (!this.hasHubValue) errorMessages.push('A "hub" value pointing to the Mercure hub must be provided.');
         if (!this.hasTopicValue && !this.hasTopicsValue)

@@ -63,6 +63,7 @@ return static function (ContainerConfigurator $container): void {
                 tagged_locator('turbo.renderer.stream_listen', 'transport'),
                 abstract_arg('default_transport'),
                 service('turbo.frame'),
+                tagged_locator('turbo.stream_source_renderer', 'transport'),
             ])
             ->tag('twig.runtime')
 

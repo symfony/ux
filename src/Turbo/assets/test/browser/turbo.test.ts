@@ -90,6 +90,17 @@ test('Can update page content with Turbo Streams after form submission', async (
     await expectNoFullPageReload(page);
 });
 
+test('turbo-mercure-stream-source connects to Mercure and receives a "connected" attribute', async ({ page }) => {
+    await page.goto('/ux-turbo/broadcast/books');
+
+    const streamSource = page.locator('turbo-mercure-stream-source');
+    await expect(streamSource).toBeAttached();
+    await expect(streamSource).toHaveAttribute('src', /\.well-known\/mercure/);
+
+    // Once the EventSource opens, the element sets the "connected" attribute
+    await expect(streamSource).toHaveAttribute('connected', '', { timeout: MERCURE_TIMEOUT });
+});
+
 test('Turbo Broadcast — create, update and remove an entity via Mercure', async ({ page }) => {
     const bookTitle = `The Ecology of Freedom ${Date.now()}`;
 

@@ -1,6 +1,8 @@
 {% extends 'example.html.twig' %}
 
 {% block example %}
+    <twig:Turbo:Stream:From topics="App\\Entity\\Turbo\\Artist" />
+
     <h2 class="h4 mb-3">Turbo Broadcast — Artists (expression language topics)</h2>
 
     <div class="row g-4">
@@ -8,7 +10,7 @@
             <div class="card">
                 <div class="card-header">Live list</div>
                 <div class="card-body">
-                    <div id="artists-list" {{ turbo_stream_listen('App\\Entity\\Turbo\\Artist') }}></div>
+                    <div id="artists-list"></div>
                 </div>
             </div>
         </div>
