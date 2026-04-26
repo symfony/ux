@@ -29,6 +29,8 @@ final class TwigExtension extends AbstractExtension
     {
         return [
             new TwigFunction('turbo_stream_listen', [TurboRuntime::class, 'renderTurboStreamListen'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('turbo_is_frame_request', [TurboRuntime::class, 'isTurboFrameRequest']),
+            new TwigFunction('turbo_frame_request_id', [TurboRuntime::class, 'getTurboFrameRequestId']),
             new TwigFunction('turbo_exempts_page_from_cache', $this->turboExemptsPageFromCache(...), ['is_safe' => ['html']]),
             new TwigFunction('turbo_exempts_page_from_preview', $this->turboExemptsPageFromPreview(...), ['is_safe' => ['html']]),
             new TwigFunction('turbo_page_requires_reload', $this->turboPageRequiresReload(...), ['is_safe' => ['html']]),

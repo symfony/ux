@@ -3,6 +3,7 @@
 ## 3.1.0
 
 - Add a minimal layout for Turbo Frame responses, allowing `head` content like meta tags to work properly
+- Add `TurboFrame` service methods and Twig functions `turbo_is_frame_request()`/`turbo_frame_request_id()` to detect Turbo Frame requests
 
 ## 3.0.0
 

@@ -12,8 +12,10 @@
 namespace Symfony\UX\Turbo\Tests\Twig;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ServiceLocatorTrait;
 use Symfony\Contracts\Service\ServiceProviderInterface;
+use Symfony\UX\Turbo\TurboFrame;
 use Symfony\UX\Turbo\Twig\TurboRuntime;
 use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
 use Twig\Environment;
@@ -32,7 +34,7 @@ final class TurboRuntimeTest extends TestCase
             use ServiceLocatorTrait;
         };
 
-        $runtime = new TurboRuntime($container, 'default');
+        $runtime = new TurboRuntime($container, 'default', new TurboFrame(new RequestStack()));
         $runtime->renderTurboStreamListen($twig, 'a_topic');
     }
 
@@ -50,7 +52,7 @@ final class TurboRuntimeTest extends TestCase
             use ServiceLocatorTrait;
         };
 
-        $runtime = new TurboRuntime($container, 'hub1');
+        $runtime = new TurboRuntime($container, 'hub1', new TurboFrame(new RequestStack()));
         $runtime->renderTurboStreamListen($twig, 'a_topic', 'hub2');
     }
 
@@ -64,7 +66,7 @@ final class TurboRuntimeTest extends TestCase
             use ServiceLocatorTrait;
         };
 
-        $runtime = new TurboRuntime($container, 'default');
+        $runtime = new TurboRuntime($container, 'default', new TurboFrame(new RequestStack()));
         $runtime->renderTurboStreamListen($twig, 'a_topic', 'default', ['hub' => 'hub3']);
     }
 }

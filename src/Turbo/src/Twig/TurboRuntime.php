@@ -13,6 +13,7 @@ namespace Symfony\UX\Turbo\Twig;
 
 use Psr\Container\ContainerInterface;
 use Symfony\UX\Turbo\Bridge\Mercure\TopicSet;
+use Symfony\UX\Turbo\TurboFrame;
 use Twig\Environment;
 use Twig\Extension\RuntimeExtensionInterface;
 
@@ -27,6 +28,7 @@ final class TurboRuntime implements RuntimeExtensionInterface
     public function __construct(
         private ContainerInterface $turboStreamListenRenderers,
         private readonly string $defaultTransport,
+        private readonly TurboFrame $turboFrame,
     ) {
     }
 
@@ -53,5 +55,15 @@ final class TurboRuntime implements RuntimeExtensionInterface
         $renderer = $this->turboStreamListenRenderers->get($transport);
 
         return $renderer->renderTurboStreamListen($env, $topic, $options);
+    }
+
+    public function isTurboFrameRequest(): bool
+    {
+        return $this->turboFrame->isFrameRequest();
+    }
+
+    public function getTurboFrameRequestId(): ?string
+    {
+        return $this->turboFrame->getRequestId();
     }
 }
