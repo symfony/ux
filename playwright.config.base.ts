@@ -20,10 +20,10 @@ export default defineConfig({
 
     reporter: [
         ['list'],
-        ['html', { open: process.env.CI ? 'never' : 'on-failure', outputFolder: '.playwright-report' }],
+        ['html', { open: process.env.CI ? 'never' : 'on-failure', outputFolder: 'playwright-report' }],
     ],
 
-    outputDir: '.playwright-output',
+    outputDir: 'playwright-output',
 
     use: {
         // Base URL to use in actions like `await page.goto('/')`.
