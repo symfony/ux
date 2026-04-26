@@ -9,5 +9,5 @@ node_modules
 /vendor
 
 /browsers
-.playwright-report/
-.playwright-output/
+playwright-report/
+playwright-output/

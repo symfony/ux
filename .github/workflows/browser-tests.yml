@@ -117,8 +117,8 @@ jobs:
               with:
                   name: Playwright report and output (${{ matrix.symfony }}, ${{ matrix.browser }})
                   path: |
-                      src/**/assets/.playwright-report/
-                      src/**/assets/.playwright-output/
+                      src/**/assets/playwright-report/
+                      src/**/assets/playwright-output/
                   retention-days: 7
                   include-hidden-files: true
 
