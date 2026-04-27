@@ -1,0 +1,65 @@
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T08:19:24Z
+
+Main exemple
+
+https://github.com/user-attachments/assets/680de98c-44fb-4012-9f5a-83f4ebbd474e
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T08:20:26Z
+
+Slides example
+
+https://github.com/user-attachments/assets/733203e2-969b-498c-b54f-a7cb5e9e814c
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T08:35:14Z
+
+RTL example
+
+https://github.com/user-attachments/assets/a60ddf4c-e1a5-4367-bae2-a9ce34ca7ea6
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-26T07:57:04Z
+
+Hi @Kocal! Applied your suggestion in b4851401 (with the duplicated classes deduped, that was just a copy-paste artefact in the snippet — no worries 🙂).
+
+Quick disclaimer though: thinking about it after the fact, I'm wondering if a slightly different fix would have been better. The reason `group-focus-within` was there in the first place is keyboard accessibility — combined with the `tabindex="0"` on the Trigger, it lets keyboard-only users tab onto the trigger and reveal the content. Removing it (without also removing the `tabindex`) means:
+
+- ✅ click + mouse-away no longer leaves the card stuck open (your bug, fixed)
+- ❌ keyboard users tabbing onto the trigger no longer see the content at all
+
+If you'd rather, I can switch to one of:
+- drop the `tabindex="0"` from the Trigger too, making this a hover/touch-only component (consistent, no half-broken a11y)
+- or keep things as they are now and address keyboard support in a follow-up with a small Stimulus controller (the same pattern used by the other Shadcn toggle components)
+
+Happy to do whichever you prefer! 🙏
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-04-26T11:17:10Z
+
+Ah you're right, I forgot about a11y when focusing the trigger with tab key.
+Indeed, I also think having a small Stimulus controller for showing the content at hovering/focusing the trigger is required
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-26T16:16:09Z
+
+Hi @Kocal! Done in 1c48c8ab. The new `hover_card_controller.js` toggles `data-state` on the root on `mouseenter`/`mouseleave` and the trigger wires `focus`/`blur` in addition. Both keyboard accessibility and the original click-then-leave bug are now handled. I also dropped the `group-hover/hover-card` CSS hack in favor of `in-data-[state=open]` selectors so the JS is the single source of truth.
+
+Bonus: I added optional `openDelay` / `closeDelay` props on `<twig:HoverCard>` so consumers can tune the show/hide timing if they want — defaults to `0` for no behavior change.
+
+Let me know what you think! 🙏
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-04-27T05:42:29Z
+
+That's a lot better, thank you!
+
+Merging when it's green
