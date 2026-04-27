@@ -1289,8 +1289,8 @@ words, you benefit from CSRF protection effortlessly, thanks to the
 
 .. warning::
 
-	To ensure this built-in CSRF protection remains effective, pay attention
-	to your CORS headers (e.g. *DO NOT* use ``Access-Control-Allow-Origin: *``).
+    To ensure this built-in CSRF protection remains effective, pay attention
+    to your CORS headers (e.g. *DO NOT* use ``Access-Control-Allow-Origin: *``).
 
 In test-mode, the CSRF protection is disabled to make testing easier.
 
@@ -4044,3 +4044,4 @@ promise. However, any internal implementation in the JavaScript files
 .. _`@symfony/ux-live-component npm package`: https://www.npmjs.com/package/@symfony/ux-live-component
 .. _`Symfony PropertyInfo`: https://symfony.com/doc/current/components/property_info.html
 .. _`credentials option of the fetch() API`: https://developer.mozilla.org/en-US/docs/Web/API/fetch#credentials
+.. _`Symfony MakerBundle`: https://github.com/symfony/maker-bundle

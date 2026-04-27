@@ -434,7 +434,7 @@ Managing plugins
 
 .. note::
 
-    Some configuration could not be supported through the `tom_select_options.plugins` option,
+    Some configuration could not be supported through the ``tom_select_options.plugins`` option,
     for example when a plugin requires a JavaScript function as configuration value.
     In that case, you must use the `Extending Tom Select`_ approach to configure plugins.
 
