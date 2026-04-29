@@ -22,18 +22,18 @@ cd src/Autocomplete && composer install
 
 ## Test Commands
 
-### PHP (PHPUnit via Symfony PHPUnit Bridge)
+### PHP (PHPUnit)
 
 ```bash
 # All tests for a package
 cd src/Autocomplete
-php vendor/bin/simple-phpunit
+php vendor/bin/phpunit
 
 # Single test file
-php vendor/bin/simple-phpunit tests/Unit/SomeTest.php
+php vendor/bin/phpunit tests/Unit/SomeTest.php
 
 # Single test method
-php vendor/bin/simple-phpunit --filter testMethodName
+php vendor/bin/phpunit --filter testMethodName
 ```
 
 ### JS Unit Tests (Vitest)
