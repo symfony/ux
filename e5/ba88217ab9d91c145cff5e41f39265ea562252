@@ -1,0 +1,144 @@
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-04-27T09:07:04Z
+
+I'll take a look at it in the next few days.
+
+---------------------------------------------------------------------------
+
+by DcgRG at 2026-04-27T11:45:05Z
+
+@Kocal Same, i'll check ! :)
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-04-28T15:10:07Z
+
+Regarding the example files, I saw that you suggested using the Shadcn/Flowbite examples and specifying a path, so that's good.
+
+However, I don't see where you indicate using the component/subcomponent files. For Shadcn, it would be in `https://github.com/shadcn-ui/ui/blob/main/apps/v4/styles/radix-nova/ui/<recipe>.tsx`
+
+Shouldn't Flowbite and Shadcn be distinguished? And therefore, separate files created?
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-29T09:25:53Z
+
+Thanks @Kocal for kicking this off — really nice base, especially the anti-patterns table and the `<recipe>_<role>_attrs` formalization 🙌
+
+I've been maintaining a similar skill on my side (FR, Shadcn-focused), built up incrementally from the review feedback I got across recent recipe PRs. A lot overlaps, but there are a few areas where mine goes deeper because they bit me in real PRs — sharing in case it's useful to fold in:
+
+### 1. Upstream sourcing — pick up @seb-jean's point
+
+Neither of our skills points to the **component source** (`apps/v4/styles/radix-nova/ui/<recipe>.tsx`), only to the examples. The component file is what carries the canonical classes / structure / `data-*` surface — without it, you only see how examples *use* the component, not the component itself. I'd add it as the first source to read.
+
+Also, listing examples is non-trivial — I have a concrete recipe for it:
+
+```bash
+# Find the MDX page that lists every example slug
+gh api repos/shadcn-ui/ui/git/trees/main?recursive=1 --jq '.tree[].path' | grep '<recipe>'
+# Then grab each .tsx referenced in the MDX:
+# https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/examples/radix/<example>.tsx
+```
+
+### 2. Local visual testing — the dual-repo gotcha
+
+The biggest pain when validating a recipe locally is that **`ux` and `ux.symfony.com` must be on matching branches**, otherwise the assetmap explodes:
+
+> The asset "./vendor/symfony/ux-toolkit/kits/shadcn/<other>/assets/controllers/<other>_controller.js" cannot be found in any asset map paths.
+
+Worth a section like:
+
+```bash
+cd ux             && git checkout feat/toolkit-shadcn-<recipe>
+cd ux.symfony.com && git checkout docs/shadcn-<recipe>
+symfony php bin/console tailwind:build
+```
+
+### 3. ux.symfony.com companion PR — what actually goes in it
+
+The skill says "open a companion PR" but doesn't spell out what it contains. From experience:
+
+- `templates/toolkit/docs/shadcn/<recipe>.md.twig` extending `_base_component.md.twig`
+- One `{{ toolkit_code_example(...) }}` per example file shipped (otherwise they don't render — silent failure)
+- If JS: register the Stimulus controller in `assets/toolkit-shadcn.js` + `importmap.php`
+- Rebuild Tailwind: `symfony php bin/console tailwind:build`
+
+### 4. Hover/focus components — don't go pure CSS
+
+Worth flagging explicitly: for `hover-card`, `tooltip`, `dropdown-menu`, `menubar`, **don't try `group-hover` + `group-focus-within` + `tabindex=0`**. It looks elegant but breaks: clicking the trigger leaves the content open after mouseleave, and removing `group-focus-within` kills keyboard a11y. Always go straight to a Stimulus controller with `openDelay`/`closeDelay` values.
+
+Minimal pattern:
+
+```js
+static values = {
+    openDelay: { type: Number, default: 0 },
+    closeDelay: { type: Number, default: 0 },
+};
+show() { /* clear timeouts, set data-state=open after openDelay */ }
+hide() { /* clear timeouts, set data-state=closed after closeDelay */ }
+```
+
+### 5. Named groups for nested open-state
+
+For components with a nested structure (`menubar` has Menu+Sub, `dropdown-menu` has Root+Sub), **`in-data-[state=open]:visible` matches any ancestor**, so opening the parent also opens every child at once. Use named groups instead:
+
+```
+.group/<recipe>-menu          (parent with data-controller)
+.group-data-[state=open]/<recipe>-menu:visible  (parent's content)
+.group/<recipe>-sub           (sub with its own data-controller)
+.group-data-[state=open]/<recipe>-sub:visible   (sub's content)
+```
+
+### 6. Animation: grid-template-rows, never `hidden`
+
+For expand/collapse (accordion, collapsible, content panels):
+
+```twig
+<div class="grid overflow-hidden transition-[grid-template-rows] duration-300 ease-out"
+     style="grid-template-rows: {{ open ? '1fr' : '0fr' }};">
+    <div class="min-h-0 min-w-0 overflow-hidden">{%- block content %}{% endblock -%}</div>
+</div>
+```
+
+`hidden` (display:none) causes layout jumps — only `grid-template-rows: 0fr` + `overflow:hidden` gives a clean transition.
+
+### 7. Snapshot gotchas
+
+Two things reviewers consistently flag and that the skill doesn't cover:
+
+- **Orphan snapshots after a rework.** When you rename or convert `<details>` to a Stimulus version, you often end up with stale `Demo.html__1.html` (no `.twig` suffix) sitting next to the new `Demo.html.twig__1.html`. They are never regenerated — `git rm` them.
+- **Re-regenerate after rebase on `3.x`.** The snapshot formatter evolves upstream; running `UPDATE_SNAPSHOTS=true vendor/bin/phpunit --filter "<recipe>"` once more after the final rebase is what avoids "diff in snapshots" CI failures.
+
+### 8. Trailing newlines on every shipped file
+
+The skill mentions snapshots/lint but not this: **every shipped file must end with a newline** — `.html.twig`, `.json`, `.js`, `.css`, `.md`. Maintainers add them by hand at merge if missing, so worth doing it upfront. One-liner:
+
+```bash
+for f in <files>; do tail -c1 "$f" | od -c | grep -q '\\n' || printf '\n' >> "$f"; done
+```
+
+---
+
+Happy to open a follow-up PR pulling these into your skill if you're open to it — or if you'd rather keep the skill lean for now, totally fair, just leaving them here for visibility 😊
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-29T09:28:07Z
+
+@seb-jean +1, fully agree on both points 👍
+
+For **(1) component source files**: the examples (`apps/v4/examples/radix/<recipe>-*.tsx`) only show how a consumer *uses* the component — they don't carry the canonical class names, `data-*` surface, or sub-component structure. Those live in `apps/v4/styles/radix-nova/ui/<recipe>.tsx`, and that's what you actually need to mirror for visual + behavioral parity. Both files should be listed as inputs.
+
+For **(2) Flowbite vs Shadcn**: I think the *conventions* (manifest, `html_cva`, `tailwind_merge`, `data-slot`, asChild `<recipe>_<role>_attrs`, Stimulus patterns…) are kit-agnostic and worth keeping in one skill. But the *upstream sources* are kit-specific:
+
+- **Shadcn** → `apps/v4/styles/radix-nova/ui/<recipe>.tsx` (component) + `apps/v4/examples/radix/<recipe>-*.tsx` (examples)
+- **Flowbite** → component & examples live in `flowbite-react/packages/ui/src/components/<Component>/` and on the docs site
+
+So rather than splitting the skill, maybe a small per-kit "Upstream sources" section (a table or a switch on the kit name) does the job? Curious what @Kocal thinks.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-04-29T21:25:23Z
+
+I just applied your comments and compressed the SKILL with caveman, thanks everyone!
