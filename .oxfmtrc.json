@@ -6,6 +6,7 @@
         "**/package.json",
         "**/node_modules",
         "**/browsers",
+        ".agents/skills",
         ".github/PULL_REQUEST_TEMPLATE.md",
         "apps/**/config/**/*.yaml",
         "apps/**/assets/**/build",
