@@ -19,6 +19,11 @@ namespace Symfony\UX\TwigComponent;
 final class MountedComponent
 {
     /**
+     * @var array<string, mixed>
+     */
+    private array $providedContext = [];
+
+    /**
      * @param array|null $inputProps if the component was just originally created,
      *                               (not hydrated from a request), this is the
      *                               array of initial props used to create the component
@@ -73,5 +78,24 @@ final class MountedComponent
         }
 
         return $this->extraMetadata[$key];
+    }
+
+    public function provide(string $key, mixed $value): void
+    {
+        $this->providedContext[$key] = $value;
+    }
+
+    public function hasProvided(string $key): bool
+    {
+        return \array_key_exists($key, $this->providedContext);
+    }
+
+    public function getProvided(string $key): mixed
+    {
+        if (!$this->hasProvided($key)) {
+            throw new \InvalidArgumentException(\sprintf('No provided context found for key "%s" in component "%s".', $key, $this->name));
+        }
+
+        return $this->providedContext[$key];
     }
 }

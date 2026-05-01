@@ -1327,6 +1327,76 @@ to resolve conflicts:
         {% block content %}{% endblock %}
     </div>
 
+Sharing State With ``provide`` / ``inject``
+-------------------------------------------
+
+When a component is made of several pieces, descendants often need values
+declared on the root. Forwarding those values through every level as props
+gets tedious fast. Use ``provide()`` in the parent to publish a value, and
+``inject()`` in any descendant to read it.
+
+In the parent, publish values with ``provide()``:
+
+.. code-block:: html+twig
+
+    {# templates/components/InputOtp.html.twig #}
+    {% props maxLength = 6 %}
+
+    {% do provide('inputOtp.maxLength', maxLength) %}
+
+    <div class="input-otp">
+        {% block content %}{% endblock %}
+    </div>
+
+In any descendant (at any depth), read them with ``inject()```:
+
+.. code-block:: html+twig
+
+    {# templates/components/InputOtp/Slot.html.twig #}
+    {% props input %}
+
+    {# Fallback to 4 if the parent doesn't provide a value for some reason #}
+    {% set maxLength = inject('inputOtp.maxLength', 4) %}
+
+    <input type="text" maxlength="1" data-index="{{ input }}" data-max-length="{{ maxLength }}" />
+
+Here, ``Slot`` reads ``maxLength`` from ``InputOtp`` even though ``Group``
+sits in between and does not forward anything:
+
+.. code-block:: html+twig
+
+    <twig:InputOtp maxLength="6">
+        <twig:InputOtp:Group>
+            {% for i in 0..5 %}
+                <twig:InputOtp:Slot input="{{ i + 1 }}" />
+            {% endfor %}
+        </twig:InputOtp:Group>
+    </twig:InputOtp>
+
+Keys are arbitrary strings; values can be any type, including ``null``.
+Prefix keys with the component name (``'inputOtp.maxLength'``,
+``'tabs.active'``) to avoid collisions across unrelated components.
+
+Rules:
+
+- Values flow top-down only. A child cannot push values back up.
+- ``inject()`` walks ancestors nearest-first, and skips the current
+  component. Read your own state through local variables.
+- Once a parent finishes rendering, its provides are dropped. Sibling
+  components never share state.
+- Calling ``provide()`` outside a component template throws.
+
+.. warning::
+
+    ``provide()`` runs at render time. A descendant only sees a value if
+    the corresponding ``provide()`` call executed first. Place
+    ``provide()`` at the top of the parent template, before
+    ``{% block content %}``. If the same key is provided twice, the last
+    call wins.
+
+This complements :ref:`outerScope <embedded-components-outerScope>`, which
+only exposes the immediate parent's local context.
+
 Higher-Order Components (Component Wrappers)
 --------------------------------------------
 
