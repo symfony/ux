@@ -1,0 +1,45 @@
+{# @prop placeholder string Placeholder text shown when no options are selected. Defaults to `'Select options...'` #}
+{# @prop name string The name attribute for form submission #}
+{# @prop disabled boolean Whether the component is disabled. Defaults to `false` #}
+{# @block content The selectable options, typically multiple `MultiSelect:Option` components #}
+{%- props placeholder = 'Select options...', name = '', disabled = false -%}
+<div
+    class="{{ ('relative w-full ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-controller': 'multi-select',
+        'data-action': 'click@window->multi-select#closeOnOutside',
+    }).without('class') }}
+>
+    <button
+        type="button"
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        {% if disabled %}disabled{% endif %}
+        data-multi-select-target="trigger"
+        data-action="click->multi-select#toggle"
+        class="flex min-h-10 w-full items-center gap-1 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    >
+        <span class="flex flex-1 flex-wrap gap-1 items-center" data-multi-select-target="badgeContainer">
+            <span class="text-muted-foreground" data-multi-select-target="placeholder">{{ placeholder }}</span>
+        </span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 shrink-0 opacity-50" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+
+    <div
+        role="listbox"
+        aria-multiselectable="true"
+        data-multi-select-target="dropdown"
+        class="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md hidden"
+    >
+        {%- block content %}{% endblock -%}
+    </div>
+
+    <select
+        multiple
+        name="{{ name }}"
+        tabindex="-1"
+        aria-hidden="true"
+        data-multi-select-target="input"
+        class="sr-only"
+    ></select>
+</div>
