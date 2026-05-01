@@ -2,6 +2,7 @@
 
 ## 3.1
 
+- [Shadcn] Add `multi-select` recipe
 - [Flowbite] Add `avatar` recipe
 - [Flowbite] Add `dropdown` recipe
 - [Shadcn] Add `hover-card` recipe
