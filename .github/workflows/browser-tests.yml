@@ -61,7 +61,7 @@ jobs:
             - name: Install browsers with Playwright
               run: pnpm exec playwright install firefox ffmpeg
 
-            - uses: shivammathur/setup-php@690cb7c9d81dbfe51eba732cfca0a00ca42db777
+            - uses: shivammathur/setup-php@45e37a5311835edf589763a5cde3a7a7ef2ebbac
               with:
                   php-version: ${{ matrix.symfony >= '8.0' && '8.5' || '8.4' }}
                   tools: symfony-cli, flex

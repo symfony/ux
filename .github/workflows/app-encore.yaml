@@ -36,7 +36,7 @@ jobs:
               with:
                   node-version-file: '.nvmrc'
 
-            - uses: shivammathur/setup-php@690cb7c9d81dbfe51eba732cfca0a00ca42db777
+            - uses: shivammathur/setup-php@45e37a5311835edf589763a5cde3a7a7ef2ebbac
 
             - name: Install root PHP dependencies
               uses: ramsey/composer-install@5c2bcf28d7b060ef3c601d7b476d5430a7b46c27
