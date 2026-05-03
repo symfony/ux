@@ -30,7 +30,7 @@ jobs:
         steps:
             - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
-            - uses: shivammathur/setup-php@690cb7c9d81dbfe51eba732cfca0a00ca42db777
+            - uses: shivammathur/setup-php@45e37a5311835edf589763a5cde3a7a7ef2ebbac
               with:
                   php-version: '8.4'
                   tools: symfony-cli, flex
