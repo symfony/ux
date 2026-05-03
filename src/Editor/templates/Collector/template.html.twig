@@ -1,0 +1,36 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block page_title 'UX Editor' %}
+
+{% block toolbar %}
+    {% set icon %}<span class="sf-toolbar-value">{{ collector.bridgeUseCount }}</span>{% endset %}
+    {% set text %}
+        <div class="sf-toolbar-info-piece"><b>UX Editor</b><span>{{ collector.bridgeUseCount }} forms</span></div>
+    {% endset %}
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { 'link': false }) }}
+{% endblock %}
+
+{% block menu %}
+    <span class="label">
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></span>
+        <strong>UX Editor</strong>
+        <span class="count"><span>{{ collector.bridgeUseCount }}</span></span>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>UX Editor</h2>
+
+    <h2>Bridges in use</h2>
+    <table>
+        {% for bridge, formats in collector.bridges %}
+            {% for fmt, count in formats %}
+                <tr><td>{{ bridge }}</td><td>{{ fmt }}</td><td>{{ count }}</td></tr>
+            {% endfor %}
+        {% else %}
+            <tr><td colspan="3">(none)</td></tr>
+        {% endfor %}
+    </table>
+    <h2>Capability warnings</h2>
+    <ul>{% for w in collector.warnings %}<li>{{ w }}</li>{% else %}<li>(none)</li>{% endfor %}</ul>
+{% endblock %}
