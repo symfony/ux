@@ -581,12 +581,6 @@ abstraction limiting and need to configure low-level options directly.
 Fortunately, you can customize these low-level options through the UX Map
 events ``ux:map:*:before-create`` using the special ``bridgeOptions`` property:
 
-.. deprecated:: 2.27
-
-    The ``rawOptions`` property was deprecated in UX Map 2.27, and will be removed in 3.0.
-    Use ``bridgeOptions`` instead, which better reflect the purpose of these options (options that are
-    specific to the renderer bridge).
-
 .. code-block:: javascript
 
     // assets/controllers/mymap_controller.js
