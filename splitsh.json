@@ -25,5 +25,8 @@
         "ux-twig-component": "src/TwigComponent",
         "ux-typed": "src/Typed",
         "ux-vue": "src/Vue"
+    },
+    "defaults": {
+        "tag_skip": "minor"
     }
 }
