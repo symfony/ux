@@ -1,17 +1,22 @@
 {# @block content The clickable trigger label that toggles the accordion item #}
-<h3 class="flex" data-orientation="{{ _accordion_orientationn }}">
+{%- set _accordionItem_triggerId = inject('accordionItem.triggerId') -%}
+{%- set _accordionItem_contentId = inject('accordionItem.contentId') -%}
+{%- set _accordionItem_disabled = inject('accordionItem.disabled', false) -%}
+{%- set _accordionItem_isOpen = inject('accordionItem.isOpen', false) -%}
+{%- set _accordionItem_orientation = inject('accordionItem.orientation', 'vertical') -%}
+<h3 class="flex" data-orientation="{{ _accordionItem_orientation }}">
     <button
         class="{{ ('focus-visible:ring-ring/50 focus-visible:border-ring focus-visible:after:border-ring **:data-[slot=accordion-trigger-icon]:text-muted-foreground group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4 ' ~ attributes.render('class'))|tailwind_merge }}"
         {{ attributes.defaults({
             type: 'button',
-            id: _accordion_item_trigger_id,
+            id: _accordionItem_triggerId,
             'data-slot': 'accordion-trigger',
             'data-accordion-target': 'trigger',
             'data-action': 'click->accordion#toggle keydown->accordion#handleKeydown',
-            disabled: _accordion_item_disabled,
-            'data-orientation': _accordion_orientationn,
-            'aria-expanded': _accordion_item_is_open ? 'true' : 'false',
-            'aria-controls': _accordion_item_content_id,
+            disabled: _accordionItem_disabled,
+            'data-orientation': _accordionItem_orientation,
+            'aria-expanded': _accordionItem_isOpen ? 'true' : 'false',
+            'aria-controls': _accordionItem_contentId,
         }) }}
     >
         {%- block content %}{% endblock -%}
