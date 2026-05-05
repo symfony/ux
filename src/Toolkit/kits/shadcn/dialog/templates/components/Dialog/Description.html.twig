@@ -1,6 +1,7 @@
 {# @block content The descriptive text explaining the dialog purpose #}
+{%- set _dialog_descriptionId = inject('dialog.descriptionId') -%}
 <p
-    id="{{ _dialog_description_id }}"
+    id="{{ _dialog_descriptionId }}"
     class="{{ ('text-muted-foreground text-sm ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.without('id') }}
 >

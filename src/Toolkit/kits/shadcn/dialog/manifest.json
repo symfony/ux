@@ -13,7 +13,7 @@
             "twig/extra-bundle",
             "twig/html-extra:^3.24.0",
             "tales-from-a-dev/twig-tailwind-extra:^1.0.0",
-            "symfony/ux-twig-component:^2.35"
+            "symfony/ux-twig-component:^3.1"
         ]
     }
 }
