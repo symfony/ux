@@ -6,6 +6,7 @@
 - [Flowbite] Add `dropdown` recipe
 - [Shadcn] Add `hover-card` recipe
 - [Shadcn] Add `resizable` recipe
+- [Shadcn] Rework `tabs` recipe to use `provide()`/`inject()` from UX TwigComponent ^3.1
 
 ## 3.0.0
 

@@ -235,12 +235,13 @@ Every component starts with one `{# @prop ... #}` per declared prop + one `{# @b
 
 ```twig
 {# descendant — InputOtp/Slot.html.twig (works even self-closing) #}
-{%- set maxLength = inject('inputOtp.maxLength', 6) -%}
-{%- set _id = inject('inputOtp.id') -%}
+{%- set _inputOtp_maxLength = inject('inputOtp.maxLength', 6) -%}
+{%- set _inputOtp_id = inject('inputOtp.id') -%}
 ```
 
 Conventions:
 - Key format: `'<camelCaseRecipe>.<key>'` (e.g. `'inputOtp.maxLength'`, `'tabs.active'`, `'toggleGroup.variant'`). Prefix avoids collisions across recipes.
+- **Local variable name for injected values: `_<camelCaseRecipe>_<key>`** (e.g. `_tabs_defaultValue`, `_toggleGroup_variant`). The `_` prefix + recipe name prevents collision with the child's own props or Twig globals.
 - Always pass fallback to `inject()` when child can render standalone.
 - Place `provide()` at top of parent template, **before** `{% block content %}` — descendants only see values published before their render.
 - Keys for ID-driven a11y wiring: derive `<recipe>.id`, `<recipe>.titleId`, `<recipe>.descriptionId`, `<recipe>.contentId`, `<recipe>.triggerId` from parent's `id` prop.

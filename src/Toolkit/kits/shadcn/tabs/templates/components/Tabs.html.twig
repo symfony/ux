@@ -2,6 +2,7 @@
 {# @prop orientation 'horizontal'|'vertical' define the visual orientation. Defaults to `horizontal` #}
 {# @block content The default block #}
 {%- props defaultValue = '', orientation = 'horizontal' -%}
+{%- do provide('tabs.defaultValue', defaultValue) -%}
 
 <div
     data-slot="tabs"
