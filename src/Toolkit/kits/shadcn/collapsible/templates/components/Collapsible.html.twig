@@ -1,7 +1,7 @@
 {# @prop open boolean Whether the collapsible is open by default. Defaults to `false` #}
 {# @block content The collapsible content, typically a `Collapsible:Trigger` and a `Collapsible:Content` #}
 {%- props open = false -%}
-{%- set _collapsible_open = open -%}
+{%- do provide('collapsible.open', open) -%}
 <div
     class="{{ ('group ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
