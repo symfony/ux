@@ -1,0 +1,68 @@
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-05-01T15:59:33Z
+
+I will try to review it as soon as I have time, if possible.
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-05-02T17:44:52Z
+
+You had proposed two syntaxes (https://github.com/symfony/ux/issues/2522#issuecomment-2802225212):
+- [Vue-style](https://vuejs.org/guide/components/provide-inject), with `provide()` and `inject()`
+- [React-style](https://react.dev/learn/passing-data-deeply-with-context), with `<twig:ux:context>` and context()`
+
+I had a preference for React's syntax :D.
+
+What made you lean more toward Vue.js syntax rather than React?
+
+---
+
+I tested with this example:
+
+- `templates/components/Input.html.twig`
+- `templates/components/Fieldset/Description.html.twig`
+- `templates/components/Fieldset/Field.html.twig`
+- `templates/components/Fieldset/Label.html.twig`
+
+```twig
+<twig:Fieldset:Field disabled>
+    <twig:Fieldset:Label>Full name</twig:Fieldset:Label>
+    <twig:Input name="full_name" />
+    <twig:Fieldset:Description>If you have a tiger, we'd like to know about it.</twig:Fieldset:Description>
+</twig:Fieldset:Field>
+```
+
+This is interesting because the `Input` component is a separate component of `Fieldset`, not even a sub-component compared to `Label` and `Description`.
+
+It works well, I get the `disabled` prop on each element using `provide()` / `inject()`.
+
+---
+
+The rendering of Twig functions on this page https://symfony.com/doc/current/reference/twig_reference.html is interesting. Perhaps the same could be done for `inject()` and `provide()`.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-05-03T01:51:44Z
+
+Thanks for the reviews :)
+
+> What made you lean more toward Vue.js syntax rather than React?
+
+For two main reasons:
+- The way you use one or more contexts in React is, in my opinion, an abomination. You have to nest components, and you quickly find yourself in [React Context Hell](https://medium.com/@ambrosekibet576/navigating-reacts-context-hell-f6f4fe5dc23a)
+- More generally, Twig components are cool, but if we can avoid overusing them in favor of more "native" and more efficient solutions (in this case, two Twig functions), that's great
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-05-04T05:32:57Z
+
+Do we also need to modify the `.agents/skills/symfony-ux-toolkit-kit/SKILL.md` file to add these 2 Twig functions?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-05-05T08:42:03Z
+
+> Do we also need to modify the `.agents/skills/symfony-ux-toolkit-kit/SKILL.md` file to add these 2 Twig functions?
+
+Yes, but I planned to do it in a dedicated PR
