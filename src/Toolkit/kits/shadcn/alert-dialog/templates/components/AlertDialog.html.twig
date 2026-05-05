@@ -3,14 +3,17 @@
 {# @block content The dialog structure, typically includes `AlertDialog:Trigger` and `AlertDialog:Content` #}
 {%- props id, open = false -%}
 
-{%- set _alert_dialog_id = 'alert-dialog-' ~ id -%}
-{%- set _alert_dialog_title_id = _alert_dialog_id ~ '-title' -%}
-{%- set _alert_dialog_description_id = _alert_dialog_id ~ '-description' -%}
+{%- set _alertDialog_id = 'alert-dialog-' ~ id -%}
+{%- set _alertDialog_titleId = _alertDialog_id ~ '-title' -%}
+{%- set _alertDialog_descriptionId = _alertDialog_id ~ '-description' -%}
+{%- do provide('alertDialog.id', _alertDialog_id) -%}
+{%- do provide('alertDialog.titleId', _alertDialog_titleId) -%}
+{%- do provide('alertDialog.descriptionId', _alertDialog_descriptionId) -%}
 <div {{ attributes.defaults({
     'data-controller': 'alert-dialog',
     'data-alert-dialog-open-value': open,
-    'aria-labelledby': _alert_dialog_title_id,
-    'aria-describedby': _alert_dialog_description_id,
+    'aria-labelledby': _alertDialog_titleId,
+    'aria-describedby': _alertDialog_descriptionId,
 }) }}>
     {% block content %}{% endblock %}
 </div>

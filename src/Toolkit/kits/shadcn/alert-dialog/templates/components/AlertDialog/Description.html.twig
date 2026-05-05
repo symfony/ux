@@ -1,6 +1,7 @@
 {# @block content The descriptive text explaining the alert dialog purpose #}
+{%- set _alertDialog_descriptionId = inject('alertDialog.descriptionId') -%}
 <p
-    id="{{ _alert_dialog_description_id }}"
+    id="{{ _alertDialog_descriptionId }}"
     class="{{ ('text-muted-foreground text-sm ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.without('id') }}
 >

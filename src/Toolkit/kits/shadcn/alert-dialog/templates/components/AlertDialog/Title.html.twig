@@ -1,6 +1,7 @@
 {# @block content The title text of the alert dialog #}
+{%- set _alertDialog_titleId = inject('alertDialog.titleId') -%}
 <h2
-    id="{{ _alert_dialog_title_id }}"
+    id="{{ _alertDialog_titleId }}"
     class="{{ ('text-lg font-semibold ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.without('id') }}
 >
