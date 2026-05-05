@@ -1,8 +1,8 @@
 {# @prop pressed boolean Whether the item is initially pressed. Defaults to `false` #}
 {# @block content The toggle item label and/or icon #}
 {%- props pressed = false -%}
-{%- set _item_variant = _toggle_group_variant ?? 'default' -%}
-{%- set _item_size = _toggle_group_size ?? 'default' -%}
+{%- set _toggleGroup_variant = inject('toggleGroup.variant', 'default') -%}
+{%- set _toggleGroup_size = inject('toggleGroup.size', 'default') -%}
 {%- set style = html_cva(
     base: "inline-flex items-center justify-center gap-2 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted hover:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground aria-pressed:bg-accent aria-pressed:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 first:rounded-s-lg last:rounded-e-lg",
     variants: {
@@ -19,14 +19,14 @@
 ) -%}
 <button
     type="button"
-    class="{{ style.apply({variant: _item_variant, size: _item_size}, attributes.render('class'))|tailwind_merge }}"
+    class="{{ style.apply({variant: _toggleGroup_variant, size: _toggleGroup_size}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
         'data-slot': 'toggle-group-item',
         'data-controller': 'toggle',
         'data-action': 'click->toggle#toggle click->toggle-group#toggle',
         'data-toggle-pressed-value': pressed ? 'true' : 'false',
-        'data-variant': _item_variant,
-        'data-size': _item_size,
+        'data-variant': _toggleGroup_variant,
+        'data-size': _toggleGroup_size,
         'aria-pressed': pressed ? 'true' : 'false',
         'data-state': pressed ? 'active' : 'inactive',
     }) }}
