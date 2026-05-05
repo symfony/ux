@@ -1,16 +1,19 @@
 {# @block content The collapsible content of the accordion item #}
+{%- set _accordionItem_contentId = inject('accordionItem.contentId') -%}
+{%- set _accordionItem_triggerId = inject('accordionItem.triggerId') -%}
+{%- set _accordionItem_isOpen = inject('accordionItem.isOpen', false) -%}
 <div
-    class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out {{ not _accordion_item_is_open ? 'hidden' }}"
+    class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out {{ not _accordionItem_isOpen ? 'hidden' }}"
     {{ attributes.defaults({
-        id: _accordion_item_content_id,
+        id: _accordionItem_contentId,
         'data-slot': 'accordion-content',
         'data-accordion-target': 'content',
         role: 'region',
-        'aria-labelledby': _accordion_item_trigger_id,
-        'aria-hidden': not _accordion_item_is_open ? 'true' : 'false',
-        'data-open': _accordion_item_is_open ? 'true' : false,
-        'data-closed': not _accordion_item_is_open ? 'true' : false,
-        style: _accordion_item_is_open ? 'grid-template-rows: 1fr;' : 'grid-template-rows: 0fr;',
+        'aria-labelledby': _accordionItem_triggerId,
+        'aria-hidden': not _accordionItem_isOpen ? 'true' : 'false',
+        'data-open': _accordionItem_isOpen ? 'true' : false,
+        'data-closed': not _accordionItem_isOpen ? 'true' : false,
+        style: _accordionItem_isOpen ? 'grid-template-rows: 1fr;' : 'grid-template-rows: 0fr;',
     }).without('class') }}
 >
     <div class="min-h-0 min-w-0 overflow-hidden">

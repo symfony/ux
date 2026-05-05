@@ -3,11 +3,20 @@
 {# @prop disabled boolean Whether the item is disabled. Defaults to `false` #}
 {# @block content The item content, typically an `Accordion:Trigger` and `Accordion:Content` #}
 {%- props value, open = false, disabled = false -%}
-{%- set _accordion_item_is_open = open or (_accordion_default_value == value or (_accordion_default_value is iterable and value in defaultValue)) -%}
+{%- set _accordion_id = inject('accordion.id') -%}
+{%- set _accordion_orientation = inject('accordion.orientation', 'vertical') -%}
+{%- set _accordion_defaultValue = inject('accordion.defaultValue') -%}
+{%- set _accordion_item_is_open = open or (_accordion_defaultValue == value or (_accordion_defaultValue is iterable and value in _accordion_defaultValue)) -%}
 {%- set _accordion_item_id = _accordion_id ~ '-' ~ value -%}
 {%- set _accordion_item_content_id = _accordion_item_id ~ '-content' -%}
 {%- set _accordion_item_trigger_id = _accordion_item_id ~ '-trigger' -%}
 {%- set _accordion_item_disabled = disabled -%}
+{%- do provide('accordionItem.id', _accordion_item_id) -%}
+{%- do provide('accordionItem.contentId', _accordion_item_content_id) -%}
+{%- do provide('accordionItem.triggerId', _accordion_item_trigger_id) -%}
+{%- do provide('accordionItem.disabled', _accordion_item_disabled) -%}
+{%- do provide('accordionItem.isOpen', _accordion_item_is_open) -%}
+{%- do provide('accordionItem.orientation', _accordion_orientation) -%}
 <div
     class="{{ ('not-last:border-b group ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
