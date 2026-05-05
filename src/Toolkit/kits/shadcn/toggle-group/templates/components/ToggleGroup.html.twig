@@ -3,8 +3,8 @@
 {# @prop type 'single'|'multiple' Whether only one or multiple items can be active. Defaults to `multiple` #}
 {# @block content The toggle items, typically multiple `ToggleGroup:Item` components #}
 {%- props variant = 'default', size = 'default', type = 'multiple' -%}
-{%- set _toggle_group_variant = variant -%}
-{%- set _toggle_group_size = size -%}
+{%- do provide('toggleGroup.variant', variant) -%}
+{%- do provide('toggleGroup.size', size) -%}
 {%- set style = html_cva(
     base: 'group/toggle-group flex w-fit items-center rounded-lg',
     variants: {
