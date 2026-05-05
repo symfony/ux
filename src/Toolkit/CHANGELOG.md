@@ -9,8 +9,9 @@
 - [Shadcn] Rework `accordion` recipe to use `provide()`/`inject()`
 - [Shadcn] Rework `alert-dialog` recipe to use `provide()`/`inject()`
 - [Shadcn] Rework `dialog` recipe to use `provide()`/`inject()`
-- [Shadcn] Rework `toggle-group` recipe to use `provide()`/`inject()`
 - [Shadcn] Rework `tabs` recipe to use `provide()`/`inject()`
+- [Shadcn] Rework `toggle-group` recipe to use `provide()`/`inject()`
+- [Shadcn] Rework `tooltip` recipe to use `provide()`/`inject()`
 
 ## 3.0.0
 

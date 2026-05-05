@@ -2,9 +2,12 @@
 {# @prop sideOffset number The distance in pixels from the trigger. Defaults to `0` #}
 {# @block content The tooltip text or content #}
 {%- props side = 'top', sideOffset = 0 -%}
+{%- set _tooltip_wrapperId = inject('tooltip.wrapperId') -%}
+{%- set _tooltip_contentId = inject('tooltip.contentId') -%}
+{%- set _tooltip_arrowId = inject('tooltip.arrowId') -%}
 
 <div
-    id="{{ _tooltip_wrapper_id }}"
+    id="{{ _tooltip_wrapperId }}"
     data-slot="tooltip-wrapper"
     data-side="{{ side }}"
     data-side-offset="{{ sideOffset }}"
@@ -16,7 +19,7 @@
     <div
         class="{{ ('invisible open:visible transition-all duration-200 open:opacity-100 open:scale-100 opacity-0 scale-95 bg-foreground text-background z-50 w-fit max-w-xs rounded-md px-3 py-1.5 text-xs ' ~ attributes.render('class'))|tailwind_merge }}"
         {{ attributes.defaults({
-            id: _tooltip_content_id,
+            id: _tooltip_contentId,
             role: 'tooltip',
             'data-slot': 'tooltip-content',
             'data-side': side,
@@ -26,7 +29,7 @@
         {%- block content %}{% endblock -%}
 
         <div
-            id="{{ _tooltip_arrow_id }}"
+            id="{{ _tooltip_arrowId }}"
             data-side="{{ side }}"
             data-tooltip-target="arrow"
             aria-hidden="true"

@@ -8,6 +8,10 @@
 {%- set _tooltip_content_id = id ~ '_content' -%}
 {%- set _tooltip_arrow_id = id ~ '_arrow' -%}
 {%- set _tooltip_delay_duration = delayDuration -%}
+{%- do provide('tooltip.triggerId', _tooltip_trigger_id) -%}
+{%- do provide('tooltip.wrapperId', _tooltip_wrapper_id) -%}
+{%- do provide('tooltip.contentId', _tooltip_content_id) -%}
+{%- do provide('tooltip.arrowId', _tooltip_arrow_id) -%}
 <div
     class="{{ ('relative inline-block ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
