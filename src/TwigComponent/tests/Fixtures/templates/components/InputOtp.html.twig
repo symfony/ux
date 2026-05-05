@@ -1,0 +1,8 @@
+{% props maxLength = 6, name = 'otp' %}
+
+{% do provide('inputOtp.maxLength', maxLength) %}
+{% do provide('inputOtp.name', name) %}
+
+<div class="input-otp">
+    {% block content %}{% endblock %}
+</div>

@@ -13,6 +13,7 @@ namespace Symfony\UX\TwigComponent\Twig;
 
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\UX\TwigComponent\ComponentRenderer;
+use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 
 /**
@@ -26,6 +27,7 @@ final class ComponentRuntime
     public function __construct(
         private readonly ComponentRenderer $renderer,
         private readonly ServiceLocator $renderers,
+        private readonly ComponentStack $componentStack,
     ) {
     }
 
@@ -58,5 +60,32 @@ final class ComponentRuntime
     public function startEmbedComponent(string $name, array $props, array $context, string $hostTemplateName, int $index): PreRenderEvent
     {
         return $this->renderer->startEmbeddedComponentRender($name, $props, $context, $hostTemplateName, $index);
+    }
+
+    public function provide(string $key, mixed $value): void
+    {
+        $current = $this->componentStack->getCurrentComponent();
+        if (null === $current) {
+            throw new \LogicException(\sprintf('The "provide()" Twig function cannot be called outside of a component template, "%s" key was being provided.', $key));
+        }
+
+        $current->provide($key, $value);
+    }
+
+    public function inject(string $key, mixed $default = null): mixed
+    {
+        $skippedSelf = false;
+        foreach ($this->componentStack as $mounted) {
+            if (!$skippedSelf) {
+                $skippedSelf = true;
+                continue;
+            }
+
+            if ($mounted->hasProvided($key)) {
+                return $mounted->getProvided($key);
+            }
+        }
+
+        return $default;
     }
 }

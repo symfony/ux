@@ -118,6 +118,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
             ->setArguments([
                 new Reference('ux.twig_component.component_renderer'),
                 new ServiceLocatorArgument(new TaggedIteratorArgument('ux.twig_component.twig_renderer', indexAttribute: 'key', needsIndexes: true)),
+                new Reference('ux.twig_component.component_stack'),
             ])
             ->addTag('twig.runtime')
         ;

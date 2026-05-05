@@ -1,0 +1,7 @@
+{% props activeTab %}
+
+{% do provide('tabs.active', activeTab) %}
+
+<div class="tabs">
+    {% block content %}{% endblock %}
+</div>

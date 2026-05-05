@@ -1,0 +1,4 @@
+{% set list = inject('list', []) %}
+{% set config = inject('config', {}) %}
+
+<span class="reader">list:{{ list|join('+') }};config:{{ config.key }}/{{ config.count }}</span>

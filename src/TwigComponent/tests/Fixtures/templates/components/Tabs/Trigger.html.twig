@@ -1,0 +1,6 @@
+{% props value %}
+{% set active = inject('tabs.active') %}
+
+<button type="button" role="tab" data-value="{{ value }}" aria-selected="{{ active == value ? 'true' : 'false' }}">
+    {{ value }}
+</button>

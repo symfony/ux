@@ -1,0 +1,7 @@
+<twig:InputOtp maxLength="6" name="code">
+    <twig:InputOtp:Group>
+        {% for i in 0..2 %}
+            <twig:InputOtp:Slot input="{{ i + 1 }}" />
+        {% endfor %}
+    </twig:InputOtp:Group>
+</twig:InputOtp>
