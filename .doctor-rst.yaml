@@ -16,9 +16,9 @@ rules:
     composer_dev_option_not_at_the_end: ~
     correct_code_block_directive_based_on_the_content: ~
     deprecated_directive_major_version:
-        major_version: 2
+        major_version: 3
     deprecated_directive_min_version:
-        min_version: '2.0'
+        min_version: '3.0'
     deprecated_directive_should_have_version: ~
     ensure_bash_prompt_before_composer_command: ~
     ensure_exactly_one_space_before_directive_type: ~
