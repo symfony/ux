@@ -20,8 +20,5 @@
         "ux-turbo": "src/Turbo",
         "ux-twig-component": "src/TwigComponent",
         "ux-vue": "src/Vue"
-    },
-    "defaults": {
-        "tag_skip": "minor"
     }
 }
