@@ -1,10 +1,11 @@
 {# @prop value string Unique suffix identifier for generating Tabs internal IDs #}
 {# @block content The default block #}
 {%- props value -%}
+{%- set _tabs_defaultValue = inject('tabs.defaultValue', '') -%}
 
 {%- set _tab_id = 'tab-' ~ value -%}
 {%- set _tab_content_id = _tab_id ~ '-description' -%}
-{%- set open = defaultValue is same as(value) -%}
+{%- set open = _tabs_defaultValue is same as(value) -%}
 <div
     id="{{ _tab_content_id }}"
     data-slot="tabs-content"
