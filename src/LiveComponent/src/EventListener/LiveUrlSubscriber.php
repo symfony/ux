@@ -28,6 +28,7 @@ use Symfony\UX\TwigComponent\MountedComponent;
 class LiveUrlSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface
 {
     private const URL_HEADER = 'X-Live-Url';
+    private const URL_PUSH_STATE_HEADER = 'X-Live-Url-Push-History-State';
 
     public function __construct(
         private ContainerInterface $container,
@@ -58,9 +59,10 @@ class LiveUrlSubscriber implements EventSubscriberInterface, ServiceSubscriberIn
         /** @var MountedComponent $mounted */
         $mounted = $request->attributes->get('_mounted_component');
 
-        [$pathProps, $queryProps] = $this->extractUrlLiveProps($mounted);
+        [$pathProps, $queryProps, $pushHistoryState] = $this->extractUrlLiveProps($mounted);
 
         $event->getResponse()->headers->set(self::URL_HEADER, $this->generateNewLiveUrl($previousLiveUrl, $pathProps, $queryProps));
+        $event->getResponse()->headers->set(self::URL_PUSH_STATE_HEADER, $pushHistoryState ? '1' : '0');
     }
 
     public static function getSubscribedEvents(): array
@@ -71,7 +73,7 @@ class LiveUrlSubscriber implements EventSubscriberInterface, ServiceSubscriberIn
     }
 
     /**
-     * @return array{ array<string, mixed>, array<string, mixed> }
+     * @return array{ array<string, mixed>, array<string, mixed>, bool }
      */
     private function extractUrlLiveProps(MountedComponent $mounted): array
     {
@@ -94,7 +96,7 @@ class LiveUrlSubscriber implements EventSubscriberInterface, ServiceSubscriberIn
             }
         }
 
-        return [$pathProps, $queryProps];
+        return [$pathProps, $queryProps, $mountedMetadata->hasPushHistoryStateEnabled()];
     }
 
     private function generateNewLiveUrl(string $previousUrl, array $pathProps, array $queryProps): string

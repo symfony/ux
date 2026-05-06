@@ -329,7 +329,12 @@ export default class Component {
 
             const liveUrl = backendResponse.getLiveUrl();
             if (liveUrl) {
-                history.replaceState(
+                const historyMethod = backendResponse.hasPushHistoryStateEnabled()
+                    ? history.pushState
+                    : history.replaceState;
+
+                historyMethod.call(
+                    history,
                     history.state,
                     '',
                     new URL(liveUrl + window.location.hash, window.location.origin)

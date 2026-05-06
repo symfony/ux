@@ -3,6 +3,7 @@
 ## 3.1
 
 - Use `aria-busy` attribute during component re-render
+- Add a new `pushHistoryState` parameter to the `AsLiveComponent` attribute, which allows pushing a new history state on URL change after a re-render.
 
 ## 3.0.0
 

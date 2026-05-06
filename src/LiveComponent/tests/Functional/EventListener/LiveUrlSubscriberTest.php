@@ -27,6 +27,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'Missing header' => [
             'previousLocation' => null,
             'expectedLocation' => null,
+            'expectedPushHistoryState' => null,
             'initialComponentData' => [],
             'args' => [],
         ];
@@ -34,6 +35,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'Unknown previous location' => [
             'previousLocation' => 'foo/bar',
             'expectedLocation' => 'foo/bar',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [],
             'args' => [],
         ];
@@ -41,6 +43,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'No props change' => [
             'previousLocation' => '/route_with_prop/foo',
             'expectedLocation' => '/route_with_prop/foo',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [
                 'pathProp' => 'foo',
             ],
@@ -50,6 +53,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'Changes in prop' => [
             'previousLocation' => '/route_with_prop/foo',
             'expectedLocation' => '/route_with_prop/bar',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [
                 'pathProp' => 'foo',
             ],
@@ -62,6 +66,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'Change in query' => [
             'previousLocation' => '/route_with_prop/foo',
             'expectedLocation' => '/route_with_prop/foo?stringProp=hello',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [
                 'pathProp' => 'foo',
             ],
@@ -74,6 +79,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'Change in query (with an existing query that is not a LiveProp)' => [
             'previousLocation' => '/route_with_prop/foo?not-a-prop=value',
             'expectedLocation' => '/route_with_prop/foo?not-a-prop=value&stringProp=hello',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [
                 'pathProp' => 'foo',
             ],
@@ -85,6 +91,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'Change in query (with two existing query, one LiveProp, one non-LiveProp)' => [
             'previousLocation' => '/route_with_prop/foo?not-a-prop=value&stringProp=hello',
             'expectedLocation' => '/route_with_prop/foo?not-a-prop=value&stringProp=bye',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [
                 'pathProp' => 'foo',
                 'stringProp' => 'hello',
@@ -98,6 +105,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'Changes in prop (alias)' => [
             'previousLocation' => '/route_with_alias_prop/foo',
             'expectedLocation' => '/route_with_alias_prop/bar',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [
                 'pathPropWithAlias' => 'foo',
             ],
@@ -110,6 +118,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'Changes in prop, with two props' => [
             'previousLocation' => '/route_with_two_props/foo/alias',
             'expectedLocation' => '/route_with_two_props/bar/alias',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [
                 'pathProp' => 'foo',
                 'pathPropWithAlias' => 'alias',
@@ -123,6 +132,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'Changes in prop, with two path params but only one prop' => [
             'previousLocation' => '/route_with_two_path_params_but_one_prop/foo/30',
             'expectedLocation' => '/route_with_two_path_params_but_one_prop/bar/30',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [
                 'pathProp' => 'foo',
             ],
@@ -135,6 +145,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'Changes in query (alias)' => [
             'previousLocation' => '/',
             'expectedLocation' => '/?q=search+term',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [],
             'args' => [
                 'propName' => 'boundPropWithAlias',
@@ -145,6 +156,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'Change in query (array)' => [
             'previousLocation' => '/route_with_prop/foo',
             'expectedLocation' => '/route_with_prop/foo?arrayProp%5B0%5D=hello&arrayProp%5B1%5D=world',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [
                 'pathProp' => 'foo',
             ],
@@ -157,6 +169,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'Change in query (array & alias)' => [
             'previousLocation' => '/route_with_prop/foo',
             'expectedLocation' => '/route_with_prop/foo?arr_alias%5B0%5D=hello&arr_alias%5B1%5D=world',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [
                 'pathProp' => 'foo',
             ],
@@ -169,6 +182,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'Change in query (array & field name)' => [
             'previousLocation' => '/route_with_prop/foo',
             'expectedLocation' => '/route_with_prop/foo?arr_field_name%5B0%5D=hello&arr_field_name%5B1%5D=world',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [
                 'pathProp' => 'foo',
             ],
@@ -181,6 +195,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'Changes in props and query' => [
             'previousLocation' => '/route_with_prop/foo',
             'expectedLocation' => '/route_with_prop/baz?q=foo+bar',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [
                 'pathProp' => 'baz',
             ],
@@ -196,6 +211,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'with an object in query, keys "address" and "city" must be present' => [
             'previousLocation' => '/',
             'expectedLocation' => '/?objectProp%5Baddress%5D=123+Main+St&objectProp%5Bcity%5D=Anytown&q=search',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [
                 'objectProp' => $address,
             ],
@@ -211,6 +227,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'with an object in query, with "useSerializerForHydration: true", keys "address" and "c" must be present' => [
             'previousLocation' => '/',
             'expectedLocation' => '/?intProp=3&objectPropWithSerializerForHydration%5Baddress%5D=123+Main+St&objectPropWithSerializerForHydration%5Bc%5D=Anytown',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [
                 'objectPropWithSerializerForHydration' => $address,
             ],
@@ -223,6 +240,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
         yield 'query with alias ("p") and modifier (prefix by "alias_")' => [
             'previousLocation' => '/',
             'expectedLocation' => '/?alias_p=test',
+            'expectedPushHistoryState' => '0',
             'initialComponentData' => [
                 'propertyWithModifierAndAlias' => 'test',
             ],
@@ -234,6 +252,7 @@ class LiveUrlSubscriberTest extends KernelTestCase
     public function testNewLiveUrlAfterLiveAction(
         ?string $previousLocation,
         ?string $expectedLocation,
+        ?string $expectedPushHistoryState,
         array $initialComponentData,
         array $args,
     ): void {
@@ -259,6 +278,34 @@ class LiveUrlSubscriberTest extends KernelTestCase
                 ]
             )
             ->assertSuccessful()
-            ->assertHeaderEquals('X-Live-Url', $expectedLocation);
+            ->assertHeaderEquals('X-Live-Url', $expectedLocation)
+            ->assertHeaderEquals('X-Live-Url-Push-History-State', $expectedPushHistoryState);
+    }
+
+    public function testPushHistoryStateEnabledLiveAction()
+    {
+        $component = $this->mountComponent('component_with_push_history_state', []);
+        $dehydrated = $this->dehydrateComponent($component);
+        $this->browser()
+            ->throwExceptions()
+            ->post(
+                '/_components/component_with_push_history_state/setCount',
+                [
+                    'body' => [
+                        'data' => json_encode([
+                            'props' => $dehydrated->getProps(),
+                            'args' => [
+                                'count' => 5,
+                            ],
+                        ]),
+                    ],
+                    'headers' => [
+                        'X-Live-Url' => '/',
+                    ],
+                ]
+            )
+            ->assertSuccessful()
+            ->assertHeaderEquals('X-Live-Url', '/?count=5')
+            ->assertHeaderEquals('X-Live-Url-Push-History-State', '1');
     }
 }

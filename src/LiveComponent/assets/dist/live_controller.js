@@ -97,6 +97,10 @@ var BackendResponse_default = class {
 		if (void 0 === this.liveUrl) this.liveUrl = this.response.headers.get("X-Live-Url");
 		return this.liveUrl;
 	}
+	hasPushHistoryStateEnabled() {
+		if (void 0 === this.pushHistoryState) this.pushHistoryState = this.response.headers.get("X-Live-Url-Push-History-State") === "1";
+		return this.pushHistoryState;
+	}
 };
 function getElementAsTagText(element) {
 	return element.innerHTML ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML)) : element.outerHTML;
@@ -1519,7 +1523,7 @@ var Component = class {
 				return response;
 			}
 			const liveUrl = backendResponse.getLiveUrl();
-			if (liveUrl) history.replaceState(history.state, "", new URL(liveUrl + window.location.hash, window.location.origin));
+			if (liveUrl) (backendResponse.hasPushHistoryStateEnabled() ? history.pushState : history.replaceState).call(history, history.state, "", new URL(liveUrl + window.location.hash, window.location.origin));
 			this.processRerender(html, backendResponse);
 			this.backendRequest = null;
 			thisPromiseResolve(backendResponse);

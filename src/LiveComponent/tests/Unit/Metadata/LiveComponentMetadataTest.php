@@ -53,4 +53,13 @@ class LiveComponentMetadataTest extends TestCase
         $this->assertInstanceOf(UrlMapping::class, $urlMappings['basicUrlMapping']);
         $this->assertEquals($aliasUrlMapping, $urlMappings['aliasUrlMapping']);
     }
+
+    public function testHasPushHistoryStateEnabled()
+    {
+        $liveComponentMetadata = new LiveComponentMetadata(new ComponentMetadata([]), []);
+        $this->assertFalse($liveComponentMetadata->hasPushHistoryStateEnabled());
+
+        $liveComponentMetadataWithPushHistoryStateEnabled = new LiveComponentMetadata(new ComponentMetadata(['push_history_state' => true]), []);
+        $this->assertTrue($liveComponentMetadataWithPushHistoryStateEnabled->hasPushHistoryStateEnabled());
+    }
 }

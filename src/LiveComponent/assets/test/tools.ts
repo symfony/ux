@@ -175,6 +175,7 @@ class MockedAjaxCall {
     private changePropsCallback?: (props: any) => void;
     private template?: (props: any) => string;
     private liveUrl?: string;
+    private pushHistoryState?: string;
     private delayResponseTime?: number = 0;
     private customResponseStatusCode?: number;
     private customResponseHTML?: string;
@@ -273,12 +274,14 @@ class MockedAjaxCall {
                 const headers = {
                     'Content-Type': 'application/vnd.live-component+html',
                     'X-Live-Url': '',
+                    'X-Live-Url-Push-History-State': '0',
                 };
                 if (this.customResponseHTML) {
                     headers['Content-Type'] = 'text/html';
                 }
                 if (this.liveUrl) {
                     headers['X-Live-Url'] = this.liveUrl;
+                    headers['X-Live-Url-Push-History-State'] = this.pushHistoryState ? '1' : '0';
                 }
 
                 const response = new Response(html, {
@@ -351,6 +354,12 @@ class MockedAjaxCall {
 
     willReturnLiveUrl(liveUrl: string): MockedAjaxCall {
         this.liveUrl = liveUrl;
+
+        return this;
+    }
+
+    willReturnPushHistoryState(pushHistoryState: string): MockedAjaxCall {
+        this.pushHistoryState = pushHistoryState;
 
         return this;
     }
