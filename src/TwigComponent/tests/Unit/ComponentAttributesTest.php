@@ -41,6 +41,15 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame(' class="foo" style="color:black;" value="" autofocus', (string) $attributes);
     }
 
+    public function testThrowsOnNullAttributeValue()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Attribute "data-foo" value cannot be null.');
+
+        $attributes = new ComponentAttributes(['data-foo' => null], new EscaperRuntime());
+        (string) $attributes;
+    }
+
     public function testCanSetDefaults()
     {
         $attributes = new ComponentAttributes(['class' => 'foo', 'style' => 'color:black;'], new EscaperRuntime());
