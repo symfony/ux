@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by xDeSwa at 2026-05-07T14:46:17Z
+
+> Can you add a test? Is it only specific to `loading` attribute?
+
+added test. yes, it is only specific about LiveComponent `loading` attribute.
