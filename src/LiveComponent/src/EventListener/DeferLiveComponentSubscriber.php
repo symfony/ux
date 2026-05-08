@@ -72,7 +72,7 @@ final class DeferLiveComponentSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $componentTemplate = $event->getMetadata()->getTemplate();
+        $componentTemplate = $event->getTemplate();
         $event->setTemplate('@LiveComponent/deferred.html.twig');
 
         $variables = $event->getVariables();

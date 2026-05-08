@@ -14,8 +14,12 @@ namespace Symfony\UX\LiveComponent\Tests\Unit\EventListener;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\LiveComponent\EventListener\DeferLiveComponentSubscriber;
+use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\Event\PostMountEvent;
+use Symfony\UX\TwigComponent\Event\PreRenderEvent;
+use Symfony\UX\TwigComponent\MountedComponent;
+use Twig\Runtime\EscaperRuntime;
 
 /**
  * @author Simon André <smn.andre@gmail.com>
@@ -84,6 +88,63 @@ class DeferLiveComponentSubscriberTest extends TestCase
             [['foo']],
             ['false'],
         ];
+    }
+
+    public function testOnPreRenderUsesEventTemplateInsteadOfMetadataTemplate()
+    {
+        $subscriber = new DeferLiveComponentSubscriber();
+
+        $metadata = new ComponentMetadata(['template' => 'original_metadata_template.html.twig']);
+
+        $escaper = new EscaperRuntime();
+        $attributes = new ComponentAttributes([], $escaper);
+
+        $mountedComponent = new MountedComponent(
+            'test_component',
+            $metadata,
+            $attributes,
+            [],
+            ['loading' => 'lazy']
+        );
+
+        $event = new PreRenderEvent($mountedComponent, $metadata, ['existing_var' => 'value']);
+
+        $event->setTemplate('dynamically_changed_template.html.twig');
+
+        $subscriber->onPreRender($event);
+
+        $this->assertSame('@LiveComponent/deferred.html.twig', $event->getTemplate());
+
+        $variables = $event->getVariables();
+        $this->assertArrayHasKey('componentTemplate', $variables);
+        $this->assertSame('dynamically_changed_template.html.twig', $variables['componentTemplate']);
+
+        $this->assertSame('lazy', $variables['loading']);
+        $this->assertSame('value', $variables['existing_var']);
+    }
+
+    public function testOnPreRenderDoesNothingWhenNoLoadingMetadata()
+    {
+        $subscriber = new DeferLiveComponentSubscriber();
+
+        $metadata = new ComponentMetadata(['template' => 'original_template.html.twig']);
+
+        $escaper = new EscaperRuntime();
+        $attributes = new ComponentAttributes([], $escaper);
+
+        $mountedComponent = new MountedComponent(
+            'test_component',
+            $metadata,
+            $attributes,
+            [],
+            []
+        );
+
+        $event = new PreRenderEvent($mountedComponent, $metadata, []);
+
+        $subscriber->onPreRender($event);
+
+        $this->assertSame('original_template.html.twig', $event->getTemplate());
     }
 
     private function createPostMountEvent(array $data): PostMountEvent
