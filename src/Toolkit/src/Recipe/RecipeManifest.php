@@ -31,6 +31,7 @@ final class RecipeManifest
      * @param non-empty-string                          $description
      * @param array<non-empty-string, non-empty-string> $copyFiles
      * @param list<DependencyInterface>                 $dependencies
+     * @param non-empty-string|null                     $addedInVersion The first UX Toolkit version in which this Recipe was made available
      */
     public function __construct(
         public readonly RecipeType $type,
@@ -38,6 +39,7 @@ final class RecipeManifest
         public readonly string $description,
         public readonly array $copyFiles,
         public readonly array $dependencies = [],
+        public readonly ?string $addedInVersion = null,
     ) {
         foreach ($this->copyFiles as $source => $destination) {
             if (!Path::isRelative($source)) {
@@ -125,12 +127,18 @@ final class RecipeManifest
             }
         }
 
+        $addedInVersion = $data['added-in-version'] ?? null;
+        if (null !== $addedInVersion && (!\is_string($addedInVersion) || '' === $addedInVersion)) {
+            throw new \InvalidArgumentException('The "added-in-version" property must be a non-empty string.');
+        }
+
         return new self(
             type: $type,
             name: $data['name'] ?? throw new \InvalidArgumentException('Property "name" is required.'),
             description: $data['description'] ?? throw new \InvalidArgumentException('Property "description" is required.'),
             copyFiles: $data['copy-files'] ?? [],
             dependencies: $dependencies,
+            addedInVersion: $addedInVersion,
         );
     }
 }

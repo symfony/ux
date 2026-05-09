@@ -18,6 +18,10 @@
             "description": "A brief description of the Recipe",
             "type": "string"
         },
+        "added-in-version": {
+            "type": "string",
+            "description": "The first UX Toolkit version in which this Recipe was made available, e.g., '2.35'"
+        },
         "copy-files": {
             "description": "Relative files or directories to copy into the project",
             "type": "object"

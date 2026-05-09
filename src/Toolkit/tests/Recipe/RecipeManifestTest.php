@@ -199,6 +199,51 @@ final class RecipeManifestTest extends TestCase
         $this->assertSame('An incredible component', $manifest->description);
         $this->assertSame(['templates/' => 'templates/'], $manifest->copyFiles);
         $this->assertEquals([], $manifest->dependencies);
+        $this->assertNull($manifest->addedInVersion);
+    }
+
+    public function testFromJsonWithAddedInVersion()
+    {
+        $manifest = RecipeManifest::fromJson(<<<JSON
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "description": "An incredible component",
+                    "added-in-version": "2.35"
+                }
+            JSON);
+
+        $this->assertSame('2.35', $manifest->addedInVersion);
+    }
+
+    public function testFromJsonWithEmptyAddedInVersion()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The "added-in-version" property must be a non-empty string.');
+
+        RecipeManifest::fromJson(<<<JSON
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "description": "An incredible component",
+                    "added-in-version": ""
+                }
+            JSON);
+    }
+
+    public function testFromJsonWithNonStringAddedInVersion()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The "added-in-version" property must be a non-empty string.');
+
+        RecipeManifest::fromJson(<<<JSON
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "description": "An incredible component",
+                    "added-in-version": 235
+                }
+            JSON);
     }
 
     public function testFromJsonWithValidData()
