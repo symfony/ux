@@ -23,7 +23,7 @@ jobs:
         name: Validate packages definition
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+            - uses: actions/checkout@900f2210b1d28bbbd0bd22d17926b9e224e8f231
 
             - name: Check all composer.json have label "symfony-ux"
               if: always()
@@ -130,7 +130,7 @@ jobs:
         name: JavaScript Formatting
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+            - uses: actions/checkout@900f2210b1d28bbbd0bd22d17926b9e224e8f231
 
             - run: npm i -g corepack && corepack enable
             - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
@@ -147,7 +147,7 @@ jobs:
         name: JavaScript Linting
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+            - uses: actions/checkout@900f2210b1d28bbbd0bd22d17926b9e224e8f231
 
             - run: npm i -g corepack && corepack enable
             - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
@@ -180,7 +180,7 @@ jobs:
                     - symfony-version: '7.4.*'
         steps:
             - name: Checkout
-              uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+              uses: actions/checkout@900f2210b1d28bbbd0bd22d17926b9e224e8f231
 
             - name: Configure environment
               run: |

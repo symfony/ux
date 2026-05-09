@@ -28,7 +28,7 @@ jobs:
     test:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+            - uses: actions/checkout@900f2210b1d28bbbd0bd22d17926b9e224e8f231
 
             - uses: shivammathur/setup-php@45e37a5311835edf589763a5cde3a7a7ef2ebbac
               with:
