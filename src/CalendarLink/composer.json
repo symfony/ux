@@ -1,0 +1,58 @@
+{
+    "name": "symfony/ux-calendar-link",
+    "type": "symfony-bundle",
+    "description": "Generates 'Add to calendar' links for Google, Outlook, Office 365 and iCalendar (.ics) in Twig templates.",
+    "keywords": [
+        "symfony-ux",
+        "calendar",
+        "ics"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Imad ZAIRIG",
+            "email": "imadzairig@gmail.com"
+        },
+        {
+            "name": "Hugo Alliaume",
+            "email": "hugo@alliau.me"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\CalendarLink\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\CalendarLink\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.4",
+        "symfony/framework-bundle": "^7.4|^8.0",
+        "symfony/twig-bundle": "^7.4|^8.0",
+        "symfony/uid": "^7.4|^8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.1|^12.0"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "conflict": {
+        "symfony/flex": "<1.13"
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}
