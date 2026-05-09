@@ -26,11 +26,11 @@ npm install shadcn tw-animate-css
 2. Modify the file `assets/styles/app.css` with the following content:
 
 ```css
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* With AssetMapper... */
-@import "../vendor/tw-animate-css/dist/tw-animate.css";
-@import "../vendor/shadcn/dist/tailwind.css";
+@import '../vendor/tw-animate-css/dist/tw-animate.css';
+@import '../vendor/shadcn/dist/tailwind.css';
 /* ... or with Webpack Encore */
 /* @import "tw-animate-css"; */
 /* @import "shadcn/tailwind.css"; */
