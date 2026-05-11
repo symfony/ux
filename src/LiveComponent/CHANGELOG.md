@@ -3,6 +3,7 @@
 ## 3.6
 
 - Export the `ComponentHooks` TypeScript type, to type hook callbacks defined outside of `Component.on()`
+- Make the `live_action()` Twig function return a `StimulusAttributes` object, so it can be spread into a Twig component tag
 
 ## 3.5
 
