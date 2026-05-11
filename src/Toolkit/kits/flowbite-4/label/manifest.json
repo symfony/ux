@@ -3,6 +3,7 @@
     "type": "component",
     "name": "Label",
     "description": "A text element that identifies form controls and other content.",
+    "version-added": "2.35",
     "copy-files": {
         "templates/": "templates/"
     },

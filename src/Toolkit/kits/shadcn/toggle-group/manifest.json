@@ -3,6 +3,7 @@
     "type": "component",
     "name": "Toggle Group",
     "description": "A set of two-state buttons that can be toggled on or off.",
+    "version-added": "3.0",
     "copy-files": {
         "assets/": "assets/",
         "templates/": "templates/"

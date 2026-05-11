@@ -3,6 +3,7 @@
     "type": "component",
     "name": "Button",
     "description": "Use the button component inside forms, as links, social login, payment options with support for multiple styles, colors, sizes, gradients, and shadows",
+    "version-added": "2.35",
     "copy-files": {
         "templates/": "templates/"
     },

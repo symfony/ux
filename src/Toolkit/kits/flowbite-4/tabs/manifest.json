@@ -3,6 +3,7 @@
     "type": "component",
     "name": "Tabs",
     "description": "Use the following default tabs component example to show a list of links that the user can navigate from on your website.",
+    "version-added": "2.35",
     "copy-files": {
         "assets/": "assets/",
         "templates/": "templates/"

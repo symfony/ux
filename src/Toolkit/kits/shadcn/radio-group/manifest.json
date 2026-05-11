@@ -3,6 +3,7 @@
     "type": "component",
     "name": "Radio Group",
     "description": "A set of checkable buttons where no more than one of the buttons can be checked at a time.",
+    "version-added": "3.0",
     "copy-files": {
         "templates/": "templates/"
     },

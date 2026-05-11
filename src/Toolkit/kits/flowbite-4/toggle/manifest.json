@@ -3,6 +3,7 @@
     "type": "component",
     "name": "Toggle",
     "description": "Use the toggle component to switch between a binary state of true or false using a single click available in multiple sizes, variants, and colors",
+    "version-added": "2.35",
     "copy-files": {
         "templates/": "templates/"
     },

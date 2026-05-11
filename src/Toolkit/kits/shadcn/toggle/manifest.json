@@ -3,6 +3,7 @@
     "type": "component",
     "name": "Toggle",
     "description": "A two-state button that can be either on or off.",
+    "version-added": "2.35",
     "copy-files": {
         "assets/": "assets/",
         "templates/": "templates/"

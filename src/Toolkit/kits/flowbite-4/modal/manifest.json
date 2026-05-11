@@ -3,6 +3,7 @@
     "type": "component",
     "name": "Modal",
     "description": "Use the modal component to show interactive dialogs and notifications to your website users available in multiple sizes, colors, and styles",
+    "version-added": "2.35",
     "copy-files": {
         "assets/": "assets/",
         "templates/": "templates/"

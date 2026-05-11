@@ -3,6 +3,7 @@
     "type": "component",
     "name": "Accordion",
     "description": "A vertically stacked set of interactive headings that each reveal a section of content.",
+    "version-added": "2.33",
     "copy-files": {
         "assets/": "assets/",
         "templates/": "templates/"
