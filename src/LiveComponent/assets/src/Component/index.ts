@@ -22,6 +22,7 @@ export type ComponentHooks = {
     'request:started': (requestConfig: any) => MaybePromise;
     'render:finished': (component: Component) => MaybePromise;
     'response:error': (backendResponse: BackendResponse, controls: { displayError: boolean }) => MaybePromise;
+    'request:error': (error: any, requestConfig: any, controls: { displayError: boolean }) => MaybePromise;
     'loading.state:started': (element: HTMLElement, request: BackendRequest) => MaybePromise;
     'loading.state:finished': (element: HTMLElement) => MaybePromise;
     'model:set': (model: string, value: any, component: Component) => MaybePromise;
@@ -349,6 +350,22 @@ export default class Component {
             }
 
             return response;
+        }).catch((error: any) => {
+            const controls = { displayError: true };
+
+            this.hooks.triggerHook('request:error', error, requestConfig, controls);
+
+            if (controls.displayError) {
+                this.renderError(`<p>${error}</p>`);
+            }
+
+            this.backendRequest = null;
+
+            // if we have a pending request, try it now
+            if (this.isRequestPending) {
+                this.isRequestPending = false;
+                this.performRequest();
+            }
         });
     }
 

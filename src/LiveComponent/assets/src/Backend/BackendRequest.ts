@@ -10,7 +10,8 @@ export default class {
             this.isResolved = true;
 
             return response;
-        });
+        }).catch(() => {});
+
         this.actions = actions;
         this.updatedModels = updateModels;
     }
