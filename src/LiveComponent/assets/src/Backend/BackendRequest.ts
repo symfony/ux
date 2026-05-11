@@ -6,11 +6,13 @@ export default class {
 
     constructor(promise: Promise<Response>, actions: string[], updateModels: string[]) {
         this.promise = promise;
-        this.promise.then((response) => {
-            this.isResolved = true;
+        this.promise
+            .then((response) => {
+                this.isResolved = true;
 
-            return response;
-        }).catch(() => {});
+                return response;
+            })
+            .catch(() => {});
 
         this.actions = actions;
         this.updatedModels = updateModels;
