@@ -3,6 +3,7 @@
     "type": "component",
     "name": "Resizable",
     "description": "A split-pane layout with draggable handles to redistribute space between panels.",
+    "version-added": "3.0",
     "copy-files": {
         "assets/": "assets/",
         "templates/": "templates/"

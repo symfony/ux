@@ -3,6 +3,7 @@
     "type": "component",
     "name": "Input",
     "description": "The input field is an important part of the form element that can be used to create interactive controls to accept data from the user based on multiple input types, such as text, email, number, password, URL, phone number, and more.",
+    "version-added": "2.35",
     "copy-files": {
         "templates/": "templates/"
     },

@@ -3,6 +3,7 @@
     "type": "component",
     "name": "Hover Card",
     "description": "A popup that displays rich content when a trigger is hovered.",
+    "version-added": "3.0",
     "copy-files": {
         "assets/": "assets/",
         "templates/": "templates/"

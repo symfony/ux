@@ -3,6 +3,7 @@
     "type": "component",
     "name": "Collapsible",
     "description": "An interactive component which expands and collapses a section of content.",
+    "version-added": "3.0",
     "copy-files": {
         "assets/": "assets/",
         "templates/": "templates/"
