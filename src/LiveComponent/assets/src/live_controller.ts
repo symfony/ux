@@ -94,6 +94,11 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     }
 
     connect() {
+        // Stimulus reuses this controller when its element reconnects, so the props may have changed since initialize()
+        if (JSON.stringify(this.propsValue) !== JSON.stringify(this.component.valueStore.getOriginalProps())) {
+            this.createComponent();
+        }
+
         this.connectComponent();
 
         this.mutationObserver.observe(this.element, {
