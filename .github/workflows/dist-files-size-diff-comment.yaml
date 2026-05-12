@@ -6,8 +6,14 @@ on:
         types:
             - completed
 
+permissions:
+    contents: read # Required to checkout the repository (default)
+    actions: read # Required to download artifacts from the triggering workflow run
+    pull-requests: write # Required to post the size diff comment on the pull request
+
 jobs:
     dist-files-size-diff:
+        if: github.event.workflow_run.conclusion == 'success'
         runs-on: ubuntu-latest
         steps:
             - name: Download artifacts
@@ -20,7 +26,12 @@ jobs:
             - name: Read pr-number artifact to env var
               id: read-pr-number
               run: |
-                  echo "pr-number=$(cat ./pr-number)" >> $GITHUB_OUTPUT
+                  PR_NUMBER=$(cat ./pr-number)
+                  if ! [[ "$PR_NUMBER" =~ ^[0-9]+$ ]]; then
+                      echo "Invalid PR number: $PR_NUMBER"
+                      exit 1
+                  fi
+                  echo "pr-number=$PR_NUMBER" >> $GITHUB_OUTPUT
 
             - name: Comment on the pull request (if success)
               uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0
