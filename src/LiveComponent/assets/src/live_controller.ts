@@ -93,6 +93,16 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     }
 
     connect() {
+        // Stimulus only calls initialize() once per controller instance. When
+        // the same DOM element is disconnected then reconnected (e.g. a parent
+        // morphs it back in with new props), connect() is called again on the
+        // existing controller. If the props now differ from what the Component
+        // was built with, the ValueStore is stale and would reject any model
+        // matching the new server-rendered HTML — so rebuild the Component.
+        if (JSON.stringify(this.propsValue) !== JSON.stringify(this.component.valueStore.getOriginalProps())) {
+            this.createComponent();
+        }
+
         this.connectComponent();
 
         this.mutationObserver.observe(this.element, {
