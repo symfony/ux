@@ -30,7 +30,23 @@ import type {
     PopupOptions,
     PolylineOptions as RectangleOptions,
 } from 'leaflet';
-import * as L from 'leaflet';
+import type * as L from 'leaflet';
+import * as LeafletModule from 'leaflet';
+import { createAdapter } from './leafletAdapter';
+
+const adapter = createAdapter(LeafletModule);
+
+// Symfony UX's default marker icon, used when the caller hasn't supplied one
+// via `bridgeOptions.icon` or a custom `Icon` definition. Built once at
+// module load rather than per-connect to avoid re-parsing the SVG for every
+// controller instance on the page.
+const defaultMarkerIcon = adapter.createDivIcon({
+    html: '<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd" stroke-linecap="round" clip-rule="evenodd" viewBox="0 0 500 820"><defs><linearGradient id="__sf_ux_map_gradient_marker_fill" x1="0" x2="1" y1="0" y2="0" gradientTransform="matrix(0 -37.57 37.57 0 416.45 541)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#126FC6"/><stop offset="1" stop-color="#4C9CD1"/></linearGradient><linearGradient id="__sf_ux_map_gradient_marker_border" x1="0" x2="1" y1="0" y2="0" gradientTransform="matrix(0 -19.05 19.05 0 414.48 522.49)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#2E6C97"/><stop offset="1" stop-color="#3883B7"/></linearGradient></defs><circle cx="252.31" cy="266.24" r="83.99" fill="#fff"/><path fill="url(#__sf_ux_map_gradient_marker_fill)" stroke="url(#__sf_ux_map_gradient_marker_border)" stroke-width="1.1" d="M416.54 503.61c-6.57 0-12.04 5.7-12.04 11.87 0 2.78 1.56 6.3 2.7 8.74l9.3 17.88 9.26-17.88c1.13-2.43 2.74-5.79 2.74-8.74 0-6.18-5.38-11.87-11.96-11.87Zm0 7.16a4.69 4.69 0 1 1-.02 9.4 4.69 4.69 0 0 1 .02-9.4Z" transform="translate(-7889.1 -9807.44) scale(19.54)"/></svg>',
+    iconSize: [25, 41],
+    iconAnchor: [12.5, 41],
+    popupAnchor: [0, -41],
+    className: '',
+});
 
 type MapOptions = Pick<LeafletMapOptions, 'attributionControl' | 'zoomControl'> & {
     attributionControlOptions?: { position: ControlPosition; prefix: string | false };
@@ -63,18 +79,6 @@ export default class extends AbstractMapController<
 > {
     declare map: L.Map;
 
-    connect(): void {
-        L.Marker.prototype.options.icon = L.divIcon({
-            html: '<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd" stroke-linecap="round" clip-rule="evenodd" viewBox="0 0 500 820"><defs><linearGradient id="__sf_ux_map_gradient_marker_fill" x1="0" x2="1" y1="0" y2="0" gradientTransform="matrix(0 -37.57 37.57 0 416.45 541)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#126FC6"/><stop offset="1" stop-color="#4C9CD1"/></linearGradient><linearGradient id="__sf_ux_map_gradient_marker_border" x1="0" x2="1" y1="0" y2="0" gradientTransform="matrix(0 -19.05 19.05 0 414.48 522.49)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#2E6C97"/><stop offset="1" stop-color="#3883B7"/></linearGradient></defs><circle cx="252.31" cy="266.24" r="83.99" fill="#fff"/><path fill="url(#__sf_ux_map_gradient_marker_fill)" stroke="url(#__sf_ux_map_gradient_marker_border)" stroke-width="1.1" d="M416.54 503.61c-6.57 0-12.04 5.7-12.04 11.87 0 2.78 1.56 6.3 2.7 8.74l9.3 17.88 9.26-17.88c1.13-2.43 2.74-5.79 2.74-8.74 0-6.18-5.38-11.87-11.96-11.87Zm0 7.16a4.69 4.69 0 1 1-.02 9.4 4.69 4.69 0 0 1 .02-9.4Z" transform="translate(-7889.1 -9807.44) scale(19.54)"/></svg>',
-            iconSize: [25, 41],
-            iconAnchor: [12.5, 41],
-            popupAnchor: [0, -41],
-            className: '', // Adding an empty class to the icon to avoid the default Leaflet styles
-        });
-
-        super.connect();
-    }
-
     public centerValueChanged(): void {
         if (this.map && this.hasCenterValue && this.centerValue && this.hasZoomValue && this.zoomValue) {
             this.map.setView(this.centerValue, this.zoomValue);
@@ -100,7 +104,7 @@ export default class extends AbstractMapController<
     }
 
     protected dispatchEvent(name: string, payload: Record<string, unknown> = {}): void {
-        payload.L = L;
+        payload.L = adapter.legacyNamespace;
         this.dispatch(name, {
             prefix: 'ux:map',
             detail: payload,
@@ -110,7 +114,7 @@ export default class extends AbstractMapController<
     protected doCreateMap({ definition }: { definition: MapDefinition<MapOptions, LeafletMapOptions> }): L.Map {
         const { center, zoom, minZoom, maxZoom, options, bridgeOptions = {} } = definition;
 
-        const map = L.map(this.element, {
+        const map = adapter.createMap(this.element, {
             center: center === null ? undefined : center,
             zoom: zoom === null ? undefined : zoom,
             minZoom: minZoom === null ? undefined : minZoom,
@@ -122,18 +126,20 @@ export default class extends AbstractMapController<
         });
 
         if (options.tileLayer) {
-            L.tileLayer(options.tileLayer.url, {
-                attribution: options.tileLayer.attribution,
-                ...options.tileLayer.options,
-            }).addTo(map);
+            adapter
+                .createTileLayer(options.tileLayer.url, {
+                    attribution: options.tileLayer.attribution,
+                    ...options.tileLayer.options,
+                })
+                .addTo(map);
         }
 
         if (typeof options.attributionControlOptions !== 'undefined') {
-            L.control.attribution({ ...options.attributionControlOptions }).addTo(map);
+            adapter.createAttributionControl({ ...options.attributionControlOptions }).addTo(map);
         }
 
         if (typeof options.zoomControlOptions !== 'undefined') {
-            L.control.zoom({ ...options.zoomControlOptions }).addTo(map);
+            adapter.createZoomControl({ ...options.zoomControlOptions }).addTo(map);
         }
 
         return map;
@@ -142,18 +148,25 @@ export default class extends AbstractMapController<
     protected doCreateMarker({ definition }: { definition: MarkerDefinition<MarkerOptions, PopupOptions> }): L.Marker {
         const { '@id': _id, position, title, infoWindow, icon, bridgeOptions = {} } = definition;
 
-        const marker = L.marker(position, {
+        const hasBridgeIcon = Object.prototype.hasOwnProperty.call(bridgeOptions, 'icon');
+        const markerOptions: MarkerOptions = {
             title: title || undefined,
             riseOnHover: true,
+            // Apply the Symfony UX default icon per-marker, unless the caller
+            // already supplied one via bridgeOptions.icon or a custom icon
+            // definition (handled via doCreateIcon below).
+            ...(hasBridgeIcon || icon ? {} : { icon: defaultMarkerIcon }),
             ...bridgeOptions,
-        }).addTo(this.map);
+        };
+
+        const marker = adapter.createMarker(position, markerOptions).addTo(this.map);
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: marker });
         }
 
         if (icon) {
-            if (Object.prototype.hasOwnProperty.call(bridgeOptions, 'icon')) {
+            if (hasBridgeIcon) {
                 console.warn(
                     '[Symfony UX Map] Defining "bridgeOptions.icon" for a marker with a custom icon is not supported and will be ignored.'
                 );
@@ -176,7 +189,7 @@ export default class extends AbstractMapController<
     }): L.Polygon {
         const { '@id': _id, points, infoWindow, bridgeOptions = {} } = definition;
 
-        const polygon = L.polygon(points, { ...bridgeOptions }).addTo(this.map);
+        const polygon = adapter.createPolygon(points, { ...bridgeOptions }).addTo(this.map);
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: polygon });
@@ -196,7 +209,7 @@ export default class extends AbstractMapController<
     }): L.Polyline {
         const { '@id': _id, points, infoWindow, bridgeOptions = {} } = definition;
 
-        const polyline = L.polyline(points, { ...bridgeOptions }).addTo(this.map);
+        const polyline = adapter.createPolyline(points, { ...bridgeOptions }).addTo(this.map);
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: polyline });
@@ -212,7 +225,7 @@ export default class extends AbstractMapController<
     protected doCreateCircle({ definition }: { definition: CircleDefinition<CircleOptions, PopupOptions> }): L.Circle {
         const { '@id': _id, center, radius, infoWindow, bridgeOptions = {} } = definition;
 
-        const circle = L.circle(center, { radius, ...bridgeOptions }).addTo(this.map);
+        const circle = adapter.createCircle(center, { radius, ...bridgeOptions }).addTo(this.map);
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: circle });
@@ -232,13 +245,15 @@ export default class extends AbstractMapController<
     }): L.Rectangle {
         const { '@id': _id, southWest, northEast, infoWindow, bridgeOptions = {} } = definition;
 
-        const rectangle = L.rectangle(
-            [
-                [southWest.lat, southWest.lng],
-                [northEast.lat, northEast.lng],
-            ],
-            { ...bridgeOptions }
-        ).addTo(this.map);
+        const rectangle = adapter
+            .createRectangle(
+                [
+                    [southWest.lat, southWest.lng],
+                    [northEast.lat, northEast.lng],
+                ],
+                { ...bridgeOptions }
+            )
+            .addTo(this.map);
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: rectangle });
@@ -287,25 +302,19 @@ export default class extends AbstractMapController<
     protected doCreateIcon({ definition, element }: { definition: Icon; element: L.Marker }): void {
         const { type, width, height } = definition;
 
+        // `className: ''` suppresses Leaflet's default `.leaflet-div-icon`
+        // / `.leaflet-marker-icon` styles, which would otherwise double-draw
+        // a white background under the user-provided icon.
+        const iconSize: [number, number] = [width, height];
+        const className = '';
+
         let icon: L.DivIcon | L.Icon;
         if (type === IconTypes.Svg) {
-            icon = L.divIcon({
-                html: definition.html,
-                iconSize: [width, height],
-                className: '', // Adding an empty class to the icon to avoid the default Leaflet styles
-            });
+            icon = adapter.createDivIcon({ html: definition.html, iconSize, className });
         } else if (type === IconTypes.UxIcon) {
-            icon = L.divIcon({
-                html: definition._generated_html,
-                iconSize: [width, height],
-                className: '', // Adding an empty class to the icon to avoid the default Leaflet styles
-            });
+            icon = adapter.createDivIcon({ html: definition._generated_html, iconSize, className });
         } else if (type === IconTypes.Url) {
-            icon = L.icon({
-                iconUrl: definition.url,
-                iconSize: [width, height],
-                className: '', // Adding an empty class to the icon to avoid the default Leaflet styles
-            });
+            icon = adapter.createIcon({ iconUrl: definition.url, iconSize, className });
         } else {
             throw new Error(`Unsupported icon type: ${type}.`);
         }

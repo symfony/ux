@@ -131,9 +131,51 @@ $leafletOptions = (new LeafletOptions())
     ->tileLayer(false);
 ```
 
+## Leaflet 2.x support
+
+The Leaflet bridge supports **both Leaflet 1.9.x and 2.x** peer installations. Version detection happens once, at controller connect time — there is no build-time flag and no separate bundle.
+
+### What changed in Leaflet 2
+
+Leaflet 2 dropped the lowercase factory functions (`L.map()`, `L.marker()`, `L.tileLayer()`, `L.icon()`, etc.) in favor of named class exports (`new Map()`, `new Marker()`, etc.) and stopped exporting a default global `L` namespace.
+
+### Preserved consumer contract
+
+Userland code listening to `ux:map:*:before-create` and `ux:map:*:after-create` events receives the Leaflet namespace as `event.detail.L`. **This contract is preserved on both versions.** Under v2, the bridge synthesizes a v1-flavored namespace from the v2 named class exports so that existing code such as:
+
+```js
+_onMarkerBeforeCreate(event) {
+    const { definition, L } = event.detail;
+    const redIcon = L.icon({ iconUrl: '...', iconSize: [38, 95] });
+    definition.bridgeOptions = { icon: redIcon };
+}
+```
+
+keeps working without any edit. The synthesized namespace is constructed from the v2 named imports only — no runtime `eval`, no global mutation.
+
+### Installing Leaflet 2
+
+Bump the `leaflet` peer dependency in your own `package.json`; the controller will detect it on the next page load:
+
+```json
+{
+    "dependencies": {
+        "leaflet": "^2.0.0"
+    }
+}
+```
+
+CSS: Leaflet 2 ships `dist/leaflet.css` on both npm and jsDelivr (no minified variant). See Known Issues below for the alias workaround that applies to both versions.
+
 ## Known issues
 
-### Unable to find `leaflet/dist/leaflet.min.css` file when using Webpack Encore
+### Unable to find `leaflet/dist/leaflet.min.css`
+
+The Stimulus controller references `leaflet/dist/leaflet.min.css` — a path that exists on [jsDelivr](https://www.jsdelivr.com/package/npm/leaflet) for Leaflet 1.9.x (used by the Symfony AssetMapper component) but does **not** exist in the Leaflet 1.9 [npm package](https://www.npmjs.com/package/leaflet), and **not at all** in the Leaflet 2.x package (v2 ships only `leaflet.css` on both npm and jsDelivr).
+
+The correct path is `leaflet/dist/leaflet.css`, but it is not possible to change the bundled import because it would break compatibility with the AssetMapper + Leaflet 1.9 combination.
+
+#### Webpack Encore
 
 When using Webpack Encore with the Leaflet bridge, you may encounter the following error:
 
@@ -147,18 +189,24 @@ webpack compiled with 1 error
  ELIFECYCLE  Command failed with exit code 1.
 ```
 
-That's because the Leaflet's Stimulus controller references the `leaflet/dist/leaflet.min.css` file,
-which exists on [jsDelivr](https://www.jsdelivr.com/package/npm/leaflet) (used by the Symfony AssetMapper component),
-but does not in the [`leaflet` npm package](https://www.npmjs.com/package/leaflet).
-The correct path is `leaflet/dist/leaflet.css`, but it is not possible to fix it because it would break compatibility
-with the Symfony AssetMapper component.
-
-As a workaround, you can configure Webpack Encore to add an alias for the `leaflet/dist/leaflet.min.css` file:
+As a workaround, you can configure Webpack Encore to add an alias for the `leaflet/dist/leaflet.min.css` file. This works for both Leaflet 1.9 and 2:
 
 ```js
 Encore.addAliases({
     'leaflet/dist/leaflet.min.css': 'leaflet/dist/leaflet.css',
 });
+```
+
+#### AssetMapper on Leaflet 2
+
+If you install Leaflet 2 and use AssetMapper, pin the CSS entry in your `importmap.php` to the un-minified file:
+
+```php
+'leaflet/dist/leaflet.min.css' => [
+    'version' => '2.0.0',
+    'type' => 'css',
+    'url' => 'https://cdn.jsdelivr.net/npm/leaflet@2.0.0/dist/leaflet.css',
+],
 ```
 
 ## Resources

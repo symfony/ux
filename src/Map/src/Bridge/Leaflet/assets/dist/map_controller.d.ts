@@ -225,7 +225,6 @@ type MapOptions$1 = Pick<MapOptions, 'attributionControl' | 'zoomControl'> & {
 };
 declare class export_default extends export_default$1<MapOptions$1, MapOptions, L.Map, MarkerOptions, L.Marker, PopupOptions, L.Popup, PolylineOptions, L.Polygon, PolylineOptions, L.Polyline, CircleOptions, L.Circle, PolylineOptions, L.Rectangle> {
   map: L.Map;
-  connect(): void;
   centerValueChanged(): void;
   zoomValueChanged(): void;
   minZoomValueChanged(): void;
