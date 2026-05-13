@@ -634,6 +634,14 @@ final class LiveComponentHydrator
         }
 
         if (\is_array($value)) {
+            // Security note: when a "plain" object (non-entity, non-enum, non-Uid)
+            // is hydrated for a writable LiveProp, the property names below come
+            // from the client-supplied $value. PropertyAccessor still honours
+            // visibility (it requires a public property or setter), so the surface
+            // is bounded by the class's own write surface — but any public setter
+            // is reachable from the frontend. Component authors using
+            // writable: true on plain DTOs must keep that in mind when adding
+            // setters (e.g. setRole(), setIsAdmin()).
             $object = new $className();
             foreach ($value as $propertyName => $propertyValue) {
                 $reflectionClass = new \ReflectionClass($className);
