@@ -1,0 +1,81 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-04-26T13:00:14Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/seb-jean/ux/tree/improving-turbo-stream-sources-listeners/src/Turbo/assets/dist"><b>Turbo</b></a></td></tr><tr>
+                <td><a href="https://github.com/seb-jean/ux/blob/improving-turbo-stream-sources-listeners/src/Turbo/assets/dist/mercure_stream_source_element.d.ts"><code>mercure_stream_source_element.d.ts</code></a></td>
+            <td><em>Added</em></td><td>
+                    <code>11 B</code>
+                    / <code>66 B</code>
+                </td></tr><tr>
+                <td><a href="https://github.com/seb-jean/ux/blob/improving-turbo-stream-sources-listeners/src/Turbo/assets/dist/mercure_stream_source_element.js"><code>mercure_stream_source_element.js</code></a></td>
+            <td><em>Added</em></td><td>
+                    <code>1.06 kB</code>
+                    / <code>484 B</code>
+                </td></tr><tr>
+                <td><a href="https://github.com/seb-jean/ux/blob/improving-turbo-stream-sources-listeners/src/Turbo/assets/dist/turbo_stream_controller.js"><code>turbo_stream_controller.js</code></a></td>
+            <td>
+                    <code>1.11 kB</code>
+                    / <code>545 B</code>
+                </td><td>
+                    <code>1.47 kB</code><sup>+32% 📈</sup>
+                    / <code>721 B</code><sup>+32% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-05-03T14:18:33Z
+
+I'm getting an error related to the `.doctor-rst.yaml` file.
+
+```
+src/Turbo/doc/index.rst ✘
+
+722: You are not allowed to use version "3.1". Only major version "2" is allowed.
+
+-> .. deprecated:: 3.1
+```
+
+Should I modify `src/Turbo/doc/index.rst` to remove `.. deprecated:: 3.1`, or should I modify the `.doctor-rst.yaml` file?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-05-03T20:18:56Z
+
+Following @MrYamous's work in https://github.com/symfony/ux/pull/3493, I think we must update the following rules:
+```yaml
+    deprecated_directive_major_version:
+        major_version: 3
+    deprecated_directive_min_version:
+        min_version: '3.0'
+```
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-05-05T08:41:23Z
+
+I just merged https://github.com/symfony/ux/pull/3515, you can rebase this one 🙏🏻
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-05-05T08:52:54Z
+
+I just rebased
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-05-11T12:19:40Z
+
+> Final round
+
+I made the corrections.
