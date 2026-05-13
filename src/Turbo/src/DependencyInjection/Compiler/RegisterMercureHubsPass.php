@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\Turbo\Bridge\Mercure\Broadcaster;
+use Symfony\UX\Turbo\Bridge\Mercure\MercureStreamSourceRenderer;
 use Symfony\UX\Turbo\Bridge\Mercure\TurboStreamListenRenderer;
 
 /**
@@ -37,10 +38,18 @@ final class RegisterMercureHubsPass implements CompilerPassInterface
                 ->addArgument(new Reference('twig'))
                 ->addTag('turbo.renderer.stream_listen', ['transport' => $name]);
 
+            $container->register("turbo.mercure.$name.stream_source_renderer", MercureStreamSourceRenderer::class)
+                ->addArgument(new Reference('turbo.id_accessor'))
+                ->addArgument(new Reference('twig'))
+                ->addArgument($name)
+                ->addTag('turbo.stream_source_renderer', ['transport' => $name]);
+
             foreach ($tags as $tag) {
                 if (isset($tag['default']) && $tag['default'] && 'default' !== $name) {
                     $container->getDefinition("turbo.mercure.$name.renderer")
                         ->addTag('turbo.renderer.stream_listen', ['transport' => 'default']);
+                    $container->getDefinition("turbo.mercure.$name.stream_source_renderer")
+                        ->addTag('turbo.stream_source_renderer', ['transport' => 'default']);
                 }
             }
 

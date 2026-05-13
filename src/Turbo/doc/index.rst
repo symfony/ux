@@ -719,6 +719,12 @@ Then, enable the "mercure stream" controller in ``assets/controllers.json``:
         }
     },
 
+.. deprecated:: 3.1
+
+    Manually enabling the ``mercure-turbo-stream`` controller is deprecated since
+    Symfony UX 3.1. Use the ``<twig:Turbo:Stream:From>`` Twig component or the
+    ``turbo_stream_from()`` Twig function instead.
+
 The easiest way to have a working development (and production-ready)
 environment is to use `Symfony Docker`_, which comes with
 a Mercure hub integrated in the web server.
@@ -829,6 +835,42 @@ as ``turbo_stream_listen()`` third argument to authenticate with the hub
 Keep in mind that you can use all features provided by Symfony Mercure,
 including `private updates`_ (to ensure that only authorized users will
 receive the updates) and `async dispatching with Symfony Messenger`_.
+
+<twig:Turbo:Stream:From> Twig Component
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. versionadded:: 3.1
+
+    The ``<twig:Turbo:Stream:From>`` Twig component was introduced in Symfony UX 3.1.
+
+The ``<twig:Turbo:Stream:From>`` Twig component renders a ``<turbo-mercure-stream-source>``
+custom HTML element that subscribes to a Mercure topic and delivers incoming
+Turbo Stream messages to the page.
+
+.. code-block:: html+twig
+
+    {# subscribe to a string topic #}
+    <twig:Turbo:Stream:From topics="chat" />
+
+    {# subscribe to an entity class (resolves its topic URL automatically) #}
+    <twig:Turbo:Stream:From topics="App\\Entity\\Book" />
+
+    {# subscribe to a private topic (sets withCredentials on the EventSource) #}
+    <twig:Turbo:Stream:From topics="chat" private />
+
+    {# subscribe using a specific transport #}
+    <twig:Turbo:Stream:From topics="App\\Entity\\Book" transport="hub2" />
+
+    {# subscribe to multiple topics #}
+    <twig:Turbo:Stream:From topics="{{ ['topic_a', 'topic_b'] }}" />
+
+You can also use the ``turbo_stream_from()`` Twig function directly:
+
+.. code-block:: twig
+
+    {{ turbo_stream_from('chat') }}
+    {{ turbo_stream_from('chat', private: true) }}
+    {{ turbo_stream_from('App\\Entity\\Book', transport: 'hub2') }}
 
 Broadcast Doctrine Entities Update
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1076,41 +1118,36 @@ transports::
         }
     }
 
-Then a stream listener::
+Then a stream source renderer::
 
-    // src/Turbo/TurboStreamListenRenderer.php
+    // src/Turbo/MyStreamSourceRenderer.php
     namespace App\Turbo;
 
     use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
-    use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
-    use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
-    use Twig\Environment;
+    use Symfony\UX\Turbo\StreamSourceRendererInterface;
 
     #[AsTaggedItem(index: 'my-transport')]
-    class TurboStreamListenRenderer implements TurboStreamListenRendererInterface
+    class MyStreamSourceRenderer implements StreamSourceRendererInterface
     {
-        public function __construct(
-            private StimulusHelper $stimulusHelper,
-        ) {}
-
-        public function renderTurboStreamListen(Environment $env, $topic): string
+        public function render(string|object|array $topics, array $options = []): string
         {
-            $stimulusAttributes = $this->stimulusHelper->createStimulusAttributes();
-            $stimulusAttributes->addController('your_stimulus_controller', [
-                /* controller values such as topic */
-            ]);
+            $url = 'https://my-transport.example.com/subscribe?topic='.$topics;
+            $private = $options['private'] ?? false;
 
-            return (string) $stimulusAttributes;
+            return \sprintf(
+                '<my-custom-stream-source src="%s"%s></my-custom-stream-source>',
+                htmlspecialchars($url, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8'),
+                $private ? ' private' : '',
+            );
         }
     }
 
 The broadcaster must be registered as a service tagged with
-``turbo.broadcaster`` and the renderer must be tagged with
-``turbo.renderer.stream_listen``. If you enabled `autoconfigure option`_
+``turbo.broadcaster`` and the stream source renderer must be tagged with
+``turbo.stream_source_renderer``. If you enabled `autoconfigure option`_
 (it's the case by default), these tags will be added automatically
 because these classes implement the ``BroadcasterInterface`` and
-``TurboStreamListenRendererInterface`` interfaces, the related services
-will be.
+``StreamSourceRendererInterface`` interfaces.
 
 Meta Tags
 ~~~~~~~~~

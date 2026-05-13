@@ -33,12 +33,16 @@
                 "main": "dist/turbo_controller.js",
                 "webpackMode": "eager",
                 "fetch": "eager",
-                "enabled": true
+                "enabled": true,
+                "autoimport": {
+                    "@symfony/ux-turbo/dist/mercure_stream_source_element.js": true
+                }
             },
             "mercure-turbo-stream": {
                 "main": "dist/turbo_stream_controller.js",
                 "fetch": "eager",
-                "enabled": false
+                "enabled": false,
+                "deprecated": "The \"mercure-turbo-stream\" Stimulus controller is deprecated since Symfony UX 3.1. Use turbo_stream_from() or the <twig:Turbo:Stream:From> Twig component instead."
             }
         },
         "importmap": {

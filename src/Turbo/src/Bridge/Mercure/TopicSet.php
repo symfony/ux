@@ -11,8 +11,12 @@
 
 namespace Symfony\UX\Turbo\Bridge\Mercure;
 
+trigger_deprecation('symfony/ux-turbo', '3.1', 'The "%s" class is deprecated since Symfony UX 3.1 and will be removed in 4.0.', TopicSet::class);
+
 /**
  * @internal
+ *
+ * @deprecated since Symfony UX 3.1, will be removed in 4.0.
  */
 final class TopicSet
 {
