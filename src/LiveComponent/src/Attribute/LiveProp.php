@@ -102,6 +102,16 @@ final class LiveProp
          * Whether to synchronize this property with a query parameter
          * in the URL. Pass true to configure the mapping automatically, or a
          * {@see UrlMapping} instance to configure the mapping.
+         *
+         * Security: when the underlying property type is a Doctrine entity (or
+         * any object loaded via {@see HydrationExtensionInterface}), the
+         * identifier read from the URL is trusted as-is — there is no
+         * authorization check at hydration time. A user visiting
+         * "?article=999" will receive the corresponding entity loaded into the
+         * component, regardless of whether they would otherwise have access to
+         * it. Enforce the access decision yourself, e.g. via a #[PostMount] or
+         * #[PreReRender] hook that calls Security::isGranted() or denies via
+         * AccessDeniedHttpException.
          */
         private bool|UrlMapping $url = false,
 
