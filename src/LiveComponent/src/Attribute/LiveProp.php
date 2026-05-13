@@ -34,6 +34,14 @@ final class LiveProp
          * Or set to an array of paths within this object/array
          * that are writable.
          *
+         * Security: when the underlying property type is a Doctrine entity (or
+         * any object loaded via {@see HydrationExtensionInterface}), an
+         * "updated" payload of the form `{"prop": <id>}` will load *any*
+         * entity of that class by its identifier — no authorization check is
+         * performed at hydration time. Make sure the action that consumes the
+         * value enforces access (#[IsGranted], voter, manual check) before
+         * persisting or rendering anything sensitive.
+         *
          * @var bool|string[]
          */
         private bool|array $writable = false,
