@@ -42,7 +42,10 @@ class EntitySearchUtil
             // adding '0' turns the string into a numeric value
             'numeric_query' => is_numeric($query) ? 0 + $query : $query,
             'uuid_query' => $query,
-            'text_query' => '%'.$lowercaseQuery.'%',
+            // escape the LIKE wildcards "%" and "_" (and the escape char "\")
+            // so a user-supplied wildcard cannot broaden the search; paired
+            // with the "ESCAPE '\'" clause on the LIKE expression below
+            'text_query' => '%'.addcslashes($lowercaseQuery, '\\%_').'%',
             'words_query' => explode(' ', $lowercaseQuery),
         ];
 
@@ -120,7 +123,8 @@ class EntitySearchUtil
                 $expressions[] = $queryBuilder->expr()->eq(\sprintf('%s.%s', $entityName, $propertyName), ':query_for_uuids');
                 $queryBuilder->setParameter('query_for_uuids', $dqlParameters['uuid_query'], 'ulid');
             } elseif ($isTextProperty) {
-                $expressions[] = $queryBuilder->expr()->like(\sprintf('LOWER(%s.%s)', $entityName, $propertyName), ':query_for_text');
+                // ESCAPE '\' so the backslash-escaped wildcards in :query_for_text are treated literally
+                $expressions[] = \sprintf("LOWER(%s.%s) LIKE :query_for_text ESCAPE '\\'", $entityName, $propertyName);
                 $queryBuilder->setParameter('query_for_text', $dqlParameters['text_query']);
 
                 $expressions[] = $queryBuilder->expr()->in(\sprintf('LOWER(%s.%s)', $entityName, $propertyName), ':query_as_words');
