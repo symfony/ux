@@ -110,7 +110,7 @@ final class EntityAutocompleteController
             \ARRAY_FILTER_USE_KEY,
         );
 
-        if ($checksum !== $this->checksumCalculator->calculateForArray($extraOptionsWithoutChecksum)) {
+        if (!hash_equals($this->checksumCalculator->calculateForArray($extraOptionsWithoutChecksum), $checksum)) {
             throw new BadRequestHttpException('The extra options have been tampered with.');
         }
     }
