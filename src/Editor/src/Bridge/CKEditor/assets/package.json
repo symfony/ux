@@ -1,0 +1,27 @@
+{
+    "name": "@symfony/ux-editor-ckeditor",
+    "description": "CKEditor 5 bridge controller for symfony/ux-editor",
+    "license": "MIT",
+    "version": "0.1.0",
+    "symfony": {
+        "controllers": {"ckeditor": {"main": "dist/controller.js", "fetch": "lazy", "enabled": true}},
+        "importmap": {"@symfony/ux-editor": "^0.1.0", "@ckeditor/ckeditor5-build-classic": "^41.0.0"}
+    },
+    "type": "module",
+    "main": "dist/controller.js",
+    "types": "dist/controller.d.ts",
+    "files": ["dist/"],
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "@symfony/ux-editor": "^0.1.0",
+        "@ckeditor/ckeditor5-build-classic": "^41.0.0"
+    },
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.2.2",
+        "@ckeditor/ckeditor5-build-classic": "^41.0.0",
+        "typescript": "^5.8.3",
+        "vitest": "^4.1.0",
+        "jsdom": "^26.1.0",
+        "tslib": "^2.8.1"
+    }
+}
