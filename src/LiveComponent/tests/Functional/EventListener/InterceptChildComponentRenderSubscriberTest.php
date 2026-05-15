@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\BrowserKit\AbstractBrowser;
+use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\Test\HasBrowser;
 
@@ -94,12 +95,12 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
                 ), $content);
                 // new props are JUST the "textLength" + a checksum for it specifically
                 $this->assertStringContainsString(\sprintf(
-                    '<li data-live-name-value="todo_item" id="%s0" data-live-fingerprint-value="sMvvf7q68tz/Cuk+vDeisDiq+7YPWzT+WZFzI37dGHY=" data-live-props-updated-from-parent-value="{&quot;textLength&quot;:18,&quot;@checksum&quot;:&quot;LGxXa9fMKrJ6PelkUPfqmdwnfkk+LORgoJHXyPpS3Pw=&quot;}" data-live-preserve></li>',
-                    AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX_EMBEDDED
+                    '<li data-live-name-value="todo_item" id="%s0" data-live-fingerprint-value="sMvvf7q68tz/Cuk+vDeisDiq+7YPWzT+WZFzI37dGHY=" data-live-props-updated-from-parent-value="{&quot;textLength&quot;:18,&quot;@checksum&quot;:&quot;ojeSrSewiB7nh7\/xJgEdQcYdY4B4CAisZL3DMOEUuuA=&quot;}" data-live-preserve></li>',
+                    AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX_EMBEDDED,
                 ), $content);
                 $this->assertStringContainsString(\sprintf(
-                    '<li data-live-name-value="todo_item" id="%s1" data-live-fingerprint-value="8AooEz36WYQyxj54BCaDm/jKbcdDdPDLaNO4/49bcQk=" data-live-props-updated-from-parent-value="{&quot;textLength&quot;:10,&quot;@checksum&quot;:&quot;BXUk7q6LI\/6Qx3c62Xiui6287YndmoK3QmVq6e5mcGk=&quot;}" data-live-preserve></li>',
-                    AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX
+                    '<li data-live-name-value="todo_item" id="%s1" data-live-fingerprint-value="8AooEz36WYQyxj54BCaDm/jKbcdDdPDLaNO4/49bcQk=" data-live-props-updated-from-parent-value="{&quot;textLength&quot;:10,&quot;@checksum&quot;:&quot;d54Y+mZ2hLyt4Ap8kfIy2ekPPvqjpqSy5dUJ7yjbEVk=&quot;}" data-live-preserve></li>',
+                    AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX,
                 ), $content);
             });
     }
