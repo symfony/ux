@@ -14,6 +14,9 @@ import ValueStore from './ValueStore';
 
 declare const Turbo: any;
 
+// Must match BatchActionController::MAX_ACTIONS_PER_BATCH on the PHP side.
+export const MAX_ACTIONS_PER_BATCH = 50;
+
 type MaybePromise<T = void> = T | Promise<T>;
 
 export type ComponentHooks = {
@@ -275,9 +278,14 @@ export default class Component {
             }
         }
 
+        // Cap each batch at MAX_ACTIONS_PER_BATCH; the overflow stays queued and
+        // ships in a follow-up request via the isRequestPending mechanism below.
+        const actionsToSend = this.pendingActions.slice(0, MAX_ACTIONS_PER_BATCH);
+        const remainingActions = this.pendingActions.slice(MAX_ACTIONS_PER_BATCH);
+
         const requestConfig = {
             props: this.valueStore.getOriginalProps(),
-            actions: this.pendingActions,
+            actions: actionsToSend,
             updated: this.valueStore.getDirtyProps(),
             children: {},
             updatedPropsFromParent: this.valueStore.getUpdatedPropsFromParent(),
@@ -294,9 +302,9 @@ export default class Component {
         );
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
 
-        this.pendingActions = [];
+        this.pendingActions = remainingActions;
         this.valueStore.flushDirtyPropsToPending();
-        this.isRequestPending = false;
+        this.isRequestPending = remainingActions.length > 0;
 
         this.backendRequest.promise.then(async (response) => {
             const backendResponse = new BackendResponse(response);

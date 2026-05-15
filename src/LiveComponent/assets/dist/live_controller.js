@@ -1494,9 +1494,11 @@ var Component = class {
 		this.unsyncedInputsTracker.resetUnsyncedFields();
 		const filesToSend = {};
 		for (const [key, value] of Object.entries(this.pendingFiles)) if (value.files) filesToSend[key] = value.files;
+		const actionsToSend = this.pendingActions.slice(0, 50);
+		const remainingActions = this.pendingActions.slice(50);
 		const requestConfig = {
 			props: this.valueStore.getOriginalProps(),
-			actions: this.pendingActions,
+			actions: actionsToSend,
 			updated: this.valueStore.getDirtyProps(),
 			children: {},
 			updatedPropsFromParent: this.valueStore.getUpdatedPropsFromParent(),
@@ -1505,9 +1507,9 @@ var Component = class {
 		this.hooks.triggerHook("request:started", requestConfig);
 		this.backendRequest = this.backend.makeRequest(requestConfig.props, requestConfig.actions, requestConfig.updated, requestConfig.children, requestConfig.updatedPropsFromParent, requestConfig.files);
 		this.hooks.triggerHook("loading.state:started", this.element, this.backendRequest);
-		this.pendingActions = [];
+		this.pendingActions = remainingActions;
 		this.valueStore.flushDirtyPropsToPending();
-		this.isRequestPending = false;
+		this.isRequestPending = remainingActions.length > 0;
 		this.backendRequest.promise.then(async (response) => {
 			const backendResponse = new BackendResponse_default(response);
 			const html = await backendResponse.getBody();
