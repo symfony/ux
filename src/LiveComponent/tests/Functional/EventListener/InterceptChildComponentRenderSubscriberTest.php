@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
@@ -136,6 +137,106 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
             // this one is changed, so it renders a full element
             ->assertContains('<li data-live-name-value="todo_item" id="live-4172682817-the-key1"')
         ;
+    }
+
+    /**
+     * @dataProvider provideInvalidChildTags
+     */
+    #[DataProvider('provideInvalidChildTags')]
+    public function testItRejectsInvalidChildTag(string $tag): void
+    {
+        $component = $this->mountComponent('todo_list', [
+            'items' => [
+                ['text' => 'wake up'],
+                ['text' => 'high five a friend'],
+                ['text' => 'take a nap'],
+            ],
+            'includeDataLiveId' => false,
+        ]);
+
+        $dehydratedProps = $this->dehydrateComponent($component);
+
+        $children = [
+            AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX.'0' => [
+                'fingerprint' => 'anything',
+                'tag' => $tag,
+            ],
+        ];
+
+        $url = \sprintf('/_components/todo_list?%s', http_build_query([
+            'props' => json_encode($dehydratedProps->getProps()),
+            'children' => json_encode($children),
+        ]));
+
+        $this->browser()
+            ->visit($url)
+            ->use(function (AbstractBrowser $browser) use ($tag) {
+                $response = $browser->getResponse();
+                $this->assertGreaterThanOrEqual(400, $response->getStatusCode(), \sprintf('Invalid child tag %s must be rejected.', json_encode($tag)));
+            })
+        ;
+    }
+
+    public static function provideInvalidChildTags(): iterable
+    {
+        // XSS payloads
+        yield 'script injection via closing angle' => ['li><script>window.__pwned=1</script><li'];
+        yield 'open angle bracket' => ['<div'];
+        yield 'close angle bracket' => ['div>'];
+        yield 'embedded angle bracket' => ['di>v'];
+        yield 'attribute injection via quote' => ['li onload="x"'];
+        yield 'attribute injection via space' => ['li onclick=x'];
+
+        // empty / whitespace
+        yield 'empty string' => [''];
+        yield 'single space' => [' '];
+        yield 'whitespace only' => ['   '];
+        yield 'leading space' => [' div'];
+        yield 'trailing space' => ['div '];
+        yield 'internal space' => ['di v'];
+        yield 'tab' => ["di\tv"];
+        yield 'newline' => ["di\nv"];
+        yield 'carriage return' => ["di\rv"];
+        yield 'form feed' => ["di\fv"];
+
+        // NUL byte
+        yield 'leading NUL' => ["\0div"];
+        yield 'embedded NUL' => ["di\0v"];
+        yield 'trailing NUL' => ["div\0"];
+        yield 'NUL only' => ["\0"];
+
+        // quotes
+        yield 'wrapped in double quotes' => ['"div"'];
+        yield 'wrapped in single quotes' => ["'div'"];
+        yield 'trailing double quote' => ['div"'];
+        yield 'trailing single quote' => ["div'"];
+        yield 'backtick' => ['`div`'];
+
+        // invalid start character
+        yield 'leading digit' => ['1div'];
+        yield 'digits only' => ['123'];
+        yield 'leading dash' => ['-div'];
+        yield 'leading underscore' => ['_div'];
+
+        // disallowed inner characters
+        yield 'underscore inside' => ['div_x'];
+        yield 'dot inside' => ['my.div'];
+        yield 'colon (namespace)' => ['svg:rect'];
+        yield 'slash' => ['div/'];
+        yield 'leading slash' => ['/div'];
+        yield 'backslash' => ['di\\v'];
+        yield 'equals sign' => ['div=x'];
+        yield 'plus sign' => ['di+v'];
+        yield 'parenthesis' => ['div()'];
+
+        // unicode (not allowed by [a-zA-Z0-9-])
+        yield 'unicode letter (accented)' => ['divé'];
+        yield 'unicode latin extended' => ['divñ'];
+        yield 'unicode math symbol' => ['div×'];
+        yield 'unicode greek' => ['αβγ'];
+        yield 'cjk' => ['日本'];
+        yield 'emoji' => ['🚀'];
+        yield 'unicode non-breaking space' => ["di\xc2\xa0v"];
     }
 
     private function buildUrlForTodoListComponent(array $childrenFingerprints, bool $includeLiveId = false): string

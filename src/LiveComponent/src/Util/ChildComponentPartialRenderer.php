@@ -12,6 +12,7 @@
 namespace Symfony\UX\LiveComponent\Util;
 
 use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
@@ -27,6 +28,8 @@ use Twig\Runtime\EscaperRuntime;
  */
 class ChildComponentPartialRenderer implements ServiceSubscriberInterface
 {
+    private const VALID_TAG = '/\A[a-zA-Z][a-zA-Z0-9-]*+\z/';
+
     public function __construct(
         private FingerprintCalculator $fingerprintCalculator,
         private TwigAttributeHelperFactory $attributeHelperFactory,
@@ -86,6 +89,10 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
      */
     private function createHtml(array $attributes, string $childTag): string
     {
+        if (!preg_match(self::VALID_TAG, $childTag)) {
+            throw new BadRequestHttpException('Invalid child tag.');
+        }
+
         $attributes['data-live-preserve'] = true;
         $attributes = new ComponentAttributes($attributes, $this->twig->getRuntime(EscaperRuntime::class));
 
