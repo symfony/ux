@@ -47,7 +47,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
     public function __construct(
         private ContainerInterface $container,
-        private bool $testMode = true,
+        private bool $testMode = false,
     ) {
     }
 
