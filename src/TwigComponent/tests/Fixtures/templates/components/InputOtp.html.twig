@@ -1,7 +1,7 @@
 {% props maxLength = 6, name = 'otp' %}
 
-{% do provide('inputOtp.maxLength', maxLength) %}
-{% do provide('inputOtp.name', name) %}
+{% do ux_twig_provide('inputOtp.maxLength', maxLength) %}
+{% do ux_twig_provide('inputOtp.name', name) %}
 
 <div class="input-otp">
     {% block content %}{% endblock %}

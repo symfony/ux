@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Notify\Twig;
 
+use Twig\DeprecatedCallableInfo;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -25,7 +26,13 @@ final class NotifyExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('stream_notifications', [NotifyRuntime::class, 'renderStreamNotifications'], ['is_safe' => ['html']]),
+            new TwigFunction('stream_notifications', [NotifyRuntime::class, 'renderStreamNotifications'], [
+                'is_safe' => ['html'],
+                ...(class_exists(DeprecatedCallableInfo::class)
+                    ? ['deprecation_info' => new DeprecatedCallableInfo('symfony/ux-notify', '3.1', 'ux_notify')]
+                    : ['deprecated' => '3.1', 'deprecating_package' => 'symfony/ux-notify', 'alternative' => 'ux_notify']),
+            ]),
+            new TwigFunction('ux_notify', [NotifyRuntime::class, 'renderStreamNotifications'], ['is_safe' => ['html']]),
         ];
     }
 }

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.3.0
+
+- Deprecate Twig function `component()`, use `ux_twig_component()` instead
+- Deprecate Twig function `provide()`, use `ux_twig_provide()` instead
+- Deprecate Twig function `inject()`, use `ux_twig_inject()` instead
+
 ## 3.2.0
 
 - Add `ComponentRendererInterface::preCreateForRender()`, `ComponentRendererInterface::startEmbeddedComponentRender()`, and `ComponentRendererInterface::finishEmbeddedComponentRender()` methods

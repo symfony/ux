@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 3.3.0
+
+- Deprecate Twig function `turbo_is_frame_request()`, use `ux_turbo_is_frame_request()` instead
+- Deprecate Twig function `turbo_frame_request_id()`, use `ux_turbo_frame_request_id()` instead
+- Deprecate Twig function `turbo_stream_from()`, use `ux_turbo_stream_from()` instead
+- Deprecate Twig function `turbo_exempts_page_from_cache()`, use `ux_turbo_exempts_page_from_cache()` instead
+- Deprecate Twig function `turbo_exempts_page_from_preview()`, use `ux_turbo_exempts_page_from_preview()` instead
+- Deprecate Twig function `turbo_page_requires_reload()`, use `ux_turbo_page_requires_reload()` instead
+- Deprecate Twig function `turbo_refreshes_with()`, use `ux_turbo_refreshes_with()` instead
+- Deprecate Twig function `turbo_refresh_method()`, use `ux_turbo_refresh_method()` instead
+- Deprecate Twig function `turbo_refresh_scroll()`, use `ux_turbo_refresh_scroll()` instead
+
 ## 3.2.0
 
 - Prevent installation alongside `symfony/mercure` 0.7.0 and 0.7.1, which are incompatible

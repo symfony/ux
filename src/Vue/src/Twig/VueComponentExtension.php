@@ -12,6 +12,7 @@
 namespace Symfony\UX\Vue\Twig;
 
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
+use Twig\DeprecatedCallableInfo;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -30,7 +31,13 @@ class VueComponentExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('vue_component', [$this, 'renderVueComponent'], ['is_safe' => ['html_attr']]),
+            new TwigFunction('vue_component', [$this, 'renderVueComponent'], [
+                'is_safe' => ['html_attr'],
+                ...(class_exists(DeprecatedCallableInfo::class)
+                    ? ['deprecation_info' => new DeprecatedCallableInfo('symfony/ux-vue', '3.1', 'ux_vue_component')]
+                    : ['deprecated' => '3.1', 'deprecating_package' => 'symfony/ux-vue', 'alternative' => 'ux_vue_component']),
+            ]),
+            new TwigFunction('ux_vue_component', [$this, 'renderVueComponent'], ['is_safe' => ['html_attr']]),
         ];
     }
 

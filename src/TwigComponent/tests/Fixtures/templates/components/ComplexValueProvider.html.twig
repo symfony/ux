@@ -1,5 +1,5 @@
-{% do provide('list', ['a', 'b', 'c']) %}
-{% do provide('config', { 'key': 'value', 'count': 42 }) %}
+{% do ux_twig_provide('list', ['a', 'b', 'c']) %}
+{% do ux_twig_provide('config', { 'key': 'value', 'count': 42 }) %}
 
 <div class="complex-provider">
     {% block content %}{% endblock %}

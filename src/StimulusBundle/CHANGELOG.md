@@ -3,6 +3,12 @@
 ## 3.3.0
 
 - Detect the `stimulusFetch: 'lazy'` directive inside preserved comments (`/*! ... */`)
+- Deprecate Twig function `stimulus_controller()`, use `ux_stimulus_controller()` instead
+- Deprecate Twig function `stimulus_action()`, use `ux_stimulus_action()` instead
+- Deprecate Twig function `stimulus_target()`, use `ux_stimulus_target()` instead
+- Deprecate Twig filter `stimulus_controller`, use `ux_stimulus_controller` instead
+- Deprecate Twig filter `stimulus_action`, use `ux_stimulus_action` instead
+- Deprecate Twig filter `stimulus_target`, use `ux_stimulus_target` instead
 
 ## 3.0.0
 

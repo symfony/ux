@@ -12,6 +12,7 @@
 namespace Symfony\UX\React\Twig;
 
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
+use Twig\DeprecatedCallableInfo;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -29,7 +30,13 @@ class ReactComponentExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('react_component', [$this, 'renderReactComponent'], ['is_safe' => ['html_attr']]),
+            new TwigFunction('react_component', [$this, 'renderReactComponent'], [
+                'is_safe' => ['html_attr'],
+                ...(class_exists(DeprecatedCallableInfo::class)
+                    ? ['deprecation_info' => new DeprecatedCallableInfo('symfony/ux-react', '3.1', 'ux_react_component')]
+                    : ['deprecated' => '3.1', 'deprecating_package' => 'symfony/ux-react', 'alternative' => 'ux_react_component']),
+            ]),
+            new TwigFunction('ux_react_component', [$this, 'renderReactComponent'], ['is_safe' => ['html_attr']]),
         ];
     }
 

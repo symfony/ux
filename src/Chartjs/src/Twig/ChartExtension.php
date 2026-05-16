@@ -13,6 +13,7 @@ namespace Symfony\UX\Chartjs\Twig;
 
 use Symfony\UX\Chartjs\Model\Chart;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
+use Twig\DeprecatedCallableInfo;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -30,7 +31,13 @@ class ChartExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('render_chart', [$this, 'renderChart'], ['is_safe' => ['html']]),
+            new TwigFunction('render_chart', [$this, 'renderChart'], [
+                'is_safe' => ['html'],
+                ...(class_exists(DeprecatedCallableInfo::class)
+                    ? ['deprecation_info' => new DeprecatedCallableInfo('symfony/ux-chartjs', '3.1', 'ux_chartjs')]
+                    : ['deprecated' => '3.1', 'deprecating_package' => 'symfony/ux-chartjs', 'alternative' => 'ux_chartjs']),
+            ]),
+            new TwigFunction('ux_chartjs', [$this, 'renderChart'], ['is_safe' => ['html']]),
         ];
     }
 

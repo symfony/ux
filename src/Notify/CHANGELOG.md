@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.3.0
+
+- Deprecate Twig function `stream_notifications()`, use `ux_notify()` instead
+
 ## 3.0.0
 
 - Minimum required Symfony version is now 7.4

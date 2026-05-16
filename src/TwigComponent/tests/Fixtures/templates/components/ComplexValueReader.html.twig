@@ -1,4 +1,4 @@
-{% set list = inject('list', []) %}
-{% set config = inject('config', {}) %}
+{% set list = ux_twig_inject('list', []) %}
+{% set config = ux_twig_inject('config', {}) %}
 
 <span class="reader">list:{{ list|join('+') }};config:{{ config.key }}/{{ config.count }}</span>

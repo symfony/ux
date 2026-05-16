@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.3.0
+
+- Deprecate Twig function `render_chart()`, use `ux_chartjs()` instead
+
 ## 3.0.0
 
 - Minimum required Symfony version is now 7.4

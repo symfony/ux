@@ -1,5 +1,5 @@
 {% props input %}
-{% set maxLength = inject('inputOtp.maxLength', 4) %}
-{% set name = inject('inputOtp.name', 'otp') %}
+{% set maxLength = ux_twig_inject('inputOtp.maxLength', 4) %}
+{% set name = ux_twig_inject('inputOtp.name', 'otp') %}
 
 <input type="text" name="{{ name }}[{{ input - 1 }}]" maxlength="1" data-index="{{ input }}" data-max-length="{{ maxLength }}" />

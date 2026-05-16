@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.3.0
+
+- Deprecate Twig function `component_url()`, use `ux_live_component_url()` instead
+- Deprecate Twig function `live_action()`, use `ux_live_action()` instead
+
 ## 3.1
 
 - Fix dynamic template resolution when using the `loading` attribute on a deferred component

@@ -13,6 +13,7 @@ namespace Symfony\UX\StimulusBundle\Twig;
 
 use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
+use Twig\DeprecatedCallableInfo;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -29,18 +30,54 @@ final class StimulusTwigExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('stimulus_controller', [$this, 'renderStimulusController'], ['is_safe' => ['html_attr']]),
-            new TwigFunction('stimulus_action', [$this, 'renderStimulusAction'], ['is_safe' => ['html_attr']]),
-            new TwigFunction('stimulus_target', [$this, 'renderStimulusTarget'], ['is_safe' => ['html_attr']]),
+            new TwigFunction('stimulus_controller', [$this, 'renderStimulusController'], [
+                'is_safe' => ['html_attr'],
+                ...(class_exists(DeprecatedCallableInfo::class)
+                    ? ['deprecation_info' => new DeprecatedCallableInfo('symfony/ux-stimulus-bundle', '3.1', 'ux_stimulus_controller')]
+                    : ['deprecated' => '3.1', 'deprecating_package' => 'symfony/ux-stimulus-bundle', 'alternative' => 'ux_stimulus_controller']),
+            ]),
+            new TwigFunction('ux_stimulus_controller', [$this, 'renderStimulusController'], ['is_safe' => ['html_attr']]),
+            new TwigFunction('stimulus_action', [$this, 'renderStimulusAction'], [
+                'is_safe' => ['html_attr'],
+                ...(class_exists(DeprecatedCallableInfo::class)
+                    ? ['deprecation_info' => new DeprecatedCallableInfo('symfony/ux-stimulus-bundle', '3.1', 'ux_stimulus_action')]
+                    : ['deprecated' => '3.1', 'deprecating_package' => 'symfony/ux-stimulus-bundle', 'alternative' => 'ux_stimulus_action']),
+            ]),
+            new TwigFunction('ux_stimulus_action', [$this, 'renderStimulusAction'], ['is_safe' => ['html_attr']]),
+            new TwigFunction('stimulus_target', [$this, 'renderStimulusTarget'], [
+                'is_safe' => ['html_attr'],
+                ...(class_exists(DeprecatedCallableInfo::class)
+                    ? ['deprecation_info' => new DeprecatedCallableInfo('symfony/ux-stimulus-bundle', '3.1', 'ux_stimulus_target')]
+                    : ['deprecated' => '3.1', 'deprecating_package' => 'symfony/ux-stimulus-bundle', 'alternative' => 'ux_stimulus_target']),
+            ]),
+            new TwigFunction('ux_stimulus_target', [$this, 'renderStimulusTarget'], ['is_safe' => ['html_attr']]),
         ];
     }
 
     public function getFilters(): array
     {
         return [
-            new TwigFilter('stimulus_controller', [$this, 'appendStimulusController'], ['is_safe' => ['html_attr']]),
-            new TwigFilter('stimulus_action', [$this, 'appendStimulusAction'], ['is_safe' => ['html_attr']]),
-            new TwigFilter('stimulus_target', [$this, 'appendStimulusTarget'], ['is_safe' => ['html_attr']]),
+            new TwigFilter('stimulus_controller', [$this, 'appendStimulusController'], [
+                'is_safe' => ['html_attr'],
+                ...(class_exists(DeprecatedCallableInfo::class)
+                    ? ['deprecation_info' => new DeprecatedCallableInfo('symfony/ux-stimulus-bundle', '3.1', 'ux_stimulus_controller')]
+                    : ['deprecated' => '3.1', 'deprecating_package' => 'symfony/ux-stimulus-bundle', 'alternative' => 'ux_stimulus_controller']),
+            ]),
+            new TwigFilter('ux_stimulus_controller', [$this, 'appendStimulusController'], ['is_safe' => ['html_attr']]),
+            new TwigFilter('stimulus_action', [$this, 'appendStimulusAction'], [
+                'is_safe' => ['html_attr'],
+                ...(class_exists(DeprecatedCallableInfo::class)
+                    ? ['deprecation_info' => new DeprecatedCallableInfo('symfony/ux-stimulus-bundle', '3.1', 'ux_stimulus_action')]
+                    : ['deprecated' => '3.1', 'deprecating_package' => 'symfony/ux-stimulus-bundle', 'alternative' => 'ux_stimulus_action']),
+            ]),
+            new TwigFilter('ux_stimulus_action', [$this, 'appendStimulusAction'], ['is_safe' => ['html_attr']]),
+            new TwigFilter('stimulus_target', [$this, 'appendStimulusTarget'], [
+                'is_safe' => ['html_attr'],
+                ...(class_exists(DeprecatedCallableInfo::class)
+                    ? ['deprecation_info' => new DeprecatedCallableInfo('symfony/ux-stimulus-bundle', '3.1', 'ux_stimulus_target')]
+                    : ['deprecated' => '3.1', 'deprecating_package' => 'symfony/ux-stimulus-bundle', 'alternative' => 'ux_stimulus_target']),
+            ]),
+            new TwigFilter('ux_stimulus_target', [$this, 'appendStimulusTarget'], ['is_safe' => ['html_attr']]),
         ];
     }
 

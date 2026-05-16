@@ -1,6 +1,6 @@
 {% props activeTab %}
 
-{% do provide('tabs.active', activeTab) %}
+{% do ux_twig_provide('tabs.active', activeTab) %}
 
 <div class="tabs">
     {% block content %}{% endblock %}

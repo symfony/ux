@@ -38,39 +38,39 @@ final class MercureStreamSourceRendererTest extends KernelTestCase
         $book->id = 123;
 
         yield 'string topic — public' => [
-            "{{ turbo_stream_from('a_topic') }}",
+            "{{ ux_turbo_stream_from('a_topic') }}",
             [],
             '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?topic=a_topic"></turbo-mercure-stream-source>',
         ];
 
         yield 'string topic — private' => [
-            "{{ turbo_stream_from('a_topic', private=true) }}",
+            "{{ ux_turbo_stream_from('a_topic', private=true) }}",
             [],
             '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?topic=a_topic" private></turbo-mercure-stream-source>',
         ];
 
         yield 'class name — single backslash (Twig drops \\X)' => [
-            "{{ turbo_stream_from('Symfony\\UX\\Turbo\\Tests\\Fixtures\\Book') }}",
+            "{{ ux_turbo_stream_from('Symfony\\UX\\Turbo\\Tests\\Fixtures\\Book') }}",
             [],
             // single-quoted Twig string: \X drops the backslash → 'SymfonyUXTurboTestsFixturesBook'
             '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?topic=SymfonyUXTurboTestsFixturesBook"></turbo-mercure-stream-source>',
         ];
 
         yield 'class name — double backslash (correct usage)' => [
-            "{{ turbo_stream_from('Symfony\\\\UX\\\\Turbo\\\\Tests\\\\Fixtures\\\\Book') }}",
+            "{{ ux_turbo_stream_from('Symfony\\\\UX\\\\Turbo\\\\Tests\\\\Fixtures\\\\Book') }}",
             [],
             // \\\\ in PHP string → \\ in Twig source → \ in Twig output → 'Symfony\UX\Turbo\Tests\Fixtures\Book' → class_exists → URL pattern
             '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?topic=https%3A%2F%2Fsymfony.com%2Fux-turbo%2FSymfony%255CUX%255CTurbo%255CTests%255CFixtures%255CBook%2F%7Bid%7D"></turbo-mercure-stream-source>',
         ];
 
         yield 'entity topic' => [
-            '{{ turbo_stream_from(book) }}',
+            '{{ ux_turbo_stream_from(book) }}',
             ['book' => $book],
             '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?topic=https%3A%2F%2Fsymfony.com%2Fux-turbo%2FSymfony%255CUX%255CTurbo%255CTests%255CFixtures%255CBook%2F123"></turbo-mercure-stream-source>',
         ];
 
         yield 'array of topics' => [
-            "{{ turbo_stream_from(['topic_a', 'topic_b']) }}",
+            "{{ ux_turbo_stream_from(['topic_a', 'topic_b']) }}",
             [],
             '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?topic=topic_a&amp;topic=topic_b"></turbo-mercure-stream-source>',
         ];
