@@ -35,7 +35,7 @@ jobs:
         env:
             SYMFONY_REQUIRE: '${{ matrix.symfony }}.*'
         steps:
-            - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+            - uses: actions/checkout@900f2210b1d28bbbd0bd22d17926b9e224e8f231
 
             - run: npm i -g corepack && corepack enable
             - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
@@ -61,7 +61,7 @@ jobs:
             - name: Install browsers with Playwright
               run: pnpm exec playwright install firefox ffmpeg
 
-            - uses: shivammathur/setup-php@45e37a5311835edf589763a5cde3a7a7ef2ebbac
+            - uses: shivammathur/setup-php@b76777ed552a433318934af33e3400c337ed236e
               with:
                   php-version: ${{ matrix.symfony >= '8.0' && '8.5' || '8.4' }}
                   tools: symfony-cli, flex
