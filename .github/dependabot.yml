@@ -2,11 +2,44 @@
 
 version: 2
 updates:
+    # GitHub Actions
     - package-ecosystem: 'github-actions'
       directory: '/'
       schedule:
           interval: 'weekly'
       groups:
           github-actions:
+              patterns:
+                  - '*'
+
+    # npm, but only for UX's internal dependencies (devDependencies not listed in peerDependencies).
+    - package-ecosystem: 'npm'
+      directories:
+          - '/'
+          - '/src/*/assets'
+          - '/src/*/src/Bridge/*/assets'
+      schedule:
+          interval: 'weekly'
+      allow:
+          - dependency-name: '@playwright/test'
+          - dependency-name: '@puppeteer/browsers'
+          - dependency-name: '@testing-library/*'
+          - dependency-name: '@tsdown/css'
+          - dependency-name: '@types/*'
+          - dependency-name: '@vitejs/*'
+          - dependency-name: 'idiomorph'
+          - dependency-name: 'jsdom'
+          - dependency-name: 'node-fetch'
+          - dependency-name: 'oxfmt'
+          - dependency-name: 'oxlint'
+          - dependency-name: 'pkg-types'
+          - dependency-name: 'resize-observer-polyfill'
+          - dependency-name: 'tinyglobby'
+          - dependency-name: 'tsdown'
+          - dependency-name: 'tslib'
+          - dependency-name: 'typescript'
+          - dependency-name: 'vitest*'
+      groups:
+          npm-dev-dependencies:
               patterns:
                   - '*'
