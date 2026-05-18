@@ -1,0 +1,72 @@
+{
+    "name": "symfony/ux-image",
+    "type": "symfony-bundle",
+    "description": "Optimized responsive image components with automatic format conversion and Core Web Vitals optimization.",
+    "keywords": [
+        "symfony-ux",
+        "symfony",
+        "image",
+        "responsive",
+        "webp",
+        "optimization",
+        "core web vitals"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aleksey Razbakov",
+            "email": "aleksey@razbakov.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Image\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Image\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.4",
+        "symfony/framework-bundle": "^7.4|^8.0",
+        "symfony/twig-bundle": "^7.4|^8.0",
+        "symfony/config": "^7.4|^8.0",
+        "symfony/dependency-injection": "^7.4|^8.0",
+        "symfony/http-kernel": "^7.4|^8.0",
+        "symfony/options-resolver": "^7.4|^8.0",
+        "twig/twig": "^3.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.65",
+        "phpunit/phpunit": "^11.1|^12.0",
+        "symfony/browser-kit": "^7.4|^8.0",
+        "symfony/css-selector": "^7.4|^8.0",
+        "symfony/debug-bundle": "^7.4|^8.0",
+        "symfony/phpunit-bridge": "^7.4|^8.0",
+        "symfony/yaml": "^7.4|^8.0",
+        "symfony/ux-twig-component": "^2.21|^3.0"
+    },
+    "suggest": {
+        "symfony/ux-twig-component": "For using the Twig component syntax (<twig:ux:img>)"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "conflict": {
+        "symfony/flex": "<1.13"
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}

@@ -1,0 +1,25 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Symfony\UX\Image\Provider\ProviderRegistry:
+        public: true
+
+    Symfony\UX\Image\Service\Transformer:
+        arguments:
+            $breakpoints: '%ux_image.breakpoints%'
+
+    Symfony\UX\Image\Twig\Img:
+        tags:
+            - { name: 'twig.component' }
+
+    Symfony\UX\Image\Twig\Picture:
+        tags:
+            - { name: 'twig.component' }
+
+    # Auto-register providers
+    Symfony\UX\Image\Provider\ProviderInterface:
+        abstract: true
+        tags:
+            - { name: 'ux_image.provider' }

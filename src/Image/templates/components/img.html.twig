@@ -1,0 +1,12 @@
+<img
+    src="{{ component.srcComputed }}"
+    {% if component.alt %}alt="{{ component.alt }}"{% endif %}
+    {% if component.srcset %}srcset="{{ component.srcset }}"{% endif %}
+    {% if component.sizes %}sizes="{{ component.sizes }}"{% endif %}
+    {% if component.getHtmlWidth %}width="{{ component.getHtmlWidth }}"{% endif %}
+    {% if component.getHtmlHeight %}height="{{ component.getHtmlHeight }}"{% endif %}
+    {% if component.loading %}loading="{{ component.loading }}"{% endif %}
+    {% if component.fetchpriority %}fetchpriority="{{ component.fetchpriority }}"{% endif %}
+    {% if component.class %}class="{{ component.class }}"{% endif %}
+    {% for attr, value in component.extraAttributes %}{{ attr }}="{{ value }}" {% endfor %}
+/>

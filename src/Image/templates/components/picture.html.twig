@@ -1,0 +1,19 @@
+<picture>
+    {% for bp in component.getBreakpoints() %}
+        <source
+            {% if bp.media is defined and bp.media %}media="{{ bp.media }}"{% endif %}
+            srcset="{{ bp.srcset }}"
+            {% if bp.sizes is defined and bp.sizes %}sizes="{{ bp.sizes }}"{% endif %}
+        />
+    {% endfor %}
+    <img
+        src="{{ component.srcComputed }}"
+        {% if component.alt %}alt="{{ component.alt }}"{% endif %}
+        {% if component.getSizes %}sizes="{{ component.getSizes }}"{% endif %}
+        {% if component.getHtmlWidth %}width="{{ component.getHtmlWidth }}"{% endif %}
+        {% if component.getHtmlHeight %}height="{{ component.getHtmlHeight }}"{% endif %}
+        {% if component.loading %}loading="{{ component.loading }}"{% endif %}
+        {% if component.fetchpriority %}fetchpriority="{{ component.fetchpriority }}"{% endif %}
+        {% if component.class %}class="{{ component.class }}"{% endif %}
+    />
+</picture>
