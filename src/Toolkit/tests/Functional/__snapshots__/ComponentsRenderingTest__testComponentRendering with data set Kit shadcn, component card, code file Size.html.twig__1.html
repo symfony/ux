@@ -1,0 +1,43 @@
+<!--
+- Kit: Shadcn UI
+- Component: Card
+- Code:
+```twig
+<twig:Card size="sm" class="mx-auto w-full max-w-sm">
+    <twig:Card:Header>
+        <twig:Card:Title>Small Card</twig:Card:Title>
+        <twig:Card:Description>
+            This card uses the small size variant.
+        </twig:Card:Description>
+    </twig:Card:Header>
+    <twig:Card:Content>
+        <p>
+            The card component supports a size prop that can be set to
+            "sm" for a more compact appearance.
+        </p>
+    </twig:Card:Content>
+    <twig:Card:Footer>
+        <twig:Button variant="outline" size="sm" class="w-full">
+            Action
+        </twig:Button>
+    </twig:Card:Footer>
+</twig:Card>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl mx-auto w-full max-w-sm" data-slot="card" data-size="sm">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3" data-slot="card-header">
+<div class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">Small Card</div>
+        <div class="text-sm text-muted-foreground" data-slot="card-description">This card uses the small size variant.
+        </div>
+    </div>
+    <div class="px-4 group-data-[size=sm]/card:px-3" data-slot="card-content">
+<p>
+            The card component supports a size prop that can be set to
+            "sm" for a more compact appearance.
+        </p>
+    </div>
+    <div class="flex items-center rounded-b-xl border-t bg-muted/50 p-4 group-data-[size=sm]/card:p-3" data-slot="card-footer">
+<button data-slot="button" class="focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 border bg-clip-padding font-medium focus-visible:ring-[3px] aria-invalid:ring-[3px] inline-flex items-center justify-center whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none shrink-0 [&amp;_svg]:shrink-0 outline-none group/button select-none border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5 w-full">Action
+        </button>
+    </div>
+</div>

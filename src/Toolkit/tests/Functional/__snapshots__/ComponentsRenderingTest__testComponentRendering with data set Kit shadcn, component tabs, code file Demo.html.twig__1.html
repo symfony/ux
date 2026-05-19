@@ -77,50 +77,50 @@
         <button id="tab-settings" data-slot="tabs-trigger" data-action="click-&gt;tabs#open" data-tabs-target="trigger" data-tab-id="settings" role="tab" aria-controls="tab-settings-description" aria-selected="false" data-state="inactive" class="gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium group-data-[variant=default]/tabs-list:data-[state=active]:shadow-sm group-data-[variant=line]/tabs-list:data-[state=active]:shadow-none [&amp;_svg:not([class*='size-'])]:size-4 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring text-foreground/60 hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center whitespace-nowrap transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-[state=active]:bg-transparent dark:group-data-[variant=line]/tabs-list:data-[state=active]:border-transparent dark:group-data-[variant=line]/tabs-list:data-[state=active]:bg-transparent data-[state=active]:bg-background dark:data-[state=active]:text-foreground dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 data-[state=active]:text-foreground after:bg-foreground after:absolute after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-right-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-[state=active]:after:opacity-100">Settings</button>
     </nav>
     <div id="tab-overview-description" data-slot="tabs-content" data-tabs-target="tab" data-tab-id="overview" role="tabpanel" aria-labelledby="tab-overview" data-state="active" class="text-sm flex-1 outline-none data-[state=inactive]:hidden">
-<div class="rounded-lg border bg-card text-card-foreground shadow-sm">
-<div class="flex flex-col space-y-1.5 p-6">
-<div class="leading-none font-semibold">Overview</div>
-                <div class="text-muted-foreground text-sm">View your key metrics and recent project activity. Track progress
+<div class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl" data-slot="card" data-size="default">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3" data-slot="card-header">
+<div class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">Overview</div>
+                <div class="text-sm text-muted-foreground" data-slot="card-description">View your key metrics and recent project activity. Track progress
                     across all your active projects.
                 </div>
             </div>
-            <div class="p-6 pt-0 text-muted-foreground text-sm">You have 12 active projects and 3 pending tasks.
+            <div class="px-4 group-data-[size=sm]/card:px-3 text-muted-foreground text-sm" data-slot="card-content">You have 12 active projects and 3 pending tasks.
             </div>
         </div>
     </div>
     <div id="tab-analytics-description" data-slot="tabs-content" data-tabs-target="tab" data-tab-id="analytics" role="tabpanel" aria-labelledby="tab-analytics" data-state="inactive" class="text-sm flex-1 outline-none data-[state=inactive]:hidden">
-<div class="rounded-lg border bg-card text-card-foreground shadow-sm">
-<div class="flex flex-col space-y-1.5 p-6">
-<div class="leading-none font-semibold">Analytics</div>
-                <div class="text-muted-foreground text-sm">Track performance and user engagement metrics. Monitor trends and
+<div class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl" data-slot="card" data-size="default">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3" data-slot="card-header">
+<div class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">Analytics</div>
+                <div class="text-sm text-muted-foreground" data-slot="card-description">Track performance and user engagement metrics. Monitor trends and
                     identify growth opportunities.
                 </div>
             </div>
-            <div class="p-6 pt-0 text-muted-foreground text-sm">Page views are up 25% compared to last month.
+            <div class="px-4 group-data-[size=sm]/card:px-3 text-muted-foreground text-sm" data-slot="card-content">Page views are up 25% compared to last month.
             </div>
         </div>
     </div>
     <div id="tab-reports-description" data-slot="tabs-content" data-tabs-target="tab" data-tab-id="reports" role="tabpanel" aria-labelledby="tab-reports" data-state="inactive" class="text-sm flex-1 outline-none data-[state=inactive]:hidden">
-<div class="rounded-lg border bg-card text-card-foreground shadow-sm">
-<div class="flex flex-col space-y-1.5 p-6">
-<div class="leading-none font-semibold">Reports</div>
-                <div class="text-muted-foreground text-sm">Generate and download your detailed reports. Export data in
+<div class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl" data-slot="card" data-size="default">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3" data-slot="card-header">
+<div class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">Reports</div>
+                <div class="text-sm text-muted-foreground" data-slot="card-description">Generate and download your detailed reports. Export data in
                     multiple formats for analysis.
                 </div>
             </div>
-            <div class="p-6 pt-0 text-muted-foreground text-sm">You have 5 reports ready and available to export.
+            <div class="px-4 group-data-[size=sm]/card:px-3 text-muted-foreground text-sm" data-slot="card-content">You have 5 reports ready and available to export.
             </div>
         </div>
     </div>
     <div id="tab-settings-description" data-slot="tabs-content" data-tabs-target="tab" data-tab-id="settings" role="tabpanel" aria-labelledby="tab-settings" data-state="inactive" class="text-sm flex-1 outline-none data-[state=inactive]:hidden">
-<div class="rounded-lg border bg-card text-card-foreground shadow-sm">
-<div class="flex flex-col space-y-1.5 p-6">
-<div class="leading-none font-semibold">Settings</div>
-                <div class="text-muted-foreground text-sm">Manage your account preferences and options. Customize your
+<div class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl" data-slot="card" data-size="default">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3" data-slot="card-header">
+<div class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">Settings</div>
+                <div class="text-sm text-muted-foreground" data-slot="card-description">Manage your account preferences and options. Customize your
                     experience to fit your needs.
                 </div>
             </div>
-            <div class="p-6 pt-0 text-muted-foreground text-sm">Configure notifications, security, and themes.
+            <div class="px-4 group-data-[size=sm]/card:px-3 text-muted-foreground text-sm" data-slot="card-content">Configure notifications, security, and themes.
             </div>
         </div>
     </div>

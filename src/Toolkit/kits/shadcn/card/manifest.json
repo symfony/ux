@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Card",
-    "description": "A container that groups related content and actions into a box with optional header, content, and footer sections.",
+    "description": "Displays a card with header, content, and footer.",
     "copy-files": {
         "templates/": "templates/"
     },

@@ -1,7 +1,7 @@
 {# @block content The main content area of the card #}
 <div
-    class="{{ ('p-6 pt-0 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    class="{{ ('px-4 group-data-[size=sm]/card:px-3 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({'data-slot': 'card-content'}) }}
 >
     {%- block content %}{% endblock -%}
 </div>
