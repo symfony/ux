@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Alert",
-    "description": "A notification component that displays important messages with an icon, title, and description.",
+    "description": "Displays a callout for user attention.",
     "copy-files": {
         "templates/": "templates/"
     },

@@ -1,7 +1,7 @@
 {# @block content The title text of the alert #}
 <div
     data-slot="alert-title"
-    class="{{ ('font-medium group-has-[>svg]/alert:col-start-2 [&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3 ' ~ attributes.render('class'))|tailwind_merge }}"
+    class="{{ ('font-medium group-has-[>svg]/alert:col-start-2 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}
