@@ -1,11 +1,12 @@
 {# @block content The separator icon between breadcrumb items, defaults to a chevron #}
 <li
-    class="{{ ('[&>svg]:w-3.5 [&>svg]:h-3.5 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    data-slot="breadcrumb-separator"
     role="presentation"
     aria-hidden="true"
+    class="{{ ('[&>svg]:size-3.5 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
 >
     {%- block content -%}
-        <twig:ux:icon name="mdi:chevron-right" />
+        <twig:ux:icon name="lucide:chevron-right" class="rtl:rotate-180" />
     {%- endblock %}
 </li>
