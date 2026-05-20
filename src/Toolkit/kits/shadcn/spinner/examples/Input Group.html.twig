@@ -1,0 +1,18 @@
+<div class="flex w-full max-w-md flex-col gap-4">
+    <twig:InputGroup>
+        <twig:InputGroup:Input placeholder="Send a message..." disabled />
+        <twig:InputGroup:Addon align="inline-end">
+            <twig:Spinner />
+        </twig:InputGroup:Addon>
+    </twig:InputGroup>
+    <twig:InputGroup>
+        <twig:InputGroup:Textarea placeholder="Send a message..." disabled />
+        <twig:InputGroup:Addon align="block-end">
+            <twig:Spinner /> Validating...
+            <twig:InputGroup:Button class="ml-auto" variant="default">
+                <twig:ux:icon name="lucide:arrow-up" />
+                <span class="sr-only">Send</span>
+            </twig:InputGroup:Button>
+        </twig:InputGroup:Addon>
+    </twig:InputGroup>
+</div>
