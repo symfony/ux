@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Item",
-    "description": "A versatile component that you can use to display any content.",
+    "description": "A versatile component for displaying content with media, title, description, and actions.",
     "copy-files": {
         "templates/": "templates/"
     },

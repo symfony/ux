@@ -23,6 +23,7 @@
 - [Shadcn] Align `breadcrumb` with shadcn reference
 - [Shadcn] Align `card` with shadcn reference
 - [Shadcn] Align `checkbox` with shadcn reference
+- [Shadcn] Align `item` with shadcn reference
 - [Shadcn] Align `kbd` with shadcn reference
 - [Shadcn] Align `label` with shadcn reference
 - [Shadcn] Align `pagination` with shadcn reference
