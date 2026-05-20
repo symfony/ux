@@ -3420,12 +3420,14 @@ it emits a ``lineItem:created`` event to the parent::
         #[LiveAction]
         public function save(EntityManagerInterface $entityManager)
         {
-            if (!$this->lineItem->getId()) {
-                $this->emit('lineItem:created', $this->lineItem);
-            }
+            $isNew = null === $this->lineItem->getId();
 
             $entityManager->persist($this->lineItem);
             $entityManager->flush();
+
+            if ($isNew) {
+                $this->emit('lineItem:created');
+            }
         }
     }
 
@@ -3491,13 +3493,14 @@ To fix this, you have two options:
 
             if ($isNew) {
                 // reset the state of this component
-                $this->emit('lineItem:created', $this->lineItem);
+                $this->emit('lineItem:created');
                 $this->lineItem = new InvoiceLineItem();
                 // if you're using ValidatableComponentTrait
                 $this->clearValidation();
             }
         }
     }
+
 
 .. _passing-blocks:
 
