@@ -33,12 +33,12 @@
 </twig:Card>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div class="rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-md">
-<div class="flex flex-col space-y-1.5 p-6">
-<div class="leading-none font-semibold">FAQ</div>
-        <div class="text-muted-foreground text-sm">Frequently asked questions</div>
+<div class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl w-full max-w-md" data-slot="card" data-size="default">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3" data-slot="card-header">
+<div class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">FAQ</div>
+        <div class="text-sm text-muted-foreground" data-slot="card-description">Frequently asked questions</div>
     </div>
-    <div class="p-6 pt-0">
+    <div class="px-4 group-data-[size=sm]/card:px-3" data-slot="card-content">
 <div class="flex w-full flex-col" id="accordion-faq" data-slot="accordion" data-controller="accordion" data-accordion-multiple-value="false" data-accordion-orientation-value="vertical" data-orientation="vertical">
 <div class="not-last:border-b group" data-slot="accordion-item" data-accordion-target="item" data-value="q1" data-closed="true">
 <h3 class="flex" data-orientation="vertical">
