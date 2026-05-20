@@ -1,0 +1,239 @@
+<!--
+- Kit: Shadcn UI
+- Component: Tabs
+- Code:
+```twig
+<div class="flex flex-col gap-8">
+    {# Arabic #}
+    <twig:Tabs defaultValue="overview" class="w-full max-w-sm" dir="rtl">
+        <twig:Tabs:List dir="rtl">
+            <twig:Tabs:Trigger value="overview">نظرة عامة</twig:Tabs:Trigger>
+            <twig:Tabs:Trigger value="analytics">التحليلات</twig:Tabs:Trigger>
+            <twig:Tabs:Trigger value="reports">التقارير</twig:Tabs:Trigger>
+            <twig:Tabs:Trigger value="settings">الإعدادات</twig:Tabs:Trigger>
+        </twig:Tabs:List>
+        <twig:Tabs:Content value="overview">
+            <twig:Card dir="rtl">
+                <twig:Card:Header>
+                    <twig:Card:Title>نظرة عامة</twig:Card:Title>
+                    <twig:Card:Description>
+                        عرض مقاييسك الرئيسية وأنشطة المشروع الأخيرة. تتبع التقدم عبر جميع مشاريعك النشطة.
+                    </twig:Card:Description>
+                </twig:Card:Header>
+                <twig:Card:Content class="text-sm text-muted-foreground">
+                    لديك ١٢ مشروعًا نشطًا و٣ مهام معلقة.
+                </twig:Card:Content>
+            </twig:Card>
+        </twig:Tabs:Content>
+        <twig:Tabs:Content value="analytics">
+            <twig:Card dir="rtl">
+                <twig:Card:Header>
+                    <twig:Card:Title>التحليلات</twig:Card:Title>
+                    <twig:Card:Description>
+                        تتبع مقاييس الأداء ومشاركة المستخدمين. راقب الاتجاهات وحدد فرص النمو.
+                    </twig:Card:Description>
+                </twig:Card:Header>
+                <twig:Card:Content class="text-sm text-muted-foreground">
+                    زادت مشاهدات الصفحة بنسبة ٢٥٪ مقارنة بالشهر الماضي.
+                </twig:Card:Content>
+            </twig:Card>
+        </twig:Tabs:Content>
+        <twig:Tabs:Content value="reports">
+            <twig:Card dir="rtl">
+                <twig:Card:Header>
+                    <twig:Card:Title>التقارير</twig:Card:Title>
+                    <twig:Card:Description>
+                        إنشاء وتنزيل تقاريرك التفصيلية. تصدير البيانات بتنسيقات متعددة للتحليل.
+                    </twig:Card:Description>
+                </twig:Card:Header>
+                <twig:Card:Content class="text-sm text-muted-foreground">
+                    لديك ٥ تقارير جاهزة ومتاحة للتصدير.
+                </twig:Card:Content>
+            </twig:Card>
+        </twig:Tabs:Content>
+        <twig:Tabs:Content value="settings">
+            <twig:Card dir="rtl">
+                <twig:Card:Header>
+                    <twig:Card:Title>الإعدادات</twig:Card:Title>
+                    <twig:Card:Description>
+                        إدارة تفضيلات حسابك وخياراته. تخصيص تجربتك لتناسب احتياجاتك.
+                    </twig:Card:Description>
+                </twig:Card:Header>
+                <twig:Card:Content class="text-sm text-muted-foreground">
+                    تكوين الإشعارات والأمان والسمات.
+                </twig:Card:Content>
+            </twig:Card>
+        </twig:Tabs:Content>
+    </twig:Tabs>
+
+    {# Hebrew #}
+    <twig:Tabs defaultValue="overview" class="w-full max-w-sm" dir="rtl">
+        <twig:Tabs:List dir="rtl">
+            <twig:Tabs:Trigger value="overview">סקירה כללית</twig:Tabs:Trigger>
+            <twig:Tabs:Trigger value="analytics">אנליטיקה</twig:Tabs:Trigger>
+            <twig:Tabs:Trigger value="reports">דוחות</twig:Tabs:Trigger>
+            <twig:Tabs:Trigger value="settings">הגדרות</twig:Tabs:Trigger>
+        </twig:Tabs:List>
+        <twig:Tabs:Content value="overview">
+            <twig:Card dir="rtl">
+                <twig:Card:Header>
+                    <twig:Card:Title>סקירה כללית</twig:Card:Title>
+                    <twig:Card:Description>
+                        הצג את המדדים העיקריים שלך ואת הנתונים האחרונים. עקוב אחר ההתקדמות בכל המיזמים.
+                    </twig:Card:Description>
+                </twig:Card:Header>
+                <twig:Card:Content class="text-sm text-muted-foreground">
+                    יש לך 12 מיזמים נגישים ו-3 משימות ממתינות.
+                </twig:Card:Content>
+            </twig:Card>
+        </twig:Tabs:Content>
+        <twig:Tabs:Content value="analytics">
+            <twig:Card dir="rtl">
+                <twig:Card:Header>
+                    <twig:Card:Title>אנליטיקה</twig:Card:Title>
+                    <twig:Card:Description>
+                        עקוב אחר ביצועים ומדדי מעורבות משתמשים. זהה מגמות והזדמנויות צמיחה.
+                    </twig:Card:Description>
+                </twig:Card:Header>
+                <twig:Card:Content class="text-sm text-muted-foreground">
+                    הגידול עמד על 25% בהשוואה לחודש שעבר.
+                </twig:Card:Content>
+            </twig:Card>
+        </twig:Tabs:Content>
+        <twig:Tabs:Content value="reports">
+            <twig:Card dir="rtl">
+                <twig:Card:Header>
+                    <twig:Card:Title>דוחות</twig:Card:Title>
+                    <twig:Card:Description>
+                        צור והורד את הדוחות המלאים שלך. ייצא נתונים בתבניות שונות לניתוח.
+                    </twig:Card:Description>
+                </twig:Card:Header>
+                <twig:Card:Content class="text-sm text-muted-foreground">
+                    יש לך 5 דוחות מוכנים וזמינים לייצוא.
+                </twig:Card:Content>
+            </twig:Card>
+        </twig:Tabs:Content>
+        <twig:Tabs:Content value="settings">
+            <twig:Card dir="rtl">
+                <twig:Card:Header>
+                    <twig:Card:Title>הגדרות</twig:Card:Title>
+                    <twig:Card:Description>
+                        ערוך את הגדרות החשבון שלך. התאם אישית את החוויה כך שתתאים לצרכיך.
+                    </twig:Card:Description>
+                </twig:Card:Header>
+                <twig:Card:Content class="text-sm text-muted-foreground">
+                    הגדר התראות, אבטחה וערכות נושא.
+                </twig:Card:Content>
+            </twig:Card>
+        </twig:Tabs:Content>
+    </twig:Tabs>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex flex-col gap-8">
+        <div data-slot="tabs" data-controller="tabs" data-tabs-active-tab-value="overview" data-orientation="horizontal" class="gap-2 group/tabs flex data-[orientation=horizontal]:flex-col w-full max-w-sm" dir="rtl">
+    <nav data-slot="tabs-list" role="tablist" data-variant="default" class="group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-[3px] text-muted-foreground group-data-[orientation=horizontal]/tabs:h-8 group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col data-[variant=line]:rounded-none bg-muted" dir="rtl">
+    <button id="tab-overview" data-slot="tabs-trigger" data-action="click-&gt;tabs#open" data-tabs-target="trigger" data-tab-id="overview" role="tab" aria-controls="tab-overview-description" aria-selected="true" data-active="true" class="relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 ltr:has-data-[icon=inline-end]:pr-1 rtl:has-data-[icon=inline-end]:pe-1 ltr:has-data-[icon=inline-start]:pl-1 rtl:has-data-[icon=inline-start]:ps-1 dark:text-muted-foreground dark:hover:text-foreground group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 ltr:group-data-[orientation=vertical]/tabs:after:-right-1 rtl:group-data-[orientation=vertical]/tabs:after:-end-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100">&Ugrave;&#134;&Oslash;&cedil;&Oslash;&plusmn;&Oslash;&copy; &Oslash;&sup1;&Oslash;&sect;&Ugrave;&#133;&Oslash;&copy;</button>
+            <button id="tab-analytics" data-slot="tabs-trigger" data-action="click-&gt;tabs#open" data-tabs-target="trigger" data-tab-id="analytics" role="tab" aria-controls="tab-analytics-description" aria-selected="false" data-active="" class="relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 ltr:has-data-[icon=inline-end]:pr-1 rtl:has-data-[icon=inline-end]:pe-1 ltr:has-data-[icon=inline-start]:pl-1 rtl:has-data-[icon=inline-start]:ps-1 dark:text-muted-foreground dark:hover:text-foreground group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 ltr:group-data-[orientation=vertical]/tabs:after:-right-1 rtl:group-data-[orientation=vertical]/tabs:after:-end-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100">&Oslash;&sect;&Ugrave;&#132;&Oslash;&ordf;&Oslash;&shy;&Ugrave;&#132;&Ugrave;&#138;&Ugrave;&#132;&Oslash;&sect;&Oslash;&ordf;</button>
+            <button id="tab-reports" data-slot="tabs-trigger" data-action="click-&gt;tabs#open" data-tabs-target="trigger" data-tab-id="reports" role="tab" aria-controls="tab-reports-description" aria-selected="false" data-active="" class="relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 ltr:has-data-[icon=inline-end]:pr-1 rtl:has-data-[icon=inline-end]:pe-1 ltr:has-data-[icon=inline-start]:pl-1 rtl:has-data-[icon=inline-start]:ps-1 dark:text-muted-foreground dark:hover:text-foreground group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 ltr:group-data-[orientation=vertical]/tabs:after:-right-1 rtl:group-data-[orientation=vertical]/tabs:after:-end-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100">&Oslash;&sect;&Ugrave;&#132;&Oslash;&ordf;&Ugrave;&#130;&Oslash;&sect;&Oslash;&plusmn;&Ugrave;&#138;&Oslash;&plusmn;</button>
+            <button id="tab-settings" data-slot="tabs-trigger" data-action="click-&gt;tabs#open" data-tabs-target="trigger" data-tab-id="settings" role="tab" aria-controls="tab-settings-description" aria-selected="false" data-active="" class="relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 ltr:has-data-[icon=inline-end]:pr-1 rtl:has-data-[icon=inline-end]:pe-1 ltr:has-data-[icon=inline-start]:pl-1 rtl:has-data-[icon=inline-start]:ps-1 dark:text-muted-foreground dark:hover:text-foreground group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 ltr:group-data-[orientation=vertical]/tabs:after:-right-1 rtl:group-data-[orientation=vertical]/tabs:after:-end-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100">&Oslash;&sect;&Ugrave;&#132;&Oslash;&yen;&Oslash;&sup1;&Oslash;&macr;&Oslash;&sect;&Oslash;&macr;&Oslash;&sect;&Oslash;&ordf;</button>
+        </nav>
+        <div id="tab-overview-description" data-slot="tabs-content" data-tabs-target="tab" data-tab-id="overview" role="tabpanel" aria-labelledby="tab-overview" data-active="true" data-state="active" class="flex-1 text-sm outline-none data-[state=inactive]:hidden">
+<div class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl" data-slot="card" data-size="default" dir="rtl">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3" data-slot="card-header">
+<div class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">&Ugrave;&#134;&Oslash;&cedil;&Oslash;&plusmn;&Oslash;&copy; &Oslash;&sup1;&Oslash;&sect;&Ugrave;&#133;&Oslash;&copy;</div>
+                    <div class="text-sm text-muted-foreground" data-slot="card-description">&Oslash;&sup1;&Oslash;&plusmn;&Oslash;&para; &Ugrave;&#133;&Ugrave;&#130;&Oslash;&sect;&Ugrave;&#138;&Ugrave;&#138;&Oslash;&sup3;&Ugrave;&#131; &Oslash;&sect;&Ugrave;&#132;&Oslash;&plusmn;&Oslash;&brvbar;&Ugrave;&#138;&Oslash;&sup3;&Ugrave;&#138;&Oslash;&copy; &Ugrave;&#136;&Oslash;&pound;&Ugrave;&#134;&Oslash;&acute;&Oslash;&middot;&Oslash;&copy; &Oslash;&sect;&Ugrave;&#132;&Ugrave;&#133;&Oslash;&acute;&Oslash;&plusmn;&Ugrave;&#136;&Oslash;&sup1; &Oslash;&sect;&Ugrave;&#132;&Oslash;&pound;&Oslash;&reg;&Ugrave;&#138;&Oslash;&plusmn;&Oslash;&copy;. &Oslash;&ordf;&Oslash;&ordf;&Oslash;&uml;&Oslash;&sup1; &Oslash;&sect;&Ugrave;&#132;&Oslash;&ordf;&Ugrave;&#130;&Oslash;&macr;&Ugrave;&#133; &Oslash;&sup1;&Oslash;&uml;&Oslash;&plusmn; &Oslash;&not;&Ugrave;&#133;&Ugrave;&#138;&Oslash;&sup1; &Ugrave;&#133;&Oslash;&acute;&Oslash;&sect;&Oslash;&plusmn;&Ugrave;&#138;&Oslash;&sup1;&Ugrave;&#131; &Oslash;&sect;&Ugrave;&#132;&Ugrave;&#134;&Oslash;&acute;&Oslash;&middot;&Oslash;&copy;.
+                    </div>
+                </div>
+                <div class="px-4 group-data-[size=sm]/card:px-3 text-sm text-muted-foreground" data-slot="card-content">&Ugrave;&#132;&Oslash;&macr;&Ugrave;&#138;&Ugrave;&#131; &Ugrave;&iexcl;&Ugrave;&cent; &Ugrave;&#133;&Oslash;&acute;&Oslash;&plusmn;&Ugrave;&#136;&Oslash;&sup1;&Ugrave;&#139;&Oslash;&sect; &Ugrave;&#134;&Oslash;&acute;&Oslash;&middot;&Ugrave;&#139;&Oslash;&sect; &Ugrave;&#136;&Ugrave;&pound; &Ugrave;&#133;&Ugrave;&#135;&Oslash;&sect;&Ugrave;&#133; &Ugrave;&#133;&Oslash;&sup1;&Ugrave;&#132;&Ugrave;&#130;&Oslash;&copy;.
+                </div>
+            </div>
+        </div>
+        <div id="tab-analytics-description" data-slot="tabs-content" data-tabs-target="tab" data-tab-id="analytics" role="tabpanel" aria-labelledby="tab-analytics" data-active="" data-state="inactive" class="flex-1 text-sm outline-none data-[state=inactive]:hidden">
+<div class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl" data-slot="card" data-size="default" dir="rtl">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3" data-slot="card-header">
+<div class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">&Oslash;&sect;&Ugrave;&#132;&Oslash;&ordf;&Oslash;&shy;&Ugrave;&#132;&Ugrave;&#138;&Ugrave;&#132;&Oslash;&sect;&Oslash;&ordf;</div>
+                    <div class="text-sm text-muted-foreground" data-slot="card-description">&Oslash;&ordf;&Oslash;&ordf;&Oslash;&uml;&Oslash;&sup1; &Ugrave;&#133;&Ugrave;&#130;&Oslash;&sect;&Ugrave;&#138;&Ugrave;&#138;&Oslash;&sup3; &Oslash;&sect;&Ugrave;&#132;&Oslash;&pound;&Oslash;&macr;&Oslash;&sect;&Oslash;&iexcl; &Ugrave;&#136;&Ugrave;&#133;&Oslash;&acute;&Oslash;&sect;&Oslash;&plusmn;&Ugrave;&#131;&Oslash;&copy; &Oslash;&sect;&Ugrave;&#132;&Ugrave;&#133;&Oslash;&sup3;&Oslash;&ordf;&Oslash;&reg;&Oslash;&macr;&Ugrave;&#133;&Ugrave;&#138;&Ugrave;&#134;. &Oslash;&plusmn;&Oslash;&sect;&Ugrave;&#130;&Oslash;&uml; &Oslash;&sect;&Ugrave;&#132;&Oslash;&sect;&Oslash;&ordf;&Oslash;&not;&Oslash;&sect;&Ugrave;&#135;&Oslash;&sect;&Oslash;&ordf; &Ugrave;&#136;&Oslash;&shy;&Oslash;&macr;&Oslash;&macr; &Ugrave;&#129;&Oslash;&plusmn;&Oslash;&micro; &Oslash;&sect;&Ugrave;&#132;&Ugrave;&#134;&Ugrave;&#133;&Ugrave;&#136;.
+                    </div>
+                </div>
+                <div class="px-4 group-data-[size=sm]/card:px-3 text-sm text-muted-foreground" data-slot="card-content">&Oslash;&sup2;&Oslash;&sect;&Oslash;&macr;&Oslash;&ordf; &Ugrave;&#133;&Oslash;&acute;&Oslash;&sect;&Ugrave;&#135;&Oslash;&macr;&Oslash;&sect;&Oslash;&ordf; &Oslash;&sect;&Ugrave;&#132;&Oslash;&micro;&Ugrave;&#129;&Oslash;&shy;&Oslash;&copy; &Oslash;&uml;&Ugrave;&#134;&Oslash;&sup3;&Oslash;&uml;&Oslash;&copy; &Ugrave;&cent;&Ugrave;&yen;&Ugrave;&ordf; &Ugrave;&#133;&Ugrave;&#130;&Oslash;&sect;&Oslash;&plusmn;&Ugrave;&#134;&Oslash;&copy; &Oslash;&uml;&Oslash;&sect;&Ugrave;&#132;&Oslash;&acute;&Ugrave;&#135;&Oslash;&plusmn; &Oslash;&sect;&Ugrave;&#132;&Ugrave;&#133;&Oslash;&sect;&Oslash;&para;&Ugrave;&#138;.
+                </div>
+            </div>
+        </div>
+        <div id="tab-reports-description" data-slot="tabs-content" data-tabs-target="tab" data-tab-id="reports" role="tabpanel" aria-labelledby="tab-reports" data-active="" data-state="inactive" class="flex-1 text-sm outline-none data-[state=inactive]:hidden">
+<div class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl" data-slot="card" data-size="default" dir="rtl">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3" data-slot="card-header">
+<div class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">&Oslash;&sect;&Ugrave;&#132;&Oslash;&ordf;&Ugrave;&#130;&Oslash;&sect;&Oslash;&plusmn;&Ugrave;&#138;&Oslash;&plusmn;</div>
+                    <div class="text-sm text-muted-foreground" data-slot="card-description">&Oslash;&yen;&Ugrave;&#134;&Oslash;&acute;&Oslash;&sect;&Oslash;&iexcl; &Ugrave;&#136;&Oslash;&ordf;&Ugrave;&#134;&Oslash;&sup2;&Ugrave;&#138;&Ugrave;&#132; &Oslash;&ordf;&Ugrave;&#130;&Oslash;&sect;&Oslash;&plusmn;&Ugrave;&#138;&Oslash;&plusmn;&Ugrave;&#131; &Oslash;&sect;&Ugrave;&#132;&Oslash;&ordf;&Ugrave;&#129;&Oslash;&micro;&Ugrave;&#138;&Ugrave;&#132;&Ugrave;&#138;&Oslash;&copy;. &Oslash;&ordf;&Oslash;&micro;&Oslash;&macr;&Ugrave;&#138;&Oslash;&plusmn; &Oslash;&sect;&Ugrave;&#132;&Oslash;&uml;&Ugrave;&#138;&Oslash;&sect;&Ugrave;&#134;&Oslash;&sect;&Oslash;&ordf; &Oslash;&uml;&Oslash;&ordf;&Ugrave;&#134;&Oslash;&sup3;&Ugrave;&#138;&Ugrave;&#130;&Oslash;&sect;&Oslash;&ordf; &Ugrave;&#133;&Oslash;&ordf;&Oslash;&sup1;&Oslash;&macr;&Oslash;&macr;&Oslash;&copy; &Ugrave;&#132;&Ugrave;&#132;&Oslash;&ordf;&Oslash;&shy;&Ugrave;&#132;&Ugrave;&#138;&Ugrave;&#132;.
+                    </div>
+                </div>
+                <div class="px-4 group-data-[size=sm]/card:px-3 text-sm text-muted-foreground" data-slot="card-content">&Ugrave;&#132;&Oslash;&macr;&Ugrave;&#138;&Ugrave;&#131; &Ugrave;&yen; &Oslash;&ordf;&Ugrave;&#130;&Oslash;&sect;&Oslash;&plusmn;&Ugrave;&#138;&Oslash;&plusmn; &Oslash;&not;&Oslash;&sect;&Ugrave;&#135;&Oslash;&sup2;&Oslash;&copy; &Ugrave;&#136;&Ugrave;&#133;&Oslash;&ordf;&Oslash;&sect;&Oslash;&shy;&Oslash;&copy; &Ugrave;&#132;&Ugrave;&#132;&Oslash;&ordf;&Oslash;&micro;&Oslash;&macr;&Ugrave;&#138;&Oslash;&plusmn;.
+                </div>
+            </div>
+        </div>
+        <div id="tab-settings-description" data-slot="tabs-content" data-tabs-target="tab" data-tab-id="settings" role="tabpanel" aria-labelledby="tab-settings" data-active="" data-state="inactive" class="flex-1 text-sm outline-none data-[state=inactive]:hidden">
+<div class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl" data-slot="card" data-size="default" dir="rtl">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3" data-slot="card-header">
+<div class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">&Oslash;&sect;&Ugrave;&#132;&Oslash;&yen;&Oslash;&sup1;&Oslash;&macr;&Oslash;&sect;&Oslash;&macr;&Oslash;&sect;&Oslash;&ordf;</div>
+                    <div class="text-sm text-muted-foreground" data-slot="card-description">&Oslash;&yen;&Oslash;&macr;&Oslash;&sect;&Oslash;&plusmn;&Oslash;&copy; &Oslash;&ordf;&Ugrave;&#129;&Oslash;&para;&Ugrave;&#138;&Ugrave;&#132;&Oslash;&sect;&Oslash;&ordf; &Oslash;&shy;&Oslash;&sup3;&Oslash;&sect;&Oslash;&uml;&Ugrave;&#131; &Ugrave;&#136;&Oslash;&reg;&Ugrave;&#138;&Oslash;&sect;&Oslash;&plusmn;&Oslash;&sect;&Oslash;&ordf;&Ugrave;&#135;. &Oslash;&ordf;&Oslash;&reg;&Oslash;&micro;&Ugrave;&#138;&Oslash;&micro; &Oslash;&ordf;&Oslash;&not;&Oslash;&plusmn;&Oslash;&uml;&Oslash;&ordf;&Ugrave;&#131; &Ugrave;&#132;&Oslash;&ordf;&Ugrave;&#134;&Oslash;&sect;&Oslash;&sup3;&Oslash;&uml; &Oslash;&sect;&Oslash;&shy;&Oslash;&ordf;&Ugrave;&#138;&Oslash;&sect;&Oslash;&not;&Oslash;&sect;&Oslash;&ordf;&Ugrave;&#131;.
+                    </div>
+                </div>
+                <div class="px-4 group-data-[size=sm]/card:px-3 text-sm text-muted-foreground" data-slot="card-content">&Oslash;&ordf;&Ugrave;&#131;&Ugrave;&#136;&Ugrave;&#138;&Ugrave;&#134; &Oslash;&sect;&Ugrave;&#132;&Oslash;&yen;&Oslash;&acute;&Oslash;&sup1;&Oslash;&sect;&Oslash;&plusmn;&Oslash;&sect;&Oslash;&ordf; &Ugrave;&#136;&Oslash;&sect;&Ugrave;&#132;&Oslash;&pound;&Ugrave;&#133;&Oslash;&sect;&Ugrave;&#134; &Ugrave;&#136;&Oslash;&sect;&Ugrave;&#132;&Oslash;&sup3;&Ugrave;&#133;&Oslash;&sect;&Oslash;&ordf;.
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div data-slot="tabs" data-controller="tabs" data-tabs-active-tab-value="overview" data-orientation="horizontal" class="gap-2 group/tabs flex data-[orientation=horizontal]:flex-col w-full max-w-sm" dir="rtl">
+    <nav data-slot="tabs-list" role="tablist" data-variant="default" class="group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-[3px] text-muted-foreground group-data-[orientation=horizontal]/tabs:h-8 group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col data-[variant=line]:rounded-none bg-muted" dir="rtl">
+    <button id="tab-overview" data-slot="tabs-trigger" data-action="click-&gt;tabs#open" data-tabs-target="trigger" data-tab-id="overview" role="tab" aria-controls="tab-overview-description" aria-selected="true" data-active="true" class="relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 ltr:has-data-[icon=inline-end]:pr-1 rtl:has-data-[icon=inline-end]:pe-1 ltr:has-data-[icon=inline-start]:pl-1 rtl:has-data-[icon=inline-start]:ps-1 dark:text-muted-foreground dark:hover:text-foreground group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 ltr:group-data-[orientation=vertical]/tabs:after:-right-1 rtl:group-data-[orientation=vertical]/tabs:after:-end-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100">&times;&iexcl;&times;&sect;&times;&#153;&times;&uml;&times;&#148; &times;&#155;&times;&#156;&times;&#156;&times;&#153;&times;&ordf;</button>
+            <button id="tab-analytics" data-slot="tabs-trigger" data-action="click-&gt;tabs#open" data-tabs-target="trigger" data-tab-id="analytics" role="tab" aria-controls="tab-analytics-description" aria-selected="false" data-active="" class="relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 ltr:has-data-[icon=inline-end]:pr-1 rtl:has-data-[icon=inline-end]:pe-1 ltr:has-data-[icon=inline-start]:pl-1 rtl:has-data-[icon=inline-start]:ps-1 dark:text-muted-foreground dark:hover:text-foreground group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 ltr:group-data-[orientation=vertical]/tabs:after:-right-1 rtl:group-data-[orientation=vertical]/tabs:after:-end-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100">&times;&#144;&times;&nbsp;&times;&#156;&times;&#153;&times;&#152;&times;&#153;&times;&sect;&times;&#148;</button>
+            <button id="tab-reports" data-slot="tabs-trigger" data-action="click-&gt;tabs#open" data-tabs-target="trigger" data-tab-id="reports" role="tab" aria-controls="tab-reports-description" aria-selected="false" data-active="" class="relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 ltr:has-data-[icon=inline-end]:pr-1 rtl:has-data-[icon=inline-end]:pe-1 ltr:has-data-[icon=inline-start]:pl-1 rtl:has-data-[icon=inline-start]:ps-1 dark:text-muted-foreground dark:hover:text-foreground group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 ltr:group-data-[orientation=vertical]/tabs:after:-right-1 rtl:group-data-[orientation=vertical]/tabs:after:-end-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100">&times;&#147;&times;&#149;&times;&#151;&times;&#149;&times;&ordf;</button>
+            <button id="tab-settings" data-slot="tabs-trigger" data-action="click-&gt;tabs#open" data-tabs-target="trigger" data-tab-id="settings" role="tab" aria-controls="tab-settings-description" aria-selected="false" data-active="" class="relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 ltr:has-data-[icon=inline-end]:pr-1 rtl:has-data-[icon=inline-end]:pe-1 ltr:has-data-[icon=inline-start]:pl-1 rtl:has-data-[icon=inline-start]:ps-1 dark:text-muted-foreground dark:hover:text-foreground group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 ltr:group-data-[orientation=vertical]/tabs:after:-right-1 rtl:group-data-[orientation=vertical]/tabs:after:-end-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100">&times;&#148;&times;&#146;&times;&#147;&times;&uml;&times;&#149;&times;&ordf;</button>
+        </nav>
+        <div id="tab-overview-description" data-slot="tabs-content" data-tabs-target="tab" data-tab-id="overview" role="tabpanel" aria-labelledby="tab-overview" data-active="true" data-state="active" class="flex-1 text-sm outline-none data-[state=inactive]:hidden">
+<div class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl" data-slot="card" data-size="default" dir="rtl">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3" data-slot="card-header">
+<div class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">&times;&iexcl;&times;&sect;&times;&#153;&times;&uml;&times;&#148; &times;&#155;&times;&#156;&times;&#156;&times;&#153;&times;&ordf;</div>
+                    <div class="text-sm text-muted-foreground" data-slot="card-description">&times;&#148;&times;&brvbar;&times;&#146; &times;&#144;&times;&ordf; &times;&#148;&times;&#158;&times;&#147;&times;&#147;&times;&#153;&times;&#157; &times;&#148;&times;&cent;&times;&#153;&times;&sect;&times;&uml;&times;&#153;&times;&#153;&times;&#157; &times;&copy;&times;&#156;&times;&#154; &times;&#149;&times;&#144;&times;&ordf; &times;&#148;&times;&nbsp;&times;&ordf;&times;&#149;&times;&nbsp;&times;&#153;&times;&#157; &times;&#148;&times;&#144;&times;&#151;&times;&uml;&times;&#149;&times;&nbsp;&times;&#153;&times;&#157;. &times;&cent;&times;&sect;&times;&#149;&times;&#145; &times;&#144;&times;&#151;&times;&uml; &times;&#148;&times;&#148;&times;&ordf;&times;&sect;&times;&#147;&times;&#158;&times;&#149;&times;&ordf; &times;&#145;&times;&#155;&times;&#156; &times;&#148;&times;&#158;&times;&#153;&times;&#150;&times;&#158;&times;&#153;&times;&#157;.
+                    </div>
+                </div>
+                <div class="px-4 group-data-[size=sm]/card:px-3 text-sm text-muted-foreground" data-slot="card-content">&times;&#153;&times;&copy; &times;&#156;&times;&#154; 12 &times;&#158;&times;&#153;&times;&#150;&times;&#158;&times;&#153;&times;&#157; &times;&nbsp;&times;&#146;&times;&#153;&times;&copy;&times;&#153;&times;&#157; &times;&#149;-3 &times;&#158;&times;&copy;&times;&#153;&times;&#158;&times;&#149;&times;&ordf; &times;&#158;&times;&#158;&times;&ordf;&times;&#153;&times;&nbsp;&times;&#149;&times;&ordf;.
+                </div>
+            </div>
+        </div>
+        <div id="tab-analytics-description" data-slot="tabs-content" data-tabs-target="tab" data-tab-id="analytics" role="tabpanel" aria-labelledby="tab-analytics" data-active="" data-state="inactive" class="flex-1 text-sm outline-none data-[state=inactive]:hidden">
+<div class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl" data-slot="card" data-size="default" dir="rtl">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3" data-slot="card-header">
+<div class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">&times;&#144;&times;&nbsp;&times;&#156;&times;&#153;&times;&#152;&times;&#153;&times;&sect;&times;&#148;</div>
+                    <div class="text-sm text-muted-foreground" data-slot="card-description">&times;&cent;&times;&sect;&times;&#149;&times;&#145; &times;&#144;&times;&#151;&times;&uml; &times;&#145;&times;&#153;&times;&brvbar;&times;&#149;&times;&cent;&times;&#153;&times;&#157; &times;&#149;&times;&#158;&times;&#147;&times;&#147;&times;&#153; &times;&#158;&times;&cent;&times;&#149;&times;&uml;&times;&#145;&times;&#149;&times;&ordf; &times;&#158;&times;&copy;&times;&ordf;&times;&#158;&times;&copy;&times;&#153;&times;&#157;. &times;&#150;&times;&#148;&times;&#148; &times;&#158;&times;&#146;&times;&#158;&times;&#149;&times;&ordf; &times;&#149;&times;&#148;&times;&#150;&times;&#147;&times;&#158;&times;&nbsp;&times;&#149;&times;&#153;&times;&#149;&times;&ordf; &times;&brvbar;&times;&#158;&times;&#153;&times;&#151;&times;&#148;.
+                    </div>
+                </div>
+                <div class="px-4 group-data-[size=sm]/card:px-3 text-sm text-muted-foreground" data-slot="card-content">&times;&#148;&times;&#146;&times;&#153;&times;&#147;&times;&#149;&times;&#156; &times;&cent;&times;&#158;&times;&#147; &times;&cent;&times;&#156; 25% &times;&#145;&times;&#148;&times;&copy;&times;&#149;&times;&#149;&times;&#144;&times;&#148; &times;&#156;&times;&#151;&times;&#149;&times;&#147;&times;&copy; &times;&copy;&times;&cent;&times;&#145;&times;&uml;.
+                </div>
+            </div>
+        </div>
+        <div id="tab-reports-description" data-slot="tabs-content" data-tabs-target="tab" data-tab-id="reports" role="tabpanel" aria-labelledby="tab-reports" data-active="" data-state="inactive" class="flex-1 text-sm outline-none data-[state=inactive]:hidden">
+<div class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl" data-slot="card" data-size="default" dir="rtl">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3" data-slot="card-header">
+<div class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">&times;&#147;&times;&#149;&times;&#151;&times;&#149;&times;&ordf;</div>
+                    <div class="text-sm text-muted-foreground" data-slot="card-description">&times;&brvbar;&times;&#149;&times;&uml; &times;&#149;&times;&#148;&times;&#149;&times;&uml;&times;&#147; &times;&#144;&times;&ordf; &times;&#148;&times;&#147;&times;&#149;&times;&#151;&times;&#149;&times;&ordf; &times;&#148;&times;&#158;&times;&#156;&times;&#144;&times;&#153;&times;&#157; &times;&copy;&times;&#156;&times;&#154;. &times;&#153;&times;&#153;&times;&brvbar;&times;&#144; &times;&nbsp;&times;&ordf;&times;&#149;&times;&nbsp;&times;&#153;&times;&#157; &times;&#145;&times;&ordf;&times;&#145;&times;&nbsp;&times;&#153;&times;&#149;&times;&ordf; &times;&copy;&times;&#149;&times;&nbsp;&times;&#149;&times;&ordf; &times;&#156;&times;&nbsp;&times;&#153;&times;&ordf;&times;&#149;&times;&#151;.
+                    </div>
+                </div>
+                <div class="px-4 group-data-[size=sm]/card:px-3 text-sm text-muted-foreground" data-slot="card-content">&times;&#153;&times;&copy; &times;&#156;&times;&#154; 5 &times;&#147;&times;&#149;&times;&#151;&times;&#149;&times;&ordf; &times;&#158;&times;&#149;&times;&#155;&times;&nbsp;&times;&#153;&times;&#157; &times;&#149;&times;&#150;&times;&#158;&times;&#153;&times;&nbsp;&times;&#153;&times;&#157; &times;&#156;&times;&#153;&times;&#153;&times;&brvbar;&times;&#149;&times;&#144;.
+                </div>
+            </div>
+        </div>
+        <div id="tab-settings-description" data-slot="tabs-content" data-tabs-target="tab" data-tab-id="settings" role="tabpanel" aria-labelledby="tab-settings" data-active="" data-state="inactive" class="flex-1 text-sm outline-none data-[state=inactive]:hidden">
+<div class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl" data-slot="card" data-size="default" dir="rtl">
+<div class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3" data-slot="card-header">
+<div class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm" data-slot="card-title">&times;&#148;&times;&#146;&times;&#147;&times;&uml;&times;&#149;&times;&ordf;</div>
+                    <div class="text-sm text-muted-foreground" data-slot="card-description">&times;&cent;&times;&uml;&times;&#149;&times;&#154; &times;&#144;&times;&ordf; &times;&#148;&times;&#146;&times;&#147;&times;&uml;&times;&#149;&times;&ordf; &times;&#148;&times;&#151;&times;&copy;&times;&#145;&times;&#149;&times;&#159; &times;&copy;&times;&#156;&times;&#154;. &times;&#148;&times;&ordf;&times;&#144;&times;&#157; &times;&#144;&times;&#153;&times;&copy;&times;&#153;&times;&ordf; &times;&#144;&times;&ordf; &times;&#148;&times;&#151;&times;&#149;&times;&#149;&times;&#153;&times;&#148; &times;&#155;&times;&#154; &times;&copy;&times;&ordf;&times;&ordf;&times;&#144;&times;&#153;&times;&#157; &times;&#156;&times;&brvbar;&times;&uml;&times;&#155;&times;&#153;&times;&#154;.
+                    </div>
+                </div>
+                <div class="px-4 group-data-[size=sm]/card:px-3 text-sm text-muted-foreground" data-slot="card-content">&times;&#148;&times;&#146;&times;&#147;&times;&uml; &times;&#148;&times;&ordf;&times;&uml;&times;&#144;&times;&#149;&times;&ordf;, &times;&#144;&times;&#145;&times;&#152;&times;&#151;&times;&#148; &times;&#149;&times;&cent;&times;&uml;&times;&#155;&times;&#149;&times;&ordf; &times;&nbsp;&times;&#149;&times;&copy;&times;&#144;.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
