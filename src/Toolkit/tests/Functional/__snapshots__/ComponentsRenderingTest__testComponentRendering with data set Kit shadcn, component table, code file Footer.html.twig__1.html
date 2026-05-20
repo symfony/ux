@@ -7,10 +7,6 @@
     {invoice: 'INV001', paymentStatus: 'Paid', totalAmount: '$250.00', paymentMethod: 'Credit Card'},
     {invoice: 'INV002', paymentStatus: 'Pending', totalAmount: '$150.00', paymentMethod: 'PayPal'},
     {invoice: 'INV003', paymentStatus: 'Unpaid', totalAmount: '$350.00', paymentMethod: 'Bank Transfer'},
-    {invoice: 'INV004', paymentStatus: 'Paid', totalAmount: '$450.00', paymentMethod: 'Credit Card'},
-    {invoice: 'INV005', paymentStatus: 'Paid', totalAmount: '$550.00', paymentMethod: 'PayPal'},
-    {invoice: 'INV006', paymentStatus: 'Pending', totalAmount: '$200.00', paymentMethod: 'Bank Transfer'},
-    {invoice: 'INV007', paymentStatus: 'Unpaid', totalAmount: '$300.00', paymentMethod: 'Credit Card'},
 ] -%}
 <twig:Table>
     <twig:Table:Caption>A list of your recent invoices.</twig:Table:Caption>
@@ -69,30 +65,6 @@
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">Unpaid</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">Bank Transfer</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0text-right" data-slot="table-cell">$350.00</td>
-            </tr>
-                    <tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
-<td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0font-medium" data-slot="table-cell">INV004</td>
-                <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">Paid</td>
-                <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">Credit Card</td>
-                <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0text-right" data-slot="table-cell">$450.00</td>
-            </tr>
-                    <tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
-<td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0font-medium" data-slot="table-cell">INV005</td>
-                <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">Paid</td>
-                <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">PayPal</td>
-                <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0text-right" data-slot="table-cell">$550.00</td>
-            </tr>
-                    <tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
-<td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0font-medium" data-slot="table-cell">INV006</td>
-                <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">Pending</td>
-                <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">Bank Transfer</td>
-                <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0text-right" data-slot="table-cell">$200.00</td>
-            </tr>
-                    <tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
-<td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0font-medium" data-slot="table-cell">INV007</td>
-                <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">Unpaid</td>
-                <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">Credit Card</td>
-                <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0text-right" data-slot="table-cell">$300.00</td>
             </tr>
             </tbody>
     <tfoot class="border-t bg-muted/50 font-medium [&amp;&gt;tr]:last:border-b-0" data-slot="table-footer">

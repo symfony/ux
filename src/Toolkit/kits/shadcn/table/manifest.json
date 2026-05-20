@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Table",
-    "description": "A structured grid element that organizes data into rows and columns, supporting headers, captions, and footers.",
+    "description": "A responsive table component.",
     "copy-files": {
         "templates/": "templates/"
     },

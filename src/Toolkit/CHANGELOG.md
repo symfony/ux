@@ -38,6 +38,7 @@
 - [Shadcn] Align `skeleton` with shadcn reference
 - [Shadcn] Align `spinner` with shadcn reference
 - [Shadcn] Align `switch` with shadcn reference
+- [Shadcn] Align `table` with shadcn reference
 - [Shadcn] Align `tabs` with shadcn reference
 - [Shadcn] Align `textarea` with shadcn reference
 - [Shadcn] Align `toggle` with shadcn reference
