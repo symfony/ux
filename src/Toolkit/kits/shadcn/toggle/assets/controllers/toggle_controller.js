@@ -22,6 +22,6 @@ export default class extends Controller {
     updateState() {
         const pressed = this.pressedValue;
         this.element.setAttribute('aria-pressed', String(pressed));
-        this.element.dataset.state = pressed ? 'active' : 'inactive';
+        this.element.dataset.state = pressed ? 'on' : 'off';
     }
 }
