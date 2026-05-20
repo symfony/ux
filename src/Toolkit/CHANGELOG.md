@@ -13,6 +13,7 @@
 - [Shadcn] Rework `tabs` recipe to use `provide()`/`inject()`
 - [Shadcn] Rework `toggle-group` recipe to use `provide()`/`inject()`
 - [Shadcn] Rework `tooltip` recipe to use `provide()`/`inject()`
+- [Shadcn] Align `button` with shadcn reference
 - [Shadcn] Align `card` with shadcn reference
 - [Shadcn] Align `pagination` with shadcn reference
 - [Shadcn] Align `tabs` with shadcn reference
