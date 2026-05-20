@@ -1,11 +1,14 @@
+{# @prop size 'default'|'sm' The size of the dialog. Defaults to `default` #}
 {# @block content The dialog content, typically includes `AlertDialog:Header` and `AlertDialog:Footer` #}
+{%- props size = 'default' -%}
 {%- set _alertDialog_id = inject('alertDialog.id') -%}
 <dialog
     id="{{ _alertDialog_id }}"
-    class="{{ ('text-foreground bg-background fixed top-[50%] left-[50%] z-50 max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] scale-95 gap-4 rounded-lg border p-6 opacity-0 shadow-lg transition-all transition-discrete duration-200 backdrop:transition-discrete backdrop:duration-150 open:grid open:scale-100 open:opacity-100 open:backdrop:bg-black/50 sm:max-w-lg starting:open:scale-95 starting:open:opacity-0 ' ~ attributes.render('class'))|tailwind_merge }}"
+    data-size="{{ size }}"
+    class="{{ ('group/alert-dialog-content fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover p-4 text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none transition-all transition-discrete backdrop:transition-discrete backdrop:duration-100 data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-sm open:grid open:scale-100 open:opacity-100 open:backdrop:bg-black/10 open:backdrop:backdrop-blur-xs scale-95 opacity-0 starting:open:scale-95 starting:open:opacity-0 ' ~ attributes.render('class'))|tailwind_merge }}"
     data-alert-dialog-target="dialog"
     data-action="keydown.esc->alert-dialog#close:prevent"
-    {{ attributes.without('id') }}
+    {{ attributes.defaults({'data-slot': 'alert-dialog-content'}).without('id') }}
 >
     {%- block content %}{% endblock -%}
 </dialog>

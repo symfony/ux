@@ -1,4 +1,7 @@
+{# @prop variant 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The button style variant. Defaults to `outline` #}
+{# @prop size 'default'|'sm'|'lg'|'xs'|'icon' The button size. Defaults to `default` #}
 {# @block content The cancel button label #}
-<twig:Button variant="outline" data-action="click->alert-dialog#close" {{ ...attributes }}>
+{%- props variant = 'outline', size = 'default' -%}
+<twig:Button variant="{{ variant }}" size="{{ size }}" data-slot="alert-dialog-cancel" data-action="click->alert-dialog#close" {{ ...attributes }}>
     {{- block(outerBlocks.content) -}}
 </twig:Button>
