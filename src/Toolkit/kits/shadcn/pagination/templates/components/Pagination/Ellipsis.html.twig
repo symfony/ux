@@ -1,8 +1,9 @@
 <span
     aria-hidden="true"
-    class="{{ ('flex size-9 items-center justify-center ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    data-slot="pagination-ellipsis"
+    class="{{ ('flex size-8 items-center justify-center [&_svg:not([class*=\'size-\'])]:size-4 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.without('class') }}
 >
-    <twig:ux:icon name="lucide:more-horizontal" class="size-4" />
+    <twig:ux:icon name="lucide:more-horizontal" />
     <span class="sr-only">More pages</span>
 </span>

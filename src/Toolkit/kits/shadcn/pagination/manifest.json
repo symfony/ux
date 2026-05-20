@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Pagination",
-    "description": "A navigation component that displays page numbers and controls for moving between pages.",
+    "description": "Pagination with page navigation, next and previous links.",
     "copy-files": {
         "templates/": "templates/"
     },
