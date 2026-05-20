@@ -1,4 +1,5 @@
 <div
-    class="{{ ('animate-pulse rounded-full bg-muted ' ~ attributes.render('class'))|tailwind_merge }}"
+    data-slot="skeleton"
+    class="{{ ('animate-pulse rounded-md bg-muted ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}
 ></div>
