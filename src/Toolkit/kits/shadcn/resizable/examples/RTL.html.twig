@@ -1,55 +1,51 @@
-<div class="flex flex-col items-center gap-6">
+<div class="flex flex-col gap-8">
     {# Arabic #}
-    <div dir="rtl" class="w-full max-w-xl">
-        <twig:Resizable orientation="horizontal" class="rounded-lg border h-[200px]">
-            <twig:Resizable:Panel>
-                <div class="flex h-full items-center justify-center p-6">
-                    <span class="font-semibold">واحد</span>
-                </div>
-            </twig:Resizable:Panel>
-            <twig:Resizable:Handle withHandle />
-            <twig:Resizable:Panel>
-                <twig:Resizable orientation="vertical">
-                    <twig:Resizable:Panel size="25">
-                        <div class="flex h-full items-center justify-center p-6">
-                            <span class="font-semibold">اثنان</span>
-                        </div>
-                    </twig:Resizable:Panel>
-                    <twig:Resizable:Handle withHandle />
-                    <twig:Resizable:Panel size="75">
-                        <div class="flex h-full items-center justify-center p-6">
-                            <span class="font-semibold">ثلاثة</span>
-                        </div>
-                    </twig:Resizable:Panel>
-                </twig:Resizable>
-            </twig:Resizable:Panel>
-        </twig:Resizable>
-    </div>
+    <twig:Resizable dir="rtl" orientation="horizontal" class="max-w-sm rounded-lg border h-[200px]">
+        <twig:Resizable:Panel size="50">
+            <div class="flex h-full items-center justify-center p-6">
+                <span class="font-semibold">واحد</span>
+            </div>
+        </twig:Resizable:Panel>
+        <twig:Resizable:Handle withHandle />
+        <twig:Resizable:Panel size="50">
+            <twig:Resizable orientation="vertical" dir="rtl">
+                <twig:Resizable:Panel size="25">
+                    <div class="flex h-full items-center justify-center p-6">
+                        <span class="font-semibold">اثنان</span>
+                    </div>
+                </twig:Resizable:Panel>
+                <twig:Resizable:Handle withHandle />
+                <twig:Resizable:Panel size="75">
+                    <div class="flex h-full items-center justify-center p-6">
+                        <span class="font-semibold">ثلاثة</span>
+                    </div>
+                </twig:Resizable:Panel>
+            </twig:Resizable>
+        </twig:Resizable:Panel>
+    </twig:Resizable>
 
     {# Hebrew #}
-    <div dir="rtl" class="w-full max-w-xl">
-        <twig:Resizable orientation="horizontal" class="rounded-lg border h-[200px]">
-            <twig:Resizable:Panel>
-                <div class="flex h-full items-center justify-center p-6">
-                    <span class="font-semibold">אחד</span>
-                </div>
-            </twig:Resizable:Panel>
-            <twig:Resizable:Handle withHandle />
-            <twig:Resizable:Panel>
-                <twig:Resizable orientation="vertical">
-                    <twig:Resizable:Panel size="25">
-                        <div class="flex h-full items-center justify-center p-6">
-                            <span class="font-semibold">שניים</span>
-                        </div>
-                    </twig:Resizable:Panel>
-                    <twig:Resizable:Handle withHandle />
-                    <twig:Resizable:Panel size="75">
-                        <div class="flex h-full items-center justify-center p-6">
-                            <span class="font-semibold">שלושה</span>
-                        </div>
-                    </twig:Resizable:Panel>
-                </twig:Resizable>
-            </twig:Resizable:Panel>
-        </twig:Resizable>
-    </div>
+    <twig:Resizable dir="rtl" orientation="horizontal" class="max-w-sm rounded-lg border h-[200px]">
+        <twig:Resizable:Panel size="50">
+            <div class="flex h-full items-center justify-center p-6">
+                <span class="font-semibold">אחד</span>
+            </div>
+        </twig:Resizable:Panel>
+        <twig:Resizable:Handle withHandle />
+        <twig:Resizable:Panel size="50">
+            <twig:Resizable orientation="vertical" dir="rtl">
+                <twig:Resizable:Panel size="25">
+                    <div class="flex h-full items-center justify-center p-6">
+                        <span class="font-semibold">שניים</span>
+                    </div>
+                </twig:Resizable:Panel>
+                <twig:Resizable:Handle withHandle />
+                <twig:Resizable:Panel size="75">
+                    <div class="flex h-full items-center justify-center p-6">
+                        <span class="font-semibold">שלושה</span>
+                    </div>
+                </twig:Resizable:Panel>
+            </twig:Resizable>
+        </twig:Resizable:Panel>
+    </twig:Resizable>
 </div>

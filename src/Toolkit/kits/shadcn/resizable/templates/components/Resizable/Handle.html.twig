@@ -1,7 +1,7 @@
-{# @prop withHandle bool Show a visible grip icon on the handle. Defaults to `false` #}
+{# @prop withHandle bool Show a visible grip handle. Defaults to `false` #}
 {%- props withHandle = false -%}
 <div
-    class="{{ ('relative flex items-center justify-center bg-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring group-data-[orientation=horizontal]/resizable:w-px group-data-[orientation=horizontal]/resizable:h-full group-data-[orientation=horizontal]/resizable:cursor-col-resize group-data-[orientation=vertical]/resizable:h-px group-data-[orientation=vertical]/resizable:w-full group-data-[orientation=vertical]/resizable:cursor-row-resize ' ~ attributes.render('class'))|tailwind_merge }}"
+    class="{{ ('relative flex w-px items-center justify-center bg-border ring-offset-background after:absolute after:inset-y-0 ltr:after:left-1/2 rtl:after:start-1/2 after:w-1 after:-translate-x-1/2 rtl:after:translate-x-1/2 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden group-data-[orientation=horizontal]/resizable:h-full group-data-[orientation=horizontal]/resizable:cursor-col-resize group-data-[orientation=vertical]/resizable:h-px group-data-[orientation=vertical]/resizable:w-full group-data-[orientation=vertical]/resizable:cursor-row-resize ltr:group-data-[orientation=vertical]/resizable:after:left-0 rtl:group-data-[orientation=vertical]/resizable:after:start-0 group-data-[orientation=vertical]/resizable:after:h-1 group-data-[orientation=vertical]/resizable:after:w-full group-data-[orientation=vertical]/resizable:after:translate-x-0 group-data-[orientation=vertical]/resizable:after:-translate-y-1/2 rtl:group-data-[orientation=vertical]/resizable:after:-translate-x-0 group-data-[orientation=vertical]/resizable:[&>div]:rotate-90 ' ~ attributes.render('class'))|tailwind_merge }}"
     tabindex="0"
     role="separator"
     {{ attributes.defaults({
@@ -10,8 +10,6 @@
     }) }}
 >
     {% if withHandle %}
-        <div class="z-10 flex items-center justify-center rounded-sm border bg-border group-data-[orientation=horizontal]/resizable:h-4 group-data-[orientation=horizontal]/resizable:w-3 group-data-[orientation=vertical]/resizable:h-3 group-data-[orientation=vertical]/resizable:w-4">
-            <twig:ux:icon name="lucide:grip-vertical" class="size-2.5 group-data-[orientation=vertical]/resizable:rotate-90" aria-hidden="true" />
-        </div>
+        <div class="z-10 flex h-6 w-1 shrink-0 rounded-lg bg-border"></div>
     {% endif %}
 </div>
