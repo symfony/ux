@@ -1,34 +1,26 @@
-<div class="flex flex-col gap-6">
-    <div class="flex items-center gap-3">
-        <twig:Checkbox id="terms" />
-        <twig:Label for="terms">Accept terms and conditions</twig:Label>
-    </div>
-    <div class="flex items-start gap-3">
-        <twig:Checkbox id="terms-2" checked />
-        <div class="grid gap-2">
-            <twig:Label for="terms-2">Accept terms and conditions</twig:Label>
-            <p class="text-muted-foreground text-sm">
-                By clicking this checkbox, you agree to the terms and conditions.
-            </p>
-        </div>
-    </div>
-    <div class="flex items-start gap-3">
-        <twig:Checkbox id="toggle" disabled />
-        <twig:Label for="toggle">Enable notifications</twig:Label>
-    </div>
-        <twig:Label class="hover:bg-accent/50 flex items-start gap-3 rounded-lg border p-3 has-checked:border-blue-600 has-checked:bg-blue-50 dark:has-checked:border-blue-900 dark:has-checked:bg-blue-950">
-        <twig:Checkbox
-            id="toggle-2"
-            checked
-            class="checked:accent-blue-600 dark:checked:accent-blue-700"
-        />
-        <div class="grid gap-1.5 font-normal">
-            <p class="text-sm leading-none font-medium">
-                Enable notifications
-            </p>
-            <p class="text-muted-foreground text-sm">
-                You can enable or disable notifications at any time.
-            </p>
-        </div>
-    </twig:Label>
-</div>
+<twig:Field:Group class="max-w-sm">
+    <twig:Field orientation="horizontal">
+        <twig:Checkbox id="terms-checkbox" name="terms-checkbox" />
+        <twig:Label for="terms-checkbox">Accept terms and conditions</twig:Label>
+    </twig:Field>
+    <twig:Field orientation="horizontal">
+        <twig:Checkbox id="terms-checkbox-2" name="terms-checkbox-2" checked />
+        <twig:Field:Content>
+            <twig:Field:Label for="terms-checkbox-2">Accept terms and conditions</twig:Field:Label>
+            <twig:Field:Description>By clicking this checkbox, you agree to the terms.</twig:Field:Description>
+        </twig:Field:Content>
+    </twig:Field>
+    <twig:Field orientation="horizontal" data-disabled>
+        <twig:Checkbox id="toggle-checkbox" name="toggle-checkbox" disabled />
+        <twig:Field:Label for="toggle-checkbox">Enable notifications</twig:Field:Label>
+    </twig:Field>
+    <twig:Field:Label>
+        <twig:Field orientation="horizontal">
+            <twig:Checkbox id="toggle-checkbox-2" name="toggle-checkbox-2" />
+            <twig:Field:Content>
+                <twig:Field:Title>Enable notifications</twig:Field:Title>
+                <twig:Field:Description>You can enable or disable notifications at any time.</twig:Field:Description>
+            </twig:Field:Content>
+        </twig:Field>
+    </twig:Field:Label>
+</twig:Field:Group>
