@@ -11,6 +11,8 @@ updates:
           github-actions:
               patterns:
                   - '*'
+      cooldown:
+          default-days: 7
 
     # npm, but only for UX's internal dependencies (devDependencies not listed in peerDependencies).
     - package-ecosystem: 'npm'
@@ -43,3 +45,5 @@ updates:
           npm-dev-dependencies:
               patterns:
                   - '*'
+      cooldown:
+          default-days: 7

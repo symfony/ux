@@ -5,17 +5,19 @@ on:
         tags:
             - 'v3.*.*'
 
-permissions:
-    id-token: write # Required for OIDC
-    contents: write # Required to push changes to the repository
+permissions: {}
 
 jobs:
     release:
+        permissions:
+            id-token: write # Required for OIDC
+            contents: write # Required to push changes to the repository
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
               with:
                   ref: 3.x
+                  persist-credentials: false
 
             - name: Configure Git
               run: |
@@ -26,7 +28,9 @@ jobs:
               run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
             - run: npm i -g corepack && corepack enable
-            - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+              # setup-node does not enable any package-manager cache here (no `cache:` input),
+              # so cache poisoning is not a concern on this release workflow.
+            - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # zizmor: ignore[cache-poisoning]
               with:
                   registry-url: 'https://registry.npmjs.org'
                   node-version-file: '.nvmrc'
@@ -38,12 +42,12 @@ jobs:
               run: pnpm install --frozen-lockfile
 
             - name: Update version of JS packages
-              run: pnpm version ${{ env.VERSION }} --no-git-tag-version --workspaces --no-workspaces-update
+              run: pnpm version "$VERSION" --no-git-tag-version --workspaces --no-workspaces-update
 
             - name: Commit changes
               run: |
                   git add .
-                  git commit -m "Update versions to ${{ env.VERSION }}"
+                  git commit -m "Update versions to $VERSION"
 
             - name: Publish on NPM
               run: pnpm publish --recursive --access public --no-git-checks

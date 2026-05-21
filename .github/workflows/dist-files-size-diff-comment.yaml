@@ -1,19 +1,26 @@
 name: Dist Files Size Diff (Comment)
 
+# workflow_run is required to post PR comments from fork-triggered runs:
+# the upstream `Dist Files Size Diff` workflow runs on `pull_request` (read-only
+# token from forks) and uploads the diff as an artifact; this workflow runs in
+# the base-repo context with `pull-requests: write` to post the comment.
+# Safety: we gate on workflow_run.conclusion, validate the PR number with a
+# regex, and never execute artifact contents (diff.md is posted as comment body).
 on:
-    workflow_run:
+    workflow_run: # zizmor: ignore[dangerous-triggers]
         workflows: ['Dist Files Size Diff']
         types:
             - completed
 
-permissions:
-    contents: read # Required to checkout the repository (default)
-    actions: read # Required to download artifacts from the triggering workflow run
-    pull-requests: write # Required to post the size diff comment on the pull request
+permissions: {}
 
 jobs:
     dist-files-size-diff:
         if: github.event.workflow_run.conclusion == 'success'
+        permissions:
+            contents: read # Required to checkout the repository (default)
+            actions: read # Required to download artifacts from the triggering workflow run
+            pull-requests: write # Required to post the size diff comment on the pull request
         runs-on: ubuntu-latest
         steps:
             - name: Download artifacts

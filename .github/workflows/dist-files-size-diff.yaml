@@ -7,6 +7,8 @@ on:
             - 'src/*/assets/dist/**'
             - 'src/*/src/Bridge/*/assets/dist/**'
 
+permissions: {}
+
 jobs:
     dist-files-size-diff:
         runs-on: ubuntu-latest
@@ -19,6 +21,7 @@ jobs:
             - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
               with:
                   ref: ${{ github.base_ref }}
+                  persist-credentials: false
 
             - name: Get dist files size (from base branch)
               id: base-dist-files
@@ -32,6 +35,8 @@ jobs:
                   echo "files=$FILES" >> $GITHUB_OUTPUT
 
             - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+              with:
+                  persist-credentials: false
 
             - name: Get dist files size (from pull request)
               id: pr-dist-files
