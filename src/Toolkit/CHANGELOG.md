@@ -15,6 +15,7 @@
 - [Shadcn] Rework `tooltip` recipe to use `provide()`/`inject()`
 - [Shadcn] Align `card` with shadcn reference
 - [Shadcn] Align `toggle` with shadcn reference
+- [Shadcn] Align `resizable` with shadcn reference
 
 ## 3.0.0
 

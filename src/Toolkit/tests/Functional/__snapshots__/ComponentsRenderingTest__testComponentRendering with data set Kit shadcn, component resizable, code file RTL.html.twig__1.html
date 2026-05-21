@@ -3,130 +3,114 @@
 - Component: Resizable
 - Code:
 ```twig
-<div class="flex flex-col items-center gap-6">
+<div class="flex flex-col gap-8">
     {# Arabic #}
-    <div dir="rtl" class="w-full max-w-xl">
-        <twig:Resizable orientation="horizontal" class="rounded-lg border h-[200px]">
-            <twig:Resizable:Panel>
-                <div class="flex h-full items-center justify-center p-6">
-                    <span class="font-semibold">واحد</span>
-                </div>
-            </twig:Resizable:Panel>
-            <twig:Resizable:Handle withHandle />
-            <twig:Resizable:Panel>
-                <twig:Resizable orientation="vertical">
-                    <twig:Resizable:Panel size="25">
-                        <div class="flex h-full items-center justify-center p-6">
-                            <span class="font-semibold">اثنان</span>
-                        </div>
-                    </twig:Resizable:Panel>
-                    <twig:Resizable:Handle withHandle />
-                    <twig:Resizable:Panel size="75">
-                        <div class="flex h-full items-center justify-center p-6">
-                            <span class="font-semibold">ثلاثة</span>
-                        </div>
-                    </twig:Resizable:Panel>
-                </twig:Resizable>
-            </twig:Resizable:Panel>
-        </twig:Resizable>
-    </div>
+    <twig:Resizable dir="rtl" orientation="horizontal" class="max-w-sm rounded-lg border h-[200px]">
+        <twig:Resizable:Panel size="50">
+            <div class="flex h-full items-center justify-center p-6">
+                <span class="font-semibold">واحد</span>
+            </div>
+        </twig:Resizable:Panel>
+        <twig:Resizable:Handle withHandle />
+        <twig:Resizable:Panel size="50">
+            <twig:Resizable orientation="vertical" dir="rtl">
+                <twig:Resizable:Panel size="25">
+                    <div class="flex h-full items-center justify-center p-6">
+                        <span class="font-semibold">اثنان</span>
+                    </div>
+                </twig:Resizable:Panel>
+                <twig:Resizable:Handle withHandle />
+                <twig:Resizable:Panel size="75">
+                    <div class="flex h-full items-center justify-center p-6">
+                        <span class="font-semibold">ثلاثة</span>
+                    </div>
+                </twig:Resizable:Panel>
+            </twig:Resizable>
+        </twig:Resizable:Panel>
+    </twig:Resizable>
 
     {# Hebrew #}
-    <div dir="rtl" class="w-full max-w-xl">
-        <twig:Resizable orientation="horizontal" class="rounded-lg border h-[200px]">
-            <twig:Resizable:Panel>
-                <div class="flex h-full items-center justify-center p-6">
-                    <span class="font-semibold">אחד</span>
-                </div>
-            </twig:Resizable:Panel>
-            <twig:Resizable:Handle withHandle />
-            <twig:Resizable:Panel>
-                <twig:Resizable orientation="vertical">
-                    <twig:Resizable:Panel size="25">
-                        <div class="flex h-full items-center justify-center p-6">
-                            <span class="font-semibold">שניים</span>
-                        </div>
-                    </twig:Resizable:Panel>
-                    <twig:Resizable:Handle withHandle />
-                    <twig:Resizable:Panel size="75">
-                        <div class="flex h-full items-center justify-center p-6">
-                            <span class="font-semibold">שלושה</span>
-                        </div>
-                    </twig:Resizable:Panel>
-                </twig:Resizable>
-            </twig:Resizable:Panel>
-        </twig:Resizable>
-    </div>
+    <twig:Resizable dir="rtl" orientation="horizontal" class="max-w-sm rounded-lg border h-[200px]">
+        <twig:Resizable:Panel size="50">
+            <div class="flex h-full items-center justify-center p-6">
+                <span class="font-semibold">אחד</span>
+            </div>
+        </twig:Resizable:Panel>
+        <twig:Resizable:Handle withHandle />
+        <twig:Resizable:Panel size="50">
+            <twig:Resizable orientation="vertical" dir="rtl">
+                <twig:Resizable:Panel size="25">
+                    <div class="flex h-full items-center justify-center p-6">
+                        <span class="font-semibold">שניים</span>
+                    </div>
+                </twig:Resizable:Panel>
+                <twig:Resizable:Handle withHandle />
+                <twig:Resizable:Panel size="75">
+                    <div class="flex h-full items-center justify-center p-6">
+                        <span class="font-semibold">שלושה</span>
+                    </div>
+                </twig:Resizable:Panel>
+            </twig:Resizable>
+        </twig:Resizable:Panel>
+    </twig:Resizable>
 </div>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div class="flex flex-col items-center gap-6">
-        <div dir="rtl" class="w-full max-w-xl">
-        <div class="group/resizable flex w-full rounded-lg border h-[200px]" data-slot="resizable" data-controller="resizable" data-resizable-orientation-value="horizontal" data-orientation="horizontal">
-<div class="overflow-auto" style="flex: 1 1 0%;" data-slot="resizable-panel" data-resizable-target="panel">
+<div class="flex flex-col gap-8">
+        <div class="group/resizable flex w-full aria-[orientation=vertical]:flex-col max-w-sm rounded-lg border h-[200px]" data-slot="resizable-panel-group" data-controller="resizable" data-resizable-orientation-value="horizontal" data-orientation="horizontal" aria-orientation="horizontal" dir="rtl">
+<div class="overflow-auto" style="flex: 50 1 0%;" data-slot="resizable-panel" data-resizable-target="panel">
 <div class="flex h-full items-center justify-center p-6">
-                    <span class="font-semibold">&Ugrave;&#136;&Oslash;&sect;&Oslash;&shy;&Oslash;&macr;</span>
-                </div>
+                <span class="font-semibold">&Ugrave;&#136;&Oslash;&sect;&Oslash;&shy;&Oslash;&macr;</span>
             </div>
-            <div class="relative flex items-center justify-center bg-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring group-data-[orientation=horizontal]/resizable:w-px group-data-[orientation=horizontal]/resizable:h-full group-data-[orientation=horizontal]/resizable:cursor-col-resize group-data-[orientation=vertical]/resizable:h-px group-data-[orientation=vertical]/resizable:w-full group-data-[orientation=vertical]/resizable:cursor-row-resize" tabindex="0" role="separator" data-slot="resizable-handle" data-resizable-target="handle">
-            <div class="z-10 flex items-center justify-center rounded-sm border bg-border group-data-[orientation=horizontal]/resizable:h-4 group-data-[orientation=horizontal]/resizable:w-3 group-data-[orientation=vertical]/resizable:h-3 group-data-[orientation=vertical]/resizable:w-4">
-            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-2.5 group-data-[orientation=vertical]/resizable:rotate-90" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="9" cy="12" r="1"></circle><circle cx="9" cy="5" r="1"></circle><circle cx="9" cy="19" r="1"></circle><circle cx="15" cy="12" r="1"></circle><circle cx="15" cy="5" r="1"></circle><circle cx="15" cy="19" r="1"></circle></g></svg>
         </div>
+        <div class="relative flex w-px items-center justify-center bg-border ring-offset-background after:absolute after:inset-y-0 ltr:after:left-1/2 rtl:after:start-1/2 after:w-1 after:-translate-x-1/2 rtl:after:translate-x-1/2 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden group-data-[orientation=horizontal]/resizable:h-full group-data-[orientation=horizontal]/resizable:cursor-col-resize group-data-[orientation=vertical]/resizable:h-px group-data-[orientation=vertical]/resizable:w-full group-data-[orientation=vertical]/resizable:cursor-row-resize ltr:group-data-[orientation=vertical]/resizable:after:left-0 rtl:group-data-[orientation=vertical]/resizable:after:start-0 group-data-[orientation=vertical]/resizable:after:h-1 group-data-[orientation=vertical]/resizable:after:w-full group-data-[orientation=vertical]/resizable:after:translate-x-0 group-data-[orientation=vertical]/resizable:after:-translate-y-1/2 rtl:group-data-[orientation=vertical]/resizable:after:-translate-x-0 group-data-[orientation=vertical]/resizable:[&amp;&gt;div]:rotate-90" tabindex="0" role="separator" data-slot="resizable-handle" data-resizable-target="handle">
+            <div class="z-10 flex h-6 w-1 shrink-0 rounded-lg bg-border"></div>
     </div>
 
-            <div class="overflow-auto" style="flex: 1 1 0%;" data-slot="resizable-panel" data-resizable-target="panel">
-<div class="group/resizable flex h-full w-full flex-col" data-slot="resizable" data-controller="resizable" data-resizable-orientation-value="vertical" data-orientation="vertical">
+        <div class="overflow-auto" style="flex: 50 1 0%;" data-slot="resizable-panel" data-resizable-target="panel">
+<div class="group/resizable flex h-full w-full aria-[orientation=vertical]:flex-col" data-slot="resizable-panel-group" data-controller="resizable" data-resizable-orientation-value="vertical" data-orientation="vertical" aria-orientation="vertical" dir="rtl">
 <div class="overflow-auto" style="flex: 25 1 0%;" data-slot="resizable-panel" data-resizable-target="panel">
 <div class="flex h-full items-center justify-center p-6">
-                            <span class="font-semibold">&Oslash;&sect;&Oslash;&laquo;&Ugrave;&#134;&Oslash;&sect;&Ugrave;&#134;</span>
-                        </div>
+                        <span class="font-semibold">&Oslash;&sect;&Oslash;&laquo;&Ugrave;&#134;&Oslash;&sect;&Ugrave;&#134;</span>
                     </div>
-                    <div class="relative flex items-center justify-center bg-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring group-data-[orientation=horizontal]/resizable:w-px group-data-[orientation=horizontal]/resizable:h-full group-data-[orientation=horizontal]/resizable:cursor-col-resize group-data-[orientation=vertical]/resizable:h-px group-data-[orientation=vertical]/resizable:w-full group-data-[orientation=vertical]/resizable:cursor-row-resize" tabindex="0" role="separator" data-slot="resizable-handle" data-resizable-target="handle">
-            <div class="z-10 flex items-center justify-center rounded-sm border bg-border group-data-[orientation=horizontal]/resizable:h-4 group-data-[orientation=horizontal]/resizable:w-3 group-data-[orientation=vertical]/resizable:h-3 group-data-[orientation=vertical]/resizable:w-4">
-            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-2.5 group-data-[orientation=vertical]/resizable:rotate-90" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="9" cy="12" r="1"></circle><circle cx="9" cy="5" r="1"></circle><circle cx="9" cy="19" r="1"></circle><circle cx="15" cy="12" r="1"></circle><circle cx="15" cy="5" r="1"></circle><circle cx="15" cy="19" r="1"></circle></g></svg>
-        </div>
+                </div>
+                <div class="relative flex w-px items-center justify-center bg-border ring-offset-background after:absolute after:inset-y-0 ltr:after:left-1/2 rtl:after:start-1/2 after:w-1 after:-translate-x-1/2 rtl:after:translate-x-1/2 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden group-data-[orientation=horizontal]/resizable:h-full group-data-[orientation=horizontal]/resizable:cursor-col-resize group-data-[orientation=vertical]/resizable:h-px group-data-[orientation=vertical]/resizable:w-full group-data-[orientation=vertical]/resizable:cursor-row-resize ltr:group-data-[orientation=vertical]/resizable:after:left-0 rtl:group-data-[orientation=vertical]/resizable:after:start-0 group-data-[orientation=vertical]/resizable:after:h-1 group-data-[orientation=vertical]/resizable:after:w-full group-data-[orientation=vertical]/resizable:after:translate-x-0 group-data-[orientation=vertical]/resizable:after:-translate-y-1/2 rtl:group-data-[orientation=vertical]/resizable:after:-translate-x-0 group-data-[orientation=vertical]/resizable:[&amp;&gt;div]:rotate-90" tabindex="0" role="separator" data-slot="resizable-handle" data-resizable-target="handle">
+            <div class="z-10 flex h-6 w-1 shrink-0 rounded-lg bg-border"></div>
     </div>
 
-                    <div class="overflow-auto" style="flex: 75 1 0%;" data-slot="resizable-panel" data-resizable-target="panel">
+                <div class="overflow-auto" style="flex: 75 1 0%;" data-slot="resizable-panel" data-resizable-target="panel">
 <div class="flex h-full items-center justify-center p-6">
-                            <span class="font-semibold">&Oslash;&laquo;&Ugrave;&#132;&Oslash;&sect;&Oslash;&laquo;&Oslash;&copy;</span>
-                        </div>
+                        <span class="font-semibold">&Oslash;&laquo;&Ugrave;&#132;&Oslash;&sect;&Oslash;&laquo;&Oslash;&copy;</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-        <div dir="rtl" class="w-full max-w-xl">
-        <div class="group/resizable flex w-full rounded-lg border h-[200px]" data-slot="resizable" data-controller="resizable" data-resizable-orientation-value="horizontal" data-orientation="horizontal">
-<div class="overflow-auto" style="flex: 1 1 0%;" data-slot="resizable-panel" data-resizable-target="panel">
+        <div class="group/resizable flex w-full aria-[orientation=vertical]:flex-col max-w-sm rounded-lg border h-[200px]" data-slot="resizable-panel-group" data-controller="resizable" data-resizable-orientation-value="horizontal" data-orientation="horizontal" aria-orientation="horizontal" dir="rtl">
+<div class="overflow-auto" style="flex: 50 1 0%;" data-slot="resizable-panel" data-resizable-target="panel">
 <div class="flex h-full items-center justify-center p-6">
-                    <span class="font-semibold">&times;&#144;&times;&#151;&times;&#147;</span>
-                </div>
+                <span class="font-semibold">&times;&#144;&times;&#151;&times;&#147;</span>
             </div>
-            <div class="relative flex items-center justify-center bg-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring group-data-[orientation=horizontal]/resizable:w-px group-data-[orientation=horizontal]/resizable:h-full group-data-[orientation=horizontal]/resizable:cursor-col-resize group-data-[orientation=vertical]/resizable:h-px group-data-[orientation=vertical]/resizable:w-full group-data-[orientation=vertical]/resizable:cursor-row-resize" tabindex="0" role="separator" data-slot="resizable-handle" data-resizable-target="handle">
-            <div class="z-10 flex items-center justify-center rounded-sm border bg-border group-data-[orientation=horizontal]/resizable:h-4 group-data-[orientation=horizontal]/resizable:w-3 group-data-[orientation=vertical]/resizable:h-3 group-data-[orientation=vertical]/resizable:w-4">
-            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-2.5 group-data-[orientation=vertical]/resizable:rotate-90" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="9" cy="12" r="1"></circle><circle cx="9" cy="5" r="1"></circle><circle cx="9" cy="19" r="1"></circle><circle cx="15" cy="12" r="1"></circle><circle cx="15" cy="5" r="1"></circle><circle cx="15" cy="19" r="1"></circle></g></svg>
         </div>
+        <div class="relative flex w-px items-center justify-center bg-border ring-offset-background after:absolute after:inset-y-0 ltr:after:left-1/2 rtl:after:start-1/2 after:w-1 after:-translate-x-1/2 rtl:after:translate-x-1/2 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden group-data-[orientation=horizontal]/resizable:h-full group-data-[orientation=horizontal]/resizable:cursor-col-resize group-data-[orientation=vertical]/resizable:h-px group-data-[orientation=vertical]/resizable:w-full group-data-[orientation=vertical]/resizable:cursor-row-resize ltr:group-data-[orientation=vertical]/resizable:after:left-0 rtl:group-data-[orientation=vertical]/resizable:after:start-0 group-data-[orientation=vertical]/resizable:after:h-1 group-data-[orientation=vertical]/resizable:after:w-full group-data-[orientation=vertical]/resizable:after:translate-x-0 group-data-[orientation=vertical]/resizable:after:-translate-y-1/2 rtl:group-data-[orientation=vertical]/resizable:after:-translate-x-0 group-data-[orientation=vertical]/resizable:[&amp;&gt;div]:rotate-90" tabindex="0" role="separator" data-slot="resizable-handle" data-resizable-target="handle">
+            <div class="z-10 flex h-6 w-1 shrink-0 rounded-lg bg-border"></div>
     </div>
 
-            <div class="overflow-auto" style="flex: 1 1 0%;" data-slot="resizable-panel" data-resizable-target="panel">
-<div class="group/resizable flex h-full w-full flex-col" data-slot="resizable" data-controller="resizable" data-resizable-orientation-value="vertical" data-orientation="vertical">
+        <div class="overflow-auto" style="flex: 50 1 0%;" data-slot="resizable-panel" data-resizable-target="panel">
+<div class="group/resizable flex h-full w-full aria-[orientation=vertical]:flex-col" data-slot="resizable-panel-group" data-controller="resizable" data-resizable-orientation-value="vertical" data-orientation="vertical" aria-orientation="vertical" dir="rtl">
 <div class="overflow-auto" style="flex: 25 1 0%;" data-slot="resizable-panel" data-resizable-target="panel">
 <div class="flex h-full items-center justify-center p-6">
-                            <span class="font-semibold">&times;&copy;&times;&nbsp;&times;&#153;&times;&#153;&times;&#157;</span>
-                        </div>
+                        <span class="font-semibold">&times;&copy;&times;&nbsp;&times;&#153;&times;&#153;&times;&#157;</span>
                     </div>
-                    <div class="relative flex items-center justify-center bg-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring group-data-[orientation=horizontal]/resizable:w-px group-data-[orientation=horizontal]/resizable:h-full group-data-[orientation=horizontal]/resizable:cursor-col-resize group-data-[orientation=vertical]/resizable:h-px group-data-[orientation=vertical]/resizable:w-full group-data-[orientation=vertical]/resizable:cursor-row-resize" tabindex="0" role="separator" data-slot="resizable-handle" data-resizable-target="handle">
-            <div class="z-10 flex items-center justify-center rounded-sm border bg-border group-data-[orientation=horizontal]/resizable:h-4 group-data-[orientation=horizontal]/resizable:w-3 group-data-[orientation=vertical]/resizable:h-3 group-data-[orientation=vertical]/resizable:w-4">
-            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-2.5 group-data-[orientation=vertical]/resizable:rotate-90" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="9" cy="12" r="1"></circle><circle cx="9" cy="5" r="1"></circle><circle cx="9" cy="19" r="1"></circle><circle cx="15" cy="12" r="1"></circle><circle cx="15" cy="5" r="1"></circle><circle cx="15" cy="19" r="1"></circle></g></svg>
-        </div>
+                </div>
+                <div class="relative flex w-px items-center justify-center bg-border ring-offset-background after:absolute after:inset-y-0 ltr:after:left-1/2 rtl:after:start-1/2 after:w-1 after:-translate-x-1/2 rtl:after:translate-x-1/2 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden group-data-[orientation=horizontal]/resizable:h-full group-data-[orientation=horizontal]/resizable:cursor-col-resize group-data-[orientation=vertical]/resizable:h-px group-data-[orientation=vertical]/resizable:w-full group-data-[orientation=vertical]/resizable:cursor-row-resize ltr:group-data-[orientation=vertical]/resizable:after:left-0 rtl:group-data-[orientation=vertical]/resizable:after:start-0 group-data-[orientation=vertical]/resizable:after:h-1 group-data-[orientation=vertical]/resizable:after:w-full group-data-[orientation=vertical]/resizable:after:translate-x-0 group-data-[orientation=vertical]/resizable:after:-translate-y-1/2 rtl:group-data-[orientation=vertical]/resizable:after:-translate-x-0 group-data-[orientation=vertical]/resizable:[&amp;&gt;div]:rotate-90" tabindex="0" role="separator" data-slot="resizable-handle" data-resizable-target="handle">
+            <div class="z-10 flex h-6 w-1 shrink-0 rounded-lg bg-border"></div>
     </div>
 
-                    <div class="overflow-auto" style="flex: 75 1 0%;" data-slot="resizable-panel" data-resizable-target="panel">
+                <div class="overflow-auto" style="flex: 75 1 0%;" data-slot="resizable-panel" data-resizable-target="panel">
 <div class="flex h-full items-center justify-center p-6">
-                            <span class="font-semibold">&times;&copy;&times;&#156;&times;&#149;&times;&copy;&times;&#148;</span>
-                        </div>
+                        <span class="font-semibold">&times;&copy;&times;&#156;&times;&#149;&times;&copy;&times;&#148;</span>
                     </div>
                 </div>
             </div>
