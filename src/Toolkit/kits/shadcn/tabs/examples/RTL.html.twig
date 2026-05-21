@@ -1,0 +1,125 @@
+<div class="flex flex-col gap-8">
+    {# Arabic #}
+    <twig:Tabs defaultValue="overview" class="w-full max-w-sm" dir="rtl">
+        <twig:Tabs:List dir="rtl">
+            <twig:Tabs:Trigger value="overview">نظرة عامة</twig:Tabs:Trigger>
+            <twig:Tabs:Trigger value="analytics">التحليلات</twig:Tabs:Trigger>
+            <twig:Tabs:Trigger value="reports">التقارير</twig:Tabs:Trigger>
+            <twig:Tabs:Trigger value="settings">الإعدادات</twig:Tabs:Trigger>
+        </twig:Tabs:List>
+        <twig:Tabs:Content value="overview">
+            <twig:Card dir="rtl">
+                <twig:Card:Header>
+                    <twig:Card:Title>نظرة عامة</twig:Card:Title>
+                    <twig:Card:Description>
+                        عرض مقاييسك الرئيسية وأنشطة المشروع الأخيرة. تتبع التقدم عبر جميع مشاريعك النشطة.
+                    </twig:Card:Description>
+                </twig:Card:Header>
+                <twig:Card:Content class="text-sm text-muted-foreground">
+                    لديك ١٢ مشروعًا نشطًا و٣ مهام معلقة.
+                </twig:Card:Content>
+            </twig:Card>
+        </twig:Tabs:Content>
+        <twig:Tabs:Content value="analytics">
+            <twig:Card dir="rtl">
+                <twig:Card:Header>
+                    <twig:Card:Title>التحليلات</twig:Card:Title>
+                    <twig:Card:Description>
+                        تتبع مقاييس الأداء ومشاركة المستخدمين. راقب الاتجاهات وحدد فرص النمو.
+                    </twig:Card:Description>
+                </twig:Card:Header>
+                <twig:Card:Content class="text-sm text-muted-foreground">
+                    زادت مشاهدات الصفحة بنسبة ٢٥٪ مقارنة بالشهر الماضي.
+                </twig:Card:Content>
+            </twig:Card>
+        </twig:Tabs:Content>
+        <twig:Tabs:Content value="reports">
+            <twig:Card dir="rtl">
+                <twig:Card:Header>
+                    <twig:Card:Title>التقارير</twig:Card:Title>
+                    <twig:Card:Description>
+                        إنشاء وتنزيل تقاريرك التفصيلية. تصدير البيانات بتنسيقات متعددة للتحليل.
+                    </twig:Card:Description>
+                </twig:Card:Header>
+                <twig:Card:Content class="text-sm text-muted-foreground">
+                    لديك ٥ تقارير جاهزة ومتاحة للتصدير.
+                </twig:Card:Content>
+            </twig:Card>
+        </twig:Tabs:Content>
+        <twig:Tabs:Content value="settings">
+            <twig:Card dir="rtl">
+                <twig:Card:Header>
+                    <twig:Card:Title>الإعدادات</twig:Card:Title>
+                    <twig:Card:Description>
+                        إدارة تفضيلات حسابك وخياراته. تخصيص تجربتك لتناسب احتياجاتك.
+                    </twig:Card:Description>
+                </twig:Card:Header>
+                <twig:Card:Content class="text-sm text-muted-foreground">
+                    تكوين الإشعارات والأمان والسمات.
+                </twig:Card:Content>
+            </twig:Card>
+        </twig:Tabs:Content>
+    </twig:Tabs>
+
+    {# Hebrew #}
+    <twig:Tabs defaultValue="overview" class="w-full max-w-sm" dir="rtl">
+        <twig:Tabs:List dir="rtl">
+            <twig:Tabs:Trigger value="overview">סקירה כללית</twig:Tabs:Trigger>
+            <twig:Tabs:Trigger value="analytics">אנליטיקה</twig:Tabs:Trigger>
+            <twig:Tabs:Trigger value="reports">דוחות</twig:Tabs:Trigger>
+            <twig:Tabs:Trigger value="settings">הגדרות</twig:Tabs:Trigger>
+        </twig:Tabs:List>
+        <twig:Tabs:Content value="overview">
+            <twig:Card dir="rtl">
+                <twig:Card:Header>
+                    <twig:Card:Title>סקירה כללית</twig:Card:Title>
+                    <twig:Card:Description>
+                        הצג את המדדים העיקריים שלך ואת הנתונים האחרונים. עקוב אחר ההתקדמות בכל המיזמים.
+                    </twig:Card:Description>
+                </twig:Card:Header>
+                <twig:Card:Content class="text-sm text-muted-foreground">
+                    יש לך 12 מיזמים נגישים ו-3 משימות ממתינות.
+                </twig:Card:Content>
+            </twig:Card>
+        </twig:Tabs:Content>
+        <twig:Tabs:Content value="analytics">
+            <twig:Card dir="rtl">
+                <twig:Card:Header>
+                    <twig:Card:Title>אנליטיקה</twig:Card:Title>
+                    <twig:Card:Description>
+                        עקוב אחר ביצועים ומדדי מעורבות משתמשים. זהה מגמות והזדמנויות צמיחה.
+                    </twig:Card:Description>
+                </twig:Card:Header>
+                <twig:Card:Content class="text-sm text-muted-foreground">
+                    הגידול עמד על 25% בהשוואה לחודש שעבר.
+                </twig:Card:Content>
+            </twig:Card>
+        </twig:Tabs:Content>
+        <twig:Tabs:Content value="reports">
+            <twig:Card dir="rtl">
+                <twig:Card:Header>
+                    <twig:Card:Title>דוחות</twig:Card:Title>
+                    <twig:Card:Description>
+                        צור והורד את הדוחות המלאים שלך. ייצא נתונים בתבניות שונות לניתוח.
+                    </twig:Card:Description>
+                </twig:Card:Header>
+                <twig:Card:Content class="text-sm text-muted-foreground">
+                    יש לך 5 דוחות מוכנים וזמינים לייצוא.
+                </twig:Card:Content>
+            </twig:Card>
+        </twig:Tabs:Content>
+        <twig:Tabs:Content value="settings">
+            <twig:Card dir="rtl">
+                <twig:Card:Header>
+                    <twig:Card:Title>הגדרות</twig:Card:Title>
+                    <twig:Card:Description>
+                        ערוך את הגדרות החשבון שלך. התאם אישית את החוויה כך שתתאים לצרכיך.
+                    </twig:Card:Description>
+                </twig:Card:Header>
+                <twig:Card:Content class="text-sm text-muted-foreground">
+                    הגדר התראות, אבטחה וערכות נושא.
+                </twig:Card:Content>
+            </twig:Card>
+        </twig:Tabs:Content>
+    </twig:Tabs>
+</div>
