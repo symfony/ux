@@ -1,0 +1,29 @@
+<div class="flex flex-col gap-8">
+    {# Arabic #}
+    <div class="flex flex-wrap gap-2" dir="rtl">
+        {% for side, label in {left: 'يسار', top: 'أعلى', bottom: 'أسفل', right: 'يمين'} %}
+            <twig:Tooltip id="tooltip-rtl-ar-{{ side }}">
+                <twig:Tooltip:Trigger>
+                    <twig:Button {{ ...tooltip_trigger_attrs }} variant="outline" class="w-fit">
+                        {{ label }}
+                    </twig:Button>
+                </twig:Tooltip:Trigger>
+                <twig:Tooltip:Content side="{{ side }}">إضافة إلى المكتبة</twig:Tooltip:Content>
+            </twig:Tooltip>
+        {% endfor %}
+    </div>
+
+    {# Hebrew #}
+    <div class="flex flex-wrap gap-2" dir="rtl">
+        {% for side, label in {left: 'שמאל', top: 'למעלה', bottom: 'למטה', right: 'ימין'} %}
+            <twig:Tooltip id="tooltip-rtl-he-{{ side }}">
+                <twig:Tooltip:Trigger>
+                    <twig:Button {{ ...tooltip_trigger_attrs }} variant="outline" class="w-fit">
+                        {{ label }}
+                    </twig:Button>
+                </twig:Tooltip:Trigger>
+                <twig:Tooltip:Content side="{{ side }}">הוסף לרשימה</twig:Tooltip:Content>
+            </twig:Tooltip>
+        {% endfor %}
+    </div>
+</div>

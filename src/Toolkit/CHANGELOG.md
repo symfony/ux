@@ -14,8 +14,9 @@
 - [Shadcn] Rework `toggle-group` recipe to use `provide()`/`inject()`
 - [Shadcn] Rework `tooltip` recipe to use `provide()`/`inject()`
 - [Shadcn] Align `card` with shadcn reference
-- [Shadcn] Align `toggle` with shadcn reference
 - [Shadcn] Align `textarea` with shadcn reference
+- [Shadcn] Align `toggle` with shadcn reference
+- [Shadcn] Align `tooltip` with shadcn reference
 
 ## 3.0.0
 
