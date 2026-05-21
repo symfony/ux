@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Label",
-    "description": "A text element that identifies form controls and other content.",
+    "description": "Renders an accessible label associated with controls.",
     "copy-files": {
         "templates/": "templates/"
     },

@@ -24,6 +24,7 @@
 - [Shadcn] Align `card` with shadcn reference
 - [Shadcn] Align `checkbox` with shadcn reference
 - [Shadcn] Align `kbd` with shadcn reference
+- [Shadcn] Align `label` with shadcn reference
 - [Shadcn] Align `pagination` with shadcn reference
 - [Shadcn] Align `progress` with shadcn reference
 - [Shadcn] Align `separator` with shadcn reference
