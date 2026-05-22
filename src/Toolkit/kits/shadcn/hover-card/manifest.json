@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Hover Card",
-    "description": "A popup that displays rich content when a trigger is hovered.",
+    "description": "For sighted users to preview content available behind a link.",
     "version-added": "3.0",
     "copy-files": {
         "assets/": "assets/",

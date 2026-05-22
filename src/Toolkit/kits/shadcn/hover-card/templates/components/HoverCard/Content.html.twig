@@ -1,7 +1,24 @@
+{# @prop side 'bottom'|'top'|'left'|'right' The side where the content appears. Defaults to `bottom` #}
 {# @block content The content revealed on hover #}
+{%- props side = 'bottom' -%}
+{%- set style = html_cva(
+    base: 'invisible opacity-0 in-data-[state=open]:visible in-data-[state=open]:opacity-100 transition-opacity duration-100 absolute z-50 w-64 rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden ',
+    variants: {
+        side: {
+            bottom: 'left-1/2 top-full mt-2 -translate-x-1/2',
+            top: 'left-1/2 top-auto bottom-full mb-2 mt-0 -translate-x-1/2',
+            left: 'top-1/2 left-auto right-full -translate-y-1/2 translate-x-0 mt-0 mr-2',
+            right: 'top-1/2 left-full -translate-y-1/2 translate-x-0 mt-0 ml-2',
+        },
+    },
+    default_variant: {
+        side: 'bottom',
+    },
+) -%}
 <span
     role="tooltip"
-    class="{{ ('invisible opacity-0 in-data-[state=open]:visible in-data-[state=open]:opacity-100 transition-opacity absolute left-1/2 top-full z-50 mt-2 w-64 -translate-x-1/2 rounded-md border bg-popover p-4 text-sm text-popover-foreground shadow-md outline-none ' ~ attributes.render('class'))|tailwind_merge }}"
+    data-side="{{ side }}"
+    class="{{ style.apply({side: side}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
         'data-slot': 'hover-card-content',
     }) }}
