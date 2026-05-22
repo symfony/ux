@@ -6,8 +6,9 @@
     variant="{{ active ? 'outline' : 'ghost' }}"
     size="icon"
     aria-current="{{ active ? 'page' : false }}"
-    href="#"
-    {{ ...attributes.without('class') }}
+    data-slot="pagination-link"
+    data-active="{{ active ? 'true' : 'false' }}"
+    {{ ...attributes }}
 >
     {{- block(outerBlocks.content) -}}
 </twig:Button>

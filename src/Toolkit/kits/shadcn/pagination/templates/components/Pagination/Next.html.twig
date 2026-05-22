@@ -1,9 +1,11 @@
+{# @prop text string The label text. Defaults to `Next` #}
+{%- props text = 'Next' -%}
 <twig:Pagination:Link
     aria-label="Go to next page"
     size="default"
-    class="{{ ('gap-1 pr-2.5 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ ...attributes }}
+    class="{{ ('ltr:pr-1.5! rtl:pe-1.5! ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ ...attributes.without('class') }}
 >
-    <span>Next</span>
-    <twig:ux:icon name="lucide:chevron-right" class="size-4" />
+    <span class="hidden sm:block">{{ text }}</span>
+    <twig:ux:icon name="lucide:chevron-right" data-icon="inline-end" class="rtl:rotate-180" />
 </twig:Pagination:Link>
