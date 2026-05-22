@@ -11,8 +11,8 @@
 
 namespace Symfony\UX\TwigComponent;
 
+use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\TwigComponent\Event\PostMountEvent;
@@ -36,7 +36,7 @@ final class ComponentFactory implements ResetInterface
      */
     public function __construct(
         private ComponentTemplateFinderInterface $componentTemplateFinder,
-        private ServiceLocator $components,
+        private ContainerInterface $components,
         private PropertyAccessorInterface $propertyAccessor,
         private EventDispatcherInterface $eventDispatcher,
         private array $config,

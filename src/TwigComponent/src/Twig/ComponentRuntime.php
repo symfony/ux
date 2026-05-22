@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\Twig;
 
-use Symfony\Component\DependencyInjection\ServiceLocator;
+use Psr\Container\ContainerInterface;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
@@ -26,7 +26,7 @@ final class ComponentRuntime
 {
     public function __construct(
         private readonly ComponentRenderer $renderer,
-        private readonly ServiceLocator $renderers,
+        private readonly ContainerInterface $renderers,
         private readonly ComponentStack $componentStack,
     ) {
     }
