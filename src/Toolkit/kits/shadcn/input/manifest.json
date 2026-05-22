@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Input",
-    "description": "A form control that allows users to enter text, numbers, or select files.",
+    "description": "A text input component for forms and user data entry with built-in styling and accessibility features.",
     "copy-files": {
         "templates/": "templates/"
     },
