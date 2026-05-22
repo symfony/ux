@@ -2,7 +2,8 @@
 {%- set _alertDialog_descriptionId = inject('alertDialog.descriptionId') -%}
 <p
     id="{{ _alertDialog_descriptionId }}"
-    class="{{ ('text-muted-foreground text-sm ' ~ attributes.render('class'))|tailwind_merge }}"
+    data-slot="alert-dialog-description"
+    class="{{ ('text-sm text-balance text-muted-foreground md:text-pretty *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.without('id') }}
 >
     {%- block content %}{% endblock -%}

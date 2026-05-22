@@ -15,6 +15,7 @@
 - [Shadcn] Rework `tooltip` recipe to use `provide()`/`inject()`
 - [Shadcn] Align `accordion` with shadcn reference
 - [Shadcn] Align `alert` with shadcn reference
+- [Shadcn] Align `alert-dialog` with shadcn reference
 - [Shadcn] Align `aspect-ratio` with shadcn reference
 - [Shadcn] Align `avatar` with shadcn reference
 - [Shadcn] Align `badge` with shadcn reference
