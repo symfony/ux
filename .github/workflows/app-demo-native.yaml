@@ -34,7 +34,7 @@ jobs:
               with:
                   persist-credentials: false
 
-            - uses: shivammathur/setup-php@45e37a5311835edf589763a5cde3a7a7ef2ebbac
+            - uses: shivammathur/setup-php@a919ff576a94b0fd7ec15f090dd9cf16b76c2c0b
               with:
                   php-version: '8.4'
                   tools: symfony-cli, flex
