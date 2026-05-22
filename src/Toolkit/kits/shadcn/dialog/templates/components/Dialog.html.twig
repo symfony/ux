@@ -10,6 +10,7 @@
 {%- do provide('dialog.titleId', _dialog_title_id) -%}
 {%- do provide('dialog.descriptionId', _dialog_description_id) -%}
 <div {{ attributes.defaults({
+    'data-slot': 'dialog',
     'data-controller': 'dialog',
     'data-dialog-open-value': open,
     'aria-labelledby': _dialog_title_id,

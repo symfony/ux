@@ -5,15 +5,24 @@
 
 <dialog
     id="{{ _dialog_id }}"
-    class="{{ ('text-foreground bg-background fixed top-[50%] left-[50%] z-50 max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] scale-95 gap-4 rounded-lg border p-6 opacity-0 shadow-lg transition-all transition-discrete duration-200 backdrop:transition-discrete backdrop:duration-150 open:grid open:scale-100 open:opacity-100 open:backdrop:bg-black/50 sm:max-w-lg starting:open:scale-95 starting:open:opacity-0 ' ~ attributes.render('class'))|tailwind_merge }}"
+    data-slot="dialog-content"
+    class="{{ ('fixed top-1/2 left-1/2 z-50 w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover p-4 text-sm text-popover-foreground ring-1 ring-foreground/10 outline-none sm:max-w-sm opacity-0 scale-95 transition-all transition-discrete duration-100 backdrop:transition-discrete backdrop:duration-100 open:grid open:scale-100 open:opacity-100 open:backdrop:bg-black/10 supports-backdrop-filter:open:backdrop:backdrop-blur-xs starting:open:scale-95 starting:open:opacity-0 ' ~ attributes.render('class'))|tailwind_merge }}"
     data-dialog-target="dialog"
     data-action="keydown.esc->dialog#close:prevent click->dialog#closeOnClickOutside"
+    {{ attributes.without('class') }}
 >
     {%- block content %}{% endblock -%}
     {% if showCloseButton %}
-        <button type="button" class="ring-offset-background focus:ring-ring absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4" data-action="click->dialog#close">
+        <twig:Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            class="absolute top-2 ltr:right-2 rtl:end-2"
+            data-slot="dialog-close"
+            data-action="click->dialog#close"
+        >
             <twig:ux:icon name="lucide:x" />
             <span class="sr-only">Close</span>
-        </button>
+        </twig:Button>
     {% endif %}
 </dialog>

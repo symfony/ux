@@ -23,6 +23,7 @@
 - [Shadcn] Align `breadcrumb` with shadcn reference
 - [Shadcn] Align `card` with shadcn reference
 - [Shadcn] Align `checkbox` with shadcn reference
+- [Shadcn] Align `dialog` with shadcn reference
 - [Shadcn] Align `empty` with shadcn reference
 - [Shadcn] Align `field` with shadcn reference
 - [Shadcn] Align `input` with shadcn reference

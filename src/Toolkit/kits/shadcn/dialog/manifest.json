@@ -8,6 +8,7 @@
         "templates/": "templates/"
     },
     "dependencies": {
+        "recipe": ["button"],
         "composer": [
             "symfony/ux-icons",
             "twig/extra-bundle",

@@ -13,13 +13,11 @@
             <div class="grid flex-1 gap-2">
                 <twig:Label for="link" class="sr-only">Link</twig:Label>
                 <twig:Input id="link" value="https://ui.shadcn.com/docs/installation" readonly />
-          </div>
+            </div>
         </div>
         <twig:Dialog:Footer class="sm:justify-start">
             <twig:Dialog:Close>
-                <twig:Button type="button" variant="secondary" {{ ...dialog_close_attrs }}>
-                    Close
-                </twig:Button>
+                <twig:Button type="button" {{ ...dialog_close_attrs }}>Close</twig:Button>
             </twig:Dialog:Close>
         </twig:Dialog:Footer>
     </twig:Dialog:Content>

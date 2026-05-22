@@ -1,0 +1,18 @@
+<twig:Dialog id="scrollable_content">
+    <twig:Dialog:Trigger>
+        <twig:Button variant="outline" {{ ...dialog_trigger_attrs }}>Scrollable Content</twig:Button>
+    </twig:Dialog:Trigger>
+    <twig:Dialog:Content>
+        <twig:Dialog:Header>
+            <twig:Dialog:Title>Scrollable Content</twig:Dialog:Title>
+            <twig:Dialog:Description>
+                This is a dialog with scrollable content.
+            </twig:Dialog:Description>
+        </twig:Dialog:Header>
+        <div class="-mx-4 max-h-[50vh] overflow-y-auto px-4">
+            {% for i in 1..10 %}
+                <p class="mb-4 leading-normal">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            {% endfor %}
+        </div>
+    </twig:Dialog:Content>
+</twig:Dialog>
