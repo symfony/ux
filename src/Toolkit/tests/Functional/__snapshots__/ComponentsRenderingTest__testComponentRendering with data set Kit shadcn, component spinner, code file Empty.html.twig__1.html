@@ -17,16 +17,16 @@
 </twig:Empty>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div data-slot="empty" class="flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center text-balance md:p-12 w-full">
-<div data-slot="empty-header" class="flex max-w-sm flex-col items-center gap-2 text-center">
-<div data-slot="empty-icon" data-variant="icon" class="flex shrink-0 items-center justify-center mb-2 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 bg-muted text-foreground size-10 rounded-lg [&amp;_svg:not([class*='size-'])]:size-6">
+<div data-slot="empty" class="flex min-w-0 flex-1 flex-col items-center justify-center gap-4 rounded-xl border-dashed p-6 text-center text-balance w-full">
+<div data-slot="empty-header" class="flex max-w-sm flex-col items-center gap-2">
+<div data-slot="empty-icon" data-variant="icon" class="flex shrink-0 items-center justify-center mb-2 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 size-8 rounded-lg bg-muted text-foreground [&amp;_svg:not([class*='size-'])]:size-4">
 <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="spinner" role="status" aria-label="Loading" class="size-4 animate-spin"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
 
         </div>
-        <div data-slot="empty-title" class="text-lg font-medium tracking-tight">Processing your request</div>
+        <div data-slot="empty-title" class="cn-font-heading text-sm font-medium tracking-tight">Processing your request</div>
         <div data-slot="empty-description" class="text-muted-foreground [&amp;&gt;a:hover]:text-primary text-sm/relaxed [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4">Please wait while we process your request. Do not refresh the page.</div>
     </div>
-    <div data-slot="empty-content" class="flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm text-balance">
+    <div data-slot="empty-content" class="flex w-full max-w-sm min-w-0 flex-col items-center gap-2.5 text-sm text-balance">
 <button data-slot="button" data-variant="outline" data-size="sm" class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg ltr:has-data-[icon=inline-end]:pr-1.5 rtl:has-data-[icon=inline-end]:pe-1.5 ltr:has-data-[icon=inline-start]:pl-1.5 rtl:has-data-[icon=inline-start]:ps-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5">Cancel</button>
     </div>
 </div>
