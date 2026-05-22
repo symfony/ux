@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Badge",
-    "description": "A small element that displays status, counts, or labels with optional icons.",
+    "description": "Displays a badge or a component that looks like a badge.",
     "copy-files": {
         "templates/": "templates/"
     },
