@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Button",
-    "description": "A clickable element that triggers actions or events, supporting various styles and states.",
+    "description": "Displays a button or a component that looks like a button.",
     "copy-files": {
         "templates/": "templates/"
     },

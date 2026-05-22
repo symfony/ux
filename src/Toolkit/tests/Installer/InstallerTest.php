@@ -65,8 +65,8 @@ final class InstallerTest extends KernelTestCase
         $installer->installRecipe($kit, $recipe, $this->tmpDir, false);
 
         $this->assertSame(0, $askedCount);
-        $this->assertFileExists($this->tmpDir.'/templates/components//Button.html.twig');
-        $this->assertSame(file_get_contents($this->tmpDir.'/templates/components//Button.html.twig'), file_get_contents(\sprintf('%s/templates/components/Button.html.twig', $recipe->absolutePath)));
+        $this->assertFileExists($this->tmpDir.'/templates/components/Button.html.twig');
+        $this->assertSame(file_get_contents($this->tmpDir.'/templates/components/Button.html.twig'), file_get_contents(\sprintf('%s/templates/components/Button.html.twig', $recipe->absolutePath)));
 
         $installer->installRecipe($kit, $recipe, $this->tmpDir, false);
         $this->assertSame(1, $askedCount);
