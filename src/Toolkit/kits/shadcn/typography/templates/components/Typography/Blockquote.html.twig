@@ -1,9 +1,0 @@
-{# @block content The quote content. #}
-<blockquote
-    class="{{ ('mt-6 border-l-2 pl-6 italic ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.defaults({
-        'data-slot': 'typography-blockquote',
-    }) }}
->
-    {%- block content %}{% endblock -%}
-</blockquote>

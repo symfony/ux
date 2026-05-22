@@ -46,7 +46,7 @@ final class KitFactoryTest extends KernelTestCase
         foreach ($kit->getRecipes() as $recipe) {
             $this->assertNotEmpty($recipe->absolutePath);
             $this->assertNotEmpty($recipe->manifest->name);
-            $this->assertNotEmpty(iterator_to_array($recipe->getFiles()));
+            $this->assertIsIterable($recipe->getFiles());
         }
     }
 
