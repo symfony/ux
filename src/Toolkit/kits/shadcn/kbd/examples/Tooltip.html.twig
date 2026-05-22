@@ -1,0 +1,23 @@
+<div class="flex flex-wrap gap-4">
+    <twig:ButtonGroup>
+        <twig:Tooltip id="tooltip-kbd-save">
+            <twig:Tooltip:Trigger>
+                <twig:Button {{ ...tooltip_trigger_attrs }} variant="outline" class="rounded-r-none">Save</twig:Button>
+            </twig:Tooltip:Trigger>
+            <twig:Tooltip:Content>
+                Save Changes <twig:Kbd>S</twig:Kbd>
+            </twig:Tooltip:Content>
+        </twig:Tooltip>
+        <twig:Tooltip id="tooltip-kbd-print">
+            <twig:Tooltip:Trigger>
+                <twig:Button {{ ...tooltip_trigger_attrs }} variant="outline" class="rounded-l-none border-l-0">Print</twig:Button>
+            </twig:Tooltip:Trigger>
+            <twig:Tooltip:Content>
+                Print Document <twig:KbdGroup>
+                    <twig:Kbd>Ctrl</twig:Kbd>
+                    <twig:Kbd>P</twig:Kbd>
+                </twig:KbdGroup>
+            </twig:Tooltip:Content>
+        </twig:Tooltip>
+    </twig:ButtonGroup>
+</div>
