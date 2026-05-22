@@ -20,6 +20,7 @@
 - [Shadcn] Align `avatar` with shadcn reference
 - [Shadcn] Align `badge` with shadcn reference
 - [Shadcn] Align `button` with shadcn reference
+- [Shadcn] Align `button-group` with shadcn reference
 - [Shadcn] Align `breadcrumb` with shadcn reference
 - [Shadcn] Align `card` with shadcn reference
 - [Shadcn] Align `checkbox` with shadcn reference

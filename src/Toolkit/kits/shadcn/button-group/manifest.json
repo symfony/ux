@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Button Group",
-    "description": "A layout helper for grouping buttons and related controls with shared borders and separators.",
+    "description": "A container that groups related buttons together with consistent styling.",
     "copy-files": {
         "templates/": "templates/"
     },
