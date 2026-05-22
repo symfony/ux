@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Avatar",
-    "description": "A circular element that displays a user's profile image or initials as a fallback.",
+    "description": "An image element with a fallback for representing the user.",
     "copy-files": {
         "templates/": "templates/"
     },
