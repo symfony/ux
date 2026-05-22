@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Switch",
-    "description": "A toggle control that switches between on and off states.",
+    "description": "A control that allows the user to toggle between checked and not checked.",
     "copy-files": {
         "templates/": "templates/"
     },
