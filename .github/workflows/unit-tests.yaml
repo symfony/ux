@@ -28,6 +28,8 @@ concurrency:
     group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
     cancel-in-progress: true
 
+permissions: {}
+
 jobs:
     php:
         runs-on: ${{ matrix.os || 'ubuntu-latest' }}
@@ -70,6 +72,8 @@ jobs:
             CREATE_SNAPSHOTS: false
         steps:
             - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+              with:
+                  persist-credentials: false
 
             - name: Configure environment
               run: |
@@ -154,6 +158,8 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+              with:
+                  persist-credentials: false
 
             - run: npm i -g corepack && corepack enable
             - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
