@@ -13,6 +13,7 @@
 - [Shadcn] Rework `tabs` recipe to use `provide()`/`inject()`
 - [Shadcn] Rework `toggle-group` recipe to use `provide()`/`inject()`
 - [Shadcn] Rework `tooltip` recipe to use `provide()`/`inject()`
+- [Shadcn] Align `accordion` with shadcn reference
 - [Shadcn] Align `alert` with shadcn reference
 - [Shadcn] Align `aspect-ratio` with shadcn reference
 - [Shadcn] Align `avatar` with shadcn reference

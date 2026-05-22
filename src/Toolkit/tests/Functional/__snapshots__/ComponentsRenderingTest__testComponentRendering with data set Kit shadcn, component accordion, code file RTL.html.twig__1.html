@@ -1,0 +1,141 @@
+<!--
+- Kit: Shadcn UI
+- Component: Accordion
+- Code:
+```twig
+<div class="flex flex-col gap-8">
+    <div dir="rtl">
+        <twig:Accordion id="accordion-rtl-ar" defaultValue="{{ ['item-1'] }}" class="max-w-md">
+            <twig:Accordion:Item value="item-1">
+                <twig:Accordion:Trigger>كيف يمكنني إعادة تعيين كلمة المرور؟</twig:Accordion:Trigger>
+                <twig:Accordion:Content>
+                    انقر على 'نسيت كلمة المرور' في صفحة تسجيل الدخول، أدخل عنوان بريدك الإلكتروني، وسنرسل لك رابطًا لإعادة تعيين كلمة المرور. سينتهي صلاحية الرابط خلال 24 ساعة.
+                </twig:Accordion:Content>
+            </twig:Accordion:Item>
+            <twig:Accordion:Item value="item-2">
+                <twig:Accordion:Trigger>هل يمكنني تغيير خطة الاشتراك الخاصة بي؟</twig:Accordion:Trigger>
+                <twig:Accordion:Content>
+                    نعم، يمكنك ترقية أو تخفيض خطتك في أي وقت من إعدادات حسابك. ستظهر التغييرات في دورة الفوترة التالية.
+                </twig:Accordion:Content>
+            </twig:Accordion:Item>
+            <twig:Accordion:Item value="item-3">
+                <twig:Accordion:Trigger>ما هي طرق الدفع التي تقبلونها؟</twig:Accordion:Trigger>
+                <twig:Accordion:Content>
+                    نقبل جميع بطاقات الائتمان الرئيسية و PayPal والتحويلات المصرفية. تتم معالجة جميع المدفوعات بأمان من خلال شركاء الدفع لدينا.
+                </twig:Accordion:Content>
+            </twig:Accordion:Item>
+        </twig:Accordion>
+    </div>
+    <div dir="rtl">
+        <twig:Accordion id="accordion-rtl-he" defaultValue="{{ ['item-1'] }}" class="max-w-md">
+            <twig:Accordion:Item value="item-1">
+                <twig:Accordion:Trigger>איך אני משנה את הסיסמה שלי?</twig:Accordion:Trigger>
+                <twig:Accordion:Content>
+                    לחץ על 'שכחתי סיסמה' בעמוד ההתחברות, הזן את כתובת האימייל שלך, ונשלח לך קישור לשינוי הסיסמה. הקישור יסתיים תוך 24 שעות.
+                </twig:Accordion:Content>
+            </twig:Accordion:Item>
+            <twig:Accordion:Item value="item-2">
+                <twig:Accordion:Trigger>האם אני יכול לשנות את תוכנית המנוי שלי?</twig:Accordion:Trigger>
+                <twig:Accordion:Content>
+                    כן, אתה יכול לשדרג או להוריד את התוכנית שלך בכל עת מההגדרות של החשבון שלך. השינויים יבואו לידי ביטוי במחזור החיוב הבא.
+                </twig:Accordion:Content>
+            </twig:Accordion:Item>
+            <twig:Accordion:Item value="item-3">
+                <twig:Accordion:Trigger>אילו אמצעי תשלום אתם מקבלים?</twig:Accordion:Trigger>
+                <twig:Accordion:Content>
+                    אנו מקבלים כרטיסי אשראי, PayPal והעברות בנקאיות.
+                </twig:Accordion:Content>
+            </twig:Accordion:Item>
+        </twig:Accordion>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex flex-col gap-8">
+    <div dir="rtl">
+        <div class="flex w-full flex-col max-w-md" id="accordion-rtl-ar" data-slot="accordion" data-controller="accordion" data-accordion-multiple-value="false" data-accordion-orientation-value="vertical" data-orientation="vertical">
+<div class="not-last:border-b group" data-slot="accordion-item" data-accordion-target="item" data-value="item-1" data-open="true">
+<h3 class="flex" data-orientation="vertical">
+    <button class="group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left rtl:text-start text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:after:border-ring disabled:pointer-events-none disabled:opacity-50 ltr:**:data-[slot=accordion-trigger-icon]:ml-auto rtl:**:data-[slot=accordion-trigger-icon]:ms-auto **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground" type="button" id="accordion-rtl-ar-item-1-trigger" data-slot="accordion-trigger" data-accordion-target="trigger" data-action="click-&gt;accordion#toggle keydown-&gt;accordion#handleKeydown" data-orientation="vertical" aria-expanded="true" aria-controls="accordion-rtl-ar-item-1-content">&Ugrave;&#131;&Ugrave;&#138;&Ugrave;&#129; &Ugrave;&#138;&Ugrave;&#133;&Ugrave;&#131;&Ugrave;&#134;&Ugrave;&#134;&Ugrave;&#138; &Oslash;&yen;&Oslash;&sup1;&Oslash;&sect;&Oslash;&macr;&Oslash;&copy; &Oslash;&ordf;&Oslash;&sup1;&Ugrave;&#138;&Ugrave;&#138;&Ugrave;&#134; &Ugrave;&#131;&Ugrave;&#132;&Ugrave;&#133;&Oslash;&copy; &Oslash;&sect;&Ugrave;&#132;&Ugrave;&#133;&Oslash;&plusmn;&Ugrave;&#136;&Oslash;&plusmn;&Oslash;&#159;<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+</h3>
+                <div class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out " id="accordion-rtl-ar-item-1-content" data-slot="accordion-content" data-accordion-target="content" role="region" aria-labelledby="accordion-rtl-ar-item-1-trigger" aria-hidden="false" data-open="true" style="grid-template-rows: 1fr;">
+    <div class="min-h-0 min-w-0 overflow-hidden">
+        <div class="pt-0 pb-2.5 [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_a]:hover:text-foreground [&amp;_p:not(:last-child)]:mb-4">&Oslash;&sect;&Ugrave;&#134;&Ugrave;&#130;&Oslash;&plusmn; &Oslash;&sup1;&Ugrave;&#132;&Ugrave;&#137; '&Ugrave;&#134;&Oslash;&sup3;&Ugrave;&#138;&Oslash;&ordf; &Ugrave;&#131;&Ugrave;&#132;&Ugrave;&#133;&Oslash;&copy; &Oslash;&sect;&Ugrave;&#132;&Ugrave;&#133;&Oslash;&plusmn;&Ugrave;&#136;&Oslash;&plusmn;' &Ugrave;&#129;&Ugrave;&#138; &Oslash;&micro;&Ugrave;&#129;&Oslash;&shy;&Oslash;&copy; &Oslash;&ordf;&Oslash;&sup3;&Oslash;&not;&Ugrave;&#138;&Ugrave;&#132; &Oslash;&sect;&Ugrave;&#132;&Oslash;&macr;&Oslash;&reg;&Ugrave;&#136;&Ugrave;&#132;&Oslash;&#140; &Oslash;&pound;&Oslash;&macr;&Oslash;&reg;&Ugrave;&#132; &Oslash;&sup1;&Ugrave;&#134;&Ugrave;&#136;&Oslash;&sect;&Ugrave;&#134; &Oslash;&uml;&Oslash;&plusmn;&Ugrave;&#138;&Oslash;&macr;&Ugrave;&#131; &Oslash;&sect;&Ugrave;&#132;&Oslash;&yen;&Ugrave;&#132;&Ugrave;&#131;&Oslash;&ordf;&Oslash;&plusmn;&Ugrave;&#136;&Ugrave;&#134;&Ugrave;&#138;&Oslash;&#140; &Ugrave;&#136;&Oslash;&sup3;&Ugrave;&#134;&Oslash;&plusmn;&Oslash;&sup3;&Ugrave;&#132; &Ugrave;&#132;&Ugrave;&#131; &Oslash;&plusmn;&Oslash;&sect;&Oslash;&uml;&Oslash;&middot;&Ugrave;&#139;&Oslash;&sect; &Ugrave;&#132;&Oslash;&yen;&Oslash;&sup1;&Oslash;&sect;&Oslash;&macr;&Oslash;&copy; &Oslash;&ordf;&Oslash;&sup1;&Ugrave;&#138;&Ugrave;&#138;&Ugrave;&#134; &Ugrave;&#131;&Ugrave;&#132;&Ugrave;&#133;&Oslash;&copy; &Oslash;&sect;&Ugrave;&#132;&Ugrave;&#133;&Oslash;&plusmn;&Ugrave;&#136;&Oslash;&plusmn;. &Oslash;&sup3;&Ugrave;&#138;&Ugrave;&#134;&Oslash;&ordf;&Ugrave;&#135;&Ugrave;&#138; &Oslash;&micro;&Ugrave;&#132;&Oslash;&sect;&Oslash;&shy;&Ugrave;&#138;&Oslash;&copy; &Oslash;&sect;&Ugrave;&#132;&Oslash;&plusmn;&Oslash;&sect;&Oslash;&uml;&Oslash;&middot; &Oslash;&reg;&Ugrave;&#132;&Oslash;&sect;&Ugrave;&#132; 24 &Oslash;&sup3;&Oslash;&sect;&Oslash;&sup1;&Oslash;&copy;.
+                </div>
+    </div>
+</div>
+            </div>
+            <div class="not-last:border-b group" data-slot="accordion-item" data-accordion-target="item" data-value="item-2" data-closed="true">
+<h3 class="flex" data-orientation="vertical">
+    <button class="group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left rtl:text-start text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:after:border-ring disabled:pointer-events-none disabled:opacity-50 ltr:**:data-[slot=accordion-trigger-icon]:ml-auto rtl:**:data-[slot=accordion-trigger-icon]:ms-auto **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground" type="button" id="accordion-rtl-ar-item-2-trigger" data-slot="accordion-trigger" data-accordion-target="trigger" data-action="click-&gt;accordion#toggle keydown-&gt;accordion#handleKeydown" data-orientation="vertical" aria-expanded="false" aria-controls="accordion-rtl-ar-item-2-content">&Ugrave;&#135;&Ugrave;&#132; &Ugrave;&#138;&Ugrave;&#133;&Ugrave;&#131;&Ugrave;&#134;&Ugrave;&#134;&Ugrave;&#138; &Oslash;&ordf;&Oslash;&ordm;&Ugrave;&#138;&Ugrave;&#138;&Oslash;&plusmn; &Oslash;&reg;&Oslash;&middot;&Oslash;&copy; &Oslash;&sect;&Ugrave;&#132;&Oslash;&sect;&Oslash;&acute;&Oslash;&ordf;&Oslash;&plusmn;&Oslash;&sect;&Ugrave;&#131; &Oslash;&sect;&Ugrave;&#132;&Oslash;&reg;&Oslash;&sect;&Oslash;&micro;&Oslash;&copy; &Oslash;&uml;&Ugrave;&#138;&Oslash;&#159;<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+</h3>
+                <div class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out hidden" id="accordion-rtl-ar-item-2-content" data-slot="accordion-content" data-accordion-target="content" role="region" aria-labelledby="accordion-rtl-ar-item-2-trigger" aria-hidden="true" data-closed="true" style="grid-template-rows: 0fr;">
+    <div class="min-h-0 min-w-0 overflow-hidden">
+        <div class="pt-0 pb-2.5 [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_a]:hover:text-foreground [&amp;_p:not(:last-child)]:mb-4">&Ugrave;&#134;&Oslash;&sup1;&Ugrave;&#133;&Oslash;&#140; &Ugrave;&#138;&Ugrave;&#133;&Ugrave;&#131;&Ugrave;&#134;&Ugrave;&#131; &Oslash;&ordf;&Oslash;&plusmn;&Ugrave;&#130;&Ugrave;&#138;&Oslash;&copy; &Oslash;&pound;&Ugrave;&#136; &Oslash;&ordf;&Oslash;&reg;&Ugrave;&#129;&Ugrave;&#138;&Oslash;&para; &Oslash;&reg;&Oslash;&middot;&Oslash;&ordf;&Ugrave;&#131; &Ugrave;&#129;&Ugrave;&#138; &Oslash;&pound;&Ugrave;&#138; &Ugrave;&#136;&Ugrave;&#130;&Oslash;&ordf; &Ugrave;&#133;&Ugrave;&#134; &Oslash;&yen;&Oslash;&sup1;&Oslash;&macr;&Oslash;&sect;&Oslash;&macr;&Oslash;&sect;&Oslash;&ordf; &Oslash;&shy;&Oslash;&sup3;&Oslash;&sect;&Oslash;&uml;&Ugrave;&#131;. &Oslash;&sup3;&Oslash;&ordf;&Oslash;&cedil;&Ugrave;&#135;&Oslash;&plusmn; &Oslash;&sect;&Ugrave;&#132;&Oslash;&ordf;&Oslash;&ordm;&Ugrave;&#138;&Ugrave;&#138;&Oslash;&plusmn;&Oslash;&sect;&Oslash;&ordf; &Ugrave;&#129;&Ugrave;&#138; &Oslash;&macr;&Ugrave;&#136;&Oslash;&plusmn;&Oslash;&copy; &Oslash;&sect;&Ugrave;&#132;&Ugrave;&#129;&Ugrave;&#136;&Oslash;&ordf;&Oslash;&plusmn;&Oslash;&copy; &Oslash;&sect;&Ugrave;&#132;&Oslash;&ordf;&Oslash;&sect;&Ugrave;&#132;&Ugrave;&#138;&Oslash;&copy;.
+                </div>
+    </div>
+</div>
+            </div>
+            <div class="not-last:border-b group" data-slot="accordion-item" data-accordion-target="item" data-value="item-3" data-closed="true">
+<h3 class="flex" data-orientation="vertical">
+    <button class="group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left rtl:text-start text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:after:border-ring disabled:pointer-events-none disabled:opacity-50 ltr:**:data-[slot=accordion-trigger-icon]:ml-auto rtl:**:data-[slot=accordion-trigger-icon]:ms-auto **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground" type="button" id="accordion-rtl-ar-item-3-trigger" data-slot="accordion-trigger" data-accordion-target="trigger" data-action="click-&gt;accordion#toggle keydown-&gt;accordion#handleKeydown" data-orientation="vertical" aria-expanded="false" aria-controls="accordion-rtl-ar-item-3-content">&Ugrave;&#133;&Oslash;&sect; &Ugrave;&#135;&Ugrave;&#138; &Oslash;&middot;&Oslash;&plusmn;&Ugrave;&#130; &Oslash;&sect;&Ugrave;&#132;&Oslash;&macr;&Ugrave;&#129;&Oslash;&sup1; &Oslash;&sect;&Ugrave;&#132;&Oslash;&ordf;&Ugrave;&#138; &Oslash;&ordf;&Ugrave;&#130;&Oslash;&uml;&Ugrave;&#132;&Ugrave;&#136;&Ugrave;&#134;&Ugrave;&#135;&Oslash;&sect;&Oslash;&#159;<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+</h3>
+                <div class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out hidden" id="accordion-rtl-ar-item-3-content" data-slot="accordion-content" data-accordion-target="content" role="region" aria-labelledby="accordion-rtl-ar-item-3-trigger" aria-hidden="true" data-closed="true" style="grid-template-rows: 0fr;">
+    <div class="min-h-0 min-w-0 overflow-hidden">
+        <div class="pt-0 pb-2.5 [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_a]:hover:text-foreground [&amp;_p:not(:last-child)]:mb-4">&Ugrave;&#134;&Ugrave;&#130;&Oslash;&uml;&Ugrave;&#132; &Oslash;&not;&Ugrave;&#133;&Ugrave;&#138;&Oslash;&sup1; &Oslash;&uml;&Oslash;&middot;&Oslash;&sect;&Ugrave;&#130;&Oslash;&sect;&Oslash;&ordf; &Oslash;&sect;&Ugrave;&#132;&Oslash;&sect;&Oslash;&brvbar;&Oslash;&ordf;&Ugrave;&#133;&Oslash;&sect;&Ugrave;&#134; &Oslash;&sect;&Ugrave;&#132;&Oslash;&plusmn;&Oslash;&brvbar;&Ugrave;&#138;&Oslash;&sup3;&Ugrave;&#138;&Oslash;&copy; &Ugrave;&#136; PayPal &Ugrave;&#136;&Oslash;&sect;&Ugrave;&#132;&Oslash;&ordf;&Oslash;&shy;&Ugrave;&#136;&Ugrave;&#138;&Ugrave;&#132;&Oslash;&sect;&Oslash;&ordf; &Oslash;&sect;&Ugrave;&#132;&Ugrave;&#133;&Oslash;&micro;&Oslash;&plusmn;&Ugrave;&#129;&Ugrave;&#138;&Oslash;&copy;. &Oslash;&ordf;&Oslash;&ordf;&Ugrave;&#133; &Ugrave;&#133;&Oslash;&sup1;&Oslash;&sect;&Ugrave;&#132;&Oslash;&not;&Oslash;&copy; &Oslash;&not;&Ugrave;&#133;&Ugrave;&#138;&Oslash;&sup1; &Oslash;&sect;&Ugrave;&#132;&Ugrave;&#133;&Oslash;&macr;&Ugrave;&#129;&Ugrave;&#136;&Oslash;&sup1;&Oslash;&sect;&Oslash;&ordf; &Oslash;&uml;&Oslash;&pound;&Ugrave;&#133;&Oslash;&sect;&Ugrave;&#134; &Ugrave;&#133;&Ugrave;&#134; &Oslash;&reg;&Ugrave;&#132;&Oslash;&sect;&Ugrave;&#132; &Oslash;&acute;&Oslash;&plusmn;&Ugrave;&#131;&Oslash;&sect;&Oslash;&iexcl; &Oslash;&sect;&Ugrave;&#132;&Oslash;&macr;&Ugrave;&#129;&Oslash;&sup1; &Ugrave;&#132;&Oslash;&macr;&Ugrave;&#138;&Ugrave;&#134;&Oslash;&sect;.
+                </div>
+    </div>
+</div>
+            </div>
+        </div>
+    </div>
+    <div dir="rtl">
+        <div class="flex w-full flex-col max-w-md" id="accordion-rtl-he" data-slot="accordion" data-controller="accordion" data-accordion-multiple-value="false" data-accordion-orientation-value="vertical" data-orientation="vertical">
+<div class="not-last:border-b group" data-slot="accordion-item" data-accordion-target="item" data-value="item-1" data-open="true">
+<h3 class="flex" data-orientation="vertical">
+    <button class="group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left rtl:text-start text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:after:border-ring disabled:pointer-events-none disabled:opacity-50 ltr:**:data-[slot=accordion-trigger-icon]:ml-auto rtl:**:data-[slot=accordion-trigger-icon]:ms-auto **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground" type="button" id="accordion-rtl-he-item-1-trigger" data-slot="accordion-trigger" data-accordion-target="trigger" data-action="click-&gt;accordion#toggle keydown-&gt;accordion#handleKeydown" data-orientation="vertical" aria-expanded="true" aria-controls="accordion-rtl-he-item-1-content">&times;&#144;&times;&#153;&times;&#154; &times;&#144;&times;&nbsp;&times;&#153; &times;&#158;&times;&copy;&times;&nbsp;&times;&#148; &times;&#144;&times;&ordf; &times;&#148;&times;&iexcl;&times;&#153;&times;&iexcl;&times;&#158;&times;&#148; &times;&copy;&times;&#156;&times;&#153;?<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+</h3>
+                <div class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out " id="accordion-rtl-he-item-1-content" data-slot="accordion-content" data-accordion-target="content" role="region" aria-labelledby="accordion-rtl-he-item-1-trigger" aria-hidden="false" data-open="true" style="grid-template-rows: 1fr;">
+    <div class="min-h-0 min-w-0 overflow-hidden">
+        <div class="pt-0 pb-2.5 [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_a]:hover:text-foreground [&amp;_p:not(:last-child)]:mb-4">&times;&#156;&times;&#151;&times;&yen; &times;&cent;&times;&#156; '&times;&copy;&times;&#155;&times;&#151;&times;&ordf;&times;&#153; &times;&iexcl;&times;&#153;&times;&iexcl;&times;&#158;&times;&#148;' &times;&#145;&times;&cent;&times;&#158;&times;&#149;&times;&#147; &times;&#148;&times;&#148;&times;&ordf;&times;&#151;&times;&#145;&times;&uml;&times;&#149;&times;&ordf;, &times;&#148;&times;&#150;&times;&#159; &times;&#144;&times;&ordf; &times;&#155;&times;&ordf;&times;&#149;&times;&#145;&times;&ordf; &times;&#148;&times;&#144;&times;&#153;&times;&#158;&times;&#153;&times;&#153;&times;&#156; &times;&copy;&times;&#156;&times;&#154;, &times;&#149;&times;&nbsp;&times;&copy;&times;&#156;&times;&#151; &times;&#156;&times;&#154; &times;&sect;&times;&#153;&times;&copy;&times;&#149;&times;&uml; &times;&#156;&times;&copy;&times;&#153;&times;&nbsp;&times;&#149;&times;&#153; &times;&#148;&times;&iexcl;&times;&#153;&times;&iexcl;&times;&#158;&times;&#148;. &times;&#148;&times;&sect;&times;&#153;&times;&copy;&times;&#149;&times;&uml; &times;&#153;&times;&iexcl;&times;&ordf;&times;&#153;&times;&#153;&times;&#157; &times;&ordf;&times;&#149;&times;&#154; 24 &times;&copy;&times;&cent;&times;&#149;&times;&ordf;.
+                </div>
+    </div>
+</div>
+            </div>
+            <div class="not-last:border-b group" data-slot="accordion-item" data-accordion-target="item" data-value="item-2" data-closed="true">
+<h3 class="flex" data-orientation="vertical">
+    <button class="group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left rtl:text-start text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:after:border-ring disabled:pointer-events-none disabled:opacity-50 ltr:**:data-[slot=accordion-trigger-icon]:ml-auto rtl:**:data-[slot=accordion-trigger-icon]:ms-auto **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground" type="button" id="accordion-rtl-he-item-2-trigger" data-slot="accordion-trigger" data-accordion-target="trigger" data-action="click-&gt;accordion#toggle keydown-&gt;accordion#handleKeydown" data-orientation="vertical" aria-expanded="false" aria-controls="accordion-rtl-he-item-2-content">&times;&#148;&times;&#144;&times;&#157; &times;&#144;&times;&nbsp;&times;&#153; &times;&#153;&times;&#155;&times;&#149;&times;&#156; &times;&#156;&times;&copy;&times;&nbsp;&times;&#149;&times;&ordf; &times;&#144;&times;&ordf; &times;&ordf;&times;&#149;&times;&#155;&times;&nbsp;&times;&#153;&times;&ordf; &times;&#148;&times;&#158;&times;&nbsp;&times;&#149;&times;&#153; &times;&copy;&times;&#156;&times;&#153;?<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+</h3>
+                <div class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out hidden" id="accordion-rtl-he-item-2-content" data-slot="accordion-content" data-accordion-target="content" role="region" aria-labelledby="accordion-rtl-he-item-2-trigger" aria-hidden="true" data-closed="true" style="grid-template-rows: 0fr;">
+    <div class="min-h-0 min-w-0 overflow-hidden">
+        <div class="pt-0 pb-2.5 [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_a]:hover:text-foreground [&amp;_p:not(:last-child)]:mb-4">&times;&#155;&times;&#159;, &times;&#144;&times;&ordf;&times;&#148; &times;&#153;&times;&#155;&times;&#149;&times;&#156; &times;&#156;&times;&copy;&times;&#147;&times;&uml;&times;&#146; &times;&#144;&times;&#149; &times;&#156;&times;&#148;&times;&#149;&times;&uml;&times;&#153;&times;&#147; &times;&#144;&times;&ordf; &times;&#148;&times;&ordf;&times;&#149;&times;&#155;&times;&nbsp;&times;&#153;&times;&ordf; &times;&copy;&times;&#156;&times;&#154; &times;&#145;&times;&#155;&times;&#156; &times;&cent;&times;&ordf; &times;&#158;&times;&#148;&times;&#148;&times;&#146;&times;&#147;&times;&uml;&times;&#149;&times;&ordf; &times;&copy;&times;&#156; &times;&#148;&times;&#151;&times;&copy;&times;&#145;&times;&#149;&times;&#159; &times;&copy;&times;&#156;&times;&#154;. &times;&#148;&times;&copy;&times;&#153;&times;&nbsp;&times;&#149;&times;&#153;&times;&#153;&times;&#157; &times;&#153;&times;&#145;&times;&#149;&times;&#144;&times;&#149; &times;&#156;&times;&#153;&times;&#147;&times;&#153; &times;&#145;&times;&#153;&times;&#152;&times;&#149;&times;&#153; &times;&#145;&times;&#158;&times;&#151;&times;&#150;&times;&#149;&times;&uml; &times;&#148;&times;&#151;&times;&#153;&times;&#149;&times;&#145; &times;&#148;&times;&#145;&times;&#144;.
+                </div>
+    </div>
+</div>
+            </div>
+            <div class="not-last:border-b group" data-slot="accordion-item" data-accordion-target="item" data-value="item-3" data-closed="true">
+<h3 class="flex" data-orientation="vertical">
+    <button class="group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left rtl:text-start text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:after:border-ring disabled:pointer-events-none disabled:opacity-50 ltr:**:data-[slot=accordion-trigger-icon]:ml-auto rtl:**:data-[slot=accordion-trigger-icon]:ms-auto **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground" type="button" id="accordion-rtl-he-item-3-trigger" data-slot="accordion-trigger" data-accordion-target="trigger" data-action="click-&gt;accordion#toggle keydown-&gt;accordion#handleKeydown" data-orientation="vertical" aria-expanded="false" aria-controls="accordion-rtl-he-item-3-content">&times;&#144;&times;&#153;&times;&#156;&times;&#149; &times;&#144;&times;&#158;&times;&brvbar;&times;&cent;&times;&#153; &times;&ordf;&times;&copy;&times;&#156;&times;&#149;&times;&#157; &times;&#144;&times;&ordf;&times;&#157; &times;&#158;&times;&sect;&times;&#145;&times;&#156;&times;&#153;&times;&#157;?<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+</h3>
+                <div class="grid text-sm overflow-hidden transition-[grid-template-rows] duration-300 ease-out hidden" id="accordion-rtl-he-item-3-content" data-slot="accordion-content" data-accordion-target="content" role="region" aria-labelledby="accordion-rtl-he-item-3-trigger" aria-hidden="true" data-closed="true" style="grid-template-rows: 0fr;">
+    <div class="min-h-0 min-w-0 overflow-hidden">
+        <div class="pt-0 pb-2.5 [&amp;_a]:underline [&amp;_a]:underline-offset-3 [&amp;_a]:hover:text-foreground [&amp;_p:not(:last-child)]:mb-4">&times;&#144;&times;&nbsp;&times;&#149; &times;&#158;&times;&sect;&times;&#145;&times;&#156;&times;&#153;&times;&#157; &times;&#155;&times;&uml;&times;&#152;&times;&#153;&times;&iexcl;&times;&#153; &times;&#144;&times;&copy;&times;&uml;&times;&#144;&times;&#153;, PayPal &times;&#149;&times;&#148;&times;&cent;&times;&#145;&times;&uml;&times;&#149;&times;&ordf; &times;&#145;&times;&nbsp;&times;&sect;&times;&#144;&times;&#153;&times;&#149;&times;&ordf;.
+                </div>
+    </div>
+</div>
+            </div>
+        </div>
+    </div>
+</div>

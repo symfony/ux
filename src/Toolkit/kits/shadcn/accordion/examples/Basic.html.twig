@@ -21,7 +21,7 @@
 
 <twig:Accordion id="accordion-basic" defaultValue="{{ ['item-1'] }}" class="max-w-lg">
     {% for item in items %}
-        <twig:Accordion:Item key="{{ item.value }}" value="{{ item.value }}">
+        <twig:Accordion:Item value="{{ item.value }}">
             <twig:Accordion:Trigger>{{ item.trigger }}</twig:Accordion:Trigger>
             <twig:Accordion:Content>{{ item.content }}</twig:Accordion:Content>
         </twig:Accordion:Item>

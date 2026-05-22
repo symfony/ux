@@ -1,26 +1,28 @@
-<twig:Card class="w-full max-w-md">
+<twig:Card class="w-full max-w-sm">
     <twig:Card:Header>
-        <twig:Card:Title>FAQ</twig:Card:Title>
-        <twig:Card:Description>Frequently asked questions</twig:Card:Description>
+        <twig:Card:Title>Subscription &amp; Billing</twig:Card:Title>
+        <twig:Card:Description>
+            Common questions about your account, plans, payments and cancellations.
+        </twig:Card:Description>
     </twig:Card:Header>
     <twig:Card:Content>
-        <twig:Accordion id="accordion-faq">
-            <twig:Accordion:Item value="q1">
-                <twig:Accordion:Trigger>What is your return policy?</twig:Accordion:Trigger>
+        <twig:Accordion id="accordion-card" defaultValue="{{ ['plans'] }}">
+            <twig:Accordion:Item value="plans">
+                <twig:Accordion:Trigger>What subscription plans do you offer?</twig:Accordion:Trigger>
                 <twig:Accordion:Content>
-                    You can return any item within 30 days of purchase for a full refund.
+                    We offer three subscription tiers: Starter ($9/month), Professional ($29/month), and Enterprise ($99/month). Each plan includes increasing storage limits, API access, priority support, and team collaboration features.
                 </twig:Accordion:Content>
             </twig:Accordion:Item>
-            <twig:Accordion:Item value="q2">
-                <twig:Accordion:Trigger>How long does shipping take?</twig:Accordion:Trigger>
+            <twig:Accordion:Item value="billing">
+                <twig:Accordion:Trigger>How does billing work?</twig:Accordion:Trigger>
                 <twig:Accordion:Content>
-                    Standard shipping takes 5-7 business days. Express shipping is available for 2-3 days delivery.
+                    Billing occurs automatically at the start of each billing cycle. We accept all major credit cards, PayPal, and ACH transfers for enterprise customers. You'll receive an invoice via email after each payment.
                 </twig:Accordion:Content>
             </twig:Accordion:Item>
-            <twig:Accordion:Item value="q3">
-                <twig:Accordion:Trigger>Do you ship internationally?</twig:Accordion:Trigger>
+            <twig:Accordion:Item value="cancel">
+                <twig:Accordion:Trigger>How do I cancel my subscription?</twig:Accordion:Trigger>
                 <twig:Accordion:Content>
-                    Yes, we ship to over 50 countries worldwide. Shipping rates vary by location.
+                    You can cancel your subscription anytime from your account settings. There are no cancellation fees or penalties. Your access will continue until the end of your current billing period.
                 </twig:Accordion:Content>
             </twig:Accordion:Item>
         </twig:Accordion>

@@ -19,9 +19,9 @@
     },
 ] %}
 
-<twig:Accordion id="accordion-multiple" multiple class="max-w-lg" defaultValue="{{ ['notifications', 'billing'] }}">
+<twig:Accordion id="accordion-multiple" multiple class="max-w-lg" defaultValue="{{ ['notifications'] }}">
     {% for item in items %}
-        <twig:Accordion:Item key="{{ item.value }}" value="{{ item.value }}">
+        <twig:Accordion:Item value="{{ item.value }}">
             <twig:Accordion:Trigger>{{ item.trigger }}</twig:Accordion:Trigger>
             <twig:Accordion:Content>{{ item.content }}</twig:Accordion:Content>
         </twig:Accordion:Item>
