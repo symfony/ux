@@ -1,7 +1,7 @@
 {# @block content The descriptive text of the alert #}
 <div
     data-slot="alert-description"
-    class="{{ ('text-muted-foreground text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4 [&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3 ' ~ attributes.render('class'))|tailwind_merge }}"
+    class="{{ ('text-sm text-balance text-muted-foreground md:text-pretty [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4 ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}

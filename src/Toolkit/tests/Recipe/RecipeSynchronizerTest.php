@@ -31,6 +31,6 @@ final class RecipeSynchronizerTest extends TestCase
         $recipeAlert = $kit->getRecipe('alert');
         $this->assertNotNull($recipeAlert);
         $this->assertEquals('Alert', $recipeAlert->manifest->name);
-        $this->assertEquals('A notification component that displays important messages with an icon, title, and description.', $recipeAlert->manifest->description);
+        $this->assertEquals('Displays a callout for user attention.', $recipeAlert->manifest->description);
     }
 }
