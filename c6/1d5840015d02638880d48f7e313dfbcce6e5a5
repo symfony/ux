@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-05-14T03:15:40Z
+
+> However, on the Shadcn website, Arabic, Hebrew, and English can all be selected via a dropdown language switcher. What is the recommended approach?
+
+You can check Collapsible, HoverCard, ToggleGroup, ..., the tree langs are always displayed. Let's keep things simple :)
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-05-17T19:08:06Z
+
+> > However, on the Shadcn website, Arabic, Hebrew, and English can all be selected via a dropdown language switcher. What is the recommended approach?
+>
+> You can check Collapsible, HoverCard, ToggleGroup, ..., the tree langs are always displayed. Let's keep things simple :)
+
+Thanks, i fixed.
