@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Separator",
-    "description": "A visual divider that creates space between content elements, available in horizontal and vertical orientations.",
+    "description": "Visually or semantically separates content.",
     "copy-files": {
         "templates/": "templates/"
     },

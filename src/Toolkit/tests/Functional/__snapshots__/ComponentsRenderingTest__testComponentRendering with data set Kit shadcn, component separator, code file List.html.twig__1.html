@@ -1,0 +1,41 @@
+<!--
+- Kit: Shadcn UI
+- Component: Separator
+- Code:
+```twig
+<div class="flex w-full max-w-sm flex-col gap-2 text-sm">
+    <dl class="flex items-center justify-between">
+        <dt>Item 1</dt>
+        <dd class="text-muted-foreground">Value 1</dd>
+    </dl>
+    <twig:Separator />
+    <dl class="flex items-center justify-between">
+        <dt>Item 2</dt>
+        <dd class="text-muted-foreground">Value 2</dd>
+    </dl>
+    <twig:Separator />
+    <dl class="flex items-center justify-between">
+        <dt>Item 3</dt>
+        <dd class="text-muted-foreground">Value 3</dd>
+    </dl>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full max-w-sm flex-col gap-2 text-sm">
+    <dl class="flex items-center justify-between">
+        <dt>Item 1</dt>
+        <dd class="text-muted-foreground">Value 1</dd>
+    </dl>
+    <div class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch" data-slot="separator" data-orientation="horizontal" role="none"></div>
+
+    <dl class="flex items-center justify-between">
+        <dt>Item 2</dt>
+        <dd class="text-muted-foreground">Value 2</dd>
+    </dl>
+    <div class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch" data-slot="separator" data-orientation="horizontal" role="none"></div>
+
+    <dl class="flex items-center justify-between">
+        <dt>Item 3</dt>
+        <dd class="text-muted-foreground">Value 3</dd>
+    </dl>
+</div>

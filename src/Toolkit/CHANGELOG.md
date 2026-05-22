@@ -21,6 +21,7 @@
 - [Shadcn] Align `breadcrumb` with shadcn reference
 - [Shadcn] Align `card` with shadcn reference
 - [Shadcn] Align `pagination` with shadcn reference
+- [Shadcn] Align `separator` with shadcn reference
 - [Shadcn] Align `tabs` with shadcn reference
 - [Shadcn] Align `textarea` with shadcn reference
 - [Shadcn] Align `toggle` with shadcn reference
