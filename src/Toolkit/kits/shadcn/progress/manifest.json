@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Progress",
-    "description": "A visual indicator that shows the completion status of a task or operation.",
+    "description": "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
     "copy-files": {
         "templates/": "templates/"
     },
