@@ -8,15 +8,11 @@
         <twig:Breadcrumb:Item>
             <twig:Breadcrumb:Link href="#">Home</twig:Breadcrumb:Link>
         </twig:Breadcrumb:Item>
-        <twig:Breadcrumb:Separator>
-            <twig:ux:icon name="lucide:dot" />
-        </twig:Breadcrumb:Separator>
+        <twig:Breadcrumb:Separator />
         <twig:Breadcrumb:Item>
             <twig:Breadcrumb:Link href="#">Components</twig:Breadcrumb:Link>
         </twig:Breadcrumb:Item>
-        <twig:Breadcrumb:Separator>
-            <twig:ux:icon name="lucide:dot" />
-        </twig:Breadcrumb:Separator>
+        <twig:Breadcrumb:Separator />
         <twig:Breadcrumb:Item>
             <twig:Breadcrumb:Page>Breadcrumb</twig:Breadcrumb:Page>
         </twig:Breadcrumb:Item>
@@ -28,15 +24,13 @@
 <li data-slot="breadcrumb-item" class="inline-flex items-center gap-1">
 <a data-slot="breadcrumb-link" class="transition-colors hover:text-foreground" href="#">Home</a>
         </li>
-        <li data-slot="breadcrumb-separator" role="presentation" aria-hidden="true" class="[&amp;&gt;svg]:size-3.5">
-<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12.1" cy="12.1" r="1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle></svg>
-        </li>
+        <li data-slot="breadcrumb-separator" role="presentation" aria-hidden="true" class="[&amp;&gt;svg]:size-3.5"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="rtl:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg></li>
+
         <li data-slot="breadcrumb-item" class="inline-flex items-center gap-1">
 <a data-slot="breadcrumb-link" class="transition-colors hover:text-foreground" href="#">Components</a>
         </li>
-        <li data-slot="breadcrumb-separator" role="presentation" aria-hidden="true" class="[&amp;&gt;svg]:size-3.5">
-<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12.1" cy="12.1" r="1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle></svg>
-        </li>
+        <li data-slot="breadcrumb-separator" role="presentation" aria-hidden="true" class="[&amp;&gt;svg]:size-3.5"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="rtl:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg></li>
+
         <li data-slot="breadcrumb-item" class="inline-flex items-center gap-1">
 <span data-slot="breadcrumb-page" role="link" aria-disabled="true" aria-current="page" class="font-normal text-foreground">Breadcrumb</span>
         </li>

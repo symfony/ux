@@ -1,4 +1,8 @@
 {# @block content The breadcrumb structure, typically a `Breadcrumb:List` #}
-<nav{{ attributes }} aria-label="Breadcrumb">
+<nav
+    data-slot="breadcrumb"
+    aria-label="breadcrumb"
+    {{ attributes }}
+>
     {%- block content %}{% endblock -%}
 </nav>

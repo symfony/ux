@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Breadcrumb",
-    "description": "A navigation element that shows the current page's location in the site hierarchy with clickable links.",
+    "description": "Displays the path to the current resource using a hierarchy of links.",
     "copy-files": {
         "templates/": "templates/"
     },

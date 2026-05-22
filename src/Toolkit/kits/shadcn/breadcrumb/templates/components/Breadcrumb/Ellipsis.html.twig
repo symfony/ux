@@ -1,8 +1,11 @@
+{# @block content Optional custom content replacing the ellipsis icon #}
 <span
-    class="{{ ('[&>svg]:w-3.5 [&>svg]:h-3.5 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    data-slot="breadcrumb-ellipsis"
     role="presentation"
     aria-hidden="true"
+    class="{{ ('flex size-5 items-center justify-center [&>svg]:size-4 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
 >
     <twig:ux:icon name="lucide:ellipsis" />
+    <span class="sr-only">More</span>
 </span>
