@@ -1,8 +1,9 @@
 <div class="flex w-full max-w-lg flex-col gap-6">
     <twig:Item variant="outline">
-        <twig:Item:Media variant="icon">
+        <twig:Item:Media>
             <twig:Avatar class="size-10">
                 <twig:Avatar:Image src="https://github.com/evilrabbit.png" alt="ER" />
+                <twig:Avatar:Fallback>ER</twig:Avatar:Fallback>
             </twig:Avatar>
         </twig:Item:Media>
         <twig:Item:Content>
@@ -13,22 +14,25 @@
         </twig:Item:Content>
         <twig:Item:Actions>
             <twig:Button size="icon-sm" variant="outline" class="rounded-full" aria-label="Invite">
-                <twig:ux:icon name="lucide:plus" class="size-4" />
+                <twig:ux:icon name="lucide:plus" />
             </twig:Button>
         </twig:Item:Actions>
     </twig:Item>
 
     <twig:Item variant="outline">
         <twig:Item:Media>
-            <div class="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
+            <div class="flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-background *:data-[slot=avatar]:grayscale">
                 <twig:Avatar class="hidden sm:flex">
-                    <twig:Avatar:Fallback class="bg-red-200">A</twig:Avatar:Fallback>
+                    <twig:Avatar:Image src="https://github.com/shadcn.png" alt="@shadcn" />
+                    <twig:Avatar:Fallback>CN</twig:Avatar:Fallback>
                 </twig:Avatar>
                 <twig:Avatar class="hidden sm:flex">
-                    <twig:Avatar:Fallback class="bg-red-300">B</twig:Avatar:Fallback>
+                    <twig:Avatar:Image src="https://github.com/maxleiter.png" alt="@maxleiter" />
+                    <twig:Avatar:Fallback>LR</twig:Avatar:Fallback>
                 </twig:Avatar>
-                <twig:Avatar class="hidden sm:flex">
-                    <twig:Avatar:Fallback class="bg-red-400">C</twig:Avatar:Fallback>
+                <twig:Avatar>
+                    <twig:Avatar:Image src="https://github.com/evilrabbit.png" alt="@evilrabbit" />
+                    <twig:Avatar:Fallback>ER</twig:Avatar:Fallback>
                 </twig:Avatar>
             </div>
         </twig:Item:Media>
