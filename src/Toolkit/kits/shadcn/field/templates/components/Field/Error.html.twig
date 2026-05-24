@@ -26,7 +26,7 @@
         {%- elseif (messages ?? [])|length == 1 -%}
             {{ messages[0] }}
         {%- else -%}
-            <ul class="ml-4 flex list-disc flex-col gap-1">
+            <ul class="ltr:ml-4 rtl:ms-4 flex list-disc flex-col gap-1">
                 {%- for message in messages|default([]) -%}
                     <li>{{ message }}</li>
                 {%- endfor -%}
