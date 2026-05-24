@@ -30,6 +30,7 @@
 - [Shadcn] Align `label` with shadcn reference
 - [Shadcn] Align `pagination` with shadcn reference
 - [Shadcn] Align `progress` with shadcn reference
+- [Shadcn] Align `radio-group` with shadcn reference
 - [Shadcn] Align `separator` with shadcn reference
 - [Shadcn] Align `spinner` with shadcn reference
 - [Shadcn] Align `tabs` with shadcn reference
