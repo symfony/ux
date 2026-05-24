@@ -1,4 +1,19 @@
-<label class="{{ ('relative inline-flex items-center cursor-pointer ' ~ attributes.render('class'))|tailwind_merge }}">
-    <input type="checkbox" class="sr-only peer absolute inset-0 w-full h-full cursor-pointer" {{ attributes }}>
-    <div class="pointer-events-none w-11 h-6 bg-input rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary peer-disabled:opacity-50 peer-disabled:cursor-not-allowed"></div>
-</label>
+{# @prop size 'default'|'sm' The switch size. Defaults to `default` #}
+{# @prop checked boolean Whether the switch is initially checked. Defaults to `false` #}
+{%- props size = 'default', checked = false -%}
+<div
+    data-slot="switch"
+    data-size="{{ size }}"
+    class="{{ ('group relative inline-flex shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-all outline-none data-[size=default]:h-[18.4px] data-[size=default]:w-[32px] data-[size=sm]:h-[14px] data-[size=sm]:w-[24px] bg-input dark:bg-input/80 has-checked:bg-primary dark:has-checked:bg-primary has-focus-visible:border-ring has-focus-visible:ring-3 has-focus-visible:ring-ring/50 has-[input[aria-invalid]]:border-destructive has-[input[aria-invalid]]:ring-3 has-[input[aria-invalid]]:ring-destructive/20 dark:has-[input[aria-invalid]]:ring-destructive/40 dark:has-[input[aria-invalid]]:border-destructive/50 has-disabled:cursor-not-allowed has-disabled:opacity-50 ' ~ attributes.render('class'))|tailwind_merge }}"
+>
+    <span
+        data-slot="switch-thumb"
+        class="pointer-events-none block rounded-full bg-background ring-0 transition-transform group-data-[size=default]:size-4 group-data-[size=sm]:size-3 translate-x-0 group-has-checked:translate-x-[calc(100%-2px)] rtl:group-has-checked:-translate-x-[calc(100%-2px)] dark:bg-foreground dark:group-has-checked:bg-primary-foreground"
+    ></span>
+    <input
+        type="checkbox"
+        role="switch"
+        class="absolute inset-0 size-full cursor-pointer appearance-none focus:outline-hidden disabled:cursor-not-allowed"
+        {{ attributes.without('class').defaults({checked: checked}) }}
+    />
+</div>
