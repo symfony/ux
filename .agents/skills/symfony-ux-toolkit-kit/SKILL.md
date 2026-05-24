@@ -60,12 +60,14 @@ Always emit `data-slot="<recipe-name>"` on root + `data-slot="<recipe-name>-<sub
 
 ### Upstream sources
 
-Read **both** files per recipe: component source carries canonical classes + `data-*` surface; examples show usage patterns.
+Read all source files per recipe: component source carries canonical classes + `data-*` surface; examples show usage patterns; MDX drives docs and manifest.
 
 | File | Purpose |
 | --- | --- |
 | `apps/v4/styles/radix-nova/ui/<recipe>.tsx` | **Component source** — canonical Tailwind classes, sub-component structure, `data-slot`/`data-state` surface |
+| `apps/v4/styles/radix-nova/ui-rtl/<recipe>.tsx` | **RTL variant** — classes that differ per text direction (see [RTL class variants](#rtl-class-variants)) |
 | `apps/v4/examples/radix/<recipe>-*.tsx` | **Usage examples** — one file per variant, drives examples list |
+| `apps/v4/content/docs/components/radix/*.mdx` | **Docs + manifest metadata** — single source of truth for titles, descriptions, section order; `description` copied verbatim to `ux/src/Toolkit/kits/shadcn/**/manifest.json` |
 
 Enumerate every example file for recipe:
 
@@ -77,6 +79,22 @@ gh api "repos/shadcn-ui/ui/git/trees/main?recursive=1" --jq '.tree[].path' \
 Fetch each:
 ```
 https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/examples/radix/<example>.tsx
+```
+
+### RTL class variants
+
+The canonical source provides two implementations per component:
+
+* `ui/apps/v4/styles/radix-nova/ui/{component}.tsx` — LTR (default)
+* `ui/apps/v4/styles/radix-nova/ui-rtl/{component}.tsx` — RTL
+
+Always diff both files. For each class that differs between LTR and RTL, apply the `rtl:` Tailwind variant **in addition** to the LTR class — do not create separate templates.
+
+Use `ltr:` to scope the LTR class when RTL replaces it with a different one. Keep `rtl:` classes from the RTL file verbatim when they are already prefixed (e.g. `rtl:translate-x-1/2`).
+
+Example: if `ui/table.tsx` has `[&:has([role=checkbox])]:pr-0` and `ui-rtl/table.tsx` has `[&:has([role=checkbox])]:pe-0`, write:
+```
+ltr:[&:has([role=checkbox])]:pr-0 rtl:[&:has([role=checkbox])]:pe-0
 ```
 
 ---
@@ -168,8 +186,7 @@ Rules:
 - Drop `assets/` from `copy-files` if no Stimulus controller.
 - Add `"symfony/ux-icons"` to `composer` whenever templates use `<twig:ux:icon>`.
 - Bump `twig/html-extra` constraint when using newer filters (e.g. `^3.24.0` for current `html_attr_type`).
-- Declare `dependencies.recipe` for inter-recipe deps (e.g. `toggle-group` depends on `toggle`).
-
+- Declare `dependencies.recipe` only for recipes required by the **component templates** themselves (e.g. `toggle-group` depends on `toggle`). Do NOT declare recipe deps for components used only in examples — examples are demo files, not shipped dependencies.
 ---
 
 ## Twig Component Patterns
@@ -349,6 +366,14 @@ export default class extends Controller {
 - **Mandatory**: `Usage.html.twig` (minimal call surface) + `Demo.html.twig` (rich showcase used as kit preview).
 - One example per upstream variant. Match upstream copy/structure where possible.
 - When upstream uses cross-cutting JS (e.g. shadcn's `language-selector`), replicate intent without inventing new infrastructure (e.g. stack two independent components for RTL+LTR side-by-side, see `collapsible/RTL`).
+
+### RTL examples
+
+- The RTL example file must be named **`RTL.html.twig`** (all caps, matching the collapsible kit convention).
+- The Twig RTL example must show **both the Arabic and Hebrew versions** (`dir="rtl"`), stacked vertically — no side-by-side LTR/RTL comparison.
+- The LTR card is intentionally omitted: it duplicates the Demo example and adds no value.
+- The RTL section in the doc must use `### RTL` (not `## RTL`) — it is a subsection of Examples, not a top-level section.
+- The RTL section description in the doc must always be: `To enable RTL support, set the \`dir="rtl"\` attribute on the root element.`
 
 ---
 
