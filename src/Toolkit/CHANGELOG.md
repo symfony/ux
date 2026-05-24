@@ -24,6 +24,7 @@
 - [Shadcn] Align `card` with shadcn reference
 - [Shadcn] Align `checkbox` with shadcn reference
 - [Shadcn] Align `input` with shadcn reference
+- [Shadcn] Align `input-group` with shadcn reference
 - [Shadcn] Align `item` with shadcn reference
 - [Shadcn] Align `kbd` with shadcn reference
 - [Shadcn] Align `label` with shadcn reference

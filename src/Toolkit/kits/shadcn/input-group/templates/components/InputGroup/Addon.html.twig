@@ -2,13 +2,13 @@
 {# @block content The addon content, typically an icon or text #}
 {%- props align = 'inline-start' -%}
 {%- set style = html_cva(
-    base: "text-muted-foreground flex h-auto items-center justify-center gap-2 text-sm font-medium select-none [&_svg:not([class*='size-'])]:size-4 group-data-[disabled=true]/input-group:opacity-50",
+    base: "flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4",
     variants: {
         align: {
-            'inline-start': 'order-first pl-3',
-            'inline-end': 'order-last pr-3',
-            'block-start': 'order-first w-full justify-start px-3 pt-3 [&.border-b]:pb-3',
-            'block-end': 'order-last w-full justify-start px-3 pb-3 [&.border-t]:pt-3',
+            'inline-start': 'order-first ltr:pl-2 rtl:ps-2 ltr:has-[>button]:ml-[-0.3rem] rtl:has-[>button]:ms-[-0.3rem] ltr:has-[>kbd]:ml-[-0.15rem] rtl:has-[>kbd]:ms-[-0.15rem]',
+            'inline-end': 'order-last ltr:pr-2 rtl:pe-2 ltr:has-[>button]:mr-[-0.3rem] rtl:has-[>button]:me-[-0.3rem] ltr:has-[>kbd]:mr-[-0.15rem] rtl:has-[>kbd]:me-[-0.15rem]',
+            'block-start': 'order-first w-full justify-start px-2.5 pt-2 group-has-[>input]/input-group:pt-2 [.border-b]:pb-2',
+            'block-end': 'order-last w-full justify-start px-2.5 pb-2 group-has-[>input]/input-group:pb-2 [.border-t]:pt-2',
         },
     },
 ) -%}
