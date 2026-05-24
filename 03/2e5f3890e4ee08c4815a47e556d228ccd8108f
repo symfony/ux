@@ -1,0 +1,26 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-05-23T19:05:06Z
+
+I'm seeing some kind of _glitch_ around the input when focusing it:
+
+https://github.com/user-attachments/assets/fff3bc0e-d68f-4a1b-bbcd-b77887a3d08e
+
+It does not happen with the current version at https://ux.symfony.com/toolkit/kits/shadcn/components/input-group
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-05-23T20:14:49Z
+
+> I'm seeing some kind of _glitch_ around the input when focusing it:
+>
+>  Enregistrement.de.l.ecran.2026-05-23.a.21.03.26.mov
+> It does not happen with the current version at https://ux.symfony.com/toolkit/kits/shadcn/components/input-group
+
+Yes, that's normal. It's related to the input component and goes along with the PR https://github.com/symfony/ux/pull/3590.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-05-24T05:45:27Z
+
+Ah you're right, it's perfect now :)
