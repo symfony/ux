@@ -209,8 +209,8 @@ e.g. ``FoodAutocompleteField`` from above):
     Read also about `Managing plugins`_.
 
 ``options_as_html`` (default: ``false``)
-    Set to ``true`` if your options (e.g. ``choice_label``) contain HTML. Not
-    needed if your autocomplete is AJAX-powered.
+    Set to ``true`` if your options (or your AJAX response's ``text`` field)
+    contain HTML. By default, values are escaped to prevent XSS.
 
 ``autocomplete_url`` (default: ``null``)
     Usually you don't need to set this manually. But, you *could* manually create

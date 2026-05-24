@@ -308,8 +308,10 @@ export default class extends Controller {
             // avoid extra filtering after results are returned
             score: (_search: string) => (_item: any) => 1,
             render: {
-                option: (item: any) => `<div>${item[labelField]}</div>`,
-                item: (item: any) => `<div>${item[labelField]}</div>`,
+                option: (item: any, escape: typeof escape_html) =>
+                    `<div>${this.optionsAsHtmlValue ? item[labelField] : escape(item[labelField])}</div>`,
+                item: (item: any, escape: typeof escape_html) =>
+                    `<div>${this.optionsAsHtmlValue ? item[labelField] : escape(item[labelField])}</div>`,
                 loading_more: (): string => {
                     return `<div class="loading-more-results">${this.loadingMoreTextValue}</div>`;
                 },

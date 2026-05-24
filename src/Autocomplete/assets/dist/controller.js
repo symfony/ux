@@ -275,8 +275,8 @@ function _createAutocompleteWithRemoteData(autocompleteEndpointUrl, minCharacter
 		optgroupField: "group_by",
 		score: (_search) => (_item) => 1,
 		render: {
-			option: (item) => `<div>${item[labelField]}</div>`,
-			item: (item) => `<div>${item[labelField]}</div>`,
+			option: (item, escape) => `<div>${this.optionsAsHtmlValue ? item[labelField] : escape(item[labelField])}</div>`,
+			item: (item, escape) => `<div>${this.optionsAsHtmlValue ? item[labelField] : escape(item[labelField])}</div>`,
 			loading_more: () => {
 				return `<div class="loading-more-results">${this.loadingMoreTextValue}</div>`;
 			},
