@@ -368,12 +368,12 @@ When you install this bundle, its Flex recipe should handle updating all the fil
 needed. If you're not using Flex or want to double-check the changes, check out
 the `StimulusBundle Flex recipe`_. Here's a summary of what's inside:
 
-* ``assets/bootstrap.js`` starts the Stimulus application and loads your
+* ``assets/stimulus_bootstrap.js`` starts the Stimulus application and loads your
   controllers. It's imported by ``assets/app.js`` and its exact content
   depends on whether you have Webpack Encore or AssetMapper installed
   (see below).
 
-* ``assets/app.js`` is *updated* to import ``assets/bootstrap.js``
+* ``assets/app.js`` is *updated* to import ``assets/stimulus_bootstrap.js``
 
 * ``assets/controllers.json`` This file starts (mostly) empty and is automatically
   updated as your install UX packages that provide Stimulus controllers.
@@ -401,11 +401,11 @@ file::
         ],
     ];
 
-The recipe will update your ``assets/bootstrap.js`` file to look like this:
+The recipe will update your ``assets/stimulus_bootstrap.js`` file to look like this:
 
 .. code-block:: javascript
 
-    // assets/bootstrap.js
+    // assets/stimulus_bootstrap.js
     import { startStimulusApp } from '@symfony/stimulus-bundle';
 
     const app = startStimulusApp();
@@ -428,11 +428,11 @@ file to include this line:
     // webpack.config.js
     .enableStimulusBridge('./assets/controllers.json')
 
-The ``assets/bootstrap.js`` file will be updated to look like this:
+The ``assets/stimulus_bootstrap.js`` file will be updated to look like this:
 
 .. code-block:: javascript
 
-    // assets/bootstrap.js
+    // assets/stimulus_bootstrap.js
     import { startStimulusApp } from '@symfony/stimulus-bridge';
 
     // Registers Stimulus controllers from controllers.json and in the controllers/ directory
@@ -482,15 +482,15 @@ to add a new Stimulus controller to your app. For example:
         "entrypoints": []
     }
 
-Finally, your ``assets/bootstrap.js`` file will automatically register:
+Finally, your ``assets/stimulus_bootstrap.js`` file will automatically register:
 
 * All files in ``assets/controllers/`` as Stimulus controllers;
 * And all controllers described in ``assets/controllers.json`` as Stimulus controllers.
 
 .. note::
 
-    If you're using WebpackEncore, the ``bootstrap.js`` file works in partnership
-    with `@symfony/stimulus-bridge`_. With AssetMapper, the ``bootstrap.js`` file
+    If you're using WebpackEncore, the ``stimulus_bootstrap.js`` file works in partnership
+    with `@symfony/stimulus-bridge`_. With AssetMapper, the ``stimulus_bootstrap.js`` file
     works directly with this bundle: a ``@symfony/stimulus-bundle`` entry is added
     to your ``importmap.php`` file via Flex, which points to a file that is dynamically
     built to find and load your controllers (see :ref:`Configuration <configuration>`).
