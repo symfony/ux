@@ -1,32 +1,28 @@
-<twig:Card class="mx-auto w-full max-w-xs">
+<twig:Card class="mx-auto w-full max-w-xs self-start" size="sm">
     <twig:Card:Header>
         <twig:Card:Title>Radius</twig:Card:Title>
         <twig:Card:Description>Set the corner radius of the element.</twig:Card:Description>
     </twig:Card:Header>
     <twig:Card:Content>
         <twig:Collapsible class="flex items-start gap-2">
-            <div class="w-full space-y-2">
-                <div class="grid grid-cols-2 gap-2">
+            <div class="grid w-full grid-cols-2 gap-2">
+                <twig:Field>
+                    <twig:Field:Label for="radius-1" class="sr-only">Radius X</twig:Field:Label>
+                    <twig:Input id="radius-1" placeholder="0" value="0" />
+                </twig:Field>
+                <twig:Field>
+                    <twig:Field:Label for="radius-2" class="sr-only">Radius Y</twig:Field:Label>
+                    <twig:Input id="radius-2" placeholder="0" value="0" />
+                </twig:Field>
+                <twig:Collapsible:Content class="col-span-full grid grid-cols-subgrid gap-2">
                     <twig:Field>
-                        <twig:Field:Label for="radius-1" class="sr-only">Radius X</twig:Field:Label>
-                        <twig:Input id="radius-1" placeholder="0" value="0" />
+                        <twig:Field:Label for="radius-3" class="sr-only">Radius X</twig:Field:Label>
+                        <twig:Input id="radius-3" placeholder="0" value="0" />
                     </twig:Field>
                     <twig:Field>
-                        <twig:Field:Label for="radius-2" class="sr-only">Radius Y</twig:Field:Label>
-                        <twig:Input id="radius-2" placeholder="0" value="0" />
+                        <twig:Field:Label for="radius-4" class="sr-only">Radius Y</twig:Field:Label>
+                        <twig:Input id="radius-4" placeholder="0" value="0" />
                     </twig:Field>
-                </div>
-                <twig:Collapsible:Content>
-                    <div class="grid grid-cols-2 gap-2">
-                        <twig:Field>
-                            <twig:Field:Label for="radius-3" class="sr-only">Radius X</twig:Field:Label>
-                            <twig:Input id="radius-3" placeholder="0" value="0" />
-                        </twig:Field>
-                        <twig:Field>
-                            <twig:Field:Label for="radius-4" class="sr-only">Radius Y</twig:Field:Label>
-                            <twig:Input id="radius-4" placeholder="0" value="0" />
-                        </twig:Field>
-                    </div>
                 </twig:Collapsible:Content>
             </div>
             <twig:Collapsible:Trigger>

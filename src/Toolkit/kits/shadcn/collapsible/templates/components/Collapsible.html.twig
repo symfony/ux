@@ -3,7 +3,6 @@
 {%- props open = false -%}
 {%- do provide('collapsible.open', open) -%}
 <div
-    class="{{ ('group ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
         'data-slot': 'collapsible',
         'data-controller': 'collapsible',
