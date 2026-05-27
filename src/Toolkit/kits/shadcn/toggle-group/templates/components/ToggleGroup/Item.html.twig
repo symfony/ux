@@ -3,17 +3,19 @@
 {%- props pressed = false -%}
 {%- set _toggleGroup_variant = inject('toggleGroup.variant', 'default') -%}
 {%- set _toggleGroup_size = inject('toggleGroup.size', 'default') -%}
+{%- set _toggleGroup_spacing = inject('toggleGroup.spacing', 2) -%}
+{%- set _toggleGroup_disabled = inject('toggleGroup.disabled', false) -%}
 {%- set style = html_cva(
-    base: "inline-flex items-center justify-center gap-2 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted hover:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground aria-pressed:bg-accent aria-pressed:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 first:rounded-s-lg last:rounded-e-lg",
+    base: "shrink-0 group-data-[spacing=0]/toggle-group:rounded-none group-data-[spacing=0]/toggle-group:px-2 focus:z-10 focus-visible:z-10 group-data-[spacing=0]/toggle-group:has-data-[icon=inline-end]:pr-1.5 group-data-[spacing=0]/toggle-group:has-data-[icon=inline-start]:pl-1.5 group-data-horizontal/toggle-group:data-[spacing=0]:first:rounded-l-lg group-data-vertical/toggle-group:data-[spacing=0]:first:rounded-t-lg group-data-horizontal/toggle-group:data-[spacing=0]:last:rounded-r-lg group-data-vertical/toggle-group:data-[spacing=0]:last:rounded-b-lg group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:border-l-0 group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:border-t-0 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-l group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-t group/toggle inline-flex items-center justify-center gap-1 rounded-lg text-sm font-medium whitespace-nowrap transition-all outline-none hover:bg-muted hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 aria-pressed:bg-muted data-[state=on]:bg-muted dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
     variants: {
         variant: {
-            default: '',
-            outline: 'border border-input shadow-none not-first:-ml-px',
+            default: 'bg-transparent',
+            outline: 'border border-input bg-transparent hover:bg-muted',
         },
         size: {
-            default: 'h-9 min-w-9 px-2',
-            sm: 'h-8 min-w-8 px-1.5',
-            lg: 'h-10 min-w-10 px-2.5',
+            default: 'h-8 min-w-8 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2',
+            sm: "h-7 min-w-7 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+            lg: 'h-9 min-w-9 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2',
         },
     },
 ) -%}
@@ -27,8 +29,10 @@
         'data-toggle-pressed-value': pressed ? 'true' : 'false',
         'data-variant': _toggleGroup_variant,
         'data-size': _toggleGroup_size,
+        'data-spacing': _toggleGroup_spacing,
         'aria-pressed': pressed ? 'true' : 'false',
-        'data-state': pressed ? 'active' : 'inactive',
+        'data-state': pressed ? 'on' : 'off',
+        disabled: _toggleGroup_disabled,
     }) }}
 >
     {%- block content %}{% endblock -%}

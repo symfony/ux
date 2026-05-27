@@ -44,6 +44,7 @@
 - [Shadcn] Align `tabs` with shadcn reference
 - [Shadcn] Align `textarea` with shadcn reference
 - [Shadcn] Align `toggle` with shadcn reference
+- [Shadcn] Align `toggle-group` with shadcn reference
 - [Shadcn] Align `tooltip` with shadcn reference
 
 ## 3.0.0
