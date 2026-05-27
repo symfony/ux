@@ -12,9 +12,12 @@
 namespace Symfony\UX\TwigComponent\Tests\Unit\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\TwigBundle\DependencyInjection\Compiler\SafeClassPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\DependencyInjection\TwigComponentExtension;
+use Symfony\UX\TwigComponent\Twig\TwigEnvironmentConfigurator;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 
 /**
@@ -82,6 +85,45 @@ class TwigComponentExtensionTest extends TestCase
         $this->compileContainer($container);
 
         $this->assertFalse($container->hasDefinition('ux.twig_component.data_collector'));
+    }
+
+    public function testSafeClassPassIntegration()
+    {
+        if (!class_exists(SafeClassPass::class)) {
+            $this->markTestSkipped('Requires symfony/twig-bundle >= 8.1 with SafeClassPass support');
+        }
+
+        $container = $this->createContainer();
+        $container->registerExtension(new TwigComponentExtension());
+        $container->loadFromExtension('twig_component', [
+            'defaults' => [],
+            'anonymous_template_directory' => 'components/',
+        ]);
+        $this->compileContainer($container);
+
+        $this->assertFalse($container->hasDefinition('ux.twig_component.twig.environment_configurator'));
+        $this->assertTrue($container->hasDefinition(ComponentAttributes::class));
+        $def = $container->getDefinition(ComponentAttributes::class);
+        $this->assertTrue($def->hasTag('twig.safe_class'));
+        $this->assertSame([['strategy' => 'html']], $def->getTag('twig.safe_class'));
+    }
+
+    public function testFallbackToEnvironmentConfiguratorWithoutSafeClassPass()
+    {
+        if (class_exists(SafeClassPass::class)) {
+            $this->markTestSkipped('Only relevant with symfony/twig-bundle < 8.1 without SafeClassPass support');
+        }
+
+        $container = $this->createContainer();
+        $container->registerExtension(new TwigComponentExtension());
+        $container->loadFromExtension('twig_component', [
+            'defaults' => [],
+            'anonymous_template_directory' => 'components/',
+        ]);
+        $this->compileContainer($container);
+
+        $this->assertTrue($container->hasDefinition('ux.twig_component.twig.environment_configurator'));
+        $this->assertSame(TwigEnvironmentConfigurator::class, $container->getDefinition('ux.twig_component.twig.environment_configurator')->getClass());
     }
 
     private function createContainer()
