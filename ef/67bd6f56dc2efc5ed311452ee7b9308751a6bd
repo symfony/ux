@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-04-14T11:39:55Z
+
+Hi, Symfony UX 3.0 has been released, and the `2.x` branch is no longer maintained.
+
+Could you please retarget this PR to the `3.x` branch instead? That way we can review and merge it in the currently supported version.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by PierreCapel at 2026-04-14T14:27:11Z
+
+Hello @Kocal I switched the target branch to `3.x` :slightly_smiling_face:
