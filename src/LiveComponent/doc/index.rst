@@ -2590,9 +2590,33 @@ new state of your component, for example: ``https://my.domain/search?query=my+se
 If you load this URL in your browser, the ``LiveProp`` value will be initialized using the query string
 (e.g. ``my search string``).
 
-.. note::
+When a ``LiveProp`` that is bound to the URL changes, the URL is updated via ``history.replaceState()``,
+so no new entry is added to the browser's history. This means that if the user clicks the back button, they will not go
+back to the previous state of the component, but to the previous page.
 
-    The URL is changed via ``history.replaceState()``. So no new entry is added.
+.. versionadded:: 3.1
+
+    The ``pushHistoryState`` option was added in LiveComponents 3.1.
+
+If you want to add a new entry to the browser's history via ``history.pushState()`` each time the URL is updated,
+you can set the ``pushHistoryState`` option to ``true``::
+
+.. code-block:: diff
+
+      // src/Twig/Components/SearchModule.php
+      use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+      use Symfony\UX\LiveComponent\Attribute\LiveProp;
+      use Symfony\UX\LiveComponent\DefaultActionTrait;
+
+    - #[AsLiveComponent]
+    + #[AsLiveComponent(pushHistoryState: true)]
+      class SearchModule
+      {
+          use DefaultActionTrait;
+
+          #[LiveProp(writable: true, url: true)]
+          public string $query = '';
+      }
 
 Supported Data Types
 ~~~~~~~~~~~~~~~~~~~~

@@ -3,9 +3,11 @@ declare class export_default$2 {
   response: Response;
   private body;
   private liveUrl;
+  private pushHistoryState;
   constructor(response: Response);
   getBody(): Promise<string>;
   getLiveUrl(): string | null;
+  hasPushHistoryStateEnabled(): boolean;
 }
 declare class export_default$1 {
   promise: Promise<Response>;

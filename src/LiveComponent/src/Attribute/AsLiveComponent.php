@@ -29,6 +29,7 @@ final class AsLiveComponent extends AsTwigComponent
     public string $method;
     public int $urlReferenceType;
     public ?string $fetchCredentials;
+    public bool $pushHistoryState;
 
     private ?string $defaultAction;
 
@@ -42,6 +43,7 @@ final class AsLiveComponent extends AsTwigComponent
      * @param string                   $method            The HTTP method to use
      * @param UrlGeneratorInterface::* $urlReferenceType  Which type of URL should be generated for the given route
      * @param string|null              $fetchCredentials  The fetch credentials mode to use ('same-origin', 'include', 'omit'), null to use the global default
+     * @param bool                     $pushHistoryState  Whether to push or replace the history state when the URL is updated. If true, a new history entry will be added. If false the current history entry will be replaced.
      */
     public function __construct(
         ?string $name = null,
@@ -53,6 +55,7 @@ final class AsLiveComponent extends AsTwigComponent
         string $method = 'post',
         int $urlReferenceType = UrlGeneratorInterface::ABSOLUTE_PATH,
         ?string $fetchCredentials = null,
+        bool $pushHistoryState = false,
     ) {
         parent::__construct($name, $template, $exposePublicProps, $attributesVar);
 
@@ -61,6 +64,7 @@ final class AsLiveComponent extends AsTwigComponent
         $this->method = strtolower($method);
         $this->urlReferenceType = $urlReferenceType;
         $this->fetchCredentials = $fetchCredentials;
+        $this->pushHistoryState = $pushHistoryState;
 
         if (!\in_array($this->method, ['get', 'post'], true)) {
             throw new \UnexpectedValueException('$method must be either \'get\' or \'post\'.');
@@ -83,6 +87,7 @@ final class AsLiveComponent extends AsTwigComponent
             'method' => $this->method,
             'url_reference_type' => $this->urlReferenceType,
             'fetch_credentials' => $this->fetchCredentials,
+            'push_history_state' => $this->pushHistoryState,
         ]);
     }
 

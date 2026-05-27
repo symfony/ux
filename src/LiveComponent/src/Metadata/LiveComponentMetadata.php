@@ -92,4 +92,9 @@ class LiveComponentMetadata
 
         return false;
     }
+
+    public function hasPushHistoryStateEnabled(): bool
+    {
+        return $this->componentMetadata->get('push_history_state', false);
+    }
 }
