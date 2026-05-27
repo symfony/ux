@@ -3,6 +3,7 @@
 ## 3.1
 
 - Use `aria-busy` attribute during component re-render
+- Return a `StimulusAttributes` object from the `live_action()` Twig function so it can be spread into a Twig component tag (`<twig:Foo {{ ...live_action('bar') }}>`), aligning its behavior with `stimulus_action()`.
 
 ## 3.0.0
 
