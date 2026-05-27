@@ -186,7 +186,7 @@ trait ComponentWithFormTrait
         );
 
         if (!$form->isValid()) {
-            throw new UnprocessableEntityHttpException('Form validation failed in component.');
+            throw new UnprocessableEntityHttpException(\sprintf("Form validation failed:\n%s", implode("\n", $this->extractErrors($form, $form->getName()))));
         }
     }
 
@@ -317,5 +317,24 @@ trait ComponentWithFormTrait
         foreach ($form as $name => $child) {
             $this->clearErrorsForNonValidatedFields($child, \sprintf('%s.%s', $currentPath, $name));
         }
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function extractErrors(FormInterface $form, string $prefix): array
+    {
+        $errors = [];
+
+        foreach ($form->getErrors() as $error) {
+            $errors[] = $prefix.': '.$error->getMessage();
+        }
+
+        $childErrors = [];
+        foreach ($form->all() as $name => $child) {
+            $childErrors[] = $this->extractErrors($child, $prefix.'.'.$name);
+        }
+
+        return array_merge($errors, ...$childErrors);
     }
 }

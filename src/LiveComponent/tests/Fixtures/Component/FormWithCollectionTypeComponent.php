@@ -53,4 +53,10 @@ class FormWithCollectionTypeComponent extends AbstractController
     {
         unset($this->formValues['comments'][$index]);
     }
+
+    #[LiveAction]
+    public function save(): void
+    {
+        $this->submitForm();
+    }
 }
