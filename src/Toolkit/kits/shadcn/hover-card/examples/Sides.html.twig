@@ -1,53 +1,15 @@
-<div class="flex flex-wrap justify-center gap-12 py-12">
-    {# Left #}
-    <twig:HoverCard>
-        <twig:HoverCard:Trigger>
-            <twig:Button variant="outline" {{ ...hover_card_trigger_attrs }}>Left</twig:Button>
-        </twig:HoverCard:Trigger>
-        <twig:HoverCard:Content class="top-1/2 left-auto right-full translate-x-0 -translate-y-1/2 mt-0 mr-2">
-            <div class="flex flex-col gap-1">
-                <h4 class="font-medium">Hover Card</h4>
-                <p>This hover card appears on the left side of the trigger.</p>
-            </div>
-        </twig:HoverCard:Content>
-    </twig:HoverCard>
-
-    {# Top #}
-    <twig:HoverCard>
-        <twig:HoverCard:Trigger>
-            <twig:Button variant="outline" {{ ...hover_card_trigger_attrs }}>Top</twig:Button>
-        </twig:HoverCard:Trigger>
-        <twig:HoverCard:Content class="top-auto bottom-full mt-0 mb-2">
-            <div class="flex flex-col gap-1">
-                <h4 class="font-medium">Hover Card</h4>
-                <p>This hover card appears on the top side of the trigger.</p>
-            </div>
-        </twig:HoverCard:Content>
-    </twig:HoverCard>
-
-    {# Bottom (default) #}
-    <twig:HoverCard>
-        <twig:HoverCard:Trigger>
-            <twig:Button variant="outline" {{ ...hover_card_trigger_attrs }}>Bottom</twig:Button>
-        </twig:HoverCard:Trigger>
-        <twig:HoverCard:Content>
-            <div class="flex flex-col gap-1">
-                <h4 class="font-medium">Hover Card</h4>
-                <p>This hover card appears on the bottom side of the trigger.</p>
-            </div>
-        </twig:HoverCard:Content>
-    </twig:HoverCard>
-
-    {# Right #}
-    <twig:HoverCard>
-        <twig:HoverCard:Trigger>
-            <twig:Button variant="outline" {{ ...hover_card_trigger_attrs }}>Right</twig:Button>
-        </twig:HoverCard:Trigger>
-        <twig:HoverCard:Content class="top-1/2 left-full translate-x-0 -translate-y-1/2 mt-0 ml-2">
-            <div class="flex flex-col gap-1">
-                <h4 class="font-medium">Hover Card</h4>
-                <p>This hover card appears on the right side of the trigger.</p>
-            </div>
-        </twig:HoverCard:Content>
-    </twig:HoverCard>
+<div class="flex flex-wrap justify-center gap-2">
+    {% for side in ['left', 'top', 'bottom', 'right'] %}
+        <twig:HoverCard openDelay="100" closeDelay="100">
+            <twig:HoverCard:Trigger>
+                <twig:Button variant="outline" class="capitalize" {{ ...hover_card_trigger_attrs }}>{{ side }}</twig:Button>
+            </twig:HoverCard:Trigger>
+            <twig:HoverCard:Content side="{{ side }}">
+                <div class="flex flex-col gap-1">
+                    <h4 class="font-medium">Hover Card</h4>
+                    <p>This hover card appears on the {{ side }} side of the trigger.</p>
+                </div>
+            </twig:HoverCard:Content>
+        </twig:HoverCard>
+    {% endfor %}
 </div>
