@@ -35,6 +35,7 @@
 - [Shadcn] Align `progress` with shadcn reference
 - [Shadcn] Align `radio-group` with shadcn reference
 - [Shadcn] Align `separator` with shadcn reference
+- [Shadcn] Align `skeleton` with shadcn reference
 - [Shadcn] Align `spinner` with shadcn reference
 - [Shadcn] Align `switch` with shadcn reference
 - [Shadcn] Align `tabs` with shadcn reference

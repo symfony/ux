@@ -2,7 +2,7 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Skeleton",
-    "description": "A placeholder element that displays a loading state with an animated background.",
+    "description": "Use to show a placeholder while content is loading.",
     "copy-files": {
         "templates/": "templates/"
     },
