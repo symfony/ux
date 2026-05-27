@@ -1,16 +1,18 @@
-<twig:Empty class="border border-dashed">
+<twig:Empty>
     <twig:Empty:Header>
         <twig:Empty:Media variant="icon">
-            <twig:ux:icon name="tabler:cloud" class="size-5" />
+            <twig:ux:icon name="tabler:folder-code" />
         </twig:Empty:Media>
-        <twig:Empty:Title>Cloud storage empty</twig:Empty:Title>
+        <twig:Empty:Title>No Projects Yet</twig:Empty:Title>
         <twig:Empty:Description>
-            Upload files to your cloud storage to access them anywhere.
+            You haven&apos;t created any projects yet. Get started by creating your first project.
         </twig:Empty:Description>
     </twig:Empty:Header>
-    <twig:Empty:Content>
-        <twig:Button variant="outline" size="sm">
-            Upload files
-        </twig:Button>
+    <twig:Empty:Content class="flex-row justify-center gap-2">
+        <twig:Button>Create Project</twig:Button>
+        <twig:Button variant="outline">Import Project</twig:Button>
     </twig:Empty:Content>
+    <twig:Button variant="link" as="a" href="#" size="sm" class="text-muted-foreground">
+        Learn More <twig:ux:icon name="lucide:arrow-up-right" />
+    </twig:Button>
 </twig:Empty>
