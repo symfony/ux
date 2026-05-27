@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-04-14T11:39:51Z
+
+Hi, Symfony UX 3.0 has been released, and the `2.x` branch is no longer maintained.
+
+Could you please retarget this PR to the `3.x` branch instead? That way we can review and merge it in the currently supported version.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2026-04-30T10:13:02Z
+
+The test failure looks related.
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2026-04-30T11:46:01Z
+
+- Requires https://github.com/twigphp/Twig/pull/4795
+
+---------------------------------------------------------------------------
+
+by GromNaN at 2026-05-17T12:41:59Z
+
+The necessary feature was merged into Twig 3.25. This PR is ready.
