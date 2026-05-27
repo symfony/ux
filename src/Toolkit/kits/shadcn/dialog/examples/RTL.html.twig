@@ -1,0 +1,63 @@
+<div class="flex flex-col gap-4">
+    {# Arabic #}
+    <twig:Dialog id="dialog_rtl_ar">
+        <twig:Dialog:Trigger>
+            <twig:Button variant="outline" {{ ...dialog_trigger_attrs }}>فتح الحوار</twig:Button>
+        </twig:Dialog:Trigger>
+        <twig:Dialog:Content dir="rtl">
+            <twig:Dialog:Header>
+                <twig:Dialog:Title>تعديل الملف الشخصي</twig:Dialog:Title>
+                <twig:Dialog:Description>
+                    قم بإجراء تغييرات على ملفك الشخصي هنا. انقر فوق حفظ عند الانتهاء.
+                </twig:Dialog:Description>
+            </twig:Dialog:Header>
+            <div class="grid gap-4">
+                <div class="grid gap-3">
+                    <twig:Label for="name-ar">الاسم</twig:Label>
+                    <twig:Input id="name-ar" name="name" value="Pedro Duarte" />
+                </div>
+                <div class="grid gap-3">
+                    <twig:Label for="username-ar">اسم المستخدم</twig:Label>
+                    <twig:Input id="username-ar" name="username" value="@peduarte" />
+                </div>
+            </div>
+            <twig:Dialog:Footer>
+                <twig:Dialog:Close>
+                    <twig:Button variant="outline" {{ ...dialog_close_attrs }}>إلغاء</twig:Button>
+                </twig:Dialog:Close>
+                <twig:Button type="submit">حفظ التغييرات</twig:Button>
+            </twig:Dialog:Footer>
+        </twig:Dialog:Content>
+    </twig:Dialog>
+
+    {# Hebrew #}
+    <twig:Dialog id="dialog_rtl_he">
+        <twig:Dialog:Trigger>
+            <twig:Button variant="outline" {{ ...dialog_trigger_attrs }}>הצג דיאלוג</twig:Button>
+        </twig:Dialog:Trigger>
+        <twig:Dialog:Content dir="rtl">
+            <twig:Dialog:Header>
+                <twig:Dialog:Title>ערוך נתונים</twig:Dialog:Title>
+                <twig:Dialog:Description>
+                    ניתן לשנות נתונים כאן. לחץ שמור בסיום.
+                </twig:Dialog:Description>
+            </twig:Dialog:Header>
+            <div class="grid gap-4">
+                <div class="grid gap-3">
+                    <twig:Label for="name-he">שם</twig:Label>
+                    <twig:Input id="name-he" name="name" value="Pedro Duarte" />
+                </div>
+                <div class="grid gap-3">
+                    <twig:Label for="username-he">שם משתמש</twig:Label>
+                    <twig:Input id="username-he" name="username" value="@peduarte" />
+                </div>
+            </div>
+            <twig:Dialog:Footer>
+                <twig:Dialog:Close>
+                    <twig:Button variant="outline" {{ ...dialog_close_attrs }}>בטל</twig:Button>
+                </twig:Dialog:Close>
+                <twig:Button type="submit">שמור שינויים</twig:Button>
+            </twig:Dialog:Footer>
+        </twig:Dialog:Content>
+    </twig:Dialog>
+</div>
