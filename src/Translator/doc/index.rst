@@ -112,6 +112,16 @@ You can also filter dumped translations by translation key patterns using wildca
 
 The wildcard ``*`` matches any characters. You can prefix a pattern with ``!`` to exclude keys matching that pattern.
 
+Manually warming the translations cache
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Translations are automatically dumped when warming up the Symfony cache. If you only need to refresh
+the JavaScript translations without warming up the whole cache, run:
+
+.. code-block:: terminal
+
+    $ php bin/console ux:translator:warm-cache
+
 Disabling TypeScript types dump
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
