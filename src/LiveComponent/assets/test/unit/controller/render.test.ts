@@ -41,6 +41,41 @@ describe('LiveController rendering Tests', () => {
         expect(test.component.valueStore.getOriginalProps()).toEqual({ firstName: 'Kevin' });
     });
 
+    it('dispatches live:render:started and live:render:finished DOM events', async () => {
+        const test = await createTest(
+            { firstName: 'Ryan' },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <span>Name: ${data.firstName}</span>
+                <button data-action="live#$render">Reload</button>
+            </div>
+        `
+        );
+
+        let startedTriggered = false;
+        let finishedTriggered = false;
+        test.element.addEventListener('live:render:started', (event: any) => {
+            startedTriggered = true;
+            expect(event.bubbles).toStrictEqual(true);
+            expect(typeof event.detail.html).toEqual('string');
+            expect(event.detail.controls).toEqual({ shouldRender: true });
+        });
+        test.element.addEventListener('live:render:finished', (event: any) => {
+            finishedTriggered = true;
+            expect(event.bubbles).toStrictEqual(true);
+        });
+
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.firstName = 'Kevin';
+        });
+
+        getByText(test.element, 'Reload').click();
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Name: Kevin'));
+        expect(startedTriggered).toBe(true);
+        expect(finishedTriggered).toBe(true);
+    });
+
     it('conserves the value of model field that was modified after a render request', async () => {
         const test = await createTest(
             { title: 'greetings', comment: '' },

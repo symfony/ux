@@ -987,6 +987,32 @@ The following hooks are available (along with the arguments that are passed):
 * ``loading.state:finished`` args ``(element: HTMLElement)``
 * ``model:set`` args ``(model: string, value: any, component: Component)``
 
+DOM Events
+~~~~~~~~~~
+
+The ``connect``, ``disconnect``, ``render:started`` and ``render:finished`` JavaScript
+hooks are also re-emitted as bubbling DOM events on the component's root element,
+prefixed with ``live:``. This lets external code subscribe via plain
+``addEventListener`` without needing to grab the ``Component`` instance through
+``getComponent()``:
+
+.. code-block:: javascript
+
+    element.addEventListener('live:render:finished', (event) => {
+        // event.detail.component  — the (proxied) Component instance
+        // event.detail.controller — the Stimulus controller
+    });
+
+The ``live:render:started`` event additionally carries ``html``, ``backendResponse``
+and ``controls`` in its ``detail``, matching the JS hook signature.
+
+The following DOM events are dispatched:
+
+* ``live:connect``
+* ``live:disconnect``
+* ``live:render:started``
+* ``live:render:finished``
+
 Loading States
 --------------
 

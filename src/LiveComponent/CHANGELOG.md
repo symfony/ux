@@ -2,6 +2,9 @@
 
 ## 3.1
 
+- Re-emit the `render:started` and `render:finished` JS hooks as bubbling
+  `live:render:started` / `live:render:finished` DOM events on the component's
+  root element, alongside the existing `live:connect` / `live:disconnect`.
 - Use `aria-busy` attribute during component re-render
 - Include field paths and violation messages in `UnprocessableEntityHttpException` thrown by `submitForm()` when validation fails
 
