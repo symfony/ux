@@ -12,6 +12,7 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Symfony\UX\Translator\CacheWarmer\TranslationsCacheWarmer;
+use Symfony\UX\Translator\Command\WarmCacheCommand;
 use Symfony\UX\Translator\MessageParameters\Extractor\IntlMessageParametersExtractor;
 use Symfony\UX\Translator\MessageParameters\Extractor\MessageParametersExtractor;
 use Symfony\UX\Translator\MessageParameters\Printer\TypeScriptMessageParametersPrinter;
@@ -47,5 +48,12 @@ return static function (ContainerConfigurator $container): void {
         ->set('ux.translator.message_parameters.extractor.intl_message_parameters_extractor', IntlMessageParametersExtractor::class)
 
         ->set('ux.translator.message_parameters.printer.typescript_message_parameters_printer', TypeScriptMessageParametersPrinter::class)
+
+        ->set('.ux_translator.command.warm_cache', WarmCacheCommand::class)
+            ->args([
+                service('ux.translator.cache_warmer.translations_cache_warmer'),
+                param('kernel.cache_dir'),
+            ])
+            ->tag('console.command')
     ;
 };

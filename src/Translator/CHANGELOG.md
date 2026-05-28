@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.1.0
+
+- Add `ux:translator:warm-cache` console command to manually dump JS/TS translation files
+
 ## 3.0.0
 
 - Minimum required Symfony version is now 7.4
