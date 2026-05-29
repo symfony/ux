@@ -58,6 +58,27 @@ class EntitySearchUtilTest extends KernelTestCase
         $this->assertSame([$prod1, $prod2], $results);
     }
 
+    public function testItEscapesLikeWildcardsInTheQuery()
+    {
+        $percent = ProductFactory::createOne(['name' => '100% legit']);
+        $underscore = ProductFactory::createOne(['name' => 'foo_bar']);
+        $backslash = ProductFactory::createOne(['name' => 'a\\b literal']);
+        ProductFactory::createOne(['name' => 'unrelated thing']);
+
+        // a literal "%" must match only the row that actually contains "%",
+        // not every row (which is what an unescaped LIKE wildcard would do)
+        $this->assertSame([$percent], $this->callAddSearchClass('%'));
+
+        // same for "_"
+        $this->assertSame([$underscore], $this->callAddSearchClass('_'));
+
+        // a literal "\" must be treated as data, not as the LIKE escape char
+        $this->assertSame([$backslash], $this->callAddSearchClass('a\\b'));
+
+        // a normal substring search still works
+        $this->assertSame([$percent], $this->callAddSearchClass('legit'));
+    }
+
     /**
      * @return array<Product>
      */
