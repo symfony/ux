@@ -4,6 +4,15 @@
 
 - Change how the Live Component request checksum is computed (security fix).
   **BC note:** users with a payload signed before the upgrade will need to reload their page.
+- Require the `X-Requested-With: XMLHttpRequest` request header on LiveComponent
+  requests, in addition to the existing `Accept: application/vnd.live-component+html`
+  check, to prevent CSRF. The `Accept` header alone is CORS-safelisted and offers
+  no protection against cross-origin requests crafted with `fetch()`.
+
+    **BC break (minor):** clients calling LiveComponent endpoints cross-origin must
+    now add `X-Requested-With` to their CORS `Access-Control-Allow-Headers` allow-list.
+    The bundled Stimulus controller already sends this header, so standard usage
+    is unaffected.
 
 ## 2.35
 

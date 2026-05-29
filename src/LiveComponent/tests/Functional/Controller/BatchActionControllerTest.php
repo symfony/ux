@@ -188,6 +188,7 @@ final class BatchActionControllerTest extends KernelTestCase
                     ],
                     'headers' => [
                         'Accept' => ['application/vnd.live-component+html'],
+                        'X-Requested-With' => ['XMLHttpRequest'],
                     ],
                 ]);
             })
