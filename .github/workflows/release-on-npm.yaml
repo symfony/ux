@@ -15,7 +15,21 @@ jobs:
         steps:
             - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
               with:
-                  ref: 2.x
+                  ref: ${{ github.ref }}
+                  fetch-depth: 0
+
+            - name: Verify tag is on the matching release branch
+              run: |
+                  set -euo pipefail
+                  MAJOR="${GITHUB_REF_NAME#v}"
+                  MAJOR="${MAJOR%%.*}"
+                  BRANCH="${MAJOR}.x"
+                  git fetch --no-tags origin "refs/heads/${BRANCH}:refs/remotes/origin/${BRANCH}"
+                  if ! git merge-base --is-ancestor "${GITHUB_SHA}" "refs/remotes/origin/${BRANCH}"; then
+                      echo "::error::Tag ${GITHUB_REF_NAME} (${GITHUB_SHA}) is not an ancestor of branch ${BRANCH}. Refusing to publish."
+                      exit 1
+                  fi
+                  echo "Tag ${GITHUB_REF_NAME} verified as ancestor of ${BRANCH}."
 
             - name: Configure Git
               run: |
