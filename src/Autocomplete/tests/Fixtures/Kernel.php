@@ -36,6 +36,7 @@ use Symfony\UX\Autocomplete\DependencyInjection\AutocompleteFormTypePass;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomAttributesProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomGroupByProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomProductAutocompleter;
+use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\InMemoryColorAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Form\CategoryWithCallbackAsCustomValue;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Form\CategoryWithPropertyNameAsCustomValue;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Form\ProductType;
@@ -216,6 +217,11 @@ final class Kernel extends BaseKernel
             ->tag('ux.entity_autocomplete_field')
             ->public()
         ;
+
+        $services->set(InMemoryColorAutocompleter::class)
+            ->tag(AutocompleteFormTypePass::AUTOCOMPLETER_TAG, [
+                'alias' => 'in_memory_colors',
+            ]);
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void

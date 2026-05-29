@@ -18,7 +18,7 @@ use Symfony\UX\Autocomplete\Form\AutocompleteChoiceTypeExtension;
 
 final class AutocompleteChoiceTypeExtensionTest extends TestCase
 {
-    public function testOptionsAsHtmlStaysTrueWithoutAutocompleteUrl(): void
+    public function testOptionsAsHtmlStaysTrueWithoutAutocompleteUrl()
     {
         $resolved = $this->resolveOptions([
             'options_as_html' => true,
@@ -27,7 +27,7 @@ final class AutocompleteChoiceTypeExtensionTest extends TestCase
         $this->assertTrue($resolved['options_as_html']);
     }
 
-    public function testOptionsAsHtmlCanBeTrueWithAutocompleteUrl(): void
+    public function testOptionsAsHtmlCanBeTrueWithAutocompleteUrl()
     {
         $resolved = $this->resolveOptions([
             'options_as_html' => true,
@@ -37,7 +37,7 @@ final class AutocompleteChoiceTypeExtensionTest extends TestCase
         $this->assertTrue($resolved['options_as_html']);
     }
 
-    public function testOptionsAsHtmlDefaultsToFalseWithAutocompleteUrl(): void
+    public function testOptionsAsHtmlDefaultsToFalseWithAutocompleteUrl()
     {
         $resolved = $this->resolveOptions([
             'autocomplete_url' => '/path/to/autocomplete',

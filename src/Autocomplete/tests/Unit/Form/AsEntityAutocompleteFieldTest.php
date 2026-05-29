@@ -24,9 +24,6 @@ class AsEntityAutocompleteFieldTest extends TestCase
         $this->assertEquals($shortName, AsEntityAutocompleteField::shortName($className));
     }
 
-    /**
-     * @return iterable<{string, string}>
-     */
     public static function provideClassNames(): iterable
     {
         yield from [
