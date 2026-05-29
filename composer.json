@@ -7,8 +7,10 @@
     "minimum-stability": "dev",
     "require-dev": {
         "php": ">=8.1",
+        "symfony/console": "^6.4|^7.0",
         "symfony/filesystem": "^6.4|^7.0",
         "symfony/finder": "^6.4|^7.0",
+        "symfony/process": "^6.4|^7.0",
         "php-cs-fixer/shim": "^3.62",
         "vincentlanglet/twig-cs-fixer": "^3.11"
     }
