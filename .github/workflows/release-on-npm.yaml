@@ -53,5 +53,18 @@ jobs:
             - name: Install root JS dependencies
               run: pnpm install --frozen-lockfile
 
+            - name: Build JS assets
+              run: pnpm run build
+
+            - name: Verify dist files match committed sources
+              run: |
+                  if ! git diff --quiet; then
+                      echo "::error::Built dist files differ from the committed ones at tag ${GITHUB_REF_NAME}. Refusing to publish."
+                      git status --porcelain
+                      git diff
+                      exit 1
+                  fi
+                  echo "Built dist files match the committed ones."
+
             - name: Publish on NPM
               run: pnpm publish --recursive --access public --no-git-checks --provenance
