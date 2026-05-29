@@ -69,7 +69,11 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
 
         // only send back the props that are allowed to be updated from the parent
         $readonlyDehydratedProps = $liveMetadata->getOnlyPropsThatAcceptUpdatesFromParent($props);
-        $readonlyDehydratedProps = $this->getLiveComponentHydrator()->addChecksumToData($readonlyDehydratedProps);
+        $readonlyDehydratedProps = $this->getLiveComponentHydrator()->addChecksumToData(
+            $readonlyDehydratedProps,
+            $componentName,
+            LiveComponentHydrator::CHECKSUM_SLOT_PROPS_FROM_PARENT,
+        );
 
         $attributesCollection->setPropsUpdatedFromParent($readonlyDehydratedProps);
         $attributes = $attributesCollection->toArray();

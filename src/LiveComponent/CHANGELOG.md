@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.36
+
+- Change how the Live Component request checksum is computed (security fix).
+  **BC note:** users with a payload signed before the upgrade will need to reload their page.
+
 ## 2.35
 
 - Allow Symfony UX 3.x packages
