@@ -1383,6 +1383,122 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ;
         }];
 
+        yield 'Format-less date prop accepts RFC3339 round-trip' => [static function () {
+            return HydrationTest::create(new class {
+                #[LiveProp(writable: true)]
+                public \DateTime $createdAt;
+
+                public function __construct()
+                {
+                    $this->createdAt = new \DateTime();
+                }
+            })
+                ->mountWith([
+                    'createdAt' => new \DateTime('2024-04-05 10:00:00', new \DateTimeZone('UTC')),
+                ])
+                ->assertDehydratesTo([
+                    'createdAt' => '2024-04-05T10:00:00+00:00',
+                ])
+                ->userUpdatesProps([
+                    'createdAt' => '2025-06-15T14:30:00+00:00',
+                ])
+                ->assertObjectAfterHydration(static function (object $object) {
+                    self::assertSame('2025-06-15T14:30:00+00:00', $object->createdAt->format(\DateTimeInterface::RFC3339));
+                })
+            ;
+        }];
+
+        yield 'Format-less date prop rejects permissive relative date input' => [static function () {
+            return HydrationTest::create(new class {
+                #[LiveProp(writable: true)]
+                public \DateTime $createdAt;
+
+                public function __construct()
+                {
+                    $this->createdAt = new \DateTime('2024-04-05 10:00:00', new \DateTimeZone('UTC'));
+                }
+            })
+                ->mountWith([
+                    'createdAt' => new \DateTime('2024-04-05 10:00:00', new \DateTimeZone('UTC')),
+                ])
+                ->userUpdatesProps([
+                    'createdAt' => '+10 years',
+                ])
+                ->expectsExceptionDuringHydration(BadRequestHttpException::class, '/invalid date data/i')
+            ;
+        }];
+
+        yield 'Format-less date prop rejects "tomorrow" relative keyword' => [static function () {
+            return HydrationTest::create(new class {
+                #[LiveProp(writable: true)]
+                public \DateTime $createdAt;
+
+                public function __construct()
+                {
+                    $this->createdAt = new \DateTime('2024-04-05 10:00:00', new \DateTimeZone('UTC'));
+                }
+            })
+                ->mountWith([
+                    'createdAt' => new \DateTime('2024-04-05 10:00:00', new \DateTimeZone('UTC')),
+                ])
+                ->userUpdatesProps([
+                    'createdAt' => 'tomorrow',
+                ])
+                ->expectsExceptionDuringHydration(BadRequestHttpException::class, '/invalid date data/i')
+            ;
+        }];
+
+        yield 'Format-less DateTimeImmutable prop accepts RFC3339 round-trip' => [static function () {
+            return HydrationTest::create(new class {
+                #[LiveProp(writable: true)]
+                public \DateTimeImmutable $createdAt;
+
+                public function __construct()
+                {
+                    $this->createdAt = new \DateTimeImmutable();
+                }
+            })
+                ->mountWith([
+                    'createdAt' => new \DateTimeImmutable('2024-04-05 10:00:00', new \DateTimeZone('UTC')),
+                ])
+                ->assertDehydratesTo([
+                    'createdAt' => '2024-04-05T10:00:00+00:00',
+                ])
+                ->userUpdatesProps([
+                    'createdAt' => '2025-06-15T14:30:00+00:00',
+                ])
+                ->assertObjectAfterHydration(static function (object $object) {
+                    self::assertInstanceOf(\DateTimeImmutable::class, $object->createdAt);
+                    self::assertSame('2025-06-15T14:30:00+00:00', $object->createdAt->format(\DateTimeInterface::RFC3339));
+                })
+            ;
+        }];
+
+        yield 'Format-less date prop preserves non-UTC offset on round-trip' => [static function () {
+            return HydrationTest::create(new class {
+                #[LiveProp(writable: true)]
+                public \DateTime $createdAt;
+
+                public function __construct()
+                {
+                    $this->createdAt = new \DateTime();
+                }
+            })
+                ->mountWith([
+                    'createdAt' => new \DateTime('2024-04-05 12:00:00', new \DateTimeZone('+02:00')),
+                ])
+                ->assertDehydratesTo([
+                    'createdAt' => '2024-04-05T12:00:00+02:00',
+                ])
+                ->userUpdatesProps([
+                    'createdAt' => '2025-06-15T09:30:00-05:00',
+                ])
+                ->assertObjectAfterHydration(static function (object $object) {
+                    self::assertSame('2025-06-15T09:30:00-05:00', $object->createdAt->format(\DateTimeInterface::RFC3339));
+                })
+            ;
+        }];
+
         yield 'It is valid to dehydrate to a fully-writable array' => [static function () {
             return HydrationTest::create(new class {
                 #[LiveProp(writable: true, hydrateWith: 'hydrateDate', dehydrateWith: 'dehydrateDate')]

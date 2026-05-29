@@ -706,11 +706,9 @@ final class LiveComponentHydrator
                 throw new BadRequestHttpException(\sprintf('The model path "%s" was sent an invalid data type "%s" for a date.', $propertyPathForError, get_debug_type($value)));
             }
 
-            if (null !== $dateFormat) {
-                return $className::createFromFormat($dateFormat, $value) ?: throw new BadRequestHttpException(\sprintf('The model path "%s" was sent invalid date data "%s" or in an invalid format. Make sure it\'s a valid date and it matches the expected format "%s".', $propertyPathForError, $value, $dateFormat));
-            }
+            $effectiveDateFormat = $dateFormat ?: \DateTimeInterface::RFC3339;
 
-            return new $className($value);
+            return $className::createFromFormat($effectiveDateFormat, $value) ?: throw new BadRequestHttpException(\sprintf('The model path "%s" was sent invalid date data "%s" or in an invalid format. Make sure it\'s a valid date and it matches the expected format "%s".', $propertyPathForError, $value, $effectiveDateFormat));
         }
 
         if (is_a($className, AbstractUid::class, true)) {
