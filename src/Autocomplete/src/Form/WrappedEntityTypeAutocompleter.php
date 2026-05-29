@@ -13,7 +13,6 @@ namespace Symfony\UX\Autocomplete\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\ChoiceList\Factory\Cache\ChoiceLabel;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -32,6 +31,8 @@ use Symfony\UX\Autocomplete\OptionsAwareEntityAutocompleterInterface;
  */
 final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocompleterInterface, ResetInterface
 {
+    use WrappedAutocompleterTrait;
+
     private ?FormInterface $form = null;
     private ?EntityMetadata $entityMetadata = null;
     private array $options = [];
@@ -114,25 +115,6 @@ final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocomp
         return $this->getEntityMetadata()->getIdValue($entity);
     }
 
-    public function isGranted(Security $security): bool
-    {
-        $securityOption = $this->getForm()->getConfig()->getOption('security');
-
-        if (false === $securityOption) {
-            return true;
-        }
-
-        if (\is_string($securityOption)) {
-            return $security->isGranted($securityOption, $this);
-        }
-
-        if (\is_callable($securityOption)) {
-            return $securityOption($security);
-        }
-
-        throw new \InvalidArgumentException('Invalid passed to the "security" option: it must be the boolean true, a string role or a callable.');
-    }
-
     public function getGroupBy(): mixed
     {
         return $this->getFormOption('group_by');
@@ -165,15 +147,6 @@ final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocomp
         return $formOptions[$name] ?? null;
     }
 
-    private function getForm(): FormInterface
-    {
-        if (null === $this->form) {
-            $this->form = $this->formFactory->create($this->formType, options: $this->options);
-        }
-
-        return $this->form;
-    }
-
     private function getSearchableFields(): ?array
     {
         return $this->getForm()->getConfig()->getOption('searchable_fields');
@@ -196,20 +169,5 @@ final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocomp
         }
 
         return $this->entityMetadata;
-    }
-
-    public function setOptions(array $options): void
-    {
-        if (null !== $this->form) {
-            throw new \LogicException('The options can only be set before the form is created.');
-        }
-
-        $this->options = $options;
-    }
-
-    public function reset(): void
-    {
-        unset($this->form);
-        $this->form = null;
     }
 }
