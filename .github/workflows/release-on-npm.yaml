@@ -7,7 +7,7 @@ on:
 
 permissions:
     id-token: write # Required for OIDC
-    contents: write # Required to push changes to the repository
+    contents: read
 
 jobs:
     release:
@@ -31,14 +31,6 @@ jobs:
                   fi
                   echo "Tag ${GITHUB_REF_NAME} verified as ancestor of ${BRANCH}."
 
-            - name: Configure Git
-              run: |
-                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                  git config --global user.name "github-actions[bot]"
-
-            - name: Extract version from tag
-              run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
-
             - run: npm i -g corepack && corepack enable
             - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
               with:
@@ -56,18 +48,5 @@ jobs:
             - name: Install root JS dependencies
               run: pnpm install --frozen-lockfile
 
-            - name: Update version of JS packages
-              run: pnpm version ${{ env.VERSION }} --no-git-tag-version --workspaces --no-workspaces-update
-
-            - name: Commit changes
-              run: |
-                  git add .
-                  git commit -m "Update versions to ${{ env.VERSION }}"
-
             - name: Publish on NPM
               run: pnpm publish --recursive --access public --no-git-checks
-
-            - name: Push changes
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: git push origin 2.x
