@@ -9,6 +9,10 @@ permissions:
     id-token: write # Required for OIDC
     contents: read
 
+concurrency:
+    group: release-on-npm-${{ github.ref_name }}
+    cancel-in-progress: false
+
 jobs:
     release:
         runs-on: ubuntu-latest
