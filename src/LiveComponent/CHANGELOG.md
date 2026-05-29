@@ -2,6 +2,12 @@
 
 ## 2.36
 
+- Reject malicious child component tags during rendering to prevent crafted
+  component names from being rendered (security fix).
+- Cap the number of actions allowed per `_batch` request to prevent abuse
+  (security fix).
+- Parse format-less date `LiveProp`s strictly using RFC 3339 to avoid lenient
+  date parsing of attacker-controlled values (security fix).
 - Change how the Live Component request checksum is computed (security fix).
   **BC note:** users with a payload signed before the upgrade will need to reload their page.
 - Require the `X-Requested-With: XMLHttpRequest` request header on LiveComponent

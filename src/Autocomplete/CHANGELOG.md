@@ -2,6 +2,8 @@
 
 ## 2.36
 
+- Escape LIKE wildcards (`%` and `_`) in the autocomplete search query so user
+  input can no longer alter the matching behavior of the generated SQL query.
 - Fix XSS vulnerability where data returned from AJAX endpoints was rendered without HTML escaping.
   Values from the `text` field of AJAX responses are now escaped by default.
 
