@@ -16,7 +16,7 @@ namespace Symfony\UX\Autocomplete\Form;
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @deprecated since Symfony UX 3.0, use AsAutocompleteField instead
+ * @deprecated since Symfony UX 3.1, use AsAutocompleteField instead
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class AsEntityAutocompleteField extends AsAutocompleteField

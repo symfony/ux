@@ -18,7 +18,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 /**
  * Interface for classes that will have an "autocomplete" endpoint exposed.
  *
- * @deprecated since Symfony UX 3.0, use AutocompleterInterface instead
+ * @deprecated since Symfony UX 3.1, use AutocompleterInterface instead
  *
  * @template T of object
  */

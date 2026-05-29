@@ -14,7 +14,7 @@ namespace Symfony\UX\Autocomplete\Controller;
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @deprecated since Symfony UX 3.0, use AutocompleteController instead
+ * @deprecated since Symfony UX 3.1, use AutocompleteController instead
  */
 class EntityAutocompleteController extends AutocompleteController
 {
