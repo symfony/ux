@@ -12,11 +12,10 @@
 namespace Symfony\UX\Autocomplete;
 
 /**
- * Interface for classes that will have an "autocomplete" endpoint exposed with a possibility to pass additional form options.
- *
- * @deprecated since Symfony UX 3.0, use OptionsAwareAutocompleterInterface instead
+ * Interface for classes that will have an "autocomplete" endpoint exposed with a possibility to pass additional form options,
+ * without requiring Doctrine ORM.
  */
-interface OptionsAwareEntityAutocompleterInterface extends EntityAutocompleterInterface
+interface OptionsAwareAutocompleterInterface extends AutocompleterInterface
 {
     public function setOptions(array $options): void;
 }
