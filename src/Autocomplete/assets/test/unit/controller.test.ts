@@ -1265,6 +1265,83 @@ describe('AutocompleteController', () => {
         });
     });
 
+    it('escapes HTML in AJAX response data by default', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                data-testid="main-element"
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+            ></select>
+        `);
+
+        // @ts-expect-error - used to detect XSS execution
+        window.xssTriggered = false;
+
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: [
+                    {
+                        value: 1,
+                        text: '<img src=x onerror="window.xssTriggered=true">pizza',
+                    },
+                ],
+            })
+        );
+
+        const controlInput = tomSelect.control_input;
+        userEvent.click(controlInput);
+
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(1);
+        });
+
+        // wait a tick for any onerror handler to fire if injection succeeded
+        await shortDelay(10);
+
+        // @ts-expect-error
+        expect(window.xssTriggered).toBe(false);
+        expect(container.querySelector('.option img')).toBeNull();
+        expect(container.querySelector('.option')?.textContent).toContain(
+            '<img src=x onerror="window.xssTriggered=true">pizza'
+        );
+    });
+
+    it('renders HTML in AJAX response data when optionsAsHtmlValue is true', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                data-testid="main-element"
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+                data-autocomplete-options-as-html-value="true"
+            ></select>
+        `);
+
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: [
+                    {
+                        value: 1,
+                        text: '<strong class="hl">pizza</strong>',
+                    },
+                ],
+            })
+        );
+
+        const controlInput = tomSelect.control_input;
+        userEvent.click(controlInput);
+
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(1);
+        });
+
+        expect(container.querySelector('.option strong.hl')).not.toBeNull();
+        expect(container.querySelector('.option strong.hl')?.textContent).toBe('pizza');
+    });
+
     it('does not reload options on focus when resetOnFocus is not set', async () => {
         const { container, tomSelect } = await startAutocompleteTest(`
             <label for="the-select">Items</label>
