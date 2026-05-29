@@ -22,6 +22,7 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV4;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Exception\HydrationException;
+use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadata;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
@@ -1381,6 +1382,122 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ;
         }];
 
+        yield 'Format-less date prop accepts RFC3339 round-trip' => [static function () {
+            return HydrationTest::create(new class {
+                #[LiveProp(writable: true)]
+                public \DateTime $createdAt;
+
+                public function __construct()
+                {
+                    $this->createdAt = new \DateTime();
+                }
+            })
+                ->mountWith([
+                    'createdAt' => new \DateTime('2024-04-05 10:00:00', new \DateTimeZone('UTC')),
+                ])
+                ->assertDehydratesTo([
+                    'createdAt' => '2024-04-05T10:00:00+00:00',
+                ])
+                ->userUpdatesProps([
+                    'createdAt' => '2025-06-15T14:30:00+00:00',
+                ])
+                ->assertObjectAfterHydration(static function (object $object) {
+                    self::assertSame('2025-06-15T14:30:00+00:00', $object->createdAt->format(\DateTimeInterface::RFC3339));
+                })
+            ;
+        }];
+
+        yield 'Format-less date prop rejects permissive relative date input' => [static function () {
+            return HydrationTest::create(new class {
+                #[LiveProp(writable: true)]
+                public \DateTime $createdAt;
+
+                public function __construct()
+                {
+                    $this->createdAt = new \DateTime('2024-04-05 10:00:00', new \DateTimeZone('UTC'));
+                }
+            })
+                ->mountWith([
+                    'createdAt' => new \DateTime('2024-04-05 10:00:00', new \DateTimeZone('UTC')),
+                ])
+                ->userUpdatesProps([
+                    'createdAt' => '+10 years',
+                ])
+                ->expectsExceptionDuringHydration(BadRequestHttpException::class, '/invalid date data/i')
+            ;
+        }];
+
+        yield 'Format-less date prop rejects "tomorrow" relative keyword' => [static function () {
+            return HydrationTest::create(new class {
+                #[LiveProp(writable: true)]
+                public \DateTime $createdAt;
+
+                public function __construct()
+                {
+                    $this->createdAt = new \DateTime('2024-04-05 10:00:00', new \DateTimeZone('UTC'));
+                }
+            })
+                ->mountWith([
+                    'createdAt' => new \DateTime('2024-04-05 10:00:00', new \DateTimeZone('UTC')),
+                ])
+                ->userUpdatesProps([
+                    'createdAt' => 'tomorrow',
+                ])
+                ->expectsExceptionDuringHydration(BadRequestHttpException::class, '/invalid date data/i')
+            ;
+        }];
+
+        yield 'Format-less DateTimeImmutable prop accepts RFC3339 round-trip' => [static function () {
+            return HydrationTest::create(new class {
+                #[LiveProp(writable: true)]
+                public \DateTimeImmutable $createdAt;
+
+                public function __construct()
+                {
+                    $this->createdAt = new \DateTimeImmutable();
+                }
+            })
+                ->mountWith([
+                    'createdAt' => new \DateTimeImmutable('2024-04-05 10:00:00', new \DateTimeZone('UTC')),
+                ])
+                ->assertDehydratesTo([
+                    'createdAt' => '2024-04-05T10:00:00+00:00',
+                ])
+                ->userUpdatesProps([
+                    'createdAt' => '2025-06-15T14:30:00+00:00',
+                ])
+                ->assertObjectAfterHydration(static function (object $object) {
+                    self::assertInstanceOf(\DateTimeImmutable::class, $object->createdAt);
+                    self::assertSame('2025-06-15T14:30:00+00:00', $object->createdAt->format(\DateTimeInterface::RFC3339));
+                })
+            ;
+        }];
+
+        yield 'Format-less date prop preserves non-UTC offset on round-trip' => [static function () {
+            return HydrationTest::create(new class {
+                #[LiveProp(writable: true)]
+                public \DateTime $createdAt;
+
+                public function __construct()
+                {
+                    $this->createdAt = new \DateTime();
+                }
+            })
+                ->mountWith([
+                    'createdAt' => new \DateTime('2024-04-05 12:00:00', new \DateTimeZone('+02:00')),
+                ])
+                ->assertDehydratesTo([
+                    'createdAt' => '2024-04-05T12:00:00+02:00',
+                ])
+                ->userUpdatesProps([
+                    'createdAt' => '2025-06-15T09:30:00-05:00',
+                ])
+                ->assertObjectAfterHydration(static function (object $object) {
+                    self::assertSame('2025-06-15T09:30:00-05:00', $object->createdAt->format(\DateTimeInterface::RFC3339));
+                })
+            ;
+        }];
+
         yield 'It is valid to dehydrate to a fully-writable array' => [static function () {
             return HydrationTest::create(new class {
                 #[LiveProp(writable: true, hydrateWith: 'hydrateDate', dehydrateWith: 'dehydrateDate')]
@@ -1616,7 +1733,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         $this->hydrator()->hydrate(
             component: new $componentClass(),
-            props: $this->hydrator()->addChecksumToData(['prop' => 'foo']),
+            props: $this->hydrator()->addChecksumToData(['prop' => 'foo'], '__testing', LiveComponentHydrator::CHECKSUM_SLOT_PROPS),
             updatedProps: ['prop' => 'bar'],
             componentMetadata: $this->createLiveMetadata($componentClass),
         );
@@ -1773,7 +1890,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $liveMetadata
         );
         $updatedFromParentData = ['shouldUppercase' => true];
-        $updatedFromParentData = $this->hydrator()->addChecksumToData($updatedFromParentData);
+        $updatedFromParentData = $this->hydrator()->addChecksumToData($updatedFromParentData, '__testing', LiveComponentHydrator::CHECKSUM_SLOT_PROPS_FROM_PARENT);
 
         $this->hydrator()->hydrate(
             $freshComponent,
@@ -1804,7 +1921,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $liveMetadata
         );
         $updatedFromParentData = ['name' => 'Kevin'];
-        $updatedFromParentData = $this->hydrator()->addChecksumToData($updatedFromParentData);
+        $updatedFromParentData = $this->hydrator()->addChecksumToData($updatedFromParentData, '__testing', LiveComponentHydrator::CHECKSUM_SLOT_PROPS_FROM_PARENT);
         // change the data again: now the checksum is wrong!
         $updatedFromParentData['name'] = 'Fabien';
 
@@ -1815,6 +1932,73 @@ final class LiveComponentHydratorTest extends KernelTestCase
             [], // updated data
             $liveMetadata,
             $updatedFromParentData
+        );
+    }
+
+    public function testCrossComponentChecksumReplayIsRejected()
+    {
+        // Two components sharing a prop name. The MAC must be bound to the
+        // component identity so a blob minted for "componentA" cannot be
+        // replayed as "componentB".
+        $componentClass = new class {
+            #[LiveProp]
+            public int $userId = 1;
+        };
+
+        $metadataFactory = self::getContainer()->get('ux.live_component.metadata_factory');
+        \assert($metadataFactory instanceof LiveComponentMetadataFactory);
+        $livePropsMetadata = $metadataFactory->createPropMetadatas(new \ReflectionClass($componentClass));
+
+        $metaA = new LiveComponentMetadata(new ComponentMetadata(['key' => 'componentA']), $livePropsMetadata);
+        $metaB = new LiveComponentMetadata(new ComponentMetadata(['key' => 'componentB']), $livePropsMetadata);
+
+        $dehydrated = $this->hydrator()->dehydrate(
+            new $componentClass(),
+            $this->createComponentAttributes(),
+            $metaA,
+        );
+
+        $this->expectException(HydrationException::class);
+        $this->expectExceptionMessage('Invalid checksum sent when updating the live component.');
+        $this->hydrator()->hydrate(
+            new $componentClass(),
+            $dehydrated->getProps(),
+            [],
+            $metaB,
+        );
+    }
+
+    public function testCrossSlotChecksumReplayIsRejected()
+    {
+        // A blob signed for the regular `props` slot must not be accepted
+        // when replayed in the `propsFromParent` slot.
+        $componentClass = new class {
+            #[LiveProp(updateFromParent: true)]
+            public int $userId = 1;
+        };
+
+        $liveMetadata = $this->createLiveMetadata($componentClass);
+        $dehydrated = $this->hydrator()->dehydrate(
+            new $componentClass(),
+            $this->createComponentAttributes(),
+            $liveMetadata,
+        );
+
+        // Mint a fresh, valid `props`-slot envelope for the same component so
+        // the first checksum check passes; the replay attempt happens on the
+        // second (propsFromParent) check.
+        $validPropsEnvelope = $dehydrated->getProps();
+
+        $this->expectException(HydrationException::class);
+        $this->expectExceptionMessage('Invalid checksum for the data sent from the parent component.');
+        $this->hydrator()->hydrate(
+            new $componentClass(),
+            $validPropsEnvelope,
+            [],
+            $liveMetadata,
+            // Replay the `props`-slot blob (valid for `props`) into the
+            // `propsFromParent` slot. The MAC must reject it.
+            $validPropsEnvelope,
         );
     }
 

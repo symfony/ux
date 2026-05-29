@@ -211,4 +211,94 @@ describe('LiveController Action Tests', () => {
 
         await waitFor(() => expect(test.element).toHaveTextContent('Component Saved!'));
     });
+
+    it('caps each batch at 50 actions and ships the overflow in a follow-up request', async () => {
+        const test = await createTest(
+            { count: 0 },
+            (data: any) => `<div ${initComponent(data)}>count: ${data.count}</div>`
+        );
+
+        // 51 actions queued back-to-back must be split into 50 + 1, never one oversized request.
+        // Distinct {i: N} args on every call pin both count AND ordering: a reorder or
+        // misplacement across batches fails the matcher (matches() uses ordered isEqual).
+        const firstBatch = test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.count = 50;
+        });
+        for (let i = 0; i < 50; i++) {
+            firstBatch.expectActionCalled('save', { i });
+        }
+
+        const secondBatch = test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.count = 51;
+        });
+        secondBatch.expectActionCalled('save', { i: 50 });
+
+        for (let i = 0; i < 51; i++) {
+            test.component.action('save', { i });
+        }
+
+        await waitFor(() => expect(test.element).toHaveTextContent('count: 51'));
+    });
+
+    it('sends a single request for an exact-fit batch of 50 actions', async () => {
+        const test = await createTest(
+            { count: 0 },
+            (data: any) => `<div ${initComponent(data)}>count: ${data.count}</div>`
+        );
+
+        const batch = test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.count = 50;
+        });
+        for (let i = 0; i < 50; i++) {
+            batch.expectActionCalled('save', { i });
+        }
+
+        for (let i = 0; i < 50; i++) {
+            test.component.action('save', { i });
+        }
+
+        await waitFor(() => expect(test.element).toHaveTextContent('count: 50'));
+    });
+
+    it('caps the follow-up batch when actions queue up while a request is in-flight', async () => {
+        const test = await createTest(
+            { count: 0 },
+            (data: any) => `<div ${initComponent(data)}>count: ${data.count}</div>`
+        );
+
+        // First request: a single debounced action, delayed so we can queue more while it's pending.
+        const firstBatch = test
+            .expectsAjaxCall()
+            .expectActionCalled('save', { i: 0 })
+            .delayResponse(30)
+            .serverWillChangeProps((data: any) => {
+                data.count = 1;
+            });
+
+        // Second request: indices 1..50 (cap exactly hit).
+        const secondBatch = test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.count = 51;
+        });
+        for (let i = 1; i <= 50; i++) {
+            secondBatch.expectActionCalled('save', { i });
+        }
+
+        // Third request: indices 51..60 (overflow from the 60 queued during the in-flight request).
+        const thirdBatch = test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.count = 61;
+        });
+        for (let i = 51; i <= 60; i++) {
+            thirdBatch.expectActionCalled('save', { i });
+        }
+
+        // Kick off the first request (debounce=0 → flushes immediately).
+        test.component.action('save', { i: 0 });
+        // Wait a tick so the first request is in-flight before we enqueue the rest.
+        await new Promise((resolve) => setTimeout(resolve, 5));
+        for (let i = 1; i <= 60; i++) {
+            test.component.action('save', { i });
+        }
+
+        await waitFor(() => expect(test.element).toHaveTextContent('count: 61'));
+    });
 });

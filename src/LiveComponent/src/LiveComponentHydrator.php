@@ -49,6 +49,9 @@ final class LiveComponentHydrator
     private const ATTRIBUTES_KEY = '@attributes';
     private const CHECKSUM_KEY = '@checksum';
 
+    public const CHECKSUM_SLOT_PROPS = 'props';
+    public const CHECKSUM_SLOT_PROPS_FROM_PARENT = 'propsFromParent';
+
     /**
      * @param iterable<HydrationExtensionInterface> $hydrationExtensions
      */
@@ -129,7 +132,11 @@ final class LiveComponentHydrator
             $dehydratedProps->addPropValue(self::ATTRIBUTES_KEY, $attributes->all());
         }
 
-        $checksum = $this->calculateChecksum($dehydratedProps->getProps());
+        $checksum = $this->calculateChecksum(
+            $dehydratedProps->getProps(),
+            $componentMetadata->getComponentMetadata()->getName(),
+            self::CHECKSUM_SLOT_PROPS,
+        );
         $dehydratedProps->addPropValue(self::CHECKSUM_KEY, $checksum);
 
         return $dehydratedProps;
@@ -148,7 +155,11 @@ final class LiveComponentHydrator
      */
     public function hydrate(object $component, array $props, array $updatedProps, LiveComponentMetadata $componentMetadata, array $updatedPropsFromParent = []): ComponentAttributes
     {
-        $dehydratedOriginalProps = $this->combineAndValidateProps($props, $updatedPropsFromParent);
+        $dehydratedOriginalProps = $this->combineAndValidateProps(
+            $props,
+            $updatedPropsFromParent,
+            $componentMetadata->getComponentMetadata()->getName(),
+        );
         $dehydratedUpdatedProps = DehydratedProps::createFromUpdatedArray($updatedProps);
 
         $attributes = new ComponentAttributes($dehydratedOriginalProps->getPropValue(self::ATTRIBUTES_KEY, []), $this->twig->getRuntime(EscaperRuntime::class));
@@ -348,9 +359,12 @@ final class LiveComponentHydrator
         return $value;
     }
 
-    public function addChecksumToData(array $data): array
+    /**
+     * @param self::CHECKSUM_SLOT_* $slot
+     */
+    public function addChecksumToData(array $data, string $componentName, string $slot): array
     {
-        $data[self::CHECKSUM_KEY] = $this->calculateChecksum($data);
+        $data[self::CHECKSUM_KEY] = $this->calculateChecksum($data, $componentName, $slot);
 
         return $data;
     }
@@ -393,15 +407,25 @@ final class LiveComponentHydrator
         return $booleanMap[$value] ?? (bool) $value;
     }
 
-    private function calculateChecksum(array $dehydratedPropsData): ?string
+    /**
+     * @param self::CHECKSUM_SLOT_* $slot
+     */
+    private function calculateChecksum(array $dehydratedPropsData, string $componentName, string $slot): string
     {
         // sort so it is always consistent (frontend could have re-ordered data)
         $this->recursiveKeySort($dehydratedPropsData);
 
-        return base64_encode(hash_hmac('sha256', json_encode($dehydratedPropsData), $this->secret, true));
+        // bind the MAC to (component name, slot) so a blob minted for component A cannot be replayed as component B,
+        // and a `props` blob cannot be replayed as `propsFromParent` (or vice-versa)
+        $preImage = $componentName."\0".$slot."\0".json_encode($dehydratedPropsData);
+
+        return base64_encode(hash_hmac('sha256', $preImage, $this->secret, true));
     }
 
-    private function verifyChecksum(array $identifierPops, string $error = 'Invalid checksum sent when updating the live component.'): void
+    /**
+     * @param self::CHECKSUM_SLOT_* $slot
+     */
+    private function verifyChecksum(array $identifierPops, string $componentName, string $slot, string $error = 'Invalid checksum sent when updating the live component.'): void
     {
         if (!\array_key_exists(self::CHECKSUM_KEY, $identifierPops)) {
             throw new HydrationException(\sprintf('Missing "%s" key.', self::CHECKSUM_KEY));
@@ -409,7 +433,7 @@ final class LiveComponentHydrator
         $sentChecksum = $identifierPops[self::CHECKSUM_KEY];
         unset($identifierPops[self::CHECKSUM_KEY]);
 
-        $expectedChecksum = $this->calculateChecksum($identifierPops);
+        $expectedChecksum = $this->calculateChecksum($identifierPops, $componentName, $slot);
 
         if (hash_equals($expectedChecksum, $sentChecksum)) {
             return;
@@ -608,11 +632,9 @@ final class LiveComponentHydrator
                 throw new BadRequestHttpException(\sprintf('The model path "%s" was sent an invalid data type "%s" for a date.', $propertyPathForError, get_debug_type($value)));
             }
 
-            if (null !== $dateFormat) {
-                return $className::createFromFormat($dateFormat, $value) ?: throw new BadRequestHttpException(\sprintf('The model path "%s" was sent invalid date data "%s" or in an invalid format. Make sure it\'s a valid date and it matches the expected format "%s".', $propertyPathForError, $value, $dateFormat));
-            }
+            $effectiveDateFormat = $dateFormat ?: \DateTimeInterface::RFC3339;
 
-            return new $className($value);
+            return $className::createFromFormat($effectiveDateFormat, $value) ?: throw new BadRequestHttpException(\sprintf('The model path "%s" was sent invalid date data "%s" or in an invalid format. Make sure it\'s a valid date and it matches the expected format "%s".', $propertyPathForError, $value, $effectiveDateFormat));
         }
 
         if (is_a($className, AbstractUid::class, true)) {
@@ -692,16 +714,16 @@ final class LiveComponentHydrator
         return $writablePaths;
     }
 
-    private function combineAndValidateProps(array $props, array $updatedPropsFromParent): DehydratedProps
+    private function combineAndValidateProps(array $props, array $updatedPropsFromParent, string $componentName): DehydratedProps
     {
         $dehydratedOriginalProps = DehydratedProps::createFromPropsArray($props);
-        $this->verifyChecksum($dehydratedOriginalProps->getProps());
+        $this->verifyChecksum($dehydratedOriginalProps->getProps(), $componentName, self::CHECKSUM_SLOT_PROPS);
         $dehydratedOriginalProps->removePropValue(self::CHECKSUM_KEY);
 
         // if a parent component is requesting some updates to the props, verify
         // their checksum and apply them as "original props"
         if (\count($updatedPropsFromParent) > 0) {
-            $this->verifyChecksum($updatedPropsFromParent, 'Invalid checksum for the data sent from the parent component.');
+            $this->verifyChecksum($updatedPropsFromParent, $componentName, self::CHECKSUM_SLOT_PROPS_FROM_PARENT, 'Invalid checksum for the data sent from the parent component.');
             unset($updatedPropsFromParent[self::CHECKSUM_KEY]);
             foreach ($updatedPropsFromParent as $key => $value) {
                 $dehydratedOriginalProps->addPropValue($key, $value);

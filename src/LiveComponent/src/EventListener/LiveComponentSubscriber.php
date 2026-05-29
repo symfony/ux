@@ -351,8 +351,15 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return true;
         }
 
-        // Except when testing, require the correct content-type in the Accept header.
-        // This also acts as a CSRF protection since this can only be set in accordance with same-origin/CORS policies.
+        // Require a non-CORS-safelisted request header to force a preflight on
+        // cross-origin requests (which Symfony does not answer for LiveComponent
+        // endpoints), preventing CSRF. The Accept header alone is insufficient
+        // because it is CORS-safelisted (Fetch spec §3.2.2) and can be set
+        // cross-origin without a preflight.
+        if ('XMLHttpRequest' !== $request->headers->get('X-Requested-With')) {
+            return false;
+        }
+
         return \in_array(self::HTML_CONTENT_TYPE, $request->getAcceptableContentTypes(), true);
     }
 

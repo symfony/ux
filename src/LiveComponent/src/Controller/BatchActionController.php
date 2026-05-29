@@ -24,12 +24,21 @@ use Symfony\UX\TwigComponent\MountedComponent;
  */
 final class BatchActionController
 {
+    /**
+     * Must match MAX_ACTIONS_PER_BATCH on the JS side (assets/src/Component/index.ts).
+     */
+    public const MAX_ACTIONS_PER_BATCH = 50;
+
     public function __construct(private HttpKernelInterface $kernel)
     {
     }
 
     public function __invoke(Request $request, MountedComponent $_mounted_component, string $serviceId, array $actions): ?Response
     {
+        if (\count($actions) > self::MAX_ACTIONS_PER_BATCH) {
+            throw new BadRequestHttpException('Too many actions in batch.');
+        }
+
         foreach ($actions as $action) {
             $name = $action['name'] ?? throw new BadRequestHttpException('Invalid JSON.');
 

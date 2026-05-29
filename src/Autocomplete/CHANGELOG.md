@@ -1,6 +1,11 @@
 # CHANGELOG
 
-## 3.0.0
+## 3.1
+
+- Fix XSS vulnerability where data returned from AJAX endpoints was rendered without HTML escaping.
+  See section 2.36 below for details.
+
+## 3.0
 
 - Minimum required Symfony version is now 7.4
 - Minimum required PHP version is now 8.4
@@ -8,6 +13,27 @@
 - Remove `ExtraLazyChoiceLoader` in favor of `Symfony\Component\Form\ChoiceList\Loader\LazyChoiceLoader` from Symfony Form >=7.2
 - Add parameter `$security` to `AutocompleteResultsExecutor::__construct()`
 - Remove BC layer for `EntityAutocompleterInterface::getAttributes()` and `EntityAutocompleterInterface::getGroupBy()`
+
+## 2.36
+
+- Fix XSS vulnerability where data returned from AJAX endpoints was rendered without HTML escaping.
+  Values from the `text` field of AJAX responses are now escaped by default.
+
+    **Possible BC break**: if your endpoint legitimately returns HTML in the `text` field (e.g., for rich content), opt in via the `options_as_html` option:
+
+    ```diff
+     #[AsEntityAutocompleteField]
+     class IngredientAutocompleteType extends AbstractType
+     {
+         public function configureOptions(OptionsResolver $resolver): void
+         {
+             $resolver->setDefaults([
+                 'class' => Ingredient::class,
+    +            'options_as_html' => true,
+             ]);
+         }
+     }
+    ```
 
 ## 2.35
 

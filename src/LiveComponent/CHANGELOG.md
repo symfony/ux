@@ -4,14 +4,32 @@
 
 - Use `aria-busy` attribute during component re-render
 - Include field paths and violation messages in `UnprocessableEntityHttpException` thrown by `submitForm()` when validation fails
+- Change how the Live Component request checksum is computed (security fix).
+  **BC note:** users with a payload signed before the upgrade will need to reload their page.
+- Require the `X-Requested-With: XMLHttpRequest` request header on LiveComponent check.
+  See section 2.36 below for details.
 
-## 3.0.0
+## 3.0
 
 - Minimum required Symfony version is now 7.4
 - Minimum required PHP version is now 8.4
 - Remove `csrf` argument from `AsLiveComponent` in favor of same-origin/CORS
 - Remove compatibility layer with Symfony PropertyInfo <7.1
 - Remove `LegacyLivePropMetadata`
+
+## 2.36
+
+- Change how the Live Component request checksum is computed (security fix).
+  **BC note:** users with a payload signed before the upgrade will need to reload their page.
+- Require the `X-Requested-With: XMLHttpRequest` request header on LiveComponent
+  requests, in addition to the existing `Accept: application/vnd.live-component+html`
+  check, to prevent CSRF. The `Accept` header alone is CORS-safelisted and offers
+  no protection against cross-origin requests crafted with `fetch()`.
+
+    **BC break (minor):** clients calling LiveComponent endpoints cross-origin must
+    now add `X-Requested-With` to their CORS `Access-Control-Allow-Headers` allow-list.
+    The bundled Stimulus controller already sends this header, so standard usage
+    is unaffected.
 
 ## 2.35
 

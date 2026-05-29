@@ -13,7 +13,9 @@ namespace Symfony\UX\LiveComponent\Tests\Functional\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\UX\LiveComponent\Controller\BatchActionController;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\KernelBrowser;
 use Zenstruck\Browser\Test\HasBrowser;
@@ -186,6 +188,7 @@ final class BatchActionControllerTest extends KernelTestCase
                     ],
                     'headers' => [
                         'Accept' => ['application/vnd.live-component+html'],
+                        'X-Requested-With' => ['XMLHttpRequest'],
                     ],
                 ]);
             })
@@ -255,6 +258,76 @@ final class BatchActionControllerTest extends KernelTestCase
                                 ['name' => 'nonLive'],
                                 ['name' => 'add', 'args' => ['what' => 'fourth']],
                             ],
+                        ]),
+                    ],
+                ]);
+            })
+        ;
+    }
+
+    public function testAcceptsBatchAtMaxActions()
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
+
+        $this->browser()
+            ->throwExceptions()
+            ->post('/_components/with_actions', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
+            ->assertSuccessful()
+            ->use(static function (Crawler $crawler, KernelBrowser $browser) {
+                $rootElement = $crawler->filter('ul')->first();
+                $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
+
+                $actions = [];
+                for ($i = 0; $i < BatchActionController::MAX_ACTIONS_PER_BATCH; ++$i) {
+                    $actions[] = ['name' => 'add', 'args' => ['what' => "item-$i"]];
+                }
+
+                $browser->post('/_components/with_actions/_batch', [
+                    'body' => [
+                        'data' => json_encode([
+                            'props' => $liveProps,
+                            'actions' => $actions,
+                        ]),
+                    ],
+                ]);
+            })
+            ->assertSuccessful()
+            ->assertSee('item-0')
+            ->assertSee('item-49')
+        ;
+    }
+
+    public function testRejectsBatchAboveMaxActions()
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
+
+        $this->browser()
+            ->post('/_components/with_actions', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
+            ->assertSuccessful()
+            ->expectException(BadRequestHttpException::class, 'Too many actions in batch.')
+            ->use(static function (Crawler $crawler, KernelBrowser $browser) {
+                $rootElement = $crawler->filter('ul')->first();
+                $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
+
+                $actions = array_fill(0, BatchActionController::MAX_ACTIONS_PER_BATCH + 1, ['name' => 'add', 'args' => ['what' => 'x']]);
+
+                $browser->post('/_components/with_actions/_batch', [
+                    'body' => [
+                        'data' => json_encode([
+                            'props' => $liveProps,
+                            'actions' => $actions,
                         ]),
                     ],
                 ]);

@@ -334,6 +334,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->post('/_components/component2/redirect', [
                 'headers' => [
                     'Accept' => 'application/vnd.live-component+html',
+                    'X-Requested-With' => 'XMLHttpRequest',
                 ],
                 'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
