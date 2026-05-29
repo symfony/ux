@@ -2,6 +2,7 @@
 
 ## 3.1
 
+- Use `hash_equals()` to compare the `extra_options` checksum to prevent timing attacks
 - Fix XSS vulnerability where data returned from AJAX endpoints was rendered without HTML escaping.
   See section 2.36 below for details.
 

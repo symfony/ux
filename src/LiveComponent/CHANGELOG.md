@@ -2,6 +2,7 @@
 
 ## 3.1
 
+- Fix dynamic template resolution when using the `loading` attribute on a deferred component
 - Use `aria-busy` attribute during component re-render
 - Include field paths and violation messages in `UnprocessableEntityHttpException` thrown by `submitForm()` when validation fails
 - Change how the Live Component request checksum is computed (security fix).
