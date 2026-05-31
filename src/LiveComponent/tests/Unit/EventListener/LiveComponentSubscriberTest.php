@@ -39,6 +39,7 @@ class LiveComponentSubscriberTest extends TestCase
         $request = new Request();
         $request->attributes->set('_live_component', 'some_component');
         $request->headers->set('Accept', 'application/vnd.live-component+html');
+        $request->headers->set('X-Requested-With', 'XMLHttpRequest');
 
         $this->assertTrue($this->callIsLiveComponentRequest($subscriber, $request));
     }
@@ -64,7 +65,7 @@ class LiveComponentSubscriberTest extends TestCase
     }
 
     #[DataProvider('provideProductionGateScenarios')]
-    public function testProductionGateRequiresNonSafelistedHeader(array $headers, bool $expected): void
+    public function testProductionGateRequiresNonSafelistedHeader(array $headers, bool $expected)
     {
         $subscriber = new LiveComponentSubscriber($this->createMock(ContainerInterface::class), testMode: false);
 
@@ -108,7 +109,7 @@ class LiveComponentSubscriberTest extends TestCase
         ];
     }
 
-    public function testRequestWithoutLiveComponentAttributeIsRejected(): void
+    public function testRequestWithoutLiveComponentAttributeIsRejected()
     {
         $subscriber = new LiveComponentSubscriber($this->createMock(ContainerInterface::class), testMode: false);
 
