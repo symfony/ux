@@ -24,7 +24,7 @@ final class CompileCommandTest extends WebTestCase
         // Given
         static::cleanup();
         $application = new Application(self::bootKernel());
-        $command = $application->find('ux-native:dump');
+        $command = $application->find('ux:native:dump');
         $commandTester = new CommandTester($command);
 
         // When
@@ -41,7 +41,7 @@ final class CompileCommandTest extends WebTestCase
         // Given
         static::cleanup();
         $application = new Application(self::bootKernel());
-        $command = $application->find('ux-native:dump');
+        $command = $application->find('ux:native:dump');
         $commandTester = new CommandTester($command);
 
         // When
@@ -63,7 +63,7 @@ final class CompileCommandTest extends WebTestCase
         $client = self::createClient();
         static::cleanup();
         $application = new Application($client->getKernel());
-        $command = $application->find('ux-native:dump');
+        $command = $application->find('ux:native:dump');
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
@@ -92,6 +92,15 @@ final class CompileCommandTest extends WebTestCase
         static::assertSame('application/json', $response->headers->get('Content-Type'));
         static::assertStringContainsString('"use_local_db":false', $response->getContent());
         static::assertStringContainsString('pull_to_refresh_enabled', $response->getContent());
+    }
+
+    public static function testTheCommandUsesUxNamespaceAndHasDescription(): void
+    {
+        $application = new Application(self::bootKernel());
+        $command = $application->find('ux:native:dump');
+
+        static::assertSame('ux:native:dump', $command->getName());
+        static::assertSame('Dump UX Native configuration files', $command->getDescription());
     }
 
     private static function cleanup(): void

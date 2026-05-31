@@ -37,6 +37,6 @@ return static function (ContainerConfigurator $container): void {
     ;
     $services->set('.ux_native.command.configuration_dumper', ConfigurationDumper::class)
         ->args([service('.ux_native.configuration_builder')])
-        ->tag('console.command', ['command' => 'ux-native:dump'])
+        ->tag('console.command', ['command' => 'ux:native:dump'])
     ;
 };

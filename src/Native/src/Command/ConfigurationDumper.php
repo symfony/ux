@@ -18,7 +18,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\UX\Native\ConfigurationBuilder;
 
-#[AsCommand('ux-native:dump')]
+#[AsCommand(
+    name: 'ux:native:dump',
+    description: 'Dump UX Native configuration files',
+)]
 final class ConfigurationDumper extends Command
 {
     public function __construct(
