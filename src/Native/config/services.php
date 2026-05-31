@@ -13,7 +13,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Symfony\UX\Native\EventListener\NativeListener;
 use Symfony\UX\Native\Twig\NativeExtension;
-use Symfony\UX\Native\Command\ConfigurationDumper;
+use Symfony\UX\Native\Command\BuildConfigurationsCommand;
 use Symfony\UX\Native\ConfigurationBuilder;
 
 return static function (ContainerConfigurator $container): void {
@@ -35,8 +35,8 @@ return static function (ContainerConfigurator $container): void {
             '%ux_native.output_dir%',
         ])
     ;
-    $services->set('.ux_native.command.configuration_dumper', ConfigurationDumper::class)
+    $services->set('.ux_native.command.build_configurations', BuildConfigurationsCommand::class)
         ->args([service('.ux_native.configuration_builder')])
-        ->tag('console.command', ['command' => 'ux-native:dump'])
+        ->tag('console.command')
     ;
 };
