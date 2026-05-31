@@ -58,12 +58,12 @@ jobs:
 
                     # Explicit Symfony versions
                     - php-version: '8.4'
-                      symfony-version: '8.0.*'
+                      symfony-version: '8.1.*'
                     - php-version: '8.5'
-                      symfony-version: '8.0.*'
+                      symfony-version: '8.1.*'
 
                     - php-version: '8.5'
-                      symfony-version: '8.0.*'
+                      symfony-version: '8.1.*'
                       os: 'windows-latest'
 
         env:

@@ -32,7 +32,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                symfony: ['7.4', '8.0']
+                symfony: ['7.4', '8.1']
                 browser: ['chrome-lowest', 'chrome-latest', 'firefox-latest']
         env:
             SYMFONY_REQUIRE: '${{ matrix.symfony }}.*'
