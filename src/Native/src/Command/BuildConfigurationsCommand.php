@@ -18,8 +18,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\UX\Native\ConfigurationBuilder;
 
-#[AsCommand('ux-native:dump')]
-final class ConfigurationDumper extends Command
+#[AsCommand(
+    name: 'ux:native:build-configs',
+    description: 'Build Hotwire Native configuration files (iOS, Android)',
+)]
+final class BuildConfigurationsCommand extends Command
 {
     public function __construct(
         private readonly ConfigurationBuilder $configurationBuilder,
@@ -30,10 +33,10 @@ final class ConfigurationDumper extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $io->comment('Dumping UX Native configuration files...');
+        $io->comment('Building UX Native configuration files...');
 
         $this->configurationBuilder->build();
-        $io->success('UX Native configuration files dumped successfully.');
+        $io->success('UX Native configuration files built successfully.');
 
         return Command::SUCCESS;
     }

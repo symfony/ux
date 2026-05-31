@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 3.2
+
+- **[BC BREAK]** Rename the `ux-native:dump` command to `ux:native:build-configs`
+  to follow the `ux:<...>` naming convention and clarify its purpose.
+
+    **Note:** This is a breaking change, but the UX Native component is still experimental.
+
 ## 2.35
 
 - Add `assets/` to ease the installation of `@hotwired/stimulus` and `@hotwired/hotwire-native-bridge` JavaScript dependencies.

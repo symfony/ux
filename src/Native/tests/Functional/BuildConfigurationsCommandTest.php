@@ -17,14 +17,14 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
-final class CompileCommandTest extends WebTestCase
+final class BuildConfigurationsCommandTest extends WebTestCase
 {
     public static function testTheFilesAreCompiledWithTheCommand(): void
     {
         // Given
         static::cleanup();
         $application = new Application(self::bootKernel());
-        $command = $application->find('ux-native:dump');
+        $command = $application->find('ux:native:build-configs');
         $commandTester = new CommandTester($command);
 
         // When
@@ -41,7 +41,7 @@ final class CompileCommandTest extends WebTestCase
         // Given
         static::cleanup();
         $application = new Application(self::bootKernel());
-        $command = $application->find('ux-native:dump');
+        $command = $application->find('ux:native:build-configs');
         $commandTester = new CommandTester($command);
 
         // When
@@ -63,7 +63,7 @@ final class CompileCommandTest extends WebTestCase
         $client = self::createClient();
         static::cleanup();
         $application = new Application($client->getKernel());
-        $command = $application->find('ux-native:dump');
+        $command = $application->find('ux:native:build-configs');
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 

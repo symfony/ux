@@ -47,7 +47,7 @@ The bundle exposes a single configuration option:
         output_dir: '%kernel.project_dir%/public' # default
 
 The ``output_dir`` option defines the directory where JSON configuration files
-are written when you run the ``ux-native:dump`` command (see
+are written when you run the ``ux:native:build-configs`` command (see
 `Dumping Configurations for Production`_).
 
 Usage
@@ -280,7 +280,7 @@ Run the following command:
 
 .. code-block:: terminal
 
-    $ php bin/console ux-native:dump
+    $ php bin/console ux:native:build-configs
 
 This writes all registered configurations as JSON files into the ``output_dir``
 directory (defaults to ``public/``). For example, a configuration registered at
