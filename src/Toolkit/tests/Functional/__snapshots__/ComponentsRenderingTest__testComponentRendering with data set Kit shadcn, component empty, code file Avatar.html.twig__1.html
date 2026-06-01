@@ -29,9 +29,9 @@
 <div data-slot="empty" class="flex w-full min-w-0 flex-1 flex-col items-center justify-center gap-4 rounded-xl border-dashed p-6 text-center text-balance">
 <div data-slot="empty-header" class="flex max-w-sm flex-col items-center gap-2">
 <div data-slot="empty-icon" data-variant="default" class="flex shrink-0 items-center justify-center mb-2 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 bg-transparent">
-<span data-slot="avatar" data-size="default" class="rounded-full after:rounded-full data-[size=lg]:size-10 data-[size=sm]:size-6 after:border-border group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten size-12"><img data-slot="avatar-image" class="hidden rounded-full aspect-square size-full object-cover grayscale" onload="this.classList.remove('hidden'); this.closest('[data-slot=avatar]')?.querySelector('[data-slot=avatar-fallback]')?.classList.add('hidden');" alt="@shadcn" src="https://github.com/shadcn.png">
+<span class="rounded-full after:rounded-full data-[size=lg]:size-10 data-[size=sm]:size-6 after:border-border group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten size-12" data-slot="avatar" data-size="default"><img class="hidden rounded-full aspect-square size-full object-cover grayscale" data-slot="avatar-image" onload="this.classList.remove('hidden'); this.closest('[data-slot=avatar]')?.querySelector('[data-slot=avatar-fallback]')?.classList.add('hidden');" alt="@shadcn" src="https://github.com/shadcn.png">
 
-                <span data-slot="avatar-fallback" class="bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs">LR</span>
+                <span class="bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs" data-slot="avatar-fallback">LR</span>
             </span>
         </div>
         <div data-slot="empty-title" class="cn-font-heading text-sm font-medium tracking-tight">User Offline</div>
