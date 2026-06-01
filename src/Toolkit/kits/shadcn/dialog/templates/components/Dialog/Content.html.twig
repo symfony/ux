@@ -5,11 +5,12 @@
 
 <dialog
     id="{{ _dialog_id }}"
-    data-slot="dialog-content"
     class="{{ ('fixed top-1/2 left-1/2 z-50 w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover p-4 text-sm text-popover-foreground ring-1 ring-foreground/10 outline-none sm:max-w-sm opacity-0 scale-95 transition-all transition-discrete duration-100 backdrop:transition-discrete backdrop:duration-100 open:grid open:scale-100 open:opacity-100 open:backdrop:bg-black/10 supports-backdrop-filter:open:backdrop:backdrop-blur-xs starting:open:scale-95 starting:open:opacity-0 ' ~ attributes.render('class'))|tailwind_merge }}"
-    data-dialog-target="dialog"
-    data-action="keydown.esc->dialog#close:prevent click->dialog#closeOnClickOutside"
-    {{ attributes.without('class') }}
+    {{ attributes.defaults({
+        'data-slot': 'dialog-content',
+        'data-dialog-target': 'dialog',
+        'data-action': 'keydown.esc->dialog#close:prevent click->dialog#closeOnClickOutside',
+    }).without('id') }}
 >
     {%- block content %}{% endblock -%}
     {% if showCloseButton %}
