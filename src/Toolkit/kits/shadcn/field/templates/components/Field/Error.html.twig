@@ -16,10 +16,11 @@
 
 {%- if slot_content != '' or (messages ?? [])|length > 0 -%}
     <div
-        role="alert"
-        data-slot="field-error"
         class="{{ ('text-destructive text-sm font-normal ' ~ attributes.render('class'))|tailwind_merge }}"
-        {{ attributes }}
+        {{ attributes.defaults({
+            role: 'alert',
+            'data-slot': 'field-error',
+        }) }}
     >
         {%- if slot_content != '' -%}
             {{ slot_content }}
