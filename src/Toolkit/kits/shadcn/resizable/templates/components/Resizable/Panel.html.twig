@@ -3,8 +3,8 @@
 {%- props size = null -%}
 <div
     class="{{ ('overflow-auto ' ~ attributes.render('class'))|tailwind_merge }}"
-    style="flex: {{ size ?? 1 }} 1 0%;"
     {{ attributes.defaults({
+        style: 'flex: ' ~ (size ?? 1) ~ ' 1 0%;',
         'data-slot': 'resizable-panel',
         'data-resizable-target': 'panel',
     }) }}
