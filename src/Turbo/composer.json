@@ -57,7 +57,8 @@
         "symfony/expression-language": "^7.4|^8.0"
     },
     "conflict": {
-        "symfony/flex": "<1.13"
+        "symfony/flex": "<1.13",
+        "symfony/mercure": ">=0.7.0 <0.7.2"
     },
     "extra": {
         "thanks": {
