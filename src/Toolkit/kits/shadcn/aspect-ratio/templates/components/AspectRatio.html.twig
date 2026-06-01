@@ -2,10 +2,11 @@
 {# @block content The content to display within the aspect ratio container #}
 {%- props ratio -%}
 <div
-    data-slot="aspect-ratio"
-    style="aspect-ratio: {{ ratio }}"
     class="{{ ('relative ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.without('class') }}
+    {{ attributes.defaults({
+        'data-slot': 'aspect-ratio',
+        style: 'aspect-ratio: ' ~ ratio,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>
