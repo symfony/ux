@@ -1,5 +1,4 @@
 <div
-    data-slot="skeleton"
     class="{{ ('animate-pulse rounded-md bg-muted ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({'data-slot': 'skeleton'}) }}
 ></div>
