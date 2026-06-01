@@ -26,7 +26,7 @@
 <fieldset data-slot="field-set" class="flex flex-col gap-4 has-[&gt;[data-slot=checkbox-group]]:gap-3 has-[&gt;[data-slot=radio-group]]:gap-3 w-full max-w-xs">
 <legend data-slot="field-legend" data-variant="label" class="mb-1.5 font-medium data-[variant=label]:text-sm data-[variant=legend]:text-base">Subscription Plan</legend>
     <p data-slot="field-description" class="ltr:text-left rtl:text-start text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&amp;]:-mt-1.5 last:mt-0 nth-last-2:-mt-1 [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4 [&amp;&gt;a:hover]:text-primary">Yearly and lifetime plans offer significant savings.</p>
-    <div role="radiogroup" class="grid w-full gap-3" data-slot="radio-group">
+    <div class="grid w-full gap-3" role="radiogroup" data-slot="radio-group">
 <div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-row items-center has-[&gt;[data-slot=field-content]]:items-start *:data-[slot=field-label]:flex-auto has-[&gt;[data-slot=field-content]]:[&amp;&gt;[role=checkbox],[role=radio]]:mt-px">
 <label class="relative inline-flex size-4 shrink-0 items-center justify-center cursor-pointer group-data-[disabled=true]/field:cursor-not-allowed">
     <input type="radio" name="subscription" value="monthly" class="peer sr-only" data-slot="radio-group-item" id="plan-monthly" checked>
