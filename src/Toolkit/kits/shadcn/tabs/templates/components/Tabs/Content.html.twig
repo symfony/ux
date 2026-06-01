@@ -8,15 +8,16 @@
 {%- set open = _tabs_defaultValue is same as(value) -%}
 <div
     id="{{ _tab_content_id }}"
-    data-slot="tabs-content"
-    data-tabs-target="tab"
-    data-tab-id="{{ value }}"
-    role="tabpanel"
-    aria-labelledby="{{ _tab_id }}"
-    data-active="{{ open ? 'true' : false }}"
-    data-state="{{ open ? 'active' : 'inactive' }}"
     class="{{ ('flex-1 text-sm outline-none data-[state=inactive]:hidden ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        'data-slot': 'tabs-content',
+        'data-tabs-target': 'tab',
+        'data-tab-id': value,
+        role: 'tabpanel',
+        'aria-labelledby': _tab_id,
+        'data-active': open ? 'true' : false,
+        'data-state': open ? 'active' : 'inactive',
+    }).without('id') }}
 >
     {%- block content %}{% endblock -%}
 </div>

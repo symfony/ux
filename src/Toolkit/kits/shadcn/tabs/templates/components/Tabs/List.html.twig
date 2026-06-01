@@ -12,10 +12,12 @@
 ) -%}
 
 <nav
-    data-slot="tabs-list"
-    role="tablist"
-    data-variant="{{ variant }}"
     class="{{ style.apply({variant: variant}, attributes.render('class'))|tailwind_merge }}"
-{{ attributes }}>
+    {{ attributes.defaults({
+        'data-slot': 'tabs-list',
+        role: 'tablist',
+        'data-variant': variant,
+    }) }}
+>
     {% block content %}{% endblock %}
 </nav>
