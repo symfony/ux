@@ -5,10 +5,11 @@
     as="a"
     variant="{{ active ? 'outline' : 'ghost' }}"
     size="icon"
-    aria-current="{{ active ? 'page' : false }}"
-    data-slot="pagination-link"
-    data-active="{{ active ? 'true' : 'false' }}"
-    {{ ...attributes }}
+    {{ ...attributes.defaults({
+        'aria-current': active ? 'page' : false,
+        'data-slot': 'pagination-link',
+        'data-active': active ? 'true' : 'false',
+    }) }}
 >
     {{- block(outerBlocks.content) -}}
 </twig:Button>

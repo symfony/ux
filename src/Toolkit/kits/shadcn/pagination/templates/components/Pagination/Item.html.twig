@@ -1,4 +1,4 @@
 {# @block content The pagination item content, typically a `Pagination:Link` #}
-<li data-slot="pagination-item" {{ attributes }}>
+<li {{ attributes.defaults({'data-slot': 'pagination-item'}) }}>
     {%- block content %}{% endblock -%}
 </li>

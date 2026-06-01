@@ -1,10 +1,11 @@
 {# @block content The pagination structure, typically a `Pagination:Content` #}
 <nav
-    data-slot="pagination"
-    aria-label="pagination"
-    role="navigation"
     class="{{ ('mx-auto flex w-full justify-center ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.without('class') }}
+    {{ attributes.defaults({
+        'data-slot': 'pagination',
+        'aria-label': 'pagination',
+        role: 'navigation',
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </nav>

@@ -1,8 +1,7 @@
 {# @block content The pagination items, typically multiple `Pagination:Item` components #}
 <ul
-    data-slot="pagination-content"
     class="{{ ('flex items-center gap-0.5 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.without('class') }}
+    {{ attributes.defaults({'data-slot': 'pagination-content'}) }}
 >
     {%- block content %}{% endblock -%}
 </ul>

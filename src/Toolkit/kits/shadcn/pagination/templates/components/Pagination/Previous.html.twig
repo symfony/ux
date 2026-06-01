@@ -1,10 +1,9 @@
 {# @prop text string The label text. Defaults to `Previous` #}
 {%- props text = 'Previous' -%}
 <twig:Pagination:Link
-    aria-label="Go to previous page"
     size="default"
     class="{{ ('ltr:pl-1.5! rtl:ps-1.5! ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ ...attributes.without('class') }}
+    {{ ...attributes.defaults({'aria-label': 'Go to previous page'}) }}
 >
     <twig:ux:icon name="lucide:chevron-left" data-icon="inline-start" class="rtl:rotate-180" />
     <span class="hidden sm:block">{{ text }}</span>
