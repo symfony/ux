@@ -1,8 +1,7 @@
 {# @block content The main content area, typically contains actions like buttons #}
 <div
-    data-slot="empty-content"
     class="{{ ('flex w-full max-w-sm min-w-0 flex-col items-center gap-2.5 text-sm text-balance ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({'data-slot': 'empty-content'}) }}
 >
     {%- block content %}{% endblock -%}
 </div>
