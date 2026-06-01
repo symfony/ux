@@ -16,10 +16,11 @@
     },
 ) -%}
 <{{ as }}
-    data-slot="badge"
-    data-variant="{{ variant }}"
     class="{{ style.apply({variant: variant}, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        'data-slot': 'badge',
+        'data-variant': variant,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </{{ as }}>
