@@ -16,10 +16,11 @@
 ) -%}
 
 <div
-    data-slot="item-media"
-    data-variant="{{ variant }}"
     class="{{ style.apply({variant: variant}, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        'data-slot': 'item-media',
+        'data-variant': variant,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>

@@ -41,33 +41,33 @@
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
 <div class="flex w-full max-w-md flex-col gap-6">
-    <div data-slot="item" data-variant="default" data-size="default" class="group/item flex w-full flex-wrap items-center rounded-lg border text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-muted border-transparent gap-2.5 px-3 py-2.5">
-<div data-slot="item-media" data-variant="icon" class="flex shrink-0 items-center justify-center gap-2 group-has-data-[slot=item-description]/item:translate-y-0.5 group-has-data-[slot=item-description]/item:self-start [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4">
+    <div class="group/item flex w-full flex-wrap items-center rounded-lg border text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-muted border-transparent gap-2.5 px-3 py-2.5" data-slot="item" data-variant="default" data-size="default">
+<div class="flex shrink-0 items-center justify-center gap-2 group-has-data-[slot=item-description]/item:translate-y-0.5 group-has-data-[slot=item-description]/item:self-start [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4" data-slot="item-media" data-variant="icon">
 <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M22 12h-6l-2 3h-4l-2-3H2"></path><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11"></path></g></svg>
         </div>
-        <div data-slot="item-content" class="flex flex-1 flex-col gap-1 group-data-[size=xs]/item:gap-0 [&amp;+[data-slot=item-content]]:flex-none">
-<div data-slot="item-title" class="line-clamp-1 flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4">Default Variant</div>
-            <p data-slot="item-description" class="line-clamp-2 text-left rtl:text-start text-sm leading-normal font-normal text-muted-foreground group-data-[size=xs]/item:text-xs [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4 [&amp;&gt;a:hover]:text-primary">Transparent background with no border.
+        <div class="flex flex-1 flex-col gap-1 group-data-[size=xs]/item:gap-0 [&amp;+[data-slot=item-content]]:flex-none" data-slot="item-content">
+<div class="line-clamp-1 flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4" data-slot="item-title">Default Variant</div>
+            <p class="line-clamp-2 text-left rtl:text-start text-sm leading-normal font-normal text-muted-foreground group-data-[size=xs]/item:text-xs [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4 [&amp;&gt;a:hover]:text-primary" data-slot="item-description">Transparent background with no border.
             </p>
         </div>
     </div>
-    <div data-slot="item" data-variant="outline" data-size="default" class="group/item flex w-full flex-wrap items-center rounded-lg border text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-muted border-border gap-2.5 px-3 py-2.5">
-<div data-slot="item-media" data-variant="icon" class="flex shrink-0 items-center justify-center gap-2 group-has-data-[slot=item-description]/item:translate-y-0.5 group-has-data-[slot=item-description]/item:self-start [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4">
+    <div class="group/item flex w-full flex-wrap items-center rounded-lg border text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-muted border-border gap-2.5 px-3 py-2.5" data-slot="item" data-variant="outline" data-size="default">
+<div class="flex shrink-0 items-center justify-center gap-2 group-has-data-[slot=item-description]/item:translate-y-0.5 group-has-data-[slot=item-description]/item:self-start [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4" data-slot="item-media" data-variant="icon">
 <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M22 12h-6l-2 3h-4l-2-3H2"></path><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11"></path></g></svg>
         </div>
-        <div data-slot="item-content" class="flex flex-1 flex-col gap-1 group-data-[size=xs]/item:gap-0 [&amp;+[data-slot=item-content]]:flex-none">
-<div data-slot="item-title" class="line-clamp-1 flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4">Outline Variant</div>
-            <p data-slot="item-description" class="line-clamp-2 text-left rtl:text-start text-sm leading-normal font-normal text-muted-foreground group-data-[size=xs]/item:text-xs [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4 [&amp;&gt;a:hover]:text-primary">Outlined style with a visible border.
+        <div class="flex flex-1 flex-col gap-1 group-data-[size=xs]/item:gap-0 [&amp;+[data-slot=item-content]]:flex-none" data-slot="item-content">
+<div class="line-clamp-1 flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4" data-slot="item-title">Outline Variant</div>
+            <p class="line-clamp-2 text-left rtl:text-start text-sm leading-normal font-normal text-muted-foreground group-data-[size=xs]/item:text-xs [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4 [&amp;&gt;a:hover]:text-primary" data-slot="item-description">Outlined style with a visible border.
             </p>
         </div>
     </div>
-    <div data-slot="item" data-variant="muted" data-size="default" class="group/item flex w-full flex-wrap items-center rounded-lg border text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-muted border-transparent bg-muted/50 gap-2.5 px-3 py-2.5">
-<div data-slot="item-media" data-variant="icon" class="flex shrink-0 items-center justify-center gap-2 group-has-data-[slot=item-description]/item:translate-y-0.5 group-has-data-[slot=item-description]/item:self-start [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4">
+    <div class="group/item flex w-full flex-wrap items-center rounded-lg border text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-muted border-transparent bg-muted/50 gap-2.5 px-3 py-2.5" data-slot="item" data-variant="muted" data-size="default">
+<div class="flex shrink-0 items-center justify-center gap-2 group-has-data-[slot=item-description]/item:translate-y-0.5 group-has-data-[slot=item-description]/item:self-start [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4" data-slot="item-media" data-variant="icon">
 <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M22 12h-6l-2 3h-4l-2-3H2"></path><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11"></path></g></svg>
         </div>
-        <div data-slot="item-content" class="flex flex-1 flex-col gap-1 group-data-[size=xs]/item:gap-0 [&amp;+[data-slot=item-content]]:flex-none">
-<div data-slot="item-title" class="line-clamp-1 flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4">Muted Variant</div>
-            <p data-slot="item-description" class="line-clamp-2 text-left rtl:text-start text-sm leading-normal font-normal text-muted-foreground group-data-[size=xs]/item:text-xs [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4 [&amp;&gt;a:hover]:text-primary">Muted background for secondary content.
+        <div class="flex flex-1 flex-col gap-1 group-data-[size=xs]/item:gap-0 [&amp;+[data-slot=item-content]]:flex-none" data-slot="item-content">
+<div class="line-clamp-1 flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4" data-slot="item-title">Muted Variant</div>
+            <p class="line-clamp-2 text-left rtl:text-start text-sm leading-normal font-normal text-muted-foreground group-data-[size=xs]/item:text-xs [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4 [&amp;&gt;a:hover]:text-primary" data-slot="item-description">Muted background for secondary content.
             </p>
         </div>
     </div>
