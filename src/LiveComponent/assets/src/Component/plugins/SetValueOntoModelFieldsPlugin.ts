@@ -30,7 +30,11 @@ export default class implements PluginInterface {
      * the "firstName" model.
      */
     private synchronizeValueOfModelFields(component: Component): void {
-        component.element.querySelectorAll('[data-model]').forEach((element: Element) => {
+        // Also target `select[name]` elements: inside a `<form data-model="*">`, fields
+        // are bound through their `name` attribute and carry no `data-model` of their own.
+        // They must still be synchronized so an auto-selected <option> is reflected in the model.
+        // https://github.com/symfony/ux/issues/767
+        component.element.querySelectorAll('[data-model], select[name]').forEach((element: Element) => {
             if (!(element instanceof HTMLElement)) {
                 throw new Error('Invalid element using data-model.');
             }
@@ -43,7 +47,7 @@ export default class implements PluginInterface {
                 return;
             }
 
-            const modelDirective = getModelDirectiveFromElement(element);
+            const modelDirective = getModelDirectiveFromElement(element, false);
             if (!modelDirective) {
                 return;
             }
