@@ -1,8 +1,7 @@
 {# @block content The list of breadcrumb items, typically multiple `Breadcrumb:Item` components #}
 <ol
-    data-slot="breadcrumb-list"
     class="{{ ('flex flex-wrap items-center gap-1.5 text-sm wrap-break-word text-muted-foreground ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({'data-slot': 'breadcrumb-list'}) }}
 >
     {%- block content %}{% endblock -%}
 </ol>

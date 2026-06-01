@@ -1,8 +1,7 @@
 {# @block content The clickable link text #}
 <a
-    data-slot="breadcrumb-link"
     class="{{ ('transition-colors hover:text-foreground ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({'data-slot': 'breadcrumb-link'}) }}
 >
     {%- block content %}{% endblock -%}
 </a>
