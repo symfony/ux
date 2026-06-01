@@ -2,7 +2,7 @@
 <div class="relative w-full overflow-x-auto" data-slot="table-container">
     <table
         class="{{ ('w-full caption-bottom text-sm ' ~ attributes.render('class'))|tailwind_merge }}"
-        {{ attributes }}
+        {{ attributes.defaults({'data-slot': 'table'}) }}
     >
         {%- block content %}{% endblock -%}
     </table>
