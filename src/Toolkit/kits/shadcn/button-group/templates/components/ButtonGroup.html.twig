@@ -15,11 +15,12 @@
 ) -%}
 
 <div
-    role="group"
-    data-slot="button-group"
-    data-orientation="{{ orientation }}"
     class="{{ style.apply({orientation: orientation}, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        role: 'group',
+        'data-slot': 'button-group',
+        'data-orientation': orientation,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>
