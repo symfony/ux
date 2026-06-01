@@ -16,11 +16,11 @@
     },
 ) -%}
 <span
-    role="tooltip"
-    data-side="{{ side }}"
     class="{{ style.apply({side: side}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
+        role: 'tooltip',
         'data-slot': 'hover-card-content',
+        'data-side': side,
     }) }}
 >
     {%- block content %}{% endblock -%}
