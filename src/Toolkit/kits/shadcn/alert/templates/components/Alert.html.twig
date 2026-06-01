@@ -12,10 +12,11 @@
 ) -%}
 
 <div
-    data-slot="alert"
-    role="alert"
     class="{{ style.apply({variant: variant}, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        'data-slot': 'alert',
+        role: 'alert',
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>
