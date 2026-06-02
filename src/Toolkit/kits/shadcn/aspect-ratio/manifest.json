@@ -7,6 +7,6 @@
         "templates/": "templates/"
     },
     "dependencies": {
-        "composer": ["twig/extra-bundle"]
+        "composer": ["tales-from-a-dev/twig-tailwind-extra:^1.0.0"]
     }
 }
