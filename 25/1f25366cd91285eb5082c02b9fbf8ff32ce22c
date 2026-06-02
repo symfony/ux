@@ -1,0 +1,49 @@
+---------------------------------------------------------------------------
+
+by kbond at 2026-05-27T19:28:57Z
+
+@treztreiz this makes sense to me, I'm just going to dig a bit see if I can understand why they weren't added to the interface originally.
+
+Why did you not add `render()` method?
+
+---------------------------------------------------------------------------
+
+by kbond at 2026-05-27T19:36:14Z
+
+Hmm, `render()` is only used in `ComponentRenderer`. Since the class is internal, we should make this private.
+
+---------------------------------------------------------------------------
+
+by kbond at 2026-05-27T19:52:23Z
+
+- `preCreateForRender()` was added in #913. It was a pretty complex PR. I don't see any discussion about the interface - maybe just missed?
+- `finishEmbeddedComponentRender()` was added in #1093 - no discussion on the interface
+- `startEmbeddedComponentRender()` was added in #317 but it was called `embeddedContext()`. The interface didn't exist then. It was refactored and renamed in #1247.
+
+I honestly think updating the interface was just missed - or at least the discussion about it.
+
+---------------------------------------------------------------------------
+
+by treztreiz at 2026-05-28T07:59:30Z
+
+@kbond @Kocal  Thanks for the feedback! Updated to use `@method` annotations to avoid the BC break. And good catch on `render() `, agreed it should stay off the interface since it's only used internally within `ComponentRenderer`.
+
+The php (8.5, stable) failure is a transient CI infrastructure issue: a corrupted twig/twig zip in the GitHub Actions cache caused LiveComponent's composer update to fail. All other packages including TwigComponent pass. Re-running the job should resolve it.
+
+---------------------------------------------------------------------------
+
+by treztreiz at 2026-05-28T12:39:09Z
+
+@kbond `LiveComponentSubscriber::createResponse()` (line 339) calls `$renderer->render($mounted)` directly on the concrete class, so making it private breaks LiveComponent. It would need a separate, larger refactor of `LiveComponentSubscriber` to stop reaching into ComponentRenderer's internals, which seems out of scope for this PR ☺️
+
+---------------------------------------------------------------------------
+
+by kbond at 2026-05-28T13:07:21Z
+
+Hah! Good catch. For sure, we need to look into that at some point.
+
+---------------------------------------------------------------------------
+
+by treztreiz at 2026-05-29T09:47:54Z
+
+All remaining CI failures are pre-existing on 3.x itself and not introduced by this PR. Also resolved the changelog conflict, seems this is ready to merge! ☺️ @kbond @Kocal
