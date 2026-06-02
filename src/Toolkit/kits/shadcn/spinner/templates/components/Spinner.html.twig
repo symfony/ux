@@ -1,9 +1,10 @@
 {%- props label = 'Loading' -%}
 <twig:ux:icon
     name="lucide:loader-2"
-    data-slot="spinner"
-    role="status"
-    aria-label="{{ label }}"
     class="{{ ('size-4 animate-spin ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ ...attributes.without('class') }}
+    {{ ...attributes.defaults({
+        'data-slot': 'spinner',
+        role: 'status',
+        'aria-label': label,
+    }) }}
 />
