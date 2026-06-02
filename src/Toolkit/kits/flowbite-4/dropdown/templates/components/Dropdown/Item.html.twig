@@ -3,9 +3,9 @@
 
 {%- props as = 'a' -%}
 
-{% set attributesDefaults = {} %}
+{% set _attributes_defaults = {} %}
 {% if as == 'button' %}
-    {% set attributesDefaults = {type: 'button'} %}
+    {% set _attributes_defaults = {type: 'button'} %}
 {% endif %}
 
 <li role="none">
@@ -13,7 +13,7 @@
         role="menuitem"
         tabindex="-1"
         class="{{ ('inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded ' ~ attributes.render('class'))|tailwind_merge }}"
-        {{ attributes.defaults(attributesDefaults) }}
+        {{ attributes.defaults(_attributes_defaults) }}
     >
         {%- block content %}{% endblock -%}
     </{{ as }}>
