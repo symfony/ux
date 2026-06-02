@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.2.0
+
+- Add `ComponentRendererInterface::preCreateForRender()`, `ComponentRendererInterface::startEmbeddedComponentRender()`, and `ComponentRendererInterface::finishEmbeddedComponentRender()` methods
+
 ## 3.1.0
 
 - Add `provide()` and `inject()` Twig functions to share state from a parent
