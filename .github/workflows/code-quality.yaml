@@ -206,7 +206,7 @@ jobs:
                   echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
 
             - name: Setup PHP
-              uses: shivammathur/setup-php@a919ff576a94b0fd7ec15f090dd9cf16b76c2c0b
+              uses: shivammathur/setup-php@083d5237d9340d541bf95e2a6eceaf3529b85892
               with:
                   php-version: '8.4'
                   tools: flex
