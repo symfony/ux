@@ -9,6 +9,6 @@
         "templates/": "templates/"
     },
     "dependencies": {
-        "composer": ["tales-from-a-dev/twig-tailwind-extra:^1.0.0", "symfony/ux-twig-component:^3.1"]
+        "composer": ["twig/extra-bundle", "twig/html-extra:^3.24.0", "symfony/ux-twig-component:^3.1"]
     }
 }
