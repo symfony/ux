@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "IconTagUndeclared",
+    "description": "<twig:ux:icon> used but symfony/ux-icons not declared -> warning.",
+    "copy-files": {"templates/": "templates/"}
+}

@@ -1,0 +1,8 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "ScopedSubpath",
+    "description": "@scope/pkg declared + @scope/pkg/sub imported -> no warning (subpath collapse).",
+    "copy-files": {"assets/": "assets/"},
+    "dependencies": {"npm": ["@scope/pkg"]}
+}

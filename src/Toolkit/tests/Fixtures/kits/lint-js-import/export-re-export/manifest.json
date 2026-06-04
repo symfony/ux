@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "ExportReExport",
+    "description": "export { x } from 'lodash' without declaration -> warning.",
+    "copy-files": {"assets/": "assets/"}
+}

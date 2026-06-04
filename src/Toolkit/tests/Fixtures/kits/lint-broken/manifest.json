@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../schema-kit-v1.json",
+    "name": "Lint Broken",
+    "description": "Kit with intentional issues for lint tests.",
+    "license": "MIT",
+    "homepage": "https://example.com/lint-broken"
+}

@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "CvaUndeclared",
+    "description": "html_cva used but no provider declared -> warning.",
+    "copy-files": {"templates/": "templates/"}
+}

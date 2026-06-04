@@ -50,7 +50,7 @@ $filesystem = new Filesystem();
 $kitSynchronizer = new KitSynchronizer($filesystem, new RecipeSynchronizer());
 $kitFactory = new KitFactory($filesystem, $kitSynchronizer);
 
-(new Application())->add($command = new DebugKitCommand($kitFactory))
+(new Application())->{method_exists(Application::class, 'addCommand') ? 'addCommand' : 'add'}($command = new DebugKitCommand($kitFactory))
     ->getApplication()
     ->setDefaultCommand($command->getName(), true)
     ->run()

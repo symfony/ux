@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../schema-kit-v1.json",
+    "name": "Lint JS Import",
+    "description": "Kit covering JsImportChecker scenarios (one recipe per case).",
+    "license": "MIT",
+    "homepage": "https://example.com/lint-js-import"
+}

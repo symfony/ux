@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "ProvideUndeclared",
+    "description": "provide() used but symfony/ux-twig-component not declared -> warning.",
+    "copy-files": {"templates/": "templates/"}
+}

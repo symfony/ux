@@ -35,6 +35,7 @@
         "symfony/console": "^7.4|^8.0",
         "symfony/filesystem": "^7.4|^8.0",
         "symfony/framework-bundle": "^7.4|^8.0",
+        "symfony/string": "^7.4|^8.0",
         "symfony/twig-bundle": "^7.4|^8.0",
         "symfony/ux-twig-component": "^3.1",
         "symfony/yaml": "^7.4|^8.0"
@@ -53,7 +54,8 @@
     },
     "bin": [
         "bin/ux-toolkit-kit-create",
-        "bin/ux-toolkit-kit-debug"
+        "bin/ux-toolkit-kit-debug",
+        "bin/ux-toolkit-kit-lint"
     ],
     "autoload": {
         "psr-4": {

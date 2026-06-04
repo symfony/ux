@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "MapUndeclared",
+    "description": "<twig:ux:map> used but symfony/ux-map not declared -> warning.",
+    "copy-files": {"templates/": "templates/"}
+}

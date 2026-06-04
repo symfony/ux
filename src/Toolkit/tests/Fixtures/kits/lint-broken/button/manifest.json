@@ -1,0 +1,14 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Button",
+    "description": "Button with broken copy-files entry and a recipe dep that does not exist.",
+    "copy-files": {
+        "templates/": "templates/",
+        "missing-dir/": "missing-dir/"
+    },
+    "dependencies": {
+        "recipe": ["does-not-exist"],
+        "composer": ["tales-from-a-dev/twig-tailwind-extra:^1.0.0"]
+    }
+}

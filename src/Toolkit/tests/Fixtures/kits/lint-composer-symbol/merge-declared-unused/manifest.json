@@ -1,0 +1,8 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "MergeDeclaredUnused",
+    "description": "tailwind-extra declared but tailwind_merge never used -> warning.",
+    "copy-files": {"templates/": "templates/"},
+    "dependencies": {"composer": ["tales-from-a-dev/twig-tailwind-extra"]}
+}

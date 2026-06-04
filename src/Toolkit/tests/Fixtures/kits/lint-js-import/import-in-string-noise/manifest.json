@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "ImportInStringNoise",
+    "description": "Strings and comments containing the word 'import' must not be detected.",
+    "copy-files": {"assets/": "assets/"}
+}
