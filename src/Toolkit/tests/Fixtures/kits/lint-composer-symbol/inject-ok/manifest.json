@@ -1,0 +1,8 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "InjectOk",
+    "description": "symfony/ux-twig-component declared + inject() used -> no warning.",
+    "copy-files": {"templates/": "templates/"},
+    "dependencies": {"composer": ["symfony/ux-twig-component"]}
+}

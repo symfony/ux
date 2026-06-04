@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../schema-kit-v1.json",
+    "name": "Lint Stimulus",
+    "description": "Kit covering StimulusControllerChecker scenarios.",
+    "license": "MIT",
+    "homepage": "https://example.com/lint-stimulus"
+}

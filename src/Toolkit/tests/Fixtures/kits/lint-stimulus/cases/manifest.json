@@ -1,0 +1,10 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Cases",
+    "description": "One template per Stimulus detection scenario.",
+    "copy-files": {
+        "templates/": "templates/",
+        "assets/": "assets/"
+    }
+}

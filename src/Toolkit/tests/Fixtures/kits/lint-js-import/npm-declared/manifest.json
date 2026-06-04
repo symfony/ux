@@ -1,0 +1,8 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "NpmDeclared",
+    "description": "lodash declared as npm + imported -> no warning.",
+    "copy-files": {"assets/": "assets/"},
+    "dependencies": {"npm": ["lodash"]}
+}

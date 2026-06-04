@@ -1,0 +1,8 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "ClassesOk",
+    "description": "twig/html-extra declared + html_classes used -> no warning.",
+    "copy-files": {"templates/": "templates/"},
+    "dependencies": {"composer": ["twig/html-extra"]}
+}

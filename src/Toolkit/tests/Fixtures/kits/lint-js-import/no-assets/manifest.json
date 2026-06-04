@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "NoAssets",
+    "description": "No assets/ directory at all -> no warning (checker skips recipe).",
+    "copy-files": {"templates/": "templates/"}
+}

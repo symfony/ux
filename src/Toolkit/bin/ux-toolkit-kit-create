@@ -38,7 +38,7 @@ if (!class_exists(Application::class)) {
 
 $filesystem = new Filesystem();
 
-(new Application())->add($command = new CreateKitCommand($filesystem))
+(new Application())->{method_exists(Application::class, 'addCommand') ? 'addCommand' : 'add'}($command = new CreateKitCommand($filesystem))
     ->getApplication()
     ->setDefaultCommand($command->getName(), true)
     ->run()

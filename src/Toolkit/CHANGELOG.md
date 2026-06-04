@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.2.0
+
+- Add lint kit command `bin/ux-toolkit-kit-lint` to check for issues in local kits
+
 ## 3.1
 
 - [Flowbite] Add `avatar` recipe

@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "MjsFile",
+    "description": "Imports in *.mjs files must be scanned -> warning when undeclared.",
+    "copy-files": {"assets/": "assets/"}
+}

@@ -1,0 +1,8 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "IconDeclaredUnused",
+    "description": "symfony/ux-icons declared but no ux_icon/twig:ux:icon used -> warning.",
+    "copy-files": {"templates/": "templates/"},
+    "dependencies": {"composer": ["symfony/ux-icons"]}
+}

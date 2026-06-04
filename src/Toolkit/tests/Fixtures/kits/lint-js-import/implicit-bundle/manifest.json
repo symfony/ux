@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "ImplicitBundle",
+    "description": "@symfony/stimulus-bundle is implicit -> no warning.",
+    "copy-files": {"assets/": "assets/"}
+}

@@ -1,0 +1,8 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "PlainSubpath",
+    "description": "pkg declared + pkg/sub imported -> no warning (subpath collapse).",
+    "copy-files": {"assets/": "assets/"},
+    "dependencies": {"npm": ["pkg"]}
+}
