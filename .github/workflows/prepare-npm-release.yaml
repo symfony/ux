@@ -1,0 +1,157 @@
+name: Prepare NPM release
+
+on:
+    workflow_dispatch:
+        inputs:
+            branch:
+                description: 'Release branch to bump'
+                required: true
+                type: choice
+                options:
+                    - 2.x
+                    - 3.x
+                default: 3.x
+            version:
+                description: 'Version to set in workspace package.json files (e.g. 2.36.0, no leading v)'
+                required: true
+                type: string
+
+permissions:
+    contents: write
+    pull-requests: write
+
+concurrency:
+    group: prepare-npm-release-${{ inputs.branch }}
+    cancel-in-progress: false
+
+jobs:
+    prepare:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Validate inputs
+              env:
+                  BRANCH: ${{ inputs.branch }}
+                  VERSION: ${{ inputs.version }}
+              run: |
+                  set -euo pipefail
+                  if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+                      echo "::error::Invalid version '$VERSION'. Expected semver without leading 'v' (e.g. 2.36.0 or 2.36.0-rc1)."
+                      exit 1
+                  fi
+                  VERSION_MAJOR="${VERSION%%.*}"
+                  BRANCH_MAJOR="${BRANCH%%.*}"
+                  if [[ "$VERSION_MAJOR" != "$BRANCH_MAJOR" ]]; then
+                      echo "::error::Version '$VERSION' (major $VERSION_MAJOR) does not match branch '$BRANCH' (major $BRANCH_MAJOR)."
+                      exit 1
+                  fi
+
+              # Persisted credentials are intentional: the bump branch is pushed back
+              # via the GITHUB_TOKEN auth header configured by actions/checkout.
+            - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98 # zizmor: ignore[artipacked]
+              with:
+                  ref: ${{ inputs.branch }}
+                  fetch-depth: 0
+
+            - name: Refuse if bump branch already exists on origin
+              env:
+                  VERSION: ${{ inputs.version }}
+              run: |
+                  set -euo pipefail
+                  BUMP_BRANCH="bump/v$VERSION"
+                  if git ls-remote --exit-code --heads origin "$BUMP_BRANCH" >/dev/null 2>&1; then
+                      echo "::error::Branch '$BUMP_BRANCH' already exists on origin. Delete it first or pick another version."
+                      exit 1
+                  fi
+
+            - name: Configure git identity
+              run: |
+                  git config user.name 'github-actions[bot]'
+                  git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+            - name: Create bump branch
+              env:
+                  VERSION: ${{ inputs.version }}
+              run: git switch -c "bump/v$VERSION"
+
+            - run: npm i -g corepack && corepack enable
+            - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+              with:
+                  node-version-file: '.nvmrc'
+                  cache: 'pnpm'
+                  cache-dependency-path: |
+                      pnpm-lock.yaml
+                      package.json
+                      src/**/package.json
+
+            - name: Install root JS dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Build JS assets
+              run: pnpm run build
+
+            - name: Verify dist files match committed sources
+              env:
+                  BRANCH: ${{ inputs.branch }}
+              run: |
+                  set -euo pipefail
+                  if ! git diff --quiet; then
+                      echo "::error::Built dist files differ from the committed ones on '${BRANCH}'. The release branch must be built before bumping."
+                      git status --porcelain
+                      git diff
+                      exit 1
+                  fi
+
+            - name: Bump workspace package.json files
+              env:
+                  VERSION: ${{ inputs.version }}
+              run: pnpm version "$VERSION" --no-git-tag-version --workspaces --no-workspaces-update
+
+            - name: Ensure package.json files actually changed
+              env:
+                  VERSION: ${{ inputs.version }}
+                  BRANCH: ${{ inputs.branch }}
+              run: |
+                  set -euo pipefail
+                  if git diff --quiet; then
+                      echo "::error::No package.json changes after pnpm version. Version '${VERSION}' may already be set on '${BRANCH}'."
+                      exit 1
+                  fi
+
+            - name: Commit and push
+              env:
+                  VERSION: ${{ inputs.version }}
+              run: |
+                  set -euo pipefail
+                  shopt -s nullglob
+                  files=(src/*/assets/package.json src/*/src/Bridge/*/assets/package.json)
+                  if [[ ${#files[@]} -eq 0 ]]; then
+                      echo "::error::No workspace package.json files matched."
+                      exit 1
+                  fi
+                  git add -- "${files[@]}"
+                  git commit -m "Bump npm packages to v$VERSION"
+                  if ! git diff --quiet HEAD; then
+                      echo "::error::Working tree is dirty after commit. Only workspace package.json files should change; any other diff (e.g. dist/) indicates the release branch is out of sync with its sources."
+                      git status --porcelain
+                      git diff
+                      exit 1
+                  fi
+                  git push origin "bump/v$VERSION"
+
+            - name: Open pull request
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  BRANCH: ${{ inputs.branch }}
+                  VERSION: ${{ inputs.version }}
+              run: |
+                  set -euo pipefail
+                  gh pr create \
+                      --base "$BRANCH" \
+                      --head "bump/v$VERSION" \
+                      --title "Bump npm packages to v$VERSION" \
+                      --body "$(cat <<EOF
+                  Prepared by the \`Prepare NPM release\` workflow.
+
+                  Once merged, create and push the \`v$VERSION\` tag via the standard Symfony release process. The \`release-on-npm.yaml\` workflow then publishes via OIDC.
+                  EOF
+                  )"
