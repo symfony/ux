@@ -5,27 +5,36 @@ on:
         tags:
             - 'v3.*.*'
 
-permissions: {}
+permissions:
+    id-token: write # Required for OIDC
+    contents: read
+
+concurrency:
+    group: release-on-npm-${{ github.ref_name }}
+    cancel-in-progress: false
 
 jobs:
     release:
-        permissions:
-            id-token: write # Required for OIDC
-            contents: write # Required to push changes to the repository
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
               with:
-                  ref: 3.x
+                  ref: ${{ github.ref }}
                   persist-credentials: false
+                  fetch-depth: 0
 
-            - name: Configure Git
+            - name: Verify tag is on the matching release branch
               run: |
-                  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                  git config --global user.name "github-actions[bot]"
-
-            - name: Extract version from tag
-              run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+                  set -euo pipefail
+                  MAJOR="${GITHUB_REF_NAME#v}"
+                  MAJOR="${MAJOR%%.*}"
+                  BRANCH="${MAJOR}.x"
+                  git fetch --no-tags origin "refs/heads/${BRANCH}:refs/remotes/origin/${BRANCH}"
+                  if ! git merge-base --is-ancestor "${GITHUB_SHA}" "refs/remotes/origin/${BRANCH}"; then
+                      echo "::error::Tag ${GITHUB_REF_NAME} (${GITHUB_SHA}) is not an ancestor of branch ${BRANCH}. Refusing to publish."
+                      exit 1
+                  fi
+                  echo "Tag ${GITHUB_REF_NAME} verified as ancestor of ${BRANCH}."
 
             - run: npm i -g corepack && corepack enable
               # setup-node does not enable any package-manager cache here (no `cache:` input),
@@ -35,24 +44,25 @@ jobs:
                   registry-url: 'https://registry.npmjs.org'
                   node-version-file: '.nvmrc'
 
-              # npm 11.5.1 or later is required for OIDC
-            - run: npm install -g npm@latest
+              # npm 11.5.1 or later is required for OIDC. Pinned explicitly to avoid
+              # pulling a compromised "latest" at release time; bump via dedicated PR.
+            - run: npm install -g npm@11.16.0
 
             - name: Install root JS dependencies
               run: pnpm install --frozen-lockfile
 
-            - name: Update version of JS packages
-              run: pnpm version "$VERSION" --no-git-tag-version --workspaces --no-workspaces-update
+            - name: Build JS assets
+              run: pnpm run build
 
-            - name: Commit changes
+            - name: Verify dist files match committed sources
               run: |
-                  git add .
-                  git commit -m "Update versions to $VERSION"
+                  if ! git diff --quiet; then
+                      echo "::error::Built dist files differ from the committed ones at tag ${GITHUB_REF_NAME}. Refusing to publish."
+                      git status --porcelain
+                      git diff
+                      exit 1
+                  fi
+                  echo "Built dist files match the committed ones."
 
             - name: Publish on NPM
-              run: pnpm publish --recursive --access public --no-git-checks
-
-            - name: Push changes
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: git push origin 3.x
+              run: pnpm publish --recursive --access public --no-git-checks --provenance
