@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-06-04T14:16:01Z
+
+This lint kit command is great, thank you.
+
+Would it be difficult to add an option to fix errors?
+Like the ones already available for PHP CS Fixer or Twig CS Fixer.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-06-04T15:44:03Z
+
+(warnings found in the two jobs will be fixed in another PR)
+
+> Would it be difficult to add an option to fix errors?
+> Like the ones already available for PHP CS Fixer or Twig CS Fixer.
+
+That's a good question, it's surely possible, maybe in a next iteration, if identified errors could be automatically fixed.
