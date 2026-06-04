@@ -1,0 +1,16 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-06-02T10:52:10Z
+
+> Does/should this address the packages.json version update?
+
+Yes, the `release-on-npm.yaml` workflow previously commited/push all new files, and had
+`write` permissions on contents.
+
+With this potential security vulnerability, and the fact that `version` field from `package.json` files were updated **after** the creation of the release tag (by you or Fabien), leading to inconsistency etc., ATM I think the best option is to **manually** bump npm versions **before** the release tag.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-06-04T20:09:31Z
+
+As discussed, I'm will add a new dispatchable workflow (in another PR) for opening a PR that automatically modifies the `version` from `package.json` files
