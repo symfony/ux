@@ -76,11 +76,11 @@ start / end               yes         yes        yes           yes
 description               yes         yes        yes           yes
 location                  yes         yes        yes           yes
 all-day                   yes         yes        yes           yes
-reminders (VALARM)        —           —          —             yes
-recurrence (RRULE)        yes         —          —             yes
+reminders (VALARM)        -           -          -             yes
+recurrence (RRULE)        yes         -          -             yes
 ========================= =========== ========== ============= =========
 
-Fields marked "—" are silently ignored when generating a link for that
+Fields marked ``-`` are silently ignored when generating a link for that
 provider, because the provider's URL scheme does not support them. For example,
 reminders are honoured only in the ``.ics`` output since Google and Outlook
 deeplink URLs cannot carry VALARM data.
