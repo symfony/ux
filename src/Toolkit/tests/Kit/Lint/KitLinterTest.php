@@ -146,6 +146,26 @@ class KitLinterTest extends TestCase
         $this->assertStringContainsString($expectedFile, $matching[0]->file);
     }
 
+    public function testStimulusControllerSatisfiedByRecipeDependency()
+    {
+        $kit = $this->loadFixtureKit('lint-stimulus');
+
+        $issues = new KitLinter([new StimulusControllerChecker()])->lint($kit)->getIssues();
+
+        $usesDepIssues = array_values(array_filter(
+            $issues,
+            static fn (LintIssue $i) => 'stimulus.controller.missing' === $i->category && 'uses-dep' === $i->recipe,
+        ));
+        $this->assertSame([], $usesDepIssues, 'Controller shipped by a recipe declared in dependencies.recipe must not be reported.');
+
+        $missingDepIssues = array_values(array_filter(
+            $issues,
+            static fn (LintIssue $i) => 'stimulus.controller.missing' === $i->category && 'missing-dep' === $i->recipe,
+        ));
+        $this->assertCount(1, $missingDepIssues, 'A controller not shipped by any declared recipe dependency must still be reported.');
+        $this->assertStringContainsString('not-shipped-anywhere', $missingDepIssues[0]->message);
+    }
+
     /**
      * @return iterable<string, array{string, ?string, ?string}>
      */
