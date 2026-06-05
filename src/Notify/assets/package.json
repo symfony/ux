@@ -2,7 +2,7 @@
     "name": "@symfony/ux-notify",
     "description": "Native notification integration for Symfony using Mercure",
     "license": "MIT",
-    "version": "3.1.0",
+    "version": "3.2.0",
     "keywords": [
         "symfony-ux"
     ],
