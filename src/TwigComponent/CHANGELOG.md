@@ -2,6 +2,7 @@
 
 ## 3.2.0
 
+- Fix backslashes being stripped from literal component attribute values
 - Add `ComponentRendererInterface::preCreateForRender()`, `ComponentRendererInterface::startEmbeddedComponentRender()`, and `ComponentRendererInterface::finishEmbeddedComponentRender()` methods
 
 ## 3.1.0

@@ -60,6 +60,21 @@ final class TwigPreLexerTest extends TestCase
             '{{ component(\'foo\', { dynamic: (dynamicVar), otherDynamic: anotherVar }) }}',
         ];
 
+        yield 'attribute_value_with_backslashes_is_preserved' => [
+            '<twig:foo path="C:\Users\me" />',
+            "{{ component('foo', { path: 'C:\\\\Users\\\\me' }) }}",
+        ];
+
+        yield 'attribute_value_with_backslash_sequence_is_kept_literal' => [
+            '<twig:foo text="line\nbreak" />',
+            "{{ component('foo', { text: 'line\\\\nbreak' }) }}",
+        ];
+
+        yield 'attribute_value_mixing_backslash_and_expression' => [
+            '<twig:foo text="C:\dir {{ name }}" />',
+            "{{ component('foo', { text: 'C:\\\\dir '~(name) }) }}",
+        ];
+
         yield 'component_with_closing_tag' => [
             '<twig:foo></twig:foo>',
             '{% component \'foo\' %}{% endcomponent %}',

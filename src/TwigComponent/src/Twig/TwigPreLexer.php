@@ -470,7 +470,7 @@ class TwigPreLexer
             if ($this->check('{{')) {
                 // mark any previous static text as complete: push into parts
                 if ('' !== $currentPart) {
-                    $parts[] = \sprintf("'%s'", str_replace("'", "\'", $currentPart));
+                    $parts[] = $this->toStringLiteral($currentPart);
                     $currentPart = '';
                 }
 
@@ -489,9 +489,21 @@ class TwigPreLexer
         }
 
         if ('' !== $currentPart) {
-            $parts[] = \sprintf("'%s'", str_replace("'", "\'", $currentPart));
+            $parts[] = $this->toStringLiteral($currentPart);
         }
 
         return implode('~', $parts);
+    }
+
+    /**
+     * Wraps a raw value into a single-quoted Twig string literal.
+     *
+     * Both the backslash and the single quote must be escaped: Twig processes
+     * backslash sequences inside single-quoted strings, so an unescaped
+     * backslash would corrupt the value.
+     */
+    private function toStringLiteral(string $value): string
+    {
+        return "'".strtr($value, ['\\' => '\\\\', "'" => "\\'"])."'";
     }
 }
