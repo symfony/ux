@@ -1,0 +1,12 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Uses Dep",
+    "description": "Consumes a Stimulus controller shipped by a recipe declared in dependencies.recipe.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "recipe": ["from-dep"]
+    }
+}

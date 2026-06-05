@@ -13,6 +13,7 @@ namespace Symfony\UX\Toolkit\Kit\Lint\Checker;
 
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
+use Symfony\UX\Toolkit\Dependency\RecipeDependency;
 use Symfony\UX\Toolkit\Kit\Kit;
 
 use function Symfony\Component\String\u;
@@ -45,6 +46,15 @@ final class StimulusControllerChecker implements KitCheckerInterface
             }
 
             $shippedControllers = $this->listShippedControllers($recipe);
+            foreach ($recipe->manifest->dependencies as $dependency) {
+                if (!$dependency instanceof RecipeDependency) {
+                    continue;
+                }
+                if (null === $dependencyRecipe = $kit->getRecipe($dependency->name)) {
+                    continue;
+                }
+                $shippedControllers = array_merge($shippedControllers, $this->listShippedControllers($dependencyRecipe));
+            }
 
             foreach ($controllerNames as $controllerName => $file) {
                 if (\in_array($controllerName, $shippedControllers, true)) {

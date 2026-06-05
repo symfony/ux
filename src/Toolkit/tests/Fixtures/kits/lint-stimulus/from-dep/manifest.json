@@ -1,0 +1,9 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "From Dep",
+    "description": "Recipe shipping a controller consumed by other recipes via dependencies.recipe.",
+    "copy-files": {
+        "assets/": "assets/"
+    }
+}

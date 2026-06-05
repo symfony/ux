@@ -1,0 +1,12 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Missing Dep",
+    "description": "Declares a recipe dependency that does NOT ship the referenced controller.",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "recipe": ["from-dep"]
+    }
+}
