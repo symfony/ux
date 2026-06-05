@@ -1,0 +1,70 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-06-03T15:40:03Z
+
+There are no modifications on the Twig-CS-Fixer configuration file?
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-06-03T16:10:14Z
+
+> There are no modifications on the Twig-CS-Fixer configuration file?
+
+@VincentLanglet, I'd like your opinion on this. Do you need to modify https://github.com/VincentLanglet/Twig-CS-Fixer to add two rules:
+- `_` prefix for Twig variables declared inside components
+- and the use of camelCase, as explained in https://github.com/symfony/ux/pull/3528#discussion_r3192069372
+
+Or should we modify the configuration of our `.twig-cs-fixer.dist.php` file?
+
+I added `$config->allowNonFixableRules();` to the .`twig-cs-fixer.dist.php` file.
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2026-06-03T16:18:14Z
+
+> > There are no modifications on the Twig-CS-Fixer configuration file?
+>
+> @VincentLanglet, I'd like your opinion on this. Do you need to modify [VincentLanglet/Twig-CS-Fixer](https://github.com/VincentLanglet/Twig-CS-Fixer?rgh-link-date=2026-06-03T16%3A10%3A14Z) to add two rules:
+>
+> * `_` prefix for Twig variables declared inside components
+
+The rule already has an option "optionalPrefix" we should allow you to use `_` as a an optional prefix.
+
+I'm not sure it should be change in the generic ruleset cause this seems to be a specific rule used by symfony/ux which is not recommended in the Twig coding standard.
+
+> * and the use of camelCase, as explained in [[Toolkit][Shadcn] Rework `toggle-group` recipe to use `provide()`/`inject()` #3528 (comment)](https://github.com/symfony/ux/pull/3528#discussion_r3192069372)
+
+Definetly something custom to this repo.
+
+> Or should we modify the configuration of our `.twig-cs-fixer.dist.php` file?
+
+Yes, that's the way
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-06-04T05:09:26Z
+
+> > > There are no modifications on the Twig-CS-Fixer configuration file?
+> >
+> >
+> > @VincentLanglet, I'd like your opinion on this. Do you need to modify [VincentLanglet/Twig-CS-Fixer](https://github.com/VincentLanglet/Twig-CS-Fixer?rgh-link-date=2026-06-03T16%3A10%3A14Z) to add two rules:
+> >
+> > * `_` prefix for Twig variables declared inside components
+>
+> The rule already has an option "optionalPrefix" we should allow you to use `_` as a an optional prefix.
+>
+> I'm not sure it should be change in the generic ruleset cause this seems to be a specific rule used by symfony/ux which is not recommended in the Twig coding standard.
+>
+> > * and the use of camelCase, as explained in [[Toolkit][Shadcn] Rework `toggle-group` recipe to use `provide()`/`inject()` #3528 (comment)](https://github.com/symfony/ux/pull/3528#discussion_r3192069372)
+>
+> Definetly something custom to this repo.
+>
+> > Or should we modify the configuration of our `.twig-cs-fixer.dist.php` file?
+>
+> Yes, that's the way
+
+Thanks @VincentLanglet for your feedback!
+
+ I've updated the `.twig-cs-fixer.dist.php` configuration with:
+- The `optionalPrefix: '_'` option for component-internal variables
+ - A custom `VariableNameRule` (in `tools/twig-cs-fixer/`) that replaces the original rule to accept both snake_case and camelCase per segment, since some Toolkit variables mix both conventions (e.g. `_tooltip_wrapperId`)
