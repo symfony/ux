@@ -142,6 +142,10 @@ interface LiveEvent extends CustomEvent {
     component: Component;
   };
 }
+interface LiveConfirmEventDetail {
+  message: string;
+  promise: Promise<boolean> | null;
+}
 interface LiveController {
   element: HTMLElement;
   component: Component;
@@ -221,7 +225,7 @@ declare class LiveControllerDefault extends Controller<HTMLElement> implements L
   connect(): void;
   disconnect(): void;
   update(event: any): void;
-  action(event: any): void;
+  action(event: any): Promise<void>;
   $render(): Promise<export_default$2>;
   emit(event: any): void;
   emitUp(event: any): void;
@@ -239,4 +243,4 @@ declare class LiveControllerDefault extends Controller<HTMLElement> implements L
   private dispatchEvent;
   private onMutations;
 }
-export { Component, LiveController, LiveEvent, LiveControllerDefault as default, getComponent };
+export { Component, LiveConfirmEventDetail, LiveController, LiveEvent, LiveControllerDefault as default, getComponent };

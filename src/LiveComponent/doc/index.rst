@@ -1279,6 +1279,96 @@ the ``#[LiveArg]`` attribute::
         }
     }
 
+Confirming Actions
+~~~~~~~~~~~~~~~~~~
+
+If you want to ask the user for confirmation before executing a LiveComponent action,
+you have three ways to do it.
+
+**1. Using standard Turbo Confirm (If Turbo is installed)**
+
+If you are already using ``@hotwired/turbo`` and have configured a custom confirm method
+(like SweetAlert) via ``Turbo.config.forms.confirm`` or ``Turbo.setConfirmMethod``,
+LiveComponent will automatically respect it. Just add the ``data-turbo-confirm`` attribute:
+
+.. code-block:: html+twig
+
+    <button
+        data-action="live#action"
+        data-live-action-param="delete"
+        data-turbo-confirm="Are you sure you want to delete this item?"
+    >Delete</button>
+
+Here is an example of how you might configure Turbo with SweetAlert2 in your JavaScript
+(e.g., in ``app.js``). While this example uses SweetAlert2, you can seamlessly integrate
+any other library or your own custom UI design as long as it returns a Promise:
+
+.. code-block:: javascript
+
+    import * as Turbo from '@hotwired/turbo';
+    import Swal from 'sweetalert2';
+
+    // Turbo 7 usage:
+    // Turbo.setConfirmMethod((message, element) => { ... });
+
+    // Turbo 8 usage:
+    Turbo.config.forms.confirm = (message, element) => {
+        return Swal.fire({
+            title: message,
+            icon: 'warning',
+            showCancelButton: true
+        }).then(result => result.isConfirmed);
+    };
+
+**2. Using Custom Async Dialogs (Without Turbo)**
+
+If you are not using Turbo, or want to handle LiveComponent confirmations separately,
+use the ``data-live-confirm`` attribute:
+
+.. code-block:: html+twig
+
+    <button
+        data-action="live#action"
+        data-live-action-param="delete"
+        data-live-confirm="Are you sure you want to delete this item?"
+    >Delete</button>
+
+By default, this will trigger the browser's native ``window.confirm()``.
+However, you can intercept this to show your own asynchronous modal (like SweetAlert2,
+another library, or a completely custom UI design) by listening to the ``live:confirm``
+event in your JavaScript:
+
+.. code-block:: javascript
+
+    // app.js
+    import Swal from 'sweetalert2';
+
+    document.addEventListener('live:confirm', (event) => {
+        // Prevent the native browser confirm dialog
+        event.preventDefault();
+
+        // Pass your Promise to event.detail.promise
+        event.detail.promise = Swal.fire({
+            title: event.detail.message,
+            icon: 'warning',
+            showCancelButton: true
+        }).then(result => result.isConfirmed);
+    });
+
+**3. Using Native Inline Confirm**
+
+If you prefer the native browser confirm, you can simply use the ``onclick``
+attribute and return its result. If the user clicks cancel, the LiveComponent
+action will automatically be aborted:
+
+.. code-block:: html+twig
+
+    <button
+        data-action="live#action"
+        data-live-action-param="delete"
+        onclick="return confirm('Are you sure you want to delete this item?')"
+    >Delete</button>
+
 Actions and CSRF Protection
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

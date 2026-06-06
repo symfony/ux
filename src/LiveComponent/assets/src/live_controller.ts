@@ -32,6 +32,11 @@ export interface LiveEvent extends CustomEvent {
     };
 }
 
+export interface LiveConfirmEventDetail {
+    message: string;
+    promise: Promise<boolean> | null;
+}
+
 export interface LiveController {
     element: HTMLElement;
     component: Component;
@@ -123,15 +128,60 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         this.updateModelFromElementEvent(event.currentTarget, null);
     }
 
-    action(event: any) {
+    async action(event: any) {
+        if (event.defaultPrevented) {
+            return;
+        }
+        const target = event.currentTarget as HTMLElement;
         const params = event.params;
         if (!params.action) {
             throw new Error(
                 `No action name provided on element: ${getElementAsTagText(
-                    event.currentTarget
+                    target
                 )}. Did you forget to add the "data-live-action-param" attribute?`
             );
         }
+
+        const confirmMessage = target.getAttribute('data-turbo-confirm') || target.getAttribute('data-live-confirm');
+        if (confirmMessage) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            let isConfirmed = false;
+
+            type TurboConfirmMethod = (message: string, element: HTMLElement) => Promise<boolean>;
+            interface TurboGlobal {
+                config?: { forms?: { confirm?: TurboConfirmMethod } };
+                navigator?: { confirmMethod?: TurboConfirmMethod };
+            }
+            const turbo = (window as any).Turbo as TurboGlobal | undefined;
+            const turboConfirm = turbo?.config?.forms?.confirm || turbo?.navigator?.confirmMethod;
+
+            if (typeof turboConfirm === 'function') {
+                isConfirmed = await turboConfirm(confirmMessage, target);
+            } else {
+                const liveConfirmEvent = new CustomEvent<LiveConfirmEventDetail>('live:confirm', {
+                    bubbles: true,
+                    cancelable: true,
+                    detail: { message: confirmMessage, promise: null },
+                });
+                target.dispatchEvent(liveConfirmEvent);
+                if (liveConfirmEvent.defaultPrevented && liveConfirmEvent.detail.promise) {
+                    try {
+                        isConfirmed = await liveConfirmEvent.detail.promise;
+                    } catch (e) {
+                        isConfirmed = false;
+                    }
+                } else if (liveConfirmEvent.defaultPrevented) {
+                    return; // Prevented but no promise, assume handled/cancelled
+                } else {
+                    isConfirmed = window.confirm(confirmMessage);
+                }
+            }
+            if (!isConfirmed) {
+                return;
+            }
+        }
+
         const rawAction = params.action;
         // all other params are considered action arguments
         const actionArgs = { ...params };
@@ -148,7 +198,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
                 event.stopPropagation();
             });
             validModifiers.set('self', () => {
-                if (event.target !== event.currentTarget) {
+                if (event.target !== target) {
                     return;
                 }
             });
@@ -191,8 +241,8 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
             // if so, to be safe, slightly delay the action so that the
             // change/input listener on LiveController can process the
             // model change *before* sending the action
-            if (getModelDirectiveFromElement(event.currentTarget, false)) {
-                this.pendingActionTriggerModelElement = event.currentTarget;
+            if (getModelDirectiveFromElement(target, false)) {
+                this.pendingActionTriggerModelElement = target;
             }
         });
     }
