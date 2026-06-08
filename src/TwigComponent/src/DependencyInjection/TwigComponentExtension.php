@@ -108,6 +108,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                 new Reference('ux.twig_component.component_factory'),
                 new Reference('ux.twig_component.component_properties'),
                 new Reference('ux.twig_component.component_stack'),
+                new Reference('service_container'),
             ])
             ->addTag('kernel.reset', ['method' => 'reset'])
         ;

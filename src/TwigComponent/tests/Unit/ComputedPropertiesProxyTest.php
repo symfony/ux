@@ -12,6 +12,7 @@
 namespace Symfony\UX\TwigComponent\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\UX\TwigComponent\Attribute\ComponentCache;
 use Symfony\UX\TwigComponent\ComputedPropertiesProxy;
 
 /**
@@ -133,5 +134,41 @@ final class ComputedPropertiesProxyTest extends TestCase
         $this->expectException(\LogicException::class);
 
         $proxy->getValue();
+    }
+
+    public function testComponentCacheAttributeUsesSymfonyCache()
+    {
+        $container = new \Symfony\Component\DependencyInjection\Container();
+        $cache = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
+        $container->set('cache.app', $cache);
+
+        $component = new class {
+            public int $count = 0;
+
+            #[ComponentCache(key: 'my_test_key')]
+            public function getHeavyData(): int
+            {
+                return ++$this->count;
+            }
+        };
+
+        $proxy = new ComputedPropertiesProxy($component, $container);
+
+        // First call hits the real method, returns 1, caches it
+        $this->assertSame(1, $proxy->heavyData());
+
+        // Second call hits the proxy in-memory cache, returns 1
+        $this->assertSame(1, $proxy->heavyData());
+
+        // New proxy, representing a new request
+        $proxy2 = new ComputedPropertiesProxy($component, $container);
+
+        // Hits the symfony cache pool, returns 1, DOES NOT increment count
+        $this->assertSame(1, $proxy2->heavyData());
+
+        // Check cache item directly
+        $item = $cache->getItem('my_test_key');
+        $this->assertTrue($item->isHit());
+        $this->assertSame(1, $item->get());
     }
 }

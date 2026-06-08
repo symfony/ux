@@ -1640,6 +1640,44 @@ are called additional times, the cached value is used.
     otherwise the method will be called twice instead of only once, leading to
     unnecessary overhead and potential performance issues.
 
+Persistent Component Caching
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+While ``computed`` properties memoize results during a single request, you can
+use the ``#[ComponentCache]`` attribute to persistently cache heavy method calls
+(e.g., database queries) across multiple requests using Symfony Cache.::
+
+    use Symfony\UX\TwigComponent\Attribute\ComponentCache;
+    #[AsTwigComponent]
+    class DashboardStats
+    {
+        #[ComponentCache(expiresAfter: 3600, tags: ['stats'])]
+        public function getHeavyMetrics(): array
+        {
+            // executed only once per hour across all requests
+            return $this->heavyQuery();
+        }
+    }
+
+In your template, call it via the ``computed`` proxy as usual:
+
+.. code-block:: html+twig
+
+    {# templates/components/Dashboard.html.twig #}
+    <div>
+        {{ computed.heavyMetrics }}
+    </div>
+
+By default, an automatic cache key is generated. You can customize the behavior
+by passing ``key``, ``expiresAfter``, ``tags``, or the cache ``pool`` name to
+the attribute.
+
+.. warning::
+
+    Since Symfony Cache serializes the returned value, you **must not** return objects
+    that contain database connections or closures (e.g., Doctrine's ``EntityManager``,
+    ``QueryBuilder``, or complex pagination objects directly).
+    Always return raw data structures like ``array``, ``string``, or simple DTOs.
+
 Events
 ------
 

@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent;
 
+use Psr\Container\ContainerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\TwigComponent\Event\PostRenderEvent;
@@ -33,6 +34,7 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
         private ComponentFactory $factory,
         private ComponentProperties $componentProperties,
         private ComponentStack $componentStack,
+        private ?ContainerInterface $container = null,
     ) {
     }
 
@@ -128,7 +130,7 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
             ...$event->getVariables(),
             // add the component as "this"
             'this' => $component,
-            'computed' => new ComputedPropertiesProxy($component),
+            'computed' => new ComputedPropertiesProxy($component, $this->container),
             'outerScope' => $context,
             // keep this line for BC break reasons
             '__props' => $classProps,

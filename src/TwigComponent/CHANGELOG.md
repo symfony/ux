@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.2.1
+
+- Add `#[ComponentCache]` attribute to persistently cache heavy computed properties via Symfony Cache
+
 ## 3.2.0
 
 - Add `ComponentRendererInterface::preCreateForRender()`, `ComponentRendererInterface::startEmbeddedComponentRender()`, and `ComponentRendererInterface::finishEmbeddedComponentRender()` methods
