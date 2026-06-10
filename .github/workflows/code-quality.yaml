@@ -103,6 +103,9 @@ jobs:
               if: always()
               run: |
                   for file in $(find src/ -mindepth 2 -type f -name package.json -not -path "*/tests/*"); do
+                      if jq -e '.private == true' "$file" > /dev/null; then
+                          continue
+                      fi
                       if ! jq -e '.files | index("dist")' "$file" > /dev/null; then
                           echo "File $file does not have the files 'dist' in its package.json";
                           exit 1;
@@ -113,6 +116,9 @@ jobs:
               if: always()
               run: |
                   for file in $(find src/ -mindepth 2 -type f -name package.json -not -path "*/tests/*"); do
+                      if jq -e '.private == true' "$file" > /dev/null; then
+                          continue
+                      fi
                       peerDependencies=$(jq -r '.peerDependencies | keys[]' "$file")
                       for peerDependency in $peerDependencies; do
                           peerDependencyVersion=$(jq -r --arg dep "$peerDependency" '.peerDependencies[$dep]' "$file")

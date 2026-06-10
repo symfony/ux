@@ -1,0 +1,18 @@
+{
+    "name": "@symfony/ux-calendar-link",
+    "description": "Generates 'Add to calendar' links for Google, Outlook, Office 365 and iCalendar (.ics) in Twig templates.",
+    "private": true,
+    "license": "MIT",
+    "keywords": [
+        "symfony-ux",
+        "calendar",
+        "ics"
+    ],
+    "homepage": "https://ux.symfony.com/calendar-link",
+    "repository": "https://github.com/symfony/ux",
+    "type": "module",
+    "scripts": {
+        "test:browser": "playwright test",
+        "test:browser:ui": "playwright test --ui"
+    }
+}
