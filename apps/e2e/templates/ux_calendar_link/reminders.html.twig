@@ -1,0 +1,11 @@
+{% extends 'example.html.twig' %}
+
+{% block example %}
+    <ul class="list-unstyled">
+        {% for link in ux_calendar_links(event) %}
+            <li>
+                <a data-testid="calendar-link-{{ link.provider }}" href="{{ link.url }}">{{ link.label }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

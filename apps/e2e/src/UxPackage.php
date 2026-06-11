@@ -14,6 +14,7 @@ namespace App;
 enum UxPackage: string
 {
     case Autocomplete = 'UX Autocomplete';
+    case CalendarLink = 'UX CalendarLink';
     case ChartJs = 'UX Chart';
     case Cropperjs = 'UX Cropperjs';
     case Icons = 'UX Icons';
@@ -36,6 +37,7 @@ enum UxPackage: string
     {
         return match ($this) {
             self::Autocomplete => 'https://ux.symfony.com/autocomplete',
+            self::CalendarLink => 'https://ux.symfony.com/calendar-link',
             self::ChartJs => 'https://ux.symfony.com/chartjs',
             self::Cropperjs => 'https://ux.symfony.com/cropperjs',
             self::Icons => 'https://ux.symfony.com/icons',

@@ -44,6 +44,7 @@
         "symfony/stimulus-bundle": "3.x-dev",
         "symfony/twig-bundle": "7.4.*|8.1.*",
         "symfony/ux-autocomplete": "3.x-dev",
+        "symfony/ux-calendar-link": "3.x-dev",
         "symfony/ux-chartjs": "3.x-dev",
         "symfony/ux-cropperjs": "3.x-dev",
         "symfony/ux-dropzone": "3.x-dev",

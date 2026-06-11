@@ -26,4 +26,5 @@ return [
     Symfony\UX\Vue\VueBundle::class => ['all' => true],
     Zenstruck\Foundry\ZenstruckFoundryBundle::class => ['all' => true],
     Symfony\UX\Native\UXNativeBundle::class => ['all' => true],
+    Symfony\UX\CalendarLink\UXCalendarLinkBundle::class => ['all' => true],
 ];
