@@ -30,6 +30,43 @@ needed if you're using AssetMapper):
 
     For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-cropperjs npm package`_
 
+Configuring the Image Driver
+----------------------------
+
+The server-side cropping (``Crop::getCroppedImage()`` and
+``Crop::getCroppedThumbnail()``) is powered by `Intervention Image`_. By
+default it uses the ``gd`` driver. You can switch to ``imagick`` or ``vips``
+through the bundle configuration:
+
+.. code-block:: yaml
+
+    # config/packages/cropperjs.yaml
+    cropperjs:
+        driver: gd # "gd" (default), "imagick" or "vips"
+
+The ``gd`` and ``imagick`` drivers ship with ``intervention/image`` (make sure
+the matching ``ext-gd`` or ``ext-imagick`` PHP extension is enabled). The
+``vips`` driver additionally requires the ``intervention/image-driver-vips``
+package, the libvips system library and the ``ext-ffi`` PHP extension:
+
+.. code-block:: terminal
+
+    $ composer require intervention/image-driver-vips
+
+Using a custom driver
+~~~~~~~~~~~~~~~~~~~~~
+
+If you need full control over the Intervention Image driver, register your own
+service implementing ``Intervention\Image\Interfaces\DriverInterface`` and
+reference it with the ``driver_service`` option. When set, it takes precedence
+over ``driver``:
+
+.. code-block:: yaml
+
+    # config/packages/cropperjs.yaml
+    cropperjs:
+        driver_service: App\Image\MyCustomDriver
+
 Usage
 -----
 
@@ -150,6 +187,7 @@ the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`Cropper.js`: https://fengyuanchen.github.io/cropperjs/
+.. _`Intervention Image`: https://image.intervention.io/
 .. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _`the Cropper.js options`: https://github.com/fengyuanchen/cropperjs/blob/main/README.md#options
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html

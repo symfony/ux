@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\Cropperjs\Factory;
 
-use Intervention\Image\ImageManager;
+use Intervention\Image\Interfaces\ImageManagerInterface;
 use Symfony\UX\Cropperjs\Model\Crop;
 
 /**
@@ -21,9 +21,9 @@ use Symfony\UX\Cropperjs\Model\Crop;
  */
 class Cropper implements CropperInterface
 {
-    private $imageManager;
+    private ImageManagerInterface $imageManager;
 
-    public function __construct(ImageManager $imageManager)
+    public function __construct(ImageManagerInterface $imageManager)
     {
         $this->imageManager = $imageManager;
     }

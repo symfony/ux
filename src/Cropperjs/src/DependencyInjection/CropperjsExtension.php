@@ -11,6 +11,9 @@
 
 namespace Symfony\UX\Cropperjs\DependencyInjection;
 
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
+use Intervention\Image\Drivers\Vips\Driver as VipsDriver;
 use Intervention\Image\ImageManager;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -31,6 +34,8 @@ class CropperjsExtension extends Extension implements PrependExtensionInterface
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
+        $config = $this->processConfiguration(new Configuration(), $configs);
+
         $container
             ->setDefinition('form.cropper', new Definition(CropperType::class))
             ->addTag('form.type')
@@ -39,6 +44,8 @@ class CropperjsExtension extends Extension implements PrependExtensionInterface
 
         $container
             ->setDefinition('cropper.image_manager', new Definition(ImageManager::class))
+            ->setFactory([ImageManager::class, 'usingDriver'])
+            ->setArguments([$this->resolveDriver($config)])
             ->setPublic(false)
         ;
 
@@ -49,6 +56,26 @@ class CropperjsExtension extends Extension implements PrependExtensionInterface
         ;
 
         $container->setAlias(CropperInterface::class, 'cropper')->setPublic(false);
+    }
+
+    /**
+     * @param array{driver: string, driver_service: string|null} $config
+     */
+    private function resolveDriver(array $config): Reference|string
+    {
+        if (null !== $config['driver_service']) {
+            return new Reference($config['driver_service']);
+        }
+
+        if ('vips' === $config['driver'] && !class_exists(VipsDriver::class)) {
+            throw new \LogicException('The "vips" cropperjs driver requires the "intervention/image-driver-vips" package. Try running "composer require intervention/image-driver-vips".');
+        }
+
+        return match ($config['driver']) {
+            'gd' => GdDriver::class,
+            'imagick' => ImagickDriver::class,
+            'vips' => VipsDriver::class,
+        };
     }
 
     public function prepend(ContainerBuilder $container): void
