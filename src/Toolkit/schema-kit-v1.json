@@ -21,6 +21,36 @@
             "type": "string",
             "format": "uri",
             "description": "The homepage URL for the kit, typically where users can find more information or documentation."
+        },
+        "dependencies": {
+            "description": "List of kit-global dependencies, available to every recipe of the kit (e.g. a library installed once during the kit setup).",
+            "type": "object",
+            "properties": {
+                "composer": {
+                    "description": "List of Composer package dependencies",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "A dependency on a Composer package, e.g., 'twig/extra-bundle' or 'twig/html-extra:^3.12.0'"
+                    }
+                },
+                "npm": {
+                    "description": "List of NPM package dependencies",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "A dependency on an NPM package, e.g., 'flowbite' or '@tailwindplus/elements@1'"
+                    }
+                },
+                "importmap": {
+                    "description": "List of Importmap package dependencies",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "A dependency on an Importmap package, e.g., 'flowbite' or 'bootstrap/dist/css/bootstrap.min.css'"
+                    }
+                }
+            }
         }
     }
 }

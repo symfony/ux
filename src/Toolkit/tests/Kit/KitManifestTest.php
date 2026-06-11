@@ -12,6 +12,9 @@
 namespace Symfony\UX\Toolkit\Tests\Kit;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\UX\Toolkit\Dependency\ImportmapPackageDependency;
+use Symfony\UX\Toolkit\Dependency\NpmPackageDependency;
+use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\Kit\KitManifest;
 
 final class KitManifestTest extends TestCase
@@ -101,5 +104,46 @@ final class KitManifestTest extends TestCase
         $this->assertSame('A kit', $manifest->description);
         $this->assertSame('MIT', $manifest->license);
         $this->assertSame('https://example.com', $manifest->homepage);
+        $this->assertSame([], $manifest->dependencies);
+    }
+
+    public function testFromJsonWithDependencies()
+    {
+        $manifest = KitManifest::fromJson(<<<JSON
+                {
+                    "name": "kit",
+                    "description": "A kit",
+                    "license": "MIT",
+                    "homepage": "https://example.com",
+                    "dependencies": {
+                        "composer": ["twig/extra-bundle"],
+                        "npm": ["flowbite"],
+                        "importmap": ["flowbite"]
+                    }
+                }
+            JSON);
+
+        $this->assertCount(3, $manifest->dependencies);
+        $this->assertInstanceOf(PhpPackageDependency::class, $manifest->dependencies[0]);
+        $this->assertInstanceOf(NpmPackageDependency::class, $manifest->dependencies[1]);
+        $this->assertInstanceOf(ImportmapPackageDependency::class, $manifest->dependencies[2]);
+    }
+
+    public function testFromJsonRejectsRecipeDependency()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The dependency types "recipe" are not supported.');
+
+        KitManifest::fromJson(<<<JSON
+                {
+                    "name": "kit",
+                    "description": "A kit",
+                    "license": "MIT",
+                    "homepage": "https://example.com",
+                    "dependencies": {
+                        "recipe": ["Button"]
+                    }
+                }
+            JSON);
     }
 }

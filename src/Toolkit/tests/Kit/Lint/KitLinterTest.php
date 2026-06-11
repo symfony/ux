@@ -220,6 +220,7 @@ class KitLinterTest extends TestCase
         // recipe slug => [expected category | null, expected package in message | null]
         yield 'npm declared' => ['npm-declared', null, null];
         yield 'importmap declared' => ['importmap-declared', null, null];
+        yield 'kit-level dependency declared' => ['kit-level-declared', null, null];
         yield 'undeclared static import' => ['undeclared', 'js.import.undeclared', 'lodash'];
         yield 'relative paths ignored' => ['relative-ignored', null, null];
         yield 'implicit @hotwired/stimulus' => ['implicit-stimulus', null, null];
