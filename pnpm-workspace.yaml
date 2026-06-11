@@ -14,3 +14,7 @@ packageExtensions:
             '@symfony/ux-map': 'workspace:*'
 
 minimumReleaseAge: 1440
+
+allowBuilds:
+    esbuild: true
+    msw: true
