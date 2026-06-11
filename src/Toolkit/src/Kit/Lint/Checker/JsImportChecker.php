@@ -13,6 +13,7 @@ namespace Symfony\UX\Toolkit\Kit\Lint\Checker;
 
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
+use Symfony\UX\Toolkit\Dependency\DependencyInterface;
 use Symfony\UX\Toolkit\Dependency\ImportmapPackageDependency;
 use Symfony\UX\Toolkit\Dependency\NpmPackageDependency;
 use Symfony\UX\Toolkit\Kit\Kit;
@@ -41,20 +42,16 @@ final class JsImportChecker implements KitCheckerInterface
 
     public function check(Kit $kit): iterable
     {
+        // Kit-global dependencies are available to every recipe (e.g. a library installed once during the kit setup).
+        $kitDeclared = $this->collectDeclaredNames($kit->manifest->dependencies);
+
         foreach ($kit->getRecipes() as $recipe) {
             $assetsDir = Path::join($recipe->absolutePath, 'assets');
             if (!is_dir($assetsDir)) {
                 continue;
             }
 
-            $declared = [];
-            foreach ($recipe->manifest->dependencies as $dependency) {
-                if ($dependency instanceof NpmPackageDependency) {
-                    $declared[] = $dependency->name;
-                } elseif ($dependency instanceof ImportmapPackageDependency) {
-                    $declared[] = $dependency->package;
-                }
-            }
+            $declared = [...$kitDeclared, ...$this->collectDeclaredNames($recipe->manifest->dependencies)];
 
             $finder = new Finder()->in($assetsDir)->files()->name(['*.js', '*.ts', '*.mjs']);
             foreach ($finder as $file) {
@@ -77,6 +74,25 @@ final class JsImportChecker implements KitCheckerInterface
                 }
             }
         }
+    }
+
+    /**
+     * @param iterable<DependencyInterface> $dependencies
+     *
+     * @return list<string>
+     */
+    private function collectDeclaredNames(iterable $dependencies): array
+    {
+        $declared = [];
+        foreach ($dependencies as $dependency) {
+            if ($dependency instanceof NpmPackageDependency) {
+                $declared[] = $dependency->name;
+            } elseif ($dependency instanceof ImportmapPackageDependency) {
+                $declared[] = $dependency->package;
+            }
+        }
+
+        return $declared;
     }
 
     /**
