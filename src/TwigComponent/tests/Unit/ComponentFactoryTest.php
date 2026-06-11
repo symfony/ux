@@ -12,7 +12,7 @@
 namespace Symfony\UX\TwigComponent\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\ServiceLocator;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\UX\TwigComponent\ComponentFactory;
@@ -28,7 +28,7 @@ class ComponentFactoryTest extends TestCase
     {
         $factory = new ComponentFactory(
             $this->createMock(ComponentTemplateFinderInterface::class),
-            $this->createMock(ServiceLocator::class),
+            $this->createMock(ContainerInterface::class),
             $this->createMock(PropertyAccessorInterface::class),
             $this->createMock(EventDispatcherInterface::class),
             ['foo' => ['key' => 'foo', 'template' => 'bar.html.twig']],
@@ -46,7 +46,7 @@ class ComponentFactoryTest extends TestCase
     {
         $factory = new ComponentFactory(
             $this->createMock(ComponentTemplateFinderInterface::class),
-            $this->createMock(ServiceLocator::class),
+            $this->createMock(ContainerInterface::class),
             $this->createMock(PropertyAccessorInterface::class),
             $this->createMock(EventDispatcherInterface::class),
             [
@@ -73,7 +73,7 @@ class ComponentFactoryTest extends TestCase
 
         $factory = new ComponentFactory(
             $templateFinder,
-            $this->createMock(ServiceLocator::class),
+            $this->createMock(ContainerInterface::class),
             $this->createMock(PropertyAccessorInterface::class),
             $this->createMock(EventDispatcherInterface::class),
             [],

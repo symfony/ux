@@ -3,6 +3,8 @@
 ## 3.2.0
 
 - Add `ComponentRendererInterface::preCreateForRender()`, `ComponentRendererInterface::startEmbeddedComponentRender()`, and `ComponentRendererInterface::finishEmbeddedComponentRender()` methods
+- Allow using `ComponentFactory` and `ComponentRuntime` with any PSR-11
+  container, making `symfony/dependency-injection` optional for standalone usage
 
 ## 3.1.0
 
