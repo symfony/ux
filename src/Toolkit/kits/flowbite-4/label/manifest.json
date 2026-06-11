@@ -8,6 +8,6 @@
         "templates/": "templates/"
     },
     "dependencies": {
-        "composer": ["tales-from-a-dev/twig-tailwind-extra:^1.0.0"]
+        "composer": ["twig/extra-bundle", "twig/html-extra:^3.12.0", "tales-from-a-dev/twig-tailwind-extra:^1.0.0"]
     }
 }
