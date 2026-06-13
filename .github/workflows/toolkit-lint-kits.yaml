@@ -59,7 +59,7 @@ jobs:
                   php-version: '8.4'
 
             - name: Install Toolkit dependencies
-              uses: ramsey/composer-install@5c2bcf28d7b060ef3c601d7b476d5430a7b46c27
+              uses: ramsey/composer-install@26d8a556604053a9612623447203a691f406fbe6
               with:
                   working-directory: src/Toolkit
 
