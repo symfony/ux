@@ -14,7 +14,7 @@
     data-tooltip-target="wrapper"
     role="presentation"
     class="isolate z-50"
-    style="position: absolute; left: 0px; top: 0px; will-change: transform;"
+    style="position: fixed; left: 0; top: 0; will-change: transform;"
 >
     <div
         class="{{ ('z-50 inline-flex w-fit max-w-xs items-center gap-1.5 rounded-md bg-foreground px-3 py-1.5 text-xs text-background ltr:has-data-[slot=kbd]:pr-1.5 rtl:has-data-[slot=kbd]:pe-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm invisible opacity-0 scale-95 transition-all duration-200 open:visible open:opacity-100 open:scale-100 ' ~ attributes.render('class'))|tailwind_merge }}"
@@ -35,6 +35,6 @@
             aria-hidden="true"
             class="bg-foreground fill-foreground z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px] data-[side=bottom]:top-1 data-[side=left]:top-1/2! data-[side=left]:-right-1 data-[side=left]:-translate-y-1/2 data-[side=right]:top-1/2! data-[side=right]:-left-1 data-[side=right]:-translate-y-1/2 data-[side=top]:-bottom-2.5"
             style="position: absolute;"
-        ></div>
+        ></div>{#- trim: this trailing whitespace text node would otherwise be a phantom flex item spaced by the content's gap-* class -#}
     </div>
 </div>
