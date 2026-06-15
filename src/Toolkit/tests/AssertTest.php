@@ -224,4 +224,46 @@ class AssertTest extends TestCase
         yield ['my/package/name'];
         yield ['@scope//my-package'];
     }
+
+    /**
+     * @dataProvider provideNonEscapingPaths
+     */
+    public function testPathDoesNotEscapeDirectoryWithValidPath(string $path)
+    {
+        $this->expectNotToPerformAssertions();
+
+        Assert::pathDoesNotEscapeDirectory($path);
+    }
+
+    public static function provideNonEscapingPaths(): iterable
+    {
+        yield ['templates/'];
+        yield ['templates/components/Button.html.twig'];
+        yield ['templates/components/Table/Body.html.twig'];
+        // A leading ".." in a segment name is fine as long as it is not a ".." segment.
+        yield ['..foo'];
+        yield ['templates/..foo.twig'];
+    }
+
+    /**
+     * @dataProvider provideEscapingPaths
+     */
+    public function testPathDoesNotEscapeDirectoryWithTraversingPath(string $path)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(\sprintf('The path "%s" must not escape its target directory.', $path));
+
+        Assert::pathDoesNotEscapeDirectory($path);
+    }
+
+    public static function provideEscapingPaths(): iterable
+    {
+        yield ['..'];
+        yield ['../templates'];
+        yield ['../../../../tmp/PWNED'];
+        yield ['templates/../../etc/passwd'];
+        // Backslash separator (Windows-style) must be rejected too.
+        yield ['..\\..\\tmp\\PWNED'];
+        yield ['templates\\..\\..\\etc'];
+    }
 }

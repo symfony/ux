@@ -70,4 +70,19 @@ final class Assert
             throw new \InvalidArgumentException(\sprintf('Invalid NPM package name "%s".', $name));
         }
     }
+
+    /**
+     * Assert that a relative path does not escape its target directory through a ".." segment.
+     *
+     * This rejects any path containing a ".." segment (using either "/" or "\" as separator),
+     * which would let a crafted recipe read from or write to a location outside its directory.
+     *
+     * @throws \InvalidArgumentException if the path escapes its target directory
+     */
+    public static function pathDoesNotEscapeDirectory(string $path): void
+    {
+        if (\in_array('..', preg_split('#[\\\\/]+#', $path), true)) {
+            throw new \InvalidArgumentException(\sprintf('The path "%s" must not escape its target directory.', $path));
+        }
+    }
 }

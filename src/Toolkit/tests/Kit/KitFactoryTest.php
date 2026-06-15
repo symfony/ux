@@ -50,6 +50,23 @@ final class KitFactoryTest extends KernelTestCase
         }
     }
 
+    public function testShouldRejectKitWithRecipeEscapingItsDirectory()
+    {
+        // A malicious recipe whose "copy-files" tries to write outside the recipe directory
+        // must be rejected when the kit (and its recipes) are loaded, before any file is touched.
+        $pwnedPath = '/tmp/PWNED';
+        $alreadyExisted = file_exists($pwnedPath);
+
+        try {
+            $this->expectException(\RuntimeException::class);
+            $this->expectExceptionMessageMatches('/must not escape its target directory\./');
+
+            $this->createKitFactory()->createKitFromAbsolutePath(__DIR__.'/../Fixtures/kits/malicious');
+        } finally {
+            $this->assertSame($alreadyExisted, file_exists($pwnedPath), 'No file should have been written outside the recipe directory.');
+        }
+    }
+
     private function createKitFactory(): KitFactory
     {
         return new KitFactory(
