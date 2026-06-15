@@ -16,6 +16,7 @@ use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\JsonMockResponse;
 use Symfony\UX\Icons\Icon;
+use Symfony\UX\Icons\IconFactory;
 use Symfony\UX\Icons\Iconify;
 use Symfony\UX\Icons\Registry\IconifyOnDemandRegistry;
 
@@ -39,7 +40,7 @@ final class IconifyOnDemandRegistryTest extends TestCase
         ]);
 
         $registry = new IconifyOnDemandRegistry(
-            new Iconify(new NullAdapter(), 'https://example.com', $client),
+            new Iconify(new NullAdapter(), new IconFactory(), 'https://example.com', $client),
             ['bi' => 'lucide'],
         );
 

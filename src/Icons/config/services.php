@@ -16,6 +16,7 @@ use Symfony\UX\Icons\Command\LockIconsCommand;
 use Symfony\UX\Icons\Command\SearchIconCommand;
 use Symfony\UX\Icons\Command\WarmCacheCommand;
 use Symfony\UX\Icons\IconCacheWarmer;
+use Symfony\UX\Icons\IconFactory;
 use Symfony\UX\Icons\Iconify;
 use Symfony\UX\Icons\IconRenderer;
 use Symfony\UX\Icons\IconRendererInterface;
@@ -40,8 +41,11 @@ return static function (ContainerConfigurator $container): void {
                 service('.ux_icons.cache'),
             ])
 
+        ->set('.ux_icons.icon_factory', IconFactory::class)
+
         ->set('.ux_icons.local_svg_icon_registry', LocalSvgIconRegistry::class)
             ->args([
+                service('.ux_icons.icon_factory'),
                 abstract_arg('icon_dir'),
             ])
             ->tag('ux_icons.registry', ['priority' => 10])
@@ -97,6 +101,7 @@ return static function (ContainerConfigurator $container): void {
         ->set('.ux_icons.iconify', Iconify::class)
             ->args([
                 service('.ux_icons.cache'),
+                service('.ux_icons.icon_factory'),
                 abstract_arg('endpoint'),
                 service('http_client')->nullOnInvalid(),
             ])
