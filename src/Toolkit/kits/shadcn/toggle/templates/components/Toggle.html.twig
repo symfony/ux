@@ -23,13 +23,13 @@
 ) -%}
 <button
     type="button"
+    data-slot="toggle"
+    aria-pressed="{{ pressed ? 'true' : 'false' }}"
+    data-state="{{ pressed ? 'on' : 'off' }}"
     class="{{ style.apply({variant: variant, size: size}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
-        'data-slot': 'toggle',
         'data-controller': 'toggle',
         'data-action': 'click->toggle#toggle',
-        'aria-pressed': pressed ? 'true' : 'false',
-        'data-state': pressed ? 'on' : 'off',
     }) }}
 >
     {%- block content %}{% endblock -%}
