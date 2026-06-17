@@ -6,11 +6,12 @@
 
 <div
     data-slot="tabs"
-    data-controller="tabs"
     data-tabs-active-tab-value="{{ defaultValue }}"
     data-orientation="{{ orientation }}"
     class="{{ ('gap-2 group/tabs flex data-[orientation=horizontal]:flex-col ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        'data-controller': 'tabs',
+    }) }}
 >
     {% block content %}{% endblock %}
 </div>

@@ -5,10 +5,12 @@
 
 {%- set _modal_id = 'modal-' ~ id -%}
 {%- set _modal_title_id = _modal_id ~ '-title' -%}
-<div {{ attributes.defaults({
-    'data-controller': 'modal',
-    'data-modal-open-value': open,
-    'aria-labelledby': _modal_title_id,
-}) }}>
+<div
+    data-modal-open-value="{{ open ? 'true' : 'false' }}"
+    aria-labelledby="{{ _modal_title_id }}"
+    {{ attributes.defaults({
+        'data-controller': 'modal',
+    }) }}
+>
     {% block content %}{% endblock %}
 </div>

@@ -6,10 +6,9 @@
         type="radio"
         name="{{ name }}"
         value="{{ value }}"
+        data-slot="radio-group-item"
         class="peer sr-only"
-        {{ attributes.defaults({
-            'data-slot': 'radio-group-item',
-        }) }}
+        {{ attributes.without('class') }}
     >
     <span class="flex aspect-square size-4 items-center justify-center rounded-full border border-input outline-none after:absolute after:-inset-x-3 after:-inset-y-2 peer-focus-visible:border-ring peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer-aria-invalid:border-destructive peer-aria-invalid:ring-3 peer-aria-invalid:ring-destructive/20 peer-aria-invalid:peer-checked:border-primary dark:bg-input/30 dark:peer-aria-invalid:border-destructive/50 dark:peer-aria-invalid:ring-destructive/40 peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground dark:peer-checked:bg-primary"></span>
     <span class="pointer-events-none absolute top-1/2 ltr:left-1/2 rtl:start-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2 scale-0 rounded-full bg-primary-foreground transition-transform peer-checked:scale-100"></span>

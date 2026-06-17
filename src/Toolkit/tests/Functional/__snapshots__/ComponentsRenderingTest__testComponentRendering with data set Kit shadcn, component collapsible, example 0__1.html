@@ -30,10 +30,10 @@
 </twig:Collapsible>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div data-slot="collapsible" data-controller="collapsible" data-collapsible-open-value="false" data-state="closed" class="flex w-[350px] flex-col gap-2 self-start">
+<div data-slot="collapsible" data-collapsible-open-value="false" data-state="closed" data-controller="collapsible" class="flex w-[350px] flex-col gap-2 self-start">
 <div class="flex items-center justify-between gap-4 px-4">
         <h4 class="text-sm font-semibold">Order #4189</h4>
-        <button data-slot="button" data-variant="ghost" data-size="icon" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" data-collapsible-target="trigger" data-action="click-&gt;collapsible#toggle" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 15l5 5l5-5M7 9l5-5l5 5"></path></svg>
+        <button data-slot="button" data-size="icon" data-variant="ghost" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-8" type="button" data-collapsible-target="trigger" data-action="click-&gt;collapsible#toggle" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 15l5 5l5-5M7 9l5-5l5 5"></path></svg>
                 <span class="sr-only">Toggle details</span>
             </button>
             </div>
@@ -41,7 +41,7 @@
         <span class="text-muted-foreground">Status</span>
         <span class="font-medium">Shipped</span>
     </div>
-    <div data-slot="collapsible-content" data-collapsible-target="content" aria-hidden="true" data-state="closed" hidden="" class="flex flex-col gap-2">
+    <div data-slot="collapsible-content" data-collapsible-target="content" aria-hidden="true" data-state="closed" hidden class="flex flex-col gap-2">
 <div class="rounded-md border px-4 py-2 text-sm">
             <p class="font-medium">Shipping address</p>
             <p class="text-muted-foreground">100 Market St, San Francisco</p>

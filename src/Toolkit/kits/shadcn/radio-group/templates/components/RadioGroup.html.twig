@@ -1,10 +1,9 @@
 {# @block content The radio items, typically multiple `RadioGroup:Item` components with `Label`. #}
 <div
     role="radiogroup"
+    data-slot="radio-group"
     class="{{ ('grid w-full gap-2 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.defaults({
-        'data-slot': 'radio-group',
-    }) }}
+    {{ attributes }}
 >
     {%- block content %}{% endblock -%}
 </div>

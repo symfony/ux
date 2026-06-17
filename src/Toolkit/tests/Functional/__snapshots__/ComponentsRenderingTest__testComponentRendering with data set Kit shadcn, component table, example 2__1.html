@@ -87,37 +87,37 @@
 <div class="flex flex-col gap-8 w-full items-center">
         <div class="relative w-full overflow-x-auto" data-slot="table-container">
     <table class="w-full caption-bottom text-sm" dir="rtl">
-<caption class="text-muted-foreground mt-4 text-sm" data-slot="table-caption">قائمة بفواتيرك الأخيرة.</caption>
-        <thead class="[&amp;_tr]:border-b" data-slot="table-header">
-<tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
+<caption data-slot="table-caption" class="text-muted-foreground mt-4 text-sm">قائمة بفواتيرك الأخيرة.</caption>
+        <thead data-slot="table-header" class="[&amp;_tr]:border-b">
+<tr data-slot="table-row" class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted">
 <th class="h-10 px-2 text-left rtl:text-start align-middle font-medium whitespace-nowrap text-foreground ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 w-[100px]" data-slot="table-head">الفاتورة</th>
                 <th class="h-10 px-2 text-left rtl:text-start align-middle font-medium whitespace-nowrap text-foreground ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-head">الحالة</th>
                 <th class="h-10 px-2 text-left rtl:text-start align-middle font-medium whitespace-nowrap text-foreground ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-head">الطريقة</th>
                 <th class="h-10 px-2 rtl:text-start align-middle font-medium whitespace-nowrap text-foreground ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 text-right" data-slot="table-head">المبلغ</th>
             </tr>
         </thead>
-        <tbody class="[&amp;_tr:last-child]:border-0" data-slot="table-body">
-<tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
+        <tbody data-slot="table-body" class="[&amp;_tr:last-child]:border-0">
+<tr data-slot="table-row" class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted">
 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 font-medium" data-slot="table-cell">INV001</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">مدفوع</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">بطاقة ائتمانية</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 text-right" data-slot="table-cell">$250.00</td>
             </tr>
-            <tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
+            <tr data-slot="table-row" class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted">
 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 font-medium" data-slot="table-cell">INV002</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">قيد الانتظار</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">PayPal</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 text-right" data-slot="table-cell">$150.00</td>
             </tr>
-            <tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
+            <tr data-slot="table-row" class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted">
 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 font-medium" data-slot="table-cell">INV003</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">غير مدفوع</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">تحويل بنكي</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 text-right" data-slot="table-cell">$350.00</td>
             </tr>
         </tbody>
-        <tfoot class="border-t bg-muted/50 font-medium [&amp;&gt;tr]:last:border-b-0" data-slot="table-footer">
-<tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
+        <tfoot data-slot="table-footer" class="border-t bg-muted/50 font-medium [&amp;&gt;tr]:last:border-b-0">
+<tr data-slot="table-row" class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted">
 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell" colspan="3">المجموع</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 text-right" data-slot="table-cell">$2,500.00</td>
             </tr>
@@ -127,37 +127,37 @@
 
         <div class="relative w-full overflow-x-auto" data-slot="table-container">
     <table class="w-full caption-bottom text-sm" dir="rtl">
-<caption class="text-muted-foreground mt-4 text-sm" data-slot="table-caption">רשימת החשבוניות האחרונות שלך.</caption>
-        <thead class="[&amp;_tr]:border-b" data-slot="table-header">
-<tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
+<caption data-slot="table-caption" class="text-muted-foreground mt-4 text-sm">רשימת החשבוניות האחרונות שלך.</caption>
+        <thead data-slot="table-header" class="[&amp;_tr]:border-b">
+<tr data-slot="table-row" class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted">
 <th class="h-10 px-2 text-left rtl:text-start align-middle font-medium whitespace-nowrap text-foreground ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 w-[100px]" data-slot="table-head">חשבונית</th>
                 <th class="h-10 px-2 text-left rtl:text-start align-middle font-medium whitespace-nowrap text-foreground ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-head">סטטוס</th>
                 <th class="h-10 px-2 text-left rtl:text-start align-middle font-medium whitespace-nowrap text-foreground ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-head">שיטה</th>
                 <th class="h-10 px-2 rtl:text-start align-middle font-medium whitespace-nowrap text-foreground ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 text-right" data-slot="table-head">סכום</th>
             </tr>
         </thead>
-        <tbody class="[&amp;_tr:last-child]:border-0" data-slot="table-body">
-<tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
+        <tbody data-slot="table-body" class="[&amp;_tr:last-child]:border-0">
+<tr data-slot="table-row" class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted">
 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 font-medium" data-slot="table-cell">INV001</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">שולם</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">כרטיס אשראי</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 text-right" data-slot="table-cell">$250.00</td>
             </tr>
-            <tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
+            <tr data-slot="table-row" class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted">
 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 font-medium" data-slot="table-cell">INV002</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">ממתין</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">PayPal</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 text-right" data-slot="table-cell">$150.00</td>
             </tr>
-            <tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
+            <tr data-slot="table-row" class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted">
 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 font-medium" data-slot="table-cell">INV003</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">לא שולם</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">העברה בנקאית</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 text-right" data-slot="table-cell">$350.00</td>
             </tr>
         </tbody>
-        <tfoot class="border-t bg-muted/50 font-medium [&amp;&gt;tr]:last:border-b-0" data-slot="table-footer">
-<tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
+        <tfoot data-slot="table-footer" class="border-t bg-muted/50 font-medium [&amp;&gt;tr]:last:border-b-0">
+<tr data-slot="table-row" class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted">
 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell" colspan="3">סה"כ</td>
                 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 text-right" data-slot="table-cell">$2,500.00</td>
             </tr>
