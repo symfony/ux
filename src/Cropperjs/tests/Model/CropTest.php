@@ -91,6 +91,33 @@ class CropTest extends TestCase
     }
 
     #[DataProvider('provideDrivers')]
+    public function testGetCroppedImageRotatesClockwise(string $driver)
+    {
+        // Source: left half red, right half blue (split at x = 100).
+        // Cropper.js rotates clockwise for positive degrees, so a 90° rotation
+        // moves the left (red) edge to the top and the right (blue) edge to the bottom.
+        $source = $this->createTwoColorImage();
+
+        try {
+            $result = $this->createCrop($driver, ['rotate' => 90], $source)->getCroppedImage('png');
+        } finally {
+            unlink($source);
+        }
+
+        $image = imagecreatefromstring($result);
+        $this->assertSame(100, imagesx($image));
+        $this->assertSame(200, imagesy($image));
+
+        $top = imagecolorat($image, 50, 30);
+        $this->assertGreaterThan(200, ($top >> 16) & 0xFF, 'Top should be red (clockwise: left edge rotates to the top)');
+        $this->assertLessThan(80, $top & 0xFF, 'Top should not be blue');
+
+        $bottom = imagecolorat($image, 50, 170);
+        $this->assertGreaterThan(200, $bottom & 0xFF, 'Bottom should be blue (clockwise: right edge rotates to the bottom)');
+        $this->assertLessThan(80, ($bottom >> 16) & 0xFF, 'Bottom should not be red');
+    }
+
+    #[DataProvider('provideDrivers')]
     public function testGetCroppedImageCropsTheRequestedRegion(string $driver)
     {
         // Source: left half red, right half blue (split at x = 100)

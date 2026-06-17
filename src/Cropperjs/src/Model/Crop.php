@@ -61,7 +61,7 @@ class Crop
         $image->scaleDown($maxWidth, $maxHeight);
 
         if (!empty($this->options['rotate'])) {
-            $image->rotate(-1 * $this->options['rotate'], 'ffffff');
+            $image->rotate($this->options['rotate'], 'ffffff');
         }
 
         return (string) $image->encodeUsingFileExtension($format, quality: $quality);
@@ -77,7 +77,7 @@ class Crop
         }
 
         if (!empty($this->options['rotate'])) {
-            $image->rotate(-1 * $this->options['rotate'], 'ffffff');
+            $image->rotate($this->options['rotate'], 'ffffff');
         }
 
         return (string) $image->encodeUsingFileExtension($format, quality: $quality);
