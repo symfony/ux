@@ -21,18 +21,18 @@
 ) -%}
 <button
     type="button"
+    data-slot="toggle-group-item"
+    data-toggle-pressed-value="{{ pressed ? 'true' : 'false' }}"
+    data-variant="{{ _toggleGroup_variant }}"
+    data-size="{{ _toggleGroup_size }}"
+    data-spacing="{{ _toggleGroup_spacing }}"
+    aria-pressed="{{ pressed ? 'true' : 'false' }}"
+    data-state="{{ pressed ? 'on' : 'off' }}"
+    {{ _toggleGroup_disabled ? 'disabled' }}
     class="{{ style.apply({variant: _toggleGroup_variant, size: _toggleGroup_size}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
-        'data-slot': 'toggle-group-item',
         'data-controller': 'toggle',
         'data-action': 'click->toggle#toggle click->toggle-group#toggle',
-        'data-toggle-pressed-value': pressed ? 'true' : 'false',
-        'data-variant': _toggleGroup_variant,
-        'data-size': _toggleGroup_size,
-        'data-spacing': _toggleGroup_spacing,
-        'aria-pressed': pressed ? 'true' : 'false',
-        'data-state': pressed ? 'on' : 'off',
-        disabled: _toggleGroup_disabled,
     }) }}
 >
     {%- block content %}{% endblock -%}
