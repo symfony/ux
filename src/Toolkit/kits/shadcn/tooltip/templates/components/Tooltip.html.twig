@@ -13,15 +13,15 @@
 {%- do provide('tooltip.contentId', _tooltip_content_id) -%}
 {%- do provide('tooltip.arrowId', _tooltip_arrow_id) -%}
 <div
+    id="{{ _tooltip_id }}"
+    data-slot="tooltip"
+    data-tooltip-delay-duration-value="{{ _tooltip_delay_duration }}"
+    data-tooltip-wrapper-selector-value="#{{ _tooltip_wrapper_id }}"
+    data-tooltip-content-selector-value="#{{ _tooltip_content_id }}"
+    data-tooltip-arrow-selector-value="#{{ _tooltip_arrow_id }}"
     class="{{ ('relative inline-block ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
-        id: _tooltip_id,
-        'data-slot': 'tooltip',
         'data-controller': 'tooltip',
-        'data-tooltip-delay-duration-value': _tooltip_delay_duration,
-        'data-tooltip-wrapper-selector-value': '#' ~ _tooltip_wrapper_id,
-        'data-tooltip-content-selector-value': '#' ~ _tooltip_content_id,
-        'data-tooltip-arrow-selector-value': '#' ~ _tooltip_arrow_id,
     }) }}
 >
     {%- block content %}{% endblock -%}

@@ -17,14 +17,13 @@
     style="position: fixed; left: 0; top: 0; will-change: transform;"
 >
     <div
+        id="{{ _tooltip_contentId }}"
+        role="tooltip"
+        data-slot="tooltip-content"
+        data-side="{{ side }}"
+        data-tooltip-target="content"
         class="{{ ('z-50 inline-flex w-fit max-w-xs items-center gap-1.5 rounded-md bg-foreground px-3 py-1.5 text-xs text-background ltr:has-data-[slot=kbd]:pr-1.5 rtl:has-data-[slot=kbd]:pe-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm invisible opacity-0 scale-95 transition-all duration-200 open:visible open:opacity-100 open:scale-100 ' ~ attributes.render('class'))|tailwind_merge }}"
-        {{ attributes.defaults({
-            id: _tooltip_contentId,
-            role: 'tooltip',
-            'data-slot': 'tooltip-content',
-            'data-side': side,
-            'data-tooltip-target': 'content',
-        }) }}
+        {{ attributes }}
     >
         {%- block content %}{% endblock -%}
 
