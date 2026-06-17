@@ -3,11 +3,11 @@
 {%- props open = false -%}
 {%- do provide('collapsible.open', open) -%}
 <div
+    data-slot="collapsible"
+    data-collapsible-open-value="{{ open ? 'true' : 'false' }}"
+    data-state="{{ open ? 'open' : 'closed' }}"
     {{ attributes.defaults({
-        'data-slot': 'collapsible',
         'data-controller': 'collapsible',
-        'data-collapsible-open-value': open ? 'true' : 'false',
-        'data-state': open ? 'open' : 'closed',
     }) }}
 >
     {%- block content %}{% endblock -%}
