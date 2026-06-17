@@ -8,14 +8,14 @@
 {%- do provide('accordion.orientation', orientation) -%}
 {%- do provide('accordion.defaultValue', defaultValue) -%}
 <div
+    id="{{ id }}"
+    data-slot="accordion"
+    data-accordion-multiple-value="{{ multiple ? 'true' : 'false' }}"
+    data-accordion-orientation-value="{{ orientation }}"
+    data-orientation="{{ orientation }}"
     class="{{ ('flex w-full flex-col ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
-        id: id,
-        'data-slot': 'accordion',
         'data-controller': 'accordion',
-        'data-accordion-multiple-value': multiple ? 'true' : 'false',
-        'data-accordion-orientation-value': orientation,
-        'data-orientation': orientation,
     }) }}
 >
     {%- block content %}{% endblock -%}
