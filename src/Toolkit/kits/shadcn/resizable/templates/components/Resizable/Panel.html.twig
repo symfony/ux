@@ -2,12 +2,11 @@
 {# @block content The panel content. #}
 {%- props size = null -%}
 <div
-    class="{{ ('overflow-auto ' ~ attributes.render('class'))|tailwind_merge }}"
     style="flex: {{ size ?? 1 }} 1 0%;"
-    {{ attributes.defaults({
-        'data-slot': 'resizable-panel',
-        'data-resizable-target': 'panel',
-    }) }}
+    data-slot="resizable-panel"
+    data-resizable-target="panel"
+    class="{{ ('overflow-auto ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
 >
     {%- block content %}{% endblock -%}
 </div>

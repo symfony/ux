@@ -1,13 +1,12 @@
 {# @prop withHandle bool Show a visible grip handle. #}
 {%- props withHandle = false -%}
 <div
-    class="{{ ('relative flex w-px items-center justify-center bg-border ring-offset-background after:absolute after:inset-y-0 ltr:after:left-1/2 rtl:after:start-1/2 after:w-1 after:-translate-x-1/2 rtl:after:translate-x-1/2 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden group-data-[orientation=horizontal]/resizable:h-full group-data-[orientation=horizontal]/resizable:cursor-col-resize group-data-[orientation=vertical]/resizable:h-px group-data-[orientation=vertical]/resizable:w-full group-data-[orientation=vertical]/resizable:cursor-row-resize ltr:group-data-[orientation=vertical]/resizable:after:left-0 rtl:group-data-[orientation=vertical]/resizable:after:start-0 group-data-[orientation=vertical]/resizable:after:h-1 group-data-[orientation=vertical]/resizable:after:w-full group-data-[orientation=vertical]/resizable:after:translate-x-0 group-data-[orientation=vertical]/resizable:after:-translate-y-1/2 rtl:group-data-[orientation=vertical]/resizable:after:-translate-x-0 group-data-[orientation=vertical]/resizable:[&>div]:rotate-90 ' ~ attributes.render('class'))|tailwind_merge }}"
     tabindex="0"
     role="separator"
-    {{ attributes.defaults({
-        'data-slot': 'resizable-handle',
-        'data-resizable-target': 'handle',
-    }) }}
+    data-slot="resizable-handle"
+    data-resizable-target="handle"
+    class="{{ ('relative flex w-px items-center justify-center bg-border ring-offset-background after:absolute after:inset-y-0 ltr:after:left-1/2 rtl:after:start-1/2 after:w-1 after:-translate-x-1/2 rtl:after:translate-x-1/2 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden group-data-[orientation=horizontal]/resizable:h-full group-data-[orientation=horizontal]/resizable:cursor-col-resize group-data-[orientation=vertical]/resizable:h-px group-data-[orientation=vertical]/resizable:w-full group-data-[orientation=vertical]/resizable:cursor-row-resize ltr:group-data-[orientation=vertical]/resizable:after:left-0 rtl:group-data-[orientation=vertical]/resizable:after:start-0 group-data-[orientation=vertical]/resizable:after:h-1 group-data-[orientation=vertical]/resizable:after:w-full group-data-[orientation=vertical]/resizable:after:translate-x-0 group-data-[orientation=vertical]/resizable:after:-translate-y-1/2 rtl:group-data-[orientation=vertical]/resizable:after:-translate-x-0 group-data-[orientation=vertical]/resizable:[&>div]:rotate-90 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
 >
     {% if withHandle %}
         <div class="z-10 flex h-6 w-1 shrink-0 rounded-lg bg-border"></div>
