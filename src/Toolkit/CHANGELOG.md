@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.36.1
+
+- Harden recipe installer against path traversal (security fix).
+
 ## 2.35
 
 - [Flowbite] Add Flowbite v4 kit
