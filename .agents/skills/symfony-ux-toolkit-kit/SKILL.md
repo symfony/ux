@@ -213,7 +213,10 @@ Format is enforced by `bin/ux-toolkit-kit-lint` (CI fails on any warning — see
 
 ### 2. Root element
 
+Use `attributes.defaults({...})` **only when there are meaningful defaults** the consumer might want to override (e.g. `data-slot`, `data-controller`, `role`, `aria-*`). When there are no defaults to set, use bare `{{ attributes }}`.
+
 ```twig
+{# WITH defaults (data-slot, controller, aria) #}
 <div
     class="{{ ('<base classes> ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
@@ -225,9 +228,17 @@ Format is enforced by `bin/ux-toolkit-kit-lint` (CI fails on any warning — see
 >
     {%- block content %}{% endblock -%}
 </div>
+
+{# WITHOUT defaults (no data-slot, no controller, no aria) #}
+<div
+    class="{{ ('<base classes> ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>
 ```
 
-- Always use `attributes.defaults({...})` (NOT raw `{{ attributes }}`). Consumers must override.
+- Do NOT put hardcoded HTML element attributes (like `type="checkbox"`) into `defaults()` — those are structural, not overridable.
 - Class merging **mandatory**: `('<base> ' ~ attributes.render('class'))|tailwind_merge`.
 
 ### 3. Variant systems with `html_cva`
@@ -461,7 +472,7 @@ Reviewers explicitly check snapshots regenerated (`#3488`).
 
 | Anti-pattern | Fix |
 | --- | --- |
-| `{{ attributes }}` on root without `defaults` | `{{ attributes.defaults({...}) }}` |
+| `{{ attributes.defaults({}) }}` with empty or no meaningful defaults | `{{ attributes }}` when no defaults needed; `{{ attributes.defaults({...}) }}` only with real defaults (`data-slot`, `data-controller`, `role`, `aria-*`) |
 | Hardcoded `class="..."` on root | `class="{{ ('<base> ' ~ attributes.render('class'))\|tailwind_merge }}"` |
 | Variant via `{% if variant == ... %}` chains | `html_cva(base, variants).apply({...})\|tailwind_merge` |
 | `Trigger.html.twig` wraps own `<button>` | Expose `<recipe>_trigger_attrs` + use `{%- block content %}{% endblock -%}` only |
@@ -493,5 +504,5 @@ Reviewers explicitly check snapshots regenerated (`#3488`).
 | Bad | Good |
 | --- | --- |
 | `<button class="..." data-action="click->dialog#open">{% block content %}{% endblock %}</button>` | `{%- set dialog_trigger_attrs = { 'data-action': 'click->dialog#open'\|html_attr_type('sst'), 'data-dialog-target': 'trigger', 'aria-haspopup': 'dialog' } -%}{%- block content %}{% endblock -%}` |
-| `<div class="text-lg leading-none font-semibold {{ attributes.render('class') }}" {{ attributes }}>` | `<div class="{{ ('text-lg leading-none font-semibold ' ~ attributes.render('class'))\|tailwind_merge }}" {{ attributes.defaults({'data-slot': 'dialog-title'}) }}>` |
+| `<div class="text-lg leading-none font-semibold {{ attributes.render('class') }}" {{ attributes }}>` | `<div class="{{ ('text-lg leading-none font-semibold ' ~ attributes.render('class'))\|tailwind_merge }}" {{ attributes.defaults({'data-slot': 'dialog-title'}) }}>` (with defaults) or `{{ attributes }}` (without defaults) |
 | `<twig:RadioGroup:Item value="a" />` reading `{% set _radio_group_name = ... %}` from parent | Keep `name` as explicit prop on `RadioGroup:Item` (self-closing) |
