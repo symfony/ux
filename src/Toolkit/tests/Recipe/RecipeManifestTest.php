@@ -197,6 +197,57 @@ final class RecipeManifestTest extends TestCase
             JSON);
     }
 
+    public function testFromJsonWithTraversalInCopyFilesSource()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The path "../../../../tmp/PWNED" must not escape its target directory.');
+
+        RecipeManifest::fromJson(<<<JSON
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "description": "An incredible component",
+                    "copy-files": {
+                        "../../../../tmp/PWNED": "templates/"
+                    }
+                }
+            JSON);
+    }
+
+    public function testFromJsonWithTraversalInCopyFilesDestination()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The path "../../../../tmp/PWNED" must not escape its target directory.');
+
+        RecipeManifest::fromJson(<<<JSON
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "description": "An incredible component",
+                    "copy-files": {
+                        "templates/": "../../../../tmp/PWNED"
+                    }
+                }
+            JSON);
+    }
+
+    public function testFromJsonWithBackslashTraversalInCopyFilesDestination()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The path "..\\..\\tmp\\PWNED" must not escape its target directory.');
+
+        RecipeManifest::fromJson(<<<JSON
+                {
+                    "type": "component",
+                    "name": "MyComponent",
+                    "description": "An incredible component",
+                    "copy-files": {
+                        "templates/": "..\\\\..\\\\tmp\\\\PWNED"
+                    }
+                }
+            JSON);
+    }
+
     public function testFromJsonWithMinimumValidData()
     {
         $manifest = RecipeManifest::fromJson(<<<JSON

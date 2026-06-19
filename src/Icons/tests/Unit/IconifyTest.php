@@ -18,6 +18,7 @@ use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\JsonMockResponse;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Icon;
+use Symfony\UX\Icons\IconFactory;
 use Symfony\UX\Icons\Iconify;
 
 /**
@@ -29,6 +30,7 @@ class IconifyTest extends TestCase
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
+            iconFactory: new IconFactory(),
             endpoint: 'https://example.com',
             httpClient: new MockHttpClient([
                 new JsonMockResponse([
@@ -51,10 +53,81 @@ class IconifyTest extends TestCase
         $this->assertEquals($icon->getAttributes(), ['viewBox' => '0 0 24 24', 'xmlns' => 'http://www.w3.org/2000/svg']);
     }
 
+    public function testFetchIconSanitizesBody()
+    {
+        $iconify = new Iconify(
+            cache: new NullAdapter(),
+            iconFactory: new IconFactory(),
+            endpoint: 'https://example.com',
+            httpClient: new MockHttpClient([
+                new JsonMockResponse(['bi' => []]),
+                new JsonMockResponse(['icons' => ['heart' => ['body' => '<rect onload="alert(document.cookie)"/>', 'height' => 24]]]),
+            ]),
+        );
+
+        $this->assertSame('<rect></rect>', $iconify->fetchIcon('bi', 'heart')->getInnerSvg());
+    }
+
+    public function testFetchIconsSanitizesBody()
+    {
+        $iconify = new Iconify(
+            cache: new NullAdapter(),
+            iconFactory: new IconFactory(),
+            endpoint: 'https://example.com',
+            httpClient: new MockHttpClient([
+                new JsonMockResponse(['bi' => []]),
+                new JsonMockResponse(['icons' => ['heart' => ['body' => '<script>alert(1)</script><path d="M0 0"/>', 'height' => 24]]]),
+            ]),
+        );
+
+        $icons = $iconify->fetchIcons('bi', ['heart']);
+
+        $this->assertSame('<path d="M0 0"></path>', $icons['heart']->getInnerSvg());
+    }
+
+    public function testFetchIconThrowsNotFoundWhenBodyIsInvalid()
+    {
+        $iconify = new Iconify(
+            cache: new NullAdapter(),
+            iconFactory: new IconFactory(),
+            endpoint: 'https://example.com',
+            httpClient: new MockHttpClient([
+                new JsonMockResponse(['bi' => []]),
+                new JsonMockResponse(['icons' => ['heart' => ['body' => '<g><path d="z"></g>', 'height' => 24]]]),
+            ]),
+        );
+
+        $this->expectException(IconNotFoundException::class);
+
+        $iconify->fetchIcon('bi', 'heart');
+    }
+
+    public function testFetchIconsSkipsIconsWithInvalidBody()
+    {
+        $iconify = new Iconify(
+            cache: new NullAdapter(),
+            iconFactory: new IconFactory(),
+            endpoint: 'https://example.com',
+            httpClient: new MockHttpClient([
+                new JsonMockResponse(['bi' => []]),
+                new JsonMockResponse(['icons' => [
+                    'good' => ['body' => '<path d="M0 0"/>', 'height' => 24],
+                    'bad' => ['body' => '<g><path d="z"></g>', 'height' => 24],
+                ]]),
+            ]),
+        );
+
+        $icons = $iconify->fetchIcons('bi', ['good', 'bad']);
+
+        $this->assertArrayHasKey('good', $icons);
+        $this->assertArrayNotHasKey('bad', $icons);
+    }
+
     public function testFetchIconByAlias()
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
+            iconFactory: new IconFactory(),
             endpoint: 'https://example.com',
             httpClient: new MockHttpClient([
                 new JsonMockResponse([
@@ -84,7 +157,7 @@ class IconifyTest extends TestCase
 
     public function testFetchIconThrowsWhenIconSetDoesNotExists()
     {
-        $iconify = new Iconify(new NullAdapter(), 'https://example.com', new MockHttpClient(new JsonMockResponse([])));
+        $iconify = new Iconify(new NullAdapter(), new IconFactory(), 'https://example.com', new MockHttpClient(new JsonMockResponse([])));
 
         $this->expectException(IconNotFoundException::class);
         $this->expectExceptionMessage('The icon "bi:heart" does not exist on iconify.design.');
@@ -96,6 +169,7 @@ class IconifyTest extends TestCase
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
+            iconFactory: new IconFactory(),
             endpoint: 'https://example.com',
             httpClient: new MockHttpClient([
                 new JsonMockResponse([
@@ -124,6 +198,7 @@ class IconifyTest extends TestCase
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
+            iconFactory: new IconFactory(),
             endpoint: 'https://example.com',
             httpClient: new MockHttpClient([
                 new JsonMockResponse([
@@ -150,6 +225,7 @@ class IconifyTest extends TestCase
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
+            iconFactory: new IconFactory(),
             endpoint: 'https://example.com',
             httpClient: new MockHttpClient([
                 new JsonMockResponse([
@@ -169,6 +245,7 @@ class IconifyTest extends TestCase
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
+            iconFactory: new IconFactory(),
             endpoint: 'https://example.com',
             httpClient: new MockHttpClient([
                 new JsonMockResponse([
@@ -200,6 +277,7 @@ class IconifyTest extends TestCase
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
+            iconFactory: new IconFactory(),
             endpoint: 'https://example.com',
             httpClient: new MockHttpClient([
                 new JsonMockResponse([
@@ -240,6 +318,7 @@ class IconifyTest extends TestCase
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
+            iconFactory: new IconFactory(),
             endpoint: 'https://example.com',
             httpClient: new MockHttpClient([
                 new JsonMockResponse([
@@ -257,6 +336,7 @@ class IconifyTest extends TestCase
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
+            iconFactory: new IconFactory(),
             endpoint: 'https://example.com',
             httpClient: new MockHttpClient([
                 new JsonMockResponse([
@@ -274,7 +354,7 @@ class IconifyTest extends TestCase
     {
         $responseFile = __DIR__.'/../Fixtures/Iconify/collections.json';
         $client = $this->createHttpClient(json_decode(file_get_contents($responseFile)));
-        $iconify = new Iconify(new NullAdapter(), 'https://localhost', $client);
+        $iconify = new Iconify(new NullAdapter(), new IconFactory(), 'https://localhost', $client);
 
         $metadata = $iconify->metadataFor('fa6-solid');
         $this->assertSame('Font Awesome Solid', $metadata['name']);
@@ -285,6 +365,7 @@ class IconifyTest extends TestCase
     {
         $iconify = new Iconify(
             new NullAdapter(),
+            new IconFactory(),
             'https://example.com',
             new MockHttpClient([]),
             $maxQueryLength,
@@ -333,7 +414,7 @@ class IconifyTest extends TestCase
 
     public function testChunkThrowWithIconPrefixTooLong()
     {
-        $iconify = new Iconify(new NullAdapter(), 'https://example.com', new MockHttpClient([]));
+        $iconify = new Iconify(new NullAdapter(), new IconFactory(), 'https://example.com', new MockHttpClient([]));
 
         $prefix = str_pad('p', 101, 'p');
         $name = 'icon';
@@ -346,7 +427,7 @@ class IconifyTest extends TestCase
 
     public function testChunkThrowWithIconNameTooLong()
     {
-        $iconify = new Iconify(new NullAdapter(), 'https://example.com', new MockHttpClient([]));
+        $iconify = new Iconify(new NullAdapter(), new IconFactory(), 'https://example.com', new MockHttpClient([]));
 
         $prefix = 'prefix';
         $name = str_pad('n', 101, 'n');

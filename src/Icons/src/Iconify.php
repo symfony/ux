@@ -44,6 +44,7 @@ final class Iconify
 
     public function __construct(
         private CacheInterface $cache,
+        private IconFactory $iconFactory,
         private string $endpoint = self::API_ENDPOINT,
         private ?HttpClientInterface $httpClient = null,
         ?int $maxIconsQueryLength = null,
@@ -86,10 +87,15 @@ final class Iconify
         $height = $data['icons'][$name]['height'] ?? $data['height'] ?? $this->sets()[$prefix]['height'] ?? null;
         $width = $data['icons'][$name]['width'] ?? $data['width'] ?? $this->sets()[$prefix]['width'] ?? null;
 
-        return new Icon($data['icons'][$name]['body'], [
-            'xmlns' => self::ATTR_XMLNS_URL,
-            'viewBox' => \sprintf('0 0 %s %s', $width ?? $height ?? self::DEFAULT_ICON_WIDTH, $height ?? $width ?? self::DEFAULT_ICON_HEIGHT),
-        ]);
+        try {
+            return $this->iconFactory->fromBody($data['icons'][$name]['body'], [
+                'xmlns' => self::ATTR_XMLNS_URL,
+                'viewBox' => \sprintf('0 0 %s %s', $width ?? $height ?? self::DEFAULT_ICON_WIDTH, $height ?? $width ?? self::DEFAULT_ICON_HEIGHT),
+            ]);
+        } catch (\RuntimeException $e) {
+            // A malformed body is treated as a missing icon so callers (and "ignore_not_found") degrade gracefully.
+            throw new IconNotFoundException(\sprintf('The icon "%s:%s" from iconify.design is not a valid SVG.', $prefix, $nameArg), previous: $e);
+        }
     }
 
     public function fetchIcons(string $prefix, array $names): array
@@ -134,10 +140,15 @@ final class Iconify
             $height = $iconData['height'] ?? $data['height'] ??= $this->sets()[$prefix]['height'] ?? null;
             $width = $iconData['width'] ?? $data['width'] ??= $this->sets()[$prefix]['width'] ?? null;
 
-            $icons[$iconName] = new Icon($iconData['body'], [
-                'xmlns' => self::ATTR_XMLNS_URL,
-                'viewBox' => \sprintf('0 0 %d %d', $width ?? $height ?? self::DEFAULT_ICON_WIDTH, $height ?? $width ?? self::DEFAULT_ICON_HEIGHT),
-            ]);
+            try {
+                $icons[$iconName] = $this->iconFactory->fromBody($iconData['body'], [
+                    'xmlns' => self::ATTR_XMLNS_URL,
+                    'viewBox' => \sprintf('0 0 %d %d', $width ?? $height ?? self::DEFAULT_ICON_WIDTH, $height ?? $width ?? self::DEFAULT_ICON_HEIGHT),
+                ]);
+            } catch (\RuntimeException) {
+                // Skip icons with a malformed body; a missing entry is reported as "not found" by callers.
+                continue;
+            }
         }
 
         return $icons;

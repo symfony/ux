@@ -14,6 +14,7 @@ namespace Symfony\UX\Icons\Registry;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Icon;
+use Symfony\UX\Icons\IconFactory;
 use Symfony\UX\Icons\IconRegistryInterface;
 
 /**
@@ -27,6 +28,7 @@ final class LocalSvgIconRegistry implements IconRegistryInterface
      * @param array<string, string> $iconSetPaths
      */
     public function __construct(
+        private readonly IconFactory $iconFactory,
         private readonly string $iconDir,
         private readonly array $iconSetPaths = [],
     ) {
@@ -45,13 +47,13 @@ final class LocalSvgIconRegistry implements IconRegistryInterface
                     throw new IconNotFoundException(\sprintf('The icon "%s" (%s) does not exist.', $name, $filename));
                 }
 
-                return Icon::fromFile($filename);
+                return $this->iconFactory->fromFile($filename);
             }
         }
 
         $filepath = str_replace(':', '/', $name).'.svg';
         if (file_exists($filename = $this->iconDir.'/'.$filepath)) {
-            return Icon::fromFile($filename);
+            return $this->iconFactory->fromFile($filename);
         }
 
         throw new IconNotFoundException(\sprintf('The icon "%s" (%s) does not exist.', $name, $filename));

@@ -1,0 +1,6 @@
+{
+    "name": "Malicious",
+    "description": "A kit crafted to attempt a path traversal during installation.",
+    "license": "MIT",
+    "homepage": "https://example.com"
+}

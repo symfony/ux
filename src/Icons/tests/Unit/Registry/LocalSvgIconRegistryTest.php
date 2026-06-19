@@ -14,6 +14,7 @@ namespace Symfony\UX\Icons\Tests\Unit\Registry;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Icons\Icon;
+use Symfony\UX\Icons\IconFactory;
 use Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
 
 /**
@@ -83,6 +84,7 @@ final class LocalSvgIconRegistryTest extends TestCase
     public function testIconSetPaths(string $name, array $iconSetPaths, ?string $expectedContent)
     {
         $registry = new LocalSvgIconRegistry(
+            iconFactory: new IconFactory(),
             iconDir: __DIR__.'/../../Fixtures/icons',
             iconSetPaths: $iconSetPaths,
         );
@@ -141,6 +143,6 @@ final class LocalSvgIconRegistryTest extends TestCase
 
     private function registry(): LocalSvgIconRegistry
     {
-        return new LocalSvgIconRegistry(__DIR__.'/../../Fixtures/svg');
+        return new LocalSvgIconRegistry(new IconFactory(), __DIR__.'/../../Fixtures/svg');
     }
 }

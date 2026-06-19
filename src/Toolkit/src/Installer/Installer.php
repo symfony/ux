@@ -50,6 +50,16 @@ final class Installer
                 $sourceAbsolutePathName = Path::join($recipeAbsolutePath, $file->sourceRelativePathName);
                 $destinationAbsolutePathName = Path::join($destinationPath, $file->destinationRelativePathName);
 
+                // Last-line defense: even though RecipeManifest and File already reject paths
+                // escaping their directory, re-check the fully resolved paths right before the
+                // filesystem read/write, so the copy can never land outside its base directory.
+                if (!Path::isBasePath($recipeAbsolutePath, $sourceAbsolutePathName)) {
+                    throw new \RuntimeException(\sprintf('Refusing to read "%s": source escapes the recipe directory.', $file->sourceRelativePathName));
+                }
+                if (!Path::isBasePath($destinationPath, $destinationAbsolutePathName)) {
+                    throw new \RuntimeException(\sprintf('Refusing to write "%s": destination escapes the target directory.', $file->destinationRelativePathName));
+                }
+
                 if ($this->copyFile($kit, $sourceAbsolutePathName, $destinationAbsolutePathName, $force)) {
                     $installedFiles[] = $file;
                 }

@@ -3,6 +3,7 @@
 ## 3.2.0
 
 - Add lint kit command `bin/ux-toolkit-kit-lint` to check for issues in local kits
+- Harden recipe installer against path traversal (security fix).
 
 ## 3.1
 
@@ -60,6 +61,10 @@
 - [Shadcn] Add `collapsible` recipe
 - [Shadcn] Add `typography` recipe
 - [Shadcn] Add `toggle-group` recipe
+
+## 2.36.1
+
+- Harden recipe installer against path traversal (security fix).
 
 ## 2.35
 

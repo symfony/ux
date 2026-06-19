@@ -176,10 +176,8 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
         }
 
         $container->getDefinition('.ux_icons.local_svg_icon_registry')
-            ->setArguments([
-                $mergedConfig['icon_dir'],
-                $iconSetPaths,
-            ])
+            ->setArgument(1, $mergedConfig['icon_dir'])
+            ->setArgument(2, $iconSetPaths)
         ;
 
         $container->getDefinition('.ux_icons.icon_finder')
@@ -198,7 +196,7 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
         ;
 
         $container->getDefinition('.ux_icons.iconify')
-            ->setArgument(1, $mergedConfig['iconify']['endpoint']);
+            ->setArgument(2, $mergedConfig['iconify']['endpoint']);
 
         $container->getDefinition('.ux_icons.iconify_on_demand_registry')
             ->setArgument(1, $iconSetAliases);

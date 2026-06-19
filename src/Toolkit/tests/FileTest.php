@@ -32,6 +32,22 @@ final class FileTest extends TestCase
         new File('templates/components/Button.html.twig', __FILE__.'Button.html.twig');
     }
 
+    public function testShouldFailIfSourcePathEscapesTargetDirectory()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The path "../../../../tmp/PWNED.html.twig" must not escape its target directory.');
+
+        new File('../../../../tmp/PWNED.html.twig', 'templates/components/Button.html.twig');
+    }
+
+    public function testShouldFailIfDestinationPathEscapesTargetDirectory()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The path "../../../../tmp/PWNED.html.twig" must not escape its target directory.');
+
+        new File('templates/components/Button.html.twig', '../../../../tmp/PWNED.html.twig');
+    }
+
     public function testCanInstantiateFile()
     {
         $file = new File('src-templates/components/Button.html.twig', 'dist-templates/components/Button.html.twig');
