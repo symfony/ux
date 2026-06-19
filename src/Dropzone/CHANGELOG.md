@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.x
+
+- Add support for multiple file uploads: accumulate files across selections, preview each file, and remove them individually
+
 ## 3.0.0
 
 - Minimum required Symfony version is now 7.4

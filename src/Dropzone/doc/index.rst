@@ -56,7 +56,7 @@ replacement of the native FileType class::
     }
 
 Uploading multiple files
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Upload several files at once, pass the standard ``multiple``
 option (inherited from ``FileType``)::
