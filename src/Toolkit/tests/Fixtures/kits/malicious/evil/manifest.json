@@ -1,0 +1,8 @@
+{
+    "type": "component",
+    "name": "Evil",
+    "description": "Attempts to write outside the target directory.",
+    "copy-files": {
+        "templates/": "../../../../../../tmp/PWNED"
+    }
+}

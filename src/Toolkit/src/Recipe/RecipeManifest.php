@@ -12,6 +12,7 @@
 namespace Symfony\UX\Toolkit\Recipe;
 
 use Symfony\Component\Filesystem\Path;
+use Symfony\UX\Toolkit\Assert;
 use Symfony\UX\Toolkit\Dependency\ConstraintVersion;
 use Symfony\UX\Toolkit\Dependency\DependencyInterface;
 use Symfony\UX\Toolkit\Dependency\ImportmapPackageDependency;
@@ -46,6 +47,9 @@ final class RecipeManifest
             if (!Path::isRelative($destination)) {
                 throw new \InvalidArgumentException(\sprintf('Copy file destination "%s" must be a relative path.', $destination));
             }
+
+            Assert::pathDoesNotEscapeDirectory($source);
+            Assert::pathDoesNotEscapeDirectory($destination);
         }
     }
 

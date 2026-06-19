@@ -34,6 +34,9 @@ final class File implements \Stringable
         if (!Path::isRelative($this->destinationRelativePathName)) {
             throw new \InvalidArgumentException(\sprintf('The destination path "%s" must be relative.', $this->destinationRelativePathName));
         }
+
+        Assert::pathDoesNotEscapeDirectory($this->sourceRelativePathName);
+        Assert::pathDoesNotEscapeDirectory($this->destinationRelativePathName);
     }
 
     public function __toString(): string
