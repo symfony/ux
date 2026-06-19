@@ -3,7 +3,11 @@
 ## 3.2.0
 
 - Add lint kit command `bin/ux-toolkit-kit-lint` to check for issues in local kits
+- Allow declaring kit-global dependencies in a kit manifest
 - Harden recipe installer against path traversal (security fix).
+- Fix dependencies in several Shadcn recipe manifests
+- Fix dependencies in several Flowbite v4 recipe manifests
+- Fix position and remove phantom text node in the Shadcn `tooltip` recipe
 
 ## 3.1
 

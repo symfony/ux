@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.2.0
+
+- Prevent installation alongside `symfony/mercure` 0.7.0 and 0.7.1, which are incompatible
+
 ## 3.1.0
 
 - Add a minimal layout for Turbo Frame responses, allowing `head` content like meta tags to work properly
