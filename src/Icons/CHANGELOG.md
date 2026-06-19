@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 2.36.1
+
+- Sanitize rendered SVG icons (Iconify bodies and local files) to prevent XSS.
+  Removed from icon output:
+    - Elements: `<script>`, `<foreignObject>`, `<iframe>`, `<object>`, `<embed>`, `<handler>`
+    - SMIL animation elements (`<animate>`, `<set>`, `<animateTransform>`, `<animateMotion>`) when they target an `on*`, `href` or `xlink:href` attribute
+    - CDATA sections and processing instructions (otherwise re-serialized as raw HTML)
+    - Event-handler attributes (`on*`, e.g. `onload`, `onclick`) on every element
+    - `href` / `xlink:href` values with a non-allowlisted scheme such as `javascript:`, `vbscript:`, `data:text/html` or `data:image/svg+xml` (allowed: `http(s)`, `mailto`, `tel`, `data:image/*` raster, fragments and relative URLs)
+
+    `<style>` elements are kept (so light/dark-mode theming keeps working), with their event-handler attributes stripped and `</style>` breakouts dropped.
+
+    Clear your icon cache after upgrading so already-cached icons are re-sanitized.
+
 ## 2.35
 
 - Allow Symfony UX 3.x packages

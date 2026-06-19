@@ -76,60 +76,6 @@ final class Icon implements \Stringable
         return (bool) preg_match('#^([a-z0-9]+(-[a-z0-9]+)*)(:[a-z0-9]+(-[a-z0-9]+)*)*$#', $name);
     }
 
-    public static function fromFile(string $filename): self
-    {
-        if (!class_exists(\DOMDocument::class)) {
-            throw new \LogicException('The "DOM" PHP extension is required to create icons from files.');
-        }
-
-        $svg = file_get_contents($filename) ?: throw new \RuntimeException(\sprintf('The icon file "%s" could not be read.', $filename));
-
-        $svgDoc = new \DOMDocument();
-        $svgDoc->preserveWhiteSpace = false;
-
-        try {
-            $svgDoc->loadXML($svg);
-        } catch (\Throwable $e) {
-            throw new \RuntimeException(\sprintf('The icon file "%s" does not contain a valid SVG.', $filename), previous: $e);
-        }
-
-        $svgElements = $svgDoc->getElementsByTagName('svg');
-
-        if (0 === $svgElements->length) {
-            throw new \RuntimeException(\sprintf('The icon file "%s" does not contain a valid SVG.', $filename));
-        }
-
-        if (1 !== $svgElements->length) {
-            throw new \RuntimeException(\sprintf('The icon file "%s" contains more than one SVG.', $filename));
-        }
-
-        $svgElement = $svgElements->item(0) ?? throw new \RuntimeException(\sprintf('The icon file "%s" does not contain a valid SVG.', $filename));
-
-        $innerSvg = '';
-
-        foreach ($svgElement->childNodes as $node) {
-            // Ignore comments and text nodes
-            if ($node instanceof \DOMComment || $node instanceof \DOMText) {
-                continue;
-            }
-
-            // Ignore script tags
-            if ($node instanceof \DOMElement && 'script' === $node->nodeName) {
-                continue;
-            }
-
-            $innerSvg .= $svgDoc->saveHTML($node);
-        }
-
-        if (!$innerSvg) {
-            throw new \RuntimeException(\sprintf('The icon file "%s" contains an empty SVG.', $filename));
-        }
-
-        $attributes = array_map(static fn (\DOMAttr $a) => $a->value, [...$svgElement->attributes]);
-
-        return new self($innerSvg, $attributes);
-    }
-
     public function __construct(
         private readonly string $innerSvg,
         private readonly array $attributes = [],
