@@ -24,11 +24,11 @@ final class QuoteRenderer implements BlockRendererInterface
     {
         $text = htmlspecialchars((string) ($blockData['text'] ?? ''), \ENT_QUOTES | \ENT_HTML5, 'UTF-8');
         $cap = $blockData['caption'] ?? null;
-        $body = sprintf('<p>%s</p>', $text);
+        $body = \sprintf('<p>%s</p>', $text);
         if (\is_string($cap) && '' !== $cap) {
-            $body .= sprintf('<cite>%s</cite>', htmlspecialchars($cap, \ENT_QUOTES | \ENT_HTML5, 'UTF-8'));
+            $body .= \sprintf('<cite>%s</cite>', htmlspecialchars($cap, \ENT_QUOTES | \ENT_HTML5, 'UTF-8'));
         }
 
-        return sprintf('<blockquote>%s</blockquote>', $body);
+        return \sprintf('<blockquote>%s</blockquote>', $body);
     }
 }

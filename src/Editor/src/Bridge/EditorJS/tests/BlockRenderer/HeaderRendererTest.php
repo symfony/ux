@@ -18,7 +18,7 @@ final class HeaderRendererTest extends TestCase
 {
     public function testType(): void
     {
-        self::assertSame('header', (new HeaderRenderer())->getBlockType());
+        self::assertSame('header', new HeaderRenderer()->getBlockType());
     }
 
     public function testRendersLevels(): void

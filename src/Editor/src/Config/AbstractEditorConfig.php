@@ -90,7 +90,7 @@ abstract class AbstractEditorConfig implements EditorConfigInterface, LoggerAwar
             return;
         }
 
-        $message = sprintf('Bridge "%s" does not support common option(s): %s', $this->getBridgeId(), implode(', ', $issues));
+        $message = \sprintf('Bridge "%s" does not support common option(s): %s', $this->getBridgeId(), implode(', ', $issues));
 
         if ($this->strict) {
             throw new IncompatibleConfigException($message);

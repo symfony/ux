@@ -35,7 +35,7 @@ abstract class AbstractBlockTransformer implements EditorContentTransformerInter
             return null;
         }
         if (!$content instanceof BlockContent) {
-            throw new \InvalidArgumentException(sprintf('Expected BlockContent, got %s', get_debug_type($content)));
+            throw new \InvalidArgumentException(\sprintf('Expected BlockContent, got %s', get_debug_type($content)));
         }
 
         return ['version' => $content->schemaVersion, 'blocks' => $content->blocks];
@@ -47,7 +47,7 @@ abstract class AbstractBlockTransformer implements EditorContentTransformerInter
             return null;
         }
         if (!\is_array($stored)) {
-            throw new ContentSchemaException(sprintf('Expected array, got %s', get_debug_type($stored)));
+            throw new ContentSchemaException(\sprintf('Expected array, got %s', get_debug_type($stored)));
         }
         $blocks = $stored['blocks'] ?? [];
         if (!\is_array($blocks)) {

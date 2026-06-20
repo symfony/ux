@@ -38,7 +38,7 @@ final class ToolDefinitionTest extends TestCase
 
     public function testToArrayOmitsEmptyConfig(): void
     {
-        $arr = (new ToolDefinition('Header'))->toArray();
+        $arr = new ToolDefinition('Header')->toArray();
         self::assertSame('Header', $arr['class']);
         self::assertArrayNotHasKey('config', $arr);
         self::assertArrayNotHasKey('shortcut', $arr);

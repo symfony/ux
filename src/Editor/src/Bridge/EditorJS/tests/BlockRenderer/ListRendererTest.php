@@ -25,11 +25,11 @@ final class ListRendererTest extends TestCase
 
     public function testOrdered(): void
     {
-        self::assertSame('<ol><li>a</li></ol>', (new ListRenderer())->render(['style' => 'ordered', 'items' => ['a']]));
+        self::assertSame('<ol><li>a</li></ol>', new ListRenderer()->render(['style' => 'ordered', 'items' => ['a']]));
     }
 
     public function testEscapesItems(): void
     {
-        self::assertSame('<ul><li>&lt;b&gt;x&lt;/b&gt;</li></ul>', (new ListRenderer())->render(['items' => ['<b>x</b>']]));
+        self::assertSame('<ul><li>&lt;b&gt;x&lt;/b&gt;</li></ul>', new ListRenderer()->render(['items' => ['<b>x</b>']]));
     }
 }

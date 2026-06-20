@@ -27,12 +27,12 @@ final class HtmlContent extends EditorContent
 
     public function isEmpty(): bool
     {
-        return trim(strip_tags($this->html)) === '';
+        return '' === trim(strip_tags($this->html));
     }
 
     public function getSanitized(?HtmlSanitizerInterface $sanitizer = null): string
     {
-        return $sanitizer === null ? $this->html : $sanitizer->sanitize($this->html);
+        return null === $sanitizer ? $this->html : $sanitizer->sanitize($this->html);
     }
 
     public static function fromString(string $html, array $metadata = []): self

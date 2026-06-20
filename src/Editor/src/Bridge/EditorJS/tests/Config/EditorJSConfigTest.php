@@ -45,6 +45,6 @@ final class EditorJSConfigTest extends TestCase
 
     public function testNoToolsKeyWhenEmpty(): void
     {
-        self::assertArrayNotHasKey('tools', (new EditorJSConfig())->toNative());
+        self::assertArrayNotHasKey('tools', new EditorJSConfig()->toNative());
     }
 }

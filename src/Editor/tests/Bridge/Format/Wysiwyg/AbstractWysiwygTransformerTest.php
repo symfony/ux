@@ -45,7 +45,10 @@ final class AbstractWysiwygTransformerTest extends TestCase
     private function fake(): AbstractWysiwygTransformer
     {
         return new class extends AbstractWysiwygTransformer {
-            public function getBridgeId(): string { return 'fake'; }
+            public function getBridgeId(): string
+            {
+                return 'fake';
+            }
         };
     }
 }

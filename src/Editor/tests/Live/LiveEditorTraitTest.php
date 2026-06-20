@@ -39,8 +39,16 @@ final class LiveEditorTraitTest extends TestCase
     {
         return new class {
             use LiveEditor;
-            public function __construct() { $this->draftRepo = new InMemoryDrafts(); }
-            public function getEntityId(): string { return '42'; }
+
+            public function __construct()
+            {
+                $this->draftRepo = new InMemoryDrafts();
+            }
+
+            public function getEntityId(): string
+            {
+                return '42';
+            }
         };
     }
 }

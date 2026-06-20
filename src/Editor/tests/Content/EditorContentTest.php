@@ -21,11 +21,20 @@ final class EditorContentTest extends TestCase
     public function testAbstractCarriesFormatAndMetadata(): void
     {
         $stub = new class('hi', ['bridgeId' => 'fake']) extends EditorContent {
-            public function __construct(public readonly string $raw, array $meta) {
+            public function __construct(public readonly string $raw, array $meta)
+            {
                 parent::__construct(EditorContentFormat::Html, $meta);
             }
-            public function getRaw(): string { return $this->raw; }
-            public function isEmpty(): bool  { return $this->raw === ''; }
+
+            public function getRaw(): string
+            {
+                return $this->raw;
+            }
+
+            public function isEmpty(): bool
+            {
+                return '' === $this->raw;
+            }
         };
         self::assertInstanceOf(EditorContentInterface::class, $stub);
         self::assertSame(EditorContentFormat::Html, $stub->getFormat());

@@ -30,7 +30,7 @@ final class PresetRegistryTest extends TestCase
     public function testUnknownPresetThrows(): void
     {
         $this->expectException(UnknownBridgeException::class);
-        (new PresetRegistry([]))->get('does.not.exist');
+        new PresetRegistry([])->get('does.not.exist');
     }
 
     public function testAll(): void
@@ -42,17 +42,43 @@ final class PresetRegistryTest extends TestCase
     private function fakePreset(string $bridgeId): EditorPresetInterface
     {
         return new class($bridgeId) implements EditorPresetInterface {
-            public function __construct(private string $bridgeId) {}
+            public function __construct(private string $bridgeId)
+            {
+            }
+
             public function build(): EditorConfigInterface
             {
                 $bid = $this->bridgeId;
+
                 return new class($bid) implements EditorConfigInterface {
-                    public function __construct(private string $bid) {}
-                    public function getBridgeId(): string { return $this->bid; }
-                    public function getCommon(): CommonOptions { return new CommonOptions(); }
-                    public function getNativeOverrides(): array { return []; }
-                    public function getCapabilities(): BridgeCapabilities { return new BridgeCapabilities(true, true, true, true, ['html']); }
-                    public function toNative(): array { return []; }
+                    public function __construct(private string $bid)
+                    {
+                    }
+
+                    public function getBridgeId(): string
+                    {
+                        return $this->bid;
+                    }
+
+                    public function getCommon(): CommonOptions
+                    {
+                        return new CommonOptions();
+                    }
+
+                    public function getNativeOverrides(): array
+                    {
+                        return [];
+                    }
+
+                    public function getCapabilities(): BridgeCapabilities
+                    {
+                        return new BridgeCapabilities(true, true, true, true, ['html']);
+                    }
+
+                    public function toNative(): array
+                    {
+                        return [];
+                    }
                 };
             }
         };

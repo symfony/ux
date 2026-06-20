@@ -21,11 +21,22 @@ final class ContentConverterRegistryPairsTest extends TestCase
     public function testPairsListsRegistered(): void
     {
         $conv = new class implements ContentConverterInterface {
-            public function getFrom(): string { return 'a'; }
-            public function getTo(): string { return 'b'; }
-            public function convert(EditorContentInterface $c): EditorContentInterface { return $c; }
+            public function getFrom(): string
+            {
+                return 'a';
+            }
+
+            public function getTo(): string
+            {
+                return 'b';
+            }
+
+            public function convert(EditorContentInterface $c): EditorContentInterface
+            {
+                return $c;
+            }
         };
-        self::assertSame([['from' => 'a', 'to' => 'b']], (new ContentConverterRegistry([$conv]))->pairs());
-        self::assertSame([], (new ContentConverterRegistry([]))->pairs());
+        self::assertSame([['from' => 'a', 'to' => 'b']], new ContentConverterRegistry([$conv])->pairs());
+        self::assertSame([], new ContentConverterRegistry([])->pairs());
     }
 }

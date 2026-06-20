@@ -30,8 +30,16 @@ final class ContentConverterRegistryTest extends TestCase
     public function testRegisteredConverterUsed(): void
     {
         $conv = new class implements ContentConverterInterface {
-            public function getFrom(): string { return 'a'; }
-            public function getTo(): string { return 'b'; }
+            public function getFrom(): string
+            {
+                return 'a';
+            }
+
+            public function getTo(): string
+            {
+                return 'b';
+            }
+
             public function convert(EditorContentInterface $c): EditorContentInterface
             {
                 return new HtmlContent('converted:'.$c->getRaw());
@@ -44,6 +52,6 @@ final class ContentConverterRegistryTest extends TestCase
     public function testUnknownPairThrows(): void
     {
         $this->expectException(UnsupportedConversionException::class);
-        (new ContentConverterRegistry([]))->convert(new HtmlContent(''), 'a', 'b');
+        new ContentConverterRegistry([])->convert(new HtmlContent(''), 'a', 'b');
     }
 }

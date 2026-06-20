@@ -25,6 +25,6 @@ final class HeaderRenderer implements BlockRendererInterface
         $level = max(2, min(6, (int) ($blockData['level'] ?? 2)));
         $text = htmlspecialchars((string) ($blockData['text'] ?? ''), \ENT_QUOTES | \ENT_HTML5, 'UTF-8');
 
-        return sprintf('<h%1$d>%2$s</h%1$d>', $level, $text);
+        return \sprintf('<h%1$d>%2$s</h%1$d>', $level, $text);
     }
 }

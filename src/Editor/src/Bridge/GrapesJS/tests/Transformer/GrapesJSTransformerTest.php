@@ -28,7 +28,7 @@ final class GrapesJSTransformerTest extends TestCase
 
     public function testReverseStampsBridgeId(): void
     {
-        $pc = (new GrapesJSTransformer())->reverseTransform([
+        $pc = new GrapesJSTransformer()->reverseTransform([
             'html' => '<h1>x</h1>',
             'css' => 'h1{}',
             'assets' => [],

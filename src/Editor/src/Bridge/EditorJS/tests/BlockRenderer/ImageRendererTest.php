@@ -27,12 +27,12 @@ final class ImageRendererTest extends TestCase
     {
         self::assertSame(
             '<figure><img src="/x.png" alt="alt"><figcaption>cap</figcaption></figure>',
-            (new ImageRenderer())->render(['file' => ['url' => '/x.png'], 'caption' => 'cap', 'alt' => 'alt'])
+            new ImageRenderer()->render(['file' => ['url' => '/x.png'], 'caption' => 'cap', 'alt' => 'alt'])
         );
     }
 
     public function testMissingUrlEmpty(): void
     {
-        self::assertSame('', (new ImageRenderer())->render([]));
+        self::assertSame('', new ImageRenderer()->render([]));
     }
 }

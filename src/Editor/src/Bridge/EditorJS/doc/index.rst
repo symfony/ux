@@ -22,7 +22,7 @@ Or with Webpack Encore:
 
     $ npm install @editorjs/editorjs
 
-Optional EditorJS tool packages (apps install the tools they need and register classes on
+Optional EditorJS tool packages (applications install the tools they need and register classes on
 ``window.UXEditorJSTools`` so the controller can resolve them):
 
 .. code-block:: terminal
@@ -32,7 +32,7 @@ Optional EditorJS tool packages (apps install the tools they need and register c
 Use
 ---
 
-.. code-block:: php
+::
 
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\FormBuilderInterface;
@@ -62,7 +62,7 @@ Use
 
 Or use the shipped preset:
 
-.. code-block:: php
+::
 
     $b->add('body', EditorType::class, ['preset' => 'blog.standard']);
 
@@ -77,12 +77,12 @@ Five block renderers ship with the bridge (paragraph, header, list, image, quote
 or add renderers by tagging your service with ``ux.editor.block_renderer``.
 
 Tool registration on the JS side
----------------------------------
+--------------------------------
 
 The bridge controller resolves tool class names listed in ``EditorJSConfig::tools`` against
 ``window.UXEditorJSTools``. Register tools in your app entrypoint:
 
-.. code-block:: js
+.. code-block:: javascript
 
     import Header from '@editorjs/header';
     import List   from '@editorjs/list';

@@ -77,7 +77,7 @@ class EditorType extends AbstractType
 
         if ($options['sanitize'] && null !== $this->sanitizer) {
             $sanitizer = $this->sanitizer;
-            $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) use ($sanitizer): void {
+            $builder->addEventListener(FormEvents::PRE_SUBMIT, static function (FormEvent $event) use ($sanitizer): void {
                 $data = $event->getData();
                 if (\is_string($data)) {
                     $event->setData($sanitizer->sanitize($data));
@@ -145,7 +145,7 @@ class EditorType extends AbstractType
             $bridge = $this->bridges->get($options['bridge']);
             $config = $bridge->getDefaultConfig();
             if (!$config instanceof AbstractEditorConfig) {
-                throw new BridgeConfigMismatchException(sprintf('Bridge "%s" default config must extend AbstractEditorConfig to accept array shorthand.', $options['bridge']));
+                throw new BridgeConfigMismatchException(\sprintf('Bridge "%s" default config must extend AbstractEditorConfig to accept array shorthand.', $options['bridge']));
             }
             $common = null !== $options['common'] ? CommonOptions::fromArray($options['common']) : $config->getCommon();
             $native = $options['native'] ?? $config->getNativeOverrides();

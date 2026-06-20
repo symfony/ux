@@ -25,7 +25,7 @@ final class UXEditorDataCollector extends DataCollector
     public function recordBridgeUse(string $bridgeId, string $format): void
     {
         $this->data['bridges'][$bridgeId][$format] = ($this->data['bridges'][$bridgeId][$format] ?? 0) + 1;
-        $this->data['count']++;
+        ++$this->data['count'];
     }
 
     public function recordCapabilityWarning(string $message): void

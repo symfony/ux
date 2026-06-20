@@ -24,7 +24,7 @@ final class AssertSanitizerPassTest extends TestCase
         $c->setParameter('ux_editor.html.sanitize_required', true);
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessageMatches('/html_sanitizer.sanitizer.default/');
-        (new AssertSanitizerPass())->process($c);
+        new AssertSanitizerPass()->process($c);
     }
 
     public function testPassesWhenSanitizerRegistered(): void
@@ -32,7 +32,7 @@ final class AssertSanitizerPassTest extends TestCase
         $c = new ContainerBuilder();
         $c->setParameter('ux_editor.html.sanitize_required', true);
         $c->setDefinition('html_sanitizer.sanitizer.default', new Definition(\stdClass::class));
-        (new AssertSanitizerPass())->process($c);
+        new AssertSanitizerPass()->process($c);
         $this->addToAssertionCount(1);
     }
 
@@ -40,7 +40,7 @@ final class AssertSanitizerPassTest extends TestCase
     {
         $c = new ContainerBuilder();
         $c->setParameter('ux_editor.html.sanitize_required', false);
-        (new AssertSanitizerPass())->process($c);
+        new AssertSanitizerPass()->process($c);
         $this->addToAssertionCount(1);
     }
 }

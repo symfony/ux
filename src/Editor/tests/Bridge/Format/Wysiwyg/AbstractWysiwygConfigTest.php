@@ -21,7 +21,10 @@ final class AbstractWysiwygConfigTest extends TestCase
     public function testDefaultTranslateCommon(): void
     {
         $cfg = new class(new CommonOptions(placeholder: 'Write…', readOnly: true, language: 'fr', plugins: ['link'])) extends AbstractWysiwygConfig {
-            public function getBridgeId(): string { return 'fake'; }
+            public function getBridgeId(): string
+            {
+                return 'fake';
+            }
         };
         $n = $cfg->toNative();
         self::assertSame('Write…', $n['placeholder']);
@@ -33,7 +36,10 @@ final class AbstractWysiwygConfigTest extends TestCase
     public function testCapabilitiesDefaultToWysiwyg(): void
     {
         $cfg = new class extends AbstractWysiwygConfig {
-            public function getBridgeId(): string { return 'fake'; }
+            public function getBridgeId(): string
+            {
+                return 'fake';
+            }
         };
         self::assertEquals(WysiwygCapabilities::default(), $cfg->getCapabilities());
         self::assertSame(['html'], $cfg->getCapabilities()->supportedFormats);
@@ -42,8 +48,15 @@ final class AbstractWysiwygConfigTest extends TestCase
     public function testSubclassCanExtendTranslateOwn(): void
     {
         $cfg = new class(new CommonOptions(placeholder: 'X')) extends AbstractWysiwygConfig {
-            public function getBridgeId(): string { return 'extra'; }
-            protected function translateOwn(): array { return ['custom' => 'value']; }
+            public function getBridgeId(): string
+            {
+                return 'extra';
+            }
+
+            protected function translateOwn(): array
+            {
+                return ['custom' => 'value'];
+            }
         };
         $n = $cfg->toNative();
         self::assertSame('X', $n['placeholder']);

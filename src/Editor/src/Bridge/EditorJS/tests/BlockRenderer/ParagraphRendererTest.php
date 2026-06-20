@@ -25,11 +25,11 @@ final class ParagraphRendererTest extends TestCase
 
     public function testEscapesHtml(): void
     {
-        self::assertSame('<p>&lt;script&gt;x&lt;/script&gt;</p>', (new ParagraphRenderer())->render(['text' => '<script>x</script>']));
+        self::assertSame('<p>&lt;script&gt;x&lt;/script&gt;</p>', new ParagraphRenderer()->render(['text' => '<script>x</script>']));
     }
 
     public function testEmptyTextEmptyParagraph(): void
     {
-        self::assertSame('<p></p>', (new ParagraphRenderer())->render([]));
+        self::assertSame('<p></p>', new ParagraphRenderer()->render([]));
     }
 }

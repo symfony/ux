@@ -24,14 +24,14 @@ Or with Webpack Encore:
 
 CKEditor 5 v44+ requires a license key. Use ``'GPL'`` for the open-source license:
 
-.. code-block:: php
+::
 
     new CKEditorConfig(licenseKey: 'GPL')
 
 Use
 ---
 
-.. code-block:: php
+::
 
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\FormBuilderInterface;
@@ -59,7 +59,7 @@ Use
 
 Or use a shipped preset:
 
-.. code-block:: php
+::
 
     $b->add('body', EditorType::class, ['preset' => 'wysiwyg.full']);
 
@@ -72,7 +72,7 @@ Sanitization
 By default ``EditorType`` runs the configured ``HtmlSanitizer`` on submit. Disable per field
 if your content must round-trip raw HTML:
 
-.. code-block:: php
+::
 
     $b->add('body', EditorType::class, ['config' => new CKEditorConfig(), 'sanitize' => false]);
 
@@ -81,7 +81,7 @@ Native overrides
 
 For any CKEditor option not exposed by ``CKEditorConfig``, pass through via ``nativeOverrides``:
 
-.. code-block:: php
+::
 
     new CKEditorConfig(
         nativeOverrides: ['ui' => ['poweredBy' => ['forceVisible' => false]]],

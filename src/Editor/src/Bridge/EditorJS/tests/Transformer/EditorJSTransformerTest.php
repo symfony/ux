@@ -28,7 +28,7 @@ final class EditorJSTransformerTest extends TestCase
 
     public function testReverseStampsBridgeId(): void
     {
-        $bc = (new EditorJSTransformer())->reverseTransform(['version' => '2.30.0', 'blocks' => [['type' => 'paragraph', 'data' => ['text' => 'hi']]]]);
+        $bc = new EditorJSTransformer()->reverseTransform(['version' => '2.30.0', 'blocks' => [['type' => 'paragraph', 'data' => ['text' => 'hi']]]]);
         self::assertInstanceOf(BlockContent::class, $bc);
         self::assertSame('editorjs', $bc->getMetadata()['bridgeId']);
         self::assertSame('2.30.0', $bc->schemaVersion);

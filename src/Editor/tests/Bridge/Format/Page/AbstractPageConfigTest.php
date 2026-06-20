@@ -21,7 +21,10 @@ final class AbstractPageConfigTest extends TestCase
     public function testCapabilitiesArePageFamily(): void
     {
         $cfg = new class extends AbstractPageConfig {
-            public function getBridgeId(): string { return 'fp'; }
+            public function getBridgeId(): string
+            {
+                return 'fp';
+            }
         };
         self::assertEquals(PageCapabilities::default(), $cfg->getCapabilities());
     }
@@ -29,7 +32,10 @@ final class AbstractPageConfigTest extends TestCase
     public function testTranslateCommonMinimal(): void
     {
         $cfg = new class(new CommonOptions(theme: 'dark', language: 'fr', placeholder: 'IGNORED')) extends AbstractPageConfig {
-            public function getBridgeId(): string { return 'fp'; }
+            public function getBridgeId(): string
+            {
+                return 'fp';
+            }
         };
         $n = $cfg->toNative();
         self::assertSame('dark', $n['theme']);

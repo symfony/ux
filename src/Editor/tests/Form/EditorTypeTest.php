@@ -53,7 +53,7 @@ final class EditorTypeTest extends TestCase
 
     public function testSanitizeOnSubmitWhenEnabled(): void
     {
-        $sanitizer = new HtmlSanitizer((new HtmlSanitizerConfig())->allowSafeElements());
+        $sanitizer = new HtmlSanitizer(new HtmlSanitizerConfig()->allowSafeElements());
         $form = $this->factory($sanitizer)->createBuilder()
             ->add('body', EditorType::class, ['config' => new EditorTypeTestFakeConfig(), 'sanitize' => true])
             ->getForm();
@@ -63,7 +63,7 @@ final class EditorTypeTest extends TestCase
 
     public function testSanitizeOffWhenDisabled(): void
     {
-        $sanitizer = new HtmlSanitizer((new HtmlSanitizerConfig())->allowSafeElements());
+        $sanitizer = new HtmlSanitizer(new HtmlSanitizerConfig()->allowSafeElements());
         $form = $this->factory($sanitizer)->createBuilder()
             ->add('body', EditorType::class, ['config' => new EditorTypeTestFakeConfig(), 'sanitize' => false])
             ->getForm();
@@ -84,31 +84,61 @@ final class EditorTypeTest extends TestCase
 
 final class EditorTypeTestFakeConfig extends AbstractEditorConfig
 {
-    public function getBridgeId(): string { return 'fake'; }
+    public function getBridgeId(): string
+    {
+        return 'fake';
+    }
 
-    public function getCapabilities(): BridgeCapabilities { return new BridgeCapabilities(true, true, true, true, ['html']); }
+    public function getCapabilities(): BridgeCapabilities
+    {
+        return new BridgeCapabilities(true, true, true, true, ['html']);
+    }
 
-    protected function translateCommon(CommonOptions $c): array { return []; }
+    protected function translateCommon(CommonOptions $c): array
+    {
+        return [];
+    }
 }
 
 final class EditorTypeTestFakeBridge extends AbstractBridge
 {
-    public function getId(): string { return 'fake'; }
+    public function getId(): string
+    {
+        return 'fake';
+    }
 
-    public function getDefaultConfig(): EditorConfigInterface { return new EditorTypeTestFakeConfig(); }
+    public function getDefaultConfig(): EditorConfigInterface
+    {
+        return new EditorTypeTestFakeConfig();
+    }
 
-    public function getCapabilities(): BridgeCapabilities { return (new EditorTypeTestFakeConfig())->getCapabilities(); }
+    public function getCapabilities(): BridgeCapabilities
+    {
+        return new EditorTypeTestFakeConfig()->getCapabilities();
+    }
 
     public function createTransformer(): EditorContentTransformerInterface
     {
         return new class implements EditorContentTransformerInterface {
-            public function getBridgeId(): string { return 'fake'; }
+            public function getBridgeId(): string
+            {
+                return 'fake';
+            }
 
-            public function getContentClass(): string { return HtmlContent::class; }
+            public function getContentClass(): string
+            {
+                return HtmlContent::class;
+            }
 
-            public function getStorageShape(): StorageShape { return StorageShape::Scalar; }
+            public function getStorageShape(): StorageShape
+            {
+                return StorageShape::Scalar;
+            }
 
-            public function transform(?EditorContentInterface $c): mixed { return $c?->getRaw(); }
+            public function transform(?EditorContentInterface $c): mixed
+            {
+                return $c?->getRaw();
+            }
 
             public function reverseTransform(mixed $v): ?EditorContentInterface
             {

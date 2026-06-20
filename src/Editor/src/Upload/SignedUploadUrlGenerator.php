@@ -25,7 +25,7 @@ final class SignedUploadUrlGenerator
     {
         $now ??= time();
         $exp = $now + $this->ttlSeconds;
-        $payload = sprintf('%s|%s|%d', $field, $profile, $exp);
+        $payload = \sprintf('%s|%s|%d', $field, $profile, $exp);
         $sig = hash_hmac('sha256', $payload, $this->secret);
 
         return base64_encode($payload.'|'.$sig);
@@ -43,7 +43,7 @@ final class SignedUploadUrlGenerator
             throw new InvalidSignatureException('Invalid token shape');
         }
         [$f, $p, $exp, $sig] = $parts;
-        $payload = sprintf('%s|%s|%s', $f, $p, $exp);
+        $payload = \sprintf('%s|%s|%s', $f, $p, $exp);
         $expected = hash_hmac('sha256', $payload, $this->secret);
         if (!hash_equals($expected, $sig)) {
             throw new InvalidSignatureException('Signature mismatch');

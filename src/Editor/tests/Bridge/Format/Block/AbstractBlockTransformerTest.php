@@ -56,7 +56,10 @@ final class AbstractBlockTransformerTest extends TestCase
     private function fake(): AbstractBlockTransformer
     {
         return new class extends AbstractBlockTransformer {
-            public function getBridgeId(): string { return 'fakeblock'; }
+            public function getBridgeId(): string
+            {
+                return 'fakeblock';
+            }
         };
     }
 }

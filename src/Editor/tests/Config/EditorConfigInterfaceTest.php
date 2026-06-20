@@ -21,11 +21,30 @@ final class EditorConfigInterfaceTest extends TestCase
     public function testContractMethodsExist(): void
     {
         $stub = new class implements EditorConfigInterface {
-            public function getBridgeId(): string { return 'fake'; }
-            public function getCommon(): CommonOptions { return new CommonOptions(); }
-            public function getNativeOverrides(): array { return []; }
-            public function getCapabilities(): BridgeCapabilities { return new BridgeCapabilities(true, true, true, true, ['html']); }
-            public function toNative(): array { return []; }
+            public function getBridgeId(): string
+            {
+                return 'fake';
+            }
+
+            public function getCommon(): CommonOptions
+            {
+                return new CommonOptions();
+            }
+
+            public function getNativeOverrides(): array
+            {
+                return [];
+            }
+
+            public function getCapabilities(): BridgeCapabilities
+            {
+                return new BridgeCapabilities(true, true, true, true, ['html']);
+            }
+
+            public function toNative(): array
+            {
+                return [];
+            }
         };
         self::assertSame('fake', $stub->getBridgeId());
         self::assertInstanceOf(CommonOptions::class, $stub->getCommon());

@@ -30,7 +30,7 @@ final class UXEditorExtensionTest extends TestCase
         $c->setParameter('kernel.debug', true);
         $c->setParameter('kernel.secret', 'test-secret');
         $c->setParameter('kernel.project_dir', sys_get_temp_dir());
-        (new UXEditorExtension())->load([], $c);
+        new UXEditorExtension()->load([], $c);
 
         foreach ([
             BridgeRegistry::class,

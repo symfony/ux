@@ -28,10 +28,10 @@ final class HtmlContentTest extends TestCase
 
     public function testIsEmpty(): void
     {
-        self::assertTrue((new HtmlContent(''))->isEmpty());
-        self::assertTrue((new HtmlContent('   '))->isEmpty());
-        self::assertTrue((new HtmlContent('<p>  </p>'))->isEmpty());
-        self::assertFalse((new HtmlContent('<p>hi</p>'))->isEmpty());
+        self::assertTrue(new HtmlContent('')->isEmpty());
+        self::assertTrue(new HtmlContent('   ')->isEmpty());
+        self::assertTrue(new HtmlContent('<p>  </p>')->isEmpty());
+        self::assertFalse(new HtmlContent('<p>hi</p>')->isEmpty());
     }
 
     public function testFromString(): void
@@ -43,14 +43,14 @@ final class HtmlContentTest extends TestCase
 
     public function testGetSanitizedWithProvidedSanitizer(): void
     {
-        $s = new HtmlSanitizer((new HtmlSanitizerConfig())->allowSafeElements());
-        $out = (new HtmlContent('<script>x</script><p>ok</p>'))->getSanitized($s);
+        $s = new HtmlSanitizer(new HtmlSanitizerConfig()->allowSafeElements());
+        $out = new HtmlContent('<script>x</script><p>ok</p>')->getSanitized($s);
         self::assertStringNotContainsString('<script>', $out);
         self::assertStringContainsString('<p>ok</p>', $out);
     }
 
     public function testGetSanitizedWithoutSanitizerReturnsRaw(): void
     {
-        self::assertSame('<p>x</p>', (new HtmlContent('<p>x</p>'))->getSanitized(null));
+        self::assertSame('<p>x</p>', new HtmlContent('<p>x</p>')->getSanitized(null));
     }
 }

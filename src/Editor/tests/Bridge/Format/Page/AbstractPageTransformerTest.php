@@ -59,7 +59,10 @@ final class AbstractPageTransformerTest extends TestCase
     private function fake(): AbstractPageTransformer
     {
         return new class extends AbstractPageTransformer {
-            public function getBridgeId(): string { return 'fakepage'; }
+            public function getBridgeId(): string
+            {
+                return 'fakepage';
+            }
         };
     }
 }

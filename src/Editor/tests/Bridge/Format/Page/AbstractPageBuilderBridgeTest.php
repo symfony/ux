@@ -24,17 +24,28 @@ final class AbstractPageBuilderBridgeTest extends TestCase
     public function testDefaults(): void
     {
         $b = new class extends AbstractPageBuilderBridge {
-            public function getId(): string { return 'fp'; }
+            public function getId(): string
+            {
+                return 'fp';
+            }
+
             public function getDefaultConfig(): EditorConfigInterface
             {
                 return new class extends AbstractPageConfig {
-                    public function getBridgeId(): string { return 'fp'; }
+                    public function getBridgeId(): string
+                    {
+                        return 'fp';
+                    }
                 };
             }
+
             public function createTransformer(): EditorContentTransformerInterface
             {
                 return new class extends AbstractPageTransformer {
-                    public function getBridgeId(): string { return 'fp'; }
+                    public function getBridgeId(): string
+                    {
+                        return 'fp';
+                    }
                 };
             }
         };

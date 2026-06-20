@@ -19,7 +19,7 @@ final class PageBuilderLandingPresetTest extends TestCase
 {
     public function testBuilds(): void
     {
-        $cfg = (new PageBuilderLandingPreset())->build();
+        $cfg = new PageBuilderLandingPreset()->build();
         self::assertInstanceOf(GrapesJSConfig::class, $cfg);
         self::assertSame('grapesjs', $cfg->getBridgeId());
         self::assertNotEmpty($cfg->blocks);
@@ -28,8 +28,8 @@ final class PageBuilderLandingPresetTest extends TestCase
 
     public function testIncludesCommonBlocks(): void
     {
-        $cfg = (new PageBuilderLandingPreset())->build();
-        $ids = array_map(fn ($b) => $b['id'], $cfg->blocks);
+        $cfg = new PageBuilderLandingPreset()->build();
+        $ids = array_map(static fn ($b) => $b['id'], $cfg->blocks);
         foreach (['hero', 'section', 'text', 'image'] as $expected) {
             self::assertContains($expected, $ids);
         }

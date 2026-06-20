@@ -28,7 +28,7 @@ final class CKEditorTransformerTest extends TestCase
 
     public function testReverseStampsBridgeId(): void
     {
-        $hc = (new CKEditorTransformer())->reverseTransform('<p>hi</p>');
+        $hc = new CKEditorTransformer()->reverseTransform('<p>hi</p>');
         self::assertInstanceOf(HtmlContent::class, $hc);
         self::assertSame('<p>hi</p>', $hc->html);
         self::assertSame('ckeditor', $hc->getMetadata()['bridgeId']);

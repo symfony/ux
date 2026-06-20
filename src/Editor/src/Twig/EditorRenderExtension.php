@@ -64,8 +64,8 @@ final class EditorRenderExtension extends AbstractExtension
             $r = $this->blockRenderers->get($type);
             if (null === $r) {
                 $out .= $this->debug
-                    ? sprintf('<div style="border:1px dashed red;padding:.5em;background:#fee">Missing block renderer for type "%s"</div>', htmlspecialchars($type))
-                    : sprintf('<!-- ux-editor: missing renderer for "%s" -->', $type);
+                    ? \sprintf('<div style="border:1px dashed red;padding:.5em;background:#fee">Missing block renderer for type "%s"</div>', htmlspecialchars($type))
+                    : \sprintf('<!-- ux-editor: missing renderer for "%s" -->', $type);
                 continue;
             }
             $out .= $r->render($block['data'] ?? [], $block);
@@ -79,13 +79,13 @@ final class EditorRenderExtension extends AbstractExtension
      */
     private function renderPage(PageContent $c, array $options): string
     {
-        $srcdoc = sprintf(
+        $srcdoc = \sprintf(
             '<!doctype html><html><head><style>%s</style></head><body>%s</body></html>',
             $c->css,
             $c->html,
         );
 
-        return sprintf(
+        return \sprintf(
             '<iframe sandbox="allow-same-origin" srcdoc="%s"></iframe>',
             htmlspecialchars($srcdoc, \ENT_QUOTES | \ENT_HTML5, 'UTF-8'),
         );

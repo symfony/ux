@@ -52,6 +52,7 @@ final class CapabilityGuardTest extends TestCase
     {
         return new class extends AbstractLogger {
             public array $log = [];
+
             public function log($level, \Stringable|string $msg, array $ctx = []): void
             {
                 $this->log[] = [$level, (string) $msg, $ctx];
@@ -66,12 +67,21 @@ final class CapabilityGuardTest extends TestCase
             {
                 parent::__construct(new CommonOptions(toolbar: ['bold']));
             }
-            public function getBridgeId(): string { return 'fake'; }
+
+            public function getBridgeId(): string
+            {
+                return 'fake';
+            }
+
             public function getCapabilities(): BridgeCapabilities
             {
                 return new BridgeCapabilities($this->supportsToolbar, true, true, true, ['html']);
             }
-            protected function translateCommon(CommonOptions $c): array { return []; }
+
+            protected function translateCommon(CommonOptions $c): array
+            {
+                return [];
+            }
         };
     }
 }

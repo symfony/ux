@@ -27,7 +27,7 @@ final class BridgeRegistry
     {
         foreach ($bridges as $b) {
             if (isset($this->bridges[$b->getId()])) {
-                throw new \LogicException(sprintf('Duplicate bridge id "%s"', $b->getId()));
+                throw new \LogicException(\sprintf('Duplicate bridge id "%s"', $b->getId()));
             }
             $this->bridges[$b->getId()] = $b;
         }
@@ -36,7 +36,7 @@ final class BridgeRegistry
     public function get(string $id): BridgeInterface
     {
         return $this->bridges[$id]
-            ?? throw new UnknownBridgeException(sprintf('Unknown bridge "%s". Registered: %s', $id, '' !== ($list = implode(', ', array_keys($this->bridges))) ? $list : '(none)'));
+            ?? throw new UnknownBridgeException(\sprintf('Unknown bridge "%s". Registered: %s', $id, '' !== ($list = implode(', ', array_keys($this->bridges))) ? $list : '(none)'));
     }
 
     /**

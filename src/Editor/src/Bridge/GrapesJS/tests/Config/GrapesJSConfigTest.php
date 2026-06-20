@@ -27,7 +27,7 @@ final class GrapesJSConfigTest extends TestCase
 
     public function testDefaultStorageManagerNone(): void
     {
-        self::assertSame(['type' => 'none'], (new GrapesJSConfig())->toNative()['storageManager']);
+        self::assertSame(['type' => 'none'], new GrapesJSConfig()->toNative()['storageManager']);
     }
 
     public function testTranslateOwn(): void

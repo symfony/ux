@@ -3,6 +3,7 @@
     "description": "GrapesJS bridge controller for symfony/ux-editor",
     "license": "MIT",
     "version": "0.1.0",
+    "keywords": ["symfony-ux", "editor", "page-builder", "grapesjs"],
     "symfony": {
         "controllers": {"grapesjs": {"main": "dist/controller.js", "fetch": "lazy", "enabled": true}},
         "importmap": {"@symfony/ux-editor": "^0.1.0", "grapesjs": "^0.21.0"}
@@ -10,7 +11,7 @@
     "type": "module",
     "main": "dist/controller.js",
     "types": "dist/controller.d.ts",
-    "files": ["dist/"],
+    "files": ["dist"],
     "peerDependencies": {
         "@hotwired/stimulus": "^3.0.0",
         "@symfony/ux-editor": "^0.1.0",

@@ -23,20 +23,55 @@ final class BridgeInterfaceTest extends TestCase
     public function testContract(): void
     {
         $b = new class implements BridgeInterface {
-            public function getId(): string { return 'fake'; }
-            public function getControllerName(): string { return 'symfony--ux-editor--fake'; }
+            public function getId(): string
+            {
+                return 'fake';
+            }
+
+            public function getControllerName(): string
+            {
+                return 'symfony--ux-editor--fake';
+            }
+
             public function getDefaultConfig(): EditorConfigInterface
             {
                 return new class implements EditorConfigInterface {
-                    public function getBridgeId(): string { return 'fake'; }
-                    public function getCommon(): CommonOptions { return new CommonOptions(); }
-                    public function getNativeOverrides(): array { return []; }
-                    public function getCapabilities(): BridgeCapabilities { return new BridgeCapabilities(true, true, true, true, ['html']); }
-                    public function toNative(): array { return []; }
+                    public function getBridgeId(): string
+                    {
+                        return 'fake';
+                    }
+
+                    public function getCommon(): CommonOptions
+                    {
+                        return new CommonOptions();
+                    }
+
+                    public function getNativeOverrides(): array
+                    {
+                        return [];
+                    }
+
+                    public function getCapabilities(): BridgeCapabilities
+                    {
+                        return new BridgeCapabilities(true, true, true, true, ['html']);
+                    }
+
+                    public function toNative(): array
+                    {
+                        return [];
+                    }
                 };
             }
-            public function getCapabilities(): BridgeCapabilities { return $this->getDefaultConfig()->getCapabilities(); }
-            public function createTransformer(): EditorContentTransformerInterface { throw new \LogicException('not used'); }
+
+            public function getCapabilities(): BridgeCapabilities
+            {
+                return $this->getDefaultConfig()->getCapabilities();
+            }
+
+            public function createTransformer(): EditorContentTransformerInterface
+            {
+                throw new \LogicException('not used');
+            }
         };
         self::assertSame('fake', $b->getId());
         self::assertSame('symfony--ux-editor--fake', $b->getControllerName());

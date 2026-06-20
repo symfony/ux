@@ -19,7 +19,7 @@ final class BlogStandardPresetTest extends TestCase
 {
     public function testBuildsEditorJSConfig(): void
     {
-        $cfg = (new BlogStandardPreset())->build();
+        $cfg = new BlogStandardPreset()->build();
         self::assertInstanceOf(EditorJSConfig::class, $cfg);
         self::assertSame('editorjs', $cfg->getBridgeId());
 

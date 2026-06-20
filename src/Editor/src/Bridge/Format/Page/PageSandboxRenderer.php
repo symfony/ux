@@ -24,13 +24,13 @@ final class PageSandboxRenderer
         if ($page->isEmpty()) {
             return '';
         }
-        $srcdoc = sprintf(
+        $srcdoc = \sprintf(
             '<!doctype html><html><head><style>%s</style></head><body>%s</body></html>',
             $page->css,
             $page->html,
         );
 
-        return sprintf(
+        return \sprintf(
             '<iframe sandbox="%s" srcdoc="%s"></iframe>',
             htmlspecialchars($this->sandbox, \ENT_QUOTES | \ENT_HTML5, 'UTF-8'),
             htmlspecialchars($srcdoc, \ENT_QUOTES | \ENT_HTML5, 'UTF-8'),

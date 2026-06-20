@@ -24,17 +24,28 @@ final class AbstractWysiwygBridgeTest extends TestCase
     public function testDefaults(): void
     {
         $b = new class extends AbstractWysiwygBridge {
-            public function getId(): string { return 'fakewy'; }
+            public function getId(): string
+            {
+                return 'fakewy';
+            }
+
             public function getDefaultConfig(): EditorConfigInterface
             {
                 return new class extends AbstractWysiwygConfig {
-                    public function getBridgeId(): string { return 'fakewy'; }
+                    public function getBridgeId(): string
+                    {
+                        return 'fakewy';
+                    }
                 };
             }
+
             public function createTransformer(): EditorContentTransformerInterface
             {
                 return new class extends AbstractWysiwygTransformer {
-                    public function getBridgeId(): string { return 'fakewy'; }
+                    public function getBridgeId(): string
+                    {
+                        return 'fakewy';
+                    }
                 };
             }
         };

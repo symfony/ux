@@ -18,9 +18,9 @@ final class EditorContentFormatTest extends TestCase
 {
     public function testCases(): void
     {
-        self::assertSame('html',   EditorContentFormat::Html->value);
+        self::assertSame('html', EditorContentFormat::Html->value);
         self::assertSame('blocks', EditorContentFormat::Blocks->value);
-        self::assertSame('page',   EditorContentFormat::Page->value);
+        self::assertSame('page', EditorContentFormat::Page->value);
         self::assertSame(EditorContentFormat::Html, EditorContentFormat::from('html'));
     }
 }

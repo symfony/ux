@@ -28,6 +28,6 @@ final class ListRenderer implements BlockRendererInterface
             $items .= '<li>'.htmlspecialchars((string) $i, \ENT_QUOTES | \ENT_HTML5, 'UTF-8').'</li>';
         }
 
-        return sprintf('<%1$s>%2$s</%1$s>', $tag, $items);
+        return \sprintf('<%1$s>%2$s</%1$s>', $tag, $items);
     }
 }

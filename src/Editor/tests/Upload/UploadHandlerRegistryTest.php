@@ -29,7 +29,7 @@ final class UploadHandlerRegistryTest extends TestCase
     public function testUnknownProfileThrows(): void
     {
         $this->expectException(UploadHandlerException::class);
-        (new UploadHandlerRegistry([]))->get('missing');
+        new UploadHandlerRegistry([])->get('missing');
     }
 
     private function fakeHandler(): EditorUploadHandlerInterface

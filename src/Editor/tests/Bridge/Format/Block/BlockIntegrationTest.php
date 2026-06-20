@@ -42,17 +42,31 @@ final class BlockIntegrationTest extends TestCase
 
 final class FakeBlockConfig extends AbstractBlockConfig
 {
-    public function getBridgeId(): string { return 'fakeblock'; }
+    public function getBridgeId(): string
+    {
+        return 'fakeblock';
+    }
 }
 
 final class FakeBlockBridge extends AbstractBlockBridge
 {
-    public function getId(): string { return 'fakeblock'; }
-    public function getDefaultConfig(): EditorConfigInterface { return new FakeBlockConfig(); }
+    public function getId(): string
+    {
+        return 'fakeblock';
+    }
+
+    public function getDefaultConfig(): EditorConfigInterface
+    {
+        return new FakeBlockConfig();
+    }
+
     public function createTransformer(): EditorContentTransformerInterface
     {
         return new class extends AbstractBlockTransformer {
-            public function getBridgeId(): string { return 'fakeblock'; }
+            public function getBridgeId(): string
+            {
+                return 'fakeblock';
+            }
         };
     }
 }

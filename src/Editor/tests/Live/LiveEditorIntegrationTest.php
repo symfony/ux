@@ -20,6 +20,7 @@ final class LiveEditorIntegrationTest extends TestCase
     {
         $repo = new class {
             public array $store = [];
+
             public function upsert(string $id, string $field, mixed $content): void
             {
                 $this->store[$id][$field] = $content;

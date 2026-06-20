@@ -13,7 +13,7 @@ namespace Symfony\UX\Editor\Content;
 
 enum EditorContentFormat: string
 {
-    case Html   = 'html';
+    case Html = 'html';
     case Blocks = 'blocks';
-    case Page   = 'page';
+    case Page = 'page';
 }

@@ -24,27 +24,31 @@ final class EditorRenderExtensionTest extends TestCase
 {
     public function testNullReturnsEmpty(): void
     {
-        self::assertSame('', (new EditorRenderExtension(new BlockRendererRegistry([]), null))->render(null));
+        self::assertSame('', new EditorRenderExtension(new BlockRendererRegistry([]), null)->render(null));
     }
 
     public function testHtmlContentSanitized(): void
     {
-        $s = new HtmlSanitizer((new HtmlSanitizerConfig())->allowSafeElements());
-        $out = (new EditorRenderExtension(new BlockRendererRegistry([]), $s))->render(new HtmlContent('<script>x</script><p>ok</p>'));
+        $s = new HtmlSanitizer(new HtmlSanitizerConfig()->allowSafeElements());
+        $out = new EditorRenderExtension(new BlockRendererRegistry([]), $s)->render(new HtmlContent('<script>x</script><p>ok</p>'));
         self::assertStringNotContainsString('<script>', $out);
         self::assertStringContainsString('<p>ok</p>', $out);
     }
 
     public function testHtmlContentNoSanitizerEchosRaw(): void
     {
-        self::assertSame('<p>x</p>', (new EditorRenderExtension(new BlockRendererRegistry([]), null))->render(new HtmlContent('<p>x</p>')));
+        self::assertSame('<p>x</p>', new EditorRenderExtension(new BlockRendererRegistry([]), null)->render(new HtmlContent('<p>x</p>')));
     }
 
     public function testBlockContentWalksRegistry(): void
     {
         $registry = new BlockRendererRegistry([
             new class implements BlockRendererInterface {
-                public function getBlockType(): string { return 'paragraph'; }
+                public function getBlockType(): string
+                {
+                    return 'paragraph';
+                }
+
                 public function render(array $blockData, array $blockMeta = []): string
                 {
                     return '<p>'.htmlspecialchars($blockData['text'] ?? '').'</p>';
@@ -52,7 +56,7 @@ final class EditorRenderExtensionTest extends TestCase
             },
         ]);
         $bc = new BlockContent([['type' => 'paragraph', 'data' => ['text' => 'hello']]]);
-        self::assertSame('<p>hello</p>', (new EditorRenderExtension($registry, null))->render($bc));
+        self::assertSame('<p>hello</p>', new EditorRenderExtension($registry, null)->render($bc));
     }
 
     public function testBlockContentMissingRendererCommentInProd(): void

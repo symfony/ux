@@ -19,7 +19,7 @@ final class PageSandboxRendererTest extends TestCase
 {
     public function testSandboxedIframe(): void
     {
-        $out = (new PageSandboxRenderer())->render(new PageContent('<h1>X</h1>', 'h1{color:red}'));
+        $out = new PageSandboxRenderer()->render(new PageContent('<h1>X</h1>', 'h1{color:red}'));
         self::assertStringContainsString('<iframe', $out);
         self::assertStringContainsString('sandbox="allow-same-origin"', $out);
         self::assertStringContainsString('srcdoc=', $out);
@@ -29,12 +29,12 @@ final class PageSandboxRendererTest extends TestCase
 
     public function testCustomSandbox(): void
     {
-        $out = (new PageSandboxRenderer('allow-same-origin allow-scripts'))->render(new PageContent('<p>x</p>'));
+        $out = new PageSandboxRenderer('allow-same-origin allow-scripts')->render(new PageContent('<p>x</p>'));
         self::assertStringContainsString('sandbox="allow-same-origin allow-scripts"', $out);
     }
 
     public function testEmptyPageProducesEmptyString(): void
     {
-        self::assertSame('', (new PageSandboxRenderer())->render(new PageContent('')));
+        self::assertSame('', new PageSandboxRenderer()->render(new PageContent('')));
     }
 }

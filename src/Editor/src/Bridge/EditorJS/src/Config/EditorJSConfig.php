@@ -39,7 +39,7 @@ final class EditorJSConfig extends AbstractBlockConfig
     {
         $out = [];
         if ([] !== $this->tools) {
-            $out['tools'] = array_map(fn (ToolDefinition $t): array => $t->toArray(), $this->tools);
+            $out['tools'] = array_map(static fn (ToolDefinition $t): array => $t->toArray(), $this->tools);
         }
         if (null !== $this->defaultBlock) {
             $out['defaultBlock'] = $this->defaultBlock;

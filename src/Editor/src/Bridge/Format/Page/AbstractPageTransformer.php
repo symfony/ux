@@ -35,7 +35,7 @@ abstract class AbstractPageTransformer implements EditorContentTransformerInterf
             return null;
         }
         if (!$content instanceof PageContent) {
-            throw new \InvalidArgumentException(sprintf('Expected PageContent, got %s', get_debug_type($content)));
+            throw new \InvalidArgumentException(\sprintf('Expected PageContent, got %s', get_debug_type($content)));
         }
 
         return [
@@ -52,7 +52,7 @@ abstract class AbstractPageTransformer implements EditorContentTransformerInterf
             return null;
         }
         if (!\is_array($stored)) {
-            throw new ContentSchemaException(sprintf('Expected array, got %s', get_debug_type($stored)));
+            throw new ContentSchemaException(\sprintf('Expected array, got %s', get_debug_type($stored)));
         }
         $html = $stored['html'] ?? '';
         $css = $stored['css'] ?? '';

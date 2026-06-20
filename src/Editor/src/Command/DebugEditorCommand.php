@@ -49,7 +49,7 @@ final class DebugEditorCommand extends Command
 
         $io->section('Content converters');
         $pairs = $this->converters->pairs();
-        $io->listing($pairs === [] ? ['(none)'] : array_map(fn (array $p): string => sprintf('%s -> %s', $p['from'], $p['to']), $pairs));
+        $io->listing([] === $pairs ? ['(none)'] : array_map(static fn (array $p): string => \sprintf('%s -> %s', $p['from'], $p['to']), $pairs));
 
         $io->section('Upload handlers');
         $io->listing(array_keys($this->uploadHandlers->all()) ?: ['(none)']);

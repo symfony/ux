@@ -24,13 +24,18 @@ final class WysiwygCapabilityWarningTest extends TestCase
     {
         $logger = new class extends AbstractLogger {
             public array $log = [];
+
             public function log($level, \Stringable|string $msg, array $ctx = []): void
             {
                 $this->log[] = [$level, (string) $msg];
             }
         };
         $cfg = new class(new CommonOptions(toolbar: ['bold'])) extends AbstractWysiwygConfig {
-            public function getBridgeId(): string { return 'notoolbar'; }
+            public function getBridgeId(): string
+            {
+                return 'notoolbar';
+            }
+
             public function getCapabilities(): BridgeCapabilities
             {
                 return WysiwygCapabilities::default()->with(supportsToolbar: false);

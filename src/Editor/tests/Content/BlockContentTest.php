@@ -19,7 +19,7 @@ final class BlockContentTest extends TestCase
 {
     public function testFormat(): void
     {
-        self::assertSame(EditorContentFormat::Blocks, (new BlockContent([]))->getFormat());
+        self::assertSame(EditorContentFormat::Blocks, new BlockContent([])->getFormat());
     }
 
     public function testRawAndSchemaVersionDefault(): void
@@ -31,8 +31,8 @@ final class BlockContentTest extends TestCase
 
     public function testIsEmpty(): void
     {
-        self::assertTrue((new BlockContent([]))->isEmpty());
-        self::assertFalse((new BlockContent([['type' => 'p', 'data' => []]]))->isEmpty());
+        self::assertTrue(new BlockContent([])->isEmpty());
+        self::assertFalse(new BlockContent([['type' => 'p', 'data' => []]])->isEmpty());
     }
 
     public function testFilterByType(): void

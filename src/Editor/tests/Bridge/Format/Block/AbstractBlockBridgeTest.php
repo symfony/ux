@@ -24,17 +24,28 @@ final class AbstractBlockBridgeTest extends TestCase
     public function testDefaults(): void
     {
         $b = new class extends AbstractBlockBridge {
-            public function getId(): string { return 'fb'; }
+            public function getId(): string
+            {
+                return 'fb';
+            }
+
             public function getDefaultConfig(): EditorConfigInterface
             {
                 return new class extends AbstractBlockConfig {
-                    public function getBridgeId(): string { return 'fb'; }
+                    public function getBridgeId(): string
+                    {
+                        return 'fb';
+                    }
                 };
             }
+
             public function createTransformer(): EditorContentTransformerInterface
             {
                 return new class extends AbstractBlockTransformer {
-                    public function getBridgeId(): string { return 'fb'; }
+                    public function getBridgeId(): string
+                    {
+                        return 'fb';
+                    }
                 };
             }
         };

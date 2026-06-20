@@ -19,7 +19,7 @@ final class ConfigurationTest extends TestCase
 {
     public function testDefaults(): void
     {
-        $cfg = (new Processor())->processConfiguration(new Configuration(), [[]]);
+        $cfg = new Processor()->processConfiguration(new Configuration(), [[]]);
         self::assertTrue($cfg['html']['sanitize_required']);
         self::assertSame('default', $cfg['upload']['default_profile']);
         self::assertSame(3600, $cfg['upload']['ttl_seconds']);
@@ -27,7 +27,7 @@ final class ConfigurationTest extends TestCase
 
     public function testOverrides(): void
     {
-        $cfg = (new Processor())->processConfiguration(new Configuration(), [[
+        $cfg = new Processor()->processConfiguration(new Configuration(), [[
             'html' => ['sanitize_required' => false],
             'upload' => ['default_profile' => 'images', 'ttl_seconds' => 600],
         ]]);

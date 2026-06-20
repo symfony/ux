@@ -47,24 +47,66 @@ final class EditorTypeStrictTest extends TestCase
 
 final class NoToolbarConfig extends AbstractEditorConfig
 {
-    public function getBridgeId(): string { return 'notb'; }
-    public function getCapabilities(): BridgeCapabilities { return new BridgeCapabilities(false, true, true, true, ['html']); }
-    protected function translateCommon(CommonOptions $c): array { return []; }
+    public function getBridgeId(): string
+    {
+        return 'notb';
+    }
+
+    public function getCapabilities(): BridgeCapabilities
+    {
+        return new BridgeCapabilities(false, true, true, true, ['html']);
+    }
+
+    protected function translateCommon(CommonOptions $c): array
+    {
+        return [];
+    }
 }
 
 final class NoToolbarBridge extends AbstractBridge
 {
-    public function getId(): string { return 'notb'; }
-    public function getDefaultConfig(): EditorConfigInterface { return new NoToolbarConfig(); }
-    public function getCapabilities(): BridgeCapabilities { return (new NoToolbarConfig())->getCapabilities(); }
+    public function getId(): string
+    {
+        return 'notb';
+    }
+
+    public function getDefaultConfig(): EditorConfigInterface
+    {
+        return new NoToolbarConfig();
+    }
+
+    public function getCapabilities(): BridgeCapabilities
+    {
+        return new NoToolbarConfig()->getCapabilities();
+    }
+
     public function createTransformer(): EditorContentTransformerInterface
     {
         return new class implements EditorContentTransformerInterface {
-            public function getBridgeId(): string { return 'notb'; }
-            public function getContentClass(): string { return HtmlContent::class; }
-            public function getStorageShape(): StorageShape { return StorageShape::Scalar; }
-            public function transform(?EditorContentInterface $c): mixed { return $c?->getRaw(); }
-            public function reverseTransform(mixed $v): ?EditorContentInterface { return null === $v ? null : new HtmlContent((string) $v); }
+            public function getBridgeId(): string
+            {
+                return 'notb';
+            }
+
+            public function getContentClass(): string
+            {
+                return HtmlContent::class;
+            }
+
+            public function getStorageShape(): StorageShape
+            {
+                return StorageShape::Scalar;
+            }
+
+            public function transform(?EditorContentInterface $c): mixed
+            {
+                return $c?->getRaw();
+            }
+
+            public function reverseTransform(mixed $v): ?EditorContentInterface
+            {
+                return null === $v ? null : new HtmlContent((string) $v);
+            }
         };
     }
 }

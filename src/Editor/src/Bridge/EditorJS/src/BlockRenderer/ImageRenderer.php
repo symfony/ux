@@ -28,11 +28,11 @@ final class ImageRenderer implements BlockRendererInterface
         }
         $alt = htmlspecialchars((string) ($blockData['alt'] ?? ''), \ENT_QUOTES | \ENT_HTML5, 'UTF-8');
         $caption = $blockData['caption'] ?? null;
-        $img = sprintf('<img src="%s" alt="%s">', htmlspecialchars($url, \ENT_QUOTES | \ENT_HTML5, 'UTF-8'), $alt);
+        $img = \sprintf('<img src="%s" alt="%s">', htmlspecialchars($url, \ENT_QUOTES | \ENT_HTML5, 'UTF-8'), $alt);
         if (\is_string($caption) && '' !== $caption) {
-            return sprintf('<figure>%s<figcaption>%s</figcaption></figure>', $img, htmlspecialchars($caption, \ENT_QUOTES | \ENT_HTML5, 'UTF-8'));
+            return \sprintf('<figure>%s<figcaption>%s</figcaption></figure>', $img, htmlspecialchars($caption, \ENT_QUOTES | \ENT_HTML5, 'UTF-8'));
         }
 
-        return sprintf('<figure>%s</figure>', $img);
+        return \sprintf('<figure>%s</figure>', $img);
     }
 }

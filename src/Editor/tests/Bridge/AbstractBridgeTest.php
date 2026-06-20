@@ -23,19 +23,50 @@ final class AbstractBridgeTest extends TestCase
     public function testDefaultControllerNameDerivedFromId(): void
     {
         $b = new class extends AbstractBridge {
-            public function getId(): string { return 'fakebridge'; }
+            public function getId(): string
+            {
+                return 'fakebridge';
+            }
+
             public function getDefaultConfig(): EditorConfigInterface
             {
                 return new class implements EditorConfigInterface {
-                    public function getBridgeId(): string { return 'fakebridge'; }
-                    public function getCommon(): CommonOptions { return new CommonOptions(); }
-                    public function getNativeOverrides(): array { return []; }
-                    public function getCapabilities(): BridgeCapabilities { return new BridgeCapabilities(true, true, true, true, ['html']); }
-                    public function toNative(): array { return []; }
+                    public function getBridgeId(): string
+                    {
+                        return 'fakebridge';
+                    }
+
+                    public function getCommon(): CommonOptions
+                    {
+                        return new CommonOptions();
+                    }
+
+                    public function getNativeOverrides(): array
+                    {
+                        return [];
+                    }
+
+                    public function getCapabilities(): BridgeCapabilities
+                    {
+                        return new BridgeCapabilities(true, true, true, true, ['html']);
+                    }
+
+                    public function toNative(): array
+                    {
+                        return [];
+                    }
                 };
             }
-            public function getCapabilities(): BridgeCapabilities { return $this->getDefaultConfig()->getCapabilities(); }
-            public function createTransformer(): EditorContentTransformerInterface { throw new \LogicException('not used'); }
+
+            public function getCapabilities(): BridgeCapabilities
+            {
+                return $this->getDefaultConfig()->getCapabilities();
+            }
+
+            public function createTransformer(): EditorContentTransformerInterface
+            {
+                throw new \LogicException('not used');
+            }
         };
         self::assertSame('symfony--ux-editor--fakebridge', $b->getControllerName());
     }

@@ -51,7 +51,7 @@ final class CKEditorIntegrationTest extends TestCase
 
     public function testSanitizeStripsScriptOnSubmit(): void
     {
-        $sanitizer = new HtmlSanitizer((new HtmlSanitizerConfig())->allowSafeElements());
+        $sanitizer = new HtmlSanitizer(new HtmlSanitizerConfig()->allowSafeElements());
         $factory = Forms::createFormFactoryBuilder()
             ->addType(new EditorType(new BridgeRegistry([new CKEditorBridge()]), new PresetRegistry([]), $sanitizer))
             ->getFormFactory();

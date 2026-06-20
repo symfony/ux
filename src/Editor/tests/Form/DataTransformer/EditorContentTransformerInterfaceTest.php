@@ -29,10 +29,26 @@ final class EditorContentTransformerInterfaceTest extends TestCase
     public function testContract(): void
     {
         $t = new class implements EditorContentTransformerInterface {
-            public function getBridgeId(): string { return 'fake'; }
-            public function getContentClass(): string { return HtmlContent::class; }
-            public function getStorageShape(): StorageShape { return StorageShape::Scalar; }
-            public function transform(?EditorContentInterface $c): mixed { return $c?->getRaw(); }
+            public function getBridgeId(): string
+            {
+                return 'fake';
+            }
+
+            public function getContentClass(): string
+            {
+                return HtmlContent::class;
+            }
+
+            public function getStorageShape(): StorageShape
+            {
+                return StorageShape::Scalar;
+            }
+
+            public function transform(?EditorContentInterface $c): mixed
+            {
+                return $c?->getRaw();
+            }
+
             public function reverseTransform(mixed $v): ?EditorContentInterface
             {
                 return null === $v ? null : new HtmlContent((string) $v);

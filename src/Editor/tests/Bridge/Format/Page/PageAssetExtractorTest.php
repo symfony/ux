@@ -23,7 +23,7 @@ final class PageAssetExtractorTest extends TestCase
             ['type' => 'image', 'url' => '/a.png'],
             ['type' => 'image', 'url' => '/b.png'],
         ]);
-        self::assertSame(['/a.png', '/b.png'], (new PageAssetExtractor())->extractUrls($page));
+        self::assertSame(['/a.png', '/b.png'], new PageAssetExtractor()->extractUrls($page));
     }
 
     public function testWalksComponentTreeForSrc(): void
@@ -34,7 +34,7 @@ final class PageAssetExtractorTest extends TestCase
                 ['type' => 'image', 'src' => '/d.png'],
             ]],
         ]);
-        $urls = (new PageAssetExtractor())->extractUrls($page);
+        $urls = new PageAssetExtractor()->extractUrls($page);
         sort($urls);
         self::assertSame(['/c.png', '/d.png'], $urls);
     }
@@ -42,6 +42,6 @@ final class PageAssetExtractorTest extends TestCase
     public function testDedupes(): void
     {
         $page = new PageContent('', '', [['type' => 'image', 'url' => '/x.png']], [['type' => 'image', 'src' => '/x.png']]);
-        self::assertSame(['/x.png'], (new PageAssetExtractor())->extractUrls($page));
+        self::assertSame(['/x.png'], new PageAssetExtractor()->extractUrls($page));
     }
 }

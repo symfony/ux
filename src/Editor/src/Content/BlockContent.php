@@ -31,13 +31,13 @@ final class BlockContent extends EditorContent
 
     public function isEmpty(): bool
     {
-        return $this->blocks === [];
+        return [] === $this->blocks;
     }
 
     public function filterByType(string $type): self
     {
         return new self(
-            array_values(array_filter($this->blocks, fn (array $b): bool => ($b['type'] ?? null) === $type)),
+            array_values(array_filter($this->blocks, static fn (array $b): bool => ($b['type'] ?? null) === $type)),
             $this->schemaVersion,
             $this->metadata,
         );

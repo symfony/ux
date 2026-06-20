@@ -32,7 +32,7 @@ final class PageAssetExtractor
     }
 
     /**
-     * @param array<mixed> $nodes
+     * @param array<mixed>        $nodes
      * @param array<string, bool> $urls
      */
     private function walk(array $nodes, array &$urls): void

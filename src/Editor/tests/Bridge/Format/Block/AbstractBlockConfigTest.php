@@ -21,7 +21,10 @@ final class AbstractBlockConfigTest extends TestCase
     public function testDefaultTranslateCommon(): void
     {
         $cfg = new class(new CommonOptions(placeholder: 'P', autofocus: true, readOnly: true)) extends AbstractBlockConfig {
-            public function getBridgeId(): string { return 'fb'; }
+            public function getBridgeId(): string
+            {
+                return 'fb';
+            }
         };
         $n = $cfg->toNative();
         self::assertSame('P', $n['placeholder']);
@@ -32,7 +35,10 @@ final class AbstractBlockConfigTest extends TestCase
     public function testCapabilitiesAreBlockFamily(): void
     {
         $cfg = new class extends AbstractBlockConfig {
-            public function getBridgeId(): string { return 'fb'; }
+            public function getBridgeId(): string
+            {
+                return 'fb';
+            }
         };
         self::assertEquals(BlockCapabilities::default(), $cfg->getCapabilities());
     }

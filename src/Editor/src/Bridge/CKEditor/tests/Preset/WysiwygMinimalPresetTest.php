@@ -19,7 +19,7 @@ final class WysiwygMinimalPresetTest extends TestCase
 {
     public function testBuilds(): void
     {
-        $cfg = (new WysiwygMinimalPreset())->build();
+        $cfg = new WysiwygMinimalPreset()->build();
         self::assertInstanceOf(CKEditorConfig::class, $cfg);
         self::assertSame('ckeditor', $cfg->getBridgeId());
         self::assertSame(['bold', 'italic', 'link'], $cfg->getCommon()->toolbar);

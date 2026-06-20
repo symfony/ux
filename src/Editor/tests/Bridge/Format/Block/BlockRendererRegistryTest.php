@@ -20,7 +20,11 @@ final class BlockRendererRegistryTest extends TestCase
     public function testGetByType(): void
     {
         $r = new class implements BlockRendererInterface {
-            public function getBlockType(): string { return 'header'; }
+            public function getBlockType(): string
+            {
+                return 'header';
+            }
+
             public function render(array $blockData, array $blockMeta = []): string
             {
                 return '<h>'.($blockData['text'] ?? '').'</h>';
@@ -34,13 +38,27 @@ final class BlockRendererRegistryTest extends TestCase
     public function testLastWriterWins(): void
     {
         $a = new class implements BlockRendererInterface {
-            public function getBlockType(): string { return 'p'; }
-            public function render(array $blockData, array $blockMeta = []): string { return 'A'; }
+            public function getBlockType(): string
+            {
+                return 'p';
+            }
+
+            public function render(array $blockData, array $blockMeta = []): string
+            {
+                return 'A';
+            }
         };
         $b = new class implements BlockRendererInterface {
-            public function getBlockType(): string { return 'p'; }
-            public function render(array $blockData, array $blockMeta = []): string { return 'B'; }
+            public function getBlockType(): string
+            {
+                return 'p';
+            }
+
+            public function render(array $blockData, array $blockMeta = []): string
+            {
+                return 'B';
+            }
         };
-        self::assertSame('B', (new BlockRendererRegistry([$a, $b]))->get('p')->render([]));
+        self::assertSame('B', new BlockRendererRegistry([$a, $b])->get('p')->render([]));
     }
 }

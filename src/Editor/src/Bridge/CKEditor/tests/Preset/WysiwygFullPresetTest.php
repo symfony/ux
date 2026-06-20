@@ -19,7 +19,7 @@ final class WysiwygFullPresetTest extends TestCase
 {
     public function testBuildsRichConfig(): void
     {
-        $cfg = (new WysiwygFullPreset())->build();
+        $cfg = new WysiwygFullPreset()->build();
         self::assertInstanceOf(CKEditorConfig::class, $cfg);
         $toolbar = $cfg->getCommon()->toolbar;
         foreach (['heading', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'undo', 'redo'] as $tool) {

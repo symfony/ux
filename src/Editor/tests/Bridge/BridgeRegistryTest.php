@@ -34,7 +34,7 @@ final class BridgeRegistryTest extends TestCase
     public function testUnknownThrows(): void
     {
         $this->expectException(UnknownBridgeException::class);
-        (new BridgeRegistry([]))->get('missing');
+        new BridgeRegistry([])->get('missing');
     }
 
     public function testDuplicateIdThrows(): void
@@ -46,12 +46,34 @@ final class BridgeRegistryTest extends TestCase
     private function fakeBridge(string $id): BridgeInterface
     {
         return new class($id) implements BridgeInterface {
-            public function __construct(private string $id) {}
-            public function getId(): string { return $this->id; }
-            public function getControllerName(): string { return 'symfony--ux-editor--'.$this->id; }
-            public function getDefaultConfig(): EditorConfigInterface { throw new \LogicException('not used'); }
-            public function getCapabilities(): BridgeCapabilities { return new BridgeCapabilities(true, true, true, true, ['html']); }
-            public function createTransformer(): EditorContentTransformerInterface { throw new \LogicException('not used'); }
+            public function __construct(private string $id)
+            {
+            }
+
+            public function getId(): string
+            {
+                return $this->id;
+            }
+
+            public function getControllerName(): string
+            {
+                return 'symfony--ux-editor--'.$this->id;
+            }
+
+            public function getDefaultConfig(): EditorConfigInterface
+            {
+                throw new \LogicException('not used');
+            }
+
+            public function getCapabilities(): BridgeCapabilities
+            {
+                return new BridgeCapabilities(true, true, true, true, ['html']);
+            }
+
+            public function createTransformer(): EditorContentTransformerInterface
+            {
+                throw new \LogicException('not used');
+            }
         };
     }
 }

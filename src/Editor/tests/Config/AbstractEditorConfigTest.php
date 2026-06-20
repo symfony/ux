@@ -20,16 +20,26 @@ final class AbstractEditorConfigTest extends TestCase
 {
     public function testMergeOrderCommonOwnOverrides(): void
     {
-        $c = new class(
-            common: new CommonOptions(placeholder: 'common-ph'),
-            nativeOverrides: ['placeholder' => 'override-ph', 'extra' => true],
-        ) extends AbstractEditorConfig {
-            public function getBridgeId(): string { return 'fake'; }
-            public function getCapabilities(): BridgeCapabilities { return new BridgeCapabilities(true, true, true, true, ['html']); }
-            protected function translateCommon(CommonOptions $c): array {
+        $c = new class(common: new CommonOptions(placeholder: 'common-ph'), nativeOverrides: ['placeholder' => 'override-ph', 'extra' => true]) extends AbstractEditorConfig {
+            public function getBridgeId(): string
+            {
+                return 'fake';
+            }
+
+            public function getCapabilities(): BridgeCapabilities
+            {
+                return new BridgeCapabilities(true, true, true, true, ['html']);
+            }
+
+            protected function translateCommon(CommonOptions $c): array
+            {
                 return ['placeholder' => $c->placeholder, 'origin' => 'common'];
             }
-            protected function translateOwn(): array { return ['origin' => 'own']; }
+
+            protected function translateOwn(): array
+            {
+                return ['origin' => 'own'];
+            }
         };
         $native = $c->toNative();
         self::assertSame('override-ph', $native['placeholder']);
@@ -40,9 +50,20 @@ final class AbstractEditorConfigTest extends TestCase
     public function testCommonReturnedAsGiven(): void
     {
         $c = new class(common: new CommonOptions(language: 'fr')) extends AbstractEditorConfig {
-            public function getBridgeId(): string { return 'fake'; }
-            public function getCapabilities(): BridgeCapabilities { return new BridgeCapabilities(true, true, true, true, ['html']); }
-            protected function translateCommon(CommonOptions $c): array { return []; }
+            public function getBridgeId(): string
+            {
+                return 'fake';
+            }
+
+            public function getCapabilities(): BridgeCapabilities
+            {
+                return new BridgeCapabilities(true, true, true, true, ['html']);
+            }
+
+            protected function translateCommon(CommonOptions $c): array
+            {
+                return [];
+            }
         };
         self::assertSame('fr', $c->getCommon()->language);
         self::assertSame([], $c->getNativeOverrides());

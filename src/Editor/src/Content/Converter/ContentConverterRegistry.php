@@ -38,7 +38,7 @@ final class ContentConverterRegistry
         }
 
         $converter = $this->byPair[$this->key($from, $to)]
-            ?? throw new UnsupportedConversionException(sprintf('No converter registered for "%s" -> "%s"', $from, $to));
+            ?? throw new UnsupportedConversionException(\sprintf('No converter registered for "%s" -> "%s"', $from, $to));
 
         return $converter->convert($content);
     }

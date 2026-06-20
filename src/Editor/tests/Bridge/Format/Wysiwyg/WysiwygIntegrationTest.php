@@ -51,17 +51,31 @@ final class WysiwygIntegrationTest extends TestCase
 
 final class FakeWysiwygConfig extends AbstractWysiwygConfig
 {
-    public function getBridgeId(): string { return 'fakewy'; }
+    public function getBridgeId(): string
+    {
+        return 'fakewy';
+    }
 }
 
 final class FakeWysiwygBridge extends AbstractWysiwygBridge
 {
-    public function getId(): string { return 'fakewy'; }
-    public function getDefaultConfig(): EditorConfigInterface { return new FakeWysiwygConfig(); }
+    public function getId(): string
+    {
+        return 'fakewy';
+    }
+
+    public function getDefaultConfig(): EditorConfigInterface
+    {
+        return new FakeWysiwygConfig();
+    }
+
     public function createTransformer(): EditorContentTransformerInterface
     {
         return new class extends AbstractWysiwygTransformer {
-            public function getBridgeId(): string { return 'fakewy'; }
+            public function getBridgeId(): string
+            {
+                return 'fakewy';
+            }
         };
     }
 }

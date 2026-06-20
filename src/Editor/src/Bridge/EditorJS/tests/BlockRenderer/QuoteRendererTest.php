@@ -25,6 +25,6 @@ final class QuoteRendererTest extends TestCase
 
     public function testWithCaption(): void
     {
-        self::assertSame('<blockquote><p>Be water</p><cite>Bruce Lee</cite></blockquote>', (new QuoteRenderer())->render(['text' => 'Be water', 'caption' => 'Bruce Lee']));
+        self::assertSame('<blockquote><p>Be water</p><cite>Bruce Lee</cite></blockquote>', new QuoteRenderer()->render(['text' => 'Be water', 'caption' => 'Bruce Lee']));
     }
 }

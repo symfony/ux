@@ -3,6 +3,7 @@
     "description": "Core abstractions for symfony/ux-editor bridges",
     "license": "MIT",
     "version": "0.1.0",
+    "keywords": ["symfony-ux", "editor", "wysiwyg", "block-editor", "page-builder"],
     "symfony": {
         "needsPackageAsADependency": false,
         "importmap": {

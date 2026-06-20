@@ -50,7 +50,7 @@ final class CKEditorConfigTest extends TestCase
 
     public function testToolbarOmittedWhenNotSet(): void
     {
-        self::assertArrayNotHasKey('toolbar', (new CKEditorConfig())->toNative());
+        self::assertArrayNotHasKey('toolbar', new CKEditorConfig()->toNative());
     }
 
     public function testNativeOverridesWinLast(): void

@@ -25,7 +25,7 @@ Or with Webpack Encore:
 Use
 ---
 
-.. code-block:: php
+::
 
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\FormBuilderInterface;
@@ -51,7 +51,7 @@ Use
 
 Or use the shipped preset:
 
-.. code-block:: php
+::
 
     $b->add('homepage', EditorType::class, ['preset' => 'page_builder.landing']);
 
@@ -72,7 +72,7 @@ Native overrides
 
 Any GrapesJS option not exposed by ``GrapesJSConfig`` passes through ``nativeOverrides``:
 
-.. code-block:: php
+::
 
     new GrapesJSConfig(
         nativeOverrides: ['styleManager' => ['sectors' => [...]]],
