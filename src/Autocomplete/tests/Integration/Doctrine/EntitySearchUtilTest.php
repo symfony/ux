@@ -63,6 +63,7 @@ class EntitySearchUtilTest extends KernelTestCase
         $percent = ProductFactory::createOne(['name' => '100% legit']);
         $underscore = ProductFactory::createOne(['name' => 'foo_bar']);
         $backslash = ProductFactory::createOne(['name' => 'a\\b literal']);
+        $bang = ProductFactory::createOne(['name' => 'wow! deal']);
         ProductFactory::createOne(['name' => 'unrelated thing']);
 
         // a literal "%" must match only the row that actually contains "%",
@@ -74,6 +75,9 @@ class EntitySearchUtilTest extends KernelTestCase
 
         // a literal "\" must be treated as data, not as the LIKE escape char
         $this->assertSame([$backslash], $this->callAddSearchClass('a\\b'));
+
+        // the LIKE escape char itself ("!") must be treated as data
+        $this->assertSame([$bang], $this->callAddSearchClass('wow!'));
 
         // a normal substring search still works
         $this->assertSame([$percent], $this->callAddSearchClass('legit'));

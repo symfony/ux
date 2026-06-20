@@ -20,6 +20,13 @@ use Symfony\Component\Uid\Uuid;
  */
 class EntitySearchUtil
 {
+    /**
+     * Custom LIKE escape character. A backslash cannot be used here: the
+     * resulting "ESCAPE '\'" clause produces invalid SQL on PostgreSQL, while
+     * "!" is safe to embed in the ESCAPE clause on every supported platform.
+     */
+    private const LIKE_ESCAPE_CHARACTER = '!';
+
     public function __construct(private EntityMetadataFactory $metadataFactory)
     {
     }
@@ -38,14 +45,16 @@ class EntitySearchUtil
         $isUuidQuery = class_exists(Uuid::class) && Uuid::isValid($query);
         $isUlidQuery = class_exists(Ulid::class) && Ulid::isValid($query);
 
+        $databasePlatform = $queryBuilder->getEntityManager()->getConnection()->getDatabasePlatform();
+
         $dqlParameters = [
             // adding '0' turns the string into a numeric value
             'numeric_query' => is_numeric($query) ? 0 + $query : $query,
             'uuid_query' => $query,
-            // escape the LIKE wildcards "%" and "_" (and the escape char "\")
-            // so a user-supplied wildcard cannot broaden the search; paired
-            // with the "ESCAPE '\'" clause on the LIKE expression below
-            'text_query' => '%'.addcslashes($lowercaseQuery, '\\%_').'%',
+            // escape the LIKE wildcards "%" and "_" (and the escape char itself)
+            // so a user-supplied wildcard cannot broaden the search; paired with
+            // the "ESCAPE '!'" clause on the LIKE expression below
+            'text_query' => '%'.$databasePlatform->escapeStringForLike($lowercaseQuery, self::LIKE_ESCAPE_CHARACTER).'%',
             'words_query' => explode(' ', $lowercaseQuery),
         ];
 
@@ -123,8 +132,8 @@ class EntitySearchUtil
                 $expressions[] = $queryBuilder->expr()->eq(\sprintf('%s.%s', $entityName, $propertyName), ':query_for_uuids');
                 $queryBuilder->setParameter('query_for_uuids', $dqlParameters['uuid_query'], 'ulid');
             } elseif ($isTextProperty) {
-                // ESCAPE '\' so the backslash-escaped wildcards in :query_for_text are treated literally
-                $expressions[] = \sprintf("LOWER(%s.%s) LIKE :query_for_text ESCAPE '\\'", $entityName, $propertyName);
+                // ESCAPE '!' so the escaped wildcards in :query_for_text are treated literally
+                $expressions[] = \sprintf("LOWER(%s.%s) LIKE :query_for_text ESCAPE '%s'", $entityName, $propertyName, self::LIKE_ESCAPE_CHARACTER);
                 $queryBuilder->setParameter('query_for_text', $dqlParameters['text_query']);
 
                 $expressions[] = $queryBuilder->expr()->in(\sprintf('LOWER(%s.%s)', $entityName, $propertyName), ':query_as_words');

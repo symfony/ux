@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.37
+
+- Fix the autocomplete search query throwing an exception on PostgreSQL because of
+  the `ESCAPE '\'` clause introduced in 2.36; a backslash-free LIKE escape character is now used.
+
 ## 2.36
 
 - Escape LIKE wildcards (`%` and `_`) in the autocomplete search query so user
