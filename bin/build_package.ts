@@ -51,7 +51,12 @@ async function main() {
         ...new Set(
             collectExportTargets(packageData.exports || {})
                 .filter((target) => target.endsWith('.js'))
-                .map((target) => target.replace(/^\.\//, '').replace(/^dist\//, 'src/').replace(/\.js$/, '.ts'))
+                .map((target) =>
+                    target
+                        .replace(/^\.\//, '')
+                        .replace(/^dist\//, 'src/')
+                        .replace(/\.js$/, '.ts')
+                )
                 .filter((srcFile) => fs.existsSync(path.join(packageRoot, srcFile)))
         ),
     ];

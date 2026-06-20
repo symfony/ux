@@ -13,9 +13,7 @@
                 {
                     "from": "src/Map",
                     "to": "",
-                    "excludes": [
-                        "src/Bridge"
-                    ]
+                    "excludes": ["src/Bridge"]
                 }
             ]
         },
@@ -34,9 +32,7 @@
                 {
                     "from": "src/Editor",
                     "to": "",
-                    "excludes": [
-                        "src/Bridge"
-                    ]
+                    "excludes": ["src/Bridge"]
                 }
             ]
         },

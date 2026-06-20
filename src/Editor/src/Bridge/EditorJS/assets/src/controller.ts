@@ -7,16 +7,25 @@ export default class EditorJSController extends AbstractBlockController {
     async createEditor(mount: HTMLElement, config: Record<string, unknown>): Promise<BlockInstance> {
         const { default: EditorJS } = await import('@editorjs/editorjs');
 
-        const tools = config.tools as Record<string, { class: string; config?: any; inlineToolbar?: boolean; shortcut?: string }> | undefined;
+        const tools = config.tools as
+            | Record<string, { class: string; config?: any; inlineToolbar?: boolean; shortcut?: string }>
+            | undefined;
         const resolvedTools: Record<string, any> = {};
         if (tools) {
             for (const [name, spec] of Object.entries(tools)) {
                 const klass = resolveTool(spec.class);
                 if (!klass) {
-                    console.warn(`[ux-editor-editorjs] Tool class "${spec.class}" not registered on window.UXEditorJSTools — skipping`);
+                    console.warn(
+                        `[ux-editor-editorjs] Tool class "${spec.class}" not registered on window.UXEditorJSTools — skipping`
+                    );
                     continue;
                 }
-                resolvedTools[name] = { class: klass, config: spec.config ?? {}, inlineToolbar: spec.inlineToolbar ?? true, shortcut: spec.shortcut };
+                resolvedTools[name] = {
+                    class: klass,
+                    config: spec.config ?? {},
+                    inlineToolbar: spec.inlineToolbar ?? true,
+                    shortcut: spec.shortcut,
+                };
             }
         }
 

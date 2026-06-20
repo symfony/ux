@@ -50,11 +50,11 @@ describe('CKEditorController', () => {
         document.body.append(wrapper);
         const root = buildHost(wrapper);
         const events: string[] = [];
-        ['ux:editor:pre-connect', 'ux:editor:connect'].forEach(n => root.addEventListener(n, () => events.push(n)));
+        ['ux:editor:pre-connect', 'ux:editor:connect'].forEach((n) => root.addEventListener(n, () => events.push(n)));
 
         const app = Application.start(wrapper);
         app.register('ckeditor', Controller as any);
-        await new Promise(r => setTimeout(r, 10));
+        await new Promise((r) => setTimeout(r, 10));
 
         expect(events).toEqual(['ux:editor:pre-connect', 'ux:editor:connect']);
         const ctrl: any = (app as any).getControllerForElementAndIdentifier(root, 'ckeditor');
@@ -70,7 +70,7 @@ describe('CKEditorController', () => {
         const root = buildHost(wrapper);
         const app = Application.start(wrapper);
         app.register('ckeditor', Controller as any);
-        await new Promise(r => setTimeout(r, 10));
+        await new Promise((r) => setTimeout(r, 10));
         const ctrl: any = (app as any).getControllerForElementAndIdentifier(root, 'ckeditor');
         expect(ctrl.hotReloadable().has('readOnly')).toBe(true);
         expect(ctrl.instance.isReadOnly).toBe(false);

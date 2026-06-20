@@ -45,9 +45,12 @@ export default class GrapesJSController extends AbstractPageBuilderController {
 
     async createEditor(mount: HTMLElement, config: Record<string, unknown>): Promise<PageInstance> {
         const { default: grapesjs } = await import('grapesjs');
-        const editor = grapesjs.init({ container: mount, ...(config as Record<string, unknown>) }) as unknown as GrapesEditor;
+        const editor = grapesjs.init({
+            container: mount,
+            ...(config as Record<string, unknown>),
+        }) as unknown as GrapesEditor;
 
-        ['component:add', 'component:remove', 'component:update', 'asset:add', 'asset:remove'].forEach(ev =>
+        ['component:add', 'component:remove', 'component:update', 'asset:add', 'asset:remove'].forEach((ev) =>
             editor.on(ev, () => this.syncInput())
         );
 

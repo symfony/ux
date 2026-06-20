@@ -41,11 +41,11 @@ describe('GrapesJSController', () => {
         document.body.append(wrapper);
         const root = buildHost(wrapper);
         const events: string[] = [];
-        ['ux:editor:pre-connect', 'ux:editor:connect'].forEach(n => root.addEventListener(n, () => events.push(n)));
+        ['ux:editor:pre-connect', 'ux:editor:connect'].forEach((n) => root.addEventListener(n, () => events.push(n)));
 
         const app = Application.start(wrapper);
         app.register('grapesjs', Controller as any);
-        await new Promise(r => setTimeout(r, 10));
+        await new Promise((r) => setTimeout(r, 10));
 
         expect(events).toEqual(['ux:editor:pre-connect', 'ux:editor:connect']);
         const ctrl: any = (app as any).getControllerForElementAndIdentifier(root, 'grapesjs');
