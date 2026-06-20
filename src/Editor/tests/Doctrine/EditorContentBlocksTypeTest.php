@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\Editor\Tests\Doctrine;
 
-use Doctrine\DBAL\Platforms\SqlitePlatform;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Editor\Content\BlockContent;
@@ -30,7 +30,7 @@ final class EditorContentBlocksTypeTest extends TestCase
     public function testRoundTrip(): void
     {
         $t = Type::getType('editor_blocks');
-        $p = new SqlitePlatform();
+        $p = $this->createMock(AbstractPlatform::class);
         $bc = new BlockContent([['type' => 'p', 'data' => ['text' => 'x']]], '2.0');
         $json = $t->convertToDatabaseValue($bc, $p);
         self::assertJson($json);
@@ -43,7 +43,7 @@ final class EditorContentBlocksTypeTest extends TestCase
     public function testNullRoundTrip(): void
     {
         $t = Type::getType('editor_blocks');
-        $p = new SqlitePlatform();
+        $p = $this->createMock(AbstractPlatform::class);
         self::assertNull($t->convertToDatabaseValue(null, $p));
         self::assertNull($t->convertToPHPValue(null, $p));
     }
@@ -51,6 +51,6 @@ final class EditorContentBlocksTypeTest extends TestCase
     public function testMalformedJsonThrows(): void
     {
         $this->expectException(ContentSchemaException::class);
-        Type::getType('editor_blocks')->convertToPHPValue('{not json', new SqlitePlatform());
+        Type::getType('editor_blocks')->convertToPHPValue('{not json', $this->createMock(AbstractPlatform::class));
     }
 }

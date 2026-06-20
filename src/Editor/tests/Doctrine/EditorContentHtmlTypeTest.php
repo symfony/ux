@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\Editor\Tests\Doctrine;
 
-use Doctrine\DBAL\Platforms\SqlitePlatform;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Editor\Content\HtmlContent;
@@ -29,7 +29,7 @@ final class EditorContentHtmlTypeTest extends TestCase
     public function testConvertToDatabaseValue(): void
     {
         $t = Type::getType('editor_html');
-        $p = new SqlitePlatform();
+        $p = $this->createMock(AbstractPlatform::class);
         self::assertSame('<p>hi</p>', $t->convertToDatabaseValue(new HtmlContent('<p>hi</p>'), $p));
         self::assertNull($t->convertToDatabaseValue(null, $p));
     }
@@ -37,7 +37,7 @@ final class EditorContentHtmlTypeTest extends TestCase
     public function testConvertToPHPValue(): void
     {
         $t = Type::getType('editor_html');
-        $p = new SqlitePlatform();
+        $p = $this->createMock(AbstractPlatform::class);
         $php = $t->convertToPHPValue('<p>hi</p>', $p);
         self::assertInstanceOf(HtmlContent::class, $php);
         self::assertSame('<p>hi</p>', $php->html);

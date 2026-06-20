@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\Editor\Tests\Doctrine;
 
-use Doctrine\DBAL\Platforms\SqlitePlatform;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Editor\Content\PageContent;
@@ -30,7 +30,7 @@ final class EditorContentPageTypeTest extends TestCase
     public function testRoundTrip(): void
     {
         $t = Type::getType('editor_page');
-        $p = new SqlitePlatform();
+        $p = $this->createMock(AbstractPlatform::class);
         $pc = new PageContent('<h1>x</h1>', 'h1{}', [['type' => 'image', 'url' => '/x.png']], [['type' => 'h1']]);
         $back = $t->convertToPHPValue($t->convertToDatabaseValue($pc, $p), $p);
         self::assertInstanceOf(PageContent::class, $back);
@@ -43,6 +43,6 @@ final class EditorContentPageTypeTest extends TestCase
     public function testMalformedThrows(): void
     {
         $this->expectException(ContentSchemaException::class);
-        Type::getType('editor_page')->convertToPHPValue('not json', new SqlitePlatform());
+        Type::getType('editor_page')->convertToPHPValue('not json', $this->createMock(AbstractPlatform::class));
     }
 }

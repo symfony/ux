@@ -16,7 +16,6 @@
         "phpunit/phpunit": "^11.1|^12.0",
         "symfony/framework-bundle": "^7.4|^8.0"
     },
-    "repositories": [{"type": "path", "url": "../../../", "options": {"symlink": false}}],
     "extra": {"thanks": {"name": "symfony/ux", "url": "https://github.com/symfony/ux"}},
     "minimum-stability": "dev"
 }
