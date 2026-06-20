@@ -3,7 +3,12 @@
     "description": "Core abstractions for symfony/ux-editor bridges",
     "license": "MIT",
     "version": "0.1.0",
-    "symfony": {"controllers": {}, "importmap": {}},
+    "symfony": {
+        "needsPackageAsADependency": false,
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0"
+        }
+    },
     "type": "module",
     "main": "dist/controller.js",
     "types": "dist/controller.d.ts",

@@ -1,9 +1,15 @@
-import { AbstractEditorController } from '../controller.js';
-export class AbstractWysiwygController extends AbstractEditorController {
-    static values = { ...AbstractEditorController.values, sanitizeOnPaste: Boolean };
-    serialize(instance) { return instance.getHTML(); }
-    async connect() {
-        this.mountTarget.setAttribute('aria-multiline', 'true');
-        await super.connect();
-    }
-}
+import { n as _defineProperty, t as AbstractEditorController } from "../controller-BoYyK5_A.js";
+var AbstractWysiwygController = class extends AbstractEditorController {
+	serialize(instance) {
+		return instance.getHTML();
+	}
+	async connect() {
+		this.mountTarget.setAttribute("aria-multiline", "true");
+		await super.connect();
+	}
+};
+_defineProperty(AbstractWysiwygController, "values", {
+	...AbstractEditorController.values,
+	sanitizeOnPaste: Boolean
+});
+export { AbstractWysiwygController };

@@ -39,13 +39,33 @@ async function main() {
     const isReactOrVue = ['@symfony/ux-react', '@symfony/ux-vue'].some((name) => packageData.name.startsWith(name));
     const isTurbo = '@symfony/ux-turbo' === packageData.name;
 
+    // Collect non-controller entry points declared in package.json "exports"
+    // (e.g. "./upload" -> "./dist/upload/SignedUploadClient.js"), mapping each
+    // "dist/*.js" target back to its "src/*.ts" source when it exists on disk.
+    const collectExportTargets = (node) => {
+        if (typeof node === 'string') return [node];
+        if (node && typeof node === 'object') return Object.values(node).flatMap(collectExportTargets);
+        return [];
+    };
+    const exportEntryFiles = [
+        ...new Set(
+            collectExportTargets(packageData.exports || {})
+                .filter((target) => target.endsWith('.js'))
+                .map((target) => target.replace(/^\.\//, '').replace(/^dist\//, 'src/').replace(/\.js$/, '.ts'))
+                .filter((srcFile) => fs.existsSync(path.join(packageRoot, srcFile)))
+        ),
+    ];
+
     const inputCssFile = packageData?.config?.css_source;
     const inputFiles = [
-        ...globSync('src/*controller.ts'),
-        ...(isTurbo ? ['src/mercure_stream_source_element.ts'] : []),
-        ...(isStimulusBundle ? ['src/loader.ts', 'src/controllers.ts'] : []),
-        ...(isReactOrVue ? ['src/loader.ts', 'src/components.ts'] : []),
-        ...(inputCssFile ? [inputCssFile] : []),
+        ...new Set([
+            ...globSync('src/**/*controller.ts'),
+            ...exportEntryFiles,
+            ...(isTurbo ? ['src/mercure_stream_source_element.ts'] : []),
+            ...(isStimulusBundle ? ['src/loader.ts', 'src/controllers.ts'] : []),
+            ...(isReactOrVue ? ['src/loader.ts', 'src/components.ts'] : []),
+            ...(inputCssFile ? [inputCssFile] : []),
+        ]),
     ];
 
     const external = new Set([

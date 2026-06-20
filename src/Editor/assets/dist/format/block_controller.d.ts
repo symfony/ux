@@ -1,14 +1,15 @@
-import { AbstractEditorController } from '../controller.js';
-export interface BlockInstance {
-    save(): Promise<{
-        version?: string;
-        blocks: Array<{
-            type: string;
-            data: Record<string, unknown>;
-        }>;
+import { AbstractEditorController } from "../controller.js";
+interface BlockInstance {
+  save(): Promise<{
+    version?: string;
+    blocks: Array<{
+      type: string;
+      data: Record<string, unknown>;
     }>;
-    destroy?(): void;
+  }>;
+  destroy?(): void;
 }
-export declare abstract class AbstractBlockController extends AbstractEditorController<BlockInstance> {
-    serialize(instance: BlockInstance): Promise<object>;
+declare abstract class AbstractBlockController extends AbstractEditorController<BlockInstance> {
+  serialize(instance: BlockInstance): Promise<object>;
 }
+export { AbstractBlockController, BlockInstance };

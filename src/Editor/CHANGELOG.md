@@ -21,7 +21,14 @@ Initial release of `symfony/ux-editor` core package.
 - Compile pass `AssertSanitizerPass` (boot-time check for required HTML sanitizer).
 - Console command `debug:ux-editor`.
 - WebProfiler data collector `ux_editor`.
+- Editor bridges shipped as separate composer + npm sub-packages:
+  `symfony/ux-editor-ckeditor` (CKEditor 5, WYSIWYG family),
+  `symfony/ux-editor-editorjs` (EditorJS, block family) and
+  `symfony/ux-editor-grapesjs` (GrapesJS, page-builder family), each with its
+  own presets, config and Stimulus controller.
 
 ### Notes
 
-This release ships abstractions only. Specific editor bridges (CKEditor, EditorJS, GrapesJS) ship as separate composer + npm sub-packages in follow-up releases.
+The core package ships editor-agnostic abstractions; concrete editors plug in
+through `BridgeInterface` + `BridgeRegistry` and are distributed as the
+sub-packages listed above.
