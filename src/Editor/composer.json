@@ -34,6 +34,7 @@
         "symfony/ux-twig-component": "^2.21|^3.0"
     },
     "extra": {
+        "branch-alias": {"dev-feat/ux-editor-core": "0.1.x-dev"},
         "thanks": {"name": "symfony/ux", "url": "https://github.com/symfony/ux"}
     },
     "minimum-stability": "dev"
