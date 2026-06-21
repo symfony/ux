@@ -42,7 +42,7 @@ final class EditorContentPageType extends JsonType
                 'metadata' => $value->getMetadata(),
             ], \JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
-            throw new ContentSchemaException('Could not encode PageContent', 0, $e);
+            throw new ContentSchemaException('Could not encode PageContent.', 0, $e);
         }
     }
 
@@ -54,7 +54,7 @@ final class EditorContentPageType extends JsonType
         try {
             $arr = json_decode((string) $value, true, 512, \JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
-            throw new ContentSchemaException('Malformed PageContent JSON', 0, $e);
+            throw new ContentSchemaException('Malformed PageContent JSON.', 0, $e);
         }
 
         return new PageContent(

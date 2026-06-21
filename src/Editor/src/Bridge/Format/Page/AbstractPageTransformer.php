@@ -57,7 +57,7 @@ abstract class AbstractPageTransformer implements EditorContentTransformerInterf
         $html = $stored['html'] ?? '';
         $css = $stored['css'] ?? '';
         if (!\is_string($html) || !\is_string($css)) {
-            throw new ContentSchemaException('"html" and "css" must be strings');
+            throw new ContentSchemaException('"html" and "css" must be strings.');
         }
 
         return new PageContent(

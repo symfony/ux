@@ -46,7 +46,7 @@ final class TransformerAdapter implements DataTransformerInterface
             try {
                 $value = json_decode($value, true, 512, \JSON_THROW_ON_ERROR);
             } catch (\JsonException $e) {
-                throw new TransformationFailedException('Invalid JSON for editor content', 0, $e);
+                throw new TransformationFailedException('Invalid JSON for editor content.', 0, $e);
             }
         }
 

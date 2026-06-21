@@ -46,7 +46,7 @@ final class DefaultLocalUploadHandler implements EditorUploadHandlerInterface
         try {
             $file->move($this->targetDir, $name);
         } catch (\Throwable $e) {
-            throw new UploadHandlerException('Could not store upload', 0, $e);
+            throw new UploadHandlerException('Could not store upload.', 0, $e);
         }
 
         return [

@@ -32,7 +32,7 @@ final class PresetRegistry
 
     public function get(string $name): EditorPresetInterface
     {
-        return $this->presets[$name] ?? throw new UnknownBridgeException(\sprintf('Unknown preset "%s". Registered: %s', $name, '' !== ($list = implode(', ', array_keys($this->presets))) ? $list : '(none)'));
+        return $this->presets[$name] ?? throw new UnknownBridgeException(\sprintf('Unknown preset "%s". Registered: "%s"', $name, '' !== ($list = implode(', ', array_keys($this->presets))) ? $list : '(none)'));
     }
 
     /**

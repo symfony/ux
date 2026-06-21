@@ -34,7 +34,7 @@ abstract class AbstractWysiwygTransformer implements EditorContentTransformerInt
             return null;
         }
         if (!$content instanceof HtmlContent) {
-            throw new \InvalidArgumentException(\sprintf('Expected HtmlContent, got %s', get_debug_type($content)));
+            throw new \InvalidArgumentException(\sprintf('Expected HtmlContent, got "%s"', get_debug_type($content)));
         }
 
         return $content->html;
