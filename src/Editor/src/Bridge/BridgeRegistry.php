@@ -27,7 +27,7 @@ final class BridgeRegistry
     {
         foreach ($bridges as $b) {
             if (isset($this->bridges[$b->getId()])) {
-                throw new \LogicException(\sprintf('Duplicate bridge id "%s"', $b->getId()));
+                throw new \LogicException(\sprintf('Duplicate bridge id "%s".', $b->getId()));
             }
             $this->bridges[$b->getId()] = $b;
         }
