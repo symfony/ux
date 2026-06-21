@@ -16,7 +16,7 @@ use Symfony\UX\Editor\Bridge\EditorJS\Config\ToolDefinition;
 
 final class ToolDefinitionTest extends TestCase
 {
-    public function testDefaults(): void
+    public function testDefaults()
     {
         $t = new ToolDefinition('Header');
         self::assertSame('Header', $t->class);
@@ -25,7 +25,7 @@ final class ToolDefinitionTest extends TestCase
         self::assertNull($t->shortcut);
     }
 
-    public function testToArray(): void
+    public function testToArray()
     {
         $t = new ToolDefinition('Image', ['endpoints' => ['byFile' => '/u']], inlineToolbar: false, shortcut: 'CMD+I');
         self::assertSame([
@@ -36,7 +36,7 @@ final class ToolDefinitionTest extends TestCase
         ], $t->toArray());
     }
 
-    public function testToArrayOmitsEmptyConfig(): void
+    public function testToArrayOmitsEmptyConfig()
     {
         $arr = new ToolDefinition('Header')->toArray();
         self::assertSame('Header', $arr['class']);

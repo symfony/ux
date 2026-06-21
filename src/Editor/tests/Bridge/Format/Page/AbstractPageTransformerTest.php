@@ -19,14 +19,14 @@ use Symfony\UX\Editor\Form\DataTransformer\StorageShape;
 
 final class AbstractPageTransformerTest extends TestCase
 {
-    public function testStorageShapeIsJsonByDefault(): void
+    public function testStorageShapeIsJsonByDefault()
     {
         $t = $this->fake();
         self::assertSame(StorageShape::Json, $t->getStorageShape());
         self::assertSame(PageContent::class, $t->getContentClass());
     }
 
-    public function testRoundTripBundle(): void
+    public function testRoundTripBundle()
     {
         $t = $this->fake();
         $pc = new PageContent('<h1>x</h1>', 'h1{}', [['type' => 'image', 'url' => '/x.png']], [['type' => 'h1']]);
@@ -42,7 +42,7 @@ final class AbstractPageTransformerTest extends TestCase
         self::assertSame('fakepage', $back->getMetadata()['bridgeId']);
     }
 
-    public function testNullPaths(): void
+    public function testNullPaths()
     {
         $t = $this->fake();
         self::assertNull($t->transform(null));
@@ -50,7 +50,7 @@ final class AbstractPageTransformerTest extends TestCase
         self::assertNull($t->reverseTransform([]));
     }
 
-    public function testMalformedThrows(): void
+    public function testMalformedThrows()
     {
         $this->expectException(ContentSchemaException::class);
         $this->fake()->reverseTransform(['html' => ['not-a-string']]);

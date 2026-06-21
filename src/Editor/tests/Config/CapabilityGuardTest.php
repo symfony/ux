@@ -20,7 +20,7 @@ use Symfony\UX\Editor\Exception\IncompatibleConfigException;
 
 final class CapabilityGuardTest extends TestCase
 {
-    public function testWarnsWhenIncompatibleAndNotStrict(): void
+    public function testWarnsWhenIncompatibleAndNotStrict()
     {
         $logger = $this->arrayLogger();
         $c = $this->configWithToolbar(false);
@@ -31,7 +31,7 @@ final class CapabilityGuardTest extends TestCase
         self::assertStringContainsString('toolbar', $logger->log[0][1]);
     }
 
-    public function testThrowsWhenIncompatibleAndStrict(): void
+    public function testThrowsWhenIncompatibleAndStrict()
     {
         $c = $this->configWithToolbar(false);
         $c->setStrict(true);
@@ -39,7 +39,7 @@ final class CapabilityGuardTest extends TestCase
         $c->toNative();
     }
 
-    public function testSilentWhenCompatible(): void
+    public function testSilentWhenCompatible()
     {
         $logger = $this->arrayLogger();
         $c = $this->configWithToolbar(true);

@@ -16,7 +16,7 @@ use Symfony\UX\Editor\Bridge\Format\Wysiwyg\WysiwygCapabilities;
 
 final class WysiwygCapabilitiesTest extends TestCase
 {
-    public function testDefaults(): void
+    public function testDefaults()
     {
         $c = WysiwygCapabilities::default();
         self::assertTrue($c->supportsToolbar);
@@ -26,7 +26,7 @@ final class WysiwygCapabilitiesTest extends TestCase
         self::assertSame(['html'], $c->supportedFormats);
     }
 
-    public function testWithOverrides(): void
+    public function testWithOverrides()
     {
         $c = WysiwygCapabilities::default()->with(supportsTheme: false);
         self::assertFalse($c->supportsTheme);

@@ -16,19 +16,19 @@ use Symfony\UX\Editor\Bridge\EditorJS\BlockRenderer\HeaderRenderer;
 
 final class HeaderRendererTest extends TestCase
 {
-    public function testType(): void
+    public function testType()
     {
         self::assertSame('header', new HeaderRenderer()->getBlockType());
     }
 
-    public function testRendersLevels(): void
+    public function testRendersLevels()
     {
         $r = new HeaderRenderer();
         self::assertSame('<h2>Title</h2>', $r->render(['text' => 'Title', 'level' => 2]));
         self::assertSame('<h4>Sub</h4>', $r->render(['text' => 'Sub', 'level' => 4]));
     }
 
-    public function testClampsLevel(): void
+    public function testClampsLevel()
     {
         $r = new HeaderRenderer();
         self::assertSame('<h2>X</h2>', $r->render(['text' => 'X', 'level' => 1]));

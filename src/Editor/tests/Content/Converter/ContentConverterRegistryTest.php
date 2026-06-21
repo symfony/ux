@@ -20,14 +20,14 @@ use Symfony\UX\Editor\Exception\UnsupportedConversionException;
 
 final class ContentConverterRegistryTest extends TestCase
 {
-    public function testIdentityConversion(): void
+    public function testIdentityConversion()
     {
         $reg = new ContentConverterRegistry([]);
         $in = new HtmlContent('<p>x</p>');
         self::assertSame($in, $reg->convert($in, 'ckeditor', 'ckeditor'));
     }
 
-    public function testRegisteredConverterUsed(): void
+    public function testRegisteredConverterUsed()
     {
         $conv = new class implements ContentConverterInterface {
             public function getFrom(): string
@@ -49,7 +49,7 @@ final class ContentConverterRegistryTest extends TestCase
         self::assertSame('converted:hi', $reg->convert(new HtmlContent('hi'), 'a', 'b')->getRaw());
     }
 
-    public function testUnknownPairThrows(): void
+    public function testUnknownPairThrows()
     {
         $this->expectException(UnsupportedConversionException::class);
         new ContentConverterRegistry([])->convert(new HtmlContent(''), 'a', 'b');

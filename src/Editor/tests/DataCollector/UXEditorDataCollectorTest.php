@@ -18,7 +18,7 @@ use Symfony\UX\Editor\DataCollector\UXEditorDataCollector;
 
 final class UXEditorDataCollectorTest extends TestCase
 {
-    public function testRecordsBridgeUseAndWarnings(): void
+    public function testRecordsBridgeUseAndWarnings()
     {
         $c = new UXEditorDataCollector();
         $c->recordBridgeUse('ckeditor', 'html');
@@ -30,7 +30,7 @@ final class UXEditorDataCollectorTest extends TestCase
         self::assertSame('ux_editor', $c->getName());
     }
 
-    public function testReset(): void
+    public function testReset()
     {
         $c = new UXEditorDataCollector();
         $c->recordBridgeUse('q', 'html');

@@ -21,7 +21,7 @@ use Symfony\UX\Editor\Form\DataTransformer\EditorContentTransformerInterface;
 
 final class AbstractBlockBridgeTest extends TestCase
 {
-    public function testDefaults(): void
+    public function testDefaults()
     {
         $b = new class extends AbstractBlockBridge {
             public function getId(): string

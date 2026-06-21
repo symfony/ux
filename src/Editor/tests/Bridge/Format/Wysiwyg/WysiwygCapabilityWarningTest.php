@@ -20,7 +20,7 @@ use Symfony\UX\Editor\Config\CommonOptions;
 
 final class WysiwygCapabilityWarningTest extends TestCase
 {
-    public function testWarnsWhenToolbarUnsupported(): void
+    public function testWarnsWhenToolbarUnsupported()
     {
         $logger = new class extends AbstractLogger {
             public array $log = [];

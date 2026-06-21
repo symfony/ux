@@ -18,7 +18,7 @@ use Symfony\UX\Editor\Form\DataTransformer\StorageShape;
 
 final class CKEditorTransformerTest extends TestCase
 {
-    public function testMetadata(): void
+    public function testMetadata()
     {
         $t = new CKEditorTransformer();
         self::assertSame('ckeditor', $t->getBridgeId());
@@ -26,7 +26,7 @@ final class CKEditorTransformerTest extends TestCase
         self::assertSame(StorageShape::Scalar, $t->getStorageShape());
     }
 
-    public function testReverseStampsBridgeId(): void
+    public function testReverseStampsBridgeId()
     {
         $hc = new CKEditorTransformer()->reverseTransform('<p>hi</p>');
         self::assertInstanceOf(HtmlContent::class, $hc);

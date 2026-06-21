@@ -18,7 +18,7 @@ use Symfony\UX\Editor\Form\DataTransformer\StorageShape;
 
 final class EditorJSTransformerTest extends TestCase
 {
-    public function testMetadata(): void
+    public function testMetadata()
     {
         $t = new EditorJSTransformer();
         self::assertSame('editorjs', $t->getBridgeId());
@@ -26,7 +26,7 @@ final class EditorJSTransformerTest extends TestCase
         self::assertSame(StorageShape::Json, $t->getStorageShape());
     }
 
-    public function testReverseStampsBridgeId(): void
+    public function testReverseStampsBridgeId()
     {
         $bc = new EditorJSTransformer()->reverseTransform(['version' => '2.30.0', 'blocks' => [['type' => 'paragraph', 'data' => ['text' => 'hi']]]]);
         self::assertInstanceOf(BlockContent::class, $bc);

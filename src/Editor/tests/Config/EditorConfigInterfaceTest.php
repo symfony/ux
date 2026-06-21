@@ -18,7 +18,7 @@ use Symfony\UX\Editor\Config\EditorConfigInterface;
 
 final class EditorConfigInterfaceTest extends TestCase
 {
-    public function testContractMethodsExist(): void
+    public function testContractMethodsExist()
     {
         $stub = new class implements EditorConfigInterface {
             public function getBridgeId(): string

@@ -18,14 +18,14 @@ use Symfony\UX\Editor\Config\CommonOptions;
 
 final class CKEditorConfigTest extends TestCase
 {
-    public function testBridgeIdAndCapabilities(): void
+    public function testBridgeIdAndCapabilities()
     {
         $cfg = new CKEditorConfig();
         self::assertSame('ckeditor', $cfg->getBridgeId());
         self::assertEquals(WysiwygCapabilities::default(), $cfg->getCapabilities());
     }
 
-    public function testTranslateCommonAndOwn(): void
+    public function testTranslateCommonAndOwn()
     {
         $cfg = new CKEditorConfig(
             common: new CommonOptions(toolbar: ['bold', 'italic', 'link'], placeholder: 'Write…', language: 'fr'),
@@ -48,12 +48,12 @@ final class CKEditorConfigTest extends TestCase
         self::assertSame('GPL', $n['licenseKey']);
     }
 
-    public function testToolbarOmittedWhenNotSet(): void
+    public function testToolbarOmittedWhenNotSet()
     {
         self::assertArrayNotHasKey('toolbar', new CKEditorConfig()->toNative());
     }
 
-    public function testNativeOverridesWinLast(): void
+    public function testNativeOverridesWinLast()
     {
         $cfg = new CKEditorConfig(
             common: new CommonOptions(language: 'fr'),

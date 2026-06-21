@@ -17,12 +17,12 @@ use Symfony\UX\Editor\Content\PageContent;
 
 final class PageContentTest extends TestCase
 {
-    public function testFormat(): void
+    public function testFormat()
     {
         self::assertSame(EditorContentFormat::Page, new PageContent('')->getFormat());
     }
 
-    public function testRawBundle(): void
+    public function testRawBundle()
     {
         $p = new PageContent(html: '<h1>x</h1>', css: 'h1{color:red}', components: [['type' => 'h1']]);
         $raw = $p->getRaw();
@@ -31,20 +31,20 @@ final class PageContentTest extends TestCase
         self::assertSame([['type' => 'h1']], $raw['components']);
     }
 
-    public function testIsEmpty(): void
+    public function testIsEmpty()
     {
         self::assertTrue(new PageContent('')->isEmpty());
         self::assertFalse(new PageContent('<p>x</p>')->isEmpty());
         self::assertFalse(new PageContent('', '', [], [['type' => 'p']])->isEmpty());
     }
 
-    public function testExtractAssets(): void
+    public function testExtractAssets()
     {
         $assets = [['type' => 'image', 'url' => '/x.png']];
         self::assertSame($assets, new PageContent('', '', $assets)->extractAssets());
     }
 
-    public function testFromBundle(): void
+    public function testFromBundle()
     {
         $p = PageContent::fromBundle([
             'html' => '<p>x</p>',

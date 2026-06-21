@@ -23,7 +23,7 @@ use Symfony\UX\Editor\Form\EditorType;
 
 final class EditorJSIntegrationTest extends TestCase
 {
-    public function testRoundTripThroughEditorType(): void
+    public function testRoundTripThroughEditorType()
     {
         $factory = Forms::createFormFactoryBuilder()
             ->addType(new EditorType(new BridgeRegistry([new EditorJSBridge()]), new PresetRegistry([])))

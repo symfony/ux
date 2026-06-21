@@ -18,14 +18,14 @@ use Symfony\UX\Editor\Form\DataTransformer\StorageShape;
 
 final class AbstractWysiwygTransformerTest extends TestCase
 {
-    public function testStorageShapeIsScalar(): void
+    public function testStorageShapeIsScalar()
     {
         $t = $this->fake();
         self::assertSame(StorageShape::Scalar, $t->getStorageShape());
         self::assertSame(HtmlContent::class, $t->getContentClass());
     }
 
-    public function testRoundTrip(): void
+    public function testRoundTrip()
     {
         $t = $this->fake();
         self::assertSame('<p>hi</p>', $t->transform(new HtmlContent('<p>hi</p>')));
@@ -37,7 +37,7 @@ final class AbstractWysiwygTransformerTest extends TestCase
         self::assertNull($t->reverseTransform(''));
     }
 
-    public function testMetadataAttachedOnReverse(): void
+    public function testMetadataAttachedOnReverse()
     {
         self::assertSame('fake', $this->fake()->reverseTransform('<p>x</p>')->getMetadata()['bridgeId']);
     }

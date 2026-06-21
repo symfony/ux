@@ -19,13 +19,13 @@ use Symfony\UX\Editor\Form\DataTransformer\StorageShape;
 
 final class AbstractBlockTransformerTest extends TestCase
 {
-    public function testStorageShapeIsJson(): void
+    public function testStorageShapeIsJson()
     {
         self::assertSame(StorageShape::Json, $this->fake()->getStorageShape());
         self::assertSame(BlockContent::class, $this->fake()->getContentClass());
     }
 
-    public function testRoundTripFromArray(): void
+    public function testRoundTripFromArray()
     {
         $t = $this->fake();
         $bc = new BlockContent([['type' => 'p', 'data' => ['text' => 'hi']]], '2.0');
@@ -39,7 +39,7 @@ final class AbstractBlockTransformerTest extends TestCase
         self::assertSame('fakeblock', $back->getMetadata()['bridgeId']);
     }
 
-    public function testNullPaths(): void
+    public function testNullPaths()
     {
         $t = $this->fake();
         self::assertNull($t->transform(null));
@@ -47,7 +47,7 @@ final class AbstractBlockTransformerTest extends TestCase
         self::assertNull($t->reverseTransform([]));
     }
 
-    public function testMalformedThrows(): void
+    public function testMalformedThrows()
     {
         $this->expectException(ContentSchemaException::class);
         $this->fake()->reverseTransform(['blocks' => 'not-an-array']);

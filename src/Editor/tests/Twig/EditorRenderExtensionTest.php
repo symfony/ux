@@ -22,12 +22,12 @@ use Symfony\UX\Editor\Twig\EditorRenderExtension;
 
 final class EditorRenderExtensionTest extends TestCase
 {
-    public function testNullReturnsEmpty(): void
+    public function testNullReturnsEmpty()
     {
         self::assertSame('', new EditorRenderExtension(new BlockRendererRegistry([]), null)->render(null));
     }
 
-    public function testHtmlContentSanitized(): void
+    public function testHtmlContentSanitized()
     {
         $s = new HtmlSanitizer(new HtmlSanitizerConfig()->allowSafeElements());
         $out = new EditorRenderExtension(new BlockRendererRegistry([]), $s)->render(new HtmlContent('<script>x</script><p>ok</p>'));
@@ -35,12 +35,12 @@ final class EditorRenderExtensionTest extends TestCase
         self::assertStringContainsString('<p>ok</p>', $out);
     }
 
-    public function testHtmlContentNoSanitizerEchosRaw(): void
+    public function testHtmlContentNoSanitizerEchosRaw()
     {
         self::assertSame('<p>x</p>', new EditorRenderExtension(new BlockRendererRegistry([]), null)->render(new HtmlContent('<p>x</p>')));
     }
 
-    public function testBlockContentWalksRegistry(): void
+    public function testBlockContentWalksRegistry()
     {
         $registry = new BlockRendererRegistry([
             new class implements BlockRendererInterface {
@@ -59,13 +59,13 @@ final class EditorRenderExtensionTest extends TestCase
         self::assertSame('<p>hello</p>', new EditorRenderExtension($registry, null)->render($bc));
     }
 
-    public function testBlockContentMissingRendererCommentInProd(): void
+    public function testBlockContentMissingRendererCommentInProd()
     {
         $e = new EditorRenderExtension(new BlockRendererRegistry([]), null, debug: false);
         self::assertSame('<!-- ux-editor: missing renderer for "unknown" -->', $e->render(new BlockContent([['type' => 'unknown', 'data' => []]])));
     }
 
-    public function testBlockContentMissingRendererVisibleInDebug(): void
+    public function testBlockContentMissingRendererVisibleInDebug()
     {
         $e = new EditorRenderExtension(new BlockRendererRegistry([]), null, debug: true);
         $out = $e->render(new BlockContent([['type' => 'unknown', 'data' => []]]));

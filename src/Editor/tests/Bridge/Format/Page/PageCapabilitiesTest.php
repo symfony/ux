@@ -16,7 +16,7 @@ use Symfony\UX\Editor\Bridge\Format\Page\PageCapabilities;
 
 final class PageCapabilitiesTest extends TestCase
 {
-    public function testDefaults(): void
+    public function testDefaults()
     {
         $c = PageCapabilities::default();
         self::assertFalse($c->supportsToolbar);

@@ -33,7 +33,7 @@ final class UploadHandlerRegistry
     public function get(string $profile): EditorUploadHandlerInterface
     {
         return $this->handlers[$profile]
-            ?? throw new UploadHandlerException(\sprintf('No upload handler for profile "%s". Registered: %s', $profile, '' !== ($list = implode(', ', array_keys($this->handlers))) ? $list : '(none)'));
+            ?? throw new UploadHandlerException(\sprintf('No upload handler for profile "%s". Registered: "%s"', $profile, '' !== ($list = implode(', ', array_keys($this->handlers))) ? $list : '(none)'));
     }
 
     /**

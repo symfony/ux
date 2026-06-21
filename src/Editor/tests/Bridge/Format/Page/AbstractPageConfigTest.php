@@ -18,7 +18,7 @@ use Symfony\UX\Editor\Config\CommonOptions;
 
 final class AbstractPageConfigTest extends TestCase
 {
-    public function testCapabilitiesArePageFamily(): void
+    public function testCapabilitiesArePageFamily()
     {
         $cfg = new class extends AbstractPageConfig {
             public function getBridgeId(): string
@@ -29,7 +29,7 @@ final class AbstractPageConfigTest extends TestCase
         self::assertEquals(PageCapabilities::default(), $cfg->getCapabilities());
     }
 
-    public function testTranslateCommonMinimal(): void
+    public function testTranslateCommonMinimal()
     {
         $cfg = new class(new CommonOptions(theme: 'dark', language: 'fr', placeholder: 'IGNORED')) extends AbstractPageConfig {
             public function getBridgeId(): string

@@ -21,7 +21,7 @@ use Symfony\UX\Editor\Form\DataTransformer\EditorContentTransformerInterface;
 
 final class BridgeRegistryTest extends TestCase
 {
-    public function testGetAndAll(): void
+    public function testGetAndAll()
     {
         $a = $this->fakeBridge('a');
         $b = $this->fakeBridge('b');
@@ -31,13 +31,13 @@ final class BridgeRegistryTest extends TestCase
         self::assertSame(['a', 'b'], array_keys($reg->all()));
     }
 
-    public function testUnknownThrows(): void
+    public function testUnknownThrows()
     {
         $this->expectException(UnknownBridgeException::class);
         new BridgeRegistry([])->get('missing');
     }
 
-    public function testDuplicateIdThrows(): void
+    public function testDuplicateIdThrows()
     {
         $this->expectException(\LogicException::class);
         new BridgeRegistry([$this->fakeBridge('a'), $this->fakeBridge('a')]);

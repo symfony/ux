@@ -21,7 +21,7 @@ use Symfony\UX\Editor\Upload\UploadHandlerRegistry;
 
 final class DebugEditorCommandTest extends TestCase
 {
-    public function testListsSections(): void
+    public function testListsSections()
     {
         $cmd = new DebugEditorCommand(
             new BridgeRegistry([]),

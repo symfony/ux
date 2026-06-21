@@ -18,7 +18,7 @@ use Symfony\UX\Editor\Upload\UploadHandlerRegistry;
 
 final class UploadHandlerRegistryAllTest extends TestCase
 {
-    public function testAllListsRegistered(): void
+    public function testAllListsRegistered()
     {
         $h = new class implements EditorUploadHandlerInterface {
             public function handle(UploadedFile $f, array $c = []): array

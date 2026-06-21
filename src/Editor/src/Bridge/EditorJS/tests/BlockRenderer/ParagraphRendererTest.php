@@ -16,19 +16,19 @@ use Symfony\UX\Editor\Bridge\EditorJS\BlockRenderer\ParagraphRenderer;
 
 final class ParagraphRendererTest extends TestCase
 {
-    public function testTypeAndRender(): void
+    public function testTypeAndRender()
     {
         $r = new ParagraphRenderer();
         self::assertSame('paragraph', $r->getBlockType());
         self::assertSame('<p>hello</p>', $r->render(['text' => 'hello']));
     }
 
-    public function testEscapesHtml(): void
+    public function testEscapesHtml()
     {
         self::assertSame('<p>&lt;script&gt;x&lt;/script&gt;</p>', new ParagraphRenderer()->render(['text' => '<script>x</script>']));
     }
 
-    public function testEmptyTextEmptyParagraph(): void
+    public function testEmptyTextEmptyParagraph()
     {
         self::assertSame('<p></p>', new ParagraphRenderer()->render([]));
     }

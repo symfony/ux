@@ -16,14 +16,14 @@ use Symfony\UX\Editor\Bridge\EditorJS\BlockRenderer\ImageRenderer;
 
 final class ImageRendererTest extends TestCase
 {
-    public function testTypeAndUrl(): void
+    public function testTypeAndUrl()
     {
         $r = new ImageRenderer();
         self::assertSame('image', $r->getBlockType());
         self::assertSame('<figure><img src="/x.png" alt=""></figure>', $r->render(['file' => ['url' => '/x.png']]));
     }
 
-    public function testWithCaption(): void
+    public function testWithCaption()
     {
         self::assertSame(
             '<figure><img src="/x.png" alt="alt"><figcaption>cap</figcaption></figure>',
@@ -31,7 +31,7 @@ final class ImageRendererTest extends TestCase
         );
     }
 
-    public function testMissingUrlEmpty(): void
+    public function testMissingUrlEmpty()
     {
         self::assertSame('', new ImageRenderer()->render([]));
     }

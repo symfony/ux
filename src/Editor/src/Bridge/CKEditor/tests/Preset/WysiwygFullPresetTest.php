@@ -17,7 +17,7 @@ use Symfony\UX\Editor\Bridge\CKEditor\Preset\WysiwygFullPreset;
 
 final class WysiwygFullPresetTest extends TestCase
 {
-    public function testBuildsRichConfig(): void
+    public function testBuildsRichConfig()
     {
         $cfg = new WysiwygFullPreset()->build();
         self::assertInstanceOf(CKEditorConfig::class, $cfg);

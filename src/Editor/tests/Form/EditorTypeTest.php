@@ -30,7 +30,7 @@ use Symfony\UX\Editor\Form\EditorType;
 
 final class EditorTypeTest extends TestCase
 {
-    public function testTypedConfigModeRoundTrips(): void
+    public function testTypedConfigModeRoundTrips()
     {
         $form = $this->factory()->createBuilder()
             ->add('body', EditorType::class, ['config' => new EditorTypeTestFakeConfig()])
@@ -42,7 +42,7 @@ final class EditorTypeTest extends TestCase
         self::assertSame('<p>hi</p>', $data->html);
     }
 
-    public function testBridgePlusArrayMode(): void
+    public function testBridgePlusArrayMode()
     {
         $form = $this->factory()->createBuilder()
             ->add('body', EditorType::class, ['bridge' => 'fake', 'common' => ['placeholder' => 'x']])
@@ -51,7 +51,7 @@ final class EditorTypeTest extends TestCase
         self::assertSame('plain', $form->get('body')->getData()->html);
     }
 
-    public function testSanitizeOnSubmitWhenEnabled(): void
+    public function testSanitizeOnSubmitWhenEnabled()
     {
         $sanitizer = new HtmlSanitizer(new HtmlSanitizerConfig()->allowSafeElements());
         $form = $this->factory($sanitizer)->createBuilder()
@@ -61,7 +61,7 @@ final class EditorTypeTest extends TestCase
         self::assertStringNotContainsString('<script>', $form->get('body')->getData()->html);
     }
 
-    public function testSanitizeOffWhenDisabled(): void
+    public function testSanitizeOffWhenDisabled()
     {
         $sanitizer = new HtmlSanitizer(new HtmlSanitizerConfig()->allowSafeElements());
         $form = $this->factory($sanitizer)->createBuilder()

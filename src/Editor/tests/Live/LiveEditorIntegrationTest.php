@@ -16,7 +16,7 @@ use Symfony\UX\Editor\Live\LiveEditor;
 
 final class LiveEditorIntegrationTest extends TestCase
 {
-    public function testHostUsingTraitInheritsAllMethods(): void
+    public function testHostUsingTraitInheritsAllMethods()
     {
         $repo = new class {
             public array $store = [];

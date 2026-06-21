@@ -26,7 +26,7 @@ use Symfony\UX\Editor\Form\EditorType;
 
 final class WysiwygIntegrationTest extends TestCase
 {
-    public function testFullRoundTrip(): void
+    public function testFullRoundTrip()
     {
         $factory = Forms::createFormFactoryBuilder()
             ->addType(new EditorType(new BridgeRegistry([new FakeWysiwygBridge()]), new PresetRegistry([])))

@@ -24,7 +24,7 @@ use Symfony\UX\Editor\Upload\UploadHandlerRegistry;
 
 final class UXEditorExtensionTest extends TestCase
 {
-    public function testServicesRegistered(): void
+    public function testServicesRegistered()
     {
         $c = new ContainerBuilder();
         $c->setParameter('kernel.debug', true);

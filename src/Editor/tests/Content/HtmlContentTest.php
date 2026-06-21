@@ -19,14 +19,14 @@ use Symfony\UX\Editor\Content\HtmlContent;
 
 final class HtmlContentTest extends TestCase
 {
-    public function testFormatAndRaw(): void
+    public function testFormatAndRaw()
     {
         $c = new HtmlContent('<p>hi</p>');
         self::assertSame(EditorContentFormat::Html, $c->getFormat());
         self::assertSame('<p>hi</p>', $c->getRaw());
     }
 
-    public function testIsEmpty(): void
+    public function testIsEmpty()
     {
         self::assertTrue(new HtmlContent('')->isEmpty());
         self::assertTrue(new HtmlContent('   ')->isEmpty());
@@ -34,14 +34,14 @@ final class HtmlContentTest extends TestCase
         self::assertFalse(new HtmlContent('<p>hi</p>')->isEmpty());
     }
 
-    public function testFromString(): void
+    public function testFromString()
     {
         $c = HtmlContent::fromString('<b>x</b>', ['bridgeId' => 'ckeditor']);
         self::assertSame('<b>x</b>', $c->html);
         self::assertSame(['bridgeId' => 'ckeditor'], $c->getMetadata());
     }
 
-    public function testGetSanitizedWithProvidedSanitizer(): void
+    public function testGetSanitizedWithProvidedSanitizer()
     {
         $s = new HtmlSanitizer(new HtmlSanitizerConfig()->allowSafeElements());
         $out = new HtmlContent('<script>x</script><p>ok</p>')->getSanitized($s);
@@ -49,7 +49,7 @@ final class HtmlContentTest extends TestCase
         self::assertStringContainsString('<p>ok</p>', $out);
     }
 
-    public function testGetSanitizedWithoutSanitizerReturnsRaw(): void
+    public function testGetSanitizedWithoutSanitizerReturnsRaw()
     {
         self::assertSame('<p>x</p>', new HtmlContent('<p>x</p>')->getSanitized(null));
     }

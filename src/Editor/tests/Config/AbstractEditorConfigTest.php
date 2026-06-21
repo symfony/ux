@@ -18,7 +18,7 @@ use Symfony\UX\Editor\Config\CommonOptions;
 
 final class AbstractEditorConfigTest extends TestCase
 {
-    public function testMergeOrderCommonOwnOverrides(): void
+    public function testMergeOrderCommonOwnOverrides()
     {
         $c = new class(common: new CommonOptions(placeholder: 'common-ph'), nativeOverrides: ['placeholder' => 'override-ph', 'extra' => true]) extends AbstractEditorConfig {
             public function getBridgeId(): string
@@ -47,7 +47,7 @@ final class AbstractEditorConfigTest extends TestCase
         self::assertTrue($native['extra']);
     }
 
-    public function testCommonReturnedAsGiven(): void
+    public function testCommonReturnedAsGiven()
     {
         $c = new class(common: new CommonOptions(language: 'fr')) extends AbstractEditorConfig {
             public function getBridgeId(): string

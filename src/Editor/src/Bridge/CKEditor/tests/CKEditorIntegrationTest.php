@@ -25,7 +25,7 @@ use Symfony\UX\Editor\Form\EditorType;
 
 final class CKEditorIntegrationTest extends TestCase
 {
-    public function testRoundTripThroughEditorType(): void
+    public function testRoundTripThroughEditorType()
     {
         $factory = Forms::createFormFactoryBuilder()
             ->addType(new EditorType(new BridgeRegistry([new CKEditorBridge()]), new PresetRegistry([])))
@@ -49,7 +49,7 @@ final class CKEditorIntegrationTest extends TestCase
         self::assertSame(['items' => ['bold', 'italic']], $native['toolbar']);
     }
 
-    public function testSanitizeStripsScriptOnSubmit(): void
+    public function testSanitizeStripsScriptOnSubmit()
     {
         $sanitizer = new HtmlSanitizer(new HtmlSanitizerConfig()->allowSafeElements());
         $factory = Forms::createFormFactoryBuilder()

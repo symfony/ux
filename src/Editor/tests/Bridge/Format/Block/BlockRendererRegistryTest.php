@@ -17,7 +17,7 @@ use Symfony\UX\Editor\Bridge\Format\Block\BlockRendererRegistry;
 
 final class BlockRendererRegistryTest extends TestCase
 {
-    public function testGetByType(): void
+    public function testGetByType()
     {
         $r = new class implements BlockRendererInterface {
             public function getBlockType(): string
@@ -35,7 +35,7 @@ final class BlockRendererRegistryTest extends TestCase
         self::assertNull($reg->get('unknown'));
     }
 
-    public function testLastWriterWins(): void
+    public function testLastWriterWins()
     {
         $a = new class implements BlockRendererInterface {
             public function getBlockType(): string

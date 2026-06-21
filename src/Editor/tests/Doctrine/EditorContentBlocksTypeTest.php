@@ -27,7 +27,7 @@ final class EditorContentBlocksTypeTest extends TestCase
         }
     }
 
-    public function testRoundTrip(): void
+    public function testRoundTrip()
     {
         $t = Type::getType('editor_blocks');
         $p = $this->createMock(AbstractPlatform::class);
@@ -40,7 +40,7 @@ final class EditorContentBlocksTypeTest extends TestCase
         self::assertSame([['type' => 'p', 'data' => ['text' => 'x']]], $back->blocks);
     }
 
-    public function testNullRoundTrip(): void
+    public function testNullRoundTrip()
     {
         $t = Type::getType('editor_blocks');
         $p = $this->createMock(AbstractPlatform::class);
@@ -48,7 +48,7 @@ final class EditorContentBlocksTypeTest extends TestCase
         self::assertNull($t->convertToPHPValue(null, $p));
     }
 
-    public function testMalformedJsonThrows(): void
+    public function testMalformedJsonThrows()
     {
         $this->expectException(ContentSchemaException::class);
         Type::getType('editor_blocks')->convertToPHPValue('{not json', $this->createMock(AbstractPlatform::class));

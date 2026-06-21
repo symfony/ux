@@ -18,7 +18,7 @@ use Symfony\UX\Editor\Config\CommonOptions;
 
 final class AbstractWysiwygConfigTest extends TestCase
 {
-    public function testDefaultTranslateCommon(): void
+    public function testDefaultTranslateCommon()
     {
         $cfg = new class(new CommonOptions(placeholder: 'Write…', readOnly: true, language: 'fr', plugins: ['link'])) extends AbstractWysiwygConfig {
             public function getBridgeId(): string
@@ -33,7 +33,7 @@ final class AbstractWysiwygConfigTest extends TestCase
         self::assertSame(['link'], $n['plugins']);
     }
 
-    public function testCapabilitiesDefaultToWysiwyg(): void
+    public function testCapabilitiesDefaultToWysiwyg()
     {
         $cfg = new class extends AbstractWysiwygConfig {
             public function getBridgeId(): string
@@ -45,7 +45,7 @@ final class AbstractWysiwygConfigTest extends TestCase
         self::assertSame(['html'], $cfg->getCapabilities()->supportedFormats);
     }
 
-    public function testSubclassCanExtendTranslateOwn(): void
+    public function testSubclassCanExtendTranslateOwn()
     {
         $cfg = new class(new CommonOptions(placeholder: 'X')) extends AbstractWysiwygConfig {
             public function getBridgeId(): string

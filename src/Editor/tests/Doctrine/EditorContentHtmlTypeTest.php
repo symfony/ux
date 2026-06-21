@@ -26,7 +26,7 @@ final class EditorContentHtmlTypeTest extends TestCase
         }
     }
 
-    public function testConvertToDatabaseValue(): void
+    public function testConvertToDatabaseValue()
     {
         $t = Type::getType('editor_html');
         $p = $this->createMock(AbstractPlatform::class);
@@ -34,7 +34,7 @@ final class EditorContentHtmlTypeTest extends TestCase
         self::assertNull($t->convertToDatabaseValue(null, $p));
     }
 
-    public function testConvertToPHPValue(): void
+    public function testConvertToPHPValue()
     {
         $t = Type::getType('editor_html');
         $p = $this->createMock(AbstractPlatform::class);
@@ -44,7 +44,7 @@ final class EditorContentHtmlTypeTest extends TestCase
         self::assertNull($t->convertToPHPValue(null, $p));
     }
 
-    public function testTypeName(): void
+    public function testTypeName()
     {
         self::assertSame('editor_html', Type::getType('editor_html')->getName());
     }

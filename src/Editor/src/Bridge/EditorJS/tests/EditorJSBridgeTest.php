@@ -19,7 +19,7 @@ use Symfony\UX\Editor\Bridge\Format\Block\BlockCapabilities;
 
 final class EditorJSBridgeTest extends TestCase
 {
-    public function testMetadata(): void
+    public function testMetadata()
     {
         $b = new EditorJSBridge();
         self::assertSame('editorjs', $b->getId());

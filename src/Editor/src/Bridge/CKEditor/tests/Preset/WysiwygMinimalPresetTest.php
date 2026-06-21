@@ -17,7 +17,7 @@ use Symfony\UX\Editor\Bridge\CKEditor\Preset\WysiwygMinimalPreset;
 
 final class WysiwygMinimalPresetTest extends TestCase
 {
-    public function testBuilds(): void
+    public function testBuilds()
     {
         $cfg = new WysiwygMinimalPreset()->build();
         self::assertInstanceOf(CKEditorConfig::class, $cfg);

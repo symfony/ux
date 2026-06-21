@@ -16,7 +16,7 @@ use Symfony\UX\Editor\Config\CommonOptions;
 
 final class CommonOptionsTest extends TestCase
 {
-    public function testDefaults(): void
+    public function testDefaults()
     {
         $o = new CommonOptions();
         self::assertNull($o->toolbar);
@@ -30,7 +30,7 @@ final class CommonOptionsTest extends TestCase
         self::assertTrue($o->spellcheck);
     }
 
-    public function testNamedArgsConstruction(): void
+    public function testNamedArgsConstruction()
     {
         $o = new CommonOptions(
             toolbar: ['bold', 'italic'],
@@ -54,7 +54,7 @@ final class CommonOptionsTest extends TestCase
         self::assertFalse($o->spellcheck);
     }
 
-    public function testFromArrayMapsKeys(): void
+    public function testFromArrayMapsKeys()
     {
         $o = CommonOptions::fromArray(['toolbar' => ['bold'], 'placeholder' => 'x']);
         self::assertSame(['bold'], $o->toolbar);

@@ -16,7 +16,7 @@ use Symfony\UX\Editor\Config\BridgeCapabilities;
 
 final class BridgeCapabilitiesTest extends TestCase
 {
-    public function testFields(): void
+    public function testFields()
     {
         $c = new BridgeCapabilities(true, true, false, true, ['html']);
         self::assertTrue($c->supportsToolbar);
@@ -26,7 +26,7 @@ final class BridgeCapabilitiesTest extends TestCase
         self::assertSame(['html'], $c->supportedFormats);
     }
 
-    public function testWithClonesAndOverrides(): void
+    public function testWithClonesAndOverrides()
     {
         $a = new BridgeCapabilities(true, true, true, true, ['html']);
         $b = $a->with(supportsTheme: false, supportedFormats: ['blocks']);

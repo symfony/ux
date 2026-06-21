@@ -16,7 +16,7 @@ use Symfony\UX\Editor\Content\EditorContentFormat;
 
 final class EditorContentFormatTest extends TestCase
 {
-    public function testCases(): void
+    public function testCases()
     {
         self::assertSame('html', EditorContentFormat::Html->value);
         self::assertSame('blocks', EditorContentFormat::Blocks->value);

@@ -18,7 +18,7 @@ use Symfony\UX\Editor\DependencyInjection\Compiler\AssertSanitizerPass;
 
 final class AssertSanitizerPassTest extends TestCase
 {
-    public function testThrowsWhenRequiredButMissing(): void
+    public function testThrowsWhenRequiredButMissing()
     {
         $c = new ContainerBuilder();
         $c->setParameter('ux_editor.html.sanitize_required', true);
@@ -27,7 +27,7 @@ final class AssertSanitizerPassTest extends TestCase
         new AssertSanitizerPass()->process($c);
     }
 
-    public function testPassesWhenSanitizerRegistered(): void
+    public function testPassesWhenSanitizerRegistered()
     {
         $c = new ContainerBuilder();
         $c->setParameter('ux_editor.html.sanitize_required', true);
@@ -36,7 +36,7 @@ final class AssertSanitizerPassTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    public function testSilentWhenNotRequired(): void
+    public function testSilentWhenNotRequired()
     {
         $c = new ContainerBuilder();
         $c->setParameter('ux_editor.html.sanitize_required', false);

@@ -29,7 +29,7 @@ use Symfony\UX\Editor\Form\EditorType;
 
 final class EditorTypeStrictTest extends TestCase
 {
-    public function testStrictCapabilitiesThrowsOnIncompatibleToolbar(): void
+    public function testStrictCapabilitiesThrowsOnIncompatibleToolbar()
     {
         $factory = Forms::createFormFactoryBuilder()
             ->addType(new EditorType(new BridgeRegistry([new NoToolbarBridge()]), new PresetRegistry([])))

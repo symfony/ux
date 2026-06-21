@@ -28,7 +28,7 @@ use Symfony\UX\Editor\Form\EditorType;
 
 final class EditorTypeViewTest extends TestCase
 {
-    public function testStimulusAttrsOnView(): void
+    public function testStimulusAttrsOnView()
     {
         $factory = Forms::createFormFactoryBuilder()
             ->addType(new EditorType(new BridgeRegistry([new EditorTypeViewTestFakeBridge()]), new PresetRegistry([])))

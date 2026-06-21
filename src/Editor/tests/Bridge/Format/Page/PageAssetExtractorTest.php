@@ -17,7 +17,7 @@ use Symfony\UX\Editor\Content\PageContent;
 
 final class PageAssetExtractorTest extends TestCase
 {
-    public function testExtractsFromAssetsField(): void
+    public function testExtractsFromAssetsField()
     {
         $page = new PageContent('<p>x</p>', '', [
             ['type' => 'image', 'url' => '/a.png'],
@@ -26,7 +26,7 @@ final class PageAssetExtractorTest extends TestCase
         self::assertSame(['/a.png', '/b.png'], new PageAssetExtractor()->extractUrls($page));
     }
 
-    public function testWalksComponentTreeForSrc(): void
+    public function testWalksComponentTreeForSrc()
     {
         $page = new PageContent('', '', [], [
             ['type' => 'section', 'children' => [
@@ -39,7 +39,7 @@ final class PageAssetExtractorTest extends TestCase
         self::assertSame(['/c.png', '/d.png'], $urls);
     }
 
-    public function testDedupes(): void
+    public function testDedupes()
     {
         $page = new PageContent('', '', [['type' => 'image', 'url' => '/x.png']], [['type' => 'image', 'src' => '/x.png']]);
         self::assertSame(['/x.png'], new PageAssetExtractor()->extractUrls($page));

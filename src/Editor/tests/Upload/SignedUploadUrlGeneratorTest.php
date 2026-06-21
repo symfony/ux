@@ -17,7 +17,7 @@ use Symfony\UX\Editor\Upload\SignedUploadUrlGenerator;
 
 final class SignedUploadUrlGeneratorTest extends TestCase
 {
-    public function testHappyRoundTrip(): void
+    public function testHappyRoundTrip()
     {
         $g = new SignedUploadUrlGenerator(secret: 's3cret', ttlSeconds: 3600);
         $token = $g->sign(field: 'body', profile: 'default');
@@ -25,7 +25,7 @@ final class SignedUploadUrlGeneratorTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    public function testTamperedTokenThrows(): void
+    public function testTamperedTokenThrows()
     {
         $g = new SignedUploadUrlGenerator('s3cret', 3600);
         $token = $g->sign('body', 'default');
@@ -33,7 +33,7 @@ final class SignedUploadUrlGeneratorTest extends TestCase
         $g->verify($token.'x', 'body', 'default');
     }
 
-    public function testFieldMismatchThrows(): void
+    public function testFieldMismatchThrows()
     {
         $g = new SignedUploadUrlGenerator('s3cret', 3600);
         $token = $g->sign('body', 'default');
@@ -41,7 +41,7 @@ final class SignedUploadUrlGeneratorTest extends TestCase
         $g->verify($token, 'other-field', 'default');
     }
 
-    public function testExpiredTokenThrows(): void
+    public function testExpiredTokenThrows()
     {
         $g = new SignedUploadUrlGenerator('s3cret', ttlSeconds: -1);
         $token = $g->sign('body', 'default');

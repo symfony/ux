@@ -17,7 +17,7 @@ use Symfony\UX\Editor\DependencyInjection\Configuration;
 
 final class ConfigurationTest extends TestCase
 {
-    public function testDefaults(): void
+    public function testDefaults()
     {
         $cfg = new Processor()->processConfiguration(new Configuration(), [[]]);
         self::assertTrue($cfg['html']['sanitize_required']);
@@ -25,7 +25,7 @@ final class ConfigurationTest extends TestCase
         self::assertSame(3600, $cfg['upload']['ttl_seconds']);
     }
 
-    public function testOverrides(): void
+    public function testOverrides()
     {
         $cfg = new Processor()->processConfiguration(new Configuration(), [[
             'html' => ['sanitize_required' => false],

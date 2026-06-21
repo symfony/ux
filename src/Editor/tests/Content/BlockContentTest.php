@@ -17,25 +17,25 @@ use Symfony\UX\Editor\Content\EditorContentFormat;
 
 final class BlockContentTest extends TestCase
 {
-    public function testFormat(): void
+    public function testFormat()
     {
         self::assertSame(EditorContentFormat::Blocks, new BlockContent([])->getFormat());
     }
 
-    public function testRawAndSchemaVersionDefault(): void
+    public function testRawAndSchemaVersionDefault()
     {
         $bc = new BlockContent([['type' => 'paragraph', 'data' => ['text' => 'hi']]]);
         self::assertSame([['type' => 'paragraph', 'data' => ['text' => 'hi']]], $bc->getRaw());
         self::assertSame('1.0', $bc->schemaVersion);
     }
 
-    public function testIsEmpty(): void
+    public function testIsEmpty()
     {
         self::assertTrue(new BlockContent([])->isEmpty());
         self::assertFalse(new BlockContent([['type' => 'p', 'data' => []]])->isEmpty());
     }
 
-    public function testFilterByType(): void
+    public function testFilterByType()
     {
         $bc = new BlockContent([
             ['type' => 'header', 'data' => ['text' => 'H']],
@@ -45,7 +45,7 @@ final class BlockContentTest extends TestCase
         self::assertCount(2, $bc->filterByType('header')->blocks);
     }
 
-    public function testFromArrayFactory(): void
+    public function testFromArrayFactory()
     {
         $bc = BlockContent::fromArray(['version' => '2.0', 'blocks' => [['type' => 'p', 'data' => []]]]);
         self::assertSame('2.0', $bc->schemaVersion);

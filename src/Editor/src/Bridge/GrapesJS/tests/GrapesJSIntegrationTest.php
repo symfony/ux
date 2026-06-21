@@ -22,7 +22,7 @@ use Symfony\UX\Editor\Form\EditorType;
 
 final class GrapesJSIntegrationTest extends TestCase
 {
-    public function testRoundTripThroughEditorType(): void
+    public function testRoundTripThroughEditorType()
     {
         $factory = Forms::createFormFactoryBuilder()
             ->addType(new EditorType(new BridgeRegistry([new GrapesJSBridge()]), new PresetRegistry([])))

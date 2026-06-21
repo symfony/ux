@@ -16,7 +16,7 @@ use Symfony\UX\Editor\Live\LiveEditor;
 
 final class LiveEditorTraitTest extends TestCase
 {
-    public function testSaveDraftMarksFieldCleanAndStampsTime(): void
+    public function testSaveDraftMarksFieldCleanAndStampsTime()
     {
         $host = $this->host();
         self::assertTrue($host->isDirty('body'));
@@ -26,7 +26,7 @@ final class LiveEditorTraitTest extends TestCase
         self::assertNotNull($host->getLastSavedAt('body'));
     }
 
-    public function testMarkDirtyExplicit(): void
+    public function testMarkDirtyExplicit()
     {
         $host = $this->host();
         $host->saveDraft('body', 'x');

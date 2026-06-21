@@ -18,19 +18,19 @@ use Symfony\UX\Editor\Config\CommonOptions;
 
 final class GrapesJSConfigTest extends TestCase
 {
-    public function testBridgeIdAndCapabilities(): void
+    public function testBridgeIdAndCapabilities()
     {
         $cfg = new GrapesJSConfig();
         self::assertSame('grapesjs', $cfg->getBridgeId());
         self::assertEquals(PageCapabilities::default(), $cfg->getCapabilities());
     }
 
-    public function testDefaultStorageManagerNone(): void
+    public function testDefaultStorageManagerNone()
     {
         self::assertSame(['type' => 'none'], new GrapesJSConfig()->toNative()['storageManager']);
     }
 
-    public function testTranslateOwn(): void
+    public function testTranslateOwn()
     {
         $cfg = new GrapesJSConfig(
             common: new CommonOptions(theme: 'dark', language: 'fr'),
@@ -50,7 +50,7 @@ final class GrapesJSConfigTest extends TestCase
         self::assertSame('body{margin:0}', $n['canvas']['styles'][0]);
     }
 
-    public function testNativeOverridesWinLast(): void
+    public function testNativeOverridesWinLast()
     {
         $cfg = new GrapesJSConfig(
             storageManager: ['type' => 'local'],

@@ -21,19 +21,19 @@ use Symfony\UX\Editor\Exception\UnknownBridgeException;
 
 final class PresetRegistryTest extends TestCase
 {
-    public function testGetByName(): void
+    public function testGetByName()
     {
         $reg = new PresetRegistry(['blog.standard' => $this->fakePreset('eid')]);
         self::assertSame('eid', $reg->get('blog.standard')->build()->getBridgeId());
     }
 
-    public function testUnknownPresetThrows(): void
+    public function testUnknownPresetThrows()
     {
         $this->expectException(UnknownBridgeException::class);
         new PresetRegistry([])->get('does.not.exist');
     }
 
-    public function testAll(): void
+    public function testAll()
     {
         $reg = new PresetRegistry(['a' => $this->fakePreset('a'), 'b' => $this->fakePreset('b')]);
         self::assertSame(['a', 'b'], array_keys($reg->all()));

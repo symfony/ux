@@ -27,7 +27,7 @@ final class EditorContentPageTypeTest extends TestCase
         }
     }
 
-    public function testRoundTrip(): void
+    public function testRoundTrip()
     {
         $t = Type::getType('editor_page');
         $p = $this->createMock(AbstractPlatform::class);
@@ -40,7 +40,7 @@ final class EditorContentPageTypeTest extends TestCase
         self::assertCount(1, $back->components);
     }
 
-    public function testMalformedThrows(): void
+    public function testMalformedThrows()
     {
         $this->expectException(ContentSchemaException::class);
         Type::getType('editor_page')->convertToPHPValue('not json', $this->createMock(AbstractPlatform::class));

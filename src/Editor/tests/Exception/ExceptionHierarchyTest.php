@@ -27,7 +27,7 @@ use Symfony\UX\Editor\Exception\Upload\UploadHandlerException;
 final class ExceptionHierarchyTest extends TestCase
 {
     #[DataProvider('exceptionClasses')]
-    public function testAllExceptionsImplementMarker(string $class): void
+    public function testAllExceptionsImplementMarker(string $class)
     {
         $e = new $class('msg');
         self::assertInstanceOf(EditorExceptionInterface::class, $e);
@@ -49,7 +49,7 @@ final class ExceptionHierarchyTest extends TestCase
         ];
     }
 
-    public function testUploadExceptionsExtendUploadException(): void
+    public function testUploadExceptionsExtendUploadException()
     {
         self::assertInstanceOf(UploadException::class, new InvalidSignatureException('x'));
         self::assertInstanceOf(UploadException::class, new UnsupportedFileException('x'));

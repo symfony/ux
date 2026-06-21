@@ -36,26 +36,26 @@ final class SignedUploadUrlGenerator
         $now ??= time();
         $decoded = base64_decode($token, true);
         if (false === $decoded) {
-            throw new InvalidSignatureException('Invalid token encoding');
+            throw new InvalidSignatureException('Invalid token encoding.');
         }
         $parts = explode('|', $decoded);
         if (4 !== \count($parts)) {
-            throw new InvalidSignatureException('Invalid token shape');
+            throw new InvalidSignatureException('Invalid token shape.');
         }
         [$f, $p, $exp, $sig] = $parts;
         $payload = \sprintf('%s|%s|%s', $f, $p, $exp);
         $expected = hash_hmac('sha256', $payload, $this->secret);
         if (!hash_equals($expected, $sig)) {
-            throw new InvalidSignatureException('Signature mismatch');
+            throw new InvalidSignatureException('Signature mismatch.');
         }
         if ($f !== $field) {
-            throw new InvalidSignatureException('Field mismatch');
+            throw new InvalidSignatureException('Field mismatch.');
         }
         if ($p !== $profile) {
-            throw new InvalidSignatureException('Profile mismatch');
+            throw new InvalidSignatureException('Profile mismatch.');
         }
         if ((int) $exp <= $now) {
-            throw new InvalidSignatureException('Token expired');
+            throw new InvalidSignatureException('Token expired.');
         }
     }
 }

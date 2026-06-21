@@ -19,7 +19,7 @@ use Symfony\UX\Editor\Bridge\Format\Wysiwyg\WysiwygCapabilities;
 
 final class CKEditorBridgeTest extends TestCase
 {
-    public function testMetadata(): void
+    public function testMetadata()
     {
         $b = new CKEditorBridge();
         self::assertSame('ckeditor', $b->getId());

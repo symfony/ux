@@ -19,14 +19,14 @@ use Symfony\UX\Editor\Form\DataTransformer\StorageShape;
 
 final class EditorContentTransformerInterfaceTest extends TestCase
 {
-    public function testEnumCases(): void
+    public function testEnumCases()
     {
         self::assertSame('scalar', StorageShape::Scalar->value);
         self::assertSame('json', StorageShape::Json->value);
         self::assertSame('split', StorageShape::Split->value);
     }
 
-    public function testContract(): void
+    public function testContract()
     {
         $t = new class implements EditorContentTransformerInterface {
             public function getBridgeId(): string

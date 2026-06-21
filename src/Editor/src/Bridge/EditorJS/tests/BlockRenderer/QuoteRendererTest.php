@@ -16,14 +16,14 @@ use Symfony\UX\Editor\Bridge\EditorJS\BlockRenderer\QuoteRenderer;
 
 final class QuoteRendererTest extends TestCase
 {
-    public function testTypeAndBasic(): void
+    public function testTypeAndBasic()
     {
         $r = new QuoteRenderer();
         self::assertSame('quote', $r->getBlockType());
         self::assertSame('<blockquote><p>Be water</p></blockquote>', $r->render(['text' => 'Be water']));
     }
 
-    public function testWithCaption(): void
+    public function testWithCaption()
     {
         self::assertSame('<blockquote><p>Be water</p><cite>Bruce Lee</cite></blockquote>', new QuoteRenderer()->render(['text' => 'Be water', 'caption' => 'Bruce Lee']));
     }

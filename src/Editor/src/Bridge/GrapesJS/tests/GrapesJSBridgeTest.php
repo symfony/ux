@@ -19,7 +19,7 @@ use Symfony\UX\Editor\Bridge\GrapesJS\Transformer\GrapesJSTransformer;
 
 final class GrapesJSBridgeTest extends TestCase
 {
-    public function testMetadata(): void
+    public function testMetadata()
     {
         $b = new GrapesJSBridge();
         self::assertSame('grapesjs', $b->getId());

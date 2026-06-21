@@ -16,7 +16,7 @@ use Symfony\UX\Editor\Bridge\Format\Block\BlockCapabilities;
 
 final class BlockCapabilitiesTest extends TestCase
 {
-    public function testDefaults(): void
+    public function testDefaults()
     {
         $c = BlockCapabilities::default();
         self::assertFalse($c->supportsToolbar);

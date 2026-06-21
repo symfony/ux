@@ -17,7 +17,7 @@ use Symfony\UX\Editor\Bridge\GrapesJS\Preset\PageBuilderLandingPreset;
 
 final class PageBuilderLandingPresetTest extends TestCase
 {
-    public function testBuilds(): void
+    public function testBuilds()
     {
         $cfg = new PageBuilderLandingPreset()->build();
         self::assertInstanceOf(GrapesJSConfig::class, $cfg);
@@ -26,7 +26,7 @@ final class PageBuilderLandingPresetTest extends TestCase
         self::assertNotEmpty($cfg->deviceManager);
     }
 
-    public function testIncludesCommonBlocks(): void
+    public function testIncludesCommonBlocks()
     {
         $cfg = new PageBuilderLandingPreset()->build();
         $ids = array_map(static fn ($b) => $b['id'], $cfg->blocks);

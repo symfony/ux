@@ -20,7 +20,7 @@ use Symfony\UX\Editor\Form\DataTransformer\EditorContentTransformerInterface;
 
 final class AbstractBridgeTest extends TestCase
 {
-    public function testDefaultControllerNameDerivedFromId(): void
+    public function testDefaultControllerNameDerivedFromId()
     {
         $b = new class extends AbstractBridge {
             public function getId(): string

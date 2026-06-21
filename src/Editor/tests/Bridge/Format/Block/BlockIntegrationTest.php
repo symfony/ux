@@ -25,7 +25,7 @@ use Symfony\UX\Editor\Form\EditorType;
 
 final class BlockIntegrationTest extends TestCase
 {
-    public function testJsonRoundTripThroughEditorType(): void
+    public function testJsonRoundTripThroughEditorType()
     {
         $factory = Forms::createFormFactoryBuilder()
             ->addType(new EditorType(new BridgeRegistry([new FakeBlockBridge()]), new PresetRegistry([])))

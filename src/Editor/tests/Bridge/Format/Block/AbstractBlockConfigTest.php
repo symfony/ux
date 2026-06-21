@@ -18,7 +18,7 @@ use Symfony\UX\Editor\Config\CommonOptions;
 
 final class AbstractBlockConfigTest extends TestCase
 {
-    public function testDefaultTranslateCommon(): void
+    public function testDefaultTranslateCommon()
     {
         $cfg = new class(new CommonOptions(placeholder: 'P', autofocus: true, readOnly: true)) extends AbstractBlockConfig {
             public function getBridgeId(): string
@@ -32,7 +32,7 @@ final class AbstractBlockConfigTest extends TestCase
         self::assertTrue($n['readOnly']);
     }
 
-    public function testCapabilitiesAreBlockFamily(): void
+    public function testCapabilitiesAreBlockFamily()
     {
         $cfg = new class extends AbstractBlockConfig {
             public function getBridgeId(): string

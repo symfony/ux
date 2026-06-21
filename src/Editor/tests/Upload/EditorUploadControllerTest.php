@@ -37,7 +37,7 @@ final class EditorUploadControllerTest extends TestCase
         @rmdir($this->tmp);
     }
 
-    public function testHappyUpload(): void
+    public function testHappyUpload()
     {
         $signer = new SignedUploadUrlGenerator('s3cret', 3600);
         $handler = new DefaultLocalUploadHandler($this->tmp, '/u', ['image/png'], 1_000_000);
@@ -56,14 +56,14 @@ final class EditorUploadControllerTest extends TestCase
         self::assertStringStartsWith('/u/', $data['url']);
     }
 
-    public function testBadSignatureReturns403(): void
+    public function testBadSignatureReturns403()
     {
         $ctl = new EditorUploadController(new SignedUploadUrlGenerator('s3cret', 3600), new UploadHandlerRegistry([]), 'default');
         $req = Request::create('/_ux_editor/upload/body?token=garbage', 'POST');
         self::assertSame(403, $ctl('body', $req)->getStatusCode());
     }
 
-    public function testBadMimeReturns422(): void
+    public function testBadMimeReturns422()
     {
         $signer = new SignedUploadUrlGenerator('s3cret', 3600);
         $handler = new DefaultLocalUploadHandler($this->tmp, '/u', ['image/png'], 1_000_000);

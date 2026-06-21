@@ -18,7 +18,7 @@ use Symfony\UX\Editor\Content\EditorContentInterface;
 
 final class EditorContentTest extends TestCase
 {
-    public function testAbstractCarriesFormatAndMetadata(): void
+    public function testAbstractCarriesFormatAndMetadata()
     {
         $stub = new class('hi', ['bridgeId' => 'fake']) extends EditorContent {
             public function __construct(public readonly string $raw, array $meta)

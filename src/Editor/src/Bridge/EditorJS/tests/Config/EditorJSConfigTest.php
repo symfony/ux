@@ -19,14 +19,14 @@ use Symfony\UX\Editor\Config\CommonOptions;
 
 final class EditorJSConfigTest extends TestCase
 {
-    public function testBridgeIdAndCapabilities(): void
+    public function testBridgeIdAndCapabilities()
     {
         $cfg = new EditorJSConfig();
         self::assertSame('editorjs', $cfg->getBridgeId());
         self::assertEquals(BlockCapabilities::default(), $cfg->getCapabilities());
     }
 
-    public function testTranslateOwn(): void
+    public function testTranslateOwn()
     {
         $cfg = new EditorJSConfig(
             common: new CommonOptions(placeholder: 'Write…'),
@@ -43,7 +43,7 @@ final class EditorJSConfigTest extends TestCase
         self::assertSame('WARN', $native['logLevel']);
     }
 
-    public function testNoToolsKeyWhenEmpty(): void
+    public function testNoToolsKeyWhenEmpty()
     {
         self::assertArrayNotHasKey('tools', new EditorJSConfig()->toNative());
     }

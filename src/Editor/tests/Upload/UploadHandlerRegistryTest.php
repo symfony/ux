@@ -19,14 +19,14 @@ use Symfony\UX\Editor\Upload\UploadHandlerRegistry;
 
 final class UploadHandlerRegistryTest extends TestCase
 {
-    public function testGetByProfile(): void
+    public function testGetByProfile()
     {
         $h = $this->fakeHandler();
         $r = new UploadHandlerRegistry(['default' => $h]);
         self::assertSame($h, $r->get('default'));
     }
 
-    public function testUnknownProfileThrows(): void
+    public function testUnknownProfileThrows()
     {
         $this->expectException(UploadHandlerException::class);
         new UploadHandlerRegistry([])->get('missing');

@@ -17,7 +17,7 @@ use Symfony\UX\Editor\Content\PageContent;
 
 final class PageSandboxRendererTest extends TestCase
 {
-    public function testSandboxedIframe(): void
+    public function testSandboxedIframe()
     {
         $out = new PageSandboxRenderer()->render(new PageContent('<h1>X</h1>', 'h1{color:red}'));
         self::assertStringContainsString('<iframe', $out);
@@ -27,13 +27,13 @@ final class PageSandboxRendererTest extends TestCase
         self::assertStringContainsString('h1{color:red}', $out);
     }
 
-    public function testCustomSandbox(): void
+    public function testCustomSandbox()
     {
         $out = new PageSandboxRenderer('allow-same-origin allow-scripts')->render(new PageContent('<p>x</p>'));
         self::assertStringContainsString('sandbox="allow-same-origin allow-scripts"', $out);
     }
 
-    public function testEmptyPageProducesEmptyString(): void
+    public function testEmptyPageProducesEmptyString()
     {
         self::assertSame('', new PageSandboxRenderer()->render(new PageContent('')));
     }

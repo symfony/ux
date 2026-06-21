@@ -34,7 +34,7 @@ final class DefaultLocalUploadHandlerTest extends TestCase
         @rmdir($this->tmp);
     }
 
-    public function testHappyUpload(): void
+    public function testHappyUpload()
     {
         $h = new DefaultLocalUploadHandler($this->tmp, '/uploads', ['image/png'], 2_000_000);
         $file = $this->makeUploadedFile('img.png', 'image/png', 100);
@@ -44,7 +44,7 @@ final class DefaultLocalUploadHandlerTest extends TestCase
         self::assertFileExists($this->tmp.'/'.basename($r['url']));
     }
 
-    public function testRejectsUnsupportedMime(): void
+    public function testRejectsUnsupportedMime()
     {
         $h = new DefaultLocalUploadHandler($this->tmp, '/uploads', ['image/png'], 2_000_000);
         $file = $this->makeUploadedFile('evil.exe', 'application/x-msdownload', 10);
@@ -52,7 +52,7 @@ final class DefaultLocalUploadHandlerTest extends TestCase
         $h->handle($file, []);
     }
 
-    public function testRejectsOversize(): void
+    public function testRejectsOversize()
     {
         $h = new DefaultLocalUploadHandler($this->tmp, '/uploads', ['image/png'], 50);
         $file = $this->makeUploadedFile('big.png', 'image/png', 1000);

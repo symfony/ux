@@ -18,7 +18,7 @@ use Symfony\UX\Editor\Twig\EditorRenderExtension;
 
 final class EditorRenderExtensionPageTest extends TestCase
 {
-    public function testPageProducesSandboxedIframe(): void
+    public function testPageProducesSandboxedIframe()
     {
         $out = new EditorRenderExtension(new BlockRendererRegistry([]), null)->render(new PageContent('<h1>X</h1>', 'h1{color:red}'));
         self::assertStringContainsString('<iframe', $out);
@@ -28,7 +28,7 @@ final class EditorRenderExtensionPageTest extends TestCase
         self::assertStringContainsString('h1{color:red}', $out);
     }
 
-    public function testEmptyPageIsEmpty(): void
+    public function testEmptyPageIsEmpty()
     {
         self::assertSame('', new EditorRenderExtension(new BlockRendererRegistry([]), null)->render(new PageContent('')));
     }

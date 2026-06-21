@@ -18,7 +18,7 @@ use Symfony\UX\Editor\Content\EditorContentInterface;
 
 final class ContentConverterRegistryPairsTest extends TestCase
 {
-    public function testPairsListsRegistered(): void
+    public function testPairsListsRegistered()
     {
         $conv = new class implements ContentConverterInterface {
             public function getFrom(): string

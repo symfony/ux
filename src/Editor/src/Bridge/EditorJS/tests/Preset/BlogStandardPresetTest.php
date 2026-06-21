@@ -17,7 +17,7 @@ use Symfony\UX\Editor\Bridge\EditorJS\Preset\BlogStandardPreset;
 
 final class BlogStandardPresetTest extends TestCase
 {
-    public function testBuildsEditorJSConfig(): void
+    public function testBuildsEditorJSConfig()
     {
         $cfg = new BlogStandardPreset()->build();
         self::assertInstanceOf(EditorJSConfig::class, $cfg);

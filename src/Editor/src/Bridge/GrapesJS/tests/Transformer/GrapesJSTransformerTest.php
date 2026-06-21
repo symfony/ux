@@ -18,7 +18,7 @@ use Symfony\UX\Editor\Form\DataTransformer\StorageShape;
 
 final class GrapesJSTransformerTest extends TestCase
 {
-    public function testMetadata(): void
+    public function testMetadata()
     {
         $t = new GrapesJSTransformer();
         self::assertSame('grapesjs', $t->getBridgeId());
@@ -26,7 +26,7 @@ final class GrapesJSTransformerTest extends TestCase
         self::assertSame(StorageShape::Json, $t->getStorageShape());
     }
 
-    public function testReverseStampsBridgeId(): void
+    public function testReverseStampsBridgeId()
     {
         $pc = new GrapesJSTransformer()->reverseTransform([
             'html' => '<h1>x</h1>',

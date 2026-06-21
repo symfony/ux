@@ -20,7 +20,7 @@ use Symfony\UX\Editor\Form\DataTransformer\EditorContentTransformerInterface;
 
 final class BridgeInterfaceTest extends TestCase
 {
-    public function testContract(): void
+    public function testContract()
     {
         $b = new class implements BridgeInterface {
             public function getId(): string
