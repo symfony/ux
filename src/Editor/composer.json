@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {"Symfony\\UX\\Editor\\": "src/"},
-        "exclude-from-classmap": ["src/Bridge/*/vendor/", "src/Bridge/*/tests/"]
+        "exclude-from-classmap": []
     },
     "autoload-dev": {"psr-4": {"Symfony\\UX\\Editor\\Tests\\": "tests/"}},
     "require": {
