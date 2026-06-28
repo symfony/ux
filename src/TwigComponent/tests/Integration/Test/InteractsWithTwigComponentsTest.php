@@ -72,6 +72,22 @@ final class InteractsWithTwigComponentsTest extends KernelTestCase
         $this->assertStringContainsString('service: service a value', $rendered);
     }
 
+    public function testCanRenderComponentWithBlocksInScopedTemplate()
+    {
+        $rendered = $this->renderTwigComponent(
+            name: 'WithSlotsScoped',
+            content: '<p>some content</p>',
+            blocks: [
+                // content mixing quotes, a backslash and Twig-like syntax to
+                // make sure it is rendered verbatim and not re-parsed/evaluated.
+                'slot1' => '<p>it\'s a "slot1" \\ {{ not_evaluated }}</p>',
+            ],
+        );
+
+        $this->assertStringContainsString('<p>some content</p>', $rendered);
+        $this->assertStringContainsString('<p>it\'s a "slot1" \\ {{ not_evaluated }}</p>', $rendered);
+    }
+
     public static function componentANameProvider(): iterable
     {
         yield ['component_a'];

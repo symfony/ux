@@ -51,8 +51,15 @@ trait InteractsWithTwigComponents
 
         $template = \sprintf('{%% component "%s" with data %%}', addslashes($name));
 
-        foreach (array_keys($blocks) as $blockName) {
-            $template .= \sprintf('{%% block %1$s %%}{{ blocks.%1$s|raw }}{%% endblock %%}', $blockName);
+        foreach ($blocks as $blockName => $blockContent) {
+            // Inline the content as a Twig string literal instead of passing it
+            // through a context variable: a variable would be filtered out when
+            // the component template restricts the scope with `{% with ... only %}`.
+            $template .= \sprintf(
+                '{%% block %s %%}{{ \'%s\'|raw }}{%% endblock %%}',
+                $blockName,
+                strtr((string) $blockContent, ['\\' => '\\\\', '\'' => '\\\'']),
+            );
         }
 
         $template .= '{% endcomponent %}';
@@ -62,7 +69,6 @@ trait InteractsWithTwigComponents
             ->createTemplate($template)
             ->render([
                 'data' => $data,
-                'blocks' => $blocks,
             ])
         );
     }
