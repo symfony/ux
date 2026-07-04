@@ -32,7 +32,7 @@ jobs:
               id: extract_base_branch
 
             - name: Cache DOCtor-RST
-              uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+              uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
               with:
                   path: .cache
                   key: doctor-rst-${{ steps.extract_base_branch.outputs.branch }}

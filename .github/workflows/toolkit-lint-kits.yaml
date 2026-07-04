@@ -54,7 +54,7 @@ jobs:
                   persist-credentials: false
 
             - name: Setup PHP
-              uses: shivammathur/setup-php@083d5237d9340d541bf95e2a6eceaf3529b85892
+              uses: shivammathur/setup-php@529ee057c4434195612e6712b010adc92893e0ef
               with:
                   php-version: '8.4'
 

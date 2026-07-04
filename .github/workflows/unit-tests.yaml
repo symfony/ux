@@ -96,7 +96,7 @@ jobs:
                   echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
 
             - name: Setup PHP
-              uses: shivammathur/setup-php@083d5237d9340d541bf95e2a6eceaf3529b85892
+              uses: shivammathur/setup-php@529ee057c4434195612e6712b010adc92893e0ef
               with:
                   php-version: ${{ matrix.php-version }}
                   extensions: ${{ matrix.os == 'windows-latest' && 'pdo_sqlite,sqlite3,fileinfo,gd,zip' || '' }}
@@ -108,7 +108,7 @@ jobs:
                   echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
             - name: Cache packages dependencies
-              uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+              uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
               with:
                   path: ${{ steps.composer-cache.outputs.dir }}
                   key: ${{ runner.os }}-composer-packages-${{ matrix.php-version }}-${{ matrix.dependency-version }}-${{ matrix.symfony-version }}-${{ matrix.minimum-stability }}-${{ hashFiles('src/**/composer.json') }}

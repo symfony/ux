@@ -51,7 +51,7 @@ jobs:
                       package.json
 
             - name: Cache custom browsers
-              uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+              uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
               with:
                   path: ./browsers
                   key: ${{ runner.os }}-browsers-${{ matrix.browser }}-${{ hashFiles('bin/get_browsers.mjs') }}
@@ -65,7 +65,7 @@ jobs:
             - name: Install browsers with Playwright
               run: pnpm exec playwright install firefox ffmpeg
 
-            - uses: shivammathur/setup-php@083d5237d9340d541bf95e2a6eceaf3529b85892
+            - uses: shivammathur/setup-php@529ee057c4434195612e6712b010adc92893e0ef
               with:
                   php-version: ${{ matrix.symfony >= '8.0' && '8.5' || '8.4' }}
                   tools: symfony-cli, flex
