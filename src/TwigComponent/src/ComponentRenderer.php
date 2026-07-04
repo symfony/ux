@@ -129,30 +129,32 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
         }
 
         // expose public properties and properties marked with ExposeInTemplate attribute
-        $props = [...$mounted->getInputProps(), ...$classProps];
-        $event = new PreRenderEvent($mounted, $metadata, [
+        $inputProps = $mounted->getInputProps();
+        $variables = [
             ...$context,
-            ...$props,
+            ...$inputProps,
+            ...$classProps,
             $metadata->getAttributesVar() => $mounted->getAttributes(),
-        ]);
+        ];
+        $event = new PreRenderEvent($mounted, $metadata, $variables);
 
         if (null === $this->introspectableDispatcher || $this->introspectableDispatcher->hasListeners(PreRenderEvent::class)) {
             $this->dispatcher->dispatch($event);
+            $variables = $event->getVariables();
         }
 
-        $event->setVariables([
-            ...$event->getVariables(),
-            // add the component as "this"
-            'this' => $component,
-            'computed' => new ComputedPropertiesProxy($component),
-            'outerScope' => $context,
-            // keep this line for BC break reasons
-            '__props' => $classProps,
-            // add the context in a separate variable to keep track
-            // of what is coming from outside the component, excluding props
-            // as they override initial context values
-            '__context' => array_diff_key($context, $props),
-        ]);
+        // add the component as "this"
+        $variables['this'] = $component;
+        $variables['computed'] = new ComputedPropertiesProxy($component);
+        $variables['outerScope'] = $context;
+        // keep this line for BC break reasons
+        $variables['__props'] = $classProps;
+        // add the context in a separate variable to keep track
+        // of what is coming from outside the component, excluding props
+        // as they override initial context values
+        $variables['__context'] = [] === $context ? [] : array_diff_key($context, $inputProps, $classProps);
+
+        $event->setVariables($variables);
 
         return $event;
     }
