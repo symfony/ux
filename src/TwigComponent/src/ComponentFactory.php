@@ -30,6 +30,9 @@ final class ComponentFactory implements ResetInterface
     private array $mountMethods = [];
     private array $writableProperties = [];
 
+    /** @var array<string, ComponentMetadata> */
+    private array $metadata = [];
+
     /**
      * @param array<string, array>        $config
      * @param array<class-string, string> $classMap
@@ -47,8 +50,12 @@ final class ComponentFactory implements ResetInterface
 
     public function metadataFor(string $name): ComponentMetadata
     {
+        if ($metadata = $this->metadata[$name] ?? null) {
+            return $metadata;
+        }
+
         if ($config = $this->config[$name] ?? null) {
-            return new ComponentMetadata($config);
+            return $this->metadata[$name] = new ComponentMetadata($config);
         }
 
         if ($template = $this->componentTemplateFinder->findAnonymousComponentTemplate($name)) {
@@ -57,12 +64,12 @@ final class ComponentFactory implements ResetInterface
                 'template' => $template,
             ];
 
-            return new ComponentMetadata($this->config[$name]);
+            return $this->metadata[$name] = new ComponentMetadata($this->config[$name]);
         }
 
         if ($mappedName = $this->classMap[$name] ?? null) {
             if ($config = $this->config[$mappedName] ?? null) {
-                return new ComponentMetadata($config);
+                return $this->metadata[$name] = new ComponentMetadata($config);
             }
 
             throw new \InvalidArgumentException(\sprintf('Unknown component "%s".', $name));
@@ -243,5 +250,6 @@ final class ComponentFactory implements ResetInterface
     {
         $this->mountMethods = [];
         $this->writableProperties = [];
+        $this->metadata = [];
     }
 }
