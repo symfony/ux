@@ -3,6 +3,7 @@
 ## 3.3.0
 
 - [Shadcn] Add `combobox` recipe
+- [Shadcn] Add `sonner` recipe
 
 ## 3.2.0
 

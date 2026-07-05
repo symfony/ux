@@ -1,0 +1,24 @@
+<twig:Sonner richColors="true">
+    <div class="flex flex-wrap gap-2">
+        <twig:Button variant="outline"
+            data-action="click->sonner#fire"
+            data-sonner-type-param="success"
+            data-sonner-title-param="Profile updated successfully"
+        >Success</twig:Button>
+        <twig:Button variant="outline"
+            data-action="click->sonner#fire"
+            data-sonner-type-param="error"
+            data-sonner-title-param="Something went wrong"
+        >Error</twig:Button>
+        <twig:Button variant="outline"
+            data-action="click->sonner#fire"
+            data-sonner-type-param="warning"
+            data-sonner-title-param="Storage limit approaching"
+        >Warning</twig:Button>
+        <twig:Button variant="outline"
+            data-action="click->sonner#fire"
+            data-sonner-type-param="info"
+            data-sonner-title-param="New update available"
+        >Info</twig:Button>
+    </div>
+</twig:Sonner>

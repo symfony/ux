@@ -1,0 +1,42 @@
+{# @prop type 'default'|'success'|'error'|'warning'|'info'|'loading' The toast type. Defaults to `default` #}
+{# @prop title string The toast title. Required #}
+{# @prop description string|null The secondary description line. Defaults to `null` #}
+{# @prop duration int|null Per-toast auto-dismiss override in ms. Uses the Toaster default when `null` #}
+{# @prop closeButton boolean Whether to show a close button. Defaults to `false` #}
+{# @prop id string|null Stable ID for deduplication. Auto-generated when `null` #}
+{# @prop action array|null Action link with `label` and `url` keys. Defaults to `null` #}
+{%- props type = 'default', title = '', description = null, duration = null, closeButton = false, id = null, action = null -%}
+<li
+    class="{{ ('group flex w-full items-start gap-3 rounded-lg border bg-background p-4 text-foreground shadow-lg transition-[transform,opacity] duration-300 pointer-events-auto absolute left-0 right-0 ' ~ attributes.render('class'))|tailwind_merge }}"
+    data-slot="toast"
+    data-state="closed"
+    data-type="{{ type }}"
+    role="{{ type == 'error' ? 'alert' : 'status' }}"
+    aria-live="{{ type == 'error' ? 'assertive' : 'polite' }}"
+    aria-atomic="true"
+    {%- if id is not null %} data-toast-id="{{ id }}"{% endif %}
+    {%- if duration is not null %} data-duration="{{ duration }}"{% endif %}
+    {{ attributes }}
+>
+    <div data-slot="toast-content" class="flex-1 space-y-1">
+        <div data-slot="toast-title" class="text-sm font-semibold leading-snug">{{ title }}</div>
+        {%- if description %}
+            <div data-slot="toast-description" class="text-sm text-muted-foreground">{{ description }}</div>
+        {%- endif %}
+    </div>
+    {%- if action %}
+        <a
+            href="{{ action.url ?? '#' }}"
+            data-slot="toast-action"
+            class="ml-auto shrink-0 rounded-md border bg-transparent px-3 py-1 text-sm font-medium transition-colors hover:bg-secondary focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2"
+        >{{ action.label }}</a>
+    {%- endif %}
+    {%- if closeButton %}
+        <button
+            type="button"
+            data-slot="toast-close"
+            aria-label="Close notification"
+            class="absolute top-2 right-2 rounded-md p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-muted"
+        ><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    {%- endif %}
+</li>
