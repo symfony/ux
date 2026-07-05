@@ -1941,8 +1941,8 @@ Debugging Components
 
 As your application grows, you'll eventually have a lot of components.
 This command will help you to debug some components issues.
-First, the debug:twig-component command lists all your application components
-that live in ``templates/components/``:
+First, the ``debug:twig-component`` command lists all your application
+components that live in ``templates/components/``:
 
 .. code-block:: terminal
 
