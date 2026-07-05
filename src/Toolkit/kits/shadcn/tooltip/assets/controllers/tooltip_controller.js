@@ -26,6 +26,7 @@ export default class extends Controller {
 
         this.showTimeout = null;
         this.hideTimeout = null;
+        this.dismiss = this.hide.bind(this);
 
         document.body.appendChild(this.wrapperElement);
         this.initialized = true;
@@ -33,6 +34,7 @@ export default class extends Controller {
 
     disconnect() {
         this.#clearTimeouts();
+        this.#removeDismissListeners();
 
         if (this.wrapperElement && this.wrapperElement.parentNode === document.body) {
             this.element.appendChild(this.wrapperElement);
@@ -62,6 +64,10 @@ export default class extends Controller {
             this.contentElement.setAttribute('open', '');
             this.arrowElement.setAttribute('open', '');
             this.#positionElements();
+            // The tooltip is portaled to <body> and positioned absolutely, so it cannot follow
+            // the trigger on scroll. Dismiss it instead (capture scrolls from any scroller).
+            window.addEventListener('scroll', this.dismiss, true);
+            window.addEventListener('resize', this.dismiss);
             this.showTimeout = null;
         }, delay);
     }
@@ -72,9 +78,15 @@ export default class extends Controller {
         }
 
         this.#clearTimeouts();
+        this.#removeDismissListeners();
         this.wrapperElement.removeAttribute('open');
         this.contentElement.removeAttribute('open');
         this.arrowElement.removeAttribute('open');
+    }
+
+    #removeDismissListeners() {
+        window.removeEventListener('scroll', this.dismiss, true);
+        window.removeEventListener('resize', this.dismiss);
     }
 
     #clearTimeouts() {
