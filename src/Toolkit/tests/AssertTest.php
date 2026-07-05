@@ -247,4 +247,88 @@ class AssertTest extends TestCase
         yield ['..\\..\\tmp\\PWNED'];
         yield ['templates\\..\\..\\etc'];
     }
+
+    #[DataProvider('provideValidPropNames')]
+    public function testValidPropName(string $name)
+    {
+        $this->expectNotToPerformAssertions();
+
+        Assert::propName($name);
+    }
+
+    public static function provideValidPropNames(): iterable
+    {
+        yield ['id'];
+        yield ['variant'];
+        yield ['openOnLoad'];
+        yield ['asIcon'];
+        yield ['defaultValue'];
+        yield ['as'];
+        yield ['a'];
+        yield ['value123'];
+    }
+
+    #[DataProvider('provideInvalidPropNames')]
+    public function testInvalidPropName(string $name)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(\sprintf('Invalid prop name "%s".', $name));
+
+        Assert::propName($name);
+    }
+
+    public static function provideInvalidPropNames(): iterable
+    {
+        yield [''];
+        // Uppercase start
+        yield ['Variant'];
+        // Underscore
+        yield ['bad_name'];
+        // Digit start
+        yield ['1prop'];
+        // Hyphen
+        yield ['my-prop'];
+        // Space
+        yield ['foo bar'];
+    }
+
+    #[DataProvider('provideValidBlockNames')]
+    public function testValidBlockName(string $name)
+    {
+        $this->expectNotToPerformAssertions();
+
+        Assert::blockName($name);
+    }
+
+    public static function provideValidBlockNames(): iterable
+    {
+        yield ['content'];
+        yield ['icon'];
+        yield ['Content'];
+        yield ['myBlock'];
+        yield ['block_1'];
+        yield ['_private'];
+    }
+
+    #[DataProvider('provideInvalidBlockNames')]
+    public function testInvalidBlockName(string $name)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(\sprintf('Invalid block name "%s".', $name));
+
+        Assert::blockName($name);
+    }
+
+    public static function provideInvalidBlockNames(): iterable
+    {
+        yield [''];
+        // Digit start
+        yield ['1bad'];
+        // Hyphen
+        yield ['bad-name'];
+        // Space
+        yield ['a b'];
+        // Dot
+        yield ['has.dot'];
+    }
 }

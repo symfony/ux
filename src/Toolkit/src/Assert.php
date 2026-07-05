@@ -72,6 +72,30 @@ final class Assert
     }
 
     /**
+     * Assert that a component prop name is valid (a camelCase Twig variable, ex: "id", "openOnLoad").
+     *
+     * @throws \InvalidArgumentException if the prop name is invalid
+     */
+    public static function propName(string $name): void
+    {
+        if (1 !== preg_match('/^[a-z][a-zA-Z0-9]*$/', $name)) {
+            throw new \InvalidArgumentException(\sprintf('Invalid prop name "%s".', $name));
+        }
+    }
+
+    /**
+     * Assert that a component block name is valid (a Twig block name, ex: "content", "icon").
+     *
+     * @throws \InvalidArgumentException if the block name is invalid
+     */
+    public static function blockName(string $name): void
+    {
+        if (1 !== preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $name)) {
+            throw new \InvalidArgumentException(\sprintf('Invalid block name "%s".', $name));
+        }
+    }
+
+    /**
      * Assert that a relative path does not escape its target directory through a ".." segment.
      *
      * This rejects any path containing a ".." segment (using either "/" or "\" as separator),

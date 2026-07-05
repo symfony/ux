@@ -1,13 +1,13 @@
-{# @prop position 'top-left'|'top-center'|'top-right'|'bottom-left'|'bottom-center'|'bottom-right' Position of the notification region. Defaults to `bottom-right` #}
-{# @prop expand boolean Whether toasts expand on hover instead of stacking. Defaults to `false` #}
-{# @prop richColors boolean Whether to use semantic colors for toast types. Defaults to `false` #}
-{# @prop closeButton boolean Whether to show a close button on every toast. Defaults to `false` #}
-{# @prop duration int Auto-dismiss duration in milliseconds. Defaults to `4000` #}
-{# @prop gap int Pixel gap between stacked toasts. Defaults to `14` #}
-{# @prop visibleToasts int Maximum number of visible stacked toasts. Defaults to `3` #}
-{# @prop dir 'ltr'|'rtl'|'auto' Text direction. Defaults to `ltr` #}
-{# @prop theme 'light'|'dark'|'system' Color theme. Defaults to `system` #}
-{# @block content Optional trigger button(s) or server-rendered `<twig:Toast>` components #}
+{# @prop position 'top-left'|'top-center'|'top-right'|'bottom-left'|'bottom-center'|'bottom-right' Position of the notification region. #}
+{# @prop expand boolean Whether toasts expand on hover instead of stacking. #}
+{# @prop richColors boolean Whether to use semantic colors for toast types. #}
+{# @prop closeButton boolean Whether to show a close button on every toast. #}
+{# @prop duration int Auto-dismiss duration in milliseconds. #}
+{# @prop gap int Pixel gap between stacked toasts. #}
+{# @prop visibleToasts int Maximum number of visible stacked toasts. #}
+{# @prop dir 'ltr'|'rtl'|'auto' Text direction. #}
+{# @prop theme 'light'|'dark'|'system' Color theme. #}
+{# @block content Optional trigger button(s) or server-rendered `<twig:Toast>` components. #}
 {%- props position = 'top-right', expand = false, richColors = false, closeButton = false, duration = 4000, gap = 14, visibleToasts = 3, dir = 'ltr', theme = 'system' -%}
 {%- set _positionClass = {
     'top-left': 'top-0 left-0',

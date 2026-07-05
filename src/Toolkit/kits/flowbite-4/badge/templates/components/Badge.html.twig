@@ -1,9 +1,9 @@
-{# @prop variant 'brand'|'alternative'|'gray'|'danger'|'success'|'warning' The visual style variant. Defaults to `brand` #}
-{# @prop size 'default'|'lg' The badge size. Defaults to `default` #}
-{# @prop shape 'rounded'|'pill' The badge shape. Defaults to `rounded` #}
-{# @prop border 'none'|'bordered' The badge border. Defaults to `none` #}
-{# @prop as 'div' The HTML tag to render. Defaults to `div` #}
-{# @block content The badge label or content #}
+{# @prop variant 'brand'|'alternative'|'gray'|'danger'|'success'|'warning' The visual style variant. #}
+{# @prop size 'default'|'lg' The badge size. #}
+{# @prop shape 'rounded'|'pill' The badge shape. #}
+{# @prop border 'none'|'bordered' The badge border. #}
+{# @prop as 'div' The HTML tag to render. #}
+{# @block content The badge label or content. #}
 {%- props variant = 'brand', size = 'default', shape = 'rounded', border = 'none', as = 'div' -%}
 {%- set style = html_cva(
     base: 'inline-flex items-center justify-center font-medium',

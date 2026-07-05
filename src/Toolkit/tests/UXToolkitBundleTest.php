@@ -12,6 +12,7 @@
 namespace Symfony\UX\Toolkit\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\UX\Toolkit\Component\ComponentDocParser;
 use Symfony\UX\Toolkit\UXToolkitBundle;
 
 class UXToolkitBundleTest extends KernelTestCase
@@ -22,5 +23,13 @@ class UXToolkitBundleTest extends KernelTestCase
         $container = self::$kernel->getContainer();
 
         $this->assertInstanceOf(UXToolkitBundle::class, $container->get('kernel')->getBundles()['UXToolkitBundle']);
+    }
+
+    public function testComponentDocParserIsRegisteredAsAPublicService()
+    {
+        self::bootKernel();
+        $container = self::$kernel->getContainer();
+
+        $this->assertInstanceOf(ComponentDocParser::class, $container->get('ux_toolkit.component.component_doc_parser'));
     }
 }

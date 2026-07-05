@@ -1,8 +1,8 @@
-{# @prop variant 'brand'|'secondary'|'tertiary'|'success'|'danger'|'warning'|'dark'|'ghost'|'outline'|'outline-brand'|'outline-success'|'outline-danger'|'outline-warning' The visual style variant. Defaults to `brand` #}
-{# @prop size 'default'|'xs'|'sm'|'lg'|'xl'|'icon'|'icon-xs'|'icon-sm' The button size. Defaults to `default` #}
-{# @prop shape 'rounded'|'pill' The badge shape. Defaults to `rounded` #}
-{# @prop as 'button' The HTML tag to render. Defaults to `button` #}
-{# @block content The button label and/or icon #}
+{# @prop variant 'brand'|'secondary'|'tertiary'|'success'|'danger'|'warning'|'dark'|'ghost'|'outline'|'outline-brand'|'outline-success'|'outline-danger'|'outline-warning' The visual style variant. #}
+{# @prop size 'default'|'xs'|'sm'|'lg'|'xl'|'icon'|'icon-xs'|'icon-sm' The button size. #}
+{# @prop shape 'rounded'|'pill' The badge shape. #}
+{# @prop as 'button' The HTML tag to render. #}
+{# @block content The button label and/or icon. #}
 {%- props variant = 'brand', size = 'default', shape = 'rounded', as = 'button' -%}
 {%- set style = html_cva(
     base: 'inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs',

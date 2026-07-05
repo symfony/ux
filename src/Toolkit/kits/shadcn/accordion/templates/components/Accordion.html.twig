@@ -1,8 +1,8 @@
-{# @prop id string Unique identifier for the Accordion #}
-{# @prop multiple boolean Whether multiple items can be opened at once. Defaults to `false` #}
-{# @prop defaultValue string|array<string>|null Value(s) of the item(s) to open by default #}
-{# @prop orientation 'vertical'|'horizontal' The visual orientation, controls whether keyboard navigation uses up/down or left/right arrow keys. Defaults to `vertical` #}
-{# @block content The accordion items, typically multiple `Accordion:Item` components #}
+{# @prop id string Unique identifier for the Accordion. #}
+{# @prop multiple boolean Whether multiple items can be opened at once. #}
+{# @prop defaultValue string|array<string>|null Value(s) of the item(s) to open by default. #}
+{# @prop orientation 'vertical'|'horizontal' The visual orientation, controls whether keyboard navigation uses up/down or left/right arrow keys. #}
+{# @block content The accordion items, typically multiple `Accordion:Item` components. #}
 {%- props id, multiple = false, defaultValue = null, orientation = 'vertical' -%}
 {%- do provide('accordion.id', id) -%}
 {%- do provide('accordion.orientation', orientation) -%}

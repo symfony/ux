@@ -1,6 +1,6 @@
-{# @prop side 'top'|'right'|'bottom'|'left' The preferred side to display the tooltip. Defaults to `top` #}
-{# @prop sideOffset number The distance in pixels from the trigger. Defaults to `0` #}
-{# @block content The tooltip text or content #}
+{# @prop side 'top'|'right'|'bottom'|'left' The preferred side to display the tooltip. #}
+{# @prop sideOffset number The distance in pixels from the trigger. #}
+{# @block content The tooltip text or content. #}
 {%- props side = 'top', sideOffset = 0 -%}
 {%- set _tooltip_wrapperId = inject('tooltip.wrapperId') -%}
 {%- set _tooltip_contentId = inject('tooltip.contentId') -%}

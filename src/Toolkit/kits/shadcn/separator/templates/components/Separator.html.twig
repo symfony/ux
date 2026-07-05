@@ -1,5 +1,5 @@
-{# @prop orientation 'horizontal'|'vertical' The separator orientation. Defaults to `horizontal` #}
-{# @prop decorative boolean Whether the separator is purely decorative (not semantic). Defaults to `true` #}
+{# @prop orientation 'horizontal'|'vertical' The separator orientation. #}
+{# @prop decorative boolean Whether the separator is purely decorative (not semantic). #}
 {%- props orientation = 'horizontal', decorative = true -%}
 <div
     class="{{ ('shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch ' ~ attributes.render('class'))|tailwind_merge }}"

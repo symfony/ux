@@ -1,5 +1,5 @@
-{# @prop orientation 'horizontal'|'vertical' Layout direction. Defaults to `horizontal` #}
-{# @block content One or more `Resizable:Panel` separated by `Resizable:Handle` #}
+{# @prop orientation 'horizontal'|'vertical' Layout direction. #}
+{# @block content One or more `Resizable:Panel` separated by `Resizable:Handle`. #}
 {%- props orientation = 'horizontal' -%}
 <div
     class="{{ ('group/resizable flex h-full w-full aria-[orientation=vertical]:flex-col ' ~ attributes.render('class'))|tailwind_merge }}"

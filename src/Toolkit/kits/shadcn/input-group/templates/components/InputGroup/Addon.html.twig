@@ -1,5 +1,5 @@
-{# @prop align 'inline-start'|'inline-end'|'block-start'|'block-end' The addon position relative to the input. Defaults to `inline-start` #}
-{# @block content The addon content, typically an icon or text #}
+{# @prop align 'inline-start'|'inline-end'|'block-start'|'block-end' The addon position relative to the input. #}
+{# @block content The addon content, typically an icon or text. #}
 {%- props align = 'inline-start' -%}
 {%- set style = html_cva(
     base: "flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4",

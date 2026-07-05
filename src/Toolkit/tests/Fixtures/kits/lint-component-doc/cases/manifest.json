@@ -1,0 +1,9 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Cases",
+    "description": "Components exercising each ComponentDocChecker rule.",
+    "copy-files": {
+        "templates/": "templates/"
+    }
+}

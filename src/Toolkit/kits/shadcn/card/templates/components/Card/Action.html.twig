@@ -1,4 +1,4 @@
-{# @block content The action area placed in the top-right corner of the card header #}
+{# @block content The action area placed in the top-right corner of the card header. #}
 <div
     class="{{ ('col-start-2 row-span-2 row-start-1 self-start justify-self-end ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({'data-slot': 'card-action'}) }}
