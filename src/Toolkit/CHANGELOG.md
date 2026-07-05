@@ -5,6 +5,7 @@
 - Lint component docblocks: check the `{# @prop #}` and `{# @block #}` format and their consistency with the `{% props %}` declaration and the rendered blocks
 - [Shadcn] Add `combobox` recipe
 - [Shadcn] Add `sonner` recipe
+- [Shadcn] Dismiss the `tooltip` on scroll and resize, and stop it from intercepting pointer events while hidden
 
 ## 3.2.0
 
