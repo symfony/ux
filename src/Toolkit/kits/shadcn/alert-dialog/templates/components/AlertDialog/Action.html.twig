@@ -1,6 +1,6 @@
-{# @prop variant 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The button style variant. Defaults to `default` #}
-{# @prop size 'default'|'sm'|'lg'|'xs'|'icon' The button size. Defaults to `default` #}
-{# @block content The action button label #}
+{# @prop variant 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The button style variant. #}
+{# @prop size 'default'|'sm'|'lg'|'xs'|'icon' The button size. #}
+{# @block content The action button label. #}
 {%- props variant = 'default', size = 'default' -%}
 <twig:Button variant="{{ variant }}" size="{{ size }}" data-slot="alert-dialog-action" {{ ...attributes }}>
     {{- block(outerBlocks.content) -}}

@@ -1,4 +1,4 @@
-{# @block content The list items (`<li>`) #}
+{# @block content The list items (`<li>`). #}
 <ul
     class="{{ ('my-6 ml-6 list-disc [&>li]:mt-2 ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({

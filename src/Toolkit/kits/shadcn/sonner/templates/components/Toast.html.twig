@@ -1,10 +1,10 @@
-{# @prop type 'default'|'success'|'error'|'warning'|'info'|'loading' The toast type. Defaults to `default` #}
-{# @prop title string The toast title. Required #}
-{# @prop description string|null The secondary description line. Defaults to `null` #}
-{# @prop duration int|null Per-toast auto-dismiss override in ms. Uses the Toaster default when `null` #}
-{# @prop closeButton boolean Whether to show a close button. Defaults to `false` #}
-{# @prop id string|null Stable ID for deduplication. Auto-generated when `null` #}
-{# @prop action array|null Action link with `label` and `url` keys. Defaults to `null` #}
+{# @prop type 'default'|'success'|'error'|'warning'|'info'|'loading' The toast type. #}
+{# @prop title string The toast title. Required. #}
+{# @prop description string|null The secondary description line. #}
+{# @prop duration int|null Per-toast auto-dismiss override in ms. Uses the Toaster default when `null`. #}
+{# @prop closeButton boolean Whether to show a close button. #}
+{# @prop id string|null Stable ID for deduplication. Auto-generated when `null`. #}
+{# @prop action array|null Action link with `label` and `url` keys. #}
 {%- props type = 'default', title = '', description = null, duration = null, closeButton = false, id = null, action = null -%}
 <li
     class="{{ ('group flex w-full items-start gap-3 rounded-lg border bg-background p-4 text-foreground shadow-lg transition-[transform,opacity] duration-300 pointer-events-auto absolute left-0 right-0 ' ~ attributes.render('class'))|tailwind_merge }}"

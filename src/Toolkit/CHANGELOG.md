@@ -2,6 +2,7 @@
 
 ## 3.3.0
 
+- Lint component docblocks: check the `{# @prop #}` and `{# @block #}` format and their consistency with the `{% props %}` declaration and the rendered blocks
 - [Shadcn] Add `combobox` recipe
 - [Shadcn] Add `sonner` recipe
 

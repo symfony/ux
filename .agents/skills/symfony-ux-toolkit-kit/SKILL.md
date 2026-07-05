@@ -193,17 +193,22 @@ Rules:
 
 ### 1. Header docblock (mandatory)
 
-Every component starts with one `{# @prop ... #}` per declared prop + one `{# @block content ... #}`:
+One `{# @prop ... #}` per declared prop + one `{# @block ... #}` per block the component renders:
 
 ```twig
-{# @prop id string Unique identifier used to generate internal Dialog IDs #}
-{# @prop open boolean Whether the dialog is open on initial render. Defaults to `false` #}
-{# @block content The dialog structure, typically includes `Dialog:Trigger` and `Dialog:Content` #}
+{# @prop id string Unique identifier used to generate internal Dialog IDs. #}
+{# @prop open boolean Whether the dialog is open on initial render. #}
+{# @block content The dialog structure, typically includes `Dialog:Trigger` and `Dialog:Content`. #}
 {%- props id, open = false -%}
 ```
 
-- Type uses Twig/PHP-flavored union syntax: `'default'|'secondary'|...`, `string|array<string>|null`, `boolean`, `number`.
-- "Defaults to \`<value>\`" when default exists.
+Format is enforced by `bin/ux-toolkit-kit-lint` (CI fails on any warning — see [Docblock linting](#docblock-linting)):
+
+- **`@prop <name> <type> <Description.>`** — name first (camelCase Twig variable, `[a-z][a-zA-Z0-9]*`), then type, then description.
+- **Type** = valid PHPDoc/PHPStan type with **no spaces**: `'default'|'secondary'`, `string|array<string>|null`, `boolean`, `number`. A space breaks the type/description boundary, so `'a' | 'b'` is rejected — write `'a'|'b'`.
+- **No `Defaults to`** in the docblock. Default values live **only** in `{%- props -%}` (single source of truth); the linter and ux.symfony.com read them from there.
+- **`@block <name> <Description.>`** — name must match a block actually rendered in the template (`{% block x %}`, `block(outerBlocks.x)`, or `block('x')`). Never document a slot the component doesn't render, and never leave a rendered block undocumented.
+- **Descriptions** start with a capital letter and end with a period.
 - Reference sub-components by Twig tag name (`\`Dialog:Trigger\``).
 
 ### 2. Root element
@@ -272,7 +277,7 @@ Sub-templates like `Trigger.html.twig`, `Close.html.twig`, `Cancel.html.twig` MU
 
 ```twig
 {# templates/components/Dialog/Trigger.html.twig #}
-{# @block content The trigger element (e.g., a `Button`) that opens the dialog when clicked #}
+{# @block content The trigger element (e.g., a `Button`) that opens the dialog when clicked. #}
 {%- set dialog_trigger_attrs = {
     'data-action': 'click->dialog#open'|html_attr_type('sst'),
     'data-dialog-target': 'trigger',
@@ -295,7 +300,8 @@ Rules:
 - Variant (when wrapping known component acceptable, e.g. `AlertDialog:Action`):
 
 ```twig
-{# @prop variant 'default'|'destructive' ... #}
+{# @prop variant 'default'|'destructive' The visual style variant. #}
+{# @block content The action button label. #}
 {%- props variant = 'default' -%}
 <twig:Button variant="{{ variant }}" {{ ...attributes }}>
     {{- block(outerBlocks.content) -}}
@@ -323,6 +329,22 @@ Always emit (when applicable):
 - `role`, `aria-haspopup`, `aria-expanded`, `aria-controls`, `aria-labelledby`, `aria-describedby`, `aria-disabled`, `aria-pressed`, `aria-hidden`.
 - `data-state="open|closed|active|inactive"`, `data-orientation="vertical|horizontal"`, `data-variant`, `data-size`, `data-disabled`, `data-open`, `data-closed`.
 - IDs deterministic + shared between trigger/content via parent's `id` prop (e.g. `aria-controls={{ _accordion_item_content_id }}`).
+
+---
+
+## Docblock linting
+
+`bin/ux-toolkit-kit-lint` validates every component's `@prop`/`@block` docblocks against the template. CI runs it per kit with `--fail-on-warning`, so any violation fails the build.
+
+```bash
+cd src/Toolkit
+php bin/ux-toolkit-kit-lint --fail-on-warning kits/<kit>
+```
+
+Checks:
+- **`@prop`** — camelCase name, valid **spaceless** PHPStan type, description Capitalized + ending with a period. Every `@prop` maps to a prop in `{%- props -%}` and vice versa.
+- **`@block`** — valid Twig block name, description Capitalized + ending with a period. Every `@block` maps to a rendered block (`{% block x %}` / `block(outerBlocks.x)` / `block('x')`) and vice versa.
+- Default values are **not** documented in the docblock — they are read from `{%- props -%}`.
 
 ---
 
@@ -425,7 +447,8 @@ Reviewers explicitly check snapshots regenerated (`#3488`).
 - [ ] Snapshots regenerated + committed (no stale entries)
 - [ ] Companion PR on `symfony/ux.symfony.com` linked
 - [ ] `php-cs-fixer`, `twig-cs-fixer`, `pnpm run fmt`, `pnpm run lint` clean
-- [ ] All Twig components have `{# @prop #}` + `{# @block #}` docblocks (if applicable)
+- [ ] `bin/ux-toolkit-kit-lint --fail-on-warning kits/<kit>` clean
+- [ ] Docblocks: `@prop`/`@block` present; descriptions Capitalized + ending with a period; prop types are spaceless PHPStan types; **no `Defaults to`** (defaults live in `{%- props -%}`); every `@block` matches a rendered block
 - [ ] Trigger/Close sub-components use `<recipe>_<role>_attrs` (no wrapping `<button>`)
 - [ ] `data-action` Stimulus actions piped through `|html_attr_type('sst')` when concatenable
 - [ ] Inter-recipe deps declared in `manifest.json` `dependencies.recipe`
@@ -445,6 +468,11 @@ Reviewers explicitly check snapshots regenerated (`#3488`).
 | `data-action="click->x#y"` not piped | `'click->x#y'\|html_attr_type('sst')` |
 | Missing `data-slot` on root/sub-roots (Shadcn) | Add `data-slot="<recipe>"` / `data-slot="<recipe>-<sub>"` |
 | Missing `{# @prop #}` / `{# @block #}` docblocks | Add docblocks before `{%- props -%}` |
+| `Defaults to \`...\`` in a `@prop` docblock | Remove it — the default lives only in `{%- props -%}` |
+| Prop type with spaces (`'a' \| 'b'`) | Remove spaces (`'a'\|'b'`) |
+| Docblock description not Capitalized / no trailing period | Capitalize + end with a period |
+| `@block` documenting a slot the component never renders | Remove the `@block` |
+| Rendered block (`{% block x %}`) with no `@block` docblock | Add the `@block` |
 | Self-closing item reading `_parent_var` (outer-scope) | Use `provide()` in parent + `inject()` in child |
 | Recipe depends on another recipe but `dependencies.recipe` empty | Declare it (e.g. `toggle-group` → `toggle`) |
 | Snapshots not regenerated / partially stale | Regenerate via `simple-phpunit -d --update-snapshots` |

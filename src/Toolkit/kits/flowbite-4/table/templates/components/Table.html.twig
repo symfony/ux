@@ -1,5 +1,5 @@
-{# @block content The table structure, typically includes `Table:Header`, `Table:Body`, and optionally `Table:Footer` #}
-{# @prop borderless boolean Whether to hide the table borders. Defaults to `false` #}
+{# @block content The table structure, typically includes `Table:Header`, `Table:Body`, and optionally `Table:Footer`. #}
+{# @prop borderless boolean Whether to hide the table borders. #}
 {%- props borderless = false -%}
 <table
     data-border="{{ borderless ? 'borderless' : 'bordered' }}"

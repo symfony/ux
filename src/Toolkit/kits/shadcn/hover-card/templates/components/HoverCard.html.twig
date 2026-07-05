@@ -1,6 +1,6 @@
-{# @prop openDelay number Delay in milliseconds before showing the content. Defaults to `0` #}
-{# @prop closeDelay number Delay in milliseconds before hiding the content. Defaults to `0` #}
-{# @block content The hover card structure, typically a `HoverCard:Trigger` and `HoverCard:Content` #}
+{# @prop openDelay number Delay in milliseconds before showing the content. #}
+{# @prop closeDelay number Delay in milliseconds before hiding the content. #}
+{# @block content The hover card structure, typically a `HoverCard:Trigger` and `HoverCard:Content`. #}
 {%- props openDelay = 0, closeDelay = 0 -%}
 <span
     class="{{ ('relative inline-block ' ~ attributes.render('class'))|tailwind_merge }}"

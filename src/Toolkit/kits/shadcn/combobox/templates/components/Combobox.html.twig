@@ -1,13 +1,13 @@
 {# @prop id string Unique identifier for ARIA references and internal element IDs. #}
-{# @prop name string|null If set, renders a hidden input for form submission. Defaults to `null`. #}
-{# @prop value string The initially selected value. Must match a choices entry. Defaults to `''`. #}
-{# @prop choices array List of choices: `[{value: '...', label: '...'}]` or grouped `[{label: '...', choices: [{value: '...', label: '...'}]}]`. Defaults to `[]`. #}
-{# @prop placeholder string Text shown on the trigger when nothing is selected. Defaults to `'Select option...'`. #}
-{# @prop searchPlaceholder string Placeholder inside the search input. Defaults to `'Search...'`. #}
-{# @prop emptyMessage string Shown when the filter matches nothing. Defaults to `'No results found.'`. #}
-{# @prop disabled boolean Whether the widget is disabled. Defaults to `false`. #}
-{# @prop required boolean Adds required to the hidden input (only applies when name is set). Defaults to `false`. #}
-{# @prop clearable boolean Shows a clear button when a value is selected. Defaults to `false`. #}
+{# @prop name string|null If set, renders a hidden input for form submission. #}
+{# @prop value string The initially selected value. Must match a choices entry. #}
+{# @prop choices array List of choices: `[{value: '...', label: '...'}]` or grouped `[{label: '...', choices: [{value: '...', label: '...'}]}]`. #}
+{# @prop placeholder string Text shown on the trigger when nothing is selected. #}
+{# @prop searchPlaceholder string Placeholder inside the search input. #}
+{# @prop emptyMessage string Shown when the filter matches nothing. #}
+{# @prop disabled boolean Whether the widget is disabled. #}
+{# @prop required boolean Adds required to the hidden input (only applies when name is set). #}
+{# @prop clearable boolean Shows a clear button when a value is selected. #}
 {%- props id, name = null, value = '', choices = [], placeholder = 'Select option...', searchPlaceholder = 'Search...', emptyMessage = 'No results found.', disabled = false, required = false, clearable = false -%}
 
 {%- set _is_grouped = choices is not empty and choices|first.choices is defined -%}

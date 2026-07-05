@@ -14,6 +14,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Symfony\UX\Toolkit\Command\CreateKitCommand;
 use Symfony\UX\Toolkit\Command\DebugKitCommand;
 use Symfony\UX\Toolkit\Command\InstallCommand;
+use Symfony\UX\Toolkit\Component\ComponentDocParser;
 use Symfony\UX\Toolkit\Kit\KitContextRunner;
 use Symfony\UX\Toolkit\Kit\KitFactory;
 use Symfony\UX\Toolkit\Kit\KitSynchronizer;
@@ -94,5 +95,13 @@ return static function (ContainerConfigurator $container): void {
             ])
 
         ->set('.ux_toolkit.recipe.recipe_synchronizer', RecipeSynchronizer::class)
+
+        // Component
+
+        ->set('ux_toolkit.component.component_doc_parser', ComponentDocParser::class)
+            ->public()
+            ->args([
+                service('twig'),
+            ])
     ;
 };

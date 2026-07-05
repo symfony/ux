@@ -1,5 +1,5 @@
-{# @prop open boolean Whether the collapsible is open by default. Defaults to `false` #}
-{# @block content The collapsible content, typically a `Collapsible:Trigger` and a `Collapsible:Content` #}
+{# @prop open boolean Whether the collapsible is open by default. #}
+{# @block content The collapsible content, typically a `Collapsible:Trigger` and a `Collapsible:Content`. #}
 {%- props open = false -%}
 {%- do provide('collapsible.open', open) -%}
 <div

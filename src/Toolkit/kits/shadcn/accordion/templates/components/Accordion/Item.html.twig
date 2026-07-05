@@ -1,7 +1,7 @@
-{# @prop value string Unique value for this accordion item #}
-{# @prop open boolean Whether the item is open by default. Defaults to `false` #}
-{# @prop disabled boolean Whether the item is disabled. Defaults to `false` #}
-{# @block content The item content, typically an `Accordion:Trigger` and `Accordion:Content` #}
+{# @prop value string Unique value for this accordion item. #}
+{# @prop open boolean Whether the item is open by default. #}
+{# @prop disabled boolean Whether the item is disabled. #}
+{# @block content The item content, typically an `Accordion:Trigger` and `Accordion:Content`. #}
 {%- props value, open = false, disabled = false -%}
 {%- set _accordion_id = inject('accordion.id') -%}
 {%- set _accordion_orientation = inject('accordion.orientation', 'vertical') -%}

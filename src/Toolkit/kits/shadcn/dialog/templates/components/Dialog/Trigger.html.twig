@@ -1,4 +1,4 @@
-{# @block content The trigger element (e.g., a `Button`) that opens the dialog when clicked #}
+{# @block content The trigger element (e.g., a `Button`) that opens the dialog when clicked. #}
 {%- set dialog_trigger_attrs = {
     'data-slot': 'dialog-trigger',
     'data-action': 'click->dialog#open'|html_attr_type('sst'),

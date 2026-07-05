@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../schema-kit-v1.json",
+    "name": "Lint Component Doc",
+    "description": "Kit covering ComponentDocChecker scenarios.",
+    "license": "MIT",
+    "homepage": "https://example.com/lint-component-doc"
+}

@@ -1,5 +1,5 @@
 {# @prop size int|null Initial size as a flex-grow value (proportional). If omitted, panels share space equally. #}
-{# @block content The panel content #}
+{# @block content The panel content. #}
 {%- props size = null -%}
 <div
     class="{{ ('overflow-auto ' ~ attributes.render('class'))|tailwind_merge }}"

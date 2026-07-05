@@ -1,6 +1,6 @@
-{# @prop id string Unique identifier for the tooltip #}
-{# @prop delayDuration number Delay in milliseconds before showing the tooltip. Defaults to `0` #}
-{# @block content The tooltip structure, typically includes `Tooltip:Trigger` and `Tooltip:Content` #}
+{# @prop id string Unique identifier for the tooltip. #}
+{# @prop delayDuration number Delay in milliseconds before showing the tooltip. #}
+{# @block content The tooltip structure, typically includes `Tooltip:Trigger` and `Tooltip:Content`. #}
 {%- props id, delayDuration = 0 -%}
 {%- set _tooltip_id = id -%}
 {%- set _tooltip_trigger_id = id ~ '_trigger' -%}

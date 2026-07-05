@@ -12,6 +12,7 @@
 namespace Symfony\UX\Toolkit\Kit\Lint;
 
 use Symfony\UX\Toolkit\Kit\Kit;
+use Symfony\UX\Toolkit\Kit\Lint\Checker\ComponentDocChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\ComposerSymbolChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\CopyFilesExistenceChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\JsImportChecker;
@@ -45,6 +46,7 @@ final class KitLinter
             new StimulusControllerChecker(),
             new JsImportChecker(),
             new ComposerSymbolChecker(),
+            new ComponentDocChecker(),
         ];
     }
 
