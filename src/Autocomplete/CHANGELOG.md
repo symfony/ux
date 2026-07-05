@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.2
+
+- Fix the XSS vulnerability fix introduced in 3.1, which was broken on PostgreSQL. See section 2.37 below for details.
+
 ## 3.1
 
 - Use `hash_equals()` to compare the `extra_options` checksum to prevent timing attacks
@@ -14,6 +18,11 @@
 - Remove `ExtraLazyChoiceLoader` in favor of `Symfony\Component\Form\ChoiceList\Loader\LazyChoiceLoader` from Symfony Form >=7.2
 - Add parameter `$security` to `AutocompleteResultsExecutor::__construct()`
 - Remove BC layer for `EntityAutocompleterInterface::getAttributes()` and `EntityAutocompleterInterface::getGroupBy()`
+
+## 2.37
+
+- Fix the autocomplete search query throwing an exception on PostgreSQL because of
+  the `ESCAPE '\'` clause introduced in 2.36; a backslash-free LIKE escape character is now used.
 
 ## 2.36
 
