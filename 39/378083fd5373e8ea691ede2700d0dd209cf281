@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-06-25T18:58:02Z
+
+Can you target branch 2.x instead? Since the security fix was also applied on 2.x, it means that it's also broken there.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-06-26T06:06:06Z
+
+Good catch — you're right, the `ESCAPE '\'` clause landed on 2.x too, so the PostgreSQL breakage is there as well. 🙏
+
+Rebased onto `2.x` and retargeted the PR. CHANGELOG entry moved to a `## 2.37` section. SQLite integration tests still green; the PostgreSQL fix is unchanged. Thanks!
