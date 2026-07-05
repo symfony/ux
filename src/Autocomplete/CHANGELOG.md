@@ -2,7 +2,7 @@
 
 ## 3.2
 
-- Fix the XSS vulnerability fix introduced in 3.1, which was broken on PostgreSQL. See section 2.37 below for details.
+- Fix the XSS vulnerability fix introduced in 3.1, which was broken on PostgreSQL. See section 2.36.1 below for details.
 
 ## 3.1
 
@@ -19,7 +19,7 @@
 - Add parameter `$security` to `AutocompleteResultsExecutor::__construct()`
 - Remove BC layer for `EntityAutocompleterInterface::getAttributes()` and `EntityAutocompleterInterface::getGroupBy()`
 
-## 2.37
+## 2.36.1
 
 - Fix the autocomplete search query throwing an exception on PostgreSQL because of
   the `ESCAPE '\'` clause introduced in 2.36; a backslash-free LIKE escape character is now used.
