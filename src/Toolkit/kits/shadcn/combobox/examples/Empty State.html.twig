@@ -1,0 +1,11 @@
+{% set frameworks = [
+    {value: 'next', label: 'Next.js'},
+    {value: 'sveltekit', label: 'SvelteKit'},
+] %}
+<twig:Combobox
+    id="framework-empty"
+    placeholder="Select framework..."
+    searchPlaceholder="Search framework..."
+    emptyMessage="No frameworks found. Try a different search."
+    :choices="frameworks"
+/>
