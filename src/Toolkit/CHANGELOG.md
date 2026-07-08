@@ -3,6 +3,7 @@
 ## 3.4.0
 
 - Add new linter checker `ClassMergeSpacingChecker` that checks for invalid `'<literal>' ~ attributes.render(...)` pattern
+- [Common] Add the `common` kit, with design-system agnostic `logout-link` and `post-link` recipes
 
 ## 3.3.0
 

@@ -68,6 +68,9 @@ final class Kernel extends BaseKernel
         ]);
 
         $container->services()
+            ->set(SecurityTwigStubExtension::class)
+                ->tag('twig.extension')
+
             ->alias('ux_toolkit.kit.kit_factory', '.ux_toolkit.kit.kit_factory')
                 ->public()
 

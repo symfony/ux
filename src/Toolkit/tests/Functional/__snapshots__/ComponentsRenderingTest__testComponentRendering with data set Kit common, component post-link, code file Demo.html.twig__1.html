@@ -1,0 +1,15 @@
+<!--
+- Kit: Common
+- Component: Post Link
+- Code:
+```twig
+<twig:PostLink href="/link/newsletter/subscribe" class="rounded-md bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-500">
+    Subscribe
+</twig:PostLink>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<form action="/link/newsletter/subscribe" method="post" class="inline">
+            <button type="submit" class="rounded-md bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-500">
+        Subscribe
+    </button>
+</form>
