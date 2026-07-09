@@ -80,6 +80,37 @@ class InstallCommandTest extends KernelTestCase
         ;
     }
 
+    public function testShouldResolveRecipeNameCaseInsensitively()
+    {
+        $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
+        mkdir($destination);
+
+        $this->bootKernel();
+        $this->consoleCommand('ux:install Alert --destination='.$destination)
+            ->addInput('Shadcn UI')
+            ->execute()
+            ->assertSuccessful()
+            ->assertOutputContains('The recipe "alert" exists in multiple Kits. Which one do you want to use?')
+            ->assertOutputContains('Installing recipe "alert" from the Shadcn UI kit...')
+            ->assertOutputContains('[OK] The recipe has been installed.')
+        ;
+    }
+
+    public function testShouldResolveRecipeNameCaseInsensitivelyWithExplicitKit()
+    {
+        $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
+        mkdir($destination);
+
+        $this->bootKernel();
+        $this->consoleCommand('ux:install Alert --kit=shadcn --destination='.$destination)
+            ->execute()
+            ->assertSuccessful()
+            ->assertOutputContains('Installing recipe "alert" from the Shadcn UI kit...')
+            ->assertOutputContains('[OK] The recipe has been installed.')
+            ->assertOutputNotContains('does not exist')
+        ;
+    }
+
     public function testShouldFailWhenComponentDoesNotExist()
     {
         $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
@@ -90,6 +121,21 @@ class InstallCommandTest extends KernelTestCase
             ->execute()
             ->assertFaulty()
             ->assertOutputContains('The recipe "unknown" does not exist');
+    }
+
+    public function testShouldSuggestAlternativesFromAllKitsWhenRecipeDoesNotExist()
+    {
+        $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
+        mkdir($destination);
+
+        $this->bootKernel();
+        $this->consoleCommand('ux:install buton --destination='.$destination)
+            ->execute()
+            ->assertFaulty()
+            ->assertOutputContains('The recipe "buton" does not exist in any official kit')
+            ->assertOutputContains('Possible alternatives:')
+            ->assertOutputContains('button')
+        ;
     }
 
     public function testShouldWarnWhenComponentFileAlreadyExistsInNonInteractiveMode()
