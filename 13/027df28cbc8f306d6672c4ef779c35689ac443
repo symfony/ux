@@ -1,0 +1,26 @@
+---------------------------------------------------------------------------
+
+by mtarld at 2026-07-09T07:04:10Z
+
+@Kocal, I'd have done this instead:
+```php
+if ($infoType->isSatisfiedBy(static fn ($t): bool => $t instanceof CollectionType)) {
+```
+
+---------------------------------------------------------------------------
+
+by rogierknoester at 2026-07-09T07:28:36Z
+
+> @Kocal, I'd have done this instead:
+>
+> ```
+> if ($infoType->isSatisfiedBy(static fn ($t): bool => $t instanceof CollectionType)) {
+> ```
+
+I like that more, also covers more scenarios, let me update it to that :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-09T16:00:45Z
+
+Thanks @mtarld!
