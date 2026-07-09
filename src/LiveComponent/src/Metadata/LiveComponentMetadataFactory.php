@@ -86,7 +86,7 @@ class LiveComponentMetadataFactory implements ResetInterface
 
         $infoType = $this->propertyTypeExtractor->getType($className, $property->getName());
 
-        if ($infoType instanceof CollectionType) {
+        if ($infoType?->isSatisfiedBy(static fn ($t): bool => $t instanceof CollectionType)) {
             // If it's an "advanced" type (like CollectionType), let's use the PropertyTypeExtractor to get the Type
             $type = $infoType;
         } elseif (null !== $reflectionType) {
