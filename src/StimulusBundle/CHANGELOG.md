@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.3.0
+
+- Detect the `stimulusFetch: 'lazy'` directive inside preserved comments (`/*! ... */`)
+
 ## 3.0.0
 
 - Minimum required Symfony version is now 7.4

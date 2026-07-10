@@ -53,6 +53,7 @@ class StimulusControllerLoaderFunctionalTest extends WebTestCase
             '/assets/controllers/bye_controller.js',
             '/assets/controllers/hello-with-dashes-controller.js',
             '/assets/controllers/hello_with_underscores-controller.js',
+            '/assets/controllers/preserved-comment_controller.js',
             '/assets/controllers/subdir/deeper-controller.js',
             '/assets/controllers/subdir/deeper-with-dashes-controller.js',
             '/assets/controllers/subdir/deeper_with_underscores-controller.js',

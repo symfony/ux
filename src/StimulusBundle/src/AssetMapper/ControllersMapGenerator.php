@@ -90,7 +90,7 @@ class ControllersMapGenerator
             }
 
             $content = file_get_contents($asset->sourcePath);
-            $isLazy = preg_match('/\/\*\s*stimulusFetch:\s*\'lazy\'\s*\*\//i', $content);
+            $isLazy = preg_match('/\/\*!?\s*stimulusFetch:\s*\'lazy\'\s*\*\//i', $content);
 
             $controllersMap[$name] = new MappedControllerAsset($asset, $isLazy);
         }
