@@ -1895,6 +1895,7 @@ var LoadingPlugin_default = class {
 		const loadingDirectives = [];
 		let matchingElements = Array.from(element.querySelectorAll("[data-loading]"));
 		matchingElements = matchingElements.filter((elt) => elementBelongsToThisComponent(elt, component));
+		matchingElements = matchingElements.filter((elt) => !elt.closest("[data-live-ignore]"));
 		if (element.hasAttribute("data-loading")) matchingElements = [element, ...matchingElements];
 		matchingElements.forEach((element) => {
 			if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) throw new Error("Invalid Element Type");

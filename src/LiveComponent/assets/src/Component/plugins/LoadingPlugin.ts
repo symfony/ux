@@ -178,6 +178,10 @@ export default class implements PluginInterface {
         // ignore elements which are inside a nested "live" component
         matchingElements = matchingElements.filter((elt) => elementBelongsToThisComponent(elt, component));
 
+        // ignore elements inside a "data-live-ignore" subtree: those are managed
+        // outside of Live (e.g. third-party widgets) and may set their own "data-loading"
+        matchingElements = matchingElements.filter((elt) => !elt.closest('[data-live-ignore]'));
+
         // querySelectorAll doesn't include the element itself
         if (element.hasAttribute('data-loading')) {
             matchingElements = [element, ...matchingElements];

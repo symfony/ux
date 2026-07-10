@@ -297,4 +297,42 @@ describe('LiveController data-loading Tests', () => {
         expect(getByTestId(test.element, 'child-loading-element-showing')).not.toBeVisible();
         expect(getByTestId(test.element, 'child-loading-element-hiding')).toBeVisible();
     });
+
+    it('ignores "data-loading" inside a "data-live-ignore" subtree', async () => {
+        const test = await createTest(
+            { food: 'pizza' },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <span>I like: ${data.food}</span>
+                <span data-loading="show" data-testid="loading-element">Loading...</span>
+
+                <div data-live-ignore data-testid="ignored">
+                    <!-- third-party widget managing its own, non-directive "data-loading" -->
+                    <span data-loading="false" data-testid="ignored-loading-element">widget internals</span>
+                </div>
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
+                data.food = 'popcorn';
+            })
+            // delay so we can check loading
+            .delayResponse(50);
+
+        // the component initializes without throwing on the "false" value
+        // held by the "data-loading" attribute inside the "data-live-ignore" subtree
+        await waitFor(() => expect(getByTestId(test.element, 'loading-element')).not.toBeVisible());
+
+        test.component.render();
+        // the real loading element still behaves as usual
+        expect(getByTestId(test.element, 'loading-element')).toBeVisible();
+        // the ignored element is never picked up by the loading scanner
+        expect(getByTestId(test.element, 'ignored-loading-element')).not.toHaveAttribute('data-live-is-loading');
+
+        // wait for loading to finish
+        await waitFor(() => expect(test.element).toHaveTextContent('I like: popcorn'));
+        expect(getByTestId(test.element, 'loading-element')).not.toBeVisible();
+    });
 });
