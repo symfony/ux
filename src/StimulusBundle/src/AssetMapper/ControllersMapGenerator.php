@@ -66,7 +66,10 @@ class ControllersMapGenerator
         $finder = new Finder();
         $finder->in($this->controllerPaths)
             ->files()
-            ->name(self::FILENAME_REGEX);
+            ->name(self::FILENAME_REGEX)
+            // the filesystem iteration order is not stable, sort to keep the
+            // generated controllers loader (and so its digest) deterministic
+            ->sortByName();
 
         $controllersMap = [];
         foreach ($finder as $file) {

@@ -119,4 +119,49 @@ class ControllersMapGeneratorTest extends TestCase
         $minifiedController = $map['minified'];
         $this->assertTrue($minifiedController->isLazy);
     }
+
+    public function testCustomControllersAreSortedByName()
+    {
+        $mapper = $this->createMock(AssetMapperInterface::class);
+        $mapper->expects($this->any())
+            ->method('getAssetFromSourcePath')
+            ->willReturnCallback(static function ($path) {
+                // replace windows slashes
+                $path = str_replace('\\', '/', $path);
+                $assetsPosition = strpos($path, '/assets/');
+
+                return new MappedAsset(substr($path, $assetsPosition + 1), $path);
+            });
+
+        $autoImportLocator = $this->createMock(AutoImportLocator::class);
+        $autoImportLocator->expects($this->any())
+            ->method('locateAutoImport')
+            ->willReturnCallback(static function ($path) {
+                return new MappedControllerAutoImport('/path/to'.$path, false);
+            });
+
+        $generator = new ControllersMapGenerator(
+            $mapper,
+            new UxPackageReader(__DIR__.'/../fixtures'),
+            [__DIR__.'/../fixtures/assets/controllers'],
+            __DIR__.'/../fixtures/assets/controllers.json',
+            $autoImportLocator,
+        );
+
+        $customControllers = array_values(array_filter(
+            array_keys($generator->getControllersMap()),
+            static fn (string $name) => !str_starts_with($name, 'fake-vendor--'),
+        ));
+
+        $this->assertSame([
+            'bye',
+            'hello',
+            'hello-with-dashes',
+            'hello-with-underscores',
+            'subdir--deeper',
+            'subdir--deeper-with-dashes',
+            'subdir--deeper-with-underscores',
+            'typescript',
+        ], $customControllers);
+    }
 }
