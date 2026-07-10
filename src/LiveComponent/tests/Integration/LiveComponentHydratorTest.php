@@ -863,6 +863,21 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ;
         }];
 
+        yield 'Enum: a non-scalar updated value is ignored gracefully (not a 500)' => [static function () {
+            return HydrationTest::create(new class {
+                #[LiveProp(writable: true)]
+                public IntEnum $int = IntEnum::HIGH;
+            })
+                ->mountWith(['int' => IntEnum::HIGH])
+                // a tampered payload sending an array instead of a scalar used to trigger
+                // a TypeError (500) in BackedEnum::tryFrom() instead of being ignored
+                ->userUpdatesProps(['int' => ['not-a-scalar']])
+                ->assertObjectAfterHydration(static function (object $object) {
+                    self::assertSame(IntEnum::HIGH, $object->int);
+                })
+            ;
+        }];
+
         yield 'Enum: null-like enum values are handled correctly' => [static function () {
             return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
@@ -930,6 +945,29 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->assertObjectAfterHydration(static function (object $object) {
                     self::assertSame($object->address->address, '4 rue des lilas');
                     self::assertSame($object->address->city, 'Asnieres');
+                })
+            ;
+        }];
+
+        yield 'Object: an unknown property in an updated object is ignored gracefully (not a 500)' => [static function () {
+            return HydrationTest::create(new class {
+                #[LiveProp(writable: true)]
+                public ?Address $address = null;
+
+                public function mount()
+                {
+                    $this->address = new Address();
+                    $this->address->address = '1 rue du Bac';
+                    $this->address->city = 'Paris';
+                }
+            })
+                ->mountWith([])
+                // a tampered payload sending an unknown property used to trigger a
+                // ReflectionException (500) instead of being ignored
+                ->userUpdatesProps(['address' => ['address' => '4 rue des lilas', 'unknownProperty' => 'x']])
+                ->assertObjectAfterHydration(static function (object $object) {
+                    self::assertSame('1 rue du Bac', $object->address->address);
+                    self::assertSame('Paris', $object->address->city);
                 })
             ;
         }];
