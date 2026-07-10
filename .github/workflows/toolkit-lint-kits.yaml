@@ -29,7 +29,7 @@ jobs:
         outputs:
             kits: ${{ steps.set.outputs.kits }}
         steps:
-            - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+            - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
               with:
                   persist-credentials: false
 
@@ -49,17 +49,17 @@ jobs:
             matrix:
                 kit: ${{ fromJson(needs.discover.outputs.kits) }}
         steps:
-            - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+            - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
               with:
                   persist-credentials: false
 
             - name: Setup PHP
-              uses: shivammathur/setup-php@083d5237d9340d541bf95e2a6eceaf3529b85892
+              uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
               with:
                   php-version: '8.4'
 
             - name: Install Toolkit dependencies
-              uses: ramsey/composer-install@26d8a556604053a9612623447203a691f406fbe6
+              uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
               with:
                   working-directory: src/Toolkit
 
