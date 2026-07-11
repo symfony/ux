@@ -9,7 +9,13 @@
         "ux-icons": "src/Icons",
         "ux-live-component": "src/LiveComponent",
         "ux-map": {
-            "prefixes": [{ "from": "src/Map", "to": "", "excludes": ["src/Bridge"] }]
+            "prefixes": [
+                {
+                    "from": "src/Map",
+                    "to": "",
+                    "excludes": ["src/Bridge"]
+                }
+            ]
         },
         "ux-google-map": "src/Map/src/Bridge/Google",
         "ux-leaflet-map": "src/Map/src/Bridge/Leaflet",
@@ -20,6 +26,18 @@
         "ux-translator": "src/Translator",
         "ux-turbo": "src/Turbo",
         "ux-twig-component": "src/TwigComponent",
-        "ux-vue": "src/Vue"
+        "ux-vue": "src/Vue",
+        "ux-editor": {
+            "prefixes": [
+                {
+                    "from": "src/Editor",
+                    "to": "",
+                    "excludes": ["src/Bridge"]
+                }
+            ]
+        },
+        "ux-editor-editorjs": "src/Editor/src/Bridge/EditorJS",
+        "ux-editor-ckeditor": "src/Editor/src/Bridge/CKEditor",
+        "ux-editor-grapesjs": "src/Editor/src/Bridge/GrapesJS"
     }
 }

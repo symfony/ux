@@ -14,7 +14,8 @@
         "fmt": "oxfmt",
         "fmt:check": "oxfmt --check",
         "lint": "oxlint",
-        "lint:fix": "oxlint --fix"
+        "lint:fix": "oxlint --fix",
+        "test:e2e": "playwright test"
     },
     "devDependencies": {
         "@playwright/test": "^1.58.2",

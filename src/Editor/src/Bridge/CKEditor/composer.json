@@ -1,0 +1,15 @@
+{
+    "name": "symfony/ux-editor-ckeditor",
+    "type": "symfony-bundle",
+    "description": "CKEditor 5 bridge for symfony/ux-editor",
+    "keywords": ["symfony-ux", "editor", "ckeditor", "wysiwyg"],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [{"name": "Symfony Community", "homepage": "https://symfony.com/contributors"}],
+    "autoload": {"psr-4": {"Symfony\\UX\\Editor\\Bridge\\CKEditor\\": "src/"}},
+    "autoload-dev": {"psr-4": {"Symfony\\UX\\Editor\\Bridge\\CKEditor\\Tests\\": "tests/"}},
+    "require": {"php": ">=8.4", "symfony/ux-editor": "^0.1|^1.0"},
+    "require-dev": {"phpunit/phpunit": "^11.1|^12.0", "symfony/framework-bundle": "^7.4|^8.0"},
+    "extra": {"thanks": {"name": "symfony/ux", "url": "https://github.com/symfony/ux"}},
+    "minimum-stability": "dev"
+}

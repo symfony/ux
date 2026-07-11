@@ -1,0 +1,14 @@
+{# Form theme for Symfony\UX\Editor\Form\EditorType. Wraps the textarea with the Stimulus
+   controller root + a mount target div. Apps register this theme via:
+
+       twig:
+           form_themes: ['@UXEditor/form/ux_editor.html.twig']
+#}
+{% block ux_editor_widget -%}
+    {%- set _ctrl = ux_editor.controller -%}
+    <div{% for k, v in ux_editor.wrapper_attr %} {{ k }}="{{ v }}"{% endfor %}>
+        {%- set attr = attr|merge({style: (attr.style|default('')) ~ 'display:none'}) -%}
+        {{- block('textarea_widget') -}}
+        <div data-{{ _ctrl }}-target="mount"></div>
+    </div>
+{%- endblock %}

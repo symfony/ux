@@ -1,0 +1,23 @@
+{
+    "controllers": {
+        "@symfony/ux-editor": {
+            "controller": {
+                "enabled": false,
+                "fetch": "lazy"
+            },
+            "format--wysiwyg": {
+                "enabled": false,
+                "fetch": "lazy"
+            },
+            "format--block": {
+                "enabled": false,
+                "fetch": "lazy"
+            },
+            "format--page": {
+                "enabled": false,
+                "fetch": "lazy"
+            }
+        }
+    },
+    "entrypoints": []
+}

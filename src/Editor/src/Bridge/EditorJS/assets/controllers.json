@@ -1,0 +1,13 @@
+{
+    "controllers": {
+        "@symfony/ux-editor-editorjs": {
+            "editorjs": {
+                "main": "dist/controller.js",
+                "fetch": "lazy",
+                "enabled": true,
+                "name": "symfony--ux-editor--editorjs"
+            }
+        }
+    },
+    "entrypoints": []
+}

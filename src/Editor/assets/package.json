@@ -1,0 +1,40 @@
+{
+    "name": "@symfony/ux-editor",
+    "description": "Core abstractions for symfony/ux-editor bridges",
+    "license": "MIT",
+    "version": "0.1.0",
+    "keywords": ["symfony-ux", "editor", "wysiwyg", "block-editor", "page-builder"],
+    "symfony": {
+        "needsPackageAsADependency": false,
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0"
+        }
+    },
+    "type": "module",
+    "main": "dist/controller.js",
+    "types": "dist/controller.d.ts",
+    "exports": {
+        ".":            {"types": "./dist/controller.d.ts", "default": "./dist/controller.js"},
+        "./format/wysiwyg": {"types": "./dist/format/wysiwyg_controller.d.ts", "default": "./dist/format/wysiwyg_controller.js"},
+        "./format/block":   {"types": "./dist/format/block_controller.d.ts",   "default": "./dist/format/block_controller.js"},
+        "./format/page":    {"types": "./dist/format/page_builder_controller.d.ts", "default": "./dist/format/page_builder_controller.js"},
+        "./upload":     {"types": "./dist/upload/SignedUploadClient.d.ts", "default": "./dist/upload/SignedUploadClient.js"},
+        "./live":       {"types": "./dist/live/live-editor.d.ts", "default": "./dist/live/live-editor.js"},
+        "./content":    {"types": "./dist/content/EditorContent.d.ts", "default": "./dist/content/EditorContent.js"}
+    },
+    "files": ["dist"],
+    "scripts": {
+        "build": "node ../../../bin/build_package.ts .",
+        "watch": "node ../../../bin/build_package.ts . --watch",
+        "test": "pnpm run test:unit",
+        "test:unit": "../../../bin/unit_test_package.sh ."
+    },
+    "peerDependencies": {"@hotwired/stimulus": "^3.0.0"},
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "jsdom": "^26.1.0",
+        "tslib": "^2.8.1",
+        "typescript": "^5.8.3",
+        "vitest": "^4.1.0"
+    }
+}
