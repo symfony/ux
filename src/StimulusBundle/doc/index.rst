@@ -15,15 +15,15 @@ Installation
 ------------
 
 First, if you don't have one yet, choose and install an asset handling system;
-both work great with StimulusBundle:
+they all work great with StimulusBundle:
 
 * `AssetMapper`_: PHP-based system for handling assets
 
-or
+* `Webpack Encore`_: Node-based packaging system built on Webpack
 
-* `Webpack Encore`_ Node-based packaging system
+* `Reprise`_: Node-based integration for Vite and Rsbuild (experimental)
 
-See `Encore vs AssetMapper`_ to learn which is best for your project.
+See `Reprise vs Encore vs AssetMapper`_ to learn which is best for your project.
 
 Next, install the bundle:
 
@@ -442,8 +442,45 @@ The ``assets/stimulus_bootstrap.js`` file will be updated to look like this:
         /\.[jt]sx?$/
     ));
 
-And 2 new packages - ``@hotwired/stimulus`` and ``@symfony/stimulus-bridge`` - will
-be added to your ``package.json`` file.
+The ``@hotwired/stimulus`` package will be added to your ``package.json`` file.
+The Webpack Encore integration also relies on `@symfony/stimulus-bridge`_, which is specific to Encore,
+so install it yourself:
+
+.. code-block:: terminal
+
+    $ npm install --save-dev @symfony/stimulus-bridge
+
+With Reprise
+~~~~~~~~~~~~
+
+If you're using `Reprise`_, you must enable Stimulus by pointing the Reprise plugin at your ``controllers.json`` file:
+
+.. code-block:: javascript
+
+    // vite.config.js (or rsbuild.config.js)
+    import Symfony from '@symfony/reprise/vite';
+
+    export default defineConfig({
+        plugins: [
+            Symfony({
+                stimulus: './assets/controllers.json',
+            }),
+        ],
+    });
+
+The ``assets/stimulus_bootstrap.js`` file will be updated to look like this:
+
+.. code-block:: javascript
+
+    // assets/stimulus_bootstrap.js
+    import { startStimulusApp } from '@symfony/reprise/stimulus';
+
+    const app = startStimulusApp();
+
+The ``@symfony/reprise/stimulus`` helper starts the application and registers all your
+custom controllers along with those from ``controllers.json``, eager or lazy, the same
+way the AssetMapper loader does. The Stimulus runtime ships with the ``@symfony/reprise``
+package, so ``@hotwired/stimulus`` is the only extra package you need to install.
 
 How are the Stimulus Controllers Loaded?
 ----------------------------------------
@@ -509,13 +546,14 @@ it will normalize it:
     <!-- will render as: -->
     <div data-controller="symfony--ux-chartjs--chart">
 
-.. _Encore vs AssetMapper: https://symfony.com/doc/current/frontend.html
+.. _Reprise vs Encore vs AssetMapper: https://symfony.com/doc/current/frontend.html
 .. _Symfony Flex: https://symfony.com/doc/current/setup/flex.html
 .. _Stimulus Documentation: https://stimulus.hotwired.dev/
 .. _`@symfony/stimulus-bridge`: https://github.com/symfony/stimulus-bridge
 .. _`Stimulus`: https://stimulus.hotwired.dev/
-.. _`Webpack Encore`: https://symfony.com/doc/current/frontend.html
+.. _`Webpack Encore`: https://symfony.com/doc/current/frontend/encore/index.html
 .. _`AssetMapper`: https://symfony.com/doc/current/frontend/asset_mapper.html
+.. _`Reprise`: https://github.com/symfony/reprise
 .. _`Stimulus Controllers & Values`: https://stimulus.hotwired.dev/reference/values
 .. _`CSS Classes`: https://stimulus.hotwired.dev/reference/css-classes
 .. _`Outlets`: https://stimulus.hotwired.dev/reference/outlets
