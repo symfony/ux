@@ -3,6 +3,8 @@
 ## 3.3.0
 
 - Detect the `stimulusFetch: 'lazy'` directive inside preserved comments (`/*! ... */`)
+- Add support for the Symfony Reprise asset integration (Vite and Rsbuild)
+- Remove `@symfony/stimulus-bridge` from the npm peer dependencies; it is specific to Webpack Encore and must be installed manually there
 
 ## 3.0.0
 
