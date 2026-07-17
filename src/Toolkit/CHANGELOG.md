@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.4.0
+
+- Add new linter checker `ClassMergeSpacingChecker` that checks for invalid `'<literal>' ~ attributes.render(...)` pattern
+
 ## 3.3.0
 
 - Lint component docblocks: check the `{# @prop #}` and `{# @block #}` format and their consistency with the `{% props %}` declaration and the rendered blocks

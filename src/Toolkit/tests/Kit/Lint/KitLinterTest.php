@@ -17,6 +17,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Kit\KitFactory;
 use Symfony\UX\Toolkit\Kit\KitSynchronizer;
+use Symfony\UX\Toolkit\Kit\Lint\Checker\ClassMergeSpacingChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\ComposerSymbolChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\CopyFilesExistenceChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\JsImportChecker;
@@ -253,5 +254,39 @@ class KitLinterTest extends TestCase
         $this->assertSame($category, $issues[0]->category);
         $this->assertSame(LintSeverity::Warning, $issues[0]->severity);
         $this->assertStringContainsString($needle, $issues[0]->message);
+    }
+
+    /**
+     * @return iterable<string, array{string, int}>
+     */
+    public static function provideClassMergeCases(): iterable
+    {
+        // template file => number of expected issues
+        yield 'literal ending with a space' => ['Valid.html.twig', 0];
+        yield 'literal missing the trailing space' => ['MissingSpace.html.twig', 1];
+        yield 'empty literal needs no separator' => ['EmptyLiteral.html.twig', 0];
+        yield 'argument form (.apply) is not concatenation' => ['ApplyArg.html.twig', 0];
+        yield 'double-quoted literal missing the trailing space' => ['DoubleQuote.html.twig', 1];
+        yield 'one valid and one invalid concatenation' => ['Mixed.html.twig', 1];
+    }
+
+    #[DataProvider('provideClassMergeCases')]
+    public function testClassMergeSpacingChecker(string $file, int $expectedCount)
+    {
+        $kit = $this->loadFixtureKit('lint-class-merge');
+
+        $report = new KitLinter([new ClassMergeSpacingChecker()])->lint($kit);
+
+        $matching = array_values(array_filter(
+            $report->getIssues(),
+            static fn (LintIssue $i) => 'component.class.missing-space' === $i->category
+                && null !== $i->file && str_contains($i->file, $file),
+        ));
+
+        $this->assertCount($expectedCount, $matching, \sprintf('File "%s" must produce %d issue(s).', $file, $expectedCount));
+        foreach ($matching as $issue) {
+            $this->assertSame(LintSeverity::Error, $issue->severity);
+            $this->assertSame('cases', $issue->recipe);
+        }
     }
 }
