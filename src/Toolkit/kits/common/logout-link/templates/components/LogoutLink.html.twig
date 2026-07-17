@@ -1,0 +1,10 @@
+{# @prop firewall string|null The firewall name to log out from; when null, the current firewall is used. #}
+{# @block content The link label. #}
+{% props firewall = null %}
+
+<twig:PostLink {{ ...attributes.defaults({
+    href: logout_path(firewall),
+    csrfTokenId: 'logout',
+}) }}>
+    {{ block(outerBlocks.content)|default('Logout') }}
+</twig:PostLink>

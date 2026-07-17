@@ -1,0 +1,28 @@
+{# @prop href string The URL the form submits to. #}
+{# @prop csrfTokenId string|null The CSRF token ID used to generate the hidden token field; when null, no token is added. #}
+{# @prop method string The HTTP method used to submit the form; when not `POST`, a hidden `_method` field is added for method spoofing. #}
+{# @prop confirm string|null A confirmation message shown before submitting; when null, no confirmation is required. #}
+{# @block content The button label. #}
+{% props href, csrfTokenId = null, method = 'POST', confirm = null %}
+
+<form{{ attributes.nested('form').defaults({
+    action: href,
+    method: 'post',
+    class: 'inline',
+    onsubmit: confirm ? 'return confirm(' ~ confirm|json_encode ~ ')' : false,
+}) }}>
+    {% if method|upper != 'POST' %}
+        <input type="hidden" name="_method" value="{{ method|upper }}">
+    {% endif %}
+    {% if csrfTokenId %}
+        <input{{ attributes.nested('csrf').defaults({
+            type: 'hidden',
+            name: '_csrf_token',
+            'data-controller': 'csrf-protection',
+            value: csrf_token(csrfTokenId),
+        }) }}>
+    {% endif %}
+    <button{{ attributes.defaults({type: 'submit'}) }}>
+        {% block content %}{% endblock %}
+    </button>
+</form>

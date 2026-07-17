@@ -1,0 +1,16 @@
+<!--
+- Kit: Common
+- Component: Post Link
+- Code:
+```twig
+<twig:PostLink href="/link/posts/42/delete" csrfTokenId="delete-post" class="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-500">
+    Delete post
+</twig:PostLink>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<form action="/link/posts/42/delete" method="post" class="inline">
+                <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="csrf-token-for-delete-post">
+        <button type="submit" class="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-500">
+        Delete post
+    </button>
+</form>

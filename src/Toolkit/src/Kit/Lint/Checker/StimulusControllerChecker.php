@@ -15,12 +15,12 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\UX\Toolkit\Dependency\RecipeDependency;
 use Symfony\UX\Toolkit\Kit\Kit;
-
-use function Symfony\Component\String\u;
 use Symfony\UX\Toolkit\Kit\Lint\KitCheckerInterface;
 use Symfony\UX\Toolkit\Kit\Lint\LintIssue;
 use Symfony\UX\Toolkit\Kit\Lint\LintSeverity;
 use Symfony\UX\Toolkit\Recipe\Recipe;
+
+use function Symfony\Component\String\u;
 
 /**
  * Detects `data-controller="..."` usages in Twig templates and verifies that a matching
@@ -32,6 +32,12 @@ use Symfony\UX\Toolkit\Recipe\Recipe;
  */
 final class StimulusControllerChecker implements KitCheckerInterface
 {
+    /**
+     * Controllers provided by the framework/ecosystem rather than shipped by a recipe
+     * (e.g. Symfony's `csrf-protection` controller from symfony/stimulus-bundle).
+     */
+    private const KNOWN_EXTERNAL_CONTROLLERS = ['csrf-protection'];
+
     public function check(Kit $kit): iterable
     {
         foreach ($kit->getRecipes() as $recipe) {
@@ -57,6 +63,9 @@ final class StimulusControllerChecker implements KitCheckerInterface
             }
 
             foreach ($controllerNames as $controllerName => $file) {
+                if (\in_array($controllerName, self::KNOWN_EXTERNAL_CONTROLLERS, true)) {
+                    continue;
+                }
                 if (\in_array($controllerName, $shippedControllers, true)) {
                     continue;
                 }
