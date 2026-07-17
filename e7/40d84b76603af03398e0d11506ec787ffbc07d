@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-17T08:16:41Z
+
+CI jobs fail because of another issue, maybe libxml or something related, float values seems to be rounded...
+```diff
+-'...den="true"><circle cx="12.1" cy="12.1" r="1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle></svg>\n
++'...den="true"><circle cx="12" cy="12" r="1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle></svg>\n
+```
+
+I will investigate in another PR
