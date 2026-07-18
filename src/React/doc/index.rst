@@ -17,8 +17,13 @@ Installation
 
 .. note::
 
-    This package works best with WebpackEncore. To use it with AssetMapper, see
-    :ref:`Using with AssetMapper <using-with-asset-mapper>`.
+    This package works best with `Symfony Reprise`_ (`Vite`_ or `Rsbuild`_). To use it with
+    Webpack Encore, see :ref:`Using with Webpack Encore <react-using-with-webpack-encore>`;
+    to use it with AssetMapper, see :ref:`Using with AssetMapper <using-with-asset-mapper>`.
+
+.. note::
+
+    Symfony Reprise support requires ``symfony/ux-react`` 3.4 and ``symfony/reprise`` 0.4.
 
 Install the bundle using Composer and Symfony Flex:
 
@@ -26,20 +31,11 @@ Install the bundle using Composer and Symfony Flex:
 
     $ composer require symfony/ux-react
 
-The Flex recipe will automatically set things up for you, like adding
-``.enableReactPreset()`` to your ``webpack.config.js`` file and adding code
-to load your React components inside ``assets/app.js``.
+The Flex recipe will automatically set things up for you, adding the code to load
+your React components inside ``assets/app.js``.
 
-Next, install a package to help React:
-
-.. code-block:: terminal
-
-    $ npm install -D @babel/preset-react --force
-    $ npm run watch
-
-.. note::
-
-    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-react npm package`_
+You also need the React plugin for your bundler so it can compile JSX:
+`@vitejs/plugin-react`_ for Vite, or `@rsbuild/plugin-react`_ for Rsbuild.
 
 That's it! Any files inside ``assets/react/controllers/`` can now be rendered as
 React components.
@@ -58,11 +54,14 @@ code to your ``assets/app.js`` file:
     // assets/app.js
     import { registerReactControllerComponents } from '@symfony/ux-react';
 
-    registerReactControllerComponents(require.context('./react/controllers', true, /\.(j|t)sx?$/));
+    registerReactControllerComponents(
+        import.meta.glob('./react/controllers/**/*.{jsx,tsx}', { eager: true })
+    );
 
 This will load all React components located in the ``assets/react/controllers``
-directory. These are known as **React controller components**: top-level
-components that are meant to be rendered from Twig.
+directory. These are known as **React controller components**: top-level components
+that are meant to be rendered from Twig. The ``eager: true`` option is required
+because UX React does not support lazy-loaded components.
 
 Render in Twig
 ~~~~~~~~~~~~~~
@@ -120,6 +119,34 @@ in the DOM  or is removed and immediately re-added to the DOM (e.g. when using
          Loading...
     </div>
 
+.. _react-using-with-webpack-encore:
+
+Using with Webpack Encore
+-------------------------
+
+With Webpack Encore, register your components with Webpack's ``require.context()``
+instead of ``import.meta.glob()``:
+
+.. code-block:: javascript
+
+    // assets/app.js
+    import { registerReactControllerComponents } from '@symfony/ux-react';
+
+    registerReactControllerComponents(require.context('./react/controllers', true, /\.(j|t)sx?$/));
+
+The Flex recipe sets Encore up for you, adding ``.enableReactPreset()`` to your
+``webpack.config.js`` file. You also need Babel's React preset:
+
+.. code-block:: terminal
+
+    $ npm install -D @babel/preset-react --force
+    $ npm run watch
+
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets
+    through the `@symfony/ux-react npm package`_.
+
 .. _using-with-asset-mapper:
 
 Using with AssetMapper
@@ -161,3 +188,8 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Symfony UX React demo`: https://ux.symfony.com/react
 .. _`Turbo`: https://turbo.hotwire.dev/
 .. _`@symfony/ux-react npm package`: https://www.npmjs.com/package/@symfony/ux-react
+.. _`Symfony Reprise`: https://github.com/symfony/reprise
+.. _`Vite`: https://vite.dev/
+.. _`Rsbuild`: https://rsbuild.dev/
+.. _`@vitejs/plugin-react`: https://www.npmjs.com/package/@vitejs/plugin-react
+.. _`@rsbuild/plugin-react`: https://rsbuild.dev/plugins/list/plugin-react
