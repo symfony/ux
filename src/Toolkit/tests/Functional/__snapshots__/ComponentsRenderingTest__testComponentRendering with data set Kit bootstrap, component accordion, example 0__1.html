@@ -1,0 +1,50 @@
+<!--
+- Kit: Bootstrap
+- Component: Accordion
+- Code:
+```twig
+<twig:Accordion id="faq-accordion">
+    <twig:Accordion:Item id="faq-first" label="What is Symfony UX?" expanded>
+        <strong>Symfony UX connects Symfony with modern frontend tools.</strong>
+        It provides JavaScript packages, Twig components, and integrations designed to work naturally with Symfony applications.
+    </twig:Accordion:Item>
+    <twig:Accordion:Item id="faq-second" label="Can I customize these components?">
+        Yes. Pass HTML attributes and Bootstrap utility classes directly to the Twig components, or customize Bootstrap through Sass and CSS variables.
+    </twig:Accordion:Item>
+    <twig:Accordion:Item id="faq-third" label="Does the accordion support multiple open items?">
+        Set <code>alwaysOpen</code> on the root accordion to omit Bootstrap's parent constraint.
+    </twig:Accordion:Item>
+</twig:Accordion>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div id="faq-accordion" class="accordion">
+<div class="accordion-item">
+    <h2 class="accordion-header" id="faq-first-heading">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq-first-collapse" aria-expanded="true" aria-controls="faq-first-collapse">What is Symfony UX?</button>
+    </h2>
+    <div id="faq-first-collapse" class="accordion-collapse collapse show" aria-labelledby="faq-first-heading" data-bs-parent="#faq-accordion">
+        <div class="accordion-body">
+<strong>Symfony UX connects Symfony with modern frontend tools.</strong>
+        It provides JavaScript packages, Twig components, and integrations designed to work naturally with Symfony applications.
+    </div>
+    </div>
+</div>
+    <div class="accordion-item">
+    <h2 class="accordion-header" id="faq-second-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-second-collapse" aria-expanded="false" aria-controls="faq-second-collapse">Can I customize these components?</button>
+    </h2>
+    <div id="faq-second-collapse" class="accordion-collapse collapse" aria-labelledby="faq-second-heading" data-bs-parent="#faq-accordion">
+        <div class="accordion-body">Yes. Pass HTML attributes and Bootstrap utility classes directly to the Twig components, or customize Bootstrap through Sass and CSS variables.
+    </div>
+    </div>
+</div>
+    <div class="accordion-item">
+    <h2 class="accordion-header" id="faq-third-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-third-collapse" aria-expanded="false" aria-controls="faq-third-collapse">Does the accordion support multiple open items?</button>
+    </h2>
+    <div id="faq-third-collapse" class="accordion-collapse collapse" aria-labelledby="faq-third-heading" data-bs-parent="#faq-accordion">
+        <div class="accordion-body">Set <code>alwaysOpen</code> on the root accordion to omit Bootstrap's parent constraint.
+    </div>
+    </div>
+</div>
+</div>

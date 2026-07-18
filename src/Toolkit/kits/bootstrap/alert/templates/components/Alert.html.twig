@@ -1,0 +1,39 @@
+{# @prop color 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark' The Bootstrap contextual color. #}
+{# @prop dismissible boolean Whether to render a dismiss button and dismissal transition classes. #}
+{# @prop heading string|null The optional alert heading. #}
+{# @prop content string The fallback message when no content block is provided. #}
+{# @block heading The alert heading, rendered before the main content. #}
+{# @block content The alert message and optional additional content. #}
+{# @block close The dismiss control rendered when the alert is dismissible. #}
+{%- props
+    color = 'primary',
+    dismissible = false,
+    heading = null,
+    content = ''
+-%}
+
+{%- set classes = html_classes({
+    alert: true,
+    ('alert-' ~ color): true,
+    'alert-dismissible': dismissible,
+    fade: dismissible,
+    show: dismissible,
+}) -%}
+
+<div {{ attributes.defaults({class: classes, role: 'alert'}) }}>
+    {%- block heading -%}
+        {%- if heading is not null and heading is not empty -%}
+            <h4 class="alert-heading">{{ heading }}</h4>
+        {%- endif -%}
+    {%- endblock -%}
+
+    {%- block content -%}
+        {{- content -}}
+    {%- endblock -%}
+
+    {%- if dismissible -%}
+        {%- block close -%}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        {%- endblock -%}
+    {%- endif -%}
+</div>

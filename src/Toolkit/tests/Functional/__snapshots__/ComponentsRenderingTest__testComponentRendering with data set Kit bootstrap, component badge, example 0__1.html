@@ -1,0 +1,32 @@
+<!--
+- Kit: Bootstrap
+- Component: Badge
+- Code:
+```twig
+<div class="d-flex flex-wrap align-items-center gap-2">
+    <twig:Badge color="primary">New</twig:Badge>
+    <twig:Badge color="success">Published</twig:Badge>
+    <twig:Badge color="warning">Pending</twig:Badge>
+    <twig:Badge color="danger" pill>99+</twig:Badge>
+    <button type="button" class="btn btn-primary position-relative ms-2">
+        Inbox
+        <twig:Badge color="danger" pill class="position-absolute top-0 start-100 translate-middle">
+            12
+            <span class="visually-hidden">unread messages</span>
+        </twig:Badge>
+    </button>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap align-items-center gap-2">
+    <span class="badge text-bg-primary">New</span>
+    <span class="badge text-bg-success">Published</span>
+    <span class="badge text-bg-warning">Pending</span>
+    <span class="badge text-bg-danger rounded-pill">99+</span>
+    <button type="button" class="btn btn-primary position-relative ms-2">
+        Inbox
+        <span class="badge text-bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">12
+            <span class="visually-hidden">unread messages</span>
+        </span>
+    </button>
+</div>

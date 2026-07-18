@@ -1,0 +1,41 @@
+<!--
+- Kit: Bootstrap
+- Component: Card
+- Code:
+```twig
+<div class="d-flex flex-wrap gap-3">
+    {% for alignment, label in {'': 'Start', 'text-center': 'Center', 'text-end': 'End'} %}
+        <twig:Card class="{{ alignment }}" style="width: 18rem;">
+            <twig:Card:Body>
+                <twig:Card:Title>{{ label }} aligned</twig:Card:Title>
+                <twig:Card:Text>Use Bootstrap text utilities on the whole card or an individual section.</twig:Card:Text>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </twig:Card:Body>
+        </twig:Card>
+    {% endfor %}
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap gap-3">
+            <div class="card " style="width: 18rem;">
+<div class="card-body">
+<h5 class="card-title">Start aligned</h5>
+                <p class="card-text">Use Bootstrap text utilities on the whole card or an individual section.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+            <div class="card text-center" style="width: 18rem;">
+<div class="card-body">
+<h5 class="card-title">Center aligned</h5>
+                <p class="card-text">Use Bootstrap text utilities on the whole card or an individual section.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+            <div class="card text-end" style="width: 18rem;">
+<div class="card-body">
+<h5 class="card-title">End aligned</h5>
+                <p class="card-text">Use Bootstrap text utilities on the whole card or an individual section.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,28 @@
+<!--
+- Kit: Bootstrap
+- Component: Button
+- Code:
+```twig
+<div class="d-flex flex-column align-items-start gap-3">
+    <div class="d-flex flex-wrap gap-2">
+        <twig:Button size="lg">Large button</twig:Button>
+        <twig:Button color="secondary" size="lg">Large button</twig:Button>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <twig:Button size="sm">Small button</twig:Button>
+        <twig:Button color="secondary" size="sm">Small button</twig:Button>
+    </div>
+    <twig:Button style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+        Custom button
+    </twig:Button>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column align-items-start gap-3">
+    <div class="d-flex flex-wrap gap-2">
+        <button class="btn btn-primary btn-lg" type="button">Large button</button>        <button class="btn btn-secondary btn-lg" type="button">Large button</button>    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <button class="btn btn-primary btn-sm" type="button">Small button</button>        <button class="btn btn-secondary btn-sm" type="button">Small button</button>    </div>
+    <button class="btn btn-primary" type="button" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Custom button
+    </button>
+</div>

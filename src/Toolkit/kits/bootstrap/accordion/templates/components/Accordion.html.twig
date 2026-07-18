@@ -1,0 +1,16 @@
+{# @prop id string The unique identifier used to coordinate the accordion items. #}
+{# @prop flush boolean Whether to remove outer borders and rounded corners. #}
+{# @prop alwaysOpen boolean Whether multiple accordion items may remain open. #}
+{# @block content The accordion items, typically `Accordion:Item` components. #}
+{%- props id, flush = false, alwaysOpen = false -%}
+{%- do provide('accordion.id', id) -%}
+{%- do provide('accordion.alwaysOpen', alwaysOpen) -%}
+<div {{ attributes.defaults({
+    id: id,
+    class: html_classes({
+        accordion: true,
+        'accordion-flush': flush,
+    }),
+}) }}>
+    {%- block content %}{% endblock -%}
+</div>

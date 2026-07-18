@@ -1,0 +1,34 @@
+<!--
+- Kit: Bootstrap
+- Component: Tooltip
+- Code:
+```twig
+<p class="text-body-secondary mb-0">
+    Placeholder text to demonstrate
+    <twig:Tooltip title="Default tooltip"><a href="#" {{ html_attr(tooltip_trigger_attrs) }}>inline links</a></twig:Tooltip>
+    with tooltips. Content placed here mimics how
+    <twig:Tooltip title="Another tooltip"><a href="#" {{ html_attr(tooltip_trigger_attrs) }}>real text</a></twig:Tooltip>
+    flows around them. You can use
+    <twig:Tooltip title="Another one here too"><a href="#" {{ html_attr(tooltip_trigger_attrs) }}>these tooltips on links</a></twig:Tooltip>
+    in your own interface.
+</p>
+
+<script type="module">
+    import { Tooltip } from 'bootstrap';
+
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((element) => Tooltip.getOrCreateInstance(element));
+</script>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<p class="text-body-secondary mb-0">
+    Placeholder text to demonstrate
+    <a href="#" data-bs-toggle="tooltip" data-bs-title="Default tooltip" data-bs-placement="top">inline links</a>    with tooltips. Content placed here mimics how
+    <a href="#" data-bs-toggle="tooltip" data-bs-title="Another tooltip" data-bs-placement="top">real text</a>    flows around them. You can use
+    <a href="#" data-bs-toggle="tooltip" data-bs-title="Another one here too" data-bs-placement="top">these tooltips on links</a>    in your own interface.
+</p>
+
+<script type="module">
+    import { Tooltip } from 'bootstrap';
+
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((element) => Tooltip.getOrCreateInstance(element));
+</script>

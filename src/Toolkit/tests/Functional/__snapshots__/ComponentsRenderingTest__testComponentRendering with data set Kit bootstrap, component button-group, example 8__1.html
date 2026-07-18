@@ -1,0 +1,97 @@
+<!--
+- Kit: Bootstrap
+- Component: Button Group
+- Code:
+```twig
+<div class="d-flex flex-wrap align-items-start gap-4">
+    <twig:ButtonGroup vertical label="Vertical button group">
+        <twig:Button>Button</twig:Button>
+        <twig:Button>Button</twig:Button>
+        <twig:Button>Button</twig:Button>
+        <twig:Button>Button</twig:Button>
+    </twig:ButtonGroup>
+
+    <twig:ButtonGroup vertical label="Vertical button group with dropdowns">
+        <twig:ButtonGroup label="Dropdown menu">
+            <twig:Button class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</twig:Button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+            </ul>
+        </twig:ButtonGroup>
+        <twig:Button>Button</twig:Button>
+        <twig:Button>Button</twig:Button>
+        <twig:ButtonGroup label="Dropstart menu" class="dropstart">
+            <twig:Button class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</twig:Button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+            </ul>
+        </twig:ButtonGroup>
+        <twig:ButtonGroup label="Dropend menu" class="dropend">
+            <twig:Button class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</twig:Button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+            </ul>
+        </twig:ButtonGroup>
+        <twig:ButtonGroup label="Dropup menu" class="dropup">
+            <twig:Button class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</twig:Button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+            </ul>
+        </twig:ButtonGroup>
+    </twig:ButtonGroup>
+
+    <twig:ButtonGroup vertical label="Vertical radio toggle button group">
+        <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio1" autocomplete="off" checked>
+        <label class="btn btn-outline-danger" for="vbtn-radio1">Radio 1</label>
+        <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio2" autocomplete="off">
+        <label class="btn btn-outline-danger" for="vbtn-radio2">Radio 2</label>
+        <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio3" autocomplete="off">
+        <label class="btn btn-outline-danger" for="vbtn-radio3">Radio 3</label>
+    </twig:ButtonGroup>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap align-items-start gap-4">
+    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+<button class="btn btn-primary" type="button">Button</button>        <button class="btn btn-primary" type="button">Button</button>        <button class="btn btn-primary" type="button">Button</button>        <button class="btn btn-primary" type="button">Button</button>    </div>
+
+    <div class="btn-group-vertical" role="group" aria-label="Vertical button group with dropdowns">
+<div class="btn-group" role="group" aria-label="Dropdown menu">
+<button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</button>            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+            </ul>
+        </div>
+        <button class="btn btn-primary" type="button">Button</button>        <button class="btn btn-primary" type="button">Button</button>        <div class="btn-group dropstart" role="group" aria-label="Dropstart menu">
+<button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</button>            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+            </ul>
+        </div>
+        <div class="btn-group dropend" role="group" aria-label="Dropend menu">
+<button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</button>            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+            </ul>
+        </div>
+        <div class="btn-group dropup" role="group" aria-label="Dropup menu">
+<button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</button>            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+                <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+<input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio1" autocomplete="off" checked>
+        <label class="btn btn-outline-danger" for="vbtn-radio1">Radio 1</label>
+        <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio2" autocomplete="off">
+        <label class="btn btn-outline-danger" for="vbtn-radio2">Radio 2</label>
+        <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio3" autocomplete="off">
+        <label class="btn btn-outline-danger" for="vbtn-radio3">Radio 3</label>
+    </div>
+</div>

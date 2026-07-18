@@ -1,0 +1,43 @@
+{# @prop id string The unique identifier used for the heading and collapsible panel. #}
+{# @prop label string The text displayed in the accordion button. #}
+{# @prop expanded boolean Whether the accordion item is initially expanded. #}
+{# @prop headingTag 'h1'|'h2'|'h3'|'h4'|'h5'|'h6' The heading element to render. #}
+{# @block label The accordion button label. #}
+{# @block content The content displayed inside the collapsible panel. #}
+{%- props id, label = '', expanded = false, headingTag = 'h2' -%}
+{%- set _accordion_id = inject('accordion.id', null) -%}
+{%- set _accordion_always_open = inject('accordion.alwaysOpen', false) -%}
+{%- set heading_id = id ~ '-heading' -%}
+{%- set collapse_id = id ~ '-collapse' -%}
+{%- set final_heading_tag = headingTag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] ? headingTag : 'h2' -%}
+<div {{ attributes.defaults({class: 'accordion-item'}) }}>
+    <{{ final_heading_tag }} class="accordion-header" id="{{ heading_id }}">
+        <button
+            class="{{ html_classes({
+                'accordion-button': true,
+                collapsed: not expanded,
+            }) }}"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#{{ collapse_id }}"
+            aria-expanded="{{ expanded ? 'true' : 'false' }}"
+            aria-controls="{{ collapse_id }}"
+        >
+            {%- block label %}{{ label }}{% endblock -%}
+        </button>
+    </{{ final_heading_tag }}>
+    <div
+        id="{{ collapse_id }}"
+        class="{{ html_classes({
+            'accordion-collapse': true,
+            collapse: true,
+            show: expanded,
+        }) }}"
+        aria-labelledby="{{ heading_id }}"
+        {% if not _accordion_always_open and _accordion_id is not null %}data-bs-parent="#{{ _accordion_id }}"{% endif %}
+    >
+        <div class="accordion-body">
+            {%- block content %}{% endblock -%}
+        </div>
+    </div>
+</div>

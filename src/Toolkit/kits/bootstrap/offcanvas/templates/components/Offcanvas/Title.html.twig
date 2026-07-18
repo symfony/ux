@@ -1,0 +1,12 @@
+{# @prop tag 'h1'|'h2'|'h3'|'h4'|'h5'|'h6' The heading element to render. #}
+{# @block content The offcanvas title. #}
+{%- props tag = 'h5' -%}
+{%- set _offcanvas_title_id = inject('offcanvas.titleId', null) -%}
+{%- set final_tag = tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] ? tag : 'h5' -%}
+{%- set default_attrs = _offcanvas_title_id is null
+    ? {class: 'offcanvas-title'}
+    : {id: _offcanvas_title_id, class: 'offcanvas-title'}
+-%}
+<{{ final_tag }} {{ attributes.defaults(default_attrs) }}>
+    {%- block content %}{% endblock -%}
+</{{ final_tag }}>

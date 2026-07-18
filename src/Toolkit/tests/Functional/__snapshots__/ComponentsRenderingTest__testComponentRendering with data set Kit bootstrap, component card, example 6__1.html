@@ -1,0 +1,52 @@
+<!--
+- Kit: Bootstrap
+- Component: Card
+- Code:
+```twig
+<div class="d-grid gap-3">
+    {% for style in ['tabs', 'pills'] %}
+        <twig:Card class="text-center">
+            <twig:Card:Header>
+                <ul class="nav nav-{{ style }} card-header-{{ style }}">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Active</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                    <li class="nav-item"><a class="nav-link disabled" aria-disabled="true">Disabled</a></li>
+                </ul>
+            </twig:Card:Header>
+            <twig:Card:Body>
+                <twig:Card:Title>Special title treatment</twig:Card:Title>
+                <twig:Card:Text>Card headers can contain Bootstrap tab or pill navigation.</twig:Card:Text>
+            </twig:Card:Body>
+        </twig:Card>
+    {% endfor %}
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-grid gap-3">
+            <div class="card text-center">
+<div class="card-header">
+<ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Active</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                    <li class="nav-item"><a class="nav-link disabled" aria-disabled="true">Disabled</a></li>
+                </ul>
+            </div>
+            <div class="card-body">
+<h5 class="card-title">Special title treatment</h5>
+                <p class="card-text">Card headers can contain Bootstrap tab or pill navigation.</p>
+            </div>
+        </div>
+            <div class="card text-center">
+<div class="card-header">
+<ul class="nav nav-pills card-header-pills">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Active</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                    <li class="nav-item"><a class="nav-link disabled" aria-disabled="true">Disabled</a></li>
+                </ul>
+            </div>
+            <div class="card-body">
+<h5 class="card-title">Special title treatment</h5>
+                <p class="card-text">Card headers can contain Bootstrap tab or pill navigation.</p>
+            </div>
+        </div>
+    </div>

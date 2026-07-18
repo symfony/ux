@@ -1,0 +1,29 @@
+<!--
+- Kit: Bootstrap
+- Component: Toast
+- Code:
+```twig
+<button type="button" class="btn btn-primary mb-3" id="live-toast-trigger">
+    Show live toast
+</button>
+
+<twig:Toast id="live-toast" :show="false">
+    <twig:Toast:Header title="Bootstrap" timestamp="just now" />
+    <twig:Toast:Body>
+        See? Just like this.
+    </twig:Toast:Body>
+</twig:Toast>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<button type="button" class="btn btn-primary mb-3" id="live-toast-trigger">
+    Show live toast
+</button>
+
+<div class="toast" role="status" aria-live="polite" aria-atomic="true" id="live-toast">
+<div class="toast-header">
+<strong class="me-auto">Bootstrap</strong><small class="text-body-secondary">just now</small><button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+</div>
+
+    <div class="toast-body">See? Just like this.
+    </div>
+</div>

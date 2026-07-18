@@ -1,0 +1,46 @@
+<!--
+- Kit: Bootstrap
+- Component: Scrollspy
+- Code:
+```twig
+<div class="w-100">
+    <nav id="demo-scrollspy-nav" class="navbar bg-body-tertiary px-3 mb-3 rounded">
+        <span class="navbar-brand">Scrollspy</span>
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a class="nav-link" href="#demo-item-1">First</a></li>
+            <li class="nav-item"><a class="nav-link" href="#demo-item-2">Second</a></li>
+            <li class="nav-item"><a class="nav-link" href="#demo-item-3">Third</a></li>
+        </ul>
+    </nav>
+
+    <twig:Scrollspy target="#demo-scrollspy-nav" height="260px" class="border rounded p-3">
+        {% for number in 1..3 %}
+            <h4 id="demo-item-{{ number }}">Section {{ number }}</h4>
+            <p>Scroll this region to update the active navigation item.</p>
+            <p class="mb-5">The observed content stays inside its own scrollable container.</p>
+        {% endfor %}
+    </twig:Scrollspy>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="w-100">
+    <nav id="demo-scrollspy-nav" class="navbar bg-body-tertiary px-3 mb-3 rounded">
+        <span class="navbar-brand">Scrollspy</span>
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a class="nav-link" href="#demo-item-1">First</a></li>
+            <li class="nav-item"><a class="nav-link" href="#demo-item-2">Second</a></li>
+            <li class="nav-item"><a class="nav-link" href="#demo-item-3">Third</a></li>
+        </ul>
+    </nav>
+
+    <div class="position-relative overflow-auto border rounded p-3" style="height: 260px;" tabindex="0" data-bs-spy="scroll" data-bs-target="#demo-scrollspy-nav">            <h4 id="demo-item-1">Section 1</h4>
+            <p>Scroll this region to update the active navigation item.</p>
+            <p class="mb-5">The observed content stays inside its own scrollable container.</p>
+                    <h4 id="demo-item-2">Section 2</h4>
+            <p>Scroll this region to update the active navigation item.</p>
+            <p class="mb-5">The observed content stays inside its own scrollable container.</p>
+                    <h4 id="demo-item-3">Section 3</h4>
+            <p>Scroll this region to update the active navigation item.</p>
+            <p class="mb-5">The observed content stays inside its own scrollable container.</p>
+            </div>
+</div>

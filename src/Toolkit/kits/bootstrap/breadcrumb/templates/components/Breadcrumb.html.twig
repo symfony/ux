@@ -1,0 +1,21 @@
+{# @prop divider string|null The custom text used as the divider between breadcrumb items. #}
+{# @prop label string|null The accessible name for the breadcrumb navigation. #}
+{# @block content The ordered list of breadcrumb items. #}
+{%- props
+    divider = null,
+    label = 'breadcrumb'
+-%}
+
+{%- set default_attrs = {} -%}
+{%- if label is not null -%}
+    {%- set default_attrs = default_attrs|merge({'aria-label': label}) -%}
+{%- endif -%}
+{%- if divider is not null -%}
+    {%- set default_attrs = default_attrs|merge({style: "--bs-breadcrumb-divider: '" ~ divider ~ "';"}) -%}
+{%- endif -%}
+
+<nav {{ attributes.defaults(default_attrs) }}>
+    <ol class="breadcrumb">
+        {%- block content -%}{%- endblock -%}
+    </ol>
+</nav>

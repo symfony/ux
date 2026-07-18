@@ -1,0 +1,11 @@
+{# @prop presentation boolean Whether the item has the presentation role in a dynamic tab list. #}
+{# @block content The navigation link, typically a `Nav:Link` component. #}
+{%- props presentation = false -%}
+{%- set default_attrs = {class: 'nav-item'} -%}
+{%- if presentation -%}
+    {%- set default_attrs = default_attrs|merge({role: 'presentation'}) -%}
+{%- endif -%}
+
+<li {{ attributes.defaults(default_attrs) }}>
+    {%- block content -%}{% endblock -%}
+</li>

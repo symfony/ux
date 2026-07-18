@@ -1,0 +1,16 @@
+{# @prop direction 'down'|'center'|'up'|'up-center'|'end'|'start' The direction in which the menu opens. #}
+{# @prop grouped boolean Whether to use a button group wrapper, as required by split toggles. #}
+{# @block content The dropdown toggle and menu. #}
+{%- props direction = 'down', grouped = false -%}
+{%- set classes = html_classes({
+    dropdown: direction == 'down' and not grouped,
+    'btn-group': grouped or direction in ['up', 'end', 'start'],
+    'dropdown-center': direction == 'center',
+    dropup: direction == 'up',
+    'dropup-center dropup': direction == 'up-center',
+    dropend: direction == 'end',
+    dropstart: direction == 'start',
+}) -%}
+<div {{ attributes.defaults({class: classes}) }}>
+    {%- block content %}{% endblock -%}
+</div>

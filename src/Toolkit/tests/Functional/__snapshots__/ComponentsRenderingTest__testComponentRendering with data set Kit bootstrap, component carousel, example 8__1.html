@@ -1,0 +1,18 @@
+<!--
+- Kit: Bootstrap
+- Component: Carousel
+- Code:
+```twig
+<twig:Carousel id="uncontrolled-carousel" ride="carousel" :controls="false" class="w-100">
+    <twig:Carousel:Item active><div class="bg-primary text-white p-5 text-center fs-2">First slide</div></twig:Carousel:Item>
+    <twig:Carousel:Item><div class="bg-success text-white p-5 text-center fs-2">Second slide</div></twig:Carousel:Item>
+    <twig:Carousel:Item><div class="bg-danger text-white p-5 text-center fs-2">Third slide</div></twig:Carousel:Item>
+</twig:Carousel>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div id="uncontrolled-carousel" class="carousel slide w-100" data-bs-ride="carousel">    <div class="carousel-inner">
+<div class="carousel-item active"><div class="bg-primary text-white p-5 text-center fs-2">First slide</div></div>
+    <div class="carousel-item"><div class="bg-success text-white p-5 text-center fs-2">Second slide</div></div>
+    <div class="carousel-item"><div class="bg-danger text-white p-5 text-center fs-2">Third slide</div></div>
+</div>
+</div>

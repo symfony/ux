@@ -1,0 +1,49 @@
+<!--
+- Kit: Bootstrap
+- Component: Card
+- Code:
+```twig
+<div class="d-grid gap-3">
+    <twig:Card>
+        <twig:Card:Header>Featured</twig:Card:Header>
+        <twig:Card:Body>
+            <twig:Card:Title>Special title treatment</twig:Card:Title>
+            <twig:Card:Text>With supporting text below as a natural lead-in to additional content.</twig:Card:Text>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </twig:Card:Body>
+    </twig:Card>
+
+    <twig:Card class="text-center">
+        <twig:Card:Header tag="h5">Featured</twig:Card:Header>
+        <twig:Card:Body>
+            <figure class="mb-0">
+                <blockquote class="blockquote"><p>A well-known quote, contained in a blockquote element.</p></blockquote>
+                <figcaption class="blockquote-footer mb-0">Someone famous in <cite title="Source Title">Source Title</cite></figcaption>
+            </figure>
+        </twig:Card:Body>
+        <twig:Card:Footer class="text-body-secondary">2 days ago</twig:Card:Footer>
+    </twig:Card>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-grid gap-3">
+    <div class="card">
+<div class="card-header">Featured</div>
+        <div class="card-body">
+<h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+
+    <div class="card text-center">
+<h5 class="card-header">Featured</h5>
+        <div class="card-body">
+<figure class="mb-0">
+                <blockquote class="blockquote"><p>A well-known quote, contained in a blockquote element.</p></blockquote>
+                <figcaption class="blockquote-footer mb-0">Someone famous in <cite title="Source Title">Source Title</cite></figcaption>
+            </figure>
+        </div>
+        <div class="card-footer text-body-secondary">2 days ago</div>
+    </div>
+</div>

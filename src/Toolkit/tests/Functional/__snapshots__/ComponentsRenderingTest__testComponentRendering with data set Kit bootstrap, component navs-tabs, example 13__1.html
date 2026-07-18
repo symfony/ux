@@ -1,0 +1,39 @@
+<!--
+- Kit: Bootstrap
+- Component: Navs and Tabs
+- Code:
+```twig
+<twig:Nav type="pills" role="tablist" class="mb-3">
+    <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="pills-home-tab" target="#pills-home" toggle="pill" active>Home</twig:Nav:Link></twig:Nav:Item>
+    <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="pills-profile-tab" target="#pills-profile" toggle="pill">Profile</twig:Nav:Link></twig:Nav:Item>
+    <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="pills-contact-tab" target="#pills-contact" toggle="pill">Contact</twig:Nav:Link></twig:Nav:Item>
+    <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="pills-disabled-tab" target="#pills-disabled" toggle="pill" disabled>Disabled</twig:Nav:Link></twig:Nav:Item>
+</twig:Nav>
+<twig:TabContent>
+    <twig:TabPane id="pills-home" labelledBy="pills-home-tab" active fade>This is the Home pill content.</twig:TabPane>
+    <twig:TabPane id="pills-profile" labelledBy="pills-profile-tab" fade>This is the Profile pill content.</twig:TabPane>
+    <twig:TabPane id="pills-contact" labelledBy="pills-contact-tab" fade>This is the Contact pill content.</twig:TabPane>
+    <twig:TabPane id="pills-disabled" labelledBy="pills-disabled-tab" fade>This pill is disabled.</twig:TabPane>
+</twig:TabContent>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<ul class="nav nav-pills mb-3" role="tablist">
+<li class="nav-item" role="presentation">
+<button class="nav-link active" id="pills-home-tab" role="tab" data-bs-toggle="pill" data-bs-target="#pills-home" aria-controls="pills-home" aria-selected="true" type="button">Home</button>
+</li>
+    <li class="nav-item" role="presentation">
+<button class="nav-link" id="pills-profile-tab" role="tab" data-bs-toggle="pill" data-bs-target="#pills-profile" aria-controls="pills-profile" aria-selected="false" type="button">Profile</button>
+</li>
+    <li class="nav-item" role="presentation">
+<button class="nav-link" id="pills-contact-tab" role="tab" data-bs-toggle="pill" data-bs-target="#pills-contact" aria-controls="pills-contact" aria-selected="false" type="button">Contact</button>
+</li>
+    <li class="nav-item" role="presentation">
+<button class="nav-link disabled" id="pills-disabled-tab" role="tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" aria-controls="pills-disabled" aria-selected="false" type="button" disabled>Disabled</button>
+</li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane fade show active" id="pills-home" role="tabpanel" tabindex="0" aria-labelledby="pills-home-tab">This is the Home pill content.</div>
+    <div class="tab-pane fade" id="pills-profile" role="tabpanel" tabindex="0" aria-labelledby="pills-profile-tab">This is the Profile pill content.</div>
+    <div class="tab-pane fade" id="pills-contact" role="tabpanel" tabindex="0" aria-labelledby="pills-contact-tab">This is the Contact pill content.</div>
+    <div class="tab-pane fade" id="pills-disabled" role="tabpanel" tabindex="0" aria-labelledby="pills-disabled-tab">This pill is disabled.</div>
+</div>

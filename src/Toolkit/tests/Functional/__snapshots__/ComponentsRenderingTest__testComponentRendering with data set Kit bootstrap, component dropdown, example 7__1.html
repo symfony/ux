@@ -1,0 +1,17 @@
+<!--
+- Kit: Bootstrap
+- Component: Dropdown
+- Code:
+```twig
+<twig:Dropdown:Menu class="d-block position-static">
+    <twig:Dropdown:Item href="#">Regular link</twig:Dropdown:Item>
+    <twig:Dropdown:Item href="#" active>Active link</twig:Dropdown:Item>
+    <twig:Dropdown:Item href="#" disabled>Disabled link</twig:Dropdown:Item>
+</twig:Dropdown:Menu>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<ul class="dropdown-menu d-block position-static">
+<li><a class="dropdown-item" href="#">Regular link</a></li>
+    <li><a class="dropdown-item active" href="#" aria-current="true">Active link</a></li>
+    <li><a class="dropdown-item disabled" aria-disabled="true" tabindex="-1">Disabled link</a></li>
+</ul>

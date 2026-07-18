@@ -1,0 +1,25 @@
+<!--
+- Kit: Bootstrap
+- Component: Placeholder
+- Code:
+```twig
+<div class="d-flex flex-column gap-3">
+    <twig:Placeholder:Animation animation="glow" tag="p" class="mb-0">
+        <twig:Placeholder class="col-12" />
+    </twig:Placeholder:Animation>
+
+    <twig:Placeholder:Animation animation="wave" tag="p" class="mb-0">
+        <twig:Placeholder class="col-12" />
+    </twig:Placeholder:Animation>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column gap-3">
+    <p class="placeholder-glow mb-0" aria-hidden="true"><span class="placeholder col-12" aria-hidden="true"></span>
+
+    </p>
+
+    <p class="placeholder-wave mb-0" aria-hidden="true"><span class="placeholder col-12" aria-hidden="true"></span>
+
+    </p>
+</div>

@@ -1,0 +1,18 @@
+<!--
+- Kit: Bootstrap
+- Component: Popover
+- Code:
+```twig
+<twig:Popover
+    content="Disabled controls cannot receive focus, so the wrapper owns the popover."
+    trigger="hover focus"
+>
+    <span class="d-inline-block" tabindex="0" {{ html_attr(popover_trigger_attrs) }}>
+        <button class="btn btn-primary" type="button" disabled>Disabled button</button>
+    </span>
+</twig:Popover>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-content="Disabled controls cannot receive focus, so the wrapper owns the popover." data-bs-trigger="hover focus">
+        <button class="btn btn-primary" type="button" disabled>Disabled button</button>
+    </span>

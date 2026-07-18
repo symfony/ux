@@ -1,0 +1,42 @@
+<!--
+- Kit: Bootstrap
+- Component: Toast
+- Code:
+```twig
+<div class="d-flex flex-column gap-3">
+    {% for color in ['primary', 'success', 'danger'] %}
+        <twig:Toast :autohide="false" class="text-bg-{{ color }} border-0">
+            <div class="d-flex">
+                <twig:Toast:Body>
+                    A {{ color }} toast with matching contextual color.
+                </twig:Toast:Body>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-theme="dark" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </twig:Toast>
+    {% endfor %}
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column gap-3">
+            <div class="toast show text-bg-primary border-0" role="status" aria-live="polite" aria-atomic="true" data-bs-autohide="false">
+<div class="d-flex">
+                <div class="toast-body">A primary toast with matching contextual color.
+                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-theme="dark" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+            <div class="toast show text-bg-success border-0" role="status" aria-live="polite" aria-atomic="true" data-bs-autohide="false">
+<div class="d-flex">
+                <div class="toast-body">A success toast with matching contextual color.
+                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-theme="dark" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+            <div class="toast show text-bg-danger border-0" role="status" aria-live="polite" aria-atomic="true" data-bs-autohide="false">
+<div class="d-flex">
+                <div class="toast-body">A danger toast with matching contextual color.
+                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-theme="dark" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>

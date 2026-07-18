@@ -1,0 +1,79 @@
+<!--
+- Kit: Bootstrap
+- Component: Button Group
+- Code:
+```twig
+<div class="d-flex flex-column gap-3">
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <twig:ButtonGroup label="First group" class="me-2">
+            <twig:Button>1</twig:Button>
+            <twig:Button>2</twig:Button>
+            <twig:Button>3</twig:Button>
+            <twig:Button>4</twig:Button>
+        </twig:ButtonGroup>
+        <twig:ButtonGroup label="Second group" class="me-2">
+            <twig:Button color="secondary">5</twig:Button>
+            <twig:Button color="secondary">6</twig:Button>
+            <twig:Button color="secondary">7</twig:Button>
+        </twig:ButtonGroup>
+        <twig:ButtonGroup label="Third group">
+            <twig:Button color="info">8</twig:Button>
+        </twig:ButtonGroup>
+    </div>
+
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with input group">
+        <twig:ButtonGroup label="First group" class="me-2">
+            <twig:Button color="secondary" outline>1</twig:Button>
+            <twig:Button color="secondary" outline>2</twig:Button>
+            <twig:Button color="secondary" outline>3</twig:Button>
+            <twig:Button color="secondary" outline>4</twig:Button>
+        </twig:ButtonGroup>
+        <div class="input-group">
+            <div class="input-group-text" id="btnGroupAddon">@</div>
+            <input type="text" class="form-control" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon">
+        </div>
+    </div>
+
+    <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with justified input group">
+        <twig:ButtonGroup label="First group">
+            <twig:Button color="secondary" outline>1</twig:Button>
+            <twig:Button color="secondary" outline>2</twig:Button>
+            <twig:Button color="secondary" outline>3</twig:Button>
+            <twig:Button color="secondary" outline>4</twig:Button>
+        </twig:ButtonGroup>
+        <div class="input-group">
+            <div class="input-group-text" id="btnGroupAddon2">@</div>
+            <input type="text" class="form-control" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon2">
+        </div>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column gap-3">
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group me-2" role="group" aria-label="First group">
+<button class="btn btn-primary" type="button">1</button>            <button class="btn btn-primary" type="button">2</button>            <button class="btn btn-primary" type="button">3</button>            <button class="btn btn-primary" type="button">4</button>        </div>
+        <div class="btn-group me-2" role="group" aria-label="Second group">
+<button class="btn btn-secondary" type="button">5</button>            <button class="btn btn-secondary" type="button">6</button>            <button class="btn btn-secondary" type="button">7</button>        </div>
+        <div class="btn-group" role="group" aria-label="Third group">
+<button class="btn btn-info" type="button">8</button>        </div>
+    </div>
+
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with input group">
+        <div class="btn-group me-2" role="group" aria-label="First group">
+<button class="btn btn-outline-secondary" type="button">1</button>            <button class="btn btn-outline-secondary" type="button">2</button>            <button class="btn btn-outline-secondary" type="button">3</button>            <button class="btn btn-outline-secondary" type="button">4</button>        </div>
+        <div class="input-group">
+            <div class="input-group-text" id="btnGroupAddon">@</div>
+            <input type="text" class="form-control" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon">
+        </div>
+    </div>
+
+    <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with justified input group">
+        <div class="btn-group" role="group" aria-label="First group">
+<button class="btn btn-outline-secondary" type="button">1</button>            <button class="btn btn-outline-secondary" type="button">2</button>            <button class="btn btn-outline-secondary" type="button">3</button>            <button class="btn btn-outline-secondary" type="button">4</button>        </div>
+        <div class="input-group">
+            <div class="input-group-text" id="btnGroupAddon2">@</div>
+            <input type="text" class="form-control" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon2">
+        </div>
+    </div>
+</div>

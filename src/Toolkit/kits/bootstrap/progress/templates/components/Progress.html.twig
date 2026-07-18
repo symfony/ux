@@ -1,0 +1,60 @@
+{# @prop value number The current progress value. #}
+{# @prop min number The minimum progress value. #}
+{# @prop max number The maximum progress value. #}
+{# @prop ariaLabel string The accessible name of the progress indicator. #}
+{# @prop label string The fallback text displayed inside the bar. #}
+{# @prop color 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark'|null The Bootstrap background color. #}
+{# @prop striped boolean Whether to display striped styling. #}
+{# @prop animated boolean Whether to animate striped styling. #}
+{# @prop height string|null The custom height of the progress container. #}
+{# @prop barWidth string|false|null The CSS width of the visual bar, or false to omit it. #}
+{# @prop barClass string The additional classes applied to the visual bar. #}
+{# @prop stacked boolean Whether this progress indicator is a segment within a stacked progress bar. #}
+{# @block content The text or custom content displayed inside the visual bar. #}
+{%- props
+    value = 0,
+    min = 0,
+    max = 100,
+    ariaLabel = 'Progress',
+    label = '',
+    color = null,
+    striped = false,
+    animated = false,
+    height = null,
+    barWidth = null,
+    barClass = '',
+    stacked = false
+-%}
+
+{%- set bar_classes = html_classes({
+    'progress-bar': true,
+    ('bg-' ~ color): color in ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'],
+    'progress-bar-striped': striped,
+    'progress-bar-animated': animated and striped,
+    (barClass): barClass != '',
+}) -%}
+{%- set root_attrs = {
+    class: 'progress',
+    role: 'progressbar',
+    'aria-label': ariaLabel,
+    'aria-valuenow': value,
+    'aria-valuemin': min,
+    'aria-valuemax': max,
+} -%}
+{%- if stacked -%}
+    {%- set root_attrs = root_attrs|merge({style: 'width: ' ~ value ~ '%'}) -%}
+{%- elseif height not in [null, ''] -%}
+    {%- set root_attrs = root_attrs|merge({style: 'height: ' ~ height}) -%}
+{%- endif -%}
+{%- set final_bar_width = stacked or barWidth is same as(false) ? null : (barWidth ?? (value ~ '%')) -%}
+
+<div {{ attributes.defaults(root_attrs) }}>
+    <div
+        class="{{ bar_classes }}"
+        {%- if final_bar_width is not null %} style="width: {{ final_bar_width }}"{% endif %}
+    >
+        {%- block content -%}
+            {{- label -}}
+        {%- endblock -%}
+    </div>
+</div>

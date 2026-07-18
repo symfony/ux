@@ -1,0 +1,15 @@
+<!--
+- Kit: Bootstrap
+- Component: Popover
+- Code:
+```twig
+<twig:Popover content="Popover components are opt-in and must be initialized in JavaScript.">
+    <button type="button" class="btn btn-secondary" {{ html_attr(popover_trigger_attrs) }}>
+        Popover trigger
+    </button>
+</twig:Popover>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<button type="button" class="btn btn-secondary" data-bs-toggle="popover" data-bs-content="Popover components are opt-in and must be initialized in JavaScript.">
+        Popover trigger
+    </button>

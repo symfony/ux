@@ -1,0 +1,13 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Accordion",
+    "description": "Build vertically collapsing sections powered by Bootstrap's Collapse plugin.",
+    "version-added": "3.4",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "composer": ["symfony/ux-twig-component:^3.1", "twig/extra-bundle", "twig/html-extra:^3.12.0"]
+    }
+}

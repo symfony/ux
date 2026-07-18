@@ -1,0 +1,62 @@
+<!--
+- Kit: Bootstrap
+- Component: Modal
+- Code:
+```twig
+<div class="d-flex flex-wrap gap-2">
+    {% for size, label in {xl: 'Extra large', lg: 'Large', sm: 'Small'} %}
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#size-{{ size }}-modal">{{ label }} modal</button>
+    {% endfor %}
+</div>
+
+{% for size, label in {xl: 'Extra large', lg: 'Large', sm: 'Small'} %}
+    <twig:Modal id="size-{{ size }}-modal" size="{{ size }}">
+        <twig:Modal:Header><twig:Modal:Title>{{ label }} modal</twig:Modal:Title></twig:Modal:Header>
+        <twig:Modal:Body>Modal content at the <code>{{ size }}</code> size.</twig:Modal:Body>
+        <twig:Modal:Footer><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></twig:Modal:Footer>
+    </twig:Modal>
+{% endfor %}
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap gap-2">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#size-xl-modal">Extra large modal</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#size-lg-modal">Large modal</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#size-sm-modal">Small modal</button>
+    </div>
+
+    <div id="size-xl-modal" class="modal fade" tabindex="-1" aria-labelledby="size-xl-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+<div class="modal-header">
+<h1 id="size-xl-modal-label" class="modal-title fs-5">Extra large modal</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+        <div class="modal-body">Modal content at the <code>xl</code> size.</div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+    </div>
+    </div>
+</div>
+    <div id="size-lg-modal" class="modal fade" tabindex="-1" aria-labelledby="size-lg-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+<div class="modal-header">
+<h1 id="size-lg-modal-label" class="modal-title fs-5">Large modal</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+        <div class="modal-body">Modal content at the <code>lg</code> size.</div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+    </div>
+    </div>
+</div>
+    <div id="size-sm-modal" class="modal fade" tabindex="-1" aria-labelledby="size-sm-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+<div class="modal-header">
+<h1 id="size-sm-modal-label" class="modal-title fs-5">Small modal</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+        <div class="modal-body">Modal content at the <code>sm</code> size.</div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+    </div>
+    </div>
+</div>

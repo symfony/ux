@@ -1,0 +1,71 @@
+{# @prop id string The unique identifier targeted by carousel controls and indicators. #}
+{# @prop controls boolean Whether to render previous and next controls. #}
+{# @prop indicators boolean Whether to render the indicators block. #}
+{# @prop ride 'carousel'|'true'|null Whether and when the carousel starts cycling automatically. #}
+{# @prop interval number|null The delay in milliseconds between automatically cycling slides. #}
+{# @prop pause 'hover'|false|null Whether cycling pauses when the pointer enters the carousel. #}
+{# @prop wrap boolean Whether the carousel cycles continuously. #}
+{# @prop touch boolean Whether touch swipe interactions are enabled. #}
+{# @prop fade boolean Whether slides crossfade instead of moving horizontally. #}
+{# @prop theme 'light'|'dark'|null The component-specific Bootstrap color mode. #}
+{# @block indicators The carousel indicator buttons. #}
+{# @block content The carousel items, typically `Carousel:Item` components. #}
+{# @block previous The visually hidden label for the previous control. #}
+{# @block next The visually hidden label for the next control. #}
+{%- props
+    id,
+    controls = true,
+    indicators = false,
+    ride = null,
+    interval = null,
+    pause = null,
+    wrap = true,
+    touch = true,
+    fade = false,
+    theme = null
+-%}
+{%- set classes = html_classes({
+    carousel: true,
+    slide: true,
+    'carousel-fade': fade,
+}) -%}
+{%- set default_attrs = {id: id, class: classes} -%}
+{%- if ride is not null -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-ride': ride}) -%}
+{%- endif -%}
+{%- if interval is not null -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-interval': interval}) -%}
+{%- endif -%}
+{%- if pause is not null -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-pause': pause is same as(false) ? 'false' : pause}) -%}
+{%- endif -%}
+{%- if not wrap -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-wrap': 'false'}) -%}
+{%- endif -%}
+{%- if not touch -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-touch': 'false'}) -%}
+{%- endif -%}
+{%- if theme is not null -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-theme': theme}) -%}
+{%- endif -%}
+
+<div {{ attributes.defaults(default_attrs) }}>
+    {%- if indicators %}
+        <div class="carousel-indicators">
+            {%- block indicators %}{% endblock -%}
+        </div>
+    {%- endif %}
+    <div class="carousel-inner">
+        {%- block content %}{% endblock -%}
+    </div>
+    {%- if controls %}
+        <button class="carousel-control-prev" type="button" data-bs-target="#{{ id }}" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">{%- block previous %}Previous{% endblock -%}</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#{{ id }}" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">{%- block next %}Next{% endblock -%}</span>
+        </button>
+    {%- endif %}
+</div>

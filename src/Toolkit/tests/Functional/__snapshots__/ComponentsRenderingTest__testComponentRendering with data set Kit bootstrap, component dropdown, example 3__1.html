@@ -1,0 +1,57 @@
+<!--
+- Kit: Bootstrap
+- Component: Dropdown
+- Code:
+```twig
+<div class="d-flex flex-wrap justify-content-center align-items-center gap-3 w-100">
+    <twig:Dropdown>
+        <twig:Dropdown:Toggle color="secondary" size="lg">Large button</twig:Dropdown:Toggle>
+        <twig:Dropdown:Menu><twig:Dropdown:Item href="#">Action</twig:Dropdown:Item></twig:Dropdown:Menu>
+    </twig:Dropdown>
+    <twig:Dropdown grouped>
+        <button class="btn btn-light btn-lg" type="button">Large split button</button>
+        <twig:Dropdown:Toggle color="light" size="lg" split />
+        <twig:Dropdown:Menu><twig:Dropdown:Item href="#">Action</twig:Dropdown:Item></twig:Dropdown:Menu>
+    </twig:Dropdown>
+    <twig:Dropdown>
+        <twig:Dropdown:Toggle color="secondary" size="sm">Small button</twig:Dropdown:Toggle>
+        <twig:Dropdown:Menu><twig:Dropdown:Item href="#">Action</twig:Dropdown:Item></twig:Dropdown:Menu>
+    </twig:Dropdown>
+    <twig:Dropdown grouped>
+        <button class="btn btn-light btn-sm" type="button">Small split button</button>
+        <twig:Dropdown:Toggle color="light" size="sm" split />
+        <twig:Dropdown:Menu><twig:Dropdown:Item href="#">Action</twig:Dropdown:Item></twig:Dropdown:Menu>
+    </twig:Dropdown>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap justify-content-center align-items-center gap-3 w-100">
+    <div class="dropdown">
+<button class="btn btn-secondary btn-lg dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" type="button">Large button</button>
+        <ul class="dropdown-menu">
+<li><a class="dropdown-item" href="#">Action</a></li>
+</ul>
+    </div>
+    <div class="btn-group">
+<button class="btn btn-light btn-lg" type="button">Large split button</button>
+        <button class="btn btn-light btn-lg dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" type="button"><span class="visually-hidden">Toggle Dropdown</span></button>
+
+        <ul class="dropdown-menu">
+<li><a class="dropdown-item" href="#">Action</a></li>
+</ul>
+    </div>
+    <div class="dropdown">
+<button class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" type="button">Small button</button>
+        <ul class="dropdown-menu">
+<li><a class="dropdown-item" href="#">Action</a></li>
+</ul>
+    </div>
+    <div class="btn-group">
+<button class="btn btn-light btn-sm" type="button">Small split button</button>
+        <button class="btn btn-light btn-sm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" type="button"><span class="visually-hidden">Toggle Dropdown</span></button>
+
+        <ul class="dropdown-menu">
+<li><a class="dropdown-item" href="#">Action</a></li>
+</ul>
+    </div>
+</div>

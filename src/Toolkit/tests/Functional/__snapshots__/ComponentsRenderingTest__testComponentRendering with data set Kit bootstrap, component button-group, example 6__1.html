@@ -1,0 +1,36 @@
+<!--
+- Kit: Bootstrap
+- Component: Button Group
+- Code:
+```twig
+<div class="d-flex flex-column align-items-start gap-2">
+    <twig:ButtonGroup size="lg" label="Large button group">
+        <twig:Button outline>Left</twig:Button>
+        <twig:Button outline>Middle</twig:Button>
+        <twig:Button outline>Right</twig:Button>
+    </twig:ButtonGroup>
+
+    <twig:ButtonGroup label="Default button group">
+        <twig:Button outline>Left</twig:Button>
+        <twig:Button outline>Middle</twig:Button>
+        <twig:Button outline>Right</twig:Button>
+    </twig:ButtonGroup>
+
+    <twig:ButtonGroup size="sm" label="Small button group">
+        <twig:Button outline>Left</twig:Button>
+        <twig:Button outline>Middle</twig:Button>
+        <twig:Button outline>Right</twig:Button>
+    </twig:ButtonGroup>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column align-items-start gap-2">
+    <div class="btn-group btn-group-lg" role="group" aria-label="Large button group">
+<button class="btn btn-outline-primary" type="button">Left</button>        <button class="btn btn-outline-primary" type="button">Middle</button>        <button class="btn btn-outline-primary" type="button">Right</button>    </div>
+
+    <div class="btn-group" role="group" aria-label="Default button group">
+<button class="btn btn-outline-primary" type="button">Left</button>        <button class="btn btn-outline-primary" type="button">Middle</button>        <button class="btn btn-outline-primary" type="button">Right</button>    </div>
+
+    <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+<button class="btn btn-outline-primary" type="button">Left</button>        <button class="btn btn-outline-primary" type="button">Middle</button>        <button class="btn btn-outline-primary" type="button">Right</button>    </div>
+</div>

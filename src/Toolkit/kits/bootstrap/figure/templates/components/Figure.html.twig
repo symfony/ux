@@ -1,0 +1,13 @@
+{# @prop caption string|null The optional caption displayed below the figure content. #}
+{# @prop captionAlign 'start'|'center'|'end'|null The horizontal alignment of the caption. #}
+{# @block content The figure content, typically a responsive image. #}
+{%- props caption = null, captionAlign = null -%}
+<figure {{ attributes.defaults({class: 'figure'}) }}>
+    {%- block content %}{% endblock -%}
+    {%- if caption is not null %}
+        <figcaption class="{{ html_classes({
+            'figure-caption': true,
+            ('text-' ~ captionAlign): captionAlign in ['start', 'center', 'end'],
+        }) }}">{{ caption }}</figcaption>
+    {%- endif %}
+</figure>

@@ -1,0 +1,44 @@
+<!--
+- Kit: Bootstrap
+- Component: Modal
+- Code:
+```twig
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#live-demo-modal">
+    Launch demo modal
+</button>
+
+<twig:Modal id="live-demo-modal">
+    <twig:Modal:Header>
+        <twig:Modal:Title>Modal title</twig:Modal:Title>
+    </twig:Modal:Header>
+    <twig:Modal:Body>
+        <p>Woo-hoo, you're reading this text in a modal!</p>
+    </twig:Modal:Body>
+    <twig:Modal:Footer>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+    </twig:Modal:Footer>
+</twig:Modal>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#live-demo-modal">
+    Launch demo modal
+</button>
+
+<div id="live-demo-modal" class="modal fade" tabindex="-1" aria-labelledby="live-demo-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+<div class="modal-header">
+<h1 id="live-demo-modal-label" class="modal-title fs-5">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+    <div class="modal-body">
+<p>Woo-hoo, you're reading this text in a modal!</p>
+    </div>
+    <div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+    </div>
+</div>
+    </div>
+</div>

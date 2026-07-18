@@ -1,0 +1,53 @@
+<!--
+- Kit: Bootstrap
+- Component: Dropdown
+- Code:
+```twig
+<div class="d-flex flex-wrap justify-content-center align-items-start gap-3 w-100">
+    {% for behavior, label in {
+    true: 'Default dropdown',
+    inside: 'Clickable inside',
+    outside: 'Clickable outside',
+    false: 'Manual close',
+    } %}
+        <twig:Dropdown>
+            <twig:Dropdown:Toggle data-bs-auto-close="{{ behavior }}">{{ label }}</twig:Dropdown:Toggle>
+            <twig:Dropdown:Menu>
+                <twig:Dropdown:Item href="#">Menu item</twig:Dropdown:Item>
+                <twig:Dropdown:Item href="#">Menu item</twig:Dropdown:Item>
+            </twig:Dropdown:Menu>
+        </twig:Dropdown>
+    {% endfor %}
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap justify-content-center align-items-start gap-3 w-100">
+            <div class="dropdown">
+<button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" type="button" data-bs-auto-close="true">Default dropdown</button>
+            <ul class="dropdown-menu">
+<li><a class="dropdown-item" href="#">Menu item</a></li>
+                <li><a class="dropdown-item" href="#">Menu item</a></li>
+            </ul>
+        </div>
+            <div class="dropdown">
+<button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" type="button" data-bs-auto-close="inside">Clickable inside</button>
+            <ul class="dropdown-menu">
+<li><a class="dropdown-item" href="#">Menu item</a></li>
+                <li><a class="dropdown-item" href="#">Menu item</a></li>
+            </ul>
+        </div>
+            <div class="dropdown">
+<button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" type="button" data-bs-auto-close="outside">Clickable outside</button>
+            <ul class="dropdown-menu">
+<li><a class="dropdown-item" href="#">Menu item</a></li>
+                <li><a class="dropdown-item" href="#">Menu item</a></li>
+            </ul>
+        </div>
+            <div class="dropdown">
+<button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" type="button" data-bs-auto-close="false">Manual close</button>
+            <ul class="dropdown-menu">
+<li><a class="dropdown-item" href="#">Menu item</a></li>
+                <li><a class="dropdown-item" href="#">Menu item</a></li>
+            </ul>
+        </div>
+    </div>

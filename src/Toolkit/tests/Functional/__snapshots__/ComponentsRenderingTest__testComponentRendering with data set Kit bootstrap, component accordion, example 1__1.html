@@ -1,0 +1,56 @@
+<!--
+- Kit: Bootstrap
+- Component: Accordion
+- Code:
+```twig
+<twig:Accordion id="accordion-example">
+    <twig:Accordion:Item id="accordion-item-one" label="Accordion Item #1" expanded>
+        <strong>This is the first item's accordion body.</strong>
+        It is shown by default until the Collapse plugin updates the appropriate classes and ARIA state.
+    </twig:Accordion:Item>
+    <twig:Accordion:Item id="accordion-item-two" label="Accordion Item #2">
+        <strong>This is the second item's accordion body.</strong>
+        It is hidden by default and can contain nearly any HTML content.
+    </twig:Accordion:Item>
+    <twig:Accordion:Item id="accordion-item-three" label="Accordion Item #3">
+        <strong>This is the third item's accordion body.</strong>
+        Opening it closes the currently open item.
+    </twig:Accordion:Item>
+</twig:Accordion>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div id="accordion-example" class="accordion">
+<div class="accordion-item">
+    <h2 class="accordion-header" id="accordion-item-one-heading">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-item-one-collapse" aria-expanded="true" aria-controls="accordion-item-one-collapse">Accordion Item #1</button>
+    </h2>
+    <div id="accordion-item-one-collapse" class="accordion-collapse collapse show" aria-labelledby="accordion-item-one-heading" data-bs-parent="#accordion-example">
+        <div class="accordion-body">
+<strong>This is the first item's accordion body.</strong>
+        It is shown by default until the Collapse plugin updates the appropriate classes and ARIA state.
+    </div>
+    </div>
+</div>
+    <div class="accordion-item">
+    <h2 class="accordion-header" id="accordion-item-two-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-item-two-collapse" aria-expanded="false" aria-controls="accordion-item-two-collapse">Accordion Item #2</button>
+    </h2>
+    <div id="accordion-item-two-collapse" class="accordion-collapse collapse" aria-labelledby="accordion-item-two-heading" data-bs-parent="#accordion-example">
+        <div class="accordion-body">
+<strong>This is the second item's accordion body.</strong>
+        It is hidden by default and can contain nearly any HTML content.
+    </div>
+    </div>
+</div>
+    <div class="accordion-item">
+    <h2 class="accordion-header" id="accordion-item-three-heading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-item-three-collapse" aria-expanded="false" aria-controls="accordion-item-three-collapse">Accordion Item #3</button>
+    </h2>
+    <div id="accordion-item-three-collapse" class="accordion-collapse collapse" aria-labelledby="accordion-item-three-heading" data-bs-parent="#accordion-example">
+        <div class="accordion-body">
+<strong>This is the third item's accordion body.</strong>
+        Opening it closes the currently open item.
+    </div>
+    </div>
+</div>
+</div>

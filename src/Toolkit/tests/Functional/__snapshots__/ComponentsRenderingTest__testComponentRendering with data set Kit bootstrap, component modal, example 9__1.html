@@ -1,0 +1,55 @@
+<!--
+- Kit: Bootstrap
+- Component: Modal
+- Code:
+```twig
+<button class="btn btn-primary" data-bs-target="#first-toggle-modal" data-bs-toggle="modal">Open first modal</button>
+
+<twig:Modal id="first-toggle-modal" centered>
+    <twig:Modal:Header><twig:Modal:Title>Modal 1</twig:Modal:Title></twig:Modal:Header>
+    <twig:Modal:Body>Show a second modal and hide this one with the button below.</twig:Modal:Body>
+    <twig:Modal:Footer>
+        <button class="btn btn-primary" data-bs-target="#second-toggle-modal" data-bs-toggle="modal">Open second modal</button>
+    </twig:Modal:Footer>
+</twig:Modal>
+
+<twig:Modal id="second-toggle-modal" centered>
+    <twig:Modal:Header><twig:Modal:Title>Modal 2</twig:Modal:Title></twig:Modal:Header>
+    <twig:Modal:Body>Hide this modal and show the first with the button below.</twig:Modal:Body>
+    <twig:Modal:Footer>
+        <button class="btn btn-primary" data-bs-target="#first-toggle-modal" data-bs-toggle="modal">Back to first</button>
+    </twig:Modal:Footer>
+</twig:Modal>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<button class="btn btn-primary" data-bs-target="#first-toggle-modal" data-bs-toggle="modal">Open first modal</button>
+
+<div id="first-toggle-modal" class="modal fade" tabindex="-1" aria-labelledby="first-toggle-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+<div class="modal-header">
+<h1 id="first-toggle-modal-label" class="modal-title fs-5">Modal 1</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+    <div class="modal-body">Show a second modal and hide this one with the button below.</div>
+    <div class="modal-footer">
+<button class="btn btn-primary" data-bs-target="#second-toggle-modal" data-bs-toggle="modal">Open second modal</button>
+    </div>
+</div>
+    </div>
+</div>
+
+<div id="second-toggle-modal" class="modal fade" tabindex="-1" aria-labelledby="second-toggle-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+<div class="modal-header">
+<h1 id="second-toggle-modal-label" class="modal-title fs-5">Modal 2</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+    <div class="modal-body">Hide this modal and show the first with the button below.</div>
+    <div class="modal-footer">
+<button class="btn btn-primary" data-bs-target="#first-toggle-modal" data-bs-toggle="modal">Back to first</button>
+    </div>
+</div>
+    </div>
+</div>

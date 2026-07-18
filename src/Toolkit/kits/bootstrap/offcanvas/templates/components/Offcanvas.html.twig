@@ -1,0 +1,51 @@
+{# @prop id string The unique identifier targeted by offcanvas controls. #}
+{# @prop placement 'start'|'end'|'top'|'bottom' The viewport edge from which the panel appears. #}
+{# @prop responsive 'sm'|'md'|'lg'|'xl'|'xxl'|null The breakpoint at which the panel becomes regular content. #}
+{# @prop backdrop boolean|'static' Whether clicking the backdrop dismisses the panel. #}
+{# @prop scroll boolean Whether the page body remains scrollable while the panel is open. #}
+{# @prop keyboard boolean Whether pressing Escape dismisses the panel. #}
+{# @prop shown boolean Whether to display the panel statically. #}
+{# @prop theme 'light'|'dark'|null The component-specific Bootstrap color mode. #}
+{# @block content The offcanvas structure, typically `Offcanvas:Header` and `Offcanvas:Body`. #}
+{%- props
+    id,
+    placement = 'start',
+    responsive = null,
+    backdrop = true,
+    scroll = false,
+    keyboard = true,
+    shown = false,
+    theme = null
+-%}
+{%- set title_id = id ~ '-label' -%}
+{%- do provide('offcanvas.titleId', title_id) -%}
+{%- set base_class = responsive in ['sm', 'md', 'lg', 'xl', 'xxl'] ? 'offcanvas-' ~ responsive : 'offcanvas' -%}
+{%- set classes = html_classes({
+    (base_class): true,
+    ('offcanvas-' ~ placement): placement in ['start', 'end', 'top', 'bottom'],
+    show: shown,
+}) -%}
+{%- set default_attrs = {
+    id: id,
+    class: classes,
+    tabindex: '-1',
+    'aria-labelledby': title_id,
+} -%}
+{%- if shown -%}
+    {%- set default_attrs = default_attrs|merge({style: 'visibility: visible; transform: none;'}) -%}
+{%- endif -%}
+{%- if backdrop is not same as(true) -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-backdrop': backdrop is same as(false) ? 'false' : 'static'}) -%}
+{%- endif -%}
+{%- if scroll -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-scroll': 'true'}) -%}
+{%- endif -%}
+{%- if not keyboard -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-keyboard': 'false'}) -%}
+{%- endif -%}
+{%- if theme is not null -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-theme': theme}) -%}
+{%- endif -%}
+<div {{ attributes.defaults(default_attrs) }}>
+    {%- block content %}{% endblock -%}
+</div>

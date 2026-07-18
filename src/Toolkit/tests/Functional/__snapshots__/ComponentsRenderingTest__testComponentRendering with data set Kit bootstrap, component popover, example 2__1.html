@@ -1,0 +1,18 @@
+<!--
+- Kit: Bootstrap
+- Component: Popover
+- Code:
+```twig
+<twig:Popover
+    title="Popover title"
+    content="And here's some amazing content. It's very engaging. Right?"
+>
+    <button type="button" class="btn btn-lg btn-danger" {{ html_attr(popover_trigger_attrs) }}>
+        Click to toggle popover
+    </button>
+</twig:Popover>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<button type="button" class="btn btn-lg btn-danger" data-bs-toggle="popover" data-bs-content="And here's some amazing content. It's very engaging. Right?" data-bs-title="Popover title">
+        Click to toggle popover
+    </button>

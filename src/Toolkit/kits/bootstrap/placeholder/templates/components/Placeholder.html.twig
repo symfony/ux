@@ -1,0 +1,14 @@
+{# @prop tag 'span'|'a'|'div'|'p'|'h1'|'h2'|'h3'|'h4'|'h5'|'h6' The HTML element used for the placeholder. #}
+{# @prop size 'lg'|'sm'|'xs'|null The Bootstrap placeholder size. #}
+{%- props
+    tag = 'span',
+    size = null
+-%}
+
+{%- set final_tag = tag in ['span', 'a', 'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'] ? tag : 'span' -%}
+{%- set classes = html_classes({
+    placeholder: true,
+    ('placeholder-' ~ size): size in ['lg', 'sm', 'xs'],
+}) -%}
+
+<{{ final_tag }} {{ attributes.defaults({class: classes, 'aria-hidden': 'true'}) }}></{{ final_tag }}>

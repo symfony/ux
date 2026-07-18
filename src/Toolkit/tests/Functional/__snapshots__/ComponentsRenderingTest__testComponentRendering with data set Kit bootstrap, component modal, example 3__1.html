@@ -1,0 +1,44 @@
+<!--
+- Kit: Bootstrap
+- Component: Modal
+- Code:
+```twig
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#static-backdrop-modal">
+    Launch static backdrop modal
+</button>
+
+<twig:Modal id="static-backdrop-modal" backdrop="static" :keyboard="false">
+    <twig:Modal:Header>
+        <twig:Modal:Title>Modal title</twig:Modal:Title>
+    </twig:Modal:Header>
+    <twig:Modal:Body>
+        <p>I will not close if you click outside of me or press Escape.</p>
+    </twig:Modal:Body>
+    <twig:Modal:Footer>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+    </twig:Modal:Footer>
+</twig:Modal>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#static-backdrop-modal">
+    Launch static backdrop modal
+</button>
+
+<div id="static-backdrop-modal" class="modal fade" tabindex="-1" aria-labelledby="static-backdrop-modal-label" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+<div class="modal-header">
+<h1 id="static-backdrop-modal-label" class="modal-title fs-5">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+    <div class="modal-body">
+<p>I will not close if you click outside of me or press Escape.</p>
+    </div>
+    <div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+    </div>
+</div>
+    </div>
+</div>

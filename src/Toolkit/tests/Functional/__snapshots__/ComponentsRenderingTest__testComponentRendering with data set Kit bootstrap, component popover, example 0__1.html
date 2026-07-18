@@ -1,0 +1,19 @@
+<!--
+- Kit: Bootstrap
+- Component: Popover
+- Code:
+```twig
+<div class="d-flex justify-content-center p-5">
+    <twig:Popover title="Bootstrap popover" content="This content appears beside the trigger.">
+        <button type="button" class="btn btn-primary" {{ html_attr(popover_trigger_attrs) }}>
+            Toggle popover
+        </button>
+    </twig:Popover>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex justify-content-center p-5">
+    <button type="button" class="btn btn-primary" data-bs-toggle="popover" data-bs-content="This content appears beside the trigger." data-bs-title="Bootstrap popover">
+            Toggle popover
+        </button>
+    </div>

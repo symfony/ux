@@ -1,0 +1,37 @@
+<!--
+- Kit: Bootstrap
+- Component: Card
+- Code:
+```twig
+{% set image_url = 'https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=720&q=80' %}
+
+<twig:Card class="mb-3" style="max-width: 540px;">
+    <div class="row g-0">
+        <div class="col-sm-4">
+            <img src="{{ image_url }}" class="img-fluid rounded-start h-100 object-fit-cover" alt="A quiet mountain landscape">
+        </div>
+        <div class="col-sm-8">
+            <twig:Card:Body>
+                <twig:Card:Title>Card title</twig:Card:Title>
+                <twig:Card:Text>This card becomes horizontal at the small breakpoint.</twig:Card:Text>
+                <twig:Card:Text><small class="text-body-secondary">Last updated 3 mins ago</small></twig:Card:Text>
+            </twig:Card:Body>
+        </div>
+    </div>
+</twig:Card>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="card mb-3" style="max-width: 540px;">
+<div class="row g-0">
+        <div class="col-sm-4">
+            <img src="https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&amp;fit=crop&amp;w=720&amp;q=80" class="img-fluid rounded-start h-100 object-fit-cover" alt="A quiet mountain landscape">
+        </div>
+        <div class="col-sm-8">
+            <div class="card-body">
+<h5 class="card-title">Card title</h5>
+                <p class="card-text">This card becomes horizontal at the small breakpoint.</p>
+                <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+            </div>
+        </div>
+    </div>
+</div>

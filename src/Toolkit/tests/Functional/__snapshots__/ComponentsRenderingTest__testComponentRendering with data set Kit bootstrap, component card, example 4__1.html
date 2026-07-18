@@ -1,0 +1,43 @@
+<!--
+- Kit: Bootstrap
+- Component: Card
+- Code:
+```twig
+<div class="row">
+    <div class="col-sm-6 mb-3 mb-sm-0">
+        <twig:Card>
+            <twig:Card:Body>
+                <twig:Card:Title>Grid-sized card</twig:Card:Title>
+                <twig:Card:Text>The surrounding Bootstrap grid controls this card's width.</twig:Card:Text>
+            </twig:Card:Body>
+        </twig:Card>
+    </div>
+    <div class="col-sm-6">
+        <twig:Card class="w-75">
+            <twig:Card:Body>
+                <twig:Card:Title>Utility-sized card</twig:Card:Title>
+                <twig:Card:Text>Width utilities or custom CSS can size a card directly.</twig:Card:Text>
+            </twig:Card:Body>
+        </twig:Card>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="row">
+    <div class="col-sm-6 mb-3 mb-sm-0">
+        <div class="card">
+<div class="card-body">
+<h5 class="card-title">Grid-sized card</h5>
+                <p class="card-text">The surrounding Bootstrap grid controls this card's width.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card w-75">
+<div class="card-body">
+<h5 class="card-title">Utility-sized card</h5>
+                <p class="card-text">Width utilities or custom CSS can size a card directly.</p>
+            </div>
+        </div>
+    </div>
+</div>

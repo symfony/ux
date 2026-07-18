@@ -1,0 +1,46 @@
+<!--
+- Kit: Bootstrap
+- Component: Scrollspy
+- Code:
+```twig
+<div class="w-100">
+    <nav id="navbar-scrollspy" class="navbar bg-body-tertiary px-3 mb-3 rounded">
+        <span class="navbar-brand">Navbar</span>
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a class="nav-link" href="#navbar-first">First</a></li>
+            <li class="nav-item"><a class="nav-link" href="#navbar-second">Second</a></li>
+            <li class="nav-item"><a class="nav-link" href="#navbar-third">Third</a></li>
+        </ul>
+    </nav>
+
+    <twig:Scrollspy target="#navbar-scrollspy" class="border rounded p-3">
+        {% for id, title in {first: 'First heading', second: 'Second heading', third: 'Third heading'} %}
+            <h4 id="navbar-{{ id }}">{{ title }}</h4>
+            <p>Representative content for {{ title|lower }}. Keep scrolling to activate the next link.</p>
+            <div style="min-height: 130px"></div>
+        {% endfor %}
+    </twig:Scrollspy>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="w-100">
+    <nav id="navbar-scrollspy" class="navbar bg-body-tertiary px-3 mb-3 rounded">
+        <span class="navbar-brand">Navbar</span>
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a class="nav-link" href="#navbar-first">First</a></li>
+            <li class="nav-item"><a class="nav-link" href="#navbar-second">Second</a></li>
+            <li class="nav-item"><a class="nav-link" href="#navbar-third">Third</a></li>
+        </ul>
+    </nav>
+
+    <div class="position-relative overflow-auto border rounded p-3" style="height: 200px;" tabindex="0" data-bs-spy="scroll" data-bs-target="#navbar-scrollspy">            <h4 id="navbar-first">First heading</h4>
+            <p>Representative content for first heading. Keep scrolling to activate the next link.</p>
+            <div style="min-height: 130px"></div>
+                    <h4 id="navbar-second">Second heading</h4>
+            <p>Representative content for second heading. Keep scrolling to activate the next link.</p>
+            <div style="min-height: 130px"></div>
+                    <h4 id="navbar-third">Third heading</h4>
+            <p>Representative content for third heading. Keep scrolling to activate the next link.</p>
+            <div style="min-height: 130px"></div>
+            </div>
+</div>

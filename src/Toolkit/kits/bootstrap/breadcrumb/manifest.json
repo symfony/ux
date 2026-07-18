@@ -1,0 +1,10 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Breadcrumb",
+    "description": "Indicates the current page's location within a navigational hierarchy.",
+    "version-added": "3.4",
+    "copy-files": {
+        "templates/": "templates/"
+    }
+}

@@ -1,0 +1,19 @@
+<!--
+- Kit: Bootstrap
+- Component: Button
+- Code:
+```twig
+<div class="d-flex flex-wrap gap-2">
+    <twig:Button tag="a" href="#">Link</twig:Button>
+    <twig:Button type="submit">Button</twig:Button>
+    <twig:Button tag="input" value="Input" />
+    <twig:Button tag="input" type="submit" value="Submit" />
+    <twig:Button tag="input" type="reset" value="Reset" />
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap gap-2">
+    <a class="btn btn-primary" role="button" href="#">Link</a>    <button class="btn btn-primary" type="submit">Button</button>    <input class="btn btn-primary" type="button" value="Input">
+    <input class="btn btn-primary" type="submit" value="Submit">
+    <input class="btn btn-primary" type="reset" value="Reset">
+</div>

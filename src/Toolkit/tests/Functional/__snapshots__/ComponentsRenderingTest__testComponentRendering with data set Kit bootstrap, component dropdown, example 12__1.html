@@ -1,0 +1,65 @@
+<!--
+- Kit: Bootstrap
+- Component: Dropdown
+- Code:
+```twig
+<div class="d-flex flex-wrap justify-content-center align-items-start gap-4 w-100">
+    <twig:Dropdown:Menu tag="form" class="d-block position-static p-4">
+        <div class="mb-3">
+            <label for="dropdown-email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="dropdown-email" placeholder="email@example.com">
+        </div>
+        <div class="mb-3">
+            <label for="dropdown-password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="dropdown-password" placeholder="Password">
+        </div>
+        <div class="mb-3">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="dropdown-check">
+                <label class="form-check-label" for="dropdown-check">Remember me</label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+    </twig:Dropdown:Menu>
+    <twig:Dropdown>
+        <twig:Dropdown:Toggle>Dropdown form</twig:Dropdown:Toggle>
+        <twig:Dropdown:Menu tag="form" class="p-4">
+            <div class="mb-3">
+                <label for="menu-email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="menu-email">
+            </div>
+            <button type="submit" class="btn btn-primary">Sign in</button>
+        </twig:Dropdown:Menu>
+    </twig:Dropdown>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap justify-content-center align-items-start gap-4 w-100">
+    <form class="dropdown-menu d-block position-static p-4">
+<div class="mb-3">
+            <label for="dropdown-email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="dropdown-email" placeholder="email@example.com">
+        </div>
+        <div class="mb-3">
+            <label for="dropdown-password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="dropdown-password" placeholder="Password">
+        </div>
+        <div class="mb-3">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="dropdown-check">
+                <label class="form-check-label" for="dropdown-check">Remember me</label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+    </form>
+    <div class="dropdown">
+<button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" type="button">Dropdown form</button>
+        <form class="dropdown-menu p-4">
+<div class="mb-3">
+                <label for="menu-email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="menu-email">
+            </div>
+            <button type="submit" class="btn btn-primary">Sign in</button>
+        </form>
+    </div>
+</div>

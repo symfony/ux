@@ -1,0 +1,18 @@
+<!--
+- Kit: Bootstrap
+- Component: Navs and Tabs
+- Code:
+```twig
+<twig:Nav tag="nav" type="pills" class="flex-column flex-sm-row" aria-label="Responsive navigation">
+    <twig:Nav:Link href="#" active class="flex-sm-fill text-sm-center">Active</twig:Nav:Link>
+    <twig:Nav:Link href="#" class="flex-sm-fill text-sm-center">Longer nav link</twig:Nav:Link>
+    <twig:Nav:Link href="#" class="flex-sm-fill text-sm-center">Link</twig:Nav:Link>
+    <twig:Nav:Link disabled class="flex-sm-fill text-sm-center">Disabled</twig:Nav:Link>
+</twig:Nav>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<nav class="nav nav-pills flex-column flex-sm-row" aria-label="Responsive navigation"><a class="nav-link active flex-sm-fill text-sm-center" aria-current="page" href="#">Active</a>
+    <a class="nav-link flex-sm-fill text-sm-center" href="#">Longer nav link</a>
+    <a class="nav-link flex-sm-fill text-sm-center" href="#">Link</a>
+    <a class="nav-link disabled flex-sm-fill text-sm-center" aria-disabled="true" tabindex="-1">Disabled</a>
+</nav>

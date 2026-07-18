@@ -1,0 +1,40 @@
+<!--
+- Kit: Bootstrap
+- Component: Scrollspy
+- Code:
+```twig
+<div class="w-100">
+    <nav id="simple-scrollspy" class="hstack gap-3 mb-3">
+        <a class="p-2 link-offset-2 link-underline link-underline-opacity-0" href="#simple-first">First</a>
+        <a class="p-2 link-offset-2 link-underline link-underline-opacity-0" href="#simple-second">Second</a>
+        <a class="p-2 link-offset-2 link-underline link-underline-opacity-0" href="#simple-third">Third</a>
+    </nav>
+
+    <twig:Scrollspy target="#simple-scrollspy" smoothScroll height="240px" class="border rounded p-3">
+        {% for id, title in {first: 'First section', second: 'Second section', third: 'Third section'} %}
+            <h4 id="simple-{{ id }}">{{ title }}</h4>
+            <p>Simple links receive the active class when this section becomes current.</p>
+            <div style="min-height: 130px"></div>
+        {% endfor %}
+    </twig:Scrollspy>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="w-100">
+    <nav id="simple-scrollspy" class="hstack gap-3 mb-3">
+        <a class="p-2 link-offset-2 link-underline link-underline-opacity-0" href="#simple-first">First</a>
+        <a class="p-2 link-offset-2 link-underline link-underline-opacity-0" href="#simple-second">Second</a>
+        <a class="p-2 link-offset-2 link-underline link-underline-opacity-0" href="#simple-third">Third</a>
+    </nav>
+
+    <div class="position-relative overflow-auto border rounded p-3" style="height: 240px;" tabindex="0" data-bs-spy="scroll" data-bs-target="#simple-scrollspy" data-bs-smooth-scroll="true">            <h4 id="simple-first">First section</h4>
+            <p>Simple links receive the active class when this section becomes current.</p>
+            <div style="min-height: 130px"></div>
+                    <h4 id="simple-second">Second section</h4>
+            <p>Simple links receive the active class when this section becomes current.</p>
+            <div style="min-height: 130px"></div>
+                    <h4 id="simple-third">Third section</h4>
+            <p>Simple links receive the active class when this section becomes current.</p>
+            <div style="min-height: 130px"></div>
+            </div>
+</div>

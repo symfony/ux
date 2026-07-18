@@ -1,0 +1,59 @@
+<!--
+- Kit: Bootstrap
+- Component: Scrollspy
+- Code:
+```twig
+<div class="row">
+    <div class="col-4">
+        <nav id="nested-scrollspy" class="h-100 flex-column align-items-stretch pe-3 border-end">
+            <nav class="nav nav-pills flex-column">
+                <a class="nav-link" href="#nested-item-1">Item 1</a>
+                <nav class="nav nav-pills flex-column ms-3">
+                    <a class="nav-link my-1" href="#nested-item-1-1">Item 1-1</a>
+                    <a class="nav-link my-1" href="#nested-item-1-2">Item 1-2</a>
+                </nav>
+                <a class="nav-link" href="#nested-item-2">Item 2</a>
+            </nav>
+        </nav>
+    </div>
+    <div class="col-8">
+        <twig:Scrollspy target="#nested-scrollspy" height="260px" smoothScroll class="p-2">
+            {% for id in ['1', '1-1', '1-2', '2'] %}
+                <h4 id="nested-item-{{ id }}">Item {{ id }}</h4>
+                <p>Nested navigation activates parent and child links as their sections enter view.</p>
+                <div style="min-height: 120px"></div>
+            {% endfor %}
+        </twig:Scrollspy>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="row">
+    <div class="col-4">
+        <nav id="nested-scrollspy" class="h-100 flex-column align-items-stretch pe-3 border-end">
+            <nav class="nav nav-pills flex-column">
+                <a class="nav-link" href="#nested-item-1">Item 1</a>
+                <nav class="nav nav-pills flex-column ms-3">
+                    <a class="nav-link my-1" href="#nested-item-1-1">Item 1-1</a>
+                    <a class="nav-link my-1" href="#nested-item-1-2">Item 1-2</a>
+                </nav>
+                <a class="nav-link" href="#nested-item-2">Item 2</a>
+            </nav>
+        </nav>
+    </div>
+    <div class="col-8">
+        <div class="position-relative overflow-auto p-2" style="height: 260px;" tabindex="0" data-bs-spy="scroll" data-bs-target="#nested-scrollspy" data-bs-smooth-scroll="true">                <h4 id="nested-item-1">Item 1</h4>
+                <p>Nested navigation activates parent and child links as their sections enter view.</p>
+                <div style="min-height: 120px"></div>
+                            <h4 id="nested-item-1-1">Item 1-1</h4>
+                <p>Nested navigation activates parent and child links as their sections enter view.</p>
+                <div style="min-height: 120px"></div>
+                            <h4 id="nested-item-1-2">Item 1-2</h4>
+                <p>Nested navigation activates parent and child links as their sections enter view.</p>
+                <div style="min-height: 120px"></div>
+                            <h4 id="nested-item-2">Item 2</h4>
+                <p>Nested navigation activates parent and child links as their sections enter view.</p>
+                <div style="min-height: 120px"></div>
+                    </div>
+    </div>
+</div>

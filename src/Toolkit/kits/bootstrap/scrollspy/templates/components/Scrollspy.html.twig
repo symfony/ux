@@ -1,0 +1,32 @@
+{# @prop target string The CSS selector of the navigation element controlled by Scrollspy. #}
+{# @prop height string The height of the scrollable region. #}
+{# @prop smoothScroll boolean Whether link activation scrolls smoothly to its target section. #}
+{# @prop rootMargin string|null The optional Intersection Observer root margin. #}
+{# @prop threshold string|null The optional comma-separated Intersection Observer thresholds. #}
+{# @block content The sections observed by Scrollspy. #}
+{%- props
+    target,
+    height = '200px',
+    smoothScroll = false,
+    rootMargin = null,
+    threshold = null
+-%}
+{%- set default_attrs = {
+    class: 'position-relative overflow-auto',
+    style: 'height: ' ~ height ~ ';',
+    tabindex: '0',
+    'data-bs-spy': 'scroll',
+    'data-bs-target': target,
+} -%}
+{%- if smoothScroll -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-smooth-scroll': 'true'}) -%}
+{%- endif -%}
+{%- if rootMargin is not null -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-root-margin': rootMargin}) -%}
+{%- endif -%}
+{%- if threshold is not null -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-threshold': threshold}) -%}
+{%- endif -%}
+<div {{ attributes.defaults(default_attrs) }}>
+    {%- block content %}{% endblock -%}
+</div>

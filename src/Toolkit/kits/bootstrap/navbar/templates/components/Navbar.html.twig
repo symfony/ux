@@ -1,0 +1,29 @@
+{# @prop expand 'always'|'sm'|'md'|'lg'|'xl'|'xxl'|null The breakpoint at which the navbar expands. #}
+{# @prop background string|null The Bootstrap background utility suffix. #}
+{# @prop theme 'light'|'dark'|null The component-specific Bootstrap color mode. #}
+{# @prop label string|null The accessible name for the navigation landmark. #}
+{# @block content The navbar brand, navigation, forms, togglers, and collapsible content. #}
+{%- props
+    expand = null,
+    background = 'body-tertiary',
+    theme = null,
+    label = null
+-%}
+
+{%- set classes = html_classes({
+    navbar: true,
+    'navbar-expand': expand == 'always',
+    ('navbar-expand-' ~ expand): expand in ['sm', 'md', 'lg', 'xl', 'xxl'],
+    ('bg-' ~ background): background is not null,
+}) -%}
+{%- set default_attrs = {class: classes} -%}
+{%- if theme is not null -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-theme': theme}) -%}
+{%- endif -%}
+{%- if label is not null -%}
+    {%- set default_attrs = default_attrs|merge({'aria-label': label}) -%}
+{%- endif -%}
+
+<nav {{ attributes.defaults(default_attrs) }}>
+    {%- block content -%}{%- endblock -%}
+</nav>

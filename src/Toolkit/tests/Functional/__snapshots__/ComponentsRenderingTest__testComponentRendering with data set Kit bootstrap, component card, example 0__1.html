@@ -1,0 +1,32 @@
+<!--
+- Kit: Bootstrap
+- Component: Card
+- Code:
+```twig
+{% set image_url = 'https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=720&q=80' %}
+
+<twig:Card style="width: 22rem;">
+    <twig:Card:Image src="{{ image_url }}" alt="A quiet mountain landscape" />
+    <twig:Card:Body>
+        <twig:Card:Title>Explore the outdoors</twig:Card:Title>
+        <twig:Card:Subtitle class="mb-2 text-body-secondary">Weekend inspiration</twig:Card:Subtitle>
+        <twig:Card:Text>Discover a new trail and make time for a change of scenery.</twig:Card:Text>
+        <a href="#" class="btn btn-primary">Find a trail</a>
+        <twig:Card:Link href="#">View guide</twig:Card:Link>
+    </twig:Card:Body>
+    <twig:Card:Footer class="text-body-secondary">Updated today</twig:Card:Footer>
+</twig:Card>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="card" style="width: 22rem;">
+<img src="https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&amp;fit=crop&amp;w=720&amp;q=80" alt="A quiet mountain landscape" class="card-img-top">
+
+    <div class="card-body">
+<h5 class="card-title">Explore the outdoors</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">Weekend inspiration</h6>
+        <p class="card-text">Discover a new trail and make time for a change of scenery.</p>
+        <a href="#" class="btn btn-primary">Find a trail</a>
+        <a href="#" class="card-link">View guide</a>
+    </div>
+    <div class="card-footer text-body-secondary">Updated today</div>
+</div>

@@ -1,0 +1,20 @@
+<!--
+- Kit: Bootstrap
+- Component: Placeholder
+- Code:
+```twig
+<div class="d-flex flex-column gap-2">
+    <twig:Placeholder class="col-6" />
+    <twig:Placeholder class="w-75" />
+    <twig:Placeholder style="width: 25%;" />
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column gap-2">
+    <span class="placeholder col-6" aria-hidden="true"></span>
+
+    <span class="placeholder w-75" aria-hidden="true"></span>
+
+    <span class="placeholder" aria-hidden="true" style="width: 25%;"></span>
+
+</div>

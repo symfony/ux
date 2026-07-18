@@ -1,0 +1,64 @@
+{# @prop tag 'button'|'a'|'input' The HTML element to render. #}
+{# @prop type 'button'|'submit'|'reset'|null The type used for button and input elements. #}
+{# @prop href string|null The destination used for anchor elements. #}
+{# @prop color 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark'|'link'|null The Bootstrap contextual color. #}
+{# @prop outline boolean Whether to use an outline style. #}
+{# @prop size 'sm'|'lg'|null The Bootstrap button size. #}
+{# @prop disabled boolean Whether the control is disabled. #}
+{# @prop value string|null The value rendered by input elements. #}
+{# @prop content string The fallback label when no content block is provided. #}
+{# @block content The button label and optional inline content. #}
+{%- props
+    tag = 'button',
+    type = null,
+    href = null,
+    color = 'primary',
+    outline = false,
+    size = null,
+    disabled = false,
+    value = null,
+    content = ''
+-%}
+
+{%- set final_tag = tag|lower in ['a', 'input'] ? tag|lower : 'button' -%}
+{%- set final_type = type in ['button', 'submit', 'reset'] ? type : 'button' -%}
+{%- set valid_colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link'] -%}
+{%- set classes = html_classes({
+    btn: true,
+    ('btn-' ~ (outline and color != 'link' ? 'outline-' : '') ~ color): color in valid_colors,
+    ('btn-' ~ size): size in ['lg', 'sm'],
+    disabled: disabled and final_tag == 'a',
+}) -%}
+{%- set default_attrs = {class: classes} -%}
+
+{%- if final_tag == 'a' -%}
+    {%- set default_attrs = default_attrs|merge({role: 'button'}) -%}
+    {%- if disabled -%}
+        {%- set default_attrs = default_attrs|merge({'aria-disabled': 'true', tabindex: '-1'}) -%}
+    {%- else -%}
+        {%- set default_attrs = default_attrs|merge({href: href not in [null, ''] ? href : '#'}) -%}
+    {%- endif -%}
+{%- elseif final_tag == 'input' -%}
+    {%- set default_attrs = default_attrs|merge({
+        type: final_type,
+        value: value ?? content,
+    }) -%}
+    {%- if disabled -%}
+        {%- set default_attrs = default_attrs|merge({disabled: true}) -%}
+    {%- endif -%}
+{%- else -%}
+    {%- set default_attrs = default_attrs|merge({type: final_type}) -%}
+    {%- if disabled -%}
+        {%- set default_attrs = default_attrs|merge({disabled: true}) -%}
+    {%- endif -%}
+{%- endif -%}
+
+{%- if final_tag == 'input' -%}
+    <input {{ attributes.defaults(default_attrs) }}>
+{%- else -%}
+    <{{ final_tag }} {{ attributes.defaults(default_attrs) }}>
+        {%- block content -%}
+            {{- content -}}
+        {%- endblock -%}
+    </{{ final_tag }}>
+{%- endif -%}

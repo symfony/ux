@@ -1,0 +1,35 @@
+<!--
+- Kit: Bootstrap
+- Component: Button
+- Code:
+```twig
+<div class="d-flex flex-column gap-4">
+    <div class="d-grid gap-2">
+        <twig:Button>Button</twig:Button>
+        <twig:Button>Button</twig:Button>
+    </div>
+    <div class="d-grid gap-2 d-md-block">
+        <twig:Button>Button</twig:Button>
+        <twig:Button>Button</twig:Button>
+    </div>
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <twig:Button>Button</twig:Button>
+        <twig:Button>Button</twig:Button>
+    </div>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <twig:Button class="me-md-2">Button</twig:Button>
+        <twig:Button>Button</twig:Button>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column gap-4">
+    <div class="d-grid gap-2">
+        <button class="btn btn-primary" type="button">Button</button>        <button class="btn btn-primary" type="button">Button</button>    </div>
+    <div class="d-grid gap-2 d-md-block">
+        <button class="btn btn-primary" type="button">Button</button>        <button class="btn btn-primary" type="button">Button</button>    </div>
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <button class="btn btn-primary" type="button">Button</button>        <button class="btn btn-primary" type="button">Button</button>    </div>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button class="btn btn-primary me-md-2" type="button">Button</button>        <button class="btn btn-primary" type="button">Button</button>    </div>
+</div>

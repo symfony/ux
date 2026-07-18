@@ -1,0 +1,24 @@
+<!--
+- Kit: Bootstrap
+- Component: Dropdown
+- Code:
+```twig
+<twig:Dropdown:Menu class="d-block position-static">
+    <twig:Dropdown:Header>Dropdown header</twig:Dropdown:Header>
+    <twig:Dropdown:Item href="#">Action</twig:Dropdown:Item>
+    <twig:Dropdown:Item href="#">Another action</twig:Dropdown:Item>
+    <twig:Dropdown:Divider />
+    <twig:Dropdown:Text>Some example text that's free-flowing within the dropdown menu.</twig:Dropdown:Text>
+    <twig:Dropdown:Item href="#">Separated link</twig:Dropdown:Item>
+</twig:Dropdown:Menu>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<ul class="dropdown-menu d-block position-static">
+<li><h6 class="dropdown-header">Dropdown header</h6></li>
+    <li><a class="dropdown-item" href="#">Action</a></li>
+    <li><a class="dropdown-item" href="#">Another action</a></li>
+    <li><hr class="dropdown-divider"></li>
+
+    <li><span class="dropdown-item-text">Some example text that's free-flowing within the dropdown menu.</span></li>
+    <li><a class="dropdown-item" href="#">Separated link</a></li>
+</ul>
