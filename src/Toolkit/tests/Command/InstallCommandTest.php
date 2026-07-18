@@ -66,6 +66,20 @@ class InstallCommandTest extends KernelTestCase
         }
     }
 
+    public function testShouldSuggestFrontendInstallationCommands()
+    {
+        $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
+        mkdir($destination);
+
+        $this->bootKernel();
+        $this->consoleCommand('ux:install button --kit=flowbite-4 --destination='.$destination)
+            ->execute()
+            ->assertSuccessful()
+            ->assertOutputContains('npm install --save flowbite')
+            ->assertOutputContains('php bin/console importmap:require flowbite')
+        ;
+    }
+
     public function testShouldFailAndSuggestAlternativeRecipesWhenKitIsExplicit()
     {
         $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
@@ -129,10 +143,10 @@ class InstallCommandTest extends KernelTestCase
         mkdir($destination);
 
         $this->bootKernel();
-        $this->consoleCommand('ux:install buton --destination='.$destination)
+        $this->consoleCommand('ux:install but --destination='.$destination)
             ->execute()
             ->assertFaulty()
-            ->assertOutputContains('The recipe "buton" does not exist in any official kit')
+            ->assertOutputContains('The recipe "but" does not exist in any official kit')
             ->assertOutputContains('Possible alternatives:')
             ->assertOutputContains('button')
         ;

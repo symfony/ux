@@ -122,17 +122,17 @@ final class PoolTest extends TestCase
         $pool->addNpmPackageDependency(new NpmPackageDependency('tailwindcss', new ConstraintVersion('^3.0.0')));
 
         $this->assertCount(1, $pool->getNpmPackageDependencies());
-        $this->assertEquals('tailwindcss:^3.0.0', (string) $pool->getNpmPackageDependencies()['tailwindcss']);
+        $this->assertEquals('tailwindcss@^3.0.0', (string) $pool->getNpmPackageDependencies()['tailwindcss']);
 
         $pool->addNpmPackageDependency(new NpmPackageDependency('tailwindcss', new ConstraintVersion('^4.0.0')));
 
         $this->assertCount(1, $pool->getNpmPackageDependencies());
-        $this->assertEquals('tailwindcss:^4.0.0', (string) $pool->getNpmPackageDependencies()['tailwindcss']);
+        $this->assertEquals('tailwindcss@^4.0.0', (string) $pool->getNpmPackageDependencies()['tailwindcss']);
 
         $pool->addNpmPackageDependency(new NpmPackageDependency('tailwindcss', new ConstraintVersion('^3.0.0')));
 
         $this->assertCount(1, $pool->getNpmPackageDependencies());
-        $this->assertEquals('tailwindcss:^4.0.0', (string) $pool->getNpmPackageDependencies()['tailwindcss']);
+        $this->assertEquals('tailwindcss@^4.0.0', (string) $pool->getNpmPackageDependencies()['tailwindcss']);
     }
 
     public function testCanAddImportmapPackageDependencies()

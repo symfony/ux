@@ -218,7 +218,7 @@ class InstallCommand extends Command
             $this->io->writeln(\sprintf(' $ <info>npm install --save %s</>', implode(' ', $installationReport->suggestedNpmPackages)));
             $this->io->newLine();
             $this->io->writeln(' # or with Importmap');
-            $this->io->writeln(\sprintf(' $ <info>php bin/console importmap:install %s</>', implode(' ', $installationReport->suggestedImportmapPackages)));
+            $this->io->writeln(\sprintf(' $ <info>php bin/console importmap:require %s</>', implode(' ', $installationReport->suggestedImportmapPackages)));
             $this->io->newLine();
         } elseif ([] !== $installationReport->suggestedNpmPackages) {
             $this->io->writeln(++$stepIndex.'. Install suggested front-end package(s) with the command:');
@@ -228,7 +228,7 @@ class InstallCommand extends Command
         } elseif ([] !== $installationReport->suggestedImportmapPackages) {
             $this->io->writeln(++$stepIndex.'. Install suggested front-end package(s) with the command:');
             $this->io->newLine();
-            $this->io->writeln(\sprintf(' $ <info>php bin/console importmap:install %s</>', implode(' ', $installationReport->suggestedImportmapPackages)));
+            $this->io->writeln(\sprintf(' $ <info>php bin/console importmap:require %s</>', implode(' ', $installationReport->suggestedImportmapPackages)));
             $this->io->newLine();
         }
 

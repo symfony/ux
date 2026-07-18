@@ -74,8 +74,8 @@ class DebugKitCommandTest extends KernelTestCase
                 '| Dependencies | button                                                                           |',
                 '|              | twig/html-extra:^3.12.0                                                          |',
                 '|              | tales-from-a-dev/twig-tailwind-extra:^1.0.0                                      |',
-                '|              | tailwindcss:^4.0.0                                                               |',
-                '|              | @tailwindplus/elements:1                                                         |',
+                '|              | tailwindcss@^4.0.0                                                               |',
+                '|              | @tailwindplus/elements@1                                                         |',
                 '|              | @hotwired/stimulus                                                               |',
                 '+--------------+----------------------------------------------------------------------------------+',
             ]))
@@ -84,7 +84,7 @@ class DebugKitCommandTest extends KernelTestCase
                 '| File(s)      | N/A                                                                              |',
                 '| Dependencies | twig/html-extra:^3.12.0                                                          |',
                 '|              | another/php-package:^2.0                                                         |',
-                '|              | another-npm-package:^1.0.0                                                       |',
+                '|              | another-npm-package@^1.0.0                                                       |',
                 '|              | another-importmap-package                                                        |',
                 '+--------------+----------------------------------------------------------------------------------+',
             ]));

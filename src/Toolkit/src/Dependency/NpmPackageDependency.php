@@ -57,6 +57,6 @@ final class NpmPackageDependency implements DependencyInterface
 
     public function __toString(): string
     {
-        return $this->name.(null !== $this->constraintVersion ? ':'.$this->constraintVersion : '');
+        return $this->name.(null !== $this->constraintVersion ? '@'.$this->constraintVersion : '');
     }
 }
