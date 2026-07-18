@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Toolkit\Installer;
 
+use Symfony\UX\Toolkit\Dependency\DependencyInterface;
 use Symfony\UX\Toolkit\Dependency\ImportmapPackageDependency;
 use Symfony\UX\Toolkit\Dependency\NpmPackageDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
@@ -28,6 +29,10 @@ final class PoolResolver
     public function resolveForRecipe(Kit $kit, Recipe $recipe): Pool
     {
         $pool = new Pool();
+
+        foreach ($kit->manifest->dependencies as $dependency) {
+            $this->addPackageDependency($pool, $dependency);
+        }
 
         // Process the component and its dependencies
         $recipesStack = [$recipe];
@@ -48,24 +53,31 @@ final class PoolResolver
             }
 
             foreach ($currentRecipe->manifest->dependencies as $dependency) {
-                if ($dependency instanceof PhpPackageDependency) {
-                    $pool->addPhpPackageDependency($dependency);
-                } elseif ($dependency instanceof NpmPackageDependency) {
-                    $pool->addNpmPackageDependency($dependency);
-                } elseif ($dependency instanceof ImportmapPackageDependency) {
-                    $pool->addImportmapPackageDependency($dependency);
-                } elseif ($dependency instanceof RecipeDependency) {
+                if ($dependency instanceof RecipeDependency) {
                     if (null === $recipeDependency = $kit->getRecipe($dependency->name)) {
                         throw new \LogicException(\sprintf('The recipe "%s" has a dependency on unregistered recipe "%s".', $currentRecipe->name, $dependency->name));
                     }
 
                     $recipesStack[] = $recipeDependency;
                 } else {
-                    throw new \RuntimeException(\sprintf('Unknown dependency type: "%s"', $dependency::class));
+                    $this->addPackageDependency($pool, $dependency);
                 }
             }
         }
 
         return $pool;
+    }
+
+    private function addPackageDependency(Pool $pool, DependencyInterface $dependency): void
+    {
+        if ($dependency instanceof PhpPackageDependency) {
+            $pool->addPhpPackageDependency($dependency);
+        } elseif ($dependency instanceof NpmPackageDependency) {
+            $pool->addNpmPackageDependency($dependency);
+        } elseif ($dependency instanceof ImportmapPackageDependency) {
+            $pool->addImportmapPackageDependency($dependency);
+        } else {
+            throw new \RuntimeException(\sprintf('Unknown package dependency type: "%s"', $dependency::class));
+        }
     }
 }
