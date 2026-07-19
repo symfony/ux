@@ -1,0 +1,12 @@
+<div class="toolkit-tabs">
+    <div class="toolkit-tabs__list" role="tablist">
+        {% for tab in tabs %}
+        <button type="button" class="toolkit-tab" role="tab" aria-selected="{{ tab.id == active_tab_id ? 'true' : 'false' }}" data-tab-id="{{ tab.id }}">{{ tab.title }}</button>
+        {% endfor %}
+    </div>
+    {% for tab in tabs %}
+    <div class="toolkit-tabs__panel" role="tabpanel" data-tab-id="{{ tab.id }}"{{ tab.id == active_tab_id ? '' : ' hidden' }}>
+        {{ tab.content|raw }}
+    </div>
+    {% endfor %}
+</div>
