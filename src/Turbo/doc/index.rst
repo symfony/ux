@@ -109,8 +109,7 @@ Turbo Drive also converts form submissions to AJAX calls. To get it to
 work, you *do* need to adjust your code to return a 422 status code on a
 validation error (instead of a 200).
 
-If you're using Symfony 6.2+, the ``render()`` method takes
-care of this automatically::
+The ``render()`` method takes care of this automatically::
 
     #[Route('/product/new', name: 'product_new')]
     public function newProduct(Request $request): Response
@@ -130,29 +129,6 @@ care of this automatically::
             'form' => $form,
         ]);
     }
-
-If you're *not* using Symfony 6.2+, adjust your code
-manually:
-
-.. code-block:: diff
-
-      #[Route('/product/new')]
-      public function newProduct(Request $request): Response
-      {
-          $form = $this->createForm(ProductFormType::class);
-          $form->handleRequest($request);
-
-          if ($form->isSubmitted() && $form->isValid()) {
-              // save...
-          }
-
-    +     $response = new Response(null, $form->isSubmitted() ? 422 : 200);
-
-          return $this->render('product/new.html.twig', [
-              'form' => $form->createView()
-    -     ]);
-    +     ], $response);
-      }
 
 This changes the response status code to 422 on validation error, which
 tells Turbo Drive that the form submit failed and it should re-render
