@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-07-19T07:01:14Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/feat/react-vue-esm-glob/src/React/assets/dist"><b>React</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/feat/react-vue-esm-glob/src/React/assets/dist/register_controller.d.ts"><code>register_controller.d.ts</code></a></td>
+            <td>
+                    <code>444 B</code>
+                    / <code>264 B</code>
+                </td><td>
+                    <code>578 B</code><sup>+30% 📈</sup>
+                    / <code>318 B</code><sup>+20% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/feat/react-vue-esm-glob/src/React/assets/dist/register_controller.js"><code>register_controller.js</code></a></td>
+            <td>
+                    <code>936 B</code>
+                    / <code>452 B</code>
+                </td><td>
+                    <code>1.81 kB</code><sup>+98% 📈</sup>
+                    / <code>816 B</code><sup>+81% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/feat/react-vue-esm-glob/src/Vue/assets/dist"><b>Vue</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/feat/react-vue-esm-glob/src/Vue/assets/dist/register_controller.d.ts"><code>register_controller.d.ts</code></a></td>
+            <td>
+                    <code>327 B</code>
+                    / <code>218 B</code>
+                </td><td>
+                    <code>461 B</code><sup>+41% 📈</sup>
+                    / <code>281 B</code><sup>+29% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/feat/react-vue-esm-glob/src/Vue/assets/dist/register_controller.js"><code>register_controller.js</code></a></td>
+            <td>
+                    <code>1.3 kB</code>
+                    / <code>587 B</code>
+                </td><td>
+                    <code>2.06 kB</code><sup>+58% 📈</sup>
+                    / <code>869 B</code><sup>+48% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
