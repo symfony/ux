@@ -20,6 +20,7 @@ use League\CommonMark\Parser\Block\BlockStartParserInterface;
 use League\CommonMark\Parser\Cursor;
 use League\CommonMark\Parser\MarkdownParserStateInterface;
 use Symfony\Component\Filesystem\Path;
+use Symfony\UX\Toolkit\Assert;
 use Symfony\UX\Toolkit\Markdown\Extension\Tabs\Node\Tabs;
 use Symfony\UX\Toolkit\Markdown\PreviewTabsBuilder;
 use Symfony\UX\Toolkit\Recipe\Recipe;
@@ -42,6 +43,10 @@ final class ExampleParser extends AbstractBlockContinueParser
      */
     public function __construct(Recipe $recipe, string $exampleName, array $options)
     {
+        // The example name comes from author-controlled Markdown: reject any "../" traversal
+        // so a directive cannot read files outside the recipe's "examples/" directory.
+        Assert::pathDoesNotEscapeDirectory($exampleName);
+
         $exampleFile = Path::join($recipe->absolutePath, 'examples', $exampleName.'.html.twig');
         if (!is_file($exampleFile)) {
             throw new \InvalidArgumentException(\sprintf('Example "%s" does not exist for recipe "%s".', $exampleName, $recipe->name));

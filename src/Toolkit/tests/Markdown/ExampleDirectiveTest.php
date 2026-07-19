@@ -74,6 +74,13 @@ class ExampleDirectiveTest extends TestCase
         $this->convert('::: example DoesNotExist');
     }
 
+    public function testExampleNameCannotEscapeTheExamplesDirectory()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->convert('::: example ../../../../etc/passwd');
+    }
+
     private function convert(string $markdown, ?PreviewUrlGenerator $urlGenerator = null): string
     {
         $loader = new FilesystemLoader();
