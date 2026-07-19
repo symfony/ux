@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+/// <reference types="vite/client" />
+
 import { describe, expect, it } from 'vitest';
 import { registerVueControllerComponents } from '../../src/register_controller';
 import Hello from '../fixtures/Hello.vue';
@@ -50,6 +52,36 @@ describe('registerVueControllerComponents', () => {
 
     it('errors with a bad name', () => {
         registerVueControllerComponents(createFakeFixturesContext(false));
+        const resolveComponent = window.resolveVueComponent;
+
+        expect(() => resolveComponent('Helloooo')).toThrow(
+            'Vue controller "Helloooo" does not exist. Possible values: Hello'
+        );
+    });
+});
+
+describe('registerVueControllerComponents with import.meta.glob()', () => {
+    it('should resolve eager components synchronously', () => {
+        registerVueControllerComponents(import.meta.glob('../fixtures/*.vue', { eager: true }));
+        const resolveComponent = window.resolveVueComponent;
+
+        expect(resolveComponent).not.toBeUndefined();
+        expect(resolveComponent('Hello')).toBe(Hello);
+    });
+
+    it('should resolve lazy components asynchronously', () => {
+        registerVueControllerComponents(import.meta.glob('../fixtures-lazy/*.vue'));
+        const resolveComponent = window.resolveVueComponent;
+
+        expect(resolveComponent).not.toBeUndefined();
+        // A lazy glob is wrapped in an async component, so it is not the raw component.
+        const component = resolveComponent('Goodbye');
+        expect(component).toBeDefined();
+        expect(component).not.toBe(Goodbye);
+    });
+
+    it('errors with a bad name', () => {
+        registerVueControllerComponents(import.meta.glob('../fixtures/*.vue', { eager: true }));
         const resolveComponent = window.resolveVueComponent;
 
         expect(() => resolveComponent('Helloooo')).toThrow(

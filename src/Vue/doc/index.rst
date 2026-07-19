@@ -15,8 +15,13 @@ Installation
 
 .. note::
 
-    This package works best with WebpackEncore. To use it with AssetMapper, see
-    :ref:`Using with AssetMapper <using-with-asset-mapper>`.
+    This package works best with `Symfony Reprise`_ (`Vite`_ or `Rsbuild`_). To use it with
+    Webpack Encore, see :ref:`Using with Webpack Encore <vue-using-with-webpack-encore>`;
+    to use it with AssetMapper, see :ref:`Using with AssetMapper <using-with-asset-mapper>`.
+
+.. note::
+
+    Symfony Reprise support requires ``symfony/ux-vue`` 3.4.
 
 Install the bundle using Composer and Symfony Flex:
 
@@ -24,20 +29,11 @@ Install the bundle using Composer and Symfony Flex:
 
     $ composer require symfony/ux-vue
 
-The Flex recipe will automatically set things up for you, like adding
-``.enableVueLoader()`` to your ``webpack.config.js`` file and adding code
-to load your Vue components inside ``assets/app.js``.
+The Flex recipe will automatically set things up for you, adding the code to load
+your Vue components inside ``assets/app.js``.
 
-Next, install a package to help Vue:
-
-.. code-block:: terminal
-
-    $ npm install -D vue-loader --force
-    $ npm run watch
-
-.. note::
-
-    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-vue npm package`_
+You also need the Vue plugin for your bundler so it can compile ``.vue`` files:
+`@vitejs/plugin-vue`_ for Vite, or `@rsbuild/plugin-vue`_ for Rsbuild.
 
 That's it! Any files inside ``assets/vue/controllers/`` can now be rendered as
 Vue components.
@@ -53,11 +49,14 @@ code to your ``assets/app.js`` file:
     // assets/app.js
     import { registerVueControllerComponents } from '@symfony/ux-vue';
 
-    registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
+    registerVueControllerComponents(
+        // remove `{ eager: true }` to lazy-load the components instead
+        import.meta.glob('./vue/controllers/**/*.vue', { eager: true })
+    );
 
 This will load all Vue components located in the ``assets/vue/controllers``
-directory. These are known as **Vue controller components**: top-level
-components that are meant to be rendered from Twig.
+directory. These are known as **Vue controller components**: top-level components
+that are meant to be rendered from Twig.
 
 You can render any Vue controller component in Twig using the ``vue_component()``.
 
@@ -163,6 +162,34 @@ used for all the Vue routes:
 
     app.use(router);
 
+.. _vue-using-with-webpack-encore:
+
+Using with Webpack Encore
+-------------------------
+
+With Webpack Encore, register your components with Webpack's ``require.context()``
+instead of ``import.meta.glob()``:
+
+.. code-block:: javascript
+
+    // assets/app.js
+    import { registerVueControllerComponents } from '@symfony/ux-vue';
+
+    registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
+
+The Flex recipe sets Encore up for you, adding ``.enableVueLoader()`` to your
+``webpack.config.js`` file. You also need the Vue loader:
+
+.. code-block:: terminal
+
+    $ npm install -D vue-loader --force
+    $ npm run watch
+
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets
+    through the `@symfony/ux-vue npm package`_.
+
 .. _using-with-asset-mapper:
 
 Using with AssetMapper
@@ -187,3 +214,8 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _ `the related section of the documentation`: https://symfony.com/doc/current/frontend/encore/vuejs.html
 .. _`@symfony/ux-vue npm package`: https://www.npmjs.com/package/@symfony/ux-vue
+.. _`Symfony Reprise`: https://github.com/symfony/reprise
+.. _`Vite`: https://vite.dev/
+.. _`Rsbuild`: https://rsbuild.dev/
+.. _`@vitejs/plugin-vue`: https://www.npmjs.com/package/@vitejs/plugin-vue
+.. _`@rsbuild/plugin-vue`: https://rsbuild.dev/plugins/list/plugin-vue

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.4
+
+- Add support for `import.meta.glob()` (Symfony Reprise) in `registerReactControllerComponents()`
+
 ## 3.0.0
 
 - Minimum required Symfony version is now 7.4

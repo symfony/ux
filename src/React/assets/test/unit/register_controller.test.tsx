@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+/// <reference types="vite/client" />
+
 import { describe, expect, it } from 'vitest';
 import { registerReactControllerComponents } from '../../src/register_controller';
 // @ts-expect-error
@@ -55,6 +57,32 @@ describe('registerReactControllerComponents', () => {
 
         expect(() => resolveComponent('NoDefaultExportComponent')).toThrow(
             'React controller "NoDefaultExportComponent" could not be resolved. Ensure the module exports the controller as a default export.'
+        );
+    });
+});
+
+describe('registerReactControllerComponents with import.meta.glob()', () => {
+    it('registers eager components', () => {
+        registerReactControllerComponents(import.meta.glob('../fixtures/*.{jsx,tsx}', { eager: true }));
+        const resolveComponent = (window as any).resolveReactComponent;
+
+        expect(resolveComponent).not.toBeUndefined();
+        expect(resolveComponent('MyTsxComponent')).toBe(MyTsxComponent);
+        expect(resolveComponent('MyJsxComponent')).not.toBeUndefined();
+    });
+
+    it('errors with a bad name', () => {
+        registerReactControllerComponents(import.meta.glob('../fixtures/*.{jsx,tsx}', { eager: true }));
+        const resolveComponent = (window as any).resolveReactComponent;
+
+        expect(() => resolveComponent('MyABCComponent')).toThrow(
+            'React controller "MyABCComponent" does not exist. Possible values: MyJsxComponent, MyTsxComponent'
+        );
+    });
+
+    it('throws a helpful error when given a lazy glob', () => {
+        expect(() => registerReactControllerComponents(import.meta.glob('../fixtures/*.{jsx,tsx}'))).toThrow(
+            /Enable the "eager" option/
         );
     });
 });
