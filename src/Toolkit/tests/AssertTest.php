@@ -331,4 +331,11 @@ class AssertTest extends TestCase
         // Dot
         yield ['has.dot'];
     }
+
+    public function testCommonMarkAvailableDoesNotThrowWhenInstalled()
+    {
+        $this->expectNotToPerformAssertions();
+
+        Assert::commonMarkAvailable();
+    }
 }
