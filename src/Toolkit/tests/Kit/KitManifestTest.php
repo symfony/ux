@@ -105,6 +105,25 @@ final class KitManifestTest extends TestCase
         $this->assertSame('MIT', $manifest->license);
         $this->assertSame('https://example.com', $manifest->homepage);
         $this->assertSame([], $manifest->dependencies);
+        $this->assertNull($manifest->color);
+        $this->assertNull($manifest->icon);
+    }
+
+    public function testFromJsonWithColorAndIcon()
+    {
+        $manifest = KitManifest::fromJson(<<<JSON
+                {
+                    "name": "kit",
+                    "description": "A kit",
+                    "license": "MIT",
+                    "homepage": "https://example.com",
+                    "color": "#000000",
+                    "icon": "icon.svg"
+                }
+            JSON);
+
+        $this->assertSame('#000000', $manifest->color);
+        $this->assertSame('icon.svg', $manifest->icon);
     }
 
     public function testFromJsonWithDependencies()

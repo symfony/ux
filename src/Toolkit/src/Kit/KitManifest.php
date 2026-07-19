@@ -22,6 +22,8 @@ final class KitManifest
 {
     /**
      * @param list<DependencyInterface> $dependencies Kit-global dependencies, available to every recipe
+     * @param ?string                   $color        Accent color of the kit, used when rendering its documentation
+     * @param ?string                   $icon         Path, relative to the kit root, to an SVG icon of the kit
      */
     public function __construct(
         public readonly string $name,
@@ -30,6 +32,8 @@ final class KitManifest
         public readonly string $homepage,
         public ?string $installAsMarkdown = null,
         public readonly array $dependencies = [],
+        public readonly ?string $color = null,
+        public readonly ?string $icon = null,
     ) {
         Assert::kitName($this->name);
 
@@ -52,6 +56,8 @@ final class KitManifest
             license: $data['license'] ?? throw new \InvalidArgumentException('Property "license" is required.'),
             homepage: $data['homepage'] ?? throw new \InvalidArgumentException('Property "homepage" is required.'),
             dependencies: DependencyParser::parse($data['dependencies'] ?? null, allowRecipe: false),
+            color: $data['color'] ?? null,
+            icon: $data['icon'] ?? null,
         );
     }
 }
