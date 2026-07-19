@@ -4,6 +4,8 @@
 
 - Add new linter checker `ClassMergeSpacingChecker` that checks for invalid `'<literal>' ~ attributes.render(...)` pattern
 - [Common] Add the `common` kit, with design-system agnostic `logout-link` and `post-link` recipes
+- Add a portable Markdown documentation layer: CommonMark extensions (`Alert`, `Tabs`, `Popover`, `CodePreview`, and the recipe-aware `::: example` directive) rendered through overridable `@UXToolkit/markdown/*` Twig templates, plus a `RecipeDocRenderer` that renders a recipe's documentation as HTML or as Markdown. `league/commonmark` is an optional (dev) dependency, only required to render docs as HTML.
+- Add optional `color` and `icon` fields to the kit manifest
 
 ## 3.3.0
 
