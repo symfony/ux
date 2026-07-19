@@ -1,0 +1,99 @@
+/*
+ * Base styles for the Markdown nodes rendered by the Toolkit (tabs, alerts, popover, code preview).
+ * Structural only: colors go through custom properties so a host can theme them, or override the
+ * `@UXToolkit/markdown/*` templates entirely. Shipped as a plain stylesheet (no build).
+ */
+
+.toolkit-tabs {
+    --toolkit-border: var(--toolkit-tabs-border, #e2e2e2);
+    --toolkit-accent: var(--toolkit-tabs-accent, #1a1a1a);
+    border: 1px solid var(--toolkit-border);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.toolkit-tabs__list {
+    display: flex;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--toolkit-border);
+    padding: 0.25rem 0.25rem 0;
+}
+
+.toolkit-tab {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    opacity: 0.65;
+}
+
+.toolkit-tab[aria-selected='true'] {
+    opacity: 1;
+    border-bottom-color: var(--toolkit-accent);
+}
+
+.toolkit-tabs__panel {
+    padding: 1rem;
+}
+
+.toolkit-alert {
+    --toolkit-alert-color: #1a1a1a;
+    border: 1px solid currentColor;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: var(--toolkit-alert-color);
+}
+
+.toolkit-alert--warning {
+    --toolkit-alert-color: #9a6700;
+}
+.toolkit-alert--caution {
+    --toolkit-alert-color: #b00020;
+}
+.toolkit-alert--tip {
+    --toolkit-alert-color: #1a7f37;
+}
+
+.toolkit-popover {
+    position: relative;
+    display: inline-block;
+}
+
+.toolkit-popover__trigger {
+    appearance: none;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    width: 1.1em;
+    height: 1.1em;
+    line-height: 1;
+    font-size: 0.75em;
+    background: transparent;
+    cursor: pointer;
+}
+
+.toolkit-popover__content {
+    position: absolute;
+    z-index: 10;
+    top: 100%;
+    left: 0;
+    min-width: 12rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e2e2e2;
+    border-radius: 0.5rem;
+    background: #fff;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+}
+
+.toolkit-code-preview__frame {
+    display: block;
+    width: 100%;
+    border: 0;
+}
+
+.toolkit-code-preview--static {
+    overflow-x: auto;
+}

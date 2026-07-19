@@ -36,15 +36,15 @@ class TabsExtensionTest extends TestCase
 
         $this->assertSame(
             \sprintf(
-                "<div class=\"toolkit-tabs\">\n"
+                "<div class=\"toolkit-tabs\" data-controller=\"toolkit-tabs\">\n"
                 ."    <div class=\"toolkit-tabs__list\" role=\"tablist\">\n"
-                ."                <button type=\"button\" class=\"toolkit-tab\" role=\"tab\" aria-selected=\"true\" data-tab-id=\"%1\$s\">PHP</button>\n"
-                ."                <button type=\"button\" class=\"toolkit-tab\" role=\"tab\" aria-selected=\"false\" data-tab-id=\"%2\$s\">JavaScript</button>\n"
+                ."                <button type=\"button\" class=\"toolkit-tab\" role=\"tab\" aria-selected=\"true\" data-tab-id=\"%1\$s\" data-toolkit-tabs-target=\"tab\" data-action=\"toolkit-tabs#select\">PHP</button>\n"
+                ."                <button type=\"button\" class=\"toolkit-tab\" role=\"tab\" aria-selected=\"false\" data-tab-id=\"%2\$s\" data-toolkit-tabs-target=\"tab\" data-action=\"toolkit-tabs#select\">JavaScript</button>\n"
                 ."            </div>\n"
-                ."        <div class=\"toolkit-tabs__panel\" role=\"tabpanel\" data-tab-id=\"%1\$s\">\n"
+                ."        <div class=\"toolkit-tabs__panel\" role=\"tabpanel\" data-tab-id=\"%1\$s\" data-toolkit-tabs-target=\"panel\">\n"
                 ."        <p>This is the PHP tab.</p>\n"
                 ."    </div>\n"
-                ."        <div class=\"toolkit-tabs__panel\" role=\"tabpanel\" data-tab-id=\"%2\$s\" hidden>\n"
+                ."        <div class=\"toolkit-tabs__panel\" role=\"tabpanel\" data-tab-id=\"%2\$s\" data-toolkit-tabs-target=\"panel\" hidden>\n"
                 ."        <p>This is the JavaScript tab.</p>\n"
                 ."    </div>\n"
                 ."    </div>\n\n",

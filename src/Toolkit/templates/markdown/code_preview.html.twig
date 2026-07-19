@@ -3,5 +3,8 @@
         <iframe class="toolkit-code-preview__frame" src="{{ previewUrl }}" loading="lazy" style="height: {{ height }};"></iframe>
     </div>
 {% else %}
-    <pre class="toolkit-code-preview toolkit-code-preview--static"><code>{{ code }}</code></pre>
+    <div class="toolkit-code-preview toolkit-code-preview--static" data-controller="toolkit-clipboard">
+        <button type="button" class="toolkit-code-preview__copy" data-toolkit-clipboard-target="button" data-action="toolkit-clipboard#copy">Copy</button>
+        <pre><code data-toolkit-clipboard-target="source">{{ code }}</code></pre>
+    </div>
 {% endif %}

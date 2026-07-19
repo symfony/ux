@@ -28,9 +28,9 @@ class PopoverExtensionTest extends TestCase
         $html = (string) $converter->convert('The prop value (?)[Some **bold** description].');
 
         $this->assertSame(
-            '<p>The prop value <span class="toolkit-popover" data-toolkit-popover-id="prop-description-1">'
-            .'<button type="button" class="toolkit-popover__trigger" aria-describedby="prop-description-1">?</button>'
-            .'<span class="toolkit-popover__content" id="prop-description-1" role="tooltip">Some <strong>bold</strong> description</span>'
+            '<p>The prop value <span class="toolkit-popover" data-controller="toolkit-popover" data-toolkit-popover-id="prop-description-1">'
+            .'<button type="button" class="toolkit-popover__trigger" aria-describedby="prop-description-1" data-action="toolkit-popover#toggle">?</button>'
+            .'<span class="toolkit-popover__content" id="prop-description-1" role="tooltip" data-toolkit-popover-target="content">Some <strong>bold</strong> description</span>'
             ."</span>.</p>\n",
             $html
         );
