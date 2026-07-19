@@ -1,0 +1,7 @@
+{% if previewUrl %}
+    <div class="toolkit-code-preview" style="height: {{ height }};">
+        <iframe class="toolkit-code-preview__frame" src="{{ previewUrl }}" loading="lazy" style="height: {{ height }};"></iframe>
+    </div>
+{% else %}
+    <pre class="toolkit-code-preview toolkit-code-preview--static"><code>{{ code }}</code></pre>
+{% endif %}
