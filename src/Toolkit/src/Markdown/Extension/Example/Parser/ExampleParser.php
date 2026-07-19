@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\Toolkit\Markdown\Extension\Example\Parser;
 
-use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
 use League\CommonMark\Node\Block\AbstractBlock;
 use League\CommonMark\Parser\Block\AbstractBlockContinueParser;
 use League\CommonMark\Parser\Block\BlockContinue;
@@ -21,9 +20,8 @@ use League\CommonMark\Parser\Block\BlockStartParserInterface;
 use League\CommonMark\Parser\Cursor;
 use League\CommonMark\Parser\MarkdownParserStateInterface;
 use Symfony\Component\Filesystem\Path;
-use Symfony\UX\Toolkit\Markdown\Extension\CodePreview\Node\CodePreview;
-use Symfony\UX\Toolkit\Markdown\Extension\Tabs\Node\Tab;
 use Symfony\UX\Toolkit\Markdown\Extension\Tabs\Node\Tabs;
+use Symfony\UX\Toolkit\Markdown\PreviewTabsBuilder;
 use Symfony\UX\Toolkit\Recipe\Recipe;
 
 /**
@@ -51,18 +49,7 @@ final class ExampleParser extends AbstractBlockContinueParser
 
         $code = trim((string) file_get_contents($exampleFile));
 
-        $this->tabs = new Tabs();
-
-        $previewTab = new Tab('Preview');
-        $previewTab->appendChild(new CodePreview($code, $options));
-        $this->tabs->appendChild($previewTab);
-
-        $codeTab = new Tab('Code');
-        $fencedCode = new FencedCode(3, '`', 0);
-        $fencedCode->setInfo('twig');
-        $fencedCode->setLiteral($code);
-        $codeTab->appendChild($fencedCode);
-        $this->tabs->appendChild($codeTab);
+        $this->tabs = PreviewTabsBuilder::build($code, $options);
     }
 
     public static function createBlockStartParser(Recipe $recipe): BlockStartParserInterface
