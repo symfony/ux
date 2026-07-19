@@ -19,8 +19,6 @@ use Symfony\UX\Translator\TranslationsDumper;
  * @author Hugo Alliaume <hugo@alliau.me>
  *
  * @internal
- *
- * @experimental
  */
 class TranslationsCacheWarmer implements CacheWarmerInterface
 {

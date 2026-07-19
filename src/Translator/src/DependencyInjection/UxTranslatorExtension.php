@@ -22,8 +22,6 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
  * @author Hugo Alliaume <hugo@alliau.me>
  *
  * @internal
- *
- * @experimental
  */
 class UxTranslatorExtension extends Extension implements PrependExtensionInterface
 {

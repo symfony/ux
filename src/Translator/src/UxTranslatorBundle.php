@@ -17,8 +17,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  * @author Hugo Alliaume <hugo@alliau.me>
  *
  * @final
- *
- * @experimental
  */
 class UxTranslatorBundle extends Bundle
 {

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.4.0
+
+- The component is not experimental anymore
+
 ## 3.1.0
 
 - Add `ux:translator:warm-cache` console command to manually dump JS/TS translation files
