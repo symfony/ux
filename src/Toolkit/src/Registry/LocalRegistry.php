@@ -32,6 +32,11 @@ final class LocalRegistry implements RegistryInterface
         return 1 === preg_match('/^[a-zA-Z0-9_-]+$/', $kitName);
     }
 
+    public static function exists(string $kitName): bool
+    {
+        return self::supports($kitName) && is_dir(Path::join(self::$kitsDir, $kitName));
+    }
+
     public function __construct(
         private readonly KitFactory $kitFactory,
         private readonly Filesystem $filesystem,
@@ -64,5 +69,18 @@ final class LocalRegistry implements RegistryInterface
         }
 
         return $availableKitsName;
+    }
+
+    /**
+     * @return array<string, Kit> the available kits, loaded and keyed by name
+     */
+    public function getAvailableKits(): array
+    {
+        $kits = [];
+        foreach (self::getAvailableKitsName() as $kitName) {
+            $kits[$kitName] = $this->getKit($kitName);
+        }
+
+        return $kits;
     }
 }

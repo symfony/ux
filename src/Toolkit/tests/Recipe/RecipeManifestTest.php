@@ -62,19 +62,6 @@ final class RecipeManifestTest extends TestCase
             JSON);
     }
 
-    public function testFromJsonWithMissingDescription()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Property "description" is required.');
-
-        RecipeManifest::fromJson(<<<JSON
-                {
-                    "type": "component",
-                    "name": "MyComponent"
-                }
-            JSON);
-    }
-
     public function testFromJsonWithInvalidDependencies()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -84,7 +71,6 @@ final class RecipeManifestTest extends TestCase
                 {
                     "type": "component",
                     "name": "MyComponent",
-                    "description": "An incredible component",
                     "copy-files": {
                         "templates/": "templates/"
                     },
@@ -102,7 +88,6 @@ final class RecipeManifestTest extends TestCase
                 {
                     "type": "component",
                     "name": "MyComponent",
-                    "description": "An incredible component",
                     "copy-files": {
                         "templates/": "templates/"
                     },
@@ -122,7 +107,6 @@ final class RecipeManifestTest extends TestCase
                 {
                     "type": "component",
                     "name": "MyComponent",
-                    "description": "An incredible component",
                     "copy-files": {
                         "templates/": "templates/"
                     },
@@ -143,7 +127,6 @@ final class RecipeManifestTest extends TestCase
                 {
                     "type": "component",
                     "name": "MyComponent",
-                    "description": "An incredible component",
                     "copy-files": {
                         "templates/": "templates/"
                     },
@@ -165,7 +148,6 @@ final class RecipeManifestTest extends TestCase
                 {
                     "type": "component",
                     "name": "MyComponent",
-                    "description": "An incredible component",
                     "copy-files": {
                         "templates/": "templates/"
                     },
@@ -188,7 +170,6 @@ final class RecipeManifestTest extends TestCase
                 {
                     "type": "component",
                     "name": "MyComponent",
-                    "description": "An incredible component",
                     "version-added": "",
                     "copy-files": {
                         "templates/": "templates/"
@@ -206,7 +187,6 @@ final class RecipeManifestTest extends TestCase
                 {
                     "type": "component",
                     "name": "MyComponent",
-                    "description": "An incredible component",
                     "copy-files": {
                         "../../../../tmp/PWNED": "templates/"
                     }
@@ -223,7 +203,6 @@ final class RecipeManifestTest extends TestCase
                 {
                     "type": "component",
                     "name": "MyComponent",
-                    "description": "An incredible component",
                     "copy-files": {
                         "templates/": "../../../../tmp/PWNED"
                     }
@@ -240,7 +219,6 @@ final class RecipeManifestTest extends TestCase
                 {
                     "type": "component",
                     "name": "MyComponent",
-                    "description": "An incredible component",
                     "copy-files": {
                         "templates/": "..\\\\..\\\\tmp\\\\PWNED"
                     }
@@ -254,7 +232,6 @@ final class RecipeManifestTest extends TestCase
                 {
                     "type": "component",
                     "name": "MyComponent",
-                    "description": "An incredible component",
                     "copy-files": {
                         "templates/": "templates/"
                     }
@@ -263,7 +240,6 @@ final class RecipeManifestTest extends TestCase
 
         $this->assertSame(RecipeType::Component, $manifest->type);
         $this->assertSame('MyComponent', $manifest->name);
-        $this->assertSame('An incredible component', $manifest->description);
         $this->assertSame(['templates/' => 'templates/'], $manifest->copyFiles);
         $this->assertEquals([], $manifest->dependencies);
         $this->assertNull($manifest->versionAdded);
@@ -275,7 +251,6 @@ final class RecipeManifestTest extends TestCase
                 {
                     "type": "component",
                     "name": "MyComponent",
-                    "description": "An incredible component",
                     "version-added": "2.35",
                     "copy-files": {
                         "templates/": "templates/"
@@ -302,7 +277,6 @@ final class RecipeManifestTest extends TestCase
 
         $this->assertSame(RecipeType::Component, $manifest->type);
         $this->assertSame('MyComponent', $manifest->name);
-        $this->assertSame('An incredible component', $manifest->description);
         $this->assertSame('2.35', $manifest->versionAdded);
         $this->assertSame(['templates/' => 'templates/'], $manifest->copyFiles);
         $this->assertEquals([

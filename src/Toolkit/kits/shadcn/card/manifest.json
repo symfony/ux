@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Card",
-    "description": "Displays a card with header, content, and footer.",
     "copy-files": {
         "templates/": "templates/"
     },

@@ -3,5 +3,7 @@
     "name": "Shadcn UI",
     "description": "Component based on the Shadcn UI library, one of the most popular design systems in JavaScript world.",
     "license": "MIT",
-    "homepage": "https://ux.symfony.com/toolkit/kits/shadcn"
+    "homepage": "https://ux.symfony.com/toolkit/kits/shadcn",
+    "color": "hsl(0,0%,0%)",
+    "icon": "icon.svg"
 }

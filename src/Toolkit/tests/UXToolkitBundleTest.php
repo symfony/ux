@@ -14,6 +14,7 @@ namespace Symfony\UX\Toolkit\Tests;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\Toolkit\Component\ComponentDocParser;
 use Symfony\UX\Toolkit\UXToolkitBundle;
+use Twig\Environment;
 
 class UXToolkitBundleTest extends KernelTestCase
 {
@@ -31,5 +32,15 @@ class UXToolkitBundleTest extends KernelTestCase
         $container = self::$kernel->getContainer();
 
         $this->assertInstanceOf(ComponentDocParser::class, $container->get('ux_toolkit.component.component_doc_parser'));
+    }
+
+    public function testToolkitTemplateNamespaceResolves()
+    {
+        self::bootKernel();
+
+        /** @var Environment $twig */
+        $twig = self::getContainer()->get('twig');
+
+        $this->assertTrue($twig->getLoader()->exists('@UXToolkit/markdown/alert.html.twig'));
     }
 }

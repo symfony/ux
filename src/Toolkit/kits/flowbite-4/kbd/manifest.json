@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Kbd",
-    "description": "The KBD (Keyboard) component can be used to indicate a textual user input from the keyboard inside other elements such as in text, tables, cards, and more.",
     "version-added": "2.35",
     "copy-files": {
         "templates/": "templates/"

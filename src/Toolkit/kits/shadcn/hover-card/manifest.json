@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Hover Card",
-    "description": "For sighted users to preview content available behind a link.",
     "version-added": "3.0",
     "copy-files": {
         "assets/": "assets/",

@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Dialog",
-    "description": "A window overlaid on either the primary window or another dialog window, rendering the content underneath inert.",
     "copy-files": {
         "assets/": "assets/",
         "templates/": "templates/"

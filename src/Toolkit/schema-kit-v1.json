@@ -22,6 +22,14 @@
             "format": "uri",
             "description": "The homepage URL for the kit, typically where users can find more information or documentation."
         },
+        "color": {
+            "type": "string",
+            "description": "Accent color of the kit (any CSS color), used when rendering the kit's documentation."
+        },
+        "icon": {
+            "type": "string",
+            "description": "Path, relative to the kit root, to an SVG icon of the kit (e.g. 'icon.svg')."
+        },
         "dependencies": {
             "description": "List of kit-global dependencies, available to every recipe of the kit (e.g. a library installed once during the kit setup).",
             "type": "object",

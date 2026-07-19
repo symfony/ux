@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Empty",
-    "description": "Use the Empty component to display an empty state.",
     "copy-files": {
         "templates/": "templates/"
     },

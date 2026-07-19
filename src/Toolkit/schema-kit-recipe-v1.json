@@ -3,7 +3,7 @@
     "title": "Kit recipe schema",
     "description": "Schema for describing a Kit recipe for the Symfony UX Toolkit.",
     "type": "object",
-    "required": ["name", "description"],
+    "required": ["name"],
     "properties": {
         "type": {
             "type": "string",
@@ -13,10 +13,6 @@
         "name": {
             "type": "string",
             "description": "The name of the Recipe"
-        },
-        "description": {
-            "description": "A brief description of the Recipe",
-            "type": "string"
         },
         "version-added": {
             "type": "string",

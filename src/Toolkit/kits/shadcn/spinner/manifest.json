@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Spinner",
-    "description": "An indicator that can be used to show a loading state.",
     "copy-files": {
         "templates/": "templates/"
     },

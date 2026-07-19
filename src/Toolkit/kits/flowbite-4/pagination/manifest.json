@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Pagination",
-    "description": "Use the Tailwind CSS pagination element to indicate a series of content across various pages based on multiple styles and sizes",
     "version-added": "2.35",
     "copy-files": {
         "templates/": "templates/"

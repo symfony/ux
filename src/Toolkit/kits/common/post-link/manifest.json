@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Post Link",
-    "description": "A link submitted as a form, with optional HTTP method spoofing, CSRF protection, and a confirmation prompt.",
     "version-added": "3.4",
     "copy-files": {
         "templates/": "templates/"

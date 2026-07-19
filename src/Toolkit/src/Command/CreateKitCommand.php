@@ -112,7 +112,6 @@ class CreateKitCommand extends Command
         $this->filesystem->dumpFile('Button/manifest.json', json_encode([
             '$schema' => '../vendor/symfony/ux-toolkit/schema-kit-recipe-v1.json',
             'name' => 'Button',
-            'description' => 'A clickable element that triggers actions or events, supporting various styles and states.',
             'copy-files' => [
                 'templates/' => 'templates/',
             ],

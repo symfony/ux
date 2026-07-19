@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Breadcrumb",
-    "description": "Displays the path to the current resource using a hierarchy of links.",
     "copy-files": {
         "templates/": "templates/"
     },

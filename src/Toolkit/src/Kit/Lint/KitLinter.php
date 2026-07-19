@@ -16,6 +16,7 @@ use Symfony\UX\Toolkit\Kit\Lint\Checker\ClassMergeSpacingChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\ComponentDocChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\ComposerSymbolChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\CopyFilesExistenceChecker;
+use Symfony\UX\Toolkit\Kit\Lint\Checker\DocHeadingLevelChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\JsImportChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\MissingRecipeManifestChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\RecipeReferenceChecker;
@@ -49,6 +50,7 @@ final class KitLinter
             new ComposerSymbolChecker(),
             new ComponentDocChecker(),
             new ClassMergeSpacingChecker(),
+            new DocHeadingLevelChecker(),
         ];
     }
 

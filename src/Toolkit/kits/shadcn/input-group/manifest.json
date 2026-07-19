@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Input Group",
-    "description": "Add addons, buttons, and helper content to inputs.",
     "version-added": "3.0",
     "copy-files": {
         "templates/": "templates/"

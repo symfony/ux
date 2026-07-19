@@ -23,6 +23,11 @@ class UXToolkitBundle extends AbstractBundle
 {
     protected string $extensionAlias = 'ux_toolkit';
 
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
+    }
+
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $container->import('../config/services.php');

@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Indicator",
-    "description": "Use the indicator component to show a number count, account status, or as a loading label positioned relative to the parent component coded with Tailwind CSS",
     "version-added": "2.35",
     "copy-files": {
         "templates/": "templates/"

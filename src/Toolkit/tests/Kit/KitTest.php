@@ -42,17 +42,17 @@ final class KitTest extends TestCase
         $kit->addRecipe(new Recipe(
             'alert',
             __DIR__.'/alert',
-            new RecipeManifest(RecipeType::Component, 'Alert', 'Description', []),
+            new RecipeManifest(RecipeType::Component, 'Alert', []),
         ));
         $kit->addRecipe(new Recipe(
             'table',
             __DIR__.'/table',
-            new RecipeManifest(RecipeType::Component, 'Table', 'Description', []),
+            new RecipeManifest(RecipeType::Component, 'Table', []),
         ));
         $kit->addRecipe(new Recipe(
             'login',
             __DIR__.'/Login',
-            new RecipeManifest(RecipeType::Block, 'Login', 'Description', []),
+            new RecipeManifest(RecipeType::Block, 'Login', []),
         ));
 
         $this->assertCount(3, $kit->getRecipes());
@@ -69,12 +69,12 @@ final class KitTest extends TestCase
         $kit->addRecipe(new Recipe(
             'alert',
             __DIR__.'/alert',
-            new RecipeManifest(RecipeType::Component, 'Alert', 'Description', []),
+            new RecipeManifest(RecipeType::Component, 'Alert', []),
         ));
         $kit->addRecipe(new Recipe(
             'alert',
             __DIR__.'/alert',
-            new RecipeManifest(RecipeType::Component, 'Alert', 'Description', []),
+            new RecipeManifest(RecipeType::Component, 'Alert', []),
         ));
     }
 
@@ -84,12 +84,12 @@ final class KitTest extends TestCase
         $kit->addRecipe(new Recipe(
             'alert',
             __DIR__.'/Alert',
-            new RecipeManifest(RecipeType::Component, 'Alert', 'Description', []),
+            new RecipeManifest(RecipeType::Component, 'Alert', []),
         ));
         $kit->addRecipe(new Recipe(
             'table',
             __DIR__.'/Table',
-            new RecipeManifest(RecipeType::Component, 'Table', 'Description', []),
+            new RecipeManifest(RecipeType::Component, 'Table', []),
         ));
 
         $this->assertSame('Table', $kit->getRecipe('table')->manifest->name);

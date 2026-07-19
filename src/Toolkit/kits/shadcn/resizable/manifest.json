@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Resizable",
-    "description": "Accessible resizable panel groups and layouts with keyboard support.",
     "version-added": "3.0",
     "copy-files": {
         "assets/": "assets/",

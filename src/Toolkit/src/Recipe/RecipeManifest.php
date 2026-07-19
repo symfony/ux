@@ -25,7 +25,6 @@ final class RecipeManifest
 {
     /**
      * @param non-empty-string                          $name
-     * @param non-empty-string                          $description
      * @param array<non-empty-string, non-empty-string> $copyFiles
      * @param list<DependencyInterface>                 $dependencies
      * @param ?non-empty-string                         $versionAdded
@@ -33,7 +32,6 @@ final class RecipeManifest
     public function __construct(
         public readonly RecipeType $type,
         public readonly string $name,
-        public readonly string $description,
         public readonly array $copyFiles,
         public readonly array $dependencies = [],
         public readonly ?string $versionAdded = null,
@@ -74,7 +72,6 @@ final class RecipeManifest
         return new self(
             type: $type,
             name: $data['name'] ?? throw new \InvalidArgumentException('Property "name" is required.'),
-            description: $data['description'] ?? throw new \InvalidArgumentException('Property "description" is required.'),
             copyFiles: $data['copy-files'] ?? [],
             dependencies: $dependencies,
             versionAdded: $versionAdded,

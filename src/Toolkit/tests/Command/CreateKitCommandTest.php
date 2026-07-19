@@ -71,7 +71,6 @@ class CreateKitCommandTest extends KernelTestCase
                 {
                     "$schema": "../vendor/symfony/ux-toolkit/schema-kit-recipe-v1.json",
                     "name": "Button",
-                    "description": "A clickable element that triggers actions or events, supporting various styles and states.",
                     "copy-files": {
                         "templates/": "templates/"
                     },

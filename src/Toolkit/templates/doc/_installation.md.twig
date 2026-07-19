@@ -1,0 +1,38 @@
+{% if format == 'markdown' %}
+```shell
+php bin/console ux:install {{ recipe.name }} --kit {{ kit_id }}
+```
+{% else %}
+::: tabs
+
+:: tab Automatic
+
+```shell
+php bin/console ux:install {{ recipe.name }} --kit {{ kit_id }}
+```
+
+:: tab Manual
+{% if php_package_dependencies is not empty %}
+Install the following Composer dependencies:
+
+```shell
+composer require {{ php_package_dependencies|join(' ') }}
+```
+{% endif %}
+{% if npm_package_dependencies is not empty %}
+Install the following front-end dependencies:
+
+```shell
+npm install {{ npm_package_dependencies|join(' ') }}
+# ...or with Symfony AssetMapper
+php bin/console importmap:require {{ importmap_package_dependencies|join(' ') }}
+```
+{% endif %}
+Copy the following file(s) into your app:
+{% for file in files %}
+```{{ file.language }}
+{{ file.content|trim }}
+```
+{% endfor %}
+:::
+{% endif %}

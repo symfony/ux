@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Alert",
-    "description": "Displays a callout for user attention.",
     "copy-files": {
         "templates/": "templates/"
     },
