@@ -30,6 +30,7 @@ final class Recipe
         public readonly string $name,
         public readonly string $absolutePath,
         public readonly RecipeManifest $manifest,
+        public readonly ?string $doc = null,
     ) {
         if (!Path::isAbsolute($this->absolutePath)) {
             throw new \InvalidArgumentException(\sprintf('Kit path "%s" is not absolute.', $this->absolutePath));
