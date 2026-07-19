@@ -23,6 +23,7 @@ use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Markdown\Extension\Alert\AlertExtension;
 use Symfony\UX\Toolkit\Markdown\Extension\CodePreview\CodePreviewExtension;
 use Symfony\UX\Toolkit\Markdown\Extension\Example\ExampleExtension;
+use Symfony\UX\Toolkit\Markdown\Extension\Example\ExampleResolver;
 use Symfony\UX\Toolkit\Markdown\Extension\FencedCodePreview\FencedCodePreviewExtension;
 use Symfony\UX\Toolkit\Markdown\Extension\Popover\PopoverExtension;
 use Symfony\UX\Toolkit\Markdown\Extension\Tabs\TabsExtension;
@@ -30,13 +31,8 @@ use Symfony\UX\Toolkit\Markdown\PreviewUrlGenerator;
 use Symfony\UX\Toolkit\Recipe\Recipe;
 
 /**
- * Generates a recipe's documentation from the kit model, the recipe's `doc.md` narrative,
- * and its component docblocks. It renders the `@UXToolkit/doc/recipe.md.twig` template
- * (which a host can override) into Markdown, then either:
- *  - {@see renderAsMarkdown()}: returns portable Markdown (`::: example` resolved to code fences),
- *    used for LLM/`.md` consumption;
- *  - {@see renderAsHtml()}: converts that Markdown to HTML with the Toolkit's CommonMark extensions,
- *    the host providing a {@see PreviewUrlGenerator} for the live previews.
+ * Renders a recipe's documentation as HTML (through league/commonmark and the Toolkit's extensions)
+ * or as portable Markdown.
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
@@ -138,21 +134,8 @@ final class RecipeDocRenderer
     private function resolveExamplesToFences(Recipe $recipe, string $markdown): string
     {
         return preg_replace_callback('/^::: example (?<rest>.+)$/m', static function (array $matches) use ($recipe): string {
-            $rest = trim($matches['rest']);
-
-            $name = $rest;
-            if (preg_match('/^(.*?)\s*(\{.*\})$/s', $rest, $parts) && \is_array(json_decode($parts[2], true))) {
-                $name = rtrim($parts[1]);
-            }
-
-            Assert::pathDoesNotEscapeDirectory($name);
-
-            $exampleFile = Path::join($recipe->absolutePath, 'examples', $name.'.html.twig');
-            if (!is_file($exampleFile)) {
-                throw new \InvalidArgumentException(\sprintf('Example "%s" does not exist for recipe "%s".', $name, $recipe->name));
-            }
-
-            $code = trim((string) file_get_contents($exampleFile));
+            [$name] = ExampleResolver::parse($matches['rest']);
+            $code = ExampleResolver::readCode($recipe, $name);
             $fence = str_contains($code, '```') ? '````' : '```';
 
             return $fence.'twig'."\n".$code."\n".$fence;

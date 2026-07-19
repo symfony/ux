@@ -1,10 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
 
-/**
- * Toggles a popover (used for the "(?)" hints in API reference tables).
- *
- * Shipped as plain ES modules (no build): a host serves this file through AssetMapper.
- */
 export default class extends Controller {
     static targets = ['content'];
 

@@ -1,10 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
 
-/**
- * Switches between the panels of a `::: tabs` block (and of a code preview).
- *
- * Shipped as plain ES modules (no build): a host serves this file through AssetMapper.
- */
 export default class extends Controller {
     static targets = ['tab', 'panel'];
 

@@ -19,8 +19,7 @@ use League\CommonMark\Parser\Block\BlockStart;
 use League\CommonMark\Parser\Block\BlockStartParserInterface;
 use League\CommonMark\Parser\Cursor;
 use League\CommonMark\Parser\MarkdownParserStateInterface;
-use Symfony\Component\Filesystem\Path;
-use Symfony\UX\Toolkit\Assert;
+use Symfony\UX\Toolkit\Markdown\Extension\Example\ExampleResolver;
 use Symfony\UX\Toolkit\Markdown\Extension\Tabs\Node\Tabs;
 use Symfony\UX\Toolkit\Markdown\PreviewTabsBuilder;
 use Symfony\UX\Toolkit\Recipe\Recipe;
@@ -43,18 +42,7 @@ final class ExampleParser extends AbstractBlockContinueParser
      */
     public function __construct(Recipe $recipe, string $exampleName, array $options)
     {
-        // The example name comes from author-controlled Markdown: reject any "../" traversal
-        // so a directive cannot read files outside the recipe's "examples/" directory.
-        Assert::pathDoesNotEscapeDirectory($exampleName);
-
-        $exampleFile = Path::join($recipe->absolutePath, 'examples', $exampleName.'.html.twig');
-        if (!is_file($exampleFile)) {
-            throw new \InvalidArgumentException(\sprintf('Example "%s" does not exist for recipe "%s".', $exampleName, $recipe->name));
-        }
-
-        $code = trim((string) file_get_contents($exampleFile));
-
-        $this->tabs = PreviewTabsBuilder::build($code, $options);
+        $this->tabs = PreviewTabsBuilder::build(ExampleResolver::readCode($recipe, $exampleName), $options);
     }
 
     public static function createBlockStartParser(Recipe $recipe): BlockStartParserInterface
@@ -75,17 +63,10 @@ final class ExampleParser extends AbstractBlockContinueParser
                     return BlockStart::none();
                 }
 
-                $remainder = trim($cursor->getRemainder());
+                $remainder = $cursor->getRemainder();
                 $cursor->advanceToEnd();
 
-                // Example names can contain spaces ("Custom Method"); options are an optional trailing JSON object.
-                $name = $remainder;
-                $options = [];
-                if (preg_match('/^(.*?)\s*(\{.*\})$/s', $remainder, $matches) && \is_array($decoded = json_decode($matches[2], true))) {
-                    $name = rtrim($matches[1]);
-                    $options = $decoded;
-                }
-
+                [$name, $options] = ExampleResolver::parse($remainder);
                 if ('' === $name) {
                     return BlockStart::none();
                 }

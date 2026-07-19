@@ -1,10 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
 
-/**
- * Copies a code snippet to the clipboard.
- *
- * Shipped as plain ES modules (no build): a host serves this file through AssetMapper.
- */
 export default class extends Controller {
     static targets = ['source', 'button'];
     static values = { copiedLabel: { type: String, default: 'Copied!' } };
