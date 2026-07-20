@@ -2,7 +2,19 @@
 
 The radio component can be used to allow the user to choose a single option from one or more available options coded with the utility classes from Tailwind CSS and available in multiple styles, variants, and colors and support dark mode.
 
-::: example Demo
+```twig {"preview":true}
+<div class="flex flex-col gap-3">
+    <div class="flex items-center mb-4">
+        <twig:Radio id="default" value="" name="radio-default"/>
+        <twig:Label for="default" class="select-none ms-2 font-medium">Default radio</twig:Label>
+    </div>
+
+    <div class="flex items-center mb-4">
+        <twig:Radio id="checked" value="" name="radio-default" checked/>
+        <twig:Label for="checked" class="select-none ms-2 font-medium">Checked state</twig:Label>
+    </div>
+</div>
+```
 
 ## Installation
 
@@ -10,19 +22,60 @@ The radio component can be used to allow the user to choose a single option from
 
 ## Usage
 
-::: example Usage
+```twig
+<twig:Radio />
+```
 
 ## Examples
 
 ### Disabled
 
 This example can be used for the disabled state of the radio component by applying the disabled attribute to the input element.
-::: example Disabled
+
+```twig {"preview":true}
+<div class="flex flex-col gap-3">
+    <div class="flex items-center mb-4">
+        <twig:Radio id="default" value="" name="radio-disabled" disabled/>
+        <twig:Label for="default" class="select-none ms-2 font-medium text-fg-disabled">Default radio</twig:Label>
+    </div>
+
+    <div class="flex items-center mb-4">
+        <twig:Radio id="checked" value="" name="radio-disabled" checked disabled/>
+        <twig:Label for="checked" class="select-none ms-2 font-medium text-fg-disabled">Checked state</twig:Label>
+    </div>
+</div>
+```
 
 ### Bordered
 
 This example can be used to create a radio component with a bordered style, a description text and an icon.
-::: example Bordered {"height": "300px"}
+
+```twig {"preview":true,"height":"300px"}
+<div class="grid gap-6 md:grid-cols-2">
+
+    <div class="flex items-center mb-4">
+        <twig:Label for="default" class="flex justify-between space-x-2.5 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
+            <div class="p-4">
+                <twig:ux:icon name="flowbite:server-outline" class="w-7 h-7 text-body mb-1.5" aria-hidden="true" />
+                <p class="select-none w-full text-sm font-medium text-heading">16GB unified memory</p>
+                <p class="select-none text-sm text-body">Seamlessly handle multitasking, large apps.</p>
+            </div>
+            <twig:Radio id="default" value="default" class="mt-4 me-4" name="radio-bordered"/>
+        </twig:Label>
+    </div>
+
+    <div class="flex items-center mb-4">
+        <twig:Label for="checked" class="flex justify-between space-x-2.5 bg-neutral-primary-soft border border-default rounded-base shadow-xs">
+            <div class="p-4">
+                <twig:ux:icon name="flowbite:database-outline" class="w-7 h-7 text-body mb-1.5" aria-hidden="true" />
+                <p class="select-none w-full text-sm font-medium text-heading">1TB SSD storage</p>
+                <p class="select-none text-sm text-body">Get ultra-fast storage with 1TB of SSD space</p>
+            </div>
+            <twig:Radio id="checked" value="checked" class="mt-4 me-4" name="radio-bordered" checked/>
+        </twig:Label>
+    </div>
+</div>
+```
 
 ## API Reference
 

@@ -2,7 +2,12 @@
 
 A text element that identifies form controls and other content.
 
-::: example Demo
+```twig {"preview":true}
+<div>
+    <twig:Label for="text">Company</twig:Label>
+    <twig:Input id="text" type="text" />
+</div>
+```
 
 ## Installation
 
@@ -10,7 +15,9 @@ A text element that identifies form controls and other content.
 
 ## Usage
 
-::: example Usage
+```twig
+<twig:Label for="email">Your email address</twig:Label>
+```
 
 ## API Reference
 
