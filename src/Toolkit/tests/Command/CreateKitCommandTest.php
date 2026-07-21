@@ -106,5 +106,50 @@ class CreateKitCommandTest extends KernelTestCase
                 </button>
                 TWIG
         );
+        $this->assertStringEqualsFile(
+            $this->tmpDir.'/Button/README.md',
+            <<<'MARKDOWN'
+                # Button
+
+                Displays a button or a component that looks like a button.
+
+                ```twig {"preview":true,"height":"150px"}
+                <div class="flex flex-wrap gap-2">
+                    <twig:Button>Button</twig:Button>
+                    <twig:Button variant="secondary">Secondary</twig:Button>
+                </div>
+                ```
+
+                ## Installation
+
+                ::: installation
+
+                ## Usage
+
+                ```twig
+                <twig:Button variant="default | secondary">
+                    Button
+                </twig:Button>
+                ```
+
+                ## Examples
+
+                ### Variants
+
+                Use the `variant` prop to change the visual style of the button.
+
+                ```twig {"preview":true,"height":"150px"}
+                <div class="flex flex-wrap gap-2">
+                    <twig:Button>Default</twig:Button>
+                    <twig:Button variant="secondary">Secondary</twig:Button>
+                </div>
+                ```
+
+                ## API Reference
+
+                ::: api-reference
+
+                MARKDOWN
+        );
     }
 }
