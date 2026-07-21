@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Card",
-    "description": "Use these responsive card components to show data entries and information to your users in multiple forms and contexts such as for your blog, application, user profiles, and more.",
     "version-added": "2.35",
     "copy-files": {
         "templates/": "templates/"

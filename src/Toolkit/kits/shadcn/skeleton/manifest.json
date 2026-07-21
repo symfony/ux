@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Skeleton",
-    "description": "Use to show a placeholder while content is loading.",
     "copy-files": {
         "templates/": "templates/"
     },

@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Field",
-    "description": "Combine labels, controls, and help text to compose accessible form fields and grouped inputs.",
     "copy-files": {
         "templates/": "templates/"
     },

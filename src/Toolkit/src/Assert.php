@@ -109,4 +109,19 @@ final class Assert
             throw new \InvalidArgumentException(\sprintf('The path "%s" must not escape its target directory.', $path));
         }
     }
+
+    /**
+     * Assert that the "league/commonmark" library is installed.
+     *
+     * It is an optional (dev) dependency of the Toolkit, only required to render kit and
+     * recipe documentation as HTML. Installing the Toolkit to scaffold components does not pull it in.
+     *
+     * @throws \RuntimeException if "league/commonmark" is not installed
+     */
+    public static function commonMarkAvailable(): void
+    {
+        if (!class_exists(\League\CommonMark\Environment\Environment::class)) {
+            throw new \RuntimeException('The "league/commonmark" library is required to render Toolkit documentation as HTML. Try running "composer require league/commonmark".');
+        }
+    }
 }

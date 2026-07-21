@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Logout Link",
-    "description": "A link that logs the current user out through a secure POST form.",
     "version-added": "3.4",
     "copy-files": {
         "templates/": "templates/"

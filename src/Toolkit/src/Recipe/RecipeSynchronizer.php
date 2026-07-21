@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Toolkit\Recipe;
 
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\UX\Toolkit\Kit\Kit;
 
@@ -29,10 +30,13 @@ final class RecipeSynchronizer
             throw new \RuntimeException(\sprintf('Unable to parse manifest file "%s": "%s"', $manifestFile->getPathname(), $e->getMessage()), previous: $e);
         }
 
+        $docFile = Path::join($manifestFile->getPath(), 'README.md');
+
         $recipe = new Recipe(
             name: $manifestFile->getPathInfo()->getBasename(),
             absolutePath: $manifestFile->getPath(),
             manifest: $manifest,
+            doc: is_file($docFile) ? file_get_contents($docFile) : null,
         );
 
         $kit->addRecipe($recipe);

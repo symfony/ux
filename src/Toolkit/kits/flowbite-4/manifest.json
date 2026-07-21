@@ -4,6 +4,8 @@
     "description": "Component based on the Flowbite (v4) library, popular open-source library of interactive UI components built with the utility classes from Tailwind CSS.",
     "license": "MIT",
     "homepage": "https://ux.symfony.com/toolkit/kits/flowbite",
+    "color": "hsl(221,79%,48%)",
+    "icon": "icon.svg",
     "dependencies": {
         "npm": ["flowbite"],
         "importmap": ["flowbite"]

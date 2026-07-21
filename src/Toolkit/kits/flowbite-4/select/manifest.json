@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Select",
-    "description": "Get started with the select component to allow the user to choose from one or more options from a dropdown list based on multiple styles, sizes, and variants",
     "version-added": "2.35",
     "copy-files": {
         "templates/": "templates/"

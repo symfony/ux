@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Tabs",
-    "description": "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
     "version-added": "2.33",
     "copy-files": {
         "assets/": "assets/",

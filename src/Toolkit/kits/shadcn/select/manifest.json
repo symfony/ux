@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Select",
-    "description": "A dropdown control that allows users to choose from a list of options.",
     "copy-files": {
         "templates/": "templates/"
     },

@@ -31,6 +31,8 @@ final class RecipeSynchronizerTest extends TestCase
         $recipeAlert = $kit->getRecipe('alert');
         $this->assertNotNull($recipeAlert);
         $this->assertEquals('Alert', $recipeAlert->manifest->name);
-        $this->assertEquals('Displays a callout for user attention.', $recipeAlert->manifest->description);
+        // The alert recipe ships a README.md, loaded into the recipe.
+        $this->assertNotNull($recipeAlert->doc);
+        $this->assertStringContainsString('::: installation', $recipeAlert->doc);
     }
 }

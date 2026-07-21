@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Combobox",
-    "description": "Autocomplete input and command palette with a list of suggestions.",
     "copy-files": {
         "assets/": "assets/",
         "templates/": "templates/"

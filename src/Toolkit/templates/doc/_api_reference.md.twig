@@ -1,0 +1,27 @@
+{% for component_name, ref in api_reference %}
+### `{{ '<' }}twig:{{ component_name }}{{ '>' }}`
+{% if ref.props is not empty %}
+
+{% if 'markdown' == format %}
+| Prop | Type | Default | Description |
+|:-----|:-----|:--------|:------------|
+{% for prop in ref.props %}
+| `{{ prop.name }}` | `{{ prop.type|replace({'|': '\\|'})|raw }}` | {{ (prop.default is not null ? '`' ~ prop.default|replace({'|': '\\|'}) ~ '`' : '-')|raw }} | {{ prop.description|replace({'|': '\\|'})|raw }} |
+{% endfor %}
+{% else %}
+| Prop | Type | Default |
+|:-----|:-----|:--------|
+{% for prop in ref.props %}
+| `{{ prop.name }}`{% if prop.description %}&nbsp;(?)[{{ prop.description|replace({'|': '\\|'})|raw }}]{% endif %} | `{{ prop.type|replace({'|': '\\|'})|raw }}` | {{ (prop.default is not null ? '`' ~ prop.default|replace({'|': '\\|'}) ~ '`' : '-')|raw }} |
+{% endfor %}
+{% endif %}
+{% endif %}
+{% if ref.blocks is not empty %}
+
+| Block | Description |
+|:------|:------------|
+{% for block in ref.blocks %}
+| `{{ block.name }}` | {{ block.description|replace({'|': '\\|'})|raw }} |
+{% endfor %}
+{% endif %}
+{% endfor %}

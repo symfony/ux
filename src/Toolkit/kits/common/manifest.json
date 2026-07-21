@@ -3,5 +3,7 @@
     "name": "Common",
     "description": "Design-system agnostic, ready-to-use Twig components for common Symfony needs, like logout links and links submitted as forms.",
     "license": "MIT",
-    "homepage": "https://ux.symfony.com/toolkit/kits/common"
+    "homepage": "https://ux.symfony.com/toolkit/kits/common",
+    "color": "#7c3aed",
+    "icon": "icon.svg"
 }

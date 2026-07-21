@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Table",
-    "description": "A responsive table component.",
     "copy-files": {
         "templates/": "templates/"
     },

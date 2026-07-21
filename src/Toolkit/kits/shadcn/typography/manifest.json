@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Typography",
-    "description": "Styled HTML text elements for headings, paragraphs, quotes, lists and inline code.",
     "version-added": "3.0",
     "copy-files": {
         "templates/": "templates/"

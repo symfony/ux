@@ -112,7 +112,6 @@ class CreateKitCommand extends Command
         $this->filesystem->dumpFile('Button/manifest.json', json_encode([
             '$schema' => '../vendor/symfony/ux-toolkit/schema-kit-recipe-v1.json',
             'name' => 'Button',
-            'description' => 'A clickable element that triggers actions or events, supporting various styles and states.',
             'copy-files' => [
                 'templates/' => 'templates/',
             ],
@@ -124,6 +123,54 @@ class CreateKitCommand extends Command
                 ],
             ],
         ], \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
+
+        // Document the component in its README — the single doc source rendered on ux.symfony.com.
+        // Examples are inline ```twig {"preview":true} blocks, not separate files.
+        $this->filesystem->dumpFile(
+            'Button/README.md',
+            <<<MARKDOWN
+                # Button
+
+                Displays a button or a component that looks like a button.
+
+                ```twig {"preview":true,"height":"150px"}
+                <div class="flex flex-wrap gap-2">
+                    <twig:Button>Button</twig:Button>
+                    <twig:Button variant="secondary">Secondary</twig:Button>
+                </div>
+                ```
+
+                ## Installation
+
+                ::: installation
+
+                ## Usage
+
+                ```twig
+                <twig:Button variant="default | secondary">
+                    Button
+                </twig:Button>
+                ```
+
+                ## Examples
+
+                ### Variants
+
+                Use the `variant` prop to change the visual style of the button.
+
+                ```twig {"preview":true,"height":"150px"}
+                <div class="flex flex-wrap gap-2">
+                    <twig:Button>Default</twig:Button>
+                    <twig:Button variant="secondary">Secondary</twig:Button>
+                </div>
+                ```
+
+                ## API Reference
+
+                ::: api-reference
+
+                MARKDOWN
+        );
 
         $io->success('Your kit has been created successfully, happy coding!');
 

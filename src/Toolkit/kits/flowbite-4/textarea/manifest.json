@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Textarea",
-    "description": "The textarea component is a multi-line text field input that can be used to receive longer chunks of text from the user in the form of a comment box, description field, and more.",
     "version-added": "2.35",
     "copy-files": {
         "templates/": "templates/"

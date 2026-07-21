@@ -2,7 +2,6 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Collapsible",
-    "description": "An interactive component which expands/collapses a panel.",
     "version-added": "3.0",
     "copy-files": {
         "assets/": "assets/",

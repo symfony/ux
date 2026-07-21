@@ -33,7 +33,6 @@ final class PoolTest extends TestCase
         $recipe = new Recipe('test-recipe', __DIR__, new RecipeManifest(
             type: RecipeType::Component,
             name: 'Test Recipe',
-            description: 'A test recipe',
             copyFiles: [],
         ));
         $pool->addFile($recipe, new File('path/to/file.html.twig', 'file.html.twig'));
@@ -50,7 +49,6 @@ final class PoolTest extends TestCase
         $recipe = new Recipe('test-recipe', __DIR__, new RecipeManifest(
             type: RecipeType::Component,
             name: 'Test Recipe',
-            description: 'A test recipe',
             copyFiles: [],
         ));
         $pool->addFile($recipe, new File('path/to/file.html.twig', 'file.html.twig'));
