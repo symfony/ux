@@ -67,19 +67,21 @@ When replacing previous and next labels with symbols, provide an accessible labe
 Mark the page currently being viewed as active. It can remain a link or render as a non-interactive item.
 
 ```twig {"preview":true,"height":"210px"}
-<twig:Pagination ariaLabel="Article pages">
-    <twig:Pagination:Item href="#" label="Previous" />
-    <twig:Pagination:Item href="#" label="1" />
-    <twig:Pagination:Item href="#" label="2" active />
-    <twig:Pagination:Item href="#" label="3" />
-    <twig:Pagination:Item href="#" label="Next" />
-</twig:Pagination>
+<div>
+    <twig:Pagination ariaLabel="Article pages">
+        <twig:Pagination:Item href="#" label="Previous" />
+        <twig:Pagination:Item href="#" label="1" />
+        <twig:Pagination:Item href="#" label="2" active />
+        <twig:Pagination:Item href="#" label="3" />
+        <twig:Pagination:Item href="#" label="Next" />
+    </twig:Pagination>
 
-<twig:Pagination ariaLabel="Article pages with a non-interactive current page" class="mt-3">
-    <twig:Pagination:Item href="#" label="1" />
-    <twig:Pagination:Item label="2" active />
-    <twig:Pagination:Item href="#" label="3" />
-</twig:Pagination>
+    <twig:Pagination ariaLabel="Article pages with a non-interactive current page" class="mt-3">
+        <twig:Pagination:Item href="#" label="1" />
+        <twig:Pagination:Item label="2" active />
+        <twig:Pagination:Item href="#" label="3" />
+    </twig:Pagination>
+</div>
 ```
 
 ### Disabled

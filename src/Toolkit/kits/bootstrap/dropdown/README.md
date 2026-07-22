@@ -71,7 +71,7 @@ Use buttons or links with Bootstrap's contextual colors.
 
 Separate the primary action from the menu toggle.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true,"height":"320px"}
 <div class="d-flex flex-wrap justify-content-center align-items-start gap-2 w-100">
     {% for color in ['primary', 'secondary', 'success', 'info', 'warning', 'danger'] %}
         <twig:Dropdown grouped>

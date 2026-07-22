@@ -3,45 +3,49 @@
 - Component: Collapse
 - Code:
 ```twig
-<p class="d-flex gap-2">
-    <a
-        class="btn btn-primary"
-        data-bs-toggle="collapse"
-        href="#collapse-example"
-        role="button"
-        aria-expanded="false"
-        aria-controls="collapse-example"
-    >
-        Link with href
-    </a>
-    <button
-        class="btn btn-primary"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#collapse-example"
-        aria-expanded="false"
-        aria-controls="collapse-example"
-    >
-        Button with data-bs-target
-    </button>
-</p>
-<twig:Collapse id="collapse-example">
-    <div class="card card-body">
-        Some placeholder content for the collapse component. This panel can be toggled by either control.
+<div class="align-self-start w-100 d-flex flex-column gap-2">
+    <div>
+        <a
+            class="btn btn-primary"
+            data-bs-toggle="collapse"
+            href="#collapse-example"
+            role="button"
+            aria-expanded="false"
+            aria-controls="collapse-example"
+        >
+            Link with href
+        </a>
+        <button
+            class="btn btn-primary"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapse-example"
+            aria-expanded="false"
+            aria-controls="collapse-example"
+        >
+            Button with data-bs-target
+        </button>
     </div>
-</twig:Collapse>
+    <twig:Collapse id="collapse-example">
+        <div class="card card-body">
+            Some placeholder content for the collapse component. This panel can be toggled by either control.
+        </div>
+    </twig:Collapse>
+</div>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<p class="d-flex gap-2">
-    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapse-example" role="button" aria-expanded="false" aria-controls="collapse-example">
-        Link with href
-    </a>
-    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-example" aria-expanded="false" aria-controls="collapse-example">
-        Button with data-bs-target
-    </button>
-</p>
-<div id="collapse-example" class="collapse">
+<div class="align-self-start w-100 d-flex flex-column gap-2">
+    <div>
+        <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapse-example" role="button" aria-expanded="false" aria-controls="collapse-example">
+            Link with href
+        </a>
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-example" aria-expanded="false" aria-controls="collapse-example">
+            Button with data-bs-target
+        </button>
+    </div>
+    <div id="collapse-example" class="collapse">
 <div class="card card-body">
-        Some placeholder content for the collapse component. This panel can be toggled by either control.
+            Some placeholder content for the collapse component. This panel can be toggled by either control.
+        </div>
     </div>
 </div>

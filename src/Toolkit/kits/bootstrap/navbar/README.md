@@ -2,32 +2,34 @@
 
 A powerful, responsive navigation header with support for branding, navigation, forms, and collapsing content.
 
-```twig {"preview":true,"height":"260px"}
-<twig:Navbar expand="lg">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarDemo" aria-controls="navbarDemo" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarDemo">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+```twig {"preview":true,"height":"300px"}
+<div class="align-self-start w-100">
+    <twig:Navbar expand="lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarDemo" aria-controls="navbarDemo" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarDemo">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
         </div>
-    </div>
-</twig:Navbar>
+    </twig:Navbar>
+</div>
 ```
 
 ## Installation
@@ -56,35 +58,37 @@ Mark the active link with `aria-current="page"`. Every toggler must expose `aria
 
 Compose branding, navigation, dropdowns, forms, togglers, and collapsing content inside one responsive navbar.
 
-```twig {"preview":true,"height":"300px"}
-<twig:Navbar expand="lg">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item"><a class="nav-link disabled" aria-disabled="true">Disabled</a></li>
-            </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+```twig {"preview":true,"height":"350px"}
+<div class="align-self-start w-100">
+    <twig:Navbar expand="lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link disabled" aria-disabled="true">Disabled</a></li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
         </div>
-    </div>
-</twig:Navbar>
+    </twig:Navbar>
+</div>
 ```
 
 ### Brand
@@ -92,7 +96,7 @@ Compose branding, navigation, dropdowns, forms, togglers, and collapsing content
 Use text, headings, images, or image-and-text combinations for the navbar brand.
 
 ```twig {"preview":true,"height":"430px"}
-<div class="d-flex flex-column gap-3">
+<div class="d-flex flex-column gap-3 w-100">
     <twig:Navbar>
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Navbar</a>
@@ -133,7 +137,7 @@ Use text, headings, images, or image-and-text combinations for the navbar brand.
 Build navigation from lists, direct links, or dropdown items, and mark the current page explicitly.
 
 ```twig {"preview":true,"height":"500px"}
-<div class="d-flex flex-column gap-3">
+<div class="d-flex flex-column gap-3 w-100">
     <twig:Navbar expand="lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Navbar</a>
@@ -193,7 +197,7 @@ Build navigation from lists, direct links, or dropdown items, and mark the curre
 Place search forms, input groups, and button groups inside navbars.
 
 ```twig {"preview":true,"height":"430px"}
-<div class="d-flex flex-column gap-3">
+<div class="d-flex flex-column gap-3 w-100">
     <twig:Navbar>
         <div class="container-fluid">
             <form class="d-flex" role="search">
@@ -235,8 +239,8 @@ Place search forms, input groups, and button groups inside navbars.
 
 Use `navbar-text` for vertically aligned text alongside navigation content.
 
-```twig {"preview":true,"height":"300px"}
-<div class="d-flex flex-column gap-3">
+```twig {"preview":true,"height":"320px"}
+<div class="d-flex flex-column gap-3 w-100">
     <twig:Navbar>
         <div class="container-fluid">
             <span class="navbar-text">Navbar text with an inline element</span>
@@ -265,7 +269,7 @@ Use `navbar-text` for vertically aligned text alongside navigation content.
 Use `data-bs-theme` through the `theme` prop and combine it with background utilities or custom colors.
 
 ```twig {"preview":true,"height":"330px"}
-<div class="d-flex flex-column gap-3">
+<div class="d-flex flex-column gap-3 w-100">
     <twig:Navbar background="dark" theme="dark" class="border-bottom border-body">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Navbar</a>
@@ -306,7 +310,7 @@ Use `data-bs-theme` through the `theme` prop and combine it with background util
 Wrap a navbar in a container, or choose a responsive inner container to constrain its content.
 
 ```twig {"preview":true,"height":"240px"}
-<div class="d-flex flex-column gap-3">
+<div class="d-flex flex-column gap-3 w-100">
     <div class="container">
         <twig:Navbar expand="lg">
             <div class="container-fluid">
@@ -328,7 +332,7 @@ Wrap a navbar in a container, or choose a responsive inner container to constrai
 Keep the navbar in the normal document flow.
 
 ```twig {"preview":true,"height":"160px"}
-<twig:Navbar>
+<twig:Navbar class="w-100">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Default</a>
     </div>
@@ -364,7 +368,7 @@ Fix the navbar to the bottom of the viewport.
 Keep the navbar at the top after it reaches that edge while scrolling.
 
 ```twig {"preview":true,"height":"180px"}
-<twig:Navbar class="sticky-top">
+<twig:Navbar class="sticky-top w-100">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Sticky top</a>
     </div>
@@ -376,7 +380,7 @@ Keep the navbar at the top after it reaches that edge while scrolling.
 Keep the navbar at the bottom after it reaches that edge while scrolling.
 
 ```twig {"preview":true,"height":"180px"}
-<twig:Navbar class="sticky-bottom">
+<twig:Navbar class="sticky-bottom w-100">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Sticky bottom</a>
     </div>
@@ -387,8 +391,8 @@ Keep the navbar at the bottom after it reaches that edge while scrolling.
 
 Limit collapsed navigation height with `navbar-nav-scroll` and `--bs-scroll-height`.
 
-```twig {"preview":true,"height":"300px"}
-<twig:Navbar expand="lg">
+```twig {"preview":true,"height":"360px"}
+<twig:Navbar expand="lg" class="w-100">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Navbar scroll</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
@@ -421,7 +425,7 @@ Limit collapsed navigation height with `navbar-nav-scroll` and `--bs-scroll-heig
 Place the responsive toggler before or after the brand to control its alignment.
 
 ```twig {"preview":true,"height":"430px"}
-<div class="d-flex flex-column gap-3">
+<div class="d-flex flex-column gap-3 w-100">
     <twig:Navbar expand="lg">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
@@ -480,7 +484,7 @@ Target collapsible content that sits outside the navbar while keeping the ARIA r
         <span class="text-body-secondary">Toggleable via the navbar brand.</span>
     </div>
 </div>
-<twig:Navbar background="dark" theme="dark">
+<twig:Navbar background="dark" theme="dark" class="w-100">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

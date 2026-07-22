@@ -3,25 +3,29 @@
 - Component: Navs and Tabs
 - Code:
 ```twig
-<twig:Nav type="tabs" role="tablist" class="mb-3">
-    <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="fade-home-tab" target="#fade-home" active>Home</twig:Nav:Link></twig:Nav:Item>
-    <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="fade-profile-tab" target="#fade-profile">Profile</twig:Nav:Link></twig:Nav:Item>
-</twig:Nav>
-<twig:TabContent>
-    <twig:TabPane id="fade-home" labelledBy="fade-home-tab" active fade>The active panel also receives the `show` class.</twig:TabPane>
-    <twig:TabPane id="fade-profile" labelledBy="fade-profile-tab" fade>Inactive panels only receive the `fade` class.</twig:TabPane>
-</twig:TabContent>
+<div class="w-75">
+    <twig:Nav type="tabs" role="tablist" class="mb-3">
+        <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="fade-home-tab" target="#fade-home" active>Home</twig:Nav:Link></twig:Nav:Item>
+        <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="fade-profile-tab" target="#fade-profile">Profile</twig:Nav:Link></twig:Nav:Item>
+    </twig:Nav>
+    <twig:TabContent>
+        <twig:TabPane id="fade-home" labelledBy="fade-home-tab" active fade>The active panel also receives the `show` class.</twig:TabPane>
+        <twig:TabPane id="fade-profile" labelledBy="fade-profile-tab" fade>Inactive panels only receive the `fade` class.</twig:TabPane>
+    </twig:TabContent>
+</div>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<ul class="nav nav-tabs mb-3" role="tablist">
+<div class="w-75">
+    <ul class="nav nav-tabs mb-3" role="tablist">
 <li class="nav-item" role="presentation">
 <button class="nav-link active" id="fade-home-tab" role="tab" data-bs-toggle="tab" data-bs-target="#fade-home" aria-controls="fade-home" aria-selected="true" type="button">Home</button>
 </li>
-    <li class="nav-item" role="presentation">
+        <li class="nav-item" role="presentation">
 <button class="nav-link" id="fade-profile-tab" role="tab" data-bs-toggle="tab" data-bs-target="#fade-profile" aria-controls="fade-profile" aria-selected="false" type="button">Profile</button>
 </li>
-</ul>
-<div class="tab-content">
+    </ul>
+    <div class="tab-content">
 <div class="tab-pane fade show active" id="fade-home" role="tabpanel" tabindex="0" aria-labelledby="fade-home-tab">The active panel also receives the `show` class.</div>
-    <div class="tab-pane fade" id="fade-profile" role="tabpanel" tabindex="0" aria-labelledby="fade-profile-tab">Inactive panels only receive the `fade` class.</div>
+        <div class="tab-pane fade" id="fade-profile" role="tabpanel" tabindex="0" aria-labelledby="fade-profile-tab">Inactive panels only receive the `fade` class.</div>
+    </div>
 </div>

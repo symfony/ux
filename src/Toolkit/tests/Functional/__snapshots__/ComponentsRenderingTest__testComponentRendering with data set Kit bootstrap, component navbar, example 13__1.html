@@ -3,7 +3,7 @@
 - Component: Navbar
 - Code:
 ```twig
-<twig:Navbar expand="lg">
+<twig:Navbar expand="lg" class="w-100">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Navbar scroll</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
@@ -31,7 +31,7 @@
 </twig:Navbar>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<nav class="navbar navbar-expand-lg bg-body-tertiary"><div class="container-fluid">
+<nav class="navbar navbar-expand-lg bg-body-tertiary w-100"><div class="container-fluid">
         <a class="navbar-brand" href="#">Navbar scroll</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarScroll">

@@ -3,17 +3,21 @@
 - Component: Popover
 - Code:
 ```twig
-<twig:Popover
-    title="Dismissible popover"
-    content="Move focus to another element to dismiss this popover."
-    trigger="focus"
->
-    <a class="btn btn-lg btn-danger" href="#" role="button" tabindex="0" {{ html_attr(popover_trigger_attrs) }}>
-        Dismissible popover
-    </a>
-</twig:Popover>
+<div class="d-flex w-100">
+    <twig:Popover
+        title="Dismissible popover"
+        content="Move focus to another element to dismiss this popover."
+        trigger="focus"
+    >
+        <a class="btn btn-lg btn-danger" href="#" role="button" tabindex="0" {{ html_attr(popover_trigger_attrs) }}>
+            Dismissible popover
+        </a>
+    </twig:Popover>
+</div>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<a class="btn btn-lg btn-danger" href="#" role="button" tabindex="0" data-bs-toggle="popover" data-bs-content="Move focus to another element to dismiss this popover." data-bs-trigger="focus" data-bs-title="Dismissible popover">
-        Dismissible popover
-    </a>
+<div class="d-flex w-100">
+    <a class="btn btn-lg btn-danger" href="#" role="button" tabindex="0" data-bs-toggle="popover" data-bs-content="Move focus to another element to dismiss this popover." data-bs-trigger="focus" data-bs-title="Dismissible popover">
+            Dismissible popover
+        </a>
+    </div>

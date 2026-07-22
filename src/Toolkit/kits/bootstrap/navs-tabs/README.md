@@ -3,22 +3,24 @@
 Build navigation components and accessible dynamic tabbed interfaces with Bootstrap.
 
 ```twig {"preview":true,"height":"180px"}
-<twig:Nav type="tabs" role="tablist" class="mb-3">
-    <twig:Nav:Item presentation>
-        <twig:Nav:Link tag="button" id="demo-home-tab" target="#demo-home" active>Home</twig:Nav:Link>
-    </twig:Nav:Item>
-    <twig:Nav:Item presentation>
-        <twig:Nav:Link tag="button" id="demo-profile-tab" target="#demo-profile">Profile</twig:Nav:Link>
-    </twig:Nav:Item>
-    <twig:Nav:Item presentation>
-        <twig:Nav:Link tag="button" id="demo-contact-tab" target="#demo-contact">Contact</twig:Nav:Link>
-    </twig:Nav:Item>
-</twig:Nav>
-<twig:TabContent>
-    <twig:TabPane id="demo-home" labelledBy="demo-home-tab" active fade>Home tab content.</twig:TabPane>
-    <twig:TabPane id="demo-profile" labelledBy="demo-profile-tab" fade>Profile tab content.</twig:TabPane>
-    <twig:TabPane id="demo-contact" labelledBy="demo-contact-tab" fade>Contact tab content.</twig:TabPane>
-</twig:TabContent>
+<div>
+    <twig:Nav type="tabs" role="tablist" class="mb-3">
+        <twig:Nav:Item presentation>
+            <twig:Nav:Link tag="button" id="demo-home-tab" target="#demo-home" active>Home</twig:Nav:Link>
+        </twig:Nav:Item>
+        <twig:Nav:Item presentation>
+            <twig:Nav:Link tag="button" id="demo-profile-tab" target="#demo-profile">Profile</twig:Nav:Link>
+        </twig:Nav:Item>
+        <twig:Nav:Item presentation>
+            <twig:Nav:Link tag="button" id="demo-contact-tab" target="#demo-contact">Contact</twig:Nav:Link>
+        </twig:Nav:Item>
+    </twig:Nav>
+    <twig:TabContent>
+        <twig:TabPane id="demo-home" labelledBy="demo-home-tab" active fade>Home tab content.</twig:TabPane>
+        <twig:TabPane id="demo-profile" labelledBy="demo-profile-tab" fade>Profile tab content.</twig:TabPane>
+        <twig:TabPane id="demo-contact" labelledBy="demo-contact-tab" fade>Contact tab content.</twig:TabPane>
+    </twig:TabContent>
+</div>
 ```
 
 ## Installation
@@ -29,10 +31,27 @@ Build navigation components and accessible dynamic tabbed interfaces with Bootst
 
 ```twig
 <twig:Nav>
-    <twig:Nav:Item><twig:Nav:Link href="#" active>Active</twig:Nav:Link></twig:Nav:Item>
-    <twig:Nav:Item><twig:Nav:Link href="#">Link</twig:Nav:Link></twig:Nav:Item>
-    <twig:Nav:Item><twig:Nav:Link disabled>Disabled</twig:Nav:Link></twig:Nav:Item>
+    <twig:Nav:Item>
+        <twig:Nav:Link href="#" active>Active</twig:Nav:Link>
+    </twig:Nav:Item>
+    <twig:Nav:Item>
+        <twig:Nav:Link href="#">Link</twig:Nav:Link>
+    </twig:Nav:Item>
+    <twig:Nav:Item>
+        <twig:Nav:Link disabled>Disabled</twig:Nav:Link>
+    </twig:Nav:Item>
 </twig:Nav>
+<twig:TabContent>
+    <twig:TabPane id="demo-home" labelledBy="demo-home-tab" active fade>
+        Home tab content.
+    </twig:TabPane>
+    <twig:TabPane id="demo-profile" labelledBy="demo-profile-tab" fade>
+        Profile tab content.
+    </twig:TabPane>
+    <twig:TabPane id="demo-contact" labelledBy="demo-contact-tab" fade>
+        Contact tab content.
+    </twig:TabPane>
+</twig:TabContent>
 ```
 
 ## Accessibility
@@ -272,18 +291,20 @@ Keep the navigation landmark while placing `role="tablist"` on a nested containe
 Use the same dynamic tab semantics with Bootstrap's pill appearance.
 
 ```twig {"preview":true}
-<twig:Nav type="pills" role="tablist" class="mb-3">
-    <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="pills-home-tab" target="#pills-home" toggle="pill" active>Home</twig:Nav:Link></twig:Nav:Item>
-    <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="pills-profile-tab" target="#pills-profile" toggle="pill">Profile</twig:Nav:Link></twig:Nav:Item>
-    <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="pills-contact-tab" target="#pills-contact" toggle="pill">Contact</twig:Nav:Link></twig:Nav:Item>
-    <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="pills-disabled-tab" target="#pills-disabled" toggle="pill" disabled>Disabled</twig:Nav:Link></twig:Nav:Item>
-</twig:Nav>
-<twig:TabContent>
-    <twig:TabPane id="pills-home" labelledBy="pills-home-tab" active fade>This is the Home pill content.</twig:TabPane>
-    <twig:TabPane id="pills-profile" labelledBy="pills-profile-tab" fade>This is the Profile pill content.</twig:TabPane>
-    <twig:TabPane id="pills-contact" labelledBy="pills-contact-tab" fade>This is the Contact pill content.</twig:TabPane>
-    <twig:TabPane id="pills-disabled" labelledBy="pills-disabled-tab" fade>This pill is disabled.</twig:TabPane>
-</twig:TabContent>
+<div>
+    <twig:Nav type="pills" role="tablist" class="mb-3">
+        <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="pills-home-tab" target="#pills-home" toggle="pill" active>Home</twig:Nav:Link></twig:Nav:Item>
+        <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="pills-profile-tab" target="#pills-profile" toggle="pill">Profile</twig:Nav:Link></twig:Nav:Item>
+        <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="pills-contact-tab" target="#pills-contact" toggle="pill">Contact</twig:Nav:Link></twig:Nav:Item>
+        <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="pills-disabled-tab" target="#pills-disabled" toggle="pill" disabled>Disabled</twig:Nav:Link></twig:Nav:Item>
+    </twig:Nav>
+    <twig:TabContent>
+        <twig:TabPane id="pills-home" labelledBy="pills-home-tab" active fade>This is the Home pill content.</twig:TabPane>
+        <twig:TabPane id="pills-profile" labelledBy="pills-profile-tab" fade>This is the Profile pill content.</twig:TabPane>
+        <twig:TabPane id="pills-contact" labelledBy="pills-contact-tab" fade>This is the Contact pill content.</twig:TabPane>
+        <twig:TabPane id="pills-disabled" labelledBy="pills-disabled-tab" fade>This pill is disabled.</twig:TabPane>
+    </twig:TabContent>
+</div>
 ```
 
 ### Vertical pills
@@ -314,14 +335,16 @@ Build a vertical dynamic tab interface and expose its orientation to assistive t
 Add Bootstrap's fade transition to tab panels. The initially active panel also receives `show`.
 
 ```twig {"preview":true}
-<twig:Nav type="tabs" role="tablist" class="mb-3">
-    <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="fade-home-tab" target="#fade-home" active>Home</twig:Nav:Link></twig:Nav:Item>
-    <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="fade-profile-tab" target="#fade-profile">Profile</twig:Nav:Link></twig:Nav:Item>
-</twig:Nav>
-<twig:TabContent>
-    <twig:TabPane id="fade-home" labelledBy="fade-home-tab" active fade>The active panel also receives the `show` class.</twig:TabPane>
-    <twig:TabPane id="fade-profile" labelledBy="fade-profile-tab" fade>Inactive panels only receive the `fade` class.</twig:TabPane>
-</twig:TabContent>
+<div class="w-75">
+    <twig:Nav type="tabs" role="tablist" class="mb-3">
+        <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="fade-home-tab" target="#fade-home" active>Home</twig:Nav:Link></twig:Nav:Item>
+        <twig:Nav:Item presentation><twig:Nav:Link tag="button" id="fade-profile-tab" target="#fade-profile">Profile</twig:Nav:Link></twig:Nav:Item>
+    </twig:Nav>
+    <twig:TabContent>
+        <twig:TabPane id="fade-home" labelledBy="fade-home-tab" active fade>The active panel also receives the `show` class.</twig:TabPane>
+        <twig:TabPane id="fade-profile" labelledBy="fade-profile-tab" fade>Inactive panels only receive the `fade` class.</twig:TabPane>
+    </twig:TabContent>
+</div>
 ```
 
 ## API Reference

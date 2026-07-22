@@ -3,11 +3,11 @@
 Display related visual content with an optional caption and responsive alignment.
 
 ```twig {"preview":true,"height":"470px"}
-<twig:Figure caption="A quiet place above the valley." captionAlign="center" style="max-width: 36rem;">
+<twig:Figure caption="Bukchon Hanok Village, in Seoul, South Korea" captionAlign="center" style="max-width: 36rem;">
     <img
         src="https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=960&q=80"
         class="figure-img img-fluid rounded"
-        alt="A quiet mountain landscape"
+        alt="Bukchon Hanok Village, in Seoul, South Korea"
     >
 </twig:Figure>
 ```
@@ -19,11 +19,11 @@ Display related visual content with an optional caption and responsive alignment
 ## Usage
 
 ```twig
-<twig:Figure caption="A caption for the above image." style="max-width: 36rem;">
+<twig:Figure caption="Bukchon Hanok Village, in Seoul, South Korea" style="max-width: 36rem;">
     <img
         src="https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=720&q=80"
         class="figure-img img-fluid rounded"
-        alt="A quiet mountain landscape"
+        alt="Bukchon Hanok Village, in Seoul, South Korea"
     >
 </twig:Figure>
 ```
@@ -41,11 +41,11 @@ Use an empty `alt` value for a decorative image. The caption remains associated 
 Display a responsive image with a caption below it.
 
 ```twig {"preview":true,"height":"470px"}
-<twig:Figure caption="A caption for the above image." style="max-width: 36rem;">
+<twig:Figure caption="Bukchon Hanok Village, in Seoul, South Korea" style="max-width: 36rem;">
     <img
         src="https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=720&q=80"
         class="figure-img img-fluid rounded"
-        alt="A quiet mountain landscape"
+        alt="Bukchon Hanok Village, in Seoul, South Korea"
     >
 </twig:Figure>
 ```
@@ -55,11 +55,11 @@ Display a responsive image with a caption below it.
 Align the caption with Bootstrap's text utilities through the `captionAlign` prop.
 
 ```twig {"preview":true,"height":"470px"}
-<twig:Figure caption="A caption aligned to the end." captionAlign="end" style="max-width: 36rem;">
+<twig:Figure caption="Bukchon Hanok Village, in Seoul, South Korea" captionAlign="end" style="max-width: 36rem;">
     <img
         src="https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=720&q=80"
         class="figure-img img-fluid rounded"
-        alt="A quiet mountain landscape"
+        alt="Bukchon Hanok Village, in Seoul, South Korea"
     >
 </twig:Figure>
 ```

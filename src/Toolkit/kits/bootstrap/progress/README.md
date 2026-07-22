@@ -45,7 +45,9 @@ Set the current value to update both the visual width and the progressbar access
 Use Bootstrap width utilities when the visual width should be controlled by a class.
 
 ```twig {"preview":true,"height":"120px"}
-<twig:Progress value="75" ariaLabel="Width utility example" barClass="w-75" :barWidth="false" />
+<div class="w-100">
+    <twig:Progress value="75" ariaLabel="Width utility example" barClass="w-75" :barWidth="false" />
+</div>
 ```
 
 ### Height
@@ -124,7 +126,9 @@ Add striped styling to default and contextual progress bars.
 Animate a striped bar to emphasize an actively changing task.
 
 ```twig {"preview":true,"height":"120px"}
-<twig:Progress value="75" ariaLabel="Animated striped example" striped animated />
+<div class="w-100">
+    <twig:Progress value="75" ariaLabel="Animated striped example" striped animated />
+</div>
 ```
 
 ## API Reference

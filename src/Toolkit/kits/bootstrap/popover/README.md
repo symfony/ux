@@ -3,7 +3,7 @@
 Display contextual Bootstrap content beside a trigger element.
 
 ```twig {"preview":true,"height":"240px"}
-<div class="d-flex justify-content-center p-5">
+<div class="d-flex w-100">
     <twig:Popover title="Bootstrap popover" content="This content appears beside the trigger.">
         <button type="button" class="btn btn-primary" {{ html_attr(popover_trigger_attrs) }}>
             Toggle popover
@@ -53,11 +53,13 @@ When `html` is enabled, Bootstrap sanitizes allowed markup by default. Do not di
 Initialize every `data-bs-toggle="popover"` trigger before expecting it to open.
 
 ```twig {"preview":true,"height":"140px"}
-<twig:Popover content="Popover components are opt-in and must be initialized in JavaScript.">
-    <button type="button" class="btn btn-secondary" {{ html_attr(popover_trigger_attrs) }}>
-        Popover trigger
-    </button>
-</twig:Popover>
+<div class="d-flex w-100">
+    <twig:Popover content="Popover components are opt-in and must be initialized in JavaScript.">
+        <button type="button" class="btn btn-secondary" {{ html_attr(popover_trigger_attrs) }}>
+            Popover trigger
+        </button>
+    </twig:Popover>
+</div>
 ```
 
 ### Live demo
@@ -65,14 +67,16 @@ Initialize every `data-bs-toggle="popover"` trigger before expecting it to open.
 Combine a heading and body content in a conventional click-triggered popover.
 
 ```twig {"preview":true,"height":"150px"}
-<twig:Popover
-    title="Popover title"
-    content="And here's some amazing content. It's very engaging. Right?"
->
-    <button type="button" class="btn btn-lg btn-danger" {{ html_attr(popover_trigger_attrs) }}>
-        Click to toggle popover
-    </button>
-</twig:Popover>
+<div class="d-flex w-100">
+    <twig:Popover
+        title="Popover title"
+        content="And here's some amazing content. It's very engaging. Right?"
+    >
+        <button type="button" class="btn btn-lg btn-danger" {{ html_attr(popover_trigger_attrs) }}>
+            Click to toggle popover
+        </button>
+    </twig:Popover>
+</div>
 ```
 
 ### Four directions
@@ -81,10 +85,10 @@ Prefer top, right, bottom, or left placement while allowing Popper to adjust whe
 
 ```twig {"preview":true,"height":"280px"}
 <div class="d-flex flex-wrap justify-content-center gap-2 p-5">
-    {% for placement in ['top', 'right', 'bottom', 'left'] %}
+    {% for placement in ['left', 'top', 'bottom', 'right'] %}
         <twig:Popover
             title="Popover {{ placement }}"
-            content="This popover opens on the {{ placement }} side."
+            content="On the {{ placement }} side."
             :placement="placement"
         >
             <button type="button" class="btn btn-secondary text-capitalize" {{ html_attr(popover_trigger_attrs) }}>
@@ -100,7 +104,7 @@ Prefer top, right, bottom, or left placement while allowing Popper to adjust whe
 Append the generated popover to a specific container when the surrounding layout requires it.
 
 ```twig {"preview":true,"height":"240px"}
-<div id="popover-container" class="border rounded p-5 text-center">
+<div id="popover-container" class="border rounded p-5 text-center w-100">
     <twig:Popover
         title="Contained popover"
         content="Bootstrap appends this popover inside the selected container."
@@ -118,15 +122,17 @@ Append the generated popover to a specific container when the surrounding layout
 Attach a custom class to the generated popover and customize Bootstrap's CSS variables in your stylesheet.
 
 ```twig {"preview":true,"height":"140px"}
-<twig:Popover
-    title="Custom popover"
-    content="Use the generated class to customize Bootstrap CSS variables."
-    customClass="custom-popover"
->
-    <button type="button" class="btn btn-secondary" {{ html_attr(popover_trigger_attrs) }}>
-        Custom popover
-    </button>
-</twig:Popover>
+<div class="d-flex w-100">
+    <twig:Popover
+        title="Custom popover"
+        content="Use the generated class to customize Bootstrap CSS variables."
+        customClass="custom-popover"
+    >
+        <button type="button" class="btn btn-secondary" {{ html_attr(popover_trigger_attrs) }}>
+            Custom popover
+        </button>
+    </twig:Popover>
+</div>
 ```
 
 ### Dismiss on next click
@@ -134,15 +140,17 @@ Attach a custom class to the generated popover and customize Bootstrap's CSS var
 Use the `focus` trigger so moving focus away closes the popover.
 
 ```twig {"preview":true,"height":"150px"}
-<twig:Popover
-    title="Dismissible popover"
-    content="Move focus to another element to dismiss this popover."
-    trigger="focus"
->
-    <a class="btn btn-lg btn-danger" href="#" role="button" tabindex="0" {{ html_attr(popover_trigger_attrs) }}>
-        Dismissible popover
-    </a>
-</twig:Popover>
+<div class="d-flex w-100">
+    <twig:Popover
+        title="Dismissible popover"
+        content="Move focus to another element to dismiss this popover."
+        trigger="focus"
+    >
+        <a class="btn btn-lg btn-danger" href="#" role="button" tabindex="0" {{ html_attr(popover_trigger_attrs) }}>
+            Dismissible popover
+        </a>
+    </twig:Popover>
+</div>
 ```
 
 ### Disabled elements
@@ -150,14 +158,16 @@ Use the `focus` trigger so moving focus away closes the popover.
 Place a disabled control inside a focusable wrapper that owns the popover attributes.
 
 ```twig {"preview":true,"height":"140px"}
-<twig:Popover
-    content="Disabled controls cannot receive focus, so the wrapper owns the popover."
-    trigger="hover focus"
->
-    <span class="d-inline-block" tabindex="0" {{ html_attr(popover_trigger_attrs) }}>
-        <button class="btn btn-primary" type="button" disabled>Disabled button</button>
-    </span>
-</twig:Popover>
+<div class="d-flex w-100">
+    <twig:Popover
+        content="Disabled controls cannot receive focus, so the wrapper owns the popover."
+        trigger="hover focus"
+    >
+        <span class="d-inline-block" tabindex="0" {{ html_attr(popover_trigger_attrs) }}>
+            <button class="btn btn-primary" type="button" disabled>Disabled button</button>
+        </span>
+    </twig:Popover>
+</div>
 ```
 
 ## API Reference
