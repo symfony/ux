@@ -22,7 +22,7 @@ use Symfony\UX\Toolkit\Kit\Lint\LintSeverity;
 
 /**
  * Heuristic, warning-only consistency check between declared Composer dependencies and
- * Twig symbols they are known to provide.
+ * the Twig symbols they are known to require.
  *
  * The mapping is curated and intentionally incomplete: false positives are reported as
  * warnings, never errors, because maintaining a complete mapping is fragile.
@@ -34,39 +34,28 @@ use Symfony\UX\Toolkit\Kit\Lint\LintSeverity;
 final class ComposerSymbolChecker implements KitCheckerInterface
 {
     /**
-     * Composer package => symbol => minimum version that ships the symbol (null = always shipped).
+     * Twig symbol => [Composer package => minimum version enabling it (null = any version)].
+     *
+     * All packages listed for a symbol are required together (AND): the symbol is satisfied
+     * only when every one is declared at a compatible version. The html_* filters ship in
+     * twig/html-extra (which gates their version), but also need twig/extra-bundle to
+     * register the extension in a Symfony application.
      *
      * Symbols are literal substrings searched in template contents (no regex).
      *
      * @var array<string, array<string, ?string>>
      */
-    private const PROVIDES = [
-        'twig/extra-bundle' => [
-            'html_cva' => '3.12',
-            'html_classes' => null,
-            'html_attr_type' => '3.24',
-            'html_attr_merge' => '3.24',
-        ],
-        'twig/html-extra' => [
-            'html_cva' => '3.12',
-            'html_classes' => null,
-            'html_attr_type' => '3.24',
-            'html_attr_merge' => '3.24',
-        ],
-        'tales-from-a-dev/twig-tailwind-extra' => [
-            'tailwind_merge' => null,
-        ],
-        'symfony/ux-icons' => [
-            'ux_icon' => null,
-            '<twig:ux:icon' => null,
-        ],
-        'symfony/ux-map' => [
-            '<twig:ux:map' => null,
-        ],
-        'symfony/ux-twig-component' => [
-            'provide(' => '3.1',
-            'inject(' => '3.1',
-        ],
+    private const REQUIRES = [
+        'html_cva' => ['twig/extra-bundle' => null, 'twig/html-extra' => '3.12'],
+        'html_classes' => ['twig/extra-bundle' => null, 'twig/html-extra' => null],
+        'html_attr_type' => ['twig/extra-bundle' => null, 'twig/html-extra' => '3.24'],
+        'html_attr_merge' => ['twig/extra-bundle' => null, 'twig/html-extra' => '3.24'],
+        'tailwind_merge' => ['tales-from-a-dev/twig-tailwind-extra' => null],
+        'ux_icon' => ['symfony/ux-icons' => null],
+        '<twig:ux:icon' => ['symfony/ux-icons' => null],
+        '<twig:ux:map' => ['symfony/ux-map' => null],
+        'provide(' => ['symfony/ux-twig-component' => '3.1'],
+        'inject(' => ['symfony/ux-twig-component' => '3.1'],
     ];
 
     public function check(Kit $kit): iterable
@@ -83,19 +72,27 @@ final class ComposerSymbolChecker implements KitCheckerInterface
                 }
             }
 
+            // Packages required by at least one used symbol.
+            $requiredPackages = [];
+            foreach (array_keys($usedSymbols) as $symbol) {
+                foreach (array_keys(self::REQUIRES[$symbol]) as $package) {
+                    $requiredPackages[$package] = true;
+                }
+            }
+
             foreach ($declared as $package => $_dep) {
-                if (!isset(self::PROVIDES[$package])) {
+                $symbols = $this->symbolsRequiring($package);
+                if ([] === $symbols) {
                     continue;
                 }
-                $knownSymbols = array_keys(self::PROVIDES[$package]);
-                if ([] === array_intersect($knownSymbols, array_keys($usedSymbols))) {
+                if (!isset($requiredPackages[$package])) {
                     yield new LintIssue(
                         severity: LintSeverity::Warning,
                         category: 'composer.declared-but-unused',
                         message: \sprintf(
                             'Composer dependency "%s" is declared but none of its known symbols (%s) appear in templates.',
                             $package,
-                            implode(', ', $knownSymbols),
+                            implode(', ', $symbols),
                         ),
                         recipe: $recipe->name,
                     );
@@ -103,20 +100,17 @@ final class ComposerSymbolChecker implements KitCheckerInterface
             }
 
             foreach ($usedSymbols as $symbol => $file) {
-                $providers = $this->providersOf($symbol);
-                if ([] === $providers) {
-                    continue;
-                }
+                $requirements = self::REQUIRES[$symbol];
 
-                $declaredProviders = array_values(array_intersect($providers, array_keys($declared)));
-                if ([] === $declaredProviders) {
+                $missing = array_values(array_diff(array_keys($requirements), array_keys($declared)));
+                if ([] !== $missing) {
                     yield new LintIssue(
                         severity: LintSeverity::Warning,
                         category: 'composer.symbol-undeclared',
                         message: \sprintf(
-                            'Template uses Twig symbol "%s" but none of its known providers (%s) is declared as a Composer dependency.',
+                            'Template uses Twig symbol "%s" but its required Composer dependencies are not all declared: %s.',
                             $symbol,
-                            implode(', ', $providers),
+                            implode(', ', $missing),
                         ),
                         recipe: $recipe->name,
                         file: $file,
@@ -124,21 +118,15 @@ final class ComposerSymbolChecker implements KitCheckerInterface
                     continue;
                 }
 
-                // A symbol is satisfied if at least one declared provider ships it at a version
-                // compatible with the recipe's declared constraint (or has no minimum requirement).
                 $offending = [];
-                foreach ($declaredProviders as $package) {
-                    $since = self::PROVIDES[$package][$symbol];
+                foreach ($requirements as $package => $since) {
                     if (null === $since) {
-                        $offending = [];
-                        break;
+                        continue;
                     }
                     $declaredMin = self::constraintMinVersion($declared[$package]->constraintVersion);
-                    if (null === $declaredMin || version_compare($declaredMin, $since, '>=')) {
-                        $offending = [];
-                        break;
+                    if (null !== $declaredMin && version_compare($declaredMin, $since, '<')) {
+                        $offending[] = \sprintf('"%s:%s" (need >=%s)', $package, (string) $declared[$package]->constraintVersion, $since);
                     }
-                    $offending[] = \sprintf('"%s:%s" (need >=%s)', $package, (string) $declared[$package]->constraintVersion, $since);
                 }
 
                 if ([] !== $offending) {
@@ -146,7 +134,7 @@ final class ComposerSymbolChecker implements KitCheckerInterface
                         severity: LintSeverity::Warning,
                         category: 'composer.symbol-version-insufficient',
                         message: \sprintf(
-                            'Template uses Twig symbol "%s" but no declared provider meets its minimum version: %s.',
+                            'Template uses Twig symbol "%s" but a required Composer dependency is below its minimum version: %s.',
                             $symbol,
                             implode('; ', $offending),
                         ),
@@ -163,18 +151,11 @@ final class ComposerSymbolChecker implements KitCheckerInterface
      */
     private function extractUsedSymbols(string $templatesDir): array
     {
-        $allSymbols = [];
-        foreach (self::PROVIDES as $symbols) {
-            foreach (array_keys($symbols) as $symbol) {
-                $allSymbols[$symbol] = true;
-            }
-        }
-
         $used = [];
         $finder = new Finder()->in($templatesDir)->files()->name('*.html.twig');
         foreach ($finder as $file) {
             $contents = $file->getContents();
-            foreach ($allSymbols as $symbol => $_) {
+            foreach (array_keys(self::REQUIRES) as $symbol) {
                 if (isset($used[$symbol])) {
                     continue;
                 }
@@ -188,18 +169,18 @@ final class ComposerSymbolChecker implements KitCheckerInterface
     }
 
     /**
-     * @return list<string>
+     * @return list<string> symbols that list the given package among their requirements
      */
-    private function providersOf(string $symbol): array
+    private function symbolsRequiring(string $package): array
     {
-        $providers = [];
-        foreach (self::PROVIDES as $package => $symbols) {
-            if (\array_key_exists($symbol, $symbols)) {
-                $providers[] = $package;
+        $symbols = [];
+        foreach (self::REQUIRES as $symbol => $packages) {
+            if (\array_key_exists($package, $packages)) {
+                $symbols[] = $symbol;
             }
         }
 
-        return $providers;
+        return $symbols;
     }
 
     /**

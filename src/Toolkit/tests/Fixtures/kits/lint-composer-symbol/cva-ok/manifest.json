@@ -2,7 +2,7 @@
     "$schema": "../../../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "CvaOk",
-    "description": "twig/extra-bundle declared + html_cva used -> no warning.",
+    "description": "twig/extra-bundle + twig/html-extra declared + html_cva used -> no warning.",
     "copy-files": {"templates/": "templates/"},
-    "dependencies": {"composer": ["twig/extra-bundle"]}
+    "dependencies": {"composer": ["twig/extra-bundle", "twig/html-extra"]}
 }
