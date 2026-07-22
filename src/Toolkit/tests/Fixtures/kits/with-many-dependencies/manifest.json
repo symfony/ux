@@ -3,5 +3,10 @@
     "name": "With many dependencies",
     "description": "Kit used as a test fixture.",
     "license": "MIT",
-    "homepage": "https://ux.symfony.com/"
+    "homepage": "https://ux.symfony.com/",
+    "dependencies": {
+        "composer": ["global/php-package:^4.0"],
+        "npm": ["global-npm-package@^3.0"],
+        "importmap": ["global-importmap-package"]
+    }
 }

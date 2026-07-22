@@ -114,18 +114,21 @@ final class PoolResolverTest extends TestCase
         $this->assertCount(0, $pool->getFiles());
 
         $this->assertEquals([
+            'global/php-package' => new PhpPackageDependency('global/php-package', new ConstraintVersion('^4.0')),
             'twig/html-extra' => new PhpPackageDependency('twig/html-extra', new ConstraintVersion('^3.12.0')),
             'tales-from-a-dev/twig-tailwind-extra' => new PhpPackageDependency('tales-from-a-dev/twig-tailwind-extra', new ConstraintVersion('^1.0.0')),
             'another/php-package' => new PhpPackageDependency('another/php-package', new ConstraintVersion('^2.0')),
         ], $pool->getPhpPackageDependencies());
 
         $this->assertEquals([
+            'global-npm-package' => new NpmPackageDependency('global-npm-package', new ConstraintVersion('^3.0')),
             'tailwindcss' => new NpmPackageDependency('tailwindcss', new ConstraintVersion('^4.0.0')),
             '@tailwindplus/elements' => new NpmPackageDependency('@tailwindplus/elements', new ConstraintVersion('1')),
             'another-npm-package' => new NpmPackageDependency('another-npm-package', new ConstraintVersion('^1.0.0')),
         ], $pool->getNpmPackageDependencies());
 
         $this->assertEquals([
+            'global-importmap-package' => new ImportmapPackageDependency('global-importmap-package'),
             '@hotwired/stimulus' => new ImportmapPackageDependency('@hotwired/stimulus'),
             'another-importmap-package' => new ImportmapPackageDependency('another-importmap-package'),
         ], $pool->getImportmapPackageDependencies());
