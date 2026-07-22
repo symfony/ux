@@ -27,8 +27,8 @@ class NpmPackageDependencyTest extends TestCase
 
         $dependency = new NpmPackageDependency('react', new ConstraintVersion('^18.0.0'));
         $this->assertSame('react', $dependency->name);
-        $this->assertSame('NPM package "react:^18.0.0"', $dependency->toDebug());
-        $this->assertSame('react:^18.0.0', (string) $dependency);
+        $this->assertSame('NPM package "react@^18.0.0"', $dependency->toDebug());
+        $this->assertSame('react@^18.0.0', (string) $dependency);
     }
 
     public function testShouldFailIfPackageNameIsInvalid()
