@@ -25,3 +25,38 @@
 {% endfor %}
 {% endif %}
 {% endfor %}
+{% for identifier, ref in stimulus_reference %}
+### `data-controller="{{ identifier }}"`
+{% if ref.values is not empty %}
+
+{% if 'markdown' == format %}
+| Value | Type | Default | Description |
+|:------|:-----|:--------|:------------|
+{% for value in ref.values %}
+| `{{ value.attribute }}` | `{{ value.type|replace({'|': '\\|'})|raw }}` | {{ (value.default is not null ? '`' ~ value.default|replace({'|': '\\|'}) ~ '`' : '-')|raw }} | {{ value.description|replace({'|': '\\|'})|raw }} |
+{% endfor %}
+{% else %}
+| Value | Type | Default |
+|:------|:-----|:--------|
+{% for value in ref.values %}
+| `{{ value.attribute }}`{% if value.description %}&nbsp;(?)[{{ value.description|replace({'|': '\\|'})|raw }}]{% endif %} | `{{ value.type|replace({'|': '\\|'})|raw }}` | {{ (value.default is not null ? '`' ~ value.default|replace({'|': '\\|'}) ~ '`' : '-')|raw }} |
+{% endfor %}
+{% endif %}
+{% endif %}
+{% if ref.targets is not empty %}
+
+| Target | Description |
+|:-------|:------------|
+{% for target in ref.targets %}
+| `{{ target.name }}` | {{ target.description|replace({'|': '\\|'})|raw }} |
+{% endfor %}
+{% endif %}
+{% if ref.actions is not empty %}
+
+| Action | Description |
+|:-------|:------------|
+{% for action in ref.actions %}
+| `{{ action.name }}` | {{ action.description|replace({'|': '\\|'})|raw }} |
+{% endfor %}
+{% endif %}
+{% endfor %}

@@ -400,6 +400,13 @@ Checks:
 ```js
 import { Controller } from '@hotwired/stimulus';
 
+/**
+ * @value  open     Whether the component is open on initial render.
+ * @target trigger  The element that toggles the component and reflects its expanded state.
+ * @target content  The region shown or hidden when the component toggles.
+ * @action open     Opens the component.
+ * @action close    Closes the component.
+ */
 export default class extends Controller {
     static targets = ['trigger', 'content'];
     static values = { open: Boolean };
@@ -424,6 +431,19 @@ export default class extends Controller {
   Pipe through `|html_attr_type('sst')` when exposing via `<recipe>_<role>_attrs` so consumers can append own actions.
 - **Hover/focus-triggered components** — never use `group-hover` + `group-focus-within` + `tabindex=0`; use Stimulus controller with `openDelay`/`closeDelay` values instead (see anti-patterns).
 - **Nested open-state** — never use `in-data-[state=open]:visible` on nested components; use named Tailwind groups (`group/<recipe>-menu`, `group/<recipe>-sub`) instead (see anti-patterns).
+
+### Controller docblocks (API reference)
+
+A controller's public API is documented with a `/** ... */` docblock placed **immediately before `export default class`**, using `@value`/`@target`/`@action` tags. `RecipeDocRenderer` renders these under `::: api-reference` (the same block that documents Twig component props), which is the only way a **controller-only recipe** — one with no `templates/components/*.html.twig` — surfaces an API reference. `bin/ux-toolkit-kit-lint` validates them via `StimulusControllerDocChecker` (see [Docblock linting](#docblock-linting)).
+
+**Add the docblock only to controllers whose API you want shown.** It is a deliberate, per-controller choice — not a blanket requirement. Document a controller when its `data-controller`/`data-*` surface is meant to be used or overridden directly by the consumer (always true for a controller-only recipe). **Omit it** — leaving the controller undocumented and rendering no API reference — when the controller is an internal implementation detail the consumer never touches directly (they drive it through the recipe's Twig components, which carry their own `@prop`/`@block` docs). Documenting such a controller would surface `data-*` internals as if they were public API.
+
+- **Format:** `@<tag> <name> <Description.>` — name first, then a one-sentence description that starts Capitalized and ends with a period. Align columns for readability (whitespace is normalized). Do **not** document types or defaults in the docblock — the renderer reads value types/defaults from the `static values` declaration.
+- **`@value <name>`** — one per key in `static values`. For object-form values (`open: { type: Boolean, default: false }`), document the **top-level key** (`open`), never the inner `type`/`default`.
+- **`@target <name>`** — one per string in `static targets`.
+- **`@action <name>`** — opt-in: document only the **public methods actually wired via `data-action`** in the recipe's templates (find them with `grep -rhoE '<identifier>#[a-zA-Z]+' templates`). Never document private methods (`_`/`#` prefixed) or lifecycle methods (`connect`/`disconnect`). Every `@action` must match a real method.
+- **All-or-nothing once you opt in:** a controller with **no tags at all** renders no API reference and is left untouched by the linter. But once **any** tag is present, the linter requires every `static values` key and every `static targets` string to have a matching tag (and vice versa) — partial documentation fails CI. So the choice is per-controller: document its whole surface, or leave it entirely undocumented.
+- The controller identifier is derived from the filename (`<recipe>_controller.js` → `<recipe>`; nested `_` → `-`, e.g. `alert_dialog_controller.js` → `alert-dialog`), and each value's `data-*` attribute is derived from it (`autoClose` on `widget` → `data-widget-auto-close-value`).
 
 ---
 

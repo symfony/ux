@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../schema-kit-v1.json",
+    "name": "Render Stimulus Doc",
+    "description": "Kit exercising the Stimulus controller API reference rendering.",
+    "license": "MIT",
+    "homepage": "https://example.com/render-stimulus-doc"
+}
