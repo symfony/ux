@@ -1,6 +1,5 @@
 {
     "$schema": "../../../schema-kit-recipe-v1.json",
-    "type": "component",
     "name": "Input Group",
     "version-added": "3.0",
     "copy-files": {

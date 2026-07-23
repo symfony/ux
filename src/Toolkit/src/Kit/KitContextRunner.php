@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\Toolkit\Kit;
 
-use Symfony\UX\Toolkit\Recipe\RecipeType;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentTemplateFinderInterface;
 use Twig\Loader\ChainLoader;
@@ -63,7 +62,7 @@ final class KitContextRunner
         $initialTwigLoader = $this->twig->getLoader();
 
         $loaders = [];
-        foreach ($kit->getRecipes(type: RecipeType::Component) as $recipe) {
+        foreach ($kit->getRecipes() as $recipe) {
             $loaders[] = new FilesystemLoader($recipe->absolutePath);
         }
         $loaders[] = $initialTwigLoader;
@@ -103,7 +102,7 @@ final class KitContextRunner
 
             public function findAnonymousComponentTemplate(string $name): ?string
             {
-                foreach ($this->kit->getRecipes(type: RecipeType::Component) as $recipe) {
+                foreach ($this->kit->getRecipes() as $recipe) {
                     foreach ($recipe->getFiles() as $file) {
                         if (str_ends_with($file->sourceRelativePathName, 'templates/components/'.str_replace(':', '/', $name).'.html.twig')) {
                             return $file->sourceRelativePathName;

@@ -1,6 +1,5 @@
 {
     "$schema": "../../../schema-kit-recipe-v1.json",
-    "type": "component",
     "name": "Sonner",
     "copy-files": {
         "assets/": "assets/",

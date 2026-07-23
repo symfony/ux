@@ -15,7 +15,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\UX\Toolkit\File;
 use Symfony\UX\Toolkit\Recipe\Recipe;
 use Symfony\UX\Toolkit\Recipe\RecipeManifest;
-use Symfony\UX\Toolkit\Recipe\RecipeType;
 
 final class RecipeTest extends TestCase
 {
@@ -25,7 +24,6 @@ final class RecipeTest extends TestCase
         $this->expectExceptionMessage('Kit path "relative/path" is not absolute.');
 
         new Recipe('test-recipe', 'relative/path', new RecipeManifest(
-            type: RecipeType::Component,
             name: 'Test Recipe',
             copyFiles: [],
         ));
@@ -37,7 +35,6 @@ final class RecipeTest extends TestCase
         $this->expectExceptionMessage('Copy file destination "/" must be a relative path.');
 
         new Recipe('test-recipe', __DIR__.'/../../kits/shadcn/Table', new RecipeManifest(
-            type: RecipeType::Component,
             name: 'Test Recipe',
             copyFiles: [
                 'templates/' => '/',
@@ -48,7 +45,6 @@ final class RecipeTest extends TestCase
     public function testGetCopyFiles()
     {
         $recipe = new Recipe('test-recipe', __DIR__.'/../../kits/shadcn/table', new RecipeManifest(
-            type: RecipeType::Component,
             name: 'Test Recipe',
             copyFiles: [
                 'templates/' => 'templates/',
@@ -70,7 +66,6 @@ final class RecipeTest extends TestCase
     public function testGetCopyFilesWithDifferentDestDir()
     {
         $recipe = new Recipe('test-recipe', __DIR__.'/../../kits/shadcn/table', new RecipeManifest(
-            type: RecipeType::Component,
             name: 'Test Recipe',
             copyFiles: [
                 'templates/' => 'dest-templates/',
@@ -91,7 +86,7 @@ final class RecipeTest extends TestCase
 
     public function testGetDescriptionReadsTheReadmeFirstParagraph()
     {
-        $manifest = new RecipeManifest(RecipeType::Component, 'Alert', []);
+        $manifest = new RecipeManifest('Alert', []);
 
         $withReadme = new Recipe('alert', __DIR__, $manifest, doc: "# Alert\n\nDisplays a callout for user attention.\n\n::: example Demo");
         $this->assertSame('Displays a callout for user attention.', $withReadme->getDescription());
@@ -117,7 +112,6 @@ final class RecipeTest extends TestCase
             MD;
 
         $recipe = new Recipe('avatar', __DIR__, new RecipeManifest(
-            type: RecipeType::Component,
             name: 'avatar',
             copyFiles: [],
         ), doc: $doc);
@@ -134,7 +128,6 @@ final class RecipeTest extends TestCase
     public function testGetExamplesIsEmptyWithoutDoc()
     {
         $recipe = new Recipe('x', __DIR__, new RecipeManifest(
-            type: RecipeType::Component,
             name: 'x',
             copyFiles: [],
         ));

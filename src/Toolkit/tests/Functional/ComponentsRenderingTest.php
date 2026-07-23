@@ -24,7 +24,6 @@ use Symfony\UX\Toolkit\Kit\KitFactory;
 use Symfony\UX\Toolkit\Kit\KitSynchronizer;
 use Symfony\UX\Toolkit\Recipe\Recipe;
 use Symfony\UX\Toolkit\Recipe\RecipeSynchronizer;
-use Symfony\UX\Toolkit\Recipe\RecipeType;
 use Symfony\UX\Toolkit\Registry\LocalRegistry;
 use Symfony\UX\Toolkit\Tests\TestHelperTrait;
 
@@ -47,7 +46,7 @@ class ComponentsRenderingTest extends WebTestCase
             $kit = self::createLocalKit($kitName);
             $kitSynchronizer->synchronize($kit);
 
-            foreach ($kit->getRecipes(RecipeType::Component) as $recipe) {
+            foreach ($kit->getRecipes() as $recipe) {
                 foreach ($recipe->getExamples() as $i => $example) {
                     yield \sprintf('Kit %s, component %s, example #%d', $kitName, $recipe->name, $i) => [$kitName, $recipe->name, $example['code']];
                 }

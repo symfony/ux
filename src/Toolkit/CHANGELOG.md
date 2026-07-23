@@ -2,6 +2,7 @@
 
 ## 3.4.0
 
+- Remove the unused recipe manifest `type` property
 - [Common] Add the `common` kit, with design-system agnostic `logout-link` and `post-link` recipes
 - Add new linter checker `ClassMergeSpacingChecker` that checks for invalid `'<literal>' ~ attributes.render(...)` pattern
 - Add per-recipe `README.md` documentation

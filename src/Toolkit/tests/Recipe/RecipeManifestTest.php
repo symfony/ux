@@ -18,7 +18,6 @@ use Symfony\UX\Toolkit\Dependency\NpmPackageDependency;
 use Symfony\UX\Toolkit\Dependency\PhpPackageDependency;
 use Symfony\UX\Toolkit\Dependency\RecipeDependency;
 use Symfony\UX\Toolkit\Recipe\RecipeManifest;
-use Symfony\UX\Toolkit\Recipe\RecipeType;
 
 final class RecipeManifestTest extends TestCase
 {
@@ -30,36 +29,12 @@ final class RecipeManifestTest extends TestCase
         RecipeManifest::fromJson('test');
     }
 
-    public function testFromJsonWithEmpty()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Property "type" is required.');
-
-        RecipeManifest::fromJson('{}');
-    }
-
-    public function testFromJsonWithInvalidType()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The recipe type "test" is not supported, valid types are "block", "component".');
-
-        RecipeManifest::fromJson(<<<JSON
-                {
-                    "type": "test"
-                }
-            JSON);
-    }
-
     public function testFromJsonWithMissingName()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Property "name" is required.');
 
-        RecipeManifest::fromJson(<<<JSON
-                {
-                    "type": "component"
-                }
-            JSON);
+        RecipeManifest::fromJson('{}');
     }
 
     public function testFromJsonWithInvalidDependencies()
@@ -69,7 +44,6 @@ final class RecipeManifestTest extends TestCase
 
         RecipeManifest::fromJson(<<<JSON
                 {
-                    "type": "component",
                     "name": "MyComponent",
                     "copy-files": {
                         "templates/": "templates/"
@@ -86,7 +60,6 @@ final class RecipeManifestTest extends TestCase
 
         RecipeManifest::fromJson(<<<JSON
                 {
-                    "type": "component",
                     "name": "MyComponent",
                     "copy-files": {
                         "templates/": "templates/"
@@ -105,7 +78,6 @@ final class RecipeManifestTest extends TestCase
 
         RecipeManifest::fromJson(<<<JSON
                 {
-                    "type": "component",
                     "name": "MyComponent",
                     "copy-files": {
                         "templates/": "templates/"
@@ -125,7 +97,6 @@ final class RecipeManifestTest extends TestCase
 
         RecipeManifest::fromJson(<<<JSON
                 {
-                    "type": "component",
                     "name": "MyComponent",
                     "copy-files": {
                         "templates/": "templates/"
@@ -146,7 +117,6 @@ final class RecipeManifestTest extends TestCase
 
         RecipeManifest::fromJson(<<<JSON
                 {
-                    "type": "component",
                     "name": "MyComponent",
                     "copy-files": {
                         "templates/": "templates/"
@@ -168,7 +138,6 @@ final class RecipeManifestTest extends TestCase
 
         RecipeManifest::fromJson(<<<JSON
                 {
-                    "type": "component",
                     "name": "MyComponent",
                     "version-added": "",
                     "copy-files": {
@@ -185,7 +154,6 @@ final class RecipeManifestTest extends TestCase
 
         RecipeManifest::fromJson(<<<JSON
                 {
-                    "type": "component",
                     "name": "MyComponent",
                     "copy-files": {
                         "../../../../tmp/PWNED": "templates/"
@@ -201,7 +169,6 @@ final class RecipeManifestTest extends TestCase
 
         RecipeManifest::fromJson(<<<JSON
                 {
-                    "type": "component",
                     "name": "MyComponent",
                     "copy-files": {
                         "templates/": "../../../../tmp/PWNED"
@@ -217,7 +184,6 @@ final class RecipeManifestTest extends TestCase
 
         RecipeManifest::fromJson(<<<JSON
                 {
-                    "type": "component",
                     "name": "MyComponent",
                     "copy-files": {
                         "templates/": "..\\\\..\\\\tmp\\\\PWNED"
@@ -230,7 +196,6 @@ final class RecipeManifestTest extends TestCase
     {
         $manifest = RecipeManifest::fromJson(<<<JSON
                 {
-                    "type": "component",
                     "name": "MyComponent",
                     "copy-files": {
                         "templates/": "templates/"
@@ -238,7 +203,6 @@ final class RecipeManifestTest extends TestCase
                 }
             JSON);
 
-        $this->assertSame(RecipeType::Component, $manifest->type);
         $this->assertSame('MyComponent', $manifest->name);
         $this->assertSame(['templates/' => 'templates/'], $manifest->copyFiles);
         $this->assertEquals([], $manifest->dependencies);
@@ -249,7 +213,6 @@ final class RecipeManifestTest extends TestCase
     {
         $manifest = RecipeManifest::fromJson(<<<JSON
                 {
-                    "type": "component",
                     "name": "MyComponent",
                     "version-added": "2.35",
                     "copy-files": {
@@ -275,7 +238,6 @@ final class RecipeManifestTest extends TestCase
                 }
             JSON);
 
-        $this->assertSame(RecipeType::Component, $manifest->type);
         $this->assertSame('MyComponent', $manifest->name);
         $this->assertSame('2.35', $manifest->versionAdded);
         $this->assertSame(['templates/' => 'templates/'], $manifest->copyFiles);

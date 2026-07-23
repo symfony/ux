@@ -13,7 +13,6 @@ namespace Symfony\UX\Toolkit\Kit;
 
 use Symfony\Component\Filesystem\Path;
 use Symfony\UX\Toolkit\Recipe\Recipe;
-use Symfony\UX\Toolkit\Recipe\RecipeType;
 
 /**
  * @internal
@@ -54,25 +53,13 @@ final class Kit
     /**
      * @return array<Recipe>
      */
-    public function getRecipes(?RecipeType $type = null): array
+    public function getRecipes(): array
     {
-        if (null !== $type) {
-            return array_filter($this->recipes, static fn (Recipe $recipe) => $recipe->manifest->type === $type);
-        }
-
         return $this->recipes;
     }
 
-    public function getRecipe(string $name, ?RecipeType $type = null): ?Recipe
+    public function getRecipe(string $name): ?Recipe
     {
-        if (null === $recipe = $this->recipes[$name] ?? null) {
-            return null;
-        }
-
-        if (null !== $type && $recipe->manifest->type !== $type) {
-            return null;
-        }
-
-        return $recipe;
+        return $this->recipes[$name] ?? null;
     }
 }

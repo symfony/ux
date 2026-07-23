@@ -30,7 +30,6 @@ final class RecipeManifest
      * @param ?non-empty-string                         $versionAdded
      */
     public function __construct(
-        public readonly RecipeType $type,
         public readonly string $name,
         public readonly array $copyFiles,
         public readonly array $dependencies = [],
@@ -57,11 +56,6 @@ final class RecipeManifest
     {
         $data = json_decode($json, true, flags: \JSON_THROW_ON_ERROR);
 
-        $type = $data['type'] ?? throw new \InvalidArgumentException('Property "type" is required.');
-        if (null === $type = RecipeType::tryFrom($type)) {
-            throw new \InvalidArgumentException(\sprintf('The recipe type "%s" is not supported, valid types are "%s".', $data['type'], implode('", "', array_map(static fn (RecipeType $type) => $type->value, RecipeType::cases()))));
-        }
-
         $dependencies = DependencyParser::parse($data['dependencies'] ?? null, allowRecipe: true);
 
         $versionAdded = $data['version-added'] ?? null;
@@ -70,7 +64,6 @@ final class RecipeManifest
         }
 
         return new self(
-            type: $type,
             name: $data['name'] ?? throw new \InvalidArgumentException('Property "name" is required.'),
             copyFiles: $data['copy-files'] ?? [],
             dependencies: $dependencies,

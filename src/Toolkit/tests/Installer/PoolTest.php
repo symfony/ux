@@ -20,7 +20,6 @@ use Symfony\UX\Toolkit\File;
 use Symfony\UX\Toolkit\Installer\Pool;
 use Symfony\UX\Toolkit\Recipe\Recipe;
 use Symfony\UX\Toolkit\Recipe\RecipeManifest;
-use Symfony\UX\Toolkit\Recipe\RecipeType;
 
 final class PoolTest extends TestCase
 {
@@ -31,7 +30,6 @@ final class PoolTest extends TestCase
         $this->assertCount(0, $pool->getFiles());
 
         $recipe = new Recipe('test-recipe', __DIR__, new RecipeManifest(
-            type: RecipeType::Component,
             name: 'Test Recipe',
             copyFiles: [],
         ));
@@ -47,7 +45,6 @@ final class PoolTest extends TestCase
         $pool = new Pool();
 
         $recipe = new Recipe('test-recipe', __DIR__, new RecipeManifest(
-            type: RecipeType::Component,
             name: 'Test Recipe',
             copyFiles: [],
         ));

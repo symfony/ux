@@ -1,6 +1,5 @@
 {
     "$schema": "../../../schema-kit-recipe-v1.json",
-    "type": "component",
     "name": "Alert Dialog",
     "copy-files": {
         "assets/": "assets/",

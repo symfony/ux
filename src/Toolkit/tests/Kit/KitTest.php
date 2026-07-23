@@ -16,7 +16,6 @@ use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Kit\KitManifest;
 use Symfony\UX\Toolkit\Recipe\Recipe;
 use Symfony\UX\Toolkit\Recipe\RecipeManifest;
-use Symfony\UX\Toolkit\Recipe\RecipeType;
 
 final class KitTest extends TestCase
 {
@@ -42,22 +41,20 @@ final class KitTest extends TestCase
         $kit->addRecipe(new Recipe(
             'alert',
             __DIR__.'/alert',
-            new RecipeManifest(RecipeType::Component, 'Alert', []),
+            new RecipeManifest('Alert', []),
         ));
         $kit->addRecipe(new Recipe(
             'table',
             __DIR__.'/table',
-            new RecipeManifest(RecipeType::Component, 'Table', []),
+            new RecipeManifest('Table', []),
         ));
         $kit->addRecipe(new Recipe(
             'login',
             __DIR__.'/Login',
-            new RecipeManifest(RecipeType::Block, 'Login', []),
+            new RecipeManifest('Login', []),
         ));
 
         $this->assertCount(3, $kit->getRecipes());
-        $this->assertCount(2, $kit->getRecipes(type: RecipeType::Component));
-        $this->assertCount(1, $kit->getRecipes(type: RecipeType::Block));
     }
 
     public function testShouldFailIfComponentIsAlreadyRegisteredInTheKit()
@@ -69,12 +66,12 @@ final class KitTest extends TestCase
         $kit->addRecipe(new Recipe(
             'alert',
             __DIR__.'/alert',
-            new RecipeManifest(RecipeType::Component, 'Alert', []),
+            new RecipeManifest('Alert', []),
         ));
         $kit->addRecipe(new Recipe(
             'alert',
             __DIR__.'/alert',
-            new RecipeManifest(RecipeType::Component, 'Alert', []),
+            new RecipeManifest('Alert', []),
         ));
     }
 
@@ -84,12 +81,12 @@ final class KitTest extends TestCase
         $kit->addRecipe(new Recipe(
             'alert',
             __DIR__.'/Alert',
-            new RecipeManifest(RecipeType::Component, 'Alert', []),
+            new RecipeManifest('Alert', []),
         ));
         $kit->addRecipe(new Recipe(
             'table',
             __DIR__.'/Table',
-            new RecipeManifest(RecipeType::Component, 'Table', []),
+            new RecipeManifest('Table', []),
         ));
 
         $this->assertSame('Table', $kit->getRecipe('table')->manifest->name);

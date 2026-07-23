@@ -18,7 +18,6 @@ use Symfony\UX\Toolkit\Kit\Lint\Checker\DocHeadingLevelChecker;
 use Symfony\UX\Toolkit\Kit\Lint\LintSeverity;
 use Symfony\UX\Toolkit\Recipe\Recipe;
 use Symfony\UX\Toolkit\Recipe\RecipeManifest;
-use Symfony\UX\Toolkit\Recipe\RecipeType;
 
 final class DocHeadingLevelCheckerTest extends TestCase
 {
@@ -51,6 +50,6 @@ final class DocHeadingLevelCheckerTest extends TestCase
 
     private function recipeManifest(string $name): RecipeManifest
     {
-        return new RecipeManifest(RecipeType::Component, $name, []);
+        return new RecipeManifest($name, []);
     }
 }
