@@ -1,8 +1,5 @@
 # Symfony UX Toolkit
 
-**EXPERIMENTAL** This component is currently experimental and is
-likely to change, or even change drastically.
-
 Symfony UX Toolkit provides a set of ready-to-use UI components for Symfony applications.
 
 **This repository is a READ-ONLY sub-tree split**. See
