@@ -1,5 +1,25 @@
 import { Controller } from '@hotwired/stimulus';
 
+/**
+ * @value  value            The currently selected option's value.
+ * @value  placeholder      The label shown when no option is selected.
+ * @target trigger          The button that opens the popover and reflects its expanded state.
+ * @target label            The element displaying the selected option's label or the placeholder.
+ * @target popover          The floating panel containing the search field and options.
+ * @target search           The text input used to filter the options.
+ * @target option           An individual selectable option.
+ * @target empty            The message shown when no option matches the search query.
+ * @target hiddenInput      The hidden form input that carries the selected value.
+ * @target group            A group of options, hidden when none of its options match.
+ * @target clearButton      The button that clears the current selection.
+ * @action toggle           Opens or closes the popover.
+ * @action clear            Clears the current selection.
+ * @action onSearch         Filters the options against the search query.
+ * @action onSelect         Selects the clicked option.
+ * @action onOptionHover    Marks the hovered option as active.
+ * @action onTriggerKeydown Handles keyboard navigation while the trigger is focused.
+ * @action onSearchKeydown  Handles keyboard navigation and selection while searching.
+ */
 export default class extends Controller {
     static targets = [
         'trigger',

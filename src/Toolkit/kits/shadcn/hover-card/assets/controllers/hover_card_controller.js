@@ -1,5 +1,11 @@
 import { Controller } from '@hotwired/stimulus';
 
+/**
+ * @value  openDelay   The delay in milliseconds before the card opens.
+ * @value  closeDelay  The delay in milliseconds before the card closes.
+ * @action show        Opens the card after the configured open delay.
+ * @action hide        Closes the card after the configured close delay.
+ */
 export default class extends Controller {
     static values = {
         openDelay: { type: Number, default: 0 },

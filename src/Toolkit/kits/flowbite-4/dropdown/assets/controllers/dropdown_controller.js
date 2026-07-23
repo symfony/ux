@@ -1,6 +1,15 @@
 import { Controller } from '@hotwired/stimulus';
 import { Dropdown } from 'flowbite';
 
+/**
+ * @value  placement       Placement of the dropdown relative to its trigger.
+ * @value  triggerType     How the dropdown is triggered (e.g. click or hover).
+ * @value  open            Whether the dropdown is open on initial render.
+ * @value  delay           Delay in milliseconds before the dropdown toggles on hover.
+ * @value  offsetDistance  Distance in pixels between the trigger and the dropdown content.
+ * @target trigger         The element that toggles the dropdown and reflects its expanded state.
+ * @target content         The dropdown menu container that is shown and hidden.
+ */
 export default class extends Controller {
     dropdown = null;
     static targets = ['trigger', 'content'];

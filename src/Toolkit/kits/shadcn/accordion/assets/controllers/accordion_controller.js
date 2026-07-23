@@ -1,5 +1,14 @@
 import { Controller } from '@hotwired/stimulus';
 
+/**
+ * @value  multiple       Whether multiple items can be open at the same time.
+ * @value  orientation    The layout orientation (`vertical` or `horizontal`) that controls keyboard navigation.
+ * @target item           Each accordion item wrapping a trigger and its content.
+ * @target trigger        The button that toggles its item and reflects the expanded state.
+ * @target content        The collapsible region shown or hidden when its item toggles.
+ * @action toggle         Toggles the accordion item of the clicked trigger.
+ * @action handleKeydown  Moves focus between triggers using arrow, Home, and End keys.
+ */
 export default class extends Controller {
     static targets = ['item', 'trigger', 'content'];
 

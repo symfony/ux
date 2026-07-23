@@ -27,6 +27,19 @@ const TYPE_ICONS = {
 const CLOSE_ICON =
     '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
 
+/**
+ * @value  position       Corner where toasts are stacked, e.g. `top-right` or `bottom-left`.
+ * @value  expand         Whether hovering expands the stack to reveal all toasts.
+ * @value  richColors     Whether type-specific background and border colors are applied.
+ * @value  closeButton    Whether a close button is rendered on each toast.
+ * @value  duration       Default lifetime of a toast in milliseconds before auto-dismiss.
+ * @value  gap            Spacing in pixels between stacked toasts.
+ * @value  visibleToasts  Maximum number of toasts visible at once.
+ * @value  dir            Text direction, `ltr` or `rtl`, controlling swipe-to-dismiss direction.
+ * @value  theme          Color theme applied to the container, `system`, `light`, or `dark`.
+ * @target list           The `<ol>` element that holds and stacks the toast items.
+ * @action fire           Creates a toast from the click event's `data-sonner-*-param` attributes.
+ */
 export default class extends Controller {
     static values = {
         position: { type: String, default: 'top-right' },

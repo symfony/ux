@@ -1,5 +1,15 @@
 import { Controller } from '@hotwired/stimulus';
 
+/**
+ * @value  delayDuration    Delay in milliseconds before the tooltip is shown.
+ * @value  wrapperSelector  CSS selector of the tooltip wrapper element portaled to the body.
+ * @value  contentSelector  CSS selector of the tooltip content element.
+ * @value  arrowSelector    CSS selector of the tooltip arrow element.
+ * @target trigger          The element that triggers the tooltip and anchors its position.
+ * @target wrapper          The tooltip wrapper element, watched to reinitialize on live component rerender.
+ * @action show             Shows the tooltip after the configured delay.
+ * @action hide             Hides the tooltip.
+ */
 export default class extends Controller {
     static values = {
         delayDuration: Number,

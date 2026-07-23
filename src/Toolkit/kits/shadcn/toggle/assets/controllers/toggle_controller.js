@@ -1,5 +1,9 @@
 import { Controller } from '@hotwired/stimulus';
 
+/**
+ * @value  pressed  Whether the toggle is currently pressed.
+ * @action toggle   Toggles the pressed state.
+ */
 export default class extends Controller {
     static values = { pressed: Boolean };
 

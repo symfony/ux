@@ -1,5 +1,13 @@
 import { Controller } from '@hotwired/stimulus';
 
+/**
+ * @value  open     Whether the dialog is open on initial render.
+ * @target trigger  The element that opens the dialog and reflects its expanded state.
+ * @target dialog   The native `<dialog>` element that is shown and closed.
+ * @action open     Opens the dialog.
+ * @action close    Closes the dialog.
+ * @action closeOnClickOutside  Closes the dialog when the backdrop outside the content is clicked.
+ */
 export default class extends Controller {
     static targets = ['trigger', 'dialog'];
 

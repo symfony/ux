@@ -1,5 +1,10 @@
 import { Controller } from '@hotwired/stimulus';
 
+/**
+ * @value  type           Selection mode of the group, either `multiple` or `single`.
+ * @value  labelSelector  CSS selector of an element whose text is updated with the selected value in single mode.
+ * @action toggle         Enforces single-selection by deselecting the other toggles and updating the label.
+ */
 export default class extends Controller {
     static values = {
         type: { type: String, default: 'multiple' },

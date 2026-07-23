@@ -1,5 +1,11 @@
 import { Controller } from '@hotwired/stimulus';
 
+/**
+ * @value  open     Whether the collapsible is expanded on initial render.
+ * @target trigger  The element that toggles the collapsible and reflects its expanded state.
+ * @target content  The collapsible region that is shown or hidden.
+ * @action toggle   Toggles the collapsible between its open and closed states.
+ */
 export default class extends Controller {
     static targets = ['trigger', 'content'];
 

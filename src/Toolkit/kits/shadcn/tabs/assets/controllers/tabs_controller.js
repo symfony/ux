@@ -1,5 +1,11 @@
 import { Controller } from '@hotwired/stimulus';
 
+/**
+ * @value  activeTab  The `data-tab-id` of the currently selected tab.
+ * @target trigger    A tab button that selects its panel and reflects the active state.
+ * @target tab         A tab panel that is shown or hidden based on the active tab.
+ * @action open        Activates the tab identified by the clicked trigger's `data-tab-id`.
+ */
 export default class extends Controller {
     static targets = ['trigger', 'tab'];
     static values = { activeTab: String };

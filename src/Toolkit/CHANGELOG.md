@@ -9,6 +9,7 @@
 - Add `RecipeDocRenderer` that renders recipes docs as HTML or Markdown, to ease wiring official kits into ux.symfony.com and, in the future, previewing community kits
 - Add optional `color` and `icon` fields to the kit manifest
 - Include kit-global dependencies when installing a recipe
+- [Flowbite][Shadcn] Document the Stimulus controllers' API (values, targets, actions) so it renders in the recipe documentation
 
 ## 3.3.0
 

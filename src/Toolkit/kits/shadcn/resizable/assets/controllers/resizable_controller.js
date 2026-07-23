@@ -1,5 +1,10 @@
 import { Controller } from '@hotwired/stimulus';
 
+/**
+ * @value  orientation  Layout direction of the panels, either `horizontal` or `vertical`.
+ * @target panel         A resizable panel whose flex size is adjusted when a handle is dragged.
+ * @target handle        A draggable divider that resizes its adjacent panels via pointer or arrow keys.
+ */
 export default class extends Controller {
     static targets = ['panel', 'handle'];
     static values = { orientation: { type: String, default: 'horizontal' } };
