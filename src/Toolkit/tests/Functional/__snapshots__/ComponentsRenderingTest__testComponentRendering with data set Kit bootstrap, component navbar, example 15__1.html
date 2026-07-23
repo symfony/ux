@@ -1,0 +1,32 @@
+<!--
+- Kit: Bootstrap
+- Component: Navbar
+- Code:
+```twig
+<div class="collapse" id="navbarToggleExternalContent" data-bs-theme="dark">
+    <div class="bg-dark p-4">
+        <h5 class="text-body-emphasis h4">Collapsed content</h5>
+        <span class="text-body-secondary">Toggleable via the navbar brand.</span>
+    </div>
+</div>
+<twig:Navbar background="dark" theme="dark" class="w-100">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</twig:Navbar>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="collapse" id="navbarToggleExternalContent" data-bs-theme="dark">
+    <div class="bg-dark p-4">
+        <h5 class="text-body-emphasis h4">Collapsed content</h5>
+        <span class="text-body-secondary">Toggleable via the navbar brand.</span>
+    </div>
+</div>
+<nav class="navbar bg-dark w-100" data-bs-theme="dark"><div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</nav>

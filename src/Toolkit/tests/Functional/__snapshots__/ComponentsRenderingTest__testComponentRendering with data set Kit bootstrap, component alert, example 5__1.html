@@ -1,0 +1,14 @@
+<!--
+- Kit: Bootstrap
+- Component: Alert
+- Code:
+```twig
+<twig:Alert color="warning" dismissible>
+    <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+</twig:Alert>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+<strong>Holy guacamole!</strong> You should check in on some of those fields below.
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>

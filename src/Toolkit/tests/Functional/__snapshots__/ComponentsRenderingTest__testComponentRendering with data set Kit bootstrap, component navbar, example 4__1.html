@@ -1,0 +1,75 @@
+<!--
+- Kit: Bootstrap
+- Component: Navbar
+- Code:
+```twig
+<div class="d-flex flex-column gap-3 w-100">
+    <twig:Navbar>
+        <div class="container-fluid">
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </twig:Navbar>
+
+    <twig:Navbar>
+        <div class="container-fluid">
+            <a class="navbar-brand">Navbar</a>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </twig:Navbar>
+
+    <twig:Navbar>
+        <form class="container-fluid">
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">@</span>
+                <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+        </form>
+    </twig:Navbar>
+
+    <twig:Navbar>
+        <form class="container-fluid justify-content-start">
+            <button class="btn btn-outline-success me-2" type="button">Main button</button>
+            <button class="btn btn-sm btn-outline-secondary" type="button">Smaller button</button>
+        </form>
+    </twig:Navbar>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column gap-3 w-100">
+    <nav class="navbar bg-body-tertiary"><div class="container-fluid">
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+
+    <nav class="navbar bg-body-tertiary"><div class="container-fluid">
+            <a class="navbar-brand">Navbar</a>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+
+    <nav class="navbar bg-body-tertiary"><form class="container-fluid">
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">@</span>
+                <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+        </form>
+    </nav>
+
+    <nav class="navbar bg-body-tertiary"><form class="container-fluid justify-content-start">
+            <button class="btn btn-outline-success me-2" type="button">Main button</button>
+            <button class="btn btn-sm btn-outline-secondary" type="button">Smaller button</button>
+        </form>
+    </nav>
+</div>

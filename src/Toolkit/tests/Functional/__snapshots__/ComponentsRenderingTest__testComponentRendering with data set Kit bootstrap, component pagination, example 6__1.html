@@ -1,0 +1,55 @@
+<!--
+- Kit: Bootstrap
+- Component: Pagination
+- Code:
+```twig
+<div class="d-flex flex-column gap-3">
+    <twig:Pagination align="center" ariaLabel="Centered page navigation example">
+        <twig:Pagination:Item label="Previous" disabled />
+        <twig:Pagination:Item href="#" label="1" />
+        <twig:Pagination:Item href="#" label="2" />
+        <twig:Pagination:Item href="#" label="3" />
+        <twig:Pagination:Item href="#" label="Next" />
+    </twig:Pagination>
+
+    <twig:Pagination align="end" ariaLabel="End-aligned page navigation example">
+        <twig:Pagination:Item label="Previous" disabled />
+        <twig:Pagination:Item href="#" label="1" />
+        <twig:Pagination:Item href="#" label="2" />
+        <twig:Pagination:Item href="#" label="3" />
+        <twig:Pagination:Item href="#" label="Next" />
+    </twig:Pagination>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column gap-3">
+    <nav aria-label="Centered page navigation example">
+    <ul class="pagination justify-content-center">
+<li class="page-item disabled"><span class="page-link" aria-disabled="true">Previous</span></li>
+
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+
+    </ul>
+</nav>
+
+    <nav aria-label="End-aligned page navigation example">
+    <ul class="pagination justify-content-end">
+<li class="page-item disabled"><span class="page-link" aria-disabled="true">Previous</span></li>
+
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+
+    </ul>
+</nav>
+</div>

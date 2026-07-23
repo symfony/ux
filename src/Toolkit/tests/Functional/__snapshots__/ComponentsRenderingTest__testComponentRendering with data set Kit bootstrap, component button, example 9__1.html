@@ -1,0 +1,39 @@
+<!--
+- Kit: Bootstrap
+- Component: Button
+- Code:
+```twig
+<div class="d-flex flex-column align-items-start gap-3">
+    <div class="d-inline-flex flex-wrap gap-1">
+        <twig:Button :color="null" data-bs-toggle="button">Toggle button</twig:Button>
+        <twig:Button :color="null" class="active" data-bs-toggle="button" aria-pressed="true">Active toggle button</twig:Button>
+        <twig:Button :color="null" disabled data-bs-toggle="button">Disabled toggle button</twig:Button>
+    </div>
+    <div class="d-inline-flex flex-wrap gap-1">
+        <twig:Button data-bs-toggle="button">Toggle button</twig:Button>
+        <twig:Button class="active" data-bs-toggle="button" aria-pressed="true">Active toggle button</twig:Button>
+        <twig:Button disabled data-bs-toggle="button">Disabled toggle button</twig:Button>
+    </div>
+    <div class="d-inline-flex flex-wrap gap-1">
+        <twig:Button tag="a" :color="null" href="#" data-bs-toggle="button">Toggle link</twig:Button>
+        <twig:Button tag="a" :color="null" href="#" class="active" data-bs-toggle="button" aria-pressed="true">Active toggle link</twig:Button>
+        <twig:Button tag="a" :color="null" disabled data-bs-toggle="button">Disabled toggle link</twig:Button>
+    </div>
+    <div class="d-inline-flex flex-wrap gap-1">
+        <twig:Button tag="a" href="#" data-bs-toggle="button">Toggle link</twig:Button>
+        <twig:Button tag="a" href="#" class="active" data-bs-toggle="button" aria-pressed="true">Active toggle link</twig:Button>
+        <twig:Button tag="a" disabled data-bs-toggle="button">Disabled toggle link</twig:Button>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column align-items-start gap-3">
+    <div class="d-inline-flex flex-wrap gap-1">
+        <button class="btn btn-primary" type="button" data-bs-toggle="button">Toggle button</button>        <button class="btn btn-primary active" type="button" data-bs-toggle="button" aria-pressed="true">Active toggle button</button>        <button class="btn btn-primary" type="button" disabled data-bs-toggle="button">Disabled toggle button</button>    </div>
+    <div class="d-inline-flex flex-wrap gap-1">
+        <button class="btn btn-primary" type="button" data-bs-toggle="button">Toggle button</button>        <button class="btn btn-primary active" type="button" data-bs-toggle="button" aria-pressed="true">Active toggle button</button>        <button class="btn btn-primary" type="button" disabled data-bs-toggle="button">Disabled toggle button</button>    </div>
+    <div class="d-inline-flex flex-wrap gap-1">
+        <a class="btn btn-primary" role="button" href="#" data-bs-toggle="button">Toggle link</a>        <a class="btn btn-primary active" role="button" href="#" data-bs-toggle="button" aria-pressed="true">Active toggle link</a>        <a class="btn btn-primary disabled" role="button" aria-disabled="true" tabindex="-1" data-bs-toggle="button">Disabled toggle link</a>    </div>
+    <div class="d-inline-flex flex-wrap gap-1">
+        <a class="btn btn-primary" role="button" href="#" data-bs-toggle="button">Toggle link</a>        <a class="btn btn-primary active" role="button" href="#" data-bs-toggle="button" aria-pressed="true">Active toggle link</a>        <a class="btn btn-primary disabled" role="button" aria-disabled="true" tabindex="-1" data-bs-toggle="button">Disabled toggle link</a>    </div>
+</div>

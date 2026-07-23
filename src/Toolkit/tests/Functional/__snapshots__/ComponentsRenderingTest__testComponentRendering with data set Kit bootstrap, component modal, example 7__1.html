@@ -1,0 +1,78 @@
+<!--
+- Kit: Bootstrap
+- Component: Modal
+- Code:
+```twig
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#grid-modal">
+    Launch grid modal
+</button>
+
+<twig:Modal id="grid-modal" size="lg">
+    <twig:Modal:Header><twig:Modal:Title>Grids in modals</twig:Modal:Title></twig:Modal:Header>
+    <twig:Modal:Body>
+        <div class="container-fluid text-center">
+            <div class="row mb-3">
+                <div class="col-md-4 border py-2">.col-md-4</div>
+                <div class="col-md-4 ms-auto border py-2">.col-md-4 .ms-auto</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3 ms-auto border py-2">.col-md-3 .ms-auto</div>
+                <div class="col-md-2 ms-auto border py-2">.col-md-2 .ms-auto</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6 ms-auto border py-2">.col-md-6 .ms-auto</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-9 border py-2">
+                    Level 1: .col-sm-9
+                    <div class="row mt-2">
+                        <div class="col-8 col-sm-6 border py-2">Level 2: .col-8 .col-sm-6</div>
+                        <div class="col-4 col-sm-6 border py-2">Level 2: .col-4 .col-sm-6</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </twig:Modal:Body>
+    <twig:Modal:Footer><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></twig:Modal:Footer>
+</twig:Modal>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#grid-modal">
+    Launch grid modal
+</button>
+
+<div id="grid-modal" class="modal fade" tabindex="-1" aria-labelledby="grid-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+<div class="modal-header">
+<h1 id="grid-modal-label" class="modal-title fs-5">Grids in modals</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+    <div class="modal-body">
+<div class="container-fluid text-center">
+            <div class="row mb-3">
+                <div class="col-md-4 border py-2">.col-md-4</div>
+                <div class="col-md-4 ms-auto border py-2">.col-md-4 .ms-auto</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3 ms-auto border py-2">.col-md-3 .ms-auto</div>
+                <div class="col-md-2 ms-auto border py-2">.col-md-2 .ms-auto</div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6 ms-auto border py-2">.col-md-6 .ms-auto</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-9 border py-2">
+                    Level 1: .col-sm-9
+                    <div class="row mt-2">
+                        <div class="col-8 col-sm-6 border py-2">Level 2: .col-8 .col-sm-6</div>
+                        <div class="col-4 col-sm-6 border py-2">Level 2: .col-4 .col-sm-6</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+</div>
+    </div>
+</div>

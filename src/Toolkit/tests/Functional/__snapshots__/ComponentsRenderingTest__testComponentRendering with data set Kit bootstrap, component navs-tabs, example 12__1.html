@@ -1,0 +1,35 @@
+<!--
+- Kit: Bootstrap
+- Component: Navs and Tabs
+- Code:
+```twig
+<nav aria-label="Account sections">
+    <twig:Nav tag="div" type="tabs" role="tablist" class="mb-3">
+        <twig:Nav:Link tag="button" id="nav-home-tab" target="#nav-home" active>Home</twig:Nav:Link>
+        <twig:Nav:Link tag="button" id="nav-profile-tab" target="#nav-profile">Profile</twig:Nav:Link>
+        <twig:Nav:Link tag="button" id="nav-contact-tab" target="#nav-contact">Contact</twig:Nav:Link>
+        <twig:Nav:Link tag="button" id="nav-disabled-tab" target="#nav-disabled" disabled>Disabled</twig:Nav:Link>
+    </twig:Nav>
+</nav>
+<twig:TabContent>
+    <twig:TabPane id="nav-home" labelledBy="nav-home-tab" active fade>This is the Home tab content.</twig:TabPane>
+    <twig:TabPane id="nav-profile" labelledBy="nav-profile-tab" fade>This is the Profile tab content.</twig:TabPane>
+    <twig:TabPane id="nav-contact" labelledBy="nav-contact-tab" fade>This is the Contact tab content.</twig:TabPane>
+    <twig:TabPane id="nav-disabled" labelledBy="nav-disabled-tab" fade>This tab is disabled.</twig:TabPane>
+</twig:TabContent>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<nav aria-label="Account sections">
+    <div class="nav nav-tabs mb-3" role="tablist">
+<button class="nav-link active" id="nav-home-tab" role="tab" data-bs-toggle="tab" data-bs-target="#nav-home" aria-controls="nav-home" aria-selected="true" type="button">Home</button>
+        <button class="nav-link" id="nav-profile-tab" role="tab" data-bs-toggle="tab" data-bs-target="#nav-profile" aria-controls="nav-profile" aria-selected="false" type="button">Profile</button>
+        <button class="nav-link" id="nav-contact-tab" role="tab" data-bs-toggle="tab" data-bs-target="#nav-contact" aria-controls="nav-contact" aria-selected="false" type="button">Contact</button>
+        <button class="nav-link disabled" id="nav-disabled-tab" role="tab" data-bs-toggle="tab" data-bs-target="#nav-disabled" aria-controls="nav-disabled" aria-selected="false" type="button" disabled>Disabled</button>
+    </div>
+</nav>
+<div class="tab-content">
+<div class="tab-pane fade show active" id="nav-home" role="tabpanel" tabindex="0" aria-labelledby="nav-home-tab">This is the Home tab content.</div>
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" tabindex="0" aria-labelledby="nav-profile-tab">This is the Profile tab content.</div>
+    <div class="tab-pane fade" id="nav-contact" role="tabpanel" tabindex="0" aria-labelledby="nav-contact-tab">This is the Contact tab content.</div>
+    <div class="tab-pane fade" id="nav-disabled" role="tabpanel" tabindex="0" aria-labelledby="nav-disabled-tab">This tab is disabled.</div>
+</div>

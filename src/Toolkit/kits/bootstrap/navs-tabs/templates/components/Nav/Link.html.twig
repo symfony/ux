@@ -1,0 +1,54 @@
+{# @prop tag 'a'|'button' The HTML element used for the navigation control. #}
+{# @prop href string|null The destination used by anchor navigation links. #}
+{# @prop id string|null The unique identifier of a dynamic tab control. #}
+{# @prop target string|null The selector of the associated tab panel. #}
+{# @prop toggle 'tab'|'pill'|null The Bootstrap JavaScript behavior. #}
+{# @prop active boolean Whether the navigation link or tab is active. #}
+{# @prop disabled boolean Whether the navigation link or tab is disabled. #}
+{# @prop content string The fallback label when no content block is provided. #}
+{# @block content The navigation link or tab label. #}
+{%- props
+    tag = 'a',
+    href = '#',
+    id = null,
+    target = null,
+    toggle = null,
+    active = false,
+    disabled = false,
+    content = ''
+-%}
+
+{%- set final_tag = tag == 'button' ? 'button' : 'a' -%}
+{%- set link_classes = html_classes('nav-link', {
+    active: active,
+    disabled: disabled,
+}) -%}
+{%- set default_attrs = {class: link_classes} -%}
+{%- if id not in [null, ''] -%}
+    {%- set default_attrs = default_attrs|merge({id: id}) -%}
+{%- endif -%}
+{%- if target not in [null, ''] -%}
+    {%- set default_attrs = default_attrs|merge({
+        role: 'tab',
+        'data-bs-toggle': toggle in ['tab', 'pill'] ? toggle : 'tab',
+        'data-bs-target': target,
+        'aria-controls': target|trim('#'),
+        'aria-selected': active ? 'true' : 'false',
+    }) -%}
+{%- elseif active -%}
+    {%- set default_attrs = default_attrs|merge({'aria-current': 'page'}) -%}
+{%- endif -%}
+{%- if final_tag == 'button' -%}
+    {%- set default_attrs = default_attrs|merge({type: 'button'}) -%}
+    {%- if disabled -%}
+        {%- set default_attrs = default_attrs|merge({disabled: true}) -%}
+    {%- endif -%}
+{%- elseif disabled -%}
+    {%- set default_attrs = default_attrs|merge({'aria-disabled': 'true', tabindex: '-1'}) -%}
+{%- elseif href not in [null, ''] -%}
+    {%- set default_attrs = default_attrs|merge({href: href}) -%}
+{%- endif -%}
+
+<{{ final_tag }} {{ attributes.defaults(default_attrs) }}>
+    {%- block content -%}{{- content -}}{%- endblock -%}
+</{{ final_tag }}>

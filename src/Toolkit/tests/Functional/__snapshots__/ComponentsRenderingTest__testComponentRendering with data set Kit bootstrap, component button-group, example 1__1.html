@@ -1,0 +1,27 @@
+<!--
+- Kit: Bootstrap
+- Component: Button Group
+- Code:
+```twig
+<div class="d-flex flex-column align-items-start gap-3">
+    <twig:ButtonGroup label="Basic example">
+        <twig:Button>Left</twig:Button>
+        <twig:Button>Middle</twig:Button>
+        <twig:Button>Right</twig:Button>
+    </twig:ButtonGroup>
+
+    <twig:ButtonGroup label="Page navigation">
+        <twig:Button tag="a" href="#" class="active" aria-current="page">Active link</twig:Button>
+        <twig:Button tag="a" href="#">Link</twig:Button>
+        <twig:Button tag="a" href="#">Link</twig:Button>
+    </twig:ButtonGroup>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column align-items-start gap-3">
+    <div class="btn-group" role="group" aria-label="Basic example">
+<button class="btn btn-primary" type="button">Left</button>        <button class="btn btn-primary" type="button">Middle</button>        <button class="btn btn-primary" type="button">Right</button>    </div>
+
+    <div class="btn-group" role="group" aria-label="Page navigation">
+<a class="btn btn-primary active" role="button" href="#" aria-current="page">Active link</a>        <a class="btn btn-primary" role="button" href="#">Link</a>        <a class="btn btn-primary" role="button" href="#">Link</a>    </div>
+</div>

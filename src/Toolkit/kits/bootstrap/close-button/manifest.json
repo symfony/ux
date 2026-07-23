@@ -1,0 +1,10 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Close Button",
+    "description": "Provide an accessible control for dismissing content such as modals and alerts.",
+    "version-added": "3.4",
+    "copy-files": {
+        "templates/": "templates/"
+    }
+}

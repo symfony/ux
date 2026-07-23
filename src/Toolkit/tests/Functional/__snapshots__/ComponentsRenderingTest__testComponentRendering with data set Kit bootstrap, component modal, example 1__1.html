@@ -1,0 +1,36 @@
+<!--
+- Kit: Bootstrap
+- Component: Modal
+- Code:
+```twig
+<twig:Modal id="static-modal" :fade="false" class="position-static d-block" aria-hidden="false">
+    <twig:Modal:Header>
+        <twig:Modal:Title tag="h5">Modal title</twig:Modal:Title>
+    </twig:Modal:Header>
+    <twig:Modal:Body>
+        <p>Modal body text goes here.</p>
+    </twig:Modal:Body>
+    <twig:Modal:Footer>
+        <button type="button" class="btn btn-secondary">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+    </twig:Modal:Footer>
+</twig:Modal>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div id="static-modal" class="modal position-static d-block" tabindex="-1" aria-labelledby="static-modal-label" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+<div class="modal-header">
+<h5 id="static-modal-label" class="modal-title fs-5">Modal title</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+    <div class="modal-body">
+<p>Modal body text goes here.</p>
+    </div>
+    <div class="modal-footer">
+<button type="button" class="btn btn-secondary">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+    </div>
+</div>
+    </div>
+</div>

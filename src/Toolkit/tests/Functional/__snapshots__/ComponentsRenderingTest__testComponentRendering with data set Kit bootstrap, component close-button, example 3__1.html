@@ -1,0 +1,17 @@
+<!--
+- Kit: Bootstrap
+- Component: Close Button
+- Code:
+```twig
+<div class="d-inline-flex gap-3 rounded bg-dark p-3" data-bs-theme="dark">
+    <twig:CloseButton label="Close" />
+    <twig:CloseButton disabled label="Close" />
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-inline-flex gap-3 rounded bg-dark p-3" data-bs-theme="dark">
+    <button type="button" class="btn-close" aria-label="Close"></button>
+
+    <button type="button" class="btn-close" aria-label="Close" disabled></button>
+
+</div>

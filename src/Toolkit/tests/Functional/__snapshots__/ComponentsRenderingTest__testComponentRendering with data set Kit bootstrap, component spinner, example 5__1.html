@@ -1,0 +1,29 @@
+<!--
+- Kit: Bootstrap
+- Component: Spinner
+- Code:
+```twig
+<div class="d-flex flex-column gap-4">
+    <div class="d-flex justify-content-center">
+        <twig:Spinner label="Loading..." />
+    </div>
+
+    <div class="d-flex align-items-center">
+        <strong role="status">Loading...</strong>
+        <twig:Spinner class="ms-auto" decorative />
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column gap-4">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>
+
+    </div>
+
+    <div class="d-flex align-items-center">
+        <strong role="status">Loading...</strong>
+        <div class="spinner-border ms-auto" aria-hidden="true"></div>
+
+    </div>
+</div>

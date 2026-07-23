@@ -1,0 +1,39 @@
+<!--
+- Kit: Bootstrap
+- Component: Navs and Tabs
+- Code:
+```twig
+<div class="d-flex align-items-start">
+    <twig:Nav tag="div" type="pills" vertical role="tablist" class="me-3" aria-orientation="vertical">
+        <twig:Nav:Link tag="button" id="vertical-home-tab" target="#vertical-home" toggle="pill" active>Home</twig:Nav:Link>
+        <twig:Nav:Link tag="button" id="vertical-profile-tab" target="#vertical-profile" toggle="pill">Profile</twig:Nav:Link>
+        <twig:Nav:Link tag="button" id="vertical-disabled-tab" target="#vertical-disabled" toggle="pill" disabled>Disabled</twig:Nav:Link>
+        <twig:Nav:Link tag="button" id="vertical-messages-tab" target="#vertical-messages" toggle="pill">Messages</twig:Nav:Link>
+        <twig:Nav:Link tag="button" id="vertical-settings-tab" target="#vertical-settings" toggle="pill">Settings</twig:Nav:Link>
+    </twig:Nav>
+    <twig:TabContent>
+        <twig:TabPane id="vertical-home" labelledBy="vertical-home-tab" active fade>Home content.</twig:TabPane>
+        <twig:TabPane id="vertical-profile" labelledBy="vertical-profile-tab" fade>Profile content.</twig:TabPane>
+        <twig:TabPane id="vertical-disabled" labelledBy="vertical-disabled-tab" fade>Disabled content.</twig:TabPane>
+        <twig:TabPane id="vertical-messages" labelledBy="vertical-messages-tab" fade>Messages content.</twig:TabPane>
+        <twig:TabPane id="vertical-settings" labelledBy="vertical-settings-tab" fade>Settings content.</twig:TabPane>
+    </twig:TabContent>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex align-items-start">
+    <div class="nav nav-pills flex-column me-3" role="tablist" aria-orientation="vertical">
+<button class="nav-link active" id="vertical-home-tab" role="tab" data-bs-toggle="pill" data-bs-target="#vertical-home" aria-controls="vertical-home" aria-selected="true" type="button">Home</button>
+        <button class="nav-link" id="vertical-profile-tab" role="tab" data-bs-toggle="pill" data-bs-target="#vertical-profile" aria-controls="vertical-profile" aria-selected="false" type="button">Profile</button>
+        <button class="nav-link disabled" id="vertical-disabled-tab" role="tab" data-bs-toggle="pill" data-bs-target="#vertical-disabled" aria-controls="vertical-disabled" aria-selected="false" type="button" disabled>Disabled</button>
+        <button class="nav-link" id="vertical-messages-tab" role="tab" data-bs-toggle="pill" data-bs-target="#vertical-messages" aria-controls="vertical-messages" aria-selected="false" type="button">Messages</button>
+        <button class="nav-link" id="vertical-settings-tab" role="tab" data-bs-toggle="pill" data-bs-target="#vertical-settings" aria-controls="vertical-settings" aria-selected="false" type="button">Settings</button>
+    </div>
+    <div class="tab-content">
+<div class="tab-pane fade show active" id="vertical-home" role="tabpanel" tabindex="0" aria-labelledby="vertical-home-tab">Home content.</div>
+        <div class="tab-pane fade" id="vertical-profile" role="tabpanel" tabindex="0" aria-labelledby="vertical-profile-tab">Profile content.</div>
+        <div class="tab-pane fade" id="vertical-disabled" role="tabpanel" tabindex="0" aria-labelledby="vertical-disabled-tab">Disabled content.</div>
+        <div class="tab-pane fade" id="vertical-messages" role="tabpanel" tabindex="0" aria-labelledby="vertical-messages-tab">Messages content.</div>
+        <div class="tab-pane fade" id="vertical-settings" role="tabpanel" tabindex="0" aria-labelledby="vertical-settings-tab">Settings content.</div>
+    </div>
+</div>

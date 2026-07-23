@@ -1,0 +1,13 @@
+{
+    "$schema": "../../schema-kit-v1.json",
+    "name": "Bootstrap",
+    "description": "Components based on Bootstrap 5.3, the world's most popular HTML, CSS, and JavaScript library for building responsive, mobile-first interfaces.",
+    "license": "MIT",
+    "homepage": "https://ux.symfony.com/toolkit/kits/bootstrap",
+    "color": "#7952b3",
+    "icon": "icon.svg",
+    "dependencies": {
+        "npm": ["bootstrap@^5.3.0"],
+        "importmap": ["bootstrap", "bootstrap/dist/css/bootstrap.min.css"]
+    }
+}

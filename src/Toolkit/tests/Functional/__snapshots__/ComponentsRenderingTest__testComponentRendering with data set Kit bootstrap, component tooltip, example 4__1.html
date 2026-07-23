@@ -1,0 +1,43 @@
+<!--
+- Kit: Bootstrap
+- Component: Tooltip
+- Code:
+```twig
+<div class="d-flex flex-wrap gap-2">
+    <twig:Tooltip title="Tooltip on top" placement="top">
+        <button type="button" class="btn btn-secondary" {{ html_attr(tooltip_trigger_attrs) }}>Tooltip on top</button>
+    </twig:Tooltip>
+    <twig:Tooltip title="Tooltip on right" placement="right">
+        <button type="button" class="btn btn-secondary" {{ html_attr(tooltip_trigger_attrs) }}>Tooltip on right</button>
+    </twig:Tooltip>
+    <twig:Tooltip title="Tooltip on bottom" placement="bottom">
+        <button type="button" class="btn btn-secondary" {{ html_attr(tooltip_trigger_attrs) }}>Tooltip on bottom</button>
+    </twig:Tooltip>
+    <twig:Tooltip title="Tooltip on left" placement="left">
+        <button type="button" class="btn btn-secondary" {{ html_attr(tooltip_trigger_attrs) }}>Tooltip on left</button>
+    </twig:Tooltip>
+    <twig:Tooltip title="<em>Tooltip</em> <u>with</u> <b>HTML</b>" html>
+        <button type="button" class="btn btn-secondary" {{ html_attr(tooltip_trigger_attrs) }}>Tooltip with HTML</button>
+    </twig:Tooltip>
+</div>
+
+<script type="module">
+    import { Tooltip } from 'bootstrap';
+
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((element) => Tooltip.getOrCreateInstance(element));
+</script>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap gap-2">
+    <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-title="Tooltip on top" data-bs-placement="top">Tooltip on top</button>
+        <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-title="Tooltip on right" data-bs-placement="right">Tooltip on right</button>
+        <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-title="Tooltip on bottom" data-bs-placement="bottom">Tooltip on bottom</button>
+        <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-title="Tooltip on left" data-bs-placement="left">Tooltip on left</button>
+        <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-title="&lt;em&gt;Tooltip&lt;/em&gt; &lt;u&gt;with&lt;/u&gt; &lt;b&gt;HTML&lt;/b&gt;" data-bs-placement="top" data-bs-html="true">Tooltip with HTML</button>
+    </div>
+
+<script type="module">
+    import { Tooltip } from 'bootstrap';
+
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((element) => Tooltip.getOrCreateInstance(element));
+</script>

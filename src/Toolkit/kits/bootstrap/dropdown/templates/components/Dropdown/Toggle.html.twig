@@ -1,0 +1,41 @@
+{# @prop tag 'button'|'a' The interactive element to render. #}
+{# @prop color 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark' The Bootstrap contextual color. #}
+{# @prop outline boolean Whether to render the outline variant. #}
+{# @prop size 'sm'|'lg'|null The optional button size. #}
+{# @prop split boolean Whether to render only the split-menu caret. #}
+{# @prop disabled boolean Whether the toggle is disabled. #}
+{# @block content The visible toggle label. #}
+{%- props
+    tag = 'button',
+    color = 'secondary',
+    outline = false,
+    size = null,
+    split = false,
+    disabled = false
+-%}
+{%- set final_tag = tag == 'a' ? 'a' : 'button' -%}
+{%- set classes = html_classes({
+    btn: true,
+    ('btn-' ~ (outline ? 'outline-' : '') ~ color): true,
+    ('btn-' ~ size): size in ['sm', 'lg'],
+    'dropdown-toggle': true,
+    'dropdown-toggle-split': split,
+}) -%}
+{%- set default_attrs = {
+    class: classes,
+    'data-bs-toggle': 'dropdown',
+    'aria-expanded': 'false',
+} -%}
+{%- if final_tag == 'button' -%}
+    {%- set default_attrs = default_attrs|merge({type: 'button', disabled: disabled}) -%}
+{%- else -%}
+    {%- set default_attrs = default_attrs|merge({role: 'button'}) -%}
+    {%- if disabled -%}
+        {%- set default_attrs = default_attrs|merge({'aria-disabled': 'true', tabindex: '-1'}) -%}
+    {%- else -%}
+        {%- set default_attrs = default_attrs|merge({href: '#'}) -%}
+    {%- endif -%}
+{%- endif -%}
+<{{ final_tag }} {{ attributes.defaults(default_attrs) }}>
+    {%- if split %}<span class="visually-hidden">Toggle Dropdown</span>{% else %}{%- block content %}{% endblock -%}{% endif -%}
+</{{ final_tag }}>

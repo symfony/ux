@@ -1,0 +1,53 @@
+{# @prop tag 'li'|'a'|'button'|null The HTML element to render. #}
+{# @prop href string|null The destination used for anchor items. #}
+{# @prop type 'button'|'submit'|'reset' The type used for button items. #}
+{# @prop active boolean Whether the item represents the current selection. #}
+{# @prop current boolean|string|null Whether and how to expose an active item as current. #}
+{# @prop disabled boolean Whether the actionable item is disabled. #}
+{# @prop color 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark'|null The Bootstrap contextual color. #}
+{# @prop label string The fallback label when no content block is provided. #}
+{# @block content The item content. #}
+{%- props
+    tag = null,
+    href = null,
+    type = 'button',
+    active = false,
+    current = null,
+    disabled = false,
+    color = null,
+    label = ''
+-%}
+
+{%- set final_tag = tag|lower in ['li', 'a', 'button'] ? tag|lower : (href is not null ? 'a' : 'li') -%}
+{%- set actionable = final_tag in ['a', 'button'] -%}
+{%- set classes = html_classes({
+    'list-group-item': true,
+    'list-group-item-action': actionable,
+    active: active,
+    disabled: disabled and final_tag == 'a',
+    ('list-group-item-' ~ color): color in ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'],
+}) -%}
+{%- set default_attrs = {class: classes} -%}
+
+{%- if active and current is not same as(false) -%}
+    {%- set default_attrs = default_attrs|merge({'aria-current': current ?? 'true'}) -%}
+{%- endif -%}
+
+{%- if final_tag == 'a' -%}
+    {%- if disabled -%}
+        {%- set default_attrs = default_attrs|merge({'aria-disabled': 'true', tabindex: '-1'}) -%}
+    {%- else -%}
+        {%- set default_attrs = default_attrs|merge({href: href ?? '#'}) -%}
+    {%- endif -%}
+{%- elseif final_tag == 'button' -%}
+    {%- set default_attrs = default_attrs|merge({type: type}) -%}
+    {%- if disabled -%}
+        {%- set default_attrs = default_attrs|merge({disabled: true}) -%}
+    {%- endif -%}
+{%- endif -%}
+
+<{{ final_tag }} {{ attributes.defaults(default_attrs) }}>
+    {%- block content -%}
+        {{- label -}}
+    {%- endblock -%}
+</{{ final_tag }}>

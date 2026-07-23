@@ -1,0 +1,32 @@
+<!--
+- Kit: Bootstrap
+- Component: List Group
+- Code:
+```twig
+<twig:ListGroup>
+    <twig:ListGroup:Item class="d-flex justify-content-between align-items-center">
+        A list item
+        <span class="badge text-bg-primary rounded-pill">14</span>
+    </twig:ListGroup:Item>
+    <twig:ListGroup:Item class="d-flex justify-content-between align-items-center">
+        A second list item
+        <span class="badge text-bg-primary rounded-pill">2</span>
+    </twig:ListGroup:Item>
+    <twig:ListGroup:Item class="d-flex justify-content-between align-items-center">
+        A third list item
+        <span class="badge text-bg-primary rounded-pill">1</span>
+    </twig:ListGroup:Item>
+</twig:ListGroup>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<ul class="list-group">
+<li class="list-group-item d-flex justify-content-between align-items-center">A list item
+        <span class="badge text-bg-primary rounded-pill">14</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">A second list item
+        <span class="badge text-bg-primary rounded-pill">2</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">A third list item
+        <span class="badge text-bg-primary rounded-pill">1</span>
+    </li>
+</ul>

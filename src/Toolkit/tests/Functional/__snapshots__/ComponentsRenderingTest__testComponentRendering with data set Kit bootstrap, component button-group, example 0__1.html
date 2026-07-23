@@ -1,0 +1,27 @@
+<!--
+- Kit: Bootstrap
+- Component: Button Group
+- Code:
+```twig
+<div class="d-flex flex-column align-items-start gap-3">
+    <twig:ButtonGroup label="Primary actions">
+        <twig:Button>Left</twig:Button>
+        <twig:Button>Middle</twig:Button>
+        <twig:Button>Right</twig:Button>
+    </twig:ButtonGroup>
+
+    <twig:ButtonGroup label="Mixed actions">
+        <twig:Button color="danger">Delete</twig:Button>
+        <twig:Button color="warning">Archive</twig:Button>
+        <twig:Button color="success">Publish</twig:Button>
+    </twig:ButtonGroup>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column align-items-start gap-3">
+    <div class="btn-group" role="group" aria-label="Primary actions">
+<button class="btn btn-primary" type="button">Left</button>        <button class="btn btn-primary" type="button">Middle</button>        <button class="btn btn-primary" type="button">Right</button>    </div>
+
+    <div class="btn-group" role="group" aria-label="Mixed actions">
+<button class="btn btn-danger" type="button">Delete</button>        <button class="btn btn-warning" type="button">Archive</button>        <button class="btn btn-success" type="button">Publish</button>    </div>
+</div>

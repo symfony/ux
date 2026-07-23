@@ -1,0 +1,39 @@
+<!--
+- Kit: Bootstrap
+- Component: Tooltip
+- Code:
+```twig
+<style>
+    .bootstrap-custom-tooltip {
+        --bs-tooltip-bg: var(--bs-primary);
+        --bs-tooltip-color: var(--bs-white);
+    }
+</style>
+
+<twig:Tooltip title="This top tooltip is themed via CSS variables." customClass="bootstrap-custom-tooltip">
+    <button type="button" class="btn btn-secondary" {{ html_attr(tooltip_trigger_attrs) }}>Custom tooltip</button>
+</twig:Tooltip>
+
+<script type="module">
+    import { Tooltip } from 'bootstrap';
+
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((element) => Tooltip.getOrCreateInstance(element));
+</script>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<html><head>
+<style>
+    .bootstrap-custom-tooltip {
+        --bs-tooltip-bg: var(--bs-primary);
+        --bs-tooltip-color: var(--bs-white);
+    }
+</style>
+
+<button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-title="This top tooltip is themed via CSS variables." data-bs-placement="top" data-bs-custom-class="bootstrap-custom-tooltip">Custom tooltip</button>
+
+<script type="module">
+    import { Tooltip } from 'bootstrap';
+
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((element) => Tooltip.getOrCreateInstance(element));
+</script>
+</head></html>

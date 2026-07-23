@@ -1,0 +1,44 @@
+<!--
+- Kit: Bootstrap
+- Component: Navs and Tabs
+- Code:
+```twig
+<div class="d-flex gap-5">
+    <twig:Nav vertical>
+        <twig:Nav:Item><twig:Nav:Link href="#" active>Active</twig:Nav:Link></twig:Nav:Item>
+        <twig:Nav:Item><twig:Nav:Link href="#">Link</twig:Nav:Link></twig:Nav:Item>
+        <twig:Nav:Item><twig:Nav:Link href="#">Link</twig:Nav:Link></twig:Nav:Item>
+        <twig:Nav:Item><twig:Nav:Link disabled>Disabled</twig:Nav:Link></twig:Nav:Item>
+    </twig:Nav>
+
+    <twig:Nav tag="nav" vertical aria-label="Secondary navigation">
+        <twig:Nav:Link href="#" active>Active</twig:Nav:Link>
+        <twig:Nav:Link href="#">Link</twig:Nav:Link>
+        <twig:Nav:Link href="#">Link</twig:Nav:Link>
+        <twig:Nav:Link disabled>Disabled</twig:Nav:Link>
+    </twig:Nav>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex gap-5">
+    <ul class="nav flex-column">
+<li class="nav-item">
+<a class="nav-link active" aria-current="page" href="#">Active</a>
+</li>
+        <li class="nav-item">
+<a class="nav-link" href="#">Link</a>
+</li>
+        <li class="nav-item">
+<a class="nav-link" href="#">Link</a>
+</li>
+        <li class="nav-item">
+<a class="nav-link disabled" aria-disabled="true" tabindex="-1">Disabled</a>
+</li>
+    </ul>
+
+    <nav class="nav flex-column" aria-label="Secondary navigation"><a class="nav-link active" aria-current="page" href="#">Active</a>
+        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link disabled" aria-disabled="true" tabindex="-1">Disabled</a>
+    </nav>
+</div>

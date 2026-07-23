@@ -1,0 +1,26 @@
+<!--
+- Kit: Bootstrap
+- Component: Card
+- Code:
+```twig
+{% set image_url = 'https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=960&q=80' %}
+
+<twig:Card class="text-bg-dark">
+    <twig:Card:Image src="{{ image_url }}" alt="A quiet mountain landscape" position="background" />
+    <twig:Card:Overlay>
+        <twig:Card:Title>Card title</twig:Card:Title>
+        <twig:Card:Text>Overlay text should remain shorter than the image height and maintain sufficient contrast.</twig:Card:Text>
+        <twig:Card:Text><small>Last updated 3 mins ago</small></twig:Card:Text>
+    </twig:Card:Overlay>
+</twig:Card>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="card text-bg-dark">
+<img src="https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&amp;fit=crop&amp;w=960&amp;q=80" alt="A quiet mountain landscape" class="card-img">
+
+    <div class="card-img-overlay">
+<h5 class="card-title">Card title</h5>
+        <p class="card-text">Overlay text should remain shorter than the image height and maintain sufficient contrast.</p>
+        <p class="card-text"><small>Last updated 3 mins ago</small></p>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+<!--
+- Kit: Bootstrap
+- Component: Offcanvas
+- Code:
+```twig
+<twig:Offcanvas id="static-offcanvas" shown class="position-static w-100">
+    <twig:Offcanvas:Header>
+        <twig:Offcanvas:Title>Offcanvas</twig:Offcanvas:Title>
+    </twig:Offcanvas:Header>
+    <twig:Offcanvas:Body>
+        Content for the offcanvas goes here. You can place just about any Bootstrap component or custom element here.
+    </twig:Offcanvas:Body>
+</twig:Offcanvas>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div id="static-offcanvas" class="offcanvas offcanvas-start show position-static w-100" tabindex="-1" aria-labelledby="static-offcanvas-label" style="visibility: visible; transform: none;">
+<div class="offcanvas-header">
+<h5 id="static-offcanvas-label" class="offcanvas-title">Offcanvas</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+</div>
+    <div class="offcanvas-body">Content for the offcanvas goes here. You can place just about any Bootstrap component or custom element here.
+    </div>
+</div>

@@ -1,0 +1,30 @@
+{# @prop id string The unique identifier targeted by a tab control. #}
+{# @prop labelledBy string|null The identifier of the tab control labelling the panel. #}
+{# @prop active boolean Whether the panel is initially visible. #}
+{# @prop fade boolean Whether the panel uses Bootstrap's fade transition. #}
+{# @block content The tab panel content. #}
+{%- props
+    id,
+    labelledBy = null,
+    active = false,
+    fade = false
+-%}
+
+{%- set pane_classes = html_classes('tab-pane', {
+    fade: fade,
+    show: fade and active,
+    active: active,
+}) -%}
+{%- set default_attrs = {
+    class: pane_classes,
+    id: id,
+    role: 'tabpanel',
+    tabindex: '0',
+} -%}
+{%- if labelledBy not in [null, ''] -%}
+    {%- set default_attrs = default_attrs|merge({'aria-labelledby': labelledBy}) -%}
+{%- endif -%}
+
+<div {{ attributes.defaults(default_attrs) }}>
+    {%- block content -%}{% endblock -%}
+</div>

@@ -1,0 +1,41 @@
+<!--
+- Kit: Bootstrap
+- Component: Toast
+- Code:
+```twig
+<div class="toast-container position-static">
+    <twig:Toast :autohide="false">
+        <twig:Toast:Header title="Bootstrap" timestamp="just now" />
+        <twig:Toast:Body>
+            First toast in the stack.
+        </twig:Toast:Body>
+    </twig:Toast>
+
+    <twig:Toast :autohide="false">
+        <twig:Toast:Header title="Bootstrap" timestamp="2 seconds ago" />
+        <twig:Toast:Body>
+            Second toast, automatically spaced by the container.
+        </twig:Toast:Body>
+    </twig:Toast>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="toast-container position-static">
+    <div class="toast show" role="status" aria-live="polite" aria-atomic="true" data-bs-autohide="false">
+<div class="toast-header">
+<strong class="me-auto">Bootstrap</strong><small class="text-body-secondary">just now</small><button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+</div>
+
+        <div class="toast-body">First toast in the stack.
+        </div>
+    </div>
+
+    <div class="toast show" role="status" aria-live="polite" aria-atomic="true" data-bs-autohide="false">
+<div class="toast-header">
+<strong class="me-auto">Bootstrap</strong><small class="text-body-secondary">2 seconds ago</small><button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+</div>
+
+        <div class="toast-body">Second toast, automatically spaced by the container.
+        </div>
+    </div>
+</div>

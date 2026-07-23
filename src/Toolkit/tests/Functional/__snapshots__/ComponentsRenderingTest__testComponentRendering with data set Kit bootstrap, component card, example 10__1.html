@@ -1,0 +1,76 @@
+<!--
+- Kit: Bootstrap
+- Component: Card
+- Code:
+```twig
+<div class="d-flex flex-wrap gap-3">
+    {% for color in ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'] %}
+        <twig:Card class="text-bg-{{ color }}" style="max-width: 18rem;">
+            <twig:Card:Header>Header</twig:Card:Header>
+            <twig:Card:Body>
+                <twig:Card:Title>{{ color|title }} card title</twig:Card:Title>
+                <twig:Card:Text>Some quick example text to build on the card title.</twig:Card:Text>
+            </twig:Card:Body>
+        </twig:Card>
+    {% endfor %}
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap gap-3">
+            <div class="card text-bg-primary" style="max-width: 18rem;">
+<div class="card-header">Header</div>
+            <div class="card-body">
+<h5 class="card-title">Primary card title</h5>
+                <p class="card-text">Some quick example text to build on the card title.</p>
+            </div>
+        </div>
+            <div class="card text-bg-secondary" style="max-width: 18rem;">
+<div class="card-header">Header</div>
+            <div class="card-body">
+<h5 class="card-title">Secondary card title</h5>
+                <p class="card-text">Some quick example text to build on the card title.</p>
+            </div>
+        </div>
+            <div class="card text-bg-success" style="max-width: 18rem;">
+<div class="card-header">Header</div>
+            <div class="card-body">
+<h5 class="card-title">Success card title</h5>
+                <p class="card-text">Some quick example text to build on the card title.</p>
+            </div>
+        </div>
+            <div class="card text-bg-danger" style="max-width: 18rem;">
+<div class="card-header">Header</div>
+            <div class="card-body">
+<h5 class="card-title">Danger card title</h5>
+                <p class="card-text">Some quick example text to build on the card title.</p>
+            </div>
+        </div>
+            <div class="card text-bg-warning" style="max-width: 18rem;">
+<div class="card-header">Header</div>
+            <div class="card-body">
+<h5 class="card-title">Warning card title</h5>
+                <p class="card-text">Some quick example text to build on the card title.</p>
+            </div>
+        </div>
+            <div class="card text-bg-info" style="max-width: 18rem;">
+<div class="card-header">Header</div>
+            <div class="card-body">
+<h5 class="card-title">Info card title</h5>
+                <p class="card-text">Some quick example text to build on the card title.</p>
+            </div>
+        </div>
+            <div class="card text-bg-light" style="max-width: 18rem;">
+<div class="card-header">Header</div>
+            <div class="card-body">
+<h5 class="card-title">Light card title</h5>
+                <p class="card-text">Some quick example text to build on the card title.</p>
+            </div>
+        </div>
+            <div class="card text-bg-dark" style="max-width: 18rem;">
+<div class="card-header">Header</div>
+            <div class="card-body">
+<h5 class="card-title">Dark card title</h5>
+                <p class="card-text">Some quick example text to build on the card title.</p>
+            </div>
+        </div>
+    </div>

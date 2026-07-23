@@ -1,0 +1,39 @@
+{# @prop show boolean Whether the toast is visible on initial render. #}
+{# @prop autohide boolean Whether Bootstrap hides the toast automatically. #}
+{# @prop delay int|null The delay in milliseconds before an autohiding toast closes. #}
+{# @prop animation boolean Whether Bootstrap animates the toast. #}
+{# @prop role 'status'|'alert' The accessibility role that describes the notification urgency. #}
+{# @prop live 'polite'|'assertive' The live region politeness level. #}
+{# @block content The toast structure, typically `Toast:Header` and `Toast:Body`. #}
+{%- props
+    show = true,
+    autohide = true,
+    delay = null,
+    animation = true,
+    role = 'status',
+    live = 'polite'
+-%}
+{%- set final_role = role in ['status', 'alert'] ? role : 'status' -%}
+{%- set final_live = live in ['polite', 'assertive'] ? live : 'polite' -%}
+{%- set toast_classes = html_classes({
+    toast: true,
+    show: show,
+}) -%}
+{%- set default_attrs = {
+    class: toast_classes,
+    role: final_role,
+    'aria-live': final_live,
+    'aria-atomic': 'true',
+} -%}
+{%- if autohide and delay is not null -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-delay': delay}) -%}
+{%- endif -%}
+{%- if not autohide -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-autohide': 'false'}) -%}
+{%- endif -%}
+{%- if not animation -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-animation': 'false'}) -%}
+{%- endif -%}
+<div {{ attributes.defaults(default_attrs) }}>
+    {%- block content %}{% endblock -%}
+</div>

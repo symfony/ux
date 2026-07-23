@@ -1,0 +1,12 @@
+{# @prop disabled boolean Whether the close button is disabled. #}
+{# @prop label string The accessible label describing the close action. #}
+{%- props disabled = false, label = 'Close'|trans -%}
+{%- set default_attrs = {
+    type: 'button',
+    class: 'btn-close',
+    'aria-label': label,
+} -%}
+{%- if disabled -%}
+    {%- set default_attrs = default_attrs|merge({disabled: true}) -%}
+{%- endif -%}
+<button {{ attributes.defaults(default_attrs) }}></button>

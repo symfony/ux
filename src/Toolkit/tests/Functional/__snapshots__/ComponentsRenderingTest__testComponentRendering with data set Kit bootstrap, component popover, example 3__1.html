@@ -1,0 +1,34 @@
+<!--
+- Kit: Bootstrap
+- Component: Popover
+- Code:
+```twig
+<div class="d-flex flex-wrap justify-content-center gap-2 p-5">
+    {% for placement in ['left', 'top', 'bottom', 'right'] %}
+        <twig:Popover
+            title="Popover {{ placement }}"
+            content="On the {{ placement }} side."
+            :placement="placement"
+        >
+            <button type="button" class="btn btn-secondary text-capitalize" {{ html_attr(popover_trigger_attrs) }}>
+                {{ placement }}
+            </button>
+        </twig:Popover>
+    {% endfor %}
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap justify-content-center gap-2 p-5">
+            <button type="button" class="btn btn-secondary text-capitalize" data-bs-toggle="popover" data-bs-content="On the left side." data-bs-placement="left" data-bs-title="Popover left">
+                left
+            </button>
+                    <button type="button" class="btn btn-secondary text-capitalize" data-bs-toggle="popover" data-bs-content="On the top side." data-bs-placement="top" data-bs-title="Popover top">
+                top
+            </button>
+                    <button type="button" class="btn btn-secondary text-capitalize" data-bs-toggle="popover" data-bs-content="On the bottom side." data-bs-placement="bottom" data-bs-title="Popover bottom">
+                bottom
+            </button>
+                    <button type="button" class="btn btn-secondary text-capitalize" data-bs-toggle="popover" data-bs-content="On the right side." data-bs-title="Popover right">
+                right
+            </button>
+            </div>

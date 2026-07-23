@@ -1,0 +1,45 @@
+<!--
+- Kit: Bootstrap
+- Component: Collapse
+- Code:
+```twig
+<div class="align-self-start w-100">
+    <p class="d-flex flex-wrap gap-2">
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multi-collapse-one" aria-expanded="false" aria-controls="multi-collapse-one">Toggle first element</button>
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multi-collapse-two" aria-expanded="false" aria-controls="multi-collapse-two">Toggle second element</button>
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false" aria-controls="multi-collapse-one multi-collapse-two">Toggle both elements</button>
+    </p>
+    <div class="row">
+        <div class="col">
+            <twig:Collapse id="multi-collapse-one" class="multi-collapse">
+                <div class="card card-body">The first panel can be toggled independently or together with the second.</div>
+            </twig:Collapse>
+        </div>
+        <div class="col">
+            <twig:Collapse id="multi-collapse-two" class="multi-collapse">
+                <div class="card card-body">The second panel responds to its ID and the shared class selector.</div>
+            </twig:Collapse>
+        </div>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="align-self-start w-100">
+    <p class="d-flex flex-wrap gap-2">
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multi-collapse-one" aria-expanded="false" aria-controls="multi-collapse-one">Toggle first element</button>
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multi-collapse-two" aria-expanded="false" aria-controls="multi-collapse-two">Toggle second element</button>
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false" aria-controls="multi-collapse-one multi-collapse-two">Toggle both elements</button>
+    </p>
+    <div class="row">
+        <div class="col">
+            <div id="multi-collapse-one" class="collapse multi-collapse">
+<div class="card card-body">The first panel can be toggled independently or together with the second.</div>
+            </div>
+        </div>
+        <div class="col">
+            <div id="multi-collapse-two" class="collapse multi-collapse">
+<div class="card card-body">The second panel responds to its ID and the shared class selector.</div>
+            </div>
+        </div>
+    </div>
+</div>

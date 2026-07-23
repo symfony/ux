@@ -1,0 +1,18 @@
+<!--
+- Kit: Bootstrap
+- Component: Placeholder
+- Code:
+```twig
+<p aria-hidden="true">
+    <twig:Placeholder class="col-6" />
+</p>
+
+<twig:Placeholder tag="a" class="btn btn-primary disabled col-4" aria-disabled="true" />
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<p aria-hidden="true">
+    <span class="placeholder col-6" aria-hidden="true"></span>
+
+</p>
+
+<a class="placeholder btn btn-primary disabled col-4" aria-hidden="true" aria-disabled="true"></a>

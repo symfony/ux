@@ -1,0 +1,32 @@
+<!--
+- Kit: Bootstrap
+- Component: Offcanvas
+- Code:
+```twig
+<div class="w-100">
+    <button class="btn btn-primary d-block mx-auto d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#responsive-offcanvas" aria-controls="responsive-offcanvas">Toggle offcanvas</button>
+
+    <twig:Offcanvas id="responsive-offcanvas" responsive="lg" placement="end">
+        <twig:Offcanvas:Header>
+            <twig:Offcanvas:Title>Responsive offcanvas</twig:Offcanvas:Title>
+        </twig:Offcanvas:Header>
+        <twig:Offcanvas:Body>
+            <p>This is content within an <code>.offcanvas-lg</code>.</p>
+        </twig:Offcanvas:Body>
+    </twig:Offcanvas>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="w-100">
+    <button class="btn btn-primary d-block mx-auto d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#responsive-offcanvas" aria-controls="responsive-offcanvas">Toggle offcanvas</button>
+
+    <div id="responsive-offcanvas" class="offcanvas-lg offcanvas-end" tabindex="-1" aria-labelledby="responsive-offcanvas-label">
+<div class="offcanvas-header">
+<h5 id="responsive-offcanvas-label" class="offcanvas-title">Responsive offcanvas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+</div>
+        <div class="offcanvas-body">
+<p>This is content within an <code>.offcanvas-lg</code>.</p>
+        </div>
+    </div>
+</div>

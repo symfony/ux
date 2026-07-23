@@ -1,0 +1,36 @@
+{# @prop type 'border'|'grow' The spinner animation style. #}
+{# @prop color 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark'|null The Bootstrap contextual text color. #}
+{# @prop small boolean Whether to use Bootstrap's compact spinner size. #}
+{# @prop role string|null The ARIA role used for an announced loading status. #}
+{# @prop label string The visually hidden loading message. #}
+{# @prop decorative boolean Whether to hide the spinner from assistive technologies. #}
+{# @block content The accessible loading message or custom inner content. #}
+{%- props
+    type = 'border',
+    color = null,
+    small = false,
+    role = 'status',
+    label = 'Loading...',
+    decorative = false
+-%}
+
+{%- set spinner_type = type == 'grow' ? 'grow' : 'border' -%}
+{%- set spinner_classes = html_classes({
+    ('spinner-' ~ spinner_type): true,
+    ('spinner-' ~ spinner_type ~ '-sm'): small,
+    ('text-' ~ color): color in ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'],
+}) -%}
+{%- set default_attrs = {class: spinner_classes} -%}
+{%- if decorative -%}
+    {%- set default_attrs = default_attrs|merge({'aria-hidden': 'true'}) -%}
+{%- elseif role not in [null, ''] -%}
+    {%- set default_attrs = default_attrs|merge({role: role}) -%}
+{%- endif -%}
+
+<div {{ attributes.defaults(default_attrs) }}>
+    {%- block content -%}
+        {%- if not decorative -%}
+            <span class="visually-hidden">{{ label }}</span>
+        {%- endif -%}
+    {%- endblock -%}
+</div>

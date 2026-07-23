@@ -1,0 +1,29 @@
+{# @prop title string The notification title. #}
+{# @prop timestamp string|null The optional relative or absolute notification time. #}
+{# @prop imageSrc string|null The optional image displayed before the title. #}
+{# @prop imageAlt string The alternative text for the header image. #}
+{# @prop closeButton boolean Whether to render a Bootstrap dismiss button. #}
+{# @prop closeLabel string The accessible label of the dismiss button. #}
+{# @block content The header title or custom header content. #}
+{%- props
+    title = '',
+    timestamp = null,
+    imageSrc = null,
+    imageAlt = '',
+    closeButton = true,
+    closeLabel = 'Close'
+-%}
+<div {{ attributes.defaults({class: 'toast-header'}) }}>
+    {%- if imageSrc is not null -%}
+        <img src="{{ imageSrc }}" class="rounded me-2" alt="{{ imageAlt }}">
+    {%- endif -%}
+    {%- block content -%}
+        <strong class="me-auto">{{ title }}</strong>
+    {%- endblock -%}
+    {%- if timestamp is not null -%}
+        <small class="text-body-secondary">{{ timestamp }}</small>
+    {%- endif -%}
+    {%- if closeButton -%}
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="{{ closeLabel }}"></button>
+    {%- endif -%}
+</div>

@@ -1,0 +1,70 @@
+<!--
+- Kit: Bootstrap
+- Component: Modal
+- Code:
+```twig
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-with-overlays">
+    Launch demo modal
+</button>
+
+<twig:Modal id="modal-with-overlays">
+    <twig:Modal:Header>
+        <twig:Modal:Title>Modal title</twig:Modal:Title>
+    </twig:Modal:Header>
+    <twig:Modal:Body>
+        <h2 class="fs-5">Popover in a modal</h2>
+        <p>
+            This
+            <twig:Popover title="Popover title" content="Popover body content is set in this attribute.">
+                <button class="btn btn-secondary" type="button" {{ html_attr(popover_trigger_attrs) }}>button</button>
+            </twig:Popover>
+            triggers a popover on click.
+        </p>
+        <hr>
+        <h2 class="fs-5">Tooltips in a modal</h2>
+        <p>
+            <twig:Tooltip title="Tooltip"><a href="#" {{ html_attr(tooltip_trigger_attrs) }}>This link</a></twig:Tooltip>
+            and
+            <twig:Tooltip title="Tooltip"><a href="#" {{ html_attr(tooltip_trigger_attrs) }}>that link</a></twig:Tooltip>
+            have tooltips on hover.
+        </p>
+    </twig:Modal:Body>
+    <twig:Modal:Footer>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+    </twig:Modal:Footer>
+</twig:Modal>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-with-overlays">
+    Launch demo modal
+</button>
+
+<div id="modal-with-overlays" class="modal fade" tabindex="-1" aria-labelledby="modal-with-overlays-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+<div class="modal-header">
+<h1 id="modal-with-overlays-label" class="modal-title fs-5">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+    <div class="modal-body">
+<h2 class="fs-5">Popover in a modal</h2>
+        <p>
+            This
+            <button class="btn btn-secondary" type="button" data-bs-toggle="popover" data-bs-content="Popover body content is set in this attribute." data-bs-title="Popover title">button</button>
+                        triggers a popover on click.
+        </p>
+        <hr>
+        <h2 class="fs-5">Tooltips in a modal</h2>
+        <p>
+            <a href="#" data-bs-toggle="tooltip" data-bs-title="Tooltip" data-bs-placement="top">This link</a>            and
+            <a href="#" data-bs-toggle="tooltip" data-bs-title="Tooltip" data-bs-placement="top">that link</a>            have tooltips on hover.
+        </p>
+    </div>
+    <div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+    </div>
+</div>
+    </div>
+</div>

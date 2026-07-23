@@ -1,0 +1,46 @@
+<!--
+- Kit: Bootstrap
+- Component: Modal
+- Code:
+```twig
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#demo-modal">
+    Review changes
+</button>
+
+<twig:Modal id="demo-modal" centered>
+    <twig:Modal:Header>
+        <twig:Modal:Title>Review changes</twig:Modal:Title>
+    </twig:Modal:Header>
+    <twig:Modal:Body>
+        <p>Your profile information is ready to be saved.</p>
+        <p class="mb-0 text-body-secondary">You can return to editing or confirm these changes now.</p>
+    </twig:Modal:Body>
+    <twig:Modal:Footer>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keep editing</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+    </twig:Modal:Footer>
+</twig:Modal>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#demo-modal">
+    Review changes
+</button>
+
+<div id="demo-modal" class="modal fade" tabindex="-1" aria-labelledby="demo-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+<div class="modal-header">
+<h1 id="demo-modal-label" class="modal-title fs-5">Review changes</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+    <div class="modal-body">
+<p>Your profile information is ready to be saved.</p>
+        <p class="mb-0 text-body-secondary">You can return to editing or confirm these changes now.</p>
+    </div>
+    <div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keep editing</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+    </div>
+</div>
+    </div>
+</div>

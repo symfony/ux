@@ -1,0 +1,62 @@
+<!--
+- Kit: Bootstrap
+- Component: Card
+- Code:
+```twig
+{% set image_url = 'https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=720&q=80' %}
+
+<div class="d-flex flex-wrap gap-3">
+    <twig:Card style="width: 18rem;">
+        <twig:Card:Body>
+            <twig:Card:Title>Card title</twig:Card:Title>
+            <twig:Card:Subtitle class="mb-2 text-body-secondary">Card subtitle</twig:Card:Subtitle>
+            <twig:Card:Text>Some quick example text to build on the card title.</twig:Card:Text>
+            <twig:Card:Link href="#">Card link</twig:Card:Link>
+            <twig:Card:Link href="#">Another link</twig:Card:Link>
+        </twig:Card:Body>
+    </twig:Card>
+
+    <twig:Card style="width: 18rem;">
+        <twig:Card:Image src="{{ image_url }}" alt="A quiet mountain landscape" />
+        <twig:Card:Body>
+            <twig:Card:Text>Text, images, list groups, and links can be freely combined.</twig:Card:Text>
+        </twig:Card:Body>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">An item</li>
+            <li class="list-group-item">A second item</li>
+            <li class="list-group-item">A third item</li>
+        </ul>
+        <twig:Card:Body>
+            <twig:Card:Link href="#">Card link</twig:Card:Link>
+        </twig:Card:Body>
+    </twig:Card>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap gap-3">
+    <div class="card" style="width: 18rem;">
+<div class="card-body">
+<h5 class="card-title">Card title</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+            <p class="card-text">Some quick example text to build on the card title.</p>
+            <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a>
+        </div>
+    </div>
+
+    <div class="card" style="width: 18rem;">
+<img src="https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&amp;fit=crop&amp;w=720&amp;q=80" alt="A quiet mountain landscape" class="card-img-top">
+
+        <div class="card-body">
+<p class="card-text">Text, images, list groups, and links can be freely combined.</p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">An item</li>
+            <li class="list-group-item">A second item</li>
+            <li class="list-group-item">A third item</li>
+        </ul>
+        <div class="card-body">
+<a href="#" class="card-link">Card link</a>
+        </div>
+    </div>
+</div>

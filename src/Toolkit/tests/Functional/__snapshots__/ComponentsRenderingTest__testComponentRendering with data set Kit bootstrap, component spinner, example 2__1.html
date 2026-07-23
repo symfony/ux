@@ -1,0 +1,35 @@
+<!--
+- Kit: Bootstrap
+- Component: Spinner
+- Code:
+```twig
+<div class="d-flex flex-wrap gap-3">
+    <twig:Spinner color="primary" label="Loading..." />
+    <twig:Spinner color="secondary" label="Loading..." />
+    <twig:Spinner color="success" label="Loading..." />
+    <twig:Spinner color="danger" label="Loading..." />
+    <twig:Spinner color="warning" label="Loading..." />
+    <twig:Spinner color="info" label="Loading..." />
+    <twig:Spinner color="light" label="Loading..." />
+    <twig:Spinner color="dark" label="Loading..." />
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap gap-3">
+    <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+
+    <div class="spinner-border text-secondary" role="status"><span class="visually-hidden">Loading...</span></div>
+
+    <div class="spinner-border text-success" role="status"><span class="visually-hidden">Loading...</span></div>
+
+    <div class="spinner-border text-danger" role="status"><span class="visually-hidden">Loading...</span></div>
+
+    <div class="spinner-border text-warning" role="status"><span class="visually-hidden">Loading...</span></div>
+
+    <div class="spinner-border text-info" role="status"><span class="visually-hidden">Loading...</span></div>
+
+    <div class="spinner-border text-light" role="status"><span class="visually-hidden">Loading...</span></div>
+
+    <div class="spinner-border text-dark" role="status"><span class="visually-hidden">Loading...</span></div>
+
+</div>

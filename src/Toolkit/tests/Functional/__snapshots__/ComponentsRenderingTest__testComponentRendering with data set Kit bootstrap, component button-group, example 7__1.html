@@ -1,0 +1,26 @@
+<!--
+- Kit: Bootstrap
+- Component: Button Group
+- Code:
+```twig
+<twig:ButtonGroup label="Button group with nested dropdown">
+    <twig:Button>1</twig:Button>
+    <twig:Button>2</twig:Button>
+    <twig:ButtonGroup label="Dropdown menu">
+        <twig:Button class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</twig:Button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+            <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+        </ul>
+    </twig:ButtonGroup>
+</twig:ButtonGroup>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+<button class="btn btn-primary" type="button">1</button>    <button class="btn btn-primary" type="button">2</button>    <div class="btn-group" role="group" aria-label="Dropdown menu">
+<button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</button>        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+            <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+        </ul>
+    </div>
+</div>

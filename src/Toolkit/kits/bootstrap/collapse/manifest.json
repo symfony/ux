@@ -1,0 +1,13 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Collapse",
+    "description": "Toggle the visibility of content with Bootstrap's Collapse plugin.",
+    "version-added": "3.4",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "composer": ["twig/extra-bundle", "twig/html-extra:^3.12.0"]
+    }
+}

@@ -1,0 +1,35 @@
+{# @prop tag 'ul'|'nav'|'div' The HTML element used for the navigation container. #}
+{# @prop type 'tabs'|'pills'|'underline'|null The Bootstrap navigation style. #}
+{# @prop fill boolean Whether items proportionally fill the available width. #}
+{# @prop justified boolean Whether items use equal widths. #}
+{# @prop vertical boolean Whether items are stacked vertically. #}
+{# @prop align 'start'|'center'|'end'|null The horizontal alignment of the navigation items. #}
+{# @prop role string|null The ARIA role applied to the navigation container. #}
+{# @block content The navigation links or `Nav:Item` components. #}
+{%- props
+    tag = 'ul',
+    type = null,
+    fill = false,
+    justified = false,
+    vertical = false,
+    align = null,
+    role = null
+-%}
+
+{%- set final_tag = tag in ['nav', 'div'] ? tag : 'ul' -%}
+{%- set nav_classes = html_classes({
+    nav: true,
+    ('nav-' ~ type): type in ['tabs', 'pills', 'underline'],
+    'nav-fill': fill,
+    'nav-justified': justified,
+    'flex-column': vertical,
+    ('justify-content-' ~ align): align in ['start', 'center', 'end'],
+}) -%}
+{%- set default_attrs = {class: nav_classes} -%}
+{%- if role not in [null, ''] -%}
+    {%- set default_attrs = default_attrs|merge({role: role}) -%}
+{%- endif -%}
+
+<{{ final_tag }} {{ attributes.defaults(default_attrs) }}>
+    {%- block content -%}{% endblock -%}
+</{{ final_tag }}>

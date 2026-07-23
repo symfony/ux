@@ -1,0 +1,26 @@
+<!--
+- Kit: Bootstrap
+- Component: Progress
+- Code:
+```twig
+<div class="progress-stacked">
+    <twig:Progress value="15" ariaLabel="Segment one" stacked />
+    <twig:Progress value="30" ariaLabel="Segment two" color="success" stacked />
+    <twig:Progress value="20" ariaLabel="Segment three" color="info" stacked />
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="progress-stacked">
+    <div class="progress" role="progressbar" aria-label="Segment one" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" style="width: 15%">
+    <div class="progress-bar"></div>
+</div>
+
+    <div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%">
+    <div class="progress-bar bg-success"></div>
+</div>
+
+    <div class="progress" role="progressbar" aria-label="Segment three" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+    <div class="progress-bar bg-info"></div>
+</div>
+
+</div>

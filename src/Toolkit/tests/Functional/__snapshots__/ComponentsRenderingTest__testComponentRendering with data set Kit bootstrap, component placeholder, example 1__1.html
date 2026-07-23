@@ -1,0 +1,83 @@
+<!--
+- Kit: Bootstrap
+- Component: Placeholder
+- Code:
+```twig
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <svg class="card-img-top text-secondary bg-body-secondary" width="100%" height="140" role="img" aria-label="Example image placeholder">
+                <rect width="100%" height="100%" fill="currentColor" />
+            </svg>
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card h-100" aria-hidden="true">
+            <svg class="card-img-top text-secondary bg-body-secondary" width="100%" height="140">
+                <rect width="100%" height="100%" fill="currentColor" />
+            </svg>
+            <div class="card-body">
+                <twig:Placeholder:Animation animation="glow" tag="h5" class="card-title">
+                    <twig:Placeholder class="col-6" />
+                </twig:Placeholder:Animation>
+                <twig:Placeholder:Animation animation="glow" tag="p" class="card-text">
+                    <twig:Placeholder class="col-7" />
+                    <twig:Placeholder class="col-4" />
+                    <twig:Placeholder class="col-4" />
+                    <twig:Placeholder class="col-6" />
+                    <twig:Placeholder class="col-8" />
+                </twig:Placeholder:Animation>
+                <twig:Placeholder tag="a" class="btn btn-primary disabled col-6" aria-disabled="true" />
+            </div>
+        </div>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <svg class="card-img-top text-secondary bg-body-secondary" width="100%" height="140" role="img" aria-label="Example image placeholder">
+                <rect width="100%" height="100%" fill="currentColor"></rect>
+            </svg>
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card h-100" aria-hidden="true">
+            <svg class="card-img-top text-secondary bg-body-secondary" width="100%" height="140">
+                <rect width="100%" height="100%" fill="currentColor"></rect>
+            </svg>
+            <div class="card-body">
+                <h5 class="placeholder-glow card-title" aria-hidden="true">
+<span class="placeholder col-6" aria-hidden="true"></span>
+
+                </h5>
+                <p class="placeholder-glow card-text" aria-hidden="true"><span class="placeholder col-7" aria-hidden="true"></span>
+
+                    <span class="placeholder col-4" aria-hidden="true"></span>
+
+                    <span class="placeholder col-4" aria-hidden="true"></span>
+
+                    <span class="placeholder col-6" aria-hidden="true"></span>
+
+                    <span class="placeholder col-8" aria-hidden="true"></span>
+
+                </p>
+                <a class="placeholder btn btn-primary disabled col-6" aria-hidden="true" aria-disabled="true"></a>
+
+            </div>
+        </div>
+    </div>
+</div>

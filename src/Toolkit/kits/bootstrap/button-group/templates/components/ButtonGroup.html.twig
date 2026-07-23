@@ -1,0 +1,22 @@
+{# @prop vertical boolean Whether to stack the buttons vertically. #}
+{# @prop size 'sm'|'lg'|null The Bootstrap size applied to every button in the group. #}
+{# @prop label string|null The accessible name for the group. #}
+{# @block content The buttons, links, or form controls contained in the group. #}
+{%- props
+    vertical = false,
+    size = null,
+    label = 'Button group'
+-%}
+
+{%- set classes = html_classes({
+    (vertical ? 'btn-group-vertical' : 'btn-group'): true,
+    ('btn-group-' ~ size): size in ['lg', 'sm'],
+}) -%}
+{%- set default_attrs = {class: classes, role: 'group'} -%}
+{%- if label not in [null, ''] -%}
+    {%- set default_attrs = default_attrs|merge({'aria-label': label}) -%}
+{%- endif -%}
+
+<div {{ attributes.defaults(default_attrs) }}>
+    {%- block content -%}{%- endblock -%}
+</div>

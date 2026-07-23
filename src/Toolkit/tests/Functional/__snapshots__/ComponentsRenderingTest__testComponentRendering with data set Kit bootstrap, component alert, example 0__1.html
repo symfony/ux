@@ -1,0 +1,14 @@
+<!--
+- Kit: Bootstrap
+- Component: Alert
+- Code:
+```twig
+<twig:Alert color="success" heading="Well done!" dismissible>
+    Your changes were saved successfully. <a href="#" class="alert-link">Review them now</a>.
+</twig:Alert>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+<h4 class="alert-heading">Well done!</h4>Your changes were saved successfully. <a href="#" class="alert-link">Review them now</a>.
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>

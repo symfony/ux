@@ -1,0 +1,58 @@
+<!--
+- Kit: Bootstrap
+- Component: Card
+- Code:
+```twig
+{% set image_url = 'https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=720&q=80' %}
+
+<div class="row row-cols-1 row-cols-sm-3 g-4">
+    {% for length in ['A longer card with supporting text.', 'A short card.', 'A card with supporting text and an aligned footer.'] %}
+        <div class="col">
+            <twig:Card class="h-100">
+                <twig:Card:Image src="{{ image_url }}" alt="A quiet mountain landscape" />
+                <twig:Card:Body>
+                    <twig:Card:Title>Card title</twig:Card:Title>
+                    <twig:Card:Text>{{ length }}</twig:Card:Text>
+                </twig:Card:Body>
+                <twig:Card:Footer><small class="text-body-secondary">Last updated 3 mins ago</small></twig:Card:Footer>
+            </twig:Card>
+        </div>
+    {% endfor %}
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="row row-cols-1 row-cols-sm-3 g-4">
+            <div class="col">
+            <div class="card h-100">
+<img src="https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&amp;fit=crop&amp;w=720&amp;q=80" alt="A quiet mountain landscape" class="card-img-top">
+
+                <div class="card-body">
+<h5 class="card-title">Card title</h5>
+                    <p class="card-text">A longer card with supporting text.</p>
+                </div>
+                <div class="card-footer"><small class="text-body-secondary">Last updated 3 mins ago</small></div>
+            </div>
+        </div>
+            <div class="col">
+            <div class="card h-100">
+<img src="https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&amp;fit=crop&amp;w=720&amp;q=80" alt="A quiet mountain landscape" class="card-img-top">
+
+                <div class="card-body">
+<h5 class="card-title">Card title</h5>
+                    <p class="card-text">A short card.</p>
+                </div>
+                <div class="card-footer"><small class="text-body-secondary">Last updated 3 mins ago</small></div>
+            </div>
+        </div>
+            <div class="col">
+            <div class="card h-100">
+<img src="https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&amp;fit=crop&amp;w=720&amp;q=80" alt="A quiet mountain landscape" class="card-img-top">
+
+                <div class="card-body">
+<h5 class="card-title">Card title</h5>
+                    <p class="card-text">A card with supporting text and an aligned footer.</p>
+                </div>
+                <div class="card-footer"><small class="text-body-secondary">Last updated 3 mins ago</small></div>
+            </div>
+        </div>
+    </div>

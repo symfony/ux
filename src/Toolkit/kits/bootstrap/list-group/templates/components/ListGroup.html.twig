@@ -1,0 +1,24 @@
+{# @prop tag 'ul'|'ol'|'div'|null The HTML element to render. #}
+{# @prop flush boolean Whether to remove outer borders and rounded corners. #}
+{# @prop numbered boolean Whether to display CSS-generated item numbers. #}
+{# @prop horizontal boolean|'sm'|'md'|'lg'|'xl'|'xxl' Whether and when to use a horizontal layout. #}
+{# @block content The list group items. #}
+{%- props
+    tag = null,
+    flush = false,
+    numbered = false,
+    horizontal = false
+-%}
+
+{%- set final_tag = tag|lower in ['ul', 'ol', 'div'] ? tag|lower : (numbered ? 'ol' : 'ul') -%}
+{%- set classes = html_classes({
+    'list-group': true,
+    'list-group-flush': flush,
+    'list-group-numbered': numbered,
+    'list-group-horizontal': horizontal is same as(true),
+    ('list-group-horizontal-' ~ horizontal): horizontal is not same as(true) and horizontal is not same as(false) and horizontal in ['sm', 'md', 'lg', 'xl', 'xxl'],
+}) -%}
+
+<{{ final_tag }} {{ attributes.defaults({class: classes}) }}>
+    {%- block content -%}{%- endblock -%}
+</{{ final_tag }}>

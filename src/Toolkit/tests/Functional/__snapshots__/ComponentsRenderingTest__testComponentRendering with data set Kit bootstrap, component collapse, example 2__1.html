@@ -1,0 +1,38 @@
+<!--
+- Kit: Bootstrap
+- Component: Collapse
+- Code:
+```twig
+<div class="align-self-start w-75">
+    <button
+        class="btn btn-primary"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapse-width-example"
+        aria-expanded="false"
+        aria-controls="collapse-width-example"
+    >
+        Toggle width collapse
+    </button>
+    <div class="mt-3" style="min-height: 120px;">
+        <twig:Collapse id="collapse-width-example" horizontal>
+            <div class="card card-body" style="width: 300px;">
+                This content collapses horizontally. The immediate child defines the expanded width.
+            </div>
+        </twig:Collapse>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="align-self-start w-75">
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-width-example" aria-expanded="false" aria-controls="collapse-width-example">
+        Toggle width collapse
+    </button>
+    <div class="mt-3" style="min-height: 120px;">
+        <div id="collapse-width-example" class="collapse collapse-horizontal">
+<div class="card card-body" style="width: 300px;">
+                This content collapses horizontally. The immediate child defines the expanded width.
+            </div>
+        </div>
+    </div>
+</div>

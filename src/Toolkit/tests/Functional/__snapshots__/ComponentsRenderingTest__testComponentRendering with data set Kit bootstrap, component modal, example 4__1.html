@@ -1,0 +1,69 @@
+<!--
+- Kit: Bootstrap
+- Component: Modal
+- Code:
+```twig
+<div class="d-flex flex-wrap gap-2">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#long-content-modal">Launch long modal</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scrollable-modal">Launch scrollable modal</button>
+</div>
+
+<twig:Modal id="long-content-modal">
+    <twig:Modal:Header><twig:Modal:Title>Long modal</twig:Modal:Title></twig:Modal:Header>
+    <twig:Modal:Body>
+        <p>This modal grows with its content, allowing the viewport to scroll.</p>
+        <div style="min-height: 900px;"></div>
+        <p class="mb-0">This content appears at the bottom.</p>
+    </twig:Modal:Body>
+    <twig:Modal:Footer><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></twig:Modal:Footer>
+</twig:Modal>
+
+<twig:Modal id="scrollable-modal" scrollable>
+    <twig:Modal:Header><twig:Modal:Title>Scrollable modal</twig:Modal:Title></twig:Modal:Header>
+    <twig:Modal:Body>
+        <p>Only this modal body scrolls when its content exceeds the available height.</p>
+        <div style="min-height: 900px;"></div>
+        <p class="mb-0">This content appears at the bottom.</p>
+    </twig:Modal:Body>
+    <twig:Modal:Footer><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></twig:Modal:Footer>
+</twig:Modal>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap gap-2">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#long-content-modal">Launch long modal</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scrollable-modal">Launch scrollable modal</button>
+</div>
+
+<div id="long-content-modal" class="modal fade" tabindex="-1" aria-labelledby="long-content-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+<div class="modal-header">
+<h1 id="long-content-modal-label" class="modal-title fs-5">Long modal</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+    <div class="modal-body">
+<p>This modal grows with its content, allowing the viewport to scroll.</p>
+        <div style="min-height: 900px;"></div>
+        <p class="mb-0">This content appears at the bottom.</p>
+    </div>
+    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+</div>
+    </div>
+</div>
+
+<div id="scrollable-modal" class="modal fade" tabindex="-1" aria-labelledby="scrollable-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+<div class="modal-header">
+<h1 id="scrollable-modal-label" class="modal-title fs-5">Scrollable modal</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+    <div class="modal-body">
+<p>Only this modal body scrolls when its content exceeds the available height.</p>
+        <div style="min-height: 900px;"></div>
+        <p class="mb-0">This content appears at the bottom.</p>
+    </div>
+    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+</div>
+    </div>
+</div>

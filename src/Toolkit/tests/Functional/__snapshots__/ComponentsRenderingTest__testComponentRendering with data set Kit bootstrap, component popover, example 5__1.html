@@ -1,0 +1,23 @@
+<!--
+- Kit: Bootstrap
+- Component: Popover
+- Code:
+```twig
+<div class="d-flex w-100">
+    <twig:Popover
+        title="Custom popover"
+        content="Use the generated class to customize Bootstrap CSS variables."
+        customClass="custom-popover"
+    >
+        <button type="button" class="btn btn-secondary" {{ html_attr(popover_trigger_attrs) }}>
+            Custom popover
+        </button>
+    </twig:Popover>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex w-100">
+    <button type="button" class="btn btn-secondary" data-bs-toggle="popover" data-bs-content="Use the generated class to customize Bootstrap CSS variables." data-bs-title="Custom popover" data-bs-custom-class="custom-popover">
+            Custom popover
+        </button>
+    </div>

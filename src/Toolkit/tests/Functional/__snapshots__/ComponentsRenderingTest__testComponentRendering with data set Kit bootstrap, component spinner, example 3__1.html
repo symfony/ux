@@ -1,0 +1,38 @@
+<!--
+- Kit: Bootstrap
+- Component: Spinner
+- Code:
+```twig
+<div class="d-flex flex-wrap gap-3">
+    <twig:Spinner type="grow" label="Loading..." />
+    <twig:Spinner type="grow" color="primary" label="Loading..." />
+    <twig:Spinner type="grow" color="secondary" label="Loading..." />
+    <twig:Spinner type="grow" color="success" label="Loading..." />
+    <twig:Spinner type="grow" color="danger" label="Loading..." />
+    <twig:Spinner type="grow" color="warning" label="Loading..." />
+    <twig:Spinner type="grow" color="info" label="Loading..." />
+    <twig:Spinner type="grow" color="light" label="Loading..." />
+    <twig:Spinner type="grow" color="dark" label="Loading..." />
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-wrap gap-3">
+    <div class="spinner-grow" role="status"><span class="visually-hidden">Loading...</span></div>
+
+    <div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+
+    <div class="spinner-grow text-secondary" role="status"><span class="visually-hidden">Loading...</span></div>
+
+    <div class="spinner-grow text-success" role="status"><span class="visually-hidden">Loading...</span></div>
+
+    <div class="spinner-grow text-danger" role="status"><span class="visually-hidden">Loading...</span></div>
+
+    <div class="spinner-grow text-warning" role="status"><span class="visually-hidden">Loading...</span></div>
+
+    <div class="spinner-grow text-info" role="status"><span class="visually-hidden">Loading...</span></div>
+
+    <div class="spinner-grow text-light" role="status"><span class="visually-hidden">Loading...</span></div>
+
+    <div class="spinner-grow text-dark" role="status"><span class="visually-hidden">Loading...</span></div>
+
+</div>

@@ -1,0 +1,25 @@
+<!--
+- Kit: Bootstrap
+- Component: Button
+- Code:
+```twig
+<div class="d-flex flex-column align-items-start gap-3">
+    <div class="d-flex flex-wrap gap-2">
+        <twig:Button disabled>Primary button</twig:Button>
+        <twig:Button color="secondary" disabled>Button</twig:Button>
+        <twig:Button outline disabled>Primary button</twig:Button>
+        <twig:Button color="secondary" outline disabled>Button</twig:Button>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <twig:Button tag="a" disabled>Primary link</twig:Button>
+        <twig:Button tag="a" color="secondary" disabled>Link</twig:Button>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="d-flex flex-column align-items-start gap-3">
+    <div class="d-flex flex-wrap gap-2">
+        <button class="btn btn-primary" type="button" disabled>Primary button</button>        <button class="btn btn-secondary" type="button" disabled>Button</button>        <button class="btn btn-outline-primary" type="button" disabled>Primary button</button>        <button class="btn btn-outline-secondary" type="button" disabled>Button</button>    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-primary disabled" role="button" aria-disabled="true" tabindex="-1">Primary link</a>        <a class="btn btn-secondary disabled" role="button" aria-disabled="true" tabindex="-1">Link</a>    </div>
+</div>

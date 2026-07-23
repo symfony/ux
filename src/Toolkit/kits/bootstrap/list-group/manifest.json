@@ -1,0 +1,13 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "List Group",
+    "description": "Display a flexible series of content with active, disabled, actionable, and contextual states.",
+    "version-added": "3.4",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "composer": ["twig/extra-bundle", "twig/html-extra:^3.12.0"]
+    }
+}

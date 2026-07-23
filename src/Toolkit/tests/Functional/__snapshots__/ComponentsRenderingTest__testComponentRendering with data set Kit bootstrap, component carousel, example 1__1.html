@@ -1,0 +1,37 @@
+<!--
+- Kit: Bootstrap
+- Component: Carousel
+- Code:
+```twig
+<twig:Carousel id="basic-carousel" class="w-100">
+    <twig:Carousel:Item active>
+        <div class="d-flex align-items-center justify-content-center bg-primary text-white fs-1" style="height: 12rem">First slide</div>
+    </twig:Carousel:Item>
+    <twig:Carousel:Item>
+        <div class="d-flex align-items-center justify-content-center bg-secondary text-white fs-1" style="height: 12rem">Second slide</div>
+    </twig:Carousel:Item>
+    <twig:Carousel:Item>
+        <div class="d-flex align-items-center justify-content-center bg-dark text-white fs-1" style="height: 12rem">Third slide</div>
+    </twig:Carousel:Item>
+</twig:Carousel>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div id="basic-carousel" class="carousel slide w-100">    <div class="carousel-inner">
+<div class="carousel-item active">
+<div class="d-flex align-items-center justify-content-center bg-primary text-white fs-1" style="height: 12rem">First slide</div>
+    </div>
+    <div class="carousel-item">
+<div class="d-flex align-items-center justify-content-center bg-secondary text-white fs-1" style="height: 12rem">Second slide</div>
+    </div>
+    <div class="carousel-item">
+<div class="d-flex align-items-center justify-content-center bg-dark text-white fs-1" style="height: 12rem">Third slide</div>
+    </div>
+</div>        <button class="carousel-control-prev" type="button" data-bs-target="#basic-carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#basic-carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+</div>

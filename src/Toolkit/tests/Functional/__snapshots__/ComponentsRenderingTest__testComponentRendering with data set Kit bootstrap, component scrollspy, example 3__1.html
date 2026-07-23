@@ -1,0 +1,46 @@
+<!--
+- Kit: Bootstrap
+- Component: Scrollspy
+- Code:
+```twig
+<div class="row">
+    <div class="col-4">
+        <div id="list-scrollspy" class="list-group">
+            <a class="list-group-item list-group-item-action" href="#list-item-1">Item 1</a>
+            <a class="list-group-item list-group-item-action" href="#list-item-2">Item 2</a>
+            <a class="list-group-item list-group-item-action" href="#list-item-3">Item 3</a>
+        </div>
+    </div>
+    <div class="col-8">
+        <twig:Scrollspy target="#list-scrollspy" height="240px" class="p-2">
+            {% for number in 1..3 %}
+                <h4 id="list-item-{{ number }}">Item {{ number }}</h4>
+                <p>List group links work as Scrollspy navigation controls.</p>
+                <div style="min-height: 125px"></div>
+            {% endfor %}
+        </twig:Scrollspy>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="row">
+    <div class="col-4">
+        <div id="list-scrollspy" class="list-group">
+            <a class="list-group-item list-group-item-action" href="#list-item-1">Item 1</a>
+            <a class="list-group-item list-group-item-action" href="#list-item-2">Item 2</a>
+            <a class="list-group-item list-group-item-action" href="#list-item-3">Item 3</a>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="position-relative overflow-auto p-2" style="height: 240px;" tabindex="0" data-bs-spy="scroll" data-bs-target="#list-scrollspy">                <h4 id="list-item-1">Item 1</h4>
+                <p>List group links work as Scrollspy navigation controls.</p>
+                <div style="min-height: 125px"></div>
+                            <h4 id="list-item-2">Item 2</h4>
+                <p>List group links work as Scrollspy navigation controls.</p>
+                <div style="min-height: 125px"></div>
+                            <h4 id="list-item-3">Item 3</h4>
+                <p>List group links work as Scrollspy navigation controls.</p>
+                <div style="min-height: 125px"></div>
+                    </div>
+    </div>
+</div>

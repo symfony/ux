@@ -1,0 +1,13 @@
+{# @prop active boolean Whether this item is the currently visible slide. #}
+{# @prop interval number|null The item-specific delay in milliseconds before advancing. #}
+{# @block content The slide content. #}
+{%- props active = false, interval = null -%}
+{%- set default_attrs = {
+    class: html_classes({'carousel-item': true, active: active}),
+} -%}
+{%- if interval is not null -%}
+    {%- set default_attrs = default_attrs|merge({'data-bs-interval': interval}) -%}
+{%- endif -%}
+<div {{ attributes.defaults(default_attrs) }}>
+    {%- block content %}{% endblock -%}
+</div>

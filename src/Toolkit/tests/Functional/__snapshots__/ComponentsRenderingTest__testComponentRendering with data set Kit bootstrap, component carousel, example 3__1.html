@@ -1,0 +1,60 @@
+<!--
+- Kit: Bootstrap
+- Component: Carousel
+- Code:
+```twig
+<twig:Carousel id="captions-carousel" indicators class="w-100">
+    <twig:block name="indicators">
+        <button type="button" data-bs-target="#captions-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#captions-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#captions-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </twig:block>
+    <twig:Carousel:Item active>
+        <div class="bg-primary" style="height: 12rem"></div>
+        <div class="carousel-caption d-none d-md-block"><h5>First slide label</h5><p>Representative placeholder content for the first slide.</p></div>
+    </twig:Carousel:Item>
+    <twig:Carousel:Item>
+        <div class="bg-success" style="height: 12rem"></div>
+        <div class="carousel-caption d-none d-md-block"><h5>Second slide label</h5><p>Representative placeholder content for the second slide.</p></div>
+    </twig:Carousel:Item>
+    <twig:Carousel:Item>
+        <div class="bg-danger" style="height: 12rem"></div>
+        <div class="carousel-caption d-none d-md-block"><h5>Third slide label</h5><p>Representative placeholder content for the third slide.</p></div>
+    </twig:Carousel:Item>
+</twig:Carousel>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div id="captions-carousel" class="carousel slide w-100">        <div class="carousel-indicators">        <button type="button" data-bs-target="#captions-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#captions-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#captions-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>    <div class="carousel-inner">
+<div class="carousel-item active">
+<div class="bg-primary" style="height: 12rem"></div>
+        <div class="carousel-caption d-none d-md-block">
+<h5>First slide label</h5>
+<p>Representative placeholder content for the first slide.</p>
+</div>
+    </div>
+    <div class="carousel-item">
+<div class="bg-success" style="height: 12rem"></div>
+        <div class="carousel-caption d-none d-md-block">
+<h5>Second slide label</h5>
+<p>Representative placeholder content for the second slide.</p>
+</div>
+    </div>
+    <div class="carousel-item">
+<div class="bg-danger" style="height: 12rem"></div>
+        <div class="carousel-caption d-none d-md-block">
+<h5>Third slide label</h5>
+<p>Representative placeholder content for the third slide.</p>
+</div>
+    </div>
+</div>        <button class="carousel-control-prev" type="button" data-bs-target="#captions-carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#captions-carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+</div>
