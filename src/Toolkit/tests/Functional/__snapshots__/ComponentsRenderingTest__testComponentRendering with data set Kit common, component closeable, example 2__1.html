@@ -1,0 +1,27 @@
+<!--
+- Kit: Common
+- Component: Closeable
+- Code:
+```twig
+<div data-controller="closeable" data-closeable-auto-close-value="5000" class="relative flex items-start gap-3 overflow-hidden rounded-md border border-violet-200 bg-violet-50 p-4 text-sm text-violet-900 dark:border-violet-900 dark:bg-violet-950 dark:text-violet-100">
+    <div class="flex-1">
+        <p class="font-medium">Copied to clipboard</p>
+        <p class="text-violet-700 dark:text-violet-300">This message closes on its own.</p>
+    </div>
+    <button type="button" data-action="click->closeable#close" aria-label="Dismiss" class="text-violet-500 hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-200">
+        <span aria-hidden="true" class="text-lg leading-none">&times;</span>
+    </button>
+    <div data-closeable-target="timerbar" class="absolute bottom-0 left-0 h-1 w-full bg-violet-500 transition-[width] ease-linear dark:bg-violet-400"></div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-controller="closeable" data-closeable-auto-close-value="5000" class="relative flex items-start gap-3 overflow-hidden rounded-md border border-violet-200 bg-violet-50 p-4 text-sm text-violet-900 dark:border-violet-900 dark:bg-violet-950 dark:text-violet-100">
+    <div class="flex-1">
+        <p class="font-medium">Copied to clipboard</p>
+        <p class="text-violet-700 dark:text-violet-300">This message closes on its own.</p>
+    </div>
+    <button type="button" data-action="click-&gt;closeable#close" aria-label="Dismiss" class="text-violet-500 hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-200">
+        <span aria-hidden="true" class="text-lg leading-none">×</span>
+    </button>
+    <div data-closeable-target="timerbar" class="absolute bottom-0 left-0 h-1 w-full bg-violet-500 transition-[width] ease-linear dark:bg-violet-400"></div>
+</div>
