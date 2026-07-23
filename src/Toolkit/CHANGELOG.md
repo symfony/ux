@@ -3,7 +3,7 @@
 ## 3.4.0
 
 - [Bootstrap] Add the Bootstrap kit
-- [Common] Add the `common` kit, with design-system agnostic `logout-link` and `post-link` recipes
+- [Common] Add the `common` kit, with design-system agnostic `closeable`, `logout-link` and `post-link` recipes
 - Add new linter checker `ClassMergeSpacingChecker` that checks for invalid `'<literal>' ~ attributes.render(...)` pattern
 - Add per-recipe `README.md` documentation
 - Add `RecipeDocRenderer` that renders recipes docs as HTML or Markdown, to ease wiring official kits into ux.symfony.com and, in the future, previewing community kits
