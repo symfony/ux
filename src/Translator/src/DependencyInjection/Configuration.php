@@ -17,8 +17,6 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
- *
- * @experimental
  */
 class Configuration implements ConfigurationInterface
 {

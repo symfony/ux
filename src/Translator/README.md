@@ -1,8 +1,5 @@
 # Symfony UX Translator
 
-**EXPERIMENTAL** This component is currently experimental and is
-likely to change, or even change drastically.
-
 Symfony UX Translator integrates [Symfony Translation](https://symfony.com/doc/current/translation.html) for JavaScript.
 
 **This repository is a READ-ONLY sub-tree split**. See

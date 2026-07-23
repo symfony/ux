@@ -22,8 +22,6 @@ use Symfony\UX\Translator\MessageParameters\Printer\TypeScriptMessageParametersP
  *
  * @final
  *
- * @experimental
- *
  * @phpstan-type Domain string
  * @phpstan-type Locale string
  * @phpstan-type MessageId string
