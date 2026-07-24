@@ -13,14 +13,13 @@ namespace Symfony\UX\Toolkit\Kit\Lint\Checker;
 
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
+use Symfony\UX\Toolkit\Component\StimulusController;
 use Symfony\UX\Toolkit\Dependency\RecipeDependency;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Kit\Lint\KitCheckerInterface;
 use Symfony\UX\Toolkit\Kit\Lint\LintIssue;
 use Symfony\UX\Toolkit\Kit\Lint\LintSeverity;
 use Symfony\UX\Toolkit\Recipe\Recipe;
-
-use function Symfony\Component\String\u;
 
 /**
  * Detects `data-controller="..."` usages in Twig templates and verifies that a matching
@@ -74,10 +73,9 @@ final class StimulusControllerChecker implements KitCheckerInterface
                     severity: LintSeverity::Warning,
                     category: 'stimulus.controller.missing',
                     message: \sprintf(
-                        'Template references Stimulus controller "%s" but no matching file "assets/controllers/%s_controller.js" was found in the recipe.',
+                        'Template references Stimulus controller "%s" but no matching file "assets/controllers/%s" was found in the recipe.',
                         $controllerName,
-                        // Stimulus convention: kebab-case identifier <-> snake_case filename.
-                        u($controllerName)->snake(),
+                        StimulusController::filename($controllerName),
                     ),
                     recipe: $recipe->name,
                     file: $file,
@@ -133,9 +131,7 @@ final class StimulusControllerChecker implements KitCheckerInterface
         $controllers = [];
         $finder = new Finder()->in($dir)->files()->name('*_controller.js');
         foreach ($finder as $file) {
-            $basename = substr($file->getFilename(), 0, -\strlen('_controller.js'));
-            // Stimulus convention: snake_case in filename, kebab-case in identifier.
-            $controllers[] = (string) u($basename)->kebab();
+            $controllers[] = StimulusController::identifier($file->getFilename());
         }
 
         return $controllers;

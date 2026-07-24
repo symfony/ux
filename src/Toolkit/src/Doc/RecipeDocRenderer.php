@@ -24,6 +24,9 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\UX\Toolkit\Assert;
 use Symfony\UX\Toolkit\Component\ComponentDoc;
 use Symfony\UX\Toolkit\Component\ComponentDocParser;
+use Symfony\UX\Toolkit\Component\StimulusController;
+use Symfony\UX\Toolkit\Component\StimulusControllerDoc;
+use Symfony\UX\Toolkit\Component\StimulusControllerDocParser;
 use Symfony\UX\Toolkit\Installer\PoolResolver;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Markdown\Extension\Alert\AlertExtension;
@@ -47,12 +50,15 @@ use Symfony\UX\Toolkit\Recipe\Recipe;
 final class RecipeDocRenderer
 {
     private readonly ComponentDocParser $componentDocParser;
+    private readonly StimulusControllerDocParser $stimulusControllerDocParser;
 
     public function __construct(
         private readonly \Twig\Environment $twig,
         ?ComponentDocParser $componentDocParser = null,
+        ?StimulusControllerDocParser $stimulusControllerDocParser = null,
     ) {
         $this->componentDocParser = $componentDocParser ?? new ComponentDocParser($twig);
+        $this->stimulusControllerDocParser = $stimulusControllerDocParser ?? new StimulusControllerDocParser();
     }
 
     public function renderAsMarkdown(Kit $kit, Recipe $recipe): string
@@ -123,7 +129,7 @@ final class RecipeDocRenderer
     {
         $context = $this->buildContext($kit, $recipe, $format);
 
-        $body = $recipe->doc ?? $this->defaultBody($recipe, [] !== $context['api_reference']);
+        $body = $recipe->doc ?? $this->defaultBody($recipe, [] !== $context['api_reference'] || [] !== $context['stimulus_reference']);
 
         return preg_replace_callback('/^::: (?<directive>installation|api-reference)\s*$/m', fn (array $matches): string => trim($this->twig->render(\sprintf('@UXToolkit/doc/_%s.md.twig', str_replace('-', '_', $matches['directive'])), $context)), $body);
     }
@@ -166,6 +172,7 @@ final class RecipeDocRenderer
             'npm_package_dependencies' => array_values($pool->getNpmPackageDependencies()),
             'importmap_package_dependencies' => array_values($pool->getImportmapPackageDependencies()),
             'api_reference' => $this->extractApiReference($recipe),
+            'stimulus_reference' => $this->extractStimulusControllerReference($recipe),
             'format' => $format,
         ];
     }
@@ -198,5 +205,35 @@ final class RecipeDocRenderer
         }
 
         return $apiReference;
+    }
+
+    /**
+     * @return array<string, StimulusControllerDoc>
+     */
+    private function extractStimulusControllerReference(Recipe $recipe): array
+    {
+        $stimulusReference = [];
+
+        foreach ($recipe->getFiles() as $file) {
+            $source = $file->sourceRelativePathName;
+            if (!StimulusController::isFilename($source) || !str_starts_with($source, 'assets/controllers/')) {
+                continue;
+            }
+
+            $filePath = Path::join($recipe->absolutePath, $source);
+            if (!is_file($filePath) || false === $contents = file_get_contents($filePath)) {
+                continue;
+            }
+
+            $identifier = StimulusController::identifier($source);
+            $controllerDoc = $this->stimulusControllerDocParser->parse($contents, $identifier);
+            if ($controllerDoc->isEmpty()) {
+                continue;
+            }
+
+            $stimulusReference[$identifier] = $controllerDoc;
+        }
+
+        return $stimulusReference;
     }
 }

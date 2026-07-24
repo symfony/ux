@@ -93,9 +93,66 @@ final class RecipeDocRendererTest extends KernelTestCase
         $this->assertStringNotContainsString('```twig', $markdown);
     }
 
+    public function testRenderAsMarkdownIncludesStimulusControllerApiReference()
+    {
+        [$kit, $recipe] = $this->loadWidgetRecipe();
+
+        $markdown = $this->renderer()->renderAsMarkdown($kit, $recipe);
+
+        $this->assertStringContainsString('## API Reference', $markdown);
+        // The controller identifier is derived from the `*_controller.js` filename.
+        $this->assertStringContainsString('`data-controller="widget"`', $markdown);
+        // Value: name/type from the code, `data-*` attribute derived (camelCase to kebab-case), description from the `@value` tag.
+        $this->assertStringContainsString('`data-widget-auto-close-value`', $markdown);
+        $this->assertStringContainsString('Delay in milliseconds before the widget closes.', $markdown);
+        // Target from `static targets`, described by the `@target` tag.
+        $this->assertStringContainsString('| `panel` |', $markdown);
+        // Actions are opt-in from `@action` tags, each bounded to its own description.
+        $this->assertStringContainsString('| `toggle` | Toggles the widget open state. |', $markdown);
+    }
+
+    public function testRenderAsHtmlIncludesStimulusControllerApiReference()
+    {
+        [$kit, $recipe] = $this->loadWidgetRecipe();
+
+        $urlGenerator = new class implements PreviewUrlGenerator {
+            public function generate(string $code, CodeOptions $options): ?string
+            {
+                return 'https://preview.test/render';
+            }
+        };
+
+        $html = $this->renderer()->renderAsHtml($kit, $recipe, $urlGenerator)->html;
+
+        // The Stimulus API reference must also render on the HTML path (tables, not just Markdown).
+        $this->assertStringContainsString('<table', $html);
+        $this->assertStringContainsString('data-controller', $html);
+        $this->assertStringContainsString('data-widget-auto-close-value', $html);
+        $this->assertStringContainsString('panel', $html);
+        $this->assertStringContainsString('toggle', $html);
+        $this->assertStringContainsString('Toggles the widget open state.', $html);
+    }
+
     private function renderer(): RecipeDocRenderer
     {
         return new RecipeDocRenderer(self::getContainer()->get('twig'));
+    }
+
+    /**
+     * @return array{0: Kit, 1: Recipe}
+     */
+    private function loadWidgetRecipe(): array
+    {
+        $kitFactory = new KitFactory(
+            self::getContainer()->get('filesystem'),
+            self::getContainer()->get('ux_toolkit.kit.kit_synchronizer'),
+        );
+
+        $kit = $kitFactory->createKitFromAbsolutePath(\dirname(__DIR__).'/Fixtures/kits/render-stimulus-doc');
+        $recipe = $kit->getRecipe('widget');
+        $this->assertNotNull($recipe);
+
+        return [$kit, $recipe];
     }
 
     /**

@@ -6,6 +6,7 @@
 - [Common] Add the `common` kit, with design-system agnostic `closeable`, `logout-link` and `post-link` recipes
 - Add new linter checker `ClassMergeSpacingChecker` that checks for invalid `'<literal>' ~ attributes.render(...)` pattern
 - Add per-recipe `README.md` documentation
+- Document Stimulus controllers in the recipe API reference from their `@value`/`@target`/`@action` docblocks, and lint those docblocks with the new `StimulusControllerDocChecker`
 - Add `RecipeDocRenderer` that renders recipes docs as HTML or Markdown, to ease wiring official kits into ux.symfony.com and, in the future, previewing community kits
 - Add optional `color` and `icon` fields to the kit manifest
 - Include kit-global dependencies when installing a recipe
