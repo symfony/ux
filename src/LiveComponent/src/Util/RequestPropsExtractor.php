@@ -98,6 +98,18 @@ final class RequestPropsExtractor
 
         $type = $livePropMetadata->getType();
 
-        return null === $type || TypeHelper::accepts($type, $value);
+        if (null === $type) {
+            return true;
+        }
+
+        // URL values for array props are stringly-typed and possibly partial:
+        // checking them against a phpdoc-derived shape or generic (e.g.
+        // array{...} or array<string, int>) would always fail, so only ensure
+        // the native type matches.
+        if (\is_array($value) && $type->isIdentifiedBy(TypeIdentifier::ARRAY)) {
+            return true;
+        }
+
+        return TypeHelper::accepts($type, $value);
     }
 }

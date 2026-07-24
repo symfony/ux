@@ -146,6 +146,8 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
             'pathPropForAnotherController' => ['name' => 'pathPropForAnotherController'],
             'arrayPropAlias' => ['name' => 'arr_alias'],
             'arr_field_name' => ['name' => 'arr_field_name'],
+            'shapedArrayProp' => ['name' => 'shapedArrayProp'],
+            'intListProp' => ['name' => 'intListProp'],
         ];
 
         $this->assertEquals($expected, $queryMapping);

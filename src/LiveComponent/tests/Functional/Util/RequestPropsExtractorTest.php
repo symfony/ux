@@ -62,8 +62,11 @@ class RequestPropsExtractorTest extends KernelTestCase
                 return $address;
             })(),
             ]],
+            'partial shaped array value' => ['shapedArrayProp[r][C-D]=1', ['shapedArrayProp' => ['r' => ['C-D' => '1']]]],
+            'generic array value' => ['intListProp[]=1&intListProp[]=2', ['intListProp' => ['1', '2']]],
             'invalid scalar value' => ['stringProp[]=foo&stringProp[]=bar', []],
             'invalid array value' => ['arrayProp=foo', []],
+            'invalid shaped array value' => ['shapedArrayProp=foo', []],
             'invalid object value' => ['objectProp=foo', []],
             'aliased prop' => ['q=foo', ['boundPropWithAlias' => 'foo']],
             'attribute prop' => ['', ['stringProp' => 'foo'], ['stringProp' => 'foo']],

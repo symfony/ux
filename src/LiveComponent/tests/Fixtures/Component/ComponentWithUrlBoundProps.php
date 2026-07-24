@@ -36,6 +36,18 @@ class ComponentWithUrlBoundProps
     #[LiveProp(url: new UrlMapping(as: 'arr_alias'))]
     public array $arrayPropAlias = [];
 
+    /**
+     * @var array{r: array<string, true>, c: array<string, true>}
+     */
+    #[LiveProp(url: true)]
+    public array $shapedArrayProp = ['r' => [], 'c' => []];
+
+    /**
+     * @var int[]
+     */
+    #[LiveProp(url: true)]
+    public array $intListProp = [];
+
     #[LiveProp(writable: true, fieldName: 'getArrayFieldName()', url: true)]
     public array $arrayPropFieldName = [];
 
