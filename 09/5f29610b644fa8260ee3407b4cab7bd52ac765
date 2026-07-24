@@ -1,0 +1,73 @@
+---------------------------------------------------------------------------
+
+by kbond at 2026-07-23T20:24:56Z
+
+Example of what it'll look like on ux.symfony.com
+
+<img width="709" height="533" alt="Screenshot 2026-07-23 at 4 24 16 PM" src="https://github.com/user-attachments/assets/f14fbb88-498c-495c-a8c3-ad4e51706dcc" />
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-23T20:43:37Z
+
+Since Stimulus Controllers are wrapped behind Twig components, is it really "useful" to document them?
+
+For example, If I can use the Accordion component from Shadcn kit, I will use the component itself and not the Stimulus controller behind it
+
+---------------------------------------------------------------------------
+
+by kbond at 2026-07-23T20:47:33Z
+
+That's a fair point. And we can close #3726 but it is useful in https://github.com/symfony/ux/pull/3725
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-23T20:51:39Z
+
+Ah I didn't think about controllers-only recipes, fair point too!
+
+---------------------------------------------------------------------------
+
+by kbond at 2026-07-23T20:55:41Z
+
+> Ah I didn't think about controllers-only recipes, fair point!
+
+But maybe they should be opt-in somehow. So we don't show the api for the ones backed by a Twig component.
+
+1. An `@api` tag on the controller opts-in?
+2. Just having the docs opts-in?
+
+---------------------------------------------------------------------------
+
+by kbond at 2026-07-23T23:33:55Z
+
+Ok, I made the following updates:
+
+- Made the API reference opt-in — renders only when the controller carries docblocks.
+- Updated the `symfony-ux-toolkit-kit` skill
+- Applied review (Kocal + Copilot)
+
+---------------------------------------------------------------------------
+
+by kbond at 2026-07-23T23:41:58Z
+
+@Kocal will Copilot just continue to find issues? I fixed the first round but now there's more 🤷🏻
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-24T05:51:26Z
+
+> @Kocal will Copilot just continue to find issues? I fixed the first round but now there's more 🤷🏻
+
+Ahah omg Copilot is on fire 😂
+Did you enable it automatically to run at each push?
+
+IMHO, https://github.com/symfony/ux/pull/3724#discussion_r3642210414 and https://github.com/symfony/ux/pull/3724#discussion_r3642210392 are worth fixing, and then we can merge
+
+---------------------------------------------------------------------------
+
+by kbond at 2026-07-24T08:55:59Z
+
+It ran on each push automatically. It's a repo setting?
+
+These two remaining things are similar to fixes to the same code earlier. I've been using Claude to review copilot's review and fix. Maybe I should just accept the copilot suggestions? Maybe Claude was making the fix in a way copilot didn't like
