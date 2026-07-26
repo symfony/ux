@@ -1,0 +1,37 @@
+<!--
+- Kit: Common
+- Component: Clipboard
+- Code:
+```twig
+<style>
+@keyframes clipboard-burst {
+    from { transform: scale(.75); opacity: .75; }
+    to { transform: scale(2) rotate(20deg); opacity: 0; }
+}
+</style>
+<div data-controller="clipboard" data-clipboard-success-duration-value="450" class="flex items-center gap-3">
+    <code data-clipboard-target="source" class="rounded-md bg-violet-50 px-3 py-2 font-mono text-sm text-violet-900 dark:bg-violet-950 dark:text-violet-100">php bin/console cache:clear</code>
+    <button type="button" data-action="clipboard#copy" class="relative rounded-md bg-violet-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-500 active:scale-95 active:bg-violet-700">
+        Copy
+        <span data-clipboard-target="success" class="pointer-events-none absolute inset-0 rounded-full border-2 border-dotted border-violet-400" style="animation: clipboard-burst 450ms linear forwards"></span>
+    </button>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<html>
+<head>
+<style>
+@keyframes clipboard-burst {
+    from { transform: scale(.75); opacity: .75; }
+    to { transform: scale(2) rotate(20deg); opacity: 0; }
+}
+</style>
+</head>
+<body><div data-controller="clipboard" data-clipboard-success-duration-value="450" class="flex items-center gap-3">
+    <code data-clipboard-target="source" class="rounded-md bg-violet-50 px-3 py-2 font-mono text-sm text-violet-900 dark:bg-violet-950 dark:text-violet-100">php bin/console cache:clear</code>
+    <button type="button" data-action="clipboard#copy" class="relative rounded-md bg-violet-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-500 active:scale-95 active:bg-violet-700">
+        Copy
+        <span data-clipboard-target="success" class="pointer-events-none absolute inset-0 rounded-full border-2 border-dotted border-violet-400" style="animation: clipboard-burst 450ms linear forwards"></span>
+    </button>
+</div></body>
+</html>

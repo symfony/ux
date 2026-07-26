@@ -1,0 +1,13 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Tooltip",
+    "version-added": "3.4",
+    "copy-files": {
+        "assets/": "assets/"
+    },
+    "dependencies": {
+        "npm": ["@floating-ui/dom"],
+        "importmap": ["@floating-ui/dom"]
+    }
+}

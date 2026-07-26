@@ -1,0 +1,15 @@
+<!--
+- Kit: Common
+- Component: Clipboard
+- Code:
+```twig
+<div data-controller="clipboard" class="flex items-center gap-3">
+    <input type="text" data-clipboard-target="source" value="hello@example.com" readonly class="rounded-md border border-violet-200 bg-violet-50 px-3 py-2 text-sm text-violet-900 dark:border-violet-900 dark:bg-violet-950 dark:text-violet-100">
+    <button type="button" data-action="clipboard#copy" class="rounded-md bg-violet-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-500 active:scale-95 active:bg-violet-700">Copy email</button>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-controller="clipboard" class="flex items-center gap-3">
+    <input type="text" data-clipboard-target="source" value="hello@example.com" readonly class="rounded-md border border-violet-200 bg-violet-50 px-3 py-2 text-sm text-violet-900 dark:border-violet-900 dark:bg-violet-950 dark:text-violet-100">
+    <button type="button" data-action="clipboard#copy" class="rounded-md bg-violet-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-500 active:scale-95 active:bg-violet-700">Copy email</button>
+</div>

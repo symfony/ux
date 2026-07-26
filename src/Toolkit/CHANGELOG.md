@@ -3,7 +3,7 @@
 ## 3.4.0
 
 - [Bootstrap] Add the Bootstrap kit
-- [Common] Add the `common` kit, with design-system agnostic `closeable`, `logout-link` and `post-link` recipes
+- [Common] Add the `common` kit, with design-system agnostic `clipboard`, `closeable`, `logout-link`, `post-link` and `tooltip` recipes
 - Add new linter checker `ClassMergeSpacingChecker` that checks for invalid `'<literal>' ~ attributes.render(...)` pattern
 - Add per-recipe `README.md` documentation
 - Document Stimulus controllers in the recipe API reference from their `@value`/`@target`/`@action` docblocks, and lint those docblocks with the new `StimulusControllerDocChecker`
