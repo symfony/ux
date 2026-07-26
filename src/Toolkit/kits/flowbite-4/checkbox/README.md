@@ -50,7 +50,7 @@ This example can be used for the disabled state of the checkbox component by app
 
 This example can be used to create a checkbox component with a bordered style, a description text and an icon.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="grid gap-6 md:grid-cols-2">
 
     <div class="flex items-center mb-4">

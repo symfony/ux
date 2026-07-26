@@ -79,7 +79,7 @@ Use the table component to show text, images, links, and other elements inside a
 
 Use this example to increase the readability of the data sets by alternating the background color of every second table row.
 
-```twig {"preview":true,"height":"500px"}
+```twig {"preview":true}
 {%- set products = [
     {name: 'Apple MacBook Pro 17"', color: 'Silver', category: 'Laptop', price: '$2999', stock: 231},
     {name: 'Microsoft Surface Pro', color: 'White', category: 'Laptop PC', price: '$1999', stock: 423},
@@ -122,7 +122,7 @@ Use this example to increase the readability of the data sets by alternating the
 
 Use this example of a table component without any border between the table cells.
 
-```twig {"preview":true,"height":"500px"}
+```twig {"preview":true}
 {%- set products = [
     {name: 'Apple MacBook Pro 17"', color: 'Silver', category: 'Laptop', price: '$2999', stock: 231},
     {name: 'Microsoft Surface Pro', color: 'White', category: 'Laptop PC', price: '$1999', stock: 423},

@@ -2,7 +2,7 @@
 
 Use Bootstrap button styles for actions in forms, dialogs, navigation, and more.
 
-```twig {"preview":true,"height":"190px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-2">
     <twig:Button>Primary</twig:Button>
     <twig:Button color="secondary">Secondary</twig:Button>
@@ -38,7 +38,7 @@ Disabled links omit their `href`, expose `aria-disabled="true"`, and are removed
 
 Use the base Bootstrap button class without a contextual color when defining a custom style.
 
-```twig {"preview":true,"height":"140px"}
+```twig {"preview":true}
 <twig:Button :color="null">Base class</twig:Button>
 ```
 
@@ -46,7 +46,7 @@ Use the base Bootstrap button class without a contextual color when defining a c
 
 Use contextual colors to communicate the purpose of an action.
 
-```twig {"preview":true,"height":"190px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-2">
     <twig:Button>Primary</twig:Button>
     <twig:Button color="secondary">Secondary</twig:Button>
@@ -64,7 +64,7 @@ Use contextual colors to communicate the purpose of an action.
 
 Add Bootstrap's `text-nowrap` utility when a button label must remain on one line.
 
-```twig {"preview":true,"height":"140px"}
+```twig {"preview":true}
 <twig:Button class="text-nowrap">This button label does not wrap</twig:Button>
 ```
 
@@ -72,7 +72,7 @@ Add Bootstrap's `text-nowrap` utility when a button label must remain on one lin
 
 Render the component as a button, link, or input depending on the semantic element required.
 
-```twig {"preview":true,"height":"140px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-2">
     <twig:Button tag="a" href="#">Link</twig:Button>
     <twig:Button type="submit">Button</twig:Button>
@@ -86,7 +86,7 @@ Render the component as a button, link, or input depending on the semantic eleme
 
 Use outline styles for actions that need less visual weight.
 
-```twig {"preview":true,"height":"190px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-2">
     <twig:Button outline>Primary</twig:Button>
     <twig:Button color="secondary" outline>Secondary</twig:Button>
@@ -103,7 +103,7 @@ Use outline styles for actions that need less visual weight.
 
 Use Bootstrap's large and small sizes, or customize the component with Bootstrap CSS variables.
 
-```twig {"preview":true,"height":"250px"}
+```twig {"preview":true}
 <div class="d-flex flex-column align-items-start gap-3">
     <div class="d-flex flex-wrap gap-2">
         <twig:Button size="lg">Large button</twig:Button>
@@ -123,7 +123,7 @@ Use Bootstrap's large and small sizes, or customize the component with Bootstrap
 
 Disable buttons and links while preserving the appropriate HTML and accessibility semantics.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <div class="d-flex flex-column align-items-start gap-3">
     <div class="d-flex flex-wrap gap-2">
         <twig:Button disabled>Primary button</twig:Button>
@@ -142,7 +142,7 @@ Disable buttons and links while preserving the appropriate HTML and accessibilit
 
 Combine the component with Bootstrap layout utilities to create responsive full-width buttons.
 
-```twig {"preview":true,"height":"470px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-4">
     <div class="d-grid gap-2">
         <twig:Button>Button</twig:Button>
@@ -167,7 +167,7 @@ Combine the component with Bootstrap layout utilities to create responsive full-
 
 Use Bootstrap's button plugin for controls that toggle between pressed and unpressed states.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="d-flex flex-column align-items-start gap-3">
     <div class="d-inline-flex flex-wrap gap-1">
         <twig:Button :color="null" data-bs-toggle="button">Toggle button</twig:Button>

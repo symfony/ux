@@ -89,7 +89,7 @@ Horizontal separators between list items.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"350px"}
+```twig {"preview":true}
 <div class="flex flex-col items-center gap-8">
     {# Arabic #}
     <div class="flex max-w-sm flex-col gap-4 text-sm" dir="rtl">

@@ -2,7 +2,7 @@
 
 A set of checkable buttons—known as radio buttons—where no more than one of the buttons can be checked at a time.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <twig:RadioGroup class="w-fit">
     <div class="flex items-center gap-3">
         <twig:RadioGroup:Item id="r1" name="spacing" value="default" />
@@ -44,7 +44,7 @@ A set of checkable buttons—known as radio buttons—where no more than one of 
 
 Radio group items with a description using the `Field` component.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:RadioGroup class="w-fit">
     <twig:Field orientation="horizontal">
         <twig:RadioGroup:Item id="desc-r1" name="density" value="default" />
@@ -74,7 +74,7 @@ Radio group items with a description using the `Field` component.
 
 Use `Field:Label` to wrap the entire `Field` for a clickable card-style selection.
 
-```twig {"preview":true,"height":"350px"}
+```twig {"preview":true}
 <twig:RadioGroup class="max-w-sm">
     <twig:Field:Label for="plus-plan" class="border border-input rounded-md has-[:checked]:bg-primary/5 has-[:checked]:border-primary/20 dark:has-[:checked]:bg-primary/10">
         <twig:Field orientation="horizontal" class="p-3">
@@ -110,7 +110,7 @@ Use `Field:Label` to wrap the entire `Field` for a clickable card-style selectio
 
 Use `Field:Set` and `Field:Legend` to group radio items with a label and description.
 
-```twig {"preview":true,"height":"250px"}
+```twig {"preview":true}
 <twig:Field:Set class="w-full max-w-xs">
     <twig:Field:Legend variant="label">Subscription Plan</twig:Field:Legend>
     <twig:Field:Description>Yearly and lifetime plans offer significant savings.</twig:Field:Description>
@@ -156,7 +156,7 @@ Use the `disabled` prop on `RadioGroup:Item` to disable individual items.
 
 Use `aria-invalid` on `RadioGroup:Item` and `data-invalid` on `Field` to show validation errors.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Field:Set class="w-full max-w-xs">
     <twig:Field:Legend variant="label">Notification Preferences</twig:Field:Legend>
     <twig:Field:Description>Choose how you want to receive notifications.</twig:Field:Description>
@@ -181,7 +181,7 @@ Use `aria-invalid` on `RadioGroup:Item` and `data-invalid` on `Field` to show va
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"450px"}
+```twig {"preview":true}
 <div class="flex flex-col gap-8">
     <twig:RadioGroup class="w-fit" dir="rtl">
         <twig:Field orientation="horizontal">

@@ -2,7 +2,7 @@
 
 Displays a card with header, content, and footer.
 
-```twig {"preview":true,"height":"500px"}
+```twig {"preview":true}
 <twig:Card class="w-full max-w-sm">
     <twig:Card:Header>
         <twig:Card:Title>Login to your account</twig:Card:Title>
@@ -79,7 +79,7 @@ Displays a card with header, content, and footer.
 
 Use the `size="sm"` prop to set the size of the card to small. The small size variant uses smaller spacing.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <twig:Card size="sm" class="mx-auto w-full max-w-sm">
     <twig:Card:Header>
         <twig:Card:Title>Small Card</twig:Card:Title>
@@ -105,7 +105,7 @@ Use the `size="sm"` prop to set the size of the card to small. The small size va
 
 Add an image before the card header to create a card with an image.
 
-```twig {"preview":true,"height":"550px"}
+```twig {"preview":true}
 <twig:Card class="relative mx-auto w-full max-w-sm pt-0">
     <div class="absolute inset-0 z-30 aspect-video bg-black/35"></div>
     <img
@@ -132,7 +132,7 @@ Add an image before the card header to create a card with an image.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"900px"}
+```twig {"preview":true}
 <div class="flex w-full flex-col items-center gap-8">
     {# Arabic #}
     <twig:Card class="w-full max-w-sm" dir="rtl">

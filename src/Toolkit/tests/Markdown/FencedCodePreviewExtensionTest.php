@@ -58,17 +58,17 @@ class FencedCodePreviewExtensionTest extends TestCase
         $urlGenerator = new class implements PreviewUrlGenerator {
             public function generate(string $code, CodeOptions $options): ?string
             {
-                return 'https://preview.test/?h='.$options->height;
+                return 'https://preview.test/?cc='.$options->collapseClass;
             }
         };
 
         $html = $this->convert(<<<'MARKDOWN'
-            ```twig {"preview": true, "height": "250px"}
+            ```twig {"preview": true, "collapseClass": true}
             <b>x</b>
             ```
             MARKDOWN, $urlGenerator);
 
-        $this->assertStringContainsString('src="https://preview.test/?h=250px"', $html);
+        $this->assertStringContainsString('src="https://preview.test/?cc=1"', $html);
     }
 
     private function convert(string $markdown, ?PreviewUrlGenerator $urlGenerator = null): string

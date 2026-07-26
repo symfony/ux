@@ -2,7 +2,7 @@
 
 Displays a button or a component that looks like a button.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="flex flex-wrap items-center gap-2 md:flex-row">
     <twig:Button variant="outline">Button</twig:Button>
     <twig:Button variant="outline" size="icon" aria-label="Submit">
@@ -27,7 +27,7 @@ Displays a button or a component that looks like a button.
 
 Use the `size` prop to change the size of the button.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="flex flex-col items-start gap-8 sm:flex-row">
     <div class="flex items-start gap-2">
         <twig:Button size="xs" variant="outline">Extra Small</twig:Button>
@@ -58,43 +58,43 @@ Use the `size` prop to change the size of the button.
 
 ### Default
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Button>Button</twig:Button>
 ```
 
 ### Outline
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Button variant="outline">Outline</twig:Button>
 ```
 
 ### Secondary
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Button variant="secondary">Secondary</twig:Button>
 ```
 
 ### Ghost
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Button variant="ghost">Ghost</twig:Button>
 ```
 
 ### Destructive
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Button variant="destructive">Destructive</twig:Button>
 ```
 
 ### Link
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Button variant="link">Link</twig:Button>
 ```
 
 ### Icon
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Button variant="outline" size="icon">
     <twig:ux:icon name="lucide:circle-fading-arrow-up" />
 </twig:Button>
@@ -104,7 +104,7 @@ Use the `size` prop to change the size of the button.
 
 Remember to add the `data-icon="inline-start"` or `data-icon="inline-end"` attribute to the icon for the correct spacing.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Button variant="outline" size="sm">
     <twig:ux:icon name="lucide:git-branch" /> New Branch
 </twig:Button>
@@ -114,7 +114,7 @@ Remember to add the `data-icon="inline-start"` or `data-icon="inline-end"` attri
 
 Use the `rounded-full` class to make the button rounded.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="flex flex-col gap-8">
     <twig:Button variant="outline" size="icon" class="rounded-full">
         <twig:ux:icon name="lucide:arrow-up" />
@@ -126,7 +126,7 @@ Use the `rounded-full` class to make the button rounded.
 
 Render a `Spinner` component inside the button to show a loading state. Remember to add the `data-icon="inline-start"` or `data-icon="inline-end"` attribute to the spinner for the correct spacing.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="flex gap-2">
     <twig:Button variant="outline" disabled>
         <twig:Spinner data-icon="inline-start" />
@@ -143,7 +143,7 @@ Render a `Spinner` component inside the button to show a loading state. Remember
 
 You can use the `as` prop on `Button` to make another element look like a button. Here's an example of a link that looks like a button.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Button as="a" href="/login">Login</twig:Button>
 ```
 

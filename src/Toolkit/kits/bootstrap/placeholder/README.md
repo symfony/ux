@@ -2,7 +2,7 @@
 
 Uses loading placeholders to indicate that content may still be loading.
 
-```twig {"preview":true,"height":"380px"}
+```twig {"preview":true}
 <div class="card" style="width: 18rem;" aria-busy="true">
     <svg class="card-img-top text-secondary bg-body-secondary" width="100%" height="140" role="img" aria-label="Loading image placeholder">
         <rect width="100%" height="100%" fill="currentColor" />
@@ -43,7 +43,7 @@ The application remains responsible for replacing placeholders and informing use
 
 Match a placeholder card's proportions to the content it temporarily replaces.
 
-```twig {"preview":true,"height":"700px"}
+```twig {"preview":true}
 <div class="row g-3">
     <div class="col-md-6">
         <div class="card h-100">
@@ -85,7 +85,7 @@ Match a placeholder card's proportions to the content it temporarily replaces.
 
 Use placeholders as text replacements or modifiers on existing components.
 
-```twig {"preview":true,"height":"120px"}
+```twig {"preview":true}
 <p aria-hidden="true">
     <twig:Placeholder class="col-6" />
 </p>
@@ -97,7 +97,7 @@ Use placeholders as text replacements or modifiers on existing components.
 
 Set widths with grid columns, width utilities, or inline styles.
 
-```twig {"preview":true,"height":"140px"}
+```twig {"preview":true}
 <div class="w-100 d-flex flex-column gap-2">
     <twig:Placeholder class="col-6" />
     <twig:Placeholder class="w-75" />
@@ -109,7 +109,7 @@ Set widths with grid columns, width utilities, or inline styles.
 
 Use the inherited text color or Bootstrap background utilities.
 
-```twig {"preview":true,"height":"270px"}
+```twig {"preview":true}
 <div class="w-100 d-flex flex-column gap-2">
     <twig:Placeholder class="col-12" />
     <twig:Placeholder class="col-12 bg-primary" />
@@ -127,7 +127,7 @@ Use the inherited text color or Bootstrap background utilities.
 
 Adjust placeholder height with large, small, and extra-small variants.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="w-100 d-flex flex-column gap-2">
     <twig:Placeholder size="lg" class="col-12" />
     <twig:Placeholder class="col-12" />
@@ -140,7 +140,7 @@ Adjust placeholder height with large, small, and extra-small variants.
 
 Use glow or wave animation to reinforce that content is actively loading.
 
-```twig {"preview":true,"height":"120px"}
+```twig {"preview":true}
 <div class="w-100 d-flex flex-column gap-3">
     <twig:Placeholder:Animation animation="glow" tag="p" class="mb-0">
         <twig:Placeholder class="col-12" />

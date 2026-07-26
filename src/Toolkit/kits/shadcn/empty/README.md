@@ -2,7 +2,7 @@
 
 Use the Empty component to display an empty state.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Empty>
     <twig:Empty:Header>
         <twig:Empty:Media variant="icon">
@@ -50,7 +50,7 @@ Use the Empty component to display an empty state.
 
 Use the `border` utility class to create an outline empty state.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Empty class="border border-dashed">
     <twig:Empty:Header>
         <twig:Empty:Media variant="icon">
@@ -73,7 +73,7 @@ Use the `border` utility class to create an outline empty state.
 
 Use the `bg-*` utilities to add a background to the empty state.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Empty class="h-full bg-muted/30">
     <twig:Empty:Header>
         <twig:Empty:Media variant="icon">
@@ -97,7 +97,7 @@ Use the `bg-*` utilities to add a background to the empty state.
 
 Use the `Empty:Media` component to display an avatar in the empty state.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Empty>
     <twig:Empty:Header>
         <twig:Empty:Media>
@@ -125,7 +125,7 @@ Use the `Empty:Media` component to display an avatar in the empty state.
 
 Use the `Empty:Media` component to display an avatar group in the empty state.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Empty>
     <twig:Empty:Header>
         <twig:Empty:Media>
@@ -162,7 +162,7 @@ Use the `Empty:Media` component to display an avatar group in the empty state.
 
 You can add an `InputGroup` component to the `Empty:Content` component.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Empty>
     <twig:Empty:Header>
         <twig:Empty:Title>404 - Not Found</twig:Empty:Title>
@@ -191,7 +191,7 @@ You can add an `InputGroup` component to the `Empty:Content` component.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"600px"}
+```twig {"preview":true}
 <div class="flex w-full flex-col gap-8">
     {# Arabic #}
     <twig:Empty dir="rtl">

@@ -2,7 +2,7 @@
 
 Styled HTML text elements for headings, paragraphs, quotes, lists and inline code.
 
-```twig {"preview":true,"height":"900px"}
+```twig {"preview":true}
 <div class="self-start w-full">
 <twig:Typography:H1>Taxing Laughter: The Joke Tax Chronicles</twig:Typography:H1>
 <twig:Typography:P class="text-xl text-muted-foreground">
@@ -88,31 +88,31 @@ Styled HTML text elements for headings, paragraphs, quotes, lists and inline cod
 
 ### H1
 
-```twig {"preview":true,"height":"100px"}
+```twig {"preview":true}
 <twig:Typography:H1 class="text-center">Taxing Laughter: The Joke Tax Chronicles</twig:Typography:H1>
 ```
 
 ### H2
 
-```twig {"preview":true,"height":"100px"}
+```twig {"preview":true}
 <twig:Typography:H2>The People of the Kingdom</twig:Typography:H2>
 ```
 
 ### H3
 
-```twig {"preview":true,"height":"100px"}
+```twig {"preview":true}
 <twig:Typography:H3>The Joke Tax</twig:Typography:H3>
 ```
 
 ### H4
 
-```twig {"preview":true,"height":"100px"}
+```twig {"preview":true}
 <twig:Typography:H4>People stopped telling jokes</twig:Typography:H4>
 ```
 
 ### Paragraph
 
-```twig {"preview":true,"height":"100px"}
+```twig {"preview":true}
 <twig:Typography:P>
     The king, seeing how much happier his subjects were, realized the error of his ways and repealed the joke tax.
 </twig:Typography:P>
@@ -120,7 +120,7 @@ Styled HTML text elements for headings, paragraphs, quotes, lists and inline cod
 
 ### Blockquote
 
-```twig {"preview":true,"height":"100px"}
+```twig {"preview":true}
 <twig:Typography:Blockquote>
     "After all," he said, "everyone enjoys a good joke, so it's only fair that they should pay for the privilege."
 </twig:Typography:Blockquote>
@@ -128,7 +128,7 @@ Styled HTML text elements for headings, paragraphs, quotes, lists and inline cod
 
 ### Table
 
-```twig {"preview":true,"height":"250px"}
+```twig {"preview":true}
 <div class="my-6 w-full overflow-y-auto">
     <table class="w-full">
         <thead>
@@ -157,7 +157,7 @@ Styled HTML text elements for headings, paragraphs, quotes, lists and inline cod
 
 ### List
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <twig:Typography:List>
     <li>1st level of puns: 5 gold coins</li>
     <li>2nd level of jokes: 10 gold coins</li>
@@ -167,13 +167,13 @@ Styled HTML text elements for headings, paragraphs, quotes, lists and inline cod
 
 ### Inline Code
 
-```twig {"preview":true,"height":"80px"}
+```twig {"preview":true}
 <twig:Typography:InlineCode>@radix-ui/react-alert-dialog</twig:Typography:InlineCode>
 ```
 
 ### Lead
 
-```twig {"preview":true,"height":"80px"}
+```twig {"preview":true}
 <p class="text-xl text-muted-foreground">
     A modal dialog that interrupts the user with important content and expects a response.
 </p>
@@ -181,19 +181,19 @@ Styled HTML text elements for headings, paragraphs, quotes, lists and inline cod
 
 ### Large
 
-```twig {"preview":true,"height":"80px"}
+```twig {"preview":true}
 <div class="text-lg font-semibold">Are you absolutely sure?</div>
 ```
 
 ### Small
 
-```twig {"preview":true,"height":"80px"}
+```twig {"preview":true}
 <small class="text-sm leading-none font-medium">Email address</small>
 ```
 
 ### Muted
 
-```twig {"preview":true,"height":"80px"}
+```twig {"preview":true}
 <p class="text-sm text-muted-foreground">Enter your email address.</p>
 ```
 
@@ -201,7 +201,7 @@ Styled HTML text elements for headings, paragraphs, quotes, lists and inline cod
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"600px"}
+```twig {"preview":true}
 <div class="self-start w-full" dir="rtl">
 <twig:Typography:H1>فرض الضرائب على الضحك: سجلات ضريبة النكتة</twig:Typography:H1>
 <twig:Typography:P class="text-xl text-muted-foreground">
@@ -270,7 +270,7 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
-```twig {"preview":true,"height":"600px"}
+```twig {"preview":true}
 <div class="self-start w-full" dir="rtl">
 <twig:Typography:H1>מיסוי הצחוק: כרוניקות מס הבדיחה</twig:Typography:H1>
 <twig:Typography:P class="text-xl text-muted-foreground">

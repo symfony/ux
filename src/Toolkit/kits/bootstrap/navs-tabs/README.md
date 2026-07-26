@@ -2,7 +2,7 @@
 
 Build navigation components and accessible dynamic tabbed interfaces with Bootstrap.
 
-```twig {"preview":true,"height":"180px"}
+```twig {"preview":true}
 <div>
     <twig:Nav type="tabs" role="tablist" class="mb-3">
         <twig:Nav:Item presentation>
@@ -110,7 +110,7 @@ Align navigation items with Bootstrap flexbox utilities through the `align` prop
 
 Stack navigation links vertically with list or landmark markup.
 
-```twig {"preview":true,"height":"260px"}
+```twig {"preview":true}
 <div class="d-flex gap-5">
     <twig:Nav vertical>
         <twig:Nav:Item><twig:Nav:Link href="#" active>Active</twig:Nav:Link></twig:Nav:Item>
@@ -171,7 +171,7 @@ Use the underline style introduced in Bootstrap 5.3.
 
 Fill the available width proportionally or give every navigation item the same width.
 
-```twig {"preview":true,"height":"220px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-3">
     <twig:Nav type="pills" fill>
         <twig:Nav:Item><twig:Nav:Link href="#" active>Active</twig:Nav:Link></twig:Nav:Item>
@@ -206,7 +206,7 @@ Combine the component with responsive flex utilities for breakpoint-specific lay
 
 Add a Bootstrap dropdown to a static tabs navigation.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <twig:Nav type="tabs">
     <twig:Nav:Item><twig:Nav:Link href="#" active>Active</twig:Nav:Link></twig:Nav:Item>
     <twig:Nav:Item class="dropdown">
@@ -228,7 +228,7 @@ Add a Bootstrap dropdown to a static tabs navigation.
 
 Add a Bootstrap dropdown to a static pills navigation.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <twig:Nav type="pills">
     <twig:Nav:Item><twig:Nav:Link href="#" active>Active</twig:Nav:Link></twig:Nav:Item>
     <twig:Nav:Item class="dropdown">
@@ -311,7 +311,7 @@ Use the same dynamic tab semantics with Bootstrap's pill appearance.
 
 Build a vertical dynamic tab interface and expose its orientation to assistive technologies.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="d-flex align-items-start">
     <twig:Nav tag="div" type="pills" vertical role="tablist" class="me-3" aria-orientation="vertical">
         <twig:Nav:Link tag="button" id="vertical-home-tab" target="#vertical-home" toggle="pill" active>Home</twig:Nav:Link>

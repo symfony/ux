@@ -12,9 +12,7 @@
 namespace Symfony\UX\Toolkit\Markdown;
 
 /**
- * The typed options a `{"preview": true}` fenced code block declares: the live-preview iframe `height`
- * and whether the code tab collapses long `class` attributes. Parsed once from the block's info-string
- * JSON and threaded down the preview pipeline (CodePreview, PreviewUrlGenerator) instead of a loose array.
+ * The typed options a `{"preview": true}` fenced code block declares.
  *
  * It owns the Toolkit's slice of the info-string contract at both ends — the read (`fromInfoJson`) and
  * the code-tab write (`toCodeTabInfoJson`); the wider info-string vocabulary (e.g. a host `filename`) is
@@ -25,7 +23,6 @@ namespace Symfony\UX\Toolkit\Markdown;
 final class CodeOptions
 {
     public function __construct(
-        public readonly string $height = '200px',
         public readonly bool $collapseClass = false,
     ) {
     }
@@ -42,15 +39,13 @@ final class CodeOptions
         }
 
         return new self(
-            // Omit height when it isn't a string so the constructor default applies (defined once).
-            ...(\is_string($options['height'] ?? null) ? ['height' => $options['height']] : []),
             collapseClass: (bool) ($options['collapseClass'] ?? false),
         );
     }
 
     /**
-     * The code-tab styling options as a fenced info-string JSON fragment (a subset: `height` is a
-     * Preview-tab concern and stays out), or null when there is nothing to carry. Symmetric with
+     * The code-tab styling options as a fenced info-string JSON fragment,
+     * or null when there is nothing to carry. Symmetric with
      * {@see self::fromInfoJson()} so encode and decode of the format live together.
      */
     public function toCodeTabInfoJson(): ?string

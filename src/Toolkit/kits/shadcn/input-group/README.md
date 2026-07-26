@@ -2,7 +2,7 @@
 
 Add addons, buttons, and helper content to inputs.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <twig:InputGroup class="max-w-xs">
     <twig:InputGroup:Input placeholder="Search..." />
     <twig:InputGroup:Addon>
@@ -31,7 +31,7 @@ Add addons, buttons, and helper content to inputs.
 
 ### Icon
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="grid w-full max-w-sm gap-6">
     <twig:InputGroup>
         <twig:InputGroup:Input placeholder="Search..." />
@@ -69,7 +69,7 @@ Add addons, buttons, and helper content to inputs.
 
 ### Text
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <div class="grid w-full max-w-sm gap-6">
     <twig:InputGroup>
         <twig:InputGroup:Addon>
@@ -109,7 +109,7 @@ Add addons, buttons, and helper content to inputs.
 
 ### Button
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="grid w-full max-w-sm gap-6">
     <twig:InputGroup>
         <twig:InputGroup:Input placeholder="https://x.com/symfony" readonly />
@@ -162,7 +162,7 @@ Add addons, buttons, and helper content to inputs.
 
 ### Spinner
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="grid w-full max-w-sm gap-4">
     <twig:InputGroup>
         <twig:InputGroup:Input placeholder="Searching..." />
@@ -200,7 +200,7 @@ Add addons, buttons, and helper content to inputs.
 
 ### Textarea
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <div class="grid w-full max-w-md gap-4">
     <twig:InputGroup>
         <twig:InputGroup:Textarea
@@ -234,7 +234,7 @@ Add addons, buttons, and helper content to inputs.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"850px"}
+```twig {"preview":true}
 <div class="w-full flex flex-col items-center gap-16">
     <div dir="rtl" class="grid w-full max-w-sm gap-6">
         <twig:InputGroup class="max-w-xs">

@@ -2,7 +2,7 @@
 
 A control that allows the user to toggle between checked and not checked.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <div class="flex items-center space-x-2">
     <twig:Switch id="airplane-mode" />
     <twig:Label for="airplane-mode">Airplane Mode</twig:Label>
@@ -37,7 +37,7 @@ A control that allows the user to toggle between checked and not checked.
 
 Card-style selection where `Field:Label` wraps the entire `Field` for a clickable card pattern.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Field:Group class="w-full max-w-sm">
     <twig:Field:Label for="switch-share">
         <twig:Field orientation="horizontal">
@@ -106,7 +106,7 @@ Use the `size` prop to change the size of the switch.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="w-full flex flex-col items-center gap-8">
     <twig:Field orientation="horizontal" class="max-w-sm" dir="rtl">
         <twig:Field:Content>

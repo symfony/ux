@@ -2,7 +2,7 @@
 
 Displays a callout for user attention.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="grid w-full max-w-md items-start gap-4">
     <twig:Alert>
         <twig:ux:icon name="lucide:circle-check-big" />
@@ -106,7 +106,7 @@ You can customize the alert colors by adding custom classes such as `bg-amber-50
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"450px"}
+```twig {"preview":true}
 <div class="flex flex-col gap-8">
     <div dir="rtl">
         <div class="grid w-full max-w-md items-start gap-4">

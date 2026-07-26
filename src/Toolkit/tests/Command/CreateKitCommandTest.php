@@ -113,7 +113,7 @@ class CreateKitCommandTest extends KernelTestCase
 
                 Displays a button or a component that looks like a button.
 
-                ```twig {"preview":true,"height":"150px"}
+                ```twig {"preview":true}
                 <div class="flex flex-wrap gap-2">
                     <twig:Button>Button</twig:Button>
                     <twig:Button variant="secondary">Secondary</twig:Button>
@@ -138,7 +138,7 @@ class CreateKitCommandTest extends KernelTestCase
 
                 Use the `variant` prop to change the visual style of the button.
 
-                ```twig {"preview":true,"height":"150px"}
+                ```twig {"preview":true}
                 <div class="flex flex-wrap gap-2">
                     <twig:Button>Default</twig:Button>
                     <twig:Button variant="secondary">Secondary</twig:Button>

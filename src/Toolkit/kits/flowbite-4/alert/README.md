@@ -66,7 +66,7 @@ The alert component can be used to provide information to your users such as suc
 
 You can also include a descriptive icon to complement the message inside the alert component with the following example.
 
-```twig {"preview":true,"height":"600px"}
+```twig {"preview":true}
 <div class="grid w-full max-w-xl items-start gap-4">
     <twig:Alert>
         <twig:block name="icon">
@@ -119,7 +119,7 @@ You can also include a descriptive icon to complement the message inside the ale
 
 Use this example to add a border accent to the alert component instead of just a plain background.
 
-```twig {"preview":true,"height":"600px"}
+```twig {"preview":true}
 <div class="grid w-full max-w-xl items-start gap-4">
     <twig:Alert border="bordered">
         <twig:block name="icon">
@@ -172,7 +172,7 @@ Use this example to add a border accent to the alert component instead of just a
 
 Use this example to show a list and a description inside an alert component.
 
-```twig {"preview":true,"height":"600px"}
+```twig {"preview":true}
 <div class="grid w-full max-w-xl items-start gap-4">
     <twig:Alert variant="success">
         <twig:block name="icon">
@@ -232,7 +232,7 @@ Use this example to show a list and a description inside an alert component.
 **Requires Flowbite JS**<br>
 Use the following alert elements that are also dismissible.
 
-```twig {"preview":true,"height":"600px"}
+```twig {"preview":true}
 <div class="grid w-full max-w-xl items-start gap-4">
     <twig:Alert dismissible>
         <twig:block name="icon">
@@ -307,7 +307,7 @@ Use `Alert:Action` to add a button or other action element to the alert.
 
 Use this example to add a border accent on top of the alert component for further visual distinction.
 
-```twig {"preview":true,"height":"600px"}
+```twig {"preview":true}
 <div class="grid w-full max-w-xl items-start gap-4">
     <twig:Alert border="accent" class="rounded-none">
         <twig:block name="icon">

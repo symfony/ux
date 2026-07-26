@@ -2,7 +2,7 @@
 
 Displays a badge or a component that looks like a badge.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="flex w-full flex-wrap justify-center gap-2">
     <twig:Badge>Badge</twig:Badge>
     <twig:Badge variant="secondary">Secondary</twig:Badge>
@@ -29,7 +29,7 @@ Displays a badge or a component that looks like a badge.
 
 Use the `variant` prop to change the variant of the badge.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="flex flex-wrap gap-2">
     <twig:Badge>Default</twig:Badge>
     <twig:Badge variant="secondary">Secondary</twig:Badge>
@@ -43,7 +43,7 @@ Use the `variant` prop to change the variant of the badge.
 
 You can render an icon inside the badge. Use `data-icon="inline-start"` to render the icon on the left and `data-icon="inline-end"` to render the icon on the right.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="flex flex-wrap gap-2">
     <twig:Badge variant="secondary">
         <twig:ux:icon name="lucide:badge-check" data-icon="inline-start" />
@@ -60,7 +60,7 @@ You can render an icon inside the badge. Use `data-icon="inline-start"` to rende
 
 You can render a spinner inside the badge. Remember to add the `data-icon="inline-start"` or `data-icon="inline-end"` attribute to the spinner.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="flex flex-wrap gap-2">
     <twig:Badge variant="destructive">
         <twig:Spinner data-icon="inline-start" />
@@ -77,7 +77,7 @@ You can render a spinner inside the badge. Remember to add the `data-icon="inlin
 
 Use the `as` prop to render a link as a badge.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Badge as="a" href="#link">
     Open Link
     <twig:ux:icon name="lucide:arrow-up-right" data-icon="inline-end" />
@@ -88,7 +88,7 @@ Use the `as` prop to render a link as a badge.
 
 You can customize the colors of a badge by adding custom classes such as `bg-green-50 dark:bg-green-800` to the `Badge` component.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="flex flex-wrap gap-2">
     <twig:Badge class="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">Blue</twig:Badge>
     <twig:Badge class="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">Green</twig:Badge>

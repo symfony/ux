@@ -2,7 +2,7 @@
 
 Displays a form textarea or a component that looks like a textarea.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <div class="*:max-w-xs contents">
     <twig:Textarea placeholder="Type your message here." />
 </div>
@@ -78,7 +78,7 @@ Pair with `Button` to create a textarea with a submit button.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <div class="*:max-w-xs contents">
     <div class="flex flex-col gap-8 w-full">
         {# Arabic #}

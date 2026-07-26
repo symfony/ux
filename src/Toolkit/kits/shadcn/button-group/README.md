@@ -2,7 +2,7 @@
 
 A container that groups related buttons together with consistent styling.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <twig:ButtonGroup>
     <twig:ButtonGroup class="hidden sm:flex">
         <twig:Button variant="outline" size="icon" aria-label="Go back">
@@ -44,7 +44,7 @@ A container that groups related buttons together with consistent styling.
 - Use `Tab` to navigate between the buttons in the group.
 - Use `aria-label` or `aria-labelledby` to label the button group.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:ButtonGroup aria-label="Button group">
     <twig:Button>Button 1</twig:Button>
     <twig:Button>Button 2</twig:Button>
@@ -57,7 +57,7 @@ A container that groups related buttons together with consistent styling.
 
 Set the `orientation` prop to change the button group layout.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <twig:ButtonGroup orientation="vertical" aria-label="Media controls" class="h-fit">
     <twig:Button variant="outline" size="icon">
         <twig:ux:icon name="lucide:plus" />
@@ -72,7 +72,7 @@ Set the `orientation` prop to change the button group layout.
 
 Control the size of buttons using the `size` prop on individual buttons.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="flex flex-col items-start gap-8">
     <twig:ButtonGroup>
         <twig:Button variant="outline" size="sm">Small</twig:Button>
@@ -105,7 +105,7 @@ Control the size of buttons using the `size` prop on individual buttons.
 
 Nest `ButtonGroup` components to create button groups with spacing.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <twig:ButtonGroup>
     <twig:ButtonGroup>
         <twig:Button variant="outline" size="icon">
@@ -129,7 +129,7 @@ The `ButtonGroup:Separator` component visually divides buttons within a group.
 
 Buttons with variant `outline` do not need a separator since they have a border. For other variants, a separator is recommended to improve the visual hierarchy.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <twig:ButtonGroup>
     <twig:Button variant="secondary" size="sm">Copy</twig:Button>
     <twig:ButtonGroup:Separator />
@@ -141,7 +141,7 @@ Buttons with variant `outline` do not need a separator since they have a border.
 
 Create a split button group by adding two buttons separated by a `ButtonGroup:Separator`.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <twig:ButtonGroup>
     <twig:Button variant="secondary">Button</twig:Button>
     <twig:ButtonGroup:Separator />
@@ -155,7 +155,7 @@ Create a split button group by adding two buttons separated by a `ButtonGroup:Se
 
 Wrap an `Input` component with buttons.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <twig:ButtonGroup>
     <twig:Input placeholder="Search..." />
     <twig:Button variant="outline" aria-label="Search">
@@ -168,7 +168,7 @@ Wrap an `Input` component with buttons.
 
 Wrap an `InputGroup` component to create complex input layouts.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <twig:ButtonGroup class="[--radius:9999rem]">
     <twig:ButtonGroup>
         <twig:Button variant="outline" size="icon">
@@ -190,7 +190,7 @@ Wrap an `InputGroup` component to create complex input layouts.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"320px"}
+```twig {"preview":true}
 <div class="flex flex-col gap-6">
     <div dir="rtl">
         <twig:ButtonGroup>

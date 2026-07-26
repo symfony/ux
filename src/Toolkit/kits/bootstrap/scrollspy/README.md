@@ -2,7 +2,7 @@
 
 Update Bootstrap navigation links as a scrollable region moves between sections.
 
-```twig {"preview":true,"height":"430px"}
+```twig {"preview":true}
 <div class="w-100">
     <nav id="demo-scrollspy-nav" class="navbar bg-body-tertiary px-3 mb-3 rounded">
         <span class="navbar-brand">Scrollspy</span>
@@ -61,7 +61,7 @@ An active navigation style is a visual enhancement, not a substitute for heading
 
 Track sections from links inside a Bootstrap navbar.
 
-```twig {"preview":true,"height":"370px"}
+```twig {"preview":true}
 <div class="w-100">
     <nav id="navbar-scrollspy" class="navbar bg-body-tertiary px-3 mb-3 rounded">
         <span class="navbar-brand">Navbar</span>
@@ -86,7 +86,7 @@ Track sections from links inside a Bootstrap navbar.
 
 Activate both parent and nested navigation links for hierarchical content.
 
-```twig {"preview":true,"height":"360px"}
+```twig {"preview":true}
 <div class="row">
     <div class="col-4">
         <nav id="nested-scrollspy" class="h-100 flex-column align-items-stretch pe-3 border-end">
@@ -116,7 +116,7 @@ Activate both parent and nested navigation links for hierarchical content.
 
 Use a list group as the navigation target.
 
-```twig {"preview":true,"height":"340px"}
+```twig {"preview":true}
 <div class="row">
     <div class="col-4">
         <div id="list-scrollspy" class="list-group">
@@ -141,7 +141,7 @@ Use a list group as the navigation target.
 
 Track sections with lightweight anchor navigation and optional smooth scrolling.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <div class="w-100">
     <nav id="simple-scrollspy" class="hstack gap-3 mb-3">
         <a class="p-2 link-offset-2 link-underline link-underline-opacity-0" href="#simple-first">First</a>

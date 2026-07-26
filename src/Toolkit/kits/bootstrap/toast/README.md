@@ -2,7 +2,7 @@
 
 Show lightweight Bootstrap notifications with optional headers and dismissal controls.
 
-```twig {"preview":true,"height":"230px"}
+```twig {"preview":true}
 <div class="d-flex justify-content-center p-4">
     <twig:Toast :autohide="false">
         <twig:Toast:Header timestamp="11 mins ago">
@@ -57,7 +57,7 @@ Choose a delay long enough to read the message. Set `autohide` to `false` when a
 
 Compose a standard toast from a header and body.
 
-```twig {"preview":true,"height":"190px"}
+```twig {"preview":true}
 <twig:Toast :autohide="false">
     <twig:Toast:Header timestamp="11 mins ago">
         <span class="rounded me-2 bg-primary" style="width: 20px; height: 20px"></span>
@@ -73,7 +73,7 @@ Compose a standard toast from a header and body.
 
 Start hidden and show the toast from application JavaScript.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <button type="button" class="btn btn-primary mb-3" id="live-toast-trigger">
     Show live toast
 </button>
@@ -90,7 +90,7 @@ Start hidden and show the toast from application JavaScript.
 
 Place the default translucent toast over colored content.
 
-```twig {"preview":true,"height":"260px"}
+```twig {"preview":true}
 <div class="p-4 rounded bg-primary bg-gradient">
     <twig:Toast :autohide="false">
         <twig:Toast:Header title="Bootstrap" timestamp="11 mins ago" />
@@ -105,7 +105,7 @@ Place the default translucent toast over colored content.
 
 Stack multiple notifications inside a Bootstrap toast container.
 
-```twig {"preview":true,"height":"320px"}
+```twig {"preview":true}
 <div class="toast-container position-static">
     <twig:Toast :autohide="false">
         <twig:Toast:Header title="Bootstrap" timestamp="just now" />
@@ -127,7 +127,7 @@ Stack multiple notifications inside a Bootstrap toast container.
 
 Omit the header and compose body content, actions, and dismissal controls directly.
 
-```twig {"preview":true,"height":"260px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-3">
     <twig:Toast :autohide="false" class="align-items-center">
         <div class="d-flex">
@@ -154,7 +154,7 @@ Omit the header and compose body content, actions, and dismissal controls direct
 
 Combine contextual background and foreground utilities for stronger visual emphasis.
 
-```twig {"preview":true,"height":"330px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-3">
     {% for color in ['primary', 'success', 'danger'] %}
         <twig:Toast :autohide="false" class="text-bg-{{ color }} border-0">
@@ -173,7 +173,7 @@ Combine contextual background and foreground utilities for stronger visual empha
 
 Position a toast container with Bootstrap's positioning utilities.
 
-```twig {"preview":true,"height":"420px"}
+```twig {"preview":true}
 <div class="position-relative w-100 bg-body-tertiary border rounded" style="height: 320px">
     <div class="toast-container position-absolute top-0 end-0 p-3">
         <twig:Toast :autohide="false">

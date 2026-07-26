@@ -2,7 +2,7 @@
 
 Groups a series of buttons on a single line or in a vertical column.
 
-```twig {"preview":true,"height":"190px"}
+```twig {"preview":true}
 <div class="d-flex flex-column align-items-start gap-3">
     <twig:ButtonGroup label="Primary actions">
         <twig:Button>Left</twig:Button>
@@ -44,7 +44,7 @@ Use `role="toolbar"` and a meaningful label on toolbars that combine multiple bu
 
 Group buttons or links together as one related set of controls.
 
-```twig {"preview":true,"height":"190px"}
+```twig {"preview":true}
 <div class="d-flex flex-column align-items-start gap-3">
     <twig:ButtonGroup label="Basic example">
         <twig:Button>Left</twig:Button>
@@ -64,7 +64,7 @@ Group buttons or links together as one related set of controls.
 
 Mix contextual button styles within one group.
 
-```twig {"preview":true,"height":"140px"}
+```twig {"preview":true}
 <twig:ButtonGroup label="Basic mixed styles example">
     <twig:Button color="danger">Left</twig:Button>
     <twig:Button color="warning">Middle</twig:Button>
@@ -76,7 +76,7 @@ Mix contextual button styles within one group.
 
 Use outline buttons for a group with less visual weight.
 
-```twig {"preview":true,"height":"140px"}
+```twig {"preview":true}
 <twig:ButtonGroup label="Basic outlined example">
     <twig:Button outline>Left</twig:Button>
     <twig:Button outline>Middle</twig:Button>
@@ -88,7 +88,7 @@ Use outline buttons for a group with less visual weight.
 
 Combine Bootstrap toggle inputs and labels into seamless checkbox or radio groups.
 
-```twig {"preview":true,"height":"190px"}
+```twig {"preview":true}
 <div class="d-flex flex-column align-items-start gap-3">
     <twig:ButtonGroup label="Basic checkbox toggle button group">
         <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
@@ -114,7 +114,7 @@ Combine Bootstrap toggle inputs and labels into seamless checkbox or radio group
 
 Combine several button groups, and optionally input groups, inside a labeled toolbar.
 
-```twig {"preview":true,"height":"250px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-3">
     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
         <twig:ButtonGroup label="First group" class="me-2">
@@ -165,7 +165,7 @@ Combine several button groups, and optionally input groups, inside a labeled too
 
 Apply a size to the group instead of repeating it on every button.
 
-```twig {"preview":true,"height":"230px"}
+```twig {"preview":true}
 <div class="d-flex flex-column align-items-start gap-2">
     <twig:ButtonGroup size="lg" label="Large button group">
         <twig:Button outline>Left</twig:Button>
@@ -191,7 +191,7 @@ Apply a size to the group instead of repeating it on every button.
 
 Nest a button group to place a dropdown alongside other buttons.
 
-```twig {"preview":true,"height":"260px"}
+```twig {"preview":true}
 <twig:ButtonGroup label="Button group with nested dropdown">
     <twig:Button>1</twig:Button>
     <twig:Button>2</twig:Button>
@@ -209,7 +209,7 @@ Nest a button group to place a dropdown alongside other buttons.
 
 Stack buttons, dropdowns, or radio controls in a vertical group.
 
-```twig {"preview":true,"height":"320px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap align-items-start gap-4">
     <twig:ButtonGroup vertical label="Vertical button group">
         <twig:Button>Button</twig:Button>

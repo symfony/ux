@@ -2,7 +2,7 @@
 
 Add Bootstrap tooltips to focusable controls with configurable content and placement.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-2">
     <twig:Tooltip title="Tooltip on left" placement="left">
         <button type="button" class="btn btn-secondary" {{ html_attr(tooltip_trigger_attrs) }}>Left</button>

@@ -2,7 +2,7 @@
 
 Toggle the visibility of content with Bootstrap's Collapse plugin.
 
-```twig {"preview":true,"height":"260px"}
+```twig {"preview":true}
 <div class="align-self-start w-100">
     <button
         class="btn btn-primary"
@@ -55,7 +55,7 @@ Bootstrap synchronizes `aria-expanded` while toggling. Avoid padding directly on
 
 Control the same collapsible panel with a link or a button.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <div class="align-self-start w-100 d-flex flex-column gap-2">
     <div>
         <a
@@ -91,7 +91,7 @@ Control the same collapsible panel with a link or a button.
 
 Animate width instead of height and set a width on the immediate child.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <div class="align-self-start w-75">
     <button
         class="btn btn-primary"
@@ -117,7 +117,7 @@ Animate width instead of height and set a width on the immediate child.
 
 Use ID and class selectors to control individual panels or several targets together.
 
-```twig {"preview":true,"height":"280px"}
+```twig {"preview":true}
 <div class="align-self-start w-100">
     <p class="d-flex flex-wrap gap-2">
         <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multi-collapse-one" aria-expanded="false" aria-controls="multi-collapse-one">Toggle first element</button>

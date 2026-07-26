@@ -2,7 +2,7 @@
 
 Combine labels, controls, and help text to compose accessible form fields and grouped inputs.
 
-```twig {"preview":true,"height":"700px"}
+```twig {"preview":true}
 <div class="w-full max-w-md">
     <form>
         <twig:Field:Group>
@@ -156,7 +156,7 @@ Combine labels, controls, and help text to compose accessible form fields and gr
 
 ### Input
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="w-full max-w-md">
     <twig:Field:Set>
         <twig:Field:Group>
@@ -181,7 +181,7 @@ Combine labels, controls, and help text to compose accessible form fields and gr
 
 ### Textarea
 
-```twig {"preview":true,"height":"220px"}
+```twig {"preview":true}
 <div class="w-full max-w-md">
     <twig:Field:Set>
         <twig:Field:Group>
@@ -203,7 +203,7 @@ Combine labels, controls, and help text to compose accessible form fields and gr
 
 ### Select
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <div class="w-full max-w-md">
     <twig:Field>
         <twig:Field:Label for="department">Department</twig:Field:Label>
@@ -226,7 +226,7 @@ Combine labels, controls, and help text to compose accessible form fields and gr
 
 ### Fieldset
 
-```twig {"preview":true,"height":"350px"}
+```twig {"preview":true}
 <div class="w-full max-w-md space-y-6">
     <twig:Field:Set>
         <twig:Field:Legend>Address information</twig:Field:Legend>
@@ -255,7 +255,7 @@ Combine labels, controls, and help text to compose accessible form fields and gr
 
 ### Checkbox
 
-```twig {"preview":true,"height":"350px"}
+```twig {"preview":true}
 <div class="w-full max-w-md">
     <twig:Field:Group>
         <twig:Field:Set>
@@ -323,7 +323,7 @@ Combine labels, controls, and help text to compose accessible form fields and gr
 
 ### Switch
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <twig:Field orientation="horizontal" class="w-fit">
     <twig:Field:Label for="2fa">Multi-factor authentication</twig:Field:Label>
     <twig:Switch id="2fa" />
@@ -334,7 +334,7 @@ Combine labels, controls, and help text to compose accessible form fields and gr
 
 Wrap `Field` components inside `Field:Label` to create selectable field groups. This works with `RadioGroup:Item`, `Checkbox`, and `Switch` components.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Field:Group class="w-full max-w-xs">
     <twig:Field:Set>
         <twig:Field:Legend variant="label">Compute Environment</twig:Field:Legend>
@@ -365,7 +365,7 @@ Wrap `Field` components inside `Field:Label` to create selectable field groups. 
 
 ### Field Group
 
-```twig {"preview":true,"height":"350px"}
+```twig {"preview":true}
 <div class="w-full max-w-md">
     <twig:Field:Group>
         <twig:Field:Set>
@@ -411,7 +411,7 @@ Wrap `Field` components inside `Field:Label` to create selectable field groups. 
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"700px"}
+```twig {"preview":true}
 <div class="flex flex-col gap-8 w-full items-center">
     <div dir="rtl" class="w-full max-w-md">
         <form>

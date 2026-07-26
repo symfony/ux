@@ -34,7 +34,7 @@ Use the skeleton component to indicate a loading status with placeholder element
 
 Use this example to show a placeholder when loading content inside a card.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <twig:Card class="animate-pulse" role="status">
     <twig:Card:Header>
         <twig:Skeleton class="flex items-center justify-center h-48 max-w-sm" shape="rounded" role="status">

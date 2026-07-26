@@ -170,7 +170,7 @@ This example can be used if you want to show additional information in the form 
 
 Use this example if you want to show a dropdown menu when clicking on the avatar component.
 
-```twig {"preview":true,"height":"600px"}
+```twig {"preview":true}
 <twig:Dropdown id="user-dropdown" placement="bottom-start">
     <twig:Dropdown:Trigger>
         <twig:Avatar class="cursor-pointer" {{ ...dropdown_trigger_attrs }}>

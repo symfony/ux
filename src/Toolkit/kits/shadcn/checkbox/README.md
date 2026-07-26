@@ -2,7 +2,7 @@
 
 A control that allows the user to toggle between checked and not checked.
 
-```twig {"preview":true,"height":"380px"}
+```twig {"preview":true}
 <twig:Field:Group class="max-w-sm">
     <twig:Field orientation="horizontal">
         <twig:Checkbox id="terms-checkbox" name="terms-checkbox" />
@@ -89,7 +89,7 @@ Use the `disabled` attribute to prevent interaction and add the `data-disabled` 
 
 Use multiple fields to create a checkbox list.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Field:Set>
     <twig:Field:Legend variant="label">Show these items on the desktop:</twig:Field:Legend>
     <twig:Field:Description>Select the items you want to show on the desktop.</twig:Field:Description>
@@ -116,7 +116,7 @@ Use multiple fields to create a checkbox list.
 
 ### Table
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Table>
     <twig:Table:Header>
         <twig:Table:Row>
@@ -169,7 +169,7 @@ Use multiple fields to create a checkbox list.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"680px"}
+```twig {"preview":true}
 <div class="flex flex-col gap-12 w-full items-center">
     {# Arabic #}
     <twig:Field:Group class="max-w-sm" dir="rtl">

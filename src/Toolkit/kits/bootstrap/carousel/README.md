@@ -2,7 +2,7 @@
 
 Cycle through images, text, and other content with optional controls and indicators.
 
-```twig {"preview":true,"height":"290px"}
+```twig {"preview":true}
 <twig:Carousel id="demo-carousel" indicators class="w-100">
     <twig:block name="indicators">
         <button type="button" data-bs-target="#demo-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -50,7 +50,7 @@ Carousels that start automatically can be difficult for people using assistive t
 
 Cycle through three slides with Bootstrap's previous and next controls.
 
-```twig {"preview":true,"height":"290px"}
+```twig {"preview":true}
 <twig:Carousel id="basic-carousel" class="w-100">
     <twig:Carousel:Item active>
         <div class="d-flex align-items-center justify-content-center bg-primary text-white fs-1" style="height: 12rem">First slide</div>
@@ -68,7 +68,7 @@ Cycle through three slides with Bootstrap's previous and next controls.
 
 Add buttons that identify and select each slide.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <twig:Carousel id="indicators-carousel" indicators class="w-100">
     <twig:block name="indicators">
         <button type="button" data-bs-target="#indicators-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -85,7 +85,7 @@ Add buttons that identify and select each slide.
 
 Overlay responsive headings and supporting text on each slide.
 
-```twig {"preview":true,"height":"290px"}
+```twig {"preview":true}
 <twig:Carousel id="captions-carousel" indicators class="w-100">
     <twig:block name="indicators">
         <button type="button" data-bs-target="#captions-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -111,7 +111,7 @@ Overlay responsive headings and supporting text on each slide.
 
 Replace the horizontal movement with a fade transition.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <twig:Carousel id="crossfade-carousel" fade class="w-100">
     <twig:Carousel:Item active><div class="bg-primary text-white p-5 text-center fs-2">First slide</div></twig:Carousel:Item>
     <twig:Carousel:Item><div class="bg-success text-white p-5 text-center fs-2">Second slide</div></twig:Carousel:Item>
@@ -123,7 +123,7 @@ Replace the horizontal movement with a fade transition.
 
 Start cycling as soon as the page loads with `ride="carousel"`.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <twig:Carousel id="autoplay-carousel" ride="carousel" class="w-100">
     <twig:Carousel:Item active><div class="bg-primary text-white p-5 text-center fs-2">First slide</div></twig:Carousel:Item>
     <twig:Carousel:Item><div class="bg-success text-white p-5 text-center fs-2">Second slide</div></twig:Carousel:Item>
@@ -135,7 +135,7 @@ Start cycling as soon as the page loads with `ride="carousel"`.
 
 Start cycling only after the user first interacts with the carousel.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <twig:Carousel id="interaction-carousel" ride="true" class="w-100">
     <twig:Carousel:Item active><div class="bg-primary text-white p-5 text-center fs-2">First slide</div></twig:Carousel:Item>
     <twig:Carousel:Item><div class="bg-success text-white p-5 text-center fs-2">Second slide</div></twig:Carousel:Item>
@@ -147,7 +147,7 @@ Start cycling only after the user first interacts with the carousel.
 
 Give individual slides a longer or shorter display interval.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <twig:Carousel id="interval-carousel" ride="carousel" class="w-100">
     <twig:Carousel:Item active :interval="10000"><div class="bg-primary text-white p-5 text-center fs-2">10 seconds</div></twig:Carousel:Item>
     <twig:Carousel:Item :interval="2000"><div class="bg-success text-white p-5 text-center fs-2">2 seconds</div></twig:Carousel:Item>
@@ -159,7 +159,7 @@ Give individual slides a longer or shorter display interval.
 
 Autoplay a carousel without rendering previous and next buttons.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <twig:Carousel id="uncontrolled-carousel" ride="carousel" :controls="false" class="w-100">
     <twig:Carousel:Item active><div class="bg-primary text-white p-5 text-center fs-2">First slide</div></twig:Carousel:Item>
     <twig:Carousel:Item><div class="bg-success text-white p-5 text-center fs-2">Second slide</div></twig:Carousel:Item>
@@ -171,7 +171,7 @@ Autoplay a carousel without rendering previous and next buttons.
 
 Keep controls active while disabling touch gestures.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <twig:Carousel id="no-touch-carousel" :touch="false" class="w-100">
     <twig:Carousel:Item active><div class="bg-primary text-white p-5 text-center fs-2">First slide</div></twig:Carousel:Item>
     <twig:Carousel:Item><div class="bg-success text-white p-5 text-center fs-2">Second slide</div></twig:Carousel:Item>
@@ -183,7 +183,7 @@ Keep controls active while disabling touch gestures.
 
 Use Bootstrap's dark color mode for controls and indicators on a light slide.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <twig:Carousel id="dark-carousel" theme="dark" indicators class="w-100">
     <twig:block name="indicators">
         <button type="button" data-bs-target="#dark-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
