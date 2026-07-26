@@ -13,7 +13,8 @@ namespace Symfony\UX\Toolkit\Component;
 
 /**
  * Reads a Stimulus controller's documented + declared surface from its source: the
- * `@value`/`@target`/`@action` docblock tags and the `static values`/`static targets`
+ * `@value`/`@target`/`@action`/`@css-class`/`@outlet` docblock tags and the
+ * `static values`/`static targets`/`static classes`/`static outlets`
  * declarations. Shared by {@see StimulusControllerDocParser} (rendering) and
  * {@see \Symfony\UX\Toolkit\Kit\Lint\Checker\StimulusControllerDocChecker} (linting) so both
  * scan a controller identically.
@@ -26,10 +27,12 @@ final class StimulusControllerSource
 {
     private const RE_DOCBLOCK = '#/\*\*(?P<body>.*?)\*/#s';
     // The description ends only at the next annotation *line* (\R\h*@), so an `@` mid-sentence isn't a boundary.
-    private const RE_TAG = '/@(?P<tag>value|target|action)\h+(?P<name>[A-Za-z_$][\w$]*)(?P<description>(?:(?!\R\h*@[a-zA-Z]).)*)/s';
+    private const RE_TAG = '/@(?P<tag>value|target|action|css-class|outlet)\h+(?P<name>[A-Za-z_$][\w$-]*)(?P<description>(?:(?!\R\h*@[a-zA-Z]).)*)/s';
     private const RE_VALUES = '/static\s+values\s*=\s*\{(?P<body>(?:[^{}]|\{[^{}]*\})*)\}/s';
     private const RE_VALUE_ENTRY = '/(?P<name>[A-Za-z_$][\w$]*)\s*:\s*(?P<type>\{[^{}]*\}|[A-Za-z_$][\w$]*)/';
     private const RE_TARGETS = '/static\s+targets\s*=\s*\[(?P<body>[^\]]*)\]/s';
+    private const RE_CLASSES = '/static\s+classes\s*=\s*\[(?P<body>[^\]]*)\]/s';
+    private const RE_OUTLETS = '/static\s+outlets\s*=\s*\[(?P<body>[^\]]*)\]/s';
     private const RE_STRING = '/[\'"](?P<value>[^\'"]+)[\'"]/';
 
     public function __construct(private readonly string $source)
@@ -39,11 +42,11 @@ final class StimulusControllerSource
     /**
      * Docblock tag descriptions, keyed by name within each tag type.
      *
-     * @return array{value: array<string, string>, target: array<string, string>, action: array<string, string>}
+     * @return array{value: array<string, string>, target: array<string, string>, action: array<string, string>, class: array<string, string>, outlet: array<string, string>}
      */
     public function tags(): array
     {
-        $tags = ['value' => [], 'target' => [], 'action' => []];
+        $tags = ['value' => [], 'target' => [], 'action' => [], 'class' => [], 'outlet' => []];
 
         if (!preg_match_all(self::RE_DOCBLOCK, $this->source, $blocks)) {
             return $tags;
@@ -58,7 +61,9 @@ final class StimulusControllerSource
             }
 
             foreach ($matches as $match) {
-                $tags[$match['tag']][$match['name']] = trim(preg_replace('/\s+/', ' ', $match['description']));
+                // The docblock tag is `@css-class` (avoiding a clash with JSDoc's `@class`); internally it maps to the `class` group.
+                $tag = 'css-class' === $match['tag'] ? 'class' : $match['tag'];
+                $tags[$tag][$match['name']] = trim(preg_replace('/\s+/', ' ', $match['description']));
             }
         }
 
@@ -97,6 +102,42 @@ final class StimulusControllerSource
     public function targets(): array
     {
         if (!preg_match(self::RE_TARGETS, $this->source, $matches)) {
+            return [];
+        }
+
+        if (!preg_match_all(self::RE_STRING, $matches['body'], $strings)) {
+            return [];
+        }
+
+        return $strings['value'];
+    }
+
+    /**
+     * Class names declared in `static classes`.
+     *
+     * @return list<string>
+     */
+    public function classes(): array
+    {
+        if (!preg_match(self::RE_CLASSES, $this->source, $matches)) {
+            return [];
+        }
+
+        if (!preg_match_all(self::RE_STRING, $matches['body'], $strings)) {
+            return [];
+        }
+
+        return $strings['value'];
+    }
+
+    /**
+     * Outlet names declared in `static outlets`.
+     *
+     * @return list<string>
+     */
+    public function outlets(): array
+    {
+        if (!preg_match(self::RE_OUTLETS, $this->source, $matches)) {
             return [];
         }
 

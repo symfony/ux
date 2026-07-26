@@ -77,6 +77,32 @@ class StimulusControllerDocCheckerTest extends TestCase
         self::assertStringContainsString('"autoClose" is declared in the controller but has no `@value', implode("\n", $messages));
     }
 
+    public function testClassMismatchesAreReportedBothWays()
+    {
+        $issues = $this->issuesForFile($this->lintCases(), 'class_conflict_controller.js');
+        $messages = array_map(static fn (LintIssue $i) => $i->message, $issues);
+
+        self::assertCount(2, $issues);
+        foreach ($issues as $issue) {
+            self::assertSame('stimulus.class.mismatch', $issue->category);
+        }
+        self::assertStringContainsString('"ghost" is documented with `@css-class` but is not declared', implode("\n", $messages));
+        self::assertStringContainsString('"loading" is declared in the controller but has no `@css-class', implode("\n", $messages));
+    }
+
+    public function testOutletMismatchesAreReportedBothWays()
+    {
+        $issues = $this->issuesForFile($this->lintCases(), 'outlet_conflict_controller.js');
+        $messages = array_map(static fn (LintIssue $i) => $i->message, $issues);
+
+        self::assertCount(2, $issues);
+        foreach ($issues as $issue) {
+            self::assertSame('stimulus.outlet.mismatch', $issue->category);
+        }
+        self::assertStringContainsString('"ghost" is documented with `@outlet` but is not declared', implode("\n", $messages));
+        self::assertStringContainsString('"flash" is declared in the controller but has no `@outlet', implode("\n", $messages));
+    }
+
     public function testBadDescriptionIsReported()
     {
         $issues = $this->issuesForFile($this->lintCases(), 'bad_description_controller.js');

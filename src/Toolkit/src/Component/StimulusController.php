@@ -56,4 +56,22 @@ final class StimulusController
     {
         return \sprintf('data-%s-%s-value', $identifier, u($value)->kebab());
     }
+
+    /**
+     * The `data-*` attribute a Stimulus class binds to, matching Stimulus' dasherization
+     * (e.g. identifier `widget` + class `success` => `data-widget-success-class`).
+     */
+    public static function classAttribute(string $identifier, string $class): string
+    {
+        return \sprintf('data-%s-%s-class', $identifier, u($class)->kebab());
+    }
+
+    /**
+     * The `data-*` attribute a Stimulus outlet binds to, matching Stimulus' dasherization
+     * (e.g. identifier `widget` + outlet `user-status` => `data-widget-user-status-outlet`).
+     */
+    public static function outletAttribute(string $identifier, string $outlet): string
+    {
+        return \sprintf('data-%s-%s-outlet', $identifier, u($outlet)->kebab());
+    }
 }
