@@ -2,7 +2,7 @@
 
 A link that logs the current user out through a secure POST form.
 
-```twig {"preview":true,"height":"300px","collapseClass":true}
+```twig {"preview":true,"collapseClass":true}
 <twig:LogoutLink class="rounded-md bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-500">
     Logout
 </twig:LogoutLink>
@@ -51,7 +51,7 @@ security:
 
 Set the `firewall` prop to log out from a specific firewall instead of the current one.
 
-```twig {"preview":true,"height":"300px","collapseClass":true}
+```twig {"preview":true,"collapseClass":true}
 <twig:LogoutLink firewall="main" class="rounded-md bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-500">
     Logout from the main firewall
 </twig:LogoutLink>

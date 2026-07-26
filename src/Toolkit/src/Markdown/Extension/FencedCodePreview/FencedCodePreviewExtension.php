@@ -21,7 +21,7 @@ use Symfony\UX\Toolkit\Markdown\PreviewTabsBuilder;
 
 /**
  * The inline preview: a fenced code block whose info string carries `{"preview": true, ...}` (e.g. a
- * `twig` block with `{"preview": true, "height": "300px"}`) is turned into a `Tabs(Preview, Code)` block.
+ * `twig` block with `{"preview": true}`) is turned into a `Tabs(Preview, Code)` block.
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */

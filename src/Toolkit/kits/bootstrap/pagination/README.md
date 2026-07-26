@@ -2,7 +2,7 @@
 
 Indicate that related content is split across multiple pages with accessible pagination links.
 
-```twig {"preview":true,"height":"160px"}
+```twig {"preview":true}
 <twig:Pagination ariaLabel="Article pages">
     <twig:Pagination:Item label="Previous" disabled />
     <twig:Pagination:Item href="?page=1" label="1" active />
@@ -38,7 +38,7 @@ The active item exposes `aria-current="page"`. Disabled items render as non-inte
 
 Use connected page links to navigate through a series of related pages.
 
-```twig {"preview":true,"height":"160px"}
+```twig {"preview":true}
 <twig:Pagination ariaLabel="Page navigation example">
     <twig:Pagination:Item href="#" label="Previous" />
     <twig:Pagination:Item href="#" label="1" />
@@ -52,7 +52,7 @@ Use connected page links to navigate through a series of related pages.
 
 When replacing previous and next labels with symbols, provide an accessible label and hide the symbol from assistive technologies.
 
-```twig {"preview":true,"height":"160px"}
+```twig {"preview":true}
 <twig:Pagination ariaLabel="Page navigation example">
     <twig:Pagination:Item href="#" ariaLabel="Previous"><span aria-hidden="true">&laquo;</span></twig:Pagination:Item>
     <twig:Pagination:Item href="#" label="1" />
@@ -66,7 +66,7 @@ When replacing previous and next labels with symbols, provide an accessible labe
 
 Mark the page currently being viewed as active. It can remain a link or render as a non-interactive item.
 
-```twig {"preview":true,"height":"210px"}
+```twig {"preview":true}
 <div>
     <twig:Pagination ariaLabel="Article pages">
         <twig:Pagination:Item href="#" label="Previous" />
@@ -88,7 +88,7 @@ Mark the page currently being viewed as active. It can remain a link or render a
 
 Disable unavailable navigation items without leaving an unusable link in the keyboard tab order.
 
-```twig {"preview":true,"height":"160px"}
+```twig {"preview":true}
 <twig:Pagination ariaLabel="Article pages">
     <twig:Pagination:Item label="Previous" disabled />
     <twig:Pagination:Item href="#" label="1" />
@@ -102,7 +102,7 @@ Disable unavailable navigation items without leaving an unusable link in the key
 
 Use Bootstrap's large and small pagination sizes.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-3">
     <twig:Pagination size="lg" ariaLabel="Large pagination example">
         <twig:Pagination:Item label="1" active />
@@ -122,7 +122,7 @@ Use Bootstrap's large and small pagination sizes.
 
 Align the pagination links with Bootstrap flexbox utilities through the `align` prop.
 
-```twig {"preview":true,"height":"230px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-3">
     <twig:Pagination align="center" ariaLabel="Centered page navigation example">
         <twig:Pagination:Item label="Previous" disabled />

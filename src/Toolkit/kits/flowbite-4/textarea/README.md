@@ -61,7 +61,7 @@ Most often the textarea component is used as the main text field input element i
 
 Use this example to add action buttons alongside a textarea for rich text editing capabilities.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <form class="w-full">
     <div class="w-full mb-4 border border-default-medium rounded-base bg-neutral-secondary-medium shadow-xs">
         <div class="flex items-center justify-between px-3 py-2 border-b border-default-medium">

@@ -2,7 +2,7 @@
 
 Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <twig:Progress value="56" class="w-[60%]" />
 ```
 

@@ -2,7 +2,7 @@
 
 For sighted users to preview content available behind a link.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:HoverCard openDelay="10" closeDelay="100">
     <twig:HoverCard:Trigger>
         <twig:Button variant="link" {{ ...hover_card_trigger_attrs }}>Hover Here</twig:Button>
@@ -36,7 +36,7 @@ For sighted users to preview content available behind a link.
 
 ### Basic
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:HoverCard openDelay="10" closeDelay="100">
     <twig:HoverCard:Trigger>
         <twig:Button variant="link" {{ ...hover_card_trigger_attrs }}>Hover Here</twig:Button>
@@ -51,7 +51,7 @@ For sighted users to preview content available behind a link.
 
 ### Sides
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="flex flex-wrap justify-center gap-2">
     {% for side in ['left', 'top', 'bottom', 'right'] %}
         <twig:HoverCard openDelay="100" closeDelay="100">
@@ -73,7 +73,7 @@ For sighted users to preview content available behind a link.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <div class="flex flex-col items-center gap-24 py-12">
     {# Arabic #}
     <div class="flex flex-wrap justify-center gap-2" dir="rtl">

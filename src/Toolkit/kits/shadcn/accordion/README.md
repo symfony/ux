@@ -2,7 +2,7 @@
 
 A vertically stacked set of interactive headings that each reveal a section of content.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Accordion id="accordion-demo" defaultValue="{{ ['shipping'] }}" class="max-w-lg">
     <twig:Accordion:Item value="shipping">
         <twig:Accordion:Trigger>What are your shipping options?</twig:Accordion:Trigger>
@@ -51,7 +51,7 @@ A vertically stacked set of interactive headings that each reveal a section of c
 
 A basic accordion that shows one item at a time. The first item is open by default.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 {% set items = [
     {
         value: 'item-1',
@@ -87,7 +87,7 @@ A basic accordion that shows one item at a time. The first item is open by defau
 
 Use the `multiple` prop to allow multiple items to be open at the same time.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 {% set items = [
     {
         value: 'notifications',
@@ -123,7 +123,7 @@ Use the `multiple` prop to allow multiple items to be open at the same time.
 
 Use the `disabled` prop on `Accordion:Item` to disable individual items.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Accordion id="accordion-disabled" class="max-w-lg">
     <twig:Accordion:Item value="item-1">
         <twig:Accordion:Trigger>Can I access my account history?</twig:Accordion:Trigger>
@@ -155,7 +155,7 @@ Use the `disabled` prop on `Accordion:Item` to disable individual items.
 
 Add `border` to the `Accordion` and `border-b last:border-b-0` to the `Accordion:Item` to add borders to the items.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 {% set items = [
     {
         value: 'billing',
@@ -198,7 +198,7 @@ Add `border` to the `Accordion` and `border-b last:border-b-0` to the `Accordion
 
 Wrap the `Accordion` in a `Card` component.
 
-```twig {"preview":true,"height":"450px"}
+```twig {"preview":true}
 <twig:Card class="w-full max-w-sm">
     <twig:Card:Header>
         <twig:Card:Title>Subscription &amp; Billing</twig:Card:Title>
@@ -235,7 +235,7 @@ Wrap the `Accordion` in a `Card` component.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"450px"}
+```twig {"preview":true}
 <div class="flex flex-col gap-8">
     <div dir="rtl">
         <twig:Accordion id="accordion-rtl-ar" defaultValue="{{ ['item-1'] }}" class="max-w-md">

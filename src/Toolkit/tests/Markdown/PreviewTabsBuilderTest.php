@@ -23,14 +23,14 @@ class PreviewTabsBuilderTest extends TestCase
     {
         // The code tab is styled by the host (ux.symfony.com collapses long class attributes), so that
         // option travels through the FencedCode info string; height is a Preview-tab concern and stays out.
-        $tabs = PreviewTabsBuilder::build('<twig:Button />', new CodeOptions(height: '300px', collapseClass: true), 'twig');
+        $tabs = PreviewTabsBuilder::build('<twig:Button />', new CodeOptions(collapseClass: true), 'twig');
 
         $this->assertSame('twig {"collapseClass":true}', $this->findFencedCode($tabs)?->getInfo());
     }
 
     public function testCodeTabHasBareLanguageWhenCollapseClassIsOff()
     {
-        $tabs = PreviewTabsBuilder::build('<twig:Button />', new CodeOptions(height: '300px'), 'twig');
+        $tabs = PreviewTabsBuilder::build('<twig:Button />', new CodeOptions(), 'twig');
 
         $this->assertSame('twig', $this->findFencedCode($tabs)?->getInfo());
     }

@@ -27,15 +27,14 @@ class CodePreviewExtensionTest extends TestCase
         $urlGenerator = new class implements PreviewUrlGenerator {
             public function generate(string $code, CodeOptions $options): ?string
             {
-                return 'https://example.test/preview?h='.$options->height;
+                return 'https://example.test/preview';
             }
         };
 
-        $html = $this->render(new CodePreview('<twig:Button>Hi</twig:Button>', new CodeOptions(height: '150px')), $urlGenerator);
+        $html = $this->render(new CodePreview('<twig:Button>Hi</twig:Button>', new CodeOptions()), $urlGenerator);
 
         $this->assertStringContainsString('<iframe', $html);
-        $this->assertStringContainsString('src="https://example.test/preview?h=150px"', $html);
-        $this->assertStringContainsString('height: 150px', $html);
+        $this->assertStringContainsString('src="https://example.test/preview"', $html);
     }
 
     public function testRendersStaticBlockWhenNoUrlGeneratorConfigured()

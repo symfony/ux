@@ -2,7 +2,7 @@
 
 Display contextual menus from buttons and links in any Bootstrap direction.
 
-```twig {"preview":true,"height":"220px"}
+```twig {"preview":true}
 <div class="d-flex justify-content-center align-items-start align-self-stretch w-100">
     <twig:Dropdown>
         <twig:Dropdown:Toggle id="demo-dropdown">Dropdown button</twig:Dropdown:Toggle>
@@ -45,7 +45,7 @@ Use a button for actions and reserve link toggles and items for navigation. Give
 
 Use buttons or links with Bootstrap's contextual colors.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap justify-content-center align-items-start gap-2 w-100">
     {% for color in ['primary', 'secondary', 'success', 'info', 'warning', 'danger'] %}
         <twig:Dropdown>
@@ -71,7 +71,7 @@ Use buttons or links with Bootstrap's contextual colors.
 
 Separate the primary action from the menu toggle.
 
-```twig {"preview":true,"height":"320px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap justify-content-center align-items-start gap-2 w-100">
     {% for color in ['primary', 'secondary', 'success', 'info', 'warning', 'danger'] %}
         <twig:Dropdown grouped>
@@ -92,7 +92,7 @@ Separate the primary action from the menu toggle.
 
 Create large and small regular or split dropdown buttons.
 
-```twig {"preview":true,"height":"420px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 w-100">
     <twig:Dropdown>
         <twig:Dropdown:Toggle color="secondary" size="lg">Large button</twig:Dropdown:Toggle>
@@ -119,7 +119,7 @@ Create large and small regular or split dropdown buttons.
 
 Render a dark menu with a visible active item.
 
-```twig {"preview":true,"height":"260px"}
+```twig {"preview":true}
 <div class="d-flex justify-content-center align-items-start align-self-stretch w-100">
     <twig:Dropdown>
         <twig:Dropdown:Toggle id="dark-dropdown" color="secondary">Dropdown button</twig:Dropdown:Toggle>
@@ -138,7 +138,7 @@ Render a dark menu with a visible active item.
 
 Open menus from the center, above, or from either side.
 
-```twig {"preview":true,"height":"360px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 w-100">
     <twig:Dropdown direction="center">
         <twig:Dropdown:Toggle>Centered dropdown</twig:Dropdown:Toggle>
@@ -182,7 +182,7 @@ Open menus from the center, above, or from either side.
 
 Use links, buttons, or non-interactive text as menu content.
 
-```twig {"preview":true,"height":"250px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap justify-content-center align-items-start gap-4 w-100">
     <twig:Dropdown:Menu class="d-block position-static">
         <twig:Dropdown:Item href="#">Action</twig:Dropdown:Item>
@@ -205,7 +205,7 @@ Use links, buttons, or non-interactive text as menu content.
 
 Communicate the current item and unavailable choices.
 
-```twig {"preview":true,"height":"220px"}
+```twig {"preview":true}
 <twig:Dropdown:Menu class="d-block position-static">
     <twig:Dropdown:Item href="#">Regular link</twig:Dropdown:Item>
     <twig:Dropdown:Item href="#" active>Active link</twig:Dropdown:Item>
@@ -217,7 +217,7 @@ Communicate the current item and unavailable choices.
 
 Align a menu against the end of its toggle.
 
-```twig {"preview":true,"height":"220px"}
+```twig {"preview":true}
 <div class="d-flex justify-content-center align-items-start align-self-stretch w-100">
     <twig:Dropdown>
         <twig:Dropdown:Toggle id="aligned-dropdown">Right-aligned menu</twig:Dropdown:Toggle>
@@ -234,7 +234,7 @@ Align a menu against the end of its toggle.
 
 Change menu alignment at Bootstrap breakpoints.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap justify-content-center align-items-start gap-3 w-100">
     <twig:Dropdown>
         <twig:Dropdown:Toggle data-bs-display="static">Left-aligned but right-aligned when large screen</twig:Dropdown:Toggle>
@@ -251,7 +251,7 @@ Change menu alignment at Bootstrap breakpoints.
 
 Combine responsive alignment with dropdowns that open in different directions.
 
-```twig {"preview":true,"height":"520px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 w-100">
     <twig:Dropdown>
         <twig:Dropdown:Toggle>Dropdown</twig:Dropdown:Toggle>
@@ -283,7 +283,7 @@ Combine responsive alignment with dropdowns that open in different directions.
 
 Structure longer menus with headings, separators, and explanatory copy.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Dropdown:Menu class="d-block position-static">
     <twig:Dropdown:Header>Dropdown header</twig:Dropdown:Header>
     <twig:Dropdown:Item href="#">Action</twig:Dropdown:Item>
@@ -298,7 +298,7 @@ Structure longer menus with headings, separators, and explanatory copy.
 
 Display a static form or open one from a dropdown toggle.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap justify-content-center align-items-start gap-4 w-100">
     <twig:Dropdown:Menu tag="form" class="d-block position-static p-4">
         <div class="mb-3">
@@ -334,7 +334,7 @@ Display a static form or open one from a dropdown toggle.
 
 Configure Popper's offset and reference element with Bootstrap data attributes.
 
-```twig {"preview":true,"height":"230px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap justify-content-center align-items-start gap-3 w-100">
     <twig:Dropdown>
         <twig:Dropdown:Toggle data-bs-offset="10,20">Offset</twig:Dropdown:Toggle>
@@ -352,7 +352,7 @@ Configure Popper's offset and reference element with Bootstrap data attributes.
 
 Choose which inside or outside interactions dismiss the menu.
 
-```twig {"preview":true,"height":"280px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap justify-content-center align-items-start gap-3 w-100">
     {% for behavior, label in {
     true: 'Default dropdown',

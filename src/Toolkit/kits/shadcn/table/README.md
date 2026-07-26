@@ -2,7 +2,7 @@
 
 A responsive table component.
 
-```twig {"preview":true,"height":"30rem"}
+```twig {"preview":true}
 {%- set invoices = [
     {invoice: 'INV001', paymentStatus: 'Paid', totalAmount: '$250.00', paymentMethod: 'Credit Card'},
     {invoice: 'INV002', paymentStatus: 'Pending', totalAmount: '$150.00', paymentMethod: 'PayPal'},
@@ -75,7 +75,7 @@ A responsive table component.
 
 Use the `TableFooter` component to add a footer to the table.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 {%- set invoices = [
     {invoice: 'INV001', paymentStatus: 'Paid', totalAmount: '$250.00', paymentMethod: 'Credit Card'},
     {invoice: 'INV002', paymentStatus: 'Pending', totalAmount: '$150.00', paymentMethod: 'PayPal'},
@@ -114,7 +114,7 @@ Use the `TableFooter` component to add a footer to the table.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"550px"}
+```twig {"preview":true}
 <div class="flex flex-col gap-8 w-full items-center">
     {# Arabic #}
     <twig:Table dir="rtl">

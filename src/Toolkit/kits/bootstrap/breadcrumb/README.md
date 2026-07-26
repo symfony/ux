@@ -2,7 +2,7 @@
 
 Indicates the current page's location within a navigational hierarchy.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Breadcrumb>
     <li class="breadcrumb-item"><a href="#">Home</a></li>
     <li class="breadcrumb-item"><a href="#">Library</a></li>
@@ -31,7 +31,7 @@ Give the navigation a meaningful accessible name. Apply `aria-current="page"` to
 
 Build breadcrumb trails with linked items followed by an active item for the current page.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-2">
     <twig:Breadcrumb>
         <li class="breadcrumb-item active" aria-current="page">Home</li>
@@ -54,7 +54,7 @@ Build breadcrumb trails with linked items followed by an active item for the cur
 
 Customize the divider with text, an escaped SVG data URL, or an empty CSS custom property.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-2">
     <twig:Breadcrumb divider=">">
         <li class="breadcrumb-item"><a href="#">Home</a></li>

@@ -2,7 +2,7 @@
 
 Used to display textual user input from keyboard.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <div class="flex flex-col items-center gap-4">
     <twig:KbdGroup>
         <twig:Kbd>⌘</twig:Kbd>
@@ -110,7 +110,7 @@ You can use the `Kbd` component inside an `InputGroup:Addon` component to displa
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="flex flex-col gap-8">
     {# Arabic #}
     <div class="flex flex-col items-center gap-4" dir="rtl">

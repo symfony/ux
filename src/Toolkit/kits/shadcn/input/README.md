@@ -2,7 +2,7 @@
 
 A text input component for forms and user data entry with built-in styling and accessibility features.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <div class="*:max-w-xs w-full justify-center flex">
     <twig:Field>
         <twig:Field:Label for="input-demo-api-key">API Key</twig:Field:Label>
@@ -50,7 +50,7 @@ Use `Field`, `Field:Label`, and `Field:Description` to create an input with a la
 
 Use `Field:Group` to show multiple `Field` blocks and to build forms.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <div class="*:max-w-xs w-full justify-center flex">
     <twig:Field:Group>
         <twig:Field>
@@ -215,7 +215,7 @@ To add buttons to an input, use the `ButtonGroup` component.
 
 A full form example with multiple inputs, a select, and a button.
 
-```twig {"preview":true,"height":"550px"}
+```twig {"preview":true}
 <form class="w-full max-w-sm">
     <twig:Field:Group>
         <twig:Field>
@@ -257,7 +257,7 @@ A full form example with multiple inputs, a select, and a button.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"320px"}
+```twig {"preview":true}
 <div class="w-full flex flex-col items-center gap-8">
     <div dir="rtl" class="max-w-xs w-full">
         <twig:Field>

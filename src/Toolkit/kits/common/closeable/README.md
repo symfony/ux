@@ -2,7 +2,7 @@
 
 A Stimulus behavior that removes its element from the page when dismissed, with optional delayed and automatic closing and an animated countdown bar.
 
-```twig {"preview":true,"height":"140px","collapseClass":true}
+```twig {"preview":true,"collapseClass":true}
 <div data-controller="closeable" class="flex items-start gap-3 rounded-md border border-violet-200 bg-violet-50 p-4 text-sm text-violet-900 dark:border-violet-900 dark:bg-violet-950 dark:text-violet-100">
     <div class="flex-1">
         <p class="font-medium">Heads up!</p>
@@ -34,7 +34,7 @@ Add `data-controller="closeable"` to the element you want to remove, then trigge
 
 Set a `data-closeable-delay-param` (in milliseconds) on the close action to defer the removal. Add a `timerbar` target to visualize the countdown.
 
-```twig {"preview":true,"height":"140px","collapseClass":true}
+```twig {"preview":true,"collapseClass":true}
 <div data-controller="closeable" class="relative flex items-start gap-3 overflow-hidden rounded-md border border-violet-200 bg-violet-50 p-4 text-sm text-violet-900 dark:border-violet-900 dark:bg-violet-950 dark:text-violet-100">
     <div class="flex-1">
         <p class="font-medium">Saved!</p>
@@ -51,7 +51,7 @@ Set a `data-closeable-delay-param` (in milliseconds) on the close action to defe
 
 Set `data-closeable-auto-close-value` (in milliseconds) to remove the element automatically once it connects. The `timerbar` target animates down over the same duration.
 
-```twig {"preview":true,"height":"140px","collapseClass":true}
+```twig {"preview":true,"collapseClass":true}
 <div data-controller="closeable" data-closeable-auto-close-value="5000" class="relative flex items-start gap-3 overflow-hidden rounded-md border border-violet-200 bg-violet-50 p-4 text-sm text-violet-900 dark:border-violet-900 dark:bg-violet-950 dark:text-violet-100">
     <div class="flex-1">
         <p class="font-medium">Copied to clipboard</p>
@@ -68,7 +68,7 @@ Set `data-closeable-auto-close-value` (in milliseconds) to remove the element au
 
 Call `closeable#cancel` to stop a pending close. Here, hovering the message cancels the automatic close so the user has time to read it.
 
-```twig {"preview":true,"height":"140px","collapseClass":true}
+```twig {"preview":true,"collapseClass":true}
 <div data-controller="closeable" data-closeable-auto-close-value="5000" data-action="mouseenter->closeable#cancel" class="relative flex items-start gap-3 overflow-hidden rounded-md border border-violet-200 bg-violet-50 p-4 text-sm text-violet-900 dark:border-violet-900 dark:bg-violet-950 dark:text-violet-100">
     <div class="flex-1">
         <p class="font-medium">Hover to keep me</p>

@@ -36,7 +36,6 @@ final class CodePreviewRenderer implements NodeRendererInterface
         return $this->twig->render('@UXToolkit/markdown/code_preview.html.twig', [
             'previewUrl' => $this->urlGenerator?->generate($node->getCode(), $options),
             'code' => $node->getCode(),
-            'height' => $options->height,
         ]);
     }
 }

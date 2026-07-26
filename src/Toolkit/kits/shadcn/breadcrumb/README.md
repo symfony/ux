@@ -2,7 +2,7 @@
 
 Displays the path to the current resource using a hierarchy of links.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Breadcrumb>
     <twig:Breadcrumb:List>
         <twig:Breadcrumb:Item>
@@ -54,7 +54,7 @@ Displays the path to the current resource using a hierarchy of links.
 
 A basic breadcrumb with a home link and a components link.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Breadcrumb>
     <twig:Breadcrumb:List>
         <twig:Breadcrumb:Item>
@@ -76,7 +76,7 @@ A basic breadcrumb with a home link and a components link.
 
 Use a custom component as `children` for `Breadcrumb:Separator` to create a custom separator.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Breadcrumb>
     <twig:Breadcrumb:List>
         <twig:Breadcrumb:Item>
@@ -102,7 +102,7 @@ Use a custom component as `children` for `Breadcrumb:Separator` to create a cust
 
 We provide a `Breadcrumb:Ellipsis` component to show a collapsed state when the breadcrumb is too long.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Breadcrumb>
     <twig:Breadcrumb:List>
         <twig:Breadcrumb:Item>
@@ -128,7 +128,7 @@ We provide a `Breadcrumb:Ellipsis` component to show a collapsed state when the 
 
 To use a custom link component from your routing library, you can pass the `href` attribute to `Breadcrumb:Link`.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Breadcrumb>
     <twig:Breadcrumb:List>
         <twig:Breadcrumb:Item>

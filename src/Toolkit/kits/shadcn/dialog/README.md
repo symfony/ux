@@ -2,7 +2,7 @@
 
 A window overlaid on either the primary window or another dialog window, rendering the content underneath inert.
 
-```twig {"preview":true,"height":"450px"}
+```twig {"preview":true}
 <twig:Dialog id="edit_profile">
     <twig:Dialog:Trigger>
         <twig:Button variant="outline" {{ ...dialog_trigger_attrs }}>Open Dialog</twig:Button>
@@ -63,7 +63,7 @@ A window overlaid on either the primary window or another dialog window, renderi
 
 Replace the default close control with your own button.
 
-```twig {"preview":true,"height":"450px"}
+```twig {"preview":true}
 <twig:Dialog id="share_link">
     <twig:Dialog:Trigger>
         <twig:Button variant="outline" {{ ...dialog_trigger_attrs }}>Share</twig:Button>
@@ -94,7 +94,7 @@ Replace the default close control with your own button.
 
 Set the `showCloseButton` prop to `false` to hide the close button.
 
-```twig {"preview":true,"height":"450px"}
+```twig {"preview":true}
 <twig:Dialog id="no_close_button">
     <twig:Dialog:Trigger>
         <twig:Button variant="outline" {{ ...dialog_trigger_attrs }}>No Close Button</twig:Button>
@@ -114,7 +114,7 @@ Set the `showCloseButton` prop to `false` to hide the close button.
 
 Keep actions visible while the content scrolls.
 
-```twig {"preview":true,"height":"450px"}
+```twig {"preview":true}
 <twig:Dialog id="sticky_footer">
     <twig:Dialog:Trigger>
         <twig:Button variant="outline" {{ ...dialog_trigger_attrs }}>Sticky Footer</twig:Button>
@@ -144,7 +144,7 @@ Keep actions visible while the content scrolls.
 
 Long content can scroll while the header stays in view.
 
-```twig {"preview":true,"height":"450px"}
+```twig {"preview":true}
 <twig:Dialog id="scrollable_content">
     <twig:Dialog:Trigger>
         <twig:Button variant="outline" {{ ...dialog_trigger_attrs }}>Scrollable Content</twig:Button>
@@ -169,7 +169,7 @@ Long content can scroll while the header stays in view.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"450px"}
+```twig {"preview":true}
 <div class="flex flex-col gap-4">
     {# Arabic #}
     <twig:Dialog id="dialog_rtl_ar">

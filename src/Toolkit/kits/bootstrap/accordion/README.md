@@ -2,7 +2,7 @@
 
 Build vertically collapsing sections powered by Bootstrap's Collapse plugin.
 
-```twig {"preview":true,"height":"360px"}
+```twig {"preview":true}
 <twig:Accordion id="faq-accordion">
     <twig:Accordion:Item id="faq-first" label="What is Symfony UX?" expanded>
         <strong>Symfony UX connects Symfony with modern frontend tools.</strong>
@@ -44,7 +44,7 @@ Bootstrap's transition respects `prefers-reduced-motion`. Keep labels concise an
 
 Render a conventional accordion where opening one item closes the currently open item.
 
-```twig {"preview":true,"height":"360px"}
+```twig {"preview":true}
 <twig:Accordion id="accordion-example">
     <twig:Accordion:Item id="accordion-item-one" label="Accordion Item #1" expanded>
         <strong>This is the first item's accordion body.</strong>
@@ -65,7 +65,7 @@ Render a conventional accordion where opening one item closes the currently open
 
 Remove outer borders and rounded corners for an edge-to-edge accordion.
 
-```twig {"preview":true,"height":"360px"}
+```twig {"preview":true}
 <twig:Accordion id="accordion-flush-example" flush>
     <twig:Accordion:Item id="flush-item-one" label="Accordion Item #1">
         Placeholder content for this edge-to-edge accordion item.
@@ -83,7 +83,7 @@ Remove outer borders and rounded corners for an edge-to-edge accordion.
 
 Allow several items to remain expanded by omitting Bootstrap's parent constraint.
 
-```twig {"preview":true,"height":"430px"}
+```twig {"preview":true}
 <twig:Accordion id="accordion-always-open" alwaysOpen>
     <twig:Accordion:Item id="always-open-one" label="Accordion Item #1" expanded>
         This item starts open and remains open when another item is expanded.

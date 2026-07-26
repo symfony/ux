@@ -2,7 +2,7 @@
 
 Autocomplete input and command palette with a list of suggestions.
 
-```twig {"preview":true,"height":"550px"}
+```twig {"preview":true}
 {% set packages = [
     {value: 'turbo', label: 'UX Turbo'},
     {value: 'twig-component', label: 'UX Twig Component'},
@@ -44,7 +44,7 @@ Autocomplete input and command palette with a list of suggestions.
 
 ### With Default Value
 
-```twig {"preview":true,"height":"550px"}
+```twig {"preview":true}
 {% set packages = [
     {value: 'turbo', label: 'UX Turbo'},
     {value: 'twig-component', label: 'UX Twig Component'},
@@ -63,7 +63,7 @@ Autocomplete input and command palette with a list of suggestions.
 
 ### With Form
 
-```twig {"preview":true,"height":"550px"}
+```twig {"preview":true}
 {% set packages = [
     {value: 'turbo', label: 'UX Turbo'},
     {value: 'twig-component', label: 'UX Twig Component'},
@@ -106,7 +106,7 @@ Autocomplete input and command palette with a list of suggestions.
 
 ### Clearable
 
-```twig {"preview":true,"height":"550px"}
+```twig {"preview":true}
 {% set packages = [
     {value: 'turbo', label: 'UX Turbo'},
     {value: 'twig-component', label: 'UX Twig Component'},
@@ -126,7 +126,7 @@ Autocomplete input and command palette with a list of suggestions.
 
 ### With Groups
 
-```twig {"preview":true,"height":"600px"}
+```twig {"preview":true}
 {% set packages = [
     {label: 'Stimulus', choices: [
         {value: 'twig-component', label: 'UX Twig Component'},
@@ -155,7 +155,7 @@ Autocomplete input and command palette with a list of suggestions.
 
 ### Empty State
 
-```twig {"preview":true,"height":"550px"}
+```twig {"preview":true}
 {% set frameworks = [
     {value: 'next', label: 'Next.js'},
     {value: 'sveltekit', label: 'SvelteKit'},
@@ -171,7 +171,7 @@ Autocomplete input and command palette with a list of suggestions.
 
 ### Long List
 
-```twig {"preview":true,"height":"550px"}
+```twig {"preview":true}
 {% set languages = [
     {value: 'php', label: 'PHP'},
     {value: 'javascript', label: 'JavaScript'},

@@ -2,7 +2,7 @@
 
 An interactive component which expands/collapses a panel.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Collapsible class="flex w-[350px] flex-col gap-2 self-start">
     <div class="flex items-center justify-between gap-4 px-4">
         <h4 class="text-sm font-semibold">Order #4189</h4>
@@ -51,7 +51,7 @@ An interactive component which expands/collapses a panel.
 
 ### Basic
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Card class="mx-auto w-full max-w-sm self-start">
     <twig:Card:Content>
         <twig:Collapsible class="rounded-md data-[state=open]:bg-muted">
@@ -76,7 +76,7 @@ An interactive component which expands/collapses a panel.
 
 Use a trigger button to reveal additional settings.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Card class="mx-auto w-full max-w-xs self-start" size="sm">
     <twig:Card:Header>
         <twig:Card:Title>Radius</twig:Card:Title>
@@ -119,7 +119,7 @@ Use a trigger button to reveal additional settings.
 
 Use nested collapsibles to build a file tree.
 
-```twig {"preview":true,"height":"600px"}
+```twig {"preview":true}
 <twig:Card class="mx-auto w-full max-w-[16rem] gap-2 self-start" size="sm">
     <twig:Card:Header>
         <twig:Tabs defaultValue="explorer">
@@ -272,7 +272,7 @@ Use nested collapsibles to build a file tree.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"550px"}
+```twig {"preview":true}
 <div class="flex w-[350px] flex-col gap-4 self-start">
     {# Arabic #}
     <twig:Collapsible class="flex flex-col gap-2" dir="rtl">

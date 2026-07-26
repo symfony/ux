@@ -2,7 +2,7 @@
 
 A versatile component for displaying content with media, title, description, and actions.
 
-```twig {"preview":true,"height":"250px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-md flex-col gap-6">
     <twig:Item variant="outline">
         <twig:Item:Content>
@@ -58,7 +58,7 @@ A versatile component for displaying content with media, title, description, and
 
 Use the `variant` prop to change the visual style of the item.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-md flex-col gap-6">
     <twig:Item>
         <twig:Item:Media variant="icon">
@@ -100,7 +100,7 @@ Use the `variant` prop to change the visual style of the item.
 
 Use the `size` prop to change the size of the item. Available sizes are `default`, `sm`, and `xs`.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-md flex-col gap-6">
     <twig:Item variant="outline">
         <twig:Item:Media variant="icon">
@@ -163,7 +163,7 @@ Use `Item:Media` with `variant="icon"` to display an icon.
 
 Use `Item:Media` to display an avatar.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-lg flex-col gap-6">
     <twig:Item variant="outline">
         <twig:Item:Media>
@@ -221,7 +221,7 @@ Use `Item:Media` to display an avatar.
 
 Use `Item:Media` with `variant="image"` to display an image.
 
-```twig {"preview":true,"height":"350px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-md flex-col gap-6">
     <twig:Item:Group class="gap-4">
         <twig:Item variant="outline" as="a" href="#" role="listitem">
@@ -268,7 +268,7 @@ Use `Item:Media` with `variant="image"` to display an image.
 
 Use `Item:Group` to group related items together.
 
-```twig {"preview":true,"height":"350px"}
+```twig {"preview":true}
 <twig:Item:Group class="max-w-sm">
     <twig:Item variant="outline">
         <twig:Item:Media>
@@ -328,7 +328,7 @@ Use `Item:Group` to group related items together.
 
 Use `Item:Header` to add a header above the item content.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-xl flex-col gap-6">
     <twig:Item:Group class="grid grid-cols-3 gap-4">
         <twig:Item variant="outline">
@@ -378,7 +378,7 @@ Use `Item:Header` to add a header above the item content.
 
 Use the `as` prop to render the item as a link. The hover and focus states will be applied to the anchor element.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-md flex-col gap-4">
     <twig:Item as="a" href="#">
         <twig:Item:Content>
@@ -409,7 +409,7 @@ Use the `as` prop to render the item as a link. The hover and focus states will 
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <div class="flex flex-col gap-8 w-full items-center">
     {# Arabic #}
     <div class="flex w-full max-w-md flex-col gap-6" dir="rtl">

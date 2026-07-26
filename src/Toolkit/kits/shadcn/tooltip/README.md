@@ -2,7 +2,7 @@
 
 A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <twig:Tooltip id="tooltip-demo">
     <twig:Tooltip:Trigger>
         <twig:Button {{ ...tooltip_trigger_attrs }} variant="outline">Hover</twig:Button>

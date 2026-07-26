@@ -2,7 +2,7 @@
 
 A set of two-state buttons that can be toggled on or off.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <twig:ToggleGroup variant="outline" type="multiple">
     <twig:ToggleGroup:Item aria-label="Toggle bold">
         <twig:ux:icon name="lucide:bold" />
@@ -107,7 +107,7 @@ A set of two-state buttons that can be toggled on or off.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"250px"}
+```twig {"preview":true}
 <div class="flex flex-col items-center gap-4">
     {# Arabic #}
     <twig:ToggleGroup variant="outline" type="single" dir="rtl">

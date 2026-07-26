@@ -2,7 +2,7 @@
 
 A set of layered sections of content—known as tab panels—that are displayed one at a time.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Tabs defaultValue="overview" class="w-[400px]">
     <twig:Tabs:List>
         <twig:Tabs:Trigger value="overview">Overview</twig:Tabs:Trigger>
@@ -150,7 +150,7 @@ Use `orientation="vertical"` for vertical tabs.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"500px"}
+```twig {"preview":true}
 <div class="flex flex-col gap-8">
     {# Arabic #}
     <twig:Tabs defaultValue="overview" class="w-full max-w-sm" dir="rtl">

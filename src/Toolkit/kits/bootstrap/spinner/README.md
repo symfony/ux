@@ -2,7 +2,7 @@
 
 Indicate the loading state of a component or page with Bootstrap spinners.
 
-```twig {"preview":true,"height":"130px"}
+```twig {"preview":true}
 <div class="d-flex align-items-center gap-3">
     <twig:Spinner color="primary" label="Loading..." />
     <twig:Spinner type="grow" color="secondary" label="Loading..." />
@@ -31,7 +31,7 @@ When visible text already announces the status, set `decorative` to hide the spi
 
 Use the border animation for a lightweight loading indicator.
 
-```twig {"preview":true,"height":"130px"}
+```twig {"preview":true}
 <twig:Spinner label="Loading..." />
 ```
 
@@ -39,7 +39,7 @@ Use the border animation for a lightweight loading indicator.
 
 The spinner inherits `currentColor`; use Bootstrap contextual text colors to customize it.
 
-```twig {"preview":true,"height":"130px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-3">
     <twig:Spinner color="primary" label="Loading..." />
     <twig:Spinner color="secondary" label="Loading..." />
@@ -56,7 +56,7 @@ The spinner inherits `currentColor`; use Bootstrap contextual text colors to cus
 
 Switch to the growing animation while keeping the same contextual color options.
 
-```twig {"preview":true,"height":"130px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-3">
     <twig:Spinner type="grow" label="Loading..." />
     <twig:Spinner type="grow" color="primary" label="Loading..." />
@@ -74,7 +74,7 @@ Switch to the growing animation while keeping the same contextual color options.
 
 Use Bootstrap spacing utilities to add space around a spinner.
 
-```twig {"preview":true,"height":"230px"}
+```twig {"preview":true}
 <twig:Spinner class="m-5" label="Loading..." />
 ```
 
@@ -82,7 +82,7 @@ Use Bootstrap spacing utilities to add space around a spinner.
 
 Use flexbox utilities to center a spinner or place it after a visible loading status.
 
-```twig {"preview":true,"height":"190px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-4">
     <div class="d-flex justify-content-center">
         <twig:Spinner label="Loading..." />
@@ -99,7 +99,7 @@ Use flexbox utilities to center a spinner or place it after a visible loading st
 
 Use float utilities when a spinner needs to follow the edge of its container.
 
-```twig {"preview":true,"height":"130px"}
+```twig {"preview":true}
 <div class="clearfix">
     <twig:Spinner class="float-end" label="Loading..." />
 </div>
@@ -109,7 +109,7 @@ Use float utilities when a spinner needs to follow the edge of its container.
 
 Because the component is inline-flex, text alignment utilities can position it within a block.
 
-```twig {"preview":true,"height":"130px"}
+```twig {"preview":true}
 <div class="text-center">
     <twig:Spinner label="Loading..." />
 </div>
@@ -119,7 +119,7 @@ Because the component is inline-flex, text alignment utilities can position it w
 
 Use the compact Bootstrap size or set custom dimensions with CSS.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="d-flex align-items-center gap-3">
     <twig:Spinner small label="Loading..." />
     <twig:Spinner type="grow" small label="Loading..." />
@@ -132,7 +132,7 @@ Use the compact Bootstrap size or set custom dimensions with CSS.
 
 Place a decorative spinner inside a disabled button and provide the loading status as button text or visually hidden text.
 
-```twig {"preview":true,"height":"140px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-2">
     <button class="btn btn-primary" type="button" disabled>
         <twig:Spinner small decorative />

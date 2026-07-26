@@ -2,7 +2,7 @@
 
 Accessible resizable panel groups and layouts with keyboard support.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Resizable orientation="horizontal" class="max-w-sm rounded-lg border h-[200px]">
     <twig:Resizable:Panel size="50">
         <div class="flex h-full items-center justify-center p-6">
@@ -46,7 +46,7 @@ Accessible resizable panel groups and layouts with keyboard support.
 
 Use `orientation="vertical"` for vertical resizing.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Resizable orientation="vertical" class="min-h-[200px] max-w-sm rounded-lg border h-[200px]">
     <twig:Resizable:Panel size="25">
         <div class="flex h-full items-center justify-center p-6">
@@ -66,7 +66,7 @@ Use `orientation="vertical"` for vertical resizing.
 
 Use the `withHandle` prop on `Resizable:Handle` to show a visible handle.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Resizable orientation="horizontal" class="min-h-[200px] max-w-md rounded-lg border md:min-w-[450px] h-[200px]">
     <twig:Resizable:Panel size="25">
         <div class="flex h-full items-center justify-center p-6">
@@ -86,7 +86,7 @@ Use the `withHandle` prop on `Resizable:Handle` to show a visible handle.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"550px"}
+```twig {"preview":true}
 <div class="flex flex-col gap-8">
     {# Arabic #}
     <twig:Resizable dir="rtl" orientation="horizontal" class="max-w-sm rounded-lg border h-[200px]">

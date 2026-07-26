@@ -40,7 +40,7 @@ Use these responsive card components to show data entries and information to you
 
 Use the following example of a card element if you also want to have an action button.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Card class="max-w-sm">
     <twig:Card:Header>
         <twig:Card:Title as="h5">Noteworthy technology acquisitions 2021</twig:Card:Title>
@@ -63,7 +63,7 @@ Use the following example of a card element if you also want to have an action b
 
 Use this alternative styled card with an image for features, blog posts, and more.
 
-```twig {"preview":true,"height":"550px"}
+```twig {"preview":true}
 <twig:Card class="max-w-sm">
     <twig:Card:Header>
         <a href="#">
@@ -98,7 +98,7 @@ Use this alternative styled card with an image for features, blog posts, and mor
 
 Use this card example where you can add form input elements that can be used for authentication actions or any other context where you need to receive information from your users.
 
-```twig {"preview":true,"height":"550px"}
+```twig {"preview":true}
 <twig:Card class="w-full max-w-sm">
     <twig:Card:Header>
         <twig:Card:Title as="h5">Sign in to our platform</twig:Card:Title>

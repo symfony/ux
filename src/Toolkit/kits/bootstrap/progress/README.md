@@ -2,7 +2,7 @@
 
 Display task progress with accessible labels, stacked bars, contextual colors, and animation.
 
-```twig {"preview":true,"height":"180px"}
+```twig {"preview":true}
 <div class="vstack gap-3" style="width: min(100%, 32rem);">
     <twig:Progress value="25" ariaLabel="Project setup" label="25%" />
     <twig:Progress value="50" ariaLabel="Content migration" color="success" striped label="50%" />
@@ -32,7 +32,7 @@ Do not rely on color alone to communicate status. Long labels can cross both the
 
 Set the current value to update both the visual width and the progressbar accessibility attributes.
 
-```twig {"preview":true,"height":"210px"}
+```twig {"preview":true}
 <div class="vstack gap-2">
     {% for value in [0, 25, 50, 75, 100] %}
         <twig:Progress :value="value" ariaLabel="Basic example" />
@@ -44,7 +44,7 @@ Set the current value to update both the visual width and the progressbar access
 
 Use Bootstrap width utilities when the visual width should be controlled by a class.
 
-```twig {"preview":true,"height":"120px"}
+```twig {"preview":true}
 <div class="w-100">
     <twig:Progress value="75" ariaLabel="Width utility example" barClass="w-75" :barWidth="false" />
 </div>
@@ -54,7 +54,7 @@ Use Bootstrap width utilities when the visual width should be controlled by a cl
 
 Set a custom height on the progress container.
 
-```twig {"preview":true,"height":"140px"}
+```twig {"preview":true}
 <div class="vstack gap-3">
     <twig:Progress value="25" ariaLabel="Example 1px high" height="1px" />
     <twig:Progress value="25" ariaLabel="Example 20px high" height="20px" />
@@ -65,7 +65,7 @@ Set a custom height on the progress container.
 
 Display short text inside the bar, with care for overflow and contrast when labels are long.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="vstack gap-3">
     <twig:Progress value="25" ariaLabel="Example with label" label="25%" />
     <twig:Progress
@@ -81,7 +81,7 @@ Display short text inside the bar, with care for overflow and contrast when labe
 
 Apply contextual background colors, with matching text-background helpers for labeled bars.
 
-```twig {"preview":true,"height":"340px"}
+```twig {"preview":true}
 <div class="vstack gap-3">
     <twig:Progress value="25" ariaLabel="Success example" color="success" />
     <twig:Progress value="50" ariaLabel="Info example" color="info" />
@@ -99,7 +99,7 @@ Apply contextual background colors, with matching text-background helpers for la
 
 Wrap stacked progress segments in Bootstrap's `progress-stacked` container.
 
-```twig {"preview":true,"height":"120px"}
+```twig {"preview":true}
 <div class="progress-stacked">
     <twig:Progress value="15" ariaLabel="Segment one" stacked />
     <twig:Progress value="30" ariaLabel="Segment two" color="success" stacked />
@@ -111,7 +111,7 @@ Wrap stacked progress segments in Bootstrap's `progress-stacked` container.
 
 Add striped styling to default and contextual progress bars.
 
-```twig {"preview":true,"height":"250px"}
+```twig {"preview":true}
 <div class="vstack gap-3">
     <twig:Progress value="10" ariaLabel="Default striped example" striped />
     <twig:Progress value="25" ariaLabel="Success striped example" color="success" striped />
@@ -125,7 +125,7 @@ Add striped styling to default and contextual progress bars.
 
 Animate a striped bar to emphasize an actively changing task.
 
-```twig {"preview":true,"height":"120px"}
+```twig {"preview":true}
 <div class="w-100">
     <twig:Progress value="75" ariaLabel="Animated striped example" striped animated />
 </div>

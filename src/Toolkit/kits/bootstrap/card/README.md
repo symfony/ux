@@ -2,7 +2,7 @@
 
 Build flexible content containers with optional headers, footers, images, and contextual styles.
 
-```twig {"preview":true,"height":"480px"}
+```twig {"preview":true}
 {% set image_url = 'https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=720&q=80' %}
 
 <twig:Card style="width: 22rem;">
@@ -45,7 +45,7 @@ Do not rely on background, text, or border color alone to communicate meaning. K
 
 Combine an image, title, supporting text, and action in a fixed-width card.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 {% set image_url = 'https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=720&q=80' %}
 
 <twig:Card style="width: 18rem;">
@@ -62,7 +62,7 @@ Combine an image, title, supporting text, and action in a fixed-width card.
 
 Mix card bodies, titles, subtitles, text, links, images, and list groups.
 
-```twig {"preview":true,"height":"470px"}
+```twig {"preview":true}
 {% set image_url = 'https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=720&q=80' %}
 
 <div class="d-flex flex-wrap gap-3">
@@ -97,7 +97,7 @@ Mix card bodies, titles, subtitles, text, links, images, and list groups.
 
 Add optional headers and footers, including semantic heading and quote content.
 
-```twig {"preview":true,"height":"420px"}
+```twig {"preview":true}
 <div class="d-grid gap-3">
     <twig:Card>
         <twig:Card:Header>Featured</twig:Card:Header>
@@ -125,7 +125,7 @@ Add optional headers and footers, including semantic heading and quote content.
 
 Size cards with Bootstrap's grid, width utilities, or custom CSS.
 
-```twig {"preview":true,"height":"190px"}
+```twig {"preview":true}
 <div class="row">
     <div class="col-sm-6 mb-3 mb-sm-0">
         <twig:Card>
@@ -150,7 +150,7 @@ Size cards with Bootstrap's grid, width utilities, or custom CSS.
 
 Apply Bootstrap text alignment utilities to a card or one of its sections.
 
-```twig {"preview":true,"height":"440px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-3">
     {% for alignment, label in {'': 'Start', 'text-center': 'Center', 'text-end': 'End'} %}
         <twig:Card class="{{ alignment }}" style="width: 18rem;">
@@ -168,7 +168,7 @@ Apply Bootstrap text alignment utilities to a card or one of its sections.
 
 Place tabs or pills in the card header.
 
-```twig {"preview":true,"height":"350px"}
+```twig {"preview":true}
 <div class="d-grid gap-3">
     {% for style in ['tabs', 'pills'] %}
         <twig:Card class="text-center">
@@ -192,7 +192,7 @@ Place tabs or pills in the card header.
 
 Position an image at the top or bottom edge of a card.
 
-```twig {"preview":true,"height":"350px"}
+```twig {"preview":true}
 {% set image_url = 'https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=960&q=80' %}
 
 <div class="row row-cols-1 row-cols-sm-2 g-3">
@@ -221,7 +221,7 @@ Position an image at the top or bottom edge of a card.
 
 Use an image as the card background and place concise, high-contrast content over it.
 
-```twig {"preview":true,"height":"410px"}
+```twig {"preview":true}
 {% set image_url = 'https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=960&q=80' %}
 
 <twig:Card class="text-bg-dark">
@@ -238,7 +238,7 @@ Use an image as the card background and place concise, high-contrast content ove
 
 Combine the component with Bootstrap's responsive grid to create a horizontal card.
 
-```twig {"preview":true,"height":"210px"}
+```twig {"preview":true}
 {% set image_url = 'https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=720&q=80' %}
 
 <twig:Card class="mb-3" style="max-width: 540px;">
@@ -261,7 +261,7 @@ Combine the component with Bootstrap's responsive grid to create a horizontal ca
 
 Use Bootstrap's `text-bg-*` helpers for contextual card styles.
 
-```twig {"preview":true,"height":"720px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-3">
     {% for color in ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'] %}
         <twig:Card class="text-bg-{{ color }}" style="max-width: 18rem;">
@@ -279,7 +279,7 @@ Use Bootstrap's `text-bg-*` helpers for contextual card styles.
 
 Change border and text colors independently with utility classes.
 
-```twig {"preview":true,"height":"720px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-3">
     {% for color in ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'] %}
         <twig:Card class="border-{{ color }}" style="max-width: 18rem;">
@@ -297,7 +297,7 @@ Change border and text colors independently with utility classes.
 
 Customize header and footer borders or remove their background color.
 
-```twig {"preview":true,"height":"250px"}
+```twig {"preview":true}
 <twig:Card class="border-success" style="max-width: 18rem;">
     <twig:Card:Header class="bg-transparent border-success">Header</twig:Card:Header>
     <twig:Card:Body class="text-success">
@@ -312,7 +312,7 @@ Customize header and footer borders or remove their background color.
 
 Render a set of attached cards with equal width and height.
 
-```twig {"preview":true,"height":"370px"}
+```twig {"preview":true}
 {% set image_url = 'https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=720&q=80' %}
 
 <div class="card-group">
@@ -333,7 +333,7 @@ Render a set of attached cards with equal width and height.
 
 Use responsive grid columns and `h-100` cards for a flexible multi-card layout.
 
-```twig {"preview":true,"height":"360px"}
+```twig {"preview":true}
 {% set image_url = 'https://images.unsplash.com/photo-1535189043414-47a3c49a0bed?auto=format&fit=crop&w=720&q=80' %}
 
 <div class="row row-cols-1 row-cols-sm-3 g-4">

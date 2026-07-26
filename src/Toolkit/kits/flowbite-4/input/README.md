@@ -2,7 +2,7 @@
 
 The input field is an important part of the form element that can be used to create interactive controls to accept data from the user based on multiple input types, such as text, email, number, password, URL, phone number, and more.
 
-```twig {"preview":true,"height":"600px"}
+```twig {"preview":true}
 <form>
     <div class="grid gap-6 mb-6 md:grid-cols-2">
         <div>

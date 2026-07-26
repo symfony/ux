@@ -2,7 +2,7 @@
 
 A two-state button that can be either on or off.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Toggle variant="outline" size="sm" aria-label="Toggle bookmark">
     <twig:ux:icon name="lucide:bookmark" class="group-data-[state=on]/toggle:fill-current" />
     Bookmark
@@ -27,7 +27,7 @@ A two-state button that can be either on or off.
 
 Use `variant="outline"` for an outline style.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="flex flex-wrap items-center gap-2">
     <twig:Toggle variant="outline" aria-label="Toggle italic">
         <twig:ux:icon name="lucide:italic" />
@@ -42,7 +42,7 @@ Use `variant="outline"` for an outline style.
 
 ### With Text
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Toggle aria-label="Toggle italic">
     <twig:ux:icon name="lucide:italic" />
     Italic
@@ -53,7 +53,7 @@ Use `variant="outline"` for an outline style.
 
 Use the `size` prop to change the size of the toggle.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="flex flex-wrap items-center gap-2">
     <twig:Toggle variant="outline" aria-label="Toggle small" size="sm">
         Small
@@ -69,7 +69,7 @@ Use the `size` prop to change the size of the toggle.
 
 ### Disabled
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="flex flex-wrap items-center gap-2">
     <twig:Toggle aria-label="Toggle disabled" disabled>
         Disabled

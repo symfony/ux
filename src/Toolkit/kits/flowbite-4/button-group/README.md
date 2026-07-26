@@ -32,7 +32,7 @@ The button group component from Flowbite can be used to stack together multiple 
 
 ### Orientation
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <twig:ButtonGroup orientation="vertical" class="w-56">
     <twig:Button variant="tertiary">Profile</twig:Button>
     <twig:Button variant="tertiary">Settings</twig:Button>
@@ -42,7 +42,7 @@ The button group component from Flowbite can be used to stack together multiple 
 
 ### Size
 
-```twig {"preview":true,"height":"420px"}
+```twig {"preview":true}
 <div class="flex flex-col items-start gap-8">
     <twig:ButtonGroup>
         <twig:Button variant="tertiary" size="sm">Small</twig:Button>

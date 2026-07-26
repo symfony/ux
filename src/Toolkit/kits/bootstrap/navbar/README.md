@@ -2,7 +2,7 @@
 
 A powerful, responsive navigation header with support for branding, navigation, forms, and collapsing content.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="align-self-start w-100">
     <twig:Navbar expand="lg">
         <div class="container-fluid">
@@ -58,7 +58,7 @@ Mark the active link with `aria-current="page"`. Every toggler must expose `aria
 
 Compose branding, navigation, dropdowns, forms, togglers, and collapsing content inside one responsive navbar.
 
-```twig {"preview":true,"height":"350px"}
+```twig {"preview":true}
 <div class="align-self-start w-100">
     <twig:Navbar expand="lg">
         <div class="container-fluid">
@@ -95,7 +95,7 @@ Compose branding, navigation, dropdowns, forms, togglers, and collapsing content
 
 Use text, headings, images, or image-and-text combinations for the navbar brand.
 
-```twig {"preview":true,"height":"430px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-3 w-100">
     <twig:Navbar>
         <div class="container-fluid">
@@ -136,7 +136,7 @@ Use text, headings, images, or image-and-text combinations for the navbar brand.
 
 Build navigation from lists, direct links, or dropdown items, and mark the current page explicitly.
 
-```twig {"preview":true,"height":"500px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-3 w-100">
     <twig:Navbar expand="lg">
         <div class="container-fluid">
@@ -196,7 +196,7 @@ Build navigation from lists, direct links, or dropdown items, and mark the curre
 
 Place search forms, input groups, and button groups inside navbars.
 
-```twig {"preview":true,"height":"430px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-3 w-100">
     <twig:Navbar>
         <div class="container-fluid">
@@ -239,7 +239,7 @@ Place search forms, input groups, and button groups inside navbars.
 
 Use `navbar-text` for vertically aligned text alongside navigation content.
 
-```twig {"preview":true,"height":"320px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-3 w-100">
     <twig:Navbar>
         <div class="container-fluid">
@@ -268,7 +268,7 @@ Use `navbar-text` for vertically aligned text alongside navigation content.
 
 Use `data-bs-theme` through the `theme` prop and combine it with background utilities or custom colors.
 
-```twig {"preview":true,"height":"330px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-3 w-100">
     <twig:Navbar background="dark" theme="dark" class="border-bottom border-body">
         <div class="container-fluid">
@@ -309,7 +309,7 @@ Use `data-bs-theme` through the `theme` prop and combine it with background util
 
 Wrap a navbar in a container, or choose a responsive inner container to constrain its content.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-3 w-100">
     <div class="container">
         <twig:Navbar expand="lg">
@@ -331,7 +331,7 @@ Wrap a navbar in a container, or choose a responsive inner container to constrai
 
 Keep the navbar in the normal document flow.
 
-```twig {"preview":true,"height":"160px"}
+```twig {"preview":true}
 <twig:Navbar class="w-100">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Default</a>
@@ -343,7 +343,7 @@ Keep the navbar in the normal document flow.
 
 Fix the navbar to the top of the viewport and account for the removed document-flow space.
 
-```twig {"preview":true,"height":"180px"}
+```twig {"preview":true}
 <twig:Navbar class="fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Fixed top</a>
@@ -355,7 +355,7 @@ Fix the navbar to the top of the viewport and account for the removed document-f
 
 Fix the navbar to the bottom of the viewport.
 
-```twig {"preview":true,"height":"180px"}
+```twig {"preview":true}
 <twig:Navbar class="fixed-bottom">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Fixed bottom</a>
@@ -367,7 +367,7 @@ Fix the navbar to the bottom of the viewport.
 
 Keep the navbar at the top after it reaches that edge while scrolling.
 
-```twig {"preview":true,"height":"180px"}
+```twig {"preview":true}
 <twig:Navbar class="sticky-top w-100">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Sticky top</a>
@@ -379,7 +379,7 @@ Keep the navbar at the top after it reaches that edge while scrolling.
 
 Keep the navbar at the bottom after it reaches that edge while scrolling.
 
-```twig {"preview":true,"height":"180px"}
+```twig {"preview":true}
 <twig:Navbar class="sticky-bottom w-100">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Sticky bottom</a>
@@ -391,7 +391,7 @@ Keep the navbar at the bottom after it reaches that edge while scrolling.
 
 Limit collapsed navigation height with `navbar-nav-scroll` and `--bs-scroll-height`.
 
-```twig {"preview":true,"height":"360px"}
+```twig {"preview":true}
 <twig:Navbar expand="lg" class="w-100">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Navbar scroll</a>
@@ -424,7 +424,7 @@ Limit collapsed navigation height with `navbar-nav-scroll` and `--bs-scroll-heig
 
 Place the responsive toggler before or after the brand to control its alignment.
 
-```twig {"preview":true,"height":"430px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-3 w-100">
     <twig:Navbar expand="lg">
         <div class="container-fluid">
@@ -477,7 +477,7 @@ Place the responsive toggler before or after the brand to control its alignment.
 
 Target collapsible content that sits outside the navbar while keeping the ARIA relationship explicit.
 
-```twig {"preview":true,"height":"260px"}
+```twig {"preview":true}
 <div class="collapse" id="navbarToggleExternalContent" data-bs-theme="dark">
     <div class="bg-dark p-4">
         <h5 class="text-body-emphasis h4">Collapsed content</h5>
@@ -497,7 +497,7 @@ Target collapsible content that sits outside the navbar while keeping the ARIA r
 
 Use an offcanvas drawer for a navbar that remains collapsed at every breakpoint.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <twig:Navbar class="fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Offcanvas navbar</a>
@@ -535,7 +535,7 @@ Use an offcanvas drawer for a navbar that remains collapsed at every breakpoint.
 
 Expand the offcanvas navigation into a regular navbar at a selected breakpoint.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <twig:Navbar expand="lg" class="fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Offcanvas navbar</a>
@@ -561,7 +561,7 @@ Expand the offcanvas navigation into a regular navbar at a selected breakpoint.
 
 Keep the navbar, drawer, close button, and dropdown menu aligned with a dark theme.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <twig:Navbar background="dark" theme="dark" class="fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Offcanvas dark navbar</a>

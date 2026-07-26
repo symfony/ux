@@ -2,7 +2,7 @@
 
 An image element with a fallback for representing the user.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="flex flex-row flex-wrap items-center gap-6 md:gap-12">
     <twig:Avatar>
         <twig:Avatar:Image
@@ -54,7 +54,7 @@ An image element with a fallback for representing the user.
 
 A basic avatar component with an image and a fallback.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Avatar>
     <twig:Avatar:Image
         src="https://github.com/shadcn.png"
@@ -69,7 +69,7 @@ A basic avatar component with an image and a fallback.
 
 Use the `Avatar:Badge` component to add a badge to the avatar. The badge is positioned at the bottom right of the avatar.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Avatar>
     <twig:Avatar:Image src="https://github.com/shadcn.png" alt="@shadcn" />
     <twig:Avatar:Fallback>CN</twig:Avatar:Fallback>
@@ -81,7 +81,7 @@ Use the `Avatar:Badge` component to add a badge to the avatar. The badge is posi
 
 You can also use an icon inside `Avatar:Badge`.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Avatar class="grayscale">
     <twig:Avatar:Image src="https://github.com/pranathip.png" alt="@pranathip" />
     <twig:Avatar:Fallback>PP</twig:Avatar:Fallback>
@@ -95,7 +95,7 @@ You can also use an icon inside `Avatar:Badge`.
 
 Use the `Avatar:Group` component to add a group of avatars.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Avatar:Group class="grayscale">
     <twig:Avatar>
         <twig:Avatar:Image src="https://github.com/shadcn.png" alt="@shadcn" />
@@ -116,7 +116,7 @@ Use the `Avatar:Group` component to add a group of avatars.
 
 Use `Avatar:GroupCount` to add a count to the group.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Avatar:Group class="grayscale">
     <twig:Avatar>
         <twig:Avatar:Image src="https://github.com/shadcn.png" alt="@shadcn" />
@@ -138,7 +138,7 @@ Use `Avatar:GroupCount` to add a count to the group.
 
 You can also use an icon inside `Avatar:GroupCount`.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <twig:Avatar:Group class="grayscale">
     <twig:Avatar>
         <twig:Avatar:Image src="https://github.com/shadcn.png" alt="@shadcn" />
@@ -162,7 +162,7 @@ You can also use an icon inside `Avatar:GroupCount`.
 
 Use the `size` prop to change the size of the avatar.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="flex flex-wrap items-center gap-2 grayscale">
     <twig:Avatar size="sm">
         <twig:Avatar:Image src="https://github.com/shadcn.png" alt="@shadcn" />

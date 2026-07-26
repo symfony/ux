@@ -2,7 +2,7 @@
 
 Use to show a placeholder while content is loading.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <div class="flex items-center gap-4">
     <twig:Skeleton class="h-12 w-12 rounded-full" />
     <div class="space-y-2">
@@ -38,7 +38,7 @@ Use to show a placeholder while content is loading.
 
 ### Card
 
-```twig {"preview":true,"height":"350px"}
+```twig {"preview":true}
 <twig:Card class="w-full max-w-xs">
     <twig:Card:Header>
         <twig:Skeleton class="h-4 w-2/3" />
@@ -62,7 +62,7 @@ Use to show a placeholder while content is loading.
 
 ### Form
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="flex w-full max-w-xs flex-col gap-7">
     <div class="flex flex-col gap-3">
         <twig:Skeleton class="h-4 w-20" />
@@ -94,7 +94,7 @@ Use to show a placeholder while content is loading.
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"250px"}
+```twig {"preview":true}
 <div class="flex flex-col gap-8">
     {# Arabic #}
     <div class="flex items-center gap-4" dir="rtl">

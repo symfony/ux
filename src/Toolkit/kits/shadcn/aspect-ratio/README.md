@@ -2,7 +2,7 @@
 
 Displays content within a desired ratio.
 
-```twig {"preview":true,"height":"350px"}
+```twig {"preview":true}
 <div class="w-full max-w-sm">
     <twig:AspectRatio ratio="16 / 9" class="rounded-lg bg-muted">
         <img
@@ -36,7 +36,7 @@ Displays content within a desired ratio.
 
 A square aspect ratio component using the `ratio="1 / 1"` prop. This is useful for displaying images in a square format.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="w-full max-w-[12rem]">
     <twig:AspectRatio ratio="1 / 1" class="rounded-lg bg-muted">
         <img
@@ -52,7 +52,7 @@ A square aspect ratio component using the `ratio="1 / 1"` prop. This is useful f
 
 A portrait aspect ratio component using the `ratio="9 / 16"` prop. This is useful for displaying images in a portrait format.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <div class="w-full max-w-[10rem]">
     <twig:AspectRatio ratio="9 / 16" class="rounded-lg bg-muted">
         <img
@@ -68,7 +68,7 @@ A portrait aspect ratio component using the `ratio="9 / 16"` prop. This is usefu
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"600px"}
+```twig {"preview":true}
 <div class="flex w-full flex-col items-center gap-4">
     <figure class="w-full max-w-sm" dir="rtl">
         <twig:AspectRatio ratio="16 / 9" class="rounded-lg bg-muted">

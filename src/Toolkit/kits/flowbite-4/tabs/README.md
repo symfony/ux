@@ -119,7 +119,7 @@ If you want to use pills as a style for the tabs component you can do so by usin
 
 Use this example to show a vertically aligned set of tabs on the left side of the page.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <twig:Tabs defaultValue="profile" orientation="vertical" class="max-w-xl w-full">
     <twig:Tabs:List variant="pill">
         <twig:Tabs:Trigger value="profile">Profile</twig:Tabs:Trigger>

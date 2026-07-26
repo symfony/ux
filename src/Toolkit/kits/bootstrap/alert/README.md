@@ -2,7 +2,7 @@
 
 Provides contextual feedback messages for typical user actions.
 
-```twig {"preview":true,"height":"210px"}
+```twig {"preview":true}
 <twig:Alert color="success" heading="Well done!" dismissible>
     Your changes were saved successfully. <a href="#" class="alert-link">Review them now</a>.
 </twig:Alert>
@@ -30,7 +30,7 @@ Dismissal removes the alert from the document. When appropriate, listen for Boot
 
 Use one of Bootstrap's eight contextual colors to match the message's purpose.
 
-```twig {"preview":true,"height":"620px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-2">
     <twig:Alert class="mb-0">A simple primary alert - check it out!</twig:Alert>
     <twig:Alert color="secondary" class="mb-0">A simple secondary alert - check it out!</twig:Alert>
@@ -47,7 +47,7 @@ Use one of Bootstrap's eight contextual colors to match the message's purpose.
 
 Use `alert-link` for links that inherit a suitable color from their alert variant.
 
-```twig {"preview":true,"height":"620px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-2">
     <twig:Alert class="mb-0">A simple primary alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.</twig:Alert>
     <twig:Alert color="secondary" class="mb-0">A simple secondary alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.</twig:Alert>
@@ -64,7 +64,7 @@ Use `alert-link` for links that inherit a suitable color from their alert varian
 
 Alerts can contain headings, paragraphs, dividers, and other structured content.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:Alert color="success" heading="Well done!">
     <p>Aww yeah, you successfully read this important alert message. This example text is long enough to show how spacing works with additional content.</p>
     <hr>
@@ -76,7 +76,7 @@ Alerts can contain headings, paragraphs, dividers, and other structured content.
 
 Combine alerts with flex utilities and accessible inline icons.
 
-```twig {"preview":true,"height":"420px"}
+```twig {"preview":true}
 <div class="d-flex flex-column gap-2">
     <twig:Alert class="d-flex align-items-center mb-0">
         <svg xmlns="http://www.w3.org/2000/svg" class="bi flex-shrink-0 me-2" width="16" height="16" viewBox="0 0 16 16" role="img" aria-label="Warning:">
@@ -120,7 +120,7 @@ Combine alerts with flex utilities and accessible inline icons.
 
 Enable Bootstrap's alert plugin with a close button, dismissal classes, and transition classes.
 
-```twig {"preview":true,"height":"180px"}
+```twig {"preview":true}
 <twig:Alert color="warning" dismissible>
     <strong>Holy guacamole!</strong> You should check in on some of those fields below.
 </twig:Alert>

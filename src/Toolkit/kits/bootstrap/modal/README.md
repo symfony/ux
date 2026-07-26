@@ -2,7 +2,7 @@
 
 Add accessible dialog overlays for notifications, forms, and custom content.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#demo-modal">
     Review changes
 </button>
@@ -56,7 +56,7 @@ Bootstrap adds the dialog role and manages focus while the modal is open. The HT
 
 Display the complete modal structure statically when composing or reviewing its content.
 
-```twig {"preview":true,"height":"450px"}
+```twig {"preview":true}
 <twig:Modal id="static-modal" :fade="false" class="position-static d-block" aria-hidden="false">
     <twig:Modal:Header>
         <twig:Modal:Title tag="h5">Modal title</twig:Modal:Title>
@@ -75,7 +75,7 @@ Display the complete modal structure statically when composing or reviewing its 
 
 Open and dismiss a standard animated modal through Bootstrap data attributes.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#live-demo-modal">
     Launch demo modal
 </button>
@@ -98,7 +98,7 @@ Open and dismiss a standard animated modal through Bootstrap data attributes.
 
 Prevent backdrop clicks and Escape from dismissing a modal that requires an explicit choice.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#static-backdrop-modal">
     Launch static backdrop modal
 </button>
@@ -121,7 +121,7 @@ Prevent backdrop clicks and Escape from dismissing a modal that requires an expl
 
 Let the viewport scroll with a long modal or constrain scrolling to the modal body.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-2">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#long-content-modal">Launch long modal</button>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scrollable-modal">Launch scrollable modal</button>
@@ -152,7 +152,7 @@ Let the viewport scroll with a long modal or constrain scrolling to the modal bo
 
 Center the dialog vertically, with or without an independently scrollable body.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-2">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#centered-modal">Vertically centered modal</button>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#centered-scrollable-modal">Centered scrollable modal</button>
@@ -179,7 +179,7 @@ Center the dialog vertically, with or without an independently scrollable body.
 
 Place supplementary Bootstrap overlays inside a modal. Bootstrap dismisses them automatically when the modal closes.
 
-```twig {"preview":true,"height":"400px"}
+```twig {"preview":true}
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-with-overlays">
     Launch demo modal
 </button>
@@ -217,7 +217,7 @@ Place supplementary Bootstrap overlays inside a modal. Bootstrap dismisses them 
 
 Nest Bootstrap's responsive grid inside the modal body.
 
-```twig {"preview":true,"height":"640px"}
+```twig {"preview":true}
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#grid-modal">
     Launch grid modal
 </button>
@@ -256,7 +256,7 @@ Nest Bootstrap's responsive grid inside the modal body.
 
 Read data attributes from the triggering button to update a shared modal before it is displayed.
 
-```twig {"preview":true,"height":"450px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-2">
     {% for recipient in ['@mdo', '@fat', '@getbootstrap'] %}
         <button
@@ -306,7 +306,7 @@ Read data attributes from the triggering button to update a shared modal before 
 
 Switch between two modals without displaying them at the same time.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <button class="btn btn-primary" data-bs-target="#first-toggle-modal" data-bs-toggle="modal">Open first modal</button>
 
 <twig:Modal id="first-toggle-modal" centered>
@@ -330,7 +330,7 @@ Switch between two modals without displaying them at the same time.
 
 Disable the fade transition when the modal should appear immediately.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#no-animation-modal">
     Open without animation
 </button>
@@ -346,7 +346,7 @@ Disable the fade transition when the modal should appear immediately.
 
 Choose Bootstrap's small, large, or extra-large modal widths.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-2">
     {% for size, label in {xl: 'Extra large', lg: 'Large', sm: 'Small'} %}
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#size-{{ size }}-modal">{{ label }} modal</button>
@@ -366,7 +366,7 @@ Choose Bootstrap's small, large, or extra-large modal widths.
 
 Fill the viewport at every size or only below a selected breakpoint.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 {% set variants = {
     always: ['Full screen', true],
     sm: ['Full screen below sm', 'sm'],

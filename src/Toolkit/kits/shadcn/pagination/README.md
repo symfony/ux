@@ -2,7 +2,7 @@
 
 Pagination with page navigation, next and previous links.
 
-```twig {"preview":true,"height":"200px"}
+```twig {"preview":true}
 <twig:Pagination>
     <twig:Pagination:Content>
         <twig:Pagination:Item>

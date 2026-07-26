@@ -2,7 +2,7 @@
 
 Display a flexible series of content with active, disabled, actionable, and contextual states.
 
-```twig {"preview":true,"height":"270px"}
+```twig {"preview":true}
 <twig:ListGroup tag="div" style="max-width: 28rem;">
     <twig:ListGroup:Item href="#" active>The current link item</twig:ListGroup:Item>
     <twig:ListGroup:Item href="#">A second link item</twig:ListGroup:Item>
@@ -37,7 +37,7 @@ Disabled links omit their `href`, expose `aria-disabled="true"`, and are removed
 
 Use a list group to display a simple series of related items.
 
-```twig {"preview":true,"height":"310px"}
+```twig {"preview":true}
 <twig:ListGroup>
     <twig:ListGroup:Item>An item</twig:ListGroup:Item>
     <twig:ListGroup:Item>A second item</twig:ListGroup:Item>
@@ -51,7 +51,7 @@ Use a list group to display a simple series of related items.
 
 Mark the current selection with the active state.
 
-```twig {"preview":true,"height":"310px"}
+```twig {"preview":true}
 <twig:ListGroup>
     <twig:ListGroup:Item active>An active item</twig:ListGroup:Item>
     <twig:ListGroup:Item>A second item</twig:ListGroup:Item>
@@ -65,7 +65,7 @@ Mark the current selection with the active state.
 
 Render actionable list items as links or buttons to expose hover, active, and disabled states.
 
-```twig {"preview":true,"height":"530px"}
+```twig {"preview":true}
 <div class="vstack gap-3">
     <twig:ListGroup tag="div">
         <twig:ListGroup:Item href="#" active>The current link item</twig:ListGroup:Item>
@@ -89,7 +89,7 @@ Render actionable list items as links or buttons to expose hover, active, and di
 
 Remove outer borders and rounded corners for edge-to-edge rendering inside a parent container.
 
-```twig {"preview":true,"height":"310px"}
+```twig {"preview":true}
 <twig:ListGroup flush>
     <twig:ListGroup:Item>An item</twig:ListGroup:Item>
     <twig:ListGroup:Item>A second item</twig:ListGroup:Item>
@@ -103,7 +103,7 @@ Remove outer borders and rounded corners for edge-to-edge rendering inside a par
 
 Generate item numbers with Bootstrap's CSS counters, including for items with custom content.
 
-```twig {"preview":true,"height":"440px"}
+```twig {"preview":true}
 <div class="vstack gap-3">
     <twig:ListGroup numbered>
         <twig:ListGroup:Item>A list item</twig:ListGroup:Item>
@@ -129,7 +129,7 @@ Generate item numbers with Bootstrap's CSS counters, including for items with cu
 
 Display items horizontally at every breakpoint or from a selected responsive breakpoint.
 
-```twig {"preview":true,"height":"720px"}
+```twig {"preview":true}
 <div class="vstack gap-2">
     {% for breakpoint in [true, 'sm', 'md', 'lg', 'xl', 'xxl'] %}
         <twig:ListGroup :horizontal="breakpoint">
@@ -145,7 +145,7 @@ Display items horizontally at every breakpoint or from a selected responsive bre
 
 Apply contextual colors to non-actionable list items.
 
-```twig {"preview":true,"height":"470px"}
+```twig {"preview":true}
 <twig:ListGroup>
     <twig:ListGroup:Item>A simple default list group item</twig:ListGroup:Item>
     <twig:ListGroup:Item color="primary">A simple primary list group item</twig:ListGroup:Item>
@@ -163,7 +163,7 @@ Apply contextual colors to non-actionable list items.
 
 Combine contextual colors with actionable links and their hover and active states.
 
-```twig {"preview":true,"height":"470px"}
+```twig {"preview":true}
 <twig:ListGroup tag="div">
     <twig:ListGroup:Item href="#">A simple default list group item</twig:ListGroup:Item>
     <twig:ListGroup:Item href="#" color="primary">A simple primary list group item</twig:ListGroup:Item>
@@ -181,7 +181,7 @@ Combine contextual colors with actionable links and their hover and active state
 
 Add badges to communicate counts or activity alongside an item label.
 
-```twig {"preview":true,"height":"230px"}
+```twig {"preview":true}
 <twig:ListGroup>
     <twig:ListGroup:Item class="d-flex justify-content-between align-items-center">
         A list item
@@ -202,7 +202,7 @@ Add badges to communicate counts or activity alongside an item label.
 
 Compose headings, supporting text, metadata, and other HTML within actionable items.
 
-```twig {"preview":true,"height":"380px"}
+```twig {"preview":true}
 <twig:ListGroup tag="div">
     <twig:ListGroup:Item href="#" active>
         <div class="d-flex w-100 justify-content-between">
@@ -229,7 +229,7 @@ Compose headings, supporting text, metadata, and other HTML within actionable it
 
 Place labeled form controls inside list items, with an optional stretched label for a larger click target.
 
-```twig {"preview":true,"height":"510px"}
+```twig {"preview":true}
 <div class="vstack gap-3">
     <twig:ListGroup>
         <twig:ListGroup:Item>
@@ -282,7 +282,7 @@ Place labeled form controls inside list items, with an optional stretched label 
 
 Use Bootstrap's tab plugin and data attributes to connect list items with tab panels.
 
-```twig {"preview":true,"height":"270px"}
+```twig {"preview":true}
 <div class="row">
     <div class="col-4">
         <twig:ListGroup tag="div" id="list-tab" role="tablist">

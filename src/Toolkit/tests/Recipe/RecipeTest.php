@@ -127,7 +127,6 @@ final class RecipeTest extends TestCase
         $this->assertCount(1, $examples);
         $this->assertSame('twig', $examples[0]['language']);
         $this->assertSame('<twig:Avatar><twig:Avatar:Image src="x.png" /></twig:Avatar>', $examples[0]['code']);
-        $this->assertSame('150px', $examples[0]['options']->height);
         $this->assertFalse($examples[0]['options']->collapseClass);
     }
 

@@ -2,7 +2,7 @@
 
 A small count or label used to highlight status, counts, or short contextual information.
 
-```twig {"preview":true,"height":"140px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap align-items-center gap-2">
     <twig:Badge color="primary">New</twig:Badge>
     <twig:Badge color="success">Published</twig:Badge>
@@ -40,7 +40,7 @@ When a badge contains a count, make sure its relationship to the surrounding hea
 
 Badges inherit their size from the immediate parent, so they scale naturally inside headings.
 
-```twig {"preview":true,"height":"350px"}
+```twig {"preview":true}
 <h1>Example heading <twig:Badge color="secondary">New</twig:Badge></h1>
 <h2>Example heading <twig:Badge color="secondary">New</twig:Badge></h2>
 <h3>Example heading <twig:Badge color="secondary">New</twig:Badge></h3>
@@ -53,7 +53,7 @@ Badges inherit their size from the immediate parent, so they scale naturally ins
 
 Place a badge inside a button to display a related count.
 
-```twig {"preview":true,"height":"140px"}
+```twig {"preview":true}
 <button type="button" class="btn btn-primary">
     Notifications <twig:Badge color="secondary">4</twig:Badge>
 </button>
@@ -63,7 +63,7 @@ Place a badge inside a button to display a related count.
 
 Combine badges with Bootstrap's position utilities to create counters and status indicators.
 
-```twig {"preview":true,"height":"140px"}
+```twig {"preview":true}
 <div class="d-flex align-items-center gap-5">
     <button type="button" class="btn btn-primary position-relative">
         Inbox
@@ -86,7 +86,7 @@ Combine badges with Bootstrap's position utilities to create counters and status
 
 Use contextual background colors while keeping the badge's meaning clear from its text.
 
-```twig {"preview":true,"height":"120px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-2">
     <twig:Badge color="primary">Primary</twig:Badge>
     <twig:Badge color="secondary">Secondary</twig:Badge>
@@ -103,7 +103,7 @@ Use contextual background colors while keeping the badge's meaning clear from it
 
 Use the pill style for a more rounded badge with a larger border radius.
 
-```twig {"preview":true,"height":"120px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap gap-2">
     <twig:Badge color="primary" pill>Primary</twig:Badge>
     <twig:Badge color="secondary" pill>Secondary</twig:Badge>

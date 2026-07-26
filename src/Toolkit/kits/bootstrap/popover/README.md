@@ -2,7 +2,7 @@
 
 Display contextual Bootstrap content beside a trigger element.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <div class="d-flex w-100">
     <twig:Popover title="Bootstrap popover" content="This content appears beside the trigger.">
         <button type="button" class="btn btn-primary" {{ html_attr(popover_trigger_attrs) }}>
@@ -52,7 +52,7 @@ When `html` is enabled, Bootstrap sanitizes allowed markup by default. Do not di
 
 Initialize every `data-bs-toggle="popover"` trigger before expecting it to open.
 
-```twig {"preview":true,"height":"140px"}
+```twig {"preview":true}
 <div class="d-flex w-100">
     <twig:Popover content="Popover components are opt-in and must be initialized in JavaScript.">
         <button type="button" class="btn btn-secondary" {{ html_attr(popover_trigger_attrs) }}>
@@ -66,7 +66,7 @@ Initialize every `data-bs-toggle="popover"` trigger before expecting it to open.
 
 Combine a heading and body content in a conventional click-triggered popover.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="d-flex w-100">
     <twig:Popover
         title="Popover title"
@@ -83,7 +83,7 @@ Combine a heading and body content in a conventional click-triggered popover.
 
 Prefer top, right, bottom, or left placement while allowing Popper to adjust when space is constrained.
 
-```twig {"preview":true,"height":"280px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap justify-content-center gap-2 p-5">
     {% for placement in ['left', 'top', 'bottom', 'right'] %}
         <twig:Popover
@@ -103,7 +103,7 @@ Prefer top, right, bottom, or left placement while allowing Popper to adjust whe
 
 Append the generated popover to a specific container when the surrounding layout requires it.
 
-```twig {"preview":true,"height":"240px"}
+```twig {"preview":true}
 <div id="popover-container" class="border rounded p-5 text-center w-100">
     <twig:Popover
         title="Contained popover"
@@ -121,7 +121,7 @@ Append the generated popover to a specific container when the surrounding layout
 
 Attach a custom class to the generated popover and customize Bootstrap's CSS variables in your stylesheet.
 
-```twig {"preview":true,"height":"140px"}
+```twig {"preview":true}
 <div class="d-flex w-100">
     <twig:Popover
         title="Custom popover"
@@ -139,7 +139,7 @@ Attach a custom class to the generated popover and customize Bootstrap's CSS var
 
 Use the `focus` trigger so moving focus away closes the popover.
 
-```twig {"preview":true,"height":"150px"}
+```twig {"preview":true}
 <div class="d-flex w-100">
     <twig:Popover
         title="Dismissible popover"
@@ -157,7 +157,7 @@ Use the `focus` trigger so moving focus away closes the popover.
 
 Place a disabled control inside a focusable wrapper that owns the popover attributes.
 
-```twig {"preview":true,"height":"140px"}
+```twig {"preview":true}
 <div class="d-flex w-100">
     <twig:Popover
         content="Disabled controls cannot receive focus, so the wrapper owns the popover."

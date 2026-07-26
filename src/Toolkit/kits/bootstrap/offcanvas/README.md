@@ -2,7 +2,7 @@
 
 Build responsive sliding panels for navigation, forms, and supplementary content.
 
-```twig {"preview":true,"height":"220px"}
+```twig {"preview":true}
 <div class="d-flex justify-content-center w-100">
     <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#demo-offcanvas" aria-controls="demo-offcanvas">
         Launch demo offcanvas
@@ -59,7 +59,7 @@ Bootstrap adds the dialog role and manages focus when a non-responsive offcanvas
 
 Display the complete panel structure statically while composing its content.
 
-```twig {"preview":true,"height":"460px"}
+```twig {"preview":true}
 <twig:Offcanvas id="static-offcanvas" shown class="position-static w-100">
     <twig:Offcanvas:Header>
         <twig:Offcanvas:Title>Offcanvas</twig:Offcanvas:Title>
@@ -74,7 +74,7 @@ Display the complete panel structure statically while composing its content.
 
 Open the same panel from either a link or a button.
 
-```twig {"preview":true,"height":"220px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap justify-content-center align-items-start gap-2 w-100">
     <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#live-offcanvas" role="button" aria-controls="live-offcanvas">Link with href</a>
     <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#live-offcanvas" aria-controls="live-offcanvas">Button with data-bs-target</button>
@@ -101,7 +101,7 @@ Open the same panel from either a link or a button.
 
 Allow body scrolling without displaying a backdrop.
 
-```twig {"preview":true,"height":"180px"}
+```twig {"preview":true}
 <div class="d-flex justify-content-center w-100">
     <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#scrolling-offcanvas" aria-controls="scrolling-offcanvas">Enable body scrolling</button>
 
@@ -120,7 +120,7 @@ Allow body scrolling without displaying a backdrop.
 
 Keep the body scrollable while retaining the backdrop.
 
-```twig {"preview":true,"height":"180px"}
+```twig {"preview":true}
 <div class="d-flex justify-content-center w-100">
     <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#scrolling-backdrop-offcanvas" aria-controls="scrolling-backdrop-offcanvas">Enable both scrolling and backdrop</button>
 
@@ -139,7 +139,7 @@ Keep the body scrollable while retaining the backdrop.
 
 Require an explicit dismiss action instead of closing on backdrop clicks.
 
-```twig {"preview":true,"height":"180px"}
+```twig {"preview":true}
 <div class="d-flex justify-content-center w-100">
     <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#static-backdrop-offcanvas" aria-controls="static-backdrop-offcanvas">Toggle static offcanvas</button>
 
@@ -158,7 +158,7 @@ Require an explicit dismiss action instead of closing on backdrop clicks.
 
 Apply Bootstrap's dark color mode to the panel and its close button.
 
-```twig {"preview":true,"height":"180px"}
+```twig {"preview":true}
 <div class="d-flex justify-content-center w-100">
     <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#dark-offcanvas" aria-controls="dark-offcanvas">Toggle dark offcanvas</button>
 
@@ -177,7 +177,7 @@ Apply Bootstrap's dark color mode to the panel and its close button.
 
 Turn an offcanvas panel into regular content at a selected breakpoint.
 
-```twig {"preview":true,"height":"380px"}
+```twig {"preview":true}
 <div class="w-100">
     <button class="btn btn-primary d-block mx-auto d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#responsive-offcanvas" aria-controls="responsive-offcanvas">Toggle offcanvas</button>
 
@@ -196,7 +196,7 @@ Turn an offcanvas panel into regular content at a selected breakpoint.
 
 Open panels from any viewport edge.
 
-```twig {"preview":true,"height":"260px"}
+```twig {"preview":true}
 <div class="d-flex flex-wrap justify-content-center align-items-start gap-2 w-100">
     {% for placement in ['start', 'end', 'top', 'bottom'] %}
         <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-{{ placement }}" aria-controls="offcanvas-{{ placement }}">Toggle {{ placement }}</button>

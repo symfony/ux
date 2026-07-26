@@ -2,7 +2,7 @@
 
 A modal dialog that interrupts the user with important content and expects a response.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:AlertDialog id="delete_account">
     <twig:AlertDialog:Trigger>
         <twig:Button variant="outline" {{ ...alert_dialog_trigger_attrs }}>Show Dialog</twig:Button>
@@ -56,7 +56,7 @@ A modal dialog that interrupts the user with important content and expects a res
 
 A basic alert dialog with a title, description, and cancel and continue buttons.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:AlertDialog id="alert-dialog-basic">
     <twig:AlertDialog:Trigger>
         <twig:Button variant="outline" {{ ...alert_dialog_trigger_attrs }}>Show Dialog</twig:Button>
@@ -81,7 +81,7 @@ A basic alert dialog with a title, description, and cancel and continue buttons.
 
 Use the `size="sm"` prop to make the alert dialog smaller.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:AlertDialog id="alert-dialog-small">
     <twig:AlertDialog:Trigger>
         <twig:Button variant="outline" {{ ...alert_dialog_trigger_attrs }}>Show Dialog</twig:Button>
@@ -105,7 +105,7 @@ Use the `size="sm"` prop to make the alert dialog smaller.
 
 Use the `AlertDialog:Media` component to add a media element such as an icon or image to the alert dialog.
 
-```twig {"preview":true,"height":"300px"}
+```twig {"preview":true}
 <twig:AlertDialog id="alert-dialog-media">
     <twig:AlertDialog:Trigger>
         <twig:Button variant="outline" {{ ...alert_dialog_trigger_attrs }}>Share Project</twig:Button>
@@ -132,7 +132,7 @@ Use the `AlertDialog:Media` component to add a media element such as an icon or 
 
 Use the `size="sm"` prop to make the alert dialog smaller and the `AlertDialog:Media` component to add a media element such as an icon or image to the alert dialog.
 
-```twig {"preview":true,"height":"350px"}
+```twig {"preview":true}
 <twig:AlertDialog id="alert-dialog-small-with-media">
     <twig:AlertDialog:Trigger>
         <twig:Button variant="outline" {{ ...alert_dialog_trigger_attrs }}>Show Dialog</twig:Button>
@@ -159,7 +159,7 @@ Use the `size="sm"` prop to make the alert dialog smaller and the `AlertDialog:M
 
 Use the `AlertDialog:Action` component to add a destructive action button to the alert dialog.
 
-```twig {"preview":true,"height":"350px"}
+```twig {"preview":true}
 <twig:AlertDialog id="alert-dialog-destructive">
     <twig:AlertDialog:Trigger>
         <twig:Button variant="destructive" {{ ...alert_dialog_trigger_attrs }}>Delete Chat</twig:Button>
@@ -187,7 +187,7 @@ Use the `AlertDialog:Action` component to add a destructive action button to the
 
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
-```twig {"preview":true,"height":"350px"}
+```twig {"preview":true}
 <div class="flex flex-col gap-8">
     <div dir="rtl" class="flex gap-4">
         <twig:AlertDialog id="rtl-ar-default">
