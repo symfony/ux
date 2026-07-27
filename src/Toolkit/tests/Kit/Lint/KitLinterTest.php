@@ -17,6 +17,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Kit\KitFactory;
 use Symfony\UX\Toolkit\Kit\KitSynchronizer;
+use Symfony\UX\Toolkit\Kit\Lint\Checker\AttributesDefaultsChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\ClassMergeSpacingChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\ComposerSymbolChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\CopyFilesExistenceChecker;
@@ -280,6 +281,41 @@ class KitLinterTest extends TestCase
         $matching = array_values(array_filter(
             $report->getIssues(),
             static fn (LintIssue $i) => 'component.class.missing-space' === $i->category
+                && null !== $i->file && str_contains($i->file, $file),
+        ));
+
+        $this->assertCount($expectedCount, $matching, \sprintf('File "%s" must produce %d issue(s).', $file, $expectedCount));
+        foreach ($matching as $issue) {
+            $this->assertSame(LintSeverity::Error, $issue->severity);
+            $this->assertSame('cases', $issue->recipe);
+        }
+    }
+
+    /**
+     * @return iterable<string, array{string, int}>
+     */
+    public static function provideAttributesDefaultsCases(): iterable
+    {
+        // template file => number of expected issues
+        yield 'controller/action + type is valid' => ['ValidControllerAction.html.twig', 0];
+        yield 'data-slot in defaults (Tailwind)' => ['DataSlotInDefaults.html.twig', 1];
+        yield 'aria in defaults (Tailwind)' => ['AriaInDefaults.html.twig', 1];
+        yield 'Stimulus value in defaults (Tailwind)' => ['StimulusValueInDefaults.html.twig', 1];
+        yield 'state data-* in defaults (Tailwind)' => ['StateDataInDefaults.html.twig', 1];
+        yield 'class + aria in defaults (non-Tailwind) is ignored' => ['NonTailwindClassInDefaults.html.twig', 0];
+        yield 'data-slot in defaults (non-Tailwind) still flagged' => ['NonTailwindDataSlot.html.twig', 1];
+    }
+
+    #[DataProvider('provideAttributesDefaultsCases')]
+    public function testAttributesDefaultsChecker(string $file, int $expectedCount)
+    {
+        $kit = $this->loadFixtureKit('lint-attributes-defaults');
+
+        $report = new KitLinter([new AttributesDefaultsChecker()])->lint($kit);
+
+        $matching = array_values(array_filter(
+            $report->getIssues(),
+            static fn (LintIssue $i) => str_starts_with($i->category, 'component.attributes.')
                 && null !== $i->file && str_contains($i->file, $file),
         ));
 

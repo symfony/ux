@@ -1,0 +1,7 @@
+<div
+    class="{{ ('flex ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-controller': 'widget',
+        'aria-labelledby': 'title',
+    }) }}
+></div>
