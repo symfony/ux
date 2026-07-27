@@ -59,11 +59,22 @@ final class ComponentNode extends Node implements NodeOutputInterface
         }
 
         $componentRuntime = $compiler->getVarName();
+        $props = $compiler->getVarName();
 
         $compiler
                ->write(\sprintf('$%s = $this->env->getRuntime(', $componentRuntime))
                ->string(ComponentRuntime::class)
                ->raw(");\n");
+
+        // Evaluate the props once: some expressions cannot be compiled twice
+        // (e.g. the null-safe operator, whose compilation is stateful since Twig 3.24)
+        // and evaluating them twice would also duplicate any side effect.
+        $compiler
+            ->write(\sprintf('$%s = ', $props))
+            ->raw($twig_to_array)
+            ->raw('(');
+        $this->writeProps($compiler)
+            ->raw(");\n");
 
         /*
          * Block 1) PreCreateForRender handling
@@ -74,11 +85,7 @@ final class ComponentNode extends Node implements NodeOutputInterface
         $compiler
             ->write(\sprintf('$preRendered = $%s->preRender(', $componentRuntime))
             ->string($this->getAttribute('component'))
-            ->raw(', ')
-            ->raw($twig_to_array)
-            ->raw('(');
-        $this->writeProps($compiler)
-            ->raw(')')
+            ->raw(\sprintf(', $%s', $props))
             ->raw(");\n");
 
         $compiler
@@ -106,11 +113,7 @@ final class ComponentNode extends Node implements NodeOutputInterface
         $compiler
             ->write(\sprintf('$preRenderEvent = $%s->startEmbedComponent(', $componentRuntime))
             ->string($this->getAttribute('component'))
-            ->raw(', ')
-            ->raw($twig_to_array)
-            ->raw('(');
-        $this->writeProps($compiler)
-            ->raw('), ')
+            ->raw(\sprintf(', $%s, ', $props))
             ->raw($this->getAttribute('only') ? '[]' : '$context')
             ->raw(', ')
             ->string($this->getAttribute('embedded_template'))
