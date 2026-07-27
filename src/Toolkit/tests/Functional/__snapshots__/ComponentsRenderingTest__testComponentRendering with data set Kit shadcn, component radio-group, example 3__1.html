@@ -26,10 +26,10 @@
 <fieldset data-slot="field-set" class="flex flex-col gap-4 has-[&gt;[data-slot=checkbox-group]]:gap-3 has-[&gt;[data-slot=radio-group]]:gap-3 w-full max-w-xs">
 <legend data-slot="field-legend" data-variant="label" class="mb-1.5 font-medium data-[variant=label]:text-sm data-[variant=legend]:text-base">Subscription Plan</legend>
     <p data-slot="field-description" class="ltr:text-left rtl:text-start text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&amp;]:-mt-1.5 last:mt-0 nth-last-2:-mt-1 [&amp;&gt;a]:underline [&amp;&gt;a]:underline-offset-4 [&amp;&gt;a:hover]:text-primary">Yearly and lifetime plans offer significant savings.</p>
-    <div role="radiogroup" class="grid w-full gap-3" data-slot="radio-group">
+    <div role="radiogroup" data-slot="radio-group" class="grid w-full gap-3">
 <div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-row items-center has-[&gt;[data-slot=field-content]]:items-start *:data-[slot=field-label]:flex-auto has-[&gt;[data-slot=field-content]]:[&amp;&gt;[role=checkbox],[role=radio]]:mt-px">
 <label class="relative inline-flex size-4 shrink-0 items-center justify-center cursor-pointer group-data-[disabled=true]/field:cursor-not-allowed">
-    <input type="radio" name="subscription" value="monthly" class="peer sr-only" data-slot="radio-group-item" id="plan-monthly" checked>
+    <input type="radio" name="subscription" value="monthly" data-slot="radio-group-item" class="peer sr-only" id="plan-monthly" checked>
     <span class="flex aspect-square size-4 items-center justify-center rounded-full border border-input outline-none after:absolute after:-inset-x-3 after:-inset-y-2 peer-focus-visible:border-ring peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer-aria-invalid:border-destructive peer-aria-invalid:ring-3 peer-aria-invalid:ring-destructive/20 peer-aria-invalid:peer-checked:border-primary dark:bg-input/30 dark:peer-aria-invalid:border-destructive/50 dark:peer-aria-invalid:ring-destructive/40 peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground dark:peer-checked:bg-primary"></span>
     <span class="pointer-events-none absolute top-1/2 ltr:left-1/2 rtl:start-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2 scale-0 rounded-full bg-primary-foreground transition-transform peer-checked:scale-100"></span>
 </label>
@@ -38,7 +38,7 @@
         </div>
         <div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-row items-center has-[&gt;[data-slot=field-content]]:items-start *:data-[slot=field-label]:flex-auto has-[&gt;[data-slot=field-content]]:[&amp;&gt;[role=checkbox],[role=radio]]:mt-px">
 <label class="relative inline-flex size-4 shrink-0 items-center justify-center cursor-pointer group-data-[disabled=true]/field:cursor-not-allowed">
-    <input type="radio" name="subscription" value="yearly" class="peer sr-only" data-slot="radio-group-item" id="plan-yearly">
+    <input type="radio" name="subscription" value="yearly" data-slot="radio-group-item" class="peer sr-only" id="plan-yearly">
     <span class="flex aspect-square size-4 items-center justify-center rounded-full border border-input outline-none after:absolute after:-inset-x-3 after:-inset-y-2 peer-focus-visible:border-ring peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer-aria-invalid:border-destructive peer-aria-invalid:ring-3 peer-aria-invalid:ring-destructive/20 peer-aria-invalid:peer-checked:border-primary dark:bg-input/30 dark:peer-aria-invalid:border-destructive/50 dark:peer-aria-invalid:ring-destructive/40 peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground dark:peer-checked:bg-primary"></span>
     <span class="pointer-events-none absolute top-1/2 ltr:left-1/2 rtl:start-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2 scale-0 rounded-full bg-primary-foreground transition-transform peer-checked:scale-100"></span>
 </label>
@@ -47,7 +47,7 @@
         </div>
         <div role="group" data-slot="field" data-orientation="horizontal" class="group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-row items-center has-[&gt;[data-slot=field-content]]:items-start *:data-[slot=field-label]:flex-auto has-[&gt;[data-slot=field-content]]:[&amp;&gt;[role=checkbox],[role=radio]]:mt-px">
 <label class="relative inline-flex size-4 shrink-0 items-center justify-center cursor-pointer group-data-[disabled=true]/field:cursor-not-allowed">
-    <input type="radio" name="subscription" value="lifetime" class="peer sr-only" data-slot="radio-group-item" id="plan-lifetime">
+    <input type="radio" name="subscription" value="lifetime" data-slot="radio-group-item" class="peer sr-only" id="plan-lifetime">
     <span class="flex aspect-square size-4 items-center justify-center rounded-full border border-input outline-none after:absolute after:-inset-x-3 after:-inset-y-2 peer-focus-visible:border-ring peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer-aria-invalid:border-destructive peer-aria-invalid:ring-3 peer-aria-invalid:ring-destructive/20 peer-aria-invalid:peer-checked:border-primary dark:bg-input/30 dark:peer-aria-invalid:border-destructive/50 dark:peer-aria-invalid:ring-destructive/40 peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground dark:peer-checked:bg-primary"></span>
     <span class="pointer-events-none absolute top-1/2 ltr:left-1/2 rtl:start-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2 scale-0 rounded-full bg-primary-foreground transition-transform peer-checked:scale-100"></span>
 </label>

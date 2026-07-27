@@ -1,9 +1,8 @@
 {# @block content The paragraph content. #}
 <p
+    data-slot="typography-p"
     class="{{ ('leading-7 [&:not(:first-child)]:mt-6 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.defaults({
-        'data-slot': 'typography-p',
-    }) }}
+    {{ attributes }}
 >
     {%- block content %}{% endblock -%}
 </p>

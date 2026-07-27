@@ -5,6 +5,8 @@
 - [Bootstrap] Add the Bootstrap kit
 - [Common] Add the `common` kit, with design-system agnostic `closeable`, `logout-link` and `post-link` recipes
 - Add new linter checker `ClassMergeSpacingChecker` that checks for invalid `'<literal>' ~ attributes.render(...)` pattern
+- Add new linter checker `AttributesDefaultsChecker` that forbids `data-slot` (and, in Tailwind kits, ARIA, Stimulus value `data-*-value` and state `data-*` attributes) inside `attributes.defaults()`
+- [Shadcn][Flowbite] Normalize `attributes.defaults()` usage: render `data-slot`, state `data-*` and ARIA attributes directly, and keep only `data-controller`/`data-action` (plus overridable HTML defaults) in `attributes.defaults()`
 - Add per-recipe `README.md` documentation
 - Document Stimulus controllers in the recipe API reference from their `@value`/`@target`/`@action` docblocks, and lint those docblocks with the new `StimulusControllerDocChecker`
 - Add `RecipeDocRenderer` that renders recipes docs as HTML or Markdown, to ease wiring official kits into ux.symfony.com and, in the future, previewing community kits

@@ -1,9 +1,8 @@
 {# @block content The heading content. #}
 <h3
+    data-slot="typography-h3"
     class="{{ ('scroll-m-20 text-2xl font-semibold tracking-tight ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.defaults({
-        'data-slot': 'typography-h3',
-    }) }}
+    {{ attributes }}
 >
     {%- block content %}{% endblock -%}
 </h3>

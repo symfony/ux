@@ -53,8 +53,8 @@
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
 <div class="relative w-full overflow-x-auto" data-slot="table-container">
     <table class="w-full caption-bottom text-sm">
-<thead class="[&amp;_tr]:border-b" data-slot="table-header">
-<tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
+<thead data-slot="table-header" class="[&amp;_tr]:border-b">
+<tr data-slot="table-row" class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted">
 <th class="h-10 px-2 text-left rtl:text-start align-middle font-medium whitespace-nowrap text-foreground ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0 w-8" data-slot="table-head">
 <div data-slot="checkbox" class="group relative grid size-4 shrink-0 grid-cols-1 group-has-disabled/field:opacity-50">
     <input type="checkbox" class="peer col-start-1 row-start-1 appearance-none size-4 rounded-[4px] border border-input bg-transparent transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 checked:border-primary checked:bg-primary dark:checked:border-primary dark:checked:bg-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 forced-colors:appearance-auto" id="select-all-checkbox" name="select-all-checkbox">
@@ -69,8 +69,8 @@
             <th class="h-10 px-2 text-left rtl:text-start align-middle font-medium whitespace-nowrap text-foreground ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-head">Role</th>
         </tr>
     </thead>
-    <tbody class="[&amp;_tr:last-child]:border-0" data-slot="table-body">
-<tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row" data-state="selected">
+    <tbody data-slot="table-body" class="[&amp;_tr:last-child]:border-0">
+<tr data-slot="table-row" class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-state="selected">
 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">
 <div data-slot="checkbox" class="group relative grid size-4 shrink-0 grid-cols-1 group-has-disabled/field:opacity-50">
     <input type="checkbox" class="peer col-start-1 row-start-1 appearance-none size-4 rounded-[4px] border border-input bg-transparent transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 checked:border-primary checked:bg-primary dark:checked:border-primary dark:checked:bg-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 forced-colors:appearance-auto" id="row-1-checkbox" name="row-1-checkbox" checked>
@@ -84,7 +84,7 @@
             <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">sarah.chen@example.com</td>
             <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">Admin</td>
         </tr>
-        <tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
+        <tr data-slot="table-row" class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted">
 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">
 <div data-slot="checkbox" class="group relative grid size-4 shrink-0 grid-cols-1 group-has-disabled/field:opacity-50">
     <input type="checkbox" class="peer col-start-1 row-start-1 appearance-none size-4 rounded-[4px] border border-input bg-transparent transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 checked:border-primary checked:bg-primary dark:checked:border-primary dark:checked:bg-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 forced-colors:appearance-auto" id="row-2-checkbox" name="row-2-checkbox">
@@ -98,7 +98,7 @@
             <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">marcus.rodriguez@example.com</td>
             <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">User</td>
         </tr>
-        <tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
+        <tr data-slot="table-row" class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted">
 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">
 <div data-slot="checkbox" class="group relative grid size-4 shrink-0 grid-cols-1 group-has-disabled/field:opacity-50">
     <input type="checkbox" class="peer col-start-1 row-start-1 appearance-none size-4 rounded-[4px] border border-input bg-transparent transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 checked:border-primary checked:bg-primary dark:checked:border-primary dark:checked:bg-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 forced-colors:appearance-auto" id="row-3-checkbox" name="row-3-checkbox">
@@ -112,7 +112,7 @@
             <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">priya.patel@example.com</td>
             <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">User</td>
         </tr>
-        <tr class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted" data-slot="table-row">
+        <tr data-slot="table-row" class="border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted">
 <td class="p-2 align-middle whitespace-nowrap ltr:[&amp;:has([role=checkbox])]:pr-0 rtl:[&amp;:has([role=checkbox])]:pe-0" data-slot="table-cell">
 <div data-slot="checkbox" class="group relative grid size-4 shrink-0 grid-cols-1 group-has-disabled/field:opacity-50">
     <input type="checkbox" class="peer col-start-1 row-start-1 appearance-none size-4 rounded-[4px] border border-input bg-transparent transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 checked:border-primary checked:bg-primary dark:checked:border-primary dark:checked:bg-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 forced-colors:appearance-auto" id="row-4-checkbox" name="row-4-checkbox">

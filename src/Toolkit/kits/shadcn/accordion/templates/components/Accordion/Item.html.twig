@@ -18,15 +18,14 @@
 {%- do provide('accordionItem.isOpen', _accordion_item_is_open) -%}
 {%- do provide('accordionItem.orientation', _accordion_orientation) -%}
 <div
+    data-slot="accordion-item"
+    data-accordion-target="item"
+    data-value="{{ value }}"
+    data-open="{{ _accordion_item_is_open ? 'true' : 'false' }}"
+    data-closed="{{ not _accordion_item_is_open ? 'true' : 'false' }}"
+    aria-disabled="{{ _accordion_item_disabled ? 'true' : 'false' }}"
     class="{{ ('not-last:border-b group ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.defaults({
-        'data-slot': 'accordion-item',
-        'data-accordion-target': 'item',
-        'data-value': value,
-        'data-open': _accordion_item_is_open ? 'true' : false,
-        'data-closed': not _accordion_item_is_open ? 'true' : false,
-        'aria-disabled': _accordion_item_disabled ? 'true' : false,
-    }) }}
+    {{ attributes }}
 >
     {%- block content %}{% endblock -%}
 </div>

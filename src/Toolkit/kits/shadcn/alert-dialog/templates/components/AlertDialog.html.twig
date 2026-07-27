@@ -9,11 +9,13 @@
 {%- do provide('alertDialog.id', _alertDialog_id) -%}
 {%- do provide('alertDialog.titleId', _alertDialog_titleId) -%}
 {%- do provide('alertDialog.descriptionId', _alertDialog_descriptionId) -%}
-<div {{ attributes.defaults({
-    'data-controller': 'alert-dialog',
-    'data-alert-dialog-open-value': open,
-    'aria-labelledby': _alertDialog_titleId,
-    'aria-describedby': _alertDialog_descriptionId,
-}) }}>
+<div
+    data-alert-dialog-open-value="{{ open }}"
+    aria-labelledby="{{ _alertDialog_titleId }}"
+    aria-describedby="{{ _alertDialog_descriptionId }}"
+    {{ attributes.defaults({
+        'data-controller': 'alert-dialog',
+    }) }}
+>
     {% block content %}{% endblock %}
 </div>

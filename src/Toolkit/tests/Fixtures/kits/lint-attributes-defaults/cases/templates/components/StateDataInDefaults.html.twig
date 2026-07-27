@@ -1,0 +1,6 @@
+<div
+    class="{{ ('flex ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-state': 'open',
+    }) }}
+></div>

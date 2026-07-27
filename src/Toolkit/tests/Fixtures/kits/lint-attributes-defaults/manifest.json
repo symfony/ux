@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../schema-kit-v1.json",
+    "name": "Lint Attributes Defaults",
+    "description": "Kit covering AttributesDefaultsChecker scenarios.",
+    "license": "MIT",
+    "homepage": "https://example.com/lint-attributes-defaults"
+}

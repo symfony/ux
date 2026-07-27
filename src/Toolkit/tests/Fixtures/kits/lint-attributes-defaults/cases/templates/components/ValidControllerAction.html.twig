@@ -1,0 +1,9 @@
+<div
+    data-slot="widget"
+    class="{{ ('flex ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-controller': 'widget',
+        'data-action': 'click->widget#toggle',
+        type: 'button',
+    }) }}
+></div>

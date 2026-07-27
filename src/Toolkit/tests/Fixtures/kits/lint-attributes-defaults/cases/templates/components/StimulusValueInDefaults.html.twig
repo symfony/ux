@@ -1,0 +1,7 @@
+<div
+    class="{{ ('flex ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-controller': 'widget',
+        'data-widget-open-value': 'true',
+    }) }}
+></div>

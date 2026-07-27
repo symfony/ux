@@ -3,12 +3,12 @@
 {# @block content The hover card structure, typically a `HoverCard:Trigger` and `HoverCard:Content`. #}
 {%- props openDelay = 0, closeDelay = 0 -%}
 <span
+    data-slot="hover-card"
+    data-hover-card-open-delay-value="{{ openDelay }}"
+    data-hover-card-close-delay-value="{{ closeDelay }}"
     class="{{ ('relative inline-block ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
-        'data-slot': 'hover-card',
         'data-controller': 'hover-card',
-        'data-hover-card-open-delay-value': openDelay,
-        'data-hover-card-close-delay-value': closeDelay,
         'data-action': 'mouseenter->hover-card#show mouseleave->hover-card#hide',
     }) }}
 >

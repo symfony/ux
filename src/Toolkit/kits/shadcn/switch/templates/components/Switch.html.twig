@@ -14,6 +14,7 @@
         type="checkbox"
         role="switch"
         class="absolute inset-0 size-full cursor-pointer appearance-none focus:outline-hidden disabled:cursor-not-allowed"
-        {{ attributes.without('class').defaults({checked: checked}) }}
+        {{ checked ? 'checked' }}
+        {{ attributes.without('class') }}
     />
 </div>

@@ -11,13 +11,15 @@
 {%- set _dropdown_id = 'dropdown-' ~ id -%}
 {%- set _dropdown_trigger_id = _dropdown_id ~ '-trigger' -%}
 
-<div {{ attributes.defaults({
+<div
+    data-dropdown-placement-value="{{ placement }}"
+    data-dropdown-trigger-type-value="{{ triggerType }}"
+    data-dropdown-open-value="{{ open ? 'true' : 'false' }}"
+    data-dropdown-delay-value="{{ delay }}"
+    data-dropdown-offset-distance-value="{{ offsetDistance }}"
+    {{ attributes.defaults({
         'data-controller': 'dropdown',
-        'data-dropdown-placement-value': placement,
-        'data-dropdown-trigger-type-value': triggerType,
-        'data-dropdown-open-value': open,
-        'data-dropdown-delay-value': delay,
-        'data-dropdown-offset-distance-value': offsetDistance,
-    }) }}>
+    }) }}
+>
     {%- block content %}{% endblock -%}
 </div>

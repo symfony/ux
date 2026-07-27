@@ -1,7 +1,7 @@
 {# @block content The table caption text. #}
 <caption
-    class="{{ ('text-muted-foreground mt-4 text-sm ' ~ attributes.render('class'))|tailwind_merge }}"
     data-slot="table-caption"
+    class="{{ ('text-muted-foreground mt-4 text-sm ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes }}
 >
     {%- block content %}{% endblock -%}
