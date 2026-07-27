@@ -1,10 +1,10 @@
 /.git* export-ignore
 /.symfony.bundle.yaml export-ignore
-/phpunit.dist.xml export-ignore
 /assets/src export-ignore
 /assets/test export-ignore
 /assets/playwright.config.ts export-ignore
 /assets/tsconfig.json export-ignore
 /assets/vitest.config.mjs export-ignore
 /doc export-ignore
+/phpunit.dist.xml export-ignore
 /tests export-ignore

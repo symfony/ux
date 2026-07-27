@@ -1,6 +1,6 @@
 /.git* export-ignore
 /.symfony.bundle.yaml export-ignore
-/alert-example.png export-ignore
-/phpunit.dist.xml export-ignore
 /doc export-ignore
+/phpunit.dist.xml export-ignore
 /tests export-ignore
+/alert-example.png export-ignore
