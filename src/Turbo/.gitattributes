@@ -1,13 +1,11 @@
 /.git* export-ignore
 /.symfony.bundle.yaml export-ignore
-/phpunit.dist.xml export-ignore
-/phpstan.dist.neon export-ignore
 /assets/src export-ignore
 /assets/test export-ignore
 /assets/playwright.config.ts export-ignore
 /assets/tsconfig.json export-ignore
 /assets/vitest.config.mjs export-ignore
-/CONTRIBUTING.md export-ignore
-/docker-compose.yml
 /doc export-ignore
+/phpstan.dist.neon export-ignore
+/phpunit.dist.xml export-ignore
 /tests export-ignore

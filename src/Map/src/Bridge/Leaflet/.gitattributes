@@ -1,7 +1,7 @@
+/.git* export-ignore
 /assets/src export-ignore
 /assets/test export-ignore
 /assets/playwright.config.ts export-ignore
-/assets/vitest.config.mjs export-ignore
-/tests export-ignore
-/.git* export-ignore
+/assets/tsconfig.json export-ignore
 /phpunit.dist.xml export-ignore
+/tests export-ignore

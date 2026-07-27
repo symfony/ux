@@ -1,5 +1,7 @@
 /.git* export-ignore
 /.symfony.bundle.yaml export-ignore
+/assets/test export-ignore
+/assets/playwright.config.ts export-ignore
 /doc export-ignore
 /phpunit.xml.dist export-ignore
 /tests export-ignore

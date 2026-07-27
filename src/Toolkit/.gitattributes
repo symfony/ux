@@ -1,5 +1,4 @@
 /.git* export-ignore
-/.symfony.bundle.yaml export-ignore
+/CONTRIBUTING.md export-ignore
 /phpunit.dist.xml export-ignore
-/doc export-ignore
 /tests export-ignore
