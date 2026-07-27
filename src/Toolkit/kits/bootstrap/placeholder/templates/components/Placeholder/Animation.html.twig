@@ -1,10 +1,7 @@
 {# @prop tag 'span'|'a'|'div'|'p'|'h1'|'h2'|'h3'|'h4'|'h5'|'h6' The HTML element used for the animation wrapper. #}
 {# @prop animation 'glow'|'wave' The Bootstrap placeholder animation. #}
 {# @block content The placeholders animated by this wrapper. #}
-{%- props
-    tag = 'div',
-    animation = 'glow'
--%}
+{%- props tag = 'div', animation = 'glow' -%}
 
 {%- set final_tag = tag in ['span', 'a', 'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'] ? tag : 'div' -%}
 {%- set classes = html_classes({

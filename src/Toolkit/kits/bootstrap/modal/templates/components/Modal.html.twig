@@ -7,16 +7,7 @@
 {# @prop keyboard boolean Whether pressing Escape dismisses the modal. #}
 {# @prop fade boolean Whether to use Bootstrap's fade transition. #}
 {# @block content The modal structure, typically `Modal:Header`, `Modal:Body`, and `Modal:Footer`. #}
-{%- props
-    id,
-    size = null,
-    centered = false,
-    scrollable = false,
-    fullscreen = false,
-    backdrop = true,
-    keyboard = true,
-    fade = true
--%}
+{%- props id, size = null, centered = false, scrollable = false, fullscreen = false, backdrop = true, keyboard = true, fade = true -%}
 {%- set title_id = id ~ '-label' -%}
 {%- do provide('modal.titleId', title_id) -%}
 {%- set fullscreen_class = fullscreen is same as(true)

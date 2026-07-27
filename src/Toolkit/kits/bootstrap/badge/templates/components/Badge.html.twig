@@ -2,11 +2,7 @@
 {# @prop pill boolean Whether to use Bootstrap's rounded pill style. #}
 {# @prop label string The fallback badge text when no content block is provided. #}
 {# @block content The badge text and optional inline content. #}
-{%- props
-    color = 'primary',
-    pill = false,
-    label = ''
--%}
+{%- props color = 'primary', pill = false, label = '' -%}
 
 {%- set classes = html_classes({
     badge: true,

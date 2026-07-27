@@ -2,11 +2,7 @@
 {# @prop align 'start'|'center'|'end'|null The horizontal alignment of the pagination links. #}
 {# @prop ariaLabel string The accessible name of the navigation landmark. #}
 {# @block content The pagination items, typically `Pagination:Item` components. #}
-{%- props
-    size = null,
-    align = null,
-    ariaLabel = 'Pagination'
--%}
+{%- props size = null, align = null, ariaLabel = 'Pagination' -%}
 
 {%- set pagination_classes = html_classes('pagination', {
     ('pagination-' ~ size): size in ['sm', 'lg'],

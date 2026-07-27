@@ -3,12 +3,7 @@
 {# @prop html boolean Whether the tooltip title contains sanitized HTML. #}
 {# @prop customClass string|null The custom class applied to the generated tooltip. #}
 {# @block content The focusable trigger rendering `tooltip_trigger_attrs` with `html_attr()`. #}
-{%- props
-    title,
-    placement = 'top',
-    html = false,
-    customClass = null
--%}
+{%- props title, placement = 'top', html = false, customClass = null -%}
 
 {%- set final_placement = placement in ['auto', 'top', 'right', 'bottom', 'left'] ? placement : 'top' -%}
 {%- set tooltip_trigger_attrs = {

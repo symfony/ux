@@ -12,18 +12,7 @@
 {# @block content The carousel items, typically `Carousel:Item` components. #}
 {# @block previous The visually hidden label for the previous control. #}
 {# @block next The visually hidden label for the next control. #}
-{%- props
-    id,
-    controls = true,
-    indicators = false,
-    ride = null,
-    interval = null,
-    pause = null,
-    wrap = true,
-    touch = true,
-    fade = false,
-    theme = null
--%}
+{%- props id, controls = true, indicators = false, ride = null, interval = null, pause = null, wrap = true, touch = true, fade = false, theme = null -%}
 {%- set classes = html_classes({
     carousel: true,
     slide: true,

@@ -5,14 +5,7 @@
 {# @prop label string The visually hidden loading message. #}
 {# @prop decorative boolean Whether to hide the spinner from assistive technologies. #}
 {# @block content The accessible loading message or custom inner content. #}
-{%- props
-    type = 'border',
-    color = null,
-    small = false,
-    role = 'status',
-    label = 'Loading...',
-    decorative = false
--%}
+{%- props type = 'border', color = null, small = false, role = 'status', label = 'Loading...', decorative = false -%}
 
 {%- set spinner_type = type == 'grow' ? 'grow' : 'border' -%}
 {%- set spinner_classes = html_classes({

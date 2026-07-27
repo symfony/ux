@@ -5,12 +5,7 @@
 {# @block heading The alert heading, rendered before the main content. #}
 {# @block content The alert message and optional additional content. #}
 {# @block close The dismiss control rendered when the alert is dismissible. #}
-{%- props
-    color = 'primary',
-    dismissible = false,
-    heading = null,
-    content = ''
--%}
+{%- props color = 'primary', dismissible = false, heading = null, content = '' -%}
 
 {%- set classes = html_classes({
     alert: true,

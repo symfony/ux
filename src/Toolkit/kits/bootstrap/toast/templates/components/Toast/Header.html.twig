@@ -5,14 +5,7 @@
 {# @prop closeButton boolean Whether to render a Bootstrap dismiss button. #}
 {# @prop closeLabel string The accessible label of the dismiss button. #}
 {# @block content The header title or custom header content. #}
-{%- props
-    title = '',
-    timestamp = null,
-    imageSrc = null,
-    imageAlt = '',
-    closeButton = true,
-    closeLabel = 'Close'
--%}
+{%- props title = '', timestamp = null, imageSrc = null, imageAlt = '', closeButton = true, closeLabel = 'Close' -%}
 <div {{ attributes.defaults({class: 'toast-header'}) }}>
     {%- if imageSrc is not null -%}
         <img src="{{ imageSrc }}" class="rounded me-2" alt="{{ imageAlt }}">

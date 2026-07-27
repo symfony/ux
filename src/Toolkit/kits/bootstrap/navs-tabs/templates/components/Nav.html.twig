@@ -6,15 +6,7 @@
 {# @prop align 'start'|'center'|'end'|null The horizontal alignment of the navigation items. #}
 {# @prop role string|null The ARIA role applied to the navigation container. #}
 {# @block content The navigation links or `Nav:Item` components. #}
-{%- props
-    tag = 'ul',
-    type = null,
-    fill = false,
-    justified = false,
-    vertical = false,
-    align = null,
-    role = null
--%}
+{%- props tag = 'ul', type = null, fill = false, justified = false, vertical = false, align = null, role = null -%}
 
 {%- set final_tag = tag in ['nav', 'div'] ? tag : 'ul' -%}
 {%- set nav_classes = html_classes({

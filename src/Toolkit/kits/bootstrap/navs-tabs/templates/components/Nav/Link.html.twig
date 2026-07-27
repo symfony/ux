@@ -7,16 +7,7 @@
 {# @prop disabled boolean Whether the navigation link or tab is disabled. #}
 {# @prop content string The fallback label when no content block is provided. #}
 {# @block content The navigation link or tab label. #}
-{%- props
-    tag = 'a',
-    href = '#',
-    id = null,
-    target = null,
-    toggle = null,
-    active = false,
-    disabled = false,
-    content = ''
--%}
+{%- props tag = 'a', href = '#', id = null, target = null, toggle = null, active = false, disabled = false, content = '' -%}
 
 {%- set final_tag = tag == 'button' ? 'button' : 'a' -%}
 {%- set link_classes = html_classes('nav-link', {

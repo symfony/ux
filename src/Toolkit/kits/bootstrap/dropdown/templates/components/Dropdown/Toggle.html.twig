@@ -5,14 +5,7 @@
 {# @prop split boolean Whether to render only the split-menu caret. #}
 {# @prop disabled boolean Whether the toggle is disabled. #}
 {# @block content The visible toggle label. #}
-{%- props
-    tag = 'button',
-    color = 'secondary',
-    outline = false,
-    size = null,
-    split = false,
-    disabled = false
--%}
+{%- props tag = 'button', color = 'secondary', outline = false, size = null, split = false, disabled = false -%}
 {%- set final_tag = tag == 'a' ? 'a' : 'button' -%}
 {%- set classes = html_classes({
     btn: true,

@@ -20,6 +20,7 @@ use Symfony\UX\Toolkit\Kit\Lint\Checker\CopyFilesExistenceChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\DocHeadingLevelChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\JsImportChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\MissingRecipeManifestChecker;
+use Symfony\UX\Toolkit\Kit\Lint\Checker\PropsSingleLineChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\RecipeReferenceChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\StimulusControllerChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\StimulusControllerDocChecker;
@@ -54,6 +55,7 @@ final class KitLinter
             new ComponentDocChecker(),
             new ClassMergeSpacingChecker(),
             new AttributesDefaultsChecker(),
+            new PropsSingleLineChecker(),
             new DocHeadingLevelChecker(),
         ];
     }

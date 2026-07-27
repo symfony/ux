@@ -3,12 +3,7 @@
 {# @prop theme 'light'|'dark'|null The component-specific Bootstrap color mode. #}
 {# @prop label string|null The accessible name for the navigation landmark. #}
 {# @block content The navbar brand, navigation, forms, togglers, and collapsible content. #}
-{%- props
-    expand = null,
-    background = 'body-tertiary',
-    theme = null,
-    label = null
--%}
+{%- props expand = null, background = 'body-tertiary', theme = null, label = null -%}
 
 {%- set classes = html_classes({
     navbar: true,

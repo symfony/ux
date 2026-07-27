@@ -6,15 +6,7 @@
 {# @prop container string|null The optional selector of the element that receives the generated popover. #}
 {# @prop customClass string|null The optional class added to the generated popover. #}
 {# @block content The trigger element, which must render `popover_trigger_attrs` with `html_attr()`. #}
-{%- props
-    title = null,
-    content = '',
-    placement = 'right',
-    trigger = 'click',
-    html = false,
-    container = null,
-    customClass = null
--%}
+{%- props title = null, content = '', placement = 'right', trigger = 'click', html = false, container = null, customClass = null -%}
 {%- set popover_trigger_attrs = {
     'data-bs-toggle': 'popover',
 }|html_attr_merge -%}

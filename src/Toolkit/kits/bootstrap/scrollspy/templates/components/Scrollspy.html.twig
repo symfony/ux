@@ -4,13 +4,7 @@
 {# @prop rootMargin string|null The optional Intersection Observer root margin. #}
 {# @prop threshold string|null The optional comma-separated Intersection Observer thresholds. #}
 {# @block content The sections observed by Scrollspy. #}
-{%- props
-    target,
-    height = '200px',
-    smoothScroll = false,
-    rootMargin = null,
-    threshold = null
--%}
+{%- props target, height = '200px', smoothScroll = false, rootMargin = null, threshold = null -%}
 {%- set default_attrs = {
     class: 'position-relative overflow-auto',
     style: 'height: ' ~ height ~ ';',

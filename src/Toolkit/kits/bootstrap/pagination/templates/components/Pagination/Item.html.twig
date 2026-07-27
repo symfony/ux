@@ -4,13 +4,7 @@
 {# @prop label string The fallback item label when no content block is provided. #}
 {# @prop ariaLabel string|null The accessible label for the page link. #}
 {# @block content The page link content. #}
-{%- props
-    active = false,
-    disabled = false,
-    href = null,
-    label = '',
-    ariaLabel = null
--%}
+{%- props active = false, disabled = false, href = null, label = '', ariaLabel = null -%}
 
 {%- set item_classes = html_classes('page-item', {
     active: active,

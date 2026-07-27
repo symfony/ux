@@ -5,14 +5,7 @@
 {# @prop role 'status'|'alert' The accessibility role that describes the notification urgency. #}
 {# @prop live 'polite'|'assertive' The live region politeness level. #}
 {# @block content The toast structure, typically `Toast:Header` and `Toast:Body`. #}
-{%- props
-    show = true,
-    autohide = true,
-    delay = null,
-    animation = true,
-    role = 'status',
-    live = 'polite'
--%}
+{%- props show = true, autohide = true, delay = null, animation = true, role = 'status', live = 'polite' -%}
 {%- set final_role = role in ['status', 'alert'] ? role : 'status' -%}
 {%- set final_live = live in ['polite', 'assertive'] ? live : 'polite' -%}
 {%- set toast_classes = html_classes({

@@ -1,10 +1,7 @@
 {# @prop divider string|null The custom text used as the divider between breadcrumb items. #}
 {# @prop label string|null The accessible name for the breadcrumb navigation. #}
 {# @block content The ordered list of breadcrumb items. #}
-{%- props
-    divider = null,
-    label = 'breadcrumb'
--%}
+{%- props divider = null, label = 'breadcrumb' -%}
 
 {%- set default_attrs = {} -%}
 {%- if label is not null -%}

@@ -7,16 +7,7 @@
 {# @prop color 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark'|null The Bootstrap contextual color. #}
 {# @prop label string The fallback label when no content block is provided. #}
 {# @block content The item content. #}
-{%- props
-    tag = null,
-    href = null,
-    type = 'button',
-    active = false,
-    current = null,
-    disabled = false,
-    color = null,
-    label = ''
--%}
+{%- props tag = null, href = null, type = 'button', active = false, current = null, disabled = false, color = null, label = '' -%}
 
 {%- set final_tag = tag|lower in ['li', 'a', 'button'] ? tag|lower : (href is not null ? 'a' : 'li') -%}
 {%- set actionable = final_tag in ['a', 'button'] -%}

@@ -8,17 +8,7 @@
 {# @prop value string|null The value rendered by input elements. #}
 {# @prop content string The fallback label when no content block is provided. #}
 {# @block content The button label and optional inline content. #}
-{%- props
-    tag = 'button',
-    type = null,
-    href = null,
-    color = 'primary',
-    outline = false,
-    size = null,
-    disabled = false,
-    value = null,
-    content = ''
--%}
+{%- props tag = 'button', type = null, href = null, color = 'primary', outline = false, size = null, disabled = false, value = null, content = '' -%}
 
 {%- set final_tag = tag|lower in ['a', 'input'] ? tag|lower : 'button' -%}
 {%- set final_type = type in ['button', 'submit', 'reset'] ? type : 'button' -%}

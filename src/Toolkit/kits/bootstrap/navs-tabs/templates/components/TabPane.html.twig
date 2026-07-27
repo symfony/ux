@@ -3,12 +3,7 @@
 {# @prop active boolean Whether the panel is initially visible. #}
 {# @prop fade boolean Whether the panel uses Bootstrap's fade transition. #}
 {# @block content The tab panel content. #}
-{%- props
-    id,
-    labelledBy = null,
-    active = false,
-    fade = false
--%}
+{%- props id, labelledBy = null, active = false, fade = false -%}
 
 {%- set pane_classes = html_classes('tab-pane', {
     fade: fade,

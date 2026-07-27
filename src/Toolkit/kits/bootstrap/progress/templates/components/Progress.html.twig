@@ -11,20 +11,7 @@
 {# @prop barClass string The additional classes applied to the visual bar. #}
 {# @prop stacked boolean Whether this progress indicator is a segment within a stacked progress bar. #}
 {# @block content The text or custom content displayed inside the visual bar. #}
-{%- props
-    value = 0,
-    min = 0,
-    max = 100,
-    ariaLabel = 'Progress',
-    label = '',
-    color = null,
-    striped = false,
-    animated = false,
-    height = null,
-    barWidth = null,
-    barClass = '',
-    stacked = false
--%}
+{%- props value = 0, min = 0, max = 100, ariaLabel = 'Progress', label = '', color = null, striped = false, animated = false, height = null, barWidth = null, barClass = '', stacked = false -%}
 
 {%- set bar_classes = html_classes({
     'progress-bar': true,

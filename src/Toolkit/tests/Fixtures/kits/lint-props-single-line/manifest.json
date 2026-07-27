@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../schema-kit-v1.json",
+    "name": "Lint Props Single Line",
+    "description": "Kit covering PropsSingleLineChecker scenarios.",
+    "license": "MIT",
+    "homepage": "https://example.com/lint-props-single-line"
+}

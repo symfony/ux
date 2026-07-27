@@ -23,6 +23,7 @@ use Symfony\UX\Toolkit\Kit\Lint\Checker\ComposerSymbolChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\CopyFilesExistenceChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\JsImportChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\MissingRecipeManifestChecker;
+use Symfony\UX\Toolkit\Kit\Lint\Checker\PropsSingleLineChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\RecipeReferenceChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\StimulusControllerChecker;
 use Symfony\UX\Toolkit\Kit\Lint\KitLinter;
@@ -316,6 +317,38 @@ class KitLinterTest extends TestCase
         $matching = array_values(array_filter(
             $report->getIssues(),
             static fn (LintIssue $i) => str_starts_with($i->category, 'component.attributes.')
+                && null !== $i->file && str_contains($i->file, $file),
+        ));
+
+        $this->assertCount($expectedCount, $matching, \sprintf('File "%s" must produce %d issue(s).', $file, $expectedCount));
+        foreach ($matching as $issue) {
+            $this->assertSame(LintSeverity::Error, $issue->severity);
+            $this->assertSame('cases', $issue->recipe);
+        }
+    }
+
+    /**
+     * @return iterable<string, array{string, int}>
+     */
+    public static function providePropsSingleLineCases(): iterable
+    {
+        // template file => number of expected issues
+        yield 'single-line props with trim markers' => ['SingleLine.html.twig', 0];
+        yield 'single-line props without trim markers' => ['SingleLineNoTrim.html.twig', 0];
+        yield 'component without props' => ['NoProps.html.twig', 0];
+        yield 'multi-line props declaration' => ['MultiLine.html.twig', 1];
+    }
+
+    #[DataProvider('providePropsSingleLineCases')]
+    public function testPropsSingleLineChecker(string $file, int $expectedCount)
+    {
+        $kit = $this->loadFixtureKit('lint-props-single-line');
+
+        $report = new KitLinter([new PropsSingleLineChecker()])->lint($kit);
+
+        $matching = array_values(array_filter(
+            $report->getIssues(),
+            static fn (LintIssue $i) => 'component.props.multiline' === $i->category
                 && null !== $i->file && str_contains($i->file, $file),
         ));
 

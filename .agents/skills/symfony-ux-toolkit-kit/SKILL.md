@@ -247,6 +247,19 @@ One `{# @prop ... #}` per declared prop + one `{# @block ... #}` per block the c
 {%- props id, open = false -%}
 ```
 
+**The `{%- props ... -%}` tag stays on a single line**, however many props it declares — the per-prop documentation already lives in the `{# @prop ... #}` docblock above it, so the tag itself is just the variable/default list. Every kit follows this (`bin/ux-toolkit-kit-lint` enforces it via `PropsSingleLineChecker`):
+
+```twig
+{# Bad — spread across several lines #}
+{%- props
+    color = 'primary',
+    label = ''
+-%}
+
+{# Good — one line #}
+{%- props color = 'primary', label = '' -%}
+```
+
 Format is enforced by `bin/ux-toolkit-kit-lint` (CI fails on any warning — see [Docblock linting](#docblock-linting)):
 
 - **`@prop <name> <type> <Description.>`** — name first (camelCase Twig variable, `[a-z][a-zA-Z0-9]*`), then type, then description.
@@ -415,6 +428,7 @@ php bin/ux-toolkit-kit-lint --fail-on-warning kits/<kit>
 Checks:
 - **`@prop`** — camelCase name, valid **spaceless** PHPStan type, description Capitalized + ending with a period. Every `@prop` maps to a prop in `{%- props -%}` and vice versa.
 - **`@block`** — valid Twig block name, description Capitalized + ending with a period. Every `@block` maps to a rendered block (`{% block x %}` / `block(outerBlocks.x)` / `block('x')`) and vice versa.
+- **`props` single line** (`PropsSingleLineChecker`) — the `{%- props ... -%}` tag must not span multiple lines; collapse it onto one line.
 - Default values are **not** documented in the docblock — they are read from `{%- props -%}`.
 
 ---
@@ -555,7 +569,7 @@ Reviewers explicitly check snapshots regenerated (`#3488`).
 - [ ] Companion PR on `symfony/ux.symfony.com` linked **only if** recipe ships JS or new Tailwind classes
 - [ ] `php-cs-fixer`, `twig-cs-fixer`, `pnpm run fmt`, `pnpm run lint` clean
 - [ ] `bin/ux-toolkit-kit-lint --fail-on-warning kits/<kit>` clean
-- [ ] Docblocks: `@prop`/`@block` present; descriptions Capitalized + ending with a period; prop types are spaceless PHPStan types; **no `Defaults to`** (defaults live in `{%- props -%}`); every `@block` matches a rendered block
+- [ ] Docblocks: `@prop`/`@block` present; descriptions Capitalized + ending with a period; prop types are spaceless PHPStan types; **no `Defaults to`** (defaults live in `{%- props -%}`); every `@block` matches a rendered block; `{%- props ... -%}` on a single line
 - [ ] `attributes.defaults()` holds only `data-controller`/`data-action` (+ overridable HTML defaults); `data-slot`, state `data-*`, `aria-*` and Stimulus `data-*-value` are literal attributes; state attrs always emitted with an explicit value
 - [ ] Trigger/Close sub-components use `<recipe>_<role>_attrs` (no wrapping `<button>`)
 - [ ] `data-action` Stimulus actions piped through `|html_attr_type('sst')` when concatenable
@@ -578,6 +592,7 @@ Reviewers explicitly check snapshots regenerated (`#3488`).
 | `data-action="click->x#y"` not piped | `'click->x#y'\|html_attr_type('sst')` |
 | Missing `data-slot` on root/sub-roots (Shadcn) | Add `data-slot="<recipe>"` / `data-slot="<recipe>-<sub>"` |
 | Missing `{# @prop #}` / `{# @block #}` docblocks | Add docblocks before `{%- props -%}` |
+| Multi-line `{%- props ... -%}` declaration | Collapse onto a single line (enforced by `PropsSingleLineChecker`) |
 | `Defaults to \`...\`` in a `@prop` docblock | Remove it — the default lives only in `{%- props -%}` |
 | Prop type with spaces (`'a' \| 'b'`) | Remove spaces (`'a'\|'b'`) |
 | Docblock description not Capitalized / no trailing period | Capitalize + end with a period |

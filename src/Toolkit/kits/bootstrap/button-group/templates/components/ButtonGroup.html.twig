@@ -2,11 +2,7 @@
 {# @prop size 'sm'|'lg'|null The Bootstrap size applied to every button in the group. #}
 {# @prop label string|null The accessible name for the group. #}
 {# @block content The buttons, links, or form controls contained in the group. #}
-{%- props
-    vertical = false,
-    size = null,
-    label = 'Button group'
--%}
+{%- props vertical = false, size = null, label = 'Button group' -%}
 
 {%- set classes = html_classes({
     (vertical ? 'btn-group-vertical' : 'btn-group'): true,

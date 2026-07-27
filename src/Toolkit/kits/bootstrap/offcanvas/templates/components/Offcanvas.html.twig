@@ -7,16 +7,7 @@
 {# @prop shown boolean Whether to display the panel statically. #}
 {# @prop theme 'light'|'dark'|null The component-specific Bootstrap color mode. #}
 {# @block content The offcanvas structure, typically `Offcanvas:Header` and `Offcanvas:Body`. #}
-{%- props
-    id,
-    placement = 'start',
-    responsive = null,
-    backdrop = true,
-    scroll = false,
-    keyboard = true,
-    shown = false,
-    theme = null
--%}
+{%- props id, placement = 'start', responsive = null, backdrop = true, scroll = false, keyboard = true, shown = false, theme = null -%}
 {%- set title_id = id ~ '-label' -%}
 {%- do provide('offcanvas.titleId', title_id) -%}
 {%- set base_class = responsive in ['sm', 'md', 'lg', 'xl', 'xxl'] ? 'offcanvas-' ~ responsive : 'offcanvas' -%}
