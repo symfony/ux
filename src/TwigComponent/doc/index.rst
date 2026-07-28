@@ -852,6 +852,22 @@ There is also a non-HTML syntax that can be used:
         {% block footer %}... footer content{% endblock %}
     {% endcomponent %}
 
+.. versionadded:: 3.4
+
+    Support for dynamic component names in the ``{% component %}`` tag was
+    added in TwigComponent 3.4.
+
+The ``{% component %}`` tag also accepts dynamic expressions, but they must be
+wrapped in parentheses. Without parentheses, the value is treated as the
+literal component name:
+
+.. code-block:: twig
+
+    {% set prefix = 'DynamicNameComponent' %}
+    {% for i in 1..2 %}
+        {% component (prefix ~ i) %}{% endcomponent %}
+    {% endfor %}
+
 .. _embedded-components-context:
 
 Context / Variables Inside of Blocks

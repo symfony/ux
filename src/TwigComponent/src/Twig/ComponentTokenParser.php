@@ -37,12 +37,12 @@ final class ComponentTokenParser extends AbstractTokenParser
 
         if (method_exists($this->parser, 'parseExpression')) {
             // Since Twig 3.21
-            $componentName = $this->componentName($this->parser->parseExpression());
+            $componentNameExpression = $this->componentNameExpression($this->parser->parseExpression());
         } else {
-            $componentName = $this->componentName($this->parser->getExpressionParser()->parseExpression());
+            $componentNameExpression = $this->componentNameExpression($this->parser->getExpressionParser()->parseExpression());
         }
 
-        if (null === $componentName) {
+        if (null === $componentNameExpression) {
             throw new SyntaxError('Could not parse component name.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
         }
 
@@ -78,7 +78,7 @@ final class ComponentTokenParser extends AbstractTokenParser
 
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new ComponentNode($componentName, $module->getTemplateName(), $module->getAttribute('index'), $propsExpression, $only, $token->getLine());
+        return new ComponentNode($componentNameExpression, $module->getTemplateName(), $module->getAttribute('index'), $propsExpression, $only, $token->getLine());
     }
 
     public function getTag(): string
@@ -86,17 +86,25 @@ final class ComponentTokenParser extends AbstractTokenParser
         return 'component';
     }
 
-    private function componentName(AbstractExpression $expression): ?string
+    private function componentNameExpression(AbstractExpression $expression): ?AbstractExpression
     {
+        if ($expression instanceof ArrayExpression) {
+            return null;
+        }
+
         if ($expression instanceof ConstantExpression) { // using {% component 'name' %}
-            return $expression->getAttribute('value');
+            return $expression;
         }
 
-        if ($expression instanceof NameExpression) { // using {% component name %}
-            return $expression->getAttribute('name');
+        if ($expression instanceof NameExpression && !$expression->hasExplicitParentheses()) { // using {% component Alert %}
+            return $expression;
         }
 
-        return null;
+        if ($expression->hasExplicitParentheses()) {
+            return $expression;
+        }
+
+        throw new SyntaxError('When passing a dynamic component expression to "{% component %}", wrap the expression in parentheses, e.g. {% component (componentNameVariable) %}.', $expression->getTemplateLine(), $this->parser->getStream()->getSourceContext());
     }
 
     /**

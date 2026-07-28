@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.4.0
+
+- Add support for dynamic component names in the `{% component %}` tag using a
+  parenthesized expression, e.g. `{% component (prefix ~ i) %}{% endcomponent %}`
+
 ## 3.2.0
 
 - Add `ComponentRendererInterface::preCreateForRender()`, `ComponentRendererInterface::startEmbeddedComponentRender()`, and `ComponentRendererInterface::finishEmbeddedComponentRender()` methods
