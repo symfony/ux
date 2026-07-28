@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\TwigComponent\Tests\Fixtures\User;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use Twig\Extra\Html\HtmlAttr\AttributeValueInterface;
 
 /**
@@ -154,6 +155,92 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('<caption>data table</caption>', $output);
         $this->assertStringContainsString('custom th (key)', $output);
         $this->assertStringContainsString('custom td (1)', $output);
+    }
+
+    public function testCanRenderEmbeddedComponentWithDynamicNameBuiltInLoop()
+    {
+        $environment = self::getContainer()->get(Environment::class);
+        $template = $environment->createTemplate('{% set prefix = "DynamicNameComponent" %}{% for i in 1..2 %}{% component (prefix ~ i) %}{% endcomponent %}{% endfor %}');
+
+        $output = $template->render();
+
+        $this->assertStringContainsString('DynamicNameComponent1 rendered', $output);
+        $this->assertStringContainsString('DynamicNameComponent2 rendered', $output);
+    }
+
+    public function testThrowsWhenDynamicComponentNameDoesNotExist()
+    {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Unknown component "DynamicNameComponent3".');
+
+        $environment = self::getContainer()->get(Environment::class);
+        $template = $environment->createTemplate('{% set prefix = "DynamicNameComponent" %}{% component (prefix ~ 3) %}{% endcomponent %}');
+        $template->render();
+    }
+
+    #[DataProvider('provideDynamicComponentNameExpressions')]
+    public function testCanRenderEmbeddedComponentFromExpression(string $template, array $context, array $expectedComponents)
+    {
+        $environment = self::getContainer()->get(Environment::class);
+        $output = $environment->createTemplate($template)->render($context);
+
+        foreach ($expectedComponents as $expectedComponent) {
+            $this->assertStringContainsString($expectedComponent.' rendered', $output);
+        }
+    }
+
+    public static function provideDynamicComponentNameExpressions(): iterable
+    {
+        yield 'array index' => [
+            '{% for i in 0..1 %}{% component (componentsArray[i]) %}{% endcomponent %}{% endfor %}',
+            ['componentsArray' => ['DynamicNameComponent1', 'DynamicNameComponent2']],
+            ['DynamicNameComponent1', 'DynamicNameComponent2'],
+        ];
+        yield 'component name variable' => [
+            '{% component (componentNameVariable) %}{% endcomponent %}',
+            ['componentNameVariable' => 'DynamicNameComponent1'],
+            ['DynamicNameComponent1'],
+        ];
+        yield 'string variable' => [
+            '{% component (stringVariable) %}{% endcomponent %}',
+            ['stringVariable' => 'DynamicNameComponent2'],
+            ['DynamicNameComponent2'],
+        ];
+    }
+
+    public function testThrowsWhenStringVariableExpressionIsNotWrappedInParentheses()
+    {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Unknown component "stringVariable"');
+
+        $environment = self::getContainer()->get(Environment::class);
+        $template = $environment->createTemplate('{% component stringVariable %}{% endcomponent %}');
+        $template->render([
+            'stringVariable' => 'DynamicNameComponent2',
+        ]);
+    }
+
+    public function testBareComponentNameStaysStaticWhenSameNamedVariableExists()
+    {
+        $environment = self::getContainer()->get(Environment::class);
+        $template = $environment->createTemplate('{% component DynamicNameComponent1 %}{% endcomponent %}');
+        $output = $template->render([
+            'DynamicNameComponent1' => 'DynamicNameComponent2',
+        ]);
+
+        $this->assertStringContainsString('DynamicNameComponent1 rendered', $output);
+        $this->assertStringNotContainsString('DynamicNameComponent2 rendered', $output);
+    }
+
+    public function testThrowsWhenExpressionDoesNotEvaluateToAComponentName()
+    {
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('must evaluate to a component name (string/scalar/Stringable)');
+        $this->expectExceptionMessage('stdClass');
+
+        $environment = self::getContainer()->get(Environment::class);
+        $template = $environment->createTemplate('{% component (obj) %}{% endcomponent %}');
+        $template->render(['obj' => new \stdClass()]);
     }
 
     public function testComponentWithNamespace()

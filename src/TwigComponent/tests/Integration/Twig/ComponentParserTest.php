@@ -36,6 +36,17 @@ final class ComponentParserTest extends KernelTestCase
         $this->assertInstanceOf(TemplateWrapper::class, $template);
     }
 
+    #[DataProvider('provideValidBareComponentNames')]
+    public function testAcceptTwigComponentTagWithValidBareComponentName(string $name)
+    {
+        $environment = $this->createEnvironment();
+        $source = str_replace('XXX', $name, '{% component XXX %}{% endcomponent %}');
+
+        $template = $environment->createTemplate($source);
+
+        $this->assertInstanceOf(TemplateWrapper::class, $template);
+    }
+
     #[DataProvider('provideValidComponentNames')]
     public function testAcceptHtmlComponentTagWithValidComponentName(string $name)
     {
@@ -70,6 +81,44 @@ final class ComponentParserTest extends KernelTestCase
         $environment->createTemplate($source, 'foo.html.twig');
     }
 
+    #[DataProvider('provideValidDynamicComponentExpressions')]
+    public function testItAcceptsParenthesizedDynamicComponentExpression(string $expression)
+    {
+        $environment = $this->createEnvironment();
+        $source = \sprintf('{%% component %s %%}{%% endcomponent %%}', $expression);
+
+        $template = $environment->createTemplate($source);
+
+        $this->assertInstanceOf(TemplateWrapper::class, $template);
+    }
+
+    #[DataProvider('provideInvalidUnparenthesizedDynamicComponentExpressions')]
+    public function testItRejectsUnparenthesizedDynamicComponentExpression(string $expression)
+    {
+        $environment = $this->createEnvironment();
+        $source = \sprintf('{%% component %s %%}{%% endcomponent %%}', $expression);
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('When passing a dynamic component expression to "{% component %}", wrap the expression in parentheses, e.g. {% component (componentNameVariable) %}');
+
+        $environment->createTemplate($source);
+    }
+
+    public static function provideValidDynamicComponentExpressions(): iterable
+    {
+        yield 'array index' => ['(componentsArray[i])'];
+        yield 'object property' => ['(someObject.component)'];
+        yield 'component name variable' => ['(componentNameVariable)'];
+        yield 'concatenation' => ['(prefix ~ i)'];
+    }
+
+    public static function provideInvalidUnparenthesizedDynamicComponentExpressions(): iterable
+    {
+        yield 'array index' => ['componentsArray[i]'];
+        yield 'object property' => ['someObject.component'];
+        yield 'concatenation' => ['prefix ~ i'];
+    }
+
     public static function provideValidComponentNames(): iterable
     {
         // Those names are all syntactically valid even if
@@ -78,6 +127,19 @@ final class ComponentParserTest extends KernelTestCase
             'Nope',
             'NopeNope',
             'Nope:Nope',
+            'Nope6',
+        ];
+
+        foreach ($names as $name) {
+            yield $name => [$name];
+        }
+    }
+
+    public static function provideValidBareComponentNames(): iterable
+    {
+        $names = [
+            'Nope',
+            'NopeNope',
             'Nope6',
         ];
 
