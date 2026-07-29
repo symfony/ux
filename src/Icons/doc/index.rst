@@ -351,6 +351,35 @@ the report to overwrite existing icons by using the ``--force`` option:
 
         $ php bin/console ux:icons:lock -v
 
+Automatically Locking On-Demand Icons
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.4
+
+    The ``auto_lock`` option was added in UX Icons 3.4.
+
+Running ``ux:icons:lock`` is easy to forget, and its Twig template scan cannot
+find icons whose names are built dynamically. As an alternative, enable
+``auto_lock`` to *lock* every *on-demand* icon to ``assets/icons/`` the first
+time it is actually rendered:
+
+.. code-block:: yaml
+
+    # config/packages/ux_icons.yaml
+    when@dev:
+        ux_icons:
+            iconify:
+                auto_lock: true
+
+With this enabled, browsing your application in development downloads and saves
+each *on-demand* icon to disk, ready to be committed. Production then renders
+the icons from these local files, without any request to the Iconify API.
+
+.. note::
+
+    Enable ``auto_lock`` in development only: the icons it writes must be
+    committed to your repository so they are available in production.
+
 Rendering Icons
 ---------------
 
@@ -694,6 +723,9 @@ Full Configuration
 
            # Whether to use the "on demand" icons powered by Iconify.design
            on_demand: true
+
+           # Whether to persist "on demand" icons to icon_dir (recommended in dev only)
+           auto_lock: false
 
            # The endpoint for the Iconify API
            endpoint: 'https://api.iconify.design'

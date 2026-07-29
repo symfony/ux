@@ -119,6 +119,10 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
                             ->info('Whether to download icons "on demand".')
                             ->defaultTrue()
                         ->end()
+                        ->booleanNode('auto_lock')
+                            ->info("Persist \"on demand\" icons to the local icon directory (see \"icon_dir\").\nRecommended in dev only. Requires \"on_demand\" to be enabled.")
+                            ->defaultFalse()
+                        ->end()
                         ->scalarNode('endpoint')
                             ->info('The endpoint for the Iconify icons API.')
                             ->defaultValue(Iconify::API_ENDPOINT)
@@ -207,6 +211,13 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
 
         if (!$mergedConfig['iconify']['on_demand'] || !$mergedConfig['iconify']['enabled']) {
             $container->removeDefinition('.ux_icons.iconify_on_demand_registry');
+            $container->removeDefinition('.ux_icons.auto_lock_icon_registry');
+        } elseif ($mergedConfig['iconify']['auto_lock']) {
+            $container->getDefinition('.ux_icons.iconify_on_demand_registry')->clearTag('ux_icons.registry');
+            $container->getDefinition('.ux_icons.auto_lock_icon_registry')
+                ->addTag('ux_icons.registry', ['priority' => -10]);
+        } else {
+            $container->removeDefinition('.ux_icons.auto_lock_icon_registry');
         }
     }
 }
