@@ -31,7 +31,7 @@ php bin/console importmap:require {{ importmap_package_dependencies|join(' ') }}
 Copy the following file(s) into your app:
 {% for file in files %}
 ```{{ file.language }}
-{{ file.content|trim }}
+{{ file.content|trim|raw }}
 ```
 {% endfor %}
 :::
