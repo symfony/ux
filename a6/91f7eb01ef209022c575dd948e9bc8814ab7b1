@@ -1,0 +1,59 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-29T19:18:04Z
+
+> Thinking we should update the recipe to enable in dev-only. WDYT?
+
+Totally!
+
+> > where an issue happened during a deployment because Iconify was unreachable, because some icons were not locked.
+>
+> What's the scenario where this happens? Iconify disabled in prod?
+
+Nope, but sometimes their API is unreachable because their system is down, or smth	 like that, and so it fails. Typically like https://github.com/symfony/ux/issues/3170 or https://github.com/symfony/ux/issues/3170#issuecomment-4222218760
+
+---------------------------------------------------------------------------
+
+by kbond at 2026-07-29T19:21:15Z
+
+Got it! Should we recommend (via recipe) iconify also be enabled only in dev?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-07-29T19:45:55Z
+
+I'm not convinced there ... document how to / help chose yes ... but changing recipe also means changing defaults ... and many, many users would have their app not working on deploy/build  :|
+
+---------------------------------------------------------------------------
+
+by kbond at 2026-07-29T19:57:19Z
+
+> but changing recipe also means changing defaults
+
+I guess we can discuss in a recipe PR but I'd be fine with this ([ref](https://github.com/symfony/recipes#updating-recipes)) - especially because there isn't a 3.x+ recipe version out yet.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-29T20:37:25Z
+
+> users would have their app not working on deploy/build :|
+
+I'm not sure to understand. Why?
+The PR only adds a way to automatically lock icons when rendering the page, disabled by default.
+The recipe will only been altered in dev environment
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-07-29T20:49:33Z
+
+Hmm sorry I was only reacting to @kbond suggestion :)
+
+> Should we recommend (via recipe) iconify also be enabled only in dev
+
+auto_lock looks like a very interesting feature to me :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-29T21:16:02Z
+
+Ah, my bad!
