@@ -1,0 +1,25 @@
+<!--
+- Kit: Common
+- Component: Clipboard
+- Code:
+```twig
+<div data-controller="clipboard" class="relative w-full max-w-sm">
+    <pre data-clipboard-target="source" class="overflow-x-auto rounded-md bg-violet-950 p-4 font-mono text-xs leading-relaxed text-violet-100"><code>$response = new JsonResponse([
+    'status' => 'ok',
+]);</code></pre>
+    <button type="button" data-action="clipboard#copy" class="absolute right-2 top-2 rounded bg-violet-700 px-2 py-1 text-xs font-medium text-violet-100 hover:bg-violet-600">
+        <span data-clipboard-target="idle">Copy</span>
+        <span data-clipboard-target="success" hidden>Copied!</span>
+    </button>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-controller="clipboard" class="relative w-full max-w-sm">
+    <pre data-clipboard-target="source" class="overflow-x-auto rounded-md bg-violet-950 p-4 font-mono text-xs leading-relaxed text-violet-100"><code>$response = new JsonResponse([
+    'status' =&gt; 'ok',
+]);</code></pre>
+    <button type="button" data-action="clipboard#copy" class="absolute right-2 top-2 rounded bg-violet-700 px-2 py-1 text-xs font-medium text-violet-100 hover:bg-violet-600">
+        <span data-clipboard-target="idle">Copy</span>
+        <span data-clipboard-target="success" hidden>Copied!</span>
+    </button>
+</div>
