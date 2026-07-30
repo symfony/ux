@@ -1,0 +1,30 @@
+{# @prop value string The value selected by this item. #}
+{# @prop textValue string|null Plain text used for the trigger label and typeahead. Defaults to the rendered item text. #}
+{# @prop disabled boolean Whether the item is disabled. #}
+{# @block content The item label and optional icon. #}
+{%- props value, textValue = null, disabled = false -%}
+{%- set _select_value = inject('select.value') -%}
+{%- set _selected = value == _select_value -%}
+<div
+    role="option"
+    tabindex="-1"
+    aria-selected="{{ _selected ? 'true' : 'false' }}"
+    aria-disabled="{{ disabled ? 'true' : 'false' }}"
+    data-slot="select-item"
+    data-disabled="{{ disabled ? 'true' : 'false' }}"
+    data-value="{{ value }}"
+    {% if textValue is not null %}data-text-value="{{ textValue }}"{% endif %}
+    data-select-target="item"
+    data-action="click->select#select pointermove->select#focusItem"
+    class="{{ ('relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=\'size-\'])]:size-4 [&_svg:not([class*=\'text-\'])]:text-muted-foreground ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.without('class') }}
+>
+    <span
+        data-slot="select-item-indicator"
+        data-select-indicator
+        class="pointer-events-none absolute end-2 flex size-4 items-center justify-center {{ _selected ? '' : 'hidden' }}"
+    >
+        <twig:ux:icon name="lucide:check" class="size-4" />
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">{%- block content %}{% endblock -%}</span>
+</div>

@@ -2,10 +2,18 @@
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "component",
     "name": "Select",
+    "description": "Displays a list of options for the user to pick from—triggered by a button.",
     "copy-files": {
+        "assets/": "assets/",
         "templates/": "templates/"
     },
     "dependencies": {
-        "composer": ["tales-from-a-dev/twig-tailwind-extra:^1.0.0"]
+        "composer": [
+            "symfony/ux-icons",
+            "twig/extra-bundle",
+            "twig/html-extra:^3.24.0",
+            "tales-from-a-dev/twig-tailwind-extra:^1.0.0",
+            "symfony/ux-twig-component:^3.1"
+        ]
     }
 }

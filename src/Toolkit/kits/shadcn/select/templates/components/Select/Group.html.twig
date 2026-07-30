@@ -1,0 +1,9 @@
+{# @block content The grouped label and items. #}
+<div
+    role="group"
+    data-slot="select-group"
+    class="{{ ('scroll-my-1 p-1 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>

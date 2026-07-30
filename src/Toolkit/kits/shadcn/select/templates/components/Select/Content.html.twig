@@ -1,0 +1,58 @@
+{# @prop position 'item-aligned'|'popper' Whether the selected item or popup edge aligns with the trigger. #}
+{# @prop side 'bottom'|'top' The preferred popup side when using `popper` positioning. #}
+{# @prop align 'start'|'center'|'end' The popup alignment relative to the trigger. #}
+{# @block content The selectable items, groups, labels, and separators. #}
+{%- props position = 'item-aligned', side = 'bottom', align = 'center' -%}
+{%- set _select_id = inject('select.id') -%}
+{%- set _select_content_id = inject('select.contentId') -%}
+{%- set _select_anchor = inject('select.anchor') -%}
+<div
+    id="{{ _select_content_id }}"
+    role="listbox"
+    popover="auto"
+    aria-labelledby="{{ _select_id }}"
+    data-slot="select-content"
+    data-position="{{ position }}"
+    data-side="{{ side }}"
+    data-align="{{ align }}"
+    data-state="closed"
+    data-select-target="content"
+    style="{{ ('position-anchor: ' ~ _select_anchor ~ '; ' ~ attributes.render('style'))|trim }}"
+    class="{{ ('fixed inset-auto z-50 m-0 min-w-36 overflow-hidden rounded-lg bg-popover text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden duration-100 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-action': 'toggle->select#onToggle keydown->select#onContentKeydown',
+    }).without('style', 'id', 'popover') }}
+>
+    <button
+        type="button"
+        tabindex="-1"
+        aria-hidden="true"
+        data-slot="select-scroll-up-button"
+        data-select-target="scrollUp"
+        data-action="click->select#scrollUp"
+        class="z-10 flex w-full cursor-default items-center justify-center bg-popover py-1 [&_svg:not([class*='size-'])]:size-4"
+        hidden
+    >
+        <twig:ux:icon name="lucide:chevron-up" />
+    </button>
+    <div
+        data-slot="select-viewport"
+        data-select-target="viewport"
+        data-action="scroll->select#onScroll"
+        class="max-h-72 overflow-y-auto overscroll-contain"
+    >
+        {%- block content %}{% endblock -%}
+    </div>
+    <button
+        type="button"
+        tabindex="-1"
+        aria-hidden="true"
+        data-slot="select-scroll-down-button"
+        data-select-target="scrollDown"
+        data-action="click->select#scrollDown"
+        class="z-10 flex w-full cursor-default items-center justify-center bg-popover py-1 [&_svg:not([class*='size-'])]:size-4"
+        hidden
+    >
+        <twig:ux:icon name="lucide:chevron-down" />
+    </button>
+</div>

@@ -40,7 +40,7 @@ Combine labels, controls, and help text to compose accessible form fields and gr
                             <twig:Field:Label for="checkout-exp-month-ts6">
                                 Month
                             </twig:Field:Label>
-                            <twig:Select id="checkout-exp-month-ts6">
+                            <twig:NativeSelect id="checkout-exp-month-ts6">
                                 <option value="" disabled selected>MM</option>
                                 <option value="01">01</option>
                                 <option value="02">02</option>
@@ -54,13 +54,13 @@ Combine labels, controls, and help text to compose accessible form fields and gr
                                 <option value="10">10</option>
                                 <option value="11">11</option>
                                 <option value="12">12</option>
-                            </twig:Select>
+                            </twig:NativeSelect>
                         </twig:Field>
                         <twig:Field>
                             <twig:Field:Label for="checkout-7j9-exp-year-f59">
                                 Year
                             </twig:Field:Label>
-                            <twig:Select>
+                            <twig:NativeSelect>
                                 <option value="" disabled selected>YYY</option>
                                 <option value="2024">2024</option>
                                 <option value="2025">2025</option>
@@ -68,7 +68,7 @@ Combine labels, controls, and help text to compose accessible form fields and gr
                                 <option value="2027">2027</option>
                                 <option value="2028">2028</option>
                                 <option value="2029">2029</option>
-                            </twig:Select>
+                            </twig:NativeSelect>
                         </twig:Field>
                         <twig:Field>
                             <twig:Field:Label for="checkout-7j9-cvv">CVV</twig:Field:Label>
@@ -207,7 +207,7 @@ Combine labels, controls, and help text to compose accessible form fields and gr
 <div class="w-full max-w-md">
     <twig:Field>
         <twig:Field:Label for="department">Department</twig:Field:Label>
-        <twig:Select id="department">
+        <twig:NativeSelect id="department">
             <option value="engineering">Engineering</option>
             <option value="design">Design</option>
             <option value="marketing">Marketing</option>
@@ -216,7 +216,7 @@ Combine labels, controls, and help text to compose accessible form fields and gr
             <option value="hr">Human Resources</option>
             <option value="finance">Finance</option>
             <option value="operations">Operations</option>
-        </twig:Select>
+        </twig:NativeSelect>
         <twig:Field:Description>
             Select your department or area of work.
         </twig:Field:Description>

@@ -1,0 +1,13 @@
+{# @prop placeholder string|null Text displayed when no item is selected. Defaults to the root placeholder. #}
+{# @block content Optional initial value content, replaced when the selection changes. #}
+{%- props placeholder = null -%}
+{%- set _select_placeholder = placeholder ?? inject('select.placeholder') -%}
+<span
+    data-slot="select-value"
+    data-select-target="value"
+    data-placeholder="{{ _select_placeholder }}"
+    class="{{ ('flex flex-1 text-start ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes }}
+>
+    {%- block content %}{{ _select_placeholder }}{% endblock -%}
+</span>

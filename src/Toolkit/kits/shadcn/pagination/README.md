@@ -94,12 +94,12 @@ Use just the previous and next buttons without page numbers. This is useful for 
 <div class="flex items-center justify-between gap-4">
     <twig:Field orientation="horizontal" class="w-fit">
         <twig:Field:Label for="select-rows-per-page">Rows per page</twig:Field:Label>
-        <twig:Select id="select-rows-per-page" class="w-20">
+        <twig:NativeSelect id="select-rows-per-page" class="w-20">
             <option value="10">10</option>
             <option value="25" selected>25</option>
             <option value="50">50</option>
             <option value="100">100</option>
-        </twig:Select>
+        </twig:NativeSelect>
     </twig:Field>
     <twig:Pagination class="mx-0 w-auto">
         <twig:Pagination:Content>

@@ -1,0 +1,205 @@
+<!--
+- Kit: Shadcn UI
+- Component: Select
+- Code:
+```twig
+<div class="grid gap-6">
+    <twig:Select id="select-fruit-ar" dir="rtl">
+        <twig:Select:Trigger>
+            <twig:Button variant="outline" class="w-40" {{ ...select_trigger_attrs }}>
+                <twig:Select:Value placeholder="اختر فاكهة" />
+                <twig:ux:icon name="lucide:chevron-down" class="text-muted-foreground" />
+            </twig:Button>
+        </twig:Select:Trigger>
+        <twig:Select:Content>
+            <twig:Select:Group>
+                <twig:Select:Label>الفواكه</twig:Select:Label>
+                <twig:Select:Item value="apple">تفاح</twig:Select:Item>
+                <twig:Select:Item value="banana">موز</twig:Select:Item>
+                <twig:Select:Item value="blueberry">توت أزرق</twig:Select:Item>
+                <twig:Select:Item value="grapes">عنب</twig:Select:Item>
+                <twig:Select:Item value="pineapple">أناناس</twig:Select:Item>
+            </twig:Select:Group>
+            <twig:Select:Separator />
+            <twig:Select:Group>
+                <twig:Select:Label>الخضروات</twig:Select:Label>
+                <twig:Select:Item value="carrot">جزر</twig:Select:Item>
+                <twig:Select:Item value="broccoli">بروكلي</twig:Select:Item>
+                <twig:Select:Item value="spinach">سبانخ</twig:Select:Item>
+            </twig:Select:Group>
+        </twig:Select:Content>
+    </twig:Select>
+    <twig:Select id="select-fruit-he" dir="rtl">
+        <twig:Select:Trigger>
+            <twig:Button variant="outline" class="w-40" {{ ...select_trigger_attrs }}>
+                <twig:Select:Value placeholder="בחר פרי" />
+                <twig:ux:icon name="lucide:chevron-down" class="text-muted-foreground" />
+            </twig:Button>
+        </twig:Select:Trigger>
+        <twig:Select:Content>
+            <twig:Select:Group>
+                <twig:Select:Label>פירות</twig:Select:Label>
+                <twig:Select:Item value="apple">תפוח</twig:Select:Item>
+                <twig:Select:Item value="banana">בננה</twig:Select:Item>
+                <twig:Select:Item value="blueberry">אוכמניה</twig:Select:Item>
+                <twig:Select:Item value="grapes">ענבים</twig:Select:Item>
+                <twig:Select:Item value="pineapple">אננס</twig:Select:Item>
+            </twig:Select:Group>
+            <twig:Select:Separator />
+            <twig:Select:Group>
+                <twig:Select:Label>ירקות</twig:Select:Label>
+                <twig:Select:Item value="carrot">גזר</twig:Select:Item>
+                <twig:Select:Item value="broccoli">ברוקולי</twig:Select:Item>
+                <twig:Select:Item value="spinach">תרד</twig:Select:Item>
+            </twig:Select:Group>
+        </twig:Select:Content>
+    </twig:Select>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="grid gap-6">
+    <div data-slot="select" data-state="closed" data-disabled="false" data-select-value-value="" data-select-placeholder-value="Select an option" data-select-required-value="false" data-select-disabled-value="false" class="relative inline-block" data-controller="select" dir="rtl">
+    <button data-slot="button" data-size="default" data-variant="outline" class="group/button shrink-0 items-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2 flex w-fit justify-between border-input bg-transparent py-2 pe-2 ps-2.5 transition-colors disabled:cursor-not-allowed data-[placeholder=true]:text-muted-foreground data-[size=default]:h-8 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5" type="button" id="select-fruit-ar" role="combobox" aria-controls="select-fruit-ar-content" aria-expanded="false" aria-haspopup="listbox" data-state="closed" data-placeholder="true" data-select-target="trigger" data-action="keydown-&gt;select#onTriggerKeydown" popovertarget="select-fruit-ar-content" style="anchor-name: --select-select-fruit-ar;"><span data-slot="select-value" data-select-target="value" data-placeholder="اختر فاكهة" class="flex flex-1 text-start">اختر فاكهة</span>
+
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="text-muted-foreground" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+            </button>
+                <div id="select-fruit-ar-content" role="listbox" popover="auto" aria-labelledby="select-fruit-ar" data-slot="select-content" data-position="item-aligned" data-side="bottom" data-align="center" data-state="closed" data-select-target="content" style="position-anchor: --select-select-fruit-ar;" class="fixed inset-auto z-50 m-0 min-w-36 overflow-hidden rounded-lg bg-popover text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden duration-100 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2" data-action="toggle-&gt;select#onToggle keydown-&gt;select#onContentKeydown">
+    <button type="button" tabindex="-1" aria-hidden="true" data-slot="select-scroll-up-button" data-select-target="scrollUp" data-action="click-&gt;select#scrollUp" class="z-10 flex w-full cursor-default items-center justify-center bg-popover py-1 [&amp;_svg:not([class*='size-'])]:size-4" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+    <div data-slot="select-viewport" data-select-target="viewport" data-action="scroll-&gt;select#onScroll" class="max-h-72 overflow-y-auto overscroll-contain">
+<div role="group" data-slot="select-group" class="scroll-my-1 p-1">
+<div data-slot="select-label" class="px-1.5 py-1 text-xs text-muted-foreground">الفواكه</div>
+                <div role="option" tabindex="-1" aria-selected="false" aria-disabled="false" data-slot="select-item" data-disabled="false" data-value="apple" data-select-target="item" data-action="click-&gt;select#select pointermove-&gt;select#focusItem" class="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;_svg:not([class*='text-'])]:text-muted-foreground">
+    <span data-slot="select-item-indicator" data-select-indicator class="pointer-events-none absolute end-2 flex size-4 items-center justify-center hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">تفاح</span>
+</div>
+                <div role="option" tabindex="-1" aria-selected="false" aria-disabled="false" data-slot="select-item" data-disabled="false" data-value="banana" data-select-target="item" data-action="click-&gt;select#select pointermove-&gt;select#focusItem" class="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;_svg:not([class*='text-'])]:text-muted-foreground">
+    <span data-slot="select-item-indicator" data-select-indicator class="pointer-events-none absolute end-2 flex size-4 items-center justify-center hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">موز</span>
+</div>
+                <div role="option" tabindex="-1" aria-selected="false" aria-disabled="false" data-slot="select-item" data-disabled="false" data-value="blueberry" data-select-target="item" data-action="click-&gt;select#select pointermove-&gt;select#focusItem" class="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;_svg:not([class*='text-'])]:text-muted-foreground">
+    <span data-slot="select-item-indicator" data-select-indicator class="pointer-events-none absolute end-2 flex size-4 items-center justify-center hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">توت أزرق</span>
+</div>
+                <div role="option" tabindex="-1" aria-selected="false" aria-disabled="false" data-slot="select-item" data-disabled="false" data-value="grapes" data-select-target="item" data-action="click-&gt;select#select pointermove-&gt;select#focusItem" class="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;_svg:not([class*='text-'])]:text-muted-foreground">
+    <span data-slot="select-item-indicator" data-select-indicator class="pointer-events-none absolute end-2 flex size-4 items-center justify-center hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">عنب</span>
+</div>
+                <div role="option" tabindex="-1" aria-selected="false" aria-disabled="false" data-slot="select-item" data-disabled="false" data-value="pineapple" data-select-target="item" data-action="click-&gt;select#select pointermove-&gt;select#focusItem" class="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;_svg:not([class*='text-'])]:text-muted-foreground">
+    <span data-slot="select-item-indicator" data-select-indicator class="pointer-events-none absolute end-2 flex size-4 items-center justify-center hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">أناناس</span>
+</div>
+            </div>
+            <div role="separator" data-slot="select-separator" class="pointer-events-none -mx-1 my-1 h-px bg-border"></div>
+
+            <div role="group" data-slot="select-group" class="scroll-my-1 p-1">
+<div data-slot="select-label" class="px-1.5 py-1 text-xs text-muted-foreground">الخضروات</div>
+                <div role="option" tabindex="-1" aria-selected="false" aria-disabled="false" data-slot="select-item" data-disabled="false" data-value="carrot" data-select-target="item" data-action="click-&gt;select#select pointermove-&gt;select#focusItem" class="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;_svg:not([class*='text-'])]:text-muted-foreground">
+    <span data-slot="select-item-indicator" data-select-indicator class="pointer-events-none absolute end-2 flex size-4 items-center justify-center hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">جزر</span>
+</div>
+                <div role="option" tabindex="-1" aria-selected="false" aria-disabled="false" data-slot="select-item" data-disabled="false" data-value="broccoli" data-select-target="item" data-action="click-&gt;select#select pointermove-&gt;select#focusItem" class="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;_svg:not([class*='text-'])]:text-muted-foreground">
+    <span data-slot="select-item-indicator" data-select-indicator class="pointer-events-none absolute end-2 flex size-4 items-center justify-center hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">بروكلي</span>
+</div>
+                <div role="option" tabindex="-1" aria-selected="false" aria-disabled="false" data-slot="select-item" data-disabled="false" data-value="spinach" data-select-target="item" data-action="click-&gt;select#select pointermove-&gt;select#focusItem" class="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;_svg:not([class*='text-'])]:text-muted-foreground">
+    <span data-slot="select-item-indicator" data-select-indicator class="pointer-events-none absolute end-2 flex size-4 items-center justify-center hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">سبانخ</span>
+</div>
+            </div>
+        </div>
+    <button type="button" tabindex="-1" aria-hidden="true" data-slot="select-scroll-down-button" data-select-target="scrollDown" data-action="click-&gt;select#scrollDown" class="z-10 flex w-full cursor-default items-center justify-center bg-popover py-1 [&amp;_svg:not([class*='size-'])]:size-4" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+    </button>
+</div>
+    </div>
+    <div data-slot="select" data-state="closed" data-disabled="false" data-select-value-value="" data-select-placeholder-value="Select an option" data-select-required-value="false" data-select-disabled-value="false" class="relative inline-block" data-controller="select" dir="rtl">
+    <button data-slot="button" data-size="default" data-variant="outline" class="group/button shrink-0 items-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2 flex w-fit justify-between border-input bg-transparent py-2 pe-2 ps-2.5 transition-colors disabled:cursor-not-allowed data-[placeholder=true]:text-muted-foreground data-[size=default]:h-8 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5" type="button" id="select-fruit-he" role="combobox" aria-controls="select-fruit-he-content" aria-expanded="false" aria-haspopup="listbox" data-state="closed" data-placeholder="true" data-select-target="trigger" data-action="keydown-&gt;select#onTriggerKeydown" popovertarget="select-fruit-he-content" style="anchor-name: --select-select-fruit-he;"><span data-slot="select-value" data-select-target="value" data-placeholder="בחר פרי" class="flex flex-1 text-start">בחר פרי</span>
+
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="text-muted-foreground" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+            </button>
+                <div id="select-fruit-he-content" role="listbox" popover="auto" aria-labelledby="select-fruit-he" data-slot="select-content" data-position="item-aligned" data-side="bottom" data-align="center" data-state="closed" data-select-target="content" style="position-anchor: --select-select-fruit-he;" class="fixed inset-auto z-50 m-0 min-w-36 overflow-hidden rounded-lg bg-popover text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden duration-100 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2" data-action="toggle-&gt;select#onToggle keydown-&gt;select#onContentKeydown">
+    <button type="button" tabindex="-1" aria-hidden="true" data-slot="select-scroll-up-button" data-select-target="scrollUp" data-action="click-&gt;select#scrollUp" class="z-10 flex w-full cursor-default items-center justify-center bg-popover py-1 [&amp;_svg:not([class*='size-'])]:size-4" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 15l-6-6l-6 6"></path></svg>
+    </button>
+    <div data-slot="select-viewport" data-select-target="viewport" data-action="scroll-&gt;select#onScroll" class="max-h-72 overflow-y-auto overscroll-contain">
+<div role="group" data-slot="select-group" class="scroll-my-1 p-1">
+<div data-slot="select-label" class="px-1.5 py-1 text-xs text-muted-foreground">פירות</div>
+                <div role="option" tabindex="-1" aria-selected="false" aria-disabled="false" data-slot="select-item" data-disabled="false" data-value="apple" data-select-target="item" data-action="click-&gt;select#select pointermove-&gt;select#focusItem" class="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;_svg:not([class*='text-'])]:text-muted-foreground">
+    <span data-slot="select-item-indicator" data-select-indicator class="pointer-events-none absolute end-2 flex size-4 items-center justify-center hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">תפוח</span>
+</div>
+                <div role="option" tabindex="-1" aria-selected="false" aria-disabled="false" data-slot="select-item" data-disabled="false" data-value="banana" data-select-target="item" data-action="click-&gt;select#select pointermove-&gt;select#focusItem" class="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;_svg:not([class*='text-'])]:text-muted-foreground">
+    <span data-slot="select-item-indicator" data-select-indicator class="pointer-events-none absolute end-2 flex size-4 items-center justify-center hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">בננה</span>
+</div>
+                <div role="option" tabindex="-1" aria-selected="false" aria-disabled="false" data-slot="select-item" data-disabled="false" data-value="blueberry" data-select-target="item" data-action="click-&gt;select#select pointermove-&gt;select#focusItem" class="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;_svg:not([class*='text-'])]:text-muted-foreground">
+    <span data-slot="select-item-indicator" data-select-indicator class="pointer-events-none absolute end-2 flex size-4 items-center justify-center hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">אוכמניה</span>
+</div>
+                <div role="option" tabindex="-1" aria-selected="false" aria-disabled="false" data-slot="select-item" data-disabled="false" data-value="grapes" data-select-target="item" data-action="click-&gt;select#select pointermove-&gt;select#focusItem" class="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;_svg:not([class*='text-'])]:text-muted-foreground">
+    <span data-slot="select-item-indicator" data-select-indicator class="pointer-events-none absolute end-2 flex size-4 items-center justify-center hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">ענבים</span>
+</div>
+                <div role="option" tabindex="-1" aria-selected="false" aria-disabled="false" data-slot="select-item" data-disabled="false" data-value="pineapple" data-select-target="item" data-action="click-&gt;select#select pointermove-&gt;select#focusItem" class="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;_svg:not([class*='text-'])]:text-muted-foreground">
+    <span data-slot="select-item-indicator" data-select-indicator class="pointer-events-none absolute end-2 flex size-4 items-center justify-center hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">אננס</span>
+</div>
+            </div>
+            <div role="separator" data-slot="select-separator" class="pointer-events-none -mx-1 my-1 h-px bg-border"></div>
+
+            <div role="group" data-slot="select-group" class="scroll-my-1 p-1">
+<div data-slot="select-label" class="px-1.5 py-1 text-xs text-muted-foreground">ירקות</div>
+                <div role="option" tabindex="-1" aria-selected="false" aria-disabled="false" data-slot="select-item" data-disabled="false" data-value="carrot" data-select-target="item" data-action="click-&gt;select#select pointermove-&gt;select#focusItem" class="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;_svg:not([class*='text-'])]:text-muted-foreground">
+    <span data-slot="select-item-indicator" data-select-indicator class="pointer-events-none absolute end-2 flex size-4 items-center justify-center hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">גזר</span>
+</div>
+                <div role="option" tabindex="-1" aria-selected="false" aria-disabled="false" data-slot="select-item" data-disabled="false" data-value="broccoli" data-select-target="item" data-action="click-&gt;select#select pointermove-&gt;select#focusItem" class="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;_svg:not([class*='text-'])]:text-muted-foreground">
+    <span data-slot="select-item-indicator" data-select-indicator class="pointer-events-none absolute end-2 flex size-4 items-center justify-center hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">ברוקולי</span>
+</div>
+                <div role="option" tabindex="-1" aria-selected="false" aria-disabled="false" data-slot="select-item" data-disabled="false" data-value="spinach" data-select-target="item" data-action="click-&gt;select#select pointermove-&gt;select#focusItem" class="relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;_svg:not([class*='text-'])]:text-muted-foreground">
+    <span data-slot="select-item-indicator" data-select-indicator class="pointer-events-none absolute end-2 flex size-4 items-center justify-center hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>
+    <span data-slot="select-item-text" class="flex flex-1 items-center gap-2">תרד</span>
+</div>
+            </div>
+        </div>
+    <button type="button" tabindex="-1" aria-hidden="true" data-slot="select-scroll-down-button" data-select-target="scrollDown" data-action="click-&gt;select#scrollDown" class="z-10 flex w-full cursor-default items-center justify-center bg-popover py-1 [&amp;_svg:not([class*='size-'])]:size-4" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+    </button>
+</div>
+    </div>
+</div>

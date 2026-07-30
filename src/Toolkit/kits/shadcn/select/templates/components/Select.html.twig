@@ -1,7 +1,42 @@
-{# @block content The select options (`<option>` elements). #}
-<select
-    class="{{ ('flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+{# @prop id string Unique identifier used for the trigger and popup relationship. #}
+{# @prop name string|null Form field name. When set, the selected value is submitted through a hidden input. #}
+{# @prop value string The initially selected value. #}
+{# @prop placeholder string Text displayed when no item is selected. #}
+{# @prop disabled boolean Whether the select is disabled. #}
+{# @prop required boolean Whether form submission requires a selected value. #}
+{# @block content The select structure, typically includes `Select:Trigger` and `Select:Content`. #}
+{%- props id, name = null, value = '', placeholder = 'Select an option', disabled = false, required = false -%}
+
+{%- set _select_content_id = id ~ '-content' -%}
+{%- set _select_anchor = '--select-' ~ id -%}
+{%- do provide('select.id', id) -%}
+{%- do provide('select.contentId', _select_content_id) -%}
+{%- do provide('select.anchor', _select_anchor) -%}
+{%- do provide('select.value', value) -%}
+{%- do provide('select.placeholder', placeholder) -%}
+{%- do provide('select.disabled', disabled) -%}
+
+<div
+    data-slot="select"
+    data-state="closed"
+    data-disabled="{{ disabled ? 'true' : 'false' }}"
+    data-select-value-value="{{ value }}"
+    data-select-placeholder-value="{{ placeholder }}"
+    data-select-required-value="{{ required ? 'true' : 'false' }}"
+    data-select-disabled-value="{{ disabled ? 'true' : 'false' }}"
+    class="{{ ('relative inline-block ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        'data-controller': 'select',
+    }) }}
 >
+    {% if name is not null %}
+        <input
+            type="hidden"
+            name="{{ name }}"
+            value="{{ value }}"
+            data-select-target="input"
+            {% if disabled %}disabled{% endif %}
+        />
+    {% endif %}
     {%- block content %}{% endblock -%}
-</select>
+</div>
