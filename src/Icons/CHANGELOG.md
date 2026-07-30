@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.4.0
+
+- Add `iconify.auto_lock` option to persist "on demand" icons to the local icon directory as they are rendered
+
 ## 3.2.0
 
 - Sanitize rendered SVG icons (Iconify bodies and local files) to prevent XSS. See section 2.36.1 below for details

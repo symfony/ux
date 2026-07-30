@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\UX\Icons\DependencyInjection\UXIconsExtension;
 
 class UXIconsBundleTest extends TestCase
@@ -96,6 +97,51 @@ class UXIconsBundleTest extends TestCase
                 'default_icon_attributes' => $value,
             ],
         ]);
+    }
+
+    private function buildContainer(array $config = []): ContainerBuilder
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.bundles', []);
+        $container->setParameter('kernel.project_dir', __DIR__);
+
+        new UXIconsExtension()->load([$config], $container);
+
+        return $container;
+    }
+
+    public function testAutoLockDefaultsToFalse()
+    {
+        $config = new Processor()->processConfiguration(new UXIconsExtension(), [[]]);
+
+        $this->assertFalse($config['iconify']['auto_lock']);
+    }
+
+    public function testAutoLockRegistryIsWiredWhenEnabled()
+    {
+        $container = $this->buildContainer(['iconify' => ['auto_lock' => true]]);
+
+        $this->assertTrue($container->hasDefinition('.ux_icons.auto_lock_icon_registry'));
+        $this->assertTrue($container->getDefinition('.ux_icons.auto_lock_icon_registry')->hasTag('ux_icons.registry'));
+        $this->assertSame([['priority' => -10]], $container->getDefinition('.ux_icons.auto_lock_icon_registry')->getTag('ux_icons.registry'));
+        // the raw on-demand registry drops out of the chain; the decorator takes its slot
+        $this->assertFalse($container->getDefinition('.ux_icons.iconify_on_demand_registry')->hasTag('ux_icons.registry'));
+    }
+
+    public function testAutoLockRegistryIsRemovedWhenDisabled()
+    {
+        $container = $this->buildContainer(['iconify' => ['auto_lock' => false]]);
+
+        $this->assertFalse($container->hasDefinition('.ux_icons.auto_lock_icon_registry'));
+        $this->assertTrue($container->getDefinition('.ux_icons.iconify_on_demand_registry')->hasTag('ux_icons.registry'));
+    }
+
+    public function testAutoLockRegistryIsRemovedWhenOnDemandDisabled()
+    {
+        $container = $this->buildContainer(['iconify' => ['on_demand' => false]]);
+
+        $this->assertFalse($container->hasDefinition('.ux_icons.auto_lock_icon_registry'));
+        $this->assertFalse($container->hasDefinition('.ux_icons.iconify_on_demand_registry'));
     }
 
     public static function provideTestValidIconAttributesConfiguration(): iterable

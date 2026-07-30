@@ -20,6 +20,7 @@ use Symfony\UX\Icons\IconFactory;
 use Symfony\UX\Icons\Iconify;
 use Symfony\UX\Icons\IconRenderer;
 use Symfony\UX\Icons\IconRendererInterface;
+use Symfony\UX\Icons\Registry\AutoLockIconRegistry;
 use Symfony\UX\Icons\Registry\CacheIconRegistry;
 use Symfony\UX\Icons\Registry\ChainIconRegistry;
 use Symfony\UX\Icons\Registry\IconifyOnDemandRegistry;
@@ -111,6 +112,13 @@ return static function (ContainerConfigurator $container): void {
                 service('.ux_icons.iconify'),
             ])
             ->tag('ux_icons.registry', ['priority' => -10])
+
+        ->set('.ux_icons.auto_lock_icon_registry', AutoLockIconRegistry::class)
+            ->args([
+                service('.ux_icons.iconify_on_demand_registry'),
+                service('.ux_icons.local_svg_icon_registry'),
+                service('logger')->ignoreOnInvalid(),
+            ])
 
         ->set('.ux_icons.command.import', ImportIconCommand::class)
             ->args([
