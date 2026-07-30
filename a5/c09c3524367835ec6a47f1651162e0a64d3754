@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by kbond at 2026-07-29T20:02:22Z
+
+> outlets
+
+~What do you mean? If you mean usages, not yet but I use it in #3740.~ Oh, you meant stimulus outlets 🤦🏻‍♂️. No, I thought I'd wait until needed. But maybe it should be added here...?
+
+---------------------------------------------------------------------------
+
+by kbond at 2026-07-29T20:33:58Z
+
+I just pushed support for `@outlet`.
