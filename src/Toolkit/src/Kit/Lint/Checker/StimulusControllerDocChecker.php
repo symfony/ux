@@ -23,7 +23,7 @@ use Symfony\UX\Toolkit\Kit\Lint\LintSeverity;
  * Normalizes a Stimulus controller's `@value`/`@target`/`@action` docblock tags and keeps them
  * consistent with the code, mirroring {@see ComponentDocChecker} for Twig components:
  *  - the description itself (present, capitalized, ending with a period);
- *  - `@value`/`@target` tags against the `static values`/`static targets` declarations (both ways);
+ *  - `@value`/`@target`/`@css-class`/`@outlet` tags against the `static values`/`static targets`/`static classes`/`static outlets` declarations (both ways);
  *  - each `@action` against a method actually defined on the controller.
  *
  * Documentation is opt-in: a controller with no tags at all is left untouched, so existing
@@ -35,7 +35,7 @@ use Symfony\UX\Toolkit\Kit\Lint\LintSeverity;
  */
 final class StimulusControllerDocChecker implements KitCheckerInterface
 {
-    private const RE_BARE_TAG = '/@(?P<tag>value|target|action)(?!\h+[A-Za-z_$])/';
+    private const RE_BARE_TAG = '/@(?P<tag>value|target|action|css-class|outlet)(?!\h+[A-Za-z_$])/';
 
     public function check(Kit $kit): iterable
     {
@@ -61,16 +61,18 @@ final class StimulusControllerDocChecker implements KitCheckerInterface
         $tags = $controller->tags();
 
         // Opt-in: nothing documented, nothing to enforce.
-        if ([] === $tags['value'] && [] === $tags['target'] && [] === $tags['action']) {
+        if ([] === $tags['value'] && [] === $tags['target'] && [] === $tags['action'] && [] === $tags['class'] && [] === $tags['outlet']) {
             return;
         }
 
         if (preg_match(self::RE_BARE_TAG, $contents)) {
-            yield $this->issue($recipe, $file, 'stimulus.doc.invalid', 'A `@value`/`@target`/`@action` tag must be written as `@<tag> <name> <Description.>`.');
+            yield $this->issue($recipe, $file, 'stimulus.doc.invalid', 'A `@value`/`@target`/`@action`/`@css-class`/`@outlet` tag must be written as `@<tag> <name> <Description.>`.');
         }
 
         yield from $this->checkGroup($recipe, $file, 'value', 'Value', $tags['value'], array_column($controller->values(), 'name'));
         yield from $this->checkGroup($recipe, $file, 'target', 'Target', $tags['target'], $controller->targets());
+        yield from $this->checkGroup($recipe, $file, 'class', 'Class', $tags['class'], $controller->classes());
+        yield from $this->checkGroup($recipe, $file, 'outlet', 'Outlet', $tags['outlet'], $controller->outlets());
 
         foreach ($tags['action'] as $name => $description) {
             if (!$this->hasMethod($contents, $name)) {
@@ -89,9 +91,12 @@ final class StimulusControllerDocChecker implements KitCheckerInterface
      */
     private function checkGroup(string $recipe, string $file, string $tag, string $label, array $documented, array $declared): iterable
     {
+        // The internal `class` group is written as `@css-class` in docblocks (avoiding JSDoc's `@class`); the slug stays `class`.
+        $docTag = 'class' === $tag ? 'css-class' : $tag;
+
         foreach ($documented as $name => $description) {
             if (!\in_array($name, $declared, true)) {
-                yield $this->issue($recipe, $file, \sprintf('stimulus.%s.mismatch', $tag), \sprintf('%s "%s" is documented with `@%s` but is not declared in the controller.', $label, $name, $tag));
+                yield $this->issue($recipe, $file, \sprintf('stimulus.%s.mismatch', $tag), \sprintf('%s "%s" is documented with `@%s` but is not declared in the controller.', $label, $name, $docTag));
             }
 
             yield from $this->checkDescription($recipe, $file, \sprintf('stimulus.%s.invalid', $tag), \sprintf('%s "%s"', $label, $name), $description);
@@ -99,7 +104,7 @@ final class StimulusControllerDocChecker implements KitCheckerInterface
 
         foreach ($declared as $name) {
             if (!\array_key_exists($name, $documented)) {
-                yield $this->issue($recipe, $file, \sprintf('stimulus.%s.mismatch', $tag), \sprintf('%s "%s" is declared in the controller but has no `@%s %2$s ...` tag.', $label, $name, $tag));
+                yield $this->issue($recipe, $file, \sprintf('stimulus.%s.mismatch', $tag), \sprintf('%s "%s" is declared in the controller but has no `@%s %2$s ...` tag.', $label, $name, $docTag));
             }
         }
     }

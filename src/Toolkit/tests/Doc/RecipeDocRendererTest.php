@@ -107,6 +107,10 @@ final class RecipeDocRendererTest extends KernelTestCase
         $this->assertStringContainsString('Delay in milliseconds before the widget closes.', $markdown);
         // Target from `static targets`, described by the `@target` tag.
         $this->assertStringContainsString('| `panel` |', $markdown);
+        // Class from `static classes`, rendered by its derived `data-*-class` attribute and `@css-class` description.
+        $this->assertStringContainsString('| `data-widget-open-class` | Applied to the widget while it is open. |', $markdown);
+        // Outlet from `static outlets`, rendered by its derived `data-*-outlet` attribute and `@outlet` description.
+        $this->assertStringContainsString('| `data-widget-status-outlet` | Linked status controller updated when the widget toggles. |', $markdown);
         // Actions are opt-in from `@action` tags, each bounded to its own description.
         $this->assertStringContainsString('| `toggle` | Toggles the widget open state. |', $markdown);
     }
@@ -129,6 +133,8 @@ final class RecipeDocRendererTest extends KernelTestCase
         $this->assertStringContainsString('data-controller', $html);
         $this->assertStringContainsString('data-widget-auto-close-value', $html);
         $this->assertStringContainsString('panel', $html);
+        $this->assertStringContainsString('data-widget-open-class', $html);
+        $this->assertStringContainsString('data-widget-status-outlet', $html);
         $this->assertStringContainsString('toggle', $html);
         $this->assertStringContainsString('Toggles the widget open state.', $html);
     }

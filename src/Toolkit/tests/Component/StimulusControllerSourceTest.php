@@ -20,15 +20,19 @@ class StimulusControllerSourceTest extends TestCase
     {
         $source = new StimulusControllerSource(<<<'JS'
             /**
-             * @value  open   Whether it is open.
-             * @target panel  The panel.
-             * @action toggle Toggles it.
+             * @value     open    Whether it is open.
+             * @target    panel   The panel.
+             * @css-class loading Applied while loading.
+             * @outlet    flash   Flashes it.
+             * @action    toggle  Toggles it.
              */
             export default class extends Controller {}
             JS);
 
         self::assertSame(['open' => 'Whether it is open.'], $source->tags()['value']);
         self::assertSame(['panel' => 'The panel.'], $source->tags()['target']);
+        self::assertSame(['loading' => 'Applied while loading.'], $source->tags()['class']);
+        self::assertSame(['flash' => 'Flashes it.'], $source->tags()['outlet']);
         self::assertSame(['toggle' => 'Toggles it.'], $source->tags()['action']);
     }
 
@@ -57,13 +61,37 @@ class StimulusControllerSourceTest extends TestCase
         self::assertSame(['trigger', 'content'], $source->targets());
     }
 
+    public function testClasses()
+    {
+        $source = new StimulusControllerSource(<<<'JS'
+            export default class extends Controller {
+                static classes = ['loading', 'success']
+            }
+            JS);
+
+        self::assertSame(['loading', 'success'], $source->classes());
+    }
+
+    public function testOutlets()
+    {
+        $source = new StimulusControllerSource(<<<'JS'
+            export default class extends Controller {
+                static outlets = ['user-status', 'flash']
+            }
+            JS);
+
+        self::assertSame(['user-status', 'flash'], $source->outlets());
+    }
+
     public function testEmptySourceYieldsNothing()
     {
         $source = new StimulusControllerSource('export default class extends Controller {}');
 
-        self::assertSame(['value' => [], 'target' => [], 'action' => []], $source->tags());
+        self::assertSame(['value' => [], 'target' => [], 'action' => [], 'class' => [], 'outlet' => []], $source->tags());
         self::assertSame([], $source->values());
         self::assertSame([], $source->targets());
+        self::assertSame([], $source->classes());
+        self::assertSame([], $source->outlets());
     }
 
     public function testTagWithoutDescriptionIsRecognizedWithEmptyDescription()

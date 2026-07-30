@@ -51,6 +51,22 @@
 | `{{ target.name }}` | {{ target.description|replace({'|': '\\|'})|raw }} |
 {% endfor %}
 {% endif %}
+{% if ref.classes is not empty %}
+
+| Class | Description |
+|:------|:------------|
+{% for class in ref.classes %}
+| `{{ class.attribute }}` | {{ class.description|replace({'|': '\\|'})|raw }} |
+{% endfor %}
+{% endif %}
+{% if ref.outlets is not empty %}
+
+| Outlet | Description |
+|:-------|:------------|
+{% for outlet in ref.outlets %}
+| `{{ outlet.attribute }}` | {{ outlet.description|replace({'|': '\\|'})|raw }} |
+{% endfor %}
+{% endif %}
 {% if ref.actions is not empty %}
 
 | Action | Description |

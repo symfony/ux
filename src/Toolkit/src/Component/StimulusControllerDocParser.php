@@ -12,7 +12,7 @@
 namespace Symfony\UX\Toolkit\Component;
 
 /**
- * Builds the {@see StimulusControllerDoc} (values, targets and actions) from a controller's source.
+ * Builds the {@see StimulusControllerDoc} (values, targets, classes, outlets and actions) from a controller's source.
  *
  * The source is scanned by {@see StimulusControllerSource}: the code is the single source of truth
  * for value names/types and target names, while their descriptions come from `@value`/`@target`
@@ -33,9 +33,9 @@ final class StimulusControllerDocParser
         $controller = new StimulusControllerSource($source);
         $tags = $controller->tags();
 
-        // Documentation is opt-in: without any @value/@target/@action tag, the controller
-        // exposes no API reference, even though its values/targets could be read from the code.
-        if ([] === $tags['value'] && [] === $tags['target'] && [] === $tags['action']) {
+        // Documentation is opt-in: without any @value/@target/@action/@css-class/@outlet tag, the controller
+        // exposes no API reference, even though its values/targets/classes/outlets could be read from the code.
+        if ([] === $tags['value'] && [] === $tags['target'] && [] === $tags['action'] && [] === $tags['class'] && [] === $tags['outlet']) {
             return new StimulusControllerDoc();
         }
 
@@ -55,11 +55,29 @@ final class StimulusControllerDocParser
             $targets[] = new StimulusControllerTarget($name, $tags['target'][$name] ?? '');
         }
 
+        $classes = [];
+        foreach ($controller->classes() as $name) {
+            $classes[] = new StimulusControllerClass(
+                $name,
+                StimulusController::classAttribute($identifier, $name),
+                $tags['class'][$name] ?? '',
+            );
+        }
+
+        $outlets = [];
+        foreach ($controller->outlets() as $name) {
+            $outlets[] = new StimulusControllerOutlet(
+                $name,
+                StimulusController::outletAttribute($identifier, $name),
+                $tags['outlet'][$name] ?? '',
+            );
+        }
+
         $actions = [];
         foreach ($tags['action'] as $name => $description) {
             $actions[] = new StimulusControllerAction($name, $description);
         }
 
-        return new StimulusControllerDoc($values, $targets, $actions);
+        return new StimulusControllerDoc($values, $targets, $classes, $outlets, $actions);
     }
 }

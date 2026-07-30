@@ -40,6 +40,40 @@ class StimulusControllerDocParserTest extends TestCase
         self::assertSame('Delay in milliseconds before the element removes itself.', $doc->values[0]->description);
     }
 
+    public function testParsesClassNameAndDerivedAttribute()
+    {
+        $doc = new StimulusControllerDocParser()->parse(<<<'JS'
+            /**
+             * @css-class success Applied to the element for a short window after a copy.
+             */
+            export default class extends Controller {
+                static classes = ['success']
+            }
+            JS, 'clipboard');
+
+        self::assertCount(1, $doc->classes);
+        self::assertSame('success', $doc->classes[0]->name);
+        self::assertSame('data-clipboard-success-class', $doc->classes[0]->attribute);
+        self::assertSame('Applied to the element for a short window after a copy.', $doc->classes[0]->description);
+    }
+
+    public function testParsesOutletNameAndDerivedAttribute()
+    {
+        $doc = new StimulusControllerDocParser()->parse(<<<'JS'
+            /**
+             * @outlet user-status Status controller reflecting the copy result.
+             */
+            export default class extends Controller {
+                static outlets = ['user-status']
+            }
+            JS, 'clipboard');
+
+        self::assertCount(1, $doc->outlets);
+        self::assertSame('user-status', $doc->outlets[0]->name);
+        self::assertSame('data-clipboard-user-status-outlet', $doc->outlets[0]->attribute);
+        self::assertSame('Status controller reflecting the copy result.', $doc->outlets[0]->description);
+    }
+
     public function testActionsAreOptInFromTags()
     {
         $doc = new StimulusControllerDocParser()->parse(<<<'JS'

@@ -12,7 +12,7 @@
 namespace Symfony\UX\Toolkit\Component;
 
 /**
- * The API reference extracted from a Stimulus controller: its values, targets and actions.
+ * The API reference extracted from a Stimulus controller: its values, targets, classes, outlets and actions.
  *
  * @author Kevin Bond <kevinbond@gmail.com>
  *
@@ -23,17 +23,21 @@ final class StimulusControllerDoc
     /**
      * @param list<StimulusControllerValue>  $values
      * @param list<StimulusControllerTarget> $targets
+     * @param list<StimulusControllerClass>  $classes
+     * @param list<StimulusControllerOutlet> $outlets
      * @param list<StimulusControllerAction> $actions
      */
     public function __construct(
         public readonly array $values = [],
         public readonly array $targets = [],
+        public readonly array $classes = [],
+        public readonly array $outlets = [],
         public readonly array $actions = [],
     ) {
     }
 
     public function isEmpty(): bool
     {
-        return [] === $this->values && [] === $this->targets && [] === $this->actions;
+        return [] === $this->values && [] === $this->targets && [] === $this->classes && [] === $this->outlets && [] === $this->actions;
     }
 }
