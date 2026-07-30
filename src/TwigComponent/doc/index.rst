@@ -854,8 +854,7 @@ There is also a non-HTML syntax that can be used:
 
 .. versionadded:: 3.4
 
-    Support for dynamic component names in the ``{% component %}`` tag was
-    added in TwigComponent 3.4.
+    Support for dynamic component names was added in TwigComponent 3.4.
 
 The ``{% component %}`` tag also accepts dynamic expressions, but they must be
 wrapped in parentheses. Without parentheses, the value is treated as the
@@ -866,6 +865,31 @@ literal component name:
     {% set prefix = 'DynamicNameComponent' %}
     {% for i in 1..2 %}
         {% component (prefix ~ i) %}{% endcomponent %}
+    {% endfor %}
+
+.. versionadded:: 3.5
+
+    Support for dynamic component names in the HTML syntax was added in TwigComponent 3.5.
+
+With the HTML syntax, use the ``<twig:component>`` tag with
+the ``is`` attribute:
+
+.. code-block:: html+twig
+
+    <twig:component is="Alert" type="success" />
+
+    {# Dynamic component name #}
+    <twig:component is="{{ componentName }}" type="success" />
+
+    {# Dynamic with content #}
+    <twig:component is="{{ componentName }}" type="success">
+        Content here
+    </twig:component>
+
+    {# Dynamic in a loop #}
+    {% set prefix = 'DynamicNameComponent' %}
+    {% for i in 1..2 %}
+        <twig:component is="{{ prefix ~ i }}" />
     {% endfor %}
 
 .. _embedded-components-context:
