@@ -1,0 +1,8 @@
+{# @block content The grouped native options. #}
+<optgroup
+    data-slot="native-select-optgroup"
+    class="{{ ('bg-[Canvas] text-[CanvasText] ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.without('class') }}
+>
+    {%- block content %}{% endblock -%}
+</optgroup>

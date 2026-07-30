@@ -4,6 +4,7 @@
 
 - [Bootstrap] Add the Bootstrap kit
 - [Common] Add the `common` kit, with design-system agnostic `clipboard`, `closeable`, `logout-link`, `post-link` and `tooltip` recipes
+- [Shadcn] Add the `native-select` recipe
 - Add new linter checker `ClassMergeSpacingChecker` that checks for invalid `'<literal>' ~ attributes.render(...)` pattern
 - Add new linter checker `AttributesDefaultsChecker` that forbids `data-slot` (and, in Tailwind kits, ARIA, Stimulus value `data-*-value` and state `data-*` attributes) inside `attributes.defaults()`
 - [Shadcn][Flowbite] Normalize `attributes.defaults()` usage: render `data-slot`, state `data-*` and ARIA attributes directly, and keep only `data-controller`/`data-action` (plus overridable HTML defaults) in `attributes.defaults()`

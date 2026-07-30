@@ -1,0 +1,13 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Native Select",
+    "description": "A styled native HTML select element with consistent design system integration.",
+    "version-added": "3.4",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "composer": ["symfony/ux-icons", "tales-from-a-dev/twig-tailwind-extra:^1.0.0"]
+    }
+}

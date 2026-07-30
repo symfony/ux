@@ -1,0 +1,8 @@
+{# @block content The option label. #}
+<option
+    data-slot="native-select-option"
+    class="{{ ('bg-[Canvas] text-[CanvasText] ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.without('class') }}
+>
+    {%- block content %}{% endblock -%}
+</option>
