@@ -3,16 +3,18 @@
 For sighted users to preview content available behind a link.
 
 ```twig {"preview":true}
-<twig:HoverCard openDelay="10" closeDelay="100">
-    <twig:HoverCard:Trigger>
-        <twig:Button variant="link" {{ ...hover_card_trigger_attrs }}>Hover Here</twig:Button>
-    </twig:HoverCard:Trigger>
-    <twig:HoverCard:Content class="flex w-64 flex-col gap-0.5">
-        <div class="font-semibold">@symfony</div>
-        <div>The PHP framework for web applications — created by @fabpot.</div>
-        <div class="mt-1 text-xs text-muted-foreground">Joined October 2010</div>
-    </twig:HoverCard:Content>
-</twig:HoverCard>
+<div class="flex items-start justify-center" style="min-height: 120px">
+    <twig:HoverCard openDelay="10" closeDelay="100">
+        <twig:HoverCard:Trigger>
+            <twig:Button variant="link" {{ ...hover_card_trigger_attrs }}>Hover Here</twig:Button>
+        </twig:HoverCard:Trigger>
+        <twig:HoverCard:Content class="flex w-64 flex-col gap-0.5">
+            <div class="font-semibold">@symfony</div>
+            <div>The PHP framework for web applications — created by @fabpot.</div>
+            <div class="mt-1 text-xs text-muted-foreground">Joined October 2010</div>
+        </twig:HoverCard:Content>
+    </twig:HoverCard>
+</div>
 ```
 
 ## Installation
@@ -37,22 +39,24 @@ For sighted users to preview content available behind a link.
 ### Basic
 
 ```twig {"preview":true}
-<twig:HoverCard openDelay="10" closeDelay="100">
-    <twig:HoverCard:Trigger>
-        <twig:Button variant="link" {{ ...hover_card_trigger_attrs }}>Hover Here</twig:Button>
-    </twig:HoverCard:Trigger>
-    <twig:HoverCard:Content class="flex w-64 flex-col gap-0.5">
-        <div class="font-semibold">@symfony</div>
-        <div>The PHP framework for web applications — created by @fabpot.</div>
-        <div class="mt-1 text-xs text-muted-foreground">Joined October 2010</div>
-    </twig:HoverCard:Content>
-</twig:HoverCard>
+<div class="flex items-start justify-center" style="min-height: 120px">
+    <twig:HoverCard openDelay="10" closeDelay="100">
+        <twig:HoverCard:Trigger>
+            <twig:Button variant="link" {{ ...hover_card_trigger_attrs }}>Hover Here</twig:Button>
+        </twig:HoverCard:Trigger>
+        <twig:HoverCard:Content class="flex w-64 flex-col gap-0.5">
+            <div class="font-semibold">@symfony</div>
+            <div>The PHP framework for web applications — created by @fabpot.</div>
+            <div class="mt-1 text-xs text-muted-foreground">Joined October 2010</div>
+        </twig:HoverCard:Content>
+    </twig:HoverCard>
+</div>
 ```
 
 ### Sides
 
 ```twig {"preview":true}
-<div class="flex flex-wrap justify-center gap-2">
+<div class="flex flex-wrap items-center justify-center gap-2" style="min-height: 204px">
     {% for side in ['left', 'top', 'bottom', 'right'] %}
         <twig:HoverCard openDelay="100" closeDelay="100">
             <twig:HoverCard:Trigger>
@@ -74,7 +78,7 @@ For sighted users to preview content available behind a link.
 To enable RTL support, set the `dir="rtl"` attribute on the root element.
 
 ```twig {"preview":true}
-<div class="flex flex-col items-center gap-24 py-12">
+<div class="flex flex-col items-center justify-center gap-24 py-12" style="min-height: 304px">
     {# Arabic #}
     <div class="flex flex-wrap justify-center gap-2" dir="rtl">
         {% for side, label in {left: 'يسار', top: 'أعلى', bottom: 'أسفل', right: 'يمين'} %}

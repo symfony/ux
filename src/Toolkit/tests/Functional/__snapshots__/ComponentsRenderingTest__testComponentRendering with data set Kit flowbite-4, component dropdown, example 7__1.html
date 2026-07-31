@@ -3,7 +3,7 @@
 - Component: Dropdown
 - Code:
 ```twig
-<div class="flex flex-wrap items-center gap-4">
+<div class="flex flex-wrap items-center gap-4" style="min-height: 304px">
     <twig:Dropdown id="placement-top" placement="top">
         <twig:Dropdown:Trigger>
             <twig:Button {{ ...dropdown_trigger_attrs }}>
@@ -70,7 +70,7 @@
 </div>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div class="flex flex-wrap items-center gap-4">
+<div class="flex flex-wrap items-center gap-4" style="min-height: 304px">
     <div data-dropdown-placement-value="top" data-dropdown-trigger-type-value="click" data-dropdown-open-value="false" data-dropdown-delay-value="300" data-dropdown-offset-distance-value="10" data-controller="dropdown">
 <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs text-white bg-brand hover:bg-brand-strong focus:ring-brand-medium text-sm px-4 py-2.5 rounded-base" data-dropdown-target="trigger" id="dropdown-placement-top-trigger" aria-expanded="false" aria-controls="dropdown-placement-top">Dropdown top
                 <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-6" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m16 14l-4-4l-4 4"></path></svg>

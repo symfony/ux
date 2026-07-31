@@ -10,24 +10,27 @@
     {value: 'autocomplete', label: 'UX Autocomplete'},
     {value: 'icons', label: 'UX Icons'},
 ] %}
-<form method="post" action="#" class="flex max-w-xs flex-col gap-4">
-    <twig:Combobox
-        id="package-form"
-        name="package"
-        placeholder="Select package..."
-        searchPlaceholder="Search packages..."
-        :choices="packages"
-        :required="true"
-    />
-    <button
-        type="submit"
-        class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs hover:bg-primary/90"
-    >Submit</button>
-</form>
+<div style="min-height: 220px">
+    <form method="post" action="#" class="flex max-w-xs flex-col gap-4">
+        <twig:Combobox
+            id="package-form"
+            name="package"
+            placeholder="Select package..."
+            searchPlaceholder="Search packages..."
+            :choices="packages"
+            :required="true"
+        />
+        <button
+            type="submit"
+            class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs hover:bg-primary/90"
+        >Submit</button>
+    </form>
+</div>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<form method="post" action="#" class="flex max-w-xs flex-col gap-4">
-    <div data-slot="combobox" data-controller="combobox" data-combobox-value-value="" data-combobox-placeholder-value="Select package...">
+<div style="min-height: 220px">
+    <form method="post" action="#" class="flex max-w-xs flex-col gap-4">
+        <div data-slot="combobox" data-controller="combobox" data-combobox-value-value="" data-combobox-placeholder-value="Select package...">
     <button type="button" role="combobox" aria-expanded="false" aria-controls="package-form_listbox" aria-haspopup="listbox" data-combobox-target="trigger" data-slot="combobox-trigger" data-action="click-&gt;combobox#toggle keydown-&gt;combobox#onTriggerKeydown" class="flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
         <span data-combobox-target="label" class="text-muted-foreground">Select package...</span>
         <span class="flex shrink-0 items-center gap-1">
@@ -68,5 +71,6 @@
     </div>
 </div>
 
-    <button type="submit" class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs hover:bg-primary/90">Submit</button>
-</form>
+        <button type="submit" class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs hover:bg-primary/90">Submit</button>
+    </form>
+</div>

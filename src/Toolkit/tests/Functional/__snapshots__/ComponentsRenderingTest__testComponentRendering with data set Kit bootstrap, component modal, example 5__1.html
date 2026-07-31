@@ -3,59 +3,63 @@
 - Component: Modal
 - Code:
 ```twig
-<div class="d-flex flex-wrap gap-2">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#centered-modal">Vertically centered modal</button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#centered-scrollable-modal">Centered scrollable modal</button>
+<div style="min-height: 204px">
+    <div class="d-flex flex-wrap gap-2">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#centered-modal">Vertically centered modal</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#centered-scrollable-modal">Centered scrollable modal</button>
+    </div>
+
+    <twig:Modal id="centered-modal" centered>
+        <twig:Modal:Header><twig:Modal:Title>Modal title</twig:Modal:Title></twig:Modal:Header>
+        <twig:Modal:Body>This is a vertically centered modal.</twig:Modal:Body>
+        <twig:Modal:Footer><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></twig:Modal:Footer>
+    </twig:Modal>
+
+    <twig:Modal id="centered-scrollable-modal" centered scrollable>
+        <twig:Modal:Header><twig:Modal:Title>Modal title</twig:Modal:Title></twig:Modal:Header>
+        <twig:Modal:Body>
+            <p>This modal combines vertical centering with an independently scrollable body.</p>
+            <div style="min-height: 900px;"></div>
+            <p class="mb-0">Just like that.</p>
+        </twig:Modal:Body>
+        <twig:Modal:Footer><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></twig:Modal:Footer>
+    </twig:Modal>
 </div>
-
-<twig:Modal id="centered-modal" centered>
-    <twig:Modal:Header><twig:Modal:Title>Modal title</twig:Modal:Title></twig:Modal:Header>
-    <twig:Modal:Body>This is a vertically centered modal.</twig:Modal:Body>
-    <twig:Modal:Footer><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></twig:Modal:Footer>
-</twig:Modal>
-
-<twig:Modal id="centered-scrollable-modal" centered scrollable>
-    <twig:Modal:Header><twig:Modal:Title>Modal title</twig:Modal:Title></twig:Modal:Header>
-    <twig:Modal:Body>
-        <p>This modal combines vertical centering with an independently scrollable body.</p>
-        <div style="min-height: 900px;"></div>
-        <p class="mb-0">Just like that.</p>
-    </twig:Modal:Body>
-    <twig:Modal:Footer><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></twig:Modal:Footer>
-</twig:Modal>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div class="d-flex flex-wrap gap-2">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#centered-modal">Vertically centered modal</button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#centered-scrollable-modal">Centered scrollable modal</button>
-</div>
+<div style="min-height: 204px">
+    <div class="d-flex flex-wrap gap-2">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#centered-modal">Vertically centered modal</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#centered-scrollable-modal">Centered scrollable modal</button>
+    </div>
 
-<div id="centered-modal" class="modal fade" tabindex="-1" aria-labelledby="centered-modal-label" aria-hidden="true">
+    <div id="centered-modal" class="modal fade" tabindex="-1" aria-labelledby="centered-modal-label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 <div class="modal-header">
 <h1 id="centered-modal-label" class="modal-title fs-5">Modal title</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-    <div class="modal-body">This is a vertically centered modal.</div>
-    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
-</div>
+        <div class="modal-body">This is a vertically centered modal.</div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+    </div>
     </div>
 </div>
 
-<div id="centered-scrollable-modal" class="modal fade" tabindex="-1" aria-labelledby="centered-scrollable-modal-label" aria-hidden="true">
+    <div id="centered-scrollable-modal" class="modal fade" tabindex="-1" aria-labelledby="centered-scrollable-modal-label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
 <div class="modal-header">
 <h1 id="centered-scrollable-modal-label" class="modal-title fs-5">Modal title</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-    <div class="modal-body">
+        <div class="modal-body">
 <p>This modal combines vertical centering with an independently scrollable body.</p>
-        <div style="min-height: 900px;"></div>
-        <p class="mb-0">Just like that.</p>
+            <div style="min-height: 900px;"></div>
+            <p class="mb-0">Just like that.</p>
+        </div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
     </div>
-    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+    </div>
 </div>
-    </div>
 </div>

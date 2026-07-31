@@ -12,99 +12,103 @@
     xxl: ['Full screen below xxl', 'xxl'],
 } %}
 
-<div class="d-flex flex-wrap gap-2">
-    {% for key, variant in variants %}
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreen-{{ key }}-modal">{{ variant[0] }}</button>
-    {% endfor %}
-</div>
-
-{% for key, variant in variants %}
-    <twig:Modal id="fullscreen-{{ key }}-modal" fullscreen="{{ variant[1] }}">
-        <twig:Modal:Header><twig:Modal:Title>{{ variant[0] }}</twig:Modal:Title></twig:Modal:Header>
-        <twig:Modal:Body>Responsive fullscreen modal content.</twig:Modal:Body>
-        <twig:Modal:Footer><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></twig:Modal:Footer>
-    </twig:Modal>
-{% endfor %}
-```
-- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div class="d-flex flex-wrap gap-2">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreen-always-modal">Full screen</button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreen-sm-modal">Full screen below sm</button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreen-md-modal">Full screen below md</button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreen-lg-modal">Full screen below lg</button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreen-xl-modal">Full screen below xl</button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreen-xxl-modal">Full screen below xxl</button>
+<div style="min-height: 204px">
+    <div class="d-flex flex-wrap gap-2">
+        {% for key, variant in variants %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreen-{{ key }}-modal">{{ variant[0] }}</button>
+        {% endfor %}
     </div>
 
-    <div id="fullscreen-always-modal" class="modal fade" tabindex="-1" aria-labelledby="fullscreen-always-modal-label" aria-hidden="true">
+    {% for key, variant in variants %}
+        <twig:Modal id="fullscreen-{{ key }}-modal" fullscreen="{{ variant[1] }}">
+            <twig:Modal:Header><twig:Modal:Title>{{ variant[0] }}</twig:Modal:Title></twig:Modal:Header>
+            <twig:Modal:Body>Responsive fullscreen modal content.</twig:Modal:Body>
+            <twig:Modal:Footer><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></twig:Modal:Footer>
+        </twig:Modal>
+    {% endfor %}
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div style="min-height: 204px">
+    <div class="d-flex flex-wrap gap-2">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreen-always-modal">Full screen</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreen-sm-modal">Full screen below sm</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreen-md-modal">Full screen below md</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreen-lg-modal">Full screen below lg</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreen-xl-modal">Full screen below xl</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreen-xxl-modal">Full screen below xxl</button>
+            </div>
+
+            <div id="fullscreen-always-modal" class="modal fade" tabindex="-1" aria-labelledby="fullscreen-always-modal-label" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
 <div class="modal-header">
 <h1 id="fullscreen-always-modal-label" class="modal-title fs-5">Full screen</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-        <div class="modal-body">Responsive fullscreen modal content.</div>
-        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
-    </div>
+            <div class="modal-body">Responsive fullscreen modal content.</div>
+            <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+        </div>
     </div>
 </div>
-    <div id="fullscreen-sm-modal" class="modal fade" tabindex="-1" aria-labelledby="fullscreen-sm-modal-label" aria-hidden="true">
+            <div id="fullscreen-sm-modal" class="modal fade" tabindex="-1" aria-labelledby="fullscreen-sm-modal-label" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen-sm-down">
         <div class="modal-content">
 <div class="modal-header">
 <h1 id="fullscreen-sm-modal-label" class="modal-title fs-5">Full screen below sm</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-        <div class="modal-body">Responsive fullscreen modal content.</div>
-        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
-    </div>
+            <div class="modal-body">Responsive fullscreen modal content.</div>
+            <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+        </div>
     </div>
 </div>
-    <div id="fullscreen-md-modal" class="modal fade" tabindex="-1" aria-labelledby="fullscreen-md-modal-label" aria-hidden="true">
+            <div id="fullscreen-md-modal" class="modal fade" tabindex="-1" aria-labelledby="fullscreen-md-modal-label" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen-md-down">
         <div class="modal-content">
 <div class="modal-header">
 <h1 id="fullscreen-md-modal-label" class="modal-title fs-5">Full screen below md</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-        <div class="modal-body">Responsive fullscreen modal content.</div>
-        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
-    </div>
+            <div class="modal-body">Responsive fullscreen modal content.</div>
+            <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+        </div>
     </div>
 </div>
-    <div id="fullscreen-lg-modal" class="modal fade" tabindex="-1" aria-labelledby="fullscreen-lg-modal-label" aria-hidden="true">
+            <div id="fullscreen-lg-modal" class="modal fade" tabindex="-1" aria-labelledby="fullscreen-lg-modal-label" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen-lg-down">
         <div class="modal-content">
 <div class="modal-header">
 <h1 id="fullscreen-lg-modal-label" class="modal-title fs-5">Full screen below lg</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-        <div class="modal-body">Responsive fullscreen modal content.</div>
-        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
-    </div>
+            <div class="modal-body">Responsive fullscreen modal content.</div>
+            <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+        </div>
     </div>
 </div>
-    <div id="fullscreen-xl-modal" class="modal fade" tabindex="-1" aria-labelledby="fullscreen-xl-modal-label" aria-hidden="true">
+            <div id="fullscreen-xl-modal" class="modal fade" tabindex="-1" aria-labelledby="fullscreen-xl-modal-label" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen-xl-down">
         <div class="modal-content">
 <div class="modal-header">
 <h1 id="fullscreen-xl-modal-label" class="modal-title fs-5">Full screen below xl</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-        <div class="modal-body">Responsive fullscreen modal content.</div>
-        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
-    </div>
+            <div class="modal-body">Responsive fullscreen modal content.</div>
+            <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+        </div>
     </div>
 </div>
-    <div id="fullscreen-xxl-modal" class="modal fade" tabindex="-1" aria-labelledby="fullscreen-xxl-modal-label" aria-hidden="true">
+            <div id="fullscreen-xxl-modal" class="modal fade" tabindex="-1" aria-labelledby="fullscreen-xxl-modal-label" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen-xxl-down">
         <div class="modal-content">
 <div class="modal-header">
 <h1 id="fullscreen-xxl-modal-label" class="modal-title fs-5">Full screen below xxl</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-        <div class="modal-body">Responsive fullscreen modal content.</div>
-        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
-    </div>
+            <div class="modal-body">Responsive fullscreen modal content.</div>
+            <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+        </div>
     </div>
 </div>
+    </div>

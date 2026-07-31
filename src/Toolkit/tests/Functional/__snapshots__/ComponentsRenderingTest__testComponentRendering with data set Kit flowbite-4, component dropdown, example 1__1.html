@@ -3,48 +3,52 @@
 - Component: Dropdown
 - Code:
 ```twig
-<twig:Dropdown id="hover" triggerType="hover">
-    <twig:Dropdown:Trigger>
-        <twig:Button {{ ...dropdown_trigger_attrs }}>
-            Dropdown button
-            <twig:ux:icon name="flowbite:chevron-down-outline" class="size-4" aria-hidden="true" />
-        </twig:Button>
-    </twig:Dropdown:Trigger>
+<div style="min-height: 304px">
+    <twig:Dropdown id="hover" triggerType="hover">
+        <twig:Dropdown:Trigger>
+            <twig:Button {{ ...dropdown_trigger_attrs }}>
+                Dropdown button
+                <twig:ux:icon name="flowbite:chevron-down-outline" class="size-4" aria-hidden="true" />
+            </twig:Button>
+        </twig:Dropdown:Trigger>
 
-    <twig:Dropdown:Content>
-        <twig:Dropdown:Group>
-            <twig:Dropdown:Item href="#">Dashboard</twig:Dropdown:Item>
-            <twig:Dropdown:Item href="#">Settings</twig:Dropdown:Item>
-            <twig:Dropdown:Item href="#">Earnings</twig:Dropdown:Item>
-            <twig:Dropdown:Item href="#">Sign out</twig:Dropdown:Item>
-        </twig:Dropdown:Group>
-    </twig:Dropdown:Content>
-</twig:Dropdown>
+        <twig:Dropdown:Content>
+            <twig:Dropdown:Group>
+                <twig:Dropdown:Item href="#">Dashboard</twig:Dropdown:Item>
+                <twig:Dropdown:Item href="#">Settings</twig:Dropdown:Item>
+                <twig:Dropdown:Item href="#">Earnings</twig:Dropdown:Item>
+                <twig:Dropdown:Item href="#">Sign out</twig:Dropdown:Item>
+            </twig:Dropdown:Group>
+        </twig:Dropdown:Content>
+    </twig:Dropdown>
+</div>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div data-dropdown-placement-value="bottom" data-dropdown-trigger-type-value="hover" data-dropdown-open-value="false" data-dropdown-delay-value="300" data-dropdown-offset-distance-value="10" data-controller="dropdown">
+<div style="min-height: 304px">
+    <div data-dropdown-placement-value="bottom" data-dropdown-trigger-type-value="hover" data-dropdown-open-value="false" data-dropdown-delay-value="300" data-dropdown-offset-distance-value="10" data-controller="dropdown">
 <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs text-white bg-brand hover:bg-brand-strong focus:ring-brand-medium text-sm px-4 py-2.5 rounded-base" data-dropdown-target="trigger" id="dropdown-hover-trigger" aria-expanded="false" aria-controls="dropdown-hover">Dropdown button
-            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 10l4 4l4-4"></path></svg>
-        </button>
-    
-    
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 10l4 4l4-4"></path></svg>
+            </button>
+        
+        
 <div id="dropdown-hover" data-dropdown-target="content" role="menu" aria-labelledby="dropdown-hover-trigger" class="z-10 bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-fit min-w-44 divide-y divide-default-medium hidden">
 <ul class="p-2 text-sm text-body font-medium" role="group">
 <li role="none">
     <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#">Dashboard</a>
 </li>
-            
+                
 <li role="none">
     <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#">Settings</a>
 </li>
-            
+                
 <li role="none">
     <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#">Earnings</a>
 </li>
-            
+                
 <li role="none">
     <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#">Sign out</a>
 </li>
-        </ul>
+            </ul>
+        </div>
     </div>
 </div>

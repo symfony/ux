@@ -3,45 +3,49 @@
 - Component: Offcanvas
 - Code:
 ```twig
-<div class="d-flex flex-wrap justify-content-center align-items-start gap-2 w-100">
-    <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#live-offcanvas" role="button" aria-controls="live-offcanvas">Link with href</a>
-    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#live-offcanvas" aria-controls="live-offcanvas">Button with data-bs-target</button>
+<div style="min-height: 124px">
+    <div class="d-flex flex-wrap justify-content-center align-items-start gap-2 w-100">
+        <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#live-offcanvas" role="button" aria-controls="live-offcanvas">Link with href</a>
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#live-offcanvas" aria-controls="live-offcanvas">Button with data-bs-target</button>
 
-    <twig:Offcanvas id="live-offcanvas">
-        <twig:Offcanvas:Header>
-            <twig:Offcanvas:Title>Offcanvas</twig:Offcanvas:Title>
-        </twig:Offcanvas:Header>
-        <twig:Offcanvas:Body>
-            <p>Content for the offcanvas goes here. You can place just about any Bootstrap component or custom element here.</p>
-            <div class="dropdown mt-3">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown button</button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                </ul>
-            </div>
-        </twig:Offcanvas:Body>
-    </twig:Offcanvas>
+        <twig:Offcanvas id="live-offcanvas">
+            <twig:Offcanvas:Header>
+                <twig:Offcanvas:Title>Offcanvas</twig:Offcanvas:Title>
+            </twig:Offcanvas:Header>
+            <twig:Offcanvas:Body>
+                <p>Content for the offcanvas goes here. You can place just about any Bootstrap component or custom element here.</p>
+                <div class="dropdown mt-3">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown button</button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                    </ul>
+                </div>
+            </twig:Offcanvas:Body>
+        </twig:Offcanvas>
+    </div>
 </div>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div class="d-flex flex-wrap justify-content-center align-items-start gap-2 w-100">
-    <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#live-offcanvas" role="button" aria-controls="live-offcanvas">Link with href</a>
-    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#live-offcanvas" aria-controls="live-offcanvas">Button with data-bs-target</button>
+<div style="min-height: 124px">
+    <div class="d-flex flex-wrap justify-content-center align-items-start gap-2 w-100">
+        <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#live-offcanvas" role="button" aria-controls="live-offcanvas">Link with href</a>
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#live-offcanvas" aria-controls="live-offcanvas">Button with data-bs-target</button>
 
-    <div id="live-offcanvas" class="offcanvas offcanvas-start" tabindex="-1" aria-labelledby="live-offcanvas-label">
+        <div id="live-offcanvas" class="offcanvas offcanvas-start" tabindex="-1" aria-labelledby="live-offcanvas-label">
 <div class="offcanvas-header">
 <h5 id="live-offcanvas-label" class="offcanvas-title">Offcanvas</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 </div>
-        <div class="offcanvas-body">
+            <div class="offcanvas-body">
 <p>Content for the offcanvas goes here. You can place just about any Bootstrap component or custom element here.</p>
-            <div class="dropdown mt-3">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown button</button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                </ul>
+                <div class="dropdown mt-3">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown button</button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
