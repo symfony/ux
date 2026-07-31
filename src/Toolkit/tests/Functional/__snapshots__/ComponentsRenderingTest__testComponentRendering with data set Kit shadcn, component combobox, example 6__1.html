@@ -7,16 +7,19 @@
     {value: 'next', label: 'Next.js'},
     {value: 'sveltekit', label: 'SvelteKit'},
 ] %}
-<twig:Combobox
-    id="framework-empty"
-    placeholder="Select framework..."
-    searchPlaceholder="Search framework..."
-    emptyMessage="No frameworks found. Try a different search."
-    :choices="frameworks"
-/>
+<div style="min-height: 220px">
+    <twig:Combobox
+        id="framework-empty"
+        placeholder="Select framework..."
+        searchPlaceholder="Search framework..."
+        emptyMessage="No frameworks found. Try a different search."
+        :choices="frameworks"
+    />
+</div>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div data-slot="combobox" data-controller="combobox" data-combobox-value-value="" data-combobox-placeholder-value="Select framework...">
+<div style="min-height: 220px">
+    <div data-slot="combobox" data-controller="combobox" data-combobox-value-value="" data-combobox-placeholder-value="Select framework...">
     <button type="button" role="combobox" aria-expanded="false" aria-controls="framework-empty_listbox" aria-haspopup="listbox" data-combobox-target="trigger" data-slot="combobox-trigger" data-action="click-&gt;combobox#toggle keydown-&gt;combobox#onTriggerKeydown" class="flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
         <span data-combobox-target="label" class="text-muted-foreground">Select framework...</span>
         <span class="flex shrink-0 items-center gap-1">
@@ -42,4 +45,6 @@
                                         <div data-combobox-target="empty" data-slot="combobox-empty" hidden class="py-6 text-center text-sm text-muted-foreground">No frameworks found. Try a different search.</div>
         </div>
     </div>
+</div>
+
 </div>

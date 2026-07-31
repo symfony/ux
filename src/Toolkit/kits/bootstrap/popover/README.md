@@ -84,7 +84,7 @@ Combine a heading and body content in a conventional click-triggered popover.
 Prefer top, right, bottom, or left placement while allowing Popper to adjust when space is constrained.
 
 ```twig {"preview":true}
-<div class="d-flex flex-wrap justify-content-center gap-2 p-5">
+<div class="d-flex flex-wrap justify-content-center align-items-center gap-2 p-5" style="min-height: 184px">
     {% for placement in ['left', 'top', 'bottom', 'right'] %}
         <twig:Popover
             title="Popover {{ placement }}"

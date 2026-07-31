@@ -3,30 +3,34 @@
 - Component: Modal
 - Code:
 ```twig
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#no-animation-modal">
-    Open without animation
-</button>
+<div style="min-height: 204px">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#no-animation-modal">
+        Open without animation
+    </button>
 
-<twig:Modal id="no-animation-modal" :fade="false">
-    <twig:Modal:Header><twig:Modal:Title>Modal without animation</twig:Modal:Title></twig:Modal:Header>
-    <twig:Modal:Body>This modal appears immediately because the <code>.fade</code> class is omitted.</twig:Modal:Body>
-    <twig:Modal:Footer><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></twig:Modal:Footer>
-</twig:Modal>
+    <twig:Modal id="no-animation-modal" :fade="false">
+        <twig:Modal:Header><twig:Modal:Title>Modal without animation</twig:Modal:Title></twig:Modal:Header>
+        <twig:Modal:Body>This modal appears immediately because the <code>.fade</code> class is omitted.</twig:Modal:Body>
+        <twig:Modal:Footer><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></twig:Modal:Footer>
+    </twig:Modal>
+</div>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#no-animation-modal">
-    Open without animation
-</button>
+<div style="min-height: 204px">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#no-animation-modal">
+        Open without animation
+    </button>
 
-<div id="no-animation-modal" class="modal" tabindex="-1" aria-labelledby="no-animation-modal-label" aria-hidden="true">
+    <div id="no-animation-modal" class="modal" tabindex="-1" aria-labelledby="no-animation-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 <div class="modal-header">
 <h1 id="no-animation-modal-label" class="modal-title fs-5">Modal without animation</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-    <div class="modal-body">This modal appears immediately because the <code>.fade</code> class is omitted.</div>
-    <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
-</div>
+        <div class="modal-body">This modal appears immediately because the <code>.fade</code> class is omitted.</div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
     </div>
+    </div>
+</div>
 </div>

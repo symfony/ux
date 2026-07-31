@@ -10,17 +10,20 @@
     {value: 'autocomplete', label: 'UX Autocomplete'},
     {value: 'icons', label: 'UX Icons'},
 ] %}
-<twig:Combobox
-    id="package-clearable"
-    value="live-component"
-    placeholder="Select package..."
-    searchPlaceholder="Search packages..."
-    clearable
-    :choices="packages"
-/>
+<div style="min-height: 220px">
+    <twig:Combobox
+        id="package-clearable"
+        value="live-component"
+        placeholder="Select package..."
+        searchPlaceholder="Search packages..."
+        clearable
+        :choices="packages"
+    />
+</div>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div data-slot="combobox" data-controller="combobox" data-combobox-value-value="live-component" data-combobox-placeholder-value="Select package...">
+<div style="min-height: 220px">
+    <div data-slot="combobox" data-controller="combobox" data-combobox-value-value="live-component" data-combobox-placeholder-value="Select package...">
     <button type="button" role="combobox" aria-expanded="false" aria-controls="package-clearable_listbox" aria-haspopup="listbox" data-combobox-target="trigger" data-slot="combobox-trigger" data-action="click-&gt;combobox#toggle keydown-&gt;combobox#onTriggerKeydown" class="flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
         <span data-combobox-target="label" class="">UX Live Component</span>
         <span class="flex shrink-0 items-center gap-1">
@@ -59,4 +62,6 @@
                                         <div data-combobox-target="empty" data-slot="combobox-empty" hidden class="py-6 text-center text-sm text-muted-foreground">No results found.</div>
         </div>
     </div>
+</div>
+
 </div>

@@ -3,7 +3,7 @@
 - Component: Dropdown
 - Code:
 ```twig
-<div class="d-flex justify-content-center align-items-start align-self-stretch w-100">
+<div class="d-flex justify-content-center align-items-start align-self-stretch w-100" style="min-height: 124px">
     <twig:Dropdown>
         <twig:Dropdown:Toggle id="demo-dropdown">Dropdown button</twig:Dropdown:Toggle>
         <twig:Dropdown:Menu labelledBy="demo-dropdown">
@@ -15,7 +15,7 @@
 </div>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div class="d-flex justify-content-center align-items-start align-self-stretch w-100">
+<div class="d-flex justify-content-center align-items-start align-self-stretch w-100" style="min-height: 124px">
     <div class="dropdown">
 <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" type="button" id="demo-dropdown">Dropdown button</button>
         <ul class="dropdown-menu" aria-labelledby="demo-dropdown">

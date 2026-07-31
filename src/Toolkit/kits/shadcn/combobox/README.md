@@ -10,12 +10,14 @@ Autocomplete input and command palette with a list of suggestions.
     {value: 'autocomplete', label: 'UX Autocomplete'},
     {value: 'icons', label: 'UX Icons'},
 ] %}
-<twig:Combobox
-    id="package"
-    placeholder="Select package..."
-    searchPlaceholder="Search packages..."
-    :choices="packages"
-/>
+<div style="min-height: 220px">
+    <twig:Combobox
+        id="package"
+        placeholder="Select package..."
+        searchPlaceholder="Search packages..."
+        :choices="packages"
+    />
+</div>
 ```
 
 ## Installation
@@ -52,13 +54,15 @@ Autocomplete input and command palette with a list of suggestions.
     {value: 'autocomplete', label: 'UX Autocomplete'},
     {value: 'icons', label: 'UX Icons'},
 ] %}
-<twig:Combobox
-    id="package-default"
-    value="live-component"
-    placeholder="Select package..."
-    searchPlaceholder="Search packages..."
-    :choices="packages"
-/>
+<div style="min-height: 220px">
+    <twig:Combobox
+        id="package-default"
+        value="live-component"
+        placeholder="Select package..."
+        searchPlaceholder="Search packages..."
+        :choices="packages"
+    />
+</div>
 ```
 
 ### With Form
@@ -71,20 +75,22 @@ Autocomplete input and command palette with a list of suggestions.
     {value: 'autocomplete', label: 'UX Autocomplete'},
     {value: 'icons', label: 'UX Icons'},
 ] %}
-<form method="post" action="#" class="flex max-w-xs flex-col gap-4">
-    <twig:Combobox
-        id="package-form"
-        name="package"
-        placeholder="Select package..."
-        searchPlaceholder="Search packages..."
-        :choices="packages"
-        :required="true"
-    />
-    <button
-        type="submit"
-        class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs hover:bg-primary/90"
-    >Submit</button>
-</form>
+<div style="min-height: 220px">
+    <form method="post" action="#" class="flex max-w-xs flex-col gap-4">
+        <twig:Combobox
+            id="package-form"
+            name="package"
+            placeholder="Select package..."
+            searchPlaceholder="Search packages..."
+            :choices="packages"
+            :required="true"
+        />
+        <button
+            type="submit"
+            class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs hover:bg-primary/90"
+        >Submit</button>
+    </form>
+</div>
 ```
 
 ### Disabled
@@ -114,14 +120,16 @@ Autocomplete input and command palette with a list of suggestions.
     {value: 'autocomplete', label: 'UX Autocomplete'},
     {value: 'icons', label: 'UX Icons'},
 ] %}
-<twig:Combobox
-    id="package-clearable"
-    value="live-component"
-    placeholder="Select package..."
-    searchPlaceholder="Search packages..."
-    clearable
-    :choices="packages"
-/>
+<div style="min-height: 220px">
+    <twig:Combobox
+        id="package-clearable"
+        value="live-component"
+        placeholder="Select package..."
+        searchPlaceholder="Search packages..."
+        clearable
+        :choices="packages"
+    />
+</div>
 ```
 
 ### With Groups
@@ -145,12 +153,14 @@ Autocomplete input and command palette with a list of suggestions.
         {value: 'map', label: 'UX Map'},
     ]},
 ] %}
-<twig:Combobox
-    id="package-grouped"
-    placeholder="Select package..."
-    searchPlaceholder="Search packages..."
-    :choices="packages"
-/>
+<div style="min-height: 504px">
+    <twig:Combobox
+        id="package-grouped"
+        placeholder="Select package..."
+        searchPlaceholder="Search packages..."
+        :choices="packages"
+    />
+</div>
 ```
 
 ### Empty State
@@ -160,13 +170,15 @@ Autocomplete input and command palette with a list of suggestions.
     {value: 'next', label: 'Next.js'},
     {value: 'sveltekit', label: 'SvelteKit'},
 ] %}
-<twig:Combobox
-    id="framework-empty"
-    placeholder="Select framework..."
-    searchPlaceholder="Search framework..."
-    emptyMessage="No frameworks found. Try a different search."
-    :choices="frameworks"
-/>
+<div style="min-height: 220px">
+    <twig:Combobox
+        id="framework-empty"
+        placeholder="Select framework..."
+        searchPlaceholder="Search framework..."
+        emptyMessage="No frameworks found. Try a different search."
+        :choices="frameworks"
+    />
+</div>
 ```
 
 ### Long List
@@ -225,12 +237,14 @@ Autocomplete input and command palette with a list of suggestions.
     {value: 'vba', label: 'VBA'},
     {value: 'cobol', label: 'COBOL'},
 ] %}
-<twig:Combobox
-    id="language"
-    placeholder="Select language..."
-    searchPlaceholder="Search languages..."
-    :choices="languages"
-/>
+<div style="min-height: 454px">
+    <twig:Combobox
+        id="language"
+        placeholder="Select language..."
+        searchPlaceholder="Search languages..."
+        :choices="languages"
+    />
+</div>
 ```
 
 ## API Reference

@@ -3,43 +3,47 @@
 - Component: Alert Dialog
 - Code:
 ```twig
-<twig:AlertDialog id="alert-dialog-destructive">
-    <twig:AlertDialog:Trigger>
-        <twig:Button variant="destructive" {{ ...alert_dialog_trigger_attrs }}>Delete Chat</twig:Button>
-    </twig:AlertDialog:Trigger>
-    <twig:AlertDialog:Content size="sm">
-        <twig:AlertDialog:Header>
-            <twig:AlertDialog:Media class="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
-                <twig:ux:icon name="lucide:trash-2" />
-            </twig:AlertDialog:Media>
-            <twig:AlertDialog:Title>Delete chat?</twig:AlertDialog:Title>
-            <twig:AlertDialog:Description>
-                This will permanently delete this chat conversation. View
-                <a href="#">Settings</a> delete any memories saved during this chat.
-            </twig:AlertDialog:Description>
-        </twig:AlertDialog:Header>
-        <twig:AlertDialog:Footer>
-            <twig:AlertDialog:Cancel>Cancel</twig:AlertDialog:Cancel>
-            <twig:AlertDialog:Action variant="destructive">Delete</twig:AlertDialog:Action>
-        </twig:AlertDialog:Footer>
-    </twig:AlertDialog:Content>
-</twig:AlertDialog>
+<div style="min-height: 254px">
+    <twig:AlertDialog id="alert-dialog-destructive">
+        <twig:AlertDialog:Trigger>
+            <twig:Button variant="destructive" {{ ...alert_dialog_trigger_attrs }}>Delete Chat</twig:Button>
+        </twig:AlertDialog:Trigger>
+        <twig:AlertDialog:Content size="sm">
+            <twig:AlertDialog:Header>
+                <twig:AlertDialog:Media class="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+                    <twig:ux:icon name="lucide:trash-2" />
+                </twig:AlertDialog:Media>
+                <twig:AlertDialog:Title>Delete chat?</twig:AlertDialog:Title>
+                <twig:AlertDialog:Description>
+                    This will permanently delete this chat conversation. View
+                    <a href="#">Settings</a> delete any memories saved during this chat.
+                </twig:AlertDialog:Description>
+            </twig:AlertDialog:Header>
+            <twig:AlertDialog:Footer>
+                <twig:AlertDialog:Cancel>Cancel</twig:AlertDialog:Cancel>
+                <twig:AlertDialog:Action variant="destructive">Delete</twig:AlertDialog:Action>
+            </twig:AlertDialog:Footer>
+        </twig:AlertDialog:Content>
+    </twig:AlertDialog>
+</div>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div data-alert-dialog-open-value="" aria-labelledby="alert-dialog-alert-dialog-destructive-title" aria-describedby="alert-dialog-alert-dialog-destructive-description" data-controller="alert-dialog">
+<div style="min-height: 254px">
+    <div data-alert-dialog-open-value="" aria-labelledby="alert-dialog-alert-dialog-destructive-title" aria-describedby="alert-dialog-alert-dialog-destructive-description" data-controller="alert-dialog">
     <button data-slot="button" data-size="default" data-variant="destructive" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:ring-3 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40 h-8 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2" type="button" data-action="click-&gt;alert-dialog#open" data-alert-dialog-target="trigger" aria-haspopup="dialog" aria-expanded="false">Delete Chat</button>
-        <dialog id="alert-dialog-alert-dialog-destructive" data-size="sm" data-alert-dialog-target="dialog" data-slot="alert-dialog-content" class="group/alert-dialog-content fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover p-4 text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none transition-all transition-discrete backdrop:transition-discrete backdrop:duration-100 data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-sm open:grid open:scale-100 open:opacity-100 open:backdrop:bg-black/10 open:backdrop:backdrop-blur-xs scale-95 opacity-0 starting:open:scale-95 starting:open:opacity-0" data-action="keydown.esc-&gt;alert-dialog#close:prevent"><div data-slot="alert-dialog-header" class="grid grid-rows-[auto_1fr] place-items-center gap-1.5 text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-4 sm:group-data-[size=default]/alert-dialog-content:place-items-start ltr:sm:group-data-[size=default]/alert-dialog-content:text-left rtl:sm:group-data-[size=default]/alert-dialog-content:text-start sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]">
+                <dialog id="alert-dialog-alert-dialog-destructive" data-size="sm" data-alert-dialog-target="dialog" data-slot="alert-dialog-content" class="group/alert-dialog-content fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover p-4 text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none transition-all transition-discrete backdrop:transition-discrete backdrop:duration-100 data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-sm open:grid open:scale-100 open:opacity-100 open:backdrop:bg-black/10 open:backdrop:backdrop-blur-xs scale-95 opacity-0 starting:open:scale-95 starting:open:opacity-0" data-action="keydown.esc-&gt;alert-dialog#close:prevent"><div data-slot="alert-dialog-header" class="grid grid-rows-[auto_1fr] place-items-center gap-1.5 text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-4 sm:group-data-[size=default]/alert-dialog-content:place-items-start ltr:sm:group-data-[size=default]/alert-dialog-content:text-left rtl:sm:group-data-[size=default]/alert-dialog-content:text-start sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]">
 <div data-slot="alert-dialog-media" class="mb-2 inline-flex size-10 items-center justify-center rounded-md sm:group-data-[size=default]/alert-dialog-content:row-span-2 *:[svg:not([class*='size-'])]:size-6 bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
 <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11v6m4-6v6m5-11v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </div>
+                <h2 id="alert-dialog-alert-dialog-destructive-title" data-slot="alert-dialog-title" class="cn-font-heading text-base font-medium sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2">Delete chat?</h2>
+                <p id="alert-dialog-alert-dialog-destructive-description" data-slot="alert-dialog-description" class="text-sm text-balance text-muted-foreground md:text-pretty *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">This will permanently delete this chat conversation. View
+                    <a href="#">Settings</a> delete any memories saved during this chat.
+                </p>
             </div>
-            <h2 id="alert-dialog-alert-dialog-destructive-title" data-slot="alert-dialog-title" class="cn-font-heading text-base font-medium sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2">Delete chat?</h2>
-            <p id="alert-dialog-alert-dialog-destructive-description" data-slot="alert-dialog-description" class="text-sm text-balance text-muted-foreground md:text-pretty *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">This will permanently delete this chat conversation. View
-                <a href="#">Settings</a> delete any memories saved during this chat.
-            </p>
-        </div>
-        <div data-slot="alert-dialog-footer" class="-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end">
+            <div data-slot="alert-dialog-footer" class="-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end">
 <button data-slot="button" data-size="default" data-variant="outline" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2" type="button" data-action="click-&gt;alert-dialog#close">Cancel</button>
-            <button data-slot="button" data-size="default" data-variant="destructive" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:ring-3 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40 h-8 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2" type="button">Delete</button>
-        </div>
-    </dialog>
+                <button data-slot="button" data-size="default" data-variant="destructive" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:ring-3 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40 h-8 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2" type="button">Delete</button>
+            </div>
+        </dialog>
+    </div>
 </div>

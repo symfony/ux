@@ -3,95 +3,99 @@
 - Component: Dropdown
 - Code:
 ```twig
-<twig:Dropdown id="header">
-    <twig:Dropdown:Trigger>
-        <twig:Button {{ ...dropdown_trigger_attrs }}>
-            Dropdown button
-            <twig:ux:icon name="flowbite:chevron-down-outline" class="size-4" aria-hidden="true" />
-        </twig:Button>
-    </twig:Dropdown:Trigger>
+<div style="min-height: 504px">
+    <twig:Dropdown id="header">
+        <twig:Dropdown:Trigger>
+            <twig:Button {{ ...dropdown_trigger_attrs }}>
+                Dropdown button
+                <twig:ux:icon name="flowbite:chevron-down-outline" class="size-4" aria-hidden="true" />
+            </twig:Button>
+        </twig:Dropdown:Trigger>
 
-    <twig:Dropdown:Content>
-        <twig:Dropdown:Header class="flex items-center space-x-1.5">
-            <twig:Avatar>
-                <twig:Avatar:Image src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="Bonnie image" />
-                <twig:Avatar:Fallback>BG</twig:Avatar:Fallback>
-            </twig:Avatar>
-            <div class="text-sm">
-                <div class="font-medium text-heading">Bonnie Green</div>
-                <div class="truncate text-body">name@flowbite.com</div>
-            </div>
-            <twig:Badge border="bordered">PRO</twig:Badge>
-        </twig:Dropdown:Header>
-        <twig:Dropdown:Group>
-            <twig:Dropdown:Item href="#">
-                <twig:ux:icon name="flowbite:user-outline" class="size-4 me-2" aria-hidden="true" />
-                Dashboard
-            </twig:Dropdown:Item>
-            <twig:Dropdown:Item href="#">
-                <twig:ux:icon name="flowbite:adjustments-horizontal-outline" class="size-4 me-2" aria-hidden="true" />
-                Settings
-            </twig:Dropdown:Item>
-            <twig:Dropdown:Item href="#">
-                <twig:ux:icon name="flowbite:lock-outline" class="size-4 me-2" aria-hidden="true" />
-                Privacy
-            </twig:Dropdown:Item>
-        </twig:Dropdown:Group>
-        <twig:Dropdown:Group>
-            <twig:Dropdown:Item class="text-fg-danger" href="#">
-                <twig:ux:icon name="flowbite:arrow-left-to-bracket-outline" class="size-4 me-2" aria-hidden="true" />
-                Sign out
-            </twig:Dropdown:Item>
-        </twig:Dropdown:Group>
-    </twig:Dropdown:Content>
-</twig:Dropdown>
+        <twig:Dropdown:Content>
+            <twig:Dropdown:Header class="flex items-center space-x-1.5">
+                <twig:Avatar>
+                    <twig:Avatar:Image src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="Bonnie image" />
+                    <twig:Avatar:Fallback>BG</twig:Avatar:Fallback>
+                </twig:Avatar>
+                <div class="text-sm">
+                    <div class="font-medium text-heading">Bonnie Green</div>
+                    <div class="truncate text-body">name@flowbite.com</div>
+                </div>
+                <twig:Badge border="bordered">PRO</twig:Badge>
+            </twig:Dropdown:Header>
+            <twig:Dropdown:Group>
+                <twig:Dropdown:Item href="#">
+                    <twig:ux:icon name="flowbite:user-outline" class="size-4 me-2" aria-hidden="true" />
+                    Dashboard
+                </twig:Dropdown:Item>
+                <twig:Dropdown:Item href="#">
+                    <twig:ux:icon name="flowbite:adjustments-horizontal-outline" class="size-4 me-2" aria-hidden="true" />
+                    Settings
+                </twig:Dropdown:Item>
+                <twig:Dropdown:Item href="#">
+                    <twig:ux:icon name="flowbite:lock-outline" class="size-4 me-2" aria-hidden="true" />
+                    Privacy
+                </twig:Dropdown:Item>
+            </twig:Dropdown:Group>
+            <twig:Dropdown:Group>
+                <twig:Dropdown:Item class="text-fg-danger" href="#">
+                    <twig:ux:icon name="flowbite:arrow-left-to-bracket-outline" class="size-4 me-2" aria-hidden="true" />
+                    Sign out
+                </twig:Dropdown:Item>
+            </twig:Dropdown:Group>
+        </twig:Dropdown:Content>
+    </twig:Dropdown>
+</div>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div data-dropdown-placement-value="bottom" data-dropdown-trigger-type-value="click" data-dropdown-open-value="false" data-dropdown-delay-value="300" data-dropdown-offset-distance-value="10" data-controller="dropdown">
+<div style="min-height: 504px">
+    <div data-dropdown-placement-value="bottom" data-dropdown-trigger-type-value="click" data-dropdown-open-value="false" data-dropdown-delay-value="300" data-dropdown-offset-distance-value="10" data-controller="dropdown">
 <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs text-white bg-brand hover:bg-brand-strong focus:ring-brand-medium text-sm px-4 py-2.5 rounded-base" data-dropdown-target="trigger" id="dropdown-header-trigger" aria-expanded="false" aria-controls="dropdown-header">Dropdown button
-            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 10l4 4l4-4"></path></svg>
-        </button>
-    
-    
+                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 10l4 4l4-4"></path></svg>
+            </button>
+        
+        
 <div id="dropdown-header" data-dropdown-target="content" role="menu" aria-labelledby="dropdown-header-trigger" class="z-10 bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-fit min-w-44 divide-y divide-default-medium hidden">
 <div role="none" class="m-2 p-2 text-sm text-body bg-neutral-secondary-strong border-0 rounded flex items-center space-x-1.5">
 <span data-size="md" class="group/avatar relative inline-flex shrink-0 select-none overflow-hidden size-10 rounded-full"><img data-avatar-image class="hidden rounded-[inherit] aspect-square size-full object-cover" onload="this.classList.remove('hidden'); this.closest('.group\\/avatar')?.querySelector('[data-avatar-fallback]')?.classList.add('hidden');" alt="Bonnie image" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg">
 
-                <span data-avatar-fallback class="bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg">BG</span>
-            </span>
-            <div class="text-sm">
-                <div class="font-medium text-heading">Bonnie Green</div>
-                <div class="truncate text-body">name@flowbite.com</div>
+                    <span data-avatar-fallback class="bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg">BG</span>
+                </span>
+                <div class="text-sm">
+                    <div class="font-medium text-heading">Bonnie Green</div>
+                    <div class="truncate text-body">name@flowbite.com</div>
+                </div>
+                <div class="inline-flex items-center justify-center font-medium bg-brand-softer text-fg-brand-strong border-brand-subtle [a&amp;]:hover:bg-brand-soft px-1.5 py-0.5 text-xs rounded border">PRO</div>
             </div>
-            <div class="inline-flex items-center justify-center font-medium bg-brand-softer text-fg-brand-strong border-brand-subtle [a&amp;]:hover:bg-brand-soft px-1.5 py-0.5 text-xs rounded border">PRO</div>
-        </div>
-        
+            
 <ul class="p-2 text-sm text-body font-medium" role="group">
 <li role="none">
     <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 me-2" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0a3 3 0 0 1 6 0Z"></path></svg>
-                Dashboard
-            </a>
+                    Dashboard
+                </a>
 </li>
-            
+                
 <li role="none">
     <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 me-2" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M20 6H10m0 0a2 2 0 1 0-4 0m4 0a2 2 0 1 1-4 0m0 0H4m16 6h-2m0 0a2 2 0 1 0-4 0m4 0a2 2 0 1 1-4 0m0 0H4m16 6H10m0 0a2 2 0 1 0-4 0m4 0a2 2 0 1 1-4 0m0 0H4"></path></svg>
-                Settings
-            </a>
+                    Settings
+                </a>
 </li>
-            
+                
 <li role="none">
     <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 me-2" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14v3m-3-6V7a3 3 0 1 1 6 0v4m-8 0h10a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1"></path></svg>
-                Privacy
-            </a>
+                    Privacy
+                </a>
 </li>
-        </ul>
-        
+            </ul>
+            
 <ul class="p-2 text-sm text-body font-medium" role="group">
 <li role="none">
     <a role="menuitem" tabindex="-1" class="inline-flex items-center w-full p-2 text-sm font-medium hover:bg-neutral-tertiary-medium hover:text-heading rounded text-fg-danger" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4 me-2" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H4m12 0l-4 4m4-4l-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"></path></svg>
-                Sign out
-            </a>
+                    Sign out
+                </a>
 </li>
-        </ul>
+            </ul>
+        </div>
     </div>
 </div>

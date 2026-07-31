@@ -3,55 +3,59 @@
 - Component: Modal
 - Code:
 ```twig
-<twig:Modal id="delete_account">
-    <twig:Modal:Trigger>
-        <twig:Button variant="outline" {{ ...modal_trigger_attrs }}>Open Modal</twig:Button>
-    </twig:Modal:Trigger>
+<div style="min-height: 304px">
+    <twig:Modal id="delete_account">
+        <twig:Modal:Trigger>
+            <twig:Button variant="outline" {{ ...modal_trigger_attrs }}>Open Modal</twig:Button>
+        </twig:Modal:Trigger>
 
-    <twig:Modal:Content>
-        <twig:Modal:Header>
-            <twig:Modal:Title>Edit profile</twig:Modal:Title>
-        </twig:Modal:Header>
+        <twig:Modal:Content>
+            <twig:Modal:Header>
+                <twig:Modal:Title>Edit profile</twig:Modal:Title>
+            </twig:Modal:Header>
 
-        <twig:Modal:Body>
-            <p class="leading-relaxed text-body">
-                With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-            </p>
-            <p class="leading-relaxed text-body">
-                The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could personally affect them.
-            </p>
-        </twig:Modal:Body>
+            <twig:Modal:Body>
+                <p class="leading-relaxed text-body">
+                    With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
+                </p>
+                <p class="leading-relaxed text-body">
+                    The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could personally affect them.
+                </p>
+            </twig:Modal:Body>
 
-        <twig:Modal:Footer>
-            <twig:Button type="submit">I accept</twig:Button>
-            <twig:Modal:Close>
-                <twig:Button variant="outline" {{ ...modal_close_attrs }}>Decline</twig:Button>
-            </twig:Modal:Close>
-        </twig:Modal:Footer>
-    </twig:Modal:Content>
-</twig:Modal>
+            <twig:Modal:Footer>
+                <twig:Button type="submit">I accept</twig:Button>
+                <twig:Modal:Close>
+                    <twig:Button variant="outline" {{ ...modal_close_attrs }}>Decline</twig:Button>
+                </twig:Modal:Close>
+            </twig:Modal:Footer>
+        </twig:Modal:Content>
+    </twig:Modal>
+</div>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<div data-modal-open-value="false" aria-labelledby="modal-delete_account-title" data-controller="modal">
+<div style="min-height: 304px">
+    <div data-modal-open-value="false" aria-labelledby="modal-delete_account-title" data-controller="modal">
     <button class="inline-flex items-center justify-center box-border border font-medium focus:ring-4 focus:outline-none shadow-xs text-body bg-neutral-primary border-default hover:bg-neutral-secondary-soft hover:text-heading focus:ring-neutral-tertiary text-sm px-4 py-2.5 rounded-base" data-action="click-&gt;modal#open" data-modal-target="trigger" aria-haspopup="dialog">Open Modal</button>
-    
-    <dialog id="modal-delete_account" tabindex="-1" aria-hidden="true" class="relative bg-neutral-primary-soft text-body border border-default rounded-base shadow-sm p-4 md:p-6 m-auto z-50 backdrop:transition-discrete backdrop:duration-150 open:backdrop:bg-dark-backdrop/70" data-modal-target="modal" data-action="keydown.esc-&gt;modal#close:prevent click-&gt;modal#closeOnClickOutside"><header class="flex items-center justify-between border-b border-default pb-4 md:pb-5"><h3 id="modal-delete_account-title" class="text-lg font-medium text-heading">Edit profile</h3>
-        </header>
+        
+        <dialog id="modal-delete_account" tabindex="-1" aria-hidden="true" class="relative bg-neutral-primary-soft text-body border border-default rounded-base shadow-sm p-4 md:p-6 m-auto z-50 backdrop:transition-discrete backdrop:duration-150 open:backdrop:bg-dark-backdrop/70" data-modal-target="modal" data-action="keydown.esc-&gt;modal#close:prevent click-&gt;modal#closeOnClickOutside"><header class="flex items-center justify-between border-b border-default pb-4 md:pb-5"><h3 id="modal-delete_account-title" class="text-lg font-medium text-heading">Edit profile</h3>
+            </header>
 
-        <div class="space-y-4 md:space-y-6 py-4 md:py-6">
+            <div class="space-y-4 md:space-y-6 py-4 md:py-6">
 <p class="leading-relaxed text-body">
-                With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-            </p>
-            <p class="leading-relaxed text-body">
-                The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could personally affect them.
-            </p>
-        </div>
+                    With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
+                </p>
+                <p class="leading-relaxed text-body">
+                    The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could personally affect them.
+                </p>
+            </div>
 
-        <footer class="flex items-center border-t border-default space-x-4 pt-4 md:pt-5"><button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs text-white bg-brand hover:bg-brand-strong focus:ring-brand-medium text-sm px-4 py-2.5 rounded-base" type="submit">I accept</button>
-            <button class="inline-flex items-center justify-center box-border border font-medium focus:ring-4 focus:outline-none shadow-xs text-body bg-neutral-primary border-default hover:bg-neutral-secondary-soft hover:text-heading focus:ring-neutral-tertiary text-sm px-4 py-2.5 rounded-base" data-action="click-&gt;modal#close">Decline</button>
-                    </footer>
-            <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none text-heading bg-transparent hover:bg-neutral-secondary-medium focus:ring-neutral-tertiary shadow-none w-8 h-8 rounded-base absolute top-4 right-4" type="button" data-action="click-&gt;modal#close"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L17.94 6M18 18L6.06 6"></path></svg>
+            <footer class="flex items-center border-t border-default space-x-4 pt-4 md:pt-5"><button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none shadow-xs text-white bg-brand hover:bg-brand-strong focus:ring-brand-medium text-sm px-4 py-2.5 rounded-base" type="submit">I accept</button>
+                <button class="inline-flex items-center justify-center box-border border font-medium focus:ring-4 focus:outline-none shadow-xs text-body bg-neutral-primary border-default hover:bg-neutral-secondary-soft hover:text-heading focus:ring-neutral-tertiary text-sm px-4 py-2.5 rounded-base" data-action="click-&gt;modal#close">Decline</button>
+                            </footer>
+                <button class="inline-flex items-center justify-center box-border border border-transparent font-medium focus:ring-4 focus:outline-none text-heading bg-transparent hover:bg-neutral-secondary-medium focus:ring-neutral-tertiary shadow-none w-8 h-8 rounded-base absolute top-4 right-4" type="button" data-action="click-&gt;modal#close"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L17.94 6M18 18L6.06 6"></path></svg>
             <span class="sr-only">Close</span>
         </button>
     </dialog>
+    </div>
 </div>
