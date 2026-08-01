@@ -65,11 +65,13 @@ final class FencedCodePreviewExtension implements ExtensionInterface
             return null;
         }
 
-        $options = CodeOptions::fromInfoJson($matches['json']);
-        if (null === $options) {
+        // The preview opt-in is a routing trigger, not a CodeOptions field: only `"preview": true` blocks
+        // become tabs; every other JSON info string (e.g. a `filename`) stays a plain fenced block.
+        $decoded = json_decode($matches['json'], true);
+        if (!\is_array($decoded) || true !== ($decoded['preview'] ?? null)) {
             return null;
         }
 
-        return [$matches['language'], $options];
+        return [$matches['language'], CodeOptions::fromDecoded($decoded)];
     }
 }

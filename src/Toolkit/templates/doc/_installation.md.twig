@@ -30,7 +30,7 @@ php bin/console importmap:require {{ importmap_package_dependencies|join(' ') }}
 {% endif %}
 Copy the following file(s) into your app:
 {% for file in files %}
-```{{ file.language }}
+```{{ file.language }}{{ (file.info ? ' ' ~ file.info : '')|raw }}
 {{ file.content|trim|raw }}
 ```
 {% endfor %}

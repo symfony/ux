@@ -11,11 +11,18 @@
 
 namespace Symfony\UX\Toolkit\Tests\Doc;
 
+use League\CommonMark\Environment\Environment;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
+use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
+use League\CommonMark\Node\Node;
+use League\CommonMark\Renderer\ChildNodeRendererInterface;
+use League\CommonMark\Renderer\NodeRendererInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\Toolkit\Doc\RecipeDocRenderer;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Kit\KitFactory;
 use Symfony\UX\Toolkit\Markdown\CodeOptions;
+use Symfony\UX\Toolkit\Markdown\Extension\Tabs\TabsExtension;
 use Symfony\UX\Toolkit\Markdown\PreviewUrlGenerator;
 use Symfony\UX\Toolkit\Recipe\Recipe;
 
@@ -137,6 +144,39 @@ final class RecipeDocRendererTest extends KernelTestCase
         $this->assertStringContainsString('data-widget-status-outlet', $html);
         $this->assertStringContainsString('toggle', $html);
         $this->assertStringContainsString('Toggles the widget open state.', $html);
+    }
+
+    public function testHtmlInstallationStepsCarryTheFileNameInTheInfoString()
+    {
+        [$kit, $recipe] = $this->loadPostLinkRecipe();
+
+        // A doc with only the install directive: no previews/alerts, so a small environment is enough.
+        $recipe = new Recipe($recipe->name, $recipe->absolutePath, $recipe->manifest, doc: "## Installation\n\n::: installation");
+
+        $urlGenerator = new class implements PreviewUrlGenerator {
+            public function generate(string $code, CodeOptions $options): ?string
+            {
+                return null;
+            }
+        };
+
+        // Mirror the host: a fenced-code renderer that surfaces the info string so we can assert the
+        // filename travels with the block (as ux.symfony.com's renderer reads it back).
+        $environment = new Environment();
+        $environment->addExtension(new CommonMarkCoreExtension());
+        $environment->addExtension(new TabsExtension(self::getContainer()->get('twig')));
+        $environment->addRenderer(FencedCode::class, new class implements NodeRendererInterface {
+            public function render(Node $node, ChildNodeRendererInterface $childRenderer): string
+            {
+                \assert($node instanceof FencedCode);
+
+                return \sprintf('<pre data-info="%s"></pre>', htmlspecialchars($node->getInfo(), \ENT_QUOTES));
+            }
+        }, 10);
+
+        $html = $this->renderer()->renderAsHtml($kit, $recipe, $urlGenerator, $environment)->html;
+
+        $this->assertStringContainsString('&quot;filename&quot;:&quot;templates/components/PostLink.html.twig&quot;', $html);
     }
 
     private function renderer(): RecipeDocRenderer
