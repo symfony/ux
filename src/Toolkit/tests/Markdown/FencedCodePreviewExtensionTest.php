@@ -53,6 +53,20 @@ class FencedCodePreviewExtensionTest extends TestCase
         $this->assertStringContainsString('language-twig', $html);
     }
 
+    public function testJsonFenceWithoutPreviewOptInIsLeftUntouched()
+    {
+        // A `filename` (or any non-preview JSON) must not turn the block into preview tabs — the info
+        // string is left in place for the host's fenced-code renderer.
+        $html = $this->convert(<<<'MARKDOWN'
+            ```twig {"filename": "templates/components/Button.html.twig"}
+            <twig:Button>Hi</twig:Button>
+            ```
+            MARKDOWN);
+
+        $this->assertStringNotContainsString('toolkit-tabs', $html);
+        $this->assertStringContainsString('language-twig', $html);
+    }
+
     public function testJsonOptionsAreThreadedToTheLivePreview()
     {
         $urlGenerator = new class implements PreviewUrlGenerator {

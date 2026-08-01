@@ -29,6 +29,7 @@ use Symfony\UX\Toolkit\Component\StimulusControllerDoc;
 use Symfony\UX\Toolkit\Component\StimulusControllerDocParser;
 use Symfony\UX\Toolkit\Installer\PoolResolver;
 use Symfony\UX\Toolkit\Kit\Kit;
+use Symfony\UX\Toolkit\Markdown\CodeOptions;
 use Symfony\UX\Toolkit\Markdown\Extension\Alert\AlertExtension;
 use Symfony\UX\Toolkit\Markdown\Extension\CodePreview\CodePreviewExtension;
 use Symfony\UX\Toolkit\Markdown\Extension\FencedCodePreview\FencedCodePreviewExtension;
@@ -159,6 +160,7 @@ final class RecipeDocRenderer
                     'path_name' => $file->sourceRelativePathName,
                     'content' => is_file($source) ? file_get_contents($source) : '',
                     'language' => pathinfo($source, \PATHINFO_EXTENSION),
+                    'info' => new CodeOptions(filename: $file->sourceRelativePathName)->toInfoJson(),
                 ];
             }
         }

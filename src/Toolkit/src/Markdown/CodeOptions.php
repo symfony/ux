@@ -12,44 +12,63 @@
 namespace Symfony\UX\Toolkit\Markdown;
 
 /**
- * The typed options a `{"preview": true}` fenced code block declares.
+ * The typed options a fenced code block declares in its `{json}` info string.
  *
  * It owns the Toolkit's slice of the info-string contract at both ends — the read (`fromInfoJson`) and
- * the code-tab write (`toCodeTabInfoJson`); the wider info-string vocabulary (e.g. a host `filename`) is
- * not modelled here. Pure PHP — no league/commonmark dependency.
+ * the write (`toInfoJson`): the file `filename` shown above the block and whether the code collapses long
+ * `class` attributes. The `"preview": true` opt-in itself is a routing trigger owned by
+ * {@see Extension\FencedCodePreview\FencedCodePreviewExtension}, not an
+ * option modelled here. Pure PHP — no league/commonmark dependency.
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
 final class CodeOptions
 {
     public function __construct(
+        public readonly ?string $filename = null,
         public readonly bool $collapseClass = false,
     ) {
     }
 
     /**
-     * Builds the options from a fenced block's `{json}` info string, or null when the block does not opt
-     * into a preview (`"preview": true` absent, or malformed JSON).
+     * Builds the options from a fenced block's `{json}` info string, or null when it carries no JSON
+     * (or malformed JSON).
      */
     public static function fromInfoJson(string $json): ?self
     {
         $options = json_decode($json, true);
-        if (!\is_array($options) || true !== ($options['preview'] ?? null)) {
-            return null;
-        }
 
+        return \is_array($options) ? self::fromDecoded($options) : null;
+    }
+
+    /**
+     * Builds the options from an already-decoded info string, so a caller that has parsed the JSON for
+     * its own check (e.g. the preview opt-in) does not decode it twice.
+     *
+     * @param array<string, mixed> $options
+     */
+    public static function fromDecoded(array $options): self
+    {
         return new self(
+            filename: \is_string($options['filename'] ?? null) ? $options['filename'] : null,
             collapseClass: (bool) ($options['collapseClass'] ?? false),
         );
     }
 
     /**
-     * The code-tab styling options as a fenced info-string JSON fragment,
-     * or null when there is nothing to carry. Symmetric with
-     * {@see self::fromInfoJson()} so encode and decode of the format live together.
+     * The options as a fenced info-string JSON fragment, or null when there is nothing to carry.
+     * Symmetric with {@see self::fromInfoJson()} so encode and decode of the format live together.
      */
-    public function toCodeTabInfoJson(): ?string
+    public function toInfoJson(): ?string
     {
-        return $this->collapseClass ? json_encode(['collapseClass' => $this->collapseClass]) : null;
+        $data = [];
+        if (null !== $this->filename) {
+            $data['filename'] = $this->filename;
+        }
+        if ($this->collapseClass) {
+            $data['collapseClass'] = true;
+        }
+
+        return $data ? json_encode($data, \JSON_UNESCAPED_SLASHES) : null;
     }
 }

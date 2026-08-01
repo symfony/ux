@@ -34,7 +34,7 @@ final class PreviewTabsBuilder
 
         $codeTab = new Tab('Code');
         $fencedCode = new FencedCode(3, '`', 0);
-        $codeTabInfoJson = $options->toCodeTabInfoJson();
+        $codeTabInfoJson = $options->toInfoJson();
         $fencedCode->setInfo(null === $codeTabInfoJson ? $language : $language.' '.$codeTabInfoJson);
         $fencedCode->setLiteral($code);
         $codeTab->appendChild($fencedCode);
