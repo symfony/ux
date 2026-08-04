@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="ar" datatype="plaintext" original="UXPaginationBundle">
+        <header>
+            <tool tool-id="symfony" tool-name="Symfony"/>
+        </header>
+        <body>
+            <trans-unit id="1">
+                <source>Showing %start%-%end% of %total%</source>
+                <target>عرض %start%-%end% من %total%</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Showing %start%-%end%</source>
+                <target>عرض %start%-%end%</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>No items</source>
+                <target>لا توجد عناصر</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Showing %count% item|Showing %count% items</source>
+                <target>لا توجد عناصر|عرض عنصر واحد|عرض عنصرين|عرض %count% عناصر|عرض %count% عنصرًا|عرض %count% عنصر</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>Showing %count% item (last page)|Showing %count% items (last page)</source>
+                <target>لا توجد عناصر (الصفحة الأخيرة)|عرض عنصر واحد (الصفحة الأخيرة)|عرض عنصرين (الصفحة الأخيرة)|عرض %count% عناصر (الصفحة الأخيرة)|عرض %count% عنصرًا (الصفحة الأخيرة)|عرض %count% عنصر (الصفحة الأخيرة)</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>Previous</source>
+                <target>السابق</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>Next</source>
+                <target>التالي</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>Previous page</source>
+                <target>الصفحة السابقة</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>Next page</source>
+                <target>الصفحة التالية</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>Go to page %page%</source>
+                <target>انتقل إلى الصفحة %page%</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>Pagination</source>
+                <target>ترقيم الصفحات</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -1,0 +1,28 @@
+{
+    "name": "@symfony/ux-pagination",
+    "description": "Pagination controls for Symfony applications",
+    "license": "MIT",
+    "version": "3.5.0",
+    "keywords": [
+        "symfony-ux",
+        "pagination",
+        "paginator"
+    ],
+    "homepage": "https://ux.symfony.com/pagination",
+    "repository": "https://github.com/symfony/ux",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "style": "dist/style.min.css",
+    "exports": {
+        "./style.min.css": "./dist/style.min.css"
+    },
+    "config": {
+        "css_source": "src/style.css"
+    },
+    "scripts": {
+        "build": "node ../../../bin/build_package.ts .",
+        "watch": "node ../../../bin/build_package.ts . --watch"
+    }
+}

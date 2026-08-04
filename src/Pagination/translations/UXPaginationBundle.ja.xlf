@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="ja" datatype="plaintext" original="UXPaginationBundle">
+        <header>
+            <tool tool-id="symfony" tool-name="Symfony"/>
+        </header>
+        <body>
+            <trans-unit id="1">
+                <source>Showing %start%-%end% of %total%</source>
+                <target>%total%件中 %start%-%end%件を表示</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Showing %start%-%end%</source>
+                <target>%start%-%end%件を表示</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>No items</source>
+                <target>項目なし</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Showing %count% item|Showing %count% items</source>
+                <target>%count%件を表示中</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>Showing %count% item (last page)|Showing %count% items (last page)</source>
+                <target>%count%件を表示中（最終ページ）</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>Previous</source>
+                <target>前へ</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>Next</source>
+                <target>次へ</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>Previous page</source>
+                <target>前のページ</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>Next page</source>
+                <target>次のページ</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>Go to page %page%</source>
+                <target>%page%ページへ移動</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>Pagination</source>
+                <target>ページネーション</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

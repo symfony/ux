@@ -1,0 +1,8 @@
+<div {{ attributes }}>
+    <p data-current-page>{{ this.pagination.currentPage }}</p>
+
+    {{ ux_pagination(
+        this.pagination,
+        link_attributes: this.paginationLinkAttributes,
+    ) }}
+</div>
