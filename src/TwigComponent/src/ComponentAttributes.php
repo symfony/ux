@@ -14,6 +14,7 @@ namespace Symfony\UX\TwigComponent;
 use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Symfony\UX\TwigComponent\Exception\RuntimeException;
 use Twig\Extra\Html\HtmlAttr\AttributeValueInterface;
+use Twig\Extra\Html\HtmlAttr\MergeableInterface;
 use Twig\Runtime\EscaperRuntime;
 
 /**
@@ -116,6 +117,10 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
             return null;
         }
 
+        if ($value instanceof AttributeValueInterface && null === $value = $value->getValue()) {
+            return null;
+        }
+
         if ($value instanceof \Stringable) {
             $value = (string) $value;
         }
@@ -145,8 +150,11 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
      * Set default attributes. These are used if they are not already
      * defined.
      *
-     * "class" and "data-controller" are special, these defaults are prepended to
-     * the existing attribute (if available).
+     * "class", "data-controller" and "data-action" are special, these defaults are
+     * prepended to the existing attribute (if available).
+     *
+     * Values implementing Twig HTML extra's MergeableInterface (e.g. from the
+     * "tailwind_classes" filter) are merged through the merge protocol, for any key.
      */
     public function defaults(iterable $attributes): self
     {
@@ -159,13 +167,23 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
         }
 
         foreach ($this->attributes as $key => $value) {
-            if (\in_array($key, ['class', 'data-controller', 'data-action'], true) && isset($attributes[$key])) {
-                $attributes[$key] = "{$attributes[$key]} {$value}";
+            if (!isset($attributes[$key])) {
+                $attributes[$key] = $value;
 
                 continue;
             }
 
-            $attributes[$key] = $value;
+            $default = $attributes[$key];
+
+            if ($value instanceof MergeableInterface) {
+                $attributes[$key] = $value->mergeInto($default);
+            } elseif ($default instanceof MergeableInterface) {
+                $attributes[$key] = $default->appendFrom($value);
+            } elseif (\in_array($key, ['class', 'data-controller', 'data-action'], true)) {
+                $attributes[$key] = "{$default} {$value}";
+            } else {
+                $attributes[$key] = $value;
+            }
         }
 
         foreach (array_keys($this->rendered) as $attribute) {

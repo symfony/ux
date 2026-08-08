@@ -18,6 +18,7 @@ use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Extra\Html\HtmlAttr\AttributeValueInterface;
+use Twig\Extra\Html\HtmlAttr\MergeableInterface;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -690,6 +691,21 @@ final class ComponentExtensionTest extends KernelTestCase
         // When no HTML Attr Type has been defined, the very last takes precedence
         $this->assertStringContainsString('data-no-html-attr-type="trigger"', $output);
         $this->assertStringContainsString('data-html-attr-type-cst="dialog, trigger"', $output);
+    }
+
+    public function testDefaultsWithMergeableFilter()
+    {
+        if (!interface_exists(MergeableInterface::class)) {
+            $this->markTestSkipped('Test requires Twig HTML extra >= 3.24.');
+        }
+
+        $output = self::getContainer()->get(Environment::class)->render('mergeable_tokens.html.twig');
+
+        // "data-foo" is not one of the special (class/data-controller/data-action) keys:
+        // without the MergeableInterface routing the caller value would simply override the
+        // default ("c"). Getting the merged "a b c" proves the protocol runs for any key,
+        // across the full component render.
+        $this->assertStringContainsString('data-foo="a b c"', $output);
     }
 
     private function renderComponent(string $name, array $data = []): string

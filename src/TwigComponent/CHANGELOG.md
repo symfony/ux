@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.5.0
+
+- Add support for `MergeableInterface` from `twig/html-extra` in `ComponentAttributes#defaults()`
+
 ## 3.4.0
 
 - Add support for dynamic component names in the `{% component %}` tag using a
