@@ -16,6 +16,9 @@ use PHPUnit\Framework\TestCase;
 use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Twig\Environment;
+use Twig\Extra\Html\HtmlAttr\AttributeValueInterface;
+use Twig\Extra\Html\HtmlAttr\InlineStyle;
+use Twig\Extra\Html\HtmlAttr\MergeableInterface;
 use Twig\Loader\ArrayLoader;
 use Twig\Runtime\EscaperRuntime;
 
@@ -64,6 +67,111 @@ final class ComponentAttributesTest extends TestCase
         );
 
         $this->assertSame(['class' => 'foo'], new ComponentAttributes([], new EscaperRuntime())->defaults(['class' => 'foo'])->all());
+    }
+
+    public function testDefaultsMergesMergeableDefaultViaAppendFrom()
+    {
+        if (!interface_exists(MergeableInterface::class)) {
+            $this->markTestSkipped('Requires twig/html-extra >= 3.24.');
+        }
+
+        // The component default is mergeable, the caller passed a plain "class".
+        $attributes = new ComponentAttributes(['class' => 'override'], new EscaperRuntime());
+
+        $merged = $attributes->defaults(['class' => $this->mergeableClasses('base-1', 'base-2')]);
+
+        // default (base) is on the left, caller (override) is appended on the right
+        $this->assertSame(' class="base-1 base-2 override"', (string) $merged);
+        $this->assertSame('base-1 base-2 override', $merged->render('class'));
+    }
+
+    public function testDefaultsMergesMergeableCallerViaMergeInto()
+    {
+        if (!interface_exists(MergeableInterface::class)) {
+            $this->markTestSkipped('Requires twig/html-extra >= 3.24.');
+        }
+
+        // The caller passed a mergeable "class", the component default is a plain string.
+        $attributes = new ComponentAttributes(['class' => $this->mergeableClasses('override')], new EscaperRuntime());
+
+        $merged = $attributes->defaults(['class' => 'base']);
+
+        $this->assertSame(' class="base override"', (string) $merged);
+    }
+
+    public function testRenderReturnsNullWhenMergeableValueResolvesToNull()
+    {
+        if (!interface_exists(MergeableInterface::class)) {
+            $this->markTestSkipped('Requires twig/html-extra >= 3.24.');
+        }
+
+        $attributes = new ComponentAttributes(['class' => $this->mergeableClasses()], new EscaperRuntime());
+
+        $this->assertNull($attributes->render('class'));
+    }
+
+    public function testDefaultsMergesMergeableDefaultOnNonSpecialKey()
+    {
+        if (!interface_exists(MergeableInterface::class)) {
+            $this->markTestSkipped('Requires twig/html-extra >= 3.24.');
+        }
+
+        // "data-foo" is not a special key, yet a mergeable default is merged
+        // instead of being overwritten by the caller's plain value.
+        $attributes = new ComponentAttributes(['data-foo' => 'caller'], new EscaperRuntime());
+
+        $merged = $attributes->defaults(['data-foo' => $this->mergeableClasses('base')]);
+
+        $this->assertSame('base caller', $merged->render('data-foo'));
+    }
+
+    public function testDefaultsMergesRealMergeableOnNonSpecialKey()
+    {
+        if (!class_exists(InlineStyle::class)) {
+            $this->markTestSkipped('Requires twig/html-extra >= 3.24.');
+        }
+
+        // Generalization with a real Twig HTML extra mergeable (InlineStyle) on "style":
+        // the caller value wins conflicts, appended after the default.
+        $attributes = new ComponentAttributes(['style' => new InlineStyle(['display: block'])], new EscaperRuntime());
+
+        $merged = $attributes->defaults(['style' => new InlineStyle(['color: red'])]);
+
+        $this->assertSame('color: red; display: block;', $merged->render('style'));
+    }
+
+    /**
+     * A minimal space-separated token list implementing the Twig HTML extra merge protocol,
+     * so these tests exercise ComponentAttributes routing without depending on a concrete
+     * implementation (e.g. tailwind_classes).
+     */
+    private function mergeableClasses(string ...$classes): object
+    {
+        return new class($classes) implements AttributeValueInterface, MergeableInterface {
+            /** @param list<string> $classes */
+            public function __construct(private array $classes)
+            {
+            }
+
+            public function getValue(): ?string
+            {
+                return $this->classes ? implode(' ', $this->classes) : null;
+            }
+
+            public function mergeInto(mixed $previous): mixed
+            {
+                $previousClasses = $previous instanceof self ? $previous->classes : array_filter([(string) $previous], 'strlen');
+
+                return new self([...$previousClasses, ...$this->classes]);
+            }
+
+            public function appendFrom(mixed $newValue): mixed
+            {
+                $newClasses = $newValue instanceof self ? $newValue->classes : array_filter([(string) $newValue], 'strlen');
+
+                return new self([...$this->classes, ...$newClasses]);
+            }
+        };
     }
 
     public function testCanGetOnly()
