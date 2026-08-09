@@ -1,6 +1,6 @@
 {
     "private": true,
-    "packageManager": "pnpm@10.16.1+sha512.0e155aa2629db8672b49e8475da6226aa4bdea85fdcdfdc15350874946d4f3c91faaf64cbdc4a5d1ab8002f473d5c3fcedcd197989cf0390f9badd3c04678706",
+    "packageManager": "pnpm@11.21.0+sha512.521705bce689924eac72f5a3587122f362689ef6571e55ba80076fd637c11132ecffada26fad4ea79c485bfddbfd3d5a2a5b05805a77e893de71ec8a6cca3bb1",
     "type": "module",
     "workspaces": [
         "src/*/assets",
@@ -9,7 +9,7 @@
     "scripts": {
         "build": "pnpm run --filter @symfony/ux-map build; sync; pnpm run --filter !@symfony/ux-map --recursive --aggregate-output build",
         "test": "pnpm run -r --workspace-concurrency=1 test",
-        "test:unit": "pnpm run -r --aggregate-output test:unit",
+        "test:unit": "pnpm run -r --workspace-concurrency=1 --aggregate-output test:unit",
         "test:browser": "pnpm run -r --workspace-concurrency=1 test:browser",
         "fmt": "oxfmt",
         "fmt:check": "oxfmt --check",

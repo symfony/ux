@@ -4,7 +4,7 @@
 
 Symfony UX is a monorepo of PHP (Symfony bundles) + TypeScript/JS (Stimulus controllers) packages.
 Each package lives under `src/<Package>/` with PHP code in `src/` and JS assets in `assets/`.
-Package manager: **pnpm** (v10, via Corepack). Node 22. PHP >= 8.1.
+Package manager: **pnpm** (v11, via Corepack). Node 22. PHP >= 8.1.
 
 ## Build Commands
 
