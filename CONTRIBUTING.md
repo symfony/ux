@@ -45,7 +45,7 @@ To set up the development environment, you need the following tools:
 - **[Composer](https://getcomposer.org/download/)** - PHP dependency manager
 - **[Node.js](https://nodejs.org/en/download/package-manager) 22.18 or higher** - Required for asset compilation
 - **[Corepack](https://github.com/nodejs/corepack)** - Package manager manager (comes with Node.js 16+)
-- **[PNPM](https://pnpm.io/) 10.16.1 or higher** - JavaScript package manager (installed via Corepack)
+- **[PNPM](https://pnpm.io/) 11.21.0 or higher** - JavaScript package manager (installed via Corepack)
 
 With these tools installed, you can install the project dependencies:
 
