@@ -4,7 +4,7 @@
 
 Monorepo of PHP (Symfony bundles) + TypeScript/JS (Stimulus controllers) packages.
 Each package: `src/<Package>/`, PHP in `src/`, JS in `assets/`.
-Package manager: **pnpm** (v10, via Corepack). Node 22. PHP >= 8.4.
+Package manager: **pnpm** (v11, via Corepack). Node 22. PHP >= 8.4.
 
 ## Build Commands
 

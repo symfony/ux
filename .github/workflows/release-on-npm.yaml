@@ -44,10 +44,6 @@ jobs:
                   registry-url: 'https://registry.npmjs.org'
                   node-version-file: '.nvmrc'
 
-              # npm 11.5.1 or later is required for OIDC. Pinned explicitly to avoid
-              # pulling a compromised "latest" at release time; bump via dedicated PR.
-            - run: npm install -g npm@11.16.0
-
             - name: Install root JS dependencies
               run: pnpm install --frozen-lockfile
 

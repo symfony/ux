@@ -1,46 +1,29 @@
 # Maintainers' guide
 
-This document is for Symfony UX maintainers. It collects procedures that are not
-needed by regular contributors.
+This document is for Symfony UX maintainers. It covers procedures that regular contributors don't need.
 
-## Releasing UX packages on NPM
+## Releasing UX packages on npm
 
-The Git tag is the source of truth for the released version. Workspace
-`package.json` files must already match the tag at publish time —
-`release-on-npm.yaml` does not enforce this and would otherwise publish
-whatever versions are committed. Always bump and merge **before** tagging.
+The Git tag is the source of truth for the released version. Workspace `package.json` files must already match the tag at publish time — `release-on-npm.yaml` publishes whatever versions are committed and does not verify that they match the tag.
 
-### 1. Bump workspace versions
+`release.sh` keeps everything in sync. It rebuilds assets to confirm the committed `dist/` files are up to date, bumps every workspace `package.json`, commits `Bump npm packages to v3.3.0`, and creates the signed `v3.3.0` tag — all in one step. Nothing is pushed.
 
-Trigger the **Prepare NPM release** workflow from the Actions tab
-(`.github/workflows/prepare-npm-release.yaml`) with:
-
-- `branch`: `2.x` or `3.x`
-- `version`: e.g. `2.36.0` (no leading `v`)
-
-It runs `pnpm install --frozen-lockfile`, `pnpm build`,
-`pnpm version $VERSION --no-git-tag-version --workspaces --no-workspaces-update`,
-commits on `bump/v$VERSION`, and opens a PR against the chosen branch.
-
-Review and merge the PR.
-
-### 2. Tag and publish
-
-Create and push the `v$VERSION` tag via the standard Symfony release process.
-The `release-on-npm.yaml` workflow then publishes via the OIDC trusted publisher.
-
-### Manual fallback
-
-If the workflow cannot be used, reproduce its steps locally from the release
-branch with `upstream` pointing to `symfony/ux`:
+From the release branch, with `upstream` pointing to `symfony/ux`:
 
 ```shell
-$ git checkout 2.x # or 3.x
-$ VERSION=2.36.0 && \
-  pnpm install --frozen-lockfile && \
-  pnpm build && \
-  pnpm version $VERSION --no-git-tag-version --workspaces --no-workspaces-update && \
-  git add . && \
-  git commit -m "Bump npm packages to v$VERSION"
-$ git push upstream HEAD
+$ git checkout 3.x # or 2.x
+$ git pull upstream 3.x
+$ ./release.sh 3.3.0
 ```
+
+Review the commit and tag, then push:
+
+```shell
+$ git push upstream 3.x --follow-tags
+```
+
+Pushing the tag triggers `release-on-npm.yaml`, which publishes each package to npm via the OIDC trusted publisher.
+
+## Splitting packages into read-only repositories
+
+Each `symfony/ux-*` package lives in its own read-only repository split from this monorepo, managed on the [split.sh dashboard](https://go.split.sh/dashboard#project-symfonyux).
