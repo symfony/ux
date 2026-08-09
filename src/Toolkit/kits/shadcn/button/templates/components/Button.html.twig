@@ -30,8 +30,8 @@
     data-slot="button"
     data-size="{{ size }}"
     data-variant="{{ variant }}"
-    class="{{ style.apply({variant: variant, size: size}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
+        class: style.apply({variant: variant, size: size})|tailwind_classes,
         type: 'button',
     }) }}
 >

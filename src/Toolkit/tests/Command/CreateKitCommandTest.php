@@ -77,8 +77,9 @@ class CreateKitCommandTest extends KernelTestCase
                     "dependencies": {
                         "composer": [
                             "twig/extra-bundle",
-                            "twig/html-extra:^3.12.0",
-                            "tales-from-a-dev/twig-tailwind-extra:^1.0.0"
+                            "twig/html-extra:^3.24.0",
+                            "symfony/ux-twig-component:^3.5",
+                            "tales-from-a-dev/twig-tailwind-extra:^1.3.0"
                         ]
                     }
                 }
@@ -99,8 +100,10 @@ class CreateKitCommandTest extends KernelTestCase
                 ) -%}
 
                 <button
-                    class="{{ style.apply({ variant }, attributes.render('class'))|tailwind_merge }}"
-                    {{ attributes.defaults({ type: 'submit'}) }}
+                    {{ attributes.defaults({
+                        class: style.apply({ variant })|tailwind_classes,
+                        type: 'submit',
+                    }) }}
                 >
                     {%- block content %}{% endblock -%}
                 </button>

@@ -6,8 +6,7 @@
     aria-valuemin="0"
     aria-valuemax="100"
     aria-valuenow="{{ value }}"
-    class="{{ ('relative flex h-1 w-full items-center overflow-x-hidden rounded-full bg-muted ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.without('class') }}
+    {{ attributes.defaults({class: 'relative flex h-1 w-full items-center overflow-x-hidden rounded-full bg-muted'|tailwind_classes}) }}
 >
     <div
         data-slot="progress-indicator"

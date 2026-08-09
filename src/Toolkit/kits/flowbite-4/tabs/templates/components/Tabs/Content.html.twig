@@ -12,8 +12,9 @@
     role="tabpanel"
     aria-labelledby="{{ _tab_id }}"
     data-state="{{ open ? 'active' : 'inactive' }}"
-    class="{{ ('data-[state=inactive]:hidden ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: 'data-[state=inactive]:hidden'|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>

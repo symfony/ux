@@ -13,7 +13,6 @@ namespace Symfony\UX\Toolkit\Kit\Lint;
 
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\AttributesDefaultsChecker;
-use Symfony\UX\Toolkit\Kit\Lint\Checker\ClassMergeSpacingChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\ComponentDocChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\ComposerSymbolChecker;
 use Symfony\UX\Toolkit\Kit\Lint\Checker\CopyFilesExistenceChecker;
@@ -52,7 +51,6 @@ final class KitLinter
             new JsImportChecker(),
             new ComposerSymbolChecker(),
             new ComponentDocChecker(),
-            new ClassMergeSpacingChecker(),
             new AttributesDefaultsChecker(),
             new DocHeadingLevelChecker(),
         ];

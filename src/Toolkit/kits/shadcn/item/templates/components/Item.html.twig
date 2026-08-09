@@ -27,8 +27,9 @@
     data-slot="item"
     data-variant="{{ variant }}"
     data-size="{{ size }}"
-    class="{{ style.apply({variant: variant, size: size}, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: style.apply({variant: variant, size: size})|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </{{ as }}>

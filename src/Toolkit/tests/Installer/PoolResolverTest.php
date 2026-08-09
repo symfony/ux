@@ -40,7 +40,7 @@ final class PoolResolverTest extends TestCase
         $this->assertEquals([
             'templates/components/Button.html.twig',
         ], array_keys($pool->getFiles()[$recipeButton->absolutePath]));
-        $this->assertCount(3, $pool->getPhpPackageDependencies());
+        $this->assertCount(4, $pool->getPhpPackageDependencies());
 
         $pool = $poolResolver->resolveForRecipe($kit, $recipeTable = $kit->getRecipe('table'));
 
@@ -54,7 +54,7 @@ final class PoolResolverTest extends TestCase
             'templates/components/Table/Header.html.twig',
             'templates/components/Table/Row.html.twig',
         ], array_keys($pool->getFiles()[$recipeTable->absolutePath]));
-        $this->assertCount(1, $pool->getPhpPackageDependencies());
+        $this->assertCount(3, $pool->getPhpPackageDependencies());
     }
 
     public function testCanHandleCircularRecipeDependencies()

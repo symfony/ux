@@ -6,8 +6,8 @@
     data-resizable-orientation-value="{{ orientation }}"
     data-orientation="{{ orientation }}"
     aria-orientation="{{ orientation }}"
-    class="{{ ('group/resizable flex h-full w-full aria-[orientation=vertical]:flex-col ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
+        class: 'group/resizable flex h-full w-full aria-[orientation=vertical]:flex-col'|tailwind_classes,
         'data-controller': 'resizable',
     }) }}
 >

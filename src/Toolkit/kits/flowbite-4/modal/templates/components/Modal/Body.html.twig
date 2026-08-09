@@ -1,7 +1,8 @@
 {# @block content The main content area of the moda. #}
 <div
-    class="{{ ('space-y-4 md:space-y-6 py-4 md:py-6 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: 'space-y-4 md:space-y-6 py-4 md:py-6'|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>

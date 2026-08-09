@@ -39,7 +39,9 @@ class DebugKitCommandTest extends KernelTestCase
                 '|              | templates/components/Avatar/Group.html.twig                                      |',
                 '|              | templates/components/Avatar/GroupCount.html.twig                                 |',
                 '|              | templates/components/Avatar/Image.html.twig                                      |',
-                '| Dependencies | tales-from-a-dev/twig-tailwind-extra:^1.0.0                                      |',
+                '| Dependencies | twig/html-extra:^3.24.0                                                          |',
+                '|              | symfony/ux-twig-component:^3.5                                                   |',
+                '|              | tales-from-a-dev/twig-tailwind-extra:^1.3.0                                      |',
                 '+--------------+----------------------------------------------------------------------------------+',
             ]))
             ->assertOutputContains(implode(\PHP_EOL, [
@@ -52,7 +54,9 @@ class DebugKitCommandTest extends KernelTestCase
                 '|              | templates/components/Table/Head.html.twig                                        |',
                 '|              | templates/components/Table/Header.html.twig                                      |',
                 '|              | templates/components/Table/Row.html.twig                                         |',
-                '| Dependencies | tales-from-a-dev/twig-tailwind-extra:^1.0.0                                      |',
+                '| Dependencies | twig/html-extra:^3.24.0                                                          |',
+                '|              | symfony/ux-twig-component:^3.5                                                   |',
+                '|              | tales-from-a-dev/twig-tailwind-extra:^1.3.0                                      |',
                 '+--------------+----------------------------------------------------------------------------------+',
             ]));
     }

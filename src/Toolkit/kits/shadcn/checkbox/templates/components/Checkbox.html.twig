@@ -4,8 +4,7 @@
 >
     <input
         type="checkbox"
-        class="{{ ('peer col-start-1 row-start-1 appearance-none size-4 rounded-[4px] border border-input bg-transparent transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 checked:border-primary checked:bg-primary dark:checked:border-primary dark:checked:bg-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 forced-colors:appearance-auto ' ~ attributes.render('class'))|tailwind_merge }}"
-        {{ attributes.without('class') }}
+        {{ attributes.defaults({class: 'peer col-start-1 row-start-1 appearance-none size-4 rounded-[4px] border border-input bg-transparent transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 checked:border-primary checked:bg-primary dark:checked:border-primary dark:checked:bg-primary disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 forced-colors:appearance-auto'|tailwind_classes}) }}
     />
     <span
         data-slot="checkbox-indicator"

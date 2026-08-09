@@ -19,8 +19,9 @@
     role="tooltip"
     data-side="{{ side }}"
     data-slot="hover-card-content"
-    class="{{ style.apply({side: side}, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: style.apply({side: side})|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </span>

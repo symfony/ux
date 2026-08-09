@@ -30,7 +30,7 @@ use Symfony\UX\Toolkit\Kit\Lint\LintSeverity;
  *  - every other `data-*`/`aria-*` attribute — ARIA, Stimulus value attributes (`data-<controller>-<key>-value`)
  *    and state `data-*` (`data-state`, `data-open`, `data-size`, ...) — must be a literal attribute so it is
  *    always present; only `data-controller`/`data-action` may stay in `defaults()` (checked only in Tailwind
- *    kits, detected by the `tailwind_merge` idiom).
+ *    kits, detected by the `tailwind_merge`/`tailwind_classes` idiom).
  *
  * Non-Tailwind kits (Bootstrap, Common) keep their own idiom (`class` merged inside `defaults()`,
  * no `data-slot`) and are therefore only checked against the universal `data-slot` rule.
@@ -80,7 +80,7 @@ final class AttributesDefaultsChecker implements KitCheckerInterface
      */
     private function checkFile(string $recipe, string $file, string $contents): iterable
     {
-        $isTailwind = str_contains($contents, 'tailwind_merge');
+        $isTailwind = str_contains($contents, 'tailwind_merge') || str_contains($contents, 'tailwind_classes');
 
         $offset = 0;
         while (false !== $start = strpos($contents, self::DEFAULTS_CALL, $offset)) {

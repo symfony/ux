@@ -1,8 +1,9 @@
 {# @block content The title text of the card. #}
 <div
     data-slot="card-title"
-    class="{{ ('cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: 'cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm'|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>

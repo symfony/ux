@@ -1,7 +1,8 @@
 {# @block content The title text of the alert. #}
 <div
-    class="{{ ('font-medium group-has-[>svg]/alert:col-start-2 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: 'font-medium group-has-[>svg]/alert:col-start-2'|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>

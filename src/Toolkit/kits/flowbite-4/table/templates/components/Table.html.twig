@@ -3,8 +3,9 @@
 {%- props borderless = false -%}
 <table
     data-border="{{ borderless ? 'borderless' : 'bordered' }}"
-    class="{{ ('w-full text-sm text-left rtl:text-right text-body group/table ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: 'w-full text-sm text-left rtl:text-right text-body group/table'|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </table>

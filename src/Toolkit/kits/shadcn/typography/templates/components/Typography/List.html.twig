@@ -1,8 +1,9 @@
 {# @block content The list items (`<li>`). #}
 <ul
     data-slot="typography-list"
-    class="{{ ('my-6 ml-6 list-disc [&>li]:mt-2 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: 'my-6 ml-6 list-disc [&>li]:mt-2'|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </ul>

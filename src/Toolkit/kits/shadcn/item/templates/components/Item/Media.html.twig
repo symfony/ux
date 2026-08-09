@@ -18,8 +18,9 @@
 <div
     data-slot="item-media"
     data-variant="{{ variant }}"
-    class="{{ style.apply({variant: variant}, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: style.apply({variant: variant})|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>

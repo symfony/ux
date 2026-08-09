@@ -4,8 +4,9 @@
     role="link"
     aria-disabled="true"
     aria-current="page"
-    class="{{ ('font-normal text-foreground ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: 'font-normal text-foreground'|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </span>

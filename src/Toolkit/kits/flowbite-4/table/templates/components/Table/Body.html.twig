@@ -12,8 +12,9 @@
     },
 ) -%}
 <tbody
-    class="{{ style.apply({highlight: highlight}, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: style.apply({highlight: highlight})|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </tbody>

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.5.0
+
+- [Shadcn][Flowbite] Merge component classes with `attributes.defaults({ class: '...'|tailwind_classes })` instead of `tailwind_merge` (consumer classes now override component variants)
+- Remove the now-obsolete `ClassMergeSpacingChecker` linter
+
 ## 3.4.0
 
 - [Bootstrap] Add the Bootstrap kit

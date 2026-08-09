@@ -3,8 +3,9 @@
 {%- props as = 'div' -%}
 <{{ as }}
     data-slot="button-group-text"
-    class="{{ ('flex items-center gap-2 rounded-lg border bg-muted px-2.5 text-sm font-medium [&_svg]:pointer-events-none [&_svg:not([class*=\'size-\'])]:size-4 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: ('flex items-center gap-2 rounded-lg border bg-muted px-2.5 text-sm font-medium [&_svg]:pointer-events-none [&_svg:not([class*=\'size-\'])]:size-4 ')|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </{{ as }}>

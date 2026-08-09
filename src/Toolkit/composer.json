@@ -52,7 +52,7 @@
         "phpunit/phpunit": "^11.1|^12.0",
         "spatie/phpunit-snapshot-assertions": "^5.2.3",
         "symfony/ux-icons": "^2.18|^3.0",
-        "tales-from-a-dev/twig-tailwind-extra": "^1.0.0"
+        "tales-from-a-dev/twig-tailwind-extra": "^1.3.0"
     },
     "bin": [
         "bin/ux-toolkit-kit-create",

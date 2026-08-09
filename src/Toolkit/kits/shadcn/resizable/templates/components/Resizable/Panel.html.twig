@@ -5,8 +5,9 @@
     style="flex: {{ size ?? 1 }} 1 0%;"
     data-slot="resizable-panel"
     data-resizable-target="panel"
-    class="{{ ('overflow-auto ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: 'overflow-auto'|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>

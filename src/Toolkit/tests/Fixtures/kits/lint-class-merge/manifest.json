@@ -1,7 +1,0 @@
-{
-    "$schema": "../../../../schema-kit-v1.json",
-    "name": "Lint Class Merge",
-    "description": "Kit covering ClassMergeSpacingChecker scenarios.",
-    "license": "MIT",
-    "homepage": "https://example.com/lint-class-merge"
-}

@@ -19,8 +19,8 @@
     data-tooltip-wrapper-selector-value="#{{ _tooltip_wrapper_id }}"
     data-tooltip-content-selector-value="#{{ _tooltip_content_id }}"
     data-tooltip-arrow-selector-value="#{{ _tooltip_arrow_id }}"
-    class="{{ ('relative inline-block ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
+        class: 'relative inline-block'|tailwind_classes,
         'data-controller': 'tooltip',
     }) }}
 >

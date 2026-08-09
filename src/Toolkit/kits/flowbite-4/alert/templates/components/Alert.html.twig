@@ -24,12 +24,13 @@
 
 <div
     role="alert"
-    class="{{ style.apply({variant: variant, border: border}, attributes.render('class'))|tailwind_merge }}"
     {% if dismissible %}
     data-controller="alert"
     data-alert-target="alert"
     {% endif %}
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: style.apply({variant: variant, border: border})|tailwind_classes,
+    }) }}
 >
     {%- block icon %}{% endblock -%}
     <div>

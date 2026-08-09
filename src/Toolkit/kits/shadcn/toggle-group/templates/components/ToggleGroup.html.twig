@@ -22,8 +22,8 @@
     data-orientation="{{ orientation }}"
     {{ orientation == 'horizontal' ? 'data-horizontal' }}
     {{ orientation == 'vertical' ? 'data-vertical' }}
-    class="{{ ('group/toggle-group flex w-fit flex-row items-center gap-[--spacing(var(--gap))] rounded-lg data-[size=sm]:rounded-[min(var(--radius-md),10px)] data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-stretch ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
+        class: 'group/toggle-group flex w-fit flex-row items-center gap-[--spacing(var(--gap))] rounded-lg data-[size=sm]:rounded-[min(var(--radius-md),10px)] data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-stretch'|tailwind_classes,
         'data-controller': 'toggle-group',
     }) }}
 >

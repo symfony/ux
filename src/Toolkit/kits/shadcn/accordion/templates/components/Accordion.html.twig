@@ -13,8 +13,8 @@
     data-accordion-multiple-value="{{ multiple ? 'true' : 'false' }}"
     data-accordion-orientation-value="{{ orientation }}"
     data-orientation="{{ orientation }}"
-    class="{{ ('flex w-full flex-col ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
+        class: 'flex w-full flex-col'|tailwind_classes,
         'data-controller': 'accordion',
     }) }}
 >

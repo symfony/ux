@@ -39,8 +39,9 @@
     },
 ) -%}
 <{{ as }}
-    class="{{ style.apply({variant: variant, size: size, shape: shape}, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: style.apply({variant: variant, size: size, shape: shape})|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </{{ as }}>

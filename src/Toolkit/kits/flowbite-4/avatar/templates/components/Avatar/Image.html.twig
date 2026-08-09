@@ -1,6 +1,5 @@
 <img
     data-avatar-image
-    class="{{ ('hidden rounded-[inherit] aspect-square size-full object-cover ' ~ attributes.render('class'))|tailwind_merge }}"
     onload="this.classList.remove('hidden'); this.closest('.group\\/avatar')?.querySelector('[data-avatar-fallback]')?.classList.add('hidden');"
-    {{ attributes.defaults({alt: ''}) }}
+    {{ attributes.defaults({class: 'hidden rounded-[inherit] aspect-square size-full object-cover'|tailwind_classes, alt: ''}) }}
 />

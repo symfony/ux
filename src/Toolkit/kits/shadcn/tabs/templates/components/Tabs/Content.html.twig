@@ -15,8 +15,9 @@
     aria-labelledby="{{ _tab_id }}"
     data-active="{{ open ? 'true' : 'false' }}"
     data-state="{{ open ? 'active' : 'inactive' }}"
-    class="{{ ('flex-1 text-sm outline-none data-[state=inactive]:hidden ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: 'flex-1 text-sm outline-none data-[state=inactive]:hidden'|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>

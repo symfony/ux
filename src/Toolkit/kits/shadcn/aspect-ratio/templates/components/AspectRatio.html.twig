@@ -4,8 +4,7 @@
 <div
     data-slot="aspect-ratio"
     style="aspect-ratio: {{ ratio }}"
-    class="{{ ('relative ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.without('class') }}
+    {{ attributes.defaults({class: 'relative'|tailwind_classes}) }}
 >
     {%- block content %}{% endblock -%}
 </div>
