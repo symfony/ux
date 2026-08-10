@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-10T06:08:18Z
+
+> Naive question: could/should this go into Twig directly, now there are filters/functions to handle utilities, and cva is here too? (genuine question)
+
+I'm not sure to understand what you're speaking about, `ComponentAttributes` maybe? Or more precisely about `ComponentAttributes::__toString()` that ideally, should directly use [`HtmlExtension::htmlAttr()`](https://github.com/twigphp/html-extra/blob/3.x/HtmlExtension.php#L195)?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-10T06:18:03Z
+
+I just pushed a new commit that fixes the usage of the pattern on a `<twig:Component>` tag:
+<img width="1729" height="680" alt="Capture d’écran 2026-08-10 à 08 15 57" src="https://github.com/user-attachments/assets/9f2bf29e-3892-4286-bc07-e98920b92c04" />
+<img width="1727" height="438" alt="Capture d’écran 2026-08-10 à 08 16 34" src="https://github.com/user-attachments/assets/58da4fa3-80e4-4488-ab9a-7610c9647a45" />
+
+`{{ ...attributes }}` erased the default `class` attribute when being used on a `<twig:Component>`, and these default classes were not applied.
+
+Since this PR contains both a feature and a fix, I also added a CHANGELOG entry for the fix (so it's not lost)
