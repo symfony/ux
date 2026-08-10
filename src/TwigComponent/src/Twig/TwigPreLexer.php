@@ -19,6 +19,9 @@ use Twig\Lexer;
  */
 class TwigPreLexer
 {
+    private const VERBATIM_REGEX = '/\G\{%[-~]?\s*verbatim\s*[-~]?%\}/';
+    private const ENDVERBATIM_REGEX = '/\{%[-~]?\s*endverbatim\s*[-~]?%\}/';
+
     private string $input;
     private int $length;
     private int $position = 0;
@@ -47,11 +50,14 @@ class TwigPreLexer
 
         while ($this->position < $this->length) {
             // ignore content inside verbatim block #947
-            if ($this->consume('{% verbatim %}')) {
-                $output .= '{% verbatim %}';
-                $output .= $this->consumeUntil('{% endverbatim %}');
-                $this->consume('{% endverbatim %}');
-                $output .= '{% endverbatim %}';
+            if ('{' === $this->input[$this->position] && preg_match(self::VERBATIM_REGEX, $this->input, $matches, 0, $this->position)) {
+                if (!empty($this->currentComponents)
+                    && !$this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock']) {
+                    $output .= '{% block content %}';
+                    $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] = true;
+                }
+
+                $output .= $this->consumeVerbatim($matches[0]);
 
                 if ($this->position === $this->length) {
                     break;
@@ -197,6 +203,26 @@ class TwigPreLexer
         }
 
         return $output;
+    }
+
+    /**
+     * Consumes a whole verbatim block, opening tag included, and returns it unchanged.
+     */
+    private function consumeVerbatim(string $openingTag): string
+    {
+        $this->line += substr_count($openingTag, "\n");
+        $this->position += \strlen($openingTag);
+
+        if (!preg_match(self::ENDVERBATIM_REGEX, $this->input, $matches, \PREG_OFFSET_CAPTURE, $this->position)) {
+            $consumed = substr($this->input, $this->position);
+        } else {
+            $consumed = substr($this->input, $this->position, $matches[0][1] - $this->position + \strlen($matches[0][0]));
+        }
+
+        $this->line += substr_count($consumed, "\n");
+        $this->position += \strlen($consumed);
+
+        return $openingTag.$consumed;
     }
 
     private function consumeComponentName(?string $customExceptionMessage = null): string

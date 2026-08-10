@@ -348,6 +348,46 @@ final class TwigPreLexerTest extends TestCase
             '{% verbatim %}<twig:Alert/>{% endverbatim %}',
         ];
 
+        yield 'ignore_content_of_verbatim_block_with_whitespace_trim' => [
+            '{%- verbatim -%}<twig:Alert/>{%- endverbatim -%}',
+            '{%- verbatim -%}<twig:Alert/>{%- endverbatim -%}',
+        ];
+
+        yield 'ignore_content_of_verbatim_block_with_line_trim' => [
+            '{%~ verbatim ~%}<twig:Alert/>{%~ endverbatim ~%}',
+            '{%~ verbatim ~%}<twig:Alert/>{%~ endverbatim ~%}',
+        ];
+
+        yield 'ignore_content_of_verbatim_block_without_spaces' => [
+            '{%verbatim%}<twig:Alert/>{%endverbatim%}',
+            '{%verbatim%}<twig:Alert/>{%endverbatim%}',
+        ];
+
+        yield 'ignore_content_of_verbatim_block_with_extra_spaces' => [
+            '{%   verbatim   %}<twig:Alert/>{%   endverbatim   %}',
+            '{%   verbatim   %}<twig:Alert/>{%   endverbatim   %}',
+        ];
+
+        yield 'ignore_content_of_verbatim_block_with_newlines_in_tags' => [
+            "{%\nverbatim\n%}<twig:Alert/>{%\nendverbatim\n%}",
+            "{%\nverbatim\n%}<twig:Alert/>{%\nendverbatim\n%}",
+        ];
+
+        yield 'ignore_content_of_verbatim_block_with_mixed_delimiters' => [
+            '{%- verbatim %}<twig:Alert/>{% endverbatim -%}',
+            '{%- verbatim %}<twig:Alert/>{% endverbatim -%}',
+        ];
+
+        yield 'verbatim_block_as_the_whole_component_content' => [
+            '<twig:foo>{% verbatim %}<twig:Alert/>{% endverbatim %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}{% verbatim %}<twig:Alert/>{% endverbatim %}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'verbatim_block_after_text_in_a_component' => [
+            '<twig:foo>a{% verbatim %}<twig:Alert/>{% endverbatim %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}a{% verbatim %}<twig:Alert/>{% endverbatim %}{% endblock %}{% endcomponent %}',
+        ];
+
         yield 'component_attr_spreading_self_closing' => [
             '<twig:foobar bar="baz"{{...attr}}/>',
             '{{ component(\'foobar\', { bar: \'baz\', ...attr }) }}',
