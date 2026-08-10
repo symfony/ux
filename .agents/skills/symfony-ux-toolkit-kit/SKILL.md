@@ -219,8 +219,9 @@ Attach screenshot/video of every interactive state. Link the companion PR URL in
     "dependencies": {
         "composer": [
             "twig/extra-bundle",
-            "twig/html-extra:^3.12.0",
-            "tales-from-a-dev/twig-tailwind-extra:^1.0.0"
+            "twig/html-extra:^3.24.0",
+            "symfony/ux-twig-component:^3.5",
+            "tales-from-a-dev/twig-tailwind-extra:^1.3.0"
         ],
         "recipe": ["<other-recipe>"]
     }
@@ -230,7 +231,7 @@ Attach screenshot/video of every interactive state. Link the companion PR URL in
 Rules:
 - Drop `assets/` from `copy-files` if no Stimulus controller.
 - Add `"symfony/ux-icons"` to `composer` whenever templates use `<twig:ux:icon>`.
-- Bump `twig/html-extra` constraint when using newer filters (e.g. `^3.24.0` for current `html_attr_type`).
+- Bump `twig/html-extra` to `^3.24.0` for `html_attr_type` / `tailwind_classes`. The `tailwind_classes` class-merge idiom also needs `tales-from-a-dev/twig-tailwind-extra:^1.3.0` and `symfony/ux-twig-component:^3.5` (enforced by `ComposerSymbolChecker`).
 - Declare `dependencies.recipe` only for recipes required by the **component templates** themselves (e.g. `toggle-group` depends on `toggle`). Do NOT declare recipe deps for components used only in examples — examples are demo files, not shipped dependencies.
 ---
 
@@ -258,14 +259,14 @@ Format is enforced by `bin/ux-toolkit-kit-lint` (CI fails on any warning — see
 
 ### 2. Root element
 
-There is one home for each kind of attribute. `attributes.defaults({...})` is **only** for values the consumer may override or extend: `data-controller`, `data-action`, and genuinely overridable HTML defaults (`type: 'button'`, `alt: ''`). Everything that identifies or reflects the component's state is rendered **directly as a literal attribute**, so it is always present and can neither be dropped by the merge nor overridden:
+There is one home for each kind of attribute. `attributes.defaults({...})` carries the consumer-overridable values: the merged **`class`** (as a `tailwind_classes` mergeable), `data-controller`, `data-action`, and genuinely overridable HTML defaults (`type: 'button'`, `alt: ''`). Everything that identifies or reflects the component's state is rendered **directly as a literal attribute**, so it is always present and can neither be dropped by the merge nor overridden:
 
-- **`class`** → `class="{{ ('<base> ' ~ attributes.render('class'))|tailwind_merge }}"` (mandatory merge; `render('class')` consumes `class` so a trailing bare `{{ attributes }}` never double-renders it).
+- **`class`** → merged **inside `defaults()`**: `class: '<base>'|tailwind_classes` (or `class: style.apply({...})|tailwind_classes` with `html_cva`). `tailwind_classes` returns a mergeable value that `defaults()` merges with the consumer's `class` (consumer wins). No separate `class="..."` / `render('class')`.
+  - **Exception — keep `('<base> ' ~ attributes.render('class'))|tailwind_merge`** when `class` and the attributes sink are on **different elements** (base on an outer element, sink on an inner one), or when `class` is spread onto an **external non-mergeable component** — e.g. `<twig:ux:icon>`, which validates `class` as a scalar string and rejects the `tailwind_classes` object. Spreading onto a **mergeable Toolkit child** (`<twig:Button>`, `<twig:Label>`, `<twig:Separator>`, …) is fine: `defaults()` chains the mergeables as `base < wrapper < caller`, matching React/Vue's `cn(base, className)`.
 - **`data-slot`** → literal attribute (`data-slot="<recipe-name>"`). Structural Shadcn marker, never overridable.
 - **State `data-*` and state `aria-*`** → literal attributes, **always emitted with an explicit value** (never `{% if %}`-guarded, never `x ? 'attr="y"'`): `data-state`, `data-open`, `data-closed`, `data-active`, `data-disabled`, `data-orientation`, `data-size`, `data-variant`, `data-side`, `data-selected`, `data-checked`; `aria-expanded`, `aria-selected`, `aria-hidden`, `aria-disabled`, `aria-checked`, `aria-pressed`, `aria-current`. Boolean values render as strings: `data-open="{{ open ? 'true' : 'false' }}"` (a bare `: false` renders empty/ambiguous — always use `: 'false'`).
 - **Stimulus value attrs** (`data-<recipe>-<key>-value`), `id`, `role`, ARIA id-refs (`aria-controls`/`aria-labelledby`/`aria-describedby`) → literal attributes.
-- **`data-controller` / `data-action` (+ overridable HTML defaults)** → `attributes.defaults({...})`.
-- When there is nothing to put in `defaults()` → bare `{{ attributes }}`.
+- **`class` + `data-controller` / `data-action` (+ overridable HTML defaults)** → `attributes.defaults({...})`. A bare `{{ attributes }}` remains only where there is no `class` base.
 
 ```twig
 {# WITH a controller/action (interactive component) #}
@@ -275,8 +276,8 @@ There is one home for each kind of attribute. `attributes.defaults({...})` is **
     data-<recipe>-<key>-value="{{ value }}"
     data-orientation="{{ orientation }}"
     aria-labelledby="{{ _<recipe>_title_id }}"
-    class="{{ ('<base classes> ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
+        class: '<base classes>'|tailwind_classes,
         'data-controller': '<recipe>',
         'data-action': 'click-><recipe>#toggle',
     }) }}
@@ -287,17 +288,18 @@ There is one home for each kind of attribute. `attributes.defaults({...})` is **
 {# WITHOUT a controller/action (static component) #}
 <div
     data-slot="<recipe-name>"
-    class="{{ ('<base classes> ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: '<base classes>'|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>
 ```
 
-- Do NOT put `data-slot`, state `data-*`, `aria-*` or Stimulus `data-*-value` into `defaults()` — they belong as literal attributes. `bin/ux-toolkit-kit-lint` enforces this (`AttributesDefaultsChecker`).
+- Do NOT put `data-slot`, state `data-*`, `aria-*` or Stimulus `data-*-value` into `defaults()` — they belong as literal attributes (enforced by `AttributesDefaultsChecker`). Only `class`, `data-controller` and `data-action` belong in `defaults()`.
 - Do NOT put hardcoded HTML element attributes (like `type="checkbox"`) into `defaults()` — those are structural, not overridable.
 - **Structural / config / marker attributes stay conditional** (they are not "always render" state): `aria-orientation` on a decorative separator, `data-bs-parent`, presence-marker attributes like `data-horizontal`/`data-vertical`.
-- **Non-Tailwind kits (Bootstrap, Common)** keep their own idiom: `class` is merged *inside* `defaults()` (`attributes.defaults({class: '...'})`), there is no `data-slot`, and no `tailwind_merge`. Only the `data-slot` rule and the state-attribute rule apply there; the linter's Tailwind-only checks are skipped for them.
+- **Non-Tailwind kits (Bootstrap, Common)** keep their own idiom: `class` is merged *inside* `defaults()` as a plain string (`attributes.defaults({class: '...'})`, no `tailwind_classes`), there is no `data-slot`, and no `tailwind_merge`. Only the `data-slot` rule and the state-attribute rule apply there; the linter's Tailwind-only checks are skipped for them.
 
 ### 3. Variant systems with `html_cva`
 
@@ -309,7 +311,7 @@ There is one home for each kind of attribute. `attributes.defaults({...})` is **
         size: { default: '...', sm: '...', lg: '...' },
     },
 ) -%}
-<button class="{{ style.apply({variant: variant, size: size}, attributes.render('class'))|tailwind_merge }}">
+<button {{ attributes.defaults({ class: style.apply({variant: variant, size: size})|tailwind_classes }) }}>
 ```
 
 ### 4. Parent → descendant context propagation
@@ -556,7 +558,7 @@ Reviewers explicitly check snapshots regenerated (`#3488`).
 - [ ] `php-cs-fixer`, `twig-cs-fixer`, `pnpm run fmt`, `pnpm run lint` clean
 - [ ] `bin/ux-toolkit-kit-lint --fail-on-warning kits/<kit>` clean
 - [ ] Docblocks: `@prop`/`@block` present; descriptions Capitalized + ending with a period; prop types are spaceless PHPStan types; **no `Defaults to`** (defaults live in `{%- props -%}`); every `@block` matches a rendered block
-- [ ] `attributes.defaults()` holds only `data-controller`/`data-action` (+ overridable HTML defaults); `data-slot`, state `data-*`, `aria-*` and Stimulus `data-*-value` are literal attributes; state attrs always emitted with an explicit value
+- [ ] `attributes.defaults()` holds the merged `class` (`'<base>'|tailwind_classes`), `data-controller`/`data-action` (+ overridable HTML defaults); `data-slot`, state `data-*`, `aria-*` and Stimulus `data-*-value` are literal attributes; state attrs always emitted with an explicit value (`tailwind_merge` kept only in different-element / external-component exceptions)
 - [ ] Trigger/Close sub-components use `<recipe>_<role>_attrs` (no wrapping `<button>`)
 - [ ] `data-action` Stimulus actions piped through `|html_attr_type('sst')` when concatenable
 - [ ] Inter-recipe deps declared in `manifest.json` `dependencies.recipe`
@@ -569,11 +571,11 @@ Reviewers explicitly check snapshots regenerated (`#3488`).
 
 | Anti-pattern | Fix |
 | --- | --- |
-| `{{ attributes.defaults({}) }}` with empty or no meaningful defaults | `{{ attributes }}` when no defaults needed; `{{ attributes.defaults({...}) }}` only for `data-controller`/`data-action` (+ overridable HTML defaults like `type`) |
-| `data-slot`, `aria-*`, Stimulus `data-*-value` or state `data-*` inside `defaults()` | Render them as literal attributes outside `defaults()`; keep only `data-controller`/`data-action` in `defaults()` (enforced by `AttributesDefaultsChecker`) |
+| `{{ attributes.defaults({}) }}` with empty or no meaningful defaults | `{{ attributes }}` when no defaults needed; `{{ attributes.defaults({...}) }}` for the merged `class` (`tailwind_classes`), `data-controller`/`data-action` (+ overridable HTML defaults like `type`) |
+| `data-slot`, `aria-*`, Stimulus `data-*-value` or state `data-*` inside `defaults()` | Render them as literal attributes outside `defaults()`; keep only `class`, `data-controller`/`data-action` in `defaults()` (enforced by `AttributesDefaultsChecker`) |
 | State attr conditionally emitted (`{{ open ? 'data-state="open"' }}`) or bare `: false` (`data-open="{{ open ? 'true' : false }}"`) | Always emit with explicit string value (`data-state="{{ open ? 'open' : 'closed' }}"`, `... : 'false'`) |
-| Hardcoded `class="..."` on root | `class="{{ ('<base> ' ~ attributes.render('class'))\|tailwind_merge }}"` |
-| Variant via `{% if variant == ... %}` chains | `html_cva(base, variants).apply({...})\|tailwind_merge` |
+| Separate `class="{{ ('<base> ' ~ attributes.render('class'))\|tailwind_merge }}"` + trailing `{{ attributes }}` (Tailwind kits) | Merge inside `defaults()`: `{{ attributes.defaults({ class: '<base>'\|tailwind_classes }) }}` (keep `tailwind_merge` only for different-element cases or spreads onto an external non-mergeable component like `<twig:ux:icon>`) |
+| Variant via `{% if variant == ... %}` chains | `attributes.defaults({ class: html_cva(base, variants).apply({...})\|tailwind_classes })` |
 | `Trigger.html.twig` wraps own `<button>` | Expose `<recipe>_trigger_attrs` + use `{%- block content %}{% endblock -%}` only |
 | `data-action="click->x#y"` not piped | `'click->x#y'\|html_attr_type('sst')` |
 | Missing `data-slot` on root/sub-roots (Shadcn) | Add `data-slot="<recipe>"` / `data-slot="<recipe>-<sub>"` |
@@ -604,5 +606,5 @@ Reviewers explicitly check snapshots regenerated (`#3488`).
 | Bad | Good |
 | --- | --- |
 | `<button class="..." data-action="click->dialog#open">{% block content %}{% endblock %}</button>` | `{%- set dialog_trigger_attrs = { 'data-action': 'click->dialog#open'\|html_attr_type('sst'), 'data-dialog-target': 'trigger', 'aria-haspopup': 'dialog' } -%}{%- block content %}{% endblock -%}` |
-| `<div class="text-lg leading-none font-semibold {{ attributes.render('class') }}" {{ attributes.defaults({'data-slot': 'dialog-title'}) }}>` | `<div data-slot="dialog-title" class="{{ ('text-lg leading-none font-semibold ' ~ attributes.render('class'))\|tailwind_merge }}" {{ attributes }}>` (`data-slot` literal; `defaults()` only for controller/action) |
+| `<div class="text-lg leading-none font-semibold {{ attributes.render('class') }}" {{ attributes.defaults({'data-slot': 'dialog-title'}) }}>` | `<div data-slot="dialog-title" {{ attributes.defaults({ class: 'text-lg leading-none font-semibold'\|tailwind_classes }) }}>` (`data-slot` literal; `class` merged inside `defaults()` via `tailwind_classes`) |
 | `<twig:RadioGroup:Item value="a" />` reading `{% set _radio_group_name = ... %}` from parent | Keep `name` as explicit prop on `RadioGroup:Item` (self-closing) |

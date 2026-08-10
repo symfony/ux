@@ -6,8 +6,8 @@
     data-slot="hover-card"
     data-hover-card-open-delay-value="{{ openDelay }}"
     data-hover-card-close-delay-value="{{ closeDelay }}"
-    class="{{ ('relative inline-block ' ~ attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
+        class: 'relative inline-block'|tailwind_classes,
         'data-controller': 'hover-card',
         'data-action': 'mouseenter->hover-card#show mouseleave->hover-card#hide',
     }) }}

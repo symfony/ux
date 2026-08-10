@@ -6,6 +6,7 @@
     data-orientation="{{ orientation }}"
     role="{{ decorative ? 'none' : 'separator' }}"
     {{ not decorative ? 'aria-orientation="' ~ orientation ~ '"' }}
-    class="{{ ('shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: 'shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch'|tailwind_classes,
+    }) }}
 ></div>

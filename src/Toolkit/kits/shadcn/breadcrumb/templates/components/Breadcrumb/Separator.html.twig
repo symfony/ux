@@ -3,8 +3,9 @@
     data-slot="breadcrumb-separator"
     role="presentation"
     aria-hidden="true"
-    class="{{ ('[&>svg]:size-3.5 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: '[&>svg]:size-3.5'|tailwind_classes,
+    }) }}
 >
     {%- block content -%}
         <twig:ux:icon name="lucide:chevron-right" class="rtl:rotate-180" />

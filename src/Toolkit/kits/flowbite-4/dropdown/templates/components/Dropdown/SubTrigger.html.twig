@@ -16,8 +16,9 @@
     aria-expanded="false"
     aria-haspopup="menu"
     aria-controls="{{ _dropdown_id }}"
-    class="{{ ('inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: 'inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded'|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
     {% if _subtrigger_icon %}

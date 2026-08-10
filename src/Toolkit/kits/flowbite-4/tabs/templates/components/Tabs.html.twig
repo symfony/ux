@@ -7,8 +7,9 @@
     data-controller="tabs"
     data-tabs-active-tab-value="{{ defaultValue }}"
     data-orientation="{{ orientation }}"
-    class="{{ ('gap-4 group/tabs flex data-[orientation=horizontal]:flex-col ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: 'gap-4 group/tabs flex data-[orientation=horizontal]:flex-col'|tailwind_classes,
+    }) }}
 >
     {% block content %}{% endblock %}
 </div>

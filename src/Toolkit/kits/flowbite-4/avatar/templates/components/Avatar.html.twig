@@ -32,8 +32,9 @@
 
 <span
     data-size="{{ size }}"
-    class="{{ style.apply({size: size, shape: shape, border: border}, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: style.apply({size: size, shape: shape, border: border})|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </span>

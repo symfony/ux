@@ -16,8 +16,9 @@
     data-slot="input-group-addon"
     data-align="{{ align }}"
     role="group"
-    class="{{ style.apply({align: align}, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: style.apply({align: align})|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>

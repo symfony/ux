@@ -2,8 +2,9 @@
     data-slot="breadcrumb-ellipsis"
     role="presentation"
     aria-hidden="true"
-    class="{{ ('flex size-5 items-center justify-center [&>svg]:size-4 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: 'flex size-5 items-center justify-center [&>svg]:size-4'|tailwind_classes,
+    }) }}
 >
     <twig:ux:icon name="lucide:ellipsis" />
     <span class="sr-only">More</span>

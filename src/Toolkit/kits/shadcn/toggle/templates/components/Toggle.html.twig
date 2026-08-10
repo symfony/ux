@@ -26,8 +26,8 @@
     data-slot="toggle"
     aria-pressed="{{ pressed ? 'true' : 'false' }}"
     data-state="{{ pressed ? 'on' : 'off' }}"
-    class="{{ style.apply({variant: variant, size: size}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
+        class: style.apply({variant: variant, size: size})|tailwind_classes,
         'data-controller': 'toggle',
         'data-action': 'click->toggle#toggle',
     }) }}

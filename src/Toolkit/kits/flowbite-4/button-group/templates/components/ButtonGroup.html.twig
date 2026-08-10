@@ -14,8 +14,9 @@
 <div
     role="group"
     data-orientation="{{ orientation }}"
-    class="{{ style.apply({orientation: orientation}, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: style.apply({orientation: orientation})|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>

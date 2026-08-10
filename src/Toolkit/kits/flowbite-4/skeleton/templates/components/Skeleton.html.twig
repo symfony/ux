@@ -11,8 +11,9 @@
     },
 ) -%}
 <div
-    class="{{ style.apply({shape: shape}, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: style.apply({shape: shape})|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>

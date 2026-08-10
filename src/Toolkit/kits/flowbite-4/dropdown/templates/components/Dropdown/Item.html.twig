@@ -12,8 +12,7 @@
     <{{ as }}
         role="menuitem"
         tabindex="-1"
-        class="{{ ('inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded ' ~ attributes.render('class'))|tailwind_merge }}"
-        {{ attributes.defaults(_attributes_defaults) }}
+        {{ attributes.defaults(_attributes_defaults).defaults({class: 'inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded'|tailwind_classes}) }}
     >
         {%- block content %}{% endblock -%}
     </{{ as }}>

@@ -2,8 +2,9 @@
 <div
     role="radiogroup"
     data-slot="radio-group"
-    class="{{ ('grid w-full gap-2 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: 'grid w-full gap-2'|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>

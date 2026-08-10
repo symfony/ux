@@ -1,9 +1,0 @@
-{
-    "$schema": "../../../../../schema-kit-recipe-v1.json",
-    "type": "component",
-    "name": "Cases",
-    "description": "One template per class-merge spacing scenario.",
-    "copy-files": {
-        "templates/": "templates/"
-    }
-}

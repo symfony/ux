@@ -29,8 +29,8 @@
     aria-pressed="{{ pressed ? 'true' : 'false' }}"
     data-state="{{ pressed ? 'on' : 'off' }}"
     {{ _toggleGroup_disabled ? 'disabled' }}
-    class="{{ style.apply({variant: _toggleGroup_variant, size: _toggleGroup_size}, attributes.render('class'))|tailwind_merge }}"
     {{ attributes.defaults({
+        class: style.apply({variant: _toggleGroup_variant, size: _toggleGroup_size})|tailwind_classes,
         'data-controller': 'toggle',
         'data-action': 'click->toggle#toggle click->toggle-group#toggle',
     }) }}

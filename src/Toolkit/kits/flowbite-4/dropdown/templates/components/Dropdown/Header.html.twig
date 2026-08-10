@@ -2,8 +2,9 @@
 
 <div
     role="none"
-    class="{{ ('m-2 p-2 text-sm text-body bg-neutral-secondary-strong border-0 rounded ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: 'm-2 p-2 text-sm text-body bg-neutral-secondary-strong border-0 rounded'|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>

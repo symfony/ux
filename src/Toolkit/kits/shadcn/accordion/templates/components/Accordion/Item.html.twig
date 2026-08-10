@@ -24,8 +24,9 @@
     data-open="{{ _accordion_item_is_open ? 'true' : 'false' }}"
     data-closed="{{ not _accordion_item_is_open ? 'true' : 'false' }}"
     aria-disabled="{{ _accordion_item_disabled ? 'true' : 'false' }}"
-    class="{{ ('not-last:border-b group ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ attributes }}
+    {{ attributes.defaults({
+        class: 'not-last:border-b group'|tailwind_classes,
+    }) }}
 >
     {%- block content %}{% endblock -%}
 </div>
