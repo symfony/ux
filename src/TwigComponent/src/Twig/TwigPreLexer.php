@@ -130,6 +130,17 @@ class TwigPreLexer
                     $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] = true;
                 }
 
+                // Handle <twig:component is="..." /> and <twig:component is="{{ ... }}" />
+                $isDynamicComponent = false;
+                $componentExpression = $componentName;
+                if ('component' === strtolower($componentName)) {
+                    $resolved = $this->consumeDynamicComponentName();
+                    if (null !== $resolved) {
+                        $componentExpression = $resolved['expression'];
+                        $isDynamicComponent = $resolved['isDynamic'];
+                    }
+                }
+
                 $attributes = $this->consumeAttributes($componentName);
                 $isSelfClosing = $this->consume('/>');
                 if (!$isSelfClosing) {
@@ -137,13 +148,19 @@ class TwigPreLexer
                     $this->currentComponents[] = ['name' => $componentName, 'hasDefaultBlock' => false];
                 }
 
-                if ($isSelfClosing) {
+                if ($isDynamicComponent) {
+                    if ($isSelfClosing) {
+                        $output .= "{{ component({$componentExpression}".($attributes ? ", { {$attributes} }" : '').') }}';
+                    } else {
+                        $output .= "{% component ({$componentExpression})".($attributes ? " with { {$attributes} }" : '').' %}';
+                    }
+                } elseif ($isSelfClosing) {
                     // use the simpler component() format, so that the system doesn't think
                     // this is an "embedded" component with blocks
                     // see https://github.com/symfony/ux/issues/810
-                    $output .= "{{ component('{$componentName}'".($attributes ? ", { {$attributes} }" : '').') }}';
+                    $output .= "{{ component('{$componentExpression}'".($attributes ? ", { {$attributes} }" : '').') }}';
                 } else {
-                    $output .= "{% component '{$componentName}'".($attributes ? " with { {$attributes} }" : '').' %}';
+                    $output .= "{% component '{$componentExpression}'".($attributes ? " with { {$attributes} }" : '').' %}';
                 }
 
                 continue;
@@ -209,6 +226,48 @@ class TwigPreLexer
         }
 
         throw new SyntaxError($customExceptionMessage ?? 'Expected component name when resolving the "<twig:" syntax.', $this->line);
+    }
+
+    /**
+     * @return array{expression: string, isDynamic: bool}|null
+     */
+    private function consumeDynamicComponentName(): ?array
+    {
+        $savedPosition = $this->position;
+        $savedLine = $this->line;
+
+        $this->consumeWhitespace();
+
+        $isDynamic = false;
+
+        if ($this->consume(':is=')) {
+            $isDynamic = true;
+        } elseif ($this->consume('is=')) {
+            $isDynamic = false;
+        } else {
+            $this->position = $savedPosition;
+            $this->line = $savedLine;
+
+            return null;
+        }
+
+        $quote = $this->consumeChar(["'", '"']);
+        $componentExpression = $this->consumeUntil($quote);
+        $this->expectAndConsumeChar($quote);
+
+        if ('' === $componentExpression) {
+            throw new SyntaxError(\sprintf('The "%s" attribute of "<twig:component>" must not be empty', $isDynamic ? ':is' : 'is'), $this->line);
+        }
+
+        if (!$isDynamic && str_starts_with($componentExpression, '{{') && str_ends_with($componentExpression, '}}')) {
+            $componentExpression = trim(substr($componentExpression, 2, -2));
+            if ('' === $componentExpression) {
+                throw new SyntaxError('The "is" attribute of "<twig:component>" must not be empty.', $this->line);
+            }
+            $isDynamic = true;
+        }
+
+        return ['expression' => $componentExpression, 'isDynamic' => $isDynamic];
     }
 
     private function consumeAttributes(string $componentName): string

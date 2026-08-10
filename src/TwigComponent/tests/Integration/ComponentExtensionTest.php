@@ -244,6 +244,101 @@ final class ComponentExtensionTest extends KernelTestCase
         $template->render(['obj' => new \stdClass()]);
     }
 
+    public function testCanRenderSelfClosingDynamicComponentWithStaticIs()
+    {
+        $environment = self::getContainer()->get(Environment::class);
+        $template = $environment->createTemplate('<twig:component is="DynamicNameComponent1" />');
+        $output = $template->render();
+
+        $this->assertStringContainsString('DynamicNameComponent1 rendered', $output);
+    }
+
+    public function testCanRenderSelfClosingDynamicComponentWithDynamicIs()
+    {
+        $environment = self::getContainer()->get(Environment::class);
+        $template = $environment->createTemplate('<twig:component :is="componentName" />');
+        $output = $template->render(['componentName' => 'DynamicNameComponent1']);
+
+        $this->assertStringContainsString('DynamicNameComponent1 rendered', $output);
+    }
+
+    public function testCanRenderPairedDynamicComponentWithStaticIs()
+    {
+        $environment = self::getContainer()->get(Environment::class);
+        $template = $environment->createTemplate('<twig:component is="DynamicNameComponent1">content</twig:component>');
+        $output = $template->render();
+
+        $this->assertStringContainsString('DynamicNameComponent1 rendered', $output);
+    }
+
+    public function testCanRenderPairedDynamicComponentWithDynamicIs()
+    {
+        $environment = self::getContainer()->get(Environment::class);
+        $template = $environment->createTemplate('<twig:component :is="componentName">content</twig:component>');
+        $output = $template->render(['componentName' => 'DynamicNameComponent1']);
+
+        $this->assertStringContainsString('DynamicNameComponent1 rendered', $output);
+    }
+
+    public function testCanRenderDynamicComponentWithDynamicIsInLoop()
+    {
+        $environment = self::getContainer()->get(Environment::class);
+        $template = $environment->createTemplate('{% set prefix = "DynamicNameComponent" %}{% for i in 1..2 %}<twig:component :is="prefix ~ i" />{% endfor %}');
+        $output = $template->render();
+
+        $this->assertStringContainsString('DynamicNameComponent1 rendered', $output);
+        $this->assertStringContainsString('DynamicNameComponent2 rendered', $output);
+    }
+
+    public function testCanRenderDynamicComponentWithDynamicIsFromArray()
+    {
+        $environment = self::getContainer()->get(Environment::class);
+        $template = $environment->createTemplate('{% for i in 0..1 %}<twig:component :is="names[i]" />{% endfor %}');
+        $output = $template->render(['names' => ['DynamicNameComponent1', 'DynamicNameComponent2']]);
+
+        $this->assertStringContainsString('DynamicNameComponent1 rendered', $output);
+        $this->assertStringContainsString('DynamicNameComponent2 rendered', $output);
+    }
+
+    public function testCanRenderDynamicComponentWithPropsViaStaticIs()
+    {
+        $environment = self::getContainer()->get(Environment::class);
+        $template = $environment->createTemplate('<twig:component is="component_a" propA="A" propB="B" />');
+        $output = $template->render();
+
+        $this->assertStringContainsString('propA: A', $output);
+        $this->assertStringContainsString('propB: B', $output);
+    }
+
+    public function testCanRenderDynamicComponentWithPropsViaDynamicIs()
+    {
+        $environment = self::getContainer()->get(Environment::class);
+        $template = $environment->createTemplate('<twig:component :is="name" propA="A" propB="B" />');
+        $output = $template->render(['name' => 'component_a']);
+
+        $this->assertStringContainsString('propA: A', $output);
+        $this->assertStringContainsString('propB: B', $output);
+    }
+
+    public function testThrowsWhenDynamicComponentHtmlSyntaxNameDoesNotExist()
+    {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Unknown component "NonExistent"');
+
+        $environment = self::getContainer()->get(Environment::class);
+        $template = $environment->createTemplate('<twig:component :is="name" />');
+        $template->render(['name' => 'NonExistent']);
+    }
+
+    public function testCanRenderDynamicComponentInsideRegularComponent()
+    {
+        $environment = self::getContainer()->get(Environment::class);
+        $template = $environment->createTemplate('<twig:BasicComponent><twig:component :is="name" /></twig:BasicComponent>');
+        $output = $template->render(['name' => 'DynamicNameComponent1']);
+
+        $this->assertStringContainsString('DynamicNameComponent1 rendered', $output);
+    }
+
     public function testComponentWithNamespace()
     {
         $output = $this->renderComponent('foo:bar:baz');
