@@ -4,6 +4,5 @@
 <twig:Separator
     orientation="{{ orientation }}"
     decorative="{{ decorative }}"
-    class="{{ ('my-2 ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ ...attributes }}
+    {{ ...attributes.defaults({class: 'my-2'|tailwind_classes}) }}
 />

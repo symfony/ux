@@ -3,6 +3,5 @@
 <twig:Separator
     orientation="{{ orientation }}"
     data-slot="button-group-separator"
-    class="{{ ('relative self-stretch bg-input ' ~ (orientation == 'vertical' ? 'my-px h-auto' : 'mx-px w-auto') ~ ' ' ~ attributes.render('class'))|tailwind_merge }}"
-    {{ ...attributes }}
+    {{ ...attributes.defaults({class: ('relative self-stretch bg-input ' ~ (orientation == 'vertical' ? 'my-px h-auto' : 'mx-px w-auto'))|tailwind_classes}) }}
 />
