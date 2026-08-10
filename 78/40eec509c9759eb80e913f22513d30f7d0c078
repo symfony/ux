@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-08T14:38:40Z
+
+The syntax for the component tag already exists no? Or the PR adding that behavior is still opened?
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-07-08T14:53:39Z
+
+Yes, I'm referring to this PR: https://github.com/symfony/ux/pull/3395, which is still open.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-28T06:57:49Z
+
+I just merged https://github.com/symfony/ux/pull/3395, it would be great if this PR (or a new one) only focus on dynamic component support for HTML-syntax.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-07-30T14:59:23Z
+
+> I just merged #3395, it would be great if this PR (or a new one) only focus on dynamic component support for HTML-syntax.
+>
+> Thanks!
+
+I have just added support for dynamic components using HTML syntax.
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-07-31T18:39:51Z
+
+@smnandre, thanks for your review; I've made the corrections.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-08-10T05:36:09Z
+
+(just need some rebase / conflict fix)
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-08-10T11:54:29Z
+
+I just rebased.
