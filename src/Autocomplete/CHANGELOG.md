@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.5
+
+- Translate the `optgroup` labels returned by the AJAX endpoint, so `group_by` can use translation keys
+- Add `EntityAutocompleterInterface::getTranslationDomain()` to choose the translation domain used for the `optgroup` labels
+
 ## 3.2
 
 - Fix the XSS vulnerability fix introduced in 3.1, which was broken on PostgreSQL. See section 2.36.2 below for details.
