@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Unreleased
+
+- Translate the `optgroup` labels returned by the AJAX endpoint, so that the `group_by`
+  option can use translation keys, like the ones rendered by the form theme already do.
+  The `getTranslationDomain()` method can be implemented by custom autocompleters to
+  choose the domain; entity autocomplete fields use their `choice_translation_domain` option.
+
 ## 2.36.2
 
 - Fix the autocomplete search query throwing an exception on PostgreSQL because of

@@ -35,6 +35,7 @@ use Symfony\UX\Autocomplete\AutocompleteBundle;
 use Symfony\UX\Autocomplete\DependencyInjection\AutocompleteFormTypePass;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomAttributesProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomGroupByProductAutocompleter;
+use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomGroupByTranslatedProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Form\CategoryWithCallbackAsCustomValue;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Form\CategoryWithPropertyNameAsCustomValue;
@@ -102,6 +103,10 @@ final class Kernel extends BaseKernel
             'secrets' => false,
             'session' => ['storage_factory_id' => 'session.storage.factory.mock_file'],
             'form' => ['enabled' => $this->enableForms],
+            'translator' => [
+                'default_path' => '%kernel.project_dir%/tests/Fixtures/translations',
+                'fallbacks' => ['en'],
+            ],
         ]);
 
         $c->extension('twig', [
@@ -189,6 +194,13 @@ final class Kernel extends BaseKernel
             ->arg(1, new Reference('ux.autocomplete.entity_search_util'))
             ->tag(AutocompleteFormTypePass::ENTITY_AUTOCOMPLETER_TAG, [
                 'alias' => 'custom_group_by_product',
+            ]);
+
+        $services->set(CustomGroupByTranslatedProductAutocompleter::class)
+            ->public()
+            ->arg(1, new Reference('ux.autocomplete.entity_search_util'))
+            ->tag(AutocompleteFormTypePass::ENTITY_AUTOCOMPLETER_TAG, [
+                'alias' => 'custom_group_by_translated_product',
             ]);
 
         $services->set(CustomAttributesProductAutocompleter::class)

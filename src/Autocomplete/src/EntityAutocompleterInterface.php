@@ -22,8 +22,9 @@ use Symfony\Bundle\SecurityBundle\Security;
  *
  * TODO Remove next lines for Symfony UX 3
  *
- * @method array getAttributes(object $entity) Returns extra attributes to add to the autocomplete result.
- * @method mixed getGroupBy()                  Return group_by option.
+ * @method array             getAttributes(object $entity) Returns extra attributes to add to the autocomplete result.
+ * @method mixed             getGroupBy()                  Return group_by option.
+ * @method string|false|null getTranslationDomain()        Return the translation domain used for the "group_by" labels.
  */
 interface EntityAutocompleterInterface
 {
@@ -75,4 +76,13 @@ interface EntityAutocompleterInterface
      * TODO Uncomment for Symfony UX 3
      */
     /* public function getGroupBy(): mixed; */
+
+    /*
+     * Return the translation domain used for the "group_by" labels.
+     *
+     * Returning null uses the default domain, false disables the translation.
+     *
+     * TODO Uncomment for Symfony UX 3
+     */
+    /* public function getTranslationDomain(): string|false|null; */
 }

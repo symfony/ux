@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\UX\Autocomplete\AutocompleteResultsExecutor;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomGroupByProductAutocompleter;
+use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomGroupByTranslatedProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Factory\CategoryFactory;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Factory\ProductFactory;
@@ -93,6 +94,37 @@ class WiringTest extends KernelTestCase
         $autocompleter = $kernel->getContainer()->get(CustomGroupByProductAutocompleter::class);
         $data = $executor->fetchResults($autocompleter, '', 1);
         $this->assertCount(3, $data->results);
-        $this->assertCount(2, $data->optgroups);
+        $this->assertSame([
+            ['value' => 'foods', 'label' => 'foods'],
+            ['value' => 'toys', 'label' => 'toys'],
+        ], $data->optgroups);
+    }
+
+    public function testWiringWithoutFormAndTranslatedGroupByOption()
+    {
+        $kernel = new Kernel('test', true);
+        $kernel->disableForms();
+        $kernel->boot();
+
+        $category1 = CategoryFactory::createOne(['name' => 'foods']);
+        $category2 = CategoryFactory::createOne(['name' => 'toys']);
+        ProductFactory::createOne(['name' => 'pizza', 'category' => $category1]);
+        ProductFactory::createOne(['name' => 'toy food', 'category' => $category2]);
+        ProductFactory::createOne(['name' => 'puzzle', 'category' => $category2]);
+
+        /** @var AutocompleteResultsExecutor $executor */
+        $executor = $kernel->getContainer()->get('public.results_executor');
+        $autocompleter = $kernel->getContainer()->get(CustomGroupByTranslatedProductAutocompleter::class);
+        $data = $executor->fetchResults($autocompleter, '', 1);
+
+        $this->assertCount(3, $data->results);
+        // the label is translated, while the value stays untranslated so that it
+        // keeps tying the results to their optgroup whatever the locale is
+        $this->assertSame([
+            ['value' => 'foods', 'label' => 'Food & drinks'],
+            ['value' => 'toys', 'label' => 'Toys'],
+        ], $data->optgroups);
+        $this->assertSame(['foods'], $data->results[0]['group_by']);
+        $this->assertSame(['toys'], $data->results[1]['group_by']);
     }
 }
