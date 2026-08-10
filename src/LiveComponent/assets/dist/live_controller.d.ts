@@ -1,11 +1,20 @@
 import { Controller } from "@hotwired/stimulus";
+interface Download {
+  filename: string;
+  blob: Blob;
+}
 declare class export_default$2 {
   response: Response;
   private body;
   private liveUrl;
+  private download;
+  private parsePromise;
   constructor(response: Response);
   getBody(): Promise<string>;
+  getDownload(): Download | null;
   getLiveUrl(): string | null;
+  getDownloadUrl(): string | null;
+  private parse;
 }
 declare class export_default$1 {
   promise: Promise<Response>;

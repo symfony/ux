@@ -1,6 +1,7 @@
 import type { BackendAction, BackendInterface } from '../Backend/Backend';
 import type BackendRequest from '../Backend/BackendRequest';
 import BackendResponse from '../Backend/BackendResponse';
+import type { Download } from '../Backend/BackendResponse';
 import { findComponents, registerComponent, unregisterComponent } from '../ComponentRegistry';
 import { elementBelongsToThisComponent, getValueFromElement, htmlToElement } from '../dom_utils';
 import HookManager from '../HookManager';
@@ -308,15 +309,16 @@ export default class Component {
 
         this.backendRequest.promise.then(async (response) => {
             const backendResponse = new BackendResponse(response);
-            const html = await backendResponse.getBody();
+            const headers = backendResponse.response.headers;
 
             // clear sent files inputs
             for (const input of Object.values(this.pendingFiles)) {
                 input.value = '';
             }
 
+            const html = await backendResponse.getBody();
+
             // if the response does not contain a component, render as an error
-            const headers = backendResponse.response.headers;
             if (
                 !headers.get('Content-Type')?.includes('application/vnd.live-component+html') &&
                 !headers.get('X-Live-Redirect')
@@ -455,6 +457,21 @@ export default class Component {
                 })
             );
         });
+
+        // the render is done and the props are applied, so a download failing here must not
+        // take the whole request down with it
+        try {
+            const downloadUrl = backendResponse.getDownloadUrl();
+            const download = backendResponse.getDownload();
+
+            if (downloadUrl) {
+                triggerDownload({ url: downloadUrl });
+            } else if (download) {
+                triggerDownload(download);
+            }
+        } catch (error) {
+            console.error('Could not start the download:', error);
+        }
 
         this.hooks.triggerHook('render:finished', this);
     }
@@ -607,4 +624,33 @@ export function proxifyComponent(component: Component): Component {
             return true;
         },
     });
+}
+
+/**
+ * Hands a file to the browser without leaving the page, either from a URL it fetches
+ * itself or from a blob carried in the response.
+ *
+ * The object URL is revoked on a delay: revoking it in the same tick can cancel the
+ * download in some browsers.
+ */
+function triggerDownload(download: Download | { url: string }): void {
+    const fromUrl = 'url' in download;
+    const href = fromUrl ? download.url : URL.createObjectURL(download.blob);
+    const link = Object.assign(document.createElement('a'), {
+        href,
+        // an empty download attribute keeps the name the server sends. Note it is ignored
+        // cross-origin, where the remote Content-Disposition decides instead
+        download: fromUrl ? '' : download.filename,
+        style: 'display: none',
+    });
+
+    document.body.appendChild(link);
+    link.click();
+
+    setTimeout(() => {
+        document.body.removeChild(link);
+        if (!fromUrl) {
+            URL.revokeObjectURL(href);
+        }
+    }, 75);
 }

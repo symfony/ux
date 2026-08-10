@@ -87,17 +87,48 @@ var Backend_default = class {
 };
 var BackendResponse_default = class {
 	constructor(response) {
+		this.download = null;
+		this.parsePromise = null;
 		this.response = response;
 	}
 	async getBody() {
-		if (!this.body) this.body = await this.response.text();
+		if (!this.parsePromise) this.parsePromise = this.parse();
+		await this.parsePromise;
 		return this.body;
+	}
+	getDownload() {
+		return this.download;
 	}
 	getLiveUrl() {
 		if (void 0 === this.liveUrl) this.liveUrl = this.response.headers.get("X-Live-Url");
 		return this.liveUrl;
 	}
+	getDownloadUrl() {
+		return this.response.headers.get("X-Live-Download-Url");
+	}
+	async parse() {
+		const htmlLength = this.response.headers.get("X-Live-Html-Length");
+		if (null === htmlLength) {
+			this.body = await this.response.text();
+			return;
+		}
+		const buffer = await this.response.arrayBuffer();
+		const splitAt = Number.parseInt(htmlLength, 10);
+		this.body = new TextDecoder().decode(buffer.slice(0, splitAt));
+		this.download = {
+			filename: decodeFilename(this.response.headers.get("X-Live-Download-Filename")),
+			blob: new Blob([buffer.slice(splitAt)], { type: this.response.headers.get("X-Live-Download-Type") ?? "application/octet-stream" })
+		};
+	}
 };
+function decodeFilename(value) {
+	if (!value) return "download";
+	try {
+		return decodeURIComponent(value) || "download";
+	} catch {
+		return "download";
+	}
+}
 function getElementAsTagText(element) {
 	return element.innerHTML ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML)) : element.outerHTML;
 }
@@ -1508,9 +1539,9 @@ var Component = class {
 		this.isRequestPending = remainingActions.length > 0;
 		this.backendRequest.promise.then(async (response) => {
 			const backendResponse = new BackendResponse_default(response);
-			const html = await backendResponse.getBody();
-			for (const input of Object.values(this.pendingFiles)) input.value = "";
 			const headers = backendResponse.response.headers;
+			for (const input of Object.values(this.pendingFiles)) input.value = "";
+			const html = await backendResponse.getBody();
 			if (!headers.get("Content-Type")?.includes("application/vnd.live-component+html") && !headers.get("X-Live-Redirect")) {
 				const controls = { displayError: true };
 				this.valueStore.pushPendingPropsBackToDirty();
@@ -1582,6 +1613,14 @@ var Component = class {
 				bubbles: true
 			}));
 		});
+		try {
+			const downloadUrl = backendResponse.getDownloadUrl();
+			const download = backendResponse.getDownload();
+			if (downloadUrl) triggerDownload({ url: downloadUrl });
+			else if (download) triggerDownload(download);
+		} catch (error) {
+			console.error("Could not start the download:", error);
+		}
 		this.hooks.triggerHook("render:finished", this);
 	}
 	calculateDebounce(debounce) {
@@ -1675,6 +1714,21 @@ function proxifyComponent(component) {
 			return true;
 		}
 	});
+}
+function triggerDownload(download) {
+	const fromUrl = "url" in download;
+	const href = fromUrl ? download.url : URL.createObjectURL(download.blob);
+	const link = Object.assign(document.createElement("a"), {
+		href,
+		download: fromUrl ? "" : download.filename,
+		style: "display: none"
+	});
+	document.body.appendChild(link);
+	link.click();
+	setTimeout(() => {
+		document.body.removeChild(link);
+		if (!fromUrl) URL.revokeObjectURL(href);
+	}, 75);
 }
 var StimulusElementDriver = class {
 	constructor(controller) {
