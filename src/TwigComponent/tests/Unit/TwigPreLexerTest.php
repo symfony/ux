@@ -110,6 +110,52 @@ final class TwigPreLexerTest extends TestCase
             '{% component \'foo\' %}{% block foo_block %}{% component \'bar\' %}{% block content %}{{ component(\'baz\') }}{% endblock %}{% endcomponent %}{% endblock %}{% endcomponent %}',
         ];
 
+        yield 'block_prefixed_component_name' => [
+            '<twig:foo><twig:block name="foo_block"><twig:blockquote>Quote</twig:blockquote></twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% component \'blockquote\' %}{% block content %}Quote{% endblock %}{% endcomponent %}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_prefixed_component_name_self_closing' => [
+            '<twig:foo><twig:block name="foo_block"><twig:blockquote /></twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{{ component(\'blockquote\') }}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_prefixed_component_name_with_dash' => [
+            '<twig:foo><twig:block name="foo_block"><twig:block-title /></twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{{ component(\'block-title\') }}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_prefixed_component_name_with_colon' => [
+            '<twig:foo><twig:block name="foo_block"><twig:block:title /></twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{{ component(\'block:title\') }}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_prefixed_component_name_with_suffix' => [
+            '<twig:foo><twig:block name="foo_block"><twig:blocked /></twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{{ component(\'blocked\') }}{% endblock %}{% endcomponent %}',
+        ];
+
+        // a traditional block does not pre-lex the components nested in it, hence the verbatim tag
+        yield 'block_prefixed_component_name_in_traditional_block' => [
+            '<twig:foo>{% block foo_block %}<twig:blockquote />{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}<twig:blockquote />{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_prefixed_component_name_capitalized' => [
+            '<twig:foo><twig:block name="foo_block"><twig:Blockquote /></twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{{ component(\'Blockquote\') }}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_prefixed_component_name_outside_block' => [
+            '<twig:foo><twig:blockquote /></twig:foo>',
+            '{% component \'foo\' %}{% block content %}{{ component(\'blockquote\') }}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'block_prefixed_component_name_around_a_real_nested_block' => [
+            '<twig:foo><twig:block name="a"><twig:blockquote /><twig:bar><twig:block name="b">x</twig:block></twig:bar></twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block a %}{{ component(\'blockquote\') }}{% component \'bar\' %}{% block b %}x{% endblock %}{% endcomponent %}{% endblock %}{% endcomponent %}',
+        ];
+
         yield 'component_with_embedded_component' => [
             '<twig:foo>foo_content<twig:bar><twig:baz /></twig:bar></twig:foo>',
             '{% component \'foo\' %}{% block content %}foo_content{% component \'bar\' %}{% block content %}{{ component(\'baz\') }}{% endblock %}{% endcomponent %}{% endblock %}{% endcomponent %}',
