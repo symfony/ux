@@ -1,0 +1,34 @@
+# Reprise works with zero configuration. Every option below is shown at its
+# default value; uncomment the block and tweak what you need.
+# See https://github.com/symfony/reprise/blob/main/doc/index.rst#configuration
+# reprise:
+    # Directory the @symfony/reprise plugin writes entrypoints.json and manifest.json into.
+    # output_path: '%kernel.project_dir%/public/build'
+
+    # Throw when entrypoints.json or a requested entry is missing, instead of rendering nothing.
+    # strict_mode: true
+
+    # A framework.assets package name used to resolve entry URLs. null uses the default package.
+    # asset_package: null
+
+    # crossorigin attribute set alongside SRI integrity: false, 'anonymous' or 'use-credentials'.
+    # crossorigin: false
+
+    # Register rendered assets as WebLink HTTP/2 Link: preload headers (needs symfony/web-link).
+    # preload: true
+
+    # Default attributes added to every rendered <script> / <link> tag.
+    # script_attributes: []
+    # link_attributes: []
+
+framework:
+    assets:
+        json_manifest_path: '%kernel.project_dir%/public/build/manifest.json'
+
+when@prod:
+    reprise:
+        # In prod we'd rather render nothing than let a missing entrypoints.json (or entry) take the app down with a 500.
+        strict_mode: false
+
+        # Cache the entrypoints.json (rebuild Symfony's cache when entrypoints.json changes)
+        cache: true
