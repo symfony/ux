@@ -1,0 +1,59 @@
+{
+    "name": "symfony/ux-image",
+    "type": "symfony-bundle",
+    "description": "Twig components for rendering optimized HTML image elements.",
+    "keywords": [
+        "symfony-ux",
+        "twig",
+        "image",
+        "picture",
+        "responsive"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sébastien Jean",
+            "email": "sebastien.jean@magnolia.fr"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Image\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Image\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.4",
+        "symfony/framework-bundle": "^7.4|^8.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "dev-master",
+        "phpunit/phpunit": "^11.1|^12.0",
+        "symfony/asset-mapper": "^7.4|^8.0",
+        "symfony/twig-bundle": "^7.4|^8.0",
+        "symfony/ux-twig-component": "^2.14|^3.0"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "conflict": {
+        "symfony/flex": "<1.13",
+        "symfony/ux-twig-component": "<2.21"
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}
