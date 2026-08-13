@@ -16,6 +16,7 @@ A real-time product search component might look like this::
 
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\Attribute\LiveProp;
+    use Symfony\UX\LiveComponent\ComponentToolsTrait;
     use Symfony\UX\LiveComponent\DefaultActionTrait;
 
     #[AsLiveComponent]
@@ -1335,6 +1336,93 @@ You probably noticed one interesting trick: to make redirecting easier,
 the component now extends ``AbstractController``! That is totally
 allowed, and gives you access to all of your normal controller
 shortcuts. We even added a flash message!
+
+.. _removing-a-component:
+
+Removing a Component from the Page
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 3.5
+
+    ``LiveResponse::remove()`` was added in LiveComponent 3.5.
+
+An action can end the component after one final re-render::
+
+    // src/Twig/Components/NotificationBanner.php
+    namespace App\Twig\Components;
+
+    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+    use Symfony\UX\LiveComponent\Attribute\LiveAction;
+    use Symfony\UX\LiveComponent\Attribute\LiveProp;
+    use Symfony\UX\LiveComponent\DefaultActionTrait;
+    use Symfony\UX\LiveComponent\LiveResponse;
+
+    #[AsLiveComponent]
+    class NotificationBanner
+    {
+        use DefaultActionTrait;
+        use ComponentToolsTrait;
+
+        #[LiveProp]
+        public Notification $notification;
+
+        #[LiveAction]
+        public function dismiss(NotificationRepository $repository): LiveResponse
+        {
+            $repository->markAsRead($this->notification);
+            $this->emit('notificationDismissed', ['id' => $this->notification->getId()]);
+
+            return LiveResponse::remove();
+        }
+    }
+
+.. code-block:: html+twig
+
+    <div {{ attributes }}>
+        {{ notification.message }}
+
+        <button data-action="live#action" data-live-action-param="dismiss">Dismiss</button>
+    </div>
+
+The server performs one final render. This carries the usual LiveComponent instructions,
+so events emitted by the action reach other components and browser events are dispatched.
+The component becomes terminal before those events are processed, so their handlers cannot
+start another request on the component being removed. It then disconnects, leaves the
+registry, drops its props and is taken off the page.
+
+Nothing is deleted server-side. This ends the component on the page, and says nothing
+about your data.
+
+Animating the removal
+.....................
+
+On its way out, the element carries a ``data-live-removing`` attribute, and it is only
+dropped once whatever you animate on it has finished:
+
+.. code-block:: css
+
+    .notification {
+        transition: opacity 300ms, translate 300ms;
+    }
+
+    .notification[data-live-removing] {
+        opacity: 0;
+        translate: 2rem 0;
+    }
+
+Nothing to declare beyond the CSS: with no animation on ``[data-live-removing]``, there
+is nothing to wait for and the element goes on the next frame. An endless animation is
+ignored, as it would keep the element on the page forever.
+
+The component is already dead by then, so the element that fades out is inert: it polls
+nothing, and a click on one of its buttons reaches nobody.
+
+Use it for something the user dismisses on its own: a flash, a banner, a notification.
+When another part of the page has to react, :ref:`emit an event <emit>` before returning
+the removal response.
+
+Like the download responses, ``LiveResponse::remove()`` can only be returned from a
+``LiveAction`` or a ``LiveListener``, over POST.
 
 .. _working-with-files:
 

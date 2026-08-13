@@ -106,6 +106,9 @@ var BackendResponse_default = class {
 	getDownloadUrl() {
 		return this.response.headers.get("X-Live-Download-Url");
 	}
+	isRemoved() {
+		return this.response.headers.has("X-Live-Remove");
+	}
 	async parse() {
 		const htmlLength = this.response.headers.get("X-Live-Html-Length");
 		if (null === htmlLength) {
@@ -1411,6 +1414,7 @@ var Component = class {
 		this.pendingActions = [];
 		this.pendingFiles = {};
 		this.isRequestPending = false;
+		this.isRemoved = false;
 		this.requestDebounceTimeout = null;
 		this.element = element;
 		this.name = name;
@@ -1509,7 +1513,21 @@ var Component = class {
 	isTurboEnabled() {
 		return typeof Turbo !== "undefined" && !this.element.closest("[data-turbo=\"false\"]");
 	}
+	removeFromPage() {
+		this.isRemoved = true;
+		this.disconnect();
+		const element = this.element;
+		for (const name of element.getAttributeNames()) if (name.startsWith("data-live-") && name.endsWith("-value")) element.removeAttribute(name);
+		element.setAttribute("data-live-removing", "");
+		requestAnimationFrame(() => {
+			const animations = (element.getAnimations?.({ subtree: true }) ?? []).filter((animation) => animation.effect?.getComputedTiming().endTime !== Number.POSITIVE_INFINITY);
+			Promise.allSettled(animations.map((animation) => animation.finished)).then(() => {
+				element.remove();
+			});
+		});
+	}
 	tryStartingRequest() {
+		if (this.isRemoved) return;
 		if (!this.backendRequest) {
 			this.performRequest();
 			return;
@@ -1543,13 +1561,21 @@ var Component = class {
 			const headers = backendResponse.response.headers;
 			for (const input of Object.values(this.pendingFiles)) input.value = "";
 			const html = await backendResponse.getBody();
-			if (!headers.get("Content-Type")?.includes("application/vnd.live-component+html") && !headers.get("X-Live-Redirect")) {
+			if (!headers.get("Content-Type")?.includes("application/vnd.live-component+html") && !headers.get("X-Live-Redirect") && !headers.has("X-Live-Remove")) {
 				const controls = { displayError: true };
 				this.valueStore.pushPendingPropsBackToDirty();
 				this.hooks.triggerHook("response:error", backendResponse, controls);
 				if (controls.displayError) this.renderError(html);
 				this.backendRequest = null;
 				thisPromiseResolve(backendResponse);
+				return response;
+			}
+			if (backendResponse.isRemoved()) {
+				this.isRemoved = true;
+				this.processRerender(html, backendResponse);
+				this.backendRequest = null;
+				thisPromiseResolve(backendResponse);
+				this.removeFromPage();
 				return response;
 			}
 			const liveUrl = backendResponse.getLiveUrl();

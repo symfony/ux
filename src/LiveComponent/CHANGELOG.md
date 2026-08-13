@@ -3,6 +3,7 @@
 ## 3.5
 
 - Add `LiveResponse::downloadUrl()` and `LiveResponse::downloadFile()` to trigger a file download from a `LiveAction`, pointing the browser at a URL or sending the contents with the response, while the component keeps its state
+- Add `LiveResponse::remove()` to take a component off the page from a `LiveAction`, instead of re-rendering it: the root element is removed and the Stimulus controller disconnects, and the server skips the render entirely
 
 ## 3.1
 

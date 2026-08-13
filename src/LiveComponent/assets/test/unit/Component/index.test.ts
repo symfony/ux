@@ -274,6 +274,223 @@ describe('Component class', () => {
         });
     });
 
+    describe('component removal', () => {
+        // the noop driver throws on every method: a request needs one that answers
+        class renderingDriver extends noopElementDriver {
+            constructor(
+                private eventsToEmit: Array<any> = [],
+                private browserEventsToDispatch: Array<any> = []
+            ) {
+                super();
+            }
+
+            getComponentProps(): any {
+                return {};
+            }
+            getEventsToEmit(): Array<any> {
+                return this.eventsToEmit;
+            }
+            getBrowserEventsToDispatch(): Array<any> {
+                return this.browserEventsToDispatch;
+            }
+        }
+
+        /**
+         * A removal carries one final LiveComponent render. X-Live-Remove tells the client
+         * to process it and then take the component off the page.
+         */
+        const makeRemovableComponent = (
+            headers: Record<string, string> = {
+                'Content-Type': 'application/vnd.live-component+html',
+                'X-Live-Remove': '1',
+            },
+            body = '<div data-controller="live" data-live-props-value="{}">rendered</div>',
+            eventsToEmit: Array<any> = [],
+            browserEventsToDispatch: Array<any> = []
+        ): Component => {
+            const backend: MockBackend = {
+                actions: [],
+                makeRequest(_data: any, actions: BackendAction[]): BackendRequest {
+                    this.actions = actions;
+
+                    return new BackendRequest(
+                        new Promise((resolve) =>
+                            resolve(
+                                // @ts-expect-error Response doesn't quite match the underlying interface
+                                new Response(body, { status: 200, headers })
+                            )
+                        ),
+                        [],
+                        []
+                    );
+                },
+            };
+
+            const element = document.createElement('div');
+            document.body.appendChild(element);
+
+            return new Component(
+                element,
+                'test-component',
+                { firstName: '' },
+                [],
+                null,
+                backend,
+                new renderingDriver(eventsToEmit, browserEventsToDispatch)
+            );
+        };
+
+        /** The element is only dropped a frame later, once its animations have settled. */
+        const nextFrame = (): Promise<void> => new Promise((resolve) => requestAnimationFrame(() => resolve()));
+
+        it('takes the element off the page', async () => {
+            const component = makeRemovableComponent();
+
+            expect(component.element.isConnected).toBe(true);
+
+            await component.set('firstName', 'Kevin', true);
+            await nextFrame();
+            await nextFrame();
+
+            expect(component.element.isConnected).toBe(false);
+        });
+
+        it('marks the element as leaving, so the page can animate it out', async () => {
+            const component = makeRemovableComponent();
+
+            await component.set('firstName', 'Kevin', true);
+
+            // still there, but no longer a live component
+            expect(component.element.isConnected).toBe(true);
+            expect(component.element.hasAttribute('data-live-removing')).toBe(true);
+        });
+
+        it('strips the props, so nothing can re-hydrate the element', async () => {
+            const component = makeRemovableComponent();
+            component.element.setAttribute('data-live-props-value', '{"firstName":"Kevin"}');
+            component.element.setAttribute('data-live-url-value', '/_components/foo');
+
+            await component.set('firstName', 'Kevin', true);
+
+            expect(component.element.hasAttribute('data-live-props-value')).toBe(false);
+            expect(component.element.hasAttribute('data-live-url-value')).toBe(false);
+        });
+
+        it('never talks to the server again, even while it is still on the page', async () => {
+            const component = makeRemovableComponent();
+            const makeRequest = vi.spyOn(component.backend, 'makeRequest');
+
+            await component.set('firstName', 'Kevin', true);
+            makeRequest.mockClear();
+
+            // render() reaches the request funnel synchronously, unlike the debounced
+            // action() path: the element keeps its listeners until it goes, so a click
+            // must not reach a component that is already gone
+            component.render();
+
+            expect(makeRequest).not.toHaveBeenCalled();
+        });
+
+        it('would otherwise have talked to the server', async () => {
+            // the counter-proof: without a removal, the very same call does reach the backend
+            const component = makeRemovableComponent(
+                { 'Content-Type': 'application/vnd.live-component+html' },
+                '<div data-controller="live" data-live-props-value="{}">rendered</div>'
+            );
+            const makeRequest = vi.spyOn(component.backend, 'makeRequest');
+
+            await component.set('firstName', 'Kevin', true);
+            makeRequest.mockClear();
+
+            component.render();
+
+            expect(makeRequest).toHaveBeenCalled();
+        });
+
+        it('processes the final render before removing the component', async () => {
+            const component = makeRemovableComponent();
+            const renderStarted = vi.fn();
+            component.on('render:started', renderStarted);
+
+            await component.set('firstName', 'Kevin', true);
+
+            expect(renderStarted).toHaveBeenCalledOnce();
+            expect(component.element).toHaveTextContent('rendered');
+        });
+
+        it('emits LiveComponent events before disconnecting', async () => {
+            const component = makeRemovableComponent(undefined, undefined, [
+                { event: 'componentRemoved', data: { id: 42 }, target: null, componentName: null },
+            ]);
+            const listener = new Component(
+                document.createElement('div'),
+                'listener-component',
+                {},
+                [{ event: 'componentRemoved', action: 'refresh' }],
+                null,
+                component.backend,
+                new renderingDriver()
+            );
+            const action = vi.spyOn(listener, 'action');
+            component.connect();
+            listener.connect();
+
+            try {
+                await component.set('firstName', 'Kevin', true);
+
+                expect(action).toHaveBeenCalledWith('refresh', { id: 42 }, 1);
+            } finally {
+                listener.disconnect();
+            }
+        });
+
+        it('dispatches browser events before disconnecting', async () => {
+            const component = makeRemovableComponent(
+                undefined,
+                undefined,
+                [],
+                [{ event: 'component:removed', payload: { id: 42 } }]
+            );
+            const received: Array<any> = [];
+            const makeRequest = vi.spyOn(component.backend, 'makeRequest');
+            let disconnected = false;
+            component.on('disconnect', () => {
+                disconnected = true;
+            });
+            component.element.addEventListener('component:removed', (event) => {
+                received.push({ detail: (event as CustomEvent).detail, disconnected });
+                component.render();
+            });
+
+            await component.set('firstName', 'Kevin', true);
+
+            expect(received).toEqual([{ detail: { id: 42 }, disconnected: false }]);
+            expect(makeRequest).toHaveBeenCalledOnce();
+            expect(disconnected).toBe(true);
+        });
+
+        it('is not mistaken for a response the client cannot use', async () => {
+            const component = makeRemovableComponent();
+            const responseError = vi.fn();
+            component.on('response:error', responseError);
+
+            await component.set('firstName', 'Kevin', true);
+
+            expect(responseError).not.toHaveBeenCalled();
+        });
+
+        it('leaves the element alone without the header', async () => {
+            const component = makeRemovableComponent(
+                { 'Content-Type': 'application/vnd.live-component+html' },
+                '<div data-controller="live" data-live-props-value="{}">rendered</div>'
+            );
+
+            await component.set('firstName', 'Kevin', true);
+
+            expect(component.element.isConnected).toBe(true);
+        });
+    });
+
     describe('Proxy wrapper', () => {
         const makeDummyComponent = (): { proxy: Component; backend: MockBackend } => {
             const { backend, component } = makeTestComponent();

@@ -144,4 +144,24 @@ final class LiveResponseTest extends TestCase
 
         LiveResponse::downloadUrl('  ');
     }
+
+    public function testRemove()
+    {
+        $response = LiveResponse::remove();
+
+        $this->assertTrue($response->isRemove());
+        $this->assertNull($response->content);
+        $this->assertNull($response->url);
+    }
+
+    public function testDownloadsAreNotRemovals()
+    {
+        $this->assertFalse(LiveResponse::downloadFile('x', 'f.bin')->isRemove());
+        $this->assertFalse(LiveResponse::downloadUrl('/f.bin')->isRemove());
+    }
+
+    public function testARemovalIsNotADownloadUrl()
+    {
+        $this->assertFalse(LiveResponse::remove()->isDownloadUrl());
+    }
 }

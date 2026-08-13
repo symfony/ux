@@ -52,6 +52,13 @@ export default class {
         return this.response.headers.get('X-Live-Download-Url');
     }
 
+    /**
+     * Whether the component is meant to leave the page after its final re-render.
+     */
+    isRemoved(): boolean {
+        return this.response.headers.has('X-Live-Remove');
+    }
+
     private async parse(): Promise<void> {
         const htmlLength = this.response.headers.get('X-Live-Html-Length');
 
