@@ -68,8 +68,9 @@ final class IconFactoryTest extends TestCase
             '<rect fill="red"></rect><a><path d="M0 0"></path></a><circle cx="1" cy="1" r="1"></circle>',
             $icon->getInnerSvg(),
         );
-        // The on* attribute on the root <svg> is stripped; xmlns is dropped (namespace declaration).
-        $this->assertSame(['viewBox' => '0 0 24 24'], $icon->getAttributes());
+        // The on* attribute on the root <svg> is stripped; namespace declarations are preserved
+        // so the icon renders identically to one fetched on-demand from Iconify.
+        $this->assertSame(['xmlns' => 'http://www.w3.org/2000/svg', 'xmlns:xlink' => 'http://www.w3.org/1999/xlink', 'viewBox' => '0 0 24 24'], $icon->getAttributes());
     }
 
     /**
@@ -182,7 +183,7 @@ final class IconFactoryTest extends TestCase
     public static function provideValidFiles(): iterable
     {
         $path = '<path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"></path>';
-        $attributes = ['viewBox' => '0 0 24 24', 'fill' => 'currentColor', 'class' => 'w-6 h-6'];
+        $attributes = ['xmlns' => 'http://www.w3.org/2000/svg', 'viewBox' => '0 0 24 24', 'fill' => 'currentColor', 'class' => 'w-6 h-6'];
 
         yield 'valid1' => ['valid1', $attributes, $path];
         yield 'valid5 (nested group, xml prolog)' => ['valid5', $attributes, $path.'<g>'.$path.'</g>'];

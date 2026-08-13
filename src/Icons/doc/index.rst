@@ -69,10 +69,10 @@ define the HTML attributes added to the ``<svg>`` element:
 .. code-block:: html+twig
 
     {{ ux_icon('user-profile', {class: 'w-4 h-4'}) }}
-    {# renders <svg class="w-4 h-4"> ... </svg> #}
+    {# renders <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4"> ... </svg> #}
 
     {{ ux_icon('user-profile', {height: '16px', width: '16px', 'aria-hidden': true}) }}
-    {# renders <svg height="16" width="16" aria-hidden="true"> ... </svg> #}
+    {# renders <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" aria-hidden="true"> ... </svg> #}
 
 Icon Sizes
 ~~~~~~~~~~
@@ -564,7 +564,7 @@ three methods to improve icons accessibility, depending on the context.
     .. code-block:: html
 
         <a href="/profile">
-            <svg viewBox="0 0 24 24" class="w-4 h-4" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4" aria-hidden="true">
                 <!-- ... -->
             </svg>
             Back to profile
@@ -670,7 +670,7 @@ returning the HTML output.
         <twig:ux:icon name="user-profile" class="w-4 h-4">🧸</twig:ux:icon>
 
         {# Renders "user-profile.svg" #}
-        <svg viewBox="0 0 24 24" class="w-4 h-4">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4">
             <path fill="currentColor" d="M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59z"/>
         </svg>
 
