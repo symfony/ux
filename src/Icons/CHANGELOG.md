@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.5.0
+
+- Migrate SVG parsing to the PHP 8.4 `Dom\XMLDocument` API, icons rendered from local files now correctly include the `xmlns` attribute.
+  It **may break your pipeline** if you assert on `ux_icon()` or `<twig:ux:icon>` output in your tests. Re-generate those assertions and clear your icon cache after upgrading.
+
 ## 3.4.0
 
 - Add `iconify.auto_lock` option to persist "on demand" icons to the local icon directory as they are rendered

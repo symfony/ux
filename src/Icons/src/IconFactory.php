@@ -24,37 +24,30 @@ namespace Symfony\UX\Icons;
  */
 final class IconFactory
 {
+    public const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
     private const FORBIDDEN_ELEMENTS = ['script', 'foreignobject', 'iframe', 'object', 'embed', 'handler'];
     private const ANIMATION_ELEMENTS = ['animate', 'set', 'animatetransform', 'animatemotion'];
 
     public function fromFile(string $filename): Icon
     {
-        if (!class_exists(\DOMDocument::class)) {
-            throw new \LogicException('The "DOM" PHP extension is required to create icons from files.');
-        }
-
         $svg = file_get_contents($filename) ?: throw new \RuntimeException(\sprintf('The icon file "%s" could not be read.', $filename));
 
-        $document = new \DOMDocument();
-        $document->preserveWhiteSpace = false;
-
-        try {
-            $document->loadXML($svg, \LIBXML_NONET);
-        } catch (\Throwable $e) {
-            throw new \RuntimeException(\sprintf('The icon file "%s" does not contain a valid SVG.', $filename), previous: $e);
-        }
+        $document = $this->parse($svg, \sprintf('The icon file "%s" does not contain a valid SVG.', $filename));
 
         $svgElement = $this->singleSvgElement($document, $filename);
 
         $this->sanitizeElement($svgElement);
 
-        $innerSvg = $this->innerSvg($document, $svgElement);
+        $innerSvg = $this->innerSvg($svgElement);
 
         if ('' === $innerSvg) {
             throw new \RuntimeException(\sprintf('The icon file "%s" contains an empty SVG.', $filename));
         }
 
-        $attributes = array_map(static fn (\DOMAttr $a) => $a->value, [...$svgElement->attributes]);
+        // Unlike the legacy \DOMDocument API, \Dom\XMLDocument exposes the SVG namespace
+        // declaration as a regular "xmlns" attribute, so an icon read from disk renders
+        // identically to one fetched on-demand from Iconify (which sets it explicitly).
+        $attributes = array_map(static fn (\Dom\Attr $a) => $a->value, [...$svgElement->attributes]);
 
         return new Icon($innerSvg, $attributes);
     }
@@ -64,18 +57,9 @@ final class IconFactory
      */
     public function fromBody(string $body, array $attributes = []): Icon
     {
-        if (!class_exists(\DOMDocument::class)) {
-            throw new \LogicException('The "DOM" PHP extension is required to create icons.');
-        }
+        $wrapped = \sprintf('<svg xmlns="%s" xmlns:xlink="http://www.w3.org/1999/xlink">%s</svg>', self::SVG_NAMESPACE, $body);
 
-        $document = new \DOMDocument();
-        $wrapped = \sprintf('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">%s</svg>', $body);
-
-        try {
-            $document->loadXML($wrapped, \LIBXML_NONET);
-        } catch (\Throwable $e) {
-            throw new \RuntimeException('The icon body is not valid SVG.', previous: $e);
-        }
+        $document = $this->parse($wrapped, 'The icon body is not valid SVG.');
 
         if (null === $svgElement = $document->documentElement) {
             throw new \RuntimeException('The icon body is not valid SVG.');
@@ -87,7 +71,18 @@ final class IconFactory
             return new Icon($body, $attributes);
         }
 
-        return new Icon($this->innerSvg($document, $svgElement), $attributes);
+        return new Icon($this->innerSvg($svgElement), $attributes);
+    }
+
+    private function parse(string $svg, string $errorMessage): \Dom\XMLDocument
+    {
+        try {
+            // LIBXML_NOBLANKS drops ignorable whitespace between elements (indentation);
+            // LIBXML_NOERROR silences libxml warnings; malformed SVG still raises a \DOMException.
+            return \Dom\XMLDocument::createFromString($svg, \LIBXML_NONET | \LIBXML_NOERROR | \LIBXML_NOBLANKS);
+        } catch (\Throwable $e) {
+            throw new \RuntimeException($errorMessage, previous: $e);
+        }
     }
 
     /**
@@ -95,18 +90,18 @@ final class IconFactory
      *
      * @return bool whether anything was removed
      */
-    private function sanitizeElement(\DOMElement $element): bool
+    private function sanitizeElement(\Dom\Element $element): bool
     {
         $modified = $this->sanitizeAttributes($element);
 
-        // \DOMNodeList is live, so collect before mutating.
+        // \Dom\NodeList is live, so collect before mutating.
         $children = [];
         $rawNodes = [];
         foreach ($element->childNodes as $child) {
-            if ($child instanceof \DOMElement) {
+            if ($child instanceof \Dom\Element) {
                 $children[] = $child;
-            } elseif ($child instanceof \DOMCdataSection || $child instanceof \DOMProcessingInstruction) {
-                // The tree is parsed as XML but serialized as HTML: saveHTML() emits the raw
+            } elseif ($child instanceof \Dom\CDATASection || $child instanceof \Dom\ProcessingInstruction) {
+                // The tree is parsed as XML but serialized as HTML: saveHtml() emits the raw
                 // payload of CDATA sections and processing instructions verbatim, turning
                 // "<![CDATA[<img onerror=...>]]>" into live markup (mutation XSS). Drop them.
                 $rawNodes[] = $child;
@@ -130,7 +125,7 @@ final class IconFactory
 
             if ('style' === $name) {
                 // <style> is kept (themes rely on it, e.g. prefers-color-scheme), but it is a
-                // raw-text element: saveHTML() re-emits its CSS verbatim, so the only XSS path is
+                // raw-text element: saveHtml() re-emits its CSS verbatim, so the only XSS path is
                 // a "</style>" breakout smuggled through CDATA. Sanitize the attributes, never the
                 // CSS itself, and drop the whole element on a breakout attempt.
                 if ($this->sanitizeAttributes($child)) {
@@ -152,11 +147,11 @@ final class IconFactory
         return $modified;
     }
 
-    private function sanitizeAttributes(\DOMElement $element): bool
+    private function sanitizeAttributes(\Dom\Element $element): bool
     {
         $modified = false;
 
-        // \DOMNamedNodeMap is live, so collect before mutating.
+        // \Dom\NamedNodeMap is live, so collect before mutating.
         $dangerous = [];
         foreach ($element->attributes as $attribute) {
             if ($this->isDangerousAttribute($attribute->nodeName, $attribute->value)) {
@@ -171,7 +166,7 @@ final class IconFactory
         return $modified;
     }
 
-    private function singleSvgElement(\DOMDocument $document, string $filename): \DOMElement
+    private function singleSvgElement(\Dom\XMLDocument $document, string $filename): \Dom\Element
     {
         $svgElements = $document->getElementsByTagName('svg');
 
@@ -186,24 +181,31 @@ final class IconFactory
         return $svgElements->item(0) ?? throw new \RuntimeException(\sprintf('The icon file "%s" does not contain a valid SVG.', $filename));
     }
 
-    private function innerSvg(\DOMDocument $document, \DOMElement $svgElement): string
+    private function innerSvg(\Dom\Element $svgElement): string
     {
+        // Import the sanitized SVG into an HTML document so its children serialize as HTML5:
+        // the namespace-aware XML serializer would otherwise redeclare "xmlns" on every
+        // top-level child and self-close elements. HTML5 output has neither, matching how the
+        // icon is embedded in a page.
+        $html = \Dom\HTMLDocument::createEmpty();
+        $imported = $html->importNode($svgElement, true);
+
         $innerSvg = '';
-        foreach ($svgElement->childNodes as $node) {
-            // Ignore comments and text nodes.
-            if ($node instanceof \DOMComment || $node instanceof \DOMText) {
+        foreach ($imported->childNodes as $node) {
+            // Ignore comments and text nodes (e.g. indentation in the source file).
+            if ($node instanceof \Dom\Comment || $node instanceof \Dom\Text) {
                 continue;
             }
 
-            $innerSvg .= $document->saveHTML($node);
+            $innerSvg .= $html->saveHtml($node);
         }
 
         return $innerSvg;
     }
 
-    private function animatesDangerousAttribute(\DOMElement $element): bool
+    private function animatesDangerousAttribute(\Dom\Element $element): bool
     {
-        $attributeName = strtolower($element->getAttribute('attributeName'));
+        $attributeName = strtolower($element->getAttribute('attributeName') ?? '');
 
         // A SMIL animation can install an event handler (on*) or a script-capable URL
         // (href/xlink:href -> "javascript:...") onto its target element.

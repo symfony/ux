@@ -36,6 +36,7 @@
     },
     "require": {
         "php": ">=8.4",
+        "ext-dom": "*",
         "symfony/framework-bundle": "^7.4|^8.0",
         "symfony/twig-bundle": "^7.4|^8.0"
     },

@@ -10,7 +10,7 @@ Renders local and remote [SVG icons](https://ux.symfony.com/icons) in your Twig 
 <twig:ux:icon name="mdi:check" class="w-4 h-4" />
 
 {# Render the "check" icon from "mdi" pack with class #}
-<svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
     <path d="M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59z"/>
 </svg>
 ```
@@ -29,7 +29,7 @@ infrastructure for you!
 
 Help Symfony by [sponsoring][3] its development!
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > **This repository is a READ-ONLY sub-tree split**.\
 > See https://github.com/symfony/ux to create issues or submit pull requests.
 
