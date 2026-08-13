@@ -475,6 +475,25 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0(@types/node@25.3.0)(jsdom@26.1.0)(msw@2.10.4(@types/node@25.3.0)(typescript@5.8.3))(vite@7.3.1(@types/node@25.3.0)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.20.3))
 
+  src/Upload/assets:
+    dependencies:
+      '@symfony/ux-live-component':
+        specifier: ^2.20 || ^3.0
+        version: link:../../LiveComponent/assets
+    devDependencies:
+      '@hotwired/stimulus':
+        specifier: ^3.2.2
+        version: 3.2.2
+      jsdom:
+        specifier: ^26.1.0
+        version: 26.1.0
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+      vitest:
+        specifier: ^4.1.0
+        version: 4.1.0(@types/node@25.3.0)(jsdom@26.1.0)(msw@2.10.4(@types/node@25.3.0)(typescript@5.8.3))(vite@7.3.1(@types/node@25.3.0)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.20.3))
+
   src/Vue/assets:
     devDependencies:
       '@hotwired/stimulus':

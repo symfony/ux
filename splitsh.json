@@ -20,6 +20,7 @@
         "ux-translator": "src/Translator",
         "ux-turbo": "src/Turbo",
         "ux-twig-component": "src/TwigComponent",
+        "ux-upload": "src/Upload",
         "ux-vue": "src/Vue"
     }
 }
