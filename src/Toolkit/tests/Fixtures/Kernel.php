@@ -67,6 +67,15 @@ final class Kernel extends BaseKernel
             'defaults' => [],
         ]);
 
+        // Kit icons are vendored under tests/Fixtures/icons to render offline.
+        // To re-import: flip `on_demand`/`auto_lock` on, run the suite once, revert.
+        $container->extension('ux_icons', [
+            'icon_dir' => __DIR__.'/icons',
+            'iconify' => [
+                'on_demand' => false,
+            ],
+        ]);
+
         $container->services()
             ->set(SecurityTwigStubExtension::class)
                 ->tag('twig.extension')
