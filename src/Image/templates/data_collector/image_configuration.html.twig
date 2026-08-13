@@ -1,0 +1,123 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+    {% set icon %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="#AAA" d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+        </svg>
+        <span class="sf-toolbar-value">{{ collector.storages|length }}</span>
+    {% endset %}
+
+    {% set text %}
+        <div class="sf-toolbar-info-piece">
+            <b>Storages</b>
+            <span>{{ collector.storages|length }}</span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Profiles</b>
+            <span>{{ collector.profiles|length }}</span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Warnings</b>
+            <span>{{ (collector.storageWarnings|length) + (collector.profileWarnings|length) }}</span>
+        </div>
+    {% endset %}
+
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: profiler_url, status: collector.hasWarnings ? 'yellow' : '' }) }}
+{% endblock %}
+
+{% block menu %}
+    <span class="label {{ collector.hasWarnings ? 'label-status-warning' : '' }}">
+        <span class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="#AAA" d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+            </svg>
+        </span>
+        <strong>UX Image</strong>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>UX Image Configuration</h2>
+
+    {% if collector.storageWarnings is not empty or collector.profileWarnings is not empty %}
+        <div class="sf-tabs-content">
+            <h3>Warnings</h3>
+            <ul>
+                {% for warning in collector.storageWarnings %}
+                    <li class="ux-image-warning">{{ warning }}</li>
+                {% endfor %}
+                {% for warning in collector.profileWarnings %}
+                    <li class="ux-image-warning">{{ warning }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <h3>Storages</h3>
+    {% if collector.storages is empty %}
+        <div class="empty">
+            <p>No storages configured. Originals and variants use the local <code>var/ux-image</code> fallback.</p>
+        </div>
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Backend</th>
+                    <th>Service</th>
+                    <th>Public URL prefix</th>
+                    <th>CDN</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for storage in collector.storages %}
+                    <tr>
+                        <th scope="row">{{ storage.name }}</th>
+                        <td>{{ storage.backend }}</td>
+                        <td>{{ storage.service ?? '-' }}</td>
+                        <td>{{ storage.public_url_prefix ?? '-' }}</td>
+                        <td>{{ storage.cdn_provider ?? '-' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <h3>Profiles</h3>
+    {% if collector.profiles is empty %}
+        <div class="empty">
+            <p>No profiles configured.</p>
+        </div>
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Processing</th>
+                    <th>Formats</th>
+                    <th>Variants</th>
+                    <th>Sizes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for profile in collector.profiles %}
+                    <tr>
+                        <th scope="row">{{ profile.name }}</th>
+                        <td>{{ profile.processing }}</td>
+                        <td>{{ profile.formats|join(', ') ?: '-' }}</td>
+                        <td>{{ profile.variant_count }}</td>
+                        <td>{{ profile.sizes ?? '-' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <style>
+        .ux-image-warning {
+            color: #b35900;
+            padding: 0.25em 0;
+        }
+    </style>
+{% endblock %}

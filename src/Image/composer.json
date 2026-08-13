@@ -1,0 +1,73 @@
+{
+    "name": "symfony/ux-image",
+    "type": "symfony-bundle",
+    "description": "Responsive image handling for Symfony applications",
+    "keywords": [
+        "symfony-ux",
+        "image"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Simon André",
+            "email": "smn.andre@gmail.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Image\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Image\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.4",
+        "psr/cache": "^2.0|^3.0",
+        "symfony/config": "^7.4|^8.0",
+        "symfony/console": "^7.4|^8.0",
+        "symfony/dependency-injection": "^7.4|^8.0",
+        "symfony/http-kernel": "^7.4|^8.0",
+        "symfony/filesystem": "^7.4|^8.0",
+        "symfony/http-foundation": "^7.4|^8.0",
+        "symfony/twig-bundle": "^7.4|^8.0"
+    },
+    "require-dev": {
+        "doctrine/dbal": "^4.0",
+        "doctrine/doctrine-bundle": "^2.10",
+        "doctrine/orm": "^3.0",
+        "intervention/image": "^3.0",
+        "league/flysystem": "^3.0",
+        "phpunit/phpunit": "^12.0",
+        "symfony/framework-bundle": "^7.4|^8.0",
+        "symfony/ux-twig-component": "^3.0"
+    },
+    "conflict": {
+        "league/flysystem": "<3.0",
+        "intervention/image": "<3.0"
+    },
+    "suggest": {
+        "doctrine/dbal": "Persist ImageAsset as a JSON column via the image_asset Doctrine type.",
+        "intervention/image": "Use the Intervention Image processor.",
+        "intervention/image-driver-vips": "Use the 'vips' image driver (also requires the libvips system library and the ext-ffi PHP extension).",
+        "league/flysystem": "Use Flysystem-backed image storage.",
+        "symfony/ux-twig-component": "Render images with the <twig:ux:image> component."
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        },
+        "symfony": {
+            "require": "^7.4|^8.0"
+        }
+    },
+    "minimum-stability": "dev"
+}
