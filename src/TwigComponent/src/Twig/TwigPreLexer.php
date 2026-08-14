@@ -366,8 +366,10 @@ class TwigPreLexer
      */
     private function consume(string $string): bool
     {
-        if (str_starts_with(substr($this->input, $this->position), $string)) {
-            $this->position += \strlen($string);
+        $length = \strlen($string);
+
+        if ($this->position + $length <= $this->length && 0 === substr_compare($this->input, $string, $this->position, $length)) {
+            $this->position += $length;
 
             return true;
         }
