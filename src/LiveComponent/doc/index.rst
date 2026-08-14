@@ -2267,8 +2267,8 @@ need::
         #[Assert\Valid]
         public User $user;
 
-         #[LiveProp]
-         #[Assert\IsTrue]
+        #[LiveProp]
+        #[Assert\IsTrue]
         public bool $agreeToTerms = false;
     }
 
@@ -2276,10 +2276,17 @@ Be sure to add the ``Valid`` attribute/annotation to any property
 where you want the object on that property to also be validated.
 
 Thanks to this setup, the component will now be automatically validated
-on each render, but in a smart way: a property will only be validated
+on each re-render, but in a smart way: a property will only be validated
 once its "model" has been updated on the frontend. The system keeps
 track of which models have been updated and only stores the errors for
 those fields on re-render.
+
+.. note::
+
+    Automatic validation *only* happens *after* the component state is sent back
+    from the frontend (e.g. when a writable ``LiveProp`` is updated or a
+    ``LiveAction`` is called). If you need to validate the *initial* render of a
+    component, see :ref:`validating-on-initial-render`.
 
 You can also trigger validation of your *entire* object manually in an
 action::
@@ -2332,6 +2339,45 @@ re-rendered. In your template, render errors using an ``_errors`` variable:
 Once a component has been validated, the component will "remember" that
 it has been validated. This means that, if you edit a field and the
 component re-renders, it will be validated again.
+
+.. _validating-on-initial-render:
+
+Validating on Initial Render
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Passing data to a Twig component generally means that it has already been
+validated by an upper layer of your application, most often in your controller
+or form handling. A component's primary responsibility is to render a valid
+state, not to validate application data again.
+
+Components can still enforce their own invariants when needed, especially when
+they are reusable across different contexts or when some combinations of
+properties would result in an invalid component state.
+
+Automatic validation is triggered when the component state is hydrated from the
+frontend. This means that the initial render is *never* validated automatically:
+if the data you pass when embedding the component violates some constraint
+(e.g. ``:agreeToTerms="false"`` violates the ``IsTrue`` constraint above), no
+error will be shown at first.
+
+To validate the component on its initial render too, call ``validate()``
+yourself from a ``PostMount`` hook. Pass ``throw: false`` so that, instead of
+throwing an exception, the errors are stored and made available in the template
+via the ``_errors`` variable::
+
+    use Symfony\UX\TwigComponent\Attribute\PostMount;
+
+    #[AsLiveComponent]
+    class EditUser
+    {
+        // ...
+
+        #[PostMount]
+        public function validateOnInitialRender(): void
+        {
+            $this->validate(throw: false);
+        }
+    }
 
 Resetting Validation Errors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
