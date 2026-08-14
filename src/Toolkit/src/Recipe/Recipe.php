@@ -24,6 +24,11 @@ use Symfony\UX\Toolkit\Markdown\CodeOptions;
 final class Recipe
 {
     /**
+     * @var list<File>|null
+     */
+    private ?array $files = null;
+
+    /**
      * @param non-empty-string $name
      * @param non-empty-string $absolutePath
      */
@@ -102,12 +107,22 @@ final class Recipe
      */
     public function getFiles(): iterable
     {
+        // This used to be a generator, so every consumer re-walked the recipe
+        // directories from disk. Several of them iterate the same recipe more
+        // than once while rendering or installing it.
+        if (null !== $this->files) {
+            return $this->files;
+        }
+
+        $files = [];
         foreach ($this->manifest->copyFiles as $source => $destination) {
             $finder = new Finder()->in(Path::join($this->absolutePath, $source))->sortByName()->files();
 
             foreach ($finder as $file) {
-                yield new File(Path::join($source, $file->getRelativePathname()), Path::join($destination, $file->getRelativePathname()));
+                $files[] = new File(Path::join($source, $file->getRelativePathname()), Path::join($destination, $file->getRelativePathname()));
             }
         }
+
+        return $this->files = $files;
     }
 }
