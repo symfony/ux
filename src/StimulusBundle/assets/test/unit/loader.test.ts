@@ -1,6 +1,6 @@
 import { Application, Controller } from '@hotwired/stimulus';
 import { waitFor } from '@testing-library/dom';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 // load from dist because the source TypeScript file points directly to controllers.js,
 // which does not actually exist in the source code
 import { loadControllers } from '../../dist/loader';
@@ -53,6 +53,27 @@ describe('loader', () => {
         await new Promise((resolve) => setTimeout(resolve, 10));
         expect(isController3Initialized).toBe(true);
 
+        application.stop();
+    });
+
+    it('stops watching the DOM once every lazy controller is loaded', async () => {
+        document.body.innerHTML = '';
+
+        const disconnect = vi.spyOn(MutationObserver.prototype, 'disconnect');
+        const application = Application.start();
+        const lazyControllers: LazyControllersCollection = {
+            controller4: () => Promise.resolve({ default: class extends Controller {} }),
+        };
+
+        loadControllers(application, {}, lazyControllers);
+
+        document.body.innerHTML = '<div data-controller="controller4"></div>';
+        await new Promise((resolve) => setTimeout(resolve, 10));
+
+        expect(Object.keys(lazyControllers)).toHaveLength(0);
+        expect(disconnect).toHaveBeenCalled();
+
+        disconnect.mockRestore();
         application.stop();
     });
 });

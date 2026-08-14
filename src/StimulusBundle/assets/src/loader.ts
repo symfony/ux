@@ -100,7 +100,7 @@ class StimulusLazyControllerHandler {
         if (Object.keys(this.lazyControllers).length === 0) {
             return;
         }
-        new MutationObserver((mutationsList) => {
+        const observer = new MutationObserver((mutationsList) => {
             for (const { attributeName, target, type } of mutationsList) {
                 switch (type) {
                     case 'attributes': {
@@ -121,7 +121,15 @@ class StimulusLazyControllerHandler {
                     }
                 }
             }
-        }).observe(element, {
+
+            // Every lazy controller has been requested: there is nothing left to
+            // look for, so stop re-scanning the DOM on each mutation. This matters
+            // on pages that mutate a lot, e.g. with Turbo or Live Components.
+            if (Object.keys(this.lazyControllers).length === 0) {
+                observer.disconnect();
+            }
+        });
+        observer.observe(element, {
             attributeFilter: [controllerAttribute],
             subtree: true,
             childList: true,
