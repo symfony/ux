@@ -203,7 +203,7 @@ class TwigPreLexer
             // handle adding a default block if we find non-whitespace outside of a block
             if (!empty($this->currentComponents)
                 && !$this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock']
-                && preg_match('/\S/', $char)
+                && !ctype_space($char)
                 && !$this->check('{% block')
             ) {
                 $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] = true;
@@ -495,42 +495,59 @@ class TwigPreLexer
         $depth = 1;
         $inComment = false;
         while ($this->position < $this->length) {
-            if ($inComment && '#}' === substr($this->input, $this->position, 2)) {
-                $inComment = false;
-            }
-            if (!$inComment && '{#' === substr($this->input, $this->position, 2)) {
-                $inComment = true;
-            }
+            $char = $this->input[$this->position];
 
-            if (!$inComment && '</twig:block>' === substr($this->input, $this->position, 13)) {
-                if (1 === $depth) {
+            // Each delimiter family starts with a distinct character, so ordinary
+            // template text runs no substr() at all and the rest run only theirs.
+            switch ($char) {
+                case '#':
+                    if ($inComment && '#}' === substr($this->input, $this->position, 2)) {
+                        $inComment = false;
+                    }
                     break;
-                }
 
-                --$depth;
-            }
+                case '{':
+                    if ('{#' === substr($this->input, $this->position, 2)) {
+                        $inComment = true;
+                        break;
+                    }
+                    if ($inComment) {
+                        break;
+                    }
 
-            if (!$inComment && '{% endblock %}' === substr($this->input, $this->position, 14)) {
-                if (1 === $depth) {
-                    // in this case, we want to advance ALL the way beyond the endblock
-                    // strlen('{% endblock %}') = 14
-                    $this->position += 14;
+                    if ('{% endblock %}' === substr($this->input, $this->position, 14)) {
+                        if (1 === $depth) {
+                            // in this case, we want to advance ALL the way beyond the endblock
+                            // strlen('{% endblock %}') = 14
+                            $this->position += 14;
+                            break 2;
+                        }
+
+                        --$depth;
+                    } elseif ('{% block' === substr($this->input, $this->position, 8)) {
+                        ++$depth;
+                    }
                     break;
-                }
 
-                --$depth;
-            }
+                case '<':
+                    if ($inComment) {
+                        break;
+                    }
 
-            if (!$inComment && '<twig:block' === substr($this->input, $this->position, 11)) {
-                ++$depth;
-            }
+                    if ('</twig:block>' === substr($this->input, $this->position, 13)) {
+                        if (1 === $depth) {
+                            break 2;
+                        }
 
-            if (!$inComment && '{% block' === substr($this->input, $this->position, 8)) {
-                ++$depth;
-            }
+                        --$depth;
+                    } elseif ('<twig:block' === substr($this->input, $this->position, 11)) {
+                        ++$depth;
+                    }
+                    break;
 
-            if ("\n" === $this->input[$this->position]) {
-                ++$this->line;
+                case "\n":
+                    ++$this->line;
+                    break;
             }
 
             ++$this->position;
