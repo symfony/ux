@@ -94,6 +94,7 @@ final class AutocompleteExtension extends Extension implements PrependExtensionI
                 new Reference('ux.autocomplete.doctrine_registry_wrapper'),
                 new Reference('property_accessor'),
                 new Reference('security.helper', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                new Reference('translator', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ])
         ;
 
