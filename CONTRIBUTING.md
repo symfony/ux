@@ -44,8 +44,7 @@ To set up the development environment, you need the following tools:
 - **[PHP](https://www.php.net/downloads.php) 8.1 or higher** - Required for running Symfony components
 - **[Composer](https://getcomposer.org/download/)** - PHP dependency manager
 - **[Node.js](https://nodejs.org/en/download/package-manager) 22.18 or higher** - Required for asset compilation
-- **[Corepack](https://github.com/nodejs/corepack)** - Package manager manager (comes with Node.js 16+)
-- **[PNPM](https://pnpm.io/) 11.21.0 or higher** - JavaScript package manager (installed via Corepack)
+- **[pnpm](https://pnpm.io/installation) 11.21.0 or higher** - JavaScript package manager
 
 With these tools installed, you can install the project dependencies:
 
@@ -53,8 +52,8 @@ With these tools installed, you can install the project dependencies:
 # Install root PHP dependencies
 $ composer install
 
-# Enable PNPM through Corepack, and install JavaScript dependencies
-$ corepack enable && pnpm install
+# Install JavaScript dependencies
+$ pnpm install
 ```
 
 ### Linking Symfony UX packages to your project

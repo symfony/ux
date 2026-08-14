@@ -35,7 +35,7 @@ jobs:
                   fi
                   echo "Tag ${GITHUB_REF_NAME} verified as ancestor of ${BRANCH}."
 
-            - run: npm i -g corepack && corepack enable
+            - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
             - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
               with:
                   registry-url: 'https://registry.npmjs.org'
