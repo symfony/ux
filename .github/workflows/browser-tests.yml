@@ -41,23 +41,15 @@ jobs:
               with:
                   persist-credentials: false
 
-            - run: npm i -g corepack && corepack enable
-            - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+            - uses: pnpm/setup@84cb39b217b10273981911c288cd62326dc7c6d2 # v2.0.2
               with:
-                  node-version-file: '.nvmrc'
-                  cache: 'pnpm'
-                  cache-dependency-path: |
-                      pnpm-lock.yaml
-                      package.json
+                  cache: true
 
             - name: Cache custom browsers
               uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
               with:
                   path: ./browsers
                   key: ${{ runner.os }}-browsers-${{ matrix.browser }}-${{ hashFiles('bin/get_browsers.mjs') }}
-
-            - name: Install root JS dependencies
-              run: pnpm install --frozen-lockfile
 
             - name: Install custom browsers
               run: node ./bin/get_browsers.mjs
