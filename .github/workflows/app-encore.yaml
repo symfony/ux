@@ -30,11 +30,9 @@ jobs:
         steps:
             - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
-            - run: npm i -g corepack && corepack enable
-
-            - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+            - uses: pnpm/setup@84cb39b217b10273981911c288cd62326dc7c6d2 # v2.0.2
               with:
-                  node-version-file: '.nvmrc'
+                  install: false
 
             - uses: shivammathur/setup-php@690cb7c9d81dbfe51eba732cfca0a00ca42db777
 
