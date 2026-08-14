@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\LiveComponent\Twig;
 
-use Twig\Error\Error;
 use Twig\Template;
 
 /**
@@ -21,6 +20,13 @@ use Twig\Template;
  */
 class DeterministicTwigIdCalculator
 {
+    /**
+     * Windows used to read the call stack, growing until the rendering template is
+     * found. The last one is unbounded, so the outcome always matches scanning the
+     * whole stack. Same sequence as Symfony\UX\TwigComponent\BlockStack.
+     */
+    private const BACKTRACE_LIMITS = [16, 64, 0];
+
     private array $lineAndFileCounts = [];
 
     /**
@@ -69,109 +75,56 @@ class DeterministicTwigIdCalculator
     /**
      * Adapted from Twig\Error\Error::guessTemplateInfo().
      *
-     * Any differences are marked below.
+     * Both the rendering template and the line it is rendering are read from the
+     * call stack. Materializing that stack is the whole cost of this method, and
+     * during a request it is deep while the frames of interest sit near the top,
+     * so it is walked through a growing window instead of all at once.
      *
      * @return array{name: string, line: int}
      */
     private function guessTemplateInfo(): array
     {
-        $template = null;
-        $templateClass = null;
+        foreach (self::BACKTRACE_LIMITS as $limit) {
+            $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT, $limit);
+            $isWholeStack = 0 === $limit || \count($backtrace) < $limit;
 
-        $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
-        foreach ($backtrace as $trace) {
-            if (isset($trace['object']) && $trace['object'] instanceof Template) {
-                $currentClass = \get_class($trace['object']);
-                $isEmbedContainer = null === $templateClass ? false : str_starts_with($templateClass, $currentClass);
-                // START CHANGE
-                // if statement not needed
-                // if (null === $this->name || ($this->name == $trace['object']->getTemplateName() && !$isEmbedContainer)) {
-                $template = $trace['object'];
-                // $templateClass = \get_class($trace['object']);
-                // }
-                // END CHANGE
-
-                // START CHANGE
-                // we want to find the FIRST matching template, not the original
-                // END CHANGE
-                break;
+            // we want to find the FIRST matching template, not the original
+            $template = null;
+            foreach ($backtrace as $trace) {
+                if (isset($trace['object']) && $trace['object'] instanceof Template) {
+                    $template = $trace['object'];
+                    break;
+                }
             }
-        }
 
-        // update template name
-        // START CHANGE
-        // don't check name property
-        // if (null !== $template && null === $this->name) {
-        if (null !== $template) {
-            // END CHANGE
-            // START CHANGE
-            // set local variable
+            if (null === $template) {
+                if ($isWholeStack) {
+                    break;
+                }
+
+                continue;
+            }
+
             $name = $template->getTemplateName();
-            // END CHANGE
-        }
+            $file = new \ReflectionObject($template)->getFileName();
 
-        // update template path if any
-        // START CHANGE
-        // if statement not needed
-        /*
-        if (null !== $template && null === $this->sourcePath) {
-            $src = $template->getSourceContext();
-            $this->sourceCode = $src->getCode();
-            $this->sourcePath = $src->getPath();
-        }
-        */
-
-        // START CHANGE
-        // if (null === $template || $this->lineno > -1) {
-        // remove lineno property check
-        if (null === $template) {
-            // END CHANGE
-            // START CHANGE
-            // throw exception instead
-            throw new \LogicException('Could not determine template while generating deterministic id.');
-            // return;
-            //
-        }
-
-        $r = new \ReflectionObject($template);
-        $file = $r->getFileName();
-
-        // START CHANGE
-        // $exceptions = [$e = $this];
-        $exceptions = [new Error('')];
-        // not other exceptions to check
-        /*
-        while ($e = $e->getPrevious()) {
-            $exceptions[] = $e;
-        }
-        */
-        // END CHANGE
-
-        while ($e = array_pop($exceptions)) {
-            $traces = $e->getTrace();
-            array_unshift($traces, ['file' => $e->getFile(), 'line' => $e->getLine()]);
-
-            while ($trace = array_shift($traces)) {
+            foreach ($backtrace as $trace) {
                 if (!isset($trace['file']) || !isset($trace['line']) || $file != $trace['file']) {
                     continue;
                 }
 
                 foreach ($template->getDebugInfo() as $codeLine => $templateLine) {
                     if ($codeLine <= $trace['line']) {
-                        // update template line
-                        // START CHANGE
-                        // set local variable
-                        $lineno = $templateLine;
-
-                        // return the values
-                        return ['name' => $name, 'line' => $lineno];
-                        // return;
-                        // END CHANGE
+                        return ['name' => $name, 'line' => $templateLine];
                     }
                 }
             }
+
+            if ($isWholeStack) {
+                throw new \LogicException(\sprintf('Could not find line number in template "%s" while generating deterministic id.', $name));
+            }
         }
 
-        throw new \LogicException(\sprintf('Could not find line number in template "%s" while generating deterministic id.', $name));
+        throw new \LogicException('Could not determine template while generating deterministic id.');
     }
 }
