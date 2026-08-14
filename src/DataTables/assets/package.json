@@ -1,0 +1,33 @@
+{
+    "name": "@symfony/ux-datatables",
+    "description": "DataTables integration for Symfony",
+    "license": "MIT",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "dist/controller.js",
+    "symfony": {
+        "controllers": {
+            "datatable": {
+                "main": "dist/controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true,
+                "autoimport": {
+                    "datatables.net-dt/css/dataTables.dataTables.min.css": true
+                }
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0",
+            "datatables.net-dt": "^2.1.5"
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "datatables.net-dt": "^2.1.5"
+    },
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "datatables.net-dt": "^2.1.5"
+    }
+}
