@@ -31,6 +31,12 @@ export function trimAll(str: string) {
  * For example: "user[firstName]" becomes "user.firstName"
  */
 export function normalizeModelName(model: string): string {
+    // Some model names are plain (e.g. "query"), and the pipeline below is a
+    // no-op for them. ValueStore also normalizes already-normalized names.
+    if (!model.includes('[') && !model.includes(']')) {
+        return model;
+    }
+
     return (
         model
             // Names ending in "[]" represent arrays in HTML.

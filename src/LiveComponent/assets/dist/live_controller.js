@@ -262,6 +262,7 @@ function trimAll(str) {
 	return str.replace(/[\s]+/g, " ").trim();
 }
 function normalizeModelName(model) {
+	if (!model.includes("[") && !model.includes("]")) return model;
 	return model.replace(/\[]$/, "").split("[").map((s) => s.replace("]", "")).join(".");
 }
 function getValueFromElement(element, valueStore) {

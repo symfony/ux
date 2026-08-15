@@ -30,4 +30,8 @@ describe('normalizeModelName', () => {
     it('can normalize a string ending in []', () => {
         expect(normalizeModelName('user[mailing][]')).toEqual('user.mailing');
     });
+
+    it('strips a stray closing bracket', () => {
+        expect(normalizeModelName('weird]name')).toEqual('weirdname');
+    });
 });
