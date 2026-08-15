@@ -24,6 +24,14 @@ final class BlockStack
     public const OUTER_BLOCK_FALLBACK_NAME = self::OUTER_BLOCK_PREFIX.'block_fallback';
 
     /**
+     * debug_backtrace() materializes every frame of the call stack, which is deep
+     * during a request. The frames looked at below sit near the top, so the stack
+     * is read through a growing window instead of all at once. The last entry is
+     * unbounded, so the outcome is always the same as scanning the whole stack.
+     */
+    private const BACKTRACE_LIMITS = [16, 64, 0];
+
+    /**
      * @var array<string, array<int, array<int, string>>>
      */
     private array $stack;
@@ -65,82 +73,99 @@ final class BlockStack
 
     public function __call(string $name, array $arguments)
     {
-        $callingEmbeddedTemplateIndex = $this->findCallingEmbeddedTemplateIndex();
-        $hostEmbeddedTemplateIndex = $this->findHostEmbeddedTemplateIndexFromCaller();
+        [$callingEmbeddedTemplateIndex, $hostEmbeddedTemplateIndex] = $this->findCallerIndexes();
 
         return $this->stack[$name][$callingEmbeddedTemplateIndex][$hostEmbeddedTemplateIndex] ?? self::OUTER_BLOCK_FALLBACK_NAME;
     }
 
     private function findHostEmbeddedTemplateIndex(): int
     {
-        $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
+        foreach (self::BACKTRACE_LIMITS as $limit) {
+            $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT, $limit);
 
-        foreach ($backtrace as $trace) {
-            if (isset($trace['object']) && $trace['object'] instanceof Template) {
-                $classname = $trace['object']::class;
-                $templateIndex = self::getTemplateIndexFromTemplateClassname($classname);
-                if ($templateIndex) {
-                    // If there's no template index, then we're in a component template
-                    // and we need to go up until we find the embedded template
-                    // (which will have the block definitions).
-                    return $templateIndex;
+            foreach ($backtrace as $trace) {
+                if (isset($trace['object']) && $trace['object'] instanceof Template) {
+                    $classname = $trace['object']::class;
+                    $templateIndex = self::getTemplateIndexFromTemplateClassname($classname);
+                    if ($templateIndex) {
+                        // If there's no template index, then we're in a component template
+                        // and we need to go up until we find the embedded template
+                        // (which will have the block definitions).
+                        return $templateIndex;
+                    }
                 }
+            }
+
+            if (self::isWholeStack($backtrace, $limit)) {
+                break;
             }
         }
 
         return 0;
     }
 
-    private function findCallingEmbeddedTemplateIndex(): int
+    /**
+     * Both indexes come from the same frames, so the stack is read once.
+     *
+     * @return array{int, int} the calling embedded template index, then the host one
+     */
+    private function findCallerIndexes(): array
     {
-        $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
+        $calling = null;
 
-        foreach ($backtrace as $trace) {
-            if (isset($trace['object']) && $trace['object'] instanceof Template) {
-                return self::getTemplateIndexFromTemplateClassname($trace['object']::class);
-            }
-        }
-    }
+        foreach (self::BACKTRACE_LIMITS as $limit) {
+            $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT, $limit);
 
-    private function findHostEmbeddedTemplateIndexFromCaller(): int
-    {
-        $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
+            $blockCallerStack = [];
+            $renderer = null;
 
-        $blockCallerStack = [];
-        $renderer = null;
-
-        foreach ($backtrace as $trace) {
-            if (isset($trace['object']) && $trace['object'] instanceof Template) {
-                $classname = $trace['object']::class;
-                $templateIndex = self::getTemplateIndexFromTemplateClassname($classname);
-                if (null === $renderer) {
-                    if ($templateIndex) {
-                        // This class is an embedded template.
-                        // Next class is either the renderer or a previous template that's passing blocks through.
-                        $blockCallerStack[$classname] = $classname;
+            foreach ($backtrace as $trace) {
+                if (isset($trace['object']) && $trace['object'] instanceof Template) {
+                    $classname = $trace['object']::class;
+                    $templateIndex = self::getTemplateIndexFromTemplateClassname($classname);
+                    // The first template frame is the one calling the block.
+                    $calling ??= $templateIndex;
+                    if (null === $renderer) {
+                        if ($templateIndex) {
+                            // This class is an embedded template.
+                            // Next class is either the renderer or a previous template that's passing blocks through.
+                            $blockCallerStack[$classname] = $classname;
+                            continue;
+                        }
+                        // If it's not an embedded template anymore, we've reached the renderer.
+                        // From now on we'll travel back up the hierarchy.
+                        $renderer = $classname;
                         continue;
                     }
-                    // If it's not an embedded template anymore, we've reached the renderer.
-                    // From now on we'll travel back up the hierarchy.
-                    $renderer = $classname;
-                    continue;
-                }
-                if ($classname === $renderer || isset($blockCallerStack[$classname])) {
-                    continue;
-                }
+                    if ($classname === $renderer || isset($blockCallerStack[$classname])) {
+                        continue;
+                    }
 
-                if (!$templateIndex) {
-                    continue;
-                }
+                    if (!$templateIndex) {
+                        continue;
+                    }
 
-                // This is the first template that's not part of the callstack,
-                // so it's the template that has the outer block definition.
-                return $templateIndex;
+                    // This is the first template that's not part of the callstack,
+                    // so it's the template that has the outer block definition.
+                    return [$calling, $templateIndex];
+                }
+            }
+
+            if (self::isWholeStack($backtrace, $limit)) {
+                break;
             }
         }
 
         // If the component is not an embedded one, just return 0, so the fallback content (aka nothing) is used.
-        return 0;
+        return [$calling ?? 0, 0];
+    }
+
+    /**
+     * @param list<array<string, mixed>> $backtrace
+     */
+    private static function isWholeStack(array $backtrace, int $limit): bool
+    {
+        return 0 === $limit || \count($backtrace) < $limit;
     }
 
     private static function getTemplateIndexFromTemplateClassname(string $classname): int
