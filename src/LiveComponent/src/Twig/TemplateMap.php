@@ -26,6 +26,11 @@ final class TemplateMap
      */
     private readonly array $map;
 
+    /**
+     * @var array<string, string>|null Map of <template name> => <obscured name>
+     */
+    private ?array $reverseMap = null;
+
     public function __construct(string $cacheFile)
     {
         $this->map = PhpArrayAdapter::create($cacheFile, new NullAdapter())->getItem('map')->get();
@@ -38,10 +43,9 @@ final class TemplateMap
 
     public function obscuredName(string $templateName): string
     {
-        if (false === $obscuredName = array_search($templateName, $this->map, true)) {
-            throw new \RuntimeException(\sprintf('Cannot find a match for template "%s". Cache may be corrupt.', $templateName));
-        }
-
-        return $obscuredName;
+        // This runs for every embedded child component, and scanning the whole map
+        // each time made it cost more the more templates an application has.
+        return ($this->reverseMap ??= array_flip($this->map))[$templateName]
+            ?? throw new \RuntimeException(\sprintf('Cannot find a match for template "%s". Cache may be corrupt.', $templateName));
     }
 }
