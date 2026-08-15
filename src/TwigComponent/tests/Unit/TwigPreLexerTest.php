@@ -351,6 +351,31 @@ final class TwigPreLexerTest extends TestCase
             '{% verbatim %}<twig:Alert/>{% endverbatim %}',
         ];
 
+        yield 'ignore_comment_like_token_inside_output_expression' => [
+            "There are {{ '{count, plural, one {# item} other {# items}}'|trans({'count': 42}) }}!\n<twig:Alert/>",
+            "There are {{ '{count, plural, one {# item} other {# items}}'|trans({'count': 42}) }}!\n{{ component('Alert') }}",
+        ];
+
+        yield 'ignore_double_close_inside_string_in_output_expression' => [
+            '{{ "}}" }} <twig:Alert/>',
+            '{{ "}}" }} {{ component(\'Alert\') }}',
+        ];
+
+        yield 'ignore_comment_like_token_inside_double_quoted_string' => [
+            '{{ "{# not a comment #}" }} <twig:Alert/>',
+            '{{ "{# not a comment #}" }} {{ component(\'Alert\') }}',
+        ];
+
+        yield 'preserve_escaped_quote_inside_output_expression' => [
+            "{{ 'it\\'s }}' }} <twig:Alert/>",
+            "{{ 'it\\'s }}' }} {{ component('Alert') }}",
+        ];
+
+        yield 'output_expression_inside_component_opens_default_block' => [
+            '<twig:Foo>{{ bar }}</twig:Foo>',
+            "{% component 'Foo' %}{% block content %}{{ bar }}{% endblock %}{% endcomponent %}",
+        ];
+
         yield 'component_attr_spreading_self_closing' => [
             '<twig:foobar bar="baz"{{...attr}}/>',
             '{{ component(\'foobar\', { bar: \'baz\', ...attr }) }}',

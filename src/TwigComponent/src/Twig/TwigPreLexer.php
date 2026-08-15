@@ -70,6 +70,31 @@ class TwigPreLexer
                 }
             }
 
+            // ignore content inside twig output expressions, see #3514
+            // (so that e.g. `{{ '{# foo #}' }}` doesn't trip the comment handler above)
+            if ($this->check('{{')) {
+                // a Twig expression is content: open the default block if we're inside a component
+                if (!empty($this->currentComponents)
+                    && !$this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock']
+                ) {
+                    $output .= '{% block content %}';
+                    $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] = true;
+                }
+
+                $this->consume('{{');
+                $output .= '{{';
+                $output .= $this->consumeTwigExpressionContent();
+                if ($this->consume('}}')) {
+                    $output .= '}}';
+                }
+
+                if ($this->position === $this->length) {
+                    break;
+                }
+
+                continue;
+            }
+
             if ($this->consume('{% embed')) {
                 $inTwigEmbed = true;
                 $output .= '{% embed';
@@ -452,6 +477,66 @@ class TwigPreLexer
         }
 
         return substr($this->input, $start, $this->position - $start);
+    }
+
+    /**
+     * Consumes the body of a Twig output expression (between `{{` and `}}`),
+     * respecting string literals so that `}}` appearing inside a string does
+     * not end the expression early.
+     */
+    private function consumeTwigExpressionContent(): string
+    {
+        $start = $this->position;
+
+        while ($this->position < $this->length) {
+            if ($this->check('}}')) {
+                return substr($this->input, $start, $this->position - $start);
+            }
+
+            $char = $this->input[$this->position];
+
+            if ("'" === $char || '"' === $char) {
+                $this->skipStringLiteral($char);
+                continue;
+            }
+
+            if ("\n" === $char) {
+                ++$this->line;
+            }
+
+            ++$this->position;
+        }
+
+        return substr($this->input, $start);
+    }
+
+    private function skipStringLiteral(string $quote): void
+    {
+        ++$this->position; // opening quote
+
+        while ($this->position < $this->length) {
+            $char = $this->input[$this->position];
+
+            if ('\\' === $char && $this->position + 1 < $this->length) {
+                if ("\n" === $this->input[$this->position + 1]) {
+                    ++$this->line;
+                }
+                $this->position += 2;
+                continue;
+            }
+
+            if ($char === $quote) {
+                ++$this->position;
+
+                return;
+            }
+
+            if ("\n" === $char) {
+                ++$this->line;
+            }
+
+            ++$this->position;
+        }
     }
 
     private function consumeAttributeValue(string $quote): string
