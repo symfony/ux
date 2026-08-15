@@ -47,7 +47,28 @@ final class ComponentProperties
      */
     public function getProperties(object $component, bool $publicProps = false): array
     {
-        return iterator_to_array($this->extractProperties($component, $publicProps));
+        $metadata = $this->classMetadata[$component::class] ??= $this->loadClassMetadata($component::class);
+
+        $properties = $publicProps ? get_object_vars($component) : [];
+
+        foreach ($metadata['properties'] as $propertyName => $property) {
+            $value = $property['getter'] ? $component->{$property['getter']}() : $this->propertyAccessor->getValue($component, $propertyName);
+            if ($property['destruct'] ?? false) {
+                $properties = [...$properties, ...$value];
+            } else {
+                $properties[$property['name']] = $value;
+            }
+        }
+
+        foreach ($metadata['methods'] as $methodName => $method) {
+            if ($method['destruct'] ?? false) {
+                $properties = [...$properties, ...$component->{$methodName}()];
+            } else {
+                $properties[$method['name']] = $component->{$methodName}();
+            }
+        }
+
+        return $properties;
     }
 
     public function warmup(): void
@@ -63,33 +84,6 @@ final class ComponentProperties
         }
 
         $this->cache->save($this->cache->getItem(self::CACHE_KEY)->set($this->classMetadata));
-    }
-
-    /**
-     * @return \Generator<string, mixed>
-     */
-    private function extractProperties(object $component, bool $publicProps): \Generator
-    {
-        yield from $publicProps ? get_object_vars($component) : [];
-
-        $metadata = $this->classMetadata[$component::class] ??= $this->loadClassMetadata($component::class);
-
-        foreach ($metadata['properties'] as $propertyName => $property) {
-            $value = $property['getter'] ? $component->{$property['getter']}() : $this->propertyAccessor->getValue($component, $propertyName);
-            if ($property['destruct'] ?? false) {
-                yield from $value;
-            } else {
-                yield $property['name'] => $value;
-            }
-        }
-
-        foreach ($metadata['methods'] as $methodName => $method) {
-            if ($method['destruct'] ?? false) {
-                yield from $component->{$methodName}();
-            } else {
-                yield $method['name'] => $component->{$methodName}();
-            }
-        }
     }
 
     /**
