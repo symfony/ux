@@ -25,6 +25,11 @@ use Symfony\UX\TwigComponent\Attribute\FromMethod;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class AsLiveComponent extends AsTwigComponent
 {
+    /**
+     * @var array<class-string, array<class-string, \ReflectionMethod[]>>
+     */
+    private static array $methodsPerAttribute = [];
+
     public string $route;
     public string $method;
     public int $urlReferenceType;
@@ -93,7 +98,7 @@ final class AsLiveComponent extends AsTwigComponent
      */
     public static function isActionAllowed(object|string $component, string $action): bool
     {
-        foreach (self::attributeMethodsFor(LiveAction::class, $component) as $method) {
+        foreach (self::cachedMethodsFor($component, LiveAction::class) as $method) {
             if ($action === $method->getName()) {
                 return true;
             }
@@ -111,7 +116,7 @@ final class AsLiveComponent extends AsTwigComponent
      */
     public static function preReRenderMethods(object|string $component): iterable
     {
-        return self::attributeMethodsByPriorityFor($component, PreReRender::class);
+        return self::cachedMethodsByPriorityFor($component, PreReRender::class);
     }
 
     /**
@@ -123,7 +128,7 @@ final class AsLiveComponent extends AsTwigComponent
      */
     public static function postHydrateMethods(object|string $component): iterable
     {
-        return self::attributeMethodsByPriorityFor($component, PostHydrate::class);
+        return self::cachedMethodsByPriorityFor($component, PostHydrate::class);
     }
 
     /**
@@ -135,7 +140,7 @@ final class AsLiveComponent extends AsTwigComponent
      */
     public static function preDehydrateMethods(object|string $component): iterable
     {
-        return self::attributeMethodsByPriorityFor($component, PreDehydrate::class);
+        return self::cachedMethodsByPriorityFor($component, PreDehydrate::class);
     }
 
     /**
@@ -148,12 +153,38 @@ final class AsLiveComponent extends AsTwigComponent
     public static function liveListeners(object|string $component): array
     {
         $listeners = [];
-        foreach (self::attributeMethodsFor(LiveListener::class, $component) as $method) {
+        foreach (self::cachedMethodsFor($component, LiveListener::class) as $method) {
             foreach ($method->getAttributes(LiveListener::class) as $attribute) {
                 $listeners[] = ['action' => $method->getName(), 'event' => $attribute->newInstance()->getEventName()];
             }
         }
 
         return $listeners;
+    }
+
+    /**
+     * @param object|class-string $component
+     * @param class-string        $attribute
+     *
+     * @return \ReflectionMethod[]
+     */
+    private static function cachedMethodsFor(object|string $component, string $attribute): array
+    {
+        $class = \is_object($component) ? $component::class : $component;
+
+        return self::$methodsPerAttribute[$class][$attribute] ??= iterator_to_array(self::attributeMethodsFor($attribute, $component));
+    }
+
+    /**
+     * @param object|class-string $component
+     * @param class-string        $attribute
+     *
+     * @return \ReflectionMethod[]
+     */
+    private static function cachedMethodsByPriorityFor(object|string $component, string $attribute): array
+    {
+        $class = \is_object($component) ? $component::class : $component;
+
+        return self::$methodsPerAttribute[$class][$attribute] ??= self::attributeMethodsByPriorityFor($component, $attribute);
     }
 }
