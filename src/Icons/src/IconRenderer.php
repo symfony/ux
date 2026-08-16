@@ -62,11 +62,7 @@ final class IconRenderer implements IconRendererInterface
             ...$attributes,
         ]);
 
-        foreach ($this->getPreRenderers() as $preRenderer) {
-            $icon = $preRenderer($icon);
-        }
-
-        return $icon->toHtml();
+        return self::setAriaHidden($icon)->toHtml();
     }
 
     /**
@@ -102,19 +98,13 @@ final class IconRenderer implements IconRendererInterface
     }
 
     /**
-     * @return iterable<callable(Icon): Icon>
-     */
-    private function getPreRenderers(): iterable
-    {
-        yield self::setAriaHidden(...);
-    }
-
-    /**
      * Set `aria-hidden=true` if not defined & no textual alternative provided.
      */
     private static function setAriaHidden(Icon $icon): Icon
     {
-        if ([] === array_intersect(['aria-hidden', 'aria-label', 'aria-labelledby', 'title'], array_keys($icon->getAttributes()))) {
+        $attributes = $icon->getAttributes();
+
+        if (!isset($attributes['aria-hidden']) && !isset($attributes['aria-label']) && !isset($attributes['aria-labelledby']) && !isset($attributes['title'])) {
             return $icon->withAttributes(['aria-hidden' => 'true']);
         }
 
