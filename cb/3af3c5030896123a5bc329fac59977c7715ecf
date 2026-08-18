@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-18T05:24:53Z
+
+> Should we define a minimum gap to accept improvements ?
+>
+> There is a hidden cost in maintenance, history, etc.
+>
+> Genuine question, I have no opinion here :)
+
+Before AI, I'd say we had to be careful with performance patches when it came to code readability, but now I think it's fine... The code is still easy to read IMHO
