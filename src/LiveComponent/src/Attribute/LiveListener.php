@@ -37,8 +37,8 @@ class LiveListener extends LiveAction
 
     /**
      * @param string $eventName The name of the event to listen to (e.g. "itemUpdated"),
-     *                           optionally followed by a client-side condition
-     *                           (e.g. "itemUpdated(event.id == props.item)")
+     *                          optionally followed by a client-side condition
+     *                          (e.g. "itemUpdated(event.id == props.item)")
      */
     public function __construct(string $eventName)
     {
