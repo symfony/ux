@@ -106,7 +106,9 @@ export default class Component {
             if (!this.listeners.has(listener.event)) {
                 this.listeners.set(listener.event, []);
             }
-            this.listeners.get(listener.event)?.push({ action: listener.action, condition: listener.condition || null });
+            this.listeners
+                .get(listener.event)
+                ?.push({ action: listener.action, condition: listener.condition || null });
         });
 
         this.valueStore = new ValueStore(props);

@@ -22,9 +22,7 @@ describe('LiveController LiveListener condition Tests', () => {
             (data: any) => `
             <div ${initComponent(data, {
                 name: 'simple-component',
-                listeners: [
-                    { event: 'product_updated', action: 'fooAction', condition: 'event.id == props.product' },
-                ],
+                listeners: [{ event: 'product_updated', action: 'fooAction', condition: 'event.id == props.product' }],
             })}>
                 Render Count: ${data.renderCount}
             </div>
@@ -53,9 +51,7 @@ describe('LiveController LiveListener condition Tests', () => {
             (data: any) => `
             <div ${initComponent(data, {
                 name: 'simple-component',
-                listeners: [
-                    { event: 'product_updated', action: 'fooAction', condition: 'event.id == props.product' },
-                ],
+                listeners: [{ event: 'product_updated', action: 'fooAction', condition: 'event.id == props.product' }],
             })}>
                 Render Count: ${data.renderCount}
             </div>
