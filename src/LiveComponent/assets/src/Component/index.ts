@@ -4,6 +4,7 @@ import BackendResponse from '../Backend/BackendResponse';
 import { findComponents, registerComponent, unregisterComponent } from '../ComponentRegistry';
 import { elementBelongsToThisComponent, getValueFromElement, htmlToElement } from '../dom_utils';
 import HookManager from '../HookManager';
+import { evaluateListenerCondition } from '../listener_condition';
 import { executeMorphdom } from '../morphdom';
 import ExternalMutationTracker from '../Rendering/ExternalMutationTracker';
 import { normalizeModelName } from '../string_utils';
@@ -39,8 +40,9 @@ export type ComponentHookCallback<T extends string = ComponentHookName> = T exte
 export default class Component {
     readonly element: HTMLElement;
     readonly name: string;
-    // key is the string event name and value is an array of action names
-    readonly listeners: Map<string, string[]>;
+    // key is the string event name and value is an array of the actions
+    // (each with an optional client-side condition) listening to it
+    readonly listeners: Map<string, Array<{ action: string; condition: string | null }>>;
     private backend: BackendInterface;
     readonly elementDriver: ElementDriver;
     id: string | null;
@@ -78,7 +80,8 @@ export default class Component {
      * @param element The root element
      * @param name    The name of the component
      * @param props   Readonly component props
-     * @param listeners Array of event -> action listeners
+     * @param listeners Array of event -> action listeners, each optionally
+     *                  guarded by a client-side condition expression
      * @param id      Some unique id to identify this component. Needed to be a child component
      * @param backend Backend instance for updating
      * @param elementDriver Class to get "model" name from any element.
@@ -87,7 +90,7 @@ export default class Component {
         element: HTMLElement,
         name: string,
         props: any,
-        listeners: Array<{ event: string; action: string }>,
+        listeners: Array<{ event: string; action: string; condition?: string | null }>,
         id: string | null,
         backend: BackendInterface,
         elementDriver: ElementDriver
@@ -103,7 +106,7 @@ export default class Component {
             if (!this.listeners.has(listener.event)) {
                 this.listeners.set(listener.event, []);
             }
-            this.listeners.get(listener.event)?.push(listener.action);
+            this.listeners.get(listener.event)?.push({ action: listener.action, condition: listener.condition || null });
         });
 
         this.valueStore = new ValueStore(props);
@@ -238,9 +241,12 @@ export default class Component {
             return;
         }
 
-        // set actions but tell TypeScript it is an array of strings
-        const actions = this.listeners.get(name) || [];
-        actions.forEach((action) => {
+        const listeners = this.listeners.get(name) || [];
+        listeners.forEach(({ action, condition }) => {
+            if (condition && !evaluateListenerCondition(condition, data, this.valueStore.getCurrentProps())) {
+                return;
+            }
+
             // debounce slightly to allow for multiple actions to queue
             this.action(action, data, 1);
         });

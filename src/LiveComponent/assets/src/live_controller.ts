@@ -56,7 +56,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     declare readonly urlValue: string;
     declare readonly propsValue: any;
     declare propsUpdatedFromParentValue: any;
-    declare readonly listenersValue: Array<{ event: string; action: string }>;
+    declare readonly listenersValue: Array<{ event: string; action: string; condition: string | null }>;
     declare readonly eventsToEmitValue: Array<{
         event: string;
         data: any;

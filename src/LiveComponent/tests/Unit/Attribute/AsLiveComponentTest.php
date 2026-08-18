@@ -124,6 +124,7 @@ final class AsLiveComponentTest extends TestCase
         $this->assertSame([
             'action' => 'aListenerActionMethod',
             'event' => 'the_event_name',
+            'condition' => null,
         ], $liveListeners[0]);
     }
 
@@ -135,6 +136,7 @@ final class AsLiveComponentTest extends TestCase
         $this->assertSame([
             'action' => 'method',
             'event' => 'event_name',
+            'condition' => null,
         ], $liveListeners[0]);
     }
 
@@ -147,20 +149,36 @@ final class AsLiveComponentTest extends TestCase
             [
                 'action' => 'onBar',
                 'event' => 'bar',
+                'condition' => null,
             ],
             [
                 'action' => 'onFooBar',
                 'event' => 'foo',
+                'condition' => null,
             ],
             [
                 'action' => 'onFooBar',
                 'event' => 'bar',
+                'condition' => null,
             ],
             [
                 'action' => 'onFooBar',
                 'event' => 'foo:bar',
+                'condition' => null,
             ],
         ], $liveListeners);
+    }
+
+    public function testCanGetLiveListenerWithCondition()
+    {
+        $liveListeners = AsLiveComponent::liveListeners(DummyLiveComponentWithCondition::class);
+
+        $this->assertCount(1, $liveListeners);
+        $this->assertSame([
+            'action' => 'method',
+            'event' => 'product_updated',
+            'condition' => 'event.id == props.product',
+        ], $liveListeners[0]);
     }
 
     public function testCanGetRepeatedLiveListenersFromClassString()
@@ -191,5 +209,14 @@ class DummyLiveComponent
     public function method(): bool
     {
         return true;
+    }
+}
+
+#[AsLiveComponent]
+class DummyLiveComponentWithCondition
+{
+    #[LiveListener('product_updated(event.id == props.product)')]
+    public function method(): void
+    {
     }
 }

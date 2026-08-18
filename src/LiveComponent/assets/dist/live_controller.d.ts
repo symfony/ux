@@ -62,6 +62,7 @@ declare class export_default {
   has(name: string): boolean;
   set(name: string, value: any): boolean;
   getOriginalProps(): any;
+  getCurrentProps(): any;
   getDirtyProps(): any;
   getUpdatedPropsFromParent(): any;
   flushDirtyPropsToPending(): void;
@@ -87,7 +88,10 @@ type ComponentHookCallback<T extends string = ComponentHookName> = T extends Com
 declare class Component {
   readonly element: HTMLElement;
   readonly name: string;
-  readonly listeners: Map<string, string[]>;
+  readonly listeners: Map<string, Array<{
+    action: string;
+    condition: string | null;
+  }>>;
   private backend;
   readonly elementDriver: ElementDriver;
   id: string | null;
@@ -107,6 +111,7 @@ declare class Component {
   constructor(element: HTMLElement, name: string, props: any, listeners: Array<{
     event: string;
     action: string;
+    condition?: string | null;
   }>, id: string | null, backend: BackendInterface, elementDriver: ElementDriver);
   addPlugin(plugin: PluginInterface): void;
   connect(): void;
@@ -194,6 +199,7 @@ declare class LiveControllerDefault extends Controller<HTMLElement> implements L
   readonly listenersValue: Array<{
     event: string;
     action: string;
+    condition: string | null;
   }>;
   readonly eventsToEmitValue: Array<{
     event: string;

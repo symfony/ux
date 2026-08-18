@@ -225,7 +225,9 @@ class LiveComponentDebugCommand extends Command
                 '' :
                 ' ('.implode(', ', $parameters).')';
 
-            $display = $name.' => '.$methodName.$parametersDisplay;
+            $conditionDisplay = null !== $liveListener['condition'] ? ' if ('.$liveListener['condition'].')' : '';
+
+            $display = $name.$conditionDisplay.' => '.$methodName.$parametersDisplay;
             $events[] = $display;
         }
 

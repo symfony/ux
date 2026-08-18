@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+var __commonJSMin = (cb, mod) => () => (mod || (cb((mod = { exports: {} }).exports, mod), cb = null), mod.exports);
 var BackendRequest_default = class {
 	constructor(promise, actions, updateModels) {
 		this.isResolved = false;
@@ -51,12 +52,14 @@ var RequestBuilder_default = class {
 			};
 			if (Object.keys(updatedPropsFromParent).length > 0) requestData.propsFromParent = updatedPropsFromParent;
 			if (hasFingerprints) requestData.children = children;
-			if (actions.length > 0) if (actions.length === 1) {
-				requestData.args = actions[0].args;
-				url += `/${encodeURIComponent(actions[0].name)}`;
-			} else {
-				url += "/_batch";
-				requestData.actions = actions;
+			if (actions.length > 0) {
+				if (actions.length === 1) {
+					requestData.args = actions[0].args;
+					url += `/${encodeURIComponent(actions[0].name)}`;
+				} else {
+					url += "/_batch";
+					requestData.actions = actions;
+				}
 			}
 			const formData = new FormData();
 			formData.append("data", JSON.stringify(requestData));
@@ -239,7 +242,6 @@ function parseDirectives(content) {
 				}
 				if (char !== " ") throw new Error(`Missing space after ${getLastActionName()}()`);
 				pushInstruction();
-				break;
 		}
 	}
 	switch (state) {
@@ -408,6 +410,1189 @@ var HookManager_default = class {
 		});
 	}
 };
+var require_interopRequireDefault = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	function _interopRequireDefault(e) {
+		return e && e.__esModule ? e : { "default": e };
+	}
+	module.exports = _interopRequireDefault, module.exports.__esModule = true, module.exports["default"] = module.exports;
+}));
+var require_typeof = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	function _typeof(o) {
+		"@babel/helpers - typeof";
+		return module.exports = _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+			return typeof o;
+		} : function(o) {
+			return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+		}, module.exports.__esModule = true, module.exports["default"] = module.exports, _typeof(o);
+	}
+	module.exports = _typeof, module.exports.__esModule = true, module.exports["default"] = module.exports;
+}));
+var require_toPrimitive = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var _typeof = require_typeof()["default"];
+	function toPrimitive(t, r) {
+		if ("object" != _typeof(t) || !t) return t;
+		var e = t[Symbol.toPrimitive];
+		if (void 0 !== e) {
+			var i = e.call(t, r || "default");
+			if ("object" != _typeof(i)) return i;
+			throw new TypeError("@@toPrimitive must return a primitive value.");
+		}
+		return ("string" === r ? String : Number)(t);
+	}
+	module.exports = toPrimitive, module.exports.__esModule = true, module.exports["default"] = module.exports;
+}));
+var require_toPropertyKey = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var _typeof = require_typeof()["default"];
+	var toPrimitive = require_toPrimitive();
+	function toPropertyKey(t) {
+		var i = toPrimitive(t, "string");
+		return "symbol" == _typeof(i) ? i : i + "";
+	}
+	module.exports = toPropertyKey, module.exports.__esModule = true, module.exports["default"] = module.exports;
+}));
+var require_defineProperty = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var toPropertyKey = require_toPropertyKey();
+	function _defineProperty(e, r, t) {
+		return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+			value: t,
+			enumerable: !0,
+			configurable: !0,
+			writable: !0
+		}) : e[r] = t, e;
+	}
+	module.exports = _defineProperty, module.exports.__esModule = true, module.exports["default"] = module.exports;
+}));
+var require_classCallCheck = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	function _classCallCheck(a, n) {
+		if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");
+	}
+	module.exports = _classCallCheck, module.exports.__esModule = true, module.exports["default"] = module.exports;
+}));
+var require_createClass = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var toPropertyKey = require_toPropertyKey();
+	function _defineProperties(e, r) {
+		for (var t = 0; t < r.length; t++) {
+			var o = r[t];
+			o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, toPropertyKey(o.key), o);
+		}
+	}
+	function _createClass(e, r, t) {
+		return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e;
+	}
+	module.exports = _createClass, module.exports.__esModule = true, module.exports["default"] = module.exports;
+}));
+var require_arrayLikeToArray = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	function _arrayLikeToArray(r, a) {
+		(null == a || a > r.length) && (a = r.length);
+		for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+		return n;
+	}
+	module.exports = _arrayLikeToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
+}));
+var require_arrayWithoutHoles = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var arrayLikeToArray = require_arrayLikeToArray();
+	function _arrayWithoutHoles(r) {
+		if (Array.isArray(r)) return arrayLikeToArray(r);
+	}
+	module.exports = _arrayWithoutHoles, module.exports.__esModule = true, module.exports["default"] = module.exports;
+}));
+var require_iterableToArray = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	function _iterableToArray(r) {
+		if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);
+	}
+	module.exports = _iterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
+}));
+var require_unsupportedIterableToArray = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var arrayLikeToArray = require_arrayLikeToArray();
+	function _unsupportedIterableToArray(r, a) {
+		if (r) {
+			if ("string" == typeof r) return arrayLikeToArray(r, a);
+			var t = {}.toString.call(r).slice(8, -1);
+			return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? arrayLikeToArray(r, a) : void 0;
+		}
+	}
+	module.exports = _unsupportedIterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
+}));
+var require_nonIterableSpread = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	function _nonIterableSpread() {
+		throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+	}
+	module.exports = _nonIterableSpread, module.exports.__esModule = true, module.exports["default"] = module.exports;
+}));
+var require_toConsumableArray = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var arrayWithoutHoles = require_arrayWithoutHoles();
+	var iterableToArray = require_iterableToArray();
+	var unsupportedIterableToArray = require_unsupportedIterableToArray();
+	var nonIterableSpread = require_nonIterableSpread();
+	function _toConsumableArray(r) {
+		return arrayWithoutHoles(r) || iterableToArray(r) || unsupportedIterableToArray(r) || nonIterableSpread();
+	}
+	module.exports = _toConsumableArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
+}));
+var require_handlers$1 = /* @__PURE__ */ __commonJSMin(((exports) => {
+	var _toConsumableArray2 = require_interopRequireDefault()(require_toConsumableArray());
+	var poolNames = {
+		functions: "Jexl Function",
+		transforms: "Transform"
+	};
+	exports.ArrayLiteral = function(ast) {
+		return this.evalArray(ast.value);
+	};
+	exports.BinaryExpression = function(ast) {
+		var _this = this;
+		var grammarOp = this._grammar.elements[ast.operator];
+		if (grammarOp.evalOnDemand) {
+			var wrap = function wrap(subAst) {
+				return { eval: function _eval() {
+					return _this.eval(subAst);
+				} };
+			};
+			return grammarOp.evalOnDemand(wrap(ast.left), wrap(ast.right));
+		}
+		return this.Promise.all([this.eval(ast.left), this.eval(ast.right)]).then(function(arr) {
+			return grammarOp.eval(arr[0], arr[1]);
+		});
+	};
+	exports.ConditionalExpression = function(ast) {
+		var _this2 = this;
+		return this.eval(ast.test).then(function(res) {
+			if (res) {
+				if (ast.consequent) return _this2.eval(ast.consequent);
+				return res;
+			}
+			return _this2.eval(ast.alternate);
+		});
+	};
+	exports.FilterExpression = function(ast) {
+		var _this3 = this;
+		return this.eval(ast.subject).then(function(subject) {
+			if (ast.relative) return _this3._filterRelative(subject, ast.expr);
+			return _this3._filterStatic(subject, ast.expr);
+		});
+	};
+	exports.Identifier = function(ast) {
+		if (!ast.from) return ast.relative ? this._relContext[ast.value] : this._context[ast.value];
+		return this.eval(ast.from).then(function(context) {
+			if (context === void 0 || context === null) return;
+			if (Array.isArray(context)) context = context[0];
+			return context[ast.value];
+		});
+	};
+	exports.Literal = function(ast) {
+		return ast.value;
+	};
+	exports.ObjectLiteral = function(ast) {
+		return this.evalMap(ast.value);
+	};
+	exports.FunctionCall = function(ast) {
+		var poolName = poolNames[ast.pool];
+		if (!poolName) throw new Error("Corrupt AST: Pool '".concat(ast.pool, "' not found"));
+		var func = this._grammar[ast.pool][ast.name];
+		if (!func) throw new Error("".concat(poolName, " ").concat(ast.name, " is not defined."));
+		return this.evalArray(ast.args || []).then(function(args) {
+			return func.apply(void 0, (0, _toConsumableArray2.default)(args));
+		});
+	};
+	exports.UnaryExpression = function(ast) {
+		var _this4 = this;
+		return this.eval(ast.right).then(function(right) {
+			return _this4._grammar.elements[ast.operator].eval(right);
+		});
+	};
+}));
+var require_Evaluator = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var _interopRequireDefault = require_interopRequireDefault();
+	var _classCallCheck2 = _interopRequireDefault(require_classCallCheck());
+	var _createClass2 = _interopRequireDefault(require_createClass());
+	var handlers = require_handlers$1();
+	module.exports = /* @__PURE__ */ function() {
+		function Evaluator(grammar, context, relativeContext) {
+			var promise = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : Promise;
+			(0, _classCallCheck2.default)(this, Evaluator);
+			this._grammar = grammar;
+			this._context = context || {};
+			this._relContext = relativeContext || this._context;
+			this.Promise = promise;
+		}
+		(0, _createClass2.default)(Evaluator, [
+			{
+				key: "eval",
+				value: function _eval(ast) {
+					var _this = this;
+					return this.Promise.resolve().then(function() {
+						return handlers[ast.type].call(_this, ast);
+					});
+				}
+			},
+			{
+				key: "evalArray",
+				value: function evalArray(arr) {
+					var _this2 = this;
+					return this.Promise.all(arr.map(function(elem) {
+						return _this2.eval(elem);
+					}));
+				}
+			},
+			{
+				key: "evalMap",
+				value: function evalMap(map) {
+					var _this3 = this;
+					var keys = Object.keys(map);
+					var result = {};
+					var asts = keys.map(function(key) {
+						return _this3.eval(map[key]);
+					});
+					return this.Promise.all(asts).then(function(vals) {
+						vals.forEach(function(val, idx) {
+							result[keys[idx]] = val;
+						});
+						return result;
+					});
+				}
+			},
+			{
+				key: "_filterRelative",
+				value: function _filterRelative(subject, expr) {
+					var _this4 = this;
+					var promises = [];
+					if (!Array.isArray(subject)) subject = subject === void 0 ? [] : [subject];
+					subject.forEach(function(elem) {
+						var evalInst = new Evaluator(_this4._grammar, _this4._context, elem, _this4.Promise);
+						promises.push(evalInst.eval(expr));
+					});
+					return this.Promise.all(promises).then(function(values) {
+						var results = [];
+						values.forEach(function(value, idx) {
+							if (value) results.push(subject[idx]);
+						});
+						return results;
+					});
+				}
+			},
+			{
+				key: "_filterStatic",
+				value: function _filterStatic(subject, expr) {
+					return this.eval(expr).then(function(res) {
+						if (typeof res === "boolean") return res ? subject : void 0;
+						return subject[res];
+					});
+				}
+			}
+		]);
+		return Evaluator;
+	}();
+}));
+var require_Lexer = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var _interopRequireDefault = require_interopRequireDefault();
+	var _classCallCheck2 = _interopRequireDefault(require_classCallCheck());
+	var _createClass2 = _interopRequireDefault(require_createClass());
+	var numericRegex = /^-?(?:(?:[0-9]*\.[0-9]+)|[0-9]+)$/;
+	var identRegex = /^[a-zA-Zа-яА-Я_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF$][a-zA-Zа-яА-Я0-9_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF$]*$/;
+	var escEscRegex = /\\\\/;
+	var whitespaceRegex = /^\s*$/;
+	var preOpRegexElems = [
+		"'(?:(?:\\\\')|[^'])*'",
+		"\"(?:(?:\\\\\")|[^\"])*\"",
+		"\\s+",
+		"\\btrue\\b",
+		"\\bfalse\\b"
+	];
+	var postOpRegexElems = ["[a-zA-Zа-яА-Я_À-ÖØ-öø-ÿ\\$][a-zA-Z0-9а-яА-Я_À-ÖØ-öø-ÿ\\$]*", "(?:(?:[0-9]*\\.[0-9]+)|[0-9]+)"];
+	var minusNegatesAfter = [
+		"binaryOp",
+		"unaryOp",
+		"openParen",
+		"openBracket",
+		"question",
+		"colon"
+	];
+	module.exports = /* @__PURE__ */ function() {
+		function Lexer(grammar) {
+			(0, _classCallCheck2.default)(this, Lexer);
+			this._grammar = grammar;
+		}
+		(0, _createClass2.default)(Lexer, [
+			{
+				key: "getElements",
+				value: function getElements(str) {
+					var regex = this._getSplitRegex();
+					return str.split(regex).filter(function(elem) {
+						return elem;
+					});
+				}
+			},
+			{
+				key: "getTokens",
+				value: function getTokens(elements) {
+					var tokens = [];
+					var negate = false;
+					for (var i = 0; i < elements.length; i++) if (this._isWhitespace(elements[i])) {
+						if (tokens.length) tokens[tokens.length - 1].raw += elements[i];
+					} else if (elements[i] === "-" && this._isNegative(tokens)) negate = true;
+					else {
+						if (negate) {
+							elements[i] = "-" + elements[i];
+							negate = false;
+						}
+						tokens.push(this._createToken(elements[i]));
+					}
+					if (negate) tokens.push(this._createToken("-"));
+					return tokens;
+				}
+			},
+			{
+				key: "tokenize",
+				value: function tokenize(str) {
+					var elements = this.getElements(str);
+					return this.getTokens(elements);
+				}
+			},
+			{
+				key: "_createToken",
+				value: function _createToken(element) {
+					var token = {
+						type: "literal",
+						value: element,
+						raw: element
+					};
+					if (element[0] === "\"" || element[0] === "'") token.value = this._unquote(element);
+					else if (element.match(numericRegex)) token.value = parseFloat(element);
+					else if (element === "true" || element === "false") token.value = element === "true";
+					else if (this._grammar.elements[element]) token.type = this._grammar.elements[element].type;
+					else if (element.match(identRegex)) token.type = "identifier";
+					else throw new Error("Invalid expression token: ".concat(element));
+					return token;
+				}
+			},
+			{
+				key: "_escapeRegExp",
+				value: function _escapeRegExp(str) {
+					str = str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+					if (str.match(identRegex)) str = "\\b" + str + "\\b";
+					return str;
+				}
+			},
+			{
+				key: "_getSplitRegex",
+				value: function _getSplitRegex() {
+					var _this = this;
+					if (!this._splitRegex) {
+						var elemArray = Object.keys(this._grammar.elements).sort(function(a, b) {
+							return b.length - a.length;
+						}).map(function(elem) {
+							return _this._escapeRegExp(elem);
+						}, this);
+						this._splitRegex = new RegExp("(" + [
+							preOpRegexElems.join("|"),
+							elemArray.join("|"),
+							postOpRegexElems.join("|")
+						].join("|") + ")");
+					}
+					return this._splitRegex;
+				}
+			},
+			{
+				key: "_isNegative",
+				value: function _isNegative(tokens) {
+					if (!tokens.length) return true;
+					return minusNegatesAfter.some(function(type) {
+						return type === tokens[tokens.length - 1].type;
+					});
+				}
+			},
+			{
+				key: "_isWhitespace",
+				value: function _isWhitespace(str) {
+					return !!str.match(whitespaceRegex);
+				}
+			},
+			{
+				key: "_unquote",
+				value: function _unquote(str) {
+					var quote = str[0];
+					var escQuoteRegex = new RegExp("\\\\" + quote, "g");
+					return str.substr(1, str.length - 2).replace(escQuoteRegex, quote).replace(escEscRegex, "\\");
+				}
+			}
+		]);
+		return Lexer;
+	}();
+}));
+var require_handlers = /* @__PURE__ */ __commonJSMin(((exports) => {
+	exports.argVal = function(ast) {
+		if (ast) this._cursor.args.push(ast);
+	};
+	exports.arrayStart = function() {
+		this._placeAtCursor({
+			type: "ArrayLiteral",
+			value: []
+		});
+	};
+	exports.arrayVal = function(ast) {
+		if (ast) this._cursor.value.push(ast);
+	};
+	exports.binaryOp = function(token) {
+		var precedence = this._grammar.elements[token.value].precedence || 0;
+		var parent = this._cursor._parent;
+		while (parent && parent.operator && this._grammar.elements[parent.operator].precedence >= precedence) {
+			this._cursor = parent;
+			parent = parent._parent;
+		}
+		var node = {
+			type: "BinaryExpression",
+			operator: token.value,
+			left: this._cursor
+		};
+		this._setParent(this._cursor, node);
+		this._cursor = parent;
+		this._placeAtCursor(node);
+	};
+	exports.dot = function() {
+		this._nextIdentEncapsulate = this._cursor && this._cursor.type !== "UnaryExpression" && (this._cursor.type !== "BinaryExpression" || this._cursor.type === "BinaryExpression" && this._cursor.right);
+		this._nextIdentRelative = !this._cursor || this._cursor && !this._nextIdentEncapsulate;
+		if (this._nextIdentRelative) this._relative = true;
+	};
+	exports.filter = function(ast) {
+		this._placeBeforeCursor({
+			type: "FilterExpression",
+			expr: ast,
+			relative: this._subParser.isRelative(),
+			subject: this._cursor
+		});
+	};
+	exports.functionCall = function() {
+		this._placeBeforeCursor({
+			type: "FunctionCall",
+			name: this._cursor.value,
+			args: [],
+			pool: "functions"
+		});
+	};
+	exports.identifier = function(token) {
+		var node = {
+			type: "Identifier",
+			value: token.value
+		};
+		if (this._nextIdentEncapsulate) {
+			node.from = this._cursor;
+			this._placeBeforeCursor(node);
+			this._nextIdentEncapsulate = false;
+		} else {
+			if (this._nextIdentRelative) {
+				node.relative = true;
+				this._nextIdentRelative = false;
+			}
+			this._placeAtCursor(node);
+		}
+	};
+	exports.literal = function(token) {
+		this._placeAtCursor({
+			type: "Literal",
+			value: token.value
+		});
+	};
+	exports.objKey = function(token) {
+		this._curObjKey = token.value;
+	};
+	exports.objStart = function() {
+		this._placeAtCursor({
+			type: "ObjectLiteral",
+			value: {}
+		});
+	};
+	exports.objVal = function(ast) {
+		this._cursor.value[this._curObjKey] = ast;
+	};
+	exports.subExpression = function(ast) {
+		this._placeAtCursor(ast);
+	};
+	exports.ternaryEnd = function(ast) {
+		this._cursor.alternate = ast;
+	};
+	exports.ternaryMid = function(ast) {
+		this._cursor.consequent = ast;
+	};
+	exports.ternaryStart = function() {
+		this._tree = {
+			type: "ConditionalExpression",
+			test: this._tree
+		};
+		this._cursor = this._tree;
+	};
+	exports.transform = function(token) {
+		this._placeBeforeCursor({
+			type: "FunctionCall",
+			name: token.value,
+			args: [this._cursor],
+			pool: "transforms"
+		});
+	};
+	exports.unaryOp = function(token) {
+		this._placeAtCursor({
+			type: "UnaryExpression",
+			operator: token.value
+		});
+	};
+}));
+var require_states = /* @__PURE__ */ __commonJSMin(((exports) => {
+	var h = require_handlers();
+	exports.states = {
+		expectOperand: { tokenTypes: {
+			literal: { toState: "expectBinOp" },
+			identifier: { toState: "identifier" },
+			unaryOp: {},
+			openParen: { toState: "subExpression" },
+			openCurl: {
+				toState: "expectObjKey",
+				handler: h.objStart
+			},
+			dot: { toState: "traverse" },
+			openBracket: {
+				toState: "arrayVal",
+				handler: h.arrayStart
+			}
+		} },
+		expectBinOp: {
+			tokenTypes: {
+				binaryOp: { toState: "expectOperand" },
+				pipe: { toState: "expectTransform" },
+				dot: { toState: "traverse" },
+				question: {
+					toState: "ternaryMid",
+					handler: h.ternaryStart
+				}
+			},
+			completable: true
+		},
+		expectTransform: { tokenTypes: { identifier: {
+			toState: "postTransform",
+			handler: h.transform
+		} } },
+		expectObjKey: { tokenTypes: {
+			identifier: {
+				toState: "expectKeyValSep",
+				handler: h.objKey
+			},
+			closeCurl: { toState: "expectBinOp" }
+		} },
+		expectKeyValSep: { tokenTypes: { colon: { toState: "objVal" } } },
+		postTransform: {
+			tokenTypes: {
+				openParen: { toState: "argVal" },
+				binaryOp: { toState: "expectOperand" },
+				dot: { toState: "traverse" },
+				openBracket: { toState: "filter" },
+				pipe: { toState: "expectTransform" }
+			},
+			completable: true
+		},
+		postArgs: {
+			tokenTypes: {
+				binaryOp: { toState: "expectOperand" },
+				dot: { toState: "traverse" },
+				openBracket: { toState: "filter" },
+				pipe: { toState: "expectTransform" }
+			},
+			completable: true
+		},
+		identifier: {
+			tokenTypes: {
+				binaryOp: { toState: "expectOperand" },
+				dot: { toState: "traverse" },
+				openBracket: { toState: "filter" },
+				openParen: {
+					toState: "argVal",
+					handler: h.functionCall
+				},
+				pipe: { toState: "expectTransform" },
+				question: {
+					toState: "ternaryMid",
+					handler: h.ternaryStart
+				}
+			},
+			completable: true
+		},
+		traverse: { tokenTypes: { identifier: { toState: "identifier" } } },
+		filter: {
+			subHandler: h.filter,
+			endStates: { closeBracket: "identifier" }
+		},
+		subExpression: {
+			subHandler: h.subExpression,
+			endStates: { closeParen: "expectBinOp" }
+		},
+		argVal: {
+			subHandler: h.argVal,
+			endStates: {
+				comma: "argVal",
+				closeParen: "postArgs"
+			}
+		},
+		objVal: {
+			subHandler: h.objVal,
+			endStates: {
+				comma: "expectObjKey",
+				closeCurl: "expectBinOp"
+			}
+		},
+		arrayVal: {
+			subHandler: h.arrayVal,
+			endStates: {
+				comma: "arrayVal",
+				closeBracket: "expectBinOp"
+			}
+		},
+		ternaryMid: {
+			subHandler: h.ternaryMid,
+			endStates: { colon: "ternaryEnd" }
+		},
+		ternaryEnd: {
+			subHandler: h.ternaryEnd,
+			completable: true
+		}
+	};
+}));
+var require_Parser = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var _interopRequireDefault = require_interopRequireDefault();
+	var _classCallCheck2 = _interopRequireDefault(require_classCallCheck());
+	var _createClass2 = _interopRequireDefault(require_createClass());
+	var handlers = require_handlers();
+	var states = require_states().states;
+	module.exports = /* @__PURE__ */ function() {
+		function Parser(grammar, prefix, stopMap) {
+			(0, _classCallCheck2.default)(this, Parser);
+			this._grammar = grammar;
+			this._state = "expectOperand";
+			this._tree = null;
+			this._exprStr = prefix || "";
+			this._relative = false;
+			this._stopMap = stopMap || {};
+		}
+		(0, _createClass2.default)(Parser, [
+			{
+				key: "addToken",
+				value: function addToken(token) {
+					if (this._state === "complete") throw new Error("Cannot add a new token to a completed Parser");
+					var state = states[this._state];
+					var startExpr = this._exprStr;
+					this._exprStr += token.raw;
+					if (state.subHandler) {
+						if (!this._subParser) this._startSubExpression(startExpr);
+						var stopState = this._subParser.addToken(token);
+						if (stopState) {
+							this._endSubExpression();
+							if (this._parentStop) return stopState;
+							this._state = stopState;
+						}
+					} else if (state.tokenTypes[token.type]) {
+						var typeOpts = state.tokenTypes[token.type];
+						var handleFunc = handlers[token.type];
+						if (typeOpts.handler) handleFunc = typeOpts.handler;
+						if (handleFunc) handleFunc.call(this, token);
+						if (typeOpts.toState) this._state = typeOpts.toState;
+					} else if (this._stopMap[token.type]) return this._stopMap[token.type];
+					else throw new Error("Token ".concat(token.raw, " (").concat(token.type, ") unexpected in expression: ").concat(this._exprStr));
+					return false;
+				}
+			},
+			{
+				key: "addTokens",
+				value: function addTokens(tokens) {
+					tokens.forEach(this.addToken, this);
+				}
+			},
+			{
+				key: "complete",
+				value: function complete() {
+					if (this._cursor && !states[this._state].completable) throw new Error("Unexpected end of expression: ".concat(this._exprStr));
+					if (this._subParser) this._endSubExpression();
+					this._state = "complete";
+					return this._cursor ? this._tree : null;
+				}
+			},
+			{
+				key: "isRelative",
+				value: function isRelative() {
+					return this._relative;
+				}
+			},
+			{
+				key: "_endSubExpression",
+				value: function _endSubExpression() {
+					states[this._state].subHandler.call(this, this._subParser.complete());
+					this._subParser = null;
+				}
+			},
+			{
+				key: "_placeAtCursor",
+				value: function _placeAtCursor(node) {
+					if (!this._cursor) this._tree = node;
+					else {
+						this._cursor.right = node;
+						this._setParent(node, this._cursor);
+					}
+					this._cursor = node;
+				}
+			},
+			{
+				key: "_placeBeforeCursor",
+				value: function _placeBeforeCursor(node) {
+					this._cursor = this._cursor._parent;
+					this._placeAtCursor(node);
+				}
+			},
+			{
+				key: "_setParent",
+				value: function _setParent(node, parent) {
+					Object.defineProperty(node, "_parent", {
+						value: parent,
+						writable: true
+					});
+				}
+			},
+			{
+				key: "_startSubExpression",
+				value: function _startSubExpression(exprStr) {
+					var endStates = states[this._state].endStates;
+					if (!endStates) {
+						this._parentStop = true;
+						endStates = this._stopMap;
+					}
+					this._subParser = new Parser(this._grammar, exprStr, endStates);
+				}
+			}
+		]);
+		return Parser;
+	}();
+}));
+var require_PromiseSync = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var _interopRequireDefault = require_interopRequireDefault();
+	var _classCallCheck2 = _interopRequireDefault(require_classCallCheck());
+	var _createClass2 = _interopRequireDefault(require_createClass());
+	var PromiseSync = /*#__PURE__*/ function() {
+		function PromiseSync(fn) {
+			(0, _classCallCheck2.default)(this, PromiseSync);
+			fn(this._resolve.bind(this), this._reject.bind(this));
+		}
+		(0, _createClass2.default)(PromiseSync, [
+			{
+				key: "catch",
+				value: function _catch(rejected) {
+					if (this.error) try {
+						this._resolve(rejected(this.error));
+					} catch (e) {
+						this._reject(e);
+					}
+					return this;
+				}
+			},
+			{
+				key: "then",
+				value: function then(resolved, rejected) {
+					if (!this.error) try {
+						this._resolve(resolved(this.value));
+					} catch (e) {
+						this._reject(e);
+					}
+					if (rejected) this.catch(rejected);
+					return this;
+				}
+			},
+			{
+				key: "_reject",
+				value: function _reject(error) {
+					this.value = void 0;
+					this.error = error;
+				}
+			},
+			{
+				key: "_resolve",
+				value: function _resolve(val) {
+					if (val instanceof PromiseSync) {
+						if (val.error) this._reject(val.error);
+						else this._resolve(val.value);
+					} else {
+						this.value = val;
+						this.error = void 0;
+					}
+				}
+			}
+		]);
+		return PromiseSync;
+	}();
+	PromiseSync.all = function(vals) {
+		return new PromiseSync(function(resolve) {
+			resolve(vals.map(function(val) {
+				while (val instanceof PromiseSync) {
+					if (val.error) throw Error(val.error);
+					val = val.value;
+				}
+				return val;
+			}));
+		});
+	};
+	PromiseSync.resolve = function(val) {
+		return new PromiseSync(function(resolve) {
+			return resolve(val);
+		});
+	};
+	PromiseSync.reject = function(error) {
+		return new PromiseSync(function(resolve, reject) {
+			return reject(error);
+		});
+	};
+	module.exports = PromiseSync;
+}));
+var require_Expression = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var _interopRequireDefault = require_interopRequireDefault();
+	var _classCallCheck2 = _interopRequireDefault(require_classCallCheck());
+	var _createClass2 = _interopRequireDefault(require_createClass());
+	var Evaluator = require_Evaluator();
+	var Lexer = require_Lexer();
+	var Parser = require_Parser();
+	var PromiseSync = require_PromiseSync();
+	module.exports = /* @__PURE__ */ function() {
+		function Expression(grammar, exprStr) {
+			(0, _classCallCheck2.default)(this, Expression);
+			this._grammar = grammar;
+			this._exprStr = exprStr;
+			this._ast = null;
+		}
+		(0, _createClass2.default)(Expression, [
+			{
+				key: "compile",
+				value: function compile() {
+					var lexer = new Lexer(this._grammar);
+					var parser = new Parser(this._grammar);
+					var tokens = lexer.tokenize(this._exprStr);
+					parser.addTokens(tokens);
+					this._ast = parser.complete();
+					return this;
+				}
+			},
+			{
+				key: "eval",
+				value: function _eval() {
+					var context = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
+					return this._eval(context, Promise);
+				}
+			},
+			{
+				key: "evalSync",
+				value: function evalSync() {
+					var context = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
+					var res = this._eval(context, PromiseSync);
+					if (res.error) throw res.error;
+					return res.value;
+				}
+			},
+			{
+				key: "_eval",
+				value: function _eval(context, promise) {
+					var _this = this;
+					return promise.resolve().then(function() {
+						var ast = _this._getAst();
+						return new Evaluator(_this._grammar, context, void 0, promise).eval(ast);
+					});
+				}
+			},
+			{
+				key: "_getAst",
+				value: function _getAst() {
+					if (!this._ast) this.compile();
+					return this._ast;
+				}
+			}
+		]);
+		return Expression;
+	}();
+}));
+var require_grammar = /* @__PURE__ */ __commonJSMin(((exports) => {
+	exports.getGrammar = function() {
+		return {
+			elements: {
+				".": { type: "dot" },
+				"[": { type: "openBracket" },
+				"]": { type: "closeBracket" },
+				"|": { type: "pipe" },
+				"{": { type: "openCurl" },
+				"}": { type: "closeCurl" },
+				":": { type: "colon" },
+				",": { type: "comma" },
+				"(": { type: "openParen" },
+				")": { type: "closeParen" },
+				"?": { type: "question" },
+				"+": {
+					type: "binaryOp",
+					precedence: 30,
+					eval: function _eval(left, right) {
+						return left + right;
+					}
+				},
+				"-": {
+					type: "binaryOp",
+					precedence: 30,
+					eval: function _eval(left, right) {
+						return left - right;
+					}
+				},
+				"*": {
+					type: "binaryOp",
+					precedence: 40,
+					eval: function _eval(left, right) {
+						return left * right;
+					}
+				},
+				"/": {
+					type: "binaryOp",
+					precedence: 40,
+					eval: function _eval(left, right) {
+						return left / right;
+					}
+				},
+				"//": {
+					type: "binaryOp",
+					precedence: 40,
+					eval: function _eval(left, right) {
+						return Math.floor(left / right);
+					}
+				},
+				"%": {
+					type: "binaryOp",
+					precedence: 50,
+					eval: function _eval(left, right) {
+						return left % right;
+					}
+				},
+				"^": {
+					type: "binaryOp",
+					precedence: 50,
+					eval: function _eval(left, right) {
+						return Math.pow(left, right);
+					}
+				},
+				"==": {
+					type: "binaryOp",
+					precedence: 20,
+					eval: function _eval(left, right) {
+						return left == right;
+					}
+				},
+				"!=": {
+					type: "binaryOp",
+					precedence: 20,
+					eval: function _eval(left, right) {
+						return left != right;
+					}
+				},
+				">": {
+					type: "binaryOp",
+					precedence: 20,
+					eval: function _eval(left, right) {
+						return left > right;
+					}
+				},
+				">=": {
+					type: "binaryOp",
+					precedence: 20,
+					eval: function _eval(left, right) {
+						return left >= right;
+					}
+				},
+				"<": {
+					type: "binaryOp",
+					precedence: 20,
+					eval: function _eval(left, right) {
+						return left < right;
+					}
+				},
+				"<=": {
+					type: "binaryOp",
+					precedence: 20,
+					eval: function _eval(left, right) {
+						return left <= right;
+					}
+				},
+				"&&": {
+					type: "binaryOp",
+					precedence: 10,
+					evalOnDemand: function evalOnDemand(left, right) {
+						return left.eval().then(function(leftVal) {
+							if (!leftVal) return leftVal;
+							return right.eval();
+						});
+					}
+				},
+				"||": {
+					type: "binaryOp",
+					precedence: 10,
+					evalOnDemand: function evalOnDemand(left, right) {
+						return left.eval().then(function(leftVal) {
+							if (leftVal) return leftVal;
+							return right.eval();
+						});
+					}
+				},
+				in: {
+					type: "binaryOp",
+					precedence: 20,
+					eval: function _eval(left, right) {
+						if (typeof right === "string") return right.indexOf(left) !== -1;
+						if (Array.isArray(right)) return right.some(function(elem) {
+							return elem === left;
+						});
+						return false;
+					}
+				},
+				"!": {
+					type: "unaryOp",
+					precedence: Infinity,
+					eval: function _eval(right) {
+						return !right;
+					}
+				}
+			},
+			functions: {},
+			transforms: {}
+		};
+	};
+}));
+const jexl = new ((/* @__PURE__ */ __commonJSMin(((exports, module) => {
+	var _interopRequireDefault = require_interopRequireDefault();
+	var _defineProperty2 = _interopRequireDefault(require_defineProperty());
+	var _classCallCheck2 = _interopRequireDefault(require_classCallCheck());
+	var _createClass2 = _interopRequireDefault(require_createClass());
+	var Expression = require_Expression();
+	var getGrammar = require_grammar().getGrammar;
+	var Jexl = /*#__PURE__*/ function() {
+		function Jexl() {
+			(0, _classCallCheck2.default)(this, Jexl);
+			this.expr = this.expr.bind(this);
+			this._grammar = getGrammar();
+		}
+		(0, _createClass2.default)(Jexl, [
+			{
+				key: "addBinaryOp",
+				value: function addBinaryOp(operator, precedence, fn, manualEval) {
+					this._addGrammarElement(operator, (0, _defineProperty2.default)({
+						type: "binaryOp",
+						precedence
+					}, manualEval ? "evalOnDemand" : "eval", fn));
+				}
+			},
+			{
+				key: "addFunction",
+				value: function addFunction(name, fn) {
+					this._grammar.functions[name] = fn;
+				}
+			},
+			{
+				key: "addFunctions",
+				value: function addFunctions(map) {
+					for (var key in map) this._grammar.functions[key] = map[key];
+				}
+			},
+			{
+				key: "addUnaryOp",
+				value: function addUnaryOp(operator, fn) {
+					this._addGrammarElement(operator, {
+						type: "unaryOp",
+						weight: Infinity,
+						eval: fn
+					});
+				}
+			},
+			{
+				key: "addTransform",
+				value: function addTransform(name, fn) {
+					this._grammar.transforms[name] = fn;
+				}
+			},
+			{
+				key: "addTransforms",
+				value: function addTransforms(map) {
+					for (var key in map) this._grammar.transforms[key] = map[key];
+				}
+			},
+			{
+				key: "compile",
+				value: function compile(expression) {
+					return this.createExpression(expression).compile();
+				}
+			},
+			{
+				key: "createExpression",
+				value: function createExpression(expression) {
+					return new Expression(this._grammar, expression);
+				}
+			},
+			{
+				key: "getFunction",
+				value: function getFunction(name) {
+					return this._grammar.functions[name];
+				}
+			},
+			{
+				key: "getTransform",
+				value: function getTransform(name) {
+					return this._grammar.transforms[name];
+				}
+			},
+			{
+				key: "eval",
+				value: function _eval(expression) {
+					var context = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
+					return this.createExpression(expression).eval(context);
+				}
+			},
+			{
+				key: "evalSync",
+				value: function evalSync(expression) {
+					var context = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
+					return this.createExpression(expression).evalSync(context);
+				}
+			},
+			{
+				key: "expr",
+				value: function expr(strs) {
+					for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) args[_key - 1] = arguments[_key];
+					var exprStr = strs.reduce(function(acc, str, idx) {
+						var arg = idx < args.length ? args[idx] : "";
+						acc += str + arg;
+						return acc;
+					}, "");
+					return this.createExpression(exprStr);
+				}
+			},
+			{
+				key: "removeOp",
+				value: function removeOp(operator) {
+					if (this._grammar.elements[operator] && (this._grammar.elements[operator].type === "binaryOp" || this._grammar.elements[operator].type === "unaryOp")) delete this._grammar.elements[operator];
+				}
+			},
+			{
+				key: "_addGrammarElement",
+				value: function _addGrammarElement(str, obj) {
+					this._grammar.elements[str] = obj;
+				}
+			}
+		]);
+		return Jexl;
+	}();
+	module.exports = new Jexl();
+	module.exports.Jexl = Jexl;
+})))()).Jexl();
+function evaluateListenerCondition(condition, eventData, props) {
+	try {
+		return !!jexl.evalSync(condition, {
+			event: eventData,
+			props
+		});
+	} catch (error) {
+		console.error(`LiveComponent: could not evaluate LiveListener condition "${condition}".`, error);
+		return false;
+	}
+}
 var Idiomorph = (function() {
 	"use strict";
 	let EMPTY_SET = /* @__PURE__ */ new Set();
@@ -611,12 +1796,13 @@ var Idiomorph = (function() {
 			let inNewContent = srcToNewHeadNodes.has(currentHeadElt.outerHTML);
 			let isReAppended = ctx.head.shouldReAppend(currentHeadElt);
 			let isPreserved = ctx.head.shouldPreserve(currentHeadElt);
-			if (inNewContent || isPreserved) if (isReAppended) removed.push(currentHeadElt);
-			else {
-				srcToNewHeadNodes.delete(currentHeadElt.outerHTML);
-				preserved.push(currentHeadElt);
-			}
-			else if (headMergeStyle === "append") {
+			if (inNewContent || isPreserved) {
+				if (isReAppended) removed.push(currentHeadElt);
+				else {
+					srcToNewHeadNodes.delete(currentHeadElt.outerHTML);
+					preserved.push(currentHeadElt);
+				}
+			} else if (headMergeStyle === "append") {
 				if (isReAppended) {
 					removed.push(currentHeadElt);
 					nodesToAppend.push(currentHeadElt);
@@ -684,8 +1870,10 @@ var Idiomorph = (function() {
 	}
 	function isIdSetMatch(node1, node2, ctx) {
 		if (node1 == null || node2 == null) return false;
-		if (node1.nodeType === node2.nodeType && node1.tagName === node2.tagName) if (node1.id !== "" && node1.id === node2.id) return true;
-		else return getIdIntersectionCount(ctx, node1, node2) > 0;
+		if (node1.nodeType === node2.nodeType && node1.tagName === node2.tagName) {
+			if (node1.id !== "" && node1.id === node2.id) return true;
+			else return getIdIntersectionCount(ctx, node1, node2) > 0;
+		}
 		return false;
 	}
 	function isSoftMatch(node1, node2) {
@@ -1123,7 +2311,6 @@ var ExternalMutationTracker_default = class {
 						this.handleAttributeMutation(mutation);
 						handledAttributeMutations.set(element, [...handledAttributeMutations.get(element), mutation.attributeName]);
 					}
-					break;
 			}
 		}
 	}
@@ -1316,6 +2503,21 @@ const parseDeepData = (data, propertyPath) => {
 		parts
 	};
 };
+function setDeepData(data, propertyPath, value) {
+	const { currentLevelData, finalData, finalKey, parts } = parseDeepData(data, propertyPath);
+	if (typeof currentLevelData !== "object") {
+		const lastPart = parts.pop();
+		if (typeof currentLevelData === "undefined") throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join(".")}" data does not exist. Did you forget to expose "${parts[0]}" as a LiveProp?`);
+		throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join(".")}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
+	}
+	if (currentLevelData[finalKey] === void 0) {
+		const lastPart = parts.pop();
+		if (parts.length > 0) throw new Error(`The model name ${propertyPath} was never initialized. Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
+		throw new Error(`The model name "${propertyPath}" was never initialized. Did you forget to expose "${lastPart}" as a LiveProp? Available models values are: ${Object.keys(data).length > 0 ? Object.keys(data).join(", ") : "(none)"}`);
+	}
+	currentLevelData[finalKey] = value;
+	return finalData;
+}
 var ValueStore_default = class {
 	constructor(props) {
 		this.props = {};
@@ -1342,6 +2544,15 @@ var ValueStore_default = class {
 	}
 	getOriginalProps() {
 		return { ...this.props };
+	}
+	getCurrentProps() {
+		let props = this.getOriginalProps();
+		[this.pendingProps, this.dirtyProps].forEach((changedProps) => {
+			Object.keys(changedProps).forEach((name) => {
+				props = setDeepData(props, name, changedProps[name]);
+			});
+		});
+		return props;
 	}
 	getDirtyProps() {
 		return { ...this.dirtyProps };
@@ -1389,7 +2600,10 @@ var Component = class {
 		this.listeners = /* @__PURE__ */ new Map();
 		listeners.forEach((listener) => {
 			if (!this.listeners.has(listener.event)) this.listeners.set(listener.event, []);
-			this.listeners.get(listener.event)?.push(listener.action);
+			this.listeners.get(listener.event)?.push({
+				action: listener.action,
+				condition: listener.condition || null
+			});
 		});
 		this.valueStore = new ValueStore_default(props);
 		this.unsyncedInputsTracker = new UnsyncedInputsTracker_default(this, elementDriver);
@@ -1471,7 +2685,8 @@ var Component = class {
 	}
 	doEmit(name, data) {
 		if (!this.listeners.has(name)) return;
-		(this.listeners.get(name) || []).forEach((action) => {
+		(this.listeners.get(name) || []).forEach(({ action, condition }) => {
+			if (condition && !evaluateListenerCondition(condition, data, this.valueStore.getCurrentProps())) return;
 			this.action(action, data, 1);
 		});
 	}
@@ -2260,8 +3475,10 @@ var LiveControllerDefault = class LiveControllerDefault extends Controller {
 		if (this.pendingActionTriggerModelElement === element) modelBinding.shouldRender = false;
 		if (eventName === "change" && modelBinding.targetEventName === "input") modelBinding.targetEventName = "change";
 		if (eventName && modelBinding.targetEventName !== eventName) return;
-		if (false === modelBinding.debounce) if (modelBinding.targetEventName === "input") modelBinding.debounce = true;
-		else modelBinding.debounce = 0;
+		if (false === modelBinding.debounce) {
+			if (modelBinding.targetEventName === "input") modelBinding.debounce = true;
+			else modelBinding.debounce = 0;
+		}
 		const finalValue = getValueFromElement(element, this.component.valueStore);
 		const finalValueIsEmpty = finalValue === "" || finalValue === null || finalValue === void 0;
 		if (isTextualInputElement(element) || isTextareaElement(element)) {
