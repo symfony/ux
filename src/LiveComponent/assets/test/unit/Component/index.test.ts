@@ -130,5 +130,54 @@ describe('Component class', () => {
             expect(backend.actions[0].name).toBe('save');
             expect(backend.actions[0].args).toEqual({ foo: 'bar', secondArg: 'secondValue' });
         });
+
+        it('does not turn the toJSON protocol probe of JSON.stringify() into an action', async () => {
+            const { proxy, backend } = makeDummyComponent();
+
+            // @ts-expect-error
+            expect(proxy.toJSON).toBeUndefined();
+
+            try {
+                JSON.stringify(proxy);
+            } catch {
+                // the component graph is circular, so stringify throws exactly like
+                // it does on the unproxied component; all that matters here is that
+                // the "toJSON" probe did not queue a server action
+            }
+
+            await new Promise((resolve) => setTimeout(resolve, 5));
+            expect(backend.actions).toHaveLength(0);
+        });
+
+        it('does not turn the then protocol probe of promise assimilation into an action', async () => {
+            const { proxy, backend } = makeDummyComponent();
+
+            // if "then" returned a callable, the proxy would be treated as a
+            // thenable and this promise would never resolve to the proxy itself
+            const resolved = await Promise.resolve(proxy);
+
+            expect(resolved).toBe(proxy);
+            await new Promise((resolve) => setTimeout(resolve, 5));
+            expect(backend.actions).toHaveLength(0);
+        });
+
+        it('still exposes models named like protocol probes', () => {
+            const { backend } = makeTestComponent();
+            const component = new Component(
+                document.createElement('div'),
+                'test-component',
+                { toJSON: 'model value', then: 'other value' },
+                [],
+                null,
+                backend,
+                new noopElementDriver()
+            );
+            const proxy = proxifyComponent(component);
+
+            // @ts-expect-error
+            expect(proxy.toJSON).toBe('model value');
+            // @ts-expect-error
+            expect(proxy.then).toBe('other value');
+        });
     });
 });

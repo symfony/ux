@@ -925,6 +925,12 @@ initialized:
     const component = document.getElementById('id-of-your-element').__component;
     component.mode = 'editing';
 
+.. note::
+
+    An action cannot be named ``then`` or ``toJSON``: these names are reserved
+    so that ``await`` and ``JSON.stringify()`` keep working on the ``Component``
+    object.
+
 .. _javascript-manual-element-change:
 
 Finally, you can also set the value of a model field directly. However,
