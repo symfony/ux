@@ -52,14 +52,12 @@ var RequestBuilder_default = class {
 			};
 			if (Object.keys(updatedPropsFromParent).length > 0) requestData.propsFromParent = updatedPropsFromParent;
 			if (hasFingerprints) requestData.children = children;
-			if (actions.length > 0) {
-				if (actions.length === 1) {
-					requestData.args = actions[0].args;
-					url += `/${encodeURIComponent(actions[0].name)}`;
-				} else {
-					url += "/_batch";
-					requestData.actions = actions;
-				}
+			if (actions.length > 0) if (actions.length === 1) {
+				requestData.args = actions[0].args;
+				url += `/${encodeURIComponent(actions[0].name)}`;
+			} else {
+				url += "/_batch";
+				requestData.actions = actions;
 			}
 			const formData = new FormData();
 			formData.append("data", JSON.stringify(requestData));
@@ -242,6 +240,7 @@ function parseDirectives(content) {
 				}
 				if (char !== " ") throw new Error(`Missing space after ${getLastActionName()}()`);
 				pushInstruction();
+				break;
 		}
 	}
 	switch (state) {
@@ -1169,7 +1168,7 @@ var require_PromiseSync = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	var _interopRequireDefault = require_interopRequireDefault();
 	var _classCallCheck2 = _interopRequireDefault(require_classCallCheck());
 	var _createClass2 = _interopRequireDefault(require_createClass());
-	var PromiseSync = /*#__PURE__*/ function() {
+	var PromiseSync = /* @__PURE__ */ function() {
 		function PromiseSync(fn) {
 			(0, _classCallCheck2.default)(this, PromiseSync);
 			fn(this._resolve.bind(this), this._reject.bind(this));
@@ -1208,10 +1207,9 @@ var require_PromiseSync = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			{
 				key: "_resolve",
 				value: function _resolve(val) {
-					if (val instanceof PromiseSync) {
-						if (val.error) this._reject(val.error);
-						else this._resolve(val.value);
-					} else {
+					if (val instanceof PromiseSync) if (val.error) this._reject(val.error);
+					else this._resolve(val.value);
+					else {
 						this.value = val;
 						this.error = void 0;
 					}
@@ -1464,7 +1462,7 @@ const jexl = new ((/* @__PURE__ */ __commonJSMin(((exports, module) => {
 	var _createClass2 = _interopRequireDefault(require_createClass());
 	var Expression = require_Expression();
 	var getGrammar = require_grammar().getGrammar;
-	var Jexl = /*#__PURE__*/ function() {
+	var Jexl = /* @__PURE__ */ function() {
 		function Jexl() {
 			(0, _classCallCheck2.default)(this, Jexl);
 			this.expr = this.expr.bind(this);
@@ -1796,13 +1794,12 @@ var Idiomorph = (function() {
 			let inNewContent = srcToNewHeadNodes.has(currentHeadElt.outerHTML);
 			let isReAppended = ctx.head.shouldReAppend(currentHeadElt);
 			let isPreserved = ctx.head.shouldPreserve(currentHeadElt);
-			if (inNewContent || isPreserved) {
-				if (isReAppended) removed.push(currentHeadElt);
-				else {
-					srcToNewHeadNodes.delete(currentHeadElt.outerHTML);
-					preserved.push(currentHeadElt);
-				}
-			} else if (headMergeStyle === "append") {
+			if (inNewContent || isPreserved) if (isReAppended) removed.push(currentHeadElt);
+			else {
+				srcToNewHeadNodes.delete(currentHeadElt.outerHTML);
+				preserved.push(currentHeadElt);
+			}
+			else if (headMergeStyle === "append") {
 				if (isReAppended) {
 					removed.push(currentHeadElt);
 					nodesToAppend.push(currentHeadElt);
@@ -1870,10 +1867,8 @@ var Idiomorph = (function() {
 	}
 	function isIdSetMatch(node1, node2, ctx) {
 		if (node1 == null || node2 == null) return false;
-		if (node1.nodeType === node2.nodeType && node1.tagName === node2.tagName) {
-			if (node1.id !== "" && node1.id === node2.id) return true;
-			else return getIdIntersectionCount(ctx, node1, node2) > 0;
-		}
+		if (node1.nodeType === node2.nodeType && node1.tagName === node2.tagName) if (node1.id !== "" && node1.id === node2.id) return true;
+		else return getIdIntersectionCount(ctx, node1, node2) > 0;
 		return false;
 	}
 	function isSoftMatch(node1, node2) {
@@ -2311,6 +2306,7 @@ var ExternalMutationTracker_default = class {
 						this.handleAttributeMutation(mutation);
 						handledAttributeMutations.set(element, [...handledAttributeMutations.get(element), mutation.attributeName]);
 					}
+					break;
 			}
 		}
 	}
@@ -3475,10 +3471,8 @@ var LiveControllerDefault = class LiveControllerDefault extends Controller {
 		if (this.pendingActionTriggerModelElement === element) modelBinding.shouldRender = false;
 		if (eventName === "change" && modelBinding.targetEventName === "input") modelBinding.targetEventName = "change";
 		if (eventName && modelBinding.targetEventName !== eventName) return;
-		if (false === modelBinding.debounce) {
-			if (modelBinding.targetEventName === "input") modelBinding.debounce = true;
-			else modelBinding.debounce = 0;
-		}
+		if (false === modelBinding.debounce) if (modelBinding.targetEventName === "input") modelBinding.debounce = true;
+		else modelBinding.debounce = 0;
 		const finalValue = getValueFromElement(element, this.component.valueStore);
 		const finalValueIsEmpty = finalValue === "" || finalValue === null || finalValue === void 0;
 		if (isTextualInputElement(element) || isTextareaElement(element)) {
