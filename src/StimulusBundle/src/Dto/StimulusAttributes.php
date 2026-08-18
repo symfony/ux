@@ -24,6 +24,14 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
 {
     private array $attributes = [];
 
+    /**
+     * Value/class/param names come from a fixed set defined in templates and
+     * controllers, so normalizing each one once is enough.
+     *
+     * @var array<string, string>
+     */
+    private static array $normalizedKeyNames = [];
+
     private array $controllers = [];
     private array $actions = [];
     private array $targets = [];
@@ -215,7 +223,9 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
      */
     private function normalizeControllerName(string $controllerName): string
     {
-        return preg_replace('/^@/', '', str_replace('_', '-', str_replace('/', '--', $controllerName)));
+        $normalized = str_replace(['/', '_'], ['--', '-'], $controllerName);
+
+        return str_starts_with($normalized, '@') ? substr($normalized, 1) : $normalized;
     }
 
     /**
@@ -234,10 +244,14 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
      */
     private function normalizeKeyName(string $str): string
     {
+        if (isset(self::$normalizedKeyNames[$str])) {
+            return self::$normalizedKeyNames[$str];
+        }
+
         // Adapted from ByteString::camel
-        $str = ucfirst(str_replace(' ', '', ucwords(preg_replace('/[^a-zA-Z0-9\x7f-\xff]++/', ' ', $str))));
+        $camel = ucfirst(str_replace(' ', '', ucwords(preg_replace('/[^a-zA-Z0-9\x7f-\xff]++/', ' ', $str))));
 
         // Adapted from ByteString::snake
-        return strtolower(preg_replace(['/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'], '\1-\2', $str));
+        return self::$normalizedKeyNames[$str] = strtolower(preg_replace(['/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'], '\1-\2', $camel));
     }
 }
