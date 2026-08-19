@@ -1,12 +1,11 @@
-{# @prop tag 'ul'|'ol'|'div'|null The HTML element to render. #}
-{# @prop flush boolean Whether to remove outer borders and rounded corners. #}
-{# @prop numbered boolean Whether to display CSS-generated item numbers. #}
-{# @prop horizontal boolean|'sm'|'md'|'lg'|'xl'|'xxl' Whether and when to use a horizontal layout. #}
-{# @block content The list group items. #}
 {%- props
+    ## 'ul'|'ol'|'div'|null The HTML element to render.
     tag = null,
+    ## boolean Whether to remove outer borders and rounded corners.
     flush = false,
+    ## boolean Whether to display CSS-generated item numbers.
     numbered = false,
+    ## boolean|'sm'|'md'|'lg'|'xl'|'xxl' Whether and when to use a horizontal layout.
     horizontal = false
 -%}
 
@@ -20,5 +19,6 @@
 }) -%}
 
 <{{ final_tag }} {{ attributes.defaults({class: classes}) }}>
+    {##- The list group items. -#}
     {%- block content -%}{%- endblock -%}
 </{{ final_tag }}>

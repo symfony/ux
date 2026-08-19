@@ -1,9 +1,9 @@
-{# @block content The group body, typically a `Sidebar:Menu`. #}
 <div
     data-slot="sidebar-group-content"
     {{ attributes.defaults({
         class: 'w-full text-sm'|tailwind_classes,
     }) }}
 >
+    {##- The group body, typically a `Sidebar:Menu`. -#}
     {%- block content %}{% endblock -%}
 </div>

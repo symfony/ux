@@ -14,7 +14,7 @@ namespace Symfony\UX\Toolkit\Component;
 use Symfony\UX\Toolkit\Assert;
 
 /**
- * A prop declared in a Twig component's docblock (`{# @prop name type description #}`).
+ * A prop documented by a `## <type> <description>` comment above its name in the `{% props %}` tag.
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  *

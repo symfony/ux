@@ -1,7 +1,9 @@
-{# @prop openDelay number Delay in milliseconds before showing the sub-menu. #}
-{# @prop closeDelay number Delay in milliseconds before hiding the sub-menu. #}
-{# @block content A `Menubar:SubTrigger` and a `Menubar:SubContent`. #}
-{%- props openDelay = 0, closeDelay = 0 -%}
+{%- props
+    ## number Delay in milliseconds before showing the sub-menu.
+    openDelay = 0,
+    ## number Delay in milliseconds before hiding the sub-menu.
+    closeDelay = 0
+-%}
 <div
     data-slot="menubar-sub"
     data-menubar-sub-open-delay-value="{{ openDelay }}"
@@ -12,5 +14,6 @@
         'data-action': 'mouseenter->menubar-sub#show mouseleave->menubar-sub#hide',
     }) }}
 >
+    {##- A `Menubar:SubTrigger` and a `Menubar:SubContent`. -#}
     {%- block content %}{% endblock -%}
 </div>

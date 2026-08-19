@@ -1,7 +1,9 @@
-{# @prop id string Unique identifier used to generate internal Dialog IDs. #}
-{# @prop open boolean Whether the dialog is open on initial render. #}
-{# @block content The dialog structure, typically includes `Dialog:Trigger` and `Dialog:Content`. #}
-{%- props id, open = false -%}
+{%- props
+    ## string Unique identifier used to generate internal Dialog IDs.
+    id,
+    ## boolean Whether the dialog is open on initial render.
+    open = false
+-%}
 
 {%- set _dialog_id = 'dialog-' ~ id -%}
 {%- set _dialog_title_id = _dialog_id ~ '-title' -%}
@@ -18,5 +20,6 @@
         'data-controller': 'dialog',
     }) }}
 >
+    {## The dialog structure, typically includes `Dialog:Trigger` and `Dialog:Content`. -#}
     {% block content %}{% endblock %}
 </div>

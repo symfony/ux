@@ -1,5 +1,7 @@
-{# @block content Optional text displayed in the center of the separator. #}
-{%- set content -%}{%- block content %}{% endblock -%}{%- endset -%}
+{%- set content -%}
+    {##- Optional text displayed in the center of the separator. -#}
+    {%- block content %}{% endblock -%}
+{%- endset -%}
 {%- set has_content = content|trim != '' -%}
 <div
     data-slot="field-separator"

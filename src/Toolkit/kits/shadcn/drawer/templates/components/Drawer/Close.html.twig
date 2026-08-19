@@ -1,6 +1,6 @@
-{# @block content The close trigger element (e.g., a `Button`) that closes the drawer when clicked. #}
 {%- set drawer_close_attrs = {
     'data-slot': 'drawer-close',
     'data-action': 'click->dialog#close'|html_attr_type('sst'),
 } -%}
+{##- The close trigger element (e.g., a `Button`) that closes the drawer when clicked. -#}
 {%- block content %}{% endblock -%}

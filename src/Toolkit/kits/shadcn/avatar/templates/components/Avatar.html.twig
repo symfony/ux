@@ -1,6 +1,7 @@
-{# @prop size 'default'|'sm'|'lg' The avatar size. #}
-{# @block content The avatar content, typically an image or `Avatar:Fallback`. #}
-{%- props size = 'default' -%}
+{%- props
+    ## 'default'|'sm'|'lg' The avatar size.
+    size = 'default'
+-%}
 
 <span
     data-slot="avatar"
@@ -9,5 +10,6 @@
         class: 'size-8 rounded-full after:rounded-full data-[size=lg]:size-10 data-[size=sm]:size-6 after:border-border group/avatar relative flex shrink-0 select-none after:absolute after:inset-0 after:border after:mix-blend-darken dark:after:mix-blend-lighten'|tailwind_classes,
     }) }}
 >
+    {##- The avatar content, typically an image or `Avatar:Fallback`. -#}
     {%- block content %}{% endblock -%}
 </span>

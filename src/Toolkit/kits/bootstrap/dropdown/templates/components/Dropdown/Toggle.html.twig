@@ -1,16 +1,15 @@
-{# @prop tag 'button'|'a' The interactive element to render. #}
-{# @prop color 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark' The Bootstrap contextual color. #}
-{# @prop outline boolean Whether to render the outline variant. #}
-{# @prop size 'sm'|'lg'|null The optional button size. #}
-{# @prop split boolean Whether to render only the split-menu caret. #}
-{# @prop disabled boolean Whether the toggle is disabled. #}
-{# @block content The visible toggle label. #}
 {%- props
+    ## 'button'|'a' The interactive element to render.
     tag = 'button',
+    ## 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark' The Bootstrap contextual color.
     color = 'secondary',
+    ## boolean Whether to render the outline variant.
     outline = false,
+    ## 'sm'|'lg'|null The optional button size.
     size = null,
+    ## boolean Whether to render only the split-menu caret.
     split = false,
+    ## boolean Whether the toggle is disabled.
     disabled = false
 -%}
 {%- set final_tag = tag == 'a' ? 'a' : 'button' -%}
@@ -37,5 +36,8 @@
     {%- endif -%}
 {%- endif -%}
 <{{ final_tag }} {{ attributes.defaults(default_attrs) }}>
-    {%- if split %}<span class="visually-hidden">Toggle Dropdown</span>{% else %}{%- block content %}{% endblock -%}{% endif -%}
+    {%- if split %}<span class="visually-hidden">Toggle Dropdown</span>{% else %}
+        {##- The visible toggle label. -#}
+        {%- block content %}{% endblock -%}
+    {% endif -%}
 </{{ final_tag }}>

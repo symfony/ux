@@ -1,10 +1,9 @@
-{# @prop size 'sm'|'lg'|null The pagination control size. #}
-{# @prop align 'start'|'center'|'end'|null The horizontal alignment of the pagination links. #}
-{# @prop ariaLabel string The accessible name of the navigation landmark. #}
-{# @block content The pagination items, typically `Pagination:Item` components. #}
 {%- props
+    ## 'sm'|'lg'|null The pagination control size.
     size = null,
+    ## 'start'|'center'|'end'|null The horizontal alignment of the pagination links.
     align = null,
+    ## string The accessible name of the navigation landmark.
     ariaLabel = 'Pagination'
 -%}
 
@@ -15,6 +14,7 @@
 
 <nav {{ attributes.defaults({'aria-label': ariaLabel}) }}>
     <ul class="{{ pagination_classes }}">
+        {##- The pagination items, typically `Pagination:Item` components. -#}
         {%- block content -%}{% endblock -%}
     </ul>
 </nav>

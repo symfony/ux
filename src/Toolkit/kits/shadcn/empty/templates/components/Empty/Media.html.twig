@@ -1,6 +1,7 @@
-{# @prop variant 'default'|'icon' The media display style. #}
-{# @block content The visual element, typically an icon or illustration. #}
-{%- props variant = 'default' -%}
+{%- props
+    ## 'default'|'icon' The media display style.
+    variant = 'default'
+-%}
 {%- set style = html_cva(
     base: 'flex shrink-0 items-center justify-center mb-2 [&_svg]:pointer-events-none [&_svg]:shrink-0',
     variants: {
@@ -21,5 +22,6 @@
         class: style.apply({variant: variant})|tailwind_classes,
     }) }}
 >
+    {##- The visual element, typically an icon or illustration. -#}
     {%- block content %}{% endblock -%}
 </div>

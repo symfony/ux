@@ -1,6 +1,7 @@
-{# @prop pressed boolean Whether the item is initially pressed. #}
-{# @block content The toggle item label and/or icon. #}
-{%- props pressed = false -%}
+{%- props
+    ## boolean Whether the item is initially pressed.
+    pressed = false
+-%}
 {%- set _toggleGroup_variant = inject('toggleGroup.variant', 'default') -%}
 {%- set _toggleGroup_size = inject('toggleGroup.size', 'default') -%}
 {%- set _toggleGroup_spacing = inject('toggleGroup.spacing', 2) -%}
@@ -35,5 +36,6 @@
         'data-action': 'click->toggle#toggle click->toggle-group#toggle',
     }) }}
 >
+    {##- The toggle item label and/or icon. -#}
     {%- block content %}{% endblock -%}
 </button>

@@ -1,8 +1,11 @@
-{# @prop variant 'default'|'outline'|'muted' The visual style variant. #}
-{# @prop size 'default'|'sm'|'xs' The item size. #}
-{# @prop as 'div' The HTML tag to render. #}
-{# @block content The item content, typically includes `Item:Media`, `Item:Content`, and/or `Item:Actions`. #}
-{%- props variant = 'default', size = 'default', as = 'div' -%}
+{%- props
+    ## 'default'|'outline'|'muted' The visual style variant.
+    variant = 'default',
+    ## 'default'|'sm'|'xs' The item size.
+    size = 'default',
+    ## 'div' The HTML tag to render.
+    as = 'div'
+-%}
 {%- set style = html_cva(
     base: 'group/item flex w-full flex-wrap items-center rounded-lg border text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-muted',
     variants: {
@@ -31,5 +34,6 @@
         class: style.apply({variant: variant, size: size})|tailwind_classes,
     }) }}
 >
+    {##- The item content, typically includes `Item:Media`, `Item:Content`, and/or `Item:Actions`. -#}
     {%- block content %}{% endblock -%}
 </{{ as }}>

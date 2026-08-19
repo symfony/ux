@@ -1,9 +1,9 @@
-{# @block content The title text of the item. #}
 <div
     data-slot="item-title"
     {{ attributes.defaults({
         class: 'line-clamp-1 flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4'|tailwind_classes,
     }) }}
 >
+    {##- The title text of the item. -#}
     {%- block content %}{% endblock -%}
 </div>

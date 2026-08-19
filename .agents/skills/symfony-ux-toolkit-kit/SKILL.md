@@ -237,25 +237,36 @@ Rules:
 
 ## Twig Component Patterns
 
-### 1. Header docblock (mandatory)
+### 1. Prop & block documentation (mandatory)
 
-One `{# @prop ... #}` per declared prop + one `{# @block ... #}` per block the component renders:
+Document every prop with a `## <type> <Description.>` comment on the line above it **inside** the
+`{% props %}` tag, and every rendered block with a `{##- <Description.> -#}` doc comment on its own
+line right above it. These are Twig 3.29 documentation comments — Twig attaches them to the following
+node as metadata, so they carry no runtime cost and the Toolkit reads them natively:
 
 ```twig
-{# @prop id string Unique identifier used to generate internal Dialog IDs. #}
-{# @prop open boolean Whether the dialog is open on initial render. #}
-{# @block content The dialog structure, typically includes `Dialog:Trigger` and `Dialog:Content`. #}
-{%- props id, open = false -%}
+{%- props
+    ## string Unique identifier used to generate internal Dialog IDs.
+    id,
+    ## boolean Whether the dialog is open on initial render.
+    open = false
+-%}
+...
+<div ...>
+    {##- The dialog structure, typically includes `Dialog:Trigger` and `Dialog:Content`. -#}
+    {%- block content %}{% endblock -%}
+</div>
 ```
 
 Format is enforced by `bin/ux-toolkit-kit-lint` (CI fails on any warning — see [Docblock linting](#docblock-linting)):
 
-- **`@prop <name> <type> <Description.>`** — name first (camelCase Twig variable, `[a-z][a-zA-Z0-9]*`), then type, then description.
+- **Prop `## <type> <Description.>`** — one per line, on the line directly above the prop name, inside `{% props %}`. Type first (camelCase name matches the declared prop), then the description.
 - **Type** = valid PHPDoc/PHPStan type with **no spaces**: `'default'|'secondary'`, `string|array<string>|null`, `boolean`, `number`. A space breaks the type/description boundary, so `'a' | 'b'` is rejected — write `'a'|'b'`.
-- **No `Defaults to`** in the docblock. Default values live **only** in `{%- props -%}` (single source of truth); the linter and ux.symfony.com read them from there.
-- **`@block <name> <Description.>`** — name must match a block actually rendered in the template (`{% block x %}`, `block(outerBlocks.x)`, or `block('x')`). Never document a slot the component doesn't render, and never leave a rendered block undocumented.
+- **No `Defaults to`** in the documentation. Default values live **only** in `{%- props -%}` (single source of truth); the linter and ux.symfony.com read them from there.
+- **Block `{##- <Description.> -#}`** — a doc comment (double `#`) on its own line directly above a block actually rendered in the template (`{% block x %}`, `block(outerBlocks.x)`, or `block('x')`). **Mirror the block's whitespace-trim** so the rendered output is unchanged: `{##- ... -#}` when the block opens with `{%-`/`{{-`, `{## ... -#}` when it opens with `{%`/`{{`. Never leave a rendered block undocumented.
 - **Descriptions** start with a capital letter and end with a period.
 - Reference sub-components by Twig tag name (`\`Dialog:Trigger\``).
+- Requires `twig/twig >= 3.29` (documentation comments) and `symfony/ux-twig-component` with `PropsNode::getPropDocumentation()`.
 
 ### 2. Root element
 
@@ -348,12 +359,12 @@ Sub-templates like `Trigger.html.twig`, `Close.html.twig`, `Cancel.html.twig` MU
 
 ```twig
 {# templates/components/Dialog/Trigger.html.twig #}
-{# @block content The trigger element (e.g., a `Button`) that opens the dialog when clicked. #}
 {%- set dialog_trigger_attrs = {
     'data-action': 'click->dialog#open'|html_attr_type('sst'),
     'data-dialog-target': 'trigger',
     'aria-haspopup': 'dialog',
 } -%}
+{##- The trigger element (e.g., a `Button`) that opens the dialog when clicked. -#}
 {%- block content %}{% endblock -%}
 ```
 
@@ -371,10 +382,12 @@ Rules:
 - Variant (when wrapping known component acceptable, e.g. `AlertDialog:Action`):
 
 ```twig
-{# @prop variant 'default'|'destructive' The visual style variant. #}
-{# @block content The action button label. #}
-{%- props variant = 'default' -%}
+{%- props
+    ## 'default'|'destructive' The visual style variant.
+    variant = 'default'
+-%}
 <twig:Button variant="{{ variant }}" {{ ...attributes }}>
+    {##- The action button label. -#}
     {{- block(outerBlocks.content) -}}
 </twig:Button>
 ```
@@ -407,7 +420,7 @@ Emit as **literal attributes** (outside `defaults()`), always present with an **
 
 ## Docblock linting
 
-`bin/ux-toolkit-kit-lint` validates every component's `@prop`/`@block` docblocks against the template. CI runs it per kit with `--fail-on-warning`, so any violation fails the build.
+`bin/ux-toolkit-kit-lint` validates every component's prop and block documentation against the template. CI runs it per kit with `--fail-on-warning`, so any violation fails the build.
 
 ```bash
 cd src/Toolkit
@@ -415,9 +428,9 @@ php bin/ux-toolkit-kit-lint --fail-on-warning kits/<kit>
 ```
 
 Checks:
-- **`@prop`** — camelCase name, valid **spaceless** PHPStan type, description Capitalized + ending with a period. Every `@prop` maps to a prop in `{%- props -%}` and vice versa.
-- **`@block`** — valid Twig block name, description Capitalized + ending with a period. Every `@block` maps to a rendered block (`{% block x %}` / `block(outerBlocks.x)` / `block('x')`) and vice versa.
-- Default values are **not** documented in the docblock — they are read from `{%- props -%}`.
+- **Prop `## <type> <Description.>`** — valid **spaceless** PHPStan type, description Capitalized + ending with a period. Every declared prop in `{%- props -%}` has a `## ...` doc comment above it and vice versa.
+- **Block `{##- <Description.> -#}`** — description Capitalized + ending with a period. Every rendered block (`{% block x %}` / `block(outerBlocks.x)` / `block('x')`) has a `{##- ... -#}` doc comment on the line above it.
+- Default values are **not** documented — they are read from `{%- props -%}`.
 
 ---
 
@@ -464,7 +477,7 @@ export default class extends Controller {
 
 A controller's public API is documented with a `/** ... */` docblock placed **immediately before `export default class`**, using `@value`/`@target`/`@action` tags. `RecipeDocRenderer` renders these under `::: api-reference` (the same block that documents Twig component props), which is the only way a **controller-only recipe** — one with no `templates/components/*.html.twig` — surfaces an API reference. `bin/ux-toolkit-kit-lint` validates them via `StimulusControllerDocChecker` (see [Docblock linting](#docblock-linting)).
 
-**Add the docblock only to controllers whose API you want shown.** It is a deliberate, per-controller choice — not a blanket requirement. Document a controller when its `data-controller`/`data-*` surface is meant to be used or overridden directly by the consumer (always true for a controller-only recipe). **Omit it** — leaving the controller undocumented and rendering no API reference — when the controller is an internal implementation detail the consumer never touches directly (they drive it through the recipe's Twig components, which carry their own `@prop`/`@block` docs). Documenting such a controller would surface `data-*` internals as if they were public API.
+**Add the docblock only to controllers whose API you want shown.** It is a deliberate, per-controller choice — not a blanket requirement. Document a controller when its `data-controller`/`data-*` surface is meant to be used or overridden directly by the consumer (always true for a controller-only recipe). **Omit it** — leaving the controller undocumented and rendering no API reference — when the controller is an internal implementation detail the consumer never touches directly (they drive it through the recipe's Twig components, which carry their own prop/block documentation). Documenting such a controller would surface `data-*` internals as if they were public API.
 
 - **Format:** `@<tag> <name> <Description.>` — name first, then a one-sentence description that starts Capitalized and ends with a period. Align columns for readability (whitespace is normalized). Do **not** document types or defaults in the docblock — the renderer reads value types/defaults from the `static values` declaration.
 - **`@value <name>`** — one per key in `static values`. For object-form values (`open: { type: Boolean, default: false }`), document the **top-level key** (`open`), never the inner `type`/`default`.
@@ -557,7 +570,7 @@ Reviewers explicitly check snapshots regenerated (`#3488`).
 - [ ] Companion PR on `symfony/ux.symfony.com` linked **only if** recipe ships JS or new Tailwind classes
 - [ ] `php-cs-fixer`, `twig-cs-fixer`, `pnpm run fmt`, `pnpm run lint` clean
 - [ ] `bin/ux-toolkit-kit-lint --fail-on-warning kits/<kit>` clean
-- [ ] Docblocks: `@prop`/`@block` present; descriptions Capitalized + ending with a period; prop types are spaceless PHPStan types; **no `Defaults to`** (defaults live in `{%- props -%}`); every `@block` matches a rendered block
+- [ ] Docs: `## <type> <Description.>` above each prop in `{% props %}` + `{##- <Description.> -#}` on the line above each rendered block (trim mirrors the block); descriptions Capitalized + ending with a period; prop types are spaceless PHPStan types; **no `Defaults to`** (defaults live in `{%- props -%}`); every rendered block documented
 - [ ] `attributes.defaults()` holds the merged `class` (`'<base>'|tailwind_classes`), `data-controller`/`data-action` (+ overridable HTML defaults); `data-slot`, state `data-*`, `aria-*` and Stimulus `data-*-value` are literal attributes; state attrs always emitted with an explicit value (`tailwind_merge` kept only in different-element / external-component exceptions)
 - [ ] Trigger/Close sub-components use `<recipe>_<role>_attrs` (no wrapping `<button>`)
 - [ ] `data-action` Stimulus actions piped through `|html_attr_type('sst')` when concatenable
@@ -579,12 +592,12 @@ Reviewers explicitly check snapshots regenerated (`#3488`).
 | `Trigger.html.twig` wraps own `<button>` | Expose `<recipe>_trigger_attrs` + use `{%- block content %}{% endblock -%}` only |
 | `data-action="click->x#y"` not piped | `'click->x#y'\|html_attr_type('sst')` |
 | Missing `data-slot` on root/sub-roots (Shadcn) | Add `data-slot="<recipe>"` / `data-slot="<recipe>-<sub>"` |
-| Missing `{# @prop #}` / `{# @block #}` docblocks | Add docblocks before `{%- props -%}` |
-| `Defaults to \`...\`` in a `@prop` docblock | Remove it — the default lives only in `{%- props -%}` |
+| Missing `## <type> <desc>` prop comment / `{##- <desc> -#}` block comment | Add `## ...` above the prop in `{% props %}` / `{##- ... -#}` above the block |
+| `Defaults to \`...\`` in a `## ...` prop comment | Remove it — the default lives only in `{%- props -%}` |
 | Prop type with spaces (`'a' \| 'b'`) | Remove spaces (`'a'\|'b'`) |
 | Docblock description not Capitalized / no trailing period | Capitalize + end with a period |
-| `@block` documenting a slot the component never renders | Remove the `@block` |
-| Rendered block (`{% block x %}`) with no `@block` docblock | Add the `@block` |
+| Rendered block (`{% block x %}`) with no `{##- ... -#}` doc comment | Add `{##- <Description.> -#}` on the line above the block |
+| Block doc comment that shifts rendered whitespace (wrong trim) | Mirror the block's trim: `{##- ... -#}` for `{%-`/`{{-`, `{## ... -#}` for `{%`/`{{` |
 | Self-closing item reading `_parent_var` (outer-scope) | Use `provide()` in parent + `inject()` in child |
 | Recipe depends on another recipe but `dependencies.recipe` empty | Declare it (e.g. `toggle-group` → `toggle`) |
 | Snapshots not regenerated / partially stale | Regenerate via `phpunit -d --update-snapshots` (not `simple-phpunit` — removed) |

@@ -1,9 +1,9 @@
-{# @block content The clickable link text. #}
 <a
     data-slot="breadcrumb-link"
     {{ attributes.defaults({
         class: 'transition-colors hover:text-foreground'|tailwind_classes,
     }) }}
 >
+    {##- The clickable link text. -#}
     {%- block content %}{% endblock -%}
 </a>

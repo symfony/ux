@@ -1,20 +1,19 @@
-{# @prop tag 'a'|'button' The HTML element used for the navigation control. #}
-{# @prop href string|null The destination used by anchor navigation links. #}
-{# @prop id string|null The unique identifier of a dynamic tab control. #}
-{# @prop target string|null The selector of the associated tab panel. #}
-{# @prop toggle 'tab'|'pill'|null The Bootstrap JavaScript behavior. #}
-{# @prop active boolean Whether the navigation link or tab is active. #}
-{# @prop disabled boolean Whether the navigation link or tab is disabled. #}
-{# @prop content string The fallback label when no content block is provided. #}
-{# @block content The navigation link or tab label. #}
 {%- props
+    ## 'a'|'button' The HTML element used for the navigation control.
     tag = 'a',
+    ## string|null The destination used by anchor navigation links.
     href = '#',
+    ## string|null The unique identifier of a dynamic tab control.
     id = null,
+    ## string|null The selector of the associated tab panel.
     target = null,
+    ## 'tab'|'pill'|null The Bootstrap JavaScript behavior.
     toggle = null,
+    ## boolean Whether the navigation link or tab is active.
     active = false,
+    ## boolean Whether the navigation link or tab is disabled.
     disabled = false,
+    ## string The fallback label when no content block is provided.
     content = ''
 -%}
 
@@ -50,5 +49,6 @@
 {%- endif -%}
 
 <{{ final_tag }} {{ attributes.defaults(default_attrs) }}>
+    {##- The navigation link or tab label. -#}
     {%- block content -%}{{- content -}}{%- endblock -%}
 </{{ final_tag }}>
