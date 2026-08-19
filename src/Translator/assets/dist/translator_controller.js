@@ -1,10 +1,16 @@
 import { IntlMessageFormat } from "intl-messageformat";
+const compiledPatterns = /* @__PURE__ */ new Map();
+const SPECIAL_CHARS_REGEX = /([-[\]{}()*+?.\\^$|#,])/g;
 function strtr(string, replacePairs) {
-	const regex = Object.entries(replacePairs).map(([from]) => {
-		return from.replace(/([-[\]{}()*+?.\\^$|#,])/g, "\\$1");
-	});
-	if (regex.length === 0) return string;
-	return string.replace(new RegExp(regex.join("|"), "g"), (matched) => replacePairs[matched].toString());
+	const keys = Object.keys(replacePairs);
+	if (keys.length === 0) return string;
+	const pattern = keys.map((from) => from.replace(SPECIAL_CHARS_REGEX, "\\$1")).join("|");
+	let regex = compiledPatterns.get(pattern);
+	if (regex === void 0) {
+		regex = new RegExp(pattern, "g");
+		compiledPatterns.set(pattern, regex);
+	}
+	return string.replace(regex, (matched) => replacePairs[matched].toString());
 }
 function format(id, parameters, locale) {
 	if (null === id || "" === id) return "";

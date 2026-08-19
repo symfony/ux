@@ -41,4 +41,12 @@ text & @()`,
     ])('strtr', (expected, string, replacePairs) => {
         expect(strtr(string, replacePairs)).toEqual(expected);
     });
+
+    test('strtr reuses its compiled pattern across calls', () => {
+        const replacePairs = { '%name%': 'Hugo', '%count%': '2' };
+
+        expect(strtr('%name% has %count% apples', replacePairs)).toEqual('Hugo has 2 apples');
+        expect(strtr('%name% has %count% apples', replacePairs)).toEqual('Hugo has 2 apples');
+        expect(strtr('%count% apples for %name%', replacePairs)).toEqual('2 apples for Hugo');
+    });
 });
