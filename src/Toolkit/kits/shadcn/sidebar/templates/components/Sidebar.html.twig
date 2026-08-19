@@ -1,11 +1,18 @@
-{# @prop side 'left'|'right' On which side of the page the sidebar sits. #}
-{# @prop variant 'sidebar'|'floating'|'inset' The visual variant. #}
-{# @prop collapsible 'icon'|'offcanvas'|'none' How the desktop sidebar collapses. #}
-{# @prop label string Accessible name for the sidebar landmark. #}
-{# @block content Typically a `Sidebar:Header`, `Sidebar:Content`, `Sidebar:Footer` and an optional `Sidebar:Rail`. #}
-{%- props side = 'left', variant = 'sidebar', collapsible = 'icon', label = 'Sidebar' -%}
+{%- props
+    ## 'left'|'right' On which side of the page the sidebar sits.
+    side = 'left',
+    ## 'sidebar'|'floating'|'inset' The visual variant.
+    variant = 'sidebar',
+    ## 'icon'|'offcanvas'|'none' How the desktop sidebar collapses.
+    collapsible = 'icon',
+    ## string Accessible name for the sidebar landmark.
+    label = 'Sidebar'
+-%}
 {%- set _sidebar_initial_open = inject('sidebar.defaultOpen', true) -%}
-{%- set _sidebar_content -%}{% block content %}{% endblock %}{%- endset -%}
+{%- set _sidebar_content -%}
+    {## Typically a `Sidebar:Header`, `Sidebar:Content`, `Sidebar:Footer` and an optional `Sidebar:Rail`. -#}
+    {% block content %}{% endblock %}
+{%- endset -%}
 {%- if 'none' == collapsible -%}
     <aside
         data-slot="sidebar"

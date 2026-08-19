@@ -1,8 +1,11 @@
-{# @prop checked boolean Whether the checkbox is initially checked. #}
-{# @prop disabled boolean Whether the item is disabled. #}
-{# @prop closeOnSelect boolean Whether selecting the item closes the menu. #}
-{# @block content The label text. #}
-{%- props checked = false, disabled = false, closeOnSelect = false -%}
+{%- props
+    ## boolean Whether the checkbox is initially checked.
+    checked = false,
+    ## boolean Whether the item is disabled.
+    disabled = false,
+    ## boolean Whether selecting the item closes the menu.
+    closeOnSelect = false
+-%}
 <button
     type="button"
     role="menuitemcheckbox"
@@ -22,5 +25,6 @@
     <span class="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center" data-checkbox-indicator {% if not checked %}hidden{% endif %}>
         <twig:ux:icon name="lucide:check" class="size-4" aria-hidden="true" />
     </span>
+    {##- The label text. -#}
     {%- block content %}{% endblock -%}
 </button>

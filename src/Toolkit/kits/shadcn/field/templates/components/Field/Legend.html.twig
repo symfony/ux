@@ -1,6 +1,7 @@
-{# @prop variant 'legend'|'label' The text size variant. #}
-{# @block content The legend text for a fieldset. #}
-{%- props variant = 'legend' -%}
+{%- props
+    ## 'legend'|'label' The text size variant.
+    variant = 'legend'
+-%}
 <legend
     data-slot="field-legend"
     data-variant="{{ variant }}"
@@ -8,5 +9,6 @@
         class: 'mb-1.5 font-medium data-[variant=label]:text-sm data-[variant=legend]:text-base'|tailwind_classes,
     }) }}
 >
+    {##- The legend text for a fieldset. -#}
     {%- block content %}{% endblock -%}
 </legend>

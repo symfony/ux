@@ -1,8 +1,11 @@
-{# @prop size 'xs'|'sm'|'md'|'lg'|'xl'|'2xl' The avatar size. #}
-{# @prop shape 'circle'|'rounded' The avatar shape. #}
-{# @prop border 'none'|'bordered' Whether to show a ring border. #}
-{# @block content The avatar content, typically `Avatar:Image` and `Avatar:Fallback`. #}
-{%- props size = 'md', shape = 'circle', border = 'none' -%}
+{%- props
+    ## 'xs'|'sm'|'md'|'lg'|'xl'|'2xl' The avatar size.
+    size = 'md',
+    ## 'circle'|'rounded' The avatar shape.
+    shape = 'circle',
+    ## 'none'|'bordered' Whether to show a ring border.
+    border = 'none'
+-%}
 
 {%- set style = html_cva(
     base: 'group/avatar relative inline-flex shrink-0 select-none overflow-hidden',
@@ -36,5 +39,6 @@
         class: style.apply({size: size, shape: shape, border: border})|tailwind_classes,
     }) }}
 >
+    {##- The avatar content, typically `Avatar:Image` and `Avatar:Fallback`. -#}
     {%- block content %}{% endblock -%}
 </span>

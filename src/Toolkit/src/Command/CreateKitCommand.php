@@ -89,7 +89,12 @@ class CreateKitCommand extends Command
         $this->filesystem->dumpFile(
             'Button/templates/components/Button.html.twig',
             <<<TWIG
-                {% props type = 'button', variant = 'default' %}
+                {% props
+                    ## 'button'|'submit'|'reset' The button type.
+                    type = 'button',
+                    ## 'default'|'secondary' The visual style variant.
+                    variant = 'default'
+                %}
                 {%- set style = html_cva(
                     base: 'inline-flex items-center',
                     variants: {
@@ -106,6 +111,7 @@ class CreateKitCommand extends Command
                         type: 'submit',
                     }) }}
                 >
+                    {## The button label. #}
                     {%- block content %}{% endblock -%}
                 </button>
                 TWIG

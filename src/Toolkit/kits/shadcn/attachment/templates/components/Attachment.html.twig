@@ -1,8 +1,11 @@
-{# @prop state 'idle'|'uploading'|'processing'|'error'|'done' The upload state, which drives the styling. #}
-{# @prop size 'default'|'sm'|'xs' The attachment size. #}
-{# @prop orientation 'horizontal'|'vertical' Whether the media sits beside or above the content. #}
-{# @block content The attachment content, typically includes `Attachment:Media`, `Attachment:Content`, `Attachment:Actions` and/or `Attachment:Trigger`. #}
-{%- props state = 'done', size = 'default', orientation = 'horizontal' -%}
+{%- props
+    ## 'idle'|'uploading'|'processing'|'error'|'done' The upload state, which drives the styling.
+    state = 'done',
+    ## 'default'|'sm'|'xs' The attachment size.
+    size = 'default',
+    ## 'horizontal'|'vertical' Whether the media sits beside or above the content.
+    orientation = 'horizontal'
+-%}
 {%- set style = html_cva(
     base: 'group/attachment relative flex w-fit max-w-full min-w-0 shrink-0 flex-wrap rounded-xl border bg-card text-card-foreground transition-colors focus-within:ring-1 focus-within:ring-ring/50 has-[>a,>button]:hover:bg-muted/50 data-[state=error]:border-destructive/30 data-[state=idle]:border-dashed',
     variants: {
@@ -26,5 +29,6 @@
         class: style.apply({size: size, orientation: orientation})|tailwind_classes,
     }) }}
 >
+    {##- The attachment content, typically includes `Attachment:Media`, `Attachment:Content`, `Attachment:Actions` and/or `Attachment:Trigger`. -#}
     {%- block content %}{% endblock -%}
 </div>

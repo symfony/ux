@@ -1,4 +1,3 @@
-{# @block content The carousel slides, typically multiple `Carousel:Item` components. #}
 {%- set _carousel_orientation = inject('carousel.orientation', 'horizontal') -%}
 <div
     data-slot="carousel-content"
@@ -10,6 +9,7 @@
             class: ('flex ' ~ (_carousel_orientation == 'vertical' ? '-mt-4 flex-col' : '-ms-4'))|tailwind_classes,
         }) }}
     >
+        {##- The carousel slides, typically multiple `Carousel:Item` components. -#}
         {%- block content %}{% endblock -%}
     </div>
 </div>

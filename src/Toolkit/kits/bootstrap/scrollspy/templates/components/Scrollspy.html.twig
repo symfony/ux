@@ -1,14 +1,13 @@
-{# @prop target string The CSS selector of the navigation element controlled by Scrollspy. #}
-{# @prop height string The height of the scrollable region. #}
-{# @prop smoothScroll boolean Whether link activation scrolls smoothly to its target section. #}
-{# @prop rootMargin string|null The optional Intersection Observer root margin. #}
-{# @prop threshold string|null The optional comma-separated Intersection Observer thresholds. #}
-{# @block content The sections observed by Scrollspy. #}
 {%- props
+    ## string The CSS selector of the navigation element controlled by Scrollspy.
     target,
+    ## string The height of the scrollable region.
     height = '200px',
+    ## boolean Whether link activation scrolls smoothly to its target section.
     smoothScroll = false,
+    ## string|null The optional Intersection Observer root margin.
     rootMargin = null,
+    ## string|null The optional comma-separated Intersection Observer thresholds.
     threshold = null
 -%}
 {%- set default_attrs = {
@@ -28,5 +27,6 @@
     {%- set default_attrs = default_attrs|merge({'data-bs-threshold': threshold}) -%}
 {%- endif -%}
 <div {{ attributes.defaults(default_attrs) }}>
+    {##- The sections observed by Scrollspy. -#}
     {%- block content %}{% endblock -%}
 </div>

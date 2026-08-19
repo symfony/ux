@@ -1,4 +1,3 @@
-{# @block content The clickable element that toggles the collapsible (e.g., a `Button`). #}
 {%- set _collapsible_open = inject('collapsible.open', false) -%}
 {%- set collapsible_trigger_attrs = {
     'data-slot': 'collapsible-trigger',
@@ -7,4 +6,5 @@
     'aria-expanded': _collapsible_open ? 'true' : 'false',
     'data-state': _collapsible_open ? 'open' : 'closed',
 } -%}
+{##- The clickable element that toggles the collapsible (e.g., a `Button`). -#}
 {%- block content %}{% endblock -%}

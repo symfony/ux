@@ -1,6 +1,8 @@
-{# @prop href string The link destination. #}
-{# @block content The link label. #}
-{%- props href = '#' -%}
+{%- props
+    ## string The link destination.
+    href = '#'
+-%}
 <a {{ attributes.defaults({href: href, class: 'card-link'}) }}>
+    {##- The link label. -#}
     {%- block content %}{% endblock -%}
 </a>

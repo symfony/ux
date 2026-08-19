@@ -1,7 +1,9 @@
-{# @prop name string|null Group name shared by mutually exclusive popovers, so only one is open at a time. #}
-{# @prop open boolean Whether the popover is open on initial render. #}
-{# @block content A `Popover:Trigger` and a `Popover:Content`. #}
-{%- props name = null, open = false -%}
+{%- props
+    ## string|null Group name shared by mutually exclusive popovers, so only one is open at a time.
+    name = null,
+    ## boolean Whether the popover is open on initial render.
+    open = false
+-%}
 {%- do provide('popover.open', open) -%}
 <div
     data-slot="popover"
@@ -18,5 +20,6 @@
         ]|join(' ')|html_attr_type('sst'),
     }) }}
 >
+    {##- A `Popover:Trigger` and a `Popover:Content`. -#}
     {%- block content %}{% endblock -%}
 </div>

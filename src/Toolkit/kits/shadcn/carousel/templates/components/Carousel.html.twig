@@ -1,11 +1,17 @@
-{# @prop orientation 'horizontal'|'vertical' The axis the slides scroll along. #}
-{# @prop align 'start'|'center'|'end' The alignment of the selected slide inside the viewport. #}
-{# @prop loop boolean Whether the carousel wraps around after the last slide. #}
-{# @prop options array Extra [Embla Carousel options](https://www.embla-carousel.com/api/options/), merged over `align` and `loop`. #}
-{# @prop autoplay int The delay in milliseconds between two automatic slide changes. Zero disables autoplay. #}
-{# @prop label string The accessible name of the carousel region. #}
-{# @block content The carousel structure, typically includes `Carousel:Content`, `Carousel:Previous` and `Carousel:Next`. #}
-{%- props orientation = 'horizontal', align = 'center', loop = false, options = {}, autoplay = 0, label = 'Carousel' -%}
+{%- props
+    ## 'horizontal'|'vertical' The axis the slides scroll along.
+    orientation = 'horizontal',
+    ## 'start'|'center'|'end' The alignment of the selected slide inside the viewport.
+    align = 'center',
+    ## boolean Whether the carousel wraps around after the last slide.
+    loop = false,
+    ## array Extra [Embla Carousel options](https://www.embla-carousel.com/api/options/), merged over `align` and `loop`.
+    options = {},
+    ## int The delay in milliseconds between two automatic slide changes. Zero disables autoplay.
+    autoplay = 0,
+    ## string The accessible name of the carousel region.
+    label = 'Carousel'
+-%}
 {%- set _carousel_options = {align: align, loop: loop}|merge(options) -%}
 {%- do provide('carousel.orientation', orientation) -%}
 {%- do provide('carousel.loop', _carousel_options.loop) -%}
@@ -25,5 +31,6 @@
         'data-action': 'keydown->carousel#handleKeydown'|html_attr_type('sst'),
     }) }}
 >
+    {##- The carousel structure, typically includes `Carousel:Content`, `Carousel:Previous` and `Carousel:Next`. -#}
     {%- block content %}{% endblock -%}
 </div>

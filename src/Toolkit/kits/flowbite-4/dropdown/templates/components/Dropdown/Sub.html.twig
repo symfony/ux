@@ -1,18 +1,24 @@
-{# @prop id string Unique identifier for generating internal IDs. #}
-{# @prop placement 'bottom'|'top'|'left'|'right'|'left-start'|'left-end'|'right-start'|'right-end'|'bottom-start'|'bottom-end'|'top-start'|'top-end' The dropdown placement relative to the trigger. #}
-{# @prop triggerType 'click'|'hover' The dropdown trigger type. #}
-{# @prop delay int The dropdown delay. #}
-{# @prop offsetDistance int The dropdown content offset. #}
-{# @block content The dropdown structure (Dropdown:SubTrigger and Dropdown:Content). #}
 
 {% if __context is defined and __context.id is defined %}
     {% set id = null %}
 {% endif %}
 
-{%- props id, placement = 'right-start', triggerType = 'click', delay = 300, offsetDistance = 10 -%}
+{%- props
+    ## string Unique identifier for generating internal IDs.
+    id,
+    ## 'bottom'|'top'|'left'|'right'|'left-start'|'left-end'|'right-start'|'right-end'|'bottom-start'|'bottom-end'|'top-start'|'top-end' The dropdown placement relative to the trigger.
+    placement = 'right-start',
+    ## 'click'|'hover' The dropdown trigger type.
+    triggerType = 'click',
+    ## int The dropdown delay.
+    delay = 300,
+    ## int The dropdown content offset.
+    offsetDistance = 10
+-%}
 
 {%- set _dropdown_id = 'dropdown-sub-' ~ id -%}
 {%- set _dropdown_trigger_id = _dropdown_id ~ '-trigger' -%}
+{##- The dropdown structure (Dropdown:SubTrigger and Dropdown:Content). -#}
 {%- set _dropdown_content = block('content') -%}
 
 <li role="none">

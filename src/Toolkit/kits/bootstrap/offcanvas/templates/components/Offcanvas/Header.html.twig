@@ -1,8 +1,11 @@
-{# @prop closable boolean Whether to render a dismiss button. #}
-{# @prop closeLabel string The accessible label of the dismiss button. #}
-{# @block content The offcanvas heading, typically an `Offcanvas:Title` component. #}
-{%- props closable = true, closeLabel = 'Close'|trans -%}
+{%- props
+    ## boolean Whether to render a dismiss button.
+    closable = true,
+    ## string The accessible label of the dismiss button.
+    closeLabel = 'Close'|trans
+-%}
 <div {{ attributes.defaults({class: 'offcanvas-header'}) }}>
+    {##- The offcanvas heading, typically an `Offcanvas:Title` component. -#}
     {%- block content %}{% endblock -%}
     {%- if closable %}
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="{{ closeLabel }}"></button>

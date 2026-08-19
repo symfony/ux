@@ -1,6 +1,7 @@
-{# @prop variant 'default'|'line' The visual style variant. #}
-{# @block content The default block. #}
-{%- props variant = 'default' -%}
+{%- props
+    ## 'default'|'line' The visual style variant.
+    variant = 'default'
+-%}
 {%- set style = html_cva(
     base: 'group/tabs-list flex flex-wrap -mb-px group-data-[orientation=vertical]/tabs:space-y-4 group-data-[orientation=vertical]/tabs:flex-col',
     variants: {
@@ -15,5 +16,6 @@
     role="tablist"
     data-variant="{{ variant }}"
     {{ attributes.defaults({class: style.apply({variant: variant})|tailwind_classes}) }}>
+    {## The default block. -#}
     {% block content %}{% endblock %}
 </ul>

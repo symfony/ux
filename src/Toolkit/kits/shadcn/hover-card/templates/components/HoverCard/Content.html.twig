@@ -1,6 +1,7 @@
-{# @prop side 'bottom'|'top'|'left'|'right' The side where the content appears. #}
-{# @block content The content revealed on hover. #}
-{%- props side = 'bottom' -%}
+{%- props
+    ## 'bottom'|'top'|'left'|'right' The side where the content appears.
+    side = 'bottom'
+-%}
 {%- set style = html_cva(
     base: 'invisible opacity-0 in-data-[state=open]:visible in-data-[state=open]:opacity-100 transition-opacity duration-100 absolute z-50 w-64 rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden ',
     variants: {
@@ -23,5 +24,6 @@
         class: style.apply({side: side})|tailwind_classes,
     }) }}
 >
+    {##- The content revealed on hover. -#}
     {%- block content %}{% endblock -%}
 </span>

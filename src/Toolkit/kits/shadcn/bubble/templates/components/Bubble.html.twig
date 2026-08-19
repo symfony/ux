@@ -1,7 +1,9 @@
-{# @prop variant 'default'|'secondary'|'muted'|'tinted'|'outline'|'ghost'|'destructive' The visual style variant. #}
-{# @prop align 'start'|'end' The inline alignment of the bubble. #}
-{# @block content The bubble content, typically includes `Bubble:Content` and optionally `Bubble:Reactions`. #}
-{%- props variant = 'default', align = 'start' -%}
+{%- props
+    ## 'default'|'secondary'|'muted'|'tinted'|'outline'|'ghost'|'destructive' The visual style variant.
+    variant = 'default',
+    ## 'start'|'end' The inline alignment of the bubble.
+    align = 'start'
+-%}
 {%- set style = html_cva(
     base: 'group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1',
     variants: {
@@ -28,5 +30,6 @@
         class: style.apply({variant: variant, align: align})|tailwind_classes,
     }) }}
 >
+    {##- The bubble content, typically includes `Bubble:Content` and optionally `Bubble:Reactions`. -#}
     {%- block content %}{% endblock -%}
 </div>

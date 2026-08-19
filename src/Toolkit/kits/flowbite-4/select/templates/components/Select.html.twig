@@ -1,8 +1,8 @@
-{# @block content The select options (`<option>` elements). #}
 <select
     {{ attributes.defaults({
         class: 'block w-full px-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body disabled:text-fg-disabled'|tailwind_classes,
     }) }}
 >
+    {##- The select options (`<option>` elements). -#}
     {%- block content %}{% endblock -%}
 </select>

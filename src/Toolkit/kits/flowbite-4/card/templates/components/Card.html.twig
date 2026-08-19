@@ -1,8 +1,8 @@
-{# @block content The card content, typically includes `Card:Content` with `Card:Header`, and/or `Card:Footer`. #}
 <div
     {{ attributes.defaults({
         class: 'bg-neutral-primary-soft text-body block p-6 border border-default rounded-base shadow-xs'|tailwind_classes,
     }) }}
 >
+    {##- The card content, typically includes `Card:Content` with `Card:Header`, and/or `Card:Footer`. -#}
     {%- block content %}{% endblock -%}
 </div>

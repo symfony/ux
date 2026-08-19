@@ -1,4 +1,3 @@
-{# @block content The slide content. #}
 {%- set _carousel_orientation = inject('carousel.orientation', 'horizontal') -%}
 <div
     role="group"
@@ -8,5 +7,6 @@
         class: ('min-w-0 shrink-0 grow-0 basis-full ' ~ (_carousel_orientation == 'vertical' ? 'pt-4' : 'ps-4'))|tailwind_classes,
     }) }}
 >
+    {##- The slide content. -#}
     {%- block content %}{% endblock -%}
 </div>

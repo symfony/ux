@@ -1,8 +1,8 @@
-{# @block content The main content area of the moda. #}
 <div
     {{ attributes.defaults({
         class: 'space-y-4 md:space-y-6 py-4 md:py-6'|tailwind_classes,
     }) }}
 >
+    {##- The main content area of the moda. -#}
     {%- block content %}{% endblock -%}
 </div>

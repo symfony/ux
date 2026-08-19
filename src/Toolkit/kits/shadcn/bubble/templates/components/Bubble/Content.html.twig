@@ -1,6 +1,7 @@
-{# @prop as 'div'|'button'|'a' The HTML tag to render. #}
-{# @block content The message content displayed inside the bubble. #}
-{%- props as = 'div' -%}
+{%- props
+    ## 'div'|'button'|'a' The HTML tag to render.
+    as = 'div'
+-%}
 <{{ as }}
     data-slot="bubble-content"
     {{ attributes.defaults({
@@ -8,5 +9,6 @@
         type: as == 'button' ? 'button' : false,
     }) }}
 >
+    {##- The message content displayed inside the bubble. -#}
     {%- block content %}{% endblock -%}
 </{{ as }}>

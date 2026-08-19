@@ -1,8 +1,8 @@
-{# @block content The footer area, typically contains action buttons. #}
 <footer
     {{ attributes.defaults({
         class: 'flex items-center border-t border-default space-x-4 pt-4 md:pt-5'|tailwind_classes,
     }) }}
 >
+    {##- The footer area, typically contains action buttons. -#}
     {%- block content %}{% endblock -%}
 </footer>

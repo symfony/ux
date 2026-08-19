@@ -1,6 +1,9 @@
-{# @prop name string The name shared by all radio inputs in the same group. #}
-{# @prop value string The value submitted when this item is selected. #}
-{%- props name, value -%}
+{%- props
+    ## string The name shared by all radio inputs in the same group.
+    name,
+    ## string The value submitted when this item is selected.
+    value
+-%}
 <label class="{{ ('relative inline-flex size-4 shrink-0 items-center justify-center cursor-pointer group-data-[disabled=true]/field:cursor-not-allowed ' ~ attributes.render('class'))|tailwind_merge }}">
     <input
         type="radio"

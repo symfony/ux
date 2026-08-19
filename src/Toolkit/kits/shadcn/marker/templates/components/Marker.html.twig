@@ -1,7 +1,9 @@
-{# @prop variant 'default'|'separator'|'border' The visual style variant. #}
-{# @prop as 'div'|'a'|'button' The HTML tag to render. #}
-{# @block content The marker content, typically includes `Marker:Icon` and `Marker:Content`. #}
-{%- props variant = 'default', as = 'div' -%}
+{%- props
+    ## 'default'|'separator'|'border' The visual style variant.
+    variant = 'default',
+    ## 'div'|'a'|'button' The HTML tag to render.
+    as = 'div'
+-%}
 {%- set style = html_cva(
     base: "group/marker relative flex min-h-4 w-full items-center gap-2 text-start text-sm text-muted-foreground [&_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground",
     variants: {
@@ -20,5 +22,6 @@
         type: as == 'button' ? 'button' : false,
     }) }}
 >
+    {##- The marker content, typically includes `Marker:Icon` and `Marker:Content`. -#}
     {%- block content %}{% endblock -%}
 </{{ as }}>

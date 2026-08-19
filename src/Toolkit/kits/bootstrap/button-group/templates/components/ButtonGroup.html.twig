@@ -1,10 +1,9 @@
-{# @prop vertical boolean Whether to stack the buttons vertically. #}
-{# @prop size 'sm'|'lg'|null The Bootstrap size applied to every button in the group. #}
-{# @prop label string|null The accessible name for the group. #}
-{# @block content The buttons, links, or form controls contained in the group. #}
 {%- props
+    ## boolean Whether to stack the buttons vertically.
     vertical = false,
+    ## 'sm'|'lg'|null The Bootstrap size applied to every button in the group.
     size = null,
+    ## string|null The accessible name for the group.
     label = 'Button group'
 -%}
 
@@ -18,5 +17,6 @@
 {%- endif -%}
 
 <div {{ attributes.defaults(default_attrs) }}>
+    {##- The buttons, links, or form controls contained in the group. -#}
     {%- block content -%}{%- endblock -%}
 </div>

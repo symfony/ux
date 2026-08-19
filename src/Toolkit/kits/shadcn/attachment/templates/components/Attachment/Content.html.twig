@@ -1,9 +1,9 @@
-{# @block content The main content area, typically includes `Attachment:Title` and `Attachment:Description`. #}
 <div
     data-slot="attachment-content"
     {{ attributes.defaults({
         class: 'max-w-full min-w-0 flex-1 leading-tight group-data-[orientation=vertical]/attachment:px-1'|tailwind_classes,
     }) }}
 >
+    {##- The main content area, typically includes `Attachment:Title` and `Attachment:Description`. -#}
     {%- block content %}{% endblock -%}
 </div>

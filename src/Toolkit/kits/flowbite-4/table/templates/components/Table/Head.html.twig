@@ -1,8 +1,8 @@
-{# @block content The header cell content. #}
 <th
     {{ attributes.defaults({
         class: 'px-6 py-3 font-medium'|tailwind_classes,
     }) }}
 >
+    {##- The header cell content. -#}
     {%- block content %}{% endblock -%}
 </th>

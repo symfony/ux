@@ -1,18 +1,17 @@
-{# @prop tag 'ul'|'nav'|'div' The HTML element used for the navigation container. #}
-{# @prop type 'tabs'|'pills'|'underline'|null The Bootstrap navigation style. #}
-{# @prop fill boolean Whether items proportionally fill the available width. #}
-{# @prop justified boolean Whether items use equal widths. #}
-{# @prop vertical boolean Whether items are stacked vertically. #}
-{# @prop align 'start'|'center'|'end'|null The horizontal alignment of the navigation items. #}
-{# @prop role string|null The ARIA role applied to the navigation container. #}
-{# @block content The navigation links or `Nav:Item` components. #}
 {%- props
+    ## 'ul'|'nav'|'div' The HTML element used for the navigation container.
     tag = 'ul',
+    ## 'tabs'|'pills'|'underline'|null The Bootstrap navigation style.
     type = null,
+    ## boolean Whether items proportionally fill the available width.
     fill = false,
+    ## boolean Whether items use equal widths.
     justified = false,
+    ## boolean Whether items are stacked vertically.
     vertical = false,
+    ## 'start'|'center'|'end'|null The horizontal alignment of the navigation items.
     align = null,
+    ## string|null The ARIA role applied to the navigation container.
     role = null
 -%}
 
@@ -31,5 +30,6 @@
 {%- endif -%}
 
 <{{ final_tag }} {{ attributes.defaults(default_attrs) }}>
+    {##- The navigation links or `Nav:Item` components. -#}
     {%- block content -%}{% endblock -%}
 </{{ final_tag }}>

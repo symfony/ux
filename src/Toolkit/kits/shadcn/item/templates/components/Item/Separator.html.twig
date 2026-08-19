@@ -1,6 +1,9 @@
-{# @prop orientation 'horizontal'|'vertical' The separator orientation. #}
-{# @prop decorative bool Whether the separator is purely decorative (not semantic). #}
-{%- props orientation = 'horizontal', decorative = true -%}
+{%- props
+    ## 'horizontal'|'vertical' The separator orientation.
+    orientation = 'horizontal',
+    ## bool Whether the separator is purely decorative (not semantic).
+    decorative = true
+-%}
 <twig:Separator
     orientation="{{ orientation }}"
     decorative="{{ decorative }}"

@@ -1,9 +1,9 @@
-{# @block content The grouped bubbles, typically multiple `Bubble` components from the same sender. #}
 <div
     data-slot="bubble-group"
     {{ attributes.defaults({
         class: 'flex min-w-0 flex-col gap-2'|tailwind_classes,
     }) }}
 >
+    {##- The grouped bubbles, typically multiple `Bubble` components from the same sender. -#}
     {%- block content %}{% endblock -%}
 </div>

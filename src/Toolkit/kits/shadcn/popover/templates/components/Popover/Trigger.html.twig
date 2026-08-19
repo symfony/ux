@@ -1,4 +1,3 @@
-{# @block content The clickable trigger (e.g., a `Button`) that opens the popover. #}
 {%- set _popover_open = inject('popover.open', false) -%}
 {%- set popover_trigger_attrs = {
     'data-slot': 'popover-trigger',
@@ -8,4 +7,5 @@
     'aria-expanded': _popover_open ? 'true' : 'false',
     'data-state': _popover_open ? 'open' : 'closed',
 } -%}
+{##- The clickable trigger (e.g., a `Button`) that opens the popover. -#}
 {%- block content %}{% endblock -%}

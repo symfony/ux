@@ -1,9 +1,9 @@
-{# @block content A `Sidebar:MenuSubButton`. #}
 <li
     data-slot="sidebar-menu-sub-item"
     {{ attributes.defaults({
         class: 'group/menu-sub-item relative'|tailwind_classes,
     }) }}
 >
+    {##- A `Sidebar:MenuSubButton`. -#}
     {%- block content %}{% endblock -%}
 </li>

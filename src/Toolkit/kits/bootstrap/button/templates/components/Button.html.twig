@@ -1,22 +1,21 @@
-{# @prop tag 'button'|'a'|'input' The HTML element to render. #}
-{# @prop type 'button'|'submit'|'reset'|null The type used for button and input elements. #}
-{# @prop href string|null The destination used for anchor elements. #}
-{# @prop color 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark'|'link'|null The Bootstrap contextual color. #}
-{# @prop outline boolean Whether to use an outline style. #}
-{# @prop size 'sm'|'lg'|null The Bootstrap button size. #}
-{# @prop disabled boolean Whether the control is disabled. #}
-{# @prop value string|null The value rendered by input elements. #}
-{# @prop content string The fallback label when no content block is provided. #}
-{# @block content The button label and optional inline content. #}
 {%- props
+    ## 'button'|'a'|'input' The HTML element to render.
     tag = 'button',
+    ## 'button'|'submit'|'reset'|null The type used for button and input elements.
     type = null,
+    ## string|null The destination used for anchor elements.
     href = null,
+    ## 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark'|'link'|null The Bootstrap contextual color.
     color = 'primary',
+    ## boolean Whether to use an outline style.
     outline = false,
+    ## 'sm'|'lg'|null The Bootstrap button size.
     size = null,
+    ## boolean Whether the control is disabled.
     disabled = false,
+    ## string|null The value rendered by input elements.
     value = null,
+    ## string The fallback label when no content block is provided.
     content = ''
 -%}
 
@@ -57,6 +56,7 @@
     <input {{ attributes.defaults(default_attrs) }}>
 {%- else -%}
     <{{ final_tag }} {{ attributes.defaults(default_attrs) }}>
+        {##- The button label and optional inline content. -#}
         {%- block content -%}
             {{- content -}}
         {%- endblock -%}

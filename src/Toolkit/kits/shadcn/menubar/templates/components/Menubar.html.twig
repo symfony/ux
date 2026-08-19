@@ -1,4 +1,3 @@
-{# @block content A list of `Menubar:Menu` children. #}
 <div
     role="menubar"
     data-slot="menubar"
@@ -8,5 +7,6 @@
         'data-action': 'keydown.esc->menubar#closeAll',
     }) }}
 >
+    {##- A list of `Menubar:Menu` children. -#}
     {%- block content %}{% endblock -%}
 </div>

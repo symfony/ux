@@ -1,8 +1,7 @@
-{# @prop divider string|null The custom text used as the divider between breadcrumb items. #}
-{# @prop label string|null The accessible name for the breadcrumb navigation. #}
-{# @block content The ordered list of breadcrumb items. #}
 {%- props
+    ## string|null The custom text used as the divider between breadcrumb items.
     divider = null,
+    ## string|null The accessible name for the breadcrumb navigation.
     label = 'breadcrumb'
 -%}
 
@@ -16,6 +15,7 @@
 
 <nav {{ attributes.defaults(default_attrs) }}>
     <ol class="breadcrumb">
+        {##- The ordered list of breadcrumb items. -#}
         {%- block content -%}{%- endblock -%}
     </ol>
 </nav>

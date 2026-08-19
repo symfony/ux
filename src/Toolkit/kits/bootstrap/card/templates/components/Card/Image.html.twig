@@ -1,7 +1,11 @@
-{# @prop src string The image source URL. #}
-{# @prop alt string A text alternative describing the image. #}
-{# @prop position 'top'|'bottom'|'background' The image position within the card. #}
-{%- props src, alt = '', position = 'top' -%}
+{%- props
+    ## string The image source URL.
+    src,
+    ## string A text alternative describing the image.
+    alt = '',
+    ## 'top'|'bottom'|'background' The image position within the card.
+    position = 'top'
+-%}
 {%- set classes = {
     top: 'card-img-top',
     bottom: 'card-img-bottom',

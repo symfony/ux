@@ -1,8 +1,8 @@
-{# @block content The table footer rows, typically `Table:Row` components. #}
 <tfoot
     {{ attributes.defaults({
         class: 'font-semibold text-heading'|tailwind_classes,
     }) }}
 >
+    {##- The table footer rows, typically `Table:Row` components. -#}
     {%- block content %}{% endblock -%}
 </tfoot>
