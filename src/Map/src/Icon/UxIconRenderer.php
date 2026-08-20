@@ -20,6 +20,11 @@ use Symfony\UX\Icons\IconRendererInterface;
  */
 class UxIconRenderer
 {
+    /**
+     * @var array<string, string>
+     */
+    private array $rendered = [];
+
     public function __construct(
         private readonly ?IconRendererInterface $renderer,
     ) {
@@ -34,7 +39,9 @@ class UxIconRenderer
             throw new \LogicException('You cannot use an UX Icon as the "UX Icons" package is not installed. Try running "composer require symfony/ux-icons" to install it.');
         }
 
-        return $this->renderer->renderIcon($name, [
+        // Markers of a map overwhelmingly share the same icon, so the same SVG
+        // was rebuilt once per marker.
+        return $this->rendered[$name.'|'.serialize($attributes)] ??= $this->renderer->renderIcon($name, [
             'xmlns' => 'http://www.w3.org/2000/svg',
             ...$attributes,
         ]);
