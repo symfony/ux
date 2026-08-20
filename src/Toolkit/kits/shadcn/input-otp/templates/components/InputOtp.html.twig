@@ -1,0 +1,15 @@
+{# @prop inputs int|null Total number of slots in this OTP, shared with the `InputOtp:Slot` children to build their accessible "Input X of Y" label. #}
+{# @prop name string Base name of the OTP inputs, shared with the `InputOtp:Slot` children to build their default `name`, e.g. `otp` yields `otp[0]`, `otp[1]`, ... #}
+{# @block content The OTP slot inputs, typically multiple `InputOtp:Slot` components. #}
+{%- props inputs = null, name = 'otp' -%}
+{%- do provide('inputOtp.inputs', inputs) -%}
+{%- do provide('inputOtp.name', name) -%}
+<div
+    data-slot="input-otp"
+    {{ attributes.defaults({
+        class: 'flex items-center gap-2 has-[:disabled]:opacity-50'|tailwind_classes,
+        'data-controller': 'input-otp',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

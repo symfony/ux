@@ -1,5 +1,6 @@
 /vendor/
 /config/reference.php
+/config/schema.json
 /composer.lock
 /phpunit.xml
 /.phpunit.cache

@@ -1,0 +1,98 @@
+<!--
+- Kit: Shadcn UI
+- Component: Input OTP
+- Code:
+```twig
+<twig:Card class="mx-auto max-w-md">
+    <twig:Card:Header>
+        <twig:Card:Title>Verify your login</twig:Card:Title>
+        <twig:Card:Description>
+            Enter the verification code we sent to your email address: <span class="font-medium">m@example.com</span>.
+        </twig:Card:Description>
+    </twig:Card:Header>
+    <twig:Card:Content>
+        <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+                <twig:Label for="otp-verification">Verification code</twig:Label>
+                <twig:Button variant="outline" size="sm" class="gap-1.5">
+                    <twig:ux:icon name="lucide:refresh-cw" class="size-3.5" />
+                    Resend Code
+                </twig:Button>
+            </div>
+            <twig:InputOtp inputs="6" id="otp-verification">
+                <twig:InputOtp:Group class="*:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
+                    <twig:InputOtp:Slot input="1" required />
+                    <twig:InputOtp:Slot input="2" required />
+                    <twig:InputOtp:Slot input="3" required />
+                </twig:InputOtp:Group>
+                <twig:InputOtp:Separator class="mx-2" />
+                <twig:InputOtp:Group class="*:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
+                    <twig:InputOtp:Slot input="4" required />
+                    <twig:InputOtp:Slot input="5" required />
+                    <twig:InputOtp:Slot input="6" required />
+                </twig:InputOtp:Group>
+            </twig:InputOtp>
+            <p class="text-sm text-muted-foreground">
+                <a href="#" class="underline underline-offset-4 hover:text-primary">I no longer have access to this email address.</a>
+            </p>
+        </div>
+    </twig:Card:Content>
+    <twig:Card:Footer class="flex flex-col gap-2">
+        <twig:Button type="submit" class="w-full">Verify</twig:Button>
+        <div class="text-sm text-muted-foreground">
+            Having trouble signing in?
+            <a href="#" class="underline underline-offset-4 hover:text-primary">Contact support</a>
+        </div>
+    </twig:Card:Footer>
+</twig:Card>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="card" data-size="default" class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl mx-auto max-w-md">
+<div data-slot="card-header" class="group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3">
+<div data-slot="card-title" class="cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm">Verify your login</div>
+        <div data-slot="card-description" class="text-sm text-muted-foreground">Enter the verification code we sent to your email address: <span class="font-medium">m@example.com</span>.
+        </div>
+    </div>
+    <div data-slot="card-content" class="px-4 group-data-[size=sm]/card:px-3">
+<div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+                <label data-slot="label" class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50" for="otp-verification">Verification code</label>
+                <button data-slot="button" data-size="sm" data-variant="outline" class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-7 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg ltr:has-data-[icon=inline-end]:pr-1.5 rtl:has-data-[icon=inline-end]:pe-1.5 ltr:has-data-[icon=inline-start]:pl-1.5 rtl:has-data-[icon=inline-start]:ps-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5 gap-1.5" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-3.5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12a9 9 0 0 1 9-9a9.75 9.75 0 0 1 6.74 2.74L21 8M21 3v5h-5m5 4a9 9 0 0 1-9 9a9.75 9.75 0 0 1-6.74-2.74L3 16m5 0H3v5"></path></svg>
+                    Resend Code
+                </button>
+            </div>
+            <div data-slot="input-otp" class="flex items-center gap-2 has-[:disabled]:opacity-50" data-controller="input-otp" id="otp-verification">
+<div data-slot="input-otp-group" class="flex items-center *:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
+<input data-slot="input-otp-slot" data-input-otp-target="slot" aria-label="Input 1 of 6" class="relative flex h-10 w-10 items-center justify-center border-y border-e border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/60 first:rounded-s-md first:border-s last:rounded-e-md" data-action="input-&gt;input-otp#onInput keydown-&gt;input-otp#onKeyDown paste-&gt;input-otp#onPaste" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" name="otp[0]" required>
+
+                    <input data-slot="input-otp-slot" data-input-otp-target="slot" aria-label="Input 2 of 6" class="relative flex h-10 w-10 items-center justify-center border-y border-e border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/60 first:rounded-s-md first:border-s last:rounded-e-md" data-action="input-&gt;input-otp#onInput keydown-&gt;input-otp#onKeyDown paste-&gt;input-otp#onPaste" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" name="otp[1]" required>
+
+                    <input data-slot="input-otp-slot" data-input-otp-target="slot" aria-label="Input 3 of 6" class="relative flex h-10 w-10 items-center justify-center border-y border-e border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/60 first:rounded-s-md first:border-s last:rounded-e-md" data-action="input-&gt;input-otp#onInput keydown-&gt;input-otp#onKeyDown paste-&gt;input-otp#onPaste" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" name="otp[2]" required>
+
+                </div>
+                <span role="separator" aria-hidden="true" data-slot="input-otp-separator" class="text-muted-foreground [&amp;&gt;svg]:size-4 mx-2">
+    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"></path></svg>
+</span>
+
+                <div data-slot="input-otp-group" class="flex items-center *:data-[slot=input-otp-slot]:h-12 *:data-[slot=input-otp-slot]:w-11 *:data-[slot=input-otp-slot]:text-xl">
+<input data-slot="input-otp-slot" data-input-otp-target="slot" aria-label="Input 4 of 6" class="relative flex h-10 w-10 items-center justify-center border-y border-e border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/60 first:rounded-s-md first:border-s last:rounded-e-md" data-action="input-&gt;input-otp#onInput keydown-&gt;input-otp#onKeyDown paste-&gt;input-otp#onPaste" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" name="otp[3]" required>
+
+                    <input data-slot="input-otp-slot" data-input-otp-target="slot" aria-label="Input 5 of 6" class="relative flex h-10 w-10 items-center justify-center border-y border-e border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/60 first:rounded-s-md first:border-s last:rounded-e-md" data-action="input-&gt;input-otp#onInput keydown-&gt;input-otp#onKeyDown paste-&gt;input-otp#onPaste" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" name="otp[4]" required>
+
+                    <input data-slot="input-otp-slot" data-input-otp-target="slot" aria-label="Input 6 of 6" class="relative flex h-10 w-10 items-center justify-center border-y border-e border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/60 first:rounded-s-md first:border-s last:rounded-e-md" data-action="input-&gt;input-otp#onInput keydown-&gt;input-otp#onKeyDown paste-&gt;input-otp#onPaste" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" name="otp[5]" required>
+
+                </div>
+            </div>
+            <p class="text-sm text-muted-foreground">
+                <a href="#" class="underline underline-offset-4 hover:text-primary">I no longer have access to this email address.</a>
+            </p>
+        </div>
+    </div>
+    <div data-slot="card-footer" class="items-center rounded-b-xl border-t bg-muted/50 p-4 group-data-[size=sm]/card:p-3 flex flex-col gap-2">
+<button data-slot="button" data-size="default" data-variant="default" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground [a]:hover:bg-primary/80 h-8 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2 w-full" type="submit">Verify</button>
+        <div class="text-sm text-muted-foreground">
+            Having trouble signing in?
+            <a href="#" class="underline underline-offset-4 hover:text-primary">Contact support</a>
+        </div>
+    </div>
+</div>
