@@ -250,4 +250,20 @@ final class StimulusTwigExtensionTest extends TestCase
             (string) $extension->appendStimulusTarget($dto, '@symfony/ux-dropzone/dropzone', 'anotherTarget fooTarget')
         );
     }
+
+    public function testAppendDifferentStimulusHelpers()
+    {
+        $extension = new StimulusTwigExtension(new StimulusHelper($this->twig));
+        $dto = $extension->renderStimulusController('first-controller');
+        $dto = $extension->appendStimulusTarget($dto, 'second-controller', 'anotherTarget');
+        $dto = $extension->appendStimulusTarget($dto, 'third-controller', 'foo');
+        $dto = $extension->appendStimulusAction($dto, 'first-controller', 'test');
+        $dto = $extension->appendStimulusController($dto, 'fourth-controller');
+        $dto = $extension->appendStimulusAction($dto, 'fourth-controller', 'onClick');
+
+        $this->assertSame(
+            'data-controller="first-controller fourth-controller" data-action="first-controller#test fourth-controller#onClick" data-second-controller-target="anotherTarget" data-third-controller-target="foo"',
+            (string) $dto
+        );
+    }
 }
