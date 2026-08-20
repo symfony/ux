@@ -455,6 +455,11 @@ class TwigPreLexer
             && 0 === substr_compare($this->input, $chars, $this->position, \strlen($chars));
     }
 
+    private function isNameChar(string $char): bool
+    {
+        return '' !== $char && (ctype_alnum($char) || str_contains('_:@-.', $char));
+    }
+
     private function consumeBlock(string $componentName): string
     {
         $attributes = $this->consumeAttributes($componentName);
@@ -542,7 +547,9 @@ class TwigPreLexer
                         }
 
                         --$depth;
-                    } elseif ('<twig:block' === substr($this->input, $this->position, 11)) {
+                    } elseif ('<twig:block' === substr($this->input, $this->position, 11)
+                        && !$this->isNameChar($this->input[$this->position + 11] ?? '')
+                    ) {
                         ++$depth;
                     }
                     break;
