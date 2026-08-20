@@ -1,0 +1,32 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2026-08-15T17:47:21Z
+
+```php
+// Mimics 20 requests for a page holding 20 live components.
+for ($i = 0; $i < 20 * 20; ++$i) {
+```
+
+Not a very realistic mimic :)
+
+Assuming 20 independent LiveComponents rendered once on the initial page:
+
+| Helper | Initial render | One component update |
+| - | -: | -: |
+| `liveListeners()` | 20 | 1 |
+| `preDehydrateMethods()` | 20 | 1 |
+| `postHydrateMethods()` | 0 | 1 |
+| `preReRenderMethods()` | 0 | 1 |
+| `isActionAllowed()` | 0 | 1 for a custom `LiveAction`, otherwise 0 |
+
+And I'm not sure to get the "n requests in parralel" is doing here.
+
+But if there are some gain for 2/5 of them, why not 👍
+
+Now, i'm not very happy we re-contaminate TwigComponent with code made for LiveComponent, and i'd rather we have these methods in the AsLiveComponent attribute directly if possible..
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-16T15:20:03Z
+
+Benchmarks updated with a more real-world usage, now only LiveComponent is modified
