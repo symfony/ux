@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-20T07:50:24Z
+
+I just rebased and fixed conflicts (due to https://github.com/symfony/ux/pull/3776), I changed the `preg_match` call for a more performant solution.
