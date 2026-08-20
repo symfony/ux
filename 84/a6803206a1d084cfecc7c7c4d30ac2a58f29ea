@@ -1,0 +1,234 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-20T07:16:27Z
+
+Again, please target the branch 3.x...
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-08-20T13:38:12Z
+
+Done, rebased and retargeted to 3.x — and noted for good this time: 3.x it is for everything ux. Sorry for the repeated 2.x reflex! Suite green on 3.x (21 tests).
+
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-08-20T13:38:48Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/docs-3794-stimulus-chaining/src/LazyImage/assets/dist"><b>LazyImage</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/LazyImage/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>395 B</code>
+                    / <code>257 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/LazyImage/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>904 B</code>
+                    / <code>457 B</code>
+                </td><td><em>Removed</em></td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/docs-3794-stimulus-chaining/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>82.76 kB</code>
+                    / <code>18.4 kB</code>
+                </td><td>
+                    <code>82.85 kB</code><sup>0%</sup>
+                    / <code>18.41 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/docs-3794-stimulus-chaining/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.6 kB</code>
+                    / <code>1.49 kB</code>
+                </td><td>
+                    <code>7.29 kB</code><sup>-4% 📉</sup>
+                    / <code>1.46 kB</code><sup>-2% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>4.92 kB</code>
+                    / <code>1.4 kB</code>
+                </td><td>
+                    <code>4.65 kB</code><sup>-5% 📉</sup>
+                    / <code>1.26 kB</code><sup>-10% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/docs-3794-stimulus-chaining/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>10.56 kB</code>
+                    / <code>1.92 kB</code>
+                </td><td>
+                    <code>10.26 kB</code><sup>-3% 📉</sup>
+                    / <code>1.9 kB</code><sup>-1% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>12.9 kB</code>
+                    / <code>3.19 kB</code>
+                </td><td>
+                    <code>11.25 kB</code><sup>-13% 📉</sup>
+                    / <code>2.84 kB</code><sup>-11% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/docs-3794-stimulus-chaining/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>9.92 kB</code>
+                    / <code>1.84 kB</code>
+                </td><td>
+                    <code>9.61 kB</code><sup>-3% 📉</sup>
+                    / <code>1.81 kB</code><sup>-2% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>12.45 kB</code>
+                    / <code>3.36 kB</code>
+                </td><td>
+                    <code>11.38 kB</code><sup>-9% 📉</sup>
+                    / <code>3.17 kB</code><sup>-6% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/docs-3794-stimulus-chaining/src/React/assets/dist"><b>React</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/React/assets/dist/register_controller.d.ts"><code>register_controller.d.ts</code></a></td>
+            <td>
+                    <code>444 B</code>
+                    / <code>264 B</code>
+                </td><td>
+                    <code>578 B</code><sup>+30% 📈</sup>
+                    / <code>318 B</code><sup>+20% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/React/assets/dist/register_controller.js"><code>register_controller.js</code></a></td>
+            <td>
+                    <code>936 B</code>
+                    / <code>452 B</code>
+                </td><td>
+                    <code>1.81 kB</code><sup>+98% 📈</sup>
+                    / <code>816 B</code><sup>+81% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/docs-3794-stimulus-chaining/src/StimulusBundle/assets/dist"><b>StimulusBundle</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/StimulusBundle/assets/dist/loader.js"><code>loader.js</code></a></td>
+            <td>
+                    <code>2.87 kB</code>
+                    / <code>948 B</code>
+                </td><td>
+                    <code>2.97 kB</code><sup>+4% 📈</sup>
+                    / <code>972 B</code><sup>+3% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/docs-3794-stimulus-chaining/src/Svelte/assets/dist"><b>Svelte</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Svelte/assets/dist/components.d.ts"><code>components.d.ts</code></a></td>
+            <td>
+                    <code>200 B</code>
+                    / <code>150 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Svelte/assets/dist/components.js"><code>components.js</code></a></td>
+            <td>
+                    <code>46 B</code>
+                    / <code>69 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Svelte/assets/dist/loader.d.ts"><code>loader.d.ts</code></a></td>
+            <td>
+                    <code>435 B</code>
+                    / <code>217 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Svelte/assets/dist/loader.js"><code>loader.js</code></a></td>
+            <td>
+                    <code>553 B</code>
+                    / <code>313 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Svelte/assets/dist/register_controller.d.ts"><code>register_controller.d.ts</code></a></td>
+            <td>
+                    <code>384 B</code>
+                    / <code>235 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Svelte/assets/dist/register_controller.js"><code>register_controller.js</code></a></td>
+            <td>
+                    <code>531 B</code>
+                    / <code>303 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Svelte/assets/dist/render_controller.d.ts"><code>render_controller.d.ts</code></a></td>
+            <td>
+                    <code>629 B</code>
+                    / <code>353 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Svelte/assets/dist/render_controller.js"><code>render_controller.js</code></a></td>
+            <td>
+                    <code>1.05 kB</code>
+                    / <code>493 B</code>
+                </td><td><em>Removed</em></td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/docs-3794-stimulus-chaining/src/Swup/assets/dist"><b>Swup</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Swup/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>1012 B</code>
+                    / <code>360 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Swup/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>1.71 kB</code>
+                    / <code>653 B</code>
+                </td><td><em>Removed</em></td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/docs-3794-stimulus-chaining/src/TogglePassword/assets/dist"><b>TogglePassword</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/TogglePassword/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>896 B</code>
+                    / <code>355 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/TogglePassword/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>2.64 kB</code>
+                    / <code>1.07 kB</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/TogglePassword/assets/dist/style.min.css"><code>style.min.css</code></a></td>
+            <td>
+                    <code>312 B</code>
+                    / <code>218 B</code>
+                </td><td><em>Removed</em></td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/docs-3794-stimulus-chaining/src/Translator/assets/dist"><b>Translator</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Translator/assets/dist/translator_controller.js"><code>translator_controller.js</code></a></td>
+            <td>
+                    <code>7.17 kB</code>
+                    / <code>2.19 kB</code>
+                </td><td>
+                    <code>7.39 kB</code><sup>+3% 📈</sup>
+                    / <code>2.29 kB</code><sup>+5% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/docs-3794-stimulus-chaining/src/Turbo/assets/dist"><b>Turbo</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Turbo/assets/dist/mercure_stream_source_element.d.ts"><code>mercure_stream_source_element.d.ts</code></a></td>
+            <td><em>Added</em></td><td>
+                    <code>11 B</code>
+                    / <code>66 B</code>
+                </td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Turbo/assets/dist/mercure_stream_source_element.js"><code>mercure_stream_source_element.js</code></a></td>
+            <td><em>Added</em></td><td>
+                    <code>1.06 kB</code>
+                    / <code>484 B</code>
+                </td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Turbo/assets/dist/turbo_stream_controller.js"><code>turbo_stream_controller.js</code></a></td>
+            <td>
+                    <code>1.11 kB</code>
+                    / <code>545 B</code>
+                </td><td>
+                    <code>1.47 kB</code><sup>+32% 📈</sup>
+                    / <code>721 B</code><sup>+32% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/docs-3794-stimulus-chaining/src/Typed/assets/dist"><b>Typed</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Typed/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>1.9 kB</code>
+                    / <code>501 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Typed/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>1.8 kB</code>
+                    / <code>638 B</code>
+                </td><td><em>Removed</em></td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/docs-3794-stimulus-chaining/src/Vue/assets/dist"><b>Vue</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Vue/assets/dist/register_controller.d.ts"><code>register_controller.d.ts</code></a></td>
+            <td>
+                    <code>327 B</code>
+                    / <code>218 B</code>
+                </td><td>
+                    <code>461 B</code><sup>+41% 📈</sup>
+                    / <code>281 B</code><sup>+29% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/docs-3794-stimulus-chaining/src/Vue/assets/dist/register_controller.js"><code>register_controller.js</code></a></td>
+            <td>
+                    <code>1.3 kB</code>
+                    / <code>587 B</code>
+                </td><td>
+                    <code>2.06 kB</code><sup>+58% 📈</sup>
+                    / <code>869 B</code><sup>+48% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
