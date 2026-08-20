@@ -1,0 +1,23 @@
+{# @prop input int|null Position of this slot (1-based), combined with the `inputs` and `name` props of the parent `InputOtp` to build the accessible "Input X of Y" label and the default `name`. #}
+{# @prop label string|null Accessible label of this slot, overriding the "Input X of Y" one built from `input`. #}
+{%- props input = null, label = null -%}
+{%- set _inputOtp_name = null -%}
+{%- if input is not null -%}
+    {%- set _inputOtp_inputs = inject('inputOtp.inputs') -%}
+    {%- set label = label ?? ('Input ' ~ input ~ (_inputOtp_inputs is not null ? ' of ' ~ _inputOtp_inputs : '')) -%}
+    {%- set _inputOtp_name = inject('inputOtp.name', 'otp') ~ '[' ~ (input - 1) ~ ']' -%}
+{%- endif -%}
+<input
+    data-slot="input-otp-slot"
+    data-input-otp-target="slot"
+    {% if label %}aria-label="{{ label }}"{% endif %}
+    {{ attributes.defaults({
+        class: 'relative flex h-10 w-10 items-center justify-center border-y border-e border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/60 first:rounded-s-md first:border-s last:rounded-e-md'|tailwind_classes,
+        'data-action': 'input->input-otp#onInput keydown->input-otp#onKeyDown paste->input-otp#onPaste',
+        type: 'text',
+        inputmode: 'numeric',
+        maxlength: 1,
+        autocomplete: 'one-time-code',
+        name: _inputOtp_name,
+    }) }}
+>

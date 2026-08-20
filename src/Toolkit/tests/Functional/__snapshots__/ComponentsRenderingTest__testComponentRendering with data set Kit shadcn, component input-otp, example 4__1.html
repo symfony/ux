@@ -1,0 +1,42 @@
+<!--
+- Kit: Shadcn UI
+- Component: Input OTP
+- Code:
+```twig
+<twig:InputOtp inputs="6">
+    <twig:InputOtp:Group>
+        <twig:InputOtp:Slot input="1" inputmode="text" pattern="[A-Za-z0-9]" />
+        <twig:InputOtp:Slot input="2" inputmode="text" pattern="[A-Za-z0-9]" />
+        <twig:InputOtp:Slot input="3" inputmode="text" pattern="[A-Za-z0-9]" />
+    </twig:InputOtp:Group>
+    <twig:InputOtp:Separator />
+    <twig:InputOtp:Group>
+        <twig:InputOtp:Slot input="4" inputmode="text" pattern="[A-Za-z0-9]" />
+        <twig:InputOtp:Slot input="5" inputmode="text" pattern="[A-Za-z0-9]" />
+        <twig:InputOtp:Slot input="6" inputmode="text" pattern="[A-Za-z0-9]" />
+    </twig:InputOtp:Group>
+</twig:InputOtp>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="input-otp" class="flex items-center gap-2 has-[:disabled]:opacity-50" data-controller="input-otp">
+<div data-slot="input-otp-group" class="flex items-center">
+<input data-slot="input-otp-slot" data-input-otp-target="slot" aria-label="Input 1 of 6" class="relative flex h-10 w-10 items-center justify-center border-y border-e border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/60 first:rounded-s-md first:border-s last:rounded-e-md" data-action="input-&gt;input-otp#onInput keydown-&gt;input-otp#onKeyDown paste-&gt;input-otp#onPaste" type="text" inputmode="text" maxlength="1" autocomplete="one-time-code" name="otp[0]" pattern="[A-Za-z0-9]">
+
+        <input data-slot="input-otp-slot" data-input-otp-target="slot" aria-label="Input 2 of 6" class="relative flex h-10 w-10 items-center justify-center border-y border-e border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/60 first:rounded-s-md first:border-s last:rounded-e-md" data-action="input-&gt;input-otp#onInput keydown-&gt;input-otp#onKeyDown paste-&gt;input-otp#onPaste" type="text" inputmode="text" maxlength="1" autocomplete="one-time-code" name="otp[1]" pattern="[A-Za-z0-9]">
+
+        <input data-slot="input-otp-slot" data-input-otp-target="slot" aria-label="Input 3 of 6" class="relative flex h-10 w-10 items-center justify-center border-y border-e border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/60 first:rounded-s-md first:border-s last:rounded-e-md" data-action="input-&gt;input-otp#onInput keydown-&gt;input-otp#onKeyDown paste-&gt;input-otp#onPaste" type="text" inputmode="text" maxlength="1" autocomplete="one-time-code" name="otp[2]" pattern="[A-Za-z0-9]">
+
+    </div>
+    <span role="separator" aria-hidden="true" data-slot="input-otp-separator" class="text-muted-foreground [&amp;&gt;svg]:size-4">
+    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"></path></svg>
+</span>
+
+    <div data-slot="input-otp-group" class="flex items-center">
+<input data-slot="input-otp-slot" data-input-otp-target="slot" aria-label="Input 4 of 6" class="relative flex h-10 w-10 items-center justify-center border-y border-e border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/60 first:rounded-s-md first:border-s last:rounded-e-md" data-action="input-&gt;input-otp#onInput keydown-&gt;input-otp#onKeyDown paste-&gt;input-otp#onPaste" type="text" inputmode="text" maxlength="1" autocomplete="one-time-code" name="otp[3]" pattern="[A-Za-z0-9]">
+
+        <input data-slot="input-otp-slot" data-input-otp-target="slot" aria-label="Input 5 of 6" class="relative flex h-10 w-10 items-center justify-center border-y border-e border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/60 first:rounded-s-md first:border-s last:rounded-e-md" data-action="input-&gt;input-otp#onInput keydown-&gt;input-otp#onKeyDown paste-&gt;input-otp#onPaste" type="text" inputmode="text" maxlength="1" autocomplete="one-time-code" name="otp[4]" pattern="[A-Za-z0-9]">
+
+        <input data-slot="input-otp-slot" data-input-otp-target="slot" aria-label="Input 6 of 6" class="relative flex h-10 w-10 items-center justify-center border-y border-e border-input bg-transparent text-center text-sm shadow-xs transition-all outline-none focus-visible:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/60 first:rounded-s-md first:border-s last:rounded-e-md" data-action="input-&gt;input-otp#onInput keydown-&gt;input-otp#onKeyDown paste-&gt;input-otp#onPaste" type="text" inputmode="text" maxlength="1" autocomplete="one-time-code" name="otp[5]" pattern="[A-Za-z0-9]">
+
+    </div>
+</div>
