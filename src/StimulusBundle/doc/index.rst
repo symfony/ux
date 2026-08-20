@@ -342,6 +342,34 @@ You can also retrieve the generated attributes as an array, which can be helpful
 
     {{ form_row(form.password, { attr: stimulus_target('hello-controller', 'myTarget').toArray() }) }}
 
+Chaining Different Helpers
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``stimulus_controller``, ``stimulus_action`` and ``stimulus_target``
+filters can be mixed freely to render all the attributes of an element at
+once, whichever function the chain started with:
+
+.. code-block:: html+twig
+
+    <div {{ stimulus_controller('first-controller')
+        |stimulus_target('second-controller', 'anotherTarget')
+        |stimulus_target('third-controller', 'foo')
+        |stimulus_action('first-controller', 'test')
+        |stimulus_controller('fourth-controller')
+        |stimulus_action('fourth-controller', 'onClick') }}
+    >
+        Hello
+    </div>
+
+    <!-- would render -->
+    <div data-controller="first-controller fourth-controller"
+        data-action="first-controller#test fourth-controller#onClick"
+        data-second-controller-target="anotherTarget"
+        data-third-controller-target="foo"
+    >
+        Hello
+    </div>
+
 .. _configuration:
 
 Configuration
