@@ -1,0 +1,121 @@
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T13:23:04Z
+
+Pattern example :
+
+https://github.com/user-attachments/assets/d920e9e0-8149-48d4-b47c-655d19d0c2c2
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T13:24:24Z
+
+Separator example
+
+https://github.com/user-attachments/assets/3fffae25-cefa-4535-93c8-d43e5baab24b
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T13:25:29Z
+
+Disabled example
+
+https://github.com/user-attachments/assets/0ba25834-6e66-40be-96a2-fbf0c5f963fd
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T13:26:57Z
+
+Controlled example :
+
+https://github.com/user-attachments/assets/64b6bba4-4ec8-401f-8887-9ce23e9f916f
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T13:28:29Z
+
+Invalid example
+
+<img width="1806" height="588" alt="Capture d’écran du 2026-04-19 15-27-49" src="https://github.com/user-attachments/assets/27727d65-cbd1-42b3-97a3-cf348c3276fc" />
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T13:29:54Z
+
+Four digits example :
+
+https://github.com/user-attachments/assets/b5eae5fb-5913-4c90-9493-8e2ac590556c
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T13:31:05Z
+
+Alphanumeric example :
+
+https://github.com/user-attachments/assets/b8ee6e04-53ec-43ee-9082-645e6c7d5db9
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T13:35:29Z
+
+Form example :
+
+https://github.com/user-attachments/assets/9fbf8441-a6ef-4a9d-a1c8-70265f3c066c
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T13:36:56Z
+
+RTL example :
+
+https://github.com/user-attachments/assets/8cf3d8a1-62ad-4310-94d6-4f1124d37c20
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-30T08:05:56Z
+
+Thanks a ton for the careful review and the helpful suggestions! 🙏 Both points addressed:
+
+1. **`autocomplete="one-time-code"`** — added by default on every `<twig:InputOtp:Slot>`, users can still override per-slot (e.g. `autocomplete="off"`) via the merged attributes.
+
+2. **Accessible `Input X of Y` label** — went the explicit route as you suggested, with one twist: I tried first to forward `inputs="6"` from `<twig:InputOtp>` down to the `Slot` via the `{% set _kit_var %}` pattern (the one Accordion uses), but since slots live inside a `<twig:InputOtp:Group>` wrapper, the variable doesn't survive the extra component level (got a clean `Variable "_input_otp_inputs" does not exist`). So I exposed two props directly on the slot:
+
+   ```twig
+   <twig:InputOtp:Slot input="1" inputs="6" name="otp[0]" />
+   ```
+
+   `input` alone yields `aria-label="Input 1"`, and `input` + `inputs` yields `aria-label="Input 1 of 6"`. A bit more verbose to write, but rock-solid and matches the spirit of your suggestion. All 11 examples updated + snapshots regenerated.
+
+And no worries about the rebase — that "force-push reflex" is a feature, not a bug 😄. Force-pushed the new commits, ready for another pass whenever you have a minute!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-05-01T13:20:18Z
+
+About 2., this is related to https://github.com/symfony/ux/issues/2522, I will try to work on it, I really don't like the current workaround 😅 🤞🏻
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-05-05T08:48:33Z
+
+https://github.com/symfony/ux/pull/3512 has been merged, I didn't tweak our skill yet, but I believe you can already starts to make this recipe better ;)
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-08-17T14:13:34Z
+
+Done! The recipe now builds on `provide()`/`inject()`, thanks for the nudge (and for #3512, it fits this component like a glove).
+
+`InputOtp` provides `inputs` and `name`, and each `Slot` only declares its `input` position: the accessible "Input X of Y" label and the default `name` are derived from the context, so the `inputs="6" name="otp[...]"` repetition is gone from every example.
+
+The branch predated the new Toolkit conventions, so I also migrated the recipe while I was at it: README-based examples, `tailwind_classes` merging, `@prop` docblocks, and `ux:toolkit:lint-kit` is green. Snapshots regenerated, 610 rendering tests pass locally.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-20T20:24:17Z
+
+Thanks for making some changes, I just did theses:
+  - Enforced the OTP `pattern` while typing/pasting, not just on submit. The Stimulus controller now checks each keystroke and paste against the slot's `pattern`.
+  - Swapped the plain text `-` separator for the Lucide `minus` icon (`<twig:ux:icon name="lucide:minus">`) to match the shadcn reference, and added `symfony/ux-icons` to the recipe manifest.
+  - Rewired the controller to the kit's usual Stimulus convention (`data-action` + `static targets`) instead of manual `addEventListener`/`bind` in `connect()`. Matches the other shadcn controllers and cuts ~20 lines. Also memoized the compiled `pattern` regex instead of recompiling it on every keystroke.
+  - Removed a stray `src/Toolkit/config/schema.json` and added  it to `.gitignore` alongside `config/reference.php`.
