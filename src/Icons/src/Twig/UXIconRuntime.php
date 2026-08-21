@@ -15,6 +15,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\IconRendererInterface;
 use Twig\Extension\RuntimeExtensionInterface;
+use Twig\Extra\Html\HtmlAttr\AttributeValueInterface;
 
 /**
  * @author Simon André <smn.andre@gmail.com>
@@ -31,10 +32,23 @@ final class UXIconRuntime implements RuntimeExtensionInterface
     }
 
     /**
-     * @param array<string, bool|string> $attributes
+     * @param array<string, bool|string|AttributeValueInterface> $attributes
      */
     public function renderIcon(string $name, array $attributes = []): string
     {
+        foreach ($attributes as $attribute => $value) {
+            // Typed values produced by twig/html-extra (e.g. "html_attr_type('sst')"), as used by
+            // Twig Components attribute merging, are rendered to their string representation
+            if ($value instanceof AttributeValueInterface) {
+                if (null === $value = $value->getValue()) {
+                    unset($attributes[$attribute]);
+                    continue;
+                }
+
+                $attributes[$attribute] = $value;
+            }
+        }
+
         try {
             return $this->iconRenderer->renderIcon($name, $attributes);
         } catch (IconNotFoundException $e) {

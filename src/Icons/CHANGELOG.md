@@ -2,6 +2,7 @@
 
 ## 3.5.0
 
+- Accept typed attribute values from `twig/html-extra` (e.g. `html_attr_type()`) in `ux_icon()` and `<twig:ux:icon>`, as produced by Twig Components attribute merging
 - Migrate SVG parsing to the PHP 8.4 `Dom\XMLDocument` API, icons rendered from local files now correctly include the `xmlns` attribute.
   It **may break your pipeline** if you assert on `ux_icon()` or `<twig:ux:icon>` output in your tests. Re-generate those assertions and clear your icon cache after upgrading.
 
