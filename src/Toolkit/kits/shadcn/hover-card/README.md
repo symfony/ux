@@ -26,7 +26,7 @@ For sighted users to preview content available behind a link.
 ```twig
 <twig:HoverCard>
     <twig:HoverCard:Trigger>
-        <a href="#" class="underline" {{ ...hover_card_trigger_attrs }}>@symfony</a>
+        <a href="#" class="underline" {{ html_attr(hover_card_trigger_attrs) }}>@symfony</a>
     </twig:HoverCard:Trigger>
     <twig:HoverCard:Content>
         The Symfony PHP framework — official organization on GitHub.
