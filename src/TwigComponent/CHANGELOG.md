@@ -4,6 +4,7 @@
 
 - Add support for `MergeableInterface` from `twig/html-extra` in `ComponentAttributes#defaults()`
 - Add support for dynamic component names in the HTML syntax using `<twig:component is="myComponent" ...`
+- Capture `## <description>` documentation comments written above props inside `{% props %}` (Twig 3.29+), exposed per prop via `PropsNode::getPropDocumentation()`
 
 ## 3.4.0
 

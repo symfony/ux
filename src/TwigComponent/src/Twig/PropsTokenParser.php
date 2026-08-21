@@ -29,8 +29,15 @@ class PropsTokenParser extends AbstractTokenParser
 
         $names = [];
         $values = [];
+        $documentations = [];
         while (!$stream->nextIf(Token::BLOCK_END_TYPE)) {
-            $name = $stream->expect(Token::NAME_TYPE)->getValue();
+            $nameToken = $stream->expect(Token::NAME_TYPE);
+            $name = $nameToken->getValue();
+
+            // Since Twig 3.29, a `## ...` comment above a prop is attached to its name token.
+            if (method_exists($nameToken, 'getDocumentation') && null !== $documentation = $nameToken->getDocumentation()) {
+                $documentations[$name] = $documentation;
+            }
 
             if ($stream->nextIf(Token::OPERATOR_TYPE, '=')) {
                 if (method_exists($parser, 'parseExpression')) {
@@ -49,7 +56,7 @@ class PropsTokenParser extends AbstractTokenParser
             }
         }
 
-        return new PropsNode($names, $values, $token->getLine());
+        return new PropsNode($names, $values, $documentations, $token->getLine());
     }
 
     public function getTag(): string

@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\TwigComponent\Twig\PropsNode;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
+use Twig\Node\Node;
 use Twig\Node\TextNode;
 use Twig\Source;
 
@@ -60,6 +61,48 @@ class ComponentPropsParserTest extends KernelTestCase
         $this->assertInstanceOf(TextNode::class, $body->getNode(1));
         $this->assertTrue($body->getNode(1)->hasAttribute('data'));
         $this->assertSame($text, $body->getNode(1)->getAttribute('data'));
+    }
+
+    public function testPropDocumentationIsCaptured()
+    {
+        if (!method_exists(\Twig\Token::class, 'getDocumentation')) {
+            $this->markTestSkipped('Documentation comments require twig/twig >= 3.29.');
+        }
+
+        $template = <<<'TWIG'
+            {%- props
+                ## string Unique identifier.
+                id,
+                ## 'default'|'secondary' The visual style variant.
+                variant = 'default',
+                open = false
+            -%}
+            TWIG;
+
+        /** @var Environment $twig */
+        $twig = self::getContainer()->get(Environment::class);
+        $twig->setLoader(new ArrayLoader(['template' => $template]));
+
+        $propsNode = $this->findPropsNode($twig->parse($twig->tokenize(new Source($template, 'template'))));
+
+        $this->assertInstanceOf(PropsNode::class, $propsNode);
+        $this->assertSame('string Unique identifier.', $propsNode->getPropDocumentation('id'));
+        $this->assertSame("'default'|'secondary' The visual style variant.", $propsNode->getPropDocumentation('variant'));
+        $this->assertNull($propsNode->getPropDocumentation('open'));
+    }
+
+    private function findPropsNode(Node $node): ?PropsNode
+    {
+        if ($node instanceof PropsNode) {
+            return $node;
+        }
+        foreach ($node as $child) {
+            if ($child instanceof Node && null !== $found = $this->findPropsNode($child)) {
+                return $found;
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -23,9 +23,20 @@ use Twig\Node\Node;
 #[YieldReady]
 class PropsNode extends Node
 {
-    public function __construct(array $propsNames, array $values, $lineno = 0)
+    /**
+     * @param array<string, string> $documentations The `## ...` documentation of each documented prop, keyed by name
+     */
+    public function __construct(array $propsNames, array $values, array $documentations = [], $lineno = 0)
     {
-        parent::__construct($values, ['names' => $propsNames], $lineno);
+        parent::__construct($values, ['names' => $propsNames, 'documentations' => $documentations], $lineno);
+    }
+
+    /**
+     * The `## ...` documentation attached to the given prop, or null when it is undocumented.
+     */
+    public function getPropDocumentation(string $name): ?string
+    {
+        return $this->getAttribute('documentations')[$name] ?? null;
     }
 
     public function compile(Compiler $compiler): void
