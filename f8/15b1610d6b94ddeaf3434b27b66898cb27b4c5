@@ -1,0 +1,89 @@
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T17:22:08Z
+
+Main example
+
+https://github.com/user-attachments/assets/9161e01d-7ff5-4d81-aee6-6e82ef0e4411
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T17:25:55Z
+
+Checkbox example (better than original)
+
+https://github.com/user-attachments/assets/acefeb63-9cee-45ce-858a-7347f62b0ca7
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T17:40:34Z
+
+Radio example (better than original)
+
+https://github.com/user-attachments/assets/a18f9e6f-b9ab-4ce3-83fc-1d6614d774b3
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T17:42:03Z
+
+Submenu example :
+
+https://github.com/user-attachments/assets/c0b96610-ae20-42ad-90bc-08ffd021548a
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T17:44:42Z
+
+With icons :
+
+https://github.com/user-attachments/assets/cc7231fd-a276-49ac-bb13-b698aabb1bdd
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T17:50:27Z
+
+RTL example
+
+https://github.com/user-attachments/assets/1524ee42-b304-4b95-928a-476ed3389827
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-27T08:10:13Z
+
+Hi @Kocal! Just pushed an update aligning this recipe with the patterns we've validated on the other Shadcn components shipped recently (notably hover-card #3478 merged earlier today).
+
+The original implementation relied on the pure-CSS `group-hover/menubar-menu` + `group-focus-within/menubar-sub` + `tabindex="0"` trio, which has the now-familiar UX issue: clicking a trigger gives it focus, so the menu stays stuck open even after the mouse leaves.
+
+The fix follows the same approach as hover-card and navigation-menu, with one menubar-specific twist:
+- New shared `menubar_controller.js` toggling `data-state`, attached to both `Menu` and `Sub`
+- `mouseenter`/`mouseleave` on `Menu` and `Sub`, `focus`/`blur` on `Trigger` and `SubTrigger`
+- Because `Sub` is nested inside `Menu`'s `Content`, the naive `in-data-[state=open]:visible` selector matches *any* ancestor with `data-state=open` — opening Edit was also opening the Find sub-menu. Switched to **named groups** (`group/menubar-menu` + `group-data-[state=open]/menubar-menu:visible` and the same for `menubar-sub`) so each Content is scoped to its own wrapper.
+- Optional `openDelay` / `closeDelay` props on `Menu` and `Sub`, default `0`
+
+Companion PR for ux.symfony.com is updated too: symfony/ux.symfony.com#69.
+
+No rush at all, just letting you know it's ready for another look! 🙏
+
+---------------------------------------------------------------------------
+
+by BafS at 2026-08-07T03:27:58Z
+
+Amazing work, @Kocal is there any plan to merge it soon?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-21T07:59:07Z
+
+I just did the following changes:
+  - Moved `examples/*.html.twig` into `README.md` `{"preview":true}` blocks -> README is now the single source for both examples and the ux.symfony.com docs page; closed the companion docs PR symfony/ux.symfony.com#69 as no longer needed
+  - Updated class handling to the 3.5 convention: `tailwind_merge` -> `attributes.defaults({ class: '...'|tailwind_classes })`, with `data-slot`/ARIA/state `data-*`/`data-*-value` as literal attributes (`AttributesDefaultsChecker`); consumer classes now override
+  - Switched `Menubar:RadioGroup` -> `Menubar:RadioItem` name sharing to `provide()`/`inject()` (set `name` once on the group)
+  - Fixed the manifest: added the deps actually used (`twig/html-extra`, `symfony/ux-icons`, `symfony/ux-twig-component`), added `version-added`, dropped `description` (not in the schema)
+  - Cleaned up docblocks (`@prop`/`@block`), moved the CHANGELOG entry to `3.5.0`, added missing test fixture icons, regenerated snapshots
+  - Gave each README preview example a `min-height` wrapper so dropdowns aren't clipped by the preview viewport on hover
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-21T08:11:20Z
+
+I also changed the "showing" behavior, a menu is initially shown by **clicking** on its associated trigger. No hovering, no delay. And when a menu is shown, hovering another menu trigger will show its associated menu.
