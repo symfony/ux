@@ -588,6 +588,14 @@ export function proxifyComponent(component: Component): Component {
                 return component.getData(prop);
             }
 
+            // protocol probes performed implicitly by JSON.stringify() ("toJSON") and
+            // by promise assimilation ("then", e.g. `await component`) must not be
+            // mistaken for actions: returning a callable would let those protocols
+            // invoke it, queueing a real server action of that name
+            if ('toJSON' === prop || 'then' === prop) {
+                return undefined;
+            }
+
             // try to call an action
             return (args: string[]) => {
                 return component.action.apply(component, [prop, args]);

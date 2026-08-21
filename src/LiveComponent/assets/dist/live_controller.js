@@ -1663,6 +1663,7 @@ function proxifyComponent(component) {
 				return Reflect.get(component, prop);
 			}
 			if (component.valueStore.has(prop)) return component.getData(prop);
+			if ("toJSON" === prop || "then" === prop) return;
 			return (args) => {
 				return component.action.apply(component, [prop, args]);
 			};
