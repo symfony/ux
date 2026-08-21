@@ -1,0 +1,53 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-08-18T14:28:47Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/fix-3752-proxy-protocol-probes/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/fix-3752-proxy-protocol-probes/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>82.85 kB</code>
+                    / <code>18.41 kB</code>
+                </td><td>
+                    <code>82.9 kB</code><sup>0%</sup>
+                    / <code>18.43 kB</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-20T07:10:08Z
+
+Please target 3.x branch
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-08-20T13:37:25Z
+
+Done! Rebased onto 3.x, dist rebuilt from the 3.x sources, JS suite green (297 tests), base switched.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-20T18:07:25Z
+
+Dist files must be rebuild
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-08-21T08:14:36Z
+
+Rebuilt the dist with the current toolchain (Node 22 + pnpm, same as the `dist-files-unbuilt` job) and pushed. Sorry for the noise!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-21T12:58:24Z
+
+I just added a small note in the documentation, merging when it's green
