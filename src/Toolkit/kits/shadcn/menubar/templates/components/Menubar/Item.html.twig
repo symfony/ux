@@ -1,0 +1,11 @@
+{# @block content The menu item label. #}
+<button
+    type="button"
+    role="menuitem"
+    data-slot="menubar-item"
+    {{ attributes.defaults({
+        class: 'relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</button>
