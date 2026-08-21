@@ -1,6 +1,6 @@
-# Create a non-exiting version of _run_task for sequential execution
-# This is used to run the tests sequentially on Windows
-# because parallel is not available on Windows.
+# Runs a single task ($1 = title, $2 = command) and buffers its output into one
+# grouped block. Returns the command's exit code instead of exiting, so it can be
+# reused both by the parallel pool (_run_package_tests) and by _run_task.
 _run_task_sequential() {
     local ok=0
     local title="$1"
@@ -28,3 +28,42 @@ _run_task() {
     exit $?
 }
 export -f _run_task
+
+# Run every package in $PACKAGES through its test command with bounded parallelism.
+# Output is buffered per package and printed once all have finished, so grouped logs
+# stay readable. Relies only on Bash job control, so it behaves the same on Linux and
+# on Windows (Git Bash) — unlike GNU parallel, which is missing from Windows runners.
+_run_package_tests() {
+    # Default matches the previous "parallel -j +3": as many jobs as CPUs, plus 3.
+    local max_jobs="${1:-$(( $(nproc 2>/dev/null || echo 4) + 3 ))}"
+    local logs
+    logs="$(mktemp -d)"
+    local pkg safe rc=0
+
+    for pkg in $PACKAGES; do
+        # Throttle: wait for a running job to finish before starting the next package.
+        while [ "$(jobs -rp | wc -l)" -ge "$max_jobs" ]; do wait -n; done
+        # Bridge packages carry slashes (e.g. Map/src/Bridge/Google), so flatten
+        # them into a single path segment for the temp file names.
+        safe="${pkg//\//_}"
+        # Run in the background, capturing the package's output and exit code to files
+        # so the parallel logs can be replayed in a stable order below.
+        {
+            _run_task_sequential "$pkg" \
+                "(cd src/$pkg && $COMPOSER_MIN_STAB && $COMPOSER_UP && $PHPUNIT)"
+            echo "$?" > "$logs/$safe.rc"
+        } > "$logs/$safe.log" 2>&1 &
+    done
+    wait
+
+    # Replay each package's log in order, failing the step if any package exited non-zero.
+    for pkg in $PACKAGES; do
+        safe="${pkg//\//_}"
+        cat "$logs/$safe.log"
+        [ "$(cat "$logs/$safe.rc" 2>/dev/null || echo 1)" = 0 ] || rc=1
+    done
+
+    rm -rf "$logs"
+    return "$rc"
+}
+export -f _run_package_tests
