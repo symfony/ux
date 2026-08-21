@@ -5,6 +5,7 @@
 - Add support for blocks: ready-to-use page sections built from a kit's components, installed and previewed as a unit
 - [Shadcn] Add the `login-01` and `login-02` login blocks
 - [Shadcn] Add `input-otp` recipe
+- [Shadcn] Add `menubar` recipe
 - [Shadcn][Flowbite] Merge component classes with `attributes.defaults({ class: '...'|tailwind_classes })` instead of `tailwind_merge` (consumer classes now override component variants)
 - [Shadcn] Fix Field/Label, InputGroup and Pagination silently dropping their own base classes when forwarding to a child component (their checked/disabled/nested/dark styles now apply)
 - Remove the now-obsolete `ClassMergeSpacingChecker` linter

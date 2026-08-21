@@ -1,0 +1,8 @@
+{# @block content The sub-menu trigger label (e.g., a `button`) that opens the sub-menu on hover or focus. #}
+{%- set menubar_sub_trigger_attrs = {
+    'data-slot': 'menubar-sub-trigger',
+    role: 'menuitem',
+    tabindex: 0,
+    'data-action': 'focus->menubar-sub#show blur->menubar-sub#hide'|html_attr_type('sst'),
+} -%}
+{%- block content %}{% endblock -%}

@@ -1,0 +1,11 @@
+{# @block content The trigger label (e.g., a `button`) that opens the menu on click. #}
+{%- set menubar_trigger_attrs = {
+    'data-slot': 'menubar-trigger',
+    'data-menubar-target': 'trigger',
+    role: 'menuitem',
+    tabindex: 0,
+    'aria-haspopup': 'menu',
+    'aria-expanded': 'false',
+    'data-action': 'click->menubar#toggle mouseenter->menubar#enter'|html_attr_type('sst'),
+} -%}
+{%- block content %}{% endblock -%}

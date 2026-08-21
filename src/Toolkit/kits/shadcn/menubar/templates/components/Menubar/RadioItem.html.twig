@@ -1,0 +1,18 @@
+{# @prop name string|null The radio form field name. Falls back to the parent `Menubar:RadioGroup`'s `name` when omitted. #}
+{# @prop value string The value submitted when this radio is selected. #}
+{# @prop checked boolean Whether this radio is initially checked. #}
+{# @block content The label text. #}
+{%- props name = null, value = '', checked = false -%}
+{%- set _menubar_radioGroupName = name ?? inject('menubar.radioGroupName', null) -%}
+<label
+    data-slot="menubar-radio-item"
+    {{ attributes.defaults({
+        class: 'relative flex cursor-pointer select-none items-center rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground'|tailwind_classes,
+    }) }}
+>
+    <input type="radio" class="peer sr-only" {% if _menubar_radioGroupName %}name="{{ _menubar_radioGroupName }}"{% endif %} value="{{ value }}" {% if checked %}checked{% endif %}>
+    <span class="absolute start-2 flex size-4 items-center justify-center opacity-0 peer-checked:opacity-100">
+        <twig:ux:icon name="lucide:circle" class="size-2 fill-current" aria-hidden="true" />
+    </span>
+    {%- block content %}{% endblock -%}
+</label>

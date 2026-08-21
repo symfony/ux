@@ -1,0 +1,10 @@
+{# @block content A `Menubar:Trigger` and a `Menubar:Content`. #}
+<div
+    data-slot="menubar-menu"
+    data-menubar-target="menu"
+    {{ attributes.defaults({
+        class: 'group/menubar-menu relative'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

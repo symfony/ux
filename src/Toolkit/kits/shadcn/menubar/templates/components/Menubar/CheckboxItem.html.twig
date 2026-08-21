@@ -1,0 +1,16 @@
+{# @prop name string|null The checkbox form field name. #}
+{# @prop checked boolean Whether the checkbox is initially checked. #}
+{# @block content The label text. #}
+{%- props name = null, checked = false -%}
+<label
+    data-slot="menubar-checkbox-item"
+    {{ attributes.defaults({
+        class: 'relative flex cursor-pointer select-none items-center rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground'|tailwind_classes,
+    }) }}
+>
+    <input type="checkbox" class="peer sr-only" {% if name %}name="{{ name }}"{% endif %} {% if checked %}checked{% endif %}>
+    <span class="absolute start-2 flex size-4 items-center justify-center opacity-0 peer-checked:opacity-100">
+        <twig:ux:icon name="lucide:check" class="size-4" aria-hidden="true" />
+    </span>
+    {%- block content %}{% endblock -%}
+</label>

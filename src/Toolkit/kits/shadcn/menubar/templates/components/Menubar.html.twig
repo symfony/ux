@@ -1,0 +1,12 @@
+{# @block content A list of `Menubar:Menu` children. #}
+<div
+    role="menubar"
+    data-slot="menubar"
+    {{ attributes.defaults({
+        class: 'flex h-9 items-center space-x-1 rounded-md border bg-background p-1 shadow-xs'|tailwind_classes,
+        'data-controller': 'menubar',
+        'data-action': 'keydown.esc->menubar#closeAll',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

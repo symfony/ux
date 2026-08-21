@@ -1,0 +1,90 @@
+<!--
+- Kit: Shadcn UI
+- Component: Menubar
+- Code:
+```twig
+<div class="flex items-start justify-center" style="min-height: 240px">
+    <twig:Menubar class="w-72">
+        <twig:Menubar:Menu>
+            <twig:Menubar:Trigger>
+                <twig:Button variant="ghost" size="sm" {{ ...menubar_trigger_attrs }}>Profiles</twig:Button>
+            </twig:Menubar:Trigger>
+            <twig:Menubar:Content>
+                <twig:Menubar:RadioGroup name="profile">
+                    <twig:Menubar:RadioItem value="andy">Andy</twig:Menubar:RadioItem>
+                    <twig:Menubar:RadioItem value="benoit" checked>Benoit</twig:Menubar:RadioItem>
+                    <twig:Menubar:RadioItem value="luis">Luis</twig:Menubar:RadioItem>
+                </twig:Menubar:RadioGroup>
+                <twig:Menubar:Separator />
+                <twig:Menubar:Item>Edit...</twig:Menubar:Item>
+                <twig:Menubar:Item>Add Profile...</twig:Menubar:Item>
+            </twig:Menubar:Content>
+        </twig:Menubar:Menu>
+        <twig:Menubar:Menu>
+            <twig:Menubar:Trigger>
+                <twig:Button variant="ghost" size="sm" {{ ...menubar_trigger_attrs }}>Theme</twig:Button>
+            </twig:Menubar:Trigger>
+            <twig:Menubar:Content>
+                <twig:Menubar:RadioGroup name="theme">
+                    <twig:Menubar:RadioItem value="light">Light</twig:Menubar:RadioItem>
+                    <twig:Menubar:RadioItem value="dark">Dark</twig:Menubar:RadioItem>
+                    <twig:Menubar:RadioItem value="system" checked>System</twig:Menubar:RadioItem>
+                </twig:Menubar:RadioGroup>
+            </twig:Menubar:Content>
+        </twig:Menubar:Menu>
+    </twig:Menubar>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex items-start justify-center" style="min-height: 240px">
+    <div role="menubar" data-slot="menubar" class="flex h-9 items-center space-x-1 rounded-md border bg-background p-1 shadow-xs w-72" data-controller="menubar" data-action="keydown.esc-&gt;menubar#closeAll">
+<div data-slot="menubar-menu" data-menubar-target="menu" class="group/menubar-menu relative">
+<button data-slot="button" data-size="sm" data-variant="ghost" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg ltr:has-data-[icon=inline-end]:pr-1.5 rtl:has-data-[icon=inline-end]:pe-1.5 ltr:has-data-[icon=inline-start]:pl-1.5 rtl:has-data-[icon=inline-start]:ps-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5" type="button" data-menubar-target="trigger" role="menuitem" tabindex="0" aria-haspopup="menu" aria-expanded="false" data-action="click-&gt;menubar#toggle mouseenter-&gt;menubar#enter">Profiles</button>
+                        <div role="menu" data-slot="menubar-content" class="invisible opacity-0 group-data-[state=open]/menubar-menu:visible group-data-[state=open]/menubar-menu:opacity-100 transition-opacity absolute start-0 top-full z-50 min-w-[12rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-md">
+<div role="group" data-slot="menubar-radio-group">
+<label data-slot="menubar-radio-item" class="relative flex cursor-pointer select-none items-center rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground">
+    <input type="radio" class="peer sr-only" name="profile" value="andy">
+    <span class="absolute start-2 flex size-4 items-center justify-center opacity-0 peer-checked:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-2 fill-current" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle></svg>
+    </span>Andy</label>
+                    <label data-slot="menubar-radio-item" class="relative flex cursor-pointer select-none items-center rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground">
+    <input type="radio" class="peer sr-only" name="profile" value="benoit" checked>
+    <span class="absolute start-2 flex size-4 items-center justify-center opacity-0 peer-checked:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-2 fill-current" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle></svg>
+    </span>Benoit</label>
+                    <label data-slot="menubar-radio-item" class="relative flex cursor-pointer select-none items-center rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground">
+    <input type="radio" class="peer sr-only" name="profile" value="luis">
+    <span class="absolute start-2 flex size-4 items-center justify-center opacity-0 peer-checked:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-2 fill-current" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle></svg>
+    </span>Luis</label>
+                </div>
+                <div role="separator" data-slot="menubar-separator" class="-mx-1 my-1 h-px bg-muted"></div>
+
+                <button type="button" role="menuitem" data-slot="menubar-item" class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50">Edit...</button>
+                <button type="button" role="menuitem" data-slot="menubar-item" class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50">Add Profile...</button>
+            </div>
+        </div>
+        <div data-slot="menubar-menu" data-menubar-target="menu" class="group/menubar-menu relative">
+<button data-slot="button" data-size="sm" data-variant="ghost" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg ltr:has-data-[icon=inline-end]:pr-1.5 rtl:has-data-[icon=inline-end]:pe-1.5 ltr:has-data-[icon=inline-start]:pl-1.5 rtl:has-data-[icon=inline-start]:ps-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5" type="button" data-menubar-target="trigger" role="menuitem" tabindex="0" aria-haspopup="menu" aria-expanded="false" data-action="click-&gt;menubar#toggle mouseenter-&gt;menubar#enter">Theme</button>
+                        <div role="menu" data-slot="menubar-content" class="invisible opacity-0 group-data-[state=open]/menubar-menu:visible group-data-[state=open]/menubar-menu:opacity-100 transition-opacity absolute start-0 top-full z-50 min-w-[12rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-md">
+<div role="group" data-slot="menubar-radio-group">
+<label data-slot="menubar-radio-item" class="relative flex cursor-pointer select-none items-center rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground">
+    <input type="radio" class="peer sr-only" name="theme" value="light">
+    <span class="absolute start-2 flex size-4 items-center justify-center opacity-0 peer-checked:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-2 fill-current" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle></svg>
+    </span>Light</label>
+                    <label data-slot="menubar-radio-item" class="relative flex cursor-pointer select-none items-center rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground">
+    <input type="radio" class="peer sr-only" name="theme" value="dark">
+    <span class="absolute start-2 flex size-4 items-center justify-center opacity-0 peer-checked:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-2 fill-current" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle></svg>
+    </span>Dark</label>
+                    <label data-slot="menubar-radio-item" class="relative flex cursor-pointer select-none items-center rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground">
+    <input type="radio" class="peer sr-only" name="theme" value="system" checked>
+    <span class="absolute start-2 flex size-4 items-center justify-center opacity-0 peer-checked:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-2 fill-current" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle></svg>
+    </span>System</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

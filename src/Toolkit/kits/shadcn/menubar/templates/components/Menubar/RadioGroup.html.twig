@@ -1,0 +1,11 @@
+{# @prop name string|null The radio group form field name, shared by all `Menubar:RadioItem` children that omit their own. #}
+{# @block content One or more `Menubar:RadioItem` components. #}
+{%- props name = null -%}
+{%- do provide('menubar.radioGroupName', name) -%}
+<div
+    role="group"
+    data-slot="menubar-radio-group"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>
