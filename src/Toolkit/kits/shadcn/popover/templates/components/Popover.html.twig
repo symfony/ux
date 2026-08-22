@@ -1,0 +1,22 @@
+{# @prop name string|null Group name shared by mutually exclusive popovers, so only one is open at a time. #}
+{# @prop open boolean Whether the popover is open on initial render. #}
+{# @block content A `Popover:Trigger` and a `Popover:Content`. #}
+{%- props name = null, open = false -%}
+{%- do provide('popover.open', open) -%}
+<div
+    data-slot="popover"
+    data-state="{{ open ? 'open' : 'closed' }}"
+    data-popover-open-value="{{ open ? 'true' : 'false' }}"
+    data-popover-name-value="{{ name }}"
+    {{ attributes.defaults({
+        class: 'group/popover relative inline-block'|tailwind_classes,
+        'data-controller': 'popover',
+        'data-action': [
+            'popover:open@window->popover#handleGroupOpen',
+            'click@window->popover#handleOutsideClick',
+            'keydown.esc@window->popover#handleEscape',
+        ]|join(' ')|html_attr_type('sst'),
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

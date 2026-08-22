@@ -1,0 +1,54 @@
+<!--
+- Kit: Shadcn UI
+- Component: Popover
+- Code:
+```twig
+<div class="flex items-start justify-center pt-6" style="min-height: 260px">
+    <div class="flex gap-6">
+        <twig:Popover name="alignments-demo">
+            <twig:Popover:Trigger>
+                <twig:Button variant="outline" size="sm" {{ ...popover_trigger_attrs }}>Start</twig:Button>
+            </twig:Popover:Trigger>
+            <twig:Popover:Content align="start" class="w-40">
+                Aligned to start
+            </twig:Popover:Content>
+        </twig:Popover>
+        <twig:Popover name="alignments-demo">
+            <twig:Popover:Trigger>
+                <twig:Button variant="outline" size="sm" {{ ...popover_trigger_attrs }}>Center</twig:Button>
+            </twig:Popover:Trigger>
+            <twig:Popover:Content align="center" class="w-40">
+                Aligned to center
+            </twig:Popover:Content>
+        </twig:Popover>
+        <twig:Popover name="alignments-demo">
+            <twig:Popover:Trigger>
+                <twig:Button variant="outline" size="sm" {{ ...popover_trigger_attrs }}>End</twig:Button>
+            </twig:Popover:Trigger>
+            <twig:Popover:Content align="end" class="w-40">
+                Aligned to end
+            </twig:Popover:Content>
+        </twig:Popover>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex items-start justify-center pt-6" style="min-height: 260px">
+    <div class="flex gap-6">
+        <div data-slot="popover" data-state="closed" data-popover-open-value="false" data-popover-name-value="alignments-demo" class="group/popover relative inline-block" data-controller="popover" data-action="popover:open@window-&gt;popover#handleGroupOpen click@window-&gt;popover#handleOutsideClick keydown.esc@window-&gt;popover#handleEscape">
+<button data-slot="button" data-size="sm" data-variant="outline" class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg ltr:has-data-[icon=inline-end]:pr-1.5 rtl:has-data-[icon=inline-end]:pe-1.5 ltr:has-data-[icon=inline-start]:pl-1.5 rtl:has-data-[icon=inline-start]:ps-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5" type="button" data-popover-target="trigger" data-action="click-&gt;popover#toggle" aria-haspopup="dialog" aria-expanded="false" data-state="closed">Start</button>
+                        <div role="dialog" data-slot="popover-content" data-popover-target="content" data-side="bottom" data-align="start" data-state="closed" aria-hidden="true" class="invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/popover:visible group-data-[state=open]/popover:scale-100 group-data-[state=open]/popover:opacity-100 absolute z-50 rounded-md border bg-popover p-4 text-sm text-popover-foreground shadow-md outline-none top-full mt-2 start-0 ltr:origin-top-left rtl:origin-top-right w-40">Aligned to start
+            </div>
+        </div>
+        <div data-slot="popover" data-state="closed" data-popover-open-value="false" data-popover-name-value="alignments-demo" class="group/popover relative inline-block" data-controller="popover" data-action="popover:open@window-&gt;popover#handleGroupOpen click@window-&gt;popover#handleOutsideClick keydown.esc@window-&gt;popover#handleEscape">
+<button data-slot="button" data-size="sm" data-variant="outline" class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg ltr:has-data-[icon=inline-end]:pr-1.5 rtl:has-data-[icon=inline-end]:pe-1.5 ltr:has-data-[icon=inline-start]:pl-1.5 rtl:has-data-[icon=inline-start]:ps-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5" type="button" data-popover-target="trigger" data-action="click-&gt;popover#toggle" aria-haspopup="dialog" aria-expanded="false" data-state="closed">Center</button>
+                        <div role="dialog" data-slot="popover-content" data-popover-target="content" data-side="bottom" data-align="center" data-state="closed" aria-hidden="true" class="invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/popover:visible group-data-[state=open]/popover:scale-100 group-data-[state=open]/popover:opacity-100 absolute z-50 rounded-md border bg-popover p-4 text-sm text-popover-foreground shadow-md outline-none top-full mt-2 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 origin-top w-40">Aligned to center
+            </div>
+        </div>
+        <div data-slot="popover" data-state="closed" data-popover-open-value="false" data-popover-name-value="alignments-demo" class="group/popover relative inline-block" data-controller="popover" data-action="popover:open@window-&gt;popover#handleGroupOpen click@window-&gt;popover#handleOutsideClick keydown.esc@window-&gt;popover#handleEscape">
+<button data-slot="button" data-size="sm" data-variant="outline" class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg ltr:has-data-[icon=inline-end]:pr-1.5 rtl:has-data-[icon=inline-end]:pe-1.5 ltr:has-data-[icon=inline-start]:pl-1.5 rtl:has-data-[icon=inline-start]:ps-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5" type="button" data-popover-target="trigger" data-action="click-&gt;popover#toggle" aria-haspopup="dialog" aria-expanded="false" data-state="closed">End</button>
+                        <div role="dialog" data-slot="popover-content" data-popover-target="content" data-side="bottom" data-align="end" data-state="closed" aria-hidden="true" class="invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/popover:visible group-data-[state=open]/popover:scale-100 group-data-[state=open]/popover:opacity-100 absolute z-50 rounded-md border bg-popover p-4 text-sm text-popover-foreground shadow-md outline-none top-full mt-2 end-0 ltr:origin-top-right rtl:origin-top-left w-40">Aligned to end
+            </div>
+        </div>
+    </div>
+</div>
