@@ -20,8 +20,12 @@ use Twig\Extra\Html\HtmlAttr\AttributeValueInterface;
 
 class ComponentRuntimeTest extends TestCase
 {
-    public function testCustomRendererReceivesPlainAttributeValues(): void
+    public function testCustomRendererReceivesPlainAttributeValues()
     {
+        if (!interface_exists(AttributeValueInterface::class)) {
+            $this->markTestSkipped('Requires twig/html-extra >= 3.24.');
+        }
+
         $customRenderer = new class {
             public ?array $receivedProps = null;
 
