@@ -1,0 +1,114 @@
+---------------------------------------------------------------------------
+
+by daFish at 2025-12-13T10:48:35Z
+
+I have also added support for dropdown-menu in button group.
+
+/cc @bernard-ng
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-12-16T05:39:57Z
+
+Hi!
+
+I started to look at your work, and thanks you so much for that!
+
+However, I find there is too much logic in the `dropdown_menu_controller.js`, and I feel like it could be super-simplified by using these new features:
+- https://developer.chrome.com/blog/command-and-commandfor
+- https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Anchor_positioning?
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by daFish at 2025-12-16T09:12:24Z
+
+@Kocal How to handle custom styles? Should I import them in the controller or is this something to be handled in user land?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-01-17T11:21:11Z
+
+Hey!
+
+Sorry for the long delay, but I've been pretty busy with https://github.com/symfony/ux/pull/3299, which added a tons of changes for documentation and code examples. 😅
+
+They are now shared between this repo and https://github.com/symfony/ux.symfony.com
+
+I will review your PR when possible, can you apply the changes in the meantime?
+
+Thanks! 🙏🏻
+
+---------------------------------------------------------------------------
+
+by daFish at 2026-01-17T21:10:32Z
+
+@Kocal No worries, Hugo. I just rebased but missed out on the changes you pushed. 😬
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-01-24T16:30:05Z
+
+Looks like something wrong happened when rebased 😱
+
+Don't worry, I will take it from here, thanks for your contribution :)
+
+---------------------------------------------------------------------------
+
+by daFish at 2026-01-27T09:11:29Z
+
+@Kocal Thanks. I think I messed up the rebase because I didn't expected new commits in this PR and I force pushed from my side.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-02-06T08:57:47Z
+
+(I've been pretty busy lately, but I'll try to take a look at it next week :))
+
+---------------------------------------------------------------------------
+
+by rvmourik at 2026-03-25T10:03:43Z
+
+> (I've been pretty busy lately, but I'll try to take a look at it next week :))
+
+Hi @Kocal, seeing a lot of positive changes to symfony UX lately, thank you for that. Is there any progress on this specific one, I am really eager to use it for the button groups. Kind of the last thing holding me back from switching our SaaS-application to using the Toolkit. The other components are already there 👍
+
+Thanks for your great work
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-04-14T11:42:14Z
+
+Hi, Symfony UX 3.0 has been released, and the `2.x` branch is no longer maintained.
+
+Could you please retarget this PR to the `3.x` branch instead? That way we can review and merge it in the currently supported version.
+
+Thanks!
+
+Status: Needs Work
+
+---------------------------------------------------------------------------
+
+by daFish at 2026-04-14T11:51:16Z
+
+@Kocal Rebased against `3.x` and also changed target branch.
+
+---------------------------------------------------------------------------
+
+by daFish at 2026-04-14T12:20:13Z
+
+Status: Needs Work
+
+---------------------------------------------------------------------------
+
+by daFish at 2026-04-23T06:23:06Z
+
+@Kocal I need your opinion regarding this PR and #3469. I wouldn't mind closing this one in favor of the other. The goal remains the same.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-22T20:20:06Z
+
+Sorry for the super late response, but I've been submerged by PRs on Toolkit and more generally on UX.
+I'm on it!
