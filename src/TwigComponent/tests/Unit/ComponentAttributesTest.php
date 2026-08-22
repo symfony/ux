@@ -424,4 +424,43 @@ final class ComponentAttributesTest extends TestCase
         yield 'sql injection' => ["' OR 1=1 --", '&#039; OR 1=1 --'];
         yield 'url encoded xss' => ['%3Cscript%3Ealert(1)%3C/script%3E', '%3Cscript%3Ealert(1)%3C/script%3E'];
     }
+
+    public function testAllReturnsPlainValues()
+    {
+        if (!interface_exists(AttributeValueInterface::class)) {
+            $this->markTestSkipped('Requires twig/html-extra >= 3.24.');
+        }
+
+        $typed = static fn (?string $value): AttributeValueInterface => new class($value) implements AttributeValueInterface {
+            public function __construct(private readonly ?string $value)
+            {
+            }
+
+            public function getValue(): ?string
+            {
+                return $this->value;
+            }
+        };
+
+        $attributes = new ComponentAttributes([
+            'class' => 'foo',
+            'data-action' => $typed('click->menu#toggle'),
+            'aria-hidden' => $typed(null),
+            'title' => new class implements \Stringable {
+                public function __toString(): string
+                {
+                    return 'User';
+                }
+            },
+            'disabled' => true,
+        ], new EscaperRuntime());
+
+        $this->assertSame([
+            'class' => 'foo',
+            'data-action' => 'click->menu#toggle',
+            'aria-hidden' => false,
+            'title' => 'User',
+            'disabled' => true,
+        ], $attributes->all());
+    }
 }

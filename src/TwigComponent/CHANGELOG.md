@@ -3,7 +3,7 @@
 ## 3.5.0
 
 - Add support for `MergeableInterface` from `twig/html-extra` in `ComponentAttributes#defaults()`
-- Resolve the typed attribute values of `twig/html-extra` and cast `Stringable` values before passing the props to a custom component renderer (`ux:icon`, `ux:map`, ...)
+- Make `ComponentAttributes::all()` return plain values (typed values of `twig/html-extra` resolved, `Stringable` values cast) and pass the props of custom component renderers (`ux:icon`, `ux:map`, ...) through it
 - Add support for dynamic component names in the HTML syntax using `<twig:component is="myComponent" ...`
 
 ## 3.4.0

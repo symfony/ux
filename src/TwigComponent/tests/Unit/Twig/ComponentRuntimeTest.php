@@ -16,7 +16,9 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\UX\TwigComponent\ComponentRendererInterface;
 use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\Twig\ComponentRuntime;
+use Twig\Environment;
 use Twig\Extra\Html\HtmlAttr\AttributeValueInterface;
+use Twig\Loader\ArrayLoader;
 
 class ComponentRuntimeTest extends TestCase
 {
@@ -44,6 +46,7 @@ class ComponentRuntimeTest extends TestCase
             $this->createMock(ComponentRendererInterface::class),
             $container,
             new ComponentStack(),
+            new Environment(new ArrayLoader()),
         );
 
         $this->assertSame('<svg></svg>', $runtime->render('UX:Icon', [

@@ -12,10 +12,12 @@
 namespace Symfony\UX\TwigComponent\Twig;
 
 use Psr\Container\ContainerInterface;
+use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentRendererInterface;
 use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
-use Twig\Extra\Html\HtmlAttr\AttributeValueInterface;
+use Twig\Environment;
+use Twig\Runtime\EscaperRuntime;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -29,6 +31,7 @@ final class ComponentRuntime
         private readonly ComponentRendererInterface $renderer,
         private readonly ContainerInterface $renderers,
         private readonly ComponentStack $componentStack,
+        private readonly ?Environment $twig = null,
     ) {
     }
 
@@ -48,7 +51,13 @@ final class ComponentRuntime
     public function render(string $name, array $props = []): string
     {
         if ($this->renderers->has($normalized = strtolower($name))) {
-            return $this->renderers->get($normalized)->render(self::normalizeRendererProps($props));
+            if (null !== $this->twig) {
+                // custom renderers (e.g. "ux:icon" or "ux:map") deal with plain values: resolve the
+                // typed attribute values the way ComponentAttributes renders them
+                $props = new ComponentAttributes($props, $this->twig->getRuntime(EscaperRuntime::class))->all();
+            }
+
+            return $this->renderers->get($normalized)->render($props);
         }
 
         return $this->renderer->createAndRender($name, $props);
@@ -57,28 +66,6 @@ final class ComponentRuntime
     /**
      * @param array<string, mixed> $props
      */
-    /**
-     * Custom renderers (e.g. "ux:icon" or "ux:map") receive the props as plain values: the typed attribute
-     * values of twig/html-extra are resolved the way ComponentAttributes renders them, a null value
-     * suppressing the attribute (including the defaults of the renderer), and Stringable values are cast.
-     *
-     * @param array<string, mixed> $props
-     *
-     * @return array<string, mixed>
-     */
-    private static function normalizeRendererProps(array $props): array
-    {
-        foreach ($props as $key => $value) {
-            if ($value instanceof AttributeValueInterface) {
-                $props[$key] = $value->getValue() ?? false;
-            } elseif ($value instanceof \Stringable) {
-                $props[$key] = (string) $value;
-            }
-        }
-
-        return $props;
-    }
-
     public function startEmbedComponent(string $name, array $props, array $context, string $hostTemplateName, int $index): PreRenderEvent
     {
         return $this->renderer->startEmbeddedComponentRender($name, $props, $context, $hostTemplateName, $index);
