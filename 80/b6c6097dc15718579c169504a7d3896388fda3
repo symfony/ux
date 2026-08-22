@@ -1,0 +1,67 @@
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T06:41:47Z
+
+Main example
+
+https://github.com/user-attachments/assets/d20aca0b-dd84-452f-9e12-76568bd4f739
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T06:42:56Z
+
+Basic example
+
+https://github.com/user-attachments/assets/7d44fbef-da89-4392-927c-0b5d40d89fca
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T06:48:01Z
+
+Align example
+
+https://github.com/user-attachments/assets/d5fc0318-b50b-47d7-9ff1-a8bf52b8afd1
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T06:53:46Z
+
+With form example
+
+https://github.com/user-attachments/assets/b7b9afe9-b974-4751-99b6-7b5d943f1157
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T07:02:29Z
+
+RTL example
+
+https://github.com/user-attachments/assets/ebe7dfc2-c769-4062-b487-73a934ba9a7e
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-23T11:10:59Z
+
+Reworked to apply the `_trigger_attrs` convention (from your review on this very PR): swapped native `<details>`/`<summary>` for a `<div>` + a small Stimulus controller so the Trigger stays element-agnostic. Moving back to draft so you can re-test at your convenience. Thanks for the patience! 🙏
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-23T14:41:39Z
+
+Re-tested locally on ux.symfony.com (with the matching controller registration on [symfony/ux.symfony.com#70](https://github.com/symfony/ux.symfony.com/pull/70)) — open/close, outside click and escape all behave as expected on every example (Demo / Usage / Basic / Alignments / Form / RTL). Back to ready for review. 🙌
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-07-11T18:57:56Z
+
+Gentle ping @Kocal 🙂
+
+The `_trigger_attrs` convention you asked for is in — `PopoverTrigger.html.twig` now exposes a Twig variable with a `block content` instead of forcing a `<button>`, so the consumer picks their own element. I also dropped the unused group/popover marker while I was in there.
+
+No rush at all, just flagging it since the review is still marked as requesting changes and the work landed back in April. Thanks for the guidance on the convention — it made the other recipes easier to get right the first time.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-22T09:04:58Z
+
+I just rebased the PR and made it UX 3.5-ready (move examples on the repo, correct @ prop and @ block annotations, adding missing dependencies in `manifest.json`, attributes, using `html_cva` ...)
