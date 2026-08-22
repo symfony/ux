@@ -1,0 +1,14 @@
+{# @block content The trigger label (e.g., a `Button`) that opens the menu on click. #}
+{%- set _dropdownMenu_triggerId = inject('dropdownMenu.triggerId', null) -%}
+{%- set _dropdownMenu_contentId = inject('dropdownMenu.contentId', null) -%}
+{%- set dropdown_menu_trigger_attrs = {
+    id: _dropdownMenu_triggerId,
+    'data-slot': 'dropdown-menu-trigger',
+    'data-dropdown-menu-target': 'trigger',
+    'aria-haspopup': 'menu',
+    'aria-controls': _dropdownMenu_contentId,
+    'aria-expanded': 'false',
+    'data-state': 'closed',
+    'data-action': 'click->dropdown-menu#toggle keydown->dropdown-menu#onTriggerKeydown'|html_attr_type('sst'),
+} -%}
+{%- block content %}{% endblock -%}

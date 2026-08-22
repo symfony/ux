@@ -1,0 +1,84 @@
+<!--
+- Kit: Shadcn UI
+- Component: Dropdown Menu
+- Code:
+```twig
+<div class="flex items-start justify-center pt-6" style="min-height: 360px">
+    <twig:Dialog id="dropdown_dialog">
+        <twig:DropdownMenu id="dialog">
+            <twig:DropdownMenu:Trigger>
+                <twig:Button variant="outline" {{ ...dropdown_menu_trigger_attrs }}>Open</twig:Button>
+            </twig:DropdownMenu:Trigger>
+            <twig:DropdownMenu:Content class="w-56">
+                <twig:DropdownMenu:Label>My Account</twig:DropdownMenu:Label>
+                <twig:DropdownMenu:Separator />
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:user" class="size-4" />
+                    Profile
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Separator />
+                <twig:DropdownMenu:Item data-action="click->dropdown-menu#close click->dialog#open">
+                    <twig:ux:icon name="lucide:user-plus" class="size-4" />
+                    Invite users
+                </twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Content>
+        </twig:DropdownMenu>
+        <twig:Dialog:Content class="sm:max-w-[425px]">
+            <twig:Dialog:Header>
+                <twig:Dialog:Title>Invite team members</twig:Dialog:Title>
+                <twig:Dialog:Description>Invite your team members to collaborate.</twig:Dialog:Description>
+            </twig:Dialog:Header>
+            <div class="grid gap-4">
+                <div class="grid gap-3">
+                    <twig:Label for="invite-email">Email address</twig:Label>
+                    <twig:Input id="invite-email" type="email" placeholder="user@example.com" />
+                </div>
+            </div>
+            <twig:Dialog:Footer>
+                <twig:Dialog:Close>
+                    <twig:Button variant="outline" {{ ...dialog_close_attrs }}>Cancel</twig:Button>
+                </twig:Dialog:Close>
+                <twig:Button type="submit">Send invite</twig:Button>
+            </twig:Dialog:Footer>
+        </twig:Dialog:Content>
+    </twig:Dialog>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex items-start justify-center pt-6" style="min-height: 360px">
+    <div data-slot="dialog" data-dialog-open-value="false" aria-labelledby="dialog-dropdown_dialog-title" aria-describedby="dialog-dropdown_dialog-description" data-controller="dialog">
+    <div data-slot="dropdown-menu" data-state="closed" data-dropdown-menu-open-value="false" class="group/dropdown-menu relative inline-block" data-controller="dropdown-menu">
+<button data-slot="button" data-size="default" data-variant="outline" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2" type="button" id="dropdown-menu-dialog-trigger" data-dropdown-menu-target="trigger" aria-haspopup="menu" aria-controls="dropdown-menu-dialog-content" aria-expanded="false" data-state="closed" data-action="click-&gt;dropdown-menu#toggle keydown-&gt;dropdown-menu#onTriggerKeydown">Open</button>
+                        <div id="dropdown-menu-dialog-content" role="menu" tabindex="-1" aria-labelledby="dropdown-menu-dialog-trigger" data-slot="dropdown-menu-content" data-dropdown-menu-target="content" data-state="closed" data-side="bottom" data-align="start" data-action="keydown-&gt;dropdown-menu#onContentKeydown" class="invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/dropdown-menu:visible group-data-[state=open]/dropdown-menu:scale-100 group-data-[state=open]/dropdown-menu:opacity-100 absolute z-50 min-w-[8rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-none top-full mt-2 start-0 ltr:origin-top-left rtl:origin-top-right w-56">
+<div data-slot="dropdown-menu-label" class="px-2 py-1.5 text-sm font-semibold">My Account</div>
+                <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+                <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></g></svg>
+                    Profile
+                </button>
+                <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+                <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem click-&gt;dropdown-menu#close click-&gt;dialog#open"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M19 8v6m3-3h-6"></path></g></svg>
+                    Invite users
+                </button>
+            </div>
+        </div>
+        <dialog id="dialog-dropdown_dialog" data-slot="dialog-content" data-dialog-target="dialog" class="fixed top-1/2 left-1/2 z-50 w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover p-4 text-sm text-popover-foreground ring-1 ring-foreground/10 outline-none opacity-0 scale-95 transition-all transition-discrete duration-100 backdrop:transition-discrete backdrop:duration-100 open:grid open:scale-100 open:opacity-100 open:backdrop:bg-black/10 supports-backdrop-filter:open:backdrop:backdrop-blur-xs starting:open:scale-95 starting:open:opacity-0 sm:max-w-[425px]" data-action="keydown.esc-&gt;dialog#close:prevent click-&gt;dialog#closeOnClickOutside"><header data-slot="dialog-header" class="flex flex-col gap-2"><h2 id="dialog-dropdown_dialog-title" data-slot="dialog-title" class="cn-font-heading text-base leading-none font-medium">Invite team members</h2>
+                <p id="dialog-dropdown_dialog-description" data-slot="dialog-description" class="text-muted-foreground text-sm *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">Invite your team members to collaborate.</p>
+            </header>
+            <div class="grid gap-4">
+                <div class="grid gap-3">
+                    <label data-slot="label" class="flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50" for="invite-email">Email address</label>
+                    <input data-slot="input" class="h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40" id="invite-email" type="email" placeholder="user@example.com">
+
+                </div>
+            </div>
+            <footer data-slot="dialog-footer" class="-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 sm:flex-row sm:justify-end"><button data-slot="button" data-size="default" data-variant="outline" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2" type="button" data-action="click-&gt;dialog#close">Cancel</button>
+                                <button data-slot="button" data-size="default" data-variant="default" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground [a]:hover:bg-primary/80 h-8 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2" type="submit">Send invite</button>
+            </footer>
+                <button data-slot="button" data-size="icon-sm" data-variant="ghost" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg absolute top-2 ltr:right-2 rtl:end-2" type="button" data-action="click-&gt;dialog#close"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"></path></svg>
+            <span class="sr-only">Close</span>
+        </button>
+    </dialog>
+    </div>
+</div>

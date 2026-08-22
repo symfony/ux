@@ -1,0 +1,26 @@
+{# @prop checked boolean Whether the checkbox is initially checked. #}
+{# @prop disabled boolean Whether the item is disabled. #}
+{# @prop closeOnSelect boolean Whether selecting the item closes the menu. #}
+{# @block content The label text. #}
+{%- props checked = false, disabled = false, closeOnSelect = false -%}
+<button
+    type="button"
+    role="menuitemcheckbox"
+    tabindex="-1"
+    data-slot="dropdown-menu-checkbox-item"
+    data-dropdown-menu-target="item"
+    data-close-on-select="{{ closeOnSelect ? 'true' : 'false' }}"
+    data-disabled="{{ disabled ? 'true' : 'false' }}"
+    aria-checked="{{ checked ? 'true' : 'false' }}"
+    aria-disabled="{{ disabled ? 'true' : 'false' }}"
+    {%- if disabled %} disabled{% endif %}
+    {{ attributes.defaults({
+        class: 'relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg:not([class*=size-])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0'|tailwind_classes,
+        'data-action': 'click->dropdown-menu#toggleCheckbox',
+    }) }}
+>
+    <span class="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center" data-checkbox-indicator {% if not checked %}hidden{% endif %}>
+        <twig:ux:icon name="lucide:check" class="size-4" aria-hidden="true" />
+    </span>
+    {%- block content %}{% endblock -%}
+</button>

@@ -1,0 +1,12 @@
+{# @block content The sub-menu items, e.g. `DropdownMenu:Item`. #}
+<div
+    role="menu"
+    data-slot="dropdown-menu-sub-content"
+    data-dropdown-menu-sub-target="content"
+    data-state="closed"
+    {{ attributes.defaults({
+        class: 'invisible opacity-0 transition-[opacity,translate,visibility] duration-150 ease-out data-[state=open]:visible data-[state=open]:opacity-100 data-[state=open]:translate-x-0 data-[state=closed]:ltr:-translate-x-2 data-[state=closed]:rtl:translate-x-2 absolute start-full top-0 z-50 ms-1 min-w-[8rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-none'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

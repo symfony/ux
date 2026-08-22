@@ -1,0 +1,9 @@
+{# @block content The shortcut label, e.g. "⌘K". #}
+<span
+    data-slot="dropdown-menu-shortcut"
+    {{ attributes.defaults({
+        class: 'ms-auto text-xs tracking-widest text-muted-foreground'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</span>

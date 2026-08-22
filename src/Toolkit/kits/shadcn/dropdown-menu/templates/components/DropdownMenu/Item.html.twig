@@ -1,0 +1,31 @@
+{# @prop as 'button'|'a'|'div' The HTML tag to render. #}
+{# @prop disabled boolean Whether the item is disabled. #}
+{# @prop inset boolean Whether the item is inset with extra start padding. #}
+{# @prop closeOnSelect boolean Whether selecting the item closes the menu. #}
+{# @block content The item label. #}
+{%- props as = 'button', disabled = false, inset = false, closeOnSelect = true -%}
+{%- set style = html_cva(
+    base: 'relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg:not([class*=size-])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0',
+    variants: {
+        inset: {
+            true: 'ps-8',
+        },
+    },
+) -%}
+<{{ as }}
+    role="menuitem"
+    tabindex="-1"
+    data-slot="dropdown-menu-item"
+    data-dropdown-menu-target="item"
+    data-close-on-select="{{ closeOnSelect ? 'true' : 'false' }}"
+    data-disabled="{{ disabled ? 'true' : 'false' }}"
+    aria-disabled="{{ disabled ? 'true' : 'false' }}"
+    {% if as == 'button' %}type="button"{% endif %}
+    {%- if as == 'button' and disabled %} disabled{% endif %}
+    {{ attributes.defaults({
+        class: style.apply({inset: inset ? 'true' : 'false'})|tailwind_classes,
+        'data-action': 'click->dropdown-menu#closeFromItem',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</{{ as }}>

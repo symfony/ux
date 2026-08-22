@@ -1,0 +1,16 @@
+{# @prop openDelay number Delay in milliseconds before showing the sub-menu. #}
+{# @prop closeDelay number Delay in milliseconds before hiding the sub-menu. #}
+{# @block content A `DropdownMenu:SubTrigger` and a `DropdownMenu:SubContent`. #}
+{%- props openDelay = 0, closeDelay = 0 -%}
+<div
+    data-slot="dropdown-menu-sub"
+    data-dropdown-menu-sub-open-delay-value="{{ openDelay }}"
+    data-dropdown-menu-sub-close-delay-value="{{ closeDelay }}"
+    {{ attributes.defaults({
+        class: 'relative'|tailwind_classes,
+        'data-controller': 'dropdown-menu-sub',
+        'data-action': 'mouseenter->dropdown-menu-sub#show mouseleave->dropdown-menu-sub#hide',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>
