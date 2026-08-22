@@ -1,0 +1,22 @@
+{# @prop id string Unique identifier used to generate the internal DropdownMenu IDs. #}
+{# @prop open boolean Whether the menu is open on initial render. #}
+{# @prop side 'top'|'right'|'bottom'|'left' Which side of the trigger the menu appears on. #}
+{# @prop align 'start'|'center'|'end' Alignment of the menu along the cross axis. #}
+{# @block content A `DropdownMenu:Trigger` and a `DropdownMenu:Content`. #}
+{%- props id, open = false, side = 'bottom', align = 'start' -%}
+{%- do provide('dropdownMenu.open', open) -%}
+{%- do provide('dropdownMenu.side', side) -%}
+{%- do provide('dropdownMenu.align', align) -%}
+{%- do provide('dropdownMenu.triggerId', 'dropdown-menu-' ~ id ~ '-trigger') -%}
+{%- do provide('dropdownMenu.contentId', 'dropdown-menu-' ~ id ~ '-content') -%}
+<div
+    data-slot="dropdown-menu"
+    data-state="{{ open ? 'open' : 'closed' }}"
+    data-dropdown-menu-open-value="{{ open ? 'true' : 'false' }}"
+    {{ attributes.defaults({
+        class: 'group/dropdown-menu relative inline-block'|tailwind_classes,
+        'data-controller': 'dropdown-menu',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

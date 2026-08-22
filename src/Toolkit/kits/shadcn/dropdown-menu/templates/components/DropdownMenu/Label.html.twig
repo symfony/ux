@@ -1,0 +1,19 @@
+{# @prop inset boolean Whether the label is inset with extra start padding. #}
+{# @block content The label text. #}
+{%- props inset = false -%}
+{%- set style = html_cva(
+    base: 'px-2 py-1.5 text-sm font-semibold',
+    variants: {
+        inset: {
+            true: 'ps-8',
+        },
+    },
+) -%}
+<div
+    data-slot="dropdown-menu-label"
+    {{ attributes.defaults({
+        class: style.apply({inset: inset ? 'true' : 'false'})|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

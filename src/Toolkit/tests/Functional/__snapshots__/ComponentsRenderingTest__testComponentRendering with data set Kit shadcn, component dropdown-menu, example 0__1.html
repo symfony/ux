@@ -1,0 +1,144 @@
+<!--
+- Kit: Shadcn UI
+- Component: Dropdown Menu
+- Code:
+```twig
+<div class="flex items-start justify-center pt-6" style="min-height: 460px">
+    <twig:DropdownMenu id="demo">
+        <twig:DropdownMenu:Trigger>
+            <twig:Button variant="outline" {{ ...dropdown_menu_trigger_attrs }}>Open</twig:Button>
+        </twig:DropdownMenu:Trigger>
+        <twig:DropdownMenu:Content class="w-56">
+            <twig:DropdownMenu:Label>My Account</twig:DropdownMenu:Label>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:user" class="size-4" />
+                    Profile
+                    <twig:DropdownMenu:Shortcut>⇧⌘P</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:credit-card" class="size-4" />
+                    Billing
+                    <twig:DropdownMenu:Shortcut>⌘B</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:settings" class="size-4" />
+                    Settings
+                    <twig:DropdownMenu:Shortcut>⌘S</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Group>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Group>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:users" class="size-4" />
+                    Team
+                </twig:DropdownMenu:Item>
+                <twig:DropdownMenu:Sub>
+                    <twig:DropdownMenu:SubTrigger>
+                        <twig:ux:icon name="lucide:user-plus" class="size-4" />
+                        Invite users
+                    </twig:DropdownMenu:SubTrigger>
+                    <twig:DropdownMenu:SubContent>
+                        <twig:DropdownMenu:Item>
+                            <twig:ux:icon name="lucide:mail" class="size-4" />
+                            Email
+                        </twig:DropdownMenu:Item>
+                        <twig:DropdownMenu:Item>
+                            <twig:ux:icon name="lucide:message-square" class="size-4" />
+                            Message
+                        </twig:DropdownMenu:Item>
+                        <twig:DropdownMenu:Separator />
+                        <twig:DropdownMenu:Item>
+                            <twig:ux:icon name="lucide:ellipsis" class="size-4" />
+                            More...
+                        </twig:DropdownMenu:Item>
+                    </twig:DropdownMenu:SubContent>
+                </twig:DropdownMenu:Sub>
+                <twig:DropdownMenu:Item>
+                    <twig:ux:icon name="lucide:plus" class="size-4" />
+                    New Team
+                    <twig:DropdownMenu:Shortcut>⌘T</twig:DropdownMenu:Shortcut>
+                </twig:DropdownMenu:Item>
+            </twig:DropdownMenu:Group>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Item disabled>
+                <twig:ux:icon name="lucide:cloud" class="size-4" />
+                API
+            </twig:DropdownMenu:Item>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:Item>
+                <twig:ux:icon name="lucide:log-out" class="size-4" />
+                Log out
+                <twig:DropdownMenu:Shortcut>⇧⌘Q</twig:DropdownMenu:Shortcut>
+            </twig:DropdownMenu:Item>
+        </twig:DropdownMenu:Content>
+    </twig:DropdownMenu>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex items-start justify-center pt-6" style="min-height: 460px">
+    <div data-slot="dropdown-menu" data-state="closed" data-dropdown-menu-open-value="false" class="group/dropdown-menu relative inline-block" data-controller="dropdown-menu">
+<button data-slot="button" data-size="default" data-variant="outline" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2" type="button" id="dropdown-menu-demo-trigger" data-dropdown-menu-target="trigger" aria-haspopup="menu" aria-controls="dropdown-menu-demo-content" aria-expanded="false" data-state="closed" data-action="click-&gt;dropdown-menu#toggle keydown-&gt;dropdown-menu#onTriggerKeydown">Open</button>
+                <div id="dropdown-menu-demo-content" role="menu" tabindex="-1" aria-labelledby="dropdown-menu-demo-trigger" data-slot="dropdown-menu-content" data-dropdown-menu-target="content" data-state="closed" data-side="bottom" data-align="start" data-action="keydown-&gt;dropdown-menu#onContentKeydown" class="invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/dropdown-menu:visible group-data-[state=open]/dropdown-menu:scale-100 group-data-[state=open]/dropdown-menu:opacity-100 absolute z-50 min-w-[8rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-none top-full mt-2 start-0 ltr:origin-top-left rtl:origin-top-right w-56">
+<div data-slot="dropdown-menu-label" class="px-2 py-1.5 text-sm font-semibold">My Account</div>
+            <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+            <div role="group" data-slot="dropdown-menu-group">
+<button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></g></svg>
+                    Profile
+                    <span data-slot="dropdown-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground">⇧⌘P</span>
+                </button>
+                <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"></rect><path d="M2 10h20"></path></g></svg>
+                    Billing
+                    <span data-slot="dropdown-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground">⌘B</span>
+                </button>
+                <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0a2.34 2.34 0 0 0 3.319 1.915a2.34 2.34 0 0 1 2.33 4.033a2.34 2.34 0 0 0 0 3.831a2.34 2.34 0 0 1-2.33 4.033a2.34 2.34 0 0 0-3.319 1.915a2.34 2.34 0 0 1-4.659 0a2.34 2.34 0 0 0-3.32-1.915a2.34 2.34 0 0 1-2.33-4.033a2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></g></svg>
+                    Settings
+                    <span data-slot="dropdown-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground">⌘S</span>
+                </button>
+            </div>
+            <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+            <div role="group" data-slot="dropdown-menu-group">
+<button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M16 3.128a4 4 0 0 1 0 7.744M22 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="9" cy="7" r="4"></circle></g></svg>
+                    Team
+                </button>
+                <div data-slot="dropdown-menu-sub" data-dropdown-menu-sub-open-delay-value="0" data-dropdown-menu-sub-close-delay-value="0" class="relative" data-controller="dropdown-menu-sub" data-action="mouseenter-&gt;dropdown-menu-sub#show mouseleave-&gt;dropdown-menu-sub#hide">
+<button type="button" role="menuitem" tabindex="-1" aria-haspopup="menu" data-slot="dropdown-menu-sub-trigger" data-dropdown-menu-target="item" data-dropdown-menu-sub-target="trigger" data-state="closed" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="mouseenter-&gt;dropdown-menu-sub#show focus-&gt;dropdown-menu-sub#show blur-&gt;dropdown-menu-sub#hide"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M19 8v6m3-3h-6"></path></g></svg>
+                        Invite users
+                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="ms-auto size-4 rtl:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
+</button>
+                    <div role="menu" data-slot="dropdown-menu-sub-content" data-dropdown-menu-sub-target="content" data-state="closed" class="invisible opacity-0 transition-[opacity,translate,visibility] duration-150 ease-out data-[state=open]:visible data-[state=open]:opacity-100 data-[state=open]:translate-x-0 data-[state=closed]:ltr:-translate-x-2 data-[state=closed]:rtl:translate-x-2 absolute start-full top-0 z-50 ms-1 min-w-[8rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-none">
+<button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m22 7l-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></g></svg>
+                            Email
+                        </button>
+                        <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"></path></svg>
+                            Message
+                        </button>
+                        <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+                        <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></g></svg>
+                            More...
+                        </button>
+                    </div>
+                </div>
+                <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7v14"></path></svg>
+                    New Team
+                    <span data-slot="dropdown-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground">⌘T</span>
+                </button>
+            </div>
+            <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+            <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="true" aria-disabled="true" type="button" disabled class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9"></path></svg>
+                API
+            </button>
+            <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+            <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m16 17l5-5l-5-5m5 5H9m0 9H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path></svg>
+                Log out
+                <span data-slot="dropdown-menu-shortcut" class="ms-auto text-xs tracking-widest text-muted-foreground">⇧⌘Q</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,48 @@
+<!--
+- Kit: Shadcn UI
+- Component: Dropdown Menu
+- Code:
+```twig
+<div class="flex items-start justify-center pt-6" style="min-height: 280px">
+    <twig:DropdownMenu id="checkboxes">
+        <twig:DropdownMenu:Trigger>
+            <twig:Button variant="outline" {{ ...dropdown_menu_trigger_attrs }}>Open</twig:Button>
+        </twig:DropdownMenu:Trigger>
+        <twig:DropdownMenu:Content class="w-56">
+            <twig:DropdownMenu:Label>Appearance</twig:DropdownMenu:Label>
+            <twig:DropdownMenu:Separator />
+            <twig:DropdownMenu:CheckboxItem checked>Status Bar</twig:DropdownMenu:CheckboxItem>
+            <twig:DropdownMenu:CheckboxItem checked>Activity Bar</twig:DropdownMenu:CheckboxItem>
+            <twig:DropdownMenu:CheckboxItem>Panel</twig:DropdownMenu:CheckboxItem>
+            <twig:DropdownMenu:CheckboxItem disabled>Full Screen</twig:DropdownMenu:CheckboxItem>
+        </twig:DropdownMenu:Content>
+    </twig:DropdownMenu>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex items-start justify-center pt-6" style="min-height: 280px">
+    <div data-slot="dropdown-menu" data-state="closed" data-dropdown-menu-open-value="false" class="group/dropdown-menu relative inline-block" data-controller="dropdown-menu">
+<button data-slot="button" data-size="default" data-variant="outline" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2" type="button" id="dropdown-menu-checkboxes-trigger" data-dropdown-menu-target="trigger" aria-haspopup="menu" aria-controls="dropdown-menu-checkboxes-content" aria-expanded="false" data-state="closed" data-action="click-&gt;dropdown-menu#toggle keydown-&gt;dropdown-menu#onTriggerKeydown">Open</button>
+                <div id="dropdown-menu-checkboxes-content" role="menu" tabindex="-1" aria-labelledby="dropdown-menu-checkboxes-trigger" data-slot="dropdown-menu-content" data-dropdown-menu-target="content" data-state="closed" data-side="bottom" data-align="start" data-action="keydown-&gt;dropdown-menu#onContentKeydown" class="invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/dropdown-menu:visible group-data-[state=open]/dropdown-menu:scale-100 group-data-[state=open]/dropdown-menu:opacity-100 absolute z-50 min-w-[8rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-none top-full mt-2 start-0 ltr:origin-top-left rtl:origin-top-right w-56">
+<div data-slot="dropdown-menu-label" class="px-2 py-1.5 text-sm font-semibold">Appearance</div>
+            <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+            <button type="button" role="menuitemcheckbox" tabindex="-1" data-slot="dropdown-menu-checkbox-item" data-dropdown-menu-target="item" data-close-on-select="false" data-disabled="false" aria-checked="true" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#toggleCheckbox">
+    <span class="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center" data-checkbox-indicator>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>Status Bar</button>
+            <button type="button" role="menuitemcheckbox" tabindex="-1" data-slot="dropdown-menu-checkbox-item" data-dropdown-menu-target="item" data-close-on-select="false" data-disabled="false" aria-checked="true" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#toggleCheckbox">
+    <span class="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center" data-checkbox-indicator>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>Activity Bar</button>
+            <button type="button" role="menuitemcheckbox" tabindex="-1" data-slot="dropdown-menu-checkbox-item" data-dropdown-menu-target="item" data-close-on-select="false" data-disabled="false" aria-checked="false" aria-disabled="false" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#toggleCheckbox">
+    <span class="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center" data-checkbox-indicator hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>Panel</button>
+            <button type="button" role="menuitemcheckbox" tabindex="-1" data-slot="dropdown-menu-checkbox-item" data-dropdown-menu-target="item" data-close-on-select="false" data-disabled="true" aria-checked="false" aria-disabled="true" disabled class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#toggleCheckbox">
+    <span class="pointer-events-none absolute start-2 flex size-3.5 items-center justify-center" data-checkbox-indicator hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+    </span>Full Screen</button>
+        </div>
+    </div>
+</div>

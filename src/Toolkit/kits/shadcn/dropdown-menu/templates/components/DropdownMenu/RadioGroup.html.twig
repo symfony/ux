@@ -1,0 +1,11 @@
+{# @prop value string|null The currently selected value. #}
+{# @block content One or more `DropdownMenu:RadioItem` components. #}
+{%- props value = null -%}
+<div
+    role="group"
+    data-slot="dropdown-menu-radio-group"
+    data-value="{{ value }}"
+    {{ attributes }}
+>
+    {%- block content %}{% endblock -%}
+</div>
