@@ -31,7 +31,6 @@ final class ComponentRuntime
         private readonly ComponentRendererInterface $renderer,
         private readonly ContainerInterface $renderers,
         private readonly ComponentStack $componentStack,
-        private readonly ?Environment $twig = null,
     ) {
     }
 
@@ -48,13 +47,13 @@ final class ComponentRuntime
         return $this->renderer->preCreateForRender($name, $props);
     }
 
-    public function render(string $name, array $props = []): string
+    public function render(Environment $env, string $name, array $props = []): string
     {
         if ($this->renderers->has($normalized = strtolower($name))) {
-            if (null !== $this->twig) {
+            if ($props) {
                 // custom renderers (e.g. "ux:icon" or "ux:map") deal with plain values: resolve the
                 // typed attribute values the way ComponentAttributes renders them
-                $props = new ComponentAttributes($props, $this->twig->getRuntime(EscaperRuntime::class))->all();
+                $props = new ComponentAttributes($props, $env->getRuntime(EscaperRuntime::class))->resolved();
             }
 
             return $this->renderers->get($normalized)->render($props);
@@ -65,6 +64,7 @@ final class ComponentRuntime
 
     /**
      * @param array<string, mixed> $props
+     * @param array<string, mixed> $context
      */
     public function startEmbedComponent(string $name, array $props, array $context, string $hostTemplateName, int $index): PreRenderEvent
     {

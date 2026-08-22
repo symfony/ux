@@ -31,17 +31,10 @@ final class UXIconRuntime implements RuntimeExtensionInterface
     }
 
     /**
-     * @param array<string, bool|string|\Stringable> $attributes
+     * @param array<string, bool|string> $attributes
      */
     public function renderIcon(string $name, array $attributes = []): string
     {
-        foreach ($attributes as $attribute => $value) {
-            // the renderer only deals with scalars, so that its decorators (e.g. caches) can rely on it
-            if ($value instanceof \Stringable) {
-                $attributes[$attribute] = (string) $value;
-            }
-        }
-
         try {
             return $this->iconRenderer->renderIcon($name, $attributes);
         } catch (IconNotFoundException $e) {

@@ -32,7 +32,7 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
     private array $rendered = [];
 
     /**
-     * @param array<string, string|bool> $attributes
+     * @param array<string, string|bool|AttributeValueInterface|\Stringable> $attributes
      */
     public function __construct(
         private array $attributes,
@@ -139,13 +139,21 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
     }
 
     /**
-     * Returns the attributes as plain values: the typed values of twig/html-extra are
-     * resolved (a null value becomes false, i.e. the attribute is omitted) and
-     * Stringable values are cast.
+     * @return array<string, string|bool|AttributeValueInterface|\Stringable>
+     */
+    public function all(): array
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * Returns the attributes as plain values, i.e. the way they are rendered:
+     * the typed values of twig/html-extra are resolved (a null value becomes
+     * false, the attribute is omitted) and Stringable values are cast to string.
      *
      * @return array<string, string|bool>
      */
-    public function all(): array
+    public function resolved(): array
     {
         $attributes = [];
         foreach ($this->attributes as $key => $value) {
@@ -277,4 +285,5 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
     {
         return \count($this->attributes);
     }
+
 }

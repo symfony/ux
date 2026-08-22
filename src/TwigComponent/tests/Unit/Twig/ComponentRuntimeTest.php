@@ -46,10 +46,9 @@ class ComponentRuntimeTest extends TestCase
             $this->createMock(ComponentRendererInterface::class),
             $container,
             new ComponentStack(),
-            new Environment(new ArrayLoader()),
         );
 
-        $this->assertSame('<svg></svg>', $runtime->render('UX:Icon', [
+        $this->assertSame('<svg></svg>', $runtime->render(new Environment(new ArrayLoader()), 'UX:Icon', [
             'name' => 'lucide:user',
             'class' => 'size-4',
             'data-action' => $this->createTypedValue('click->menu#toggle'),

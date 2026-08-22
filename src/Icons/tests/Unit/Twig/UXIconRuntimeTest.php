@@ -40,25 +40,4 @@ class UXIconRuntimeTest extends TestCase
         $this->expectException(IconNotFoundException::class);
         $runtime->renderIcon('not_found');
     }
-
-    public function testRenderIconCastsStringableAttributeValues()
-    {
-        $renderer = $this->createMock(IconRendererInterface::class);
-        $renderer->expects($this->once())
-            ->method('renderIcon')
-            ->with('user', ['class' => 'size-4', 'data-action' => 'click->menu#toggle', 'aria-hidden' => true])
-            ->willReturn('<svg></svg>');
-
-        $runtime = new UXIconRuntime($renderer);
-        $this->assertSame('<svg></svg>', $runtime->renderIcon('user', [
-            'class' => 'size-4',
-            'data-action' => new class implements \Stringable {
-                public function __toString(): string
-                {
-                    return 'click->menu#toggle';
-                }
-            },
-            'aria-hidden' => true,
-        ]));
-    }
 }

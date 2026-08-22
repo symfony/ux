@@ -425,7 +425,7 @@ final class ComponentAttributesTest extends TestCase
         yield 'url encoded xss' => ['%3Cscript%3Ealert(1)%3C/script%3E', '%3Cscript%3Ealert(1)%3C/script%3E'];
     }
 
-    public function testAllReturnsPlainValues()
+    public function testResolvedReturnsPlainValues()
     {
         if (!interface_exists(AttributeValueInterface::class)) {
             $this->markTestSkipped('Requires twig/html-extra >= 3.24.');
@@ -461,6 +461,19 @@ final class ComponentAttributesTest extends TestCase
             'aria-hidden' => false,
             'title' => 'User',
             'disabled' => true,
-        ], $attributes->all());
+        ], $attributes->resolved());
+    }
+
+    public function testResolvedReturnsTheSameValuesAsAllForPlainValues()
+    {
+        $attributes = new ComponentAttributes([
+            'class' => 'foo',
+            'data-action' => 'click->menu#toggle',
+            'aria-hidden' => true,
+            'disabled' => false,
+            'title' => 'Foo & Bar',
+        ], new EscaperRuntime());
+
+        $this->assertSame($attributes->all(), $attributes->resolved());
     }
 }

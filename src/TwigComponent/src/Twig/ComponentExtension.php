@@ -24,7 +24,7 @@ final class ComponentExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('component', [ComponentRuntime::class, 'render'], ['is_safe' => ['all']]),
+            new TwigFunction('component', [ComponentRuntime::class, 'render'], ['needs_environment' => true, 'is_safe' => ['all']]),
             new TwigFunction('provide', [ComponentRuntime::class, 'provide']),
             new TwigFunction('inject', [ComponentRuntime::class, 'inject']),
         ];
