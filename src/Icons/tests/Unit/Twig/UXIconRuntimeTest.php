@@ -16,7 +16,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\IconRendererInterface;
 use Symfony\UX\Icons\Twig\UXIconRuntime;
-use Twig\Extra\Html\HtmlAttr\AttributeValueInterface;
 
 /**
  * @author Simon André <smn.andre@gmail.com>
@@ -42,33 +41,24 @@ class UXIconRuntimeTest extends TestCase
         $runtime->renderIcon('not_found');
     }
 
-    public function testRenderIconConvertsTypedAttributeValues()
+    public function testRenderIconCastsStringableAttributeValues()
     {
         $renderer = $this->createMock(IconRendererInterface::class);
         $renderer->expects($this->once())
             ->method('renderIcon')
-            ->with('user', ['class' => 'size-4', 'data-action' => 'click->menu#toggle'])
+            ->with('user', ['class' => 'size-4', 'data-action' => 'click->menu#toggle', 'aria-hidden' => true])
             ->willReturn('<svg></svg>');
 
         $runtime = new UXIconRuntime($renderer);
         $this->assertSame('<svg></svg>', $runtime->renderIcon('user', [
             'class' => 'size-4',
-            'data-action' => $this->createTypedValue('click->menu#toggle'),
-            'aria-hidden' => $this->createTypedValue(null),
+            'data-action' => new class implements \Stringable {
+                public function __toString(): string
+                {
+                    return 'click->menu#toggle';
+                }
+            },
+            'aria-hidden' => true,
         ]));
-    }
-
-    private function createTypedValue(?string $value): AttributeValueInterface
-    {
-        return new class($value) implements AttributeValueInterface {
-            public function __construct(private readonly ?string $value)
-            {
-            }
-
-            public function getValue(): ?string
-            {
-                return $this->value;
-            }
-        };
     }
 }

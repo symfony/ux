@@ -47,8 +47,7 @@
         "symfony/http-client": "^7.4|^8.0",
         "symfony/ux-twig-component": "^2.14|^3.0",
         "zenstruck/console-test": "^1.5",
-        "psr/log": "^2|^3",
-        "twig/html-extra": "^3.24"
+        "psr/log": "^2|^3"
     },
     "config": {
         "sort-packages": true
