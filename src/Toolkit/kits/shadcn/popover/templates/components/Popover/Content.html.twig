@@ -1,0 +1,38 @@
+{# @prop side 'top'|'right'|'bottom'|'left' Which side of the trigger the content appears on. #}
+{# @prop align 'start'|'center'|'end' Alignment of the content along the cross axis. #}
+{# @block content The content revealed when the popover is open. #}
+{%- props side = 'bottom', align = 'center' -%}
+{%- set _popover_open = inject('popover.open', false) -%}
+{%- set style = html_cva(
+    base: 'invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/popover:visible group-data-[state=open]/popover:scale-100 group-data-[state=open]/popover:opacity-100 absolute z-50 w-72 rounded-md border bg-popover p-4 text-sm text-popover-foreground shadow-md outline-none',
+    variants: {
+        side: {
+            top: 'bottom-full mb-2',
+            bottom: 'top-full mt-2',
+            left: 'right-full top-1/2 -translate-y-1/2 mr-2 origin-right',
+            right: 'left-full top-1/2 -translate-y-1/2 ml-2 origin-left',
+        },
+    },
+    compound_variants: [
+        {side: ['top'], align: ['start'], class: 'start-0 ltr:origin-bottom-left rtl:origin-bottom-right'},
+        {side: ['top'], align: ['center'], class: 'start-1/2 -translate-x-1/2 rtl:translate-x-1/2 origin-bottom'},
+        {side: ['top'], align: ['end'], class: 'end-0 ltr:origin-bottom-right rtl:origin-bottom-left'},
+        {side: ['bottom'], align: ['start'], class: 'start-0 ltr:origin-top-left rtl:origin-top-right'},
+        {side: ['bottom'], align: ['center'], class: 'start-1/2 -translate-x-1/2 rtl:translate-x-1/2 origin-top'},
+        {side: ['bottom'], align: ['end'], class: 'end-0 ltr:origin-top-right rtl:origin-top-left'},
+    ],
+) -%}
+<div
+    role="dialog"
+    data-slot="popover-content"
+    data-popover-target="content"
+    data-side="{{ side }}"
+    data-align="{{ align }}"
+    data-state="{{ _popover_open ? 'open' : 'closed' }}"
+    aria-hidden="{{ _popover_open ? 'false' : 'true' }}"
+    {{ attributes.defaults({
+        class: style.apply({side: side, align: align})|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>
