@@ -16,6 +16,34 @@ Installation
 
     $ composer require symfony/ux-icons
 
+Basic Usage
+-----------
+
+Render an icon in any Twig template with the ``ux_icon()`` function, passing the
+`name <Icon Names_>`_ of the icon:
+
+.. code-block:: twig
+
+    {# renders an icon from the local "assets/icons/" directory #}
+    {{ ux_icon('user-profile', {class: 'w-4 h-4'}) }}
+
+    {# renders an icon "on-demand" from any icon set available on ux.symfony.com #}
+    {{ ux_icon('mdi:home', {class: 'w-4 h-4'}) }}
+
+The second argument is an optional map of HTML attributes added to the generated
+``<svg>`` element (e.g. ``class``, ``style``, ``aria-label``).
+
+If you also have ``symfony/ux-twig-component`` installed, you can use the
+equivalent HTML syntax instead:
+
+.. code-block:: html+twig
+
+    <twig:ux:icon name="user-profile" class="w-4 h-4" />
+    <twig:ux:icon name="mdi:home" class="w-4 h-4" />
+
+That's all you need to get started. Read on to learn how to load icons from local
+files or icon sets, customize their size and color, and fine-tune rendering.
+
 SVG Icons
 ---------
 
@@ -47,33 +75,6 @@ where the icon is located, or a combination of both.
 For example, the ``bi`` prefix refers to the Bootstrap Icons set, while the ``header`` prefix
 refers to the icons located in the ``header`` directory.
 
-Loading Icons
--------------
-
-.. code-block:: twig
-
-    {# includes the contents of the 'assets/icons/user-profile.svg' file in the template #}
-    {{ ux_icon('user-profile') }}
-
-    {# icons stored in subdirectories must use the 'subdirectory_name:file_name' syntax
-       (e.g. this includes 'assets/icons/admin/user-profile.svg') #}
-    {{ ux_icon('admin:user-profile') }}
-
-    {# this downloads the 'user-solid.svg' icon from the 'Flowbite' icon set via ux.symfony.com
-       and embeds the downloaded SVG contents in the template #}
-    {{ ux_icon('flowbite:user-solid') }}
-
-The ``ux_icon()`` function defines a second optional argument where you can
-define the HTML attributes added to the ``<svg>`` element:
-
-.. code-block:: html+twig
-
-    {{ ux_icon('user-profile', {class: 'w-4 h-4'}) }}
-    {# renders <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4"> ... </svg> #}
-
-    {{ ux_icon('user-profile', {height: '16px', width: '16px', 'aria-hidden': true}) }}
-    {# renders <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" aria-hidden="true"> ... </svg> #}
-
 Icon Sizes
 ~~~~~~~~~~
 
@@ -84,7 +85,7 @@ Icon Sizes
 
 To align icons naturally with surrounding text and inherit font sizing, use ``em``
 units. This works well for buttons, links, or inline text. Defining the height alone
- is sufficient—the width will scale proportionally:
+is sufficient—the width will scale proportionally:
 
 .. code-block:: html+twig
 
@@ -172,8 +173,8 @@ Icon Set                    Icons  License     Prefix           Example
 `Tabler Icons`_              5200  MIT         ``tabler``       ``tabler:check``
 ========================  =======  ==========  ===============  =====================
 
-Search Icon sets
-~~~~~~~~~~~~~~~~
+Search Icon Sets
+^^^^^^^^^^^^^^^^
 
 You can use the ``ux:icons:search`` command to search for icon sets, or to find
 the prefix of a specific icon set:
@@ -193,7 +194,7 @@ the prefix of a specific icon set:
      php bin/console ux:icons:search tabler arrow
 
 Search Icons
-~~~~~~~~~~~~
+^^^^^^^^^^^^
 
 You can also search for icons within a specific icon set. To search for "arrow"
 icons in the "Tabler Icons" set, use the following command:
@@ -222,33 +223,8 @@ icons in the "Tabler Icons" set, use the following command:
      Page 1/3. Continue? (yes/no) [yes]:
      >
 
-HTML Syntax
-~~~~~~~~~~~
-
-In addition to the ``ux_icon()`` function explained in the previous sections,
-this package also provides an alternative HTML-based syntax. Before using it,
-ensure that the following package is installed in your application:
-
-.. code-block:: terminal
-
-    $ composer require symfony/ux-twig-component
-
-You can then use the following syntax to include icons::
-
-.. code-block:: html
-
-    <!-- renders "user-profile.svg" -->
-    <twig:ux:icon name="user-profile" class="w-4 h-4" />
-    <!-- renders "admin/user-profile.svg" -->
-    <twig:ux:icon name="admin:user-profile" class="w-4 h-4" />
-    <!-- renders 'user-solid.svg' icon from 'Flowbite' icon set via ux.symfony.com -->
-    <twig:ux:icon name="flowbite:user-solid" />
-
-    <!-- you can also add any HTML attributes -->
-    <twig:ux:icon name="user-profile" height="16" width="16" aria-hidden="true" />
-
-Downloading Icons
------------------
+Loading Icons
+-------------
 
 This package doesn't include any icons, but provides access to over 200,000
 open source icons.
@@ -277,7 +253,7 @@ a subdirectory, the *name* will be ``subdirectory:icon_name``.
     │     └─ ...
     └─ ...
 
-Icons On-Demand
+On-Demand Icons
 ~~~~~~~~~~~~~~~
 
 `ux.symfony.com/icons`_ has a huge searchable repository of icons from many
@@ -297,8 +273,8 @@ for future requests for the same icon.
 
     `Local SVG Icons`_ of the same name will have precedence over *on-demand* icons.
 
-Importing Icons
----------------
+Imported Icons
+~~~~~~~~~~~~~~
 
 While *on-demand* icons are great during development, they require HTTP requests
 to fetch the icon and always use the *latest version* of the icon. It's possible
@@ -323,7 +299,7 @@ the ``assets/icons/`` directory. You can think of importing an icon as *locking 
     Imported icons must be committed to your repository.
 
 Locking On-Demand Icons
-~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^
 
 You can *lock* (import) all the *on-demand* icons you're using in your project by
 running the following command:
@@ -352,7 +328,7 @@ the report to overwrite existing icons by using the ``--force`` option:
         $ php bin/console ux:icons:lock -v
 
 Automatically Locking On-Demand Icons
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. versionadded:: 3.4
 
@@ -383,6 +359,9 @@ the icons from these local files, without any request to the Iconify API.
 Rendering Icons
 ---------------
 
+Twig Function
+~~~~~~~~~~~~~
+
 .. code-block:: twig
 
     {# includes the contents of the 'assets/icons/user-profile.svg' file in the template #}
@@ -396,25 +375,43 @@ Rendering Icons
        and embeds the downloaded SVG contents in the template #}
     {{ ux_icon('flowbite:user-solid') }}
 
-HTML Syntax
-~~~~~~~~~~~
+The ``ux_icon()`` function defines a second optional argument where you can
+define the HTML attributes added to the ``<svg>`` element:
 
 .. code-block:: html+twig
 
-    <twig:ux:icon name="user-profile" />
+    {{ ux_icon('user-profile', {class: 'w-4 h-4'}) }}
+    {# renders <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4"> ... </svg> #}
 
-    {# Renders "user-profile.svg" #}
+    {{ ux_icon('user-profile', {height: '16px', width: '16px', 'aria-hidden': true}) }}
+    {# renders <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" aria-hidden="true"> ... </svg> #}
+
+HTML Syntax
+~~~~~~~~~~~
+
+In addition to the ``ux_icon()`` function explained in the previous sections,
+this package also provides an alternative HTML-based syntax. Before using it,
+ensure that the following package is installed in your application:
+
+.. code-block:: terminal
+
+    $ composer require symfony/ux-twig-component
+
+You can then use the following syntax to include icons:
+
+.. code-block:: html+twig
+
+    {# renders "user-profile.svg" #}
     <twig:ux:icon name="user-profile" class="w-4 h-4" />
 
-    {# Renders "sub-dir/user-profile.svg" (sub-directory) #}
-    <twig:ux:icon name="sub-dir:user-profile" class="w-4 h-4" />
+    {# renders "admin/user-profile.svg", stored in a sub-directory #}
+    <twig:ux:icon name="admin:user-profile" class="w-4 h-4" />
 
-    {# Renders "flowbite:user-solid" from ux.symfony.com #}
+    {# renders "user-solid.svg" from the "Flowbite" icon set via ux.symfony.com #}
     <twig:ux:icon name="flowbite:user-solid" />
 
-.. note::
-
-    ``symfony/ux-twig-component`` is required to use the HTML syntax.
+    {# you can also add any HTML attributes #}
+    <twig:ux:icon name="user-profile" height="16" width="16" aria-hidden="true" />
 
 .. _icons_default_attributes:
 
@@ -589,17 +586,12 @@ Performance
 The UX Icons component is designed to be fast. The following are some of
 the optimizations made to ensure the best performance possible.
 
-Caching
--------
+On-Demand vs Import
+~~~~~~~~~~~~~~~~~~~
 
-On-Demand VS Import
-^^^^^^^^^^^^^^^^^^^
-
-While *on-demand* icons are great during development, they require HTTP requests to fetch the icon
-and always use the *latest version* of the icon. It's possible the icon could change or be removed
-in the future. Additionally, the cache warming process will take significantly longer if using
-many _on-demand_ icons. You can think of importing the icon as *locking it* (similar to how
-``composer.lock`` _locks_ your dependencies).
+Every *on-demand* icon requires an HTTP request to the `Iconify`_ API the first time it is
+rendered, which also makes the cache warming process significantly longer. Importing the icons
+you use removes these requests entirely, see `Imported Icons`_.
 
 Icon Caching
 ~~~~~~~~~~~~
