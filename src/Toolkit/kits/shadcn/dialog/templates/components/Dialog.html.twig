@@ -11,7 +11,7 @@
 {%- do provide('dialog.descriptionId', _dialog_description_id) -%}
 <div
     data-slot="dialog"
-    data-dialog-open-value="{{ open }}"
+    data-dialog-open-value="{{ open ? 'true' : 'false' }}"
     aria-labelledby="{{ _dialog_title_id }}"
     aria-describedby="{{ _dialog_description_id }}"
     {{ attributes.defaults({
