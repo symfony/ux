@@ -1,0 +1,29 @@
+<!--
+- Kit: Shadcn UI
+- Component: Slider
+- Code:
+```twig
+<div class="mx-auto flex w-full max-w-xs items-center justify-center gap-6">
+    <twig:Slider name="vertical-1" min="0" max="100" step="1" value="50" orientation="vertical" />
+    <twig:Slider name="vertical-2" min="0" max="100" step="1" value="25" orientation="vertical" />
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="mx-auto flex w-full max-w-xs items-center justify-center gap-6">
+    <div data-slot="slider" data-orientation="vertical" data-slider-min-value="0" data-slider-max-value="100" data-slider-step-value="1" data-slider-orientation-value="vertical" class="group/slider relative flex touch-none select-none items-center h-40 w-1.5 flex-col justify-center" data-controller="slider">
+    <div class="relative h-full w-1.5 grow overflow-hidden rounded-full bg-muted" data-slot="slider-track" data-slider-target="track">
+        <div class="absolute left-0 right-0 bg-primary" style="bottom: 0%; top: 50%;" data-slot="slider-range" data-slider-target="range"></div>
+    </div>
+    <span role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-orientation="vertical" aria-label="Slider" class="absolute block size-3.5 shrink-0 rounded-full border border-primary bg-background shadow-sm ring-ring/50 transition-[color,box-shadow] outline-none hover:ring-4 focus-visible:ring-4 -translate-x-1/2 translate-y-1/2 left-1/2" style="bottom: 50%;" data-slot="slider-thumb" data-slider-target="thumb"></span>
+                <input type="hidden" name="vertical-1" value="50" data-slider-target="input">
+    </div>
+
+    <div data-slot="slider" data-orientation="vertical" data-slider-min-value="0" data-slider-max-value="100" data-slider-step-value="1" data-slider-orientation-value="vertical" class="group/slider relative flex touch-none select-none items-center h-40 w-1.5 flex-col justify-center" data-controller="slider">
+    <div class="relative h-full w-1.5 grow overflow-hidden rounded-full bg-muted" data-slot="slider-track" data-slider-target="track">
+        <div class="absolute left-0 right-0 bg-primary" style="bottom: 0%; top: 75%;" data-slot="slider-range" data-slider-target="range"></div>
+    </div>
+    <span role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" aria-orientation="vertical" aria-label="Slider" class="absolute block size-3.5 shrink-0 rounded-full border border-primary bg-background shadow-sm ring-ring/50 transition-[color,box-shadow] outline-none hover:ring-4 focus-visible:ring-4 -translate-x-1/2 translate-y-1/2 left-1/2" style="bottom: 25%;" data-slot="slider-thumb" data-slider-target="thumb"></span>
+                <input type="hidden" name="vertical-2" value="25" data-slider-target="input">
+    </div>
+
+</div>
