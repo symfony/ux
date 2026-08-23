@@ -1,0 +1,16 @@
+{# @prop openDelay number Delay in milliseconds before showing the submenu. #}
+{# @prop closeDelay number Delay in milliseconds before hiding the submenu. #}
+{# @block content The trigger and optional submenu content. #}
+{%- props openDelay = 0, closeDelay = 0 -%}
+<li
+    data-slot="navigation-menu-item"
+    data-navigation-menu-open-delay-value="{{ openDelay }}"
+    data-navigation-menu-close-delay-value="{{ closeDelay }}"
+    {{ attributes.defaults({
+        class: 'relative'|tailwind_classes,
+        'data-controller': 'navigation-menu',
+        'data-action': 'mouseenter->navigation-menu#show mouseleave->navigation-menu#hide focusin->navigation-menu#show focusout->navigation-menu#focusOut',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</li>

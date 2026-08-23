@@ -1,0 +1,12 @@
+{# @prop label string The accessible name of the navigation landmark. #}
+{# @block content A `NavigationMenu:List` containing `NavigationMenu:Item` children. #}
+{%- props label = 'Main' -%}
+<nav
+    data-slot="navigation-menu"
+    aria-label="{{ label }}"
+    {{ attributes.defaults({
+        class: 'relative flex max-w-max flex-1 items-center justify-center'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</nav>

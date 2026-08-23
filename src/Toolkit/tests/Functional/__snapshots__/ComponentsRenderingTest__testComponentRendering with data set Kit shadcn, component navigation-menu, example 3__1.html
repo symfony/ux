@@ -1,0 +1,309 @@
+<!--
+- Kit: Shadcn UI
+- Component: Navigation Menu
+- Code:
+```twig
+<div class="flex flex-col items-center gap-12" style="min-height: 720px">
+    {# Arabic #}
+    <div dir="rtl">
+        <twig:NavigationMenu>
+            <twig:NavigationMenu:List>
+                <twig:NavigationMenu:Item>
+                    <twig:NavigationMenu:Trigger>
+                        <twig:Button variant="ghost" size="sm" {{ ...navigation_menu_trigger_attrs }}>
+                            البدء
+                            <twig:ux:icon name="lucide:chevron-down" class="relative top-px size-3 transition-transform duration-200 in-data-[state=open]:rotate-180" aria-hidden="true" />
+                        </twig:Button>
+                    </twig:NavigationMenu:Trigger>
+                    <twig:NavigationMenu:Content>
+                        <ul class="grid gap-1 w-96">
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs">
+                                    <div class="text-sm font-medium leading-none">مقدمة</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">مكونات قابلة لإعادة الاستخدام مبنية باستخدام Tailwind CSS.</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/installation">
+                                    <div class="text-sm font-medium leading-none">التثبيت</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">كيفية تثبيت التبعيات وتنظيم تطبيقك.</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/typography">
+                                    <div class="text-sm font-medium leading-none">الطباعة</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">أنماط للعناوين والفقرات والقوائم...إلخ</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </twig:NavigationMenu:Content>
+                </twig:NavigationMenu:Item>
+                <twig:NavigationMenu:Item>
+                    <twig:NavigationMenu:Trigger>
+                        <twig:Button variant="ghost" size="sm" {{ ...navigation_menu_trigger_attrs }}>
+                            المكونات
+                            <twig:ux:icon name="lucide:chevron-down" class="relative top-px size-3 transition-transform duration-200 in-data-[state=open]:rotate-180" aria-hidden="true" />
+                        </twig:Button>
+                    </twig:NavigationMenu:Trigger>
+                    <twig:NavigationMenu:Content>
+                        <ul class="grid gap-2 w-[500px] grid-cols-2">
+                            {% set components_ar = [
+                                {title: 'حوار التنبيه', href: '/docs/primitives/alert-dialog', description: 'حوار نافذة يقطع المستخدم بمحتوى مهم ويتوقع استجابة.'},
+                                {title: 'بطاقة التحويم', href: '/docs/primitives/hover-card', description: 'للمستخدمين المبصرين لمعاينة المحتوى المتاح خلف الرابط.'},
+                                {title: 'التقدم', href: '/docs/primitives/progress', description: 'يعرض مؤشرًا يوضح تقدم إتمام المهمة، عادةً يتم عرضه كشريط تقدم.'},
+                                {title: 'منطقة التمرير', href: '/docs/primitives/scroll-area', description: 'يفصل المحتوى بصريًا أو دلاليًا.'},
+                                {title: 'التبويبات', href: '/docs/primitives/tabs', description: 'مجموعة من أقسام المحتوى المتعددة الطبقات—المعروفة بألواح التبويب—التي يتم عرضها واحدة في كل مرة.'},
+                                {title: 'تلميح', href: '/docs/primitives/tooltip', description: 'نافذة منبثقة تعرض معلومات متعلقة بعنصر عند تحويم الماوس فوقه.'},
+                            ] %}
+                            {% for c in components_ar %}
+                                <li>
+                                    <a class="block rounded-md p-3 hover:bg-accent" href="{{ c.href }}">
+                                        <div class="text-sm font-medium leading-none">{{ c.title }}</div>
+                                        <p class="line-clamp-2 text-sm text-muted-foreground">{{ c.description }}</p>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </twig:NavigationMenu:Content>
+                </twig:NavigationMenu:Item>
+                <twig:NavigationMenu:Item>
+                    <twig:NavigationMenu:Link href="/docs">الوثائق</twig:NavigationMenu:Link>
+                </twig:NavigationMenu:Item>
+            </twig:NavigationMenu:List>
+        </twig:NavigationMenu>
+    </div>
+
+    {# Hebrew #}
+    <div dir="rtl">
+        <twig:NavigationMenu>
+            <twig:NavigationMenu:List>
+                <twig:NavigationMenu:Item>
+                    <twig:NavigationMenu:Trigger>
+                        <twig:Button variant="ghost" size="sm" {{ ...navigation_menu_trigger_attrs }}>
+                            התחלה
+                            <twig:ux:icon name="lucide:chevron-down" class="relative top-px size-3 transition-transform duration-200 in-data-[state=open]:rotate-180" aria-hidden="true" />
+                        </twig:Button>
+                    </twig:NavigationMenu:Trigger>
+                    <twig:NavigationMenu:Content>
+                        <ul class="grid gap-1 w-96">
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs">
+                                    <div class="text-sm font-medium leading-none">הקדמה</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">רכיבים לשימוש חוזר שנבנו עם Tailwind CSS.</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/installation">
+                                    <div class="text-sm font-medium leading-none">התקנה</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">כיצד להתקין תלויות ולבנות את האפליקציה שלך.</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/typography">
+                                    <div class="text-sm font-medium leading-none">טיפוגרפיה</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">סגנונות לכותרות, פסקאות, רשימות...וכו'</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </twig:NavigationMenu:Content>
+                </twig:NavigationMenu:Item>
+                <twig:NavigationMenu:Item>
+                    <twig:NavigationMenu:Trigger>
+                        <twig:Button variant="ghost" size="sm" {{ ...navigation_menu_trigger_attrs }}>
+                            רכיבים
+                            <twig:ux:icon name="lucide:chevron-down" class="relative top-px size-3 transition-transform duration-200 in-data-[state=open]:rotate-180" aria-hidden="true" />
+                        </twig:Button>
+                    </twig:NavigationMenu:Trigger>
+                    <twig:NavigationMenu:Content>
+                        <ul class="grid gap-2 w-[500px] grid-cols-2">
+                            {% set components_he = [
+                                {title: 'דיאלוג התראה', href: '/docs/primitives/alert-dialog', description: 'דיאלוג מודאלי שמפריע למשתמש עם תוכן חשוב ומצפה לתגובה.'},
+                                {title: 'כרטיס ריחוף', href: '/docs/primitives/hover-card', description: 'למשתמשים רואים כדי להציג תצוגה מקדימה של תוכן זמין מאחורי קישור.'},
+                                {title: 'התקדמות', href: '/docs/primitives/progress', description: 'מציג אינדיקטור המציג את התקדמות ההשלמה של משימה, בדרך כלל מוצג כסרגל התקדמות.'},
+                                {title: 'אזור גלילה', href: '/docs/primitives/scroll-area', description: 'מפריד תוכן חזותית או סמנטית.'},
+                                {title: 'כרטיסיות', href: '/docs/primitives/tabs', description: 'קבוצה של חלקי תוכן מרובדים—המכונים לוחות כרטיסיות—המוצגים אחד בכל פעם.'},
+                                {title: 'טולטיפ', href: '/docs/primitives/tooltip', description: 'חלון קופץ המציג מידע הקשור לאלמנט כאשר העכבר מרחף מעליו.'},
+                            ] %}
+                            {% for c in components_he %}
+                                <li>
+                                    <a class="block rounded-md p-3 hover:bg-accent" href="{{ c.href }}">
+                                        <div class="text-sm font-medium leading-none">{{ c.title }}</div>
+                                        <p class="line-clamp-2 text-sm text-muted-foreground">{{ c.description }}</p>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </twig:NavigationMenu:Content>
+                </twig:NavigationMenu:Item>
+                <twig:NavigationMenu:Item>
+                    <twig:NavigationMenu:Link href="/docs">תיעוד</twig:NavigationMenu:Link>
+                </twig:NavigationMenu:Item>
+            </twig:NavigationMenu:List>
+        </twig:NavigationMenu>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex flex-col items-center gap-12" style="min-height: 720px">
+        <div dir="rtl">
+        <nav data-slot="navigation-menu" aria-label="Main" class="relative flex max-w-max flex-1 items-center justify-center"><ul data-slot="navigation-menu-list" class="group flex flex-1 list-none items-center justify-center gap-1">
+<li data-slot="navigation-menu-item" data-navigation-menu-open-delay-value="0" data-navigation-menu-close-delay-value="0" class="relative" data-controller="navigation-menu" data-action="mouseenter-&gt;navigation-menu#show mouseleave-&gt;navigation-menu#hide focusin-&gt;navigation-menu#show focusout-&gt;navigation-menu#focusOut">
+<button data-slot="button" data-size="sm" data-variant="ghost" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg ltr:has-data-[icon=inline-end]:pr-1.5 rtl:has-data-[icon=inline-end]:pe-1.5 ltr:has-data-[icon=inline-start]:pl-1.5 rtl:has-data-[icon=inline-start]:ps-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5" type="button" tabindex="0">البدء
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="relative top-px size-3 transition-transform duration-200 in-data-[state=open]:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+                        </button>
+                                        <div data-slot="navigation-menu-content" class="invisible opacity-0 in-data-[state=open]:visible in-data-[state=open]:opacity-100 transition-opacity absolute start-0 top-full z-50 min-w-48 rounded-md border bg-popover p-2 text-popover-foreground shadow-md">
+<ul class="grid gap-1 w-96">
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs">
+                                    <div class="text-sm font-medium leading-none">مقدمة</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">مكونات قابلة لإعادة الاستخدام مبنية باستخدام Tailwind CSS.</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/installation">
+                                    <div class="text-sm font-medium leading-none">التثبيت</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">كيفية تثبيت التبعيات وتنظيم تطبيقك.</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/typography">
+                                    <div class="text-sm font-medium leading-none">الطباعة</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">أنماط للعناوين والفقرات والقوائم...إلخ</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li data-slot="navigation-menu-item" data-navigation-menu-open-delay-value="0" data-navigation-menu-close-delay-value="0" class="relative" data-controller="navigation-menu" data-action="mouseenter-&gt;navigation-menu#show mouseleave-&gt;navigation-menu#hide focusin-&gt;navigation-menu#show focusout-&gt;navigation-menu#focusOut">
+<button data-slot="button" data-size="sm" data-variant="ghost" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg ltr:has-data-[icon=inline-end]:pr-1.5 rtl:has-data-[icon=inline-end]:pe-1.5 ltr:has-data-[icon=inline-start]:pl-1.5 rtl:has-data-[icon=inline-start]:ps-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5" type="button" tabindex="0">المكونات
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="relative top-px size-3 transition-transform duration-200 in-data-[state=open]:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+                        </button>
+                                        <div data-slot="navigation-menu-content" class="invisible opacity-0 in-data-[state=open]:visible in-data-[state=open]:opacity-100 transition-opacity absolute start-0 top-full z-50 min-w-48 rounded-md border bg-popover p-2 text-popover-foreground shadow-md">
+<ul class="grid gap-2 w-[500px] grid-cols-2">
+                                                                                        <li>
+                                    <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/alert-dialog">
+                                        <div class="text-sm font-medium leading-none">حوار التنبيه</div>
+                                        <p class="line-clamp-2 text-sm text-muted-foreground">حوار نافذة يقطع المستخدم بمحتوى مهم ويتوقع استجابة.</p>
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/hover-card">
+                                        <div class="text-sm font-medium leading-none">بطاقة التحويم</div>
+                                        <p class="line-clamp-2 text-sm text-muted-foreground">للمستخدمين المبصرين لمعاينة المحتوى المتاح خلف الرابط.</p>
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/progress">
+                                        <div class="text-sm font-medium leading-none">التقدم</div>
+                                        <p class="line-clamp-2 text-sm text-muted-foreground">يعرض مؤشرًا يوضح تقدم إتمام المهمة، عادةً يتم عرضه كشريط تقدم.</p>
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/scroll-area">
+                                        <div class="text-sm font-medium leading-none">منطقة التمرير</div>
+                                        <p class="line-clamp-2 text-sm text-muted-foreground">يفصل المحتوى بصريًا أو دلاليًا.</p>
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/tabs">
+                                        <div class="text-sm font-medium leading-none">التبويبات</div>
+                                        <p class="line-clamp-2 text-sm text-muted-foreground">مجموعة من أقسام المحتوى المتعددة الطبقات—المعروفة بألواح التبويب—التي يتم عرضها واحدة في كل مرة.</p>
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/tooltip">
+                                        <div class="text-sm font-medium leading-none">تلميح</div>
+                                        <p class="line-clamp-2 text-sm text-muted-foreground">نافذة منبثقة تعرض معلومات متعلقة بعنصر عند تحويم الماوس فوقه.</p>
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                </li>
+                <li data-slot="navigation-menu-item" data-navigation-menu-open-delay-value="0" data-navigation-menu-close-delay-value="0" class="relative" data-controller="navigation-menu" data-action="mouseenter-&gt;navigation-menu#show mouseleave-&gt;navigation-menu#hide focusin-&gt;navigation-menu#show focusout-&gt;navigation-menu#focusOut">
+<a href="/docs" data-slot="navigation-menu-link" class="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50">الوثائق</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+        <div dir="rtl">
+        <nav data-slot="navigation-menu" aria-label="Main" class="relative flex max-w-max flex-1 items-center justify-center"><ul data-slot="navigation-menu-list" class="group flex flex-1 list-none items-center justify-center gap-1">
+<li data-slot="navigation-menu-item" data-navigation-menu-open-delay-value="0" data-navigation-menu-close-delay-value="0" class="relative" data-controller="navigation-menu" data-action="mouseenter-&gt;navigation-menu#show mouseleave-&gt;navigation-menu#hide focusin-&gt;navigation-menu#show focusout-&gt;navigation-menu#focusOut">
+<button data-slot="button" data-size="sm" data-variant="ghost" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg ltr:has-data-[icon=inline-end]:pr-1.5 rtl:has-data-[icon=inline-end]:pe-1.5 ltr:has-data-[icon=inline-start]:pl-1.5 rtl:has-data-[icon=inline-start]:ps-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5" type="button" tabindex="0">התחלה
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="relative top-px size-3 transition-transform duration-200 in-data-[state=open]:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+                        </button>
+                                        <div data-slot="navigation-menu-content" class="invisible opacity-0 in-data-[state=open]:visible in-data-[state=open]:opacity-100 transition-opacity absolute start-0 top-full z-50 min-w-48 rounded-md border bg-popover p-2 text-popover-foreground shadow-md">
+<ul class="grid gap-1 w-96">
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs">
+                                    <div class="text-sm font-medium leading-none">הקדמה</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">רכיבים לשימוש חוזר שנבנו עם Tailwind CSS.</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/installation">
+                                    <div class="text-sm font-medium leading-none">התקנה</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">כיצד להתקין תלויות ולבנות את האפליקציה שלך.</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/typography">
+                                    <div class="text-sm font-medium leading-none">טיפוגרפיה</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">סגנונות לכותרות, פסקאות, רשימות...וכו'</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li data-slot="navigation-menu-item" data-navigation-menu-open-delay-value="0" data-navigation-menu-close-delay-value="0" class="relative" data-controller="navigation-menu" data-action="mouseenter-&gt;navigation-menu#show mouseleave-&gt;navigation-menu#hide focusin-&gt;navigation-menu#show focusout-&gt;navigation-menu#focusOut">
+<button data-slot="button" data-size="sm" data-variant="ghost" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg ltr:has-data-[icon=inline-end]:pr-1.5 rtl:has-data-[icon=inline-end]:pe-1.5 ltr:has-data-[icon=inline-start]:pl-1.5 rtl:has-data-[icon=inline-start]:ps-1.5 [&amp;_svg:not([class*='size-'])]:size-3.5" type="button" tabindex="0">רכיבים
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="relative top-px size-3 transition-transform duration-200 in-data-[state=open]:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+                        </button>
+                                        <div data-slot="navigation-menu-content" class="invisible opacity-0 in-data-[state=open]:visible in-data-[state=open]:opacity-100 transition-opacity absolute start-0 top-full z-50 min-w-48 rounded-md border bg-popover p-2 text-popover-foreground shadow-md">
+<ul class="grid gap-2 w-[500px] grid-cols-2">
+                                                                                        <li>
+                                    <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/alert-dialog">
+                                        <div class="text-sm font-medium leading-none">דיאלוג התראה</div>
+                                        <p class="line-clamp-2 text-sm text-muted-foreground">דיאלוג מודאלי שמפריע למשתמש עם תוכן חשוב ומצפה לתגובה.</p>
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/hover-card">
+                                        <div class="text-sm font-medium leading-none">כרטיס ריחוף</div>
+                                        <p class="line-clamp-2 text-sm text-muted-foreground">למשתמשים רואים כדי להציג תצוגה מקדימה של תוכן זמין מאחורי קישור.</p>
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/progress">
+                                        <div class="text-sm font-medium leading-none">התקדמות</div>
+                                        <p class="line-clamp-2 text-sm text-muted-foreground">מציג אינדיקטור המציג את התקדמות ההשלמה של משימה, בדרך כלל מוצג כסרגל התקדמות.</p>
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/scroll-area">
+                                        <div class="text-sm font-medium leading-none">אזור גלילה</div>
+                                        <p class="line-clamp-2 text-sm text-muted-foreground">מפריד תוכן חזותית או סמנטית.</p>
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/tabs">
+                                        <div class="text-sm font-medium leading-none">כרטיסיות</div>
+                                        <p class="line-clamp-2 text-sm text-muted-foreground">קבוצה של חלקי תוכן מרובדים—המכונים לוחות כרטיסיות—המוצגים אחד בכל פעם.</p>
+                                    </a>
+                                </li>
+                                                            <li>
+                                    <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/tooltip">
+                                        <div class="text-sm font-medium leading-none">טולטיפ</div>
+                                        <p class="line-clamp-2 text-sm text-muted-foreground">חלון קופץ המציג מידע הקשור לאלמנט כאשר העכבר מרחף מעליו.</p>
+                                    </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                </li>
+                <li data-slot="navigation-menu-item" data-navigation-menu-open-delay-value="0" data-navigation-menu-close-delay-value="0" class="relative" data-controller="navigation-menu" data-action="mouseenter-&gt;navigation-menu#show mouseleave-&gt;navigation-menu#hide focusin-&gt;navigation-menu#show focusout-&gt;navigation-menu#focusOut">
+<a href="/docs" data-slot="navigation-menu-link" class="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50">תיעוד</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
