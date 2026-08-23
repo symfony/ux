@@ -1,0 +1,11 @@
+{# @block content The `NavigationMenu:Trigger` and its optional `NavigationMenu:Content`. #}
+<li
+    data-slot="navigation-menu-item"
+    data-navigation-menu-target="item"
+    {{ attributes.defaults({
+        class: 'group/navigation-menu-item relative'|tailwind_classes,
+        'data-action': 'mouseenter->navigation-menu#open',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</li>

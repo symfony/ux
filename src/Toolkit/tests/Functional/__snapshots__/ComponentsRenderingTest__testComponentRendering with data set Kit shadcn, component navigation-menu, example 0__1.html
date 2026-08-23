@@ -1,0 +1,198 @@
+<!--
+- Kit: Shadcn UI
+- Component: Navigation Menu
+- Code:
+```twig
+<div class="flex items-start justify-center" style="min-height: 320px">
+    <twig:NavigationMenu>
+        <twig:NavigationMenu:List>
+            <twig:NavigationMenu:Item>
+                <twig:NavigationMenu:Trigger>Getting started</twig:NavigationMenu:Trigger>
+                <twig:NavigationMenu:Content>
+                    <ul class="grid w-96 gap-1">
+                        <li>
+                            <a class="block rounded-md p-3 hover:bg-accent" href="/docs">
+                                <div class="text-sm font-medium leading-none">Introduction</div>
+                                <p class="line-clamp-2 text-sm text-muted-foreground">Reusable components built with Tailwind CSS.</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="block rounded-md p-3 hover:bg-accent" href="/docs/installation">
+                                <div class="text-sm font-medium leading-none">Installation</div>
+                                <p class="line-clamp-2 text-sm text-muted-foreground">How to install dependencies and structure your app.</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/typography">
+                                <div class="text-sm font-medium leading-none">Typography</div>
+                                <p class="line-clamp-2 text-sm text-muted-foreground">Styles for headings, paragraphs, lists, and more.</p>
+                            </a>
+                        </li>
+                    </ul>
+                </twig:NavigationMenu:Content>
+            </twig:NavigationMenu:Item>
+            <twig:NavigationMenu:Item>
+                <twig:NavigationMenu:Trigger>Components</twig:NavigationMenu:Trigger>
+                <twig:NavigationMenu:Content>
+                    <ul class="grid w-[500px] grid-cols-2 gap-2">
+                        {% set components = [
+                            {title: 'Alert Dialog', href: '/docs/primitives/alert-dialog', description: 'A modal dialog that interrupts the user with important content and expects a response.'},
+                            {title: 'Hover Card', href: '/docs/primitives/hover-card', description: 'For sighted users to preview content available behind a link.'},
+                            {title: 'Progress', href: '/docs/primitives/progress', description: 'Displays an indicator showing the completion progress of a task.'},
+                            {title: 'Scroll Area', href: '/docs/primitives/scroll-area', description: 'Visually or semantically separates content.'},
+                            {title: 'Tabs', href: '/docs/primitives/tabs', description: 'Layered sections of content displayed one panel at a time.'},
+                            {title: 'Tooltip', href: '/docs/primitives/tooltip', description: 'A popup that displays information related to an element on hover or focus.'},
+                        ] %}
+                        {% for component in components %}
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="{{ component.href }}">
+                                    <div class="text-sm font-medium leading-none">{{ component.title }}</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">{{ component.description }}</p>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </twig:NavigationMenu:Content>
+            </twig:NavigationMenu:Item>
+            <twig:NavigationMenu:Item>
+                <twig:NavigationMenu:Link href="/docs">Docs</twig:NavigationMenu:Link>
+            </twig:NavigationMenu:Item>
+            <twig:NavigationMenu:Item>
+                <twig:NavigationMenu:Trigger>Resources</twig:NavigationMenu:Trigger>
+                <twig:NavigationMenu:Content>
+                    <ul class="grid w-[500px] grid-cols-2 gap-2">
+                        {% set resources = [
+                            {title: 'Blog', href: '/blog', description: 'Read the latest news and articles from the team.'},
+                            {title: 'Changelog', href: '/changelog', description: 'See what shipped in every release.'},
+                            {title: 'Support', href: '/support', description: 'Get help from the community and the maintainers.'},
+                            {title: 'Roadmap', href: '/roadmap', description: 'Discover what we are planning to build next.'},
+                        ] %}
+                        {% for resource in resources %}
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="{{ resource.href }}">
+                                    <div class="text-sm font-medium leading-none">{{ resource.title }}</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">{{ resource.description }}</p>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </twig:NavigationMenu:Content>
+            </twig:NavigationMenu:Item>
+        </twig:NavigationMenu:List>
+    </twig:NavigationMenu>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex items-start justify-center" style="min-height: 320px">
+    <nav data-slot="navigation-menu" aria-label="Main" data-navigation-menu-open-delay-value="200" data-navigation-menu-close-delay-value="300" class="relative flex max-w-max flex-1 items-center justify-center" data-controller="navigation-menu" data-action="mouseleave-&gt;navigation-menu#scheduleClose focusin-&gt;navigation-menu#onFocusIn focusout-&gt;navigation-menu#onFocusOut"><ul data-slot="navigation-menu-list" class="flex flex-1 list-none items-center justify-center gap-1">
+<li data-slot="navigation-menu-item" data-navigation-menu-target="item" class="group/navigation-menu-item relative" data-action="mouseenter-&gt;navigation-menu#open">
+<button type="button" data-slot="navigation-menu-trigger" data-navigation-menu-target="trigger" aria-haspopup="menu" aria-expanded="false" class="inline-flex h-9 w-max items-center justify-center gap-1 rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50">Getting started<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="relative top-px size-3 transition-transform duration-200 group-data-[state=open]/navigation-menu-item:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+</button>
+                <div data-slot="navigation-menu-content" data-navigation-menu-target="content" class="invisible absolute start-0 top-0 w-max p-2 opacity-0 transition-[opacity,translate,visibility] duration-200 ease-out data-[active]:visible data-[active]:translate-x-0 data-[active]:opacity-100 data-[motion=from-end]:translate-x-8 data-[motion=from-start]:-translate-x-8">
+<ul class="grid w-96 gap-1">
+                        <li>
+                            <a class="block rounded-md p-3 hover:bg-accent" href="/docs">
+                                <div class="text-sm font-medium leading-none">Introduction</div>
+                                <p class="line-clamp-2 text-sm text-muted-foreground">Reusable components built with Tailwind CSS.</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="block rounded-md p-3 hover:bg-accent" href="/docs/installation">
+                                <div class="text-sm font-medium leading-none">Installation</div>
+                                <p class="line-clamp-2 text-sm text-muted-foreground">How to install dependencies and structure your app.</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/typography">
+                                <div class="text-sm font-medium leading-none">Typography</div>
+                                <p class="line-clamp-2 text-sm text-muted-foreground">Styles for headings, paragraphs, lists, and more.</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li data-slot="navigation-menu-item" data-navigation-menu-target="item" class="group/navigation-menu-item relative" data-action="mouseenter-&gt;navigation-menu#open">
+<button type="button" data-slot="navigation-menu-trigger" data-navigation-menu-target="trigger" aria-haspopup="menu" aria-expanded="false" class="inline-flex h-9 w-max items-center justify-center gap-1 rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50">Components<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="relative top-px size-3 transition-transform duration-200 group-data-[state=open]/navigation-menu-item:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+</button>
+                <div data-slot="navigation-menu-content" data-navigation-menu-target="content" class="invisible absolute start-0 top-0 w-max p-2 opacity-0 transition-[opacity,translate,visibility] duration-200 ease-out data-[active]:visible data-[active]:translate-x-0 data-[active]:opacity-100 data-[motion=from-end]:translate-x-8 data-[motion=from-start]:-translate-x-8">
+<ul class="grid w-[500px] grid-cols-2 gap-2">
+                                                                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/alert-dialog">
+                                    <div class="text-sm font-medium leading-none">Alert Dialog</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">A modal dialog that interrupts the user with important content and expects a response.</p>
+                                </a>
+                            </li>
+                                                    <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/hover-card">
+                                    <div class="text-sm font-medium leading-none">Hover Card</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">For sighted users to preview content available behind a link.</p>
+                                </a>
+                            </li>
+                                                    <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/progress">
+                                    <div class="text-sm font-medium leading-none">Progress</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">Displays an indicator showing the completion progress of a task.</p>
+                                </a>
+                            </li>
+                                                    <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/scroll-area">
+                                    <div class="text-sm font-medium leading-none">Scroll Area</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">Visually or semantically separates content.</p>
+                                </a>
+                            </li>
+                                                    <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/tabs">
+                                    <div class="text-sm font-medium leading-none">Tabs</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">Layered sections of content displayed one panel at a time.</p>
+                                </a>
+                            </li>
+                                                    <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/primitives/tooltip">
+                                    <div class="text-sm font-medium leading-none">Tooltip</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">A popup that displays information related to an element on hover or focus.</p>
+                                </a>
+                            </li>
+                                            </ul>
+                </div>
+            </li>
+            <li data-slot="navigation-menu-item" data-navigation-menu-target="item" class="group/navigation-menu-item relative" data-action="mouseenter-&gt;navigation-menu#open">
+<a href="/docs" data-slot="navigation-menu-link" class="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50">Docs</a>
+            </li>
+            <li data-slot="navigation-menu-item" data-navigation-menu-target="item" class="group/navigation-menu-item relative" data-action="mouseenter-&gt;navigation-menu#open">
+<button type="button" data-slot="navigation-menu-trigger" data-navigation-menu-target="trigger" aria-haspopup="menu" aria-expanded="false" class="inline-flex h-9 w-max items-center justify-center gap-1 rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50">Resources<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="relative top-px size-3 transition-transform duration-200 group-data-[state=open]/navigation-menu-item:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+</button>
+                <div data-slot="navigation-menu-content" data-navigation-menu-target="content" class="invisible absolute start-0 top-0 w-max p-2 opacity-0 transition-[opacity,translate,visibility] duration-200 ease-out data-[active]:visible data-[active]:translate-x-0 data-[active]:opacity-100 data-[motion=from-end]:translate-x-8 data-[motion=from-start]:-translate-x-8">
+<ul class="grid w-[500px] grid-cols-2 gap-2">
+                                                                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/blog">
+                                    <div class="text-sm font-medium leading-none">Blog</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">Read the latest news and articles from the team.</p>
+                                </a>
+                            </li>
+                                                    <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/changelog">
+                                    <div class="text-sm font-medium leading-none">Changelog</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">See what shipped in every release.</p>
+                                </a>
+                            </li>
+                                                    <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/support">
+                                    <div class="text-sm font-medium leading-none">Support</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">Get help from the community and the maintainers.</p>
+                                </a>
+                            </li>
+                                                    <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/roadmap">
+                                    <div class="text-sm font-medium leading-none">Roadmap</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">Discover what we are planning to build next.</p>
+                                </a>
+                            </li>
+                                            </ul>
+                </div>
+            </li>
+        </ul>
+    <div data-navigation-menu-target="viewportPositioner" class="absolute start-0 top-full isolate z-50 transition-[inset-inline-start] duration-150 ease-out" data-action="mouseenter-&gt;navigation-menu#cancelClose mouseleave-&gt;navigation-menu#scheduleClose">
+        <div data-slot="navigation-menu-viewport" data-navigation-menu-target="viewport" data-state="closed" class="invisible relative mt-1.5 h-[var(--navigation-menu-viewport-height)] w-[var(--navigation-menu-viewport-width)] max-w-[calc(100vw-2rem)] origin-top scale-95 overflow-hidden rounded-md border bg-popover text-popover-foreground opacity-0 shadow-md transition-[opacity,scale,width,height,visibility] duration-150 ease-out data-[state=open]:visible data-[state=open]:scale-100 data-[state=open]:opacity-100"></div>
+    </div>
+</nav>
+</div>

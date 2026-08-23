@@ -1,0 +1,133 @@
+<!--
+- Kit: Shadcn UI
+- Component: Navigation Menu
+- Code:
+```twig
+<div class="flex flex-col items-center gap-16 py-8" style="min-height: 320px">
+    {# Arabic #}
+    <div dir="rtl">
+        <twig:NavigationMenu>
+            <twig:NavigationMenu:List>
+                <twig:NavigationMenu:Item>
+                    <twig:NavigationMenu:Trigger>ابدأ</twig:NavigationMenu:Trigger>
+                    <twig:NavigationMenu:Content>
+                        <ul class="grid w-96 gap-1">
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs">
+                                    <div class="text-sm font-medium leading-none">مقدمة</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">مكونات قابلة لإعادة الاستخدام مبنية باستخدام Tailwind CSS.</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/installation">
+                                    <div class="text-sm font-medium leading-none">التثبيت</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">كيفية تثبيت التبعيات وتنظيم تطبيقك.</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </twig:NavigationMenu:Content>
+                </twig:NavigationMenu:Item>
+                <twig:NavigationMenu:Item>
+                    <twig:NavigationMenu:Link href="/docs">التوثيق</twig:NavigationMenu:Link>
+                </twig:NavigationMenu:Item>
+            </twig:NavigationMenu:List>
+        </twig:NavigationMenu>
+    </div>
+
+    {# Hebrew #}
+    <div dir="rtl">
+        <twig:NavigationMenu>
+            <twig:NavigationMenu:List>
+                <twig:NavigationMenu:Item>
+                    <twig:NavigationMenu:Trigger>תחילת העבודה</twig:NavigationMenu:Trigger>
+                    <twig:NavigationMenu:Content>
+                        <ul class="grid w-96 gap-1">
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs">
+                                    <div class="text-sm font-medium leading-none">מבוא</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">רכיבים לשימוש חוזר הבנויים עם Tailwind CSS.</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/installation">
+                                    <div class="text-sm font-medium leading-none">התקנה</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">כיצד להתקין תלויות ולבנות את האפליקציה שלך.</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </twig:NavigationMenu:Content>
+                </twig:NavigationMenu:Item>
+                <twig:NavigationMenu:Item>
+                    <twig:NavigationMenu:Link href="/docs">תיעוד</twig:NavigationMenu:Link>
+                </twig:NavigationMenu:Item>
+            </twig:NavigationMenu:List>
+        </twig:NavigationMenu>
+    </div>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex flex-col items-center gap-16 py-8" style="min-height: 320px">
+        <div dir="rtl">
+        <nav data-slot="navigation-menu" aria-label="Main" data-navigation-menu-open-delay-value="200" data-navigation-menu-close-delay-value="300" class="relative flex max-w-max flex-1 items-center justify-center" data-controller="navigation-menu" data-action="mouseleave-&gt;navigation-menu#scheduleClose focusin-&gt;navigation-menu#onFocusIn focusout-&gt;navigation-menu#onFocusOut"><ul data-slot="navigation-menu-list" class="flex flex-1 list-none items-center justify-center gap-1">
+<li data-slot="navigation-menu-item" data-navigation-menu-target="item" class="group/navigation-menu-item relative" data-action="mouseenter-&gt;navigation-menu#open">
+<button type="button" data-slot="navigation-menu-trigger" data-navigation-menu-target="trigger" aria-haspopup="menu" aria-expanded="false" class="inline-flex h-9 w-max items-center justify-center gap-1 rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50">ابدأ<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="relative top-px size-3 transition-transform duration-200 group-data-[state=open]/navigation-menu-item:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+</button>
+                    <div data-slot="navigation-menu-content" data-navigation-menu-target="content" class="invisible absolute start-0 top-0 w-max p-2 opacity-0 transition-[opacity,translate,visibility] duration-200 ease-out data-[active]:visible data-[active]:translate-x-0 data-[active]:opacity-100 data-[motion=from-end]:translate-x-8 data-[motion=from-start]:-translate-x-8">
+<ul class="grid w-96 gap-1">
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs">
+                                    <div class="text-sm font-medium leading-none">مقدمة</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">مكونات قابلة لإعادة الاستخدام مبنية باستخدام Tailwind CSS.</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/installation">
+                                    <div class="text-sm font-medium leading-none">التثبيت</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">كيفية تثبيت التبعيات وتنظيم تطبيقك.</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li data-slot="navigation-menu-item" data-navigation-menu-target="item" class="group/navigation-menu-item relative" data-action="mouseenter-&gt;navigation-menu#open">
+<a href="/docs" data-slot="navigation-menu-link" class="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50">التوثيق</a>
+                </li>
+            </ul>
+        <div data-navigation-menu-target="viewportPositioner" class="absolute start-0 top-full isolate z-50 transition-[inset-inline-start] duration-150 ease-out" data-action="mouseenter-&gt;navigation-menu#cancelClose mouseleave-&gt;navigation-menu#scheduleClose">
+        <div data-slot="navigation-menu-viewport" data-navigation-menu-target="viewport" data-state="closed" class="invisible relative mt-1.5 h-[var(--navigation-menu-viewport-height)] w-[var(--navigation-menu-viewport-width)] max-w-[calc(100vw-2rem)] origin-top scale-95 overflow-hidden rounded-md border bg-popover text-popover-foreground opacity-0 shadow-md transition-[opacity,scale,width,height,visibility] duration-150 ease-out data-[state=open]:visible data-[state=open]:scale-100 data-[state=open]:opacity-100"></div>
+    </div>
+</nav>
+    </div>
+
+        <div dir="rtl">
+        <nav data-slot="navigation-menu" aria-label="Main" data-navigation-menu-open-delay-value="200" data-navigation-menu-close-delay-value="300" class="relative flex max-w-max flex-1 items-center justify-center" data-controller="navigation-menu" data-action="mouseleave-&gt;navigation-menu#scheduleClose focusin-&gt;navigation-menu#onFocusIn focusout-&gt;navigation-menu#onFocusOut"><ul data-slot="navigation-menu-list" class="flex flex-1 list-none items-center justify-center gap-1">
+<li data-slot="navigation-menu-item" data-navigation-menu-target="item" class="group/navigation-menu-item relative" data-action="mouseenter-&gt;navigation-menu#open">
+<button type="button" data-slot="navigation-menu-trigger" data-navigation-menu-target="trigger" aria-haspopup="menu" aria-expanded="false" class="inline-flex h-9 w-max items-center justify-center gap-1 rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50">תחילת העבודה<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="relative top-px size-3 transition-transform duration-200 group-data-[state=open]/navigation-menu-item:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+</button>
+                    <div data-slot="navigation-menu-content" data-navigation-menu-target="content" class="invisible absolute start-0 top-0 w-max p-2 opacity-0 transition-[opacity,translate,visibility] duration-200 ease-out data-[active]:visible data-[active]:translate-x-0 data-[active]:opacity-100 data-[motion=from-end]:translate-x-8 data-[motion=from-start]:-translate-x-8">
+<ul class="grid w-96 gap-1">
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs">
+                                    <div class="text-sm font-medium leading-none">מבוא</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">רכיבים לשימוש חוזר הבנויים עם Tailwind CSS.</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="block rounded-md p-3 hover:bg-accent" href="/docs/installation">
+                                    <div class="text-sm font-medium leading-none">התקנה</div>
+                                    <p class="line-clamp-2 text-sm text-muted-foreground">כיצד להתקין תלויות ולבנות את האפליקציה שלך.</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li data-slot="navigation-menu-item" data-navigation-menu-target="item" class="group/navigation-menu-item relative" data-action="mouseenter-&gt;navigation-menu#open">
+<a href="/docs" data-slot="navigation-menu-link" class="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50">תיעוד</a>
+                </li>
+            </ul>
+        <div data-navigation-menu-target="viewportPositioner" class="absolute start-0 top-full isolate z-50 transition-[inset-inline-start] duration-150 ease-out" data-action="mouseenter-&gt;navigation-menu#cancelClose mouseleave-&gt;navigation-menu#scheduleClose">
+        <div data-slot="navigation-menu-viewport" data-navigation-menu-target="viewport" data-state="closed" class="invisible relative mt-1.5 h-[var(--navigation-menu-viewport-height)] w-[var(--navigation-menu-viewport-width)] max-w-[calc(100vw-2rem)] origin-top scale-95 overflow-hidden rounded-md border bg-popover text-popover-foreground opacity-0 shadow-md transition-[opacity,scale,width,height,visibility] duration-150 ease-out data-[state=open]:visible data-[state=open]:scale-100 data-[state=open]:opacity-100"></div>
+    </div>
+</nav>
+    </div>
+</div>
