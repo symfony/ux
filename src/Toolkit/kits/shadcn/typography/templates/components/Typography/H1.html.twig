@@ -1,9 +1,0 @@
-{# @block content The heading content. #}
-<h1
-    data-slot="typography-h1"
-    {{ attributes.defaults({
-        class: 'scroll-m-20 text-4xl font-extrabold tracking-tight text-balance'|tailwind_classes,
-    }) }}
->
-    {%- block content %}{% endblock -%}
-</h1>

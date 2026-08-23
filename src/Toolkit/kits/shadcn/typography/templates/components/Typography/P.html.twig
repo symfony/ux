@@ -1,9 +1,0 @@
-{# @block content The paragraph content. #}
-<p
-    data-slot="typography-p"
-    {{ attributes.defaults({
-        class: 'leading-7 [&:not(:first-child)]:mt-6'|tailwind_classes,
-    }) }}
->
-    {%- block content %}{% endblock -%}
-</p>
