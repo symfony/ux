@@ -1,0 +1,79 @@
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T09:46:41Z
+
+Main example
+
+https://github.com/user-attachments/assets/1265c31e-d520-4b99-8829-995d808a527e
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T10:01:01Z
+
+Range example
+
+https://github.com/user-attachments/assets/265012c7-d0c5-41ad-aad2-bf344a5b6ff1
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T10:02:00Z
+
+Multiple Thumbs example
+
+https://github.com/user-attachments/assets/f2b86814-c7c6-490b-8178-5ce198cb2573
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T10:02:45Z
+
+Vertical example
+
+https://github.com/user-attachments/assets/54d7d0da-acda-497d-8cbe-881e9f4a1f93
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T10:04:15Z
+
+Disabled example
+
+https://github.com/user-attachments/assets/5ed1e34b-c3ff-49d0-ba5c-0f0aafe61944
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T10:09:18Z
+
+Controlled example
+
+https://github.com/user-attachments/assets/4fea1d34-f1d9-4909-861d-32cb255c5b6d
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-19T10:31:26Z
+
+RTL example
+
+https://github.com/user-attachments/assets/df0bc59c-5698-4adc-827a-dda96ef41643
+
+---------------------------------------------------------------------------
+
+by zairigimad at 2026-04-22T08:03:39Z
+
+From the videos, it looks great. I left some minor comments
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-30T12:00:04Z
+
+While reviewing #3483 (input-otp), @Kocal pointed out a missing per-input \`aria-label\`, and the same gap was hiding here on the slider thumbs: each \`<span role="slider">\` had \`aria-valuenow\` but no label, which makes range/multi-thumb sliders confusing for screen-reader users (you hear "slider 25 / slider 50" with no way to know which is min and which is max).
+
+Just pushed a tiny a11y patch to fix that:
+
+- Each thumb now gets a default \`aria-label\` — \`Slider\` for a single thumb, \`Slider thumb X of Y\` for multi-thumb.
+- New optional \`labels\` prop (comma-separated string or array) lets you provide friendlier labels:
+  \`\`\`twig
+  <twig:Slider value="25,50" labels="Min,Max" />
+  <twig:Slider value="20,50,80" labels="Low,Medium,High" />
+  \`\`\`
+- Range / Multiple examples updated, snapshots regenerated.
+
+Force-pushed on top of the existing branch. Happy to adjust the wording or the prop name if you'd prefer something else! 🙏
