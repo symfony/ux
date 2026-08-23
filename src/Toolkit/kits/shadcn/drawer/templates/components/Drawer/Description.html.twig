@@ -1,0 +1,9 @@
+{# @block content The descriptive text explaining the drawer purpose. #}
+{%- set _drawer_descriptionId = inject('drawer.descriptionId') -%}
+<p
+    id="{{ _drawer_descriptionId }}"
+    data-slot="drawer-description"
+    {{ attributes.without('id').defaults({class: 'text-muted-foreground text-sm'|tailwind_classes}) }}
+>
+    {%- block content %}{% endblock -%}
+</p>

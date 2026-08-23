@@ -1,0 +1,29 @@
+{# @block content The drawer content, typically includes `Drawer:Header` and optionally `Drawer:Footer`. #}
+{%- set _drawer_id = inject('drawer.id') -%}
+{%- set _drawer_direction = inject('drawer.direction', 'bottom') -%}
+{%- set style = html_cva(
+    base: 'group/drawer-content fixed z-50 m-0 flex h-auto max-h-none w-auto max-w-none flex-col bg-background p-0 outline-none transition duration-300 ease-in-out transition-discrete backdrop:bg-black/50 backdrop:opacity-0 backdrop:transition-[opacity,display,overlay] backdrop:duration-300 backdrop:ease-in-out backdrop:transition-discrete open:backdrop:opacity-100 starting:open:backdrop:opacity-0',
+    variants: {
+        direction: {
+            top: 'inset-x-0 top-0 bottom-auto mb-24 max-h-[80vh] rounded-b-lg border-b -translate-y-full open:translate-y-0 starting:open:-translate-y-full',
+            bottom: 'inset-x-0 bottom-0 top-auto mt-24 max-h-[80vh] rounded-t-lg border-t translate-y-full open:translate-y-0 starting:open:translate-y-full',
+            right: 'inset-y-0 right-0 left-auto h-full w-3/4 border-l translate-x-full open:translate-x-0 starting:open:translate-x-full sm:max-w-sm',
+            left: 'inset-y-0 left-0 right-auto h-full w-3/4 border-r -translate-x-full open:translate-x-0 starting:open:-translate-x-full sm:max-w-sm',
+        },
+    },
+) -%}
+<dialog
+    id="{{ _drawer_id }}"
+    data-slot="drawer-content"
+    data-dialog-target="dialog"
+    data-direction="{{ _drawer_direction }}"
+    {{ attributes.defaults({
+        class: style.apply({direction: _drawer_direction})|tailwind_classes,
+        'data-action': 'keydown.esc->dialog#close:prevent click->dialog#closeOnClickOutside',
+    }) }}
+>
+    {% if _drawer_direction == 'bottom' %}
+        <div class="mx-auto mt-4 h-2 w-[100px] shrink-0 rounded-full bg-muted"></div>
+    {% endif %}
+    {%- block content %}{% endblock -%}
+</dialog>

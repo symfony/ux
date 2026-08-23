@@ -1,0 +1,46 @@
+<!--
+- Kit: Shadcn UI
+- Component: Drawer
+- Code:
+```twig
+<div style="min-height: 400px">
+    <twig:Drawer id="drawer-rtl" dir="rtl">
+        <twig:Drawer:Trigger>
+            <twig:Button variant="outline" {{ ...drawer_trigger_attrs }}>فتح</twig:Button>
+        </twig:Drawer:Trigger>
+        <twig:Drawer:Content>
+            <div class="mx-auto w-full max-w-sm">
+                <twig:Drawer:Header>
+                    <twig:Drawer:Title>تعديل الهدف</twig:Drawer:Title>
+                    <twig:Drawer:Description>حدد هدف نشاطك اليومي.</twig:Drawer:Description>
+                </twig:Drawer:Header>
+                <twig:Drawer:Footer>
+                    <twig:Button>إرسال</twig:Button>
+                    <twig:Drawer:Close>
+                        <twig:Button variant="outline" {{ ...drawer_close_attrs }}>إلغاء</twig:Button>
+                    </twig:Drawer:Close>
+                </twig:Drawer:Footer>
+            </div>
+        </twig:Drawer:Content>
+    </twig:Drawer>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div style="min-height: 400px">
+    <div data-slot="drawer" data-dialog-open-value="false" aria-labelledby="drawer-drawer-rtl-title" aria-describedby="drawer-drawer-rtl-description" data-controller="dialog" dir="rtl">
+    <button data-slot="button" data-size="default" data-variant="outline" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2" type="button" data-action="click-&gt;dialog#open" data-dialog-target="trigger" aria-haspopup="dialog">فتح</button>
+                <dialog id="drawer-drawer-rtl" data-slot="drawer-content" data-dialog-target="dialog" data-direction="bottom" class="group/drawer-content fixed z-50 m-0 flex h-auto max-h-none w-auto max-w-none flex-col bg-background p-0 outline-none transition duration-300 ease-in-out transition-discrete backdrop:bg-black/50 backdrop:opacity-0 backdrop:transition-[opacity,display,overlay] backdrop:duration-300 backdrop:ease-in-out backdrop:transition-discrete open:backdrop:opacity-100 starting:open:backdrop:opacity-0 inset-x-0 bottom-0 top-auto mt-24 max-h-[80vh] rounded-t-lg border-t translate-y-full open:translate-y-0 starting:open:translate-y-full" data-action="keydown.esc-&gt;dialog#close:prevent click-&gt;dialog#closeOnClickOutside">
+            <div class="mx-auto mt-4 h-2 w-[100px] shrink-0 rounded-full bg-muted"></div>
+    <div class="mx-auto w-full max-w-sm">
+                <div data-slot="drawer-header" class="flex flex-col gap-0.5 p-4 group-data-[direction=bottom]/drawer-content:text-center group-data-[direction=top]/drawer-content:text-center md:gap-1.5 md:text-left">
+<h2 id="drawer-drawer-rtl-title" data-slot="drawer-title" class="font-semibold text-foreground">تعديل الهدف</h2>
+                    <p id="drawer-drawer-rtl-description" data-slot="drawer-description" class="text-muted-foreground text-sm">حدد هدف نشاطك اليومي.</p>
+                </div>
+                <div data-slot="drawer-footer" class="mt-auto flex flex-col gap-2 p-4">
+<button data-slot="button" data-size="default" data-variant="default" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground [a]:hover:bg-primary/80 h-8 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2" type="button">إرسال</button>
+                    <button data-slot="button" data-size="default" data-variant="outline" class="group/button inline-flex shrink-0 items-center justify-center rounded-lg border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2" type="button" data-action="click-&gt;dialog#close">إلغاء</button>
+                                    </div>
+            </div>
+        </dialog>
+    </div>
+</div>
