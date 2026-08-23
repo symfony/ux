@@ -1,0 +1,69 @@
+<!--
+- Kit: Shadcn UI
+- Component: Scroll Area
+- Code:
+```twig
+<twig:ScrollArea class="w-96 rounded-md border whitespace-nowrap">
+    <div class="flex w-max space-x-4 p-4">
+        <figure class="shrink-0">
+            <div class="overflow-hidden rounded-md">
+                <img src="https://images.unsplash.com/photo-1465869185982-5a1a7522cbcb?auto=format&fit=crop&w=300&q=80" alt="Photo by Ornella Binni" class="aspect-[3/4] h-fit w-fit object-cover" width="300" height="400">
+            </div>
+            <figcaption class="pt-2 text-xs text-muted-foreground">
+                Photo by
+                <span class="font-semibold text-foreground">Ornella Binni</span>
+            </figcaption>
+        </figure>
+        <figure class="shrink-0">
+            <div class="overflow-hidden rounded-md">
+                <img src="https://images.unsplash.com/photo-1548516173-3cabfa4607e9?auto=format&fit=crop&w=300&q=80" alt="Photo by Tom Byrom" class="aspect-[3/4] h-fit w-fit object-cover" width="300" height="400">
+            </div>
+            <figcaption class="pt-2 text-xs text-muted-foreground">
+                Photo by
+                <span class="font-semibold text-foreground">Tom Byrom</span>
+            </figcaption>
+        </figure>
+        <figure class="shrink-0">
+            <div class="overflow-hidden rounded-md">
+                <img src="https://images.unsplash.com/photo-1494337480532-3725c85fd2ab?auto=format&fit=crop&w=300&q=80" alt="Photo by Vladimir Malyavko" class="aspect-[3/4] h-fit w-fit object-cover" width="300" height="400">
+            </div>
+            <figcaption class="pt-2 text-xs text-muted-foreground">
+                Photo by
+                <span class="font-semibold text-foreground">Vladimir Malyavko</span>
+            </figcaption>
+        </figure>
+    </div>
+</twig:ScrollArea>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="scroll-area" class="relative overflow-auto [&amp;::-webkit-scrollbar]:h-2.5 [&amp;::-webkit-scrollbar]:w-2.5 [&amp;::-webkit-scrollbar-track]:bg-transparent [&amp;::-webkit-scrollbar-thumb]:rounded-full [&amp;::-webkit-scrollbar-thumb]:border [&amp;::-webkit-scrollbar-thumb]:border-transparent [&amp;::-webkit-scrollbar-thumb]:bg-border [&amp;::-webkit-scrollbar-thumb]:bg-clip-padding [&amp;::-webkit-scrollbar-thumb:hover]:bg-muted-foreground/50 w-96 rounded-md border whitespace-nowrap">
+<div class="flex w-max space-x-4 p-4">
+        <figure class="shrink-0">
+            <div class="overflow-hidden rounded-md">
+                <img src="https://images.unsplash.com/photo-1465869185982-5a1a7522cbcb?auto=format&amp;fit=crop&amp;w=300&amp;q=80" alt="Photo by Ornella Binni" class="aspect-[3/4] h-fit w-fit object-cover" width="300" height="400">
+            </div>
+            <figcaption class="pt-2 text-xs text-muted-foreground">
+                Photo by
+                <span class="font-semibold text-foreground">Ornella Binni</span>
+            </figcaption>
+        </figure>
+        <figure class="shrink-0">
+            <div class="overflow-hidden rounded-md">
+                <img src="https://images.unsplash.com/photo-1548516173-3cabfa4607e9?auto=format&amp;fit=crop&amp;w=300&amp;q=80" alt="Photo by Tom Byrom" class="aspect-[3/4] h-fit w-fit object-cover" width="300" height="400">
+            </div>
+            <figcaption class="pt-2 text-xs text-muted-foreground">
+                Photo by
+                <span class="font-semibold text-foreground">Tom Byrom</span>
+            </figcaption>
+        </figure>
+        <figure class="shrink-0">
+            <div class="overflow-hidden rounded-md">
+                <img src="https://images.unsplash.com/photo-1494337480532-3725c85fd2ab?auto=format&amp;fit=crop&amp;w=300&amp;q=80" alt="Photo by Vladimir Malyavko" class="aspect-[3/4] h-fit w-fit object-cover" width="300" height="400">
+            </div>
+            <figcaption class="pt-2 text-xs text-muted-foreground">
+                Photo by
+                <span class="font-semibold text-foreground">Vladimir Malyavko</span>
+            </figcaption>
+        </figure>
+    </div>
+</div>
