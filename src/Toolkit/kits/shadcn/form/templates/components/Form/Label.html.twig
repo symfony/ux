@@ -1,0 +1,9 @@
+{# @block content The label text. #}
+<label
+    data-slot="form-label"
+    {{ attributes.defaults({
+        class: 'flex items-center gap-2 text-sm font-medium leading-none select-none group-has-[[data-slot=form-message]]/form-item:text-destructive'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</label>

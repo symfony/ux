@@ -1,0 +1,9 @@
+{# @block content The form fields, typically a list of `Form:Item`. #}
+<form
+    data-slot="form"
+    {{ attributes.defaults({
+        class: 'space-y-6'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</form>
