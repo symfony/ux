@@ -1,0 +1,19 @@
+{# @prop for string Id of the `Sidebar:Provider` to control. Defaults to the id of the surrounding provider. #}
+{# @prop label string Accessible label announced for the trigger. #}
+{# @block content The trigger's icon (typically a `lucide:panel-left`). #}
+{%- props for = null, label = 'Toggle Sidebar' -%}
+{%- set _sidebar_for = for ?? inject('sidebar.id', null) -%}
+{%- set _sidebar_initial_open = inject('sidebar.defaultOpen', true) -%}
+<button
+    data-slot="sidebar-trigger"
+    aria-label="{{ label }}"
+    aria-expanded="{{ _sidebar_initial_open ? 'true' : 'false' }}"
+    {% if _sidebar_for %}data-sidebar-target="{{ _sidebar_for }}" aria-controls="{{ _sidebar_for }}"{% endif %}
+    {{ attributes.defaults({
+        type: 'button',
+        class: 'inline-flex size-7 shrink-0 items-center justify-center rounded-md outline-none ring-sidebar-ring transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0'|tailwind_classes,
+        'data-action': 'click->sidebar#toggle',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</button>

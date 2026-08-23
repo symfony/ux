@@ -1,0 +1,76 @@
+{# @prop side 'left'|'right' On which side of the page the sidebar sits. #}
+{# @prop variant 'sidebar'|'floating'|'inset' The visual variant. #}
+{# @prop collapsible 'icon'|'offcanvas'|'none' How the desktop sidebar collapses. #}
+{# @prop label string Accessible name for the sidebar landmark. #}
+{# @block content Typically a `Sidebar:Header`, `Sidebar:Content`, `Sidebar:Footer` and an optional `Sidebar:Rail`. #}
+{%- props side = 'left', variant = 'sidebar', collapsible = 'icon', label = 'Sidebar' -%}
+{%- set _sidebar_initial_open = inject('sidebar.defaultOpen', true) -%}
+{%- set _sidebar_content -%}{% block content %}{% endblock %}{%- endset -%}
+{%- if 'none' == collapsible -%}
+    <aside
+        data-slot="sidebar"
+        data-side="{{ side }}"
+        data-variant="{{ variant }}"
+        data-collapsible=""
+        data-collapsible-mode="{{ collapsible }}"
+        aria-label="{{ label }}"
+        {{ attributes.defaults({
+            class: 'flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground'|tailwind_classes,
+        }) }}
+    >
+        {{ _sidebar_content|raw }}
+    </aside>
+{%- else -%}
+    {%- set _sidebar_id = inject('sidebar.id', 'sidebar') -%}
+    <twig:Sheet id="{{ _sidebar_id }}-mobile" :side="side" class="md:hidden">
+        <twig:Sheet:Content :showCloseButton="false" class="w-(--sidebar-width-mobile) overflow-x-hidden overflow-y-auto bg-sidebar p-0 text-sidebar-foreground">
+            <twig:Sheet:Header class="sr-only">
+                <twig:Sheet:Title>{{ label }}</twig:Sheet:Title>
+                <twig:Sheet:Description>Displays the mobile sidebar.</twig:Sheet:Description>
+            </twig:Sheet:Header>
+            <div data-slot="sidebar-mobile-inner" class="flex h-full w-full flex-col"></div>
+        </twig:Sheet:Content>
+    </twig:Sheet>
+    <div
+        class="group peer hidden text-sidebar-foreground md:block{{ 'floating' == variant or 'inset' == variant ? ' p-2' }}"
+        data-slot="sidebar"
+        data-side="{{ side }}"
+        data-variant="{{ variant }}"
+        data-collapsible="{{ _sidebar_initial_open ? '' : collapsible }}"
+        data-collapsible-mode="{{ collapsible }}"
+        data-state="{{ _sidebar_initial_open ? 'expanded' : 'collapsed' }}"
+    >
+        <div
+            class="{{ 'relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear group-data-[collapsible=offcanvas]:w-0'
+                ~ ('floating' == variant or 'inset' == variant ? ' group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]' : '')
+                ~ ('sidebar' == variant ? ' group-data-[collapsible=icon]:w-(--sidebar-width-icon)' : '')
+                ~ ('right' == side ? ' rotate-180' : '') }}"
+            data-slot="sidebar-gap"
+            aria-hidden="true"
+        ></div>
+        <aside
+            data-slot="sidebar-container"
+            aria-label="{{ label }}"
+            {{ attributes.defaults({
+                class: ('fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex'
+                    ~ ('left' == side
+                        ? ' left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]'
+                        : ' right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]'
+                    )
+                    ~ ('floating' == variant or 'inset' == variant ? ' p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]' : '')
+                    ~ ('sidebar' == variant ? ' group-data-[collapsible=icon]:w-(--sidebar-width-icon)' : '')
+                    ~ ('sidebar' == variant and 'left' == side ? ' border-r border-sidebar-border' : '')
+                    ~ ('sidebar' == variant and 'right' == side ? ' border-l border-sidebar-border' : '')
+                )|tailwind_classes,
+            }) }}
+        >
+            <div
+                class="{{ 'flex h-full w-full flex-col bg-sidebar group-data-[collapsible=icon]:not-has-[[data-slot=dropdown-menu][data-state=open]]:overflow-hidden'
+                    ~ ('floating' == variant ? ' rounded-lg border border-sidebar-border shadow-sm' : '') }}"
+                data-slot="sidebar-inner"
+            >
+                {{ _sidebar_content|raw }}
+            </div>
+        </aside>
+    </div>
+{%- endif -%}

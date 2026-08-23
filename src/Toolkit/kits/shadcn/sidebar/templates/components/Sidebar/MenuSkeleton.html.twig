@@ -1,0 +1,14 @@
+{# @prop showIcon boolean Whether to render a placeholder icon next to the label. #}
+{%- props showIcon = false -%}
+{%- set _skeleton_width = 50 + random(40) -%}
+<div
+    data-slot="sidebar-menu-skeleton"
+    {{ attributes.defaults({
+        class: 'flex h-8 items-center gap-2 rounded-md px-2'|tailwind_classes,
+    }) }}
+>
+    {%- if showIcon -%}
+        <div class="size-4 animate-pulse rounded-md bg-sidebar-accent/50"></div>
+    {%- endif -%}
+    <div class="h-4 max-w-(--skeleton-width) flex-1 animate-pulse rounded-md bg-sidebar-accent/50" style="--skeleton-width: {{ _skeleton_width }}%;"></div>
+</div>
