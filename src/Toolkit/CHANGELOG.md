@@ -6,6 +6,7 @@
 - [Shadcn] Add the `login-01` and `login-02` login blocks
 - [Shadcn] Add `input-otp` recipe
 - [Shadcn] Add `menubar` recipe
+- [Shadcn] Add `navigation-menu` recipe
 - [Shadcn] Add `popover` recipe
 - [Shadcn] Add `dropdown-menu` recipe
 - [Shadcn][Flowbite] Merge component classes with `attributes.defaults({ class: '...'|tailwind_classes })` instead of `tailwind_merge` (consumer classes now override component variants)

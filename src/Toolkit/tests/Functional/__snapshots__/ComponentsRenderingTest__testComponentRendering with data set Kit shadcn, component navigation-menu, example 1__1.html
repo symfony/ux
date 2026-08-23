@@ -1,0 +1,39 @@
+<!--
+- Kit: Shadcn UI
+- Component: Navigation Menu
+- Code:
+```twig
+<div class="flex items-start justify-center" style="min-height: 100px">
+    <twig:NavigationMenu>
+        <twig:NavigationMenu:List>
+            <twig:NavigationMenu:Item>
+                <twig:NavigationMenu:Link href="/">Home</twig:NavigationMenu:Link>
+            </twig:NavigationMenu:Item>
+            <twig:NavigationMenu:Item>
+                <twig:NavigationMenu:Link href="/docs">Docs</twig:NavigationMenu:Link>
+            </twig:NavigationMenu:Item>
+            <twig:NavigationMenu:Item>
+                <twig:NavigationMenu:Link href="/pricing">Pricing</twig:NavigationMenu:Link>
+            </twig:NavigationMenu:Item>
+        </twig:NavigationMenu:List>
+    </twig:NavigationMenu>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex items-start justify-center" style="min-height: 100px">
+    <nav data-slot="navigation-menu" aria-label="Main" data-navigation-menu-open-delay-value="200" data-navigation-menu-close-delay-value="300" class="relative flex max-w-max flex-1 items-center justify-center" data-controller="navigation-menu" data-action="mouseleave-&gt;navigation-menu#scheduleClose focusin-&gt;navigation-menu#onFocusIn focusout-&gt;navigation-menu#onFocusOut"><ul data-slot="navigation-menu-list" class="flex flex-1 list-none items-center justify-center gap-1">
+<li data-slot="navigation-menu-item" data-navigation-menu-target="item" class="group/navigation-menu-item relative" data-action="mouseenter-&gt;navigation-menu#open">
+<a href="/" data-slot="navigation-menu-link" class="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50">Home</a>
+            </li>
+            <li data-slot="navigation-menu-item" data-navigation-menu-target="item" class="group/navigation-menu-item relative" data-action="mouseenter-&gt;navigation-menu#open">
+<a href="/docs" data-slot="navigation-menu-link" class="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50">Docs</a>
+            </li>
+            <li data-slot="navigation-menu-item" data-navigation-menu-target="item" class="group/navigation-menu-item relative" data-action="mouseenter-&gt;navigation-menu#open">
+<a href="/pricing" data-slot="navigation-menu-link" class="inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50">Pricing</a>
+            </li>
+        </ul>
+    <div data-navigation-menu-target="viewportPositioner" class="absolute start-0 top-full isolate z-50 transition-[inset-inline-start] duration-150 ease-out" data-action="mouseenter-&gt;navigation-menu#cancelClose mouseleave-&gt;navigation-menu#scheduleClose">
+        <div data-slot="navigation-menu-viewport" data-navigation-menu-target="viewport" data-state="closed" class="invisible relative mt-1.5 h-[var(--navigation-menu-viewport-height)] w-[var(--navigation-menu-viewport-width)] max-w-[calc(100vw-2rem)] origin-top scale-95 overflow-hidden rounded-md border bg-popover text-popover-foreground opacity-0 shadow-md transition-[opacity,scale,width,height,visibility] duration-150 ease-out data-[state=open]:visible data-[state=open]:scale-100 data-[state=open]:opacity-100"></div>
+    </div>
+</nav>
+</div>

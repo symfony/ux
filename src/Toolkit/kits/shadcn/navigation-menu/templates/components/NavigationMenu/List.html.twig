@@ -1,0 +1,9 @@
+{# @block content The `NavigationMenu:Item` children. #}
+<ul
+    data-slot="navigation-menu-list"
+    {{ attributes.defaults({
+        class: 'flex flex-1 list-none items-center justify-center gap-1'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</ul>

@@ -1,0 +1,30 @@
+{# @prop ariaLabel string The accessible name for the navigation landmark. #}
+{# @prop openDelay number Delay in milliseconds before opening a menu on hover. #}
+{# @prop closeDelay number Delay in milliseconds before closing the menu once the pointer leaves. #}
+{# @block content A `NavigationMenu:List` containing `NavigationMenu:Item` children. #}
+{%- props ariaLabel = 'Main', openDelay = 200, closeDelay = 300 -%}
+<nav
+    data-slot="navigation-menu"
+    aria-label="{{ ariaLabel }}"
+    data-navigation-menu-open-delay-value="{{ openDelay }}"
+    data-navigation-menu-close-delay-value="{{ closeDelay }}"
+    {{ attributes.defaults({
+        class: 'relative flex max-w-max flex-1 items-center justify-center'|tailwind_classes,
+        'data-controller': 'navigation-menu',
+        'data-action': 'mouseleave->navigation-menu#scheduleClose focusin->navigation-menu#onFocusIn focusout->navigation-menu#onFocusOut',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+    <div
+        data-navigation-menu-target="viewportPositioner"
+        class="absolute start-0 top-full isolate z-50 transition-[inset-inline-start] duration-150 ease-out"
+        data-action="mouseenter->navigation-menu#cancelClose mouseleave->navigation-menu#scheduleClose"
+    >
+        <div
+            data-slot="navigation-menu-viewport"
+            data-navigation-menu-target="viewport"
+            data-state="closed"
+            class="invisible relative mt-1.5 h-[var(--navigation-menu-viewport-height)] w-[var(--navigation-menu-viewport-width)] max-w-[calc(100vw-2rem)] origin-top scale-95 overflow-hidden rounded-md border bg-popover text-popover-foreground opacity-0 shadow-md transition-[opacity,scale,width,height,visibility] duration-150 ease-out data-[state=open]:visible data-[state=open]:scale-100 data-[state=open]:opacity-100"
+        ></div>
+    </div>
+</nav>
