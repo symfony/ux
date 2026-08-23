@@ -9,6 +9,7 @@
 - [Shadcn] Add `navigation-menu` recipe
 - [Shadcn] Add `popover` recipe
 - [Shadcn] Add `dropdown-menu` recipe
+- [Shadcn] Add `native-select` recipe
 - [Shadcn][Flowbite] Merge component classes with `attributes.defaults({ class: '...'|tailwind_classes })` instead of `tailwind_merge` (consumer classes now override component variants)
 - [Shadcn] Fix Field/Label, InputGroup and Pagination silently dropping their own base classes when forwarding to a child component (their checked/disabled/nested/dark styles now apply)
 - [Shadcn] Fix `dialog` opening on initial render when `open` is `false`

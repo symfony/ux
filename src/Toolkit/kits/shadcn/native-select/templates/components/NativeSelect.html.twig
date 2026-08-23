@@ -1,0 +1,18 @@
+{# @prop size 'default'|'sm' The select size. #}
+{# @block content The select options, typically `NativeSelect:Option` and `NativeSelect:OptGroup` components. #}
+{%- props size = 'default' -%}
+<div
+    data-slot="native-select-wrapper"
+    data-size="{{ size }}"
+    class="{{ ('group/native-select relative w-fit has-[select:disabled]:opacity-50 ' ~ attributes.render('class'))|tailwind_merge }}"
+>
+    <select
+        data-slot="native-select"
+        data-size="{{ size }}"
+        class="h-9 w-full min-w-0 appearance-none rounded-md border border-input bg-transparent px-3 py-2 pe-9 text-sm shadow-xs transition-[color,box-shadow] outline-none select-none selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/40 data-[size=sm]:h-8 data-[size=sm]:py-1 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 dark:[color-scheme:dark] [&_option]:bg-background [&_option]:text-foreground [&_optgroup]:bg-background [&_optgroup]:text-foreground"
+        {{ attributes.without('class') }}
+    >
+        {%- block content %}{% endblock -%}
+    </select>
+    <twig:ux:icon name="lucide:chevron-down" class="pointer-events-none absolute top-1/2 end-3.5 size-4 -translate-y-1/2 text-muted-foreground opacity-50 select-none" aria-hidden="true" data-slot="native-select-icon" />
+</div>
