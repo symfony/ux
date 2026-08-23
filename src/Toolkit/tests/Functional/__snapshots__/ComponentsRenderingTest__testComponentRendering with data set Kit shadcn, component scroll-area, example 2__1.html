@@ -1,0 +1,343 @@
+<!--
+- Kit: Shadcn UI
+- Component: Scroll Area
+- Code:
+```twig
+<div class="flex flex-col items-center gap-8">
+    {# Arabic #}
+    <twig:ScrollArea dir="rtl" class="h-72 w-48 rounded-md border">
+        <div class="p-4">
+            <h4 class="mb-4 text-sm leading-none font-medium">العلامات</h4>
+            {% for i in range(50, 1, -1) %}
+                <div class="text-sm">v1.2.0-beta.{{ i }}</div>
+                <twig:Separator class="my-2" />
+            {% endfor %}
+        </div>
+    </twig:ScrollArea>
+
+    {# Hebrew #}
+    <twig:ScrollArea dir="rtl" class="h-72 w-48 rounded-md border">
+        <div class="p-4">
+            <h4 class="mb-4 text-sm leading-none font-medium">תגיות</h4>
+            {% for i in range(50, 1, -1) %}
+                <div class="text-sm">v1.2.0-beta.{{ i }}</div>
+                <twig:Separator class="my-2" />
+            {% endfor %}
+        </div>
+    </twig:ScrollArea>
+</div>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex flex-col items-center gap-8">
+        <div data-slot="scroll-area" class="relative overflow-auto [&amp;::-webkit-scrollbar]:h-2.5 [&amp;::-webkit-scrollbar]:w-2.5 [&amp;::-webkit-scrollbar-track]:bg-transparent [&amp;::-webkit-scrollbar-thumb]:rounded-full [&amp;::-webkit-scrollbar-thumb]:border [&amp;::-webkit-scrollbar-thumb]:border-transparent [&amp;::-webkit-scrollbar-thumb]:bg-border [&amp;::-webkit-scrollbar-thumb]:bg-clip-padding [&amp;::-webkit-scrollbar-thumb:hover]:bg-muted-foreground/50 h-72 w-48 rounded-md border" dir="rtl">
+<div class="p-4">
+            <h4 class="mb-4 text-sm leading-none font-medium">العلامات</h4>
+                            <div class="text-sm">v1.2.0-beta.50</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.49</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.48</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.47</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.46</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.45</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.44</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.43</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.42</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.41</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.40</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.39</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.38</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.37</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.36</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.35</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.34</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.33</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.32</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.31</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.30</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.29</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.28</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.27</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.26</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.25</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.24</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.23</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.22</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.21</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.20</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.19</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.18</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.17</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.16</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.15</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.14</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.13</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.12</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.11</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.10</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.9</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.8</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.7</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.6</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.5</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.4</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.3</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.2</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.1</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                    </div>
+    </div>
+
+        <div data-slot="scroll-area" class="relative overflow-auto [&amp;::-webkit-scrollbar]:h-2.5 [&amp;::-webkit-scrollbar]:w-2.5 [&amp;::-webkit-scrollbar-track]:bg-transparent [&amp;::-webkit-scrollbar-thumb]:rounded-full [&amp;::-webkit-scrollbar-thumb]:border [&amp;::-webkit-scrollbar-thumb]:border-transparent [&amp;::-webkit-scrollbar-thumb]:bg-border [&amp;::-webkit-scrollbar-thumb]:bg-clip-padding [&amp;::-webkit-scrollbar-thumb:hover]:bg-muted-foreground/50 h-72 w-48 rounded-md border" dir="rtl">
+<div class="p-4">
+            <h4 class="mb-4 text-sm leading-none font-medium">תגיות</h4>
+                            <div class="text-sm">v1.2.0-beta.50</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.49</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.48</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.47</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.46</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.45</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.44</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.43</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.42</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.41</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.40</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.39</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.38</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.37</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.36</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.35</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.34</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.33</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.32</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.31</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.30</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.29</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.28</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.27</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.26</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.25</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.24</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.23</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.22</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.21</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.20</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.19</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.18</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.17</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.16</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.15</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.14</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.13</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.12</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.11</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.10</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.9</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.8</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.7</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.6</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.5</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.4</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.3</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.2</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                            <div class="text-sm">v1.2.0-beta.1</div>
+                <div data-slot="separator" data-orientation="horizontal" role="none" class="shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch my-2"></div>
+
+                    </div>
+    </div>
+</div>

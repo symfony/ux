@@ -1,0 +1,9 @@
+{# @block content The scrollable content. #}
+<div
+    data-slot="scroll-area"
+    {{ attributes.defaults({
+        class: 'relative overflow-auto [&::-webkit-scrollbar]:h-2.5 [&::-webkit-scrollbar]:w-2.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-thumb]:bg-clip-padding [&::-webkit-scrollbar-thumb:hover]:bg-muted-foreground/50'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>
