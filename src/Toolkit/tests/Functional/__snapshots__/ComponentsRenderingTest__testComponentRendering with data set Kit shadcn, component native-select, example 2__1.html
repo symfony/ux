@@ -1,0 +1,21 @@
+<!--
+- Kit: Shadcn UI
+- Component: Native Select
+- Code:
+```twig
+<twig:NativeSelect disabled>
+    <twig:NativeSelect:Option value="">Disabled</twig:NativeSelect:Option>
+    <twig:NativeSelect:Option value="apple">Apple</twig:NativeSelect:Option>
+    <twig:NativeSelect:Option value="banana">Banana</twig:NativeSelect:Option>
+    <twig:NativeSelect:Option value="blueberry">Blueberry</twig:NativeSelect:Option>
+</twig:NativeSelect>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div data-slot="native-select-wrapper" data-size="default" class="group/native-select relative w-fit has-[select:disabled]:opacity-50">
+    <select data-slot="native-select" data-size="default" class="h-9 w-full min-w-0 appearance-none rounded-md border border-input bg-transparent px-3 py-2 pe-9 text-sm shadow-xs transition-[color,box-shadow] outline-none select-none selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/40 data-[size=sm]:h-8 data-[size=sm]:py-1 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 dark:[color-scheme:dark] [&amp;_option]:bg-background [&amp;_option]:text-foreground [&amp;_optgroup]:bg-background [&amp;_optgroup]:text-foreground" disabled><option data-slot="native-select-option" value="">Disabled</option>
+    <option data-slot="native-select-option" value="apple">Apple</option>
+    <option data-slot="native-select-option" value="banana">Banana</option>
+    <option data-slot="native-select-option" value="blueberry">Blueberry</option>
+</select>
+    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="pointer-events-none absolute top-1/2 end-3.5 size-4 -translate-y-1/2 text-muted-foreground opacity-50 select-none" aria-hidden="true" data-slot="native-select-icon"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg>
+</div>
