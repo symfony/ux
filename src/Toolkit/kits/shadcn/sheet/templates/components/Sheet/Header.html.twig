@@ -1,0 +1,9 @@
+{# @block content The header area, typically contains `Sheet:Title` and `Sheet:Description`. #}
+<div
+    data-slot="sheet-header"
+    {{ attributes.defaults({
+        class: 'flex flex-col gap-1.5 p-4'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

@@ -1,0 +1,19 @@
+{
+    "$schema": "../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Sheet",
+    "version-added": "3.5",
+    "copy-files": {
+        "templates/": "templates/"
+    },
+    "dependencies": {
+        "recipe": ["dialog", "button"],
+        "composer": [
+            "symfony/ux-icons",
+            "twig/extra-bundle",
+            "twig/html-extra:^3.24.0",
+            "tales-from-a-dev/twig-tailwind-extra:^1.3.0",
+            "symfony/ux-twig-component:^3.5"
+        ]
+    }
+}

@@ -1,0 +1,9 @@
+{# @block content The footer area, typically contains action buttons. #}
+<div
+    data-slot="sheet-footer"
+    {{ attributes.defaults({
+        class: 'mt-auto flex flex-col gap-2 p-4'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>
