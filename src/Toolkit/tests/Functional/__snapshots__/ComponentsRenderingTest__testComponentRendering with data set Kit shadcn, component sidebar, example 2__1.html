@@ -1,0 +1,87 @@
+<!--
+- Kit: Shadcn UI
+- Component: Sidebar
+- Code:
+```twig
+<twig:Sidebar:Provider id="sidebar-offcanvas-example" cookieName="" class="min-h-[320px] w-full">
+    <twig:Sidebar collapsible="offcanvas">
+        <twig:Sidebar:Header>
+            <span class="px-2 font-semibold">My App</span>
+        </twig:Sidebar:Header>
+        <twig:Sidebar:Content>
+            <twig:Sidebar:Group>
+                <twig:Sidebar:GroupContent>
+                    <twig:Sidebar:Menu>
+                        <twig:Sidebar:MenuItem>
+                            <twig:Sidebar:MenuButton as="a" href="#" active>
+                                <twig:ux:icon name="lucide:inbox" aria-hidden="true" />
+                                <span>Inbox</span>
+                            </twig:Sidebar:MenuButton>
+                        </twig:Sidebar:MenuItem>
+                        <twig:Sidebar:MenuItem>
+                            <twig:Sidebar:MenuButton as="a" href="#">
+                                <twig:ux:icon name="lucide:search" aria-hidden="true" />
+                                <span>Search</span>
+                            </twig:Sidebar:MenuButton>
+                        </twig:Sidebar:MenuItem>
+                    </twig:Sidebar:Menu>
+                </twig:Sidebar:GroupContent>
+            </twig:Sidebar:Group>
+        </twig:Sidebar:Content>
+        <twig:Sidebar:Rail />
+    </twig:Sidebar>
+    <twig:Sidebar:Inset>
+        <header class="flex h-14 items-center gap-2 border-b px-4">
+            <twig:Sidebar:Trigger>
+                <twig:ux:icon name="lucide:panel-left" aria-hidden="true" />
+            </twig:Sidebar:Trigger>
+        </header>
+    </twig:Sidebar:Inset>
+</twig:Sidebar:Provider>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div id="sidebar-offcanvas-example" data-slot="sidebar-provider" data-sidebar-default-open-value="true" data-sidebar-cookie-name-value="" data-sidebar-cookie-max-age-value="604800" data-sidebar-mobile-breakpoint-value="768" data-sidebar-keyboard-shortcut-value="b" data-state="expanded" class="group/sidebar-wrapper flex has-[[data-variant=inset]]:bg-sidebar min-h-[320px] w-full" data-controller="sidebar" data-action="keydown@window-&gt;sidebar#handleKeydown" style="--sidebar-width: 16rem; --sidebar-width-icon: 3rem; --sidebar-width-mobile: 18rem;">
+<div data-slot="sheet" data-dialog-open-value="false" aria-labelledby="sheet-sidebar-offcanvas-example-mobile-title" aria-describedby="sheet-sidebar-offcanvas-example-mobile-description" data-controller="dialog" class="md:hidden">
+    <dialog id="sheet-sidebar-offcanvas-example-mobile" data-slot="sheet-content" data-dialog-target="dialog" data-side="left" class="fixed z-50 m-0 flex max-h-none max-w-none flex-col gap-4 shadow-lg outline-none transition duration-300 ease-in-out transition-discrete backdrop:bg-black/50 backdrop:opacity-0 backdrop:transition-[opacity,display,overlay] backdrop:duration-300 backdrop:ease-in-out backdrop:transition-discrete open:backdrop:opacity-100 starting:open:backdrop:opacity-0 inset-y-0 left-0 right-auto h-full border-r -translate-x-full open:translate-x-0 starting:open:-translate-x-full sm:max-w-sm w-(--sidebar-width-mobile) overflow-x-hidden overflow-y-auto bg-sidebar p-0 text-sidebar-foreground" data-action="keydown.esc-&gt;dialog#close:prevent click-&gt;dialog#closeOnClickOutside"><div data-slot="sheet-header" class="flex flex-col gap-1.5 p-4 sr-only">
+<h2 id="sheet-sidebar-offcanvas-example-mobile-title" data-slot="sheet-title" class="font-semibold text-foreground">Sidebar</h2>
+                <p id="sheet-sidebar-offcanvas-example-mobile-description" data-slot="sheet-description" class="text-muted-foreground text-sm">Displays the mobile sidebar.</p>
+            </div>
+            <div data-slot="sidebar-mobile-inner" class="flex h-full w-full flex-col"></div>
+        </dialog>
+    </div>
+    <div class="group peer hidden text-sidebar-foreground md:block" data-slot="sidebar" data-side="left" data-variant="sidebar" data-collapsible="" data-collapsible-mode="offcanvas" data-state="expanded">
+        <div class="relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear group-data-[collapsible=offcanvas]:w-0 group-data-[collapsible=icon]:w-(--sidebar-width-icon)" data-slot="sidebar-gap" aria-hidden="true"></div>
+        <aside data-slot="sidebar-container" aria-label="Sidebar" class="fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] group-data-[collapsible=icon]:w-(--sidebar-width-icon) border-r border-sidebar-border">
+            <div class="flex h-full w-full flex-col bg-sidebar group-data-[collapsible=icon]:not-has-[[data-slot=dropdown-menu][data-state=open]]:overflow-hidden" data-slot="sidebar-inner">
+                <div data-slot="sidebar-header" class="flex flex-col gap-2 p-2">
+<span class="px-2 font-semibold">My App</span>
+        </div>
+        <div data-slot="sidebar-content" class="flex min-h-0 flex-1 flex-col gap-2 group-data-[collapsible=icon]:overflow-hidden">
+<div data-slot="sidebar-group" class="relative flex w-full min-w-0 flex-col p-2">
+<div data-slot="sidebar-group-content" class="w-full text-sm">
+<ul data-slot="sidebar-menu" class="flex w-full min-w-0 flex-col gap-1">
+<li data-slot="sidebar-menu-item" class="group/menu-item relative">
+<a data-slot="sidebar-menu-button" data-size="default" data-active="true" aria-current="page" class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-slot=sidebar-menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&amp;&gt;:not(:first-child)]:hidden [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M22 12h-6l-2 3h-4l-2-3H2"></path><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11"></path></g></svg>
+                                <span>Inbox</span>
+                            </a>
+                        </li>
+                        <li data-slot="sidebar-menu-item" class="group/menu-item relative">
+<a data-slot="sidebar-menu-button" data-size="default" data-active="false" class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-slot=sidebar-menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&amp;&gt;:not(:first-child)]:hidden [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m21 21l-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></g></svg>
+                                <span>Search</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <button data-slot="sidebar-rail" aria-label="Toggle Sidebar" title="Toggle Sidebar" tabindex="-1" type="button" class="absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear sm:flex after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 [[data-side=left]_&amp;]:cursor-w-resize [[data-side=right]_&amp;]:cursor-e-resize [[data-side=left][data-state=collapsed]_&amp;]:cursor-e-resize [[data-side=right][data-state=collapsed]_&amp;]:cursor-w-resize group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full group-data-[collapsible=offcanvas]:hover:bg-sidebar [[data-side=left][data-collapsible=offcanvas]_&amp;]:-right-2 [[data-side=right][data-collapsible=offcanvas]_&amp;]:-left-2" data-action="click-&gt;sidebar#toggle"></button>
+
+    
+            </div>
+        </aside>
+    </div>    <main data-slot="sidebar-inset" class="relative flex w-full min-w-0 flex-1 flex-col bg-background md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2"><header class="flex h-14 items-center gap-2 border-b px-4">
+            <button data-slot="sidebar-trigger" aria-label="Toggle Sidebar" aria-expanded="true" data-sidebar-target="sidebar-offcanvas-example" aria-controls="sidebar-offcanvas-example" type="button" class="inline-flex size-7 shrink-0 items-center justify-center rounded-md outline-none ring-sidebar-ring transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0" data-action="click-&gt;sidebar#toggle"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M9 3v18"></path></g></svg>
+            </button>
+        </header>
+    </main>
+</div>

@@ -1,0 +1,76 @@
+<!--
+- Kit: Shadcn UI
+- Component: Sidebar
+- Code:
+```twig
+<twig:Sidebar:Provider id="sidebar-menu-example" cookieName="" class="min-h-[320px] w-full">
+    <twig:Sidebar collapsible="none" class="rounded-lg border border-sidebar-border">
+        <twig:Sidebar:Content>
+            <twig:Sidebar:Group>
+                <twig:Sidebar:GroupLabel>Mailbox</twig:Sidebar:GroupLabel>
+                <twig:Sidebar:GroupContent>
+                    <twig:Sidebar:Menu>
+                        <twig:Sidebar:MenuItem>
+                            <twig:Sidebar:MenuButton as="a" href="#" active>
+                                <twig:ux:icon name="lucide:inbox" aria-hidden="true" />
+                                <span>Inbox</span>
+                            </twig:Sidebar:MenuButton>
+                            <twig:Sidebar:MenuBadge>24</twig:Sidebar:MenuBadge>
+                        </twig:Sidebar:MenuItem>
+                        <twig:Sidebar:MenuItem>
+                            <twig:Sidebar:MenuButton as="a" href="#">
+                                <twig:ux:icon name="lucide:star" aria-hidden="true" />
+                                <span>Starred</span>
+                            </twig:Sidebar:MenuButton>
+                            <twig:Sidebar:MenuAction showOnHover>
+                                <twig:ux:icon name="lucide:plus" aria-hidden="true" />
+                                <span class="sr-only">Add</span>
+                            </twig:Sidebar:MenuAction>
+                        </twig:Sidebar:MenuItem>
+                        <twig:Sidebar:MenuItem>
+                            <twig:Sidebar:MenuButton as="a" href="#">
+                                <twig:ux:icon name="lucide:mail" aria-hidden="true" />
+                                <span>Drafts</span>
+                            </twig:Sidebar:MenuButton>
+                            <twig:Sidebar:MenuBadge>3</twig:Sidebar:MenuBadge>
+                        </twig:Sidebar:MenuItem>
+                    </twig:Sidebar:Menu>
+                </twig:Sidebar:GroupContent>
+            </twig:Sidebar:Group>
+        </twig:Sidebar:Content>
+    </twig:Sidebar>
+</twig:Sidebar:Provider>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div id="sidebar-menu-example" data-slot="sidebar-provider" data-sidebar-default-open-value="true" data-sidebar-cookie-name-value="" data-sidebar-cookie-max-age-value="604800" data-sidebar-mobile-breakpoint-value="768" data-sidebar-keyboard-shortcut-value="b" data-state="expanded" class="group/sidebar-wrapper flex has-[[data-variant=inset]]:bg-sidebar min-h-[320px] w-full" data-controller="sidebar" data-action="keydown@window-&gt;sidebar#handleKeydown" style="--sidebar-width: 16rem; --sidebar-width-icon: 3rem; --sidebar-width-mobile: 18rem;"><aside data-slot="sidebar" data-side="left" data-variant="sidebar" data-collapsible="" data-collapsible-mode="none" aria-label="Sidebar" class="flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground rounded-lg border border-sidebar-border">
+        <div data-slot="sidebar-content" class="flex min-h-0 flex-1 flex-col gap-2 group-data-[collapsible=icon]:overflow-hidden">
+<div data-slot="sidebar-group" class="relative flex w-full min-w-0 flex-col p-2">
+<div data-slot="sidebar-group-label" class="flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 outline-none ring-sidebar-ring transition-[margin,opacity] duration-200 ease-linear group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0">Mailbox</div>
+                <div data-slot="sidebar-group-content" class="w-full text-sm">
+<ul data-slot="sidebar-menu" class="flex w-full min-w-0 flex-col gap-1">
+<li data-slot="sidebar-menu-item" class="group/menu-item relative">
+<a data-slot="sidebar-menu-button" data-size="default" data-active="true" aria-current="page" class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-slot=sidebar-menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&amp;&gt;:not(:first-child)]:hidden [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M22 12h-6l-2 3h-4l-2-3H2"></path><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11"></path></g></svg>
+                                <span>Inbox</span>
+                            </a>
+                            <div data-slot="sidebar-menu-badge" class="pointer-events-none absolute right-1 flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-xs font-medium tabular-nums text-sidebar-foreground select-none peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[active=true]/menu-button:text-sidebar-accent-foreground peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5 group-data-[collapsible=icon]:hidden">24</div>
+                        </li>
+                        <li data-slot="sidebar-menu-item" class="group/menu-item relative">
+<a data-slot="sidebar-menu-button" data-size="default" data-active="false" class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-slot=sidebar-menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&amp;&gt;:not(:first-child)]:hidden [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.12 2.12 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.12 2.12 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.12 2.12 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.12 2.12 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.12 2.12 0 0 0 1.597-1.16z"></path></svg>
+                                <span>Starred</span>
+                            </a>
+                            <button data-slot="sidebar-menu-action" type="button" class="absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 peer-hover/menu-button:text-sidebar-accent-foreground [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 after:absolute after:-inset-2 peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5 group-data-[collapsible=icon]:hidden group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7v14"></path></svg>
+                                <span class="sr-only">Add</span>
+                            </button>
+                        </li>
+                        <li data-slot="sidebar-menu-item" class="group/menu-item relative">
+<a data-slot="sidebar-menu-button" data-size="default" data-active="false" class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-slot=sidebar-menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&amp;&gt;:not(:first-child)]:hidden [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m22 7l-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect width="20" height="16" x="2" y="4" rx="2"></rect></g></svg>
+                                <span>Drafts</span>
+                            </a>
+                            <div data-slot="sidebar-menu-badge" class="pointer-events-none absolute right-1 flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-xs font-medium tabular-nums text-sidebar-foreground select-none peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[active=true]/menu-button:text-sidebar-accent-foreground peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5 group-data-[collapsible=icon]:hidden">3</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    
+    </aside></div>

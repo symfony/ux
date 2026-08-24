@@ -1,0 +1,34 @@
+{# @prop as 'button'|'a' The HTML tag to render; use `a` when the menu item is a link. #}
+{# @prop active boolean Whether this button represents the active route. #}
+{# @prop size 'default'|'sm'|'lg' The visual size. #}
+{# @prop variant 'default'|'outline' The visual style variant. #}
+{# @prop tooltip string Optional title shown when the sidebar is collapsed to icons. #}
+{# @block content The label and/or icon. #}
+{%- props as = 'button', active = false, size = 'default', variant = 'default', tooltip = null -%}
+{%- set style = html_cva(
+    base: 'peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-slot=sidebar-menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&>:not(:first-child)]:hidden [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0',
+    variants: {
+        variant: {
+            default: 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+            outline: 'bg-background shadow-[0_0_0_1px_var(--sidebar-border)] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_var(--sidebar-accent)]',
+        },
+        size: {
+            default: 'h-8 text-sm',
+            sm: 'h-7 text-xs',
+            lg: 'h-12 text-sm',
+        },
+    },
+) -%}
+<{{ as }}
+    data-slot="sidebar-menu-button"
+    data-size="{{ size }}"
+    data-active="{{ active ? 'true' : 'false' }}"
+    {% if 'button' == as %}type="button"{% endif %}
+    {% if tooltip %}title="{{ tooltip }}"{% endif %}
+    {% if active %}aria-current="page"{% endif %}
+    {{ attributes.defaults({
+        class: style.apply({variant: variant, size: size})|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</{{ as }}>

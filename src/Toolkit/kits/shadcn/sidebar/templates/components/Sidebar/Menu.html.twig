@@ -1,0 +1,9 @@
+{# @block content One or more `Sidebar:MenuItem`. #}
+<ul
+    data-slot="sidebar-menu"
+    {{ attributes.defaults({
+        class: 'flex w-full min-w-0 flex-col gap-1'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</ul>

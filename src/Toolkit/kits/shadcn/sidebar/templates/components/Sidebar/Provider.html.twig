@@ -1,0 +1,36 @@
+{# @prop id string Unique id used to wire `Sidebar:Trigger` and `Sidebar:Rail` to the right provider. Auto-generated when omitted. #}
+{# @prop defaultOpen boolean Initial open state when no cookie is present. #}
+{# @prop cookieName string Cookie used to persist the sidebar state across reloads (empty disables persistence). #}
+{# @prop cookieMaxAge int Cookie max-age, in seconds. #}
+{# @prop mobileBreakpoint int Pixel width below which the sidebar behaves as an off-canvas sheet. #}
+{# @prop keyboardShortcut string Single key combined with Ctrl/Cmd that toggles the sidebar; empty disables the shortcut. #}
+{# @block content Typically a `Sidebar` and a `Sidebar:Inset` (with one or more `Sidebar:Trigger` inside). #}
+{%- props
+    id = null,
+    defaultOpen = true,
+    cookieName = 'sidebar:state',
+    cookieMaxAge = 604800,
+    mobileBreakpoint = 768,
+    keyboardShortcut = 'b'
+-%}
+{%- set _sidebar_provider_id = id ?? ('sidebar-provider-' ~ random()) -%}
+{%- do provide('sidebar.id', _sidebar_provider_id) -%}
+{%- do provide('sidebar.defaultOpen', defaultOpen) -%}
+<div
+    id="{{ _sidebar_provider_id }}"
+    data-slot="sidebar-provider"
+    data-sidebar-default-open-value="{{ defaultOpen ? 'true' : 'false' }}"
+    data-sidebar-cookie-name-value="{{ cookieName }}"
+    data-sidebar-cookie-max-age-value="{{ cookieMaxAge }}"
+    data-sidebar-mobile-breakpoint-value="{{ mobileBreakpoint }}"
+    data-sidebar-keyboard-shortcut-value="{{ keyboardShortcut }}"
+    data-state="{{ defaultOpen ? 'expanded' : 'collapsed' }}"
+    {{ attributes.defaults({
+        class: 'group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar'|tailwind_classes,
+        'data-controller': 'sidebar',
+        'data-action': 'keydown@window->sidebar#handleKeydown',
+        style: '--sidebar-width: 16rem; --sidebar-width-icon: 3rem; --sidebar-width-mobile: 18rem;',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

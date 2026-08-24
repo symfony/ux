@@ -1,0 +1,371 @@
+<!--
+- Kit: Shadcn UI
+- Component: Sidebar
+- Code:
+```twig
+<twig:Sidebar:Provider id="sidebar-demo" defaultOpen cookieName="" class="min-h-[640px] w-full">
+    <twig:Sidebar collapsible="icon">
+        <twig:Sidebar:Header>
+            <twig:Sidebar:Menu>
+                <twig:Sidebar:MenuItem>
+                    <twig:DropdownMenu id="sidebar-team" class="w-full block">
+                        <twig:DropdownMenu:Trigger>
+                            <twig:Sidebar:MenuButton {{ ...dropdown_menu_trigger_attrs }} size="lg" tooltip="Acme Inc">
+                                <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                                    <twig:ux:icon name="lucide:command" class="size-4" aria-hidden="true" />
+                                </div>
+                                <div class="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                                    <span class="truncate font-semibold">Acme Inc</span>
+                                    <span class="truncate text-xs">Enterprise</span>
+                                </div>
+                                <twig:ux:icon name="lucide:chevrons-up-down" class="ms-auto size-4 group-data-[collapsible=icon]:hidden" aria-hidden="true" />
+                            </twig:Sidebar:MenuButton>
+                        </twig:DropdownMenu:Trigger>
+                        <twig:DropdownMenu:Content class="w-56">
+                            <twig:DropdownMenu:Label>Teams</twig:DropdownMenu:Label>
+                            <twig:DropdownMenu:Item>Acme Inc</twig:DropdownMenu:Item>
+                            <twig:DropdownMenu:Item>Acme Corp.</twig:DropdownMenu:Item>
+                            <twig:DropdownMenu:Item>Evil Corp.</twig:DropdownMenu:Item>
+                            <twig:DropdownMenu:Separator />
+                            <twig:DropdownMenu:Item>Add team</twig:DropdownMenu:Item>
+                        </twig:DropdownMenu:Content>
+                    </twig:DropdownMenu>
+                </twig:Sidebar:MenuItem>
+            </twig:Sidebar:Menu>
+        </twig:Sidebar:Header>
+        <twig:Sidebar:Content>
+            <twig:Sidebar:Group>
+                <twig:Sidebar:GroupLabel>Platform</twig:Sidebar:GroupLabel>
+                <twig:Sidebar:GroupContent>
+                    <twig:Sidebar:Menu>
+                        <twig:Sidebar:MenuItem>
+                            <twig:Collapsible open class="group/collapsible">
+                                <twig:Collapsible:Trigger>
+                                    <twig:Sidebar:MenuButton {{ ...collapsible_trigger_attrs }} tooltip="Playground" active>
+                                        <twig:ux:icon name="lucide:square-terminal" aria-hidden="true" />
+                                        <span>Playground</span>
+                                        <twig:ux:icon name="lucide:chevron-right" class="ms-auto transition-transform group-data-[state=open]/collapsible:rotate-90" aria-hidden="true" />
+                                    </twig:Sidebar:MenuButton>
+                                </twig:Collapsible:Trigger>
+                                <twig:Collapsible:Content>
+                                    <twig:Sidebar:MenuSub>
+                                        <twig:Sidebar:MenuSubItem>
+                                            <twig:Sidebar:MenuSubButton href="#"><span>History</span></twig:Sidebar:MenuSubButton>
+                                        </twig:Sidebar:MenuSubItem>
+                                        <twig:Sidebar:MenuSubItem>
+                                            <twig:Sidebar:MenuSubButton href="#"><span>Starred</span></twig:Sidebar:MenuSubButton>
+                                        </twig:Sidebar:MenuSubItem>
+                                        <twig:Sidebar:MenuSubItem>
+                                            <twig:Sidebar:MenuSubButton href="#"><span>Settings</span></twig:Sidebar:MenuSubButton>
+                                        </twig:Sidebar:MenuSubItem>
+                                    </twig:Sidebar:MenuSub>
+                                </twig:Collapsible:Content>
+                            </twig:Collapsible>
+                        </twig:Sidebar:MenuItem>
+                        <twig:Sidebar:MenuItem>
+                            <twig:Sidebar:MenuButton as="a" href="#" tooltip="Models">
+                                <twig:ux:icon name="lucide:bot" aria-hidden="true" />
+                                <span>Models</span>
+                            </twig:Sidebar:MenuButton>
+                        </twig:Sidebar:MenuItem>
+                        <twig:Sidebar:MenuItem>
+                            <twig:Sidebar:MenuButton as="a" href="#" tooltip="Documentation">
+                                <twig:ux:icon name="lucide:book-open" aria-hidden="true" />
+                                <span>Documentation</span>
+                            </twig:Sidebar:MenuButton>
+                        </twig:Sidebar:MenuItem>
+                        <twig:Sidebar:MenuItem>
+                            <twig:Sidebar:MenuButton as="a" href="#" tooltip="Settings">
+                                <twig:ux:icon name="lucide:settings-2" aria-hidden="true" />
+                                <span>Settings</span>
+                            </twig:Sidebar:MenuButton>
+                        </twig:Sidebar:MenuItem>
+                    </twig:Sidebar:Menu>
+                </twig:Sidebar:GroupContent>
+            </twig:Sidebar:Group>
+            <twig:Sidebar:Group class="group-data-[collapsible=icon]:hidden">
+                <twig:Sidebar:GroupLabel>Projects</twig:Sidebar:GroupLabel>
+                <twig:Sidebar:GroupContent>
+                    <twig:Sidebar:Menu>
+                        <twig:Sidebar:MenuItem>
+                            <twig:Sidebar:MenuButton as="a" href="#">
+                                <twig:ux:icon name="lucide:frame" aria-hidden="true" />
+                                <span>Design Engineering</span>
+                            </twig:Sidebar:MenuButton>
+                            <twig:DropdownMenu id="sidebar-project-1" side="right" align="start" class="absolute! right-1 top-1.5">
+                                <twig:DropdownMenu:Trigger>
+                                    <twig:Sidebar:MenuAction class="static!" {{ ...dropdown_menu_trigger_attrs }}>
+                                        <twig:ux:icon name="lucide:more-horizontal" class="size-4" aria-hidden="true" />
+                                        <span class="sr-only">More</span>
+                                    </twig:Sidebar:MenuAction>
+                                </twig:DropdownMenu:Trigger>
+                                <twig:DropdownMenu:Content class="w-40">
+                                    <twig:DropdownMenu:Item>View project</twig:DropdownMenu:Item>
+                                    <twig:DropdownMenu:Item>Share project</twig:DropdownMenu:Item>
+                                    <twig:DropdownMenu:Separator />
+                                    <twig:DropdownMenu:Item>Delete project</twig:DropdownMenu:Item>
+                                </twig:DropdownMenu:Content>
+                            </twig:DropdownMenu>
+                        </twig:Sidebar:MenuItem>
+                        <twig:Sidebar:MenuItem>
+                            <twig:Sidebar:MenuButton as="a" href="#">
+                                <twig:ux:icon name="lucide:pie-chart" aria-hidden="true" />
+                                <span>Sales &amp; Marketing</span>
+                            </twig:Sidebar:MenuButton>
+                            <twig:DropdownMenu id="sidebar-project-2" side="right" align="start" class="absolute! right-1 top-1.5">
+                                <twig:DropdownMenu:Trigger>
+                                    <twig:Sidebar:MenuAction class="static!" {{ ...dropdown_menu_trigger_attrs }}>
+                                        <twig:ux:icon name="lucide:more-horizontal" class="size-4" aria-hidden="true" />
+                                        <span class="sr-only">More</span>
+                                    </twig:Sidebar:MenuAction>
+                                </twig:DropdownMenu:Trigger>
+                                <twig:DropdownMenu:Content class="w-40">
+                                    <twig:DropdownMenu:Item>View project</twig:DropdownMenu:Item>
+                                    <twig:DropdownMenu:Item>Share project</twig:DropdownMenu:Item>
+                                    <twig:DropdownMenu:Separator />
+                                    <twig:DropdownMenu:Item>Delete project</twig:DropdownMenu:Item>
+                                </twig:DropdownMenu:Content>
+                            </twig:DropdownMenu>
+                        </twig:Sidebar:MenuItem>
+                        <twig:Sidebar:MenuItem>
+                            <twig:Sidebar:MenuButton as="a" href="#">
+                                <twig:ux:icon name="lucide:map" aria-hidden="true" />
+                                <span>Travel</span>
+                            </twig:Sidebar:MenuButton>
+                        </twig:Sidebar:MenuItem>
+                    </twig:Sidebar:Menu>
+                </twig:Sidebar:GroupContent>
+            </twig:Sidebar:Group>
+        </twig:Sidebar:Content>
+        <twig:Sidebar:Footer>
+            <twig:Sidebar:Menu>
+                <twig:Sidebar:MenuItem>
+                    <twig:DropdownMenu id="sidebar-account" side="top" class="w-full block">
+                        <twig:DropdownMenu:Trigger>
+                            <twig:Sidebar:MenuButton {{ ...dropdown_menu_trigger_attrs }} size="lg" tooltip="shadcn">
+                                <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                                    <twig:ux:icon name="lucide:user" class="size-4" aria-hidden="true" />
+                                </div>
+                                <div class="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                                    <span class="truncate font-semibold">shadcn</span>
+                                    <span class="truncate text-xs">m@example.com</span>
+                                </div>
+                                <twig:ux:icon name="lucide:chevrons-up-down" class="ms-auto size-4 group-data-[collapsible=icon]:hidden" aria-hidden="true" />
+                            </twig:Sidebar:MenuButton>
+                        </twig:DropdownMenu:Trigger>
+                        <twig:DropdownMenu:Content class="w-56">
+                            <twig:DropdownMenu:Label>My Account</twig:DropdownMenu:Label>
+                            <twig:DropdownMenu:Item>Upgrade to Pro</twig:DropdownMenu:Item>
+                            <twig:DropdownMenu:Separator />
+                            <twig:DropdownMenu:Item>Account</twig:DropdownMenu:Item>
+                            <twig:DropdownMenu:Item>Billing</twig:DropdownMenu:Item>
+                            <twig:DropdownMenu:Item>Notifications</twig:DropdownMenu:Item>
+                            <twig:DropdownMenu:Separator />
+                            <twig:DropdownMenu:Item>Log out</twig:DropdownMenu:Item>
+                        </twig:DropdownMenu:Content>
+                    </twig:DropdownMenu>
+                </twig:Sidebar:MenuItem>
+            </twig:Sidebar:Menu>
+        </twig:Sidebar:Footer>
+        <twig:Sidebar:Rail />
+    </twig:Sidebar>
+    <twig:Sidebar:Inset>
+        <header class="flex h-14 shrink-0 items-center gap-2 border-b px-4">
+            <twig:Sidebar:Trigger class="-ml-1">
+                <twig:ux:icon name="lucide:panel-left" aria-hidden="true" />
+            </twig:Sidebar:Trigger>
+            <div class="mx-1 h-4 w-px bg-border"></div>
+            <span class="text-sm text-muted-foreground">Building Your Application &nbsp;/&nbsp; Data Fetching</span>
+        </header>
+        <div class="flex flex-1 flex-col gap-4 p-4">
+            <div class="grid auto-rows-min gap-4 md:grid-cols-3">
+                <div class="aspect-video rounded-xl bg-muted/50"></div>
+                <div class="aspect-video rounded-xl bg-muted/50"></div>
+                <div class="aspect-video rounded-xl bg-muted/50"></div>
+            </div>
+            <div class="min-h-[200px] flex-1 rounded-xl bg-muted/50"></div>
+        </div>
+    </twig:Sidebar:Inset>
+</twig:Sidebar:Provider>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div id="sidebar-demo" data-slot="sidebar-provider" data-sidebar-default-open-value="true" data-sidebar-cookie-name-value="" data-sidebar-cookie-max-age-value="604800" data-sidebar-mobile-breakpoint-value="768" data-sidebar-keyboard-shortcut-value="b" data-state="expanded" class="group/sidebar-wrapper flex has-[[data-variant=inset]]:bg-sidebar min-h-[640px] w-full" data-controller="sidebar" data-action="keydown@window-&gt;sidebar#handleKeydown" style="--sidebar-width: 16rem; --sidebar-width-icon: 3rem; --sidebar-width-mobile: 18rem;">
+<div data-slot="sheet" data-dialog-open-value="false" aria-labelledby="sheet-sidebar-demo-mobile-title" aria-describedby="sheet-sidebar-demo-mobile-description" data-controller="dialog" class="md:hidden">
+    <dialog id="sheet-sidebar-demo-mobile" data-slot="sheet-content" data-dialog-target="dialog" data-side="left" class="fixed z-50 m-0 flex max-h-none max-w-none flex-col gap-4 shadow-lg outline-none transition duration-300 ease-in-out transition-discrete backdrop:bg-black/50 backdrop:opacity-0 backdrop:transition-[opacity,display,overlay] backdrop:duration-300 backdrop:ease-in-out backdrop:transition-discrete open:backdrop:opacity-100 starting:open:backdrop:opacity-0 inset-y-0 left-0 right-auto h-full border-r -translate-x-full open:translate-x-0 starting:open:-translate-x-full sm:max-w-sm w-(--sidebar-width-mobile) overflow-x-hidden overflow-y-auto bg-sidebar p-0 text-sidebar-foreground" data-action="keydown.esc-&gt;dialog#close:prevent click-&gt;dialog#closeOnClickOutside"><div data-slot="sheet-header" class="flex flex-col gap-1.5 p-4 sr-only">
+<h2 id="sheet-sidebar-demo-mobile-title" data-slot="sheet-title" class="font-semibold text-foreground">Sidebar</h2>
+                <p id="sheet-sidebar-demo-mobile-description" data-slot="sheet-description" class="text-muted-foreground text-sm">Displays the mobile sidebar.</p>
+            </div>
+            <div data-slot="sidebar-mobile-inner" class="flex h-full w-full flex-col"></div>
+        </dialog>
+    </div>
+    <div class="group peer hidden text-sidebar-foreground md:block" data-slot="sidebar" data-side="left" data-variant="sidebar" data-collapsible="" data-collapsible-mode="icon" data-state="expanded">
+        <div class="relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear group-data-[collapsible=offcanvas]:w-0 group-data-[collapsible=icon]:w-(--sidebar-width-icon)" data-slot="sidebar-gap" aria-hidden="true"></div>
+        <aside data-slot="sidebar-container" aria-label="Sidebar" class="fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] group-data-[collapsible=icon]:w-(--sidebar-width-icon) border-r border-sidebar-border">
+            <div class="flex h-full w-full flex-col bg-sidebar group-data-[collapsible=icon]:not-has-[[data-slot=dropdown-menu][data-state=open]]:overflow-hidden" data-slot="sidebar-inner">
+                <div data-slot="sidebar-header" class="flex flex-col gap-2 p-2">
+<ul data-slot="sidebar-menu" class="flex w-full min-w-0 flex-col gap-1">
+<li data-slot="sidebar-menu-item" class="group/menu-item relative">
+<div data-slot="dropdown-menu" data-state="closed" data-dropdown-menu-open-value="false" class="group/dropdown-menu relative w-full block" data-controller="dropdown-menu">
+<button data-slot="sidebar-menu-button" data-size="lg" data-active="false" type="button" title="Acme Inc" class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-slot=sidebar-menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&amp;&gt;:not(:first-child)]:hidden [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-12 text-sm" id="dropdown-menu-sidebar-team-trigger" data-dropdown-menu-target="trigger" aria-haspopup="menu" aria-controls="dropdown-menu-sidebar-team-content" aria-expanded="false" data-state="closed" data-action="click-&gt;dropdown-menu#toggle keydown-&gt;dropdown-menu#onTriggerKeydown"><div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"></path></svg>
+                                </div>
+                                <div class="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                                    <span class="truncate font-semibold">Acme Inc</span>
+                                    <span class="truncate text-xs">Enterprise</span>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="ms-auto size-4 group-data-[collapsible=icon]:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 15l5 5l5-5M7 9l5-5l5 5"></path></svg>
+                            </button>
+                                                <div id="dropdown-menu-sidebar-team-content" role="menu" tabindex="-1" aria-labelledby="dropdown-menu-sidebar-team-trigger" data-slot="dropdown-menu-content" data-dropdown-menu-target="content" data-state="closed" data-side="bottom" data-align="start" data-action="keydown-&gt;dropdown-menu#onContentKeydown" class="invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/dropdown-menu:visible group-data-[state=open]/dropdown-menu:scale-100 group-data-[state=open]/dropdown-menu:opacity-100 absolute z-50 min-w-[8rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-none top-full mt-2 start-0 ltr:origin-top-left rtl:origin-top-right w-56">
+<div data-slot="dropdown-menu-label" class="px-2 py-1.5 text-sm font-semibold">Teams</div>
+                            <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem">Acme Inc</button>
+                            <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem">Acme Corp.</button>
+                            <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem">Evil Corp.</button>
+                            <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+                            <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem">Add team</button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div data-slot="sidebar-content" class="flex min-h-0 flex-1 flex-col gap-2 group-data-[collapsible=icon]:overflow-hidden">
+<div data-slot="sidebar-group" class="relative flex w-full min-w-0 flex-col p-2">
+<div data-slot="sidebar-group-label" class="flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 outline-none ring-sidebar-ring transition-[margin,opacity] duration-200 ease-linear group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0">Platform</div>
+                <div data-slot="sidebar-group-content" class="w-full text-sm">
+<ul data-slot="sidebar-menu" class="flex w-full min-w-0 flex-col gap-1">
+<li data-slot="sidebar-menu-item" class="group/menu-item relative">
+<div data-slot="collapsible" data-collapsible-open-value="true" data-state="open" data-controller="collapsible" class="group/collapsible">
+<button data-slot="sidebar-menu-button" data-size="default" data-active="true" type="button" title="Playground" aria-current="page" class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-slot=sidebar-menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&amp;&gt;:not(:first-child)]:hidden [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm" data-collapsible-target="trigger" data-action="click-&gt;collapsible#toggle" aria-expanded="true" data-state="open"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m7 11l2-2l-2-2m4 6h4"></path><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect></g></svg>
+                                        <span>Playground</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="ms-auto transition-transform group-data-[state=open]/collapsible:rotate-90" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
+                                    </button>
+                                                                <div data-slot="collapsible-content" data-collapsible-target="content" aria-hidden="false" data-state="open">
+<ul data-slot="sidebar-menu-sub" class="mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-sidebar-border px-2.5 py-0.5 group-data-[collapsible=icon]:hidden">
+<li data-slot="sidebar-menu-sub-item" class="group/menu-sub-item relative">
+<a data-slot="sidebar-menu-sub-button" data-size="md" data-active="false" class="flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground outline-none ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 [&amp;&gt;svg]:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:hidden text-sm" href="#"><span>History</span></a>
+                                        </li>
+                                        <li data-slot="sidebar-menu-sub-item" class="group/menu-sub-item relative">
+<a data-slot="sidebar-menu-sub-button" data-size="md" data-active="false" class="flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground outline-none ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 [&amp;&gt;svg]:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:hidden text-sm" href="#"><span>Starred</span></a>
+                                        </li>
+                                        <li data-slot="sidebar-menu-sub-item" class="group/menu-sub-item relative">
+<a data-slot="sidebar-menu-sub-button" data-size="md" data-active="false" class="flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground outline-none ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 [&amp;&gt;svg]:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:hidden text-sm" href="#"><span>Settings</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li data-slot="sidebar-menu-item" class="group/menu-item relative">
+<a data-slot="sidebar-menu-button" data-size="default" data-active="false" title="Models" class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-slot=sidebar-menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&amp;&gt;:not(:first-child)]:hidden [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2m16 0h2m-7-1v2m-6-2v2"></path></g></svg>
+                                <span>Models</span>
+                            </a>
+                        </li>
+                        <li data-slot="sidebar-menu-item" class="group/menu-item relative">
+<a data-slot="sidebar-menu-button" data-size="default" data-active="false" title="Documentation" class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-slot=sidebar-menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&amp;&gt;:not(:first-child)]:hidden [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v16m8.001-2A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2a5 5 0 0 1 4-2z"></path></svg>
+                                <span>Documentation</span>
+                            </a>
+                        </li>
+                        <li data-slot="sidebar-menu-item" class="group/menu-item relative">
+<a data-slot="sidebar-menu-button" data-size="default" data-active="false" title="Settings" class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-slot=sidebar-menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&amp;&gt;:not(:first-child)]:hidden [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M14 17H5M19 7h-9"></path><circle cx="17" cy="17" r="3"></circle><circle cx="7" cy="7" r="3"></circle></g></svg>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div data-slot="sidebar-group" class="relative flex w-full min-w-0 flex-col p-2 group-data-[collapsible=icon]:hidden">
+<div data-slot="sidebar-group-label" class="flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 outline-none ring-sidebar-ring transition-[margin,opacity] duration-200 ease-linear group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0">Projects</div>
+                <div data-slot="sidebar-group-content" class="w-full text-sm">
+<ul data-slot="sidebar-menu" class="flex w-full min-w-0 flex-col gap-1">
+<li data-slot="sidebar-menu-item" class="group/menu-item relative">
+<a data-slot="sidebar-menu-button" data-size="default" data-active="false" class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-slot=sidebar-menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&amp;&gt;:not(:first-child)]:hidden [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 6H2m20 12H2M6 2v20M18 2v20"></path></svg>
+                                <span>Design Engineering</span>
+                            </a>
+                            <div data-slot="dropdown-menu" data-state="closed" data-dropdown-menu-open-value="false" class="group/dropdown-menu relative inline-block absolute! right-1 top-1.5" data-controller="dropdown-menu">
+<button data-slot="sidebar-menu-action" type="button" class="absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 peer-hover/menu-button:text-sidebar-accent-foreground [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 after:absolute after:-inset-2 peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5 group-data-[collapsible=icon]:hidden static!" id="dropdown-menu-sidebar-project-1-trigger" data-dropdown-menu-target="trigger" aria-haspopup="menu" aria-controls="dropdown-menu-sidebar-project-1-content" aria-expanded="false" data-state="closed" data-action="click-&gt;dropdown-menu#toggle keydown-&gt;dropdown-menu#onTriggerKeydown"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></g></svg>
+                                        <span class="sr-only">More</span>
+                                    </button>
+                                                                <div id="dropdown-menu-sidebar-project-1-content" role="menu" tabindex="-1" aria-labelledby="dropdown-menu-sidebar-project-1-trigger" data-slot="dropdown-menu-content" data-dropdown-menu-target="content" data-state="closed" data-side="right" data-align="start" data-action="keydown-&gt;dropdown-menu#onContentKeydown" class="invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/dropdown-menu:visible group-data-[state=open]/dropdown-menu:scale-100 group-data-[state=open]/dropdown-menu:opacity-100 absolute z-50 min-w-[8rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-none left-full top-1/2 -translate-y-1/2 ml-2 origin-left w-40">
+<button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem">View project</button>
+                                    <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem">Share project</button>
+                                    <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+                                    <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem">Delete project</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li data-slot="sidebar-menu-item" class="group/menu-item relative">
+<a data-slot="sidebar-menu-button" data-size="default" data-active="false" class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-slot=sidebar-menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&amp;&gt;:not(:first-child)]:hidden [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></g></svg>
+                                <span>Sales &amp; Marketing</span>
+                            </a>
+                            <div data-slot="dropdown-menu" data-state="closed" data-dropdown-menu-open-value="false" class="group/dropdown-menu relative inline-block absolute! right-1 top-1.5" data-controller="dropdown-menu">
+<button data-slot="sidebar-menu-action" type="button" class="absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 peer-hover/menu-button:text-sidebar-accent-foreground [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 after:absolute after:-inset-2 peer-data-[size=sm]/menu-button:top-1 peer-data-[size=default]/menu-button:top-1.5 peer-data-[size=lg]/menu-button:top-2.5 group-data-[collapsible=icon]:hidden static!" id="dropdown-menu-sidebar-project-2-trigger" data-dropdown-menu-target="trigger" aria-haspopup="menu" aria-controls="dropdown-menu-sidebar-project-2-content" aria-expanded="false" data-state="closed" data-action="click-&gt;dropdown-menu#toggle keydown-&gt;dropdown-menu#onTriggerKeydown"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></g></svg>
+                                        <span class="sr-only">More</span>
+                                    </button>
+                                                                <div id="dropdown-menu-sidebar-project-2-content" role="menu" tabindex="-1" aria-labelledby="dropdown-menu-sidebar-project-2-trigger" data-slot="dropdown-menu-content" data-dropdown-menu-target="content" data-state="closed" data-side="right" data-align="start" data-action="keydown-&gt;dropdown-menu#onContentKeydown" class="invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/dropdown-menu:visible group-data-[state=open]/dropdown-menu:scale-100 group-data-[state=open]/dropdown-menu:opacity-100 absolute z-50 min-w-[8rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-none left-full top-1/2 -translate-y-1/2 ml-2 origin-left w-40">
+<button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem">View project</button>
+                                    <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem">Share project</button>
+                                    <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+                                    <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem">Delete project</button>
+                                </div>
+                            </div>
+                        </li>
+                        <li data-slot="sidebar-menu-item" class="group/menu-item relative">
+<a data-slot="sidebar-menu-button" data-size="default" data-active="false" class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-slot=sidebar-menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&amp;&gt;:not(:first-child)]:hidden [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0zm.894.211v15M9 3.236v15"></path></svg>
+                                <span>Travel</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div data-slot="sidebar-footer" class="flex flex-col gap-2 p-2">
+<ul data-slot="sidebar-menu" class="flex w-full min-w-0 flex-col gap-1">
+<li data-slot="sidebar-menu-item" class="group/menu-item relative">
+<div data-slot="dropdown-menu" data-state="closed" data-dropdown-menu-open-value="false" class="group/dropdown-menu relative w-full block" data-controller="dropdown-menu">
+<button data-slot="sidebar-menu-button" data-size="lg" data-active="false" type="button" title="shadcn" class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-slot=sidebar-menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&amp;&gt;:not(:first-child)]:hidden [&amp;&gt;span:last-child]:truncate [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-12 text-sm" id="dropdown-menu-sidebar-account-trigger" data-dropdown-menu-target="trigger" aria-haspopup="menu" aria-controls="dropdown-menu-sidebar-account-content" aria-expanded="false" data-state="closed" data-action="click-&gt;dropdown-menu#toggle keydown-&gt;dropdown-menu#onTriggerKeydown"><div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></g></svg>
+                                </div>
+                                <div class="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                                    <span class="truncate font-semibold">shadcn</span>
+                                    <span class="truncate text-xs">m@example.com</span>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="ms-auto size-4 group-data-[collapsible=icon]:hidden" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 15l5 5l5-5M7 9l5-5l5 5"></path></svg>
+                            </button>
+                                                <div id="dropdown-menu-sidebar-account-content" role="menu" tabindex="-1" aria-labelledby="dropdown-menu-sidebar-account-trigger" data-slot="dropdown-menu-content" data-dropdown-menu-target="content" data-state="closed" data-side="top" data-align="start" data-action="keydown-&gt;dropdown-menu#onContentKeydown" class="invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/dropdown-menu:visible group-data-[state=open]/dropdown-menu:scale-100 group-data-[state=open]/dropdown-menu:opacity-100 absolute z-50 min-w-[8rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-none bottom-full mb-2 start-0 ltr:origin-bottom-left rtl:origin-bottom-right w-56">
+<div data-slot="dropdown-menu-label" class="px-2 py-1.5 text-sm font-semibold">My Account</div>
+                            <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem">Upgrade to Pro</button>
+                            <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+                            <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem">Account</button>
+                            <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem">Billing</button>
+                            <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem">Notifications</button>
+                            <div role="separator" aria-orientation="horizontal" data-slot="dropdown-menu-separator" class="-mx-1 my-1 h-px bg-border"></div>
+
+                            <button role="menuitem" tabindex="-1" data-slot="dropdown-menu-item" data-dropdown-menu-target="item" data-close-on-select="true" data-disabled="false" aria-disabled="false" type="button" class="relative flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&amp;_svg:not([class*=size-])]:size-4 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0" data-action="click-&gt;dropdown-menu#closeFromItem">Log out</button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <button data-slot="sidebar-rail" aria-label="Toggle Sidebar" title="Toggle Sidebar" tabindex="-1" type="button" class="absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear sm:flex after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 [[data-side=left]_&amp;]:cursor-w-resize [[data-side=right]_&amp;]:cursor-e-resize [[data-side=left][data-state=collapsed]_&amp;]:cursor-e-resize [[data-side=right][data-state=collapsed]_&amp;]:cursor-w-resize group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full group-data-[collapsible=offcanvas]:hover:bg-sidebar [[data-side=left][data-collapsible=offcanvas]_&amp;]:-right-2 [[data-side=right][data-collapsible=offcanvas]_&amp;]:-left-2" data-action="click-&gt;sidebar#toggle"></button>
+
+    
+            </div>
+        </aside>
+    </div>    <main data-slot="sidebar-inset" class="relative flex w-full min-w-0 flex-1 flex-col bg-background md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2"><header class="flex h-14 shrink-0 items-center gap-2 border-b px-4">
+            <button data-slot="sidebar-trigger" aria-label="Toggle Sidebar" aria-expanded="true" data-sidebar-target="sidebar-demo" aria-controls="sidebar-demo" type="button" class="inline-flex size-7 shrink-0 items-center justify-center rounded-md outline-none ring-sidebar-ring transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:shrink-0 -ml-1" data-action="click-&gt;sidebar#toggle"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M9 3v18"></path></g></svg>
+            </button>
+            <div class="mx-1 h-4 w-px bg-border"></div>
+            <span class="text-sm text-muted-foreground">Building Your Application  /  Data Fetching</span>
+        </header>
+        <div class="flex flex-1 flex-col gap-4 p-4">
+            <div class="grid auto-rows-min gap-4 md:grid-cols-3">
+                <div class="aspect-video rounded-xl bg-muted/50"></div>
+                <div class="aspect-video rounded-xl bg-muted/50"></div>
+                <div class="aspect-video rounded-xl bg-muted/50"></div>
+            </div>
+            <div class="min-h-[200px] flex-1 rounded-xl bg-muted/50"></div>
+        </div>
+    </main>
+</div>

@@ -1,0 +1,9 @@
+{# @block content A `Sidebar:MenuButton` and optionally a `Sidebar:MenuAction`, `Sidebar:MenuBadge` or `Sidebar:MenuSub`. #}
+<li
+    data-slot="sidebar-menu-item"
+    {{ attributes.defaults({
+        class: 'group/menu-item relative'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</li>
