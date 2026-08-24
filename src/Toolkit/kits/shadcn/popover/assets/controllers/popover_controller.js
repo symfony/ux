@@ -89,9 +89,11 @@ export default class extends Controller {
 
     #focusContent() {
         const content = this.contentTargets[0];
-        const focusable = content?.querySelector(
-            'input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
-        );
+        const focusable =
+            content?.querySelector('[autofocus]:not([disabled])') ??
+            content?.querySelector(
+                'input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+            );
         if (!focusable) {
             return;
         }
