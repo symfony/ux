@@ -49,7 +49,13 @@ final class ComponentNode extends Node implements NodeOutputInterface
     {
         $compiler->addDebugInfo($this);
 
-        $useYield = method_exists(Environment::class, 'useYield') && $compiler->getEnvironment()->useYield();
+        // Twig 4 removed Environment::useYield(): yield is no longer opt-in, it is the only
+        // compilation mode. Probing for the method therefore reports "no yield support" on
+        // Twig 4 and selects the legacy echo/display path, which Twig 4 rejects outright --
+        // so every template containing a component fails to compile.
+        $isTwig4 = Environment::MAJOR_VERSION >= 4;
+        $canYield = $isTwig4 || method_exists(Environment::class, 'useYield');
+        $useYield = $isTwig4 || ($canYield && $compiler->getEnvironment()->useYield());
 
         $componentRuntime = $compiler->getVarName();
         $compiler
@@ -115,7 +121,10 @@ final class ComponentNode extends Node implements NodeOutputInterface
             ->write('if (null !== $preRendered) {')
             ->raw("\n")
             ->indent();
-        if (method_exists(Environment::class, 'useYield')) {
+        // This node is #[YieldReady], so on any Twig that understands yield it emits yield even
+        // when the environment is still in legacy mode -- hence $canYield rather than $useYield,
+        // preserving the existing method_exists() behaviour on Twig 3.
+        if ($canYield) {
             $compiler->write('yield $preRendered; ');
         } else {
             $compiler->write('echo $preRendered; ');
