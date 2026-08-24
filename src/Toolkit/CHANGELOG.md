@@ -12,6 +12,7 @@
 - [Shadcn] Add `native-select` recipe
 - [Shadcn] Add `scroll-area` recipe
 - [Shadcn] Add `slider` recipe
+- [Shadcn] Add `drawer` recipe
 - [Shadcn] Add `sheet` recipe
 - [Shadcn][Flowbite] Merge component classes with `attributes.defaults({ class: '...'|tailwind_classes })` instead of `tailwind_merge` (consumer classes now override component variants)
 - [Shadcn] Fix Field/Label, InputGroup and Pagination silently dropping their own base classes when forwarding to a child component (their checked/disabled/nested/dark styles now apply)

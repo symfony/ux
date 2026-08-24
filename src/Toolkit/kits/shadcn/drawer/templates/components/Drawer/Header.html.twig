@@ -1,0 +1,9 @@
+{# @block content The header area, typically contains `Drawer:Title` and `Drawer:Description`. #}
+<div
+    data-slot="drawer-header"
+    {{ attributes.defaults({
+        class: 'flex flex-col gap-0.5 p-4 group-data-[direction=bottom]/drawer-content:text-center group-data-[direction=top]/drawer-content:text-center md:gap-1.5 md:text-left'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>

@@ -1,0 +1,9 @@
+{# @block content The title text of the drawer. #}
+{%- set _drawer_titleId = inject('drawer.titleId') -%}
+<h2
+    id="{{ _drawer_titleId }}"
+    data-slot="drawer-title"
+    {{ attributes.without('id').defaults({class: 'font-semibold text-foreground'|tailwind_classes}) }}
+>
+    {%- block content %}{% endblock -%}
+</h2>
