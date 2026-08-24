@@ -1,0 +1,436 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-04-14T20:49:30Z
+
+Can you change the base branch to 3.x please, the 2.x is not maintained anymore.
+
+Thanks!
+
+Status: Needs work
+
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-04-15T06:35:12Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/feat/toolkit-shadcn-dropdown-sidebar/src/LazyImage/assets/dist"><b>LazyImage</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/LazyImage/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>395 B</code>
+                    / <code>257 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/LazyImage/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>904 B</code>
+                    / <code>457 B</code>
+                </td><td><em>Removed</em></td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/feat/toolkit-shadcn-dropdown-sidebar/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.6 kB</code>
+                    / <code>1.49 kB</code>
+                </td><td>
+                    <code>7.29 kB</code><sup>-4% 📉</sup>
+                    / <code>1.46 kB</code><sup>-2% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>4.92 kB</code>
+                    / <code>1.4 kB</code>
+                </td><td>
+                    <code>4.65 kB</code><sup>-5% 📉</sup>
+                    / <code>1.26 kB</code><sup>-10% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/feat/toolkit-shadcn-dropdown-sidebar/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>10.56 kB</code>
+                    / <code>1.92 kB</code>
+                </td><td>
+                    <code>10.26 kB</code><sup>-3% 📉</sup>
+                    / <code>1.9 kB</code><sup>-1% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>12.9 kB</code>
+                    / <code>3.19 kB</code>
+                </td><td>
+                    <code>11.25 kB</code><sup>-13% 📉</sup>
+                    / <code>2.84 kB</code><sup>-11% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/feat/toolkit-shadcn-dropdown-sidebar/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>9.92 kB</code>
+                    / <code>1.84 kB</code>
+                </td><td>
+                    <code>9.61 kB</code><sup>-3% 📉</sup>
+                    / <code>1.81 kB</code><sup>-2% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>12.45 kB</code>
+                    / <code>3.36 kB</code>
+                </td><td>
+                    <code>11.38 kB</code><sup>-9% 📉</sup>
+                    / <code>3.17 kB</code><sup>-6% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/feat/toolkit-shadcn-dropdown-sidebar/src/Svelte/assets/dist"><b>Svelte</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Svelte/assets/dist/components.d.ts"><code>components.d.ts</code></a></td>
+            <td>
+                    <code>200 B</code>
+                    / <code>150 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Svelte/assets/dist/components.js"><code>components.js</code></a></td>
+            <td>
+                    <code>46 B</code>
+                    / <code>69 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Svelte/assets/dist/loader.d.ts"><code>loader.d.ts</code></a></td>
+            <td>
+                    <code>435 B</code>
+                    / <code>217 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Svelte/assets/dist/loader.js"><code>loader.js</code></a></td>
+            <td>
+                    <code>553 B</code>
+                    / <code>313 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Svelte/assets/dist/register_controller.d.ts"><code>register_controller.d.ts</code></a></td>
+            <td>
+                    <code>384 B</code>
+                    / <code>235 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Svelte/assets/dist/register_controller.js"><code>register_controller.js</code></a></td>
+            <td>
+                    <code>531 B</code>
+                    / <code>303 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Svelte/assets/dist/render_controller.d.ts"><code>render_controller.d.ts</code></a></td>
+            <td>
+                    <code>629 B</code>
+                    / <code>353 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Svelte/assets/dist/render_controller.js"><code>render_controller.js</code></a></td>
+            <td>
+                    <code>1.05 kB</code>
+                    / <code>493 B</code>
+                </td><td><em>Removed</em></td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/feat/toolkit-shadcn-dropdown-sidebar/src/Swup/assets/dist"><b>Swup</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Swup/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>1012 B</code>
+                    / <code>360 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Swup/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>1.71 kB</code>
+                    / <code>653 B</code>
+                </td><td><em>Removed</em></td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/feat/toolkit-shadcn-dropdown-sidebar/src/TogglePassword/assets/dist"><b>TogglePassword</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/TogglePassword/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>896 B</code>
+                    / <code>355 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/TogglePassword/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>2.64 kB</code>
+                    / <code>1.07 kB</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/TogglePassword/assets/dist/style.min.css"><code>style.min.css</code></a></td>
+            <td>
+                    <code>312 B</code>
+                    / <code>218 B</code>
+                </td><td><em>Removed</em></td></tr><tr><td colspan="3"><a href="https://github.com/Amoifr/ux/tree/feat/toolkit-shadcn-dropdown-sidebar/src/Typed/assets/dist"><b>Typed</b></a></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Typed/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>1.9 kB</code>
+                    / <code>501 B</code>
+                </td><td><em>Removed</em></td></tr><tr>
+                <td><a href="https://github.com/Amoifr/ux/blob/feat/toolkit-shadcn-dropdown-sidebar/src/Typed/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>1.8 kB</code>
+                    / <code>638 B</code>
+                </td><td><em>Removed</em></td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-15T06:35:31Z
+
+Sorry about this — rebased onto `3.x` and moved the CHANGELOG entries into the `3.0.0` section. I'd already been reminded about this on a previous PR and still wasn't careful enough on this batch. Thanks for the patience! 🙏
+
+---------------------------------------------------------------------------
+
+by daFish at 2026-04-16T10:02:50Z
+
+Hey @Amoifr, how is your implementation different than #3232? I think we should avoid duplicate work. 😃
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T07:58:56Z
+
+Main example
+
+https://github.com/user-attachments/assets/66841545-154f-49ce-a096-4fc177c3fde4
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T08:09:02Z
+
+Basic example
+
+https://github.com/user-attachments/assets/0479992b-2d64-42d1-8096-17b71dd0a5d9
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T09:13:15Z
+
+Submenu example
+
+https://github.com/user-attachments/assets/93bfacec-cc36-4f1c-8bd5-6603d5620b5d
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T09:14:36Z
+
+Shortcuts example
+
+https://github.com/user-attachments/assets/b8aec8a6-bc55-4a35-af6e-6d206b82ff15
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T09:17:49Z
+
+With icons example
+
+https://github.com/user-attachments/assets/9390b316-1dc7-4659-be62-54319582199a
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T09:20:06Z
+
+Checkboxes example
+
+https://github.com/user-attachments/assets/d9001b7d-ba67-4cb2-8d46-e2a574216327
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T09:42:12Z
+
+Checkboxes icons (better than ogiginal)
+
+https://github.com/user-attachments/assets/ab8bbee2-2bfa-4bba-ab17-bd2c34fde3ea
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T09:47:35Z
+
+Radio group example :
+
+https://github.com/user-attachments/assets/a532e07c-b82d-4df1-ab25-9a812c368490
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T09:56:22Z
+
+Radio Icons example
+
+https://github.com/user-attachments/assets/94637c97-1184-4dc1-b8a1-d42bbd43c914
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T09:58:57Z
+
+Desctructive example
+
+https://github.com/user-attachments/assets/469ed310-ba91-4b5d-9cc0-a2bfad3a9ab5
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T10:00:21Z
+
+Avatar example
+
+https://github.com/user-attachments/assets/18de00d9-3430-4fd8-a939-78ec2e31536b
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T10:11:12Z
+
+Complex example :
+
+https://github.com/user-attachments/assets/11d61bf9-0e74-49a2-8047-c6b09db623d9
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-20T12:06:29Z
+
+RTL example
+
+https://github.com/user-attachments/assets/52b60997-97e6-430d-a87d-470421edf9f6
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-23T13:29:35Z
+
+Reworked `DropdownMenu` (and its `SubTrigger`) to apply the `_trigger_attrs` convention (ref [review on #3487](https://github.com/symfony/ux/pull/3487#discussion_r3129054070)): swapped native `<details>`/`<summary>` for a `<div>` + a small Stimulus controller, and dropped the hardcoded `<button>`/chevron on `SubTrigger` so the consumer now picks the wrapping element. Sidebar is untouched (no trigger). Moving back to draft so you can re-test at your convenience. Thanks for the patience! 🙏
+
+---------------------------------------------------------------------------
+
+by Lacoi at 2026-04-25T21:51:50Z
+
+it would be great, to  add the `as` Prop (like the `<twig:Button as="a" href="https://example.com">Link</twig:Button>`) to the `<twig:Sidebar:MenuButton>` component. Without it, you can't render the sidebar menu button as link.
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-04-26T06:55:29Z
+
+Hi @Lacoi! Good catch — that's a fair point, sidebar items are very often links rather than buttons, and several other Shadcn components in this PR already expose an `as` prop (`Button`, `Badge`, `Item`, `ButtonGroup/Text`). So `MenuButton` not having one is a bit inconsistent. 🙂
+
+@Kocal @smnandre — would you like me to fold this into the current PR, or keep it focused and address it in a follow-up once this one is in? Happy either way!
+
+---------------------------------------------------------------------------
+
+by mlwymore at 2026-07-24T13:57:05Z
+
+I'd love to see this merged for a project going into production soon. Let me know if there's any testing etc. I can do to speed it along.
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-08-17T14:13:45Z
+
+Thanks a lot @mlwymore, that's motivating to hear! Quick status: the Toolkit conventions changed quite a bit since this PR was opened (README-based recipes, new class merging, `provide()`/`inject()`, a kit linter), so the branch needs a rework before it can leave draft. I'm updating my Shadcn PRs one by one and this one is next on the list. Your testing offer is very welcome: I'll ping you here as soon as the updated branch is pushed so you can try it against your project.
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-08-19T13:36:56Z
+
+@mlwymore the reworked branch is up! Both kits are now on the current Toolkit format (README-based examples, new class merging, `provide()`/`inject()`), the sidebar became a proper multi-component recipe, and `Sidebar:MenuButton` gained the `as` prop so menu items can render as links (@Lacoi, that one's for you). Kit linter and the 1000+ rendering snapshots are green. If you can give it a spin on your project before I take it out of draft, that would be gold. Thanks for the patience!
+
+---------------------------------------------------------------------------
+
+by mlwymore at 2026-08-20T17:46:23Z
+
+@Amoifr thank you for this! I'm trying out the dropdown menu. Overall it seems to work great, though my menu isn't very complicated. A few questions:
+
+Are there requirements for the elements you can use for the trigger? The documented <twig:Button> works:
+```
+<twig:DropdownMenu:Trigger>
+    <twig:Button variant="outline" {{ ...dropdown_menu_trigger_attrs }}>Open</twig:Button>
+</twig:DropdownMenu:Trigger>
+```
+But I've tried a few other things and they error out. This one:
+```
+<twig:DropdownMenu:Trigger>
+    <button {{ ...dropdown_menu_trigger_attrs }}>Hi</button>
+</twig:DropdownMenu:Trigger>
+```
+yields `Compile Error: Cannot use positional argument after argument unpacking` on page load. And this one:
+```
+<twig:DropdownMenu:Trigger>
+    <twig:ux:icon name="iconoir:user-circle" class="text-primary size-8" {{ ...dropdown_menu_trigger_attrs }}/>
+</twig:DropdownMenu:Trigger>
+```
+yields `An exception has been thrown during the rendering of a template ("Invalid value type for attribute "data-action". Boolean, string, int or float allowed, "Twig\Extra\Html\HtmlAttr\SeparatedTokenList" provided. ") in base.html.twig at line 42.`
+
+Also, when I click on a link in the menu, and then click back in the browser, the menu is still open when I return to the previous page. Not sure if that's expected behavior.
+
+---------------------------------------------------------------------------
+
+by mlwymore at 2026-08-20T18:59:44Z
+
+@Amoifr I also checked out the sidebar. I don't have a sidebar like that in my app, so I tried the demo one. A few observations:
+
+1. The dropdown menus are expandable when the sidebar is collapsed, but they're hidden by the Inset.
+2. The bottom corner dropdown menu expands off the screen.
+3. This might just be a limitation of Twig Components, but it seems like I can't put block definitions in the `<twig:Sidebar:Inset>`. I get `The block 'content' has already been defined line 191 in base.html.twig at line 250.` I tried moving the block definitions outside of the components, but then I think the nesting is throwing things off. There is probably some outerBlocks magic that could be done on my side to make it work. But this might be a general usability issue since the Sidebar Inset is likely to wrap almost everything.
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-08-21T07:50:17Z
+
+Thanks a lot for the thorough testing @mlwymore, this is exactly the kind of feedback the PR needed! Everything below is pushed in 4e13f708.
+
+**Dropdown menu**
+
+- `<button {{ ...dropdown_menu_trigger_attrs }}>`: the `{{ ... }}` spread is a Twig Components feature, it only works on `<twig:...>` tags. On a plain HTML element it reaches Twig as-is and blows up at compile time, as you saw. The way to do it is `<button type="button" {{ html_attr(dropdown_menu_trigger_attrs) }}>`. I added that to the README right after the usage example (and the same trap exists in the upstream `hover-card` README, I will fix it separately).
+- `<twig:ux:icon ... {{ ...dropdown_menu_trigger_attrs }} />`: that one is a limitation of `ux:icon` itself, which rejects the typed attribute values the Toolkit uses for `data-action` merging. It is not specific to this recipe (any `*_trigger_attrs` hits it), so it deserves its own fix on the Icons side. In practice an `<svg>` is not a good trigger anyway (not focusable, no keyboard activation), so wrapping the icon in a `<twig:Button variant="ghost" size="icon" {{ ...dropdown_menu_trigger_attrs }}>` is what I would recommend.
+- Menu still open after going back: the menu did not close when an item was activated, so bfcache restored it open. Activating an item now closes the menu (like Radix does), which also fixes the back navigation case.
+
+**Sidebar**
+
+- `DropdownMenu:Content` gained `side` (`top`/`right`/`bottom`/`left`) and `align` (`start`/`center`/`end`) props. The demo now uses `side="right" align="start"` for the project actions and `side="top"` for the footer menu, so nothing expands off-screen anymore.
+- When the sidebar is collapsed to icons, its inner container used `overflow-hidden`, which clipped any open menu. It now stays visible while a dropdown is open, and the menus render above the inset.
+- Blocks inside `<twig:Sidebar:Inset>`: not a Sidebar limitation, it is how Twig Components work. The content of a component tag is its own template, and `content` is already the name of its default block, hence the "already defined" error. Blocks declared in there also cannot be overridden through `{% extends %}` (and `outerBlocks` only climbs one level, so it does not help across `Provider > Inset`). The pattern that works is a small layout component that captures its `content` block in a variable and renders it inside the inset:
+
+  ```twig
+  {# templates/components/AppLayout.html.twig #}
+  {% set page_content %}{% block content %}{% endblock %}{% endset %}
+  <twig:Sidebar:Provider>
+      <twig:Sidebar>...</twig:Sidebar>
+      <twig:Sidebar:Inset>
+          ...
+          {{ page_content|raw }}
+      </twig:Sidebar:Inset>
+  </twig:Sidebar:Provider>
+  ```
+
+  and then `<twig:AppLayout>...page content...</twig:AppLayout>` inside your pages' `{% block body %}`. I added a "Using the sidebar as a page layout" section to the README with the full snippet, since most people will hit this.
+
+If you get a chance to re-run your scenarios against the new push, I would love to hear how it goes. Thanks again!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-23T05:57:06Z
+
+The dropdown recipe from https://github.com/symfony/ux/pull/3232 has been merged
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-08-23T06:34:45Z
+
+Thanks for the heads-up @Kocal! Dropped my `dropdown-menu` recipe and rebased the branch onto current `3.x` so the sidebar now builds on the merged one from #3232 (`id` prop, `side` / `align` on the root). The PR is reduced to the `sidebar` recipe only (title and description updated), kit linter and the 631 rendering snapshots are green.
+
+@mlwymore fyi, same behavior as before on your side, only the dropdown API changed: `<twig:DropdownMenu id="..." side="right" align="start">` instead of `side` / `align` on `DropdownMenu:Content`.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-24T10:48:38Z
+
+Thanks @Amoifr for the resync, it's solid work. I rebased onto current 3.x (form/sheet/drawer recipes landed in the meantime) and pushed a few fixes plus one feature on top. Here's a recap.
+
+**Housekeeping**
+- Added the CHANGELOG entry for the recipe.
+- Set the manifest `version-added` to `3.5` (was `3.6`) to match the other recipes landing in 3.5.
+
+**MenuButton, collapsed (icon) rail**
+
+The collapsed team-switcher avatar was crushed and the icon buttons weren't centered. Root cause: `|tailwind_classes` doesn't resolve conflicting utilities the way JS `tailwind-merge` does, so the base `!important` `p-2` kept winning over the `lg` variant's `p-0`. Fixed by forcing `group-data-[collapsible=icon]:p-0!` plus `group-data-[collapsible=icon]:justify-center` (avatar fills, icons stay centered).
+
+**Mobile off-canvas (the main addition)**
+
+It was missing entirely: the controller tracked an `openMobile` state but nothing rendered it, so the sidebar was just `display:none` below the breakpoint.
+
+I implemented it by reusing the `sheet` recipe (native `<dialog>` + backdrop + slide-in + Escape/click-outside come for free), with a single-render DOM-relocation portal: the sidebar content is rendered once and physically moved between the desktop layout and the mobile sheet on breakpoint change, instead of being duplicated. The controller drives the sheet's `<dialog>` via `showModal()`/`close()`.
+
+This let me delete the controller's hand-rolled outside-click and Escape handling, since the reused `dialog` controller owns that now. The manifest gains `recipe: ["sheet"]`, and the Provider drops its now-unused `click@window` action.
+
+**Cleanups (review pass)**
+
+Cached the `MediaQueryList`, DOM refs and the keyboard shortcut in `connect()`, simplified `toggle()`, removed a dead `data-mobile` write, and the mobile sheet's accessible title now derives from the `label` prop instead of a hardcoded string.
+
+**Preview fixes (seen on ux.symfony.com)**
+- The hero example used `min-h-[60vh]`, which made the preview iframe balloon on mobile (the iframe auto-sizes to content, so `vh` feeds back on itself) -> switched to a fixed `min-h`.
+- The narrow mobile sheet scrolled horizontally because closed inline dropdown menus overflowed it -> clipped with `overflow-x-hidden` on the mobile sheet content.
+
+All snapshots regenerated, tests + kit lint + oxlint green, and I verified live at mobile (375px) and desktop.
+
+---
+
+Final demo
+
+https://github.com/user-attachments/assets/5db9e0a6-e991-4c1d-9dcd-77bd79462e0d
