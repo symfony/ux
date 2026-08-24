@@ -1,0 +1,9 @@
+{# @block content The title text of the sheet. #}
+{%- set _sheet_titleId = inject('sheet.titleId') -%}
+<h2
+    id="{{ _sheet_titleId }}"
+    data-slot="sheet-title"
+    {{ attributes.without('id').defaults({class: 'font-semibold text-foreground'|tailwind_classes}) }}
+>
+    {%- block content %}{% endblock -%}
+</h2>
