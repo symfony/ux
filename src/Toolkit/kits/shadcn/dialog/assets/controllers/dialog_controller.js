@@ -15,6 +15,7 @@ export default class extends Controller {
 
     open() {
         this.dialogTarget.showModal();
+        this._focusInitialElement();
 
         if (this.hasTriggerTarget) {
             if (this.dialogTarget.getAnimations().length > 0) {
@@ -35,6 +36,19 @@ export default class extends Controller {
         if (target === this.dialogTarget) {
             this.close();
         }
+    }
+
+    _focusInitialElement() {
+        // showModal() already focuses an [autofocus] target or the first focusable element;
+        // when the author did not opt into autofocus, prefer the first form field instead.
+        if (this.dialogTarget.querySelector('[autofocus]')) {
+            return;
+        }
+
+        const field = this.dialogTarget.querySelector(
+            'input:not([type="hidden"]):not([disabled]), textarea:not([disabled]), select:not([disabled])'
+        );
+        field?.focus();
     }
 
     close() {
