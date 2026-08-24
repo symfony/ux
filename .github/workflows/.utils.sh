@@ -42,16 +42,21 @@ _run_package_tests() {
 
     for pkg in $PACKAGES; do
         # Throttle: wait for a running job to finish before starting the next package.
-        while [ "$(jobs -rp | wc -l)" -ge "$max_jobs" ]; do wait -n; done
+        # "|| :" keeps errexit (bash -e) from aborting on a failed job's exit code;
+        # failures are collected from the .rc files during replay instead.
+        while [ "$(jobs -rp | wc -l)" -ge "$max_jobs" ]; do wait -n || :; done
         # Bridge packages carry slashes (e.g. Map/src/Bridge/Google), so flatten
         # them into a single path segment for the temp file names.
         safe="${pkg//\//_}"
         # Run in the background, capturing the package's output and exit code to files
-        # so the parallel logs can be replayed in a stable order below.
+        # so the parallel logs can be replayed in a stable order below. "|| code=$?"
+        # is required: under errexit a failing task would otherwise abort the subshell
+        # before its exit code is recorded.
         {
+            code=0
             _run_task_sequential "$pkg" \
-                "(cd src/$pkg && $COMPOSER_MIN_STAB && $COMPOSER_UP && $PHPUNIT)"
-            echo "$?" > "$logs/$safe.rc"
+                "(cd src/$pkg && $COMPOSER_MIN_STAB && $COMPOSER_UP && $PHPUNIT)" || code=$?
+            echo "$code" > "$logs/$safe.rc"
         } > "$logs/$safe.log" 2>&1 &
     done
     wait
