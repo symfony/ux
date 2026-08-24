@@ -1,0 +1,22 @@
+<!--
+- Kit: Shadcn UI
+- Component: Form
+- Code:
+```twig
+<twig:Form class="mx-auto w-full max-w-md">
+    <twig:Form:Item>
+        <twig:Form:Label for="form-validation-email">Email</twig:Form:Label>
+        <twig:Input id="form-validation-email" name="email" type="email" value="not-an-email" aria-invalid="true" />
+        <twig:Form:Message>Please enter a valid email address.</twig:Form:Message>
+    </twig:Form:Item>
+</twig:Form>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<form data-slot="form" class="space-y-6 mx-auto w-full max-w-md">
+<div data-slot="form-item" class="group/form-item grid gap-2">
+<label data-slot="form-label" class="flex items-center gap-2 text-sm font-medium leading-none select-none group-has-[[data-slot=form-message]]/form-item:text-destructive" for="form-validation-email">Email</label>
+        <input data-slot="input" class="h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40" id="form-validation-email" name="email" type="email" value="not-an-email" aria-invalid="true">
+
+        <p data-slot="form-message" class="text-sm text-destructive">Please enter a valid email address.</p>
+    </div>
+</form>
