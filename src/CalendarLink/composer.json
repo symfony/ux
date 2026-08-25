@@ -35,6 +35,7 @@
     },
     "require": {
         "php": ">=8.4",
+        "symfony/clock": "^7.4|^8.0",
         "symfony/framework-bundle": "^7.4|^8.0",
         "symfony/twig-bundle": "^7.4|^8.0",
         "symfony/uid": "^7.4|^8.0"

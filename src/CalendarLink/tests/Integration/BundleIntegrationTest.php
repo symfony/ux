@@ -12,6 +12,7 @@
 namespace Symfony\UX\CalendarLink\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Clock\MockClock;
 use Symfony\UX\CalendarLink\CalendarEvent;
 use Symfony\UX\CalendarLink\Provider\CalendarLinkProviderInterface;
 use Symfony\UX\CalendarLink\Registry\CalendarLinkProviderRegistry;
@@ -30,6 +31,20 @@ final class BundleIntegrationTest extends KernelTestCase
         foreach ($registry->all() as $provider) {
             $this->assertInstanceOf(CalendarLinkProviderInterface::class, $provider);
         }
+    }
+
+    public function testDtstampUsesTheContainerClock()
+    {
+        $container = self::getContainer();
+        $container->set('clock', new MockClock(new \DateTimeImmutable('2026-05-14 08:30:00', new \DateTimeZone('UTC'))));
+
+        $ics = $container->get('ux_calendar_link.ics.builder')->build(new CalendarEvent(
+            title: 'Demo',
+            start: new \DateTimeImmutable('2026-05-14 09:00', new \DateTimeZone('UTC')),
+            end: new \DateTimeImmutable('2026-05-14 10:00', new \DateTimeZone('UTC')),
+        ));
+
+        $this->assertStringContainsString("DTSTAMP:20260514T083000Z\r\n", $ics);
     }
 
     public function testTwigRendersCalendarLink()

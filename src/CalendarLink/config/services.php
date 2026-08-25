@@ -25,7 +25,8 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_it
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
-    $services->set('ux_calendar_link.ics.builder', IcsBuilder::class);
+    $services->set('ux_calendar_link.ics.builder', IcsBuilder::class)
+        ->arg('$clock', service('clock'));
 
     $services->set('ux_calendar_link.provider.google', GoogleCalendarLinkProvider::class)
         ->tag('ux_calendar_link.provider');
