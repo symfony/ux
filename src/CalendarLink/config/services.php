@@ -27,6 +27,8 @@ return static function (ContainerConfigurator $container): void {
 
     $services->set('ux_calendar_link.ics.builder', IcsBuilder::class);
 
+    $services->alias(IcsBuilder::class, 'ux_calendar_link.ics.builder');
+
     $services->set('ux_calendar_link.provider.google', GoogleCalendarLinkProvider::class)
         ->tag('ux_calendar_link.provider');
 

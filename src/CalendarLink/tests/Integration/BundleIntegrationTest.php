@@ -13,6 +13,7 @@ namespace Symfony\UX\CalendarLink\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\CalendarLink\CalendarEvent;
+use Symfony\UX\CalendarLink\Ics\IcsBuilder;
 use Symfony\UX\CalendarLink\Provider\CalendarLinkProviderInterface;
 use Symfony\UX\CalendarLink\Registry\CalendarLinkProviderRegistry;
 
@@ -30,6 +31,11 @@ final class BundleIntegrationTest extends KernelTestCase
         foreach ($registry->all() as $provider) {
             $this->assertInstanceOf(CalendarLinkProviderInterface::class, $provider);
         }
+    }
+
+    public function testIcsBuilderIsAutowirable()
+    {
+        $this->assertInstanceOf(IcsBuilder::class, self::getContainer()->get(IcsBuilder::class));
     }
 
     public function testTwigRendersCalendarLink()
