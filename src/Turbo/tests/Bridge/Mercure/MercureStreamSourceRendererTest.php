@@ -49,11 +49,14 @@ final class MercureStreamSourceRendererTest extends KernelTestCase
             '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?topic=a_topic" private></turbo-mercure-stream-source>',
         ];
 
-        yield 'class name — single backslash (Twig drops \\X)' => [
+        yield 'class name — single backslash' => [
             "{{ turbo_stream_from('Symfony\\UX\\Turbo\\Tests\\Fixtures\\Book') }}",
             [],
-            // single-quoted Twig string: \X drops the backslash → 'SymfonyUXTurboTestsFixturesBook'
-            '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?topic=SymfonyUXTurboTestsFixturesBook"></turbo-mercure-stream-source>',
+            // single-quoted Twig string: Twig 3 drops the backslash of \X → 'SymfonyUXTurboTestsFixturesBook', Twig 4 keeps it → class_exists → URL pattern
+            // @phpstan-ignore greaterOrEqual.alwaysFalse, greaterOrEqual.alwaysTrue (PHPStan only ever sees the installed Twig)
+            \Twig\Environment::MAJOR_VERSION >= 4
+                ? '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?topic=https%3A%2F%2Fsymfony.com%2Fux-turbo%2FSymfony%255CUX%255CTurbo%255CTests%255CFixtures%255CBook%2F%7Bid%7D"></turbo-mercure-stream-source>'
+                : '<turbo-mercure-stream-source src="http://127.0.0.1:3000/.well-known/mercure?topic=SymfonyUXTurboTestsFixturesBook"></turbo-mercure-stream-source>',
         ];
 
         yield 'class name — double backslash (correct usage)' => [

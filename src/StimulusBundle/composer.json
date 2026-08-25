@@ -18,7 +18,7 @@
         "symfony/dependency-injection": "^7.4|^8.0",
         "symfony/finder": "^7.4|^8.0",
         "symfony/http-kernel": "^7.4|^8.0",
-        "twig/twig": "^2.15.3|^3.8",
+        "twig/twig": "^2.15.3|^3.8|^4.0",
         "symfony/deprecation-contracts": "^2.0|^3.0"
     },
     "conflict": {

@@ -40,7 +40,7 @@
         "symfony/routing": "^7.4|^8.0",
         "symfony/translation-contracts": "^3.0",
         "symfony/twig-bundle": "^7.4|^8.0",
-        "twig/twig": "^3.10.3"
+        "twig/twig": "^3.10.3|^4.0"
     },
     "require-dev": {
         "doctrine/dbal": "^4.4",

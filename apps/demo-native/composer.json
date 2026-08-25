@@ -19,9 +19,9 @@
         "symfony/ux-native": "3.x-dev",
         "symfony/ux-turbo": "3.x-dev",
         "symfony/yaml": "8.0.*",
-        "twig/extra-bundle": "^3.24",
-        "twig/string-extra": "^3.24",
-        "twig/twig": "^3.24"
+        "twig/extra-bundle": "^3.24|^4.0",
+        "twig/string-extra": "^3.24|^4.0",
+        "twig/twig": "^3.24|^4.0"
     },
     "require-dev": {
         "symfony/debug-bundle": "8.0.*",
