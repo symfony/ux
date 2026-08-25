@@ -25,6 +25,7 @@ export type ComponentHooks = {
     'request:started': (requestConfig: any) => MaybePromise;
     'render:finished': (component: Component) => MaybePromise;
     'response:error': (backendResponse: BackendResponse, controls: { displayError: boolean }) => MaybePromise;
+    'request:error': (error: any, requestConfig: any, controls: { displayError: boolean }) => MaybePromise;
     'loading.state:started': (element: HTMLElement, request: BackendRequest) => MaybePromise;
     'loading.state:finished': (element: HTMLElement) => MaybePromise;
     'model:set': (model: string, value: any, component: Component) => MaybePromise;
@@ -306,58 +307,76 @@ export default class Component {
         this.valueStore.flushDirtyPropsToPending();
         this.isRequestPending = remainingActions.length > 0;
 
-        this.backendRequest.promise.then(async (response) => {
-            const backendResponse = new BackendResponse(response);
-            const html = await backendResponse.getBody();
+        this.backendRequest.promise
+            .then(async (response) => {
+                const backendResponse = new BackendResponse(response);
+                const html = await backendResponse.getBody();
 
-            // clear sent files inputs
-            for (const input of Object.values(this.pendingFiles)) {
-                input.value = '';
-            }
-
-            // if the response does not contain a component, render as an error
-            const headers = backendResponse.response.headers;
-            if (
-                !headers.get('Content-Type')?.includes('application/vnd.live-component+html') &&
-                !headers.get('X-Live-Redirect')
-            ) {
-                const controls = { displayError: true };
-                this.valueStore.pushPendingPropsBackToDirty();
-                this.hooks.triggerHook('response:error', backendResponse, controls);
-
-                if (controls.displayError) {
-                    this.renderError(html);
+                // clear sent files inputs
+                for (const input of Object.values(this.pendingFiles)) {
+                    input.value = '';
                 }
 
+                // if the response does not contain a component, render as an error
+                const headers = backendResponse.response.headers;
+                if (
+                    !headers.get('Content-Type')?.includes('application/vnd.live-component+html') &&
+                    !headers.get('X-Live-Redirect')
+                ) {
+                    const controls = { displayError: true };
+                    this.valueStore.pushPendingPropsBackToDirty();
+                    this.hooks.triggerHook('response:error', backendResponse, controls);
+
+                    if (controls.displayError) {
+                        this.renderError(html);
+                    }
+
+                    this.backendRequest = null;
+                    thisPromiseResolve(backendResponse);
+
+                    return response;
+                }
+
+                const liveUrl = backendResponse.getLiveUrl();
+                if (liveUrl) {
+                    history.replaceState(
+                        history.state,
+                        '',
+                        new URL(liveUrl + window.location.hash, window.location.origin)
+                    );
+                }
+
+                this.processRerender(html, backendResponse);
+
+                // finally resolve this promise
                 this.backendRequest = null;
                 thisPromiseResolve(backendResponse);
 
+                // do we already have another request pending?
+                if (this.isRequestPending) {
+                    this.isRequestPending = false;
+                    this.performRequest();
+                }
+
                 return response;
-            }
+            })
+            .catch((error: any) => {
+                const controls = { displayError: true };
 
-            const liveUrl = backendResponse.getLiveUrl();
-            if (liveUrl) {
-                history.replaceState(
-                    history.state,
-                    '',
-                    new URL(liveUrl + window.location.hash, window.location.origin)
-                );
-            }
+                this.hooks.triggerHook('request:error', error, requestConfig, controls);
 
-            this.processRerender(html, backendResponse);
+                if (controls.displayError) {
+                    this.renderError(`<p>${error}</p>`);
+                }
 
-            // finally resolve this promise
-            this.backendRequest = null;
-            thisPromiseResolve(backendResponse);
+                this.backendRequest = null;
 
-            // do we already have another request pending?
-            if (this.isRequestPending) {
-                this.isRequestPending = false;
-                this.performRequest();
-            }
-
-            return response;
-        });
+                // if we have a pending request, try it now
+                if (this.isRequestPending) {
+                    this.isRequestPending = false;
+                    this.performRequest();
+                }
+            });
     }
 
     private processRerender(html: string, backendResponse: BackendResponse) {

@@ -6,7 +6,7 @@ var BackendRequest_default = class {
 		this.promise.then((response) => {
 			this.isResolved = true;
 			return response;
-		});
+		}).catch(() => {});
 		this.actions = actions;
 		this.updatedModels = updateModels;
 	}
@@ -1531,6 +1531,15 @@ var Component = class {
 				this.performRequest();
 			}
 			return response;
+		}).catch((error) => {
+			const controls = { displayError: true };
+			this.hooks.triggerHook("request:error", error, requestConfig, controls);
+			if (controls.displayError) this.renderError(`<p>${error}</p>`);
+			this.backendRequest = null;
+			if (this.isRequestPending) {
+				this.isRequestPending = false;
+				this.performRequest();
+			}
 		});
 	}
 	processRerender(html, backendResponse) {

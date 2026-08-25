@@ -988,6 +988,7 @@ The following hooks are available (along with the arguments that are passed):
 * ``disconnect`` args ``(component: Component)``
 * ``render:started`` args ``(html: string, response: BackendResponse, controls: { shouldRender: boolean })``
 * ``render:finished`` args ``(component: Component)``
+* ``request:error`` args ``(error: any, requestConfig: any, controls: { displayError: boolean })``
 * ``response:error`` args ``(backendResponse: BackendResponse, controls: { displayError: boolean })``
 * ``loading.state:started`` args ``(element: HTMLElement, request: BackendRequest)``
 * ``loading.state:finished`` args ``(element: HTMLElement)``
