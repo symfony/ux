@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\CalendarLink;
 
+use Symfony\Component\Uid\Uuid;
 use Symfony\UX\CalendarLink\Exception\InvalidArgumentException;
 
 /**
@@ -23,6 +24,7 @@ final class CalendarEvent
 
     /**
      * @param list<CalendarReminder> $reminders
+     * @param Uuid|null              $uid       A stable UID reused across builds so clients update the event instead of duplicating it; derived from the event content when null
      */
     public function __construct(
         public readonly string $title,
@@ -34,6 +36,7 @@ final class CalendarEvent
         public readonly ?string $url = null,
         public readonly ?CalendarRecurrence $recurrence = null,
         public readonly array $reminders = [],
+        public readonly ?Uuid $uid = null,
     ) {
         if ('' === trim($title)) {
             throw new InvalidArgumentException('Event title must not be empty.');
