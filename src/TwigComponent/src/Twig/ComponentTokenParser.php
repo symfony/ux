@@ -17,6 +17,7 @@ use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
@@ -96,7 +97,8 @@ final class ComponentTokenParser extends AbstractTokenParser
             return $expression;
         }
 
-        if ($expression instanceof NameExpression && !$expression->hasExplicitParentheses()) { // using {% component Alert %}
+        // using {% component Alert %} (NameExpression on Twig 3, ContextVariable on Twig 4)
+        if (($expression instanceof NameExpression || $expression instanceof ContextVariable) && !$expression->hasExplicitParentheses()) {
             return $expression;
         }
 
