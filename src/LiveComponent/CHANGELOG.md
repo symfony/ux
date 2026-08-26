@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.5
+
+- Add `LiveResponse::downloadUrl()` and `LiveResponse::downloadFile()` to trigger a file download from a `LiveAction`, pointing the browser at a URL or sending the contents with the response, while the component keeps its state
+
 ## 3.1
 
 - Fix dynamic template resolution when using the `loading` attribute on a deferred component

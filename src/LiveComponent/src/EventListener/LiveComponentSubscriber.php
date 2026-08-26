@@ -16,6 +16,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -28,6 +29,7 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
+use Symfony\UX\LiveComponent\LiveResponse;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentMetadata;
@@ -44,6 +46,10 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 {
     private const HTML_CONTENT_TYPE = 'application/vnd.live-component+html';
     private const REDIRECT_HEADER = 'X-Live-Redirect';
+    private const HTML_LENGTH_HEADER = 'X-Live-Html-Length';
+    private const DOWNLOAD_FILENAME_HEADER = 'X-Live-Download-Filename';
+    private const DOWNLOAD_TYPE_HEADER = 'X-Live-Download-Type';
+    private const DOWNLOAD_URL_HEADER = 'X-Live-Download-Url';
 
     public function __construct(
         private ContainerInterface $container,
@@ -248,11 +254,21 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
+        $liveResponse = $event->getControllerResult();
+        $liveResponse = $liveResponse instanceof LiveResponse ? $liveResponse : null;
+
         if (!$event->isMainRequest()) {
-            // sub-request, so skip rendering
+            // sub-request (batch): the render happens later, so hand the directive up
+            if (null !== $liveResponse) {
+                $request->attributes->set('_live_response', $liveResponse);
+            }
             $event->setResponse(new Response());
 
             return;
+        }
+
+        if (null !== $liveResponse) {
+            $this->assertLiveResponseIsAllowed($request);
         }
 
         $mountedComponent = $request->attributes->get('_mounted_component');
@@ -263,7 +279,21 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             $request->attributes->set('_live_request_data', $liveRequestData);
         }
 
-        $event->setResponse($this->createResponse($mountedComponent));
+        $event->setResponse($this->createResponse($mountedComponent, $liveResponse));
+    }
+
+    /**
+     * A download answers a user intent, so it is restricted to what can only come from one.
+     */
+    private function assertLiveResponseIsAllowed(Request $request): void
+    {
+        if (!$request->isMethod('post')) {
+            throw new \LogicException('A LiveResponse can only be returned from a POST request. A GET is replayable (prefetch, crawlers), which a download is not.');
+        }
+
+        if ($request->attributes->get('_component_default_action', false)) {
+            throw new \LogicException('A LiveResponse cannot be returned from the default action: it runs on every re-render, so a polling component would trigger it over and over. Return it from a LiveAction or a LiveListener instead.');
+        }
     }
 
     public function onKernelException(ExceptionEvent $event): void
@@ -328,7 +358,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         ];
     }
 
-    private function createResponse(MountedComponent $mounted): Response
+    private function createResponse(MountedComponent $mounted, ?LiveResponse $liveResponse = null): Response
     {
         $component = $mounted->getComponent();
 
@@ -336,9 +366,68 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             $component->{$method->name}();
         }
 
-        return new Response($this->container->get(ComponentRenderer::class)->render($mounted), 200, [
+        $html = $this->container->get(ComponentRenderer::class)->render($mounted);
+
+        if (null === $liveResponse) {
+            return new Response($html, 200, [
+                'Content-Type' => self::HTML_CONTENT_TYPE,
+            ]);
+        }
+
+        if ($liveResponse->isDownloadUrl()) {
+            // the render is untouched; the browser fetches the file itself
+            return new Response($html, 200, [
+                'Content-Type' => self::HTML_CONTENT_TYPE,
+                self::DOWNLOAD_URL_HEADER => $liveResponse->url,
+            ]);
+        }
+
+        // the file rides along in the same body, right after the HTML: the component still
+        // re-renders, so anything the action changed survives the download
+        $htmlLength = \strlen($html);
+        $headers = [
             'Content-Type' => self::HTML_CONTENT_TYPE,
-        ]);
+            self::HTML_LENGTH_HEADER => (string) $htmlLength,
+            // headers are ASCII only, so the real name is percent-encoded
+            self::DOWNLOAD_FILENAME_HEADER => rawurlencode($liveResponse->filename),
+            self::DOWNLOAD_TYPE_HEADER => $liveResponse->contentType,
+        ];
+
+        // knowing both lengths lets the browser report progress over the whole body
+        if (null !== $liveResponse->size) {
+            $headers['Content-Length'] = (string) ($htmlLength + $liveResponse->size);
+        }
+
+        $content = $liveResponse->content;
+
+        if (\is_string($content)) {
+            return new Response($html.$content, 200, $headers);
+        }
+
+        return new StreamedResponse(static function () use ($html, $content): void {
+            echo $html;
+
+            if ($content instanceof \Closure) {
+                $result = $content();
+
+                // a closure may echo directly, or return an iterable to be streamed
+                if (is_iterable($result)) {
+                    foreach ($result as $chunk) {
+                        echo $chunk;
+                    }
+                }
+
+                return;
+            }
+
+            if ($content instanceof \SplFileInfo) {
+                $content = fopen($content->getPathname(), 'r');
+            }
+
+            while (!feof($content)) {
+                echo fread($content, 8192);
+            }
+        }, 200, $headers);
     }
 
     private function isLiveComponentRequest(Request $request): bool

@@ -1336,10 +1336,18 @@ the component now extends ``AbstractController``! That is totally
 allowed, and gives you access to all of your normal controller
 shortcuts. We even added a flash message!
 
+.. _working-with-files:
+
+Files
+-----
+
+Live Components can send files to the server (uploads) and return files from
+a ``LiveAction`` (downloads).
+
 .. _files:
 
 Uploading files
----------------
+~~~~~~~~~~~~~~~
 
 Files aren't sent to the component by default. You need to use a live action
 to handle the files and tell the component when the file should be sent:
@@ -1405,39 +1413,127 @@ The files will be available in a regular ``$request->files`` files bag::
 .. _downloads:
 
 Downloading files
------------------
+~~~~~~~~~~~~~~~~~
 
-Currently, Live Components do not natively support returning file responses
-directly from a LiveAction. However, you can implement file downloads by
-redirecting to a route that handles the file response.
+.. versionadded:: 3.5
 
-Create a LiveAction that generates the URL for the file download and returns a ``RedirectResponse``::
+    Triggering a file download from a ``LiveAction`` was added in LiveComponent 3.5.
 
-        #[LiveAction]
-        public function initiateDownload(UrlGeneratorInterface $urlGenerator): RedirectResponse
-        {
-            $url = $urlGenerator->generate('app_file_download');
-            return new RedirectResponse($url);
-        }
-
-.. code-block:: html+twig
-
-    <div {{ attributes }} data-turbo="false">
-        <button
-            data-action="live#action"
-            data-live-action-param="initiateDownload"
-        >
-            Download
-        </button>
-    </div>
-
+Return a ``LiveResponse`` from a ``LiveAction`` to ask the browser for a download. Your
+component still re-renders, so anything the action changed stays on the page.
 
 .. tip::
 
-    When Turbo is enabled, if a LiveAction response redirects to another URL,
-    Turbo will make a request to prefetch the content. Here, adding ``data-turbo="false"``
-    ensures that the download URL is called only once.
+    Prefer ``LiveResponse::downloadUrl()`` whenever you can serve the file from its own route.
+    The browser downloads it natively, so no memory is used on either side, progress is
+    reported, range requests and resuming work, and you can access-control and log that URL on
+    its own. Reach for ``downloadFile()`` only when no such URL can exist, typically because
+    the action builds the content and you would have to store it first.
 
+Pointing the browser at a URL
+.............................
+
+::
+
+    // src/Twig/Components/ReportExporter.php
+    namespace App\Twig\Components;
+
+    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+    use Symfony\UX\LiveComponent\Attribute\LiveAction;
+    use Symfony\UX\LiveComponent\Attribute\LiveProp;
+    use Symfony\UX\LiveComponent\DefaultActionTrait;
+    use Symfony\UX\LiveComponent\LiveResponse;
+
+    #[AsLiveComponent]
+    class ReportExporter
+    {
+        use DefaultActionTrait;
+
+        #[LiveProp]
+        public int $exportCount = 0;
+
+        #[LiveAction]
+        public function export(UrlGeneratorInterface $urlGenerator): LiveResponse
+        {
+            ++$this->exportCount;
+
+            return LiveResponse::downloadUrl($urlGenerator->generate('app_report_download'));
+        }
+    }
+
+.. code-block:: html+twig
+
+    <div {{ attributes }}>
+        <button data-action="live#action" data-live-action-param="export">Export</button>
+
+        <p>Exported {{ exportCount }} times</p>
+    </div>
+
+The component re-renders and ``exportCount`` is up to date, while the browser fetches the file
+from the URL on its own.
+
+Sending the file with the response
+..................................
+
+When no URL can serve the content, ``downloadFile()`` sends it alongside your rendered
+component, in a single response::
+
+    #[LiveAction]
+    public function export(): LiveResponse
+    {
+        ++$this->exportCount;
+
+        return LiveResponse::downloadFile($this->buildCsv(), 'report.csv', 'text/csv');
+    }
+
+You can pass four kinds of content as the first argument:
+
+* a ``string``, which is always the contents themselves and **never** a path;
+* an ``\SplFileInfo``, whose basename and size are used, so you can omit ``$filename``;
+* a ``resource``, for instance what ``$filesystem->readStream('report.csv')`` returns;
+* a ``\Closure``, called to produce the contents, either by echoing them or by returning
+  an iterable.
+
+Everything but a ``string`` is streamed, so the file is never held in memory on your server::
+
+    #[LiveAction]
+    public function exportLarge(): LiveResponse
+    {
+        return LiveResponse::downloadFile(
+            $this->filesystem->readStream('reports/2026.csv'),
+            'report.csv',
+            'text/csv',
+            $this->filesystem->fileSize('reports/2026.csv'),
+        );
+    }
+
+The last argument is the size in bytes. You never need it for a ``string`` or an
+``\SplFileInfo``, where it is deduced, and passing a value that contradicts the real one throws.
+Nothing can be deduced from a stream or a closure, so pass it whenever you know it: it is what
+lets the response carry a ``Content-Length``, and the browser show progress.
+
+Whatever your server does, the browser buffers the contents before saving them, which is why
+``downloadUrl()`` remains the better answer for large files.
+
+.. caution::
+
+    You can only return a ``LiveResponse`` from a ``LiveAction`` or a ``LiveListener``, over
+    POST. Returning one from the default action throws: that action runs on every re-render, so
+    a component with ``data-poll`` would trigger a download every few hundred milliseconds.
+    Returning one from a GET request throws as well, since a GET is meant to be replayable by
+    prefetching or crawling.
+
+.. note::
+
+    An action returns either a ``LiveResponse`` or a redirect, never both. A redirect replaces
+    the render with an empty response, which has nowhere to carry a file.
+
+Batched actions
+...............
+
+Unlike a redirect, a download does not interrupt a batch: the actions you queued after it still
+run, and the file rides along with the final render. If several of them return a
+``LiveResponse``, the last one wins.
 
 .. _forms:
 

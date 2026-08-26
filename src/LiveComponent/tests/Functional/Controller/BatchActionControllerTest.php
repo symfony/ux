@@ -197,6 +197,66 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
+    public function testDownloadDoesNotShortCircuitBatch()
+    {
+        // unlike a redirect, a download no longer ends the batch: it rides along with the
+        // final render, so the actions queued after it still run
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('download_file'));
+
+        $this->browser()
+            ->throwExceptions()
+            ->post('/_components/download_file/_batch', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                        'actions' => [
+                            ['name' => 'download'],
+                            ['name' => 'noDownload'],
+                        ],
+                    ]),
+                ],
+            ])
+            ->assertStatus(200)
+            ->assertSeeIn('#count', '2')
+            ->use(static function (KernelBrowser $browser) {
+                $headers = $browser->client()->getResponse()->headers;
+                $body = $browser->client()->getInternalResponse()->getContent();
+
+                self::assertSame('foo.json', rawurldecode($headers->get('X-Live-Download-Filename')));
+                self::assertSame(
+                    ['foo' => 'bar'],
+                    json_decode(substr($body, (int) $headers->get('X-Live-Html-Length')), true)
+                );
+            })
+        ;
+    }
+
+    public function testLastDownloadWinsWithinABatch()
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('download_file'));
+
+        $this->browser()
+            ->throwExceptions()
+            ->post('/_components/download_file/_batch', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                        'actions' => [
+                            ['name' => 'download'],
+                            ['name' => 'downloadEmpty'],
+                        ],
+                    ]),
+                ],
+            ])
+            ->assertStatus(200)
+            ->use(static function (KernelBrowser $browser) {
+                $headers = $browser->client()->getResponse()->headers;
+
+                self::assertSame('empty.txt', rawurldecode($headers->get('X-Live-Download-Filename')));
+            })
+        ;
+    }
+
     public function testException()
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
