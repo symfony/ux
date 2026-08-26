@@ -16,6 +16,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\IconRendererInterface;
 use Symfony\UX\Icons\Twig\UXIconRuntime;
+use Twig\Extra\Html\HtmlExtension;
 
 /**
  * @author Simon André <smn.andre@gmail.com>
@@ -39,5 +40,39 @@ class UXIconRuntimeTest extends TestCase
         $runtime = new UXIconRuntime($renderer, false);
         $this->expectException(IconNotFoundException::class);
         $runtime->renderIcon('not_found');
+    }
+
+    public function testRenderIconResolvesAttributeValues()
+    {
+        $renderer = $this->createMock(IconRendererInterface::class);
+        $renderer->expects($this->once())
+            ->method('renderIcon')
+            ->with('foo', self::identicalTo([
+                'data-action' => 'click->menu#toggle',
+                'class' => 'a b',
+                'aria-expanded' => 'false',
+                'data-open' => 'true',
+                'hidden' => '',
+                'title' => 'User',
+                'gone' => false,
+            ]))
+            ->willReturn('<svg></svg>');
+
+        $runtime = new UXIconRuntime($renderer);
+
+        $this->assertSame('<svg></svg>', $runtime->renderIcon('foo', [
+            'data-action' => HtmlExtension::htmlAttrType('click->menu#toggle'),
+            'class' => ['a', 'b'],
+            'aria-expanded' => false,
+            'data-open' => true,
+            'hidden' => true,
+            'title' => new class implements \Stringable {
+                public function __toString(): string
+                {
+                    return 'User';
+                }
+            },
+            'gone' => null,
+        ]));
     }
 }

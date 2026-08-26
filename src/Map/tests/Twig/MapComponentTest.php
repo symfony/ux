@@ -16,6 +16,7 @@ use Symfony\UX\Map\Map;
 use Symfony\UX\Map\Point;
 use Symfony\UX\Map\Renderer\RendererInterface;
 use Symfony\UX\Map\Tests\Kernel\TwigComponentKernel;
+use Twig\Extra\Html\HtmlExtension;
 
 class MapComponentTest extends KernelTestCase
 {
@@ -45,6 +46,33 @@ class MapComponentTest extends KernelTestCase
         $this->assertSame(
             '<div data-controller="@symfony/ux-foobar-map"></div>',
             $template->render(['attributes' => $attributes]),
+        );
+    }
+
+    public function testRenderMapComponentWithAMapInstanceAndTypedAttributes()
+    {
+        $map = new Map()
+            ->center(new Point(latitude: 5, longitude: 10))
+            ->zoom(4);
+
+        $renderer = self::createMock(RendererInterface::class);
+        $renderer
+            ->expects(self::once())
+            ->method('renderMap')
+            ->with($map, self::identicalTo(['data-action' => 'click->map#center']))
+            ->willReturn('<div data-controller="@symfony/ux-foobar-map"></div>')
+        ;
+        self::getContainer()->set('test.ux_map.renderers', $renderer);
+
+        $twig = self::getContainer()->get('twig');
+        $template = $twig->createTemplate('<twig:ux:map :map="map" {{ ...attributes }} />');
+
+        $this->assertSame(
+            '<div data-controller="@symfony/ux-foobar-map"></div>',
+            $template->render([
+                'map' => $map,
+                'attributes' => ['data-action' => HtmlExtension::htmlAttrType('click->map#center')],
+            ]),
         );
     }
 }
