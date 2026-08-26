@@ -102,7 +102,8 @@ final class IconRenderer implements IconRendererInterface
      */
     private static function setAriaHidden(Icon $icon): Icon
     {
-        $attributes = $icon->getAttributes();
+        // "false" marks an omitted attribute, it provides no textual alternative
+        $attributes = array_filter($icon->getAttributes(), static fn ($value) => false !== $value);
 
         if (!isset($attributes['aria-hidden']) && !isset($attributes['aria-label']) && !isset($attributes['aria-labelledby']) && !isset($attributes['title'])) {
             return $icon->withAttributes(['aria-hidden' => 'true']);

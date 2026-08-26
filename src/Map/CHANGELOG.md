@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.5.0
+
+- Resolve map attribute values through twig/html-extra's `html_attr()` logic, so `ux_map()` and `<twig:ux:map>` render attributes like any other component: the typed values of `html_attr_type()` and `tailwind_classes` are now accepted, `null` omits an attribute, `aria-*` booleans render `"true"`/`"false"`, and a boolean `true` renders `name=""` (`data-*` renders `"true"`).
+  It **may break your pipeline** if you assert on `ux_map()` or `<twig:ux:map>` output in your tests. Re-generate those assertions after upgrading.
+
 ## 3.0.0
 
 - Minimum required Symfony version is now 7.4
