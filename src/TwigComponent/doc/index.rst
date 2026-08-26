@@ -1082,7 +1082,11 @@ When rendering the component, you can pass an array of html attributes to add:
       My Component!
     </div>
 
-Set an attribute's value to ``true`` to render just the attribute name:
+.. note::
+
+    ``ComponentAttributes`` renders its attributes through the ``html_attr()`` function from ``twig/html-extra``, so a component and a plain Twig template render the same attributes identically.
+
+Set an attribute's value to ``true`` to render the attribute name with an empty value:
 
 .. code-block:: html+twig
 
@@ -1093,9 +1097,11 @@ Set an attribute's value to ``true`` to render just the attribute name:
     <twig:Input type="text" value="" :autofocus="true" />
 
     {# renders as: #}
-    <input type="text" value="" autofocus/>
+    <input type="text" value="" autofocus=""/>
 
-Set an attribute's value to ``false`` to exclude the attribute:
+``aria-*`` and ``data-*`` attributes are an exception: a boolean renders the ``"true"`` string, e.g. ``aria-expanded="true"`` and ``data-open="true"``.
+
+Set an attribute's value to ``false`` or ``null`` to exclude the attribute (``aria-*`` is again an exception, ``false`` renders ``"false"``):
 
 .. code-block:: html+twig
 

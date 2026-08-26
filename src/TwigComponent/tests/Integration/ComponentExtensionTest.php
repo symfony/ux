@@ -97,7 +97,7 @@ final class ComponentExtensionTest extends KernelTestCase
         ]);
 
         $this->assertStringContainsString('Component Content (prop value 1)', $output);
-        $this->assertStringContainsString('<button class="foo bar" type="button" style="color:red;" value="" autofocus>', $output);
+        $this->assertStringContainsString('<button class="foo bar" type="button" style="color:red;" value="" autofocus="">', $output);
 
         $output = $this->renderComponent('with_attributes', [
             'prop' => 'prop value 2',

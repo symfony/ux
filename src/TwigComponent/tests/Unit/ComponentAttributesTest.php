@@ -19,6 +19,7 @@ use Twig\Environment;
 use Twig\Extra\Html\HtmlAttr\AttributeValueInterface;
 use Twig\Extra\Html\HtmlAttr\InlineStyle;
 use Twig\Extra\Html\HtmlAttr\MergeableInterface;
+use Twig\Extra\Html\HtmlExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Runtime\EscaperRuntime;
 
@@ -41,16 +42,62 @@ final class ComponentAttributesTest extends TestCase
             'autofocus' => true,
         ], new EscaperRuntime());
 
-        $this->assertSame(' class="foo" style="color:black;" value="" autofocus', (string) $attributes);
+        $this->assertSame(' class="foo" style="color:black;" value="" autofocus=""', (string) $attributes);
     }
 
-    public function testThrowsOnNullAttributeValue()
+    public function testNullIsOmittedNotThrown()
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Attribute "data-foo" value cannot be null.');
+        $attributes = new ComponentAttributes(['x' => null, 'class' => 'foo'], new EscaperRuntime());
+        $this->assertSame(' class="foo"', (string) $attributes);
+    }
 
-        $attributes = new ComponentAttributes(['data-foo' => null], new EscaperRuntime());
-        (string) $attributes;
+    public function testBooleanTrueRendersEmptyValue()
+    {
+        $attributes = new ComponentAttributes(['autofocus' => true], new EscaperRuntime());
+        $this->assertSame(' autofocus=""', (string) $attributes);
+    }
+
+    public function testAriaFalseRendersFalseString()
+    {
+        $attributes = new ComponentAttributes(['aria-expanded' => false], new EscaperRuntime());
+        $this->assertSame(' aria-expanded="false"', (string) $attributes);
+    }
+
+    public function testDataTrueRendersTrueString()
+    {
+        $attributes = new ComponentAttributes(['data-open' => true], new EscaperRuntime());
+        $this->assertSame(' data-open="true"', (string) $attributes);
+    }
+
+    public function testArrayValueRendersTokenList()
+    {
+        $attributes = new ComponentAttributes(['class' => ['a', 'b']], new EscaperRuntime());
+        $this->assertSame(' class="a b"', (string) $attributes);
+    }
+
+    public function testEmptyRendersEmptyString()
+    {
+        $attributes = new ComponentAttributes([], new EscaperRuntime());
+        $this->assertSame('', (string) $attributes);
+    }
+
+    #[DataProvider('provideParityCases')]
+    public function testOutputMatchesHtmlAttr(array $attributes)
+    {
+        $env = new Environment(new ArrayLoader());
+        $expected = HtmlExtension::htmlAttr($env, $attributes);
+        $expected = '' === $expected ? '' : ' '.$expected;
+
+        $this->assertSame($expected, (string) new ComponentAttributes($attributes, new EscaperRuntime()));
+    }
+
+    public static function provideParityCases(): iterable
+    {
+        yield 'scalars' => [['class' => 'a b', 'id' => 'x', 'tabindex' => 0]];
+        yield 'booleans' => [['autofocus' => true, 'disabled' => false, 'data-open' => true]];
+        yield 'aria' => [['aria-expanded' => false, 'aria-hidden' => true]];
+        yield 'null and iterable' => [['x' => null, 'class' => ['a', 'b']]];
+        yield 'special keys' => [['@click' => 'go', ':class' => 'c', 'x-on:click' => 'h']];
     }
 
     public function testCanSetDefaults()
@@ -235,7 +282,7 @@ final class ComponentAttributesTest extends TestCase
         $attributes = new ComponentAttributes(['disabled' => true], new EscaperRuntime());
 
         $this->assertSame(['disabled' => true], $attributes->all());
-        $this->assertSame(' disabled', (string) $attributes);
+        $this->assertSame(' disabled=""', (string) $attributes);
 
         $attributes = new ComponentAttributes(['disabled' => false], new EscaperRuntime());
 
@@ -275,13 +322,27 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame(' attr2="value2"', (string) $attributes);
     }
 
-    public function testCannotRenderNonStringAttribute()
+    public function testRenderOmittedAttributeReturnsNull()
     {
-        $attributes = new ComponentAttributes(['attr1' => false], new EscaperRuntime());
+        $attributes = new ComponentAttributes(['attr1' => false, 'attr2' => null], new EscaperRuntime());
 
-        $this->expectException(\LogicException::class);
+        $this->assertNull($attributes->render('attr1'));
+        $this->assertNull($attributes->render('attr2'));
+    }
 
-        $attributes->render('attr1');
+    public function testRenderResolvesValueLikeHtmlAttr()
+    {
+        $attributes = new ComponentAttributes([
+            'class' => ['a', 'b'],
+            'hidden' => true,
+            'data-open' => true,
+            'data-config' => ['theme' => 'dark'],
+        ], new EscaperRuntime());
+
+        $this->assertSame('a b', $attributes->render('class'));
+        $this->assertSame('', $attributes->render('hidden'));
+        $this->assertSame('true', $attributes->render('data-open'));
+        $this->assertSame('{"theme":"dark"}', $attributes->render('data-config'));
     }
 
     public function testCanCheckIfAttributeExists()
@@ -329,7 +390,7 @@ final class ComponentAttributesTest extends TestCase
             'aria-number' => '1',
         ], new EscaperRuntime());
 
-        $this->assertStringNotContainsString('aria-bar', (string) $attributes);
+        $this->assertStringContainsString('aria-bar="false"', (string) $attributes);
         $this->assertStringContainsString('aria-foo="true"', (string) $attributes);
         $this->assertStringContainsString('aria-true="true"', (string) $attributes);
         $this->assertStringContainsString('aria-false="false"', (string) $attributes);
@@ -342,8 +403,7 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame('foobar', $attributes->render('aria-foobar'));
         $this->assertSame('1', $attributes->render('aria-number'));
 
-        $this->expectException(\LogicException::class);
-        $attributes->render('aria-bar');
+        $this->assertSame('false', $attributes->render('aria-bar'));
     }
 
     #[DataProvider('provideSpecialSyntaxAttributeNames')]
@@ -373,8 +433,7 @@ final class ComponentAttributesTest extends TestCase
     #[DataProvider('nameProvider')]
     public function testEscapeName(string $input, string $expected)
     {
-        $runtime = new EscaperRuntime();
-        $attributes = new ComponentAttributes([$input => 'foo'], $runtime);
+        $attributes = new ComponentAttributes([$input => 'foo'], new EscaperRuntime());
 
         $this->assertSame(' '.$expected.'="foo"', (string) $attributes);
     }
@@ -382,8 +441,7 @@ final class ComponentAttributesTest extends TestCase
     #[DataProvider('valueProvider')]
     public function testEscapeValue(string $input, string $expected)
     {
-        $runtime = new EscaperRuntime();
-        $attributes = new ComponentAttributes(['foo' => $input], $runtime);
+        $attributes = new ComponentAttributes(['foo' => $input], new EscaperRuntime());
 
         $this->assertSame(' foo="'.$expected.'"', (string) $attributes);
     }
