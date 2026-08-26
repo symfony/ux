@@ -5,6 +5,7 @@
 - Add support for `MergeableInterface` from `twig/html-extra` in `ComponentAttributes#defaults()`
 - Add support for dynamic component names in the HTML syntax using `<twig:component is="myComponent" ...`
 - Capture `## <description>` documentation comments written above props inside `{% props %}` (Twig 3.29+), exposed per prop via `PropsNode::getPropDocumentation()`
+- Render component attributes with twig/html-extra's `html_attr()` logic, through `HtmlExtension::htmlAttrValue()`: a `null` value now omits the attribute (instead of throwing), `aria-*` booleans render `"true"`/`"false"` symmetrically, a boolean `true` renders as `name=""` (`data-*` renders `"true"`), and array/iterable/`BackedEnum` values are supported. `attributes.render()` follows the same rules and returns `null` for an omitted attribute, instead of throwing on a non-string value. Requires `twig/html-extra` `^3.29` and `twig/twig` `^3.24`.
 
 ## 3.4.0
 
