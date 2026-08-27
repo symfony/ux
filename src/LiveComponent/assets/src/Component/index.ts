@@ -245,12 +245,19 @@ export default class Component {
 
         const listeners = this.listeners.get(name) || [];
         listeners.forEach(({ action, condition }) => {
-            if (condition && !evaluateListenerCondition(condition, data, this.valueStore.getCurrentProps())) {
+            if (!condition) {
+                // debounce slightly to allow for multiple actions to queue
+                this.action(action, data, 1);
+
                 return;
             }
 
-            // debounce slightly to allow for multiple actions to queue
-            this.action(action, data, 1);
+            evaluateListenerCondition(condition, data, this.valueStore.getCurrentProps()).then((matches) => {
+                if (matches) {
+                    // debounce slightly to allow for multiple actions to queue
+                    this.action(action, data, 1);
+                }
+            });
         });
     }
 

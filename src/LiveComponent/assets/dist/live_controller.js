@@ -1,5 +1,4 @@
 import { Controller } from "@hotwired/stimulus";
-var __commonJSMin = (cb, mod) => () => (mod || (cb((mod = { exports: {} }).exports, mod), cb = null), mod.exports);
 var BackendRequest_default = class {
 	constructor(promise, actions, updateModels) {
 		this.isResolved = false;
@@ -409,469 +408,490 @@ var HookManager_default = class {
 		});
 	}
 };
-var require_interopRequireDefault = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	function _interopRequireDefault(e) {
-		return e && e.__esModule ? e : { "default": e };
+const numericRegex = /^-?(?:(?:[0-9]*\.[0-9]+)|[0-9]+)$/;
+const identRegex = /^[a-zA-Zа-яА-Я_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF$][a-zA-Zа-яА-Я0-9_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF$]*$/;
+const escEscRegex = /\\\\/;
+const whitespaceRegex = /^\s*$/;
+const preOpRegexElements = [
+	"'(?:(?:\\\\')|[^'])*'",
+	"\"(?:(?:\\\\\")|[^\"])*\"",
+	"`(?:(?:\\\\`)|[^`])*`",
+	"\\s+",
+	"\\btrue\\b",
+	"\\bfalse\\b",
+	"\\bnull\\b",
+	"\\bundefined\\b",
+	"(?:[0-9]+(?:\\.[0-9]+)?|\\.[0-9]+)"
+];
+const postOpRegexElements = ["[a-zA-Zа-яА-Я_À-ÖØ-öø-ÿ\\$][a-zA-Z0-9а-яА-Я_À-ÖØ-öø-ÿ\\$]*"];
+const unaryOpsAfter = [
+	"binaryOp",
+	"unaryOp",
+	"openParen",
+	"openBracket",
+	"question",
+	"colon",
+	"comma"
+];
+var Lexer = class {
+	constructor(grammar) {
+		this._grammar = grammar;
 	}
-	module.exports = _interopRequireDefault, module.exports.__esModule = true, module.exports["default"] = module.exports;
-}));
-var require_typeof = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	function _typeof(o) {
-		"@babel/helpers - typeof";
-		return module.exports = _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
-			return typeof o;
-		} : function(o) {
-			return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-		}, module.exports.__esModule = true, module.exports["default"] = module.exports, _typeof(o);
+	getElements(str) {
+		const regex = this._getSplitRegex();
+		return str.split(regex).filter((elem) => {
+			return elem;
+		});
 	}
-	module.exports = _typeof, module.exports.__esModule = true, module.exports["default"] = module.exports;
-}));
-var require_toPrimitive = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var _typeof = require_typeof()["default"];
-	function toPrimitive(t, r) {
-		if ("object" != _typeof(t) || !t) return t;
-		var e = t[Symbol.toPrimitive];
-		if (void 0 !== e) {
-			var i = e.call(t, r || "default");
-			if ("object" != _typeof(i)) return i;
-			throw new TypeError("@@toPrimitive must return a primitive value.");
+	getTokens(elements) {
+		const tokens = [];
+		let negate = false;
+		for (let i = 0; i < elements.length; i++) {
+			const element = elements[i];
+			if (!element) continue;
+			if (this._isWhitespace(element)) {
+				if (tokens.length > 0) tokens[tokens.length - 1].raw += element;
+			} else if ((element === "+" || element === "-") && this._isUnary(tokens)) {
+				const lastToken = tokens.length > 0 ? tokens[tokens.length - 1] : null;
+				if (lastToken && lastToken.type === "binaryOp" && (lastToken.value === "+" || lastToken.value === "-") && !lastToken.raw.match(/\s$/)) throw new Error(`Unexpected token '${element}' after operator '${lastToken.value}'`);
+				let nextElement = "";
+				for (let j = i + 1; j < elements.length; j++) if (!this._isWhitespace(elements[j])) {
+					nextElement = elements[j];
+					break;
+				}
+				if (element === "-") if (nextElement.match(numericRegex)) negate = true;
+				else {
+					const token = this._createToken(element);
+					token.type = "unaryOp";
+					tokens.push(token);
+				}
+				else if (!nextElement.match(numericRegex)) {
+					const token = this._createToken(element);
+					token.type = "unaryOp";
+					tokens.push(token);
+				}
+			} else {
+				if (negate) {
+					elements[i] = "-" + element;
+					negate = false;
+				}
+				tokens.push(this._createToken(elements[i]));
+			}
 		}
-		return ("string" === r ? String : Number)(t);
+		if (negate) tokens.push(this._createToken("-"));
+		return tokens;
 	}
-	module.exports = toPrimitive, module.exports.__esModule = true, module.exports["default"] = module.exports;
-}));
-var require_toPropertyKey = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var _typeof = require_typeof()["default"];
-	var toPrimitive = require_toPrimitive();
-	function toPropertyKey(t) {
-		var i = toPrimitive(t, "string");
-		return "symbol" == _typeof(i) ? i : i + "";
+	tokenize(str) {
+		const elements = this.getElements(str);
+		return this.getTokens(elements);
 	}
-	module.exports = toPropertyKey, module.exports.__esModule = true, module.exports["default"] = module.exports;
-}));
-var require_defineProperty = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var toPropertyKey = require_toPropertyKey();
-	function _defineProperty(e, r, t) {
-		return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
-			value: t,
-			enumerable: !0,
-			configurable: !0,
-			writable: !0
-		}) : e[r] = t, e;
+	_createToken(element) {
+		const token = {
+			type: "literal",
+			value: element,
+			raw: element
+		};
+		if (element[0] === "\"" || element[0] === "'") token.value = this._unquote(element);
+		else if (element[0] === "`") {
+			token.type = "template";
+			token.value = element;
+		} else if (element.match(numericRegex)) token.value = parseFloat(element);
+		else if (element === "true" || element === "false") token.value = element === "true";
+		else if (element === "null") token.value = null;
+		else if (element === "undefined") token.value = void 0;
+		else if (this._grammar.elements[element]) token.type = this._grammar.elements[element].type;
+		else if (element.match(identRegex)) token.type = "identifier";
+		else throw new Error(`Invalid expression token: ${element}`);
+		return token;
 	}
-	module.exports = _defineProperty, module.exports.__esModule = true, module.exports["default"] = module.exports;
-}));
-var require_classCallCheck = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	function _classCallCheck(a, n) {
-		if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");
+	_escapeRegExp(str) {
+		str = str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+		if (str.match(identRegex)) str = "\\b" + str + "\\b";
+		return str;
 	}
-	module.exports = _classCallCheck, module.exports.__esModule = true, module.exports["default"] = module.exports;
-}));
-var require_createClass = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var toPropertyKey = require_toPropertyKey();
-	function _defineProperties(e, r) {
-		for (var t = 0; t < r.length; t++) {
-			var o = r[t];
-			o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, toPropertyKey(o.key), o);
+	_getSplitRegex() {
+		if (!this._splitRegex) {
+			const elemArray = Object.keys(this._grammar.elements).sort((a, b) => {
+				return b.length - a.length;
+			}).map((elem) => {
+				return this._escapeRegExp(elem);
+			}, this);
+			this._splitRegex = new RegExp("(" + [
+				preOpRegexElements.join("|"),
+				elemArray.join("|"),
+				postOpRegexElements.join("|")
+			].join("|") + ")");
 		}
+		return this._splitRegex;
 	}
-	function _createClass(e, r, t) {
-		return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e;
+	_isUnary(tokens) {
+		if (!tokens.length) return true;
+		const lastToken = tokens[tokens.length - 1];
+		if (!lastToken) return true;
+		return unaryOpsAfter.some((type) => type === lastToken.type);
 	}
-	module.exports = _createClass, module.exports.__esModule = true, module.exports["default"] = module.exports;
-}));
-var require_arrayLikeToArray = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	function _arrayLikeToArray(r, a) {
-		(null == a || a > r.length) && (a = r.length);
-		for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
-		return n;
+	_isWhitespace(str) {
+		return !!str.match(whitespaceRegex);
 	}
-	module.exports = _arrayLikeToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
-}));
-var require_arrayWithoutHoles = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var arrayLikeToArray = require_arrayLikeToArray();
-	function _arrayWithoutHoles(r) {
-		if (Array.isArray(r)) return arrayLikeToArray(r);
+	_unquote(str) {
+		const quote = str[0];
+		if (!quote) throw new Error("Cannot unquote empty string");
+		const escQuoteRegex = new RegExp("\\\\" + quote, "g");
+		return str.substr(1, str.length - 2).replace(escQuoteRegex, quote).replace(escEscRegex, "\\");
 	}
-	module.exports = _arrayWithoutHoles, module.exports.__esModule = true, module.exports["default"] = module.exports;
-}));
-var require_iterableToArray = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	function _iterableToArray(r) {
-		if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);
-	}
-	module.exports = _iterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
-}));
-var require_unsupportedIterableToArray = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var arrayLikeToArray = require_arrayLikeToArray();
-	function _unsupportedIterableToArray(r, a) {
-		if (r) {
-			if ("string" == typeof r) return arrayLikeToArray(r, a);
-			var t = {}.toString.call(r).slice(8, -1);
-			return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? arrayLikeToArray(r, a) : void 0;
+};
+const states = {
+	expectOperand: { tokenTypes: {
+		literal: { toState: "expectBinOp" },
+		template: { toState: "expectBinOp" },
+		identifier: { toState: "identifier" },
+		unaryOp: {},
+		openParen: { toState: "subExpression" },
+		openCurl: {
+			toState: "expectObjKey",
+			handler: "objStart"
+		},
+		dot: { toState: "traverse" },
+		openBracket: {
+			toState: "arrayVal",
+			handler: "arrayStart"
 		}
+	} },
+	expectBinOp: {
+		tokenTypes: {
+			binaryOp: { toState: "expectOperand" },
+			pipe: { toState: "expectTransform" },
+			dot: { toState: "traverse" },
+			question: {
+				toState: "ternaryMid",
+				handler: "ternaryStart"
+			}
+		},
+		completable: true
+	},
+	expectTransform: { tokenTypes: { identifier: {
+		toState: "postTransform",
+		handler: "transform"
+	} } },
+	expectObjKey: { tokenTypes: {
+		literal: {
+			toState: "expectKeyValSep",
+			handler: "objKey"
+		},
+		identifier: {
+			toState: "expectKeyValSep",
+			handler: "objKey"
+		},
+		unaryOp: {
+			toState: "objSpread",
+			handler: "noop"
+		},
+		closeCurl: { toState: "expectBinOp" }
+	} },
+	expectKeyValSep: { tokenTypes: {
+		colon: { toState: "objVal" },
+		unaryOp: { toState: "objSpread" }
+	} },
+	postTransform: {
+		tokenTypes: {
+			openParen: { toState: "argVal" },
+			binaryOp: { toState: "expectOperand" },
+			dot: { toState: "traverse" },
+			openBracket: { toState: "filter" },
+			pipe: { toState: "expectTransform" }
+		},
+		completable: true
+	},
+	postArgs: {
+		tokenTypes: {
+			binaryOp: { toState: "expectOperand" },
+			dot: { toState: "traverse" },
+			openBracket: { toState: "filter" },
+			question: {
+				toState: "ternaryMid",
+				handler: "ternaryStart"
+			},
+			pipe: { toState: "expectTransform" }
+		},
+		completable: true
+	},
+	identifier: {
+		tokenTypes: {
+			binaryOp: { toState: "expectOperand" },
+			dot: { toState: "traverse" },
+			openBracket: { toState: "filter" },
+			openParen: {
+				toState: "argVal",
+				handler: "functionCall"
+			},
+			pipe: { toState: "expectTransform" },
+			question: {
+				toState: "ternaryMid",
+				handler: "ternaryStart"
+			}
+		},
+		completable: true
+	},
+	traverse: { tokenTypes: {
+		identifier: { toState: "identifier" },
+		pipe: { toState: "expectTransform" }
+	} },
+	filter: {
+		subHandler: "filter",
+		endStates: { closeBracket: "identifier" }
+	},
+	subExpression: {
+		subHandler: "subExpression",
+		endStates: { closeParen: "expectBinOp" }
+	},
+	argVal: {
+		subHandler: "argVal",
+		endStates: {
+			comma: "argVal",
+			closeParen: "postArgs"
+		}
+	},
+	objVal: {
+		subHandler: "objVal",
+		endStates: {
+			comma: "expectObjKey",
+			closeCurl: "expectBinOp"
+		}
+	},
+	objSpread: {
+		subHandler: "objSpread",
+		endStates: {
+			comma: "expectObjKey",
+			closeCurl: "expectBinOp"
+		}
+	},
+	arrayVal: {
+		subHandler: "arrayVal",
+		endStates: {
+			comma: "arrayVal",
+			closeBracket: "expectBinOp"
+		},
+		tokenTypes: { unaryOp: {
+			toState: "arraySpread",
+			handler: "noop"
+		} }
+	},
+	arraySpread: {
+		subHandler: "arraySpread",
+		endStates: {
+			comma: "arrayVal",
+			closeBracket: "expectBinOp"
+		}
+	},
+	ternaryMid: {
+		subHandler: "ternaryMid",
+		endStates: { colon: "ternaryEnd" }
+	},
+	ternaryEnd: {
+		subHandler: "ternaryEnd",
+		completable: true
 	}
-	module.exports = _unsupportedIterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
-}));
-var require_nonIterableSpread = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	function _nonIterableSpread() {
-		throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+};
+var Parser = class Parser {
+	constructor(grammar, prefix, stopMap = {}) {
+		this._grammar = grammar;
+		this._state = "expectOperand";
+		this._tree = null;
+		this._exprStr = prefix || "";
+		this._relative = false;
+		this._stopMap = stopMap;
 	}
-	module.exports = _nonIterableSpread, module.exports.__esModule = true, module.exports["default"] = module.exports;
-}));
-var require_toConsumableArray = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var arrayWithoutHoles = require_arrayWithoutHoles();
-	var iterableToArray = require_iterableToArray();
-	var unsupportedIterableToArray = require_unsupportedIterableToArray();
-	var nonIterableSpread = require_nonIterableSpread();
-	function _toConsumableArray(r) {
-		return arrayWithoutHoles(r) || iterableToArray(r) || unsupportedIterableToArray(r) || nonIterableSpread();
-	}
-	module.exports = _toConsumableArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
-}));
-var require_handlers$1 = /* @__PURE__ */ __commonJSMin(((exports) => {
-	var _toConsumableArray2 = require_interopRequireDefault()(require_toConsumableArray());
-	var poolNames = {
-		functions: "Jexl Function",
-		transforms: "Transform"
-	};
-	exports.ArrayLiteral = function(ast) {
-		return this.evalArray(ast.value);
-	};
-	exports.BinaryExpression = function(ast) {
-		var _this = this;
-		var grammarOp = this._grammar.elements[ast.operator];
-		if (grammarOp.evalOnDemand) {
-			var wrap = function wrap(subAst) {
-				return { eval: function _eval() {
-					return _this.eval(subAst);
-				} };
+	addToken(token) {
+		if (this._state === "complete") throw new Error("Cannot add a new token to a completed Parser");
+		const state = states[this._state];
+		if (!state) throw new Error(`Invalid parser state: ${this._state}`);
+		const startExpr = this._exprStr;
+		this._exprStr += token.raw;
+		if (this._state === "traverse" && token.type === "binaryOp" && typeof token.value === "string") {
+			if ([
+				"and",
+				"or",
+				"xor",
+				"in"
+			].includes(token.value)) token = {
+				type: "identifier",
+				value: token.value,
+				raw: token.raw
 			};
-			return grammarOp.evalOnDemand(wrap(ast.left), wrap(ast.right));
 		}
-		return this.Promise.all([this.eval(ast.left), this.eval(ast.right)]).then(function(arr) {
-			return grammarOp.eval(arr[0], arr[1]);
-		});
-	};
-	exports.ConditionalExpression = function(ast) {
-		var _this2 = this;
-		return this.eval(ast.test).then(function(res) {
-			if (res) {
-				if (ast.consequent) return _this2.eval(ast.consequent);
-				return res;
+		if ((this._state === "identifier" || this._state === "expectBinOp") && token.type === "unaryOp" && (token.value === "+" || token.value === "-")) token = {
+			type: "binaryOp",
+			value: token.value,
+			raw: token.raw
+		};
+		if (state.subHandler) {
+			if (!this._subParser) this._startSubExpression(startExpr);
+			const stopState = this._subParser.addToken(token);
+			if (stopState) {
+				this._endSubExpression();
+				if (this._parentStop) return stopState;
+				this._state = stopState;
 			}
-			return _this2.eval(ast.alternate);
-		});
-	};
-	exports.FilterExpression = function(ast) {
-		var _this3 = this;
-		return this.eval(ast.subject).then(function(subject) {
-			if (ast.relative) return _this3._filterRelative(subject, ast.expr);
-			return _this3._filterStatic(subject, ast.expr);
-		});
-	};
-	exports.Identifier = function(ast) {
-		if (!ast.from) return ast.relative ? this._relContext[ast.value] : this._context[ast.value];
-		return this.eval(ast.from).then(function(context) {
-			if (context === void 0 || context === null) return;
-			if (Array.isArray(context)) context = context[0];
-			return context[ast.value];
-		});
-	};
-	exports.Literal = function(ast) {
-		return ast.value;
-	};
-	exports.ObjectLiteral = function(ast) {
-		return this.evalMap(ast.value);
-	};
-	exports.FunctionCall = function(ast) {
-		var poolName = poolNames[ast.pool];
-		if (!poolName) throw new Error("Corrupt AST: Pool '".concat(ast.pool, "' not found"));
-		var func = this._grammar[ast.pool][ast.name];
-		if (!func) throw new Error("".concat(poolName, " ").concat(ast.name, " is not defined."));
-		return this.evalArray(ast.args || []).then(function(args) {
-			return func.apply(void 0, (0, _toConsumableArray2.default)(args));
-		});
-	};
-	exports.UnaryExpression = function(ast) {
-		var _this4 = this;
-		return this.eval(ast.right).then(function(right) {
-			return _this4._grammar.elements[ast.operator].eval(right);
-		});
-	};
-}));
-var require_Evaluator = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var _interopRequireDefault = require_interopRequireDefault();
-	var _classCallCheck2 = _interopRequireDefault(require_classCallCheck());
-	var _createClass2 = _interopRequireDefault(require_createClass());
-	var handlers = require_handlers$1();
-	module.exports = /* @__PURE__ */ function() {
-		function Evaluator(grammar, context, relativeContext) {
-			var promise = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : Promise;
-			(0, _classCallCheck2.default)(this, Evaluator);
-			this._grammar = grammar;
-			this._context = context || {};
-			this._relContext = relativeContext || this._context;
-			this.Promise = promise;
+		} else if (state.tokenTypes && state.tokenTypes[token.type]) {
+			const typeOpts = state.tokenTypes[token.type];
+			if (!typeOpts) throw new Error(`No type options for token ${token.type}`);
+			if (typeOpts.handler) {
+				const handlerMethod = this._getTokenHandlerMethod(typeOpts.handler);
+				if (handlerMethod) handlerMethod(token);
+			} else {
+				const handlerMethod = this._getHandlerMethod(token.type);
+				if (handlerMethod) handlerMethod(token);
+			}
+			if (typeOpts.toState) this._state = typeOpts.toState;
+		} else if (this._stopMap[token.type]) return this._stopMap[token.type];
+		else throw new Error(`Token ${token.raw} (${token.type}) unexpected in expression: ${this._exprStr}`);
+		return false;
+	}
+	addTokens(tokens) {
+		tokens.forEach(this.addToken, this);
+	}
+	complete() {
+		const currentState = states[this._state];
+		if (this._cursor && (!currentState || !currentState.completable)) throw new Error(`Unexpected end of expression: ${this._exprStr}`);
+		if (this._subParser) this._endSubExpression();
+		this._state = "complete";
+		return this._cursor ? this._tree : null;
+	}
+	isRelative() {
+		return this._relative;
+	}
+	_endSubExpression() {
+		const currentState = states[this._state];
+		if (!currentState || !currentState.subHandler) throw new Error(`Invalid state for ending sub expression: ${this._state}`);
+		if (this._subParser.isRelative()) this._relative = true;
+		const subHandlerName = currentState.subHandler;
+		const handlerMethod = this._getSubHandlerMethod(subHandlerName);
+		if (handlerMethod) handlerMethod(this._subParser.complete());
+		this._subParser = null;
+	}
+	_placeAtCursor(node) {
+		if (!this._cursor) this._tree = node;
+		else {
+			this._cursor.right = node;
+			this._setParent(node, this._cursor);
 		}
-		(0, _createClass2.default)(Evaluator, [
-			{
-				key: "eval",
-				value: function _eval(ast) {
-					var _this = this;
-					return this.Promise.resolve().then(function() {
-						return handlers[ast.type].call(_this, ast);
-					});
-				}
-			},
-			{
-				key: "evalArray",
-				value: function evalArray(arr) {
-					var _this2 = this;
-					return this.Promise.all(arr.map(function(elem) {
-						return _this2.eval(elem);
-					}));
-				}
-			},
-			{
-				key: "evalMap",
-				value: function evalMap(map) {
-					var _this3 = this;
-					var keys = Object.keys(map);
-					var result = {};
-					var asts = keys.map(function(key) {
-						return _this3.eval(map[key]);
-					});
-					return this.Promise.all(asts).then(function(vals) {
-						vals.forEach(function(val, idx) {
-							result[keys[idx]] = val;
-						});
-						return result;
-					});
-				}
-			},
-			{
-				key: "_filterRelative",
-				value: function _filterRelative(subject, expr) {
-					var _this4 = this;
-					var promises = [];
-					if (!Array.isArray(subject)) subject = subject === void 0 ? [] : [subject];
-					subject.forEach(function(elem) {
-						var evalInst = new Evaluator(_this4._grammar, _this4._context, elem, _this4.Promise);
-						promises.push(evalInst.eval(expr));
-					});
-					return this.Promise.all(promises).then(function(values) {
-						var results = [];
-						values.forEach(function(value, idx) {
-							if (value) results.push(subject[idx]);
-						});
-						return results;
-					});
-				}
-			},
-			{
-				key: "_filterStatic",
-				value: function _filterStatic(subject, expr) {
-					return this.eval(expr).then(function(res) {
-						if (typeof res === "boolean") return res ? subject : void 0;
-						return subject[res];
-					});
-				}
-			}
-		]);
-		return Evaluator;
-	}();
-}));
-var require_Lexer = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var _interopRequireDefault = require_interopRequireDefault();
-	var _classCallCheck2 = _interopRequireDefault(require_classCallCheck());
-	var _createClass2 = _interopRequireDefault(require_createClass());
-	var numericRegex = /^-?(?:(?:[0-9]*\.[0-9]+)|[0-9]+)$/;
-	var identRegex = /^[a-zA-Zа-яА-Я_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF$][a-zA-Zа-яА-Я0-9_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF$]*$/;
-	var escEscRegex = /\\\\/;
-	var whitespaceRegex = /^\s*$/;
-	var preOpRegexElems = [
-		"'(?:(?:\\\\')|[^'])*'",
-		"\"(?:(?:\\\\\")|[^\"])*\"",
-		"\\s+",
-		"\\btrue\\b",
-		"\\bfalse\\b"
-	];
-	var postOpRegexElems = ["[a-zA-Zа-яА-Я_À-ÖØ-öø-ÿ\\$][a-zA-Z0-9а-яА-Я_À-ÖØ-öø-ÿ\\$]*", "(?:(?:[0-9]*\\.[0-9]+)|[0-9]+)"];
-	var minusNegatesAfter = [
-		"binaryOp",
-		"unaryOp",
-		"openParen",
-		"openBracket",
-		"question",
-		"colon"
-	];
-	module.exports = /* @__PURE__ */ function() {
-		function Lexer(grammar) {
-			(0, _classCallCheck2.default)(this, Lexer);
-			this._grammar = grammar;
+		this._cursor = node;
+	}
+	_placeBeforeCursor(node) {
+		this._cursor = this._cursor?._parent;
+		this._placeAtCursor(node);
+	}
+	_setParent(node, parent) {
+		Object.defineProperty(node, "_parent", {
+			value: parent,
+			writable: true
+		});
+	}
+	_startSubExpression(exprStr) {
+		let endStates = states[this._state].endStates;
+		if (!endStates) {
+			this._parentStop = true;
+			endStates = this._stopMap;
 		}
-		(0, _createClass2.default)(Lexer, [
-			{
-				key: "getElements",
-				value: function getElements(str) {
-					var regex = this._getSplitRegex();
-					return str.split(regex).filter(function(elem) {
-						return elem;
-					});
-				}
-			},
-			{
-				key: "getTokens",
-				value: function getTokens(elements) {
-					var tokens = [];
-					var negate = false;
-					for (var i = 0; i < elements.length; i++) if (this._isWhitespace(elements[i])) {
-						if (tokens.length) tokens[tokens.length - 1].raw += elements[i];
-					} else if (elements[i] === "-" && this._isNegative(tokens)) negate = true;
-					else {
-						if (negate) {
-							elements[i] = "-" + elements[i];
-							negate = false;
-						}
-						tokens.push(this._createToken(elements[i]));
-					}
-					if (negate) tokens.push(this._createToken("-"));
-					return tokens;
-				}
-			},
-			{
-				key: "tokenize",
-				value: function tokenize(str) {
-					var elements = this.getElements(str);
-					return this.getTokens(elements);
-				}
-			},
-			{
-				key: "_createToken",
-				value: function _createToken(element) {
-					var token = {
-						type: "literal",
-						value: element,
-						raw: element
-					};
-					if (element[0] === "\"" || element[0] === "'") token.value = this._unquote(element);
-					else if (element.match(numericRegex)) token.value = parseFloat(element);
-					else if (element === "true" || element === "false") token.value = element === "true";
-					else if (this._grammar.elements[element]) token.type = this._grammar.elements[element].type;
-					else if (element.match(identRegex)) token.type = "identifier";
-					else throw new Error("Invalid expression token: ".concat(element));
-					return token;
-				}
-			},
-			{
-				key: "_escapeRegExp",
-				value: function _escapeRegExp(str) {
-					str = str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-					if (str.match(identRegex)) str = "\\b" + str + "\\b";
-					return str;
-				}
-			},
-			{
-				key: "_getSplitRegex",
-				value: function _getSplitRegex() {
-					var _this = this;
-					if (!this._splitRegex) {
-						var elemArray = Object.keys(this._grammar.elements).sort(function(a, b) {
-							return b.length - a.length;
-						}).map(function(elem) {
-							return _this._escapeRegExp(elem);
-						}, this);
-						this._splitRegex = new RegExp("(" + [
-							preOpRegexElems.join("|"),
-							elemArray.join("|"),
-							postOpRegexElems.join("|")
-						].join("|") + ")");
-					}
-					return this._splitRegex;
-				}
-			},
-			{
-				key: "_isNegative",
-				value: function _isNegative(tokens) {
-					if (!tokens.length) return true;
-					return minusNegatesAfter.some(function(type) {
-						return type === tokens[tokens.length - 1].type;
-					});
-				}
-			},
-			{
-				key: "_isWhitespace",
-				value: function _isWhitespace(str) {
-					return !!str.match(whitespaceRegex);
-				}
-			},
-			{
-				key: "_unquote",
-				value: function _unquote(str) {
-					var quote = str[0];
-					var escQuoteRegex = new RegExp("\\\\" + quote, "g");
-					return str.substr(1, str.length - 2).replace(escQuoteRegex, quote).replace(escEscRegex, "\\");
-				}
-			}
-		]);
-		return Lexer;
-	}();
-}));
-var require_handlers = /* @__PURE__ */ __commonJSMin(((exports) => {
-	exports.argVal = function(ast) {
-		if (ast) this._cursor.args.push(ast);
-	};
-	exports.arrayStart = function() {
+		this._subParser = new Parser(this._grammar, exprStr, endStates);
+	}
+	argVal(ast) {
+		if (ast) this._cursor?.args?.push(ast);
+	}
+	arrayStart() {
 		this._placeAtCursor({
 			type: "ArrayLiteral",
 			value: []
 		});
-	};
-	exports.arrayVal = function(ast) {
-		if (ast) this._cursor.value.push(ast);
-	};
-	exports.binaryOp = function(token) {
-		var precedence = this._grammar.elements[token.value].precedence || 0;
-		var parent = this._cursor._parent;
-		while (parent && parent.operator && this._grammar.elements[parent.operator].precedence >= precedence) {
+	}
+	arrayVal(ast) {
+		const { _cursor } = this;
+		if (ast && _cursor && Array.isArray(_cursor.value)) if (ast.type === "UnaryExpression" && ast.operator === "..." && ast.right) {
+			const right = ast.right;
+			if (!Array.isArray(_cursor.entries)) _cursor.entries = [..._cursor.value];
+			_cursor.value.push(right);
+			if (Array.isArray(_cursor.entries)) _cursor.entries.push({
+				type: "SpreadElement",
+				expr: right
+			});
+		} else {
+			_cursor.value.push(ast);
+			if (Array.isArray(_cursor.entries)) _cursor.entries.push(ast);
+		}
+	}
+	arraySpread(ast) {
+		const { _cursor } = this;
+		if (ast && _cursor) {
+			if (!Array.isArray(_cursor.entries)) _cursor.entries = [..._cursor.value];
+			_cursor.entries.push({
+				type: "SpreadElement",
+				expr: ast
+			});
+		}
+	}
+	binaryOp(token) {
+		const precedence = this._grammar.elements[token.value]?.precedence || 0;
+		let parent = this._cursor?._parent;
+		while (parent && parent.operator && this._grammar.elements[parent.operator]?.precedence >= precedence) {
 			this._cursor = parent;
 			parent = parent._parent;
 		}
-		var node = {
+		const node = {
 			type: "BinaryExpression",
 			operator: token.value,
 			left: this._cursor
 		};
-		this._setParent(this._cursor, node);
+		if (this._cursor) this._setParent(this._cursor, node);
 		this._cursor = parent;
 		this._placeAtCursor(node);
-	};
-	exports.dot = function() {
-		this._nextIdentEncapsulate = this._cursor && this._cursor.type !== "UnaryExpression" && (this._cursor.type !== "BinaryExpression" || this._cursor.type === "BinaryExpression" && this._cursor.right);
+	}
+	dot() {
+		this._nextIdentEncapsulate = Boolean(this._cursor && this._cursor.type !== "UnaryExpression" && (this._cursor.type !== "BinaryExpression" || this._cursor.type === "BinaryExpression" && this._cursor.right));
 		this._nextIdentRelative = !this._cursor || this._cursor && !this._nextIdentEncapsulate;
 		if (this._nextIdentRelative) this._relative = true;
-	};
-	exports.filter = function(ast) {
+	}
+	filter(ast) {
 		this._placeBeforeCursor({
 			type: "FilterExpression",
 			expr: ast,
 			relative: this._subParser.isRelative(),
 			subject: this._cursor
 		});
-	};
-	exports.functionCall = function() {
+	}
+	functionCall() {
+		if (this._cursor && this._cursor.type === "FunctionCall" && this._cursor.pool === "transforms") return;
+		const functionName = this._buildFullIdentifierPath(this._cursor || null);
 		this._placeBeforeCursor({
 			type: "FunctionCall",
-			name: this._cursor.value,
+			name: functionName,
 			args: [],
 			pool: "functions"
 		});
-	};
-	exports.identifier = function(token) {
-		var node = {
+	}
+	_buildFullIdentifierPath(node) {
+		if (!node || node.type !== "Identifier") return node?.value || "";
+		const parts = [];
+		let current = node;
+		while (current && current.type === "Identifier") {
+			parts.unshift(current.value);
+			current = current.from || null;
+		}
+		return parts.join(".");
+	}
+	identifier(token) {
+		const node = {
 			type: "Identifier",
 			value: token.value
 		};
+		if (this._nextIdentEncapsulate && this._cursor && this._cursor.type === "FunctionCall" && this._cursor.pool === "transforms") {
+			const namespaceParts = [];
+			namespaceParts.push(this._cursor.name);
+			namespaceParts.push(token.value);
+			const namespacedTransformName = namespaceParts.join(".");
+			this._cursor.name = namespacedTransformName;
+			this._nextIdentEncapsulate = false;
+			return;
+		}
 		if (this._nextIdentEncapsulate) {
 			node.from = this._cursor;
 			this._placeBeforeCursor(node);
@@ -883,706 +903,1471 @@ var require_handlers = /* @__PURE__ */ __commonJSMin(((exports) => {
 			}
 			this._placeAtCursor(node);
 		}
-	};
-	exports.literal = function(token) {
+	}
+	literal(token) {
 		this._placeAtCursor({
 			type: "Literal",
 			value: token.value
 		});
-	};
-	exports.objKey = function(token) {
+	}
+	template(token) {
+		const raw = token.value || token.raw || "";
+		if (!raw || raw[0] !== "`" || raw[raw.length - 1] !== "`") throw new Error("Invalid template literal");
+		const content = raw.slice(1, -1);
+		const parts = [];
+		let buffer = "";
+		let i = 0;
+		const pushBufferLiteral = () => {
+			if (buffer.length > 0) {
+				parts.push({
+					type: "Literal",
+					value: buffer
+				});
+				buffer = "";
+			}
+		};
+		const readInterpolated = () => {
+			let j = i + 2;
+			let inSingle = false;
+			let inDouble = false;
+			let escaped = false;
+			let depthParen = 0;
+			let depthBracket = 0;
+			let depthBrace = 0;
+			for (; j < content.length; j++) {
+				const ch = content[j];
+				if (escaped) {
+					escaped = false;
+					continue;
+				}
+				if (ch === "\\") {
+					escaped = true;
+					continue;
+				}
+				if (!inSingle && !inDouble) {
+					if (ch === "'") inSingle = true;
+					else if (ch === "\"") inDouble = true;
+					else if (ch === "(") depthParen++;
+					else if (ch === ")") depthParen = Math.max(0, depthParen - 1);
+					else if (ch === "[") depthBracket++;
+					else if (ch === "]") depthBracket = Math.max(0, depthBracket - 1);
+					else if (ch === "{") depthBrace++;
+					else if (ch === "}") {
+						if (depthParen === 0 && depthBracket === 0 && depthBrace === 0 && content[j - 1] === "}") {
+							const inner = content.slice(i + 2, j - 1);
+							i = j + 1;
+							return inner;
+						}
+						if (depthBrace > 0) depthBrace = Math.max(0, depthBrace - 1);
+					}
+					continue;
+				}
+				if (inSingle && ch === "'") inSingle = false;
+				if (inDouble && ch === "\"") inDouble = false;
+			}
+			throw new Error("Unclosed interpolation in template literal");
+		};
+		while (i < content.length) {
+			const ch = content[i];
+			if (ch === "\\") {
+				const next = content[i + 1];
+				if (next === "`" || next === "{" || next === "\\") {
+					buffer += next;
+					i += 2;
+					continue;
+				}
+				buffer += ch;
+				i++;
+				continue;
+			}
+			if (ch === "{" && content[i + 1] === "{") {
+				pushBufferLiteral();
+				const inner = readInterpolated();
+				const nestedLexer = new Lexer(this._grammar);
+				const nestedParser = new Parser(this._grammar);
+				const nestedTokens = nestedLexer.tokenize(inner);
+				nestedParser.addTokens(nestedTokens);
+				const nestedAst = nestedParser.complete();
+				if (!nestedAst) parts.push({
+					type: "Literal",
+					value: ""
+				});
+				else parts.push(nestedAst);
+				continue;
+			}
+			buffer += ch;
+			i++;
+		}
+		pushBufferLiteral();
+		this._placeAtCursor({
+			type: "TemplateLiteral",
+			value: void 0,
+			parts
+		});
+	}
+	objKey(token) {
 		this._curObjKey = token.value;
-	};
-	exports.objStart = function() {
+	}
+	objStart() {
 		this._placeAtCursor({
 			type: "ObjectLiteral",
 			value: {}
 		});
-	};
-	exports.objVal = function(ast) {
-		this._cursor.value[this._curObjKey] = ast;
-	};
-	exports.subExpression = function(ast) {
+	}
+	objVal(ast) {
+		if (this._cursor && this._curObjKey) if (ast.type === "UnaryExpression" && ast.operator === "..." && ast.right) {
+			const right = ast.right;
+			this._cursor.value[this._curObjKey] = right;
+			if (Array.isArray(this._cursor.entries)) this._cursor.entries.push({
+				type: "ObjectProperty",
+				key: this._curObjKey,
+				value: right
+			});
+		} else {
+			this._cursor.value[this._curObjKey] = ast;
+			if (Array.isArray(this._cursor.entries)) this._cursor.entries.push({
+				type: "ObjectProperty",
+				key: this._curObjKey,
+				value: ast
+			});
+		}
+	}
+	objSpread(ast) {
+		if (this._cursor && Array.isArray(this._cursor.entries)) {
+			let expr = ast;
+			if (ast.type === "UnaryExpression" && ast.operator === "..." && ast.right) expr = ast.right;
+			this._cursor.entries.push({
+				type: "SpreadElement",
+				expr
+			});
+			return;
+		}
+		if (this._cursor) {
+			const cur = this._cursor;
+			if (!Array.isArray(cur.entries)) {
+				cur.entries = [];
+				const obj = cur.value || {};
+				for (const key of Object.keys(obj)) cur.entries.push({
+					type: "ObjectProperty",
+					key,
+					value: obj[key]
+				});
+			}
+			let expr = ast;
+			if (ast.type === "UnaryExpression" && ast.operator === "..." && ast.right) expr = ast.right;
+			cur.entries.push({
+				type: "SpreadElement",
+				expr
+			});
+		}
+	}
+	subExpression(ast) {
 		this._placeAtCursor(ast);
-	};
-	exports.ternaryEnd = function(ast) {
-		this._cursor.alternate = ast;
-	};
-	exports.ternaryMid = function(ast) {
-		this._cursor.consequent = ast;
-	};
-	exports.ternaryStart = function() {
+	}
+	ternaryEnd(ast) {
+		if (this._cursor) this._cursor.alternate = ast;
+	}
+	ternaryMid(ast) {
+		if (this._cursor) this._cursor.consequent = ast;
+	}
+	ternaryStart() {
 		this._tree = {
 			type: "ConditionalExpression",
-			test: this._tree
+			test: this._tree || void 0
 		};
 		this._cursor = this._tree;
-	};
-	exports.transform = function(token) {
+	}
+	transform(token) {
+		const transformName = token.value;
 		this._placeBeforeCursor({
 			type: "FunctionCall",
-			name: token.value,
-			args: [this._cursor],
+			name: transformName,
+			args: this._cursor ? [this._cursor] : [],
 			pool: "transforms"
 		});
-	};
-	exports.unaryOp = function(token) {
+	}
+	unaryOp(token) {
 		this._placeAtCursor({
 			type: "UnaryExpression",
 			operator: token.value
 		});
-	};
-}));
-var require_states = /* @__PURE__ */ __commonJSMin(((exports) => {
-	var h = require_handlers();
-	exports.states = {
-		expectOperand: { tokenTypes: {
-			literal: { toState: "expectBinOp" },
-			identifier: { toState: "identifier" },
-			unaryOp: {},
-			openParen: { toState: "subExpression" },
-			openCurl: {
-				toState: "expectObjKey",
-				handler: h.objStart
-			},
-			dot: { toState: "traverse" },
-			openBracket: {
-				toState: "arrayVal",
-				handler: h.arrayStart
-			}
-		} },
-		expectBinOp: {
-			tokenTypes: {
-				binaryOp: { toState: "expectOperand" },
-				pipe: { toState: "expectTransform" },
-				dot: { toState: "traverse" },
-				question: {
-					toState: "ternaryMid",
-					handler: h.ternaryStart
-				}
-			},
-			completable: true
-		},
-		expectTransform: { tokenTypes: { identifier: {
-			toState: "postTransform",
-			handler: h.transform
-		} } },
-		expectObjKey: { tokenTypes: {
-			identifier: {
-				toState: "expectKeyValSep",
-				handler: h.objKey
-			},
-			closeCurl: { toState: "expectBinOp" }
-		} },
-		expectKeyValSep: { tokenTypes: { colon: { toState: "objVal" } } },
-		postTransform: {
-			tokenTypes: {
-				openParen: { toState: "argVal" },
-				binaryOp: { toState: "expectOperand" },
-				dot: { toState: "traverse" },
-				openBracket: { toState: "filter" },
-				pipe: { toState: "expectTransform" }
-			},
-			completable: true
-		},
-		postArgs: {
-			tokenTypes: {
-				binaryOp: { toState: "expectOperand" },
-				dot: { toState: "traverse" },
-				openBracket: { toState: "filter" },
-				pipe: { toState: "expectTransform" }
-			},
-			completable: true
-		},
-		identifier: {
-			tokenTypes: {
-				binaryOp: { toState: "expectOperand" },
-				dot: { toState: "traverse" },
-				openBracket: { toState: "filter" },
-				openParen: {
-					toState: "argVal",
-					handler: h.functionCall
-				},
-				pipe: { toState: "expectTransform" },
-				question: {
-					toState: "ternaryMid",
-					handler: h.ternaryStart
-				}
-			},
-			completable: true
-		},
-		traverse: { tokenTypes: { identifier: { toState: "identifier" } } },
-		filter: {
-			subHandler: h.filter,
-			endStates: { closeBracket: "identifier" }
-		},
-		subExpression: {
-			subHandler: h.subExpression,
-			endStates: { closeParen: "expectBinOp" }
-		},
-		argVal: {
-			subHandler: h.argVal,
-			endStates: {
-				comma: "argVal",
-				closeParen: "postArgs"
-			}
-		},
-		objVal: {
-			subHandler: h.objVal,
-			endStates: {
-				comma: "expectObjKey",
-				closeCurl: "expectBinOp"
-			}
-		},
-		arrayVal: {
-			subHandler: h.arrayVal,
-			endStates: {
-				comma: "arrayVal",
-				closeBracket: "expectBinOp"
-			}
-		},
-		ternaryMid: {
-			subHandler: h.ternaryMid,
-			endStates: { colon: "ternaryEnd" }
-		},
-		ternaryEnd: {
-			subHandler: h.ternaryEnd,
-			completable: true
+	}
+	_getHandlerMethod(tokenType) {
+		switch (tokenType) {
+			case "binaryOp": return this.binaryOp.bind(this);
+			case "dot": return () => this.dot();
+			case "identifier": return this.identifier.bind(this);
+			case "literal": return this.literal.bind(this);
+			case "template": return this.template.bind(this);
+			case "unaryOp": return this.unaryOp.bind(this);
+			case "pipe": return () => this.pipe();
+			default: return;
 		}
-	};
-}));
-var require_Parser = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var _interopRequireDefault = require_interopRequireDefault();
-	var _classCallCheck2 = _interopRequireDefault(require_classCallCheck());
-	var _createClass2 = _interopRequireDefault(require_createClass());
-	var handlers = require_handlers();
-	var states = require_states().states;
-	module.exports = /* @__PURE__ */ function() {
-		function Parser(grammar, prefix, stopMap) {
-			(0, _classCallCheck2.default)(this, Parser);
-			this._grammar = grammar;
-			this._state = "expectOperand";
-			this._tree = null;
-			this._exprStr = prefix || "";
-			this._relative = false;
-			this._stopMap = stopMap || {};
+	}
+	pipe() {
+		if (this._state === "traverse") {
+			this._placeAtCursor({
+				type: "Identifier",
+				value: ".",
+				relative: true
+			});
+			this._relative = true;
 		}
-		(0, _createClass2.default)(Parser, [
-			{
-				key: "addToken",
-				value: function addToken(token) {
-					if (this._state === "complete") throw new Error("Cannot add a new token to a completed Parser");
-					var state = states[this._state];
-					var startExpr = this._exprStr;
-					this._exprStr += token.raw;
-					if (state.subHandler) {
-						if (!this._subParser) this._startSubExpression(startExpr);
-						var stopState = this._subParser.addToken(token);
-						if (stopState) {
-							this._endSubExpression();
-							if (this._parentStop) return stopState;
-							this._state = stopState;
-						}
-					} else if (state.tokenTypes[token.type]) {
-						var typeOpts = state.tokenTypes[token.type];
-						var handleFunc = handlers[token.type];
-						if (typeOpts.handler) handleFunc = typeOpts.handler;
-						if (handleFunc) handleFunc.call(this, token);
-						if (typeOpts.toState) this._state = typeOpts.toState;
-					} else if (this._stopMap[token.type]) return this._stopMap[token.type];
-					else throw new Error("Token ".concat(token.raw, " (").concat(token.type, ") unexpected in expression: ").concat(this._exprStr));
-					return false;
-				}
-			},
-			{
-				key: "addTokens",
-				value: function addTokens(tokens) {
-					tokens.forEach(this.addToken, this);
-				}
-			},
-			{
-				key: "complete",
-				value: function complete() {
-					if (this._cursor && !states[this._state].completable) throw new Error("Unexpected end of expression: ".concat(this._exprStr));
-					if (this._subParser) this._endSubExpression();
-					this._state = "complete";
-					return this._cursor ? this._tree : null;
-				}
-			},
-			{
-				key: "isRelative",
-				value: function isRelative() {
-					return this._relative;
-				}
-			},
-			{
-				key: "_endSubExpression",
-				value: function _endSubExpression() {
-					states[this._state].subHandler.call(this, this._subParser.complete());
-					this._subParser = null;
-				}
-			},
-			{
-				key: "_placeAtCursor",
-				value: function _placeAtCursor(node) {
-					if (!this._cursor) this._tree = node;
-					else {
-						this._cursor.right = node;
-						this._setParent(node, this._cursor);
-					}
-					this._cursor = node;
-				}
-			},
-			{
-				key: "_placeBeforeCursor",
-				value: function _placeBeforeCursor(node) {
-					this._cursor = this._cursor._parent;
-					this._placeAtCursor(node);
-				}
-			},
-			{
-				key: "_setParent",
-				value: function _setParent(node, parent) {
-					Object.defineProperty(node, "_parent", {
-						value: parent,
-						writable: true
-					});
-				}
-			},
-			{
-				key: "_startSubExpression",
-				value: function _startSubExpression(exprStr) {
-					var endStates = states[this._state].endStates;
-					if (!endStates) {
-						this._parentStop = true;
-						endStates = this._stopMap;
-					}
-					this._subParser = new Parser(this._grammar, exprStr, endStates);
-				}
-			}
-		]);
-		return Parser;
-	}();
-}));
-var require_PromiseSync = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var _interopRequireDefault = require_interopRequireDefault();
-	var _classCallCheck2 = _interopRequireDefault(require_classCallCheck());
-	var _createClass2 = _interopRequireDefault(require_createClass());
-	var PromiseSync = /* @__PURE__ */ function() {
-		function PromiseSync(fn) {
-			(0, _classCallCheck2.default)(this, PromiseSync);
-			fn(this._resolve.bind(this), this._reject.bind(this));
+	}
+	_getTokenHandlerMethod(handlerName) {
+		switch (handlerName) {
+			case "arrayStart": return () => this.arrayStart();
+			case "noop": return () => {};
+			case "functionCall": return () => this.functionCall();
+			case "objKey": return this.objKey.bind(this);
+			case "objStart": return () => this.objStart();
+			case "ternaryStart": return () => this.ternaryStart();
+			case "transform": return this.transform.bind(this);
+			default: return;
 		}
-		(0, _createClass2.default)(PromiseSync, [
-			{
-				key: "catch",
-				value: function _catch(rejected) {
-					if (this.error) try {
-						this._resolve(rejected(this.error));
-					} catch (e) {
-						this._reject(e);
-					}
-					return this;
-				}
-			},
-			{
-				key: "then",
-				value: function then(resolved, rejected) {
-					if (!this.error) try {
-						this._resolve(resolved(this.value));
-					} catch (e) {
-						this._reject(e);
-					}
-					if (rejected) this.catch(rejected);
-					return this;
-				}
-			},
-			{
-				key: "_reject",
-				value: function _reject(error) {
-					this.value = void 0;
-					this.error = error;
-				}
-			},
-			{
-				key: "_resolve",
-				value: function _resolve(val) {
-					if (val instanceof PromiseSync) if (val.error) this._reject(val.error);
-					else this._resolve(val.value);
-					else {
-						this.value = val;
-						this.error = void 0;
-					}
-				}
-			}
-		]);
-		return PromiseSync;
-	}();
-	PromiseSync.all = function(vals) {
-		return new PromiseSync(function(resolve) {
-			resolve(vals.map(function(val) {
-				while (val instanceof PromiseSync) {
-					if (val.error) throw Error(val.error);
-					val = val.value;
-				}
-				return val;
-			}));
-		});
-	};
-	PromiseSync.resolve = function(val) {
-		return new PromiseSync(function(resolve) {
-			return resolve(val);
-		});
-	};
-	PromiseSync.reject = function(error) {
-		return new PromiseSync(function(resolve, reject) {
-			return reject(error);
-		});
-	};
-	module.exports = PromiseSync;
-}));
-var require_Expression = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var _interopRequireDefault = require_interopRequireDefault();
-	var _classCallCheck2 = _interopRequireDefault(require_classCallCheck());
-	var _createClass2 = _interopRequireDefault(require_createClass());
-	var Evaluator = require_Evaluator();
-	var Lexer = require_Lexer();
-	var Parser = require_Parser();
-	var PromiseSync = require_PromiseSync();
-	module.exports = /* @__PURE__ */ function() {
-		function Expression(grammar, exprStr) {
-			(0, _classCallCheck2.default)(this, Expression);
-			this._grammar = grammar;
-			this._exprStr = exprStr;
-			this._ast = null;
+	}
+	_getSubHandlerMethod(handlerName) {
+		switch (handlerName) {
+			case "argVal": return this.argVal.bind(this);
+			case "arrayVal": return this.arrayVal.bind(this);
+			case "arraySpread": return this.arraySpread.bind(this);
+			case "filter": return this.filter.bind(this);
+			case "objVal": return this.objVal.bind(this);
+			case "objSpread": return this.objSpread.bind(this);
+			case "subExpression": return this.subExpression.bind(this);
+			case "ternaryEnd": return this.ternaryEnd.bind(this);
+			case "ternaryMid": return this.ternaryMid.bind(this);
+			default: return;
 		}
-		(0, _createClass2.default)(Expression, [
-			{
-				key: "compile",
-				value: function compile() {
-					var lexer = new Lexer(this._grammar);
-					var parser = new Parser(this._grammar);
-					var tokens = lexer.tokenize(this._exprStr);
-					parser.addTokens(tokens);
-					this._ast = parser.complete();
-					return this;
-				}
-			},
-			{
-				key: "eval",
-				value: function _eval() {
-					var context = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
-					return this._eval(context, Promise);
-				}
-			},
-			{
-				key: "evalSync",
-				value: function evalSync() {
-					var context = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
-					var res = this._eval(context, PromiseSync);
-					if (res.error) throw res.error;
-					return res.value;
-				}
-			},
-			{
-				key: "_eval",
-				value: function _eval(context, promise) {
-					var _this = this;
-					return promise.resolve().then(function() {
-						var ast = _this._getAst();
-						return new Evaluator(_this._grammar, context, void 0, promise).eval(ast);
-					});
-				}
-			},
-			{
-				key: "_getAst",
-				value: function _getAst() {
-					if (!this._ast) this.compile();
-					return this._ast;
-				}
-			}
-		]);
-		return Expression;
-	}();
-}));
-var require_grammar = /* @__PURE__ */ __commonJSMin(((exports) => {
-	exports.getGrammar = function() {
-		return {
-			elements: {
-				".": { type: "dot" },
-				"[": { type: "openBracket" },
-				"]": { type: "closeBracket" },
-				"|": { type: "pipe" },
-				"{": { type: "openCurl" },
-				"}": { type: "closeCurl" },
-				":": { type: "colon" },
-				",": { type: "comma" },
-				"(": { type: "openParen" },
-				")": { type: "closeParen" },
-				"?": { type: "question" },
-				"+": {
-					type: "binaryOp",
-					precedence: 30,
-					eval: function _eval(left, right) {
-						return left + right;
-					}
-				},
-				"-": {
-					type: "binaryOp",
-					precedence: 30,
-					eval: function _eval(left, right) {
-						return left - right;
-					}
-				},
-				"*": {
-					type: "binaryOp",
-					precedence: 40,
-					eval: function _eval(left, right) {
-						return left * right;
-					}
-				},
-				"/": {
-					type: "binaryOp",
-					precedence: 40,
-					eval: function _eval(left, right) {
-						return left / right;
-					}
-				},
-				"//": {
-					type: "binaryOp",
-					precedence: 40,
-					eval: function _eval(left, right) {
-						return Math.floor(left / right);
-					}
-				},
-				"%": {
-					type: "binaryOp",
-					precedence: 50,
-					eval: function _eval(left, right) {
-						return left % right;
-					}
-				},
-				"^": {
-					type: "binaryOp",
-					precedence: 50,
-					eval: function _eval(left, right) {
-						return Math.pow(left, right);
-					}
-				},
-				"==": {
-					type: "binaryOp",
-					precedence: 20,
-					eval: function _eval(left, right) {
-						return left == right;
-					}
-				},
-				"!=": {
-					type: "binaryOp",
-					precedence: 20,
-					eval: function _eval(left, right) {
-						return left != right;
-					}
-				},
-				">": {
-					type: "binaryOp",
-					precedence: 20,
-					eval: function _eval(left, right) {
-						return left > right;
-					}
-				},
-				">=": {
-					type: "binaryOp",
-					precedence: 20,
-					eval: function _eval(left, right) {
-						return left >= right;
-					}
-				},
-				"<": {
-					type: "binaryOp",
-					precedence: 20,
-					eval: function _eval(left, right) {
-						return left < right;
-					}
-				},
-				"<=": {
-					type: "binaryOp",
-					precedence: 20,
-					eval: function _eval(left, right) {
-						return left <= right;
-					}
-				},
-				"&&": {
-					type: "binaryOp",
-					precedence: 10,
-					evalOnDemand: function evalOnDemand(left, right) {
-						return left.eval().then(function(leftVal) {
-							if (!leftVal) return leftVal;
-							return right.eval();
-						});
-					}
-				},
-				"||": {
-					type: "binaryOp",
-					precedence: 10,
-					evalOnDemand: function evalOnDemand(left, right) {
-						return left.eval().then(function(leftVal) {
-							if (leftVal) return leftVal;
-							return right.eval();
-						});
-					}
-				},
-				in: {
-					type: "binaryOp",
-					precedence: 20,
-					eval: function _eval(left, right) {
-						if (typeof right === "string") return right.indexOf(left) !== -1;
-						if (Array.isArray(right)) return right.some(function(elem) {
-							return elem === left;
-						});
-						return false;
-					}
-				},
-				"!": {
-					type: "unaryOp",
-					precedence: Infinity,
-					eval: function _eval(right) {
-						return !right;
-					}
-				}
-			},
-			functions: {},
-			transforms: {}
+	}
+};
+var ValidationSeverity;
+(function(ValidationSeverity) {
+	ValidationSeverity["ERROR"] = "error";
+	ValidationSeverity["WARNING"] = "warning";
+	ValidationSeverity["INFO"] = "info";
+})(ValidationSeverity || (ValidationSeverity = {}));
+var Autocomplete = class {
+	constructor(grammar) {
+		this._grammar = grammar;
+		this._lexer = new Lexer(grammar);
+	}
+	getSuggestions(expression, cursorPosition, context) {
+		try {
+			if (cursorPosition < 0 || cursorPosition > expression.length) return { suggestions: [] };
+			if (expression.length === 0) return { suggestions: this._getGeneralSuggestions(context) };
+			const analysis = this._analyzeContext(expression, cursorPosition, context);
+			const suggestions = this._getSuggestionsForContext(analysis, context);
+			const filteredSuggestions = this._filterSuggestions(suggestions, analysis.partialIdentifier);
+			const replaceRange = this._getReplaceRange(expression, cursorPosition, analysis);
+			return {
+				suggestions: filteredSuggestions,
+				triggerCharacter: this._getTriggerCharacter(analysis),
+				replaceRange
+			};
+		} catch {
+			return { suggestions: [] };
+		}
+	}
+	_analyzeContext(expression, cursorPosition, context) {
+		const beforeCursor = expression.substring(0, cursorPosition);
+		if (this._isInsideString(beforeCursor)) return {
+			contextType: "general",
+			insideString: true
 		};
-	};
-}));
-const jexl = new ((/* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var _interopRequireDefault = require_interopRequireDefault();
-	var _defineProperty2 = _interopRequireDefault(require_defineProperty());
-	var _classCallCheck2 = _interopRequireDefault(require_classCallCheck());
-	var _createClass2 = _interopRequireDefault(require_createClass());
-	var Expression = require_Expression();
-	var getGrammar = require_grammar().getGrammar;
-	var Jexl = /* @__PURE__ */ function() {
-		function Jexl() {
-			(0, _classCallCheck2.default)(this, Jexl);
-			this.expr = this.expr.bind(this);
-			this._grammar = getGrammar();
+		if (this._isInsideTemplate(beforeCursor)) return {
+			contextType: "general",
+			insideTemplate: true
+		};
+		const tokens = this._lexer.tokenize(beforeCursor);
+		if (tokens.length === 0) return { contextType: "general" };
+		const lastToken = tokens[tokens.length - 1];
+		const arrayFilterContext = this._analyzeArrayFilterContext(tokens, context, expression, cursorPosition);
+		if (arrayFilterContext) return arrayFilterContext;
+		switch (lastToken.type) {
+			case "dot": return this._analyzeDotContext(tokens, context);
+			case "pipe": return { contextType: "pipe" };
+			case "openParen": return { contextType: "paren" };
+			case "openBracket": return { contextType: "bracket" };
+			case "comma": {
+				const beforeCursor = expression.substring(0, cursorPosition);
+				if (beforeCursor.endsWith(", ") || beforeCursor.endsWith(",")) return { contextType: "general" };
+				return { contextType: "paren" };
+			}
+			case "identifier": {
+				const partialId = this._getPartialIdentifier(expression, cursorPosition);
+				if (partialId) {
+					const dotContext = this._analyzeDotContext(tokens, context);
+					if (dotContext.contextType === "dot" && dotContext.targetObject) return {
+						contextType: "dot",
+						targetObject: dotContext.targetObject,
+						partialIdentifier: partialId
+					};
+					return {
+						contextType: "identifier",
+						partialIdentifier: partialId
+					};
+				}
+				const afterCursor = expression.substring(cursorPosition);
+				if (afterCursor.trim() === "" || afterCursor.startsWith(" ")) return { contextType: "operator" };
+				return { contextType: "identifier" };
+			}
+			case "binaryOp":
+			case "unaryOp": {
+				const beforeCursor = expression.substring(0, cursorPosition);
+				if (beforeCursor.endsWith(" && ") || beforeCursor.endsWith(" || ") || beforeCursor.endsWith(" > ") || beforeCursor.endsWith(" < ") || beforeCursor.endsWith(" >= ") || beforeCursor.endsWith(" <= ") || beforeCursor.endsWith(" == ") || beforeCursor.endsWith(" != ") || beforeCursor.endsWith(" + ") || beforeCursor.endsWith(" - ") || beforeCursor.endsWith(" * ") || beforeCursor.endsWith(" / ") || beforeCursor.endsWith(" % ")) return { contextType: "general" };
+				return { contextType: "operator" };
+			}
+			default: return { contextType: "general" };
 		}
-		(0, _createClass2.default)(Jexl, [
-			{
-				key: "addBinaryOp",
-				value: function addBinaryOp(operator, precedence, fn, manualEval) {
-					this._addGrammarElement(operator, (0, _defineProperty2.default)({
-						type: "binaryOp",
-						precedence
-					}, manualEval ? "evalOnDemand" : "eval", fn));
+	}
+	_analyzeDotContext(tokens, context) {
+		let targetObject = context;
+		let namespace;
+		const pathComponents = [];
+		for (let i = tokens.length - 2; i >= 0; i--) {
+			const token = tokens[i];
+			if (token.type === "identifier") pathComponents.push(token.value);
+			else if (token.type === "dot") continue;
+			else if (token.type === "number" || token.type === "literal") pathComponents.push(typeof token.value === "number" ? token.value : parseInt(token.value, 10));
+			else if (token.type === "closeBracket") continue;
+			else if (token.type === "openBracket") continue;
+			else break;
+		}
+		for (const component of pathComponents.reverse()) if (targetObject && typeof targetObject === "object") if (typeof component === "number" && Array.isArray(targetObject)) targetObject = targetObject[component];
+		else if (typeof component === "string") targetObject = targetObject[component];
+		else {
+			targetObject = void 0;
+			break;
+		}
+		else {
+			targetObject = void 0;
+			break;
+		}
+		const lastIdentifier = this._findLastIdentifier(tokens);
+		if (lastIdentifier && this._isNamespace(lastIdentifier)) namespace = lastIdentifier;
+		return {
+			contextType: "dot",
+			targetObject,
+			namespace
+		};
+	}
+	_analyzeArrayFilterContext(tokens, context, expression, cursorPosition) {
+		let firstBracketIndex = -1;
+		let targetArray = null;
+		let arrayElement = null;
+		for (let i = 0; i < tokens.length; i++) if (tokens[i].type === "openBracket") {
+			if (i + 1 < tokens.length && tokens[i + 1].type === "dot") {
+				firstBracketIndex = i;
+				let tempTargetArray = context;
+				const identifiers = [];
+				for (let j = i - 1; j >= 0; j--) {
+					const token = tokens[j];
+					if (token.type === "identifier") identifiers.push(token.value);
+					else if (token.type === "dot") continue;
+					else break;
 				}
-			},
-			{
-				key: "addFunction",
-				value: function addFunction(name, fn) {
-					this._grammar.functions[name] = fn;
-				}
-			},
-			{
-				key: "addFunctions",
-				value: function addFunctions(map) {
-					for (var key in map) this._grammar.functions[key] = map[key];
-				}
-			},
-			{
-				key: "addUnaryOp",
-				value: function addUnaryOp(operator, fn) {
-					this._addGrammarElement(operator, {
-						type: "unaryOp",
-						weight: Infinity,
-						eval: fn
-					});
-				}
-			},
-			{
-				key: "addTransform",
-				value: function addTransform(name, fn) {
-					this._grammar.transforms[name] = fn;
-				}
-			},
-			{
-				key: "addTransforms",
-				value: function addTransforms(map) {
-					for (var key in map) this._grammar.transforms[key] = map[key];
-				}
-			},
-			{
-				key: "compile",
-				value: function compile(expression) {
-					return this.createExpression(expression).compile();
-				}
-			},
-			{
-				key: "createExpression",
-				value: function createExpression(expression) {
-					return new Expression(this._grammar, expression);
-				}
-			},
-			{
-				key: "getFunction",
-				value: function getFunction(name) {
-					return this._grammar.functions[name];
-				}
-			},
-			{
-				key: "getTransform",
-				value: function getTransform(name) {
-					return this._grammar.transforms[name];
-				}
-			},
-			{
-				key: "eval",
-				value: function _eval(expression) {
-					var context = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-					return this.createExpression(expression).eval(context);
-				}
-			},
-			{
-				key: "evalSync",
-				value: function evalSync(expression) {
-					var context = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-					return this.createExpression(expression).evalSync(context);
-				}
-			},
-			{
-				key: "expr",
-				value: function expr(strs) {
-					for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) args[_key - 1] = arguments[_key];
-					var exprStr = strs.reduce(function(acc, str, idx) {
-						var arg = idx < args.length ? args[idx] : "";
-						acc += str + arg;
-						return acc;
-					}, "");
-					return this.createExpression(exprStr);
-				}
-			},
-			{
-				key: "removeOp",
-				value: function removeOp(operator) {
-					if (this._grammar.elements[operator] && (this._grammar.elements[operator].type === "binaryOp" || this._grammar.elements[operator].type === "unaryOp")) delete this._grammar.elements[operator];
-				}
-			},
-			{
-				key: "_addGrammarElement",
-				value: function _addGrammarElement(str, obj) {
-					this._grammar.elements[str] = obj;
+				for (const identifier of identifiers.reverse()) if (tempTargetArray && typeof tempTargetArray === "object") tempTargetArray = tempTargetArray[identifier];
+				else return null;
+				if (Array.isArray(tempTargetArray) && tempTargetArray.length > 0) {
+					targetArray = tempTargetArray;
+					arrayElement = tempTargetArray[0];
+					break;
 				}
 			}
+		}
+		if (firstBracketIndex === -1 || !targetArray || !arrayElement) return null;
+		let currentBracketIndex = -1;
+		let dotAfterCurrentBracket = false;
+		for (let i = tokens.length - 1; i >= 0; i--) if (tokens[i].type === "openBracket") {
+			if (i + 1 < tokens.length && tokens[i + 1].type === "dot") {
+				currentBracketIndex = i;
+				dotAfterCurrentBracket = true;
+				break;
+			}
+		}
+		if (currentBracketIndex === -1 || !dotAfterCurrentBracket) {
+			for (let i = tokens.length - 1; i >= 0; i--) if (tokens[i].type === "closeBracket") {
+				if (i + 1 < tokens.length && tokens[i + 1].type === "dot") {
+					let bracketCount = 1;
+					for (let j = i - 1; j >= 0; j--) if (tokens[j].type === "closeBracket") bracketCount++;
+					else if (tokens[j].type === "openBracket") {
+						bracketCount--;
+						if (bracketCount === 0) {
+							currentBracketIndex = j;
+							dotAfterCurrentBracket = true;
+							break;
+						}
+					}
+					break;
+				}
+			}
+		}
+		if (currentBracketIndex === -1 || !dotAfterCurrentBracket) return null;
+		if (tokens.length === currentBracketIndex + 2 && tokens[tokens.length - 1].type === "dot") {
+			let elementTarget = arrayElement;
+			const elementIdentifiers = [];
+			for (let i = firstBracketIndex + 2; i < currentBracketIndex; i++) {
+				const token = tokens[i];
+				if (token.type === "identifier") elementIdentifiers.push(token.value);
+				else if (token.type === "dot") continue;
+				else if (token.type === "openBracket") {
+					if (i + 1 < tokens.length && tokens[i + 1].type === "dot") {
+						for (const identifier of elementIdentifiers) if (elementTarget && typeof elementTarget === "object") elementTarget = elementTarget[identifier];
+						else return null;
+						if (Array.isArray(elementTarget) && elementTarget.length > 0) {
+							elementTarget = elementTarget[0];
+							elementIdentifiers.length = 0;
+						} else return null;
+					}
+					continue;
+				}
+			}
+			for (const identifier of elementIdentifiers) if (elementTarget && typeof elementTarget === "object") {
+				elementTarget = elementTarget[identifier];
+				if (Array.isArray(elementTarget) && elementTarget.length > 0) elementTarget = elementTarget[0];
+			} else return null;
+			return {
+				contextType: "arrayFilter",
+				targetObject: elementTarget,
+				arrayElementType: arrayElement,
+				relativeContext: true,
+				partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+			};
+		}
+		if (tokens.length > 2 && (tokens[tokens.length - 1].type === "dot" || tokens[tokens.length - 1].type === "identifier")) {
+			const prevToken = tokens[tokens.length - 2];
+			if (prevToken.type === "closeBracket" || prevToken.type === "dot" && tokens[tokens.length - 3]?.type === "closeBracket") {
+				let bracketCount = 1;
+				let foundNumber = false;
+				const startIndex = prevToken.type === "closeBracket" ? tokens.length - 3 : tokens.length - 4;
+				for (let i = startIndex; i >= 0; i--) if (tokens[i].type === "closeBracket") bracketCount++;
+				else if (tokens[i].type === "openBracket") {
+					bracketCount--;
+					if (bracketCount === 0) {
+						if (i + 1 < tokens.length && (tokens[i + 1].type === "number" || tokens[i + 1].type === "literal")) {
+							foundNumber = true;
+							currentBracketIndex = i;
+							dotAfterCurrentBracket = true;
+						}
+						break;
+					}
+				}
+				if (foundNumber) {
+					let elementTarget = arrayElement;
+					const elementIdentifiers = [];
+					for (let i = firstBracketIndex + 2; i < currentBracketIndex; i++) {
+						const token = tokens[i];
+						if (token.type === "identifier") elementIdentifiers.push(token.value);
+						else if (token.type === "dot") continue;
+						else if (token.type === "openBracket") continue;
+					}
+					for (const identifier of elementIdentifiers) if (elementTarget && typeof elementTarget === "object") elementTarget = elementTarget[identifier];
+					else return null;
+					return {
+						contextType: "arrayFilter",
+						targetObject: elementTarget,
+						arrayElementType: arrayElement,
+						relativeContext: true,
+						partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+					};
+				}
+			}
+		}
+		let elementTarget = arrayElement;
+		const elementIdentifiers = [];
+		for (let i = firstBracketIndex + 2; i < currentBracketIndex; i++) {
+			const token = tokens[i];
+			if (token.type === "identifier") elementIdentifiers.push(token.value);
+			else if (token.type === "dot") continue;
+			else if (token.type === "openBracket") {
+				if (i + 1 < tokens.length && tokens[i + 1].type === "dot") {
+					for (const identifier of elementIdentifiers) if (elementTarget && typeof elementTarget === "object") elementTarget = elementTarget[identifier];
+					else return null;
+					if (Array.isArray(elementTarget) && elementTarget.length > 0) {
+						elementTarget = elementTarget[0];
+						elementIdentifiers.length = 0;
+					} else return null;
+				}
+				continue;
+			}
+		}
+		for (let i = currentBracketIndex + 2; i < tokens.length; i++) {
+			const token = tokens[i];
+			if (token.type === "identifier") elementIdentifiers.push(token.value);
+			else if (token.type === "dot") continue;
+			else if (token.type === "openBracket") break;
+			else continue;
+		}
+		const lastToken = tokens[tokens.length - 1];
+		if (lastToken.type === "identifier" && lastToken.value.length > 0 && expression && cursorPosition !== void 0) {
+			const partialIdentifier = this._getPartialIdentifier(expression, cursorPosition);
+			if (partialIdentifier && partialIdentifier.length < lastToken.value.length) elementIdentifiers.pop();
+			else if (partialIdentifier && partialIdentifier === lastToken.value) {
+				if (cursorPosition === expression.length || cursorPosition < expression.length && /[a-zA-Z0-9_]/.test(expression[cursorPosition])) elementIdentifiers.pop();
+			}
+		}
+		for (const identifier of elementIdentifiers) if (elementTarget && typeof elementTarget === "object") {
+			elementTarget = elementTarget[identifier];
+			if (Array.isArray(elementTarget) && elementTarget.length > 0) elementTarget = elementTarget[0];
+		} else return null;
+		if (tokens.length > 0 && tokens[tokens.length - 1].type === "dot") return {
+			contextType: "arrayFilter",
+			targetObject: elementTarget,
+			arrayElementType: arrayElement,
+			relativeContext: true,
+			partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+		};
+		if (tokens.length > 0 && tokens[tokens.length - 1].type === "identifier" && expression && cursorPosition !== void 0) {
+			const partialIdentifier = this._getPartialIdentifier(expression, cursorPosition);
+			if (partialIdentifier && partialIdentifier.length < tokens[tokens.length - 1].value.length) return {
+				contextType: "arrayFilter",
+				targetObject: elementTarget,
+				arrayElementType: arrayElement,
+				relativeContext: true,
+				partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+			};
+			else if (partialIdentifier && partialIdentifier === tokens[tokens.length - 1].value) if (cursorPosition === expression.length || cursorPosition < expression.length && /[a-zA-Z0-9_]/.test(expression[cursorPosition])) {
+				if (elementTarget && typeof elementTarget === "object") {
+					let hasPartialMatch = false;
+					for (const key of Object.keys(elementTarget)) if (key.toLowerCase().startsWith(partialIdentifier.toLowerCase()) && key.toLowerCase() !== partialIdentifier.toLowerCase()) {
+						hasPartialMatch = true;
+						break;
+					}
+					if (hasPartialMatch) return {
+						contextType: "arrayFilter",
+						targetObject: elementTarget,
+						arrayElementType: arrayElement,
+						relativeContext: true,
+						partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+					};
+				}
+				return {
+					contextType: "arrayFilter",
+					targetObject: null,
+					arrayElementType: arrayElement,
+					relativeContext: true,
+					partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+				};
+			} else return {
+				contextType: "arrayFilter",
+				targetObject: elementTarget,
+				arrayElementType: arrayElement,
+				relativeContext: true,
+				partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+			};
+			else {
+				if (elementTarget && typeof elementTarget === "object") {
+					const partialIdentifier = this._getPartialIdentifier(expression, cursorPosition);
+					if (partialIdentifier && partialIdentifier.length > 0) {
+						let hasPartialMatch = false;
+						for (const key of Object.keys(elementTarget)) if (key.toLowerCase().startsWith(partialIdentifier.toLowerCase()) && key.toLowerCase() !== partialIdentifier.toLowerCase()) {
+							hasPartialMatch = true;
+							break;
+						}
+						if (hasPartialMatch) return {
+							contextType: "arrayFilter",
+							targetObject: elementTarget,
+							arrayElementType: arrayElement,
+							relativeContext: true,
+							partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+						};
+					}
+				}
+				return {
+					contextType: "arrayFilter",
+					targetObject: null,
+					arrayElementType: arrayElement,
+					relativeContext: true,
+					partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+				};
+			}
+		}
+		return {
+			contextType: "arrayFilter",
+			targetObject: elementTarget,
+			arrayElementType: arrayElement,
+			relativeContext: true,
+			partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+		};
+	}
+	_getSuggestionsForContext(analysis, context) {
+		if (analysis.insideString || analysis.insideTemplate) return [];
+		switch (analysis.contextType) {
+			case "dot": return this._getPropertySuggestions(analysis.targetObject, analysis.namespace);
+			case "arrayFilter": return this._getArrayFilterSuggestions(analysis);
+			case "pipe": return this._getTransformSuggestions(analysis.namespace);
+			case "function": return this._getFunctionSuggestions(analysis.namespace);
+			case "identifier": return this._getIdentifierSuggestions(context);
+			case "operator": return this._getOperatorSuggestions();
+			case "bracket":
+			case "paren": return this._getGeneralSuggestions(context);
+			default: return this._getGeneralSuggestions(context);
+		}
+	}
+	_getPropertySuggestions(targetObject, namespace) {
+		const suggestions = [];
+		if (namespace) {
+			const transformSuggestions = this._getNamespaceTransformSuggestions(namespace);
+			const functionSuggestions = this._getNamespaceFunctionSuggestions(namespace);
+			return [...transformSuggestions, ...functionSuggestions];
+		}
+		if (targetObject && typeof targetObject === "object") for (const key of Object.keys(targetObject)) {
+			const value = targetObject[key];
+			const type = this._getValueType(value);
+			suggestions.push({
+				label: key,
+				value: key,
+				type: "property",
+				description: `Property of type ${type}`,
+				detail: type
+			});
+		}
+		return suggestions;
+	}
+	_getArrayFilterSuggestions(analysis) {
+		const suggestions = [];
+		if (analysis.targetObject === null) return suggestions;
+		if (analysis.targetObject && typeof analysis.targetObject === "object") for (const key of Object.keys(analysis.targetObject)) {
+			const value = analysis.targetObject[key];
+			const type = this._getValueType(value);
+			if (analysis.partialIdentifier && !key.toLowerCase().startsWith(analysis.partialIdentifier.toLowerCase())) continue;
+			suggestions.push({
+				label: key,
+				value: key,
+				type: "property",
+				description: `Property of type ${type}`,
+				detail: type
+			});
+		}
+		else if (analysis.arrayElementType && typeof analysis.arrayElementType === "object") for (const key of Object.keys(analysis.arrayElementType)) {
+			const value = analysis.arrayElementType[key];
+			const type = this._getValueType(value);
+			if (analysis.partialIdentifier && !key.toLowerCase().startsWith(analysis.partialIdentifier.toLowerCase())) continue;
+			suggestions.push({
+				label: key,
+				value: key,
+				type: "property",
+				description: `Property of type ${type}`,
+				detail: type
+			});
+		}
+		return suggestions;
+	}
+	_getTransformSuggestions(namespace) {
+		const suggestions = [];
+		if (namespace) return this._getNamespaceTransformSuggestions(namespace);
+		for (const [name, transform] of Object.entries(this._grammar.transforms)) suggestions.push({
+			label: name,
+			value: name,
+			type: "transform",
+			description: "Transform function",
+			signature: this._getFunctionSignature(transform)
+		});
+		return suggestions;
+	}
+	_getNamespaceTransformSuggestions(namespace) {
+		const suggestions = [];
+		const prefix = `${namespace}.`;
+		for (const [name, transform] of Object.entries(this._grammar.transforms)) if (name.startsWith(prefix)) {
+			const shortName = name.substring(prefix.length);
+			suggestions.push({
+				label: shortName,
+				value: shortName,
+				type: "transform",
+				description: `Transform function in ${namespace} namespace`,
+				signature: this._getFunctionSignature(transform)
+			});
+		}
+		return suggestions;
+	}
+	_getFunctionSuggestions(namespace) {
+		const suggestions = [];
+		if (namespace) return this._getNamespaceFunctionSuggestions(namespace);
+		for (const [name, func] of Object.entries(this._grammar.functions)) suggestions.push({
+			label: name,
+			value: name,
+			type: "function",
+			description: "Function",
+			signature: this._getFunctionSignature(func)
+		});
+		return suggestions;
+	}
+	_getNamespaceFunctionSuggestions(namespace) {
+		const suggestions = [];
+		const prefix = `${namespace}.`;
+		for (const [name, func] of Object.entries(this._grammar.functions)) if (name.startsWith(prefix)) {
+			const shortName = name.substring(prefix.length);
+			suggestions.push({
+				label: shortName,
+				value: shortName,
+				type: "function",
+				description: `Function in ${namespace} namespace`,
+				signature: this._getFunctionSignature(func)
+			});
+		}
+		return suggestions;
+	}
+	_getIdentifierSuggestions(context) {
+		const suggestions = [];
+		if (context) for (const [key, value] of Object.entries(context)) {
+			const type = this._getValueType(value);
+			suggestions.push({
+				label: key,
+				value: key,
+				type: "identifier",
+				description: `Variable of type ${type}`,
+				detail: type
+			});
+		}
+		for (const [name, func] of Object.entries(this._grammar.functions)) suggestions.push({
+			label: name,
+			value: name,
+			type: "function",
+			description: "Function",
+			signature: this._getFunctionSignature(func)
+		});
+		suggestions.push(...[
+			{
+				label: "true",
+				value: "true",
+				type: "keyword",
+				description: "Boolean true"
+			},
+			{
+				label: "false",
+				value: "false",
+				type: "keyword",
+				description: "Boolean false"
+			},
+			{
+				label: "null",
+				value: "null",
+				type: "keyword",
+				description: "Null value"
+			},
+			{
+				label: "undefined",
+				value: "undefined",
+				type: "keyword",
+				description: "Undefined value"
+			}
 		]);
-		return Jexl;
-	}();
-	module.exports = new Jexl();
-	module.exports.Jexl = Jexl;
-})))()).Jexl();
-function evaluateListenerCondition(condition, eventData, props) {
+		return suggestions;
+	}
+	_getOperatorSuggestions() {
+		const suggestions = [];
+		for (const [op, element] of Object.entries(this._grammar.elements)) if (element.type === "binaryOp" || element.type === "unaryOp") suggestions.push({
+			label: op,
+			value: op,
+			type: "operator",
+			description: `${element.type === "binaryOp" ? "Binary" : "Unary"} operator`
+		});
+		return suggestions;
+	}
+	_getGeneralSuggestions(context) {
+		const suggestions = [];
+		if (context) for (const [key, value] of Object.entries(context)) {
+			const type = this._getValueType(value);
+			suggestions.push({
+				label: key,
+				value: key,
+				type: "identifier",
+				description: `Variable of type ${type}`,
+				detail: type
+			});
+		}
+		for (const [name, func] of Object.entries(this._grammar.functions)) suggestions.push({
+			label: name,
+			value: name,
+			type: "function",
+			description: "Function",
+			signature: this._getFunctionSignature(func)
+		});
+		for (const [name, transform] of Object.entries(this._grammar.transforms)) suggestions.push({
+			label: name,
+			value: name,
+			type: "transform",
+			description: "Transform function",
+			signature: this._getFunctionSignature(transform)
+		});
+		suggestions.push(...[
+			{
+				label: "true",
+				value: "true",
+				type: "keyword",
+				description: "Boolean true"
+			},
+			{
+				label: "false",
+				value: "false",
+				type: "keyword",
+				description: "Boolean false"
+			},
+			{
+				label: "null",
+				value: "null",
+				type: "keyword",
+				description: "Null value"
+			},
+			{
+				label: "undefined",
+				value: "undefined",
+				type: "keyword",
+				description: "Undefined value"
+			}
+		]);
+		return suggestions;
+	}
+	_filterSuggestions(suggestions, partialIdentifier) {
+		if (!partialIdentifier) return suggestions;
+		const lowerPartial = partialIdentifier.toLowerCase();
+		return suggestions.filter((suggestion) => {
+			return (suggestion.filterText || suggestion.label).toLowerCase().includes(lowerPartial);
+		});
+	}
+	_getReplaceRange(expression, cursorPosition, analysis) {
+		if (analysis.partialIdentifier) {
+			const match = expression.substring(0, cursorPosition).match(/([a-zA-Z_$][a-zA-Z0-9_$]*)$/);
+			if (match) return {
+				start: cursorPosition - match[1].length,
+				end: cursorPosition
+			};
+		}
+		return {
+			start: cursorPosition,
+			end: cursorPosition
+		};
+	}
+	_getTriggerCharacter(analysis) {
+		switch (analysis.contextType) {
+			case "dot": return ".";
+			case "pipe": return "|";
+			case "paren": return "(";
+			case "bracket": return "[";
+			default: return;
+		}
+	}
+	_isInsideString(text) {
+		let inString = false;
+		let escapeNext = false;
+		let quoteChar = "";
+		for (const char of text) {
+			if (escapeNext) {
+				escapeNext = false;
+				continue;
+			}
+			if (char === "\\") {
+				escapeNext = true;
+				continue;
+			}
+			if (!inString && (char === "\"" || char === "'")) {
+				inString = true;
+				quoteChar = char;
+				continue;
+			}
+			if (inString && char === quoteChar) {
+				inString = false;
+				quoteChar = "";
+			}
+		}
+		return inString;
+	}
+	_isInsideTemplate(text) {
+		let inTemplate = false;
+		let escapeNext = false;
+		for (const char of text) {
+			if (escapeNext) {
+				escapeNext = false;
+				continue;
+			}
+			if (char === "\\") {
+				escapeNext = true;
+				continue;
+			}
+			if (char === "`") inTemplate = !inTemplate;
+		}
+		return inTemplate;
+	}
+	_getPartialIdentifier(expression, cursorPosition) {
+		const match = expression.substring(0, cursorPosition).match(/([a-zA-Z_$][a-zA-Z0-9_$]*)$/);
+		return match ? match[1] : void 0;
+	}
+	_findLastIdentifier(tokens) {
+		for (let i = tokens.length - 1; i >= 0; i--) if (tokens[i].type === "identifier") return tokens[i].value;
+	}
+	_isNamespace(identifier) {
+		const prefix = `${identifier}.`;
+		for (const name of Object.keys(this._grammar.transforms)) if (name.startsWith(prefix)) return true;
+		for (const name of Object.keys(this._grammar.functions)) if (name.startsWith(prefix)) return true;
+		return false;
+	}
+	_getValueType(value) {
+		if (value === null) return "null";
+		if (value === void 0) return "undefined";
+		if (Array.isArray(value)) return "array";
+		if (value instanceof Date) return "date";
+		return typeof value;
+	}
+	_getFunctionSignature(func) {
+		const match = func.toString().match(/\([^)]*\)/);
+		return match ? match[0] : "()";
+	}
+};
+const poolNames = {
+	functions: "Jexl Function",
+	transforms: "Transform"
+};
+var Evaluator = class Evaluator {
+	constructor(grammar, context, relativeContext) {
+		this._grammar = grammar;
+		this._context = context || {};
+		this._relContext = relativeContext || this._context;
+	}
+	async eval(ast) {
+		switch (ast.type) {
+			case "ArrayLiteral": return this._handleArrayLiteral(ast);
+			case "BinaryExpression": return this._handleBinaryExpression(ast);
+			case "ConditionalExpression": return this._handleConditionalExpression(ast);
+			case "FilterExpression": return this._handleFilterExpression(ast);
+			case "Identifier": return this._handleIdentifier(ast);
+			case "Literal": return this._handleLiteral(ast);
+			case "TemplateLiteral": return this._handleTemplateLiteral(ast);
+			case "ObjectLiteral": return this._handleObjectLiteral(ast);
+			case "FunctionCall": return this._handleFunctionCall(ast);
+			case "UnaryExpression": return this._handleUnaryExpression(ast);
+			default: throw new Error(`Unknown AST node type: ${ast.type}`);
+		}
+	}
+	evalArray(arr) {
+		return Promise.all(arr.map((elem) => this.eval(elem)));
+	}
+	async evalMap(map) {
+		const keys = Object.keys(map);
+		const result = {};
+		const asts = keys.map((key) => {
+			const ast = map[key];
+			if (!ast) throw new Error(`No AST found for key: ${key}`);
+			return this.eval(ast);
+		});
+		(await Promise.all(asts)).forEach((val, idx) => {
+			const key = keys[idx];
+			if (key !== void 0) result[key] = val;
+		});
+		return result;
+	}
+	async _filterRelative(subject, expr) {
+		const promises = [];
+		let subjectArray;
+		if (!Array.isArray(subject)) subjectArray = subject === void 0 ? [] : [subject];
+		else subjectArray = subject;
+		subjectArray.forEach((elem) => {
+			const evalInst = new Evaluator(this._grammar, this._context, elem);
+			promises.push(evalInst.eval(expr));
+		});
+		const values = await Promise.all(promises);
+		if (values.every((v) => typeof v === "boolean")) {
+			const filtered = [];
+			values.forEach((value, idx) => {
+				if (value) filtered.push(subjectArray[idx]);
+			});
+			return filtered;
+		}
+		return values;
+	}
+	async _filterStatic(subject, expr) {
+		const res = await this.eval(expr);
+		if (typeof res === "boolean") return res ? subject : void 0;
+		if (subject === void 0) return;
+		if (subject === null) return null;
+		if (typeof subject === "object" || Array.isArray(subject)) return subject[res];
+	}
+	async _handleArrayLiteral(ast) {
+		if (Array.isArray(ast.entries) && ast.entries.length > 0) {
+			const result = [];
+			for (const entry of ast.entries) if (entry.type === "SpreadElement") {
+				const spreadVal = await this.eval(entry.expr);
+				if (spreadVal == null) continue;
+				if (typeof spreadVal[Symbol.iterator] !== "function") throw new TypeError("Spread value is not iterable");
+				for (const item of spreadVal) result.push(item);
+			} else result.push(await this.eval(entry));
+			return result;
+		}
+		return this.evalArray(ast.value);
+	}
+	async _handleBinaryExpression(ast) {
+		const grammarOp = this._grammar.elements[ast.operator];
+		if (!grammarOp) throw new Error(`Unknown binary operator: ${ast.operator}`);
+		if ("evalOnDemand" in grammarOp && grammarOp.evalOnDemand) {
+			const wrap = (subAst) => ({ eval: () => this.eval(subAst) });
+			return grammarOp.evalOnDemand(wrap(ast.left), wrap(ast.right));
+		}
+		if ("eval" in grammarOp && grammarOp.eval) {
+			const [leftVal, rightVal] = await Promise.all([this.eval(ast.left), this.eval(ast.right)]);
+			return grammarOp.eval(leftVal, rightVal);
+		}
+		throw new Error(`Binary operator ${ast.operator} has no eval function`);
+	}
+	async _handleConditionalExpression(ast) {
+		const res = await this.eval(ast.test);
+		if (res) {
+			if (ast.consequent) return this.eval(ast.consequent);
+			return res;
+		}
+		return this.eval(ast.alternate);
+	}
+	async _handleFilterExpression(ast) {
+		const subject = await this.eval(ast.subject);
+		if (ast.relative) return this._filterRelative(subject, ast.expr);
+		return this._filterStatic(subject, ast.expr);
+	}
+	async _handleIdentifier(ast) {
+		if (!ast.from) return ast.relative ? this._relContext[ast.value] : this._context[ast.value];
+		const context = await this.eval(ast.from);
+		if (context === void 0) return;
+		if (context === null) return null;
+		let targetContext = context;
+		if (Array.isArray(context)) targetContext = context[0];
+		return targetContext?.[ast.value];
+	}
+	_handleLiteral(ast) {
+		return ast.value;
+	}
+	async _handleTemplateLiteral(ast) {
+		const parts = ast.parts || [];
+		const out = [];
+		for (const part of parts) if (part.type === "Literal") out.push(String(part.value ?? ""));
+		else {
+			const val = await this.eval(part);
+			out.push(val === void 0 || val === null ? "" : String(val));
+		}
+		return out.join("");
+	}
+	async _handleObjectLiteral(ast) {
+		if (Array.isArray(ast.entries) && ast.entries.length > 0) {
+			const out = {};
+			for (const entry of ast.entries) if (entry.type === "SpreadElement") {
+				const spreadVal = await this.eval(entry.expr);
+				if (spreadVal != null) Object.assign(out, spreadVal);
+			} else if (entry.type === "ObjectProperty") out[entry.key] = await this.eval(entry.value);
+			return out;
+		}
+		return this.evalMap(ast.value);
+	}
+	async _handleFunctionCall(ast) {
+		const poolName = poolNames[ast.pool];
+		if (!poolName) throw new Error(`Corrupt AST: Pool '${ast.pool}' not found`);
+		const func = this._grammar[ast.pool][ast.name];
+		if (!func) throw new Error(`${poolName} ${ast.name} is not defined.`);
+		const args = await this.evalArray(ast.args || []);
+		return func.bind({ context: this._context })(...args);
+	}
+	async _handleUnaryExpression(ast) {
+		const right = await this.eval(ast.right);
+		const grammarOp = this._grammar.elements[ast.operator];
+		if (!grammarOp) throw new Error(`Unknown unary operator: ${ast.operator}`);
+		if ("eval" in grammarOp && grammarOp.eval) return grammarOp.eval(right);
+		throw new Error(`Unary operator ${ast.operator} has no eval function`);
+	}
+};
+var Expression = class {
+	constructor(grammar, exprStr) {
+		this._grammar = grammar;
+		this._exprStr = exprStr;
+		this._ast = null;
+	}
+	compile() {
+		const lexer = new Lexer(this._grammar);
+		const parser = new Parser(this._grammar);
+		parser.addTokens(lexer.tokenize(this._exprStr));
+		this._ast = parser.complete();
+		return this;
+	}
+	eval(context = {}) {
+		return this._eval(context);
+	}
+	async evalAsString(context = {}) {
+		const result = await this.eval(context);
+		if (result === null) return "null";
+		if (result === void 0) return "undefined";
+		return String(result);
+	}
+	async evalAsNumber(context = {}) {
+		const result = await this.eval(context);
+		if (result === null || result === void 0) return NaN;
+		return Number(result);
+	}
+	async evalAsBoolean(context = {}) {
+		return !!await this.eval(context);
+	}
+	async evalAsArray(context = {}) {
+		const result = await this.eval(context);
+		if (result === null || result === void 0) return [];
+		if (Array.isArray(result)) return result;
+		return [result];
+	}
+	async evalAsEnum(context = {}, allowedValues) {
+		const result = await this.eval(context);
+		if (allowedValues.includes(result)) return result;
+	}
+	async evalWithDefault(context = {}, defaultValue) {
+		const result = await this.eval(context);
+		if (result === null || result === void 0) return defaultValue;
+		return result;
+	}
+	async _eval(context) {
+		const ast = this._getAst();
+		if (!ast) throw new Error("No AST available for evaluation. Expression may not be compiled.");
+		return new Evaluator(this._grammar, context, context).eval(ast);
+	}
+	_getAst() {
+		if (!this._ast) this.compile();
+		return this._ast;
+	}
+};
+const getGrammar = () => ({
+	elements: {
+		".": { type: "dot" },
+		"[": { type: "openBracket" },
+		"]": { type: "closeBracket" },
+		"|": { type: "pipe" },
+		"{": { type: "openCurl" },
+		"}": { type: "closeCurl" },
+		":": { type: "colon" },
+		",": { type: "comma" },
+		"(": { type: "openParen" },
+		")": { type: "closeParen" },
+		"?": { type: "question" },
+		"...": { type: "unaryOp" },
+		"+": {
+			type: "binaryOp",
+			precedence: 30,
+			eval: function(left, right) {
+				if (arguments.length === 1) return +left;
+				return left + right;
+			}
+		},
+		"-": {
+			type: "binaryOp",
+			precedence: 30,
+			eval: function(left, right) {
+				if (arguments.length === 1) return -left;
+				return left - right;
+			}
+		},
+		"*": {
+			type: "binaryOp",
+			precedence: 40,
+			eval: (left, right) => left * right
+		},
+		"/": {
+			type: "binaryOp",
+			precedence: 40,
+			eval: (left, right) => left / right
+		},
+		"//": {
+			type: "binaryOp",
+			precedence: 40,
+			eval: (left, right) => Math.floor(left / right)
+		},
+		"%": {
+			type: "binaryOp",
+			precedence: 50,
+			eval: (left, right) => left % right
+		},
+		"^": {
+			type: "binaryOp",
+			precedence: 50,
+			eval: (left, right) => Math.pow(left, right)
+		},
+		"**": {
+			type: "binaryOp",
+			precedence: 70,
+			eval: (left, right) => left ** right
+		},
+		"==": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => left === right
+		},
+		"!=": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => left !== right
+		},
+		"~=": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => Math.abs(left - right) <= .01
+		},
+		"!~=": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => Math.abs(left - right) > .01
+		},
+		">": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => left > right
+		},
+		">=": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => left >= right
+		},
+		"<": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => left < right
+		},
+		"<=": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => left <= right
+		},
+		"&&": {
+			type: "binaryOp",
+			precedence: 10,
+			evalOnDemand: (left, right) => {
+				return left.eval().then((leftVal) => {
+					if (!leftVal) return leftVal;
+					return right.eval();
+				});
+			}
+		},
+		"||": {
+			type: "binaryOp",
+			precedence: 5,
+			evalOnDemand: (left, right) => {
+				return left.eval().then((leftVal) => {
+					if (leftVal) return leftVal;
+					return right.eval();
+				});
+			}
+		},
+		"and": {
+			type: "binaryOp",
+			precedence: 10,
+			eval: (left, right) => {
+				const isValidationError = (val) => {
+					if (typeof val === "string") return true;
+					if (typeof val === "object" && val !== null && !Array.isArray(val)) return Object.values(val).every((v) => typeof v === "string");
+					return false;
+				};
+				const isValidationErrorArray = (val) => {
+					return Array.isArray(val) && val.length > 0 && val.every((item) => isValidationError(item));
+				};
+				const leftIsArray = isValidationErrorArray(left);
+				const rightIsArray = isValidationErrorArray(right);
+				const leftIsError = isValidationError(left);
+				const rightIsError = isValidationError(right);
+				if (!left && !leftIsError && !leftIsArray) return false;
+				const errors = [];
+				if (leftIsArray) errors.push(...left);
+				else if (leftIsError) errors.push(left);
+				if (rightIsArray) errors.push(...right);
+				else if (rightIsError) errors.push(right);
+				if (errors.length > 0) {
+					if (!right && !rightIsError && !rightIsArray) return false;
+					return errors;
+				}
+				if (left && right) return true;
+				return false;
+			}
+		},
+		"or": {
+			type: "binaryOp",
+			precedence: 10,
+			eval: (left, right) => {
+				const isValidationError = (val) => {
+					if (typeof val === "string") return true;
+					if (typeof val === "object" && val !== null && !Array.isArray(val)) return Object.values(val).every((v) => typeof v === "string");
+					return false;
+				};
+				const isValidationErrorArray = (val) => {
+					return Array.isArray(val) && val.length > 0 && val.every((item) => isValidationError(item));
+				};
+				const leftIsArray = isValidationErrorArray(left);
+				const leftIsError = isValidationError(left);
+				const rightIsError = isValidationError(right);
+				if ((leftIsError || leftIsArray) && right && !rightIsError) return right;
+				if ((leftIsError || leftIsArray) && rightIsError) return [right];
+				if (left && !leftIsError && !leftIsArray) return left;
+				return right;
+			}
+		},
+		"xor": {
+			type: "binaryOp",
+			precedence: 10,
+			eval: (left, right) => {
+				const isValidationError = (val) => {
+					if (typeof val === "string") return true;
+					if (typeof val === "object" && val !== null && !Array.isArray(val)) return Object.values(val).every((v) => typeof v === "string");
+					return false;
+				};
+				const isValidationErrorArray = (val) => {
+					return Array.isArray(val) && val.length > 0 && val.every((item) => isValidationError(item));
+				};
+				const leftIsArray = isValidationErrorArray(left);
+				const rightIsArray = isValidationErrorArray(right);
+				const leftIsError = isValidationError(left);
+				const rightIsError = isValidationError(right);
+				const errors = [];
+				if (leftIsArray) errors.push(...left);
+				else if (leftIsError) errors.push(left);
+				if (rightIsArray) errors.push(...right);
+				else if (rightIsError) errors.push(right);
+				if (errors.length > 0) {
+					if (errors.length === 1 && (leftIsError || leftIsArray) !== (rightIsError || rightIsArray)) return errors;
+					return errors.length === 1 ? errors[0] : errors;
+				}
+				return Boolean(left) !== Boolean(right);
+			}
+		},
+		"in": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => {
+				const isObjectLike = (v) => typeof v === "object" && v !== null;
+				const deepEqual = (a, b) => {
+					if (a === b) return true;
+					if (a instanceof Date && b instanceof Date) return a.getTime() === b.getTime();
+					if (Array.isArray(a) && Array.isArray(b)) {
+						if (a.length !== b.length) return false;
+						for (let i = 0; i < a.length; i++) if (!deepEqual(a[i], b[i])) return false;
+						return true;
+					}
+					if (isObjectLike(a) && isObjectLike(b)) {
+						const aKeys = Object.keys(a);
+						const bKeys = Object.keys(b);
+						if (aKeys.length !== bKeys.length) return false;
+						for (const key of aKeys) {
+							if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
+							if (!deepEqual(a[key], b[key])) return false;
+						}
+						return true;
+					}
+					return false;
+				};
+				if (typeof right === "string") return right.indexOf(left) !== -1;
+				if (Array.isArray(right)) {
+					if (isObjectLike(left) && "id" in left) {
+						const leftId = left.id;
+						return right.some((elem) => isObjectLike(elem) && "id" in elem ? elem.id === leftId : elem === leftId);
+					}
+					return right.some((elem) => deepEqual(elem, left));
+				}
+				return false;
+			}
+		},
+		"!": {
+			type: "unaryOp",
+			precedence: Infinity,
+			eval: (right) => !right
+		}
+	},
+	functions: {},
+	transforms: {}
+});
+var Jexl = class {
+	constructor() {
+		this.expr = this.expr.bind(this);
+		this.grammar = getGrammar();
+	}
+	addBinaryOp(operator, precedence, fn, manualEval) {
+		const element = {
+			type: "binaryOp",
+			precedence
+		};
+		if (manualEval) element.evalOnDemand = fn;
+		else element.eval = fn;
+		this._addGrammarElement(operator, element);
+	}
+	addFunction(name, fn) {
+		this.grammar.functions[name] = fn;
+	}
+	addFunctions(map) {
+		for (const key in map) if (Object.prototype.hasOwnProperty.call(map, key)) {
+			const fn = map[key];
+			if (fn) this.grammar.functions[key] = fn;
+		}
+	}
+	addUnaryOp(operator, fn) {
+		const element = {
+			type: "unaryOp",
+			weight: Infinity,
+			eval: fn
+		};
+		this._addGrammarElement(operator, element);
+	}
+	addTransform(name, fn) {
+		this.grammar.transforms[name] = fn;
+	}
+	addTransforms(map) {
+		for (const key in map) if (Object.prototype.hasOwnProperty.call(map, key)) {
+			const fn = map[key];
+			if (fn) this.grammar.transforms[key] = fn;
+		}
+	}
+	compile(expression) {
+		return this.createExpression(expression).compile();
+	}
+	createExpression(expression) {
+		return new Expression(this.grammar, expression);
+	}
+	getFunction(name) {
+		const fn = this.grammar.functions[name];
+		if (!fn) throw new Error(`Function '${name}' is not defined`);
+		return fn;
+	}
+	getTransform(name) {
+		const fn = this.grammar.transforms[name];
+		if (!fn) throw new Error(`Transform '${name}' is not defined`);
+		return fn;
+	}
+	eval(expression, context = {}) {
+		return this.createExpression(expression).eval(context);
+	}
+	evalAsString(expression, context = {}) {
+		return this.createExpression(expression).evalAsString(context);
+	}
+	evalAsNumber(expression, context = {}) {
+		return this.createExpression(expression).evalAsNumber(context);
+	}
+	evalAsBoolean(expression, context = {}) {
+		return this.createExpression(expression).evalAsBoolean(context);
+	}
+	evalAsArray(expression, context = {}) {
+		return this.createExpression(expression).evalAsArray(context);
+	}
+	evalAsEnum(expression, context = {}, allowedValues) {
+		return this.createExpression(expression).evalAsEnum(context, allowedValues);
+	}
+	evalWithDefault(expression, context = {}, defaultValue) {
+		return this.createExpression(expression).evalWithDefault(context, defaultValue);
+	}
+	expr(strings, ...args) {
+		const exprStr = strings.reduce((acc, str, idx) => {
+			const arg = idx < args.length ? args[idx] : "";
+			acc += str + arg;
+			return acc;
+		}, "");
+		return this.createExpression(exprStr);
+	}
+	removeOp(operator) {
+		if (Object.prototype.hasOwnProperty.call(this.grammar.elements, operator) && (this.grammar.elements[operator].type === "binaryOp" || this.grammar.elements[operator].type === "unaryOp")) delete this.grammar.elements[operator];
+	}
+	autocomplete(expression, cursorPosition, context = {}) {
+		return new Autocomplete(this.grammar).getSuggestions(expression, cursorPosition, context);
+	}
+	_addGrammarElement(str, obj) {
+		this.grammar.elements[str] = obj;
+	}
+};
+const jexl = new Jexl();
+async function evaluateListenerCondition(condition, eventData, props) {
 	try {
-		return !!jexl.evalSync(condition, {
+		return !!await jexl.eval(condition, {
 			event: eventData,
 			props
 		});
@@ -2682,8 +3467,13 @@ var Component = class {
 	doEmit(name, data) {
 		if (!this.listeners.has(name)) return;
 		(this.listeners.get(name) || []).forEach(({ action, condition }) => {
-			if (condition && !evaluateListenerCondition(condition, data, this.valueStore.getCurrentProps())) return;
-			this.action(action, data, 1);
+			if (!condition) {
+				this.action(action, data, 1);
+				return;
+			}
+			evaluateListenerCondition(condition, data, this.valueStore.getCurrentProps()).then((matches) => {
+				if (matches) this.action(action, data, 1);
+			});
 		});
 	}
 	isTurboEnabled() {

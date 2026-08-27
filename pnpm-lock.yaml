@@ -180,6 +180,9 @@ importers:
       '@hotwired/stimulus':
         specifier: ^3.0.0
         version: 3.2.2
+      '@hypatiatech/jexl':
+        specifier: ^4.10.5
+        version: 4.10.5
       '@testing-library/dom':
         specifier: ^10.4.1
         version: 10.4.1
@@ -189,18 +192,12 @@ importers:
       '@testing-library/user-event':
         specifier: ^13.1.9
         version: 13.5.0(@testing-library/dom@10.4.1)
-      '@types/jexl':
-        specifier: ^2.3.4
-        version: 2.3.4
       '@types/node-fetch':
         specifier: ^2.6.13
         version: 2.6.13
       idiomorph:
         specifier: ^0.3.0
         version: 0.3.0
-      jexl:
-        specifier: ^2.3.0
-        version: 2.3.0
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0(supports-color@7.2.0)
@@ -1040,6 +1037,10 @@ packages:
     resolution: {integrity: sha512-M7qXUqcGab6G5PKOiwhgbByTtrPgKPFCTMNQ52QhzUEXEqmp0/ApEguUesh/FPiUjrmFec+3lq98KsWnYY2C7g==}
     engines: {node: '>= 14'}
 
+  '@hypatiatech/jexl@4.10.5':
+    resolution: {integrity: sha512-gLfiOazgyrQ6msOiUWGJa1OJ2dF465YhRtFGdyOzHUhjwJZuDeM3pJfiszTuSZzjs1gi5b/vhb7ta4EwmkFgzg==}
+    engines: {node: '>=20.0.0'}
+
   '@inquirer/ansi@1.0.2':
     resolution: {integrity: sha512-S8qNSZiYzFd0wAcyG5AXCvUHC5Sr7xpZ9wZ2py9XR88jUz8wooStVx5M6dRzczbBWjic9NP7+rY0Xi7qqK/aMQ==}
     engines: {node: '>=18'}
@@ -1823,9 +1824,6 @@ packages:
   '@types/hotwired__turbo@8.0.4':
     resolution: {integrity: sha512-kgEKOms0taywPxPQvXUh90+G7M+phBHTiUw95Dosw0FU/we86iFerMfgBGcf3eQcAGs5pTNYnLMhiIlfRw/AfA==}
 
-  '@types/jexl@2.3.4':
-    resolution: {integrity: sha512-3BU5DbkPvwqOeW8kZcB9Bvn5bspTFY3Lo0yBS6ephuI8kVSpCjzbGtRPbWnvdbr67tMvXDxiJRcL3fwbz/6+PQ==}
-
   '@types/jsesc@2.5.1':
     resolution: {integrity: sha512-9VN+6yxLOPLOav+7PwjZbxiID2bVaeq0ED4qSQmdQTdjnXJSaCVKTR58t15oqH1H5t8Ng2ZX1SabJVoN9Q34bw==}
 
@@ -2411,9 +2409,6 @@ packages:
   jest-canvas-mock@2.5.2:
     resolution: {integrity: sha512-vgnpPupjOL6+L5oJXzxTxFrlGEIbHdZqFU+LFNdtLxZ3lRDCl17FlTMM7IatoRQkrcyOTMlDinjUguqmQ6bR2A==}
 
-  jexl@2.3.0:
-    resolution: {integrity: sha512-ecqln4kTWNkMwbFvTukOMDq1jy1GcPzvshhMp/s4pxU86xdLDq7HbDRa87DfMfbSAOS8V6EwvCdfs0S+w/iycA==}
-
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -2430,6 +2425,9 @@ packages:
     resolution: {integrity: sha512-/sM3dO2FOzXjKQhJuo0Q173wf2KOo8t4I8vHy6lF9poUp7bKT0/NHE8fPX23PwfhnykfqnC2xRxOnVw5XuGIaA==}
     engines: {node: '>=6'}
     hasBin: true
+
+  json-schema@0.4.0:
+    resolution: {integrity: sha512-es94M3nTIfsEPisRafak+HDLfHXnKBhV3vU5eqPcS3flIWqcxJWgXHXiey3YrpaNsanY5ei1VoYEbOzijuq9BA==}
 
   json5@2.2.3:
     resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
@@ -3618,6 +3616,10 @@ snapshots:
 
   '@hotwired/turbo@8.0.13': {}
 
+  '@hypatiatech/jexl@4.10.5':
+    dependencies:
+      json-schema: 0.4.0
+
   '@inquirer/ansi@1.0.2':
     optional: true
 
@@ -4154,8 +4156,6 @@ snapshots:
   '@types/google.maps@3.58.1': {}
 
   '@types/hotwired__turbo@8.0.4': {}
-
-  '@types/jexl@2.3.4': {}
 
   '@types/jsesc@2.5.1': {}
 
@@ -4788,10 +4788,6 @@ snapshots:
       cssfontparser: 1.2.1
       moo-color: 1.0.3
 
-  jexl@2.3.0:
-    dependencies:
-      '@babel/runtime': 7.28.6
-
   js-tokens@4.0.0: {}
 
   jsdom@26.1.0(supports-color@7.2.0):
@@ -4822,6 +4818,8 @@ snapshots:
       - utf-8-validate
 
   jsesc@3.1.0: {}
+
+  json-schema@0.4.0: {}
 
   json5@2.2.3: {}
 

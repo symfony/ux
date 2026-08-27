@@ -87,7 +87,7 @@ async function main() {
         unbundle: isStimulusBundle || isReactOrVue,
         deps: {
             neverBundle: Array.from(external),
-            onlyBundle: ['idiomorph', 'jexl', '@babel/runtime'],
+            onlyBundle: ['idiomorph', '@hypatiatech/jexl'],
         },
         plugins: [
             {

@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Jexl } from 'jexl';
+import { Jexl } from '@hypatiatech/jexl';
 
 const jexl = new Jexl();
 
@@ -29,9 +29,9 @@ const jexl = new Jexl();
  * so a typo in a condition can never accidentally trigger every listener,
  * and the error is logged to help debugging.
  */
-export function evaluateListenerCondition(condition: string, eventData: any, props: any): boolean {
+export async function evaluateListenerCondition(condition: string, eventData: any, props: any): Promise<boolean> {
     try {
-        return !!jexl.evalSync(condition, { event: eventData, props });
+        return !!(await jexl.eval(condition, { event: eventData, props }));
     } catch (error) {
         console.error(`LiveComponent: could not evaluate LiveListener condition "${condition}".`, error);
 
