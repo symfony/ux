@@ -3,6 +3,7 @@
 ## 3.5
 
 - Add `LiveResponse::downloadUrl()` and `LiveResponse::downloadFile()` to trigger a file download from a `LiveAction`, pointing the browser at a URL or sending the contents with the response, while the component keeps its state
+- Fix `NoModificationAllowedError` thrown when closing the server-error modal twice in quick succession
 
 ## 3.1
 

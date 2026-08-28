@@ -536,9 +536,10 @@ export default class Component {
         }
 
         const closeModal = (modal: HTMLElement | null) => {
-            if (modal) {
-                modal.outerHTML = '';
-            }
+            // Element.remove() is idempotent: safe to call again after the
+            // first close detached the modal from the DOM (unlike assigning
+            // to outerHTML, which throws on a parent-less element).
+            modal?.remove();
             document.body.style.overflow = 'visible';
         };
 

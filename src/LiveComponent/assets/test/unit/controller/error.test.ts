@@ -89,6 +89,33 @@ describe('LiveController Error Handling', () => {
         expect(test.element).toHaveTextContent('Original component text');
     });
 
+    it('closing the error modal twice does not throw', async () => {
+        const test = await createTest(
+            {},
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <button data-action="live#action" data-live-action-param="save">Save</button>
+            </div>
+        `
+        );
+
+        test.expectsAjaxCall()
+            .serverWillReturnCustomResponse(500, '<html><body><h1>Boom</h1></body></html>')
+            .expectActionCalled('save');
+
+        getByText(test.element, 'Save').click();
+
+        await waitFor(() => expect(getErrorElement()).not.toBeNull());
+
+        const modal = getErrorElement() as HTMLElement;
+        modal.click();
+        // Second close (e.g. a quick double-click or a simultaneous Escape) must not throw
+        // even though the element is already detached from the DOM after the first close.
+        expect(() => modal.click()).not.toThrow();
+
+        expect(getErrorElement()).toBeNull();
+    });
+
     it('triggers response:error hook', async () => {
         const test = await createTest(
             {},
