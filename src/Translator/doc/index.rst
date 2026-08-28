@@ -1,6 +1,10 @@
 Symfony UX Translator
 =====================
 
+.. tip::
+
+    Try the `Symfony UX Translator demo`_ and see the translations update live.
+
 Symfony UX Translator is a Symfony bundle providing the same mechanism as `Symfony Translator`_
 in JavaScript with a TypeScript integration, in Symfony applications. It is part of `the Symfony UX initiative`_.
 
@@ -224,6 +228,7 @@ This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
+.. _`Symfony UX Translator demo`: https://ux.symfony.com/translator
 .. _`Symfony Translator`: https://symfony.com/doc/current/translation.html
 .. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
