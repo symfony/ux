@@ -1,0 +1,10 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-28T05:19:26Z
+
+I changed it to:
+```
+.. tip::
+
+    Try the `Symfony UX Translator demo`_ and see the translations update live.
+```
