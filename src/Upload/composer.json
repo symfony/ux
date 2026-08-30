@@ -26,6 +26,7 @@
         "symfony/dependency-injection": "^7.4|^8.0",
         "symfony/event-dispatcher": "^7.4|^8.0",
         "symfony/form": "^7.4|^8.0",
+        "symfony/http-foundation": "^7.4|^8.0",
         "symfony/http-kernel": "^7.4|^8.0",
         "symfony/lock": "^7.4|^8.0",
         "symfony/mime": "^7.4|^8.0",
