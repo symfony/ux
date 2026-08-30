@@ -111,7 +111,7 @@ final class LocalStorage extends AbstractStorage implements PrunableStorageInter
             throw new InvalidArgumentException(\sprintf('Chunk %d has already been uploaded with different content.', $index));
         }
         try {
-            if (false === fwrite($handle, $data)) {
+            if (\strlen($data) !== fwrite($handle, $data)) {
                 throw new StorageException(\sprintf('Unable to write chunk %d.', $index));
             }
         } finally {
