@@ -106,9 +106,10 @@ describe('PreviewCache', () => {
         });
 
         it('returns blob URL for cached token', async () => {
-            // Manually put something in the mock cache
-            const blob = new Blob(['fake-image'], { type: 'image/jpeg' });
-            const response = new Response(blob, {
+            // Build the body from a string, not a Blob: jsdom's Blob and Node's
+            // Response come from two different implementations, and undici does not
+            // accept the former.
+            const response = new Response('fake-image', {
                 headers: { 'Content-Type': 'image/jpeg' },
             });
             await mockCaches.mockCache.put('/_ux-upload-preview/my-token', response);
@@ -128,8 +129,7 @@ describe('PreviewCache', () => {
     describe('remove', () => {
         it('deletes a cached entry', async () => {
             // Put then remove
-            const blob = new Blob(['data'], { type: 'image/jpeg' });
-            await mockCaches.mockCache.put('/_ux-upload-preview/del-token', new Response(blob));
+            await mockCaches.mockCache.put('/_ux-upload-preview/del-token', new Response('data'));
             expect(mockCaches.store.size).toBe(1);
 
             await cache.remove('del-token');
