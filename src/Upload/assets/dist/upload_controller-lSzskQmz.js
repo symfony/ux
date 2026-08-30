@@ -1,5 +1,5 @@
 import { t as _defineProperty } from "./defineProperty-B6pPL0VL.js";
-import { n as UploadSuspendedError, r as Uploader, t as UploadCancelledError } from "./uploader-CW2SxOPm.js";
+import { n as UploadSuspendedError, r as Uploader, t as UploadCancelledError } from "./uploader-B-ZqO7h4.js";
 import { Controller } from "@hotwired/stimulus";
 const MAX_DIMENSION = 200;
 const JPEG_QUALITY = .7;

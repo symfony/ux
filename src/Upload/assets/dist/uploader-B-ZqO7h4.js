@@ -475,11 +475,11 @@ var Uploader = class {
 					const body = await response.json();
 					if (body.error) message = body.error;
 				} catch {}
-				throw new Error(`Chunk upload failed: ${message}`);
+				throw new ChunkUploadError(`Chunk upload failed: ${message}`, response.status);
 			}
 		} catch (error) {
 			if (error instanceof DOMException && error.name === "AbortError") throw error;
-			if (attempt < maxRetries) {
+			if (!(error instanceof ChunkUploadError && error.status >= 400 && error.status < 500 && error.status !== 408 && error.status !== 429) && attempt < maxRetries) {
 				const delay = Math.pow(2, attempt) * 1e3;
 				await this.sleep(delay, signal);
 				return this.uploadChunk(file, uploadId, uploadUrl, chunkIndex, chunkSize, compression, totalChunks, signal, attempt + 1);
@@ -636,4 +636,10 @@ var Uploader = class {
 	}
 };
 var DirectUploadFallbackError = class extends Error {};
+var ChunkUploadError = class extends Error {
+	constructor(message, status) {
+		super(message);
+		this.status = status;
+	}
+};
 export { UploadSuspendedError as n, Uploader as r, UploadCancelledError as t };

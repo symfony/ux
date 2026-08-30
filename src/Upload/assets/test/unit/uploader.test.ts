@@ -1297,5 +1297,34 @@ describe('Uploader', () => {
             expect(chunkAttempts).toBe(1);
             expect(fetch).toHaveBeenCalledTimes(5);
         });
+
+        it('does not retry a chunk rejected with a 4xx', async () => {
+            // Fake timers are never advanced here: a retry would leave the upload
+            // pending on its backoff instead of rejecting.
+            vi.useFakeTimers({ toFake: ['setTimeout'] });
+
+            const file = createMockFile('test.txt', 100);
+            const initResponse = createMockInitResponse('upload-403', 1);
+
+            let chunkAttempts = 0;
+
+            vi.mocked(fetch)
+                .mockResolvedValueOnce({
+                    ok: true,
+                    json: () => Promise.resolve(initResponse),
+                } as Response)
+                .mockResolvedValueOnce({
+                    ok: true,
+                    json: () => Promise.resolve({ progress: { chunkIndices: [] } }),
+                } as Response)
+                .mockImplementation(() => {
+                    chunkAttempts++;
+                    return Promise.resolve({ ok: false, status: 403, statusText: 'Forbidden' } as Response);
+                });
+
+            await expect(uploader.upload(file)).rejects.toThrow();
+
+            expect(chunkAttempts).toBe(1);
+        });
     });
 });

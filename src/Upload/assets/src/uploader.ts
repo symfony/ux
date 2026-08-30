@@ -713,15 +713,24 @@ export class Uploader {
                 } catch {
                     // Response body is not JSON -- use statusText
                 }
-                throw new Error(`Chunk upload failed: ${message}`);
+                throw new ChunkUploadError(`Chunk upload failed: ${message}`, response.status);
             }
         } catch (error) {
             if (error instanceof DOMException && error.name === 'AbortError') {
                 throw error;
             }
 
+            // A 4xx will not change on retry, so failing fast beats burning the
+            // whole backoff. 408 and 429 are the exceptions: both invite a retry.
+            const permanent =
+                error instanceof ChunkUploadError &&
+                error.status >= 400 &&
+                error.status < 500 &&
+                error.status !== 408 &&
+                error.status !== 429;
+
             // Retry with exponential backoff
-            if (attempt < maxRetries) {
+            if (!permanent && attempt < maxRetries) {
                 const delay = Math.pow(2, attempt) * 1000;
                 await this.sleep(delay, signal);
                 return this.uploadChunk(
@@ -978,3 +987,12 @@ export class Uploader {
 }
 
 class DirectUploadFallbackError extends Error {}
+
+class ChunkUploadError extends Error {
+    constructor(
+        message: string,
+        readonly status: number
+    ) {
+        super(message);
+    }
+}
