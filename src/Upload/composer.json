@@ -48,14 +48,6 @@
         "symfony/twig-bundle": "^7.4|^8.0",
         "symfony/ux-live-component": "^2.20|^3.0"
     },
-    "suggest": {
-        "league/flysystem": "For advanced storage backend support (S3, GCS, Azure)",
-        "symfony/console": "For the ux:upload:cleanup command",
-        "symfony/rate-limiter": "For throttling upload initialization with a named Framework rate limiter (opt-in via ux_upload.rate_limiter)",
-        "symfony/security-bundle": "For automatically binding uploads and tokens to the authenticated Symfony user",
-        "symfony/ux-live-component": "For the ComponentWithUploadTrait bridge that pushes a completed upload onto a Live Component prop without a form submission",
-        "symfony/security-csrf": "For CSRF protection on all upload mutation endpoints"
-    },
     "autoload": {
         "psr-4": {
             "Symfony\\UX\\Upload\\": "src/"
