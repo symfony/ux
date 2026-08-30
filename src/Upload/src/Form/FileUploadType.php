@@ -440,13 +440,13 @@ final class FileUploadType extends AbstractType
     private function formatBytes(int $bytes): string
     {
         if ($bytes >= 1024 * 1024 * 1024) {
-            return round($bytes / (1024 * 1024 * 1024), 1).' GB';
+            return round($bytes / (1024 * 1024 * 1024), 1).' GiB';
         }
         if ($bytes >= 1024 * 1024) {
-            return round($bytes / (1024 * 1024), 1).' MB';
+            return round($bytes / (1024 * 1024), 1).' MiB';
         }
         if ($bytes >= 1024) {
-            return round($bytes / 1024, 1).' KB';
+            return round($bytes / 1024, 1).' KiB';
         }
 
         return $bytes.' B';

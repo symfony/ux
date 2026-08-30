@@ -498,15 +498,15 @@ final class FileUploadTypeTest extends TestCase
             'allowed_types' => $mimeTypes,
             'multiple' => true,
         ])->createView();
-        self::assertStringContainsString('2 GB', $view->vars['help_text']);
+        self::assertStringContainsString('2 GiB', $view->vars['help_text']);
         self::assertStringContainsString('Up to 3 files', $view->vars['help_text']);
         self::assertStringNotContainsString('--', $view->vars['help_text']);
         foreach (['DOCX', 'JPEG', 'PNG', 'GIF', 'WebP', 'SVG', 'PDF', 'TXT', 'CSV', 'JSON', 'ZIP', 'Images', 'Videos', 'Audio', 'VND.CUSTOM', 'README'] as $label) {
             self::assertStringContainsString($label, $view->vars['help_text']);
         }
 
-        self::assertStringContainsString('2 MB', $this->formFactory->create(FileUploadType::class, options: ['max_size' => '2M'])->createView()->vars['help_text']);
-        self::assertStringContainsString('2 KB', $this->formFactory->create(FileUploadType::class, options: ['max_size' => '2K'])->createView()->vars['help_text']);
+        self::assertStringContainsString('2 MiB', $this->formFactory->create(FileUploadType::class, options: ['max_size' => '2M'])->createView()->vars['help_text']);
+        self::assertStringContainsString('2 KiB', $this->formFactory->create(FileUploadType::class, options: ['max_size' => '2K'])->createView()->vars['help_text']);
         self::assertStringContainsString('2 B', $this->formFactory->create(FileUploadType::class, options: ['max_size' => '2'])->createView()->vars['help_text']);
     }
 
