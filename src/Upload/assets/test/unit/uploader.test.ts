@@ -784,6 +784,74 @@ describe('Uploader', () => {
         });
     });
 
+    describe('parallel chunks', () => {
+        it('keeps every slot busy instead of waiting for the slowest chunk', async () => {
+            const file = createMockFile('large.bin', 1000, 'image/jpeg');
+            const initResponse: InitResponse = {
+                uploadId: 'upload-pool',
+                uploadUrl: '/upload/upload-pool?sig=test',
+                config: { chunkSize: 200, totalChunks: 5, compression: false, parallel: 2 },
+            };
+
+            let inFlight = 0;
+            let maxInFlight = 0;
+            let chunkZeroDone = false;
+            const startedWhileChunkZeroRan: number[] = [];
+
+            vi.mocked(fetch)
+                .mockResolvedValueOnce({
+                    ok: true,
+                    json: () => Promise.resolve(initResponse),
+                } as Response)
+                .mockResolvedValueOnce({
+                    ok: true,
+                    json: () => Promise.resolve({ progress: { chunkIndices: [] } }),
+                } as Response)
+                .mockImplementation((_url, options) => {
+                    const headers = (options as RequestInit)?.headers as Record<string, string> | undefined;
+                    const index = Number(headers?.['X-Chunk-Index'] ?? -1);
+
+                    // The completion request carries no chunk index.
+                    if (index < 0) {
+                        return Promise.resolve({
+                            ok: true,
+                            json: () =>
+                                Promise.resolve({
+                                    success: true,
+                                    meta: { filename: 'large.bin', size: 1000, mimeType: 'image/jpeg' },
+                                }),
+                        } as Response);
+                    }
+
+                    inFlight++;
+                    maxInFlight = Math.max(maxInFlight, inFlight);
+                    if (0 !== index && !chunkZeroDone) {
+                        startedWhileChunkZeroRan.push(index);
+                    }
+
+                    return new Promise((resolve) => {
+                        setTimeout(
+                            () => {
+                                inFlight--;
+                                if (0 === index) {
+                                    chunkZeroDone = true;
+                                }
+                                resolve({ ok: true } as Response);
+                            },
+                            0 === index ? 50 : 1
+                        );
+                    });
+                });
+
+            await uploader.upload(file);
+
+            expect(maxInFlight).toBeLessThanOrEqual(2);
+            // Chunk 0 holds one slot for the whole upload: the other slot must run
+            // every remaining chunk meanwhile. Fixed batches would stop after 1.
+            expect(startedWhileChunkZeroRan).toEqual([1, 2, 3, 4]);
+        });
+    });
+
     describe('cancel', () => {
         it('should abort upload when cancel is called', async () => {
             // Use image/jpeg to skip compression (avoids slow stream processing in JSDOM)

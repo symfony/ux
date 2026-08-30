@@ -627,37 +627,42 @@ export class Uploader {
 
         let completedCount = existingCount;
 
-        // Process chunks in batches
-        for (let i = 0; i < chunks.length; i += parallel) {
-            // Wait if paused (resolves immediately if not paused)
-            await this.waitIfPaused(uploadId);
+        // Chunks are pulled from a shared queue rather than sent in fixed batches:
+        // a slot that frees up takes the next chunk right away, instead of idling
+        // until the slowest member of its batch is done. `parallel` therefore caps
+        // requests in flight, and stays reached for the whole upload.
+        const queue = [...chunks];
 
-            this.throwIfAborted(signal);
+        const worker = async (): Promise<void> => {
+            for (let chunkIndex = queue.shift(); undefined !== chunkIndex; chunkIndex = queue.shift()) {
+                // Checked per chunk, not per batch: pausing or aborting takes effect
+                // at the next chunk instead of at the next batch boundary.
+                await this.waitIfPaused(uploadId);
 
-            const batch = chunks.slice(i, i + parallel);
+                this.throwIfAborted(signal);
 
-            await Promise.all(
-                batch.map(async (chunkIndex) => {
-                    await this.uploadChunk(
-                        file,
-                        uploadId,
-                        uploadUrl,
-                        chunkIndex,
-                        chunkSize,
-                        compression,
-                        totalChunks,
-                        signal
-                    );
-                    // Report progress after each chunk completes
-                    completedCount++;
-                    const percent = Math.min(Math.round((completedCount / totalChunks) * 100), 100);
-                    const chunkBytes = Math.min(chunkSize, file.size - chunkIndex * chunkSize);
-                    const speed = this.recordSpeedSample(uploadId, chunkBytes, percent);
-                    this.events.onProgress?.(uploadId, percent, chunkIndex, speed);
-                    this.events.onChunkComplete?.(uploadId, chunkIndex, totalChunks);
-                })
-            );
-        }
+                await this.uploadChunk(
+                    file,
+                    uploadId,
+                    uploadUrl,
+                    chunkIndex,
+                    chunkSize,
+                    compression,
+                    totalChunks,
+                    signal
+                );
+
+                // Report progress after each chunk completes
+                completedCount++;
+                const percent = Math.min(Math.round((completedCount / totalChunks) * 100), 100);
+                const chunkBytes = Math.min(chunkSize, file.size - chunkIndex * chunkSize);
+                const speed = this.recordSpeedSample(uploadId, chunkBytes, percent);
+                this.events.onProgress?.(uploadId, percent, chunkIndex, speed);
+                this.events.onChunkComplete?.(uploadId, chunkIndex, totalChunks);
+            }
+        };
+
+        await Promise.all(Array.from({ length: Math.min(parallel, queue.length) }, () => worker()));
     }
 
     /**

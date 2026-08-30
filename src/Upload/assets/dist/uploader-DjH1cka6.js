@@ -432,11 +432,11 @@ var Uploader = class {
 		const { chunkSize, parallel, compression, totalChunks } = config;
 		if (!Array.isArray(chunks)) chunks = [];
 		let completedCount = existingCount;
-		for (let i = 0; i < chunks.length; i += parallel) {
-			await this.waitIfPaused(uploadId);
-			this.throwIfAborted(signal);
-			const batch = chunks.slice(i, i + parallel);
-			await Promise.all(batch.map(async (chunkIndex) => {
+		const queue = [...chunks];
+		const worker = async () => {
+			for (let chunkIndex = queue.shift(); void 0 !== chunkIndex; chunkIndex = queue.shift()) {
+				await this.waitIfPaused(uploadId);
+				this.throwIfAborted(signal);
 				await this.uploadChunk(file, uploadId, uploadUrl, chunkIndex, chunkSize, compression, totalChunks, signal);
 				completedCount++;
 				const percent = Math.min(Math.round(completedCount / totalChunks * 100), 100);
@@ -444,8 +444,9 @@ var Uploader = class {
 				const speed = this.recordSpeedSample(uploadId, chunkBytes, percent);
 				this.events.onProgress?.(uploadId, percent, chunkIndex, speed);
 				this.events.onChunkComplete?.(uploadId, chunkIndex, totalChunks);
-			}));
-		}
+			}
+		};
+		await Promise.all(Array.from({ length: Math.min(parallel, queue.length) }, () => worker()));
 	}
 	async uploadChunk(file, uploadId, uploadUrl, chunkIndex, chunkSize, compression, totalChunks, signal, attempt = 0) {
 		const maxRetries = 3;
