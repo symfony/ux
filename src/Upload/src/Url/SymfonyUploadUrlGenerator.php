@@ -45,24 +45,11 @@ final readonly class SymfonyUploadUrlGenerator implements UploadUrlGeneratorInte
             UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
-        // Append expiration timestamp
-        $expires = time() + $this->signatureExpiry;
-        $url .= (str_contains($url, '?') ? '&' : '?').'_expires='.$expires;
-
-        return $this->uriSigner->sign($url);
+        return $this->uriSigner->sign($url, time() + $this->signatureExpiry);
     }
 
     public function verifyRequest(Request $request): bool
     {
-        if (!$this->uriSigner->check($request->getUri())) {
-            return false;
-        }
-
-        $expires = $request->query->getInt('_expires');
-        if ($expires > 0 && $expires < time()) {
-            return false;
-        }
-
-        return true;
+        return $this->uriSigner->check($request->getUri());
     }
 }

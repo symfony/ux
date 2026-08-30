@@ -58,7 +58,7 @@ final class SymfonyUploadUrlGeneratorTest extends TestCase
         $url = $generator->generateUploadUrl('upload-abc');
 
         $this->assertStringContainsString('http://localhost/upload/upload-abc', $url);
-        $this->assertStringContainsString('_expires=', $url);
+        $this->assertStringContainsString('_expiration=', $url);
         $this->assertStringContainsString('_hash=', $url);
         $this->assertStringNotContainsString('_total=', $url);
         $this->assertStringNotContainsString('_f=', $url);
@@ -83,7 +83,7 @@ final class SymfonyUploadUrlGeneratorTest extends TestCase
         $generator = new SymfonyUploadUrlGenerator($this->urlGenerator, $this->uriSigner, 3600);
 
         $url = $generator->generateUploadUrl('upload-tamper');
-        $tamperedUrl = str_replace('_expires=', 'extra=1&_expires=', $url);
+        $tamperedUrl = str_replace('_expiration=', 'extra=1&_expiration=', $url);
         $request = Request::create($tamperedUrl);
 
         $this->assertFalse($generator->verifyRequest($request));
@@ -93,7 +93,7 @@ final class SymfonyUploadUrlGeneratorTest extends TestCase
     public function verifyRequestRejectsExpiredUrl(): void
     {
         $generator = new SymfonyUploadUrlGenerator($this->urlGenerator, $this->uriSigner);
-        $url = $this->uriSigner->sign('http://localhost/upload/upload-expired?_expires='.(time() - 1));
+        $url = $this->uriSigner->sign('http://localhost/upload/upload-expired', time() - 1);
         $request = Request::create($url);
 
         $this->assertFalse($generator->verifyRequest($request));
@@ -104,7 +104,7 @@ final class SymfonyUploadUrlGeneratorTest extends TestCase
     {
         $generator = new SymfonyUploadUrlGenerator($this->urlGenerator, $this->uriSigner, 3600);
 
-        $request = Request::create('http://localhost/upload/upload-123?_expires='.time() + 3600);
+        $request = Request::create('http://localhost/upload/upload-123?_expiration='.time() + 3600);
 
         $this->assertFalse($generator->verifyRequest($request));
     }
@@ -116,7 +116,7 @@ final class SymfonyUploadUrlGeneratorTest extends TestCase
 
         $url = $generator->generateUploadUrl('upload-special');
 
-        self::assertSame(['_expires', '_hash'], array_keys(Request::create($url)->query->all()));
+        self::assertSame(['_expiration', '_hash'], array_keys(Request::create($url)->query->all()));
     }
 
     #[Test]
@@ -126,9 +126,8 @@ final class SymfonyUploadUrlGeneratorTest extends TestCase
 
         $url = $generator->generateUploadUrl('upload-default');
 
-        // Extract _expires value
         parse_str(parse_url($url, \PHP_URL_QUERY) ?? '', $params);
-        $expires = (int) ($params['_expires'] ?? 0);
+        $expires = (int) ($params['_expiration'] ?? 0);
 
         // Should be approximately 1 hour in the future
         $this->assertGreaterThan(time() + 3500, $expires);
