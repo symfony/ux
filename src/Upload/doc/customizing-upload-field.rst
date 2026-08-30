@@ -233,9 +233,7 @@ Native And Widget Attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Use the standard Symfony Form ``attr`` option for the native file input and
-``widget_attr`` for the UX Upload container:
-
-::
+``widget_attr`` for the UX Upload container::
 
     $builder->add('attachments', FileUploadType::class, [
         'attr' => [

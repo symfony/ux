@@ -43,9 +43,7 @@ The name is included in the signed policy and completed-upload token. ``FileUplo
 Narrow A Policy
 ---------------
 
-Form-level ``max_size`` and ``allowed_types`` may narrow the named policy:
-
-::
+Form-level ``max_size`` and ``allowed_types`` may narrow the named policy::
 
     $builder->add('thumbnail', FileUploadType::class, [
         'uploader' => 'avatars',

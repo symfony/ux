@@ -6,9 +6,7 @@ Persisting Uploaded Files
 Application Service
 -------------------
 
-The primary integration point is plain application code:
-
-::
+The primary integration point is plain application code::
 
     // src/Application/StoreAttachment.php
     use Symfony\UX\Upload\Upload\CompletedUpload;
@@ -59,9 +57,7 @@ Use ``CompletedUpload::getId()`` as an application-owned idempotency key, determ
 Doctrine Metadata
 -----------------
 
-Persist only application-owned identifiers:
-
-::
+Persist only application-owned identifiers::
 
     $attachment = $storeAttachment($upload);
 

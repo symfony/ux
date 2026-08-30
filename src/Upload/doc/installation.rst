@@ -1,13 +1,6 @@
 Installation
 ============
 
-Requirements
-------------
-
-- PHP 8.4 or later;
-- Symfony 7.4 or 8.0;
-- ``symfony/stimulus-bundle`` 3.0 or later.
-
 TwigBundle enables the built-in form themes. Console enables ``ux:upload:cleanup``. Both integrations are optional package capabilities.
 
 Install the Package
@@ -22,9 +15,7 @@ Install the Package
     $ composer require symfony/ux-upload
 
 This initial release does not include a Symfony Flex recipe. Register the Bundle
-and its routes explicitly:
-
-::
+and its routes explicitly::
 
     // config/bundles.php
     return [
@@ -41,8 +32,8 @@ and its routes explicitly:
         trailing_slash_on_root: false
 
 This route import uses ``/_ux/upload`` for the internal endpoints. Change
-``prefix`` when the application needs another path. Keep
-``trailing_slash_on_root: false`` so the direct endpoint has no trailing slash.
+``prefix`` to use another path, and keep ``trailing_slash_on_root: false`` so
+the direct endpoint has no trailing slash.
 
 When TwigBundle is present, the Bundle prepends ``@UXUpload/form_theme.html.twig`` automatically.
 
@@ -78,8 +69,7 @@ UX Upload does not load CSS automatically. Enable either
 ``@symfony/ux-upload/dist/dropzone.css`` in ``assets/controllers.json``. See
 :doc:`Customizing the Upload Field <customizing-upload-field>`.
 
-With Webpack Encore, install and build the dependencies managed by
-StimulusBundle:
+With Webpack Encore or Reprise, install and build the npm dependencies:
 
 .. code-block:: terminal
 

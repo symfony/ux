@@ -4,9 +4,7 @@ Testing Upload Workflows
 Application Service
 -------------------
 
-Use ``CompletedUploadFactory`` to test code that consumes a temporary upload:
-
-::
+Use ``CompletedUploadFactory`` to test code that consumes a temporary upload::
 
     // tests/Application/StoreAttachmentTest.php
     use PHPUnit\Framework\TestCase;
@@ -33,9 +31,7 @@ The factory writes deterministic bytes to ``InMemoryStorage`` and returns a non-
 Deterministic Upload Context
 ----------------------------
 
-``TestUploadContextResolver`` resolves one fixed context so ownership and token assertions are deterministic. Inject it wherever the Bundle expects an ``UploadContextResolverInterface``:
-
-::
+``TestUploadContextResolver`` resolves one fixed context so ownership and token assertions are deterministic. Inject it wherever the Bundle expects an ``UploadContextResolverInterface``::
 
     use Symfony\UX\Upload\Test\TestUploadContextResolver;
     use Symfony\UX\Upload\Token\UploadTokenHandler;

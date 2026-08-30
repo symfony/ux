@@ -30,9 +30,7 @@ Single File
         }
     }
 
-The submitted value is ``CompletedUpload|null``:
-
-::
+The submitted value is ``CompletedUpload|null``::
 
     // src/Controller/DocumentController.php
     use Symfony\UX\Upload\Upload\CompletedUpload;
@@ -101,9 +99,7 @@ browser feedback with no identifiable file uses the field's client error area.
 Lazy Metadata
 -------------
 
-These calls do not access storage:
-
-::
+These calls do not access storage::
 
     $upload->getId();
     $upload->getUploaderName();

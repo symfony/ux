@@ -41,9 +41,7 @@ Owner, Tenant and Field Binding
 
 With SecurityBundle, the default resolver binds uploads to ``UserInterface::getUserIdentifier()``. Anonymous mode uses bearer credentials.
 
-For tenant-aware or API authentication, replace the resolver:
-
-::
+For tenant-aware or API authentication, replace the resolver::
 
     // src/Upload/TenantUploadContextResolver.php
     use Symfony\UX\Upload\Security\UploadContext;
