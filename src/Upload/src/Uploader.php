@@ -528,7 +528,10 @@ final readonly class Uploader implements UploaderInterface
 
         $output = '';
         $length = \strlen($compressed);
-        $blockSize = 64 * 1024;
+        // DEFLATE tops out around 1032:1, so a block of N bytes can decode to about
+        // 1032 N. Sizing the block from the configured limit keeps the peak close to
+        // chunkSize instead of the 66 MiB a fixed 64 KiB block would allow.
+        $blockSize = min(64 * 1024, max(4096, intdiv($this->chunkSize, 1032)));
         for ($offset = 0; $offset < $length; $offset += $blockSize) {
             $flush = $offset + $blockSize >= $length ? \ZLIB_FINISH : \ZLIB_SYNC_FLUSH;
             $decoded = @inflate_add($context, substr($compressed, $offset, $blockSize), $flush);
