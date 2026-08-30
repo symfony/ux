@@ -42,8 +42,6 @@ use Symfony\UX\Upload\Util\SizeParser;
  */
 final class FileUploadType extends AbstractType
 {
-    /** Fallback when no configured uploader can provide its effective limit. */
-    private const DEFAULT_MAX_SIZE = (string) Uploader::DEFAULT_MAX_SIZE;
     private const TRANSLATION_DOMAIN = 'UXUploadBundle';
     private const TRANSLATION_FALLBACKS = [
         'ux_upload.drop_files' => 'Drop files here or click to browse',
@@ -386,7 +384,7 @@ final class FileUploadType extends AbstractType
         /** @var string $maxSize */
         $maxSize = $options['max_size'];
         $bytes = SizeParser::parse($maxSize);
-        if (0 !== $bytes && self::DEFAULT_MAX_SIZE !== $maxSize) {
+        if (0 !== $bytes && Uploader::DEFAULT_MAX_SIZE !== $bytes) {
             $parts[] = $this->trans('ux_upload.help.max_size', ['%size%' => $this->formatBytes($bytes)]);
         }
 
