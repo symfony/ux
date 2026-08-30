@@ -505,7 +505,7 @@ final readonly class Uploader implements UploaderInterface
         if ($actualSize !== $expectedSize) {
             throw new ValidationException(\sprintf('Assembled file size %d bytes does not match declared file size of %d bytes.', $actualSize, $expectedSize));
         }
-        if (null !== $expectedHash && '' !== $expectedHash && (null === $actualHash || !hash_equals($expectedHash, $actualHash))) {
+        if (null !== $expectedHash && '' !== $expectedHash && (null === $actualHash || !hash_equals(strtolower($expectedHash), $actualHash))) {
             throw new ValidationException(\sprintf('File integrity check failed: expected hash "%s", got "%s".', $expectedHash, $actualHash ?? 'none'));
         }
     }
