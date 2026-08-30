@@ -17,6 +17,25 @@ use Symfony\UX\Upload\Policy\UploadPolicySigner;
 
 final class UploadPolicySignerTest extends TestCase
 {
+    public function testResolveRejectsATokenSignedForAnotherType(): void
+    {
+        $uriSigner = new UriSigner('secret');
+        // Every key a policy needs, a valid signature, the same secret: only the
+        // kind differs. Without the discriminator this would resolve.
+        $payload = [
+            'k' => 'r',
+            'u' => 'documents',
+            's' => '1000',
+            't' => '',
+            'n' => '2',
+            'f' => '',
+            'e' => (string) (time() + 3600),
+        ];
+        $token = substr($uriSigner->sign('?'.http_build_query($payload), (int) $payload['e']), 1);
+
+        self::assertNull(new UploadPolicySigner($uriSigner)->resolve($token));
+    }
+
     public function testRoundTrip(): void
     {
         $signer = new UploadPolicySigner(new UriSigner('secret'));

@@ -28,6 +28,7 @@ final readonly class ResumeTokenHandler
     public function generate(string $uploadId, UploadContext $context): string
     {
         $payload = [
+            'k' => 'r',
             'i' => $uploadId,
             'o' => $context->ownerId ?? '',
             't' => $context->tenantId ?? '',
@@ -44,6 +45,11 @@ final readonly class ResumeTokenHandler
             return null;
         }
         parse_str($token, $payload);
+        // All three token types are signed by the same uri_signer, so each payload
+        // carries its own kind: a token cannot be replayed as another type.
+        if ('r' !== ($payload['k'] ?? null)) {
+            return null;
+        }
         if (!isset($payload['i'], $payload['o'], $payload['t'], $payload['f'], $payload['e'])
             || !\is_string($payload['i']) || !\is_string($payload['o']) || !\is_string($payload['t']) || !\is_string($payload['f']) || !\is_string($payload['e'])
             || (int) $payload['e'] < time()

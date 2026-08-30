@@ -62,6 +62,7 @@ final readonly class UploadTokenHandler
         $tokenExpiresAt = min($upload->expiresAt->getTimestamp(), time() + $this->ttl);
 
         return substr($this->signer->sign('?'.http_build_query(array_filter([
+            'k' => 'u',
             'i' => $upload->id,
             'u' => $upload->uploader,
             'p' => $upload->getTemporaryPath(),
@@ -171,6 +172,11 @@ final readonly class UploadTokenHandler
      */
     private function hasRequiredPayload(array $payload): bool
     {
+        // All three token types are signed by the same uri_signer, so each payload
+        // carries its own kind: a token cannot be replayed as another type.
+        if ('u' !== ($payload['k'] ?? null)) {
+            return false;
+        }
         foreach (['i', 'u', 'p', 'f', 'm', 's', 'c', 'e', 'x'] as $key) {
             if (!isset($payload[$key]) || !\is_string($payload[$key]) || '' === $payload[$key]) {
                 return false;

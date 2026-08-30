@@ -30,6 +30,7 @@ final readonly class UploadPolicySigner
     public function issue(string $uploader, int $maxSize, array $allowedTypes, int $maxFiles, ?string $fieldName = null): string
     {
         $payload = [
+            'k' => 'p',
             'u' => $uploader,
             's' => $maxSize,
             't' => implode(',', $allowedTypes),
@@ -47,6 +48,11 @@ final readonly class UploadPolicySigner
             return null;
         }
         parse_str($token, $data);
+        // All three token types are signed by the same uri_signer, so each payload
+        // carries its own kind: a token cannot be replayed as another type.
+        if ('p' !== ($data['k'] ?? null)) {
+            return null;
+        }
         if (!isset($data['u'], $data['s'], $data['t'], $data['n'], $data['f'], $data['e'])
             || !\is_string($data['u']) || !\is_string($data['s']) || !\is_string($data['t'])
             || !\is_string($data['n']) || !\is_string($data['f']) || !\is_string($data['e']) || (int) $data['e'] < time()
