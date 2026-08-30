@@ -33,11 +33,11 @@ final class LiveComponentHydratorTest extends TestCase
 
         new LiveComponentHydrator(
             [],
-            $this->createMock(PropertyAccessorInterface::class),
-            $this->createMock(LiveComponentMetadataFactory::class),
-            $this->createMock(NormalizerInterface::class),
+            $this->createStub(PropertyAccessorInterface::class),
+            $this->createStub(LiveComponentMetadataFactory::class),
+            $this->createStub(NormalizerInterface::class),
             '',
-            $this->createMock(Environment::class),
+            $this->createStub(Environment::class),
         );
     }
 
@@ -47,11 +47,11 @@ final class LiveComponentHydratorTest extends TestCase
         if (!class_exists(Type::class)) {
             $hydrator = new LiveComponentHydrator(
                 [],
-                $this->createMock(PropertyAccessorInterface::class),
-                $this->createMock(LiveComponentMetadataFactory::class),
+                $this->createStub(PropertyAccessorInterface::class),
+                $this->createStub(LiveComponentMetadataFactory::class),
                 new Serializer(normalizers: [new ObjectNormalizer()]),
                 'foo',
-                $this->createMock(Environment::class),
+                $this->createStub(Environment::class),
             );
 
             $hydratedValue = $hydrator->hydrateValue(
@@ -64,11 +64,11 @@ final class LiveComponentHydratorTest extends TestCase
         } else {
             $hydrator = new LiveComponentHydrator(
                 [],
-                $this->createMock(PropertyAccessorInterface::class),
-                $this->createMock(LiveComponentMetadataFactory::class),
+                $this->createStub(PropertyAccessorInterface::class),
+                $this->createStub(LiveComponentMetadataFactory::class),
                 new Serializer(normalizers: [new ObjectNormalizer()]),
                 'foo',
-                $this->createMock(Environment::class),
+                $this->createStub(Environment::class),
             );
 
             $hydratedValue = $hydrator->hydrateValue(
