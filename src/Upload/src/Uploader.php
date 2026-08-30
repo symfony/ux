@@ -269,37 +269,25 @@ final readonly class Uploader implements UploaderInterface
 
             // Storage duplicate detection is exists-then-write on most backends:
             // without serialization, two concurrent requests for the same chunk
-            // could both pass the existence check and both write. The lock is keyed
-            // per (uploadId, chunkIndex) -- the finest granularity that closes the
-            // race -- so distinct chunks of the same upload still store in parallel
-            // (the whole point of parallel_chunks). It blocks rather than fails fast
-            // so the loser waits for the winner, then observes the chunk already
-            // exists and is rejected cleanly instead of corrupting the stored bytes.
-            //
-            $lockKey = \sprintf('ux_upload_chunk_%s_%d', $uploadId, $chunkIndex);
-            $lock = $this->lockFactory->createLock($lockKey);
-            $lock->acquire(true);
-
-            try {
-                if ($compressed) {
-                    if (!$this->compressionEnabled) {
-                        throw new ValidationException(\sprintf('Chunk %d is declared gzip-compressed but compression is not enabled for this uploader.', $chunkIndex));
-                    }
-                    $chunkData = $this->decompressBounded($chunkData, $chunkIndex);
+            // could both pass the existence check and both write. The lifecycle
+            // lock taken above already covers that: it spans the whole method, so
+            // no two processes are ever inside storeChunk() for the same upload.
+            if ($compressed) {
+                if (!$this->compressionEnabled) {
+                    throw new ValidationException(\sprintf('Chunk %d is declared gzip-compressed but compression is not enabled for this uploader.', $chunkIndex));
                 }
-
-                if (\strlen($chunkData) > $this->chunkSize) {
-                    throw new ValidationException(\sprintf('Decompressed chunk %d size of %d bytes exceeds maximum allowed chunk size of %d bytes.', $chunkIndex, \strlen($chunkData), $this->chunkSize));
-                }
-                $actualDigest = hash('sha256', $chunkData);
-                if (null !== $digest && !hash_equals(strtolower($digest), $actualDigest)) {
-                    throw new ValidationException(\sprintf('Integrity check failed for chunk %d.', $chunkIndex));
-                }
-
-                $this->storage->storeChunk($uploadId, $chunkIndex, $chunkData, $actualDigest);
-            } finally {
-                $lock->release();
+                $chunkData = $this->decompressBounded($chunkData, $chunkIndex);
             }
+
+            if (\strlen($chunkData) > $this->chunkSize) {
+                throw new ValidationException(\sprintf('Decompressed chunk %d size of %d bytes exceeds maximum allowed chunk size of %d bytes.', $chunkIndex, \strlen($chunkData), $this->chunkSize));
+            }
+            $actualDigest = hash('sha256', $chunkData);
+            if (null !== $digest && !hash_equals(strtolower($digest), $actualDigest)) {
+                throw new ValidationException(\sprintf('Integrity check failed for chunk %d.', $chunkIndex));
+            }
+
+            $this->storage->storeChunk($uploadId, $chunkIndex, $chunkData, $actualDigest);
 
             // Calculate progress
             $chunks = $this->storage->listChunks($uploadId);

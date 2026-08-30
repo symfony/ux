@@ -20,7 +20,10 @@ Another form field is invalid                     Keep the signed completed valu
 Completed token expires                           Reject form transformation                                                  Upload again
 ================================================  ==========================================================================  =================================
 
-Chunk retry delays are 1, 2 and 4 seconds. ``parallel_chunks`` is a concurrency ceiling.
+Chunk retry delays are 1, 2 and 4 seconds. A chunk rejected with a 4xx other than
+408 or 429 fails immediately, since retrying it would not change the answer.
+``parallel_chunks`` caps how many chunk requests the browser sends at once; the
+server serializes the writes of a given upload.
 
 Direct uploads cannot be paused or resumed. This avoids creating an additional
 session request for ordinary files while preserving resumability where it is

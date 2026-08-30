@@ -53,7 +53,7 @@ Option                     Default                                   Description
 ``completed_prefix``       ``.tmp/completed``                        Prefix for assembled temporary files
 ``completed_ttl``          ``86400``                                 Lifetime after successful assembly, minimum 60 seconds
 ``chunk_size``             ``5M``                                    Direct-upload threshold and chunk size, from 64 KiB to 64 MiB
-``parallel_chunks``        ``3``                                     Concurrent chunks, from 1 to 10
+``parallel_chunks``        ``3``                                     Concurrent chunk requests sent by the browser, from 1 to 10
 ``signature_expiry``       ``3600``                                  Signed upload URL lifetime
 ``form_token_ttl``         ``86400``                                 Form token lifetime, capped by completed expiration
 ``max_pending_per_owner``  ``1000``                                  Pending-session quota per upload context

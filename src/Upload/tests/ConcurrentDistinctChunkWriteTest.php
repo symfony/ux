@@ -16,16 +16,14 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Proves the lock granularity in {@see \Symfony\UX\Upload\Uploader::storeChunk()}
- * is per-(uploadId, chunkIndex), not per-upload: distinct chunk indices of the
- * *same* upload can be written concurrently without serializing on one another.
+ * Proves that concurrent writes to *distinct* chunk indices of the *same* upload
+ * all land: no false duplicate rejection, no deadlock.
  *
  * The sibling {@see ConcurrentChunkWriteTest} proves correctness on the *same*
- * chunk (exactly one winner, the rest rejected). This test proves the other half
- * of the granularity decision: when workers target *different* indices, every
- * write must land -- no false rejection, no deadlock -- because they take
- * different lock keys. A per-upload lock would have needlessly serialized them;
- * a broken key would have rejected some as duplicates. Neither happens here.
+ * chunk (exactly one winner, the rest rejected). This test covers the other half:
+ * every distinct index must be stored. The per-upload lifecycle lock taken in
+ * storeChunk() serializes these writes, so what is checked here is that the
+ * serialization stays correct under load, not that the writes overlap.
  *
  * @group concurrency
  */
