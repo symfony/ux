@@ -27,10 +27,10 @@ Start with the result you want:
         Symfony form theme.
     * - Get a ready-to-use upload field
       - Keep ``'layout' => 'compact'`` and load
-        ``@symfony/ux-upload/dist/compact.css``.
+        ``@symfony/ux-upload/dist/compact.min.css``.
     * - Build a drop area or image gallery
       - Set ``'layout' => 'dropzone'``, optionally enable ``show_preview`` and
-        ``multiple``, then load ``@symfony/ux-upload/dist/dropzone.css``.
+        ``multiple``, then load ``@symfony/ux-upload/dist/dropzone.min.css``.
     * - Integrate an application design system
       - Load no package stylesheet, import the bundle form theme with Twig
         ``use``, override only the necessary blocks and preserve the
@@ -70,8 +70,8 @@ UX Upload publishes two standalone Baseline 2026 stylesheets:
 ================  ==================================================
 Layout            AssetMapper path
 ================  ==================================================
-Compact field     ``@symfony/ux-upload/dist/compact.css``
-Drop area         ``@symfony/ux-upload/dist/dropzone.css``
+Compact field     ``@symfony/ux-upload/dist/compact.min.css``
+Drop area         ``@symfony/ux-upload/dist/dropzone.min.css``
 ================  ==================================================
 
 Enable one explicitly in ``assets/controllers.json``:
@@ -85,8 +85,8 @@ Enable one explicitly in ``assets/controllers.json``:
                     "enabled": true,
                     "fetch": "eager",
                     "autoimport": {
-                        "@symfony/ux-upload/dist/compact.css": true,
-                        "@symfony/ux-upload/dist/dropzone.css": false
+                        "@symfony/ux-upload/dist/compact.min.css": true,
+                        "@symfony/ux-upload/dist/dropzone.min.css": false
                     }
                 }
             }
@@ -99,7 +99,7 @@ use AssetMapper directly:
 
 .. code-block:: html+twig
 
-    <link rel="stylesheet" href="{{ asset('@symfony/ux-upload/dist/dropzone.css') }}">
+    <link rel="stylesheet" href="{{ asset('@symfony/ux-upload/dist/dropzone.min.css') }}">
 
 The npm package also exports ``@symfony/ux-upload/compact.css`` and
 ``@symfony/ux-upload/dropzone.css``. Importing neither is supported.

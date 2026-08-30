@@ -87,13 +87,12 @@ final class ThemingDocumentationTest extends TestCase
         $packageDir = \dirname(__DIR__, 2);
         $package = json_decode((string) file_get_contents($packageDir.'/assets/package.json'), true, flags: \JSON_THROW_ON_ERROR);
 
-        self::assertSame('./dist/compact.css', $package['exports']['./compact.css']);
-        self::assertSame('./dist/dropzone.css', $package['exports']['./dropzone.css']);
-        self::assertFalse($package['config']['css_min_suffix']);
-        self::assertFalse($package['symfony']['controllers']['upload']['autoimport']['@symfony/ux-upload/dist/compact.css']);
-        self::assertFalse($package['symfony']['controllers']['upload']['autoimport']['@symfony/ux-upload/dist/dropzone.css']);
-        self::assertFileExists($packageDir.'/assets/dist/compact.css');
-        self::assertFileExists($packageDir.'/assets/dist/dropzone.css');
+        self::assertSame('./dist/compact.min.css', $package['exports']['./compact.css']);
+        self::assertSame('./dist/dropzone.min.css', $package['exports']['./dropzone.css']);
+        self::assertFalse($package['symfony']['controllers']['upload']['autoimport']['@symfony/ux-upload/dist/compact.min.css']);
+        self::assertFalse($package['symfony']['controllers']['upload']['autoimport']['@symfony/ux-upload/dist/dropzone.min.css']);
+        self::assertFileExists($packageDir.'/assets/dist/compact.min.css');
+        self::assertFileExists($packageDir.'/assets/dist/dropzone.min.css');
     }
 
     public function testContinuousIntegrationRebuildsAndVerifiesPublishedAssets(): void

@@ -65,8 +65,8 @@ With AssetMapper:
     $ php bin/console importmap:install
 
 UX Upload does not load CSS automatically. Enable either
-``@symfony/ux-upload/dist/compact.css`` or
-``@symfony/ux-upload/dist/dropzone.css`` in ``assets/controllers.json``. See
+``@symfony/ux-upload/dist/compact.min.css`` or
+``@symfony/ux-upload/dist/dropzone.min.css`` in ``assets/controllers.json``. See
 :doc:`Customizing the Upload Field <customizing-upload-field>`.
 
 With Webpack Encore or Reprise, install and build the npm dependencies:

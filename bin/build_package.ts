@@ -40,7 +40,6 @@ async function main() {
     const isTurbo = '@symfony/ux-turbo' === packageData.name;
 
     const configuredCssSources = packageData?.config?.css_source;
-    const useMinSuffixForCss = packageData?.config?.css_min_suffix !== false;
     const inputCssFiles = (Array.isArray(configuredCssSources) ? configuredCssSources : [configuredCssSources]).filter(
         (source): source is string => typeof source === 'string'
     );
@@ -62,7 +61,7 @@ async function main() {
             const extension = path.extname(inputFile);
             const name = path.basename(inputFile, extension);
 
-            return [inputFile.endsWith('.css') && useMinSuffixForCss ? `${name}.min` : name, inputFile];
+            return [inputFile.endsWith('.css') ? `${name}.min` : name, inputFile];
         })
     );
 

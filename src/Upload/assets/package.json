@@ -35,8 +35,8 @@
             "types": "./dist/uploader.d.ts",
             "import": "./dist/uploader.js"
         },
-        "./compact.css": "./dist/compact.css",
-        "./dropzone.css": "./dist/dropzone.css"
+        "./compact.css": "./dist/compact.min.css",
+        "./dropzone.css": "./dist/dropzone.min.css"
     },
     "scripts": {
         "build": "node ../../../bin/build_package.ts .",
@@ -64,7 +64,6 @@
             "src/styles/compact.css",
             "src/styles/dropzone.css"
         ],
-        "css_min_suffix": false,
         "entrypoints": [
             "src/index.ts",
             "src/uploader.ts"
@@ -78,8 +77,8 @@
                 "fetch": "eager",
                 "enabled": true,
                 "autoimport": {
-                    "@symfony/ux-upload/dist/compact.css": false,
-                    "@symfony/ux-upload/dist/dropzone.css": false
+                    "@symfony/ux-upload/dist/compact.min.css": false,
+                    "@symfony/ux-upload/dist/dropzone.min.css": false
                 }
             },
             "live-upload": {
