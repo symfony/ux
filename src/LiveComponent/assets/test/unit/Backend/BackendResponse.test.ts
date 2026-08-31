@@ -179,4 +179,18 @@ describe('BackendResponse', () => {
             expect(makeResponse().getLiveUrl()).toBeNull();
         });
     });
+
+    describe('isRemoved()', () => {
+        it('is true when the X-Live-Remove header is present', () => {
+            expect(makeResponse({ 'X-Live-Remove': '1' }).isRemoved()).toBe(true);
+        });
+
+        it('is false when absent', () => {
+            expect(makeResponse().isRemoved()).toBe(false);
+        });
+
+        it('only looks at the presence of the header, not its value', () => {
+            expect(makeResponse({ 'X-Live-Remove': '0' }).isRemoved()).toBe(true);
+        });
+    });
 });

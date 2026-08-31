@@ -68,6 +68,8 @@ export default class Component {
     private pendingFiles: { [key: string]: HTMLInputElement } = {};
     /** Is a request waiting to be made? */
     private isRequestPending = false;
+    /** Once removed, the component is done: it must never talk to the server again. */
+    private isRemoved = false;
     /** Current "timeout" before the pending request should be sent. */
     private requestDebounceTimeout: number | null = null;
     private nextRequestPromise: Promise<BackendResponse>;
@@ -251,7 +253,53 @@ export default class Component {
         return typeof Turbo !== 'undefined' && !this.element.closest('[data-turbo="false"]');
     }
 
+    /**
+     * Ends the component on the page.
+     *
+     * Once the final render and its events have been processed, polling stops and the
+     * component leaves the registry. The element is then marked with `data-live-removing`
+     * and left in place, so the page can animate it out without a live component still
+     * answering for it.
+     *
+     * With no animation on `[data-live-removing]`, there is nothing to wait for and the
+     * element goes on the next frame.
+     */
+    private removeFromPage(): void {
+        this.isRemoved = true;
+        this.disconnect();
+
+        const element = this.element;
+
+        // the props are what makes this element a live component: dropping them keeps
+        // anything from re-hydrating it, here or on a later render
+        for (const name of element.getAttributeNames()) {
+            if (name.startsWith('data-live-') && name.endsWith('-value')) {
+                element.removeAttribute(name);
+            }
+        }
+
+        element.setAttribute('data-live-removing', '');
+
+        // a transition only exists once the attribute has been applied, so give the browser
+        // a frame to create it before asking what is running
+        requestAnimationFrame(() => {
+            const animations = (element.getAnimations?.({ subtree: true }) ?? [])
+                // an endless animation would keep the element on the page forever
+                .filter((animation) => animation.effect?.getComputedTiming().endTime !== Number.POSITIVE_INFINITY);
+
+            Promise.allSettled(animations.map((animation) => animation.finished)).then(() => {
+                element.remove();
+            });
+        });
+    }
+
     private tryStartingRequest(): void {
+        if (this.isRemoved) {
+            // the element may still be on the page while it animates out, and it keeps its
+            // listeners until then: a click must not reach a component that is already gone
+            return;
+        }
+
         if (!this.backendRequest) {
             this.performRequest();
 
@@ -321,7 +369,8 @@ export default class Component {
             // if the response does not contain a component, render as an error
             if (
                 !headers.get('Content-Type')?.includes('application/vnd.live-component+html') &&
-                !headers.get('X-Live-Redirect')
+                !headers.get('X-Live-Redirect') &&
+                !headers.has('X-Live-Remove')
             ) {
                 const controls = { displayError: true };
                 this.valueStore.pushPendingPropsBackToDirty();
@@ -333,6 +382,21 @@ export default class Component {
 
                 this.backendRequest = null;
                 thisPromiseResolve(backendResponse);
+
+                return response;
+            }
+
+            // The render carries the usual LiveComponent instructions. Make this component
+            // terminal before processing them, so a synchronous event handler cannot start
+            // another request on the component that is about to leave.
+            if (backendResponse.isRemoved()) {
+                this.isRemoved = true;
+                this.processRerender(html, backendResponse);
+
+                this.backendRequest = null;
+                thisPromiseResolve(backendResponse);
+
+                this.removeFromPage();
 
                 return response;
             }

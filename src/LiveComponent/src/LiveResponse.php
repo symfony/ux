@@ -14,9 +14,9 @@ namespace Symfony\UX\LiveComponent;
 /**
  * Returned from a LiveAction to ask the browser for something the render alone cannot express.
  *
- * This is not an HTTP response: LiveComponentSubscriber turns it into one, alongside the
- * re-rendered component. That is the whole point: the component still renders, so whatever
- * the action changed is applied on the page even though a file was downloaded.
+ * This is not an HTTP response: LiveComponentSubscriber turns it into one. A download rides
+ * alongside the re-rendered component, so whatever the action changed is still applied on the
+ * page even though a file was downloaded or the component was removed.
  *
  *     #[LiveAction]
  *     public function export(): LiveResponse
@@ -28,7 +28,7 @@ namespace Symfony\UX\LiveComponent;
  *
  * Can only be returned from a LiveAction or a LiveListener, over POST. Returning one from the
  * default action throws, as that action runs on every re-render: a polling component would
- * otherwise download a file on every tick.
+ * otherwise download a file, or remove itself, on every tick.
  *
  * @author Simon André <smn.andre@gmail.com>
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -48,7 +48,30 @@ final class LiveResponse
         public readonly ?string $contentType = null,
         public readonly ?int $size = null,
         public readonly ?string $url = null,
+        private readonly bool $remove = false,
     ) {
+    }
+
+    /**
+     * Takes the component off the page after its final re-render.
+     *
+     * The root element is removed and the Stimulus controller disconnects, which tears down
+     * polling, listeners and registration. Nothing is deleted server-side: what the action did
+     * to your data is your business, this only ends the component on the page.
+     *
+     * The final render delivers the usual LiveComponent events before the component disconnects.
+     *
+     *     #[LiveAction]
+     *     public function dismiss(): LiveResponse
+     *     {
+     *         $this->notification->markAsRead();
+     *
+     *         return LiveResponse::remove();
+     *     }
+     */
+    public static function remove(): self
+    {
+        return new self(remove: true);
     }
 
     /**
@@ -145,5 +168,15 @@ final class LiveResponse
     public function isDownloadUrl(): bool
     {
         return null !== $this->url;
+    }
+
+    /**
+     * Whether the component leaves the page instead of being re-rendered.
+     *
+     * @internal
+     */
+    public function isRemove(): bool
+    {
+        return $this->remove;
     }
 }

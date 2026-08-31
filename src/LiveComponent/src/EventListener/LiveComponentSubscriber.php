@@ -50,6 +50,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     private const DOWNLOAD_FILENAME_HEADER = 'X-Live-Download-Filename';
     private const DOWNLOAD_TYPE_HEADER = 'X-Live-Download-Type';
     private const DOWNLOAD_URL_HEADER = 'X-Live-Download-Url';
+    private const REMOVE_HEADER = 'X-Live-Remove';
 
     public function __construct(
         private ContainerInterface $container,
@@ -288,7 +289,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     private function assertLiveResponseIsAllowed(Request $request): void
     {
         if (!$request->isMethod('post')) {
-            throw new \LogicException('A LiveResponse can only be returned from a POST request. A GET is replayable (prefetch, crawlers), which a download is not.');
+            throw new \LogicException('A LiveResponse can only be returned from a POST request. A GET is replayable (prefetch, crawlers), which downloading a file or removing a component is not.');
         }
 
         if ($request->attributes->get('_component_default_action', false)) {
@@ -367,6 +368,15 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         }
 
         $html = $this->container->get(ComponentRenderer::class)->render($mounted);
+
+        if ($liveResponse?->isRemove()) {
+            // the render carries the usual LiveComponent instructions, including emitted
+            // events; the browser processes them before taking the component off the page
+            return new Response($html, 200, [
+                'Content-Type' => self::HTML_CONTENT_TYPE,
+                self::REMOVE_HEADER => '1',
+            ]);
+        }
 
         if (null === $liveResponse) {
             return new Response($html, 200, [

@@ -14,6 +14,7 @@ declare class export_default$2 {
   getDownload(): Download | null;
   getLiveUrl(): string | null;
   getDownloadUrl(): string | null;
+  isRemoved(): boolean;
   private parse;
 }
 declare class export_default$1 {
@@ -109,6 +110,7 @@ declare class Component {
   private pendingActions;
   private pendingFiles;
   private isRequestPending;
+  private isRemoved;
   private requestDebounceTimeout;
   private nextRequestPromise;
   private nextRequestPromiseResolve;
@@ -134,6 +136,7 @@ declare class Component {
   private performEmit;
   private doEmit;
   private isTurboEnabled;
+  private removeFromPage;
   private tryStartingRequest;
   private performRequest;
   private processRerender;
