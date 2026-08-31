@@ -79,6 +79,54 @@ final class IcsBuilderTest extends TestCase
         $this->assertStringContainsString("DTEND;VALUE=DATE:20260516\r\n", $ics);
     }
 
+    public function testTimedEventInNamedZoneUsesTzidInsteadOfUtc()
+    {
+        $event = new CalendarEvent(
+            title: 'Standup',
+            start: new \DateTimeImmutable('2026-07-01 09:00', new \DateTimeZone('Europe/Paris')),
+            end: new \DateTimeImmutable('2026-07-01 09:30', new \DateTimeZone('Europe/Paris')),
+        );
+
+        $ics = $this->builder->build($event);
+
+        $this->assertStringContainsString("DTSTART;TZID=Europe/Paris:20260701T090000\r\n", $ics);
+        $this->assertStringContainsString("DTEND;TZID=Europe/Paris:20260701T093000\r\n", $ics);
+    }
+
+    public function testNamedZoneEmitsVtimezoneWithDstRules()
+    {
+        $event = new CalendarEvent(
+            title: 'Standup',
+            start: new \DateTimeImmutable('2026-07-01 09:00', new \DateTimeZone('Europe/Paris')),
+            end: new \DateTimeImmutable('2026-07-01 09:30', new \DateTimeZone('Europe/Paris')),
+            recurrence: CalendarRecurrence::weekly(),
+        );
+
+        $ics = $this->builder->build($event);
+
+        $this->assertStringContainsString("BEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\n", $ics);
+        $this->assertStringContainsString("BEGIN:DAYLIGHT\r\n", $ics);
+        $this->assertStringContainsString("TZOFFSETTO:+0200\r\n", $ics);
+        $this->assertStringContainsString("RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU\r\n", $ics);
+        $this->assertStringContainsString("BEGIN:STANDARD\r\n", $ics);
+        $this->assertStringContainsString("TZOFFSETTO:+0100\r\n", $ics);
+        $this->assertStringContainsString("RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU\r\n", $ics);
+    }
+
+    public function testUtcEventDoesNotEmitVtimezone()
+    {
+        $event = new CalendarEvent(
+            title: 'Demo',
+            start: new \DateTimeImmutable('2026-05-14 09:00', new \DateTimeZone('UTC')),
+            end: new \DateTimeImmutable('2026-05-14 10:00', new \DateTimeZone('UTC')),
+        );
+
+        $ics = $this->builder->build($event);
+
+        $this->assertStringNotContainsString('BEGIN:VTIMEZONE', $ics);
+        $this->assertStringContainsString("DTSTART:20260514T090000Z\r\n", $ics);
+    }
+
     public function testTextEscaping()
     {
         $event = new CalendarEvent(
