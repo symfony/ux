@@ -29,10 +29,9 @@ test('uploads a single file and writes the completion token back', async ({ page
 test('uploads several files at once', async ({ page }) => {
     await page.goto('/ux-upload/multiple');
 
-    await page.locator('.ux-upload__input').setInputFiles([
-        file('first.txt', 'first file'),
-        file('second.txt', 'second file'),
-    ]);
+    await page
+        .locator('.ux-upload__input')
+        .setInputFiles([file('first.txt', 'first file'), file('second.txt', 'second file')]);
 
     await expect(page.locator('.ux-upload__item[data-status="completed"]')).toHaveCount(2);
     await expect(page.locator('.ux-upload input[type="hidden"]')).toHaveValue(/"token"/);
@@ -103,9 +102,7 @@ test('prevents a second immediate form submission', async ({ page }) => {
 
 test('optional styles follow the application color scheme', async ({ page }) => {
     const background = async () =>
-        page
-            .locator('.ux-upload__dropzone')
-            .evaluate((element) => getComputedStyle(element).backgroundColor);
+        page.locator('.ux-upload__dropzone').evaluate((element) => getComputedStyle(element).backgroundColor);
 
     await page.emulateMedia({ colorScheme: 'light' });
     await page.goto('/ux-upload/');
