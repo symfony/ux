@@ -3,6 +3,32 @@ Security
 
 UX Upload secures transport and temporary references. Your application remains responsible for authorization and access to final files. File and business validation are documented separately in :doc:`File Validation <validation>`.
 
+Who May Upload
+--------------
+
+The endpoints refuse an upload that Security cannot attribute to anyone. An
+application with a firewall needs no configuration for this: the resolver reads
+the authenticated user, so every session carries an owner and the pending quota
+applies per user.
+
+Without an owner or a tenant, every visitor would share one ``UploadContext``.
+The quota would then be global rather than per user, and one actor filling it
+would lock out everyone else. Accepting that is a deliberate choice::
+
+    # config/packages/ux_upload.yaml
+    ux_upload:
+        allow_anonymous: true
+
+Turn it on only for endpoints meant to be public, and pair it with a
+``rate_limiter`` and an ``UploadContextResolverInterface`` that isolates
+visitors from one another.
+
+.. note::
+
+    CSRF protection follows the same shape. ``symfony/security-bundle`` requires
+    ``symfony/security-csrf``, so an application with a firewall validates the
+    ``X-CSRF-Token`` header on every mutation without any extra step.
+
 Signed Boundaries
 -----------------
 

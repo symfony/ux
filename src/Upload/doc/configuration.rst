@@ -23,6 +23,7 @@ Configuration
         integrity_algorithm: sha256
         max_size: 100M
         allowed_types: []
+        allow_anonymous: false
         rate_limiter: null
 
         local_storage:
@@ -61,6 +62,7 @@ Option                     Default                                   Description
 ``integrity_algorithm``    ``sha256``                                Algorithm for the optional browser whole-file checksum
 ``max_size``               ``100M``                                  Server limit; ``0`` disables it
 ``allowed_types``          ``[]``                                    Server MIME allow-list; empty accepts all
+``allow_anonymous``        ``false``                                 Accept uploads Security cannot attribute to anyone
 ``rate_limiter``           ``null``                                  Named Framework rate-limiter service ID for initialization
 =========================  ========================================  =============================================================
 

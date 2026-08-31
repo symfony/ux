@@ -54,6 +54,7 @@ final class UploadController
         private readonly UploadContextResolverInterface $contextResolver = new AnonymousUploadContextResolver(),
         private readonly ?UploadPolicySigner $policySigner = null,
         private readonly ?ResumeTokenHandler $resumeTokenHandler = null,
+        private readonly bool $allowAnonymous = false,
     ) {
     }
 
@@ -75,6 +76,10 @@ final class UploadController
 
             if (!$this->isCsrfValid($request)) {
                 return new JsonResponse(['error' => 'Invalid CSRF token'], Response::HTTP_FORBIDDEN);
+            }
+
+            if ($denied = $this->denyAnonymousUpload()) {
+                return $denied;
             }
 
             /** @var array{filename?: string, fileSize?: int, mimeType?: string, uploader?: string, hash?: string, hashAlgorithm?: string, policyToken?: string} $payload */
@@ -140,6 +145,10 @@ final class UploadController
         try {
             if (!$this->isCsrfValid($request)) {
                 return new JsonResponse(['error' => 'Invalid CSRF token'], Response::HTTP_FORBIDDEN);
+            }
+
+            if ($denied = $this->denyAnonymousUpload()) {
+                return $denied;
             }
 
             $file = $request->files->get('file');
@@ -222,6 +231,10 @@ final class UploadController
         try {
             if (!$this->isCsrfValid($request)) {
                 return new JsonResponse(['error' => 'Invalid CSRF token'], Response::HTTP_FORBIDDEN);
+            }
+
+            if ($denied = $this->denyAnonymousUpload()) {
+                return $denied;
             }
             $payload = $request->toArray();
             $token = $payload['resumeToken'] ?? null;
@@ -349,6 +362,10 @@ final class UploadController
             if (!$this->isCsrfValid($request)) {
                 return new JsonResponse(['error' => 'Invalid CSRF token'], Response::HTTP_FORBIDDEN);
             }
+
+            if ($denied = $this->denyAnonymousUpload()) {
+                return $denied;
+            }
             $payload = $request->toArray();
             $policy = isset($payload['policyToken']) && \is_string($payload['policyToken']) ? $this->policySigner?->resolve($payload['policyToken']) : null;
             if (isset($payload['policyToken']) && null === $policy) {
@@ -456,6 +473,30 @@ final class UploadController
         $uploader->cancelUpload($uploadId);
 
         return new JsonResponse(['success' => true]);
+    }
+
+    /**
+     * Refuses an upload that Security cannot attribute to anyone.
+     *
+     * Without an owner or a tenant every visitor shares one UploadContext: the
+     * pending quota becomes global, so one actor filling it locks out everyone
+     * else. Applications behind a firewall get an owner from Security and never
+     * reach this; public endpoints opt in through "ux_upload.allow_anonymous".
+     */
+    private function denyAnonymousUpload(): ?JsonResponse
+    {
+        if ($this->allowAnonymous) {
+            return null;
+        }
+
+        $context = $this->contextResolver->resolve();
+        if (null !== $context->ownerId || null !== $context->tenantId) {
+            return null;
+        }
+
+        $this->logger?->warning('Rejected an upload that has neither an owner nor a tenant. Authenticate the request, register an UploadContextResolverInterface, or set "ux_upload.allow_anonymous" to true to accept anonymous uploads.');
+
+        return new JsonResponse(['error' => 'Anonymous uploads are disabled'], Response::HTTP_FORBIDDEN);
     }
 
     private function isCsrfValid(Request $request): bool

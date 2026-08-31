@@ -204,6 +204,9 @@ final class UXUploadBundle extends AbstractBundle
         $locatorDefinition->addTag('container.service_locator');
         $builder->setDefinition('ux_upload.uploaders', $locatorDefinition);
 
+        $builder->getDefinition('ux_upload.controller.upload')
+            ->setArgument('$allowAnonymous', $config['allow_anonymous']);
+
         /** @var string|null $rateLimiter */
         $rateLimiter = $config['rate_limiter'];
         if (null !== $rateLimiter) {
@@ -282,6 +285,7 @@ final class UXUploadBundle extends AbstractBundle
                 ->enumNode('integrity_algorithm')->values(Uploader::INTEGRITY_ALGORITHMS)->defaultValue('sha256')->info('Hash algorithm used for optional end-to-end file integrity verification')->end()
                 ->scalarNode('max_size')->defaultValue(Uploader::DEFAULT_MAX_SIZE)->info('Maximum file size enforced server-side (0 = no limit, e.g. "100M")')->end()
                 ->arrayNode('allowed_types')->scalarPrototype()->end()->defaultValue([])->info('Allowed MIME types enforced server-side (empty = all types)')->end()
+                ->booleanNode('allow_anonymous')->defaultFalse()->info('Accept uploads from visitors that Security cannot identify. Leave disabled unless the endpoints are meant to be public, and pair it with a rate_limiter and an UploadContextResolverInterface')->end()
                 ->scalarNode('rate_limiter')->defaultNull()->info('Service ID of a named framework.rate_limiter factory used to throttle upload initialization (for example "limiter.ux_upload_init")')->end()
                 ->arrayNode('local_storage')
                     ->addDefaultsIfNotSet()

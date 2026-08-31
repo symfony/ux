@@ -191,7 +191,7 @@ final class UXUploadBundleExtensionTest extends TestCase
 
     public function testCsrfTokenIsGeneratedAndValidatedThroughContainer(): void
     {
-        $container = $this->bootKernel([]);
+        $container = $this->bootKernel(['allow_anonymous' => true]);
         $requestStack = $container->get('test.request_stack');
         $session = new Session(new MockArraySessionStorage());
         $token = $this->csrfTokenFor($container, $requestStack, $session);
@@ -430,7 +430,7 @@ final class UXUploadBundleExtensionTest extends TestCase
 
     public function testRateLimiterIsDisabledByDefault(): void
     {
-        $container = $this->bootKernel([]);
+        $container = $this->bootKernel(['allow_anonymous' => true]);
         $requestStack = $container->get('test.request_stack');
         $session = new Session(new MockArraySessionStorage());
         $token = $this->csrfTokenFor($container, $requestStack, $session);
@@ -475,7 +475,7 @@ final class UXUploadBundleExtensionTest extends TestCase
             self::markTestSkipped('symfony/rate-limiter is not installed.');
         }
 
-        $container = $this->bootKernel(['rate_limiter' => 'limiter.ux_upload_init']);
+        $container = $this->bootKernel(['rate_limiter' => 'limiter.ux_upload_init', 'allow_anonymous' => true]);
         $requestStack = $container->get('test.request_stack');
         $session = new Session(new MockArraySessionStorage());
         $token = $this->csrfTokenFor($container, $requestStack, $session);

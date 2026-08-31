@@ -139,6 +139,7 @@ final class UploadControllerTest extends TestCase
             csrfTokenManager: $csrf,
             contextResolver: $contextResolver,
             policySigner: $policySigner,
+            allowAnonymous: true,
         );
         $parameters = [
             'filename' => 'avatar.txt',
@@ -178,6 +179,7 @@ final class UploadControllerTest extends TestCase
             $this->uploadUrlGenerator,
             new UploadTokenHandler($this->uriSigner, $this->storage),
             $this->storage,
+            allowAnonymous: true,
         );
 
         self::assertSame(
@@ -202,6 +204,7 @@ final class UploadControllerTest extends TestCase
             new UploadTokenHandler($this->uriSigner, $this->storage),
             $this->storage,
             initRateLimiter: $limiter,
+            allowAnonymous: true,
         );
 
         self::assertSame(Response::HTTP_BAD_REQUEST, $controller->direct(new Request())->getStatusCode());
@@ -220,6 +223,7 @@ final class UploadControllerTest extends TestCase
             new UploadTokenHandler($this->uriSigner, $this->storage),
             $this->storage,
             policySigner: $policySigner,
+            allowAnonymous: true,
         );
 
         self::assertSame(
@@ -282,6 +286,7 @@ final class UploadControllerTest extends TestCase
             new UploadTokenHandler($this->uriSigner, $this->storage),
             $this->storage,
             logger: $logger,
+            allowAnonymous: true,
         );
 
         $response = $controller->direct($this->directRequest('data', [
@@ -304,6 +309,7 @@ final class UploadControllerTest extends TestCase
             $tokenHandler,
             $this->storage,
             policySigner: $policySigner,
+            allowAnonymous: true,
         );
         $policyToken = $policySigner->issue('default', 1024, ['text/plain'], 20, 'attachments');
         $tokens = [];
@@ -412,6 +418,7 @@ final class UploadControllerTest extends TestCase
             new UploadTokenHandler($this->uriSigner, $this->storage),
             $this->storage,
             policySigner: $policySigner,
+            allowAnonymous: true,
         );
         $policy = $policySigner->issue('default', 10, ['text/plain'], 1);
         $request = new Request([], [], [], [], [], [], json_encode([
@@ -451,6 +458,7 @@ final class UploadControllerTest extends TestCase
             $this->storage,
             policySigner: $policySigner,
             resumeTokenHandler: $resumeTokenHandler,
+            allowAnonymous: true,
         );
         $fieldA = $policySigner->issue('default', 1000, ['text/plain'], 1, 'profile.attachment');
         $fieldB = $policySigner->issue('default', 1000, ['text/plain'], 1, 'profile.avatar');
@@ -579,7 +587,7 @@ final class UploadControllerTest extends TestCase
         $storage = $this->createStub(StorageInterface::class);
         $storage->method('getMetadata')->willReturn(null);
 
-        $controller = new UploadController($this->uploader, $this->uploadUrlGenerator, new UploadTokenHandler($this->uriSigner, $storage), $storage);
+        $controller = new UploadController($this->uploader, $this->uploadUrlGenerator, new UploadTokenHandler($this->uriSigner, $storage), $storage, allowAnonymous: true);
 
         $uploadId = 'unknown';
         $uploadUrl = $this->uploadUrlGenerator->generateUploadUrl($uploadId);
@@ -606,6 +614,7 @@ final class UploadControllerTest extends TestCase
             $this->uploadUrlGenerator,
             new UploadTokenHandler($this->uriSigner, $storage),
             $storage,
+            allowAnonymous: true,
         );
         $request = Request::create($this->uploadUrlGenerator->generateUploadUrl('vanished'), 'GET');
 
@@ -623,6 +632,7 @@ final class UploadControllerTest extends TestCase
             new UploadTokenHandler($this->uriSigner, $this->storage),
             $this->storage,
             $uploaders,
+            allowAnonymous: true,
         );
         $request = new Request([], [], [], [], [], [], json_encode([
             'filename' => 'test.txt',
@@ -645,6 +655,7 @@ final class UploadControllerTest extends TestCase
             $tokenHandler,
             $this->storage,
             contextResolver: $ownerA,
+            allowAnonymous: true,
         );
         $secondController = new UploadController(
             $this->uploader,
@@ -652,6 +663,7 @@ final class UploadControllerTest extends TestCase
             $tokenHandler,
             $this->storage,
             contextResolver: $ownerB,
+            allowAnonymous: true,
         );
         $response = $firstController->init(new Request([], [], [], [], [], [], json_encode([
             'filename' => 'private.txt',
@@ -682,6 +694,7 @@ final class UploadControllerTest extends TestCase
             $tokenHandler,
             $this->storage,
             contextResolver: $contextResolver,
+            allowAnonymous: true,
         );
         $pending = $this->uploader->initializeUpload(
             'private.txt',
@@ -709,7 +722,7 @@ final class UploadControllerTest extends TestCase
         $badStorage->method('getMetadata')->willThrowException(new \RuntimeException('Unexpected error'));
 
         $badUploader = new Uploader($badStorage, $this->uploadUrlGenerator, new EventDispatcher());
-        $controller = new UploadController($badUploader, $this->uploadUrlGenerator, new UploadTokenHandler($this->uriSigner, $badStorage), $badStorage, null, $logger);
+        $controller = new UploadController($badUploader, $this->uploadUrlGenerator, new UploadTokenHandler($this->uriSigner, $badStorage), $badStorage, null, $logger, allowAnonymous: true);
 
         $uploadId = 'unknown';
         $uploadUrl = $this->uploadUrlGenerator->generateUploadUrl($uploadId);
@@ -728,7 +741,7 @@ final class UploadControllerTest extends TestCase
         $badStorage->method('initiate')->willThrowException(new \RuntimeException('disk full'));
 
         $badUploader = new Uploader($badStorage, $this->uploadUrlGenerator, new EventDispatcher());
-        $controller = new UploadController($badUploader, $this->uploadUrlGenerator, new UploadTokenHandler($this->uriSigner, $badStorage), $badStorage, null, $logger);
+        $controller = new UploadController($badUploader, $this->uploadUrlGenerator, new UploadTokenHandler($this->uriSigner, $badStorage), $badStorage, null, $logger, allowAnonymous: true);
 
         $request = new Request([], [], [], [], [], [], json_encode([
             'filename' => 'test.txt',
@@ -945,7 +958,7 @@ final class UploadControllerTest extends TestCase
         );
 
         $tokenHandler = new UploadTokenHandler($uriSigner, $storage);
-        $controller = new UploadController($uploader, $urlGenerator, $tokenHandler, $storage);
+        $controller = new UploadController($uploader, $urlGenerator, $tokenHandler, $storage, allowAnonymous: true);
 
         // Create upload
         $request = new Request([], [], [], [], [], [], json_encode([
@@ -1102,7 +1115,7 @@ final class UploadControllerTest extends TestCase
         $container->method('has')->willReturnCallback(static fn (string $id) => 'avatar' === $id);
         $container->method('get')->willReturnCallback(static fn (string $id) => 'avatar' === $id ? $namedUploader : null);
         $tokenHandler = new UploadTokenHandler($this->uriSigner, $this->storage);
-        $controller = new UploadController($this->uploader, $this->uploadUrlGenerator, $tokenHandler, $this->storage, $container);
+        $controller = new UploadController($this->uploader, $this->uploadUrlGenerator, $tokenHandler, $this->storage, $container, allowAnonymous: true);
 
         $request = new Request([], [], [], [], [], [], json_encode([
             'filename' => 'avatar.png',
@@ -1181,7 +1194,7 @@ final class UploadControllerTest extends TestCase
         );
 
         $tokenHandler = new UploadTokenHandler($this->uriSigner, $this->storage);
-        $controller = new UploadController($this->uploader, $this->uploadUrlGenerator, $tokenHandler, $this->storage, null, null, null, $limiterFactory);
+        $controller = new UploadController($this->uploader, $this->uploadUrlGenerator, $tokenHandler, $this->storage, null, null, null, $limiterFactory, allowAnonymous: true);
 
         $makeRequest = static fn (): Request => new Request([], [], [], [], [], [], json_encode([
             'filename' => 'test.txt',
@@ -1224,6 +1237,7 @@ final class UploadControllerTest extends TestCase
             $this->storage,
             csrfTokenManager: $csrf,
             resumeTokenHandler: $resumeHandler,
+            allowAnonymous: true,
         );
         self::assertSame(Response::HTTP_FORBIDDEN, $withCsrf->resume(new Request([], [], [], [], [], [], '{}'))->getStatusCode());
 
@@ -1240,6 +1254,7 @@ final class UploadControllerTest extends TestCase
             $this->storage,
             policySigner: $policySigner,
             resumeTokenHandler: $resumeHandler,
+            allowAnonymous: true,
         );
         $request = new Request([], [], [], [], [], [], json_encode([
             'resumeToken' => 'invalid',
@@ -1258,6 +1273,7 @@ final class UploadControllerTest extends TestCase
             new UploadTokenHandler($this->uriSigner, $this->storage),
             $this->storage,
             resumeTokenHandler: $handler,
+            allowAnonymous: true,
         );
         $request = new Request([], [], [], [], [], [], json_encode([
             'resumeToken' => $handler->generate('missing', $anonymous),
@@ -1278,6 +1294,7 @@ final class UploadControllerTest extends TestCase
             $this->storage,
             contextResolver: $ownerB,
             resumeTokenHandler: $handler,
+            allowAnonymous: true,
         );
         $ownedRequest = new Request([], [], [], [], [], [], json_encode([
             'resumeToken' => $handler->generate('owned', $ownerB->resolve()),
@@ -1298,6 +1315,7 @@ final class UploadControllerTest extends TestCase
             new UploadTokenHandler($this->uriSigner, $missingStorage),
             $missingStorage,
             resumeTokenHandler: $handler,
+            allowAnonymous: true,
         );
         self::assertSame(Response::HTTP_NOT_FOUND, $missing->resume($this->resumeRequest($token))->getStatusCode());
 
@@ -1313,6 +1331,7 @@ final class UploadControllerTest extends TestCase
             new UploadTokenHandler($this->uriSigner, $this->storage),
             $this->storage,
             resumeTokenHandler: $handler,
+            allowAnonymous: true,
         );
         self::assertSame(
             Response::HTTP_BAD_REQUEST,
@@ -1330,6 +1349,7 @@ final class UploadControllerTest extends TestCase
             $brokenStorage,
             logger: $logger,
             resumeTokenHandler: $handler,
+            allowAnonymous: true,
         );
         self::assertSame(Response::HTTP_INTERNAL_SERVER_ERROR, $broken->resume($this->resumeRequest($token))->getStatusCode());
     }
@@ -1350,6 +1370,7 @@ final class UploadControllerTest extends TestCase
             new UploadTokenHandler($this->uriSigner, $this->storage),
             $this->storage,
             policySigner: $policySigner,
+            allowAnonymous: true,
         );
         self::assertSame(
             Response::HTTP_FORBIDDEN,
@@ -1386,6 +1407,7 @@ final class UploadControllerTest extends TestCase
             $handler,
             $storage,
             logger: $logger,
+            allowAnonymous: true,
         );
         $request = new Request([], [], [], [], [], [], json_encode(['token' => $handler->generate($upload)], \JSON_THROW_ON_ERROR));
 
@@ -1413,6 +1435,7 @@ final class UploadControllerTest extends TestCase
             $this->uploadUrlGenerator,
             new UploadTokenHandler($this->uriSigner, $this->storage),
             $this->storage,
+            allowAnonymous: true,
         );
         $url = $this->uploadUrlGenerator->generateUploadUrl('small-chunks');
 
@@ -1448,6 +1471,57 @@ final class UploadControllerTest extends TestCase
         );
     }
 
+    public function testAnonymousInitializationIsRejectedByDefault(): void
+    {
+        $controller = new UploadController(
+            $this->uploader,
+            $this->uploadUrlGenerator,
+            new UploadTokenHandler($this->uriSigner, $this->storage),
+            $this->storage,
+        );
+
+        $response = $controller->init($this->anonymousInitRequest());
+
+        self::assertSame(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+        self::assertStringContainsString('Anonymous uploads are disabled', (string) $response->getContent());
+    }
+
+    public function testAnonymousInitializationIsAcceptedWhenExplicitlyAllowed(): void
+    {
+        $controller = new UploadController(
+            $this->uploader,
+            $this->uploadUrlGenerator,
+            new UploadTokenHandler($this->uriSigner, $this->storage),
+            $this->storage,
+            allowAnonymous: true,
+        );
+
+        self::assertSame(Response::HTTP_OK, $controller->init($this->anonymousInitRequest())->getStatusCode());
+    }
+
+    public function testAnIdentifiedOwnerNeedsNoAnonymousOptIn(): void
+    {
+        $contextResolver = $this->contextResolver('owner-1');
+        $controller = new UploadController(
+            $this->uploader,
+            $this->uploadUrlGenerator,
+            new UploadTokenHandler($this->uriSigner, $this->storage, contextResolver: $contextResolver),
+            $this->storage,
+            contextResolver: $contextResolver,
+        );
+
+        self::assertSame(Response::HTTP_OK, $controller->init($this->anonymousInitRequest())->getStatusCode());
+    }
+
+    private function anonymousInitRequest(): Request
+    {
+        return new Request([], [], [], [], [], [], json_encode([
+            'filename' => 'test.txt',
+            'fileSize' => 1000,
+            'mimeType' => 'text/plain',
+        ]));
+    }
+
     private function createController(?CsrfTokenManagerInterface $csrfTokenManager = null): UploadController
     {
         $tokenHandler = new UploadTokenHandler($this->uriSigner, $this->storage);
@@ -1458,6 +1532,7 @@ final class UploadControllerTest extends TestCase
             $tokenHandler,
             $this->storage,
             csrfTokenManager: $csrfTokenManager,
+            allowAnonymous: true,
         );
     }
 
