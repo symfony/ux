@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\CalendarLink\Ics;
 
+use Symfony\Component\Clock\ClockInterface;
+use Symfony\Component\Clock\NativeClock;
 use Symfony\Component\Uid\Factory\UuidFactory;
 use Symfony\UX\CalendarLink\CalendarEvent;
 use Symfony\UX\CalendarLink\CalendarReminder;
@@ -28,8 +30,10 @@ final class IcsBuilder
 
     private readonly UuidFactory $uuidFactory;
 
-    public function __construct(?UuidFactory $uuidFactory = null)
-    {
+    public function __construct(
+        ?UuidFactory $uuidFactory = null,
+        private readonly ClockInterface $clock = new NativeClock(),
+    ) {
         $this->uuidFactory = $uuidFactory ?? new UuidFactory();
     }
 
@@ -44,7 +48,7 @@ final class IcsBuilder
             ...$this->formatVtimezones($event),
             'BEGIN:VEVENT',
             'UID:'.$this->uuidFactory->create()->toRfc4122(),
-            'DTSTAMP:'.$this->formatUtc(new \DateTimeImmutable('now', new \DateTimeZone('UTC'))),
+            'DTSTAMP:'.$this->formatUtc($this->clock->now()),
             ...$this->formatDateLines($event),
             'SUMMARY:'.$this->escape($event->title),
         ];

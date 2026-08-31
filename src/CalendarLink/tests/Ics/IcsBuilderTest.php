@@ -13,6 +13,7 @@ namespace Symfony\UX\CalendarLink\Tests\Ics;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Clock\MockClock;
 use Symfony\Component\Uid\Factory\MockUuidFactory;
 use Symfony\UX\CalendarLink\CalendarEvent;
 use Symfony\UX\CalendarLink\CalendarRecurrence;
@@ -25,7 +26,21 @@ final class IcsBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->builder = new IcsBuilder(new MockUuidFactory(['0192a5d2-7c6f-7000-8000-000000000000']));
+        $this->builder = new IcsBuilder(
+            new MockUuidFactory(['0192a5d2-7c6f-7000-8000-000000000000']),
+            new MockClock(new \DateTimeImmutable('2026-05-14 08:30:00', new \DateTimeZone('UTC'))),
+        );
+    }
+
+    public function testDtstampUsesTheInjectedClock()
+    {
+        $event = new CalendarEvent(
+            title: 'Demo',
+            start: new \DateTimeImmutable('2026-05-14 09:00', new \DateTimeZone('UTC')),
+            end: new \DateTimeImmutable('2026-05-14 10:00', new \DateTimeZone('UTC')),
+        );
+
+        $this->assertStringContainsString("DTSTAMP:20260514T083000Z\r\n", $this->builder->build($event));
     }
 
     public function testUidIsUniquePerBuild()
