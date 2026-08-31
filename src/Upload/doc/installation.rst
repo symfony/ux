@@ -45,6 +45,10 @@ Verify the installation:
     $ php bin/console debug:router ux_upload_remove
     $ php bin/console debug:config ux_upload
 
+Uploads require an owner that Security can identify, so an application with a
+firewall works as installed. Endpoints meant to be public opt in explicitly with
+``allow_anonymous``, described in :doc:`Security <security>`.
+
 Configure the Bundle
 --------------------
 

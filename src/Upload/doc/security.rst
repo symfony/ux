@@ -43,6 +43,10 @@ Form policy             Restrict uploader, size, MIME types, count and field
 Completed-upload token  Reconstruct signed metadata for Forms and Live Components
 ======================  =========================================================
 
+Each of these payloads carries its own kind, so a value signed for one purpose
+is rejected when presented as another, even though all four share the same
+signing key.
+
 Treat these values as bearer credentials. Do not log complete tokens or signed URLs. Keep ``APP_SECRET`` stable across nodes and deployments.
 
 No Storage Read On Submission

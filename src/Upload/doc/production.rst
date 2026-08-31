@@ -8,6 +8,8 @@ Checklist
 - accept at least one chunk plus protocol overhead in proxy and PHP limits;
 - set request timeouts for the slowest expected chunk;
 - configure a stable shared ``APP_SECRET``;
+- keep ``allow_anonymous`` disabled unless the endpoints are meant to be public;
+- when they are, pair it with a ``rate_limiter`` and an ``UploadContextResolverInterface``;
 - schedule ``ux:upload:cleanup``;
 - monitor initialization, chunk, completion and cleanup failures;
 - test uploads through the real proxy and storage backend;
@@ -71,7 +73,14 @@ The defaults limit one field to one file, one uploader to 100 MiB, chunks to 5
 MiB and parallel chunk requests to three. Increasing ``max_files``,
 ``chunk_size`` or ``parallel_chunks`` is an application and infrastructure
 decision. A useful upper-bound estimate is active files multiplied by parallel
-chunks multiplied by chunk size, plus protocol and assembly overhead.
+chunks multiplied by chunk size, plus protocol and assembly overhead. That
+estimate holds with ``compression`` enabled: decompression is fed in blocks
+sized from ``chunk_size``, so a compressed chunk cannot expand beyond it.
+
+``max_pending_per_owner`` bounds pending sessions per upload context. With an
+authenticated owner that quota applies per user; under ``allow_anonymous`` every
+visitor shares one context unless a resolver separates them, so the quota then
+bounds the whole application at once.
 
 ``openStream()`` uses the backend read stream. Form submission itself performs no remote object request.
 
