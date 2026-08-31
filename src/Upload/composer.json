@@ -46,7 +46,9 @@
         "symfony/security-bundle": "^7.4|^8.0",
         "symfony/security-csrf": "^7.4|^8.0",
         "symfony/twig-bundle": "^7.4|^8.0",
-        "symfony/ux-live-component": "^2.20|^3.0"
+        "symfony/ux-live-component": "^2.20|^3.0",
+        "symfony/dom-crawler": "^7.4|^8.0",
+        "symfony/css-selector": "^7.4|^8.0"
     },
     "autoload": {
         "psr-4": {
