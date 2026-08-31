@@ -17,6 +17,8 @@ use Symfony\UX\CalendarLink\CalendarReminder;
 
 /**
  * @author Imad ZAIRIG <imadzairig@gmail.com>
+ *
+ * @internal
  */
 final class IcsBuilder
 {
