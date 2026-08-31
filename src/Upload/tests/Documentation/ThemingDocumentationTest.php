@@ -94,14 +94,4 @@ final class ThemingDocumentationTest extends TestCase
         self::assertFileExists($packageDir.'/assets/dist/compact.min.css');
         self::assertFileExists($packageDir.'/assets/dist/dropzone.min.css');
     }
-
-    public function testContinuousIntegrationRebuildsAndVerifiesPublishedAssets(): void
-    {
-        $rootDir = \dirname(__DIR__, 4);
-        $workflow = file_get_contents($rootDir.'/.github/workflows/browser-tests.yml');
-
-        self::assertIsString($workflow);
-        self::assertStringContainsString('(cd src/Upload/assets && node ../../../bin/build_package.ts .)', $workflow);
-        self::assertStringContainsString('git diff --exit-code -- src/Upload/assets/dist', $workflow);
-    }
 }

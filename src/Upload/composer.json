@@ -39,7 +39,6 @@
     "require-dev": {
         "league/flysystem": "^3.0",
         "phpunit/phpunit": "^12.0",
-        "playwright-php/playwright": "^1.2",
         "symfony/console": "^7.4|^8.0",
         "symfony/framework-bundle": "^7.4|^8.0",
         "symfony/rate-limiter": "^7.4|^8.0",

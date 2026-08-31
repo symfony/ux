@@ -30,6 +30,7 @@ enum UxPackage: string
     // case Toolkit; // not subject to E2E
     case Translator = 'UX Translator';
     case Turbo = 'UX Turbo';
+    case Upload = 'UX Upload';
     // case Typed; // deprecated
     case Vue = 'UX Vue';
 
@@ -43,6 +44,7 @@ enum UxPackage: string
             self::Icons => 'https://ux.symfony.com/icons',
             self::LiveComponent => 'https://ux.symfony.com/live-component',
             self::Map => 'https://ux.symfony.com/map',
+            self::Upload => 'https://ux.symfony.com/upload',
             self::Notify => 'https://ux.symfony.com/notify',
             self::React => 'https://ux.symfony.com/react',
             self::StimulusBundle => 'https://ux.symfony.com/stimulus',

@@ -21,12 +21,6 @@
         </testsuite>
     </testsuites>
 
-    <groups>
-        <exclude>
-            <group>integration</group>
-        </exclude>
-    </groups>
-
     <source
             ignoreSuppressionOfDeprecations="true"
             ignoreIndirectDeprecations="true"

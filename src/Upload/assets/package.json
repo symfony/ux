@@ -42,7 +42,8 @@
         "build": "node ../../../bin/build_package.ts .",
         "watch": "node ../../../bin/build_package.ts . --watch",
         "test": "pnpm run test:unit",
-        "test:unit": "../../../bin/unit_test_package.sh ."
+        "test:unit": "../../../bin/unit_test_package.sh .",
+        "test:browser": "playwright test"
     },
     "devDependencies": {
         "@hotwired/stimulus": "^3.2.2",
