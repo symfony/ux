@@ -27,6 +27,8 @@ final class IcsBuilder
     private const CRLF = "\r\n";
     private const PRODID = '-//Symfony//UX Calendar Link//EN';
     private const TWO_YEARS = 63072000;
+    // Uuid::v5(NAMESPACE_DNS, 'ux.symfony.com'), frozen: changing it changes every derived UID.
+    private const UID_NAMESPACE = 'c7762b19-6d40-547b-9037-e90ffec34fb2';
 
     private readonly UuidFactory $uuidFactory;
 
@@ -47,7 +49,7 @@ final class IcsBuilder
             'METHOD:PUBLISH',
             ...$this->formatVtimezones($event),
             'BEGIN:VEVENT',
-            'UID:'.$this->uuidFactory->create()->toRfc4122(),
+            'UID:'.$this->uid($event),
             'DTSTAMP:'.$this->formatUtc($this->clock->now()),
             ...$this->formatDateLines($event),
             'SUMMARY:'.$this->escape($event->title),
@@ -79,6 +81,24 @@ final class IcsBuilder
         $folded = array_map([$this, 'fold'], $lines);
 
         return implode(self::CRLF, $folded).self::CRLF;
+    }
+
+    private function uid(CalendarEvent $event): string
+    {
+        if (null !== $event->uid) {
+            return $event->uid->toRfc4122();
+        }
+
+        // Derive a stable UUIDv5 from the event identity, so the same event always
+        // serializes to the same UID instead of a random one clients treat as a new event.
+        $identity = implode('|', [
+            $event->title,
+            $event->start->format(\DateTimeInterface::ATOM),
+            $event->end->format(\DateTimeInterface::ATOM),
+            $event->location ?? '',
+        ]);
+
+        return $this->uuidFactory->nameBased(self::UID_NAMESPACE)->create($identity)->toRfc4122();
     }
 
     /**

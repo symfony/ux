@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 use Symfony\Component\Uid\Factory\MockUuidFactory;
+use Symfony\Component\Uid\Uuid;
 use Symfony\UX\CalendarLink\CalendarEvent;
 use Symfony\UX\CalendarLink\CalendarRecurrence;
 use Symfony\UX\CalendarLink\CalendarReminder;
@@ -27,8 +28,7 @@ final class IcsBuilderTest extends TestCase
     protected function setUp(): void
     {
         $this->builder = new IcsBuilder(
-            new MockUuidFactory(['0192a5d2-7c6f-7000-8000-000000000000']),
-            new MockClock(new \DateTimeImmutable('2026-05-14 08:30:00', new \DateTimeZone('UTC'))),
+            clock: new MockClock(new \DateTimeImmutable('2026-05-14 08:30:00', new \DateTimeZone('UTC'))),
         );
     }
 
@@ -43,20 +43,57 @@ final class IcsBuilderTest extends TestCase
         $this->assertStringContainsString("DTSTAMP:20260514T083000Z\r\n", $this->builder->build($event));
     }
 
-    public function testUidIsUniquePerBuild()
+    public function testUidIsStableForTheSameEvent()
     {
-        $builder = new IcsBuilder();
-
         $event = new CalendarEvent(
             title: 'Demo',
             start: new \DateTimeImmutable('2026-05-14 09:00', new \DateTimeZone('UTC')),
             end: new \DateTimeImmutable('2026-05-14 10:00', new \DateTimeZone('UTC')),
         );
 
-        preg_match('/^UID:(.+)$/m', $builder->build($event), $first);
-        preg_match('/^UID:(.+)$/m', $builder->build($event), $second);
+        preg_match('/^UID:(.+)$/m', $this->builder->build($event), $first);
+        preg_match('/^UID:(.+)$/m', $this->builder->build($event), $second);
+
+        $this->assertSame($first[1], $second[1]);
+    }
+
+    public function testDifferentEventsGetDifferentUids()
+    {
+        $start = new \DateTimeImmutable('2026-05-14 09:00', new \DateTimeZone('UTC'));
+        $end = new \DateTimeImmutable('2026-05-14 10:00', new \DateTimeZone('UTC'));
+
+        preg_match('/^UID:(.+)$/m', $this->builder->build(new CalendarEvent('Demo', $start, $end)), $first);
+        preg_match('/^UID:(.+)$/m', $this->builder->build(new CalendarEvent('Other', $start, $end)), $second);
 
         $this->assertNotSame($first[1], $second[1]);
+    }
+
+    public function testUidIsDerivedThroughTheInjectedUuidFactory()
+    {
+        // MockUuidFactory::nameBased() throws unless the UID matches the v5 it recomputes,
+        // which pins both the namespace and the identity string the UID is derived from.
+        $builder = new IcsBuilder(new MockUuidFactory(['66da134f-b0c7-54b1-924b-afa4fbe3f952']));
+
+        $event = new CalendarEvent(
+            title: 'Demo',
+            start: new \DateTimeImmutable('2026-05-14 09:00', new \DateTimeZone('UTC')),
+            end: new \DateTimeImmutable('2026-05-14 10:00', new \DateTimeZone('UTC')),
+            location: 'Paris',
+        );
+
+        $this->assertStringContainsString("UID:66da134f-b0c7-54b1-924b-afa4fbe3f952\r\n", $builder->build($event));
+    }
+
+    public function testExplicitUidTakesPrecedence()
+    {
+        $event = new CalendarEvent(
+            title: 'Demo',
+            start: new \DateTimeImmutable('2026-05-14 09:00', new \DateTimeZone('UTC')),
+            end: new \DateTimeImmutable('2026-05-14 10:00', new \DateTimeZone('UTC')),
+            uid: Uuid::fromString('5fc53010-1267-4f8e-bc28-1d7ae55a7c99'),
+        );
+
+        $this->assertStringContainsString("UID:5fc53010-1267-4f8e-bc28-1d7ae55a7c99\r\n", $this->builder->build($event));
     }
 
     public function testMinimalTimedEventStructure()
