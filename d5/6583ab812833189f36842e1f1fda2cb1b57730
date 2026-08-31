@@ -1,0 +1,38 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2026-08-26T01:27:29Z
+
+Can we try matching the RFC here ? https://www.rfc-editor.org/info/rfc2445/#section-4.8.4.7
+
+UID has an expected format ..
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-27T21:02:23Z
+
+The RFC you're linking is obsolete (see the very top of the page), and has been replaced by https://www.rfc-editor.org/info/rfc7986/.
+
+But, it's already the case no? Or are you referring to the `return $event->uid` that allows to returns a value which is not a UUID string?
+
+I just pushed a modification where we rely on a `Uuid` instance instead, it should be fine now.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-08-28T11:24:26Z
+
+My (very badly expressed) point was that UID are encouraged to follow a format, that is not an UID in the Symfony way
+
+> Though other algorithms will work, it is RECOMMENDED that the right-hand
+      side contain some domain identifier (either of the host itself or
+      otherwise) such that the generator of the message identifier can
+      guarantee the uniqueness of the left-hand side within the scope of
+      that domain.
+
+and
+
+>   Example:  The following is an example of this property:
+       UID:19960401T080045Z-4000F192713-0052@example.com
+
+ https://www.rfc-editor.org/info/rfc5545/#section-3.8.4.7
+
+ I feel this would be a good idea if possible without re-coding many things there. Or it can be a following PR no problem for me I'll open it .. but this was more a "let's start on the most default-standard-recommended system, even if we allow all spec"
