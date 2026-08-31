@@ -1,0 +1,69 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-08-13T16:11:07Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/smnandre/ux/tree/sa/live-response-remove/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/smnandre/ux/blob/sa/live-response-remove/src/LiveComponent/assets/dist/live_controller.d.ts"><code>live_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.72 kB</code>
+                    / <code>2 kB</code>
+                </td><td>
+                    <code>7.79 kB</code><sup>+1% 📈</sup>
+                    / <code>2.02 kB</code><sup>+1% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/smnandre/ux/blob/sa/live-response-remove/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>84.57 kB</code>
+                    / <code>18.9 kB</code>
+                </td><td>
+                    <code>85.57 kB</code><sup>+1% 📈</sup>
+                    / <code>19.17 kB</code><sup>+1% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-22T06:57:42Z
+
+Let's document that `emit()` and `dispatchBrowserEvent()` from a removing action are silently ignored (`LiveComponentSubscriber.php:364-368`)?
+
+Also, my super-friend Claud found an issue with `LiveResponder` state that could leaks across worker requests, since `LiveResponder::reset()` can be never called, see https://claude.ai/code/artifact/0dc4c535-0770-4edc-9ddb-5009bddf9332?via=auto_preview
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-08-26T01:30:33Z
+
+>  super-friend Claud found an issue with LiveResponder state that could leaks across worker requests, since LiveResponder::reset() can be never called, see https://claude.ai/code/artifact/0dc4c535-0770-4edc-9ddb-5009bddf9332?via=auto_preview
+
+As its an existing problem, do you think you could ask them to fix it ? 😅
+
+I'll do it on a following PR elsewhen don't worry
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-08-26T18:12:27Z
+
+> Let's document that `emit()` and `dispatchBrowserEvent()` from a removing action are silently ignored (`LiveComponentSubscriber.php:364-368`)?
+>
+> Also, my super-friend Claud found an issue with `LiveResponder` state that could leaks across worker requests, since `LiveResponder::reset()` can be never called, see https://claude.ai/code/artifact/0dc4c535-0770-4edc-9ddb-5009bddf9332?via=auto_preview
+
+I've found a way to dispatch them before the removal (that cannot be stopped from front-end) !
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-08-30T14:24:39Z
+
+> To merge after #3761 and a small rebase + rebuild assets 🙏🏻
+
+PR code & docs updated with the new method (dispatch events _then_ remove element)
+
+I you want to have a quick check @Kocal
