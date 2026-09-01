@@ -39,7 +39,7 @@ final class InMemoryStorageTest extends TestCase
         new InMemoryStorage('/absolute');
     }
 
-    public function testWriteAndRead(): void
+    public function testWriteAndRead()
     {
         $path = 'test.txt';
         $content = 'Hello World';
@@ -50,7 +50,7 @@ final class InMemoryStorageTest extends TestCase
         $this->assertSame($content, $this->storage->read($path));
     }
 
-    public function testDelete(): void
+    public function testDelete()
     {
         $path = 'test.txt';
         $this->storage->write($path, 'content');
@@ -60,7 +60,7 @@ final class InMemoryStorageTest extends TestCase
         $this->assertFalse($this->storage->exists($path));
     }
 
-    public function testChunkedUploadFlow(): void
+    public function testChunkedUploadFlow()
     {
         $uploadId = 'upload-123';
         $metadata = [

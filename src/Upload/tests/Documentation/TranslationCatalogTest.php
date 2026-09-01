@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 #[CoversNothing]
 final class TranslationCatalogTest extends TestCase
 {
-    public function testCatalogsUseTheBundleDomainAndSemanticKeys(): void
+    public function testCatalogsUseTheBundleDomainAndSemanticKeys()
     {
         $catalogs = glob(\dirname(__DIR__, 2).'/translations/*.xlf');
         self::assertIsArray($catalogs);

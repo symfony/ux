@@ -16,7 +16,7 @@ use Symfony\UX\Upload\Security\UploadContext;
 
 final class UploadContextTest extends TestCase
 {
-    public function testAccessorsMatchingAndFingerprint(): void
+    public function testAccessorsMatchingAndFingerprint()
     {
         $context = new UploadContext('user-1', 'tenant-1', 'profile.avatar');
 
@@ -29,7 +29,7 @@ final class UploadContextTest extends TestCase
         self::assertNotSame($context->fingerprint(), new UploadContext('user-1', 'tenant-1', 'profile.cover')->fingerprint());
     }
 
-    public function testAnonymousContextOnlyMatchesAnonymousValues(): void
+    public function testAnonymousContextOnlyMatchesAnonymousValues()
     {
         $context = new UploadContext();
 

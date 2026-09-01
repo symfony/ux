@@ -24,7 +24,7 @@ use Symfony\UX\Upload\Upload\CompletedUpload;
 
 final class CompletedUploadTraitTest extends TestCase
 {
-    public function testTargetRejectsAnEmptyUploaderName(): void
+    public function testTargetRejectsAnEmptyUploaderName()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('cannot be empty');
@@ -32,7 +32,7 @@ final class CompletedUploadTraitTest extends TestCase
         new UploadTarget('');
     }
 
-    public function testResolveAndClearDeletesCompletedTemporaryUpload(): void
+    public function testResolveAndClearDeletesCompletedTemporaryUpload()
     {
         $storage = new MockStorage();
         $now = new \DateTimeImmutable();
@@ -77,7 +77,7 @@ final class CompletedUploadTraitTest extends TestCase
         self::assertFalse($storage->exists($upload->getTemporaryPath()));
     }
 
-    public function testUploaderRestrictionRejectsAValidTokenFromAnotherUploader(): void
+    public function testUploaderRestrictionRejectsAValidTokenFromAnotherUploader()
     {
         $storage = new MockStorage();
         $now = new \DateTimeImmutable();
@@ -113,7 +113,7 @@ final class CompletedUploadTraitTest extends TestCase
         self::assertNull($component->upload());
     }
 
-    public function testTargetMustAlsoBeANullableStringLiveProp(): void
+    public function testTargetMustAlsoBeANullableStringLiveProp()
     {
         $handler = new UploadTokenHandler(new UriSigner('secret'), new MockStorage());
         $component = new class {
@@ -130,7 +130,7 @@ final class CompletedUploadTraitTest extends TestCase
         $component->applyUpload('file', 'invalid');
     }
 
-    public function testTargetMustAlsoBeALiveProp(): void
+    public function testTargetMustAlsoBeALiveProp()
     {
         $handler = new UploadTokenHandler(new UriSigner('secret'), new MockStorage());
         $component = new class {
@@ -147,7 +147,7 @@ final class CompletedUploadTraitTest extends TestCase
         $component->applyUpload('file', 'invalid');
     }
 
-    public function testNonTargetPropertyCannotBeWritten(): void
+    public function testNonTargetPropertyCannotBeWritten()
     {
         $handler = new UploadTokenHandler(new UriSigner('secret'), new MockStorage());
         $component = new class {

@@ -37,7 +37,7 @@ final class MissingOptionalDependencyTest extends TestCase
     private const VALIDATOR = 'Symfony\\Component\\Validator\\';
     private const TRANSLATION = 'Symfony\\Component\\Translation\\';
 
-    public function testLoadExtensionFlysystemThrowsWhenLibraryMissing(): void
+    public function testLoadExtensionFlysystemThrowsWhenLibraryMissing()
     {
         $result = $this->bootInIsolation([self::FLYSYSTEM], [
             'ux_upload' => ['storage' => 'flysystem'],
@@ -48,7 +48,7 @@ final class MissingOptionalDependencyTest extends TestCase
         self::assertStringContainsString('league/flysystem is not installed', $result['message'] ?? '');
     }
 
-    public function testBundleBootsWithoutConsole(): void
+    public function testBundleBootsWithoutConsole()
     {
         $result = $this->bootInIsolation([self::CONSOLE], [
             'has' => ['ux_upload.command.cleanup'],
@@ -61,7 +61,7 @@ final class MissingOptionalDependencyTest extends TestCase
         self::assertFalse($result['has']['ux_upload.command.cleanup'] ?? true);
     }
 
-    public function testBundleBootsWithoutSecurityCsrf(): void
+    public function testBundleBootsWithoutSecurityCsrf()
     {
         $result = $this->bootInIsolation([self::SECURITY_CSRF], [
             'action' => 'create_form',
@@ -74,7 +74,7 @@ final class MissingOptionalDependencyTest extends TestCase
         self::assertNull($result['csrf_token'] ?? null);
     }
 
-    public function testBundleBootsWithoutValidator(): void
+    public function testBundleBootsWithoutValidator()
     {
         // Validator is optional: applications may use standard constraints on the
         // form field, but the core upload pipeline does not reference the component.
@@ -86,7 +86,7 @@ final class MissingOptionalDependencyTest extends TestCase
         self::assertSame('note.txt', $result['upload']['filename'] ?? null);
     }
 
-    public function testBundleBootsWithoutTranslation(): void
+    public function testBundleBootsWithoutTranslation()
     {
         $result = $this->bootInIsolation([self::TRANSLATION], [
             'action' => 'create_form',
@@ -95,7 +95,7 @@ final class MissingOptionalDependencyTest extends TestCase
         self::assertSame('ok', $result['status'], $this->explain($result));
     }
 
-    public function testBundleBootsWithNoOptionalPackages(): void
+    public function testBundleBootsWithNoOptionalPackages()
     {
         $result = $this->bootInIsolation([
             self::FLYSYSTEM,

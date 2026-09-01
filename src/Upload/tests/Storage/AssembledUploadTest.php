@@ -16,7 +16,7 @@ use Symfony\UX\Upload\Storage\AssembledUpload;
 
 final class AssembledUploadTest extends TestCase
 {
-    public function testExposesVerifiedAssemblyMeasurements(): void
+    public function testExposesVerifiedAssemblyMeasurements()
     {
         $assembled = new AssembledUpload('.tmp/completed/file.txt', 42, 'checksum');
 

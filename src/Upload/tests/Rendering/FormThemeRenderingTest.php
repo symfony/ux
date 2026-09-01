@@ -33,7 +33,7 @@ final class FormThemeRenderingTest extends KernelTestCase
         return RenderingKernel::class;
     }
 
-    public function testDropzoneAndFileInputRender(): void
+    public function testDropzoneAndFileInputRender()
     {
         $html = $this->render(layout: 'dropzone', preview: true);
 
@@ -46,7 +46,7 @@ final class FormThemeRenderingTest extends KernelTestCase
         self::assertCount(1, $html->filter('[data-test-upload-global-theme]'));
     }
 
-    public function testDropzoneRendersASeparatePickerInstruction(): void
+    public function testDropzoneRendersASeparatePickerInstruction()
     {
         $html = $this->render(layout: 'dropzone');
 
@@ -59,7 +59,7 @@ final class FormThemeRenderingTest extends KernelTestCase
         );
     }
 
-    public function testApplicationFormThemeCanOverrideOneBlockAndRenderItsParent(): void
+    public function testApplicationFormThemeCanOverrideOneBlockAndRenderItsParent()
     {
         $html = $this->render(layout: 'dropzone', theme: 'upload_application_theme.html.twig');
 
@@ -69,7 +69,7 @@ final class FormThemeRenderingTest extends KernelTestCase
         self::assertCount(1, $override->filter('.ux-upload__input'));
     }
 
-    public function testRootAttributesUseSymfonyFormEscapingAndBooleanSemantics(): void
+    public function testRootAttributesUseSymfonyFormEscapingAndBooleanSemantics()
     {
         $html = $this->render(attributes: true);
 
@@ -99,7 +99,7 @@ final class FormThemeRenderingTest extends KernelTestCase
         self::assertCount(0, $html->filter('script[data-test-injected-script]'));
     }
 
-    public function testFormRowRendersLabelHelpAndTransformationErrorsOnTheNativeInput(): void
+    public function testFormRowRendersLabelHelpAndTransformationErrorsOnTheNativeInput()
     {
         $html = $this->render(layout: 'dropzone', row: true, invalid: true, attributes: true);
 
@@ -129,7 +129,7 @@ final class FormThemeRenderingTest extends KernelTestCase
         self::assertNull($input->attr('name'));
     }
 
-    public function testFormRowDelegatesToTheActiveApplicationFormTheme(): void
+    public function testFormRowDelegatesToTheActiveApplicationFormTheme()
     {
         $bootstrap = $this->render(row: true, invalid: true, theme: 'bootstrap_5_layout.html.twig');
         self::assertSame('Attachments', trim($bootstrap->filter('.mb-3 > label.form-label')->text()));
@@ -146,7 +146,7 @@ final class FormThemeRenderingTest extends KernelTestCase
         );
     }
 
-    public function testOptionalPresentationBlocksCanBeEmptied(): void
+    public function testOptionalPresentationBlocksCanBeEmptied()
     {
         $html = $this->render(theme: 'upload_minimal_theme.html.twig');
 
@@ -158,7 +158,7 @@ final class FormThemeRenderingTest extends KernelTestCase
         self::assertCount(0, $html->filter('.ux-upload__errors'));
     }
 
-    public function testDropzoneHasAccessibleAttributes(): void
+    public function testDropzoneHasAccessibleAttributes()
     {
         $html = $this->render(layout: 'dropzone');
 
@@ -169,7 +169,7 @@ final class FormThemeRenderingTest extends KernelTestCase
         );
     }
 
-    public function testPickerMergesAllDropzoneActions(): void
+    public function testPickerMergesAllDropzoneActions()
     {
         $expectedActions = [
             'dragover->symfony--ux-upload--upload#dragover',
@@ -189,7 +189,7 @@ final class FormThemeRenderingTest extends KernelTestCase
         self::assertSame(4, substr_count($actions, '->'));
     }
 
-    public function testManualUploadButtonIsRenderedInsideControllerScope(): void
+    public function testManualUploadButtonIsRenderedInsideControllerScope()
     {
         $button = $this->render(manual: true)->filter('.ux-upload > .ux-upload__start');
 

@@ -63,7 +63,7 @@ final class UploaderTest extends TestCase
         NativeFunctions::reset();
     }
 
-    public function testInitializeUpload(): void
+    public function testInitializeUpload()
     {
         $result = $this->uploader->initializeUpload('test.txt', 1000, 'text/plain');
 
@@ -78,7 +78,7 @@ final class UploaderTest extends TestCase
         $this->assertSame(3, $result->parallel);
     }
 
-    public function testDirectUploadCompletesWithExactBytesAndMetadata(): void
+    public function testDirectUploadCompletesWithExactBytesAndMetadata()
     {
         $content = "direct upload\0bytes";
         $context = new UploadContext('owner-1', 'tenant-1', 'profile.document');
@@ -106,7 +106,7 @@ final class UploaderTest extends TestCase
         self::assertSame($content, $this->storage->read($completed->getTemporaryPath()));
     }
 
-    public function testDirectUploadDecompressesBeforeDigestAndCompletion(): void
+    public function testDirectUploadDecompressesBeforeDigestAndCompletion()
     {
         $content = str_repeat('compressible data ', 20);
         $compressed = gzencode($content);
@@ -124,7 +124,7 @@ final class UploaderTest extends TestCase
         self::assertSame($content, $this->storage->read($completed->getTemporaryPath()));
     }
 
-    public function testDirectUploadRejectsOversizeBeforeCreatingSession(): void
+    public function testDirectUploadRejectsOversizeBeforeCreatingSession()
     {
         $dispatcher = $this->createMock(\Psr\EventDispatcher\EventDispatcherInterface::class);
         $dispatcher->expects(self::never())->method('dispatch');
@@ -141,7 +141,7 @@ final class UploaderTest extends TestCase
         $uploader->uploadDirect('large.txt', 5, 'text/plain', '12345');
     }
 
-    public function testDirectUploadCleansNonResumableSessionAfterFailure(): void
+    public function testDirectUploadCleansNonResumableSessionAfterFailure()
     {
         $dispatcher = new EventDispatcher();
         $dispatcher->addListener(UploadAssembledEvent::class, static function (): never {
@@ -165,7 +165,7 @@ final class UploaderTest extends TestCase
         self::assertSame([], $reflection->getValue($this->storage));
     }
 
-    public function testDirectUploadPreservesOriginalFailureWhenCleanupAlsoFails(): void
+    public function testDirectUploadPreservesOriginalFailureWhenCleanupAlsoFails()
     {
         $storage = $this->createStub(StorageInterface::class);
         $storage->method('getMetadata')->willReturn([
@@ -187,7 +187,7 @@ final class UploaderTest extends TestCase
         $uploader->uploadDirect('failed.txt', 4, 'text/plain', 'data', digest: hash('sha256', 'different'));
     }
 
-    public function testDirectUploadProducesExactBytesWithLocalAndFlysystemStorage(): void
+    public function testDirectUploadProducesExactBytesWithLocalAndFlysystemStorage()
     {
         $root = sys_get_temp_dir().'/ux_upload_direct_'.bin2hex(random_bytes(8));
         $filesystem = new Filesystem();
@@ -230,7 +230,7 @@ final class UploaderTest extends TestCase
         }
     }
 
-    public function testRejectsExcessiveChunkSizeAtRuntime(): void
+    public function testRejectsExcessiveChunkSizeAtRuntime()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('chunk size must be between');
@@ -243,7 +243,7 @@ final class UploaderTest extends TestCase
         );
     }
 
-    public function testRejectsInvalidConstructorConfiguration(): void
+    public function testRejectsInvalidConstructorConfiguration()
     {
         $invalidArguments = [
             ['name' => ''],
@@ -269,7 +269,7 @@ final class UploaderTest extends TestCase
         }
     }
 
-    public function testAcceptsAnExplicitLockFactory(): void
+    public function testAcceptsAnExplicitLockFactory()
     {
         $uploader = new Uploader(
             $this->storage,
@@ -281,7 +281,7 @@ final class UploaderTest extends TestCase
         self::assertSame('default', $uploader->getName());
     }
 
-    public function testInitializeRejectsMismatchedHashAlgorithm(): void
+    public function testInitializeRejectsMismatchedHashAlgorithm()
     {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('does not match configured integrity algorithm');
@@ -289,7 +289,7 @@ final class UploaderTest extends TestCase
         $this->uploader->initializeUpload('test.txt', 4, 'text/plain', hash('sha512', 'data'), 'sha512');
     }
 
-    public function testDistributedStorageRequiresSharedLockGuarantee(): void
+    public function testDistributedStorageRequiresSharedLockGuarantee()
     {
         $storage = new FlysystemStorage($this->createStub(FilesystemOperator::class));
         $uploader = new Uploader($storage, $this->createStub(UploadUrlGeneratorInterface::class), new EventDispatcher());
@@ -300,7 +300,7 @@ final class UploaderTest extends TestCase
         $uploader->initializeUpload('test.txt', 4, 'text/plain');
     }
 
-    public function testLocalStorageEnforcesQuotaAndCompletesThroughVerifiedAssembly(): void
+    public function testLocalStorageEnforcesQuotaAndCompletesThroughVerifiedAssembly()
     {
         $root = sys_get_temp_dir().'/ux_upload_uploader_'.bin2hex(random_bytes(8));
         $filesystem = new Filesystem();
@@ -333,7 +333,7 @@ final class UploaderTest extends TestCase
         }
     }
 
-    public function testStoreChunkRejectsPayloadLargerThanConfiguredChunkSize(): void
+    public function testStoreChunkRejectsPayloadLargerThanConfiguredChunkSize()
     {
         $uploader = new Uploader(
             $this->storage,
@@ -349,7 +349,7 @@ final class UploaderTest extends TestCase
         $uploader->storeChunk($pending->uploadId, 0, '12345');
     }
 
-    public function testCompleteRejectsUnknownUpload(): void
+    public function testCompleteRejectsUnknownUpload()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('does not exist');
@@ -357,7 +357,7 @@ final class UploaderTest extends TestCase
         $this->uploader->completeUpload('missing');
     }
 
-    public function testCompleteRejectsInvalidHashAlgorithmMetadata(): void
+    public function testCompleteRejectsInvalidHashAlgorithmMetadata()
     {
         $this->storage->initiate('id', [
             'filename' => 'test.txt',
@@ -374,7 +374,7 @@ final class UploaderTest extends TestCase
         $this->uploader->completeUpload('id');
     }
 
-    public function testCompleteRejectsIncompleteCompletedMetadata(): void
+    public function testCompleteRejectsIncompleteCompletedMetadata()
     {
         $this->storage->initiate('id', ['completedPath' => 'completed/id']);
 
@@ -384,7 +384,7 @@ final class UploaderTest extends TestCase
         $this->uploader->completeUpload('id');
     }
 
-    public function testUploadIdIsUniqueHexAndPathSafe(): void
+    public function testUploadIdIsUniqueHexAndPathSafe()
     {
         $seen = [];
         for ($i = 0; $i < 500; ++$i) {
@@ -399,7 +399,7 @@ final class UploaderTest extends TestCase
         }
     }
 
-    public function testStoreChunk(): void
+    public function testStoreChunk()
     {
         $result = $this->uploader->initializeUpload('test.txt', 1000, 'text/plain');
         $uploadId = $result->uploadId;
@@ -410,7 +410,7 @@ final class UploaderTest extends TestCase
         $this->assertCount(1, $this->storage->listChunks($uploadId));
     }
 
-    public function testStoreChunkVerifiesOptionalSha256Digest(): void
+    public function testStoreChunkVerifiesOptionalSha256Digest()
     {
         $upload = $this->uploader->initializeUpload('test.txt', 4, 'text/plain');
 
@@ -423,7 +423,7 @@ final class UploaderTest extends TestCase
         $this->uploader->storeChunk($other->uploadId, 0, 'data', hash('sha256', 'tampered'));
     }
 
-    public function testStoreChunkAcceptsIdenticalRetransmissionWithoutDuplicating(): void
+    public function testStoreChunkAcceptsIdenticalRetransmissionWithoutDuplicating()
     {
         $result = $this->uploader->initializeUpload('test.txt', 1000, 'text/plain');
         $uploadId = $result->uploadId;
@@ -434,7 +434,7 @@ final class UploaderTest extends TestCase
         $this->assertSame([0], $this->storage->listChunks($uploadId));
     }
 
-    public function testStoreChunkOverwriteAttemptPreservesOriginalData(): void
+    public function testStoreChunkOverwriteAttemptPreservesOriginalData()
     {
         $result = $this->uploader->initializeUpload('test.txt', 8, 'text/plain');
         $uploadId = $result->uploadId;
@@ -455,7 +455,7 @@ final class UploaderTest extends TestCase
         $this->assertSame('original', $this->storage->read($path));
     }
 
-    public function testCompleteUploadCleansUpOnFailure(): void
+    public function testCompleteUploadCleansUpOnFailure()
     {
         // Force hash failure by initializing with a hash and then uploading different content
         $result = $this->uploader->initializeUpload('test.txt', 4, 'text/plain', 'invalid-hash');
@@ -473,7 +473,7 @@ final class UploaderTest extends TestCase
         $this->assertNull($this->storage->getMetadata($uploadId));
     }
 
-    public function testCompleteUpload(): void
+    public function testCompleteUpload()
     {
         $result = $this->uploader->initializeUpload('test.txt', 4, 'text/plain');
         $uploadId = $result->uploadId;
@@ -490,7 +490,7 @@ final class UploaderTest extends TestCase
         $this->assertSame($uploadId, $uploadResult->id);
     }
 
-    public function testCompletedTtlStartsWhenAssemblyCompletes(): void
+    public function testCompletedTtlStartsWhenAssemblyCompletes()
     {
         $pending = $this->uploader->initializeUpload('test.txt', 4, 'text/plain');
         self::assertArrayNotHasKey('expiresAt', $this->storage->getMetadata($pending->uploadId));
@@ -503,7 +503,7 @@ final class UploaderTest extends TestCase
         self::assertLessThanOrEqual(time() + Uploader::DEFAULT_COMPLETED_TTL, $completed->expiresAt->getTimestamp());
     }
 
-    public function testInitializeUploadRejectsZeroSizeFile(): void
+    public function testInitializeUploadRejectsZeroSizeFile()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('File size must be greater than zero');
@@ -511,7 +511,7 @@ final class UploaderTest extends TestCase
         $this->uploader->initializeUpload('empty.txt', 0, 'text/plain');
     }
 
-    public function testInitializeUploadRejectsNegativeSizeFile(): void
+    public function testInitializeUploadRejectsNegativeSizeFile()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('File size must be greater than zero');
@@ -519,7 +519,7 @@ final class UploaderTest extends TestCase
         $this->uploader->initializeUpload('negative.txt', -100, 'text/plain');
     }
 
-    public function testStoreChunkRejectsNegativeIndex(): void
+    public function testStoreChunkRejectsNegativeIndex()
     {
         $result = $this->uploader->initializeUpload('test.txt', 1000, 'text/plain');
 
@@ -529,7 +529,7 @@ final class UploaderTest extends TestCase
         $this->uploader->storeChunk($result->uploadId, -1, 'data');
     }
 
-    public function testStoreChunkRejectsIndexBeyondTotal(): void
+    public function testStoreChunkRejectsIndexBeyondTotal()
     {
         // 1000 bytes with 5MB chunk size = 1 total chunk (indices 0..0)
         $result = $this->uploader->initializeUpload('test.txt', 1000, 'text/plain');
@@ -540,7 +540,7 @@ final class UploaderTest extends TestCase
         $this->uploader->storeChunk($result->uploadId, 5, 'data');
     }
 
-    public function testStoreChunkRejectsIndexEqualToTotal(): void
+    public function testStoreChunkRejectsIndexEqualToTotal()
     {
         // 15MB file with 5MB chunk size = 3 total chunks (indices 0, 1, 2)
         $result = $this->uploader->initializeUpload('test.txt', 15 * 1024 * 1024, 'text/plain');
@@ -552,7 +552,7 @@ final class UploaderTest extends TestCase
         $this->uploader->storeChunk($result->uploadId, 3, 'data');
     }
 
-    public function testStoreChunkAcceptsValidIndex(): void
+    public function testStoreChunkAcceptsValidIndex()
     {
         // 15MB file with 5MB chunk size = 3 total chunks
         $result = $this->uploader->initializeUpload('test.txt', 15 * 1024 * 1024, 'text/plain');
@@ -567,7 +567,7 @@ final class UploaderTest extends TestCase
         $this->assertCount(2, $this->storage->listChunks($result->uploadId));
     }
 
-    public function testStoreChunkHandlesNonCompressedData(): void
+    public function testStoreChunkHandlesNonCompressedData()
     {
         $result = $this->uploader->initializeUpload('test.txt', 1000, 'text/plain');
         $plainData = 'This is not gzip compressed data';
@@ -578,7 +578,7 @@ final class UploaderTest extends TestCase
         $this->assertCount(1, $this->storage->listChunks($result->uploadId));
     }
 
-    public function testStoreChunkHandlesGzipCompressedData(): void
+    public function testStoreChunkHandlesGzipCompressedData()
     {
         $result = $this->uploader->initializeUpload('test.txt', 1000, 'text/plain');
         $originalData = 'This is the original content';
@@ -589,7 +589,7 @@ final class UploaderTest extends TestCase
         $this->assertCount(1, $this->storage->listChunks($result->uploadId));
     }
 
-    public function testStoreChunkStoresUndeclaredGzipLookalikeVerbatim(): void
+    public function testStoreChunkStoresUndeclaredGzipLookalikeVerbatim()
     {
         // A binary chunk may legitimately start with the gzip magic bytes.
         // Without the explicit compressed flag it must be stored as-is, never
@@ -602,7 +602,7 @@ final class UploaderTest extends TestCase
         $this->assertCount(1, $this->storage->listChunks($result->uploadId));
     }
 
-    public function testStoreChunkRejectsDeclaredCompressionWhenDisabled(): void
+    public function testStoreChunkRejectsDeclaredCompressionWhenDisabled()
     {
         $uploader = new Uploader(
             $this->storage,
@@ -617,7 +617,7 @@ final class UploaderTest extends TestCase
         $uploader->storeChunk($result->uploadId, 0, gzencode('data'), compressed: true);
     }
 
-    public function testStoreChunkThrowsOnCorruptGzipData(): void
+    public function testStoreChunkThrowsOnCorruptGzipData()
     {
         $result = $this->uploader->initializeUpload('test.txt', 1000, 'text/plain');
 
@@ -630,7 +630,7 @@ final class UploaderTest extends TestCase
         $this->uploader->storeChunk($result->uploadId, 0, $corruptGzipData, compressed: true);
     }
 
-    public function testStoreChunkRejectsDecompressedDataLargerThanChunkSize(): void
+    public function testStoreChunkRejectsDecompressedDataLargerThanChunkSize()
     {
         $uploader = new Uploader(
             $this->storage,
@@ -647,7 +647,7 @@ final class UploaderTest extends TestCase
         $uploader->storeChunk($result->uploadId, 0, gzencode('123456789'), compressed: true);
     }
 
-    public function testCompleteUploadRejectsAssembledSizeMismatch(): void
+    public function testCompleteUploadRejectsAssembledSizeMismatch()
     {
         $result = $this->uploader->initializeUpload('test.txt', 5, 'text/plain');
         $this->uploader->storeChunk($result->uploadId, 0, 'data');
@@ -663,7 +663,7 @@ final class UploaderTest extends TestCase
         self::assertFalse($this->storage->exists('test/test.txt'));
     }
 
-    public function testGetProgressReturnsCorrectPercentage(): void
+    public function testGetProgressReturnsCorrectPercentage()
     {
         $result = $this->uploader->initializeUpload('test.txt', 15 * 1024 * 1024, 'text/plain');
         $uploadId = $result->uploadId;
@@ -694,7 +694,7 @@ final class UploaderTest extends TestCase
         $this->assertSame([0, 1, 2], $progress->chunkIndices);
     }
 
-    public function testCancelUploadCleansUp(): void
+    public function testCancelUploadCleansUp()
     {
         $result = $this->uploader->initializeUpload('test.txt', 1000, 'text/plain');
         $uploadId = $result->uploadId;
@@ -712,7 +712,7 @@ final class UploaderTest extends TestCase
         self::assertEmpty($this->storage->listChunks($uploadId));
     }
 
-    public function testCompletionIsIdempotentAndCancelDoesNotDeleteCompletedUpload(): void
+    public function testCompletionIsIdempotentAndCancelDoesNotDeleteCompletedUpload()
     {
         $pending = $this->uploader->initializeUpload('stable.txt', 4, 'text/plain');
         $this->uploader->storeChunk($pending->uploadId, 0, 'data');
@@ -725,14 +725,14 @@ final class UploaderTest extends TestCase
         self::assertTrue($this->storage->exists($first->getTemporaryPath()));
     }
 
-    public function testGetProgressOnUnknownUploadReturnsZeroProgress(): void
+    public function testGetProgressOnUnknownUploadReturnsZeroProgress()
     {
         $progress = $this->uploader->getProgress('unknown');
         self::assertSame(0, $progress->totalChunks);
         self::assertSame(0, $progress->percentComplete);
     }
 
-    public function testGetPercentCompleteWithZeroTotalChunks(): void
+    public function testGetPercentCompleteWithZeroTotalChunks()
     {
         $reflection = new \ReflectionClass(Uploader::class);
         $method = $reflection->getMethod('getPercentComplete');
@@ -741,12 +741,12 @@ final class UploaderTest extends TestCase
         $this->assertSame(0, $result);
     }
 
-    public function testGetNameReturnsDefault(): void
+    public function testGetNameReturnsDefault()
     {
         self::assertSame('default', $this->uploader->getName());
     }
 
-    public function testGetNameReturnsCustomName(): void
+    public function testGetNameReturnsCustomName()
     {
         $uploader = new Uploader(
             $this->storage,
@@ -758,7 +758,7 @@ final class UploaderTest extends TestCase
         self::assertSame('avatar', $uploader->getName());
     }
 
-    public function testGetConfig(): void
+    public function testGetConfig()
     {
         $config = $this->uploader->getConfig();
 
@@ -770,7 +770,7 @@ final class UploaderTest extends TestCase
         self::assertSame(5 * 1024 * 1024, $config['chunk_size']);
     }
 
-    public function testGetConfigWithCustomValues(): void
+    public function testGetConfigWithCustomValues()
     {
         $uploader = new Uploader(
             $this->storage,
@@ -788,7 +788,7 @@ final class UploaderTest extends TestCase
         self::assertSame(1024 * 1024, $config['chunk_size']);
     }
 
-    public function testInitializeUploadWithMaxSizeConstraint(): void
+    public function testInitializeUploadWithMaxSizeConstraint()
     {
         $uploader = new Uploader(
             $this->storage,
@@ -803,7 +803,7 @@ final class UploaderTest extends TestCase
         $uploader->initializeUpload('big.bin', 2000, 'application/octet-stream');
     }
 
-    public function testCompleteUploadWithValidHash(): void
+    public function testCompleteUploadWithValidHash()
     {
         $content = 'test content for hashing';
         $hash = hash('sha256', $content);
@@ -819,7 +819,7 @@ final class UploaderTest extends TestCase
         self::assertSame('test.txt', $uploadResult->originalName);
     }
 
-    public function testCompleteUploadWithInvalidHashThrows(): void
+    public function testCompleteUploadWithInvalidHashThrows()
     {
         $content = 'test content';
         $wrongHash = hash('sha256', 'different content');
@@ -835,7 +835,7 @@ final class UploaderTest extends TestCase
         $this->uploader->completeUpload($uploadId);
     }
 
-    public function testInitializeUploadWithHash(): void
+    public function testInitializeUploadWithHash()
     {
         $hash = 'abc123def456';
 
@@ -847,7 +847,7 @@ final class UploaderTest extends TestCase
         self::assertSame($hash, $metadata['hash']);
     }
 
-    public function testInitializeUploadWithNullHash(): void
+    public function testInitializeUploadWithNullHash()
     {
         $result = $this->uploader->initializeUpload('test.txt', 100, 'text/plain', null);
 
@@ -855,7 +855,7 @@ final class UploaderTest extends TestCase
         self::assertNull($metadata['hash']);
     }
 
-    public function testMultiChunkCompleteUpload(): void
+    public function testMultiChunkCompleteUpload()
     {
         $chunkSize = 100;
         $totalSize = 300;
@@ -879,7 +879,7 @@ final class UploaderTest extends TestCase
         self::assertSame($totalSize, $uploadResult->size);
     }
 
-    public function testManyShuffledChunksReassembleBytePerfect(): void
+    public function testManyShuffledChunksReassembleBytePerfect()
     {
         // A realistic chunk count, stored out of order (delivery is not guaranteed
         // in-order), then assembled and compared byte-for-byte -- not just by length.
@@ -915,7 +915,7 @@ final class UploaderTest extends TestCase
         self::assertSame(hash('sha256', $original), hash('sha256', $assembled), 'Assembled bytes must be identical to the original.');
     }
 
-    public function testCompleteUploadAcceptsMatchingAssembledHash(): void
+    public function testCompleteUploadAcceptsMatchingAssembledHash()
     {
         $content = 'test content';
         $hash = hash('sha256', $content);
@@ -930,7 +930,7 @@ final class UploaderTest extends TestCase
         $this->assertSame('f', $result->originalName);
     }
 
-    public function testCompleteUploadRejectsMismatchingAssembledHash(): void
+    public function testCompleteUploadRejectsMismatchingAssembledHash()
     {
         $content = 'test content';
 
@@ -946,7 +946,7 @@ final class UploaderTest extends TestCase
         $uploader->completeUpload('id');
     }
 
-    public function testStoreChunkReportsGzipInitializationFailure(): void
+    public function testStoreChunkReportsGzipInitializationFailure()
     {
         $upload = $this->uploader->initializeUpload('compressed.bin', 4, 'application/octet-stream');
         NativeFunctions::mock('Symfony\\UX\\Upload\\inflate_init', false);
@@ -957,7 +957,7 @@ final class UploaderTest extends TestCase
         $this->uploader->storeChunk($upload->uploadId, 0, "\x1f\x8bdata", compressed: true);
     }
 
-    public function testStoreChunkWithCompressionDisabled(): void
+    public function testStoreChunkWithCompressionDisabled()
     {
         $urlGenerator = $this->createStub(UploadUrlGeneratorInterface::class);
         $urlGenerator->method('generateUploadUrl')->willReturn('http://example.com/upload/123');

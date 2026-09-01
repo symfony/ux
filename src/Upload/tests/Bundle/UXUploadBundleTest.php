@@ -21,7 +21,7 @@ final class UXUploadBundleTest extends KernelTestCase
         return TestKernel::class;
     }
 
-    public function testBundleBoots(): void
+    public function testBundleBoots()
     {
         self::bootKernel();
 

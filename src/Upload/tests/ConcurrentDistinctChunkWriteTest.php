@@ -45,7 +45,7 @@ final class ConcurrentDistinctChunkWriteTest extends TestCase
         $this->filesystem->remove($this->root);
     }
 
-    public function testConcurrentWritesToDistinctChunksAllLand(): void
+    public function testConcurrentWritesToDistinctChunksAllLand()
     {
         $tempDir = $this->root.'/tmp';
         $directory = $this->root.'/files';

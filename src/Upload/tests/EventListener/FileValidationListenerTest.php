@@ -28,7 +28,7 @@ use Symfony\UX\Upload\UploaderInterface;
 final class FileValidationListenerTest extends TestCase
 {
     #[DataProvider('ambiguousTextFiles')]
-    public function testAmbiguousTextDetectionUsesAnExtensionCompatibleAllowedType(string $filename, string $declaredMimeType, string $content): void
+    public function testAmbiguousTextDetectionUsesAnExtensionCompatibleAllowedType(string $filename, string $declaredMimeType, string $content)
     {
         $storage = new InMemoryStorage();
         $path = '.tmp/completed/'.(time() + 3600).'-'.str_repeat('a', 32).'.'.pathinfo($filename, \PATHINFO_EXTENSION);
@@ -64,7 +64,7 @@ final class FileValidationListenerTest extends TestCase
         yield 'Markdown detected as text/plain' => ['README.md', 'text/markdown', "# Title\n\nText\n"];
     }
 
-    public function testPlainTextCannotBecomePdfFromFilenameAndClientDeclaration(): void
+    public function testPlainTextCannotBecomePdfFromFilenameAndClientDeclaration()
     {
         $event = $this->event(new InMemoryStorage(), 'This is not a PDF.', 'invoice.pdf', 'application/pdf');
 
@@ -78,7 +78,7 @@ final class FileValidationListenerTest extends TestCase
         self::assertSame('application/pdf', $event->getUpload()->getMimeType());
     }
 
-    public function testOctetStreamCannotBecomeImageFromFilenameAndClientDeclaration(): void
+    public function testOctetStreamCannotBecomeImageFromFilenameAndClientDeclaration()
     {
         $content = "\x00\x01\x02\x03\x04\x05";
         $event = $this->event(new InMemoryStorage(), $content, 'avatar.png', 'image/png');
@@ -89,7 +89,7 @@ final class FileValidationListenerTest extends TestCase
         $this->listener(allowedTypes: ['image/png'])($event);
     }
 
-    public function testDetectedPlainTextWinsOverBinaryDeclarationWithoutAllowList(): void
+    public function testDetectedPlainTextWinsOverBinaryDeclarationWithoutAllowList()
     {
         $event = $this->event(new InMemoryStorage(), 'This is not a PDF.', 'invoice.pdf', 'application/pdf');
 
@@ -98,7 +98,7 @@ final class FileValidationListenerTest extends TestCase
         self::assertSame('text/plain', $event->getUpload()->getMimeType());
     }
 
-    public function testPolicySizeLimitRejectsBeforeReadingStorage(): void
+    public function testPolicySizeLimitRejectsBeforeReadingStorage()
     {
         $storage = $this->createMock(StorageInterface::class);
         $storage->expects(self::never())->method('read');
@@ -112,7 +112,7 @@ final class FileValidationListenerTest extends TestCase
         $this->listener()($event);
     }
 
-    public function testStorageInspectionFailureIsLoggedAndWrapped(): void
+    public function testStorageInspectionFailureIsLoggedAndWrapped()
     {
         $storage = $this->createStub(StorageInterface::class);
         $storage->method('read')->willThrowException(new \RuntimeException('backend down'));
@@ -132,14 +132,14 @@ final class FileValidationListenerTest extends TestCase
         }
     }
 
-    public function testEmptyContentCannotProduceAMimeType(): void
+    public function testEmptyContentCannotProduceAMimeType()
     {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('Unable to determine');
         $this->listener()($this->event(new InMemoryStorage(), ''));
     }
 
-    public function testDetectedContentWinsOverSpoofedDeclarationWithoutAllowList(): void
+    public function testDetectedContentWinsOverSpoofedDeclarationWithoutAllowList()
     {
         $logger = $this->createMock(LoggerInterface::class);
         $logger->expects(self::once())->method('warning');
@@ -152,7 +152,7 @@ final class FileValidationListenerTest extends TestCase
         self::assertSame('image/png', $event->getUpload()->getMimeType());
     }
 
-    public function testWildcardAllowListAcceptsDetectedContent(): void
+    public function testWildcardAllowListAcceptsDetectedContent()
     {
         $content = file_get_contents(__DIR__.'/../Fixtures/files/valid_image.png');
         self::assertIsString($content);
@@ -163,7 +163,7 @@ final class FileValidationListenerTest extends TestCase
         self::assertSame('image/png', $event->getUpload()->getMimeType());
     }
 
-    public function testDisallowedDetectedContentIsRejected(): void
+    public function testDisallowedDetectedContentIsRejected()
     {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('is not allowed');
@@ -172,7 +172,7 @@ final class FileValidationListenerTest extends TestCase
         );
     }
 
-    public function testNamedUploaderConstraintsAreResolvedFromTheLocator(): void
+    public function testNamedUploaderConstraintsAreResolvedFromTheLocator()
     {
         $uploader = $this->createStub(UploaderInterface::class);
         $uploader->method('getConfig')->willReturn([
@@ -192,7 +192,7 @@ final class FileValidationListenerTest extends TestCase
         $listener($event);
     }
 
-    public function testRejectsInvalidNamedUploaderService(): void
+    public function testRejectsInvalidNamedUploaderService()
     {
         $listener = new FileValidationListener(
             MimeTypes::getDefault(),

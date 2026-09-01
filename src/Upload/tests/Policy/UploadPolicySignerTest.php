@@ -17,7 +17,7 @@ use Symfony\UX\Upload\Policy\UploadPolicySigner;
 
 final class UploadPolicySignerTest extends TestCase
 {
-    public function testResolveRejectsATokenSignedForAnotherType(): void
+    public function testResolveRejectsATokenSignedForAnotherType()
     {
         $uriSigner = new UriSigner('secret');
         // Every key a policy needs, a valid signature, the same secret: only the
@@ -36,7 +36,7 @@ final class UploadPolicySignerTest extends TestCase
         self::assertNull(new UploadPolicySigner($uriSigner)->resolve($token));
     }
 
-    public function testRoundTrip(): void
+    public function testRoundTrip()
     {
         $signer = new UploadPolicySigner(new UriSigner('secret'));
 
@@ -56,7 +56,7 @@ final class UploadPolicySignerTest extends TestCase
         self::assertSame('profile.documents', $policy?->getFieldName());
     }
 
-    public function testTamperedAndExpiredPoliciesAreRejected(): void
+    public function testTamperedAndExpiredPoliciesAreRejected()
     {
         self::assertNull(new UploadPolicySigner(new UriSigner('secret'))->resolve('invalid'));
 
@@ -64,7 +64,7 @@ final class UploadPolicySignerTest extends TestCase
         self::assertNull($signer->resolve($signer->issue('default', 10, [], 1)));
     }
 
-    public function testSignedMalformedPolicyIsRejected(): void
+    public function testSignedMalformedPolicyIsRejected()
     {
         $expiresAt = time() + 60;
         $uriSigner = new UriSigner('secret');

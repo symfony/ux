@@ -83,7 +83,7 @@ final class UploadControllerTest extends TestCase
         }
     }
 
-    public function testDirectUploadReturnsResolvableTokenAndExactBytes(): void
+    public function testDirectUploadReturnsResolvableTokenAndExactBytes()
     {
         $content = "one request\0payload";
         $request = $this->directRequest($content, [
@@ -116,7 +116,7 @@ final class UploadControllerTest extends TestCase
         }
     }
 
-    public function testDirectUploadEnforcesCsrfPolicyNamedUploaderAndContext(): void
+    public function testDirectUploadEnforcesCsrfPolicyNamedUploaderAndContext()
     {
         $csrf = $this->createStub(CsrfTokenManagerInterface::class);
         $csrf->method('isTokenValid')->willReturnCallback(
@@ -166,7 +166,7 @@ final class UploadControllerTest extends TestCase
         self::assertSame('profile.avatar', $completed->getFieldName());
     }
 
-    public function testDirectUploadReturns413ForDeclaredOrTransmittedOversize(): void
+    public function testDirectUploadReturns413ForDeclaredOrTransmittedOversize()
     {
         $uploader = new Uploader(
             $this->storage,
@@ -192,7 +192,7 @@ final class UploadControllerTest extends TestCase
         );
     }
 
-    public function testDirectUploadIsRateLimitedAndRejectsInvalidInput(): void
+    public function testDirectUploadIsRateLimitedAndRejectsInvalidInput()
     {
         $limiter = new RateLimiterFactory(
             ['id' => 'ux_upload_direct', 'policy' => 'fixed_window', 'limit' => 1, 'interval' => '1 minute'],
@@ -214,7 +214,7 @@ final class UploadControllerTest extends TestCase
         );
     }
 
-    public function testDirectUploadRejectsMalformedMetadataAndPolicyViolations(): void
+    public function testDirectUploadRejectsMalformedMetadataAndPolicyViolations()
     {
         $policySigner = new UploadPolicySigner($this->uriSigner);
         $controller = new UploadController(
@@ -261,7 +261,7 @@ final class UploadControllerTest extends TestCase
         );
     }
 
-    public function testDirectUploadLogsUnexpectedFailure(): void
+    public function testDirectUploadLogsUnexpectedFailure()
     {
         $uploader = $this->createStub(UploaderInterface::class);
         $uploader->method('getConfig')->willReturn([
@@ -299,7 +299,7 @@ final class UploadControllerTest extends TestCase
         self::assertSame('Internal server error', json_decode($response->getContent(), true, flags: \JSON_THROW_ON_ERROR)['error']);
     }
 
-    public function testTwentyDirectFilesProduceTwentyValidTokens(): void
+    public function testTwentyDirectFilesProduceTwentyValidTokens()
     {
         $policySigner = new UploadPolicySigner($this->uriSigner);
         $tokenHandler = new UploadTokenHandler($this->uriSigner, $this->storage);
@@ -347,7 +347,7 @@ final class UploadControllerTest extends TestCase
         self::assertCount(20, $form->getData());
     }
 
-    public function testInitActionWithValidCsrfToken(): void
+    public function testInitActionWithValidCsrfToken()
     {
         $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
         $csrfTokenManager->method('isTokenValid')
@@ -368,7 +368,7 @@ final class UploadControllerTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testInitActionWithInvalidCsrfToken(): void
+    public function testInitActionWithInvalidCsrfToken()
     {
         $csrfTokenManager = $this->createStub(CsrfTokenManagerInterface::class);
         $csrfTokenManager->method('isTokenValid')
@@ -390,7 +390,7 @@ final class UploadControllerTest extends TestCase
         $this->assertSame('Invalid CSRF token', $data['error']);
     }
 
-    public function testMutationWithoutCsrfTokenIsRejectedWhenCsrfIsAvailable(): void
+    public function testMutationWithoutCsrfTokenIsRejectedWhenCsrfIsAvailable()
     {
         $pending = $this->uploader->initializeUpload('test.txt', 4, 'text/plain');
         $csrfTokenManager = $this->createStub(CsrfTokenManagerInterface::class);
@@ -409,7 +409,7 @@ final class UploadControllerTest extends TestCase
         self::assertSame([], $this->storage->listChunks($pending->uploadId));
     }
 
-    public function testSignedFormPolicyIsEnforcedAndCannotBeTampered(): void
+    public function testSignedFormPolicyIsEnforcedAndCannotBeTampered()
     {
         $policySigner = new UploadPolicySigner($this->uriSigner);
         $controller = new UploadController(
@@ -447,7 +447,7 @@ final class UploadControllerTest extends TestCase
         self::assertSame(Response::HTTP_FORBIDDEN, $controller->init($tampered)->getStatusCode());
     }
 
-    public function testResumeTokenCannotCrossSignedFormFields(): void
+    public function testResumeTokenCannotCrossSignedFormFields()
     {
         $policySigner = new UploadPolicySigner($this->uriSigner);
         $resumeTokenHandler = new ResumeTokenHandler($this->uriSigner);
@@ -484,7 +484,7 @@ final class UploadControllerTest extends TestCase
         self::assertSame(Response::HTTP_OK, $controller->resume($sameField)->getStatusCode());
     }
 
-    public function testInitActionWithoutCsrfTokenManagerStillWorks(): void
+    public function testInitActionWithoutCsrfTokenManagerStillWorks()
     {
         $controller = $this->createController(null);
 
@@ -499,7 +499,7 @@ final class UploadControllerTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testMalformedJsonBodyIsRejectedWithBadRequest(): void
+    public function testMalformedJsonBodyIsRejectedWithBadRequest()
     {
         $controller = $this->createController();
 
@@ -513,7 +513,7 @@ final class UploadControllerTest extends TestCase
         }
     }
 
-    public function testHandleChunkAcceptsIdenticalRetransmission(): void
+    public function testHandleChunkAcceptsIdenticalRetransmission()
     {
         $controller = $this->createController();
 
@@ -540,7 +540,7 @@ final class UploadControllerTest extends TestCase
         $this->assertTrue($data['success']);
     }
 
-    public function testHandleChunkRejectsOverwriteAndPreservesOriginalChunk(): void
+    public function testHandleChunkRejectsOverwriteAndPreservesOriginalChunk()
     {
         $controller = $this->createController();
 
@@ -582,7 +582,7 @@ final class UploadControllerTest extends TestCase
         }
     }
 
-    public function testHandleWithMissingSessionReturns404(): void
+    public function testHandleWithMissingSessionReturns404()
     {
         $storage = $this->createStub(StorageInterface::class);
         $storage->method('getMetadata')->willReturn(null);
@@ -597,7 +597,7 @@ final class UploadControllerTest extends TestCase
         $this->assertSame(404, $response->getStatusCode());
     }
 
-    public function testHandleReturns404WhenSessionDisappearsDuringUploaderResolution(): void
+    public function testHandleReturns404WhenSessionDisappearsDuringUploaderResolution()
     {
         $storage = $this->createMock(StorageInterface::class);
         $storage->expects(self::exactly(2))
@@ -621,7 +621,7 @@ final class UploadControllerTest extends TestCase
         self::assertSame(Response::HTTP_NOT_FOUND, $controller->handle($request, 'vanished')->getStatusCode());
     }
 
-    public function testInvalidNamedUploaderServiceReturnsInternalServerError(): void
+    public function testInvalidNamedUploaderServiceReturnsInternalServerError()
     {
         $uploaders = $this->createStub(ContainerInterface::class);
         $uploaders->method('has')->willReturn(true);
@@ -644,7 +644,7 @@ final class UploadControllerTest extends TestCase
         self::assertSame(Response::HTTP_INTERNAL_SERVER_ERROR, $controller->init($request)->getStatusCode());
     }
 
-    public function testSignedUrlCannotBeUsedByAnotherUploadContext(): void
+    public function testSignedUrlCannotBeUsedByAnotherUploadContext()
     {
         $ownerA = $this->contextResolver('owner-a', 'tenant-a', 'attachment');
         $ownerB = $this->contextResolver('owner-a', 'tenant-b', 'attachment');
@@ -680,7 +680,7 @@ final class UploadControllerTest extends TestCase
         self::assertSame(Response::HTTP_FORBIDDEN, $secondController->handle($request, $payload['uploadId'])->getStatusCode());
     }
 
-    public function testRemoveDeletesACompletedTemporaryUpload(): void
+    public function testRemoveDeletesACompletedTemporaryUpload()
     {
         $contextResolver = $this->contextResolver('owner-a', 'tenant-a', 'attachment');
         $tokenHandler = new UploadTokenHandler(
@@ -713,7 +713,7 @@ final class UploadControllerTest extends TestCase
         self::assertNull($this->storage->getMetadata($completed->id));
     }
 
-    public function testHandleWithLogger(): void
+    public function testHandleWithLogger()
     {
         $logger = $this->createMock(LoggerInterface::class);
         $logger->expects($this->once())->method('error');
@@ -732,7 +732,7 @@ final class UploadControllerTest extends TestCase
         $this->assertSame(500, $response->getStatusCode());
     }
 
-    public function testInitInternalErrorWithLogger(): void
+    public function testInitInternalErrorWithLogger()
     {
         $logger = $this->createMock(LoggerInterface::class);
         $logger->expects($this->once())->method('error');
@@ -753,7 +753,7 @@ final class UploadControllerTest extends TestCase
         $this->assertSame(500, $response->getStatusCode());
     }
 
-    public function testInitAction(): void
+    public function testInitAction()
     {
         $controller = $this->createController();
 
@@ -773,7 +773,7 @@ final class UploadControllerTest extends TestCase
         $this->assertArrayHasKey('uploadUrl', $data);
     }
 
-    public function testHandleChunk(): void
+    public function testHandleChunk()
     {
         $controller = $this->createController();
 
@@ -797,7 +797,7 @@ final class UploadControllerTest extends TestCase
         $this->assertTrue($data['success']);
     }
 
-    public function testHandleComplete(): void
+    public function testHandleComplete()
     {
         $controller = $this->createController();
         $content = 'test content';
@@ -828,7 +828,7 @@ final class UploadControllerTest extends TestCase
         $this->assertArrayHasKey('size', $data['meta']);
     }
 
-    public function testHandleCompleteCanBeRetriedAfterThePendingSessionWasRemoved(): void
+    public function testHandleCompleteCanBeRetriedAfterThePendingSessionWasRemoved()
     {
         $controller = $this->createController();
         $content = 'test content';
@@ -852,7 +852,7 @@ final class UploadControllerTest extends TestCase
         );
     }
 
-    public function testHandleStatus(): void
+    public function testHandleStatus()
     {
         $controller = $this->createController();
         $request = new Request([], [], [], [], [], [], json_encode([
@@ -873,7 +873,7 @@ final class UploadControllerTest extends TestCase
         $this->assertArrayHasKey('progress', $data);
     }
 
-    public function testHandleCancel(): void
+    public function testHandleCancel()
     {
         $controller = $this->createController();
         $request = new Request([], [], [], [], [], [], json_encode([
@@ -894,7 +894,7 @@ final class UploadControllerTest extends TestCase
         $this->assertTrue($data['success']);
     }
 
-    public function testHandleInvalidSignature(): void
+    public function testHandleInvalidSignature()
     {
         $controller = $this->createController();
         $uploadId = 'some-id';
@@ -907,7 +907,7 @@ final class UploadControllerTest extends TestCase
         $this->assertSame(403, $response->getStatusCode());
     }
 
-    public function testHandleTamperedSignature(): void
+    public function testHandleTamperedSignature()
     {
         $controller = $this->createController();
 
@@ -933,7 +933,7 @@ final class UploadControllerTest extends TestCase
         $this->assertStringContainsString('Invalid or expired', $responseData['error']);
     }
 
-    public function testHandleExpiredSignature(): void
+    public function testHandleExpiredSignature()
     {
         // Create a separate SymfonyUploadUrlGenerator with very short expiry
         $storage = new MockStorage();
@@ -980,7 +980,7 @@ final class UploadControllerTest extends TestCase
         $this->assertSame(403, $response->getStatusCode());
     }
 
-    public function testHandleMissingChunkIndexHeader(): void
+    public function testHandleMissingChunkIndexHeader()
     {
         $controller = $this->createController();
 
@@ -1004,7 +1004,7 @@ final class UploadControllerTest extends TestCase
         $this->assertStringContainsString('X-Chunk-Index', $responseData['error']);
     }
 
-    public function testHandleInvalidChunkIndex(): void
+    public function testHandleInvalidChunkIndex()
     {
         $controller = $this->createController();
 
@@ -1029,7 +1029,7 @@ final class UploadControllerTest extends TestCase
         $this->assertStringContainsString('out of range', $responseData['error']);
     }
 
-    public function testInitMissingFilename(): void
+    public function testInitMissingFilename()
     {
         $controller = $this->createController();
 
@@ -1045,7 +1045,7 @@ final class UploadControllerTest extends TestCase
         $this->assertStringContainsString('filename', $responseData['error']);
     }
 
-    public function testInitMissingFileSize(): void
+    public function testInitMissingFileSize()
     {
         $controller = $this->createController();
 
@@ -1061,7 +1061,7 @@ final class UploadControllerTest extends TestCase
         $this->assertStringContainsString('fileSize', $responseData['error']);
     }
 
-    public function testInitZeroFileSize(): void
+    public function testInitZeroFileSize()
     {
         $controller = $this->createController();
 
@@ -1078,7 +1078,7 @@ final class UploadControllerTest extends TestCase
         $this->assertStringContainsString('greater than zero', $responseData['error']);
     }
 
-    public function testMethodNotAllowed(): void
+    public function testMethodNotAllowed()
     {
         $controller = $this->createController();
 
@@ -1100,7 +1100,7 @@ final class UploadControllerTest extends TestCase
         $this->assertSame(405, $response->getStatusCode());
     }
 
-    public function testInitWithNamedUploader(): void
+    public function testInitWithNamedUploader()
     {
         $namedStorage = new MockStorage();
         $dispatcher = new EventDispatcher();
@@ -1131,7 +1131,7 @@ final class UploadControllerTest extends TestCase
         self::assertArrayHasKey('uploadId', $data);
     }
 
-    public function testInitWithUnknownUploaderReturns400(): void
+    public function testInitWithUnknownUploaderReturns400()
     {
         $controller = $this->createController();
 
@@ -1149,7 +1149,7 @@ final class UploadControllerTest extends TestCase
         $this->assertStringContainsString('Unknown uploader', $data['error']);
     }
 
-    public function testInitDefaultMimeType(): void
+    public function testInitDefaultMimeType()
     {
         $controller = $this->createController();
 
@@ -1163,7 +1163,7 @@ final class UploadControllerTest extends TestCase
         self::assertSame(200, $response->getStatusCode());
     }
 
-    public function testHandleStatusReturns404WhenSessionMissing(): void
+    public function testHandleStatusReturns404WhenSessionMissing()
     {
         $controller = $this->createController();
 
@@ -1186,7 +1186,7 @@ final class UploadControllerTest extends TestCase
         self::assertSame(404, $response->getStatusCode());
     }
 
-    public function testInitRateLimitRejectsWhenExceeded(): void
+    public function testInitRateLimitRejectsWhenExceeded()
     {
         $limiterFactory = new RateLimiterFactory(
             ['id' => 'ux_upload_init', 'policy' => 'sliding_window', 'limit' => 2, 'interval' => '1 minute'],
@@ -1210,7 +1210,7 @@ final class UploadControllerTest extends TestCase
         self::assertStringContainsString('Too many requests', json_decode($response->getContent(), true)['error']);
     }
 
-    public function testInitWithoutRateLimiterIsNotThrottled(): void
+    public function testInitWithoutRateLimiterIsNotThrottled()
     {
         $controller = $this->createController();
 
@@ -1225,7 +1225,7 @@ final class UploadControllerTest extends TestCase
         }
     }
 
-    public function testResumeRejectsMissingCsrfHandlerAndInvalidPolicy(): void
+    public function testResumeRejectsMissingCsrfHandlerAndInvalidPolicy()
     {
         $csrf = $this->createStub(CsrfTokenManagerInterface::class);
         $csrf->method('isTokenValid')->willReturn(false);
@@ -1263,7 +1263,7 @@ final class UploadControllerTest extends TestCase
         self::assertSame(Response::HTTP_FORBIDDEN, $withPolicy->resume($request)->getStatusCode());
     }
 
-    public function testResumeRejectsMissingSessionAndMismatchedContext(): void
+    public function testResumeRejectsMissingSessionAndMismatchedContext()
     {
         $handler = new ResumeTokenHandler($this->uriSigner);
         $anonymous = new UploadContext();
@@ -1302,7 +1302,7 @@ final class UploadControllerTest extends TestCase
         self::assertSame(Response::HTTP_FORBIDDEN, $ownedController->resume($ownedRequest)->getStatusCode());
     }
 
-    public function testResumeMapsDomainAndUnexpectedFailures(): void
+    public function testResumeMapsDomainAndUnexpectedFailures()
     {
         $handler = new ResumeTokenHandler($this->uriSigner);
         $token = $handler->generate('upload-1', new UploadContext());
@@ -1354,7 +1354,7 @@ final class UploadControllerTest extends TestCase
         self::assertSame(Response::HTTP_INTERNAL_SERVER_ERROR, $broken->resume($this->resumeRequest($token))->getStatusCode());
     }
 
-    public function testRemoveRejectsCsrfPolicyAndTokenFailures(): void
+    public function testRemoveRejectsCsrfPolicyAndTokenFailures()
     {
         $csrf = $this->createStub(CsrfTokenManagerInterface::class);
         $csrf->method('isTokenValid')->willReturn(false);
@@ -1382,7 +1382,7 @@ final class UploadControllerTest extends TestCase
         );
     }
 
-    public function testRemoveLogsStorageFailure(): void
+    public function testRemoveLogsStorageFailure()
     {
         $storage = $this->createStub(StorageInterface::class);
         $storage->method('delete')->willThrowException(new \RuntimeException('delete failed'));
@@ -1414,7 +1414,7 @@ final class UploadControllerTest extends TestCase
         self::assertSame(Response::HTTP_INTERNAL_SERVER_ERROR, $controller->remove($request)->getStatusCode());
     }
 
-    public function testChunkRejectsDeclaredAndActualOversizeBeforeStorage(): void
+    public function testChunkRejectsDeclaredAndActualOversizeBeforeStorage()
     {
         $uploader = $this->createMock(UploaderInterface::class);
         $uploader->method('getConfig')->willReturn([
@@ -1471,7 +1471,7 @@ final class UploadControllerTest extends TestCase
         );
     }
 
-    public function testAnonymousInitializationIsRejectedByDefault(): void
+    public function testAnonymousInitializationIsRejectedByDefault()
     {
         $controller = new UploadController(
             $this->uploader,
@@ -1486,7 +1486,7 @@ final class UploadControllerTest extends TestCase
         self::assertStringContainsString('Anonymous uploads are disabled', (string) $response->getContent());
     }
 
-    public function testAnonymousInitializationIsAcceptedWhenExplicitlyAllowed(): void
+    public function testAnonymousInitializationIsAcceptedWhenExplicitlyAllowed()
     {
         $controller = new UploadController(
             $this->uploader,
@@ -1499,7 +1499,7 @@ final class UploadControllerTest extends TestCase
         self::assertSame(Response::HTTP_OK, $controller->init($this->anonymousInitRequest())->getStatusCode());
     }
 
-    public function testAnIdentifiedOwnerNeedsNoAnonymousOptIn(): void
+    public function testAnIdentifiedOwnerNeedsNoAnonymousOptIn()
     {
         $contextResolver = $this->contextResolver('owner-1');
         $controller = new UploadController(

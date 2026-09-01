@@ -66,7 +66,7 @@ final class LocalStorage extends AbstractStorage implements PrunableStorageInter
 
         $stream = @fopen($fullPath, 'r');
         if (false === $stream) {
-            throw new StorageException(\sprintf('Cannot open file for reading: %s', $path));
+            throw new StorageException(\sprintf('Cannot open file for reading: "%s"', $path));
         }
 
         return $stream;
@@ -275,12 +275,12 @@ final class LocalStorage extends AbstractStorage implements PrunableStorageInter
 
         $partialPath = tempnam(\dirname($fullFinalPath), '.ux-upload-'.$uploadId.'-');
         if (false === $partialPath) {
-            throw new StorageException(\sprintf('Cannot create temporary assembly file beside: %s', $fullFinalPath));
+            throw new StorageException(\sprintf('Cannot create temporary assembly file beside: "%s"', $fullFinalPath));
         }
         $finalFile = fopen($partialPath, 'w');
         if (false === $finalFile) {
             $this->filesystem->remove($partialPath);
-            throw new StorageException(\sprintf('Cannot open file for writing: %s', $fullFinalPath));
+            throw new StorageException(\sprintf('Cannot open file for writing: "%s"', $fullFinalPath));
         }
         /** @var int $totalChunks */
         $totalChunks = $metadata['totalChunks'] ?? 0;
@@ -332,7 +332,7 @@ final class LocalStorage extends AbstractStorage implements PrunableStorageInter
             $this->filesystem->rename($partialPath, $fullFinalPath, true);
         } catch (\Throwable $exception) {
             $this->filesystem->remove($partialPath);
-            throw new StorageException(\sprintf('Cannot publish assembled upload: %s', $finalPath), 0, $exception);
+            throw new StorageException(\sprintf('Cannot publish assembled upload: "%s"', $finalPath), 0, $exception);
         }
 
         return new AssembledUpload(

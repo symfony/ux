@@ -49,7 +49,7 @@ final class FileUploadTypeTest extends TestCase
             ->getFormFactory();
     }
 
-    public function testRejectsUploadCreatedByAnotherUploader(): void
+    public function testRejectsUploadCreatedByAnotherUploader()
     {
         $upload = $this->stage('avatar', 'image/png', 10, 'ux_upload');
         $form = $this->formFactory->create(FileUploadType::class, options: ['uploader' => 'documents']);
@@ -59,7 +59,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertFalse($form->isSynchronized());
     }
 
-    public function testRejectsUploadLargerThanFieldLimit(): void
+    public function testRejectsUploadLargerThanFieldLimit()
     {
         $upload = $this->stage('default', 'application/pdf', 2048, 'ux_upload');
         $form = $this->formFactory->create(FileUploadType::class, options: ['max_size' => '1K']);
@@ -69,7 +69,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertFalse($form->isSynchronized());
     }
 
-    public function testRejectsUploadOutsideFieldMimePolicy(): void
+    public function testRejectsUploadOutsideFieldMimePolicy()
     {
         $upload = $this->stage('default', 'text/plain', 10, 'ux_upload');
         $form = $this->formFactory->create(FileUploadType::class, options: ['allowed_types' => ['image/*']]);
@@ -79,7 +79,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertFalse($form->isSynchronized());
     }
 
-    public function testAcceptsUploadMatchingFieldMimeWildcard(): void
+    public function testAcceptsUploadMatchingFieldMimeWildcard()
     {
         $upload = $this->stage('default', 'image/png', 10, 'ux_upload');
         $form = $this->formFactory->create(FileUploadType::class, options: ['allowed_types' => ['image/*']]);
@@ -90,7 +90,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertEquals($upload, $form->getData());
     }
 
-    public function testRejectsMoreFilesThanFieldLimit(): void
+    public function testRejectsMoreFilesThanFieldLimit()
     {
         $first = $this->stage('default', 'text/plain', 10);
         $second = $this->stage('default', 'text/plain', 10);
@@ -107,7 +107,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertFalse($form->isSynchronized());
     }
 
-    public function testSignedPolicyUsesTheCompleteFormPathForSameNamedLeafFields(): void
+    public function testSignedPolicyUsesTheCompleteFormPathForSameNamedLeafFields()
     {
         $signer = new UploadPolicySigner(new UriSigner('secret'));
         $router = $this->createStub(UrlGeneratorInterface::class);
@@ -140,7 +140,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertFalse($profile->get('attachment')->isSynchronized());
     }
 
-    public function testCollectionEntriesShareANormalizedFormPath(): void
+    public function testCollectionEntriesShareANormalizedFormPath()
     {
         $signer = new UploadPolicySigner(new UriSigner('secret'));
         $router = $this->createStub(UrlGeneratorInterface::class);
@@ -169,7 +169,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertEquals($upload, $post->get('attachments')->get('0')->getData());
     }
 
-    public function testPrototypeUploadedTokenResolvesInDynamicallyAddedRows(): void
+    public function testPrototypeUploadedTokenResolvesInDynamicallyAddedRows()
     {
         // A JS-cloned prototype row uploads under the prototype's policy: the
         // token context carries the normalized path, not a numeric index.
@@ -189,7 +189,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertEquals($upload, $post->get('attachments')->get('3')->getData());
     }
 
-    public function testCollectionUploadSurvivesEntryReindexing(): void
+    public function testCollectionUploadSurvivesEntryReindexing()
     {
         $signer = new UploadPolicySigner(new UriSigner('secret'));
         $router = $this->createStub(UrlGeneratorInterface::class);
@@ -222,7 +222,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertEquals($upload, $post->get('attachments')->get('0')->getData());
     }
 
-    public function testUploaderLimitExpansionThrowsInvalidOptionsException(): void
+    public function testUploaderLimitExpansionThrowsInvalidOptionsException()
     {
         $uploader = $this->createStub(UploaderInterface::class);
         $uploader->method('getConfig')->willReturn([
@@ -247,7 +247,7 @@ final class FileUploadTypeTest extends TestCase
         ])->createView();
     }
 
-    public function testSingleAndMultipleInitialDataRoundTripThroughSignedTokens(): void
+    public function testSingleAndMultipleInitialDataRoundTripThroughSignedTokens()
     {
         $first = $this->stage('default', 'text/plain', 10, 'ux_upload');
         $second = $this->stage('default', 'text/plain', 20, 'ux_upload');
@@ -270,7 +270,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertEquals([$first, $second], $multiple->getData());
     }
 
-    public function testEmptyAndUnsupportedModelValuesNormalizePredictably(): void
+    public function testEmptyAndUnsupportedModelValuesNormalizePredictably()
     {
         $single = $this->formFactory->create(FileUploadType::class);
         $single->submit('');
@@ -284,7 +284,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertSame('', $this->formFactory->create(FileUploadType::class, new \stdClass(), ['multiple' => true])->createView()->vars['value']);
     }
 
-    public function testMalformedSingleAndMultiplePayloadsAreRejected(): void
+    public function testMalformedSingleAndMultiplePayloadsAreRejected()
     {
         foreach ([
             ['options' => [], 'payload' => 'not-json'],
@@ -300,7 +300,7 @@ final class FileUploadTypeTest extends TestCase
         }
     }
 
-    public function testNamedUploaderConfigDrivesViewPolicyTranslationAndCsrf(): void
+    public function testNamedUploaderConfigDrivesViewPolicyTranslationAndCsrf()
     {
         $uploader = $this->createStub(UploaderInterface::class);
         $uploader->method('getConfig')->willReturn([
@@ -361,7 +361,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertSame(2048, new UploadPolicySigner(new UriSigner('secret'))->resolve($policyToken)?->maxSize);
     }
 
-    public function testDefaultUploaderConfigNarrowsSubmittedValues(): void
+    public function testDefaultUploaderConfigNarrowsSubmittedValues()
     {
         $uploader = $this->createStub(UploaderInterface::class);
         $uploader->method('getConfig')->willReturn([
@@ -395,7 +395,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertFalse($wrongType->isSynchronized());
     }
 
-    public function testUnlimitedUploaderIsInheritedByTheField(): void
+    public function testUnlimitedUploaderIsInheritedByTheField()
     {
         $uploader = $this->createStub(UploaderInterface::class);
         $uploader->method('getConfig')->willReturn([
@@ -429,7 +429,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertEquals($upload, $form->getData());
     }
 
-    public function testExplicitFieldLimitEqualToTheGlobalDefaultIsNotReplaced(): void
+    public function testExplicitFieldLimitEqualToTheGlobalDefaultIsNotReplaced()
     {
         $uploader = $this->createStub(UploaderInterface::class);
         $uploader->method('getConfig')->willReturn([
@@ -455,7 +455,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertSame(100 * 1024 * 1024, $view->vars['max_size']);
     }
 
-    public function testRejectsInvalidUploaderService(): void
+    public function testRejectsInvalidUploaderService()
     {
         $container = $this->createStub(\Psr\Container\ContainerInterface::class);
         $container->method('has')->willReturn(true);
@@ -471,7 +471,7 @@ final class FileUploadTypeTest extends TestCase
         $factory->create(FileUploadType::class, options: ['uploader' => 'documents'])->createView();
     }
 
-    public function testHelpTextFormatsSizesCountsAndMimeLabels(): void
+    public function testHelpTextFormatsSizesCountsAndMimeLabels()
     {
         $mimeTypes = [
             '.docx',
@@ -510,7 +510,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertStringContainsString('2 B', $this->formFactory->create(FileUploadType::class, options: ['max_size' => '2'])->createView()->vars['help_text']);
     }
 
-    public function testUploaderMimePolicyCannotBeExpanded(): void
+    public function testUploaderMimePolicyCannotBeExpanded()
     {
         $uploader = $this->createStub(UploaderInterface::class);
         $uploader->method('getConfig')->willReturn([
@@ -534,7 +534,7 @@ final class FileUploadTypeTest extends TestCase
         ])->createView();
     }
 
-    public function testTypeMetadataAndOptionValidation(): void
+    public function testTypeMetadataAndOptionValidation()
     {
         $type = new FileUploadType($this->createStub(UrlGeneratorInterface::class), $this->tokenHandler);
         self::assertSame(\Symfony\Component\Form\Extension\Core\Type\HiddenType::class, $type->getParent());
@@ -544,7 +544,7 @@ final class FileUploadTypeTest extends TestCase
         $this->formFactory->create(FileUploadType::class, options: ['max_files' => 0]);
     }
 
-    public function testLayoutAndPreviewAreIndependentViewOptions(): void
+    public function testLayoutAndPreviewAreIndependentViewOptions()
     {
         $compactForm = $this->formFactory->create(FileUploadType::class, options: [
             'widget_attr' => ['class' => 'upload-shell'],
@@ -565,7 +565,7 @@ final class FileUploadTypeTest extends TestCase
         self::assertTrue($dropzone->vars['multiple']);
     }
 
-    public function testRejectsUnknownLayout(): void
+    public function testRejectsUnknownLayout()
     {
         $this->expectException(InvalidOptionsException::class);
         $this->formFactory->create(FileUploadType::class, options: ['layout' => 'gallery']);

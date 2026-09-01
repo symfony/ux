@@ -18,7 +18,7 @@ use Symfony\UX\Upload\Token\ResumeTokenHandler;
 
 final class ResumeTokenHandlerTest extends TestCase
 {
-    public function testTokenIsBoundToOwnerAndExpiry(): void
+    public function testTokenIsBoundToOwnerAndExpiry()
     {
         $handler = new ResumeTokenHandler(new UriSigner('secret'));
         $token = $handler->generate('upload-1', new UploadContext('owner-a', 'tenant-a', 'field-a'));

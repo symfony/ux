@@ -120,7 +120,7 @@ final class FileValidationListener
             }
         }
 
-        throw new ValidationException(\sprintf('MIME type "%s" is not allowed. Allowed types: %s.', $detectedMimeType, implode(', ', $allowedTypes)));
+        throw new ValidationException(\sprintf('MIME type "%s" is not allowed. Allowed types: "%s".', $detectedMimeType, implode(', ', $allowedTypes)));
     }
 
     /**

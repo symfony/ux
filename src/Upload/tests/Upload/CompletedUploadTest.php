@@ -21,7 +21,7 @@ use Symfony\UX\Upload\Upload\CompletedUploadAccess;
 #[CoversClass(CompletedUpload::class)]
 final class CompletedUploadTest extends TestCase
 {
-    public function testMetadataAccessDoesNotReadStorage(): void
+    public function testMetadataAccessDoesNotReadStorage()
     {
         $storage = $this->createMock(StorageInterface::class);
         $storage->expects(self::never())->method('read');
@@ -42,7 +42,7 @@ final class CompletedUploadTest extends TestCase
         self::assertNull($upload->getFieldName());
     }
 
-    public function testOpenStreamPerformsTheExplicitRead(): void
+    public function testOpenStreamPerformsTheExplicitRead()
     {
         $storage = $this->createMock(StorageInterface::class);
         $storage->expects(self::once())
@@ -56,7 +56,7 @@ final class CompletedUploadTest extends TestCase
         fclose($stream);
     }
 
-    public function testDeleteRemovesOnlyTheTemporaryObject(): void
+    public function testDeleteRemovesOnlyTheTemporaryObject()
     {
         $storage = $this->createMock(StorageInterface::class);
         $storage->expects(self::once())
@@ -69,7 +69,7 @@ final class CompletedUploadTest extends TestCase
         $this->upload($storage)->delete();
     }
 
-    public function testJsonEncodingDoesNotExposeStoragePathOrSecurityContext(): void
+    public function testJsonEncodingDoesNotExposeStoragePathOrSecurityContext()
     {
         $encoded = json_encode($this->upload($this->createStub(StorageInterface::class)), \JSON_THROW_ON_ERROR);
 
@@ -78,7 +78,7 @@ final class CompletedUploadTest extends TestCase
         self::assertStringNotContainsString('tenantId', $encoded);
     }
 
-    public function testExpiredUploadCannotBeRead(): void
+    public function testExpiredUploadCannotBeRead()
     {
         $storage = $this->createMock(StorageInterface::class);
         $storage->expects(self::never())->method('read');
@@ -100,7 +100,7 @@ final class CompletedUploadTest extends TestCase
         $upload->openStream();
     }
 
-    public function testDetachedUploadCannotBeReadOrDeleted(): void
+    public function testDetachedUploadCannotBeReadOrDeleted()
     {
         $upload = $this->detachedUpload();
 
@@ -116,7 +116,7 @@ final class CompletedUploadTest extends TestCase
         $upload->delete();
     }
 
-    public function testAccessReturnsExistingStreamsAndRejectsUnsupportedStorageContent(): void
+    public function testAccessReturnsExistingStreamsAndRejectsUnsupportedStorageContent()
     {
         $stream = fopen('php://temp', 'w+');
         self::assertIsResource($stream);
@@ -132,7 +132,7 @@ final class CompletedUploadTest extends TestCase
         new CompletedUploadAccess($invalidStorage)->openStream('path');
     }
 
-    public function testWithMimeTypePreservesMetadataAndAccess(): void
+    public function testWithMimeTypePreservesMetadataAndAccess()
     {
         $storage = $this->createStub(StorageInterface::class);
         $storage->method('read')->willReturn('data');
@@ -145,7 +145,7 @@ final class CompletedUploadTest extends TestCase
         fclose($stream);
     }
 
-    public function testConstructorRejectsInvalidMetadata(): void
+    public function testConstructorRejectsInvalidMetadata()
     {
         $cases = [
             ['', 'default', 'path', 'file', 'text/plain', 1, 'non-empty'],
@@ -162,7 +162,7 @@ final class CompletedUploadTest extends TestCase
         }
     }
 
-    public function testConstructorRejectsInvalidDatesAndPartialChecksum(): void
+    public function testConstructorRejectsInvalidDatesAndPartialChecksum()
     {
         $now = new \DateTimeImmutable();
         try {

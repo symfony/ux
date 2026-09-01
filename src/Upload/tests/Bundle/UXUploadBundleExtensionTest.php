@@ -66,7 +66,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         $this->kernel = null;
     }
 
-    public function testLoadExtensionWithDefaultConfig(): void
+    public function testLoadExtensionWithDefaultConfig()
     {
         $container = $this->bootKernel([]);
         $uploader = $container->get(UploaderInterface::class);
@@ -78,7 +78,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         self::assertSame([], $uploader->getConfig()['allowed_types']);
     }
 
-    public function testPrependsOptionalFrameworkAndTwigConfiguration(): void
+    public function testPrependsOptionalFrameworkAndTwigConfiguration()
     {
         $builder = new \Symfony\Component\DependencyInjection\ContainerBuilder();
         $builder->setParameter('kernel.bundles', ['TwigBundle' => TwigBundle::class]);
@@ -104,7 +104,7 @@ final class UXUploadBundleExtensionTest extends TestCase
 
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
-    public function testPrependsFrameworkConfigurationWhenOptionalComponentsAreInstalled(): void
+    public function testPrependsFrameworkConfigurationWhenOptionalComponentsAreInstalled()
     {
         if (!interface_exists(\Symfony\Component\AssetMapper\AssetMapperInterface::class)) {
             eval('namespace Symfony\Component\AssetMapper; interface AssetMapperInterface {}');
@@ -136,7 +136,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         );
     }
 
-    public function testFileValidationListenerRunsAtItsDocumentedPriority(): void
+    public function testFileValidationListenerRunsAtItsDocumentedPriority()
     {
         $dispatcher = $this->bootKernel([])->get('event_dispatcher');
         self::assertInstanceOf(EventDispatcherInterface::class, $dispatcher);
@@ -156,7 +156,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         self::fail('The file validation listener is not registered for UploadAssembledEvent.');
     }
 
-    public function testSecurityContextResolverIsEnabledOnlyWhenSecurityBundleIsActive(): void
+    public function testSecurityContextResolverIsEnabledOnlyWhenSecurityBundleIsActive()
     {
         self::assertInstanceOf(
             AnonymousUploadContextResolver::class,
@@ -173,7 +173,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         );
     }
 
-    public function testLoadExtensionWithCustomConfig(): void
+    public function testLoadExtensionWithCustomConfig()
     {
         $uploader = $this->bootKernel([
             'chunk_size' => '10M',
@@ -189,7 +189,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         self::assertSame(['image/jpeg', 'image/png'], $uploader->getConfig()['allowed_types']);
     }
 
-    public function testCsrfTokenIsGeneratedAndValidatedThroughContainer(): void
+    public function testCsrfTokenIsGeneratedAndValidatedThroughContainer()
     {
         $container = $this->bootKernel(['allow_anonymous' => true]);
         $requestStack = $container->get('test.request_stack');
@@ -208,7 +208,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         $requestStack->pop();
     }
 
-    public function testLocalStorageAndPrunableStorageUseTheSameService(): void
+    public function testLocalStorageAndPrunableStorageUseTheSameService()
     {
         $container = $this->bootKernel([]);
 
@@ -216,7 +216,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         self::assertSame($container->get(StorageInterface::class), $container->get(PrunableStorageInterface::class));
     }
 
-    public function testNamedUploaderIsAvailableFromTheLocator(): void
+    public function testNamedUploaderIsAvailableFromTheLocator()
     {
         $container = $this->bootKernel([
             'uploaders' => [
@@ -235,7 +235,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         self::assertSame(['application/pdf'], $uploader->getConfig()['allowed_types']);
     }
 
-    public function testRejectsChunkSizeBelowMinimum(): void
+    public function testRejectsChunkSizeBelowMinimum()
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('"chunk_size" must be at least 64K');
@@ -243,7 +243,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         $this->bootKernel(['chunk_size' => '32K']);
     }
 
-    public function testRejectsChunkSizeAboveMaximum(): void
+    public function testRejectsChunkSizeAboveMaximum()
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('"chunk_size" cannot exceed');
@@ -251,7 +251,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         $this->bootKernel(['chunk_size' => '65M']);
     }
 
-    public function testRejectsNegativeMaximumSize(): void
+    public function testRejectsNegativeMaximumSize()
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('"max_size" cannot be negative');
@@ -259,7 +259,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         $this->bootKernel(['max_size' => -1]);
     }
 
-    public function testRejectsInvalidNamedUploaderChunkSize(): void
+    public function testRejectsInvalidNamedUploaderChunkSize()
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('"uploaders.documents.chunk_size" must be at least 64K');
@@ -267,7 +267,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         $this->bootKernel(['uploaders' => ['documents' => ['chunk_size' => '32K']]]);
     }
 
-    public function testRejectsNamedUploaderChunkSizeAboveMaximum(): void
+    public function testRejectsNamedUploaderChunkSizeAboveMaximum()
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('"uploaders.documents.chunk_size" cannot exceed');
@@ -275,14 +275,14 @@ final class UXUploadBundleExtensionTest extends TestCase
         $this->bootKernel(['uploaders' => ['documents' => ['chunk_size' => '65M']]]);
     }
 
-    public function testRejectsInvalidNamedUploaderParallelism(): void
+    public function testRejectsInvalidNamedUploaderParallelism()
     {
         $this->expectException(InvalidConfigurationException::class);
 
         $this->bootKernel(['uploaders' => ['documents' => ['parallel_chunks' => 11]]]);
     }
 
-    public function testRejectsInvalidNamedUploaderMaximumSize(): void
+    public function testRejectsInvalidNamedUploaderMaximumSize()
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('"uploaders.documents.max_size" cannot be negative');
@@ -290,7 +290,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         $this->bootKernel(['uploaders' => ['documents' => ['max_size' => -1]]]);
     }
 
-    public function testNamedUploaderInheritsGlobalDefaults(): void
+    public function testNamedUploaderInheritsGlobalDefaults()
     {
         $container = $this->bootKernel([
             'chunk_size' => '8M',
@@ -307,7 +307,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         self::assertSame(['application/pdf'], $namedConfig['allowed_types']);
     }
 
-    public function testNamedUploaderCanExplicitlyAllowAllTypes(): void
+    public function testNamedUploaderCanExplicitlyAllowAllTypes()
     {
         $container = $this->bootKernel([
             'allowed_types' => ['application/pdf'],
@@ -319,7 +319,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         self::assertSame([], $uploader->getConfig()['allowed_types']);
     }
 
-    public function testNamedUploaderAcceptsAllSupportedOptions(): void
+    public function testNamedUploaderAcceptsAllSupportedOptions()
     {
         $container = $this->bootKernel([
             'uploaders' => [
@@ -345,7 +345,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         self::assertFalse($pending->compression);
     }
 
-    public function testIntegerMaximumSizeIsPreserved(): void
+    public function testIntegerMaximumSizeIsPreserved()
     {
         $config = $this->bootKernel(['max_size' => 10_000_000])
             ->get(UploaderInterface::class)
@@ -354,7 +354,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         self::assertSame(10_000_000, $config['max_size']);
     }
 
-    public function testFlysystemRequiresAnExplicitService(): void
+    public function testFlysystemRequiresAnExplicitService()
     {
         if (!interface_exists(FilesystemOperator::class)) {
             self::markTestSkipped('league/flysystem is not installed.');
@@ -366,7 +366,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         $this->bootKernel(['storage' => 'flysystem']);
     }
 
-    public function testFlysystemConfigurationExplainsMissingOptionalDependency(): void
+    public function testFlysystemConfigurationExplainsMissingOptionalDependency()
     {
         NativeFunctions::mock(
             'Symfony\\UX\\Upload\\interface_exists',
@@ -383,7 +383,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         ]);
     }
 
-    public function testFlysystemUsesTheConfiguredService(): void
+    public function testFlysystemUsesTheConfiguredService()
     {
         if (!interface_exists(FilesystemOperator::class)) {
             self::markTestSkipped('league/flysystem is not installed.');
@@ -407,7 +407,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         self::assertInstanceOf(\Symfony\UX\Upload\Storage\FlysystemStorage::class, $storage);
     }
 
-    public function testDistributedDeploymentRequiresSharedLock(): void
+    public function testDistributedDeploymentRequiresSharedLock()
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('"ux_upload.shared_lock: true"');
@@ -417,7 +417,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         ]);
     }
 
-    public function testDistributedDeploymentRejectsLocalStorage(): void
+    public function testDistributedDeploymentRejectsLocalStorage()
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('cannot use "storage: local"');
@@ -428,7 +428,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         ]);
     }
 
-    public function testRateLimiterIsDisabledByDefault(): void
+    public function testRateLimiterIsDisabledByDefault()
     {
         $container = $this->bootKernel(['allow_anonymous' => true]);
         $requestStack = $container->get('test.request_stack');
@@ -444,7 +444,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         }
     }
 
-    public function testConfiguredFormTokenTtlIsApplied(): void
+    public function testConfiguredFormTokenTtlIsApplied()
     {
         $container = $this->bootKernel(['form_token_ttl' => 120]);
         $now = new \DateTimeImmutable();
@@ -469,7 +469,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         self::assertSame($upload->expiresAt->getTimestamp(), (int) $payload['e']);
     }
 
-    public function testConfiguredRateLimiterThrottlesInitialization(): void
+    public function testConfiguredRateLimiterThrottlesInitialization()
     {
         if (!class_exists(\Symfony\Component\RateLimiter\RateLimiterFactory::class)) {
             self::markTestSkipped('symfony/rate-limiter is not installed.');
@@ -492,7 +492,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         $requestStack->pop();
     }
 
-    public function testRemovedLocalStoragePublicPathIsRejected(): void
+    public function testRemovedLocalStoragePublicPathIsRejected()
     {
         $this->expectException(InvalidConfigurationException::class);
 
@@ -504,7 +504,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         ]);
     }
 
-    public function testCleanupCommandIsRegisteredWhenConsoleIsInstalled(): void
+    public function testCleanupCommandIsRegisteredWhenConsoleIsInstalled()
     {
         if (!class_exists(\Symfony\Component\Console\Command\Command::class)) {
             self::markTestSkipped('symfony/console is not installed.');
@@ -513,7 +513,7 @@ final class UXUploadBundleExtensionTest extends TestCase
         self::assertInstanceOf(CleanupCommand::class, $this->bootKernel([])->get('test.cleanup_command'));
     }
 
-    public function testBundlePathPointsToThePackageRoot(): void
+    public function testBundlePathPointsToThePackageRoot()
     {
         self::assertSame(\dirname(__DIR__, 2), new UXUploadBundle()->getPath());
     }

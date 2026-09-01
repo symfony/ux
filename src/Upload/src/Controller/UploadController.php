@@ -83,8 +83,8 @@ final class UploadController
             }
 
             /** @var array{filename?: string, fileSize?: int, mimeType?: string, uploader?: string, hash?: string, hashAlgorithm?: string, policyToken?: string} $payload */
-            $filename = $payload['filename'] ?? throw new InvalidArgumentException('Missing "filename" field in request body');
-            $fileSize = $payload['fileSize'] ?? throw new InvalidArgumentException('Missing "fileSize" field in request body');
+            $filename = $payload['filename'] ?? throw new InvalidArgumentException('Missing "filename" field in request body.');
+            $fileSize = $payload['fileSize'] ?? throw new InvalidArgumentException('Missing "fileSize" field in request body.');
             $mimeType = $payload['mimeType'] ?? 'application/octet-stream';
             $hash = isset($payload['hash']) && \is_string($payload['hash']) ? $payload['hash'] : null;
             $hashAlgorithm = isset($payload['hashAlgorithm']) && \is_string($payload['hashAlgorithm']) ? $payload['hashAlgorithm'] : null;
@@ -409,7 +409,7 @@ final class UploadController
     {
         $chunkIndex = $request->headers->get('X-Chunk-Index');
         if (!is_numeric($chunkIndex)) {
-            throw new InvalidArgumentException('Missing X-Chunk-Index header');
+            throw new InvalidArgumentException('Missing X-Chunk-Index header.');
         }
 
         $chunkIndex = (int) $chunkIndex;

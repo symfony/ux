@@ -18,7 +18,7 @@ use Symfony\UX\Upload\Event\UploadStartedEvent;
 
 final class UploadEventsTest extends TestCase
 {
-    public function testStartedEventExposesTheTransferContract(): void
+    public function testStartedEventExposesTheTransferContract()
     {
         $event = new UploadStartedEvent(
             uploadId: 'upload-1',
@@ -43,7 +43,7 @@ final class UploadEventsTest extends TestCase
         self::assertSame(2, $event->getParallelChunks());
     }
 
-    public function testProgressEventExposesPersistedChunks(): void
+    public function testProgressEventExposesPersistedChunks()
     {
         $event = new UploadProgressEvent('upload-1', 2, 4, 75, 3, [0, 1, 2]);
 
@@ -55,7 +55,7 @@ final class UploadEventsTest extends TestCase
         self::assertSame([0, 1, 2], $event->getChunkIndices());
     }
 
-    public function testFailedEventPreservesTheOriginalError(): void
+    public function testFailedEventPreservesTheOriginalError()
     {
         $error = new \RuntimeException('storage unavailable');
         $event = new UploadFailedEvent('upload-1', $error);

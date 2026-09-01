@@ -44,7 +44,7 @@ final class CompletedUploadStorageContractTest extends TestCase
     }
 
     #[DataProvider('storageNames')]
-    public function testCompletedUploadReadsIdenticalBytes(string $storageName): void
+    public function testCompletedUploadReadsIdenticalBytes(string $storageName)
     {
         $storage = $this->createStorage($storageName);
         $content = str_repeat('0123456789abcdef', 131_072);
@@ -59,7 +59,7 @@ final class CompletedUploadStorageContractTest extends TestCase
     }
 
     #[DataProvider('storageNames')]
-    public function testCompletedUploadDeletionIsIdempotent(string $storageName): void
+    public function testCompletedUploadDeletionIsIdempotent(string $storageName)
     {
         $storage = $this->createStorage($storageName);
         $upload = new CompletedUploadFactory()->create($storage);
@@ -71,7 +71,7 @@ final class CompletedUploadStorageContractTest extends TestCase
     }
 
     #[DataProvider('storageNames')]
-    public function testCleanupWinningTheDeleteRaceRemainsSafe(string $storageName): void
+    public function testCleanupWinningTheDeleteRaceRemainsSafe(string $storageName)
     {
         $storage = $this->createStorage($storageName);
         self::assertInstanceOf(PrunableStorageInterface::class, $storage);

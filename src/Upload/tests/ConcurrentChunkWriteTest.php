@@ -45,7 +45,7 @@ final class ConcurrentChunkWriteTest extends TestCase
         $this->filesystem->remove($this->root);
     }
 
-    public function testConcurrentWritesToSameChunkYieldExactlyOneWinner(): void
+    public function testConcurrentWritesToSameChunkYieldExactlyOneWinner()
     {
         $tempDir = $this->root.'/tmp';
         $directory = $this->root.'/files';

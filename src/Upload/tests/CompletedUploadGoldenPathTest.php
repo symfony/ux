@@ -29,7 +29,7 @@ use Symfony\UX\Upload\Url\UploadUrlGeneratorInterface;
 
 final class CompletedUploadGoldenPathTest extends TestCase
 {
-    public function testAssemblyFormRoundTripAndLazyApplicationRead(): void
+    public function testAssemblyFormRoundTripAndLazyApplicationRead()
     {
         $storage = new MockStorage();
         $dispatcher = new EventDispatcher();
@@ -68,7 +68,7 @@ final class CompletedUploadGoldenPathTest extends TestCase
         }
     }
 
-    public function testTechnicalValidationRunsBeforeCompletionReturns(): void
+    public function testTechnicalValidationRunsBeforeCompletionReturns()
     {
         $storage = new MockStorage();
         $dispatcher = new EventDispatcher();
@@ -91,7 +91,7 @@ final class CompletedUploadGoldenPathTest extends TestCase
         self::assertNull($storage->getMetadata($pending->uploadId));
     }
 
-    public function testTransientCompletionFailureCanRetryWithoutRetransmittingChunks(): void
+    public function testTransientCompletionFailureCanRetryWithoutRetransmittingChunks()
     {
         $storage = new MockStorage();
         $dispatcher = new EventDispatcher();

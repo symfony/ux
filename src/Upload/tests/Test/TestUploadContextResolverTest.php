@@ -23,7 +23,7 @@ use Symfony\UX\Upload\Token\UploadTokenHandler;
 #[CoversClass(TestUploadContextResolver::class)]
 final class TestUploadContextResolverTest extends TestCase
 {
-    public function testItImplementsTheProductionContractWithDeterministicDefaults(): void
+    public function testItImplementsTheProductionContractWithDeterministicDefaults()
     {
         $resolver = new TestUploadContextResolver();
 
@@ -33,7 +33,7 @@ final class TestUploadContextResolverTest extends TestCase
         self::assertNull($resolver->resolve()->fieldName);
     }
 
-    public function testEveryContextValueCanBeOverriddenIncludingAnonymousOwnership(): void
+    public function testEveryContextValueCanBeOverriddenIncludingAnonymousOwnership()
     {
         $context = new TestUploadContextResolver(
             ownerId: null,
@@ -46,7 +46,7 @@ final class TestUploadContextResolverTest extends TestCase
         self::assertSame('profile.avatar', $context->fieldName);
     }
 
-    public function testItDrivesRealOwnerBoundFormTokens(): void
+    public function testItDrivesRealOwnerBoundFormTokens()
     {
         $storage = new InMemoryStorage();
         $upload = new CompletedUploadFactory(ownerId: 'user-42')->create($storage);

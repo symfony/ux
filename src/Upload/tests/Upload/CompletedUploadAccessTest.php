@@ -26,7 +26,7 @@ final class CompletedUploadAccessTest extends TestCase
         NativeFunctions::reset();
     }
 
-    public function testOpenStreamReturnsStorageStream(): void
+    public function testOpenStreamReturnsStorageStream()
     {
         $stream = fopen('php://temp', 'w+');
         self::assertIsResource($stream);
@@ -38,7 +38,7 @@ final class CompletedUploadAccessTest extends TestCase
         fclose($stream);
     }
 
-    public function testOpenStreamRejectsUnsupportedStorageContent(): void
+    public function testOpenStreamRejectsUnsupportedStorageContent()
     {
         $storage = $this->createStub(StorageInterface::class);
         $storage->method('read')->willReturn(123);
@@ -49,7 +49,7 @@ final class CompletedUploadAccessTest extends TestCase
         new CompletedUploadAccess($storage)->openStream('path');
     }
 
-    public function testOpenStreamReportsTemporaryStreamCreationFailure(): void
+    public function testOpenStreamReportsTemporaryStreamCreationFailure()
     {
         $storage = $this->createStub(StorageInterface::class);
         $storage->method('read')->willReturn('data');
@@ -61,7 +61,7 @@ final class CompletedUploadAccessTest extends TestCase
         new CompletedUploadAccess($storage)->openStream('path');
     }
 
-    public function testOpenStreamClosesStreamAfterNativeWriteFailure(): void
+    public function testOpenStreamClosesStreamAfterNativeWriteFailure()
     {
         $storage = $this->createStub(StorageInterface::class);
         $storage->method('read')->willReturn('data');

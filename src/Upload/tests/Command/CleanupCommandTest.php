@@ -43,7 +43,7 @@ final class CleanupCommandTest extends TestCase
         }
     }
 
-    public function testExecuteWithNoUploads(): void
+    public function testExecuteWithNoUploads()
     {
         $command = new CleanupCommand($this->storage);
         $application = new Application();
@@ -56,7 +56,7 @@ final class CleanupCommandTest extends TestCase
         $this->assertStringContainsString('Pruning operation completed', $commandTester->getDisplay());
     }
 
-    public function testExecuteWithOldUpload(): void
+    public function testExecuteWithOldUpload()
     {
         $uploadId = $this->createOldUpload(48); // 48 hours old
 
@@ -72,7 +72,7 @@ final class CleanupCommandTest extends TestCase
         $this->assertEmpty($this->storage->listChunks($uploadId));
     }
 
-    public function testExecuteWithRecentUpload(): void
+    public function testExecuteWithRecentUpload()
     {
         $uploadId = $this->createOldUpload(1); // 1 hour old
 
@@ -88,7 +88,7 @@ final class CleanupCommandTest extends TestCase
         $this->assertNotEmpty($this->storage->listChunks($uploadId));
     }
 
-    public function testExecuteWithDaysOption(): void
+    public function testExecuteWithDaysOption()
     {
         $uploadId = $this->createOldUpload(72); // 72 hours = 3 days
 
@@ -104,7 +104,7 @@ final class CleanupCommandTest extends TestCase
         $this->assertEmpty($this->storage->listChunks($uploadId));
     }
 
-    public function testParseAgeWithInvalidFormat(): void
+    public function testParseAgeWithInvalidFormat()
     {
         $command = new CleanupCommand($this->storage);
         $application = new Application();
@@ -118,14 +118,14 @@ final class CleanupCommandTest extends TestCase
         $commandTester->execute(['--age' => 'invalid']);
     }
 
-    public function testCommandHasCorrectName(): void
+    public function testCommandHasCorrectName()
     {
         $command = new CleanupCommand($this->storage);
 
         $this->assertSame('ux:upload:cleanup', $command->getName());
     }
 
-    public function testCommandHasDescription(): void
+    public function testCommandHasDescription()
     {
         $command = new CleanupCommand($this->storage);
 

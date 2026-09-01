@@ -24,7 +24,7 @@ use Symfony\UX\Upload\Upload\CompletedUploadAccess;
 #[CoversClass(UploadTokenHandler::class)]
 final class UploadTokenHandlerTest extends TestCase
 {
-    public function testResolveHydratesSignedMetadataWithoutReadingStorage(): void
+    public function testResolveHydratesSignedMetadataWithoutReadingStorage()
     {
         $storage = $this->createMock(StorageInterface::class);
         $storage->expects(self::never())->method('read');
@@ -43,7 +43,7 @@ final class UploadTokenHandlerTest extends TestCase
         self::assertSame($upload->expiresAt->getTimestamp(), $resolved->expiresAt->getTimestamp());
     }
 
-    public function testResolveRejectsTamperingAndAnotherOwner(): void
+    public function testResolveRejectsTamperingAndAnotherOwner()
     {
         $storage = $this->createStub(StorageInterface::class);
         $handler = new UploadTokenHandler(new UriSigner('secret'), $storage);
@@ -54,7 +54,7 @@ final class UploadTokenHandlerTest extends TestCase
         self::assertNull($handler->resolve($token, new UploadContext(ownerId: 'user-2')));
     }
 
-    public function testLiveTargetReplacesFieldBindingButKeepsIdentityAndUploaderBinding(): void
+    public function testLiveTargetReplacesFieldBindingButKeepsIdentityAndUploaderBinding()
     {
         $storage = $this->createStub(StorageInterface::class);
         $handler = new UploadTokenHandler(
@@ -90,7 +90,7 @@ final class UploadTokenHandlerTest extends TestCase
         self::assertNull($otherOwner->resolveForLiveTarget($token, 'avatar'));
     }
 
-    public function testTokenExpiryDoesNotReplaceUploadExpiryMetadata(): void
+    public function testTokenExpiryDoesNotReplaceUploadExpiryMetadata()
     {
         $storage = $this->createStub(StorageInterface::class);
         $handler = new UploadTokenHandler(new UriSigner('secret'), $storage, ttl: 60);
@@ -103,7 +103,7 @@ final class UploadTokenHandlerTest extends TestCase
         self::assertLessThanOrEqual(time() + 60, (int) $payload['x']);
     }
 
-    public function testRejectsUnsafeCompletedPrefix(): void
+    public function testRejectsUnsafeCompletedPrefix()
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -114,7 +114,7 @@ final class UploadTokenHandlerTest extends TestCase
         );
     }
 
-    public function testRejectsNonPositiveTokenTtl(): void
+    public function testRejectsNonPositiveTokenTtl()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('greater than zero');
@@ -122,7 +122,7 @@ final class UploadTokenHandlerTest extends TestCase
         new UploadTokenHandler(new UriSigner('secret'), $this->createStub(StorageInterface::class), ttl: 0);
     }
 
-    public function testGenerateRejectsAnotherContextAndUnsafePath(): void
+    public function testGenerateRejectsAnotherContextAndUnsafePath()
     {
         $handler = new UploadTokenHandler(new UriSigner('secret'), $this->createStub(StorageInterface::class));
 
@@ -150,7 +150,7 @@ final class UploadTokenHandlerTest extends TestCase
         $handler->generate($unsafe);
     }
 
-    public function testAcceptsPrebuiltCompletedUploadAccess(): void
+    public function testAcceptsPrebuiltCompletedUploadAccess()
     {
         $storage = $this->createStub(StorageInterface::class);
         $handler = new UploadTokenHandler(new UriSigner('secret'), new CompletedUploadAccess($storage));
@@ -158,7 +158,7 @@ final class UploadTokenHandlerTest extends TestCase
         self::assertNotNull($handler->resolve($handler->generate($this->upload())));
     }
 
-    public function testResolveRejectsOversizedStructuredAndIncompleteTokens(): void
+    public function testResolveRejectsOversizedStructuredAndIncompleteTokens()
     {
         $signer = new UriSigner('secret');
         $handler = new UploadTokenHandler($signer, $this->createStub(StorageInterface::class));
@@ -168,7 +168,7 @@ final class UploadTokenHandlerTest extends TestCase
         self::assertNull($handler->resolve($this->signPayload($signer, ['i' => 'only-id'])));
     }
 
-    public function testResolveRejectsExpiredUnsafeAndPartialChecksumPayloads(): void
+    public function testResolveRejectsExpiredUnsafeAndPartialChecksumPayloads()
     {
         $signer = new UriSigner('secret');
         $handler = new UploadTokenHandler($signer, $this->createStub(StorageInterface::class));
@@ -179,7 +179,7 @@ final class UploadTokenHandlerTest extends TestCase
         self::assertNull($handler->resolve($this->signPayload($signer, [...$valid, 'h' => 'checksum'])));
     }
 
-    public function testResolveRejectsMetadataThatCannotBuildACompletedUpload(): void
+    public function testResolveRejectsMetadataThatCannotBuildACompletedUpload()
     {
         $signer = new UriSigner('secret');
         $handler = new UploadTokenHandler($signer, $this->createStub(StorageInterface::class));

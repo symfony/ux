@@ -46,7 +46,7 @@ final class LocalStorageTest extends TestCase
         }
     }
 
-    public function testWriteAndRead(): void
+    public function testWriteAndRead()
     {
         $path = 'test.txt';
         $content = 'Hello World';
@@ -61,12 +61,12 @@ final class LocalStorageTest extends TestCase
         fclose($stream);
     }
 
-    public function testIsNotDistributed(): void
+    public function testIsNotDistributed()
     {
         self::assertFalse($this->storage->isDistributed());
     }
 
-    public function testDelete(): void
+    public function testDelete()
     {
         $path = 'test.txt';
         $this->storage->write($path, 'content');
@@ -76,7 +76,7 @@ final class LocalStorageTest extends TestCase
         $this->assertFalse($this->storage->exists($path));
     }
 
-    public function testChunkedUploadFlow(): void
+    public function testChunkedUploadFlow()
     {
         $uploadId = 'upload-123';
         $metadata = [
@@ -108,7 +108,7 @@ final class LocalStorageTest extends TestCase
         $this->assertEmpty($this->storage->listChunks($uploadId));
     }
 
-    public function testAtomicChunkWriteIsIdempotentAndRejectsDivergentContent(): void
+    public function testAtomicChunkWriteIsIdempotentAndRejectsDivergentContent()
     {
         $this->storage->initiate('atomic', ['filename' => 'file.txt', 'fileSize' => 4, 'totalChunks' => 1]);
 
@@ -120,7 +120,7 @@ final class LocalStorageTest extends TestCase
         $this->storage->storeChunk('atomic', 0, 'evil', hash('sha256', 'evil'));
     }
 
-    public function testCountsPendingUploadsByOwner(): void
+    public function testCountsPendingUploadsByOwner()
     {
         $this->storage->initiate('owned-1', ['ownerId' => 'one']);
         $this->storage->initiate('owned-2', ['ownerId' => 'one']);
@@ -135,7 +135,7 @@ final class LocalStorageTest extends TestCase
         self::assertSame(0, $this->storage->countPendingByContext(new UploadContext()));
     }
 
-    public function testGetUploadDirThrowsForInvalidId(): void
+    public function testGetUploadDirThrowsForInvalidId()
     {
         $reflection = new \ReflectionClass(LocalStorage::class);
         $method = $reflection->getMethod('getUploadDir');
@@ -145,7 +145,7 @@ final class LocalStorageTest extends TestCase
         $method->invoke($this->storage, '../invalid');
     }
 
-    public function testRejectsPathTraversalInUploadId(): void
+    public function testRejectsPathTraversalInUploadId()
     {
         $this->expectException(StorageException::class);
         $this->expectExceptionMessage('Invalid upload ID');
@@ -153,7 +153,7 @@ final class LocalStorageTest extends TestCase
         $this->storage->initiate('../etc/passwd', ['filename' => 'test.txt', 'totalChunks' => 1]);
     }
 
-    public function testRejectsSlashInUploadId(): void
+    public function testRejectsSlashInUploadId()
     {
         $this->expectException(StorageException::class);
         $this->expectExceptionMessage('Invalid upload ID');
@@ -161,7 +161,7 @@ final class LocalStorageTest extends TestCase
         $this->storage->listChunks('foo/bar');
     }
 
-    public function testAcceptsValidUploadId(): void
+    public function testAcceptsValidUploadId()
     {
         // 32-char lowercase hex, the format produced by Uploader::initializeUpload().
         $uploadId = bin2hex(random_bytes(16));
@@ -174,7 +174,7 @@ final class LocalStorageTest extends TestCase
         $this->assertNotNull($this->storage->getMetadata($uploadId));
     }
 
-    public function testRejectsDotsInUploadId(): void
+    public function testRejectsDotsInUploadId()
     {
         $this->expectException(StorageException::class);
         $this->expectExceptionMessage('Invalid upload ID');
@@ -182,7 +182,7 @@ final class LocalStorageTest extends TestCase
         $this->storage->initiate('upload.123', ['filename' => 'test.txt', 'totalChunks' => 1]);
     }
 
-    public function testReadThrowsOnMissingFile(): void
+    public function testReadThrowsOnMissingFile()
     {
         $this->expectException(StorageException::class);
         $this->expectExceptionMessage('not found');
@@ -190,7 +190,7 @@ final class LocalStorageTest extends TestCase
         $this->storage->read('nonexistent.txt');
     }
 
-    public function testReadThrowsWhenFileCannotBeOpened(): void
+    public function testReadThrowsWhenFileCannotBeOpened()
     {
         $path = 'unreadable.txt';
         $this->storage->write($path, 'content');
@@ -208,7 +208,7 @@ final class LocalStorageTest extends TestCase
         }
     }
 
-    public function testPruneDeletesStaleUploads(): void
+    public function testPruneDeletesStaleUploads()
     {
         $uploadId = 'stale-upload';
         $this->storage->initiate($uploadId, [
@@ -225,7 +225,7 @@ final class LocalStorageTest extends TestCase
         self::assertNull($this->storage->getMetadata($uploadId));
     }
 
-    public function testPruneKeepsFreshUploads(): void
+    public function testPruneKeepsFreshUploads()
     {
         $uploadId = 'fresh-upload';
         $this->storage->initiate($uploadId, [
@@ -240,7 +240,7 @@ final class LocalStorageTest extends TestCase
         self::assertNotNull($this->storage->getMetadata($uploadId));
     }
 
-    public function testPruneDeletesOnlyExpiredGeneratedCompletedFiles(): void
+    public function testPruneDeletesOnlyExpiredGeneratedCompletedFiles()
     {
         $expired = '.tmp/completed/'.(time() - 1).'-0123456789abcdef0123456789abcdef.txt';
         $fresh = '.tmp/completed/'.(time() + 3600).'-fedcba9876543210fedcba9876543210.txt';
@@ -258,7 +258,7 @@ final class LocalStorageTest extends TestCase
         self::assertTrue($this->storage->exists($unrecognized));
     }
 
-    public function testPruneDeletesUploadWithMissingMetadata(): void
+    public function testPruneDeletesUploadWithMissingMetadata()
     {
         // Create an upload directory without metadata.json
         $uploadDir = $this->tempDir.'/.tmp/orphan-upload';
@@ -272,7 +272,7 @@ final class LocalStorageTest extends TestCase
         self::assertDirectoryDoesNotExist($uploadDir);
     }
 
-    public function testPruneDeletesUploadWithInvalidJson(): void
+    public function testPruneDeletesUploadWithInvalidJson()
     {
         $uploadDir = $this->tempDir.'/.tmp/corrupt-upload';
         $this->filesystem->mkdir($uploadDir);
@@ -285,7 +285,7 @@ final class LocalStorageTest extends TestCase
         self::assertDirectoryDoesNotExist($uploadDir);
     }
 
-    public function testPruneNoOpWhenTempDirMissing(): void
+    public function testPruneNoOpWhenTempDirMissing()
     {
         // Remove the temp dir completely
         $tempDir = $this->tempDir.'/.tmp';
@@ -299,12 +299,12 @@ final class LocalStorageTest extends TestCase
         self::assertTrue(true);
     }
 
-    public function testGetMetadataReturnsNullForMissingSession(): void
+    public function testGetMetadataReturnsNullForMissingSession()
     {
         self::assertNull($this->storage->getMetadata('nonexistent'));
     }
 
-    public function testRejectsScalarAndListMetadata(): void
+    public function testRejectsScalarAndListMetadata()
     {
         foreach (['true', '["value"]'] as $index => $json) {
             $uploadId = 'invalid-metadata-'.$index;
@@ -321,7 +321,7 @@ final class LocalStorageTest extends TestCase
         }
     }
 
-    public function testPendingCountIgnoresCorruptMetadata(): void
+    public function testPendingCountIgnoresCorruptMetadata()
     {
         $directory = $this->tempDir.'/.tmp/corrupt-count';
         $this->filesystem->mkdir($directory);
@@ -330,17 +330,17 @@ final class LocalStorageTest extends TestCase
         self::assertSame(0, $this->storage->countPendingByContext(new UploadContext()));
     }
 
-    public function testListChunksReturnsEmptyForMissingDir(): void
+    public function testListChunksReturnsEmptyForMissingDir()
     {
         self::assertSame([], $this->storage->listChunks('nonexistent'));
     }
 
-    public function testGetDirectoryReturnsConfiguredPath(): void
+    public function testGetDirectoryReturnsConfiguredPath()
     {
         self::assertSame($this->tempDir, $this->storage->getDirectory());
     }
 
-    public function testAssemblePreservesFileExtension(): void
+    public function testAssemblePreservesFileExtension()
     {
         $uploadId = 'ext-test';
         $this->storage->initiate($uploadId, [
@@ -355,7 +355,7 @@ final class LocalStorageTest extends TestCase
         self::assertStringEndsWith('.pdf', $path);
     }
 
-    public function testAssembleWithMultipleChunks(): void
+    public function testAssembleWithMultipleChunks()
     {
         $uploadId = 'multi-chunk';
         $this->storage->initiate($uploadId, [
@@ -374,7 +374,7 @@ final class LocalStorageTest extends TestCase
         fclose($stream);
     }
 
-    public function testVerifiedAssemblyMeasuresAndHashesDuringCopy(): void
+    public function testVerifiedAssemblyMeasuresAndHashesDuringCopy()
     {
         $uploadId = 'verified';
         $this->storage->initiate($uploadId, [
@@ -392,14 +392,14 @@ final class LocalStorageTest extends TestCase
         self::assertTrue($this->storage->exists($assembled->path));
     }
 
-    public function testVerifiedAssemblyWithMissingSessionThrows(): void
+    public function testVerifiedAssemblyWithMissingSessionThrows()
     {
         $this->expectException(\Symfony\UX\Upload\Exception\UploadSessionNotFoundException::class);
 
         $this->storage->assemble('missing');
     }
 
-    public function testAssemblyReplacesAnUncommittedObjectLeftByACrash(): void
+    public function testAssemblyReplacesAnUncommittedObjectLeftByACrash()
     {
         $uploadId = str_repeat('a', 32);
         $expiresAt = time() + 3600;
@@ -424,7 +424,7 @@ final class LocalStorageTest extends TestCase
         self::assertSame(hash('sha256', 'good'), $assembled->hash);
     }
 
-    public function testPruneSkipsAnUploadWhoseLifecycleLockIsHeld(): void
+    public function testPruneSkipsAnUploadWhoseLifecycleLockIsHeld()
     {
         $lockFactory = new LockFactory(new FlockStore());
         $storage = new LocalStorage($this->tempDir, $this->tempDir.'/.tmp-lock', $this->filesystem, lockFactory: $lockFactory);
@@ -445,7 +445,7 @@ final class LocalStorageTest extends TestCase
         self::assertNull($storage->getMetadata($uploadId));
     }
 
-    public function testPruneDeletesExpiredCompletedSessionAndObject(): void
+    public function testPruneDeletesExpiredCompletedSessionAndObject()
     {
         $uploadId = 'expired-completed';
         $path = '.tmp/completed/'.(time() + 3600).'-0123456789abcdef0123456789abcdef.txt';
@@ -461,7 +461,7 @@ final class LocalStorageTest extends TestCase
         self::assertNull($this->storage->getMetadata($uploadId));
     }
 
-    public function testAssemblyWrapsPublicationFailureAndRemovesPartialFile(): void
+    public function testAssemblyWrapsPublicationFailureAndRemovesPartialFile()
     {
         $filesystem = $this->getMockBuilder(Filesystem::class)->onlyMethods(['rename'])->getMock();
         $filesystem->expects(self::atLeastOnce())->method('rename')->willReturnCallback(static function (string $origin, string $target, bool $overwrite = false): void {
@@ -485,7 +485,7 @@ final class LocalStorageTest extends TestCase
         $storage->assemble('publish-failure');
     }
 
-    public function testAssembleThrowsWhenFileCannotBeOpenedForWriting(): void
+    public function testAssembleThrowsWhenFileCannotBeOpenedForWriting()
     {
         $uploadId = 'fail-id';
         $this->storage->initiate($uploadId, ['filename' => 'f', 'totalChunks' => 1]);
@@ -498,7 +498,7 @@ final class LocalStorageTest extends TestCase
         $this->storage->assemble($uploadId);
     }
 
-    public function testAtomicChunkWriteReportsNativeWriteFailure(): void
+    public function testAtomicChunkWriteReportsNativeWriteFailure()
     {
         $this->storage->initiate('write-failure', ['filename' => 'f', 'totalChunks' => 1]);
         NativeFunctions::mock('Symfony\\UX\\Upload\\Storage\\fwrite', false);
@@ -509,7 +509,7 @@ final class LocalStorageTest extends TestCase
         $this->storage->storeChunk('write-failure', 0, 'data', hash('sha256', 'data'));
     }
 
-    public function testAssemblyReportsTemporaryFileCreationFailure(): void
+    public function testAssemblyReportsTemporaryFileCreationFailure()
     {
         $this->prepareAssembly('tempnam-failure');
         NativeFunctions::mock('Symfony\\UX\\Upload\\Storage\\tempnam', false);
@@ -520,7 +520,7 @@ final class LocalStorageTest extends TestCase
         $this->storage->assemble('tempnam-failure');
     }
 
-    public function testAssemblyReportsChunkOpenFailure(): void
+    public function testAssemblyReportsChunkOpenFailure()
     {
         $this->prepareAssembly('chunk-open-failure');
         NativeFunctions::mock(
@@ -535,7 +535,7 @@ final class LocalStorageTest extends TestCase
         $this->storage->assemble('chunk-open-failure');
     }
 
-    public function testAssemblyReportsChunkReadFailure(): void
+    public function testAssemblyReportsChunkReadFailure()
     {
         $this->prepareAssembly('chunk-read-failure');
         NativeFunctions::mock('Symfony\\UX\\Upload\\Storage\\fread', false);
@@ -546,7 +546,7 @@ final class LocalStorageTest extends TestCase
         $this->storage->assemble('chunk-read-failure');
     }
 
-    public function testAssemblyIgnoresAnEmptyIntermediateRead(): void
+    public function testAssemblyIgnoresAnEmptyIntermediateRead()
     {
         $this->prepareAssembly('empty-read');
         NativeFunctions::mock(
@@ -558,7 +558,7 @@ final class LocalStorageTest extends TestCase
         self::assertStringContainsString('empty-read', $this->storage->assemble('empty-read')->path);
     }
 
-    public function testAssemblyReportsNativeWriteFailure(): void
+    public function testAssemblyReportsNativeWriteFailure()
     {
         $this->prepareAssembly('assembly-write-failure');
         NativeFunctions::mock('Symfony\\UX\\Upload\\Storage\\fwrite', 0);
@@ -569,7 +569,7 @@ final class LocalStorageTest extends TestCase
         $this->storage->assemble('assembly-write-failure');
     }
 
-    public function testAssembleThrowsOnMissingChunk(): void
+    public function testAssembleThrowsOnMissingChunk()
     {
         $uploadId = 'missing-chunk';
         $this->storage->initiate($uploadId, [

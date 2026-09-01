@@ -35,7 +35,7 @@ final class CompletedUploadAccess
             return $content;
         }
         if (!\is_string($content)) {
-            throw new UploadException(\sprintf('Temporary storage returned unsupported content of type %s.', get_debug_type($content)));
+            throw new UploadException(\sprintf('Temporary storage returned unsupported content of type "%s".', get_debug_type($content)));
         }
 
         $stream = fopen('php://temp', 'w+');

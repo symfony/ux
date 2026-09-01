@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 #[CoversNothing]
 final class ThemingDocumentationTest extends TestCase
 {
-    public function testEveryDocumentedCssCustomPropertyIsConsumedByAPublishedStylesheet(): void
+    public function testEveryDocumentedCssCustomPropertyIsConsumedByAPublishedStylesheet()
     {
         $packageDir = \dirname(__DIR__, 2);
         $documentation = file_get_contents($packageDir.'/doc/customizing-upload-field.rst');
@@ -36,7 +36,7 @@ final class ThemingDocumentationTest extends TestCase
         }
     }
 
-    public function testFormThemeContainsThePublicBlockContract(): void
+    public function testFormThemeContainsThePublicBlockContract()
     {
         $packageDir = \dirname(__DIR__, 2);
         $formTheme = file_get_contents($packageDir.'/templates/form_theme.html.twig');
@@ -49,7 +49,7 @@ final class ThemingDocumentationTest extends TestCase
         self::assertDirectoryDoesNotExist($packageDir.'/templates/upload');
     }
 
-    public function testEveryPublicRenderingBlockIsDefinedAndComposedByTwig(): void
+    public function testEveryPublicRenderingBlockIsDefinedAndComposedByTwig()
     {
         $packageDir = \dirname(__DIR__, 2);
         $source = file_get_contents($packageDir.'/templates/form_theme.html.twig');
@@ -82,7 +82,7 @@ final class ThemingDocumentationTest extends TestCase
         self::assertStringNotContainsString('.innerHTML', $controller);
     }
 
-    public function testPublishedStylesAreOptionalAssetMapperChoices(): void
+    public function testPublishedStylesAreOptionalAssetMapperChoices()
     {
         $packageDir = \dirname(__DIR__, 2);
         $package = json_decode((string) file_get_contents($packageDir.'/assets/package.json'), true, flags: \JSON_THROW_ON_ERROR);

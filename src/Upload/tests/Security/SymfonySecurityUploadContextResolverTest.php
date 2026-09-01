@@ -18,7 +18,7 @@ use Symfony\UX\Upload\Security\SymfonySecurityUploadContextResolver;
 
 final class SymfonySecurityUploadContextResolverTest extends TestCase
 {
-    public function testUsesAuthenticatedUserIdentifierAsOwner(): void
+    public function testUsesAuthenticatedUserIdentifierAsOwner()
     {
         $user = new class implements UserInterface {
             public function getRoles(): array
@@ -43,7 +43,7 @@ final class SymfonySecurityUploadContextResolverTest extends TestCase
         self::assertSame('user@example.com', $context->ownerId);
     }
 
-    public function testFallsBackToAnonymousContextWithoutSecurityService(): void
+    public function testFallsBackToAnonymousContextWithoutSecurityService()
     {
         self::assertNull(new SymfonySecurityUploadContextResolver(null)->resolve()->ownerId);
     }

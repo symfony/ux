@@ -17,7 +17,7 @@ use Symfony\UX\Upload\Test\CompletedUploadFactory;
 
 final class CompletedUploadFactoryTest extends TestCase
 {
-    public function testCreatesAReadableDeterministicUploadWithSecurityContext(): void
+    public function testCreatesAReadableDeterministicUploadWithSecurityContext()
     {
         $storage = new InMemoryStorage();
         $upload = new CompletedUploadFactory(
@@ -49,7 +49,7 @@ final class CompletedUploadFactoryTest extends TestCase
         }
     }
 
-    public function testCreatesAnExtensionlessUploadWithInternalStorage(): void
+    public function testCreatesAnExtensionlessUploadWithInternalStorage()
     {
         $upload = new CompletedUploadFactory(originalName: 'LICENSE')->create(content: 'text');
 
