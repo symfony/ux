@@ -22,6 +22,7 @@ use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -123,12 +124,12 @@ final class UXUploadBundleExtensionTest extends TestCase
             [[
                 'asset_mapper' => [
                     'paths' => [
-                        \dirname(__DIR__, 2).'/src/../assets/dist' => '@symfony/ux-upload',
+                        Path::canonicalize(\dirname(__DIR__, 2).'/assets/dist') => '@symfony/ux-upload',
                     ],
                 ],
                 'translator' => [
                     'paths' => [
-                        \dirname(__DIR__, 2).'/src/../translations',
+                        Path::canonicalize(\dirname(__DIR__, 2).'/translations'),
                     ],
                 ],
             ]],

@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\Component\Translation\Translator;
@@ -244,14 +245,14 @@ final class UXUploadBundle extends AbstractBundle
         if (interface_exists(AssetMapperInterface::class)) {
             $frameworkConfig['asset_mapper'] = [
                 'paths' => [
-                    __DIR__.'/../assets/dist' => '@symfony/ux-upload',
+                    Path::canonicalize(__DIR__.'/../assets/dist') => '@symfony/ux-upload',
                 ],
             ];
         }
         if (class_exists(Translator::class)) {
             $frameworkConfig['translator'] = [
                 'paths' => [
-                    __DIR__.'/../translations',
+                    Path::canonicalize(__DIR__.'/../translations'),
                 ],
             ];
         }

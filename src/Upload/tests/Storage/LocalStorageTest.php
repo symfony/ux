@@ -192,6 +192,10 @@ final class LocalStorageTest extends TestCase
 
     public function testReadThrowsWhenFileCannotBeOpened()
     {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            self::markTestSkipped('chmod() does not restrict read access on Windows.');
+        }
+
         $path = 'unreadable.txt';
         $this->storage->write($path, 'content');
 

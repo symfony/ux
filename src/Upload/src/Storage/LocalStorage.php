@@ -173,10 +173,12 @@ final class LocalStorage extends AbstractStorage implements PrunableStorageInter
 
         $dirs = glob($tempDir.'/*', \GLOB_ONLYDIR) ?: [];
         $cutoffTime = time() - $maxAge;
-        $completedDirectory = Path::join($this->directory, trim($this->completedPrefix, '/'));
+        // glob() and Path::join() do not agree on separators everywhere, so both
+        // sides are canonicalized before being compared.
+        $completedDirectory = Path::canonicalize(Path::join($this->directory, trim($this->completedPrefix, '/')));
 
         foreach ($dirs as $uploadDir) {
-            if ($uploadDir === $completedDirectory) {
+            if (Path::canonicalize($uploadDir) === $completedDirectory) {
                 continue;
             }
             $uploadId = basename($uploadDir);
