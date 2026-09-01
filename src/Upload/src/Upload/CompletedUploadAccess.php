@@ -19,7 +19,7 @@ use Symfony\UX\Upload\Storage\StorageInterface;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class CompletedUploadAccess
+final class CompletedUploadAccess
 {
     public function __construct(private StorageInterface $storage)
     {

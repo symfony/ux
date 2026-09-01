@@ -16,17 +16,17 @@ namespace Symfony\UX\Upload\Upload;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class UploadProgress
+final class UploadProgress
 {
     /**
      * @param array<int> $chunkIndices
      */
     public function __construct(
-        public string $uploadId,
-        public int $storedChunks,
-        public int $totalChunks,
-        public int $percentComplete,
-        public array $chunkIndices,
+        public readonly string $uploadId,
+        public readonly int $storedChunks,
+        public readonly int $totalChunks,
+        public readonly int $percentComplete,
+        public readonly array $chunkIndices,
     ) {
     }
 

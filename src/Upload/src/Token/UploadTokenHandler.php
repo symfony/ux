@@ -25,17 +25,17 @@ use Symfony\UX\Upload\Upload\CompletedUploadAccess;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class UploadTokenHandler
+final class UploadTokenHandler
 {
     private const int MAX_TOKEN_LENGTH = 8192;
-    private CompletedUploadAccess $access;
+    private readonly CompletedUploadAccess $access;
 
     public function __construct(
-        private UriSigner $signer,
+        private readonly UriSigner $signer,
         StorageInterface|CompletedUploadAccess $access,
-        private int $ttl = 86400,
-        private UploadContextResolverInterface $contextResolver = new AnonymousUploadContextResolver(),
-        private string $completedPrefix = '.tmp/completed',
+        private readonly int $ttl = 86400,
+        private readonly UploadContextResolverInterface $contextResolver = new AnonymousUploadContextResolver(),
+        private readonly string $completedPrefix = '.tmp/completed',
     ) {
         $this->access = $access instanceof CompletedUploadAccess ? $access : new CompletedUploadAccess($access);
         $prefix = trim($this->completedPrefix, '/');

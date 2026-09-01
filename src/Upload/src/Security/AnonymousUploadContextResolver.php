@@ -14,7 +14,7 @@ namespace Symfony\UX\Upload\Security;
 /**
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class AnonymousUploadContextResolver implements UploadContextResolverInterface
+final class AnonymousUploadContextResolver implements UploadContextResolverInterface
 {
     public function resolve(): UploadContext
     {

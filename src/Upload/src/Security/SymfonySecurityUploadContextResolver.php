@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class SymfonySecurityUploadContextResolver implements UploadContextResolverInterface
+final class SymfonySecurityUploadContextResolver implements UploadContextResolverInterface
 {
     public function __construct(private ?Security $security)
     {

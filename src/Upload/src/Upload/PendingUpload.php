@@ -16,17 +16,17 @@ namespace Symfony\UX\Upload\Upload;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class PendingUpload
+final class PendingUpload
 {
     public function __construct(
-        public string $uploadId,
-        public string $filename,
-        public int $fileSize,
-        public string $mimeType,
-        public int $totalChunks,
-        public int $chunkSize,
-        public bool $compression,
-        public int $parallel,
+        public readonly string $uploadId,
+        public readonly string $filename,
+        public readonly int $fileSize,
+        public readonly string $mimeType,
+        public readonly int $totalChunks,
+        public readonly int $chunkSize,
+        public readonly bool $compression,
+        public readonly int $parallel,
     ) {
     }
 

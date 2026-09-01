@@ -51,11 +51,13 @@ final class PendingUploadTest extends TestCase
     }
 
     #[Test]
-    public function isReadonly(): void
+    public function hasOnlyReadonlyProperties(): void
     {
         $reflection = new \ReflectionClass(PendingUpload::class);
 
-        $this->assertTrue($reflection->isReadOnly());
+        foreach ($reflection->getProperties() as $property) {
+            $this->assertTrue($property->isReadOnly(), \sprintf('Property "%s" should be readonly.', $property->getName()));
+        }
     }
 
     #[Test]

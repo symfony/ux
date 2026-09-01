@@ -28,7 +28,7 @@ namespace Symfony\UX\Upload\LiveComponent\Attribute;
  * @author Simon André <smn.andre@gmail.com>
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
-final readonly class UploadTarget
+final class UploadTarget
 {
     public function __construct(public ?string $uploader = null)
     {

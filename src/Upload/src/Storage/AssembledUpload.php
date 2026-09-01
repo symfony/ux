@@ -14,12 +14,12 @@ namespace Symfony\UX\Upload\Storage;
 /**
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class AssembledUpload
+final class AssembledUpload
 {
     public function __construct(
-        public string $path,
-        public int $size,
-        public ?string $hash,
+        public readonly string $path,
+        public readonly int $size,
+        public readonly ?string $hash,
     ) {
     }
 

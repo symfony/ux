@@ -14,18 +14,18 @@ namespace Symfony\UX\Upload\Policy;
 /**
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class UploadPolicy
+final class UploadPolicy
 {
     /**
      * @param list<string> $allowedTypes
      */
     public function __construct(
-        public string $uploader,
-        public int $maxSize,
-        public array $allowedTypes,
-        public int $maxFiles,
-        public int $expiresAt,
-        public ?string $fieldName = null,
+        public readonly string $uploader,
+        public readonly int $maxSize,
+        public readonly array $allowedTypes,
+        public readonly int $maxFiles,
+        public readonly int $expiresAt,
+        public readonly ?string $fieldName = null,
     ) {
     }
 

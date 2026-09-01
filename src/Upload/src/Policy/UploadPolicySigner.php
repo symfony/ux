@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\UriSigner;
 /**
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class UploadPolicySigner
+final class UploadPolicySigner
 {
     private const int MAX_TOKEN_LENGTH = 4096;
 

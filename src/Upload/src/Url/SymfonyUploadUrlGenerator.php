@@ -25,12 +25,12 @@ use Symfony\UX\Upload\Exception\InvalidArgumentException;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class SymfonyUploadUrlGenerator implements UploadUrlGeneratorInterface
+final class SymfonyUploadUrlGenerator implements UploadUrlGeneratorInterface
 {
     public function __construct(
-        private UrlGeneratorInterface $urlGenerator,
-        private UriSigner $uriSigner,
-        private int $signatureExpiry = 3600,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly UriSigner $uriSigner,
+        private readonly int $signatureExpiry = 3600,
     ) {
         if ($signatureExpiry < 1) {
             throw new InvalidArgumentException('The upload URL signature expiry must be at least one second.');

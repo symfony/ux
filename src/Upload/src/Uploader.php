@@ -33,7 +33,7 @@ use Symfony\UX\Upload\Url\UploadUrlGeneratorInterface;
 /**
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class Uploader implements UploaderInterface
+final class Uploader implements UploaderInterface
 {
     public const int DEFAULT_COMPLETED_TTL = 86400;
     public const int MAX_CHUNK_SIZE = 64 * 1024 * 1024;
@@ -56,31 +56,31 @@ final readonly class Uploader implements UploaderInterface
     public const int DEFAULT_MAX_SIZE = 100 * 1024 * 1024;
 
     /** @var array{max_size: int, allowed_types: list<string>, chunk_size: int, integrity_algorithm: string, compression: bool} */
-    private array $config;
+    private readonly array $config;
     /**
      * Serializes concurrent writes of the same chunk (see {@see storeChunk()}).
      */
-    private LockFactory $lockFactory;
-    private CompletedUploadAccess $completedUploadAccess;
+    private readonly LockFactory $lockFactory;
+    private readonly CompletedUploadAccess $completedUploadAccess;
 
     /**
      * @param list<string> $allowedTypes
      */
     public function __construct(
-        private StorageInterface $storage,
-        private UploadUrlGeneratorInterface $urlGenerator,
-        private EventDispatcherInterface $dispatcher,
-        private string $name = 'default',
-        private int $chunkSize = 5 * 1024 * 1024,
-        private int $parallelChunks = 3,
-        private bool $compressionEnabled = false,
-        private int $maxSize = self::DEFAULT_MAX_SIZE,
-        private array $allowedTypes = [],
-        private string $integrityAlgorithm = 'sha256',
+        private readonly StorageInterface $storage,
+        private readonly UploadUrlGeneratorInterface $urlGenerator,
+        private readonly EventDispatcherInterface $dispatcher,
+        private readonly string $name = 'default',
+        private readonly int $chunkSize = 5 * 1024 * 1024,
+        private readonly int $parallelChunks = 3,
+        private readonly bool $compressionEnabled = false,
+        private readonly int $maxSize = self::DEFAULT_MAX_SIZE,
+        private readonly array $allowedTypes = [],
+        private readonly string $integrityAlgorithm = 'sha256',
         ?LockFactory $lockFactory = null,
-        private int $completedTtl = self::DEFAULT_COMPLETED_TTL,
-        private int $maxPendingPerOwner = 1000,
-        private bool $distributedLockGuaranteed = false,
+        private readonly int $completedTtl = self::DEFAULT_COMPLETED_TTL,
+        private readonly int $maxPendingPerOwner = 1000,
+        private readonly bool $distributedLockGuaranteed = false,
         ?CompletedUploadAccess $completedUploadAccess = null,
     ) {
         if ('' === $this->name) {

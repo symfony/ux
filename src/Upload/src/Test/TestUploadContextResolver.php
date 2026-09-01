@@ -19,14 +19,14 @@ use Symfony\UX\Upload\Security\UploadContextResolverInterface;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class TestUploadContextResolver implements UploadContextResolverInterface
+final class TestUploadContextResolver implements UploadContextResolverInterface
 {
     public const string DEFAULT_OWNER_ID = 'user-1';
 
     public function __construct(
-        private ?string $ownerId = self::DEFAULT_OWNER_ID,
-        private ?string $tenantId = null,
-        private ?string $fieldName = null,
+        private readonly ?string $ownerId = self::DEFAULT_OWNER_ID,
+        private readonly ?string $tenantId = null,
+        private readonly ?string $fieldName = null,
     ) {
     }
 

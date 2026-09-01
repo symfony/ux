@@ -31,7 +31,7 @@ use Symfony\UX\Upload\UploaderInterface;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class FileValidationListener
+final class FileValidationListener
 {
     public const int PRIORITY = 255;
 
@@ -40,11 +40,11 @@ final readonly class FileValidationListener
      * @param int          $maxSize      Maximum file size in bytes (0 = no limit)
      */
     public function __construct(
-        private MimeTypesInterface $mimeTypes,
-        private ?ContainerInterface $uploaders = null,
-        private array $allowedTypes = [],
-        private int $maxSize = 0,
-        private ?LoggerInterface $logger = null,
+        private readonly MimeTypesInterface $mimeTypes,
+        private readonly ?ContainerInterface $uploaders = null,
+        private readonly array $allowedTypes = [],
+        private readonly int $maxSize = 0,
+        private readonly ?LoggerInterface $logger = null,
     ) {
     }
 

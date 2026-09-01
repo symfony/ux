@@ -21,17 +21,17 @@ use Symfony\UX\Upload\Upload\CompletedUploadAccess;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class CompletedUploadFactory
+final class CompletedUploadFactory
 {
     public function __construct(
-        private string $id = '0123456789abcdef0123456789abcdef',
-        private string $uploader = 'default',
-        private string $originalName = 'document.txt',
-        private string $mimeType = 'text/plain',
-        private int $size = 4,
-        private ?string $ownerId = null,
-        private ?string $tenantId = null,
-        private ?string $fieldName = null,
+        private readonly string $id = '0123456789abcdef0123456789abcdef',
+        private readonly string $uploader = 'default',
+        private readonly string $originalName = 'document.txt',
+        private readonly string $mimeType = 'text/plain',
+        private readonly int $size = 4,
+        private readonly ?string $ownerId = null,
+        private readonly ?string $tenantId = null,
+        private readonly ?string $fieldName = null,
     ) {
     }
 

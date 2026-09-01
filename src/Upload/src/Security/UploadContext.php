@@ -14,12 +14,12 @@ namespace Symfony\UX\Upload\Security;
 /**
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class UploadContext
+final class UploadContext
 {
     public function __construct(
-        public ?string $ownerId = null,
-        public ?string $tenantId = null,
-        public ?string $fieldName = null,
+        public readonly ?string $ownerId = null,
+        public readonly ?string $tenantId = null,
+        public readonly ?string $fieldName = null,
     ) {
     }
 

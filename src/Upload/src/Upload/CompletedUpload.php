@@ -22,23 +22,23 @@ use Symfony\UX\Upload\Exception\UploadException;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class CompletedUpload
+final class CompletedUpload
 {
     public function __construct(
-        public string $id,
-        public string $uploader,
-        private string $path,
-        public string $originalName,
-        public string $mimeType,
-        public int $size,
-        public \DateTimeImmutable $createdAt,
-        public \DateTimeImmutable $expiresAt,
-        public ?string $checksum = null,
-        public ?string $checksumAlgorithm = null,
-        private ?string $ownerId = null,
-        private ?string $tenantId = null,
-        private ?string $fieldName = null,
-        private ?CompletedUploadAccess $access = null,
+        public readonly string $id,
+        public readonly string $uploader,
+        private readonly string $path,
+        public readonly string $originalName,
+        public readonly string $mimeType,
+        public readonly int $size,
+        public readonly \DateTimeImmutable $createdAt,
+        public readonly \DateTimeImmutable $expiresAt,
+        public readonly ?string $checksum = null,
+        public readonly ?string $checksumAlgorithm = null,
+        private readonly ?string $ownerId = null,
+        private readonly ?string $tenantId = null,
+        private readonly ?string $fieldName = null,
+        private readonly ?CompletedUploadAccess $access = null,
     ) {
         if ('' === $id || '' === $uploader || '' === $path || '' === $originalName || '' === $mimeType) {
             throw new InvalidArgumentException('A completed upload requires non-empty id, uploader, path, original name and MIME type values.');

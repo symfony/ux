@@ -17,7 +17,7 @@ use Symfony\UX\Upload\Security\UploadContext;
 /**
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class ResumeTokenHandler
+final class ResumeTokenHandler
 {
     private const int MAX_TOKEN_LENGTH = 4096;
 
