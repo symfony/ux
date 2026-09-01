@@ -469,7 +469,9 @@ final class LocalStorageTest extends TestCase
     {
         $filesystem = $this->getMockBuilder(Filesystem::class)->onlyMethods(['rename'])->getMock();
         $filesystem->expects(self::atLeastOnce())->method('rename')->willReturnCallback(static function (string $origin, string $target, bool $overwrite = false): void {
-            if (str_starts_with(basename($origin), '.ux-upload-publish-failure-')) {
+            // tempnam() only keeps the first three characters of the prefix on
+            // Windows, so the partial file is matched on those.
+            if (str_starts_with(basename($origin), '.ux')) {
                 throw new IOException('rename failed');
             }
             if (!$overwrite && file_exists($target)) {
