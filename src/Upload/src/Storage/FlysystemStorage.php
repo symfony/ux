@@ -123,30 +123,29 @@ final class FlysystemStorage extends AbstractStorage implements PrunableStorageI
 
     public function countPendingByContext(UploadContext $context): int
     {
-        if (!$this->filesystem->directoryExists('.tmp')) {
+        $directory = $this->pendingDir().'/'.$context->fingerprint();
+        if (!$this->filesystem->directoryExists($directory)) {
             return 0;
         }
 
         $count = 0;
-        foreach ($this->filesystem->listContents('.tmp', false) as $item) {
-            if (!$item->isDir()) {
-                continue;
-            }
-            try {
-                $metadata = $this->getMetadata(basename($item->path()));
-                if (null !== $metadata && !isset($metadata['completedPath']) && $context->matches(
-                    \is_string($metadata['ownerId'] ?? null) ? $metadata['ownerId'] : null,
-                    \is_string($metadata['tenantId'] ?? null) ? $metadata['tenantId'] : null,
-                    \is_string($metadata['field'] ?? null) ? $metadata['field'] : null,
-                )) {
-                    ++$count;
-                }
-            } catch (\Throwable) {
-                // Corrupt and orphan sessions are handled by prune().
+        foreach ($this->filesystem->listContents($directory, false) as $item) {
+            if ($item->isFile()) {
+                ++$count;
             }
         }
 
         return $count;
+    }
+
+    private function pendingDir(): string
+    {
+        return '.tmp/.pending';
+    }
+
+    private function pendingMarker(string $uploadId, string $key): string
+    {
+        return $this->pendingDir().'/'.$key.'/'.$uploadId;
     }
 
     public function getMetadata(string $uploadId): ?array
@@ -176,8 +175,16 @@ final class FlysystemStorage extends AbstractStorage implements PrunableStorageI
 
     public function abort(string $uploadId): void
     {
-        $uploadDir = $this->getUploadDir($uploadId);
-        $this->filesystem->deleteDirectory($uploadDir);
+        $this->filesystem->deleteDirectory($this->getUploadDir($uploadId));
+        // The key cannot be derived here, so the marker is located instead.
+        if (!$this->filesystem->directoryExists($this->pendingDir())) {
+            return;
+        }
+        foreach ($this->filesystem->listContents($this->pendingDir(), true) as $item) {
+            if ($item->isFile() && basename($item->path()) === $uploadId) {
+                $this->filesystem->delete($item->path());
+            }
+        }
     }
 
     public function completeSession(string $uploadId, array $metadata): void
@@ -189,6 +196,7 @@ final class FlysystemStorage extends AbstractStorage implements PrunableStorageI
             }
         }
         $this->filesystem->write($uploadDir.'/metadata.json', json_encode($metadata, \JSON_THROW_ON_ERROR));
+        $this->filesystem->delete($this->pendingMarker($uploadId, self::pendingKey($metadata)));
     }
 
     public function prune(int $maxAge): void
@@ -202,7 +210,10 @@ final class FlysystemStorage extends AbstractStorage implements PrunableStorageI
         $cutoffTime = time() - $maxAge;
 
         foreach ($listing as $item) {
-            if (!$item->isDir() || trim($this->completedPrefix, '/') === $item->path()) {
+            if (!$item->isDir()
+                || trim($this->completedPrefix, '/') === $item->path()
+                || $this->pendingDir() === $item->path()
+            ) {
                 continue;
             }
 
@@ -240,12 +251,32 @@ final class FlysystemStorage extends AbstractStorage implements PrunableStorageI
                 $lock->release();
             }
         }
+
+        $this->prunePendingMarkers();
+    }
+
+    /**
+     * Drops markers whose session is gone, so a crash between the two writes
+     * cannot inflate a context quota for good.
+     */
+    private function prunePendingMarkers(): void
+    {
+        if (!$this->filesystem->directoryExists($this->pendingDir())) {
+            return;
+        }
+
+        foreach ($this->filesystem->listContents($this->pendingDir(), true) as $item) {
+            if ($item->isFile() && !$this->filesystem->directoryExists($this->getUploadDir(basename($item->path())))) {
+                $this->filesystem->delete($item->path());
+            }
+        }
     }
 
     protected function doInitiate(string $uploadId, array $metadata): void
     {
         $uploadDir = $this->getUploadDir($uploadId);
         $this->filesystem->write($uploadDir.'/metadata.json', json_encode($metadata, \JSON_THROW_ON_ERROR));
+        $this->filesystem->write($this->pendingMarker($uploadId, self::pendingKey($metadata)), '');
     }
 
     protected function doAssemble(string $uploadId, array $metadata, int $expiresAt, ?string $hashAlgorithm): AssembledUpload

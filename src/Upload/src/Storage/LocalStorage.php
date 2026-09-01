@@ -148,8 +148,9 @@ final class LocalStorage extends AbstractStorage implements PrunableStorageInter
 
     public function abort(string $uploadId): void
     {
-        $uploadDir = $this->getUploadDir($uploadId);
-        $this->filesystem->remove($uploadDir);
+        $this->filesystem->remove($this->getUploadDir($uploadId));
+        // The key cannot be derived here, so the marker is located instead.
+        $this->filesystem->remove(glob($this->pendingDir().'/*/'.$uploadId) ?: []);
     }
 
     public function completeSession(string $uploadId, array $metadata): void
@@ -160,6 +161,7 @@ final class LocalStorage extends AbstractStorage implements PrunableStorageInter
             $this->filesystem->remove($chunk);
         }
         $this->filesystem->dumpFile($uploadDir.'/metadata.json', json_encode($metadata, \JSON_THROW_ON_ERROR));
+        $this->filesystem->remove($this->pendingMarker($uploadId, self::pendingKey($metadata)));
     }
 
     public function prune(int $maxAge): void
@@ -177,8 +179,11 @@ final class LocalStorage extends AbstractStorage implements PrunableStorageInter
         // sides are canonicalized before being compared.
         $completedDirectory = Path::canonicalize(Path::join($this->directory, trim($this->completedPrefix, '/')));
 
+        $pendingDirectory = Path::canonicalize($this->pendingDir());
+
         foreach ($dirs as $uploadDir) {
-            if (Path::canonicalize($uploadDir) === $completedDirectory) {
+            $canonical = Path::canonicalize($uploadDir);
+            if ($canonical === $completedDirectory || $canonical === $pendingDirectory) {
                 continue;
             }
             $uploadId = basename($uploadDir);
@@ -217,31 +222,36 @@ final class LocalStorage extends AbstractStorage implements PrunableStorageInter
                 $lock->release();
             }
         }
+
+        $this->prunePendingMarkers();
+    }
+
+    /**
+     * Drops markers whose session is gone, so a crash between the two writes
+     * cannot inflate a context quota for good.
+     */
+    private function prunePendingMarkers(): void
+    {
+        foreach (glob($this->pendingDir().'/*/*') ?: [] as $marker) {
+            if (!$this->filesystem->exists($this->tempDir.'/'.basename($marker))) {
+                $this->filesystem->remove($marker);
+            }
+        }
     }
 
     public function countPendingByContext(UploadContext $context): int
     {
-        $count = 0;
-        foreach (glob($this->tempDir.'/*/metadata.json') ?: [] as $metadataFile) {
-            try {
-                /** @var array<string, mixed> $metadata */
-                $metadata = json_decode((string) file_get_contents($metadataFile), true, 512, \JSON_THROW_ON_ERROR);
-            } catch (\JsonException) {
-                continue;
-            }
-            if (isset($metadata['completedPath'])) {
-                continue;
-            }
-            if ($context->matches(
-                \is_string($metadata['ownerId'] ?? null) ? $metadata['ownerId'] : null,
-                \is_string($metadata['tenantId'] ?? null) ? $metadata['tenantId'] : null,
-                \is_string($metadata['field'] ?? null) ? $metadata['field'] : null,
-            )) {
-                ++$count;
-            }
-        }
+        return \count(glob($this->pendingDir().'/'.$context->fingerprint().'/*') ?: []);
+    }
 
-        return $count;
+    private function pendingDir(): string
+    {
+        return $this->tempDir.'/.pending';
+    }
+
+    private function pendingMarker(string $uploadId, string $key): string
+    {
+        return $this->pendingDir().'/'.$key.'/'.$uploadId;
     }
 
     protected function doInitiate(string $uploadId, array $metadata): void
@@ -250,6 +260,7 @@ final class LocalStorage extends AbstractStorage implements PrunableStorageInter
         $this->filesystem->mkdir($uploadDir);
 
         $this->filesystem->dumpFile($uploadDir.'/metadata.json', json_encode($metadata, \JSON_THROW_ON_ERROR));
+        $this->filesystem->dumpFile($this->pendingMarker($uploadId, self::pendingKey($metadata)), '');
     }
 
     protected function doAssemble(string $uploadId, array $metadata, int $expiresAt, ?string $hashAlgorithm): AssembledUpload

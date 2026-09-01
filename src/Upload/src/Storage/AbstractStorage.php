@@ -12,6 +12,7 @@
 namespace Symfony\UX\Upload\Storage;
 
 use Symfony\UX\Upload\Exception\UploadSessionNotFoundException;
+use Symfony\UX\Upload\Security\UploadContext;
 
 /**
  * Base class for storage implementations using the Template Method pattern.
@@ -94,6 +95,23 @@ abstract class AbstractStorage implements StorageInterface
      *
      * Uses one temporary prefix and an expiration timestamp in the key.
      */
+    /**
+     * Directory name under which a session is indexed while it is still pending.
+     *
+     * Counting a context then means listing one directory instead of reading the
+     * metadata of every session the application has kept since the last prune.
+     *
+     * @param array<string, mixed> $metadata
+     */
+    protected static function pendingKey(array $metadata): string
+    {
+        return new UploadContext(
+            \is_string($metadata['ownerId'] ?? null) ? $metadata['ownerId'] : null,
+            \is_string($metadata['tenantId'] ?? null) ? $metadata['tenantId'] : null,
+            \is_string($metadata['field'] ?? null) ? $metadata['field'] : null,
+        )->fingerprint();
+    }
+
     protected function generatePath(string $uploadId, string $filename, int $expiresAt): string
     {
         $extension = pathinfo($filename, \PATHINFO_EXTENSION);

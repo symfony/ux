@@ -158,14 +158,18 @@ final class FlysystemStorageTest extends TestCase
 
         $metadata = ['filename' => 'test.txt'];
 
-        $filesystem->expects($this->once())
+        $writes = [];
+        $filesystem->expects($this->exactly(2))
             ->method('write')
-            ->with(
-                '.tmp/abc123/metadata.json',
-                json_encode(['filename' => 'test.txt'])
-            );
+            ->willReturnCallback(static function (string $path, string $contents) use (&$writes): void {
+                $writes[$path] = $contents;
+            });
 
         $storage->initiate('abc123', $metadata);
+
+        self::assertSame(json_encode(['filename' => 'test.txt']), $writes['.tmp/abc123/metadata.json'] ?? null);
+        // The session is also indexed so it can be counted without being read.
+        self::assertArrayHasKey('.tmp/.pending/'.new UploadContext()->fingerprint().'/abc123', $writes);
     }
 
     #[Test]
@@ -399,34 +403,39 @@ final class FlysystemStorageTest extends TestCase
         $other->method('isFile')->willReturn(true);
         $other->method('path')->willReturn('.tmp/abc123/metadata.json');
         $filesystem->method('listContents')->willReturn(new DirectoryListing([$chunk, $other]));
-        $filesystem->expects(self::once())->method('delete')->with('.tmp/abc123/chunk_0');
+        $deleted = [];
+        $filesystem->expects(self::exactly(2))
+            ->method('delete')
+            ->willReturnCallback(static function (string $path) use (&$deleted): void {
+                $deleted[] = $path;
+            });
         $filesystem->expects(self::once())->method('write')->with(
             '.tmp/abc123/metadata.json',
             json_encode(['completedPath' => 'completed']),
         );
 
         $storage->completeSession('abc123', ['completedPath' => 'completed']);
+
+        self::assertContains('.tmp/abc123/chunk_0', $deleted);
+        // A completed session is no longer pending, so it leaves the index.
+        self::assertContains('.tmp/.pending/'.new UploadContext()->fingerprint().'/abc123', $deleted);
     }
 
     #[Test]
     public function countsPendingUploadsForTheRequestedOwner(): void
     {
         [$storage, $filesystem] = $this->createMockFilesystem();
-        $filesystem->method('directoryExists')->with('.tmp')->willReturn(true);
-        $ownerA = $this->createStub(\League\Flysystem\StorageAttributes::class);
-        $ownerA->method('isDir')->willReturn(true);
-        $ownerA->method('path')->willReturn('.tmp/owner-a');
-        $ownerB = $this->createStub(\League\Flysystem\StorageAttributes::class);
-        $ownerB->method('isDir')->willReturn(true);
-        $ownerB->method('path')->willReturn('.tmp/owner-b');
-        $filesystem->method('listContents')->with('.tmp', false)->willReturn(new DirectoryListing([$ownerA, $ownerB]));
-        $filesystem->method('fileExists')->willReturn(true);
-        $filesystem->method('read')->willReturnMap([
-            ['.tmp/owner-a/metadata.json', json_encode(['ownerId' => 'a'])],
-            ['.tmp/owner-b/metadata.json', json_encode(['ownerId' => 'b'])],
-        ]);
+        $context = new UploadContext('a');
+        $directory = '.tmp/.pending/'.$context->fingerprint();
 
-        self::assertSame(1, $storage->countPendingByContext(new UploadContext('a')));
+        $filesystem->method('directoryExists')->with($directory)->willReturn(true);
+        $marker = $this->createStub(\League\Flysystem\StorageAttributes::class);
+        $marker->method('isFile')->willReturn(true);
+        $filesystem->method('listContents')->with($directory, false)->willReturn(new DirectoryListing([$marker]));
+
+        // One listing of one directory: no metadata is read, so the cost no longer
+        // grows with the number of sessions the application has kept.
+        self::assertSame(1, $storage->countPendingByContext($context));
     }
 
     #[Test]
@@ -917,6 +926,7 @@ final class FlysystemStorageTest extends TestCase
         $filesystem->method('listContents')->willReturnMap([
             ['.tmp/completed', false, new DirectoryListing([$expired, $fresh])],
             ['.tmp', false, new DirectoryListing([$completedDirectory])],
+            ['.tmp/.pending', true, new DirectoryListing([])],
         ]);
         $filesystem->expects(self::once())->method('delete')->with($expiredPath);
 

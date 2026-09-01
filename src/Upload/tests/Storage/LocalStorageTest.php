@@ -135,6 +135,21 @@ final class LocalStorageTest extends TestCase
         self::assertSame(0, $this->storage->countPendingByContext(new UploadContext()));
     }
 
+    public function testPruneDropsPendingMarkersLeftWithoutASession()
+    {
+        $context = new UploadContext('ghost');
+        $marker = $this->tempDir.'/.tmp/.pending/'.$context->fingerprint().'/vanished';
+        $this->filesystem->dumpFile($marker, '');
+
+        // A crash between the two writes would otherwise hold a quota slot forever.
+        self::assertSame(1, $this->storage->countPendingByContext($context));
+
+        $this->storage->prune(3600);
+
+        self::assertSame(0, $this->storage->countPendingByContext($context));
+        self::assertFileDoesNotExist($marker);
+    }
+
     public function testGetUploadDirThrowsForInvalidId()
     {
         $reflection = new \ReflectionClass(LocalStorage::class);
