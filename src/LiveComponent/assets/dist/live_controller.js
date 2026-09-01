@@ -2105,39 +2105,9 @@ var LiveControllerDefault = class LiveControllerDefault extends Controller {
 		if (event.type === "input" || event.type === "change") throw new Error(`Since LiveComponents 2.3, you no longer need data-action="live#update" on form elements. Found on element: ${getElementAsTagText(event.currentTarget)}`);
 		this.updateModelFromElementEvent(event.currentTarget, null);
 	}
-	async action(event) {
-		if (event.defaultPrevented) return;
-		const target = event.currentTarget;
+	action(event) {
 		const params = event.params;
-		if (!params.action) throw new Error(`No action name provided on element: ${getElementAsTagText(target)}. Did you forget to add the "data-live-action-param" attribute?`);
-		const confirmMessage = target.getAttribute("data-turbo-confirm") || target.getAttribute("data-live-confirm");
-		if (confirmMessage) {
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			let isConfirmed = false;
-			const turbo = window.Turbo;
-			const turboConfirm = turbo?.config?.forms?.confirm || turbo?.navigator?.confirmMethod;
-			if (typeof turboConfirm === "function") isConfirmed = await turboConfirm(confirmMessage, target);
-			else {
-				const liveConfirmEvent = new CustomEvent("live:confirm", {
-					bubbles: true,
-					cancelable: true,
-					detail: {
-						message: confirmMessage,
-						promise: null
-					}
-				});
-				target.dispatchEvent(liveConfirmEvent);
-				if (liveConfirmEvent.defaultPrevented && liveConfirmEvent.detail.promise) try {
-					isConfirmed = await liveConfirmEvent.detail.promise;
-				} catch (e) {
-					isConfirmed = false;
-				}
-				else if (liveConfirmEvent.defaultPrevented) return;
-				else isConfirmed = window.confirm(confirmMessage);
-			}
-			if (!isConfirmed) return;
-		}
+		if (!params.action) throw new Error(`No action name provided on element: ${getElementAsTagText(event.currentTarget)}. Did you forget to add the "data-live-action-param" attribute?`);
 		const rawAction = params.action;
 		const actionArgs = { ...params };
 		delete actionArgs.action;
@@ -2150,7 +2120,7 @@ var LiveControllerDefault = class LiveControllerDefault extends Controller {
 				event.stopPropagation();
 			});
 			validModifiers.set("self", () => {
-				if (event.target !== target) return;
+				if (event.target !== event.currentTarget) return;
 			});
 			validModifiers.set("debounce", (modifier) => {
 				debounce = modifier.value ? Number.parseInt(modifier.value) : true;
@@ -2171,8 +2141,56 @@ var LiveControllerDefault = class LiveControllerDefault extends Controller {
 				delete this.pendingFiles[key];
 			}
 			this.component.action(directive.action, actionArgs, debounce);
-			if (getModelDirectiveFromElement(target, false)) this.pendingActionTriggerModelElement = target;
+			if (getModelDirectiveFromElement(event.currentTarget, false)) this.pendingActionTriggerModelElement = event.currentTarget;
 		});
+	}
+	async confirmAction(event) {
+		event.preventDefault();
+		const target = event.currentTarget;
+		const params = { ...event.params };
+		const confirmMessage = params.confirmMessage || target.dataset.confirmMessageParam || target.getAttribute("data-turbo-confirm");
+		if (!confirmMessage) {
+			console.warn("LiveComponent: live#confirmAction requires a confirm message.");
+			return;
+		}
+		const actionName = params.action || target.dataset.confirmActionParam;
+		if (!actionName) throw new Error("LiveComponent: No action provided. Please use data-live-action-param.");
+		let isConfirmed = false;
+		const liveConfirmEvent = new CustomEvent("live:confirmAction", {
+			bubbles: true,
+			cancelable: true,
+			detail: {
+				message: confirmMessage,
+				promise: null
+			}
+		});
+		target.dispatchEvent(liveConfirmEvent);
+		if (liveConfirmEvent.defaultPrevented) {
+			if (liveConfirmEvent.detail.promise) try {
+				isConfirmed = await liveConfirmEvent.detail.promise;
+			} catch {
+				isConfirmed = false;
+			}
+		} else {
+			const turbo = window.Turbo;
+			const turboConfirm = turbo?.config?.forms?.confirm || turbo?.navigator?.confirmMethod;
+			if (typeof turboConfirm === "function") isConfirmed = await turboConfirm(confirmMessage, target.closest("form"), target);
+			else isConfirmed = window.confirm(confirmMessage);
+		}
+		if (!isConfirmed) return;
+		params.action = actionName;
+		delete params.confirmMessage;
+		delete params.confirmAction;
+		const fakeEvent = {
+			type: event.type,
+			preventDefault: () => {},
+			stopPropagation: () => {},
+			currentTarget: target,
+			target: event.target,
+			params,
+			defaultPrevented: false
+		};
+		this.action(fakeEvent);
 	}
 	$render() {
 		return this.component.render();
