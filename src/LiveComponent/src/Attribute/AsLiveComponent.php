@@ -148,14 +148,19 @@ final class AsLiveComponent extends AsTwigComponent
      *
      * @param object|class-string $component
      *
-     * @return array<array{action: string, event: string}>
+     * @return array<array{action: string, event: string, condition: string|null}>
      */
     public static function liveListeners(object|string $component): array
     {
         $listeners = [];
         foreach (self::cachedMethodsFor($component, LiveListener::class) as $method) {
             foreach ($method->getAttributes(LiveListener::class) as $attribute) {
-                $listeners[] = ['action' => $method->getName(), 'event' => $attribute->newInstance()->getEventName()];
+                $liveListener = $attribute->newInstance();
+                $listeners[] = [
+                    'action' => $method->getName(),
+                    'event' => $liveListener->getEventName(),
+                    'condition' => $liveListener->getCondition(),
+                ];
             }
         }
 

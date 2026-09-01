@@ -239,6 +239,36 @@ describe('ValueStore', () => {
         expect(container.getOriginalProps()).toEqual({ city: 'Grand Rapids', user: 'Kevin', product: 5 });
     });
 
+    it('getCurrentProps() returns props unmodified when there are no local changes', () => {
+        const store = new ValueStore({ city: 'Grand Rapids', product: 5 });
+
+        expect(store.getCurrentProps()).toEqual({ city: 'Grand Rapids', product: 5 });
+    });
+
+    it('getCurrentProps() merges in dirty props not yet sent to the server', () => {
+        const store = new ValueStore({ city: 'Grand Rapids', product: 5 });
+        store.set('product', 99);
+
+        expect(store.getCurrentProps()).toEqual({ city: 'Grand Rapids', product: 99 });
+        // the original props are untouched
+        expect(store.getOriginalProps()).toEqual({ city: 'Grand Rapids', product: 5 });
+    });
+
+    it('getCurrentProps() merges in pending props still awaiting a server response', () => {
+        const store = new ValueStore({ product: 5 });
+        store.set('product', 99);
+        store.flushDirtyPropsToPending();
+
+        expect(store.getCurrentProps()).toEqual({ product: 99 });
+    });
+
+    it('getCurrentProps() merges deeply nested dirty props', () => {
+        const store = new ValueStore({ user: { firstName: 'Ryan', lastName: 'Weaver' } });
+        store.set('user.firstName', 'Kevin');
+
+        expect(store.getCurrentProps()).toEqual({ user: { firstName: 'Kevin', lastName: 'Weaver' } });
+    });
+
     const storeNewPropsFromParentDataset = [
         {
             props: {},

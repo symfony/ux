@@ -118,7 +118,7 @@ final class LivePropInheritanceTest extends KernelTestCase
         $listeners = AsLiveComponent::liveListeners($child);
 
         $this->assertContains(
-            ['action' => 'save', 'event' => 'save'],
+            ['action' => 'save', 'event' => 'save', 'condition' => null],
             $listeners,
             'The save listener must be registered on the child component when '.
             '#[LiveListener] is declared on the parent class method.'

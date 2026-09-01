@@ -1,4 +1,4 @@
-import { getDeepData } from '../data_manipulation_utils';
+import { getDeepData, setDeepData } from '../data_manipulation_utils';
 import { normalizeModelName } from '../string_utils';
 
 export default class {
@@ -80,6 +80,26 @@ export default class {
 
     getOriginalProps(): any {
         return { ...this.props };
+    }
+
+    /**
+     * Returns the current, effective props: the original props, deeply
+     * merged with any local changes that have not been confirmed by the
+     * server yet.
+     *
+     * Used, for example, to evaluate a LiveListener condition against the
+     * "live" prop values as currently known on the client.
+     */
+    getCurrentProps(): any {
+        let props = this.getOriginalProps();
+
+        [this.pendingProps, this.dirtyProps].forEach((changedProps) => {
+            Object.keys(changedProps).forEach((name) => {
+                props = setDeepData(props, name, changedProps[name]);
+            });
+        });
+
+        return props;
     }
 
     getDirtyProps(): any {

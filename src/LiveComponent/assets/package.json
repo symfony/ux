@@ -50,6 +50,7 @@
     },
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
+        "@hypatiatech/jexl": "^4.10.5",
         "@testing-library/dom": "^10.4.1",
         "@testing-library/jest-dom": "^6.6.3",
         "@testing-library/user-event": "^13.1.9",

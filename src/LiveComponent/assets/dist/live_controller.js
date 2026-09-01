@@ -442,6 +442,1974 @@ var HookManager_default = class {
 		});
 	}
 };
+const numericRegex = /^-?(?:(?:[0-9]*\.[0-9]+)|[0-9]+)$/;
+const identRegex = /^[a-zA-Zа-яА-Я_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF$][a-zA-Zа-яА-Я0-9_\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF$]*$/;
+const escEscRegex = /\\\\/;
+const whitespaceRegex = /^\s*$/;
+const preOpRegexElements = [
+	"'(?:(?:\\\\')|[^'])*'",
+	"\"(?:(?:\\\\\")|[^\"])*\"",
+	"`(?:(?:\\\\`)|[^`])*`",
+	"\\s+",
+	"\\btrue\\b",
+	"\\bfalse\\b",
+	"\\bnull\\b",
+	"\\bundefined\\b",
+	"(?:[0-9]+(?:\\.[0-9]+)?|\\.[0-9]+)"
+];
+const postOpRegexElements = ["[a-zA-Zа-яА-Я_À-ÖØ-öø-ÿ\\$][a-zA-Z0-9а-яА-Я_À-ÖØ-öø-ÿ\\$]*"];
+const unaryOpsAfter = [
+	"binaryOp",
+	"unaryOp",
+	"openParen",
+	"openBracket",
+	"question",
+	"colon",
+	"comma"
+];
+var Lexer = class {
+	constructor(grammar) {
+		this._grammar = grammar;
+	}
+	getElements(str) {
+		const regex = this._getSplitRegex();
+		return str.split(regex).filter((elem) => {
+			return elem;
+		});
+	}
+	getTokens(elements) {
+		const tokens = [];
+		let negate = false;
+		for (let i = 0; i < elements.length; i++) {
+			const element = elements[i];
+			if (!element) continue;
+			if (this._isWhitespace(element)) {
+				if (tokens.length > 0) tokens[tokens.length - 1].raw += element;
+			} else if ((element === "+" || element === "-") && this._isUnary(tokens)) {
+				const lastToken = tokens.length > 0 ? tokens[tokens.length - 1] : null;
+				if (lastToken && lastToken.type === "binaryOp" && (lastToken.value === "+" || lastToken.value === "-") && !lastToken.raw.match(/\s$/)) throw new Error(`Unexpected token '${element}' after operator '${lastToken.value}'`);
+				let nextElement = "";
+				for (let j = i + 1; j < elements.length; j++) if (!this._isWhitespace(elements[j])) {
+					nextElement = elements[j];
+					break;
+				}
+				if (element === "-") if (nextElement.match(numericRegex)) negate = true;
+				else {
+					const token = this._createToken(element);
+					token.type = "unaryOp";
+					tokens.push(token);
+				}
+				else if (!nextElement.match(numericRegex)) {
+					const token = this._createToken(element);
+					token.type = "unaryOp";
+					tokens.push(token);
+				}
+			} else {
+				if (negate) {
+					elements[i] = "-" + element;
+					negate = false;
+				}
+				tokens.push(this._createToken(elements[i]));
+			}
+		}
+		if (negate) tokens.push(this._createToken("-"));
+		return tokens;
+	}
+	tokenize(str) {
+		const elements = this.getElements(str);
+		return this.getTokens(elements);
+	}
+	_createToken(element) {
+		const token = {
+			type: "literal",
+			value: element,
+			raw: element
+		};
+		if (element[0] === "\"" || element[0] === "'") token.value = this._unquote(element);
+		else if (element[0] === "`") {
+			token.type = "template";
+			token.value = element;
+		} else if (element.match(numericRegex)) token.value = parseFloat(element);
+		else if (element === "true" || element === "false") token.value = element === "true";
+		else if (element === "null") token.value = null;
+		else if (element === "undefined") token.value = void 0;
+		else if (this._grammar.elements[element]) token.type = this._grammar.elements[element].type;
+		else if (element.match(identRegex)) token.type = "identifier";
+		else throw new Error(`Invalid expression token: ${element}`);
+		return token;
+	}
+	_escapeRegExp(str) {
+		str = str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+		if (str.match(identRegex)) str = "\\b" + str + "\\b";
+		return str;
+	}
+	_getSplitRegex() {
+		if (!this._splitRegex) {
+			const elemArray = Object.keys(this._grammar.elements).sort((a, b) => {
+				return b.length - a.length;
+			}).map((elem) => {
+				return this._escapeRegExp(elem);
+			}, this);
+			this._splitRegex = new RegExp("(" + [
+				preOpRegexElements.join("|"),
+				elemArray.join("|"),
+				postOpRegexElements.join("|")
+			].join("|") + ")");
+		}
+		return this._splitRegex;
+	}
+	_isUnary(tokens) {
+		if (!tokens.length) return true;
+		const lastToken = tokens[tokens.length - 1];
+		if (!lastToken) return true;
+		return unaryOpsAfter.some((type) => type === lastToken.type);
+	}
+	_isWhitespace(str) {
+		return !!str.match(whitespaceRegex);
+	}
+	_unquote(str) {
+		const quote = str[0];
+		if (!quote) throw new Error("Cannot unquote empty string");
+		const escQuoteRegex = new RegExp("\\\\" + quote, "g");
+		return str.substr(1, str.length - 2).replace(escQuoteRegex, quote).replace(escEscRegex, "\\");
+	}
+};
+const states = {
+	expectOperand: { tokenTypes: {
+		literal: { toState: "expectBinOp" },
+		template: { toState: "expectBinOp" },
+		identifier: { toState: "identifier" },
+		unaryOp: {},
+		openParen: { toState: "subExpression" },
+		openCurl: {
+			toState: "expectObjKey",
+			handler: "objStart"
+		},
+		dot: { toState: "traverse" },
+		openBracket: {
+			toState: "arrayVal",
+			handler: "arrayStart"
+		}
+	} },
+	expectBinOp: {
+		tokenTypes: {
+			binaryOp: { toState: "expectOperand" },
+			pipe: { toState: "expectTransform" },
+			dot: { toState: "traverse" },
+			question: {
+				toState: "ternaryMid",
+				handler: "ternaryStart"
+			}
+		},
+		completable: true
+	},
+	expectTransform: { tokenTypes: { identifier: {
+		toState: "postTransform",
+		handler: "transform"
+	} } },
+	expectObjKey: { tokenTypes: {
+		literal: {
+			toState: "expectKeyValSep",
+			handler: "objKey"
+		},
+		identifier: {
+			toState: "expectKeyValSep",
+			handler: "objKey"
+		},
+		unaryOp: {
+			toState: "objSpread",
+			handler: "noop"
+		},
+		closeCurl: { toState: "expectBinOp" }
+	} },
+	expectKeyValSep: { tokenTypes: {
+		colon: { toState: "objVal" },
+		unaryOp: { toState: "objSpread" }
+	} },
+	postTransform: {
+		tokenTypes: {
+			openParen: { toState: "argVal" },
+			binaryOp: { toState: "expectOperand" },
+			dot: { toState: "traverse" },
+			openBracket: { toState: "filter" },
+			pipe: { toState: "expectTransform" }
+		},
+		completable: true
+	},
+	postArgs: {
+		tokenTypes: {
+			binaryOp: { toState: "expectOperand" },
+			dot: { toState: "traverse" },
+			openBracket: { toState: "filter" },
+			question: {
+				toState: "ternaryMid",
+				handler: "ternaryStart"
+			},
+			pipe: { toState: "expectTransform" }
+		},
+		completable: true
+	},
+	identifier: {
+		tokenTypes: {
+			binaryOp: { toState: "expectOperand" },
+			dot: { toState: "traverse" },
+			openBracket: { toState: "filter" },
+			openParen: {
+				toState: "argVal",
+				handler: "functionCall"
+			},
+			pipe: { toState: "expectTransform" },
+			question: {
+				toState: "ternaryMid",
+				handler: "ternaryStart"
+			}
+		},
+		completable: true
+	},
+	traverse: { tokenTypes: {
+		identifier: { toState: "identifier" },
+		pipe: { toState: "expectTransform" }
+	} },
+	filter: {
+		subHandler: "filter",
+		endStates: { closeBracket: "identifier" }
+	},
+	subExpression: {
+		subHandler: "subExpression",
+		endStates: { closeParen: "expectBinOp" }
+	},
+	argVal: {
+		subHandler: "argVal",
+		endStates: {
+			comma: "argVal",
+			closeParen: "postArgs"
+		}
+	},
+	objVal: {
+		subHandler: "objVal",
+		endStates: {
+			comma: "expectObjKey",
+			closeCurl: "expectBinOp"
+		}
+	},
+	objSpread: {
+		subHandler: "objSpread",
+		endStates: {
+			comma: "expectObjKey",
+			closeCurl: "expectBinOp"
+		}
+	},
+	arrayVal: {
+		subHandler: "arrayVal",
+		endStates: {
+			comma: "arrayVal",
+			closeBracket: "expectBinOp"
+		},
+		tokenTypes: { unaryOp: {
+			toState: "arraySpread",
+			handler: "noop"
+		} }
+	},
+	arraySpread: {
+		subHandler: "arraySpread",
+		endStates: {
+			comma: "arrayVal",
+			closeBracket: "expectBinOp"
+		}
+	},
+	ternaryMid: {
+		subHandler: "ternaryMid",
+		endStates: { colon: "ternaryEnd" }
+	},
+	ternaryEnd: {
+		subHandler: "ternaryEnd",
+		completable: true
+	}
+};
+var Parser = class Parser {
+	constructor(grammar, prefix, stopMap = {}) {
+		this._grammar = grammar;
+		this._state = "expectOperand";
+		this._tree = null;
+		this._exprStr = prefix || "";
+		this._relative = false;
+		this._stopMap = stopMap;
+	}
+	addToken(token) {
+		if (this._state === "complete") throw new Error("Cannot add a new token to a completed Parser");
+		const state = states[this._state];
+		if (!state) throw new Error(`Invalid parser state: ${this._state}`);
+		const startExpr = this._exprStr;
+		this._exprStr += token.raw;
+		if (this._state === "traverse" && token.type === "binaryOp" && typeof token.value === "string") {
+			if ([
+				"and",
+				"or",
+				"xor",
+				"in"
+			].includes(token.value)) token = {
+				type: "identifier",
+				value: token.value,
+				raw: token.raw
+			};
+		}
+		if ((this._state === "identifier" || this._state === "expectBinOp") && token.type === "unaryOp" && (token.value === "+" || token.value === "-")) token = {
+			type: "binaryOp",
+			value: token.value,
+			raw: token.raw
+		};
+		if (state.subHandler) {
+			if (!this._subParser) this._startSubExpression(startExpr);
+			const stopState = this._subParser.addToken(token);
+			if (stopState) {
+				this._endSubExpression();
+				if (this._parentStop) return stopState;
+				this._state = stopState;
+			}
+		} else if (state.tokenTypes && state.tokenTypes[token.type]) {
+			const typeOpts = state.tokenTypes[token.type];
+			if (!typeOpts) throw new Error(`No type options for token ${token.type}`);
+			if (typeOpts.handler) {
+				const handlerMethod = this._getTokenHandlerMethod(typeOpts.handler);
+				if (handlerMethod) handlerMethod(token);
+			} else {
+				const handlerMethod = this._getHandlerMethod(token.type);
+				if (handlerMethod) handlerMethod(token);
+			}
+			if (typeOpts.toState) this._state = typeOpts.toState;
+		} else if (this._stopMap[token.type]) return this._stopMap[token.type];
+		else throw new Error(`Token ${token.raw} (${token.type}) unexpected in expression: ${this._exprStr}`);
+		return false;
+	}
+	addTokens(tokens) {
+		tokens.forEach(this.addToken, this);
+	}
+	complete() {
+		const currentState = states[this._state];
+		if (this._cursor && (!currentState || !currentState.completable)) throw new Error(`Unexpected end of expression: ${this._exprStr}`);
+		if (this._subParser) this._endSubExpression();
+		this._state = "complete";
+		return this._cursor ? this._tree : null;
+	}
+	isRelative() {
+		return this._relative;
+	}
+	_endSubExpression() {
+		const currentState = states[this._state];
+		if (!currentState || !currentState.subHandler) throw new Error(`Invalid state for ending sub expression: ${this._state}`);
+		if (this._subParser.isRelative()) this._relative = true;
+		const subHandlerName = currentState.subHandler;
+		const handlerMethod = this._getSubHandlerMethod(subHandlerName);
+		if (handlerMethod) handlerMethod(this._subParser.complete());
+		this._subParser = null;
+	}
+	_placeAtCursor(node) {
+		if (!this._cursor) this._tree = node;
+		else {
+			this._cursor.right = node;
+			this._setParent(node, this._cursor);
+		}
+		this._cursor = node;
+	}
+	_placeBeforeCursor(node) {
+		this._cursor = this._cursor?._parent;
+		this._placeAtCursor(node);
+	}
+	_setParent(node, parent) {
+		Object.defineProperty(node, "_parent", {
+			value: parent,
+			writable: true
+		});
+	}
+	_startSubExpression(exprStr) {
+		let endStates = states[this._state].endStates;
+		if (!endStates) {
+			this._parentStop = true;
+			endStates = this._stopMap;
+		}
+		this._subParser = new Parser(this._grammar, exprStr, endStates);
+	}
+	argVal(ast) {
+		if (ast) this._cursor?.args?.push(ast);
+	}
+	arrayStart() {
+		this._placeAtCursor({
+			type: "ArrayLiteral",
+			value: []
+		});
+	}
+	arrayVal(ast) {
+		const { _cursor } = this;
+		if (ast && _cursor && Array.isArray(_cursor.value)) if (ast.type === "UnaryExpression" && ast.operator === "..." && ast.right) {
+			const right = ast.right;
+			if (!Array.isArray(_cursor.entries)) _cursor.entries = [..._cursor.value];
+			_cursor.value.push(right);
+			if (Array.isArray(_cursor.entries)) _cursor.entries.push({
+				type: "SpreadElement",
+				expr: right
+			});
+		} else {
+			_cursor.value.push(ast);
+			if (Array.isArray(_cursor.entries)) _cursor.entries.push(ast);
+		}
+	}
+	arraySpread(ast) {
+		const { _cursor } = this;
+		if (ast && _cursor) {
+			if (!Array.isArray(_cursor.entries)) _cursor.entries = [..._cursor.value];
+			_cursor.entries.push({
+				type: "SpreadElement",
+				expr: ast
+			});
+		}
+	}
+	binaryOp(token) {
+		const precedence = this._grammar.elements[token.value]?.precedence || 0;
+		let parent = this._cursor?._parent;
+		while (parent && parent.operator && this._grammar.elements[parent.operator]?.precedence >= precedence) {
+			this._cursor = parent;
+			parent = parent._parent;
+		}
+		const node = {
+			type: "BinaryExpression",
+			operator: token.value,
+			left: this._cursor
+		};
+		if (this._cursor) this._setParent(this._cursor, node);
+		this._cursor = parent;
+		this._placeAtCursor(node);
+	}
+	dot() {
+		this._nextIdentEncapsulate = Boolean(this._cursor && this._cursor.type !== "UnaryExpression" && (this._cursor.type !== "BinaryExpression" || this._cursor.type === "BinaryExpression" && this._cursor.right));
+		this._nextIdentRelative = !this._cursor || this._cursor && !this._nextIdentEncapsulate;
+		if (this._nextIdentRelative) this._relative = true;
+	}
+	filter(ast) {
+		this._placeBeforeCursor({
+			type: "FilterExpression",
+			expr: ast,
+			relative: this._subParser.isRelative(),
+			subject: this._cursor
+		});
+	}
+	functionCall() {
+		if (this._cursor && this._cursor.type === "FunctionCall" && this._cursor.pool === "transforms") return;
+		const functionName = this._buildFullIdentifierPath(this._cursor || null);
+		this._placeBeforeCursor({
+			type: "FunctionCall",
+			name: functionName,
+			args: [],
+			pool: "functions"
+		});
+	}
+	_buildFullIdentifierPath(node) {
+		if (!node || node.type !== "Identifier") return node?.value || "";
+		const parts = [];
+		let current = node;
+		while (current && current.type === "Identifier") {
+			parts.unshift(current.value);
+			current = current.from || null;
+		}
+		return parts.join(".");
+	}
+	identifier(token) {
+		const node = {
+			type: "Identifier",
+			value: token.value
+		};
+		if (this._nextIdentEncapsulate && this._cursor && this._cursor.type === "FunctionCall" && this._cursor.pool === "transforms") {
+			const namespaceParts = [];
+			namespaceParts.push(this._cursor.name);
+			namespaceParts.push(token.value);
+			const namespacedTransformName = namespaceParts.join(".");
+			this._cursor.name = namespacedTransformName;
+			this._nextIdentEncapsulate = false;
+			return;
+		}
+		if (this._nextIdentEncapsulate) {
+			node.from = this._cursor;
+			this._placeBeforeCursor(node);
+			this._nextIdentEncapsulate = false;
+		} else {
+			if (this._nextIdentRelative) {
+				node.relative = true;
+				this._nextIdentRelative = false;
+			}
+			this._placeAtCursor(node);
+		}
+	}
+	literal(token) {
+		this._placeAtCursor({
+			type: "Literal",
+			value: token.value
+		});
+	}
+	template(token) {
+		const raw = token.value || token.raw || "";
+		if (!raw || raw[0] !== "`" || raw[raw.length - 1] !== "`") throw new Error("Invalid template literal");
+		const content = raw.slice(1, -1);
+		const parts = [];
+		let buffer = "";
+		let i = 0;
+		const pushBufferLiteral = () => {
+			if (buffer.length > 0) {
+				parts.push({
+					type: "Literal",
+					value: buffer
+				});
+				buffer = "";
+			}
+		};
+		const readInterpolated = () => {
+			let j = i + 2;
+			let inSingle = false;
+			let inDouble = false;
+			let escaped = false;
+			let depthParen = 0;
+			let depthBracket = 0;
+			let depthBrace = 0;
+			for (; j < content.length; j++) {
+				const ch = content[j];
+				if (escaped) {
+					escaped = false;
+					continue;
+				}
+				if (ch === "\\") {
+					escaped = true;
+					continue;
+				}
+				if (!inSingle && !inDouble) {
+					if (ch === "'") inSingle = true;
+					else if (ch === "\"") inDouble = true;
+					else if (ch === "(") depthParen++;
+					else if (ch === ")") depthParen = Math.max(0, depthParen - 1);
+					else if (ch === "[") depthBracket++;
+					else if (ch === "]") depthBracket = Math.max(0, depthBracket - 1);
+					else if (ch === "{") depthBrace++;
+					else if (ch === "}") {
+						if (depthParen === 0 && depthBracket === 0 && depthBrace === 0 && content[j - 1] === "}") {
+							const inner = content.slice(i + 2, j - 1);
+							i = j + 1;
+							return inner;
+						}
+						if (depthBrace > 0) depthBrace = Math.max(0, depthBrace - 1);
+					}
+					continue;
+				}
+				if (inSingle && ch === "'") inSingle = false;
+				if (inDouble && ch === "\"") inDouble = false;
+			}
+			throw new Error("Unclosed interpolation in template literal");
+		};
+		while (i < content.length) {
+			const ch = content[i];
+			if (ch === "\\") {
+				const next = content[i + 1];
+				if (next === "`" || next === "{" || next === "\\") {
+					buffer += next;
+					i += 2;
+					continue;
+				}
+				buffer += ch;
+				i++;
+				continue;
+			}
+			if (ch === "{" && content[i + 1] === "{") {
+				pushBufferLiteral();
+				const inner = readInterpolated();
+				const nestedLexer = new Lexer(this._grammar);
+				const nestedParser = new Parser(this._grammar);
+				const nestedTokens = nestedLexer.tokenize(inner);
+				nestedParser.addTokens(nestedTokens);
+				const nestedAst = nestedParser.complete();
+				if (!nestedAst) parts.push({
+					type: "Literal",
+					value: ""
+				});
+				else parts.push(nestedAst);
+				continue;
+			}
+			buffer += ch;
+			i++;
+		}
+		pushBufferLiteral();
+		this._placeAtCursor({
+			type: "TemplateLiteral",
+			value: void 0,
+			parts
+		});
+	}
+	objKey(token) {
+		this._curObjKey = token.value;
+	}
+	objStart() {
+		this._placeAtCursor({
+			type: "ObjectLiteral",
+			value: {}
+		});
+	}
+	objVal(ast) {
+		if (this._cursor && this._curObjKey) if (ast.type === "UnaryExpression" && ast.operator === "..." && ast.right) {
+			const right = ast.right;
+			this._cursor.value[this._curObjKey] = right;
+			if (Array.isArray(this._cursor.entries)) this._cursor.entries.push({
+				type: "ObjectProperty",
+				key: this._curObjKey,
+				value: right
+			});
+		} else {
+			this._cursor.value[this._curObjKey] = ast;
+			if (Array.isArray(this._cursor.entries)) this._cursor.entries.push({
+				type: "ObjectProperty",
+				key: this._curObjKey,
+				value: ast
+			});
+		}
+	}
+	objSpread(ast) {
+		if (this._cursor && Array.isArray(this._cursor.entries)) {
+			let expr = ast;
+			if (ast.type === "UnaryExpression" && ast.operator === "..." && ast.right) expr = ast.right;
+			this._cursor.entries.push({
+				type: "SpreadElement",
+				expr
+			});
+			return;
+		}
+		if (this._cursor) {
+			const cur = this._cursor;
+			if (!Array.isArray(cur.entries)) {
+				cur.entries = [];
+				const obj = cur.value || {};
+				for (const key of Object.keys(obj)) cur.entries.push({
+					type: "ObjectProperty",
+					key,
+					value: obj[key]
+				});
+			}
+			let expr = ast;
+			if (ast.type === "UnaryExpression" && ast.operator === "..." && ast.right) expr = ast.right;
+			cur.entries.push({
+				type: "SpreadElement",
+				expr
+			});
+		}
+	}
+	subExpression(ast) {
+		this._placeAtCursor(ast);
+	}
+	ternaryEnd(ast) {
+		if (this._cursor) this._cursor.alternate = ast;
+	}
+	ternaryMid(ast) {
+		if (this._cursor) this._cursor.consequent = ast;
+	}
+	ternaryStart() {
+		this._tree = {
+			type: "ConditionalExpression",
+			test: this._tree || void 0
+		};
+		this._cursor = this._tree;
+	}
+	transform(token) {
+		const transformName = token.value;
+		this._placeBeforeCursor({
+			type: "FunctionCall",
+			name: transformName,
+			args: this._cursor ? [this._cursor] : [],
+			pool: "transforms"
+		});
+	}
+	unaryOp(token) {
+		this._placeAtCursor({
+			type: "UnaryExpression",
+			operator: token.value
+		});
+	}
+	_getHandlerMethod(tokenType) {
+		switch (tokenType) {
+			case "binaryOp": return this.binaryOp.bind(this);
+			case "dot": return () => this.dot();
+			case "identifier": return this.identifier.bind(this);
+			case "literal": return this.literal.bind(this);
+			case "template": return this.template.bind(this);
+			case "unaryOp": return this.unaryOp.bind(this);
+			case "pipe": return () => this.pipe();
+			default: return;
+		}
+	}
+	pipe() {
+		if (this._state === "traverse") {
+			this._placeAtCursor({
+				type: "Identifier",
+				value: ".",
+				relative: true
+			});
+			this._relative = true;
+		}
+	}
+	_getTokenHandlerMethod(handlerName) {
+		switch (handlerName) {
+			case "arrayStart": return () => this.arrayStart();
+			case "noop": return () => {};
+			case "functionCall": return () => this.functionCall();
+			case "objKey": return this.objKey.bind(this);
+			case "objStart": return () => this.objStart();
+			case "ternaryStart": return () => this.ternaryStart();
+			case "transform": return this.transform.bind(this);
+			default: return;
+		}
+	}
+	_getSubHandlerMethod(handlerName) {
+		switch (handlerName) {
+			case "argVal": return this.argVal.bind(this);
+			case "arrayVal": return this.arrayVal.bind(this);
+			case "arraySpread": return this.arraySpread.bind(this);
+			case "filter": return this.filter.bind(this);
+			case "objVal": return this.objVal.bind(this);
+			case "objSpread": return this.objSpread.bind(this);
+			case "subExpression": return this.subExpression.bind(this);
+			case "ternaryEnd": return this.ternaryEnd.bind(this);
+			case "ternaryMid": return this.ternaryMid.bind(this);
+			default: return;
+		}
+	}
+};
+var ValidationSeverity;
+(function(ValidationSeverity) {
+	ValidationSeverity["ERROR"] = "error";
+	ValidationSeverity["WARNING"] = "warning";
+	ValidationSeverity["INFO"] = "info";
+})(ValidationSeverity || (ValidationSeverity = {}));
+var Autocomplete = class {
+	constructor(grammar) {
+		this._grammar = grammar;
+		this._lexer = new Lexer(grammar);
+	}
+	getSuggestions(expression, cursorPosition, context) {
+		try {
+			if (cursorPosition < 0 || cursorPosition > expression.length) return { suggestions: [] };
+			if (expression.length === 0) return { suggestions: this._getGeneralSuggestions(context) };
+			const analysis = this._analyzeContext(expression, cursorPosition, context);
+			const suggestions = this._getSuggestionsForContext(analysis, context);
+			const filteredSuggestions = this._filterSuggestions(suggestions, analysis.partialIdentifier);
+			const replaceRange = this._getReplaceRange(expression, cursorPosition, analysis);
+			return {
+				suggestions: filteredSuggestions,
+				triggerCharacter: this._getTriggerCharacter(analysis),
+				replaceRange
+			};
+		} catch {
+			return { suggestions: [] };
+		}
+	}
+	_analyzeContext(expression, cursorPosition, context) {
+		const beforeCursor = expression.substring(0, cursorPosition);
+		if (this._isInsideString(beforeCursor)) return {
+			contextType: "general",
+			insideString: true
+		};
+		if (this._isInsideTemplate(beforeCursor)) return {
+			contextType: "general",
+			insideTemplate: true
+		};
+		const tokens = this._lexer.tokenize(beforeCursor);
+		if (tokens.length === 0) return { contextType: "general" };
+		const lastToken = tokens[tokens.length - 1];
+		const arrayFilterContext = this._analyzeArrayFilterContext(tokens, context, expression, cursorPosition);
+		if (arrayFilterContext) return arrayFilterContext;
+		switch (lastToken.type) {
+			case "dot": return this._analyzeDotContext(tokens, context);
+			case "pipe": return { contextType: "pipe" };
+			case "openParen": return { contextType: "paren" };
+			case "openBracket": return { contextType: "bracket" };
+			case "comma": {
+				const beforeCursor = expression.substring(0, cursorPosition);
+				if (beforeCursor.endsWith(", ") || beforeCursor.endsWith(",")) return { contextType: "general" };
+				return { contextType: "paren" };
+			}
+			case "identifier": {
+				const partialId = this._getPartialIdentifier(expression, cursorPosition);
+				if (partialId) {
+					const dotContext = this._analyzeDotContext(tokens, context);
+					if (dotContext.contextType === "dot" && dotContext.targetObject) return {
+						contextType: "dot",
+						targetObject: dotContext.targetObject,
+						partialIdentifier: partialId
+					};
+					return {
+						contextType: "identifier",
+						partialIdentifier: partialId
+					};
+				}
+				const afterCursor = expression.substring(cursorPosition);
+				if (afterCursor.trim() === "" || afterCursor.startsWith(" ")) return { contextType: "operator" };
+				return { contextType: "identifier" };
+			}
+			case "binaryOp":
+			case "unaryOp": {
+				const beforeCursor = expression.substring(0, cursorPosition);
+				if (beforeCursor.endsWith(" && ") || beforeCursor.endsWith(" || ") || beforeCursor.endsWith(" > ") || beforeCursor.endsWith(" < ") || beforeCursor.endsWith(" >= ") || beforeCursor.endsWith(" <= ") || beforeCursor.endsWith(" == ") || beforeCursor.endsWith(" != ") || beforeCursor.endsWith(" + ") || beforeCursor.endsWith(" - ") || beforeCursor.endsWith(" * ") || beforeCursor.endsWith(" / ") || beforeCursor.endsWith(" % ")) return { contextType: "general" };
+				return { contextType: "operator" };
+			}
+			default: return { contextType: "general" };
+		}
+	}
+	_analyzeDotContext(tokens, context) {
+		let targetObject = context;
+		let namespace;
+		const pathComponents = [];
+		for (let i = tokens.length - 2; i >= 0; i--) {
+			const token = tokens[i];
+			if (token.type === "identifier") pathComponents.push(token.value);
+			else if (token.type === "dot") continue;
+			else if (token.type === "number" || token.type === "literal") pathComponents.push(typeof token.value === "number" ? token.value : parseInt(token.value, 10));
+			else if (token.type === "closeBracket") continue;
+			else if (token.type === "openBracket") continue;
+			else break;
+		}
+		for (const component of pathComponents.reverse()) if (targetObject && typeof targetObject === "object") if (typeof component === "number" && Array.isArray(targetObject)) targetObject = targetObject[component];
+		else if (typeof component === "string") targetObject = targetObject[component];
+		else {
+			targetObject = void 0;
+			break;
+		}
+		else {
+			targetObject = void 0;
+			break;
+		}
+		const lastIdentifier = this._findLastIdentifier(tokens);
+		if (lastIdentifier && this._isNamespace(lastIdentifier)) namespace = lastIdentifier;
+		return {
+			contextType: "dot",
+			targetObject,
+			namespace
+		};
+	}
+	_analyzeArrayFilterContext(tokens, context, expression, cursorPosition) {
+		let firstBracketIndex = -1;
+		let targetArray = null;
+		let arrayElement = null;
+		for (let i = 0; i < tokens.length; i++) if (tokens[i].type === "openBracket") {
+			if (i + 1 < tokens.length && tokens[i + 1].type === "dot") {
+				firstBracketIndex = i;
+				let tempTargetArray = context;
+				const identifiers = [];
+				for (let j = i - 1; j >= 0; j--) {
+					const token = tokens[j];
+					if (token.type === "identifier") identifiers.push(token.value);
+					else if (token.type === "dot") continue;
+					else break;
+				}
+				for (const identifier of identifiers.reverse()) if (tempTargetArray && typeof tempTargetArray === "object") tempTargetArray = tempTargetArray[identifier];
+				else return null;
+				if (Array.isArray(tempTargetArray) && tempTargetArray.length > 0) {
+					targetArray = tempTargetArray;
+					arrayElement = tempTargetArray[0];
+					break;
+				}
+			}
+		}
+		if (firstBracketIndex === -1 || !targetArray || !arrayElement) return null;
+		let currentBracketIndex = -1;
+		let dotAfterCurrentBracket = false;
+		for (let i = tokens.length - 1; i >= 0; i--) if (tokens[i].type === "openBracket") {
+			if (i + 1 < tokens.length && tokens[i + 1].type === "dot") {
+				currentBracketIndex = i;
+				dotAfterCurrentBracket = true;
+				break;
+			}
+		}
+		if (currentBracketIndex === -1 || !dotAfterCurrentBracket) {
+			for (let i = tokens.length - 1; i >= 0; i--) if (tokens[i].type === "closeBracket") {
+				if (i + 1 < tokens.length && tokens[i + 1].type === "dot") {
+					let bracketCount = 1;
+					for (let j = i - 1; j >= 0; j--) if (tokens[j].type === "closeBracket") bracketCount++;
+					else if (tokens[j].type === "openBracket") {
+						bracketCount--;
+						if (bracketCount === 0) {
+							currentBracketIndex = j;
+							dotAfterCurrentBracket = true;
+							break;
+						}
+					}
+					break;
+				}
+			}
+		}
+		if (currentBracketIndex === -1 || !dotAfterCurrentBracket) return null;
+		if (tokens.length === currentBracketIndex + 2 && tokens[tokens.length - 1].type === "dot") {
+			let elementTarget = arrayElement;
+			const elementIdentifiers = [];
+			for (let i = firstBracketIndex + 2; i < currentBracketIndex; i++) {
+				const token = tokens[i];
+				if (token.type === "identifier") elementIdentifiers.push(token.value);
+				else if (token.type === "dot") continue;
+				else if (token.type === "openBracket") {
+					if (i + 1 < tokens.length && tokens[i + 1].type === "dot") {
+						for (const identifier of elementIdentifiers) if (elementTarget && typeof elementTarget === "object") elementTarget = elementTarget[identifier];
+						else return null;
+						if (Array.isArray(elementTarget) && elementTarget.length > 0) {
+							elementTarget = elementTarget[0];
+							elementIdentifiers.length = 0;
+						} else return null;
+					}
+					continue;
+				}
+			}
+			for (const identifier of elementIdentifiers) if (elementTarget && typeof elementTarget === "object") {
+				elementTarget = elementTarget[identifier];
+				if (Array.isArray(elementTarget) && elementTarget.length > 0) elementTarget = elementTarget[0];
+			} else return null;
+			return {
+				contextType: "arrayFilter",
+				targetObject: elementTarget,
+				arrayElementType: arrayElement,
+				relativeContext: true,
+				partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+			};
+		}
+		if (tokens.length > 2 && (tokens[tokens.length - 1].type === "dot" || tokens[tokens.length - 1].type === "identifier")) {
+			const prevToken = tokens[tokens.length - 2];
+			if (prevToken.type === "closeBracket" || prevToken.type === "dot" && tokens[tokens.length - 3]?.type === "closeBracket") {
+				let bracketCount = 1;
+				let foundNumber = false;
+				const startIndex = prevToken.type === "closeBracket" ? tokens.length - 3 : tokens.length - 4;
+				for (let i = startIndex; i >= 0; i--) if (tokens[i].type === "closeBracket") bracketCount++;
+				else if (tokens[i].type === "openBracket") {
+					bracketCount--;
+					if (bracketCount === 0) {
+						if (i + 1 < tokens.length && (tokens[i + 1].type === "number" || tokens[i + 1].type === "literal")) {
+							foundNumber = true;
+							currentBracketIndex = i;
+							dotAfterCurrentBracket = true;
+						}
+						break;
+					}
+				}
+				if (foundNumber) {
+					let elementTarget = arrayElement;
+					const elementIdentifiers = [];
+					for (let i = firstBracketIndex + 2; i < currentBracketIndex; i++) {
+						const token = tokens[i];
+						if (token.type === "identifier") elementIdentifiers.push(token.value);
+						else if (token.type === "dot") continue;
+						else if (token.type === "openBracket") continue;
+					}
+					for (const identifier of elementIdentifiers) if (elementTarget && typeof elementTarget === "object") elementTarget = elementTarget[identifier];
+					else return null;
+					return {
+						contextType: "arrayFilter",
+						targetObject: elementTarget,
+						arrayElementType: arrayElement,
+						relativeContext: true,
+						partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+					};
+				}
+			}
+		}
+		let elementTarget = arrayElement;
+		const elementIdentifiers = [];
+		for (let i = firstBracketIndex + 2; i < currentBracketIndex; i++) {
+			const token = tokens[i];
+			if (token.type === "identifier") elementIdentifiers.push(token.value);
+			else if (token.type === "dot") continue;
+			else if (token.type === "openBracket") {
+				if (i + 1 < tokens.length && tokens[i + 1].type === "dot") {
+					for (const identifier of elementIdentifiers) if (elementTarget && typeof elementTarget === "object") elementTarget = elementTarget[identifier];
+					else return null;
+					if (Array.isArray(elementTarget) && elementTarget.length > 0) {
+						elementTarget = elementTarget[0];
+						elementIdentifiers.length = 0;
+					} else return null;
+				}
+				continue;
+			}
+		}
+		for (let i = currentBracketIndex + 2; i < tokens.length; i++) {
+			const token = tokens[i];
+			if (token.type === "identifier") elementIdentifiers.push(token.value);
+			else if (token.type === "dot") continue;
+			else if (token.type === "openBracket") break;
+			else continue;
+		}
+		const lastToken = tokens[tokens.length - 1];
+		if (lastToken.type === "identifier" && lastToken.value.length > 0 && expression && cursorPosition !== void 0) {
+			const partialIdentifier = this._getPartialIdentifier(expression, cursorPosition);
+			if (partialIdentifier && partialIdentifier.length < lastToken.value.length) elementIdentifiers.pop();
+			else if (partialIdentifier && partialIdentifier === lastToken.value) {
+				if (cursorPosition === expression.length || cursorPosition < expression.length && /[a-zA-Z0-9_]/.test(expression[cursorPosition])) elementIdentifiers.pop();
+			}
+		}
+		for (const identifier of elementIdentifiers) if (elementTarget && typeof elementTarget === "object") {
+			elementTarget = elementTarget[identifier];
+			if (Array.isArray(elementTarget) && elementTarget.length > 0) elementTarget = elementTarget[0];
+		} else return null;
+		if (tokens.length > 0 && tokens[tokens.length - 1].type === "dot") return {
+			contextType: "arrayFilter",
+			targetObject: elementTarget,
+			arrayElementType: arrayElement,
+			relativeContext: true,
+			partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+		};
+		if (tokens.length > 0 && tokens[tokens.length - 1].type === "identifier" && expression && cursorPosition !== void 0) {
+			const partialIdentifier = this._getPartialIdentifier(expression, cursorPosition);
+			if (partialIdentifier && partialIdentifier.length < tokens[tokens.length - 1].value.length) return {
+				contextType: "arrayFilter",
+				targetObject: elementTarget,
+				arrayElementType: arrayElement,
+				relativeContext: true,
+				partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+			};
+			else if (partialIdentifier && partialIdentifier === tokens[tokens.length - 1].value) if (cursorPosition === expression.length || cursorPosition < expression.length && /[a-zA-Z0-9_]/.test(expression[cursorPosition])) {
+				if (elementTarget && typeof elementTarget === "object") {
+					let hasPartialMatch = false;
+					for (const key of Object.keys(elementTarget)) if (key.toLowerCase().startsWith(partialIdentifier.toLowerCase()) && key.toLowerCase() !== partialIdentifier.toLowerCase()) {
+						hasPartialMatch = true;
+						break;
+					}
+					if (hasPartialMatch) return {
+						contextType: "arrayFilter",
+						targetObject: elementTarget,
+						arrayElementType: arrayElement,
+						relativeContext: true,
+						partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+					};
+				}
+				return {
+					contextType: "arrayFilter",
+					targetObject: null,
+					arrayElementType: arrayElement,
+					relativeContext: true,
+					partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+				};
+			} else return {
+				contextType: "arrayFilter",
+				targetObject: elementTarget,
+				arrayElementType: arrayElement,
+				relativeContext: true,
+				partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+			};
+			else {
+				if (elementTarget && typeof elementTarget === "object") {
+					const partialIdentifier = this._getPartialIdentifier(expression, cursorPosition);
+					if (partialIdentifier && partialIdentifier.length > 0) {
+						let hasPartialMatch = false;
+						for (const key of Object.keys(elementTarget)) if (key.toLowerCase().startsWith(partialIdentifier.toLowerCase()) && key.toLowerCase() !== partialIdentifier.toLowerCase()) {
+							hasPartialMatch = true;
+							break;
+						}
+						if (hasPartialMatch) return {
+							contextType: "arrayFilter",
+							targetObject: elementTarget,
+							arrayElementType: arrayElement,
+							relativeContext: true,
+							partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+						};
+					}
+				}
+				return {
+					contextType: "arrayFilter",
+					targetObject: null,
+					arrayElementType: arrayElement,
+					relativeContext: true,
+					partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+				};
+			}
+		}
+		return {
+			contextType: "arrayFilter",
+			targetObject: elementTarget,
+			arrayElementType: arrayElement,
+			relativeContext: true,
+			partialIdentifier: expression && cursorPosition !== void 0 ? this._getPartialIdentifier(expression, cursorPosition) : void 0
+		};
+	}
+	_getSuggestionsForContext(analysis, context) {
+		if (analysis.insideString || analysis.insideTemplate) return [];
+		switch (analysis.contextType) {
+			case "dot": return this._getPropertySuggestions(analysis.targetObject, analysis.namespace);
+			case "arrayFilter": return this._getArrayFilterSuggestions(analysis);
+			case "pipe": return this._getTransformSuggestions(analysis.namespace);
+			case "function": return this._getFunctionSuggestions(analysis.namespace);
+			case "identifier": return this._getIdentifierSuggestions(context);
+			case "operator": return this._getOperatorSuggestions();
+			case "bracket":
+			case "paren": return this._getGeneralSuggestions(context);
+			default: return this._getGeneralSuggestions(context);
+		}
+	}
+	_getPropertySuggestions(targetObject, namespace) {
+		const suggestions = [];
+		if (namespace) {
+			const transformSuggestions = this._getNamespaceTransformSuggestions(namespace);
+			const functionSuggestions = this._getNamespaceFunctionSuggestions(namespace);
+			return [...transformSuggestions, ...functionSuggestions];
+		}
+		if (targetObject && typeof targetObject === "object") for (const key of Object.keys(targetObject)) {
+			const value = targetObject[key];
+			const type = this._getValueType(value);
+			suggestions.push({
+				label: key,
+				value: key,
+				type: "property",
+				description: `Property of type ${type}`,
+				detail: type
+			});
+		}
+		return suggestions;
+	}
+	_getArrayFilterSuggestions(analysis) {
+		const suggestions = [];
+		if (analysis.targetObject === null) return suggestions;
+		if (analysis.targetObject && typeof analysis.targetObject === "object") for (const key of Object.keys(analysis.targetObject)) {
+			const value = analysis.targetObject[key];
+			const type = this._getValueType(value);
+			if (analysis.partialIdentifier && !key.toLowerCase().startsWith(analysis.partialIdentifier.toLowerCase())) continue;
+			suggestions.push({
+				label: key,
+				value: key,
+				type: "property",
+				description: `Property of type ${type}`,
+				detail: type
+			});
+		}
+		else if (analysis.arrayElementType && typeof analysis.arrayElementType === "object") for (const key of Object.keys(analysis.arrayElementType)) {
+			const value = analysis.arrayElementType[key];
+			const type = this._getValueType(value);
+			if (analysis.partialIdentifier && !key.toLowerCase().startsWith(analysis.partialIdentifier.toLowerCase())) continue;
+			suggestions.push({
+				label: key,
+				value: key,
+				type: "property",
+				description: `Property of type ${type}`,
+				detail: type
+			});
+		}
+		return suggestions;
+	}
+	_getTransformSuggestions(namespace) {
+		const suggestions = [];
+		if (namespace) return this._getNamespaceTransformSuggestions(namespace);
+		for (const [name, transform] of Object.entries(this._grammar.transforms)) suggestions.push({
+			label: name,
+			value: name,
+			type: "transform",
+			description: "Transform function",
+			signature: this._getFunctionSignature(transform)
+		});
+		return suggestions;
+	}
+	_getNamespaceTransformSuggestions(namespace) {
+		const suggestions = [];
+		const prefix = `${namespace}.`;
+		for (const [name, transform] of Object.entries(this._grammar.transforms)) if (name.startsWith(prefix)) {
+			const shortName = name.substring(prefix.length);
+			suggestions.push({
+				label: shortName,
+				value: shortName,
+				type: "transform",
+				description: `Transform function in ${namespace} namespace`,
+				signature: this._getFunctionSignature(transform)
+			});
+		}
+		return suggestions;
+	}
+	_getFunctionSuggestions(namespace) {
+		const suggestions = [];
+		if (namespace) return this._getNamespaceFunctionSuggestions(namespace);
+		for (const [name, func] of Object.entries(this._grammar.functions)) suggestions.push({
+			label: name,
+			value: name,
+			type: "function",
+			description: "Function",
+			signature: this._getFunctionSignature(func)
+		});
+		return suggestions;
+	}
+	_getNamespaceFunctionSuggestions(namespace) {
+		const suggestions = [];
+		const prefix = `${namespace}.`;
+		for (const [name, func] of Object.entries(this._grammar.functions)) if (name.startsWith(prefix)) {
+			const shortName = name.substring(prefix.length);
+			suggestions.push({
+				label: shortName,
+				value: shortName,
+				type: "function",
+				description: `Function in ${namespace} namespace`,
+				signature: this._getFunctionSignature(func)
+			});
+		}
+		return suggestions;
+	}
+	_getIdentifierSuggestions(context) {
+		const suggestions = [];
+		if (context) for (const [key, value] of Object.entries(context)) {
+			const type = this._getValueType(value);
+			suggestions.push({
+				label: key,
+				value: key,
+				type: "identifier",
+				description: `Variable of type ${type}`,
+				detail: type
+			});
+		}
+		for (const [name, func] of Object.entries(this._grammar.functions)) suggestions.push({
+			label: name,
+			value: name,
+			type: "function",
+			description: "Function",
+			signature: this._getFunctionSignature(func)
+		});
+		suggestions.push(...[
+			{
+				label: "true",
+				value: "true",
+				type: "keyword",
+				description: "Boolean true"
+			},
+			{
+				label: "false",
+				value: "false",
+				type: "keyword",
+				description: "Boolean false"
+			},
+			{
+				label: "null",
+				value: "null",
+				type: "keyword",
+				description: "Null value"
+			},
+			{
+				label: "undefined",
+				value: "undefined",
+				type: "keyword",
+				description: "Undefined value"
+			}
+		]);
+		return suggestions;
+	}
+	_getOperatorSuggestions() {
+		const suggestions = [];
+		for (const [op, element] of Object.entries(this._grammar.elements)) if (element.type === "binaryOp" || element.type === "unaryOp") suggestions.push({
+			label: op,
+			value: op,
+			type: "operator",
+			description: `${element.type === "binaryOp" ? "Binary" : "Unary"} operator`
+		});
+		return suggestions;
+	}
+	_getGeneralSuggestions(context) {
+		const suggestions = [];
+		if (context) for (const [key, value] of Object.entries(context)) {
+			const type = this._getValueType(value);
+			suggestions.push({
+				label: key,
+				value: key,
+				type: "identifier",
+				description: `Variable of type ${type}`,
+				detail: type
+			});
+		}
+		for (const [name, func] of Object.entries(this._grammar.functions)) suggestions.push({
+			label: name,
+			value: name,
+			type: "function",
+			description: "Function",
+			signature: this._getFunctionSignature(func)
+		});
+		for (const [name, transform] of Object.entries(this._grammar.transforms)) suggestions.push({
+			label: name,
+			value: name,
+			type: "transform",
+			description: "Transform function",
+			signature: this._getFunctionSignature(transform)
+		});
+		suggestions.push(...[
+			{
+				label: "true",
+				value: "true",
+				type: "keyword",
+				description: "Boolean true"
+			},
+			{
+				label: "false",
+				value: "false",
+				type: "keyword",
+				description: "Boolean false"
+			},
+			{
+				label: "null",
+				value: "null",
+				type: "keyword",
+				description: "Null value"
+			},
+			{
+				label: "undefined",
+				value: "undefined",
+				type: "keyword",
+				description: "Undefined value"
+			}
+		]);
+		return suggestions;
+	}
+	_filterSuggestions(suggestions, partialIdentifier) {
+		if (!partialIdentifier) return suggestions;
+		const lowerPartial = partialIdentifier.toLowerCase();
+		return suggestions.filter((suggestion) => {
+			return (suggestion.filterText || suggestion.label).toLowerCase().includes(lowerPartial);
+		});
+	}
+	_getReplaceRange(expression, cursorPosition, analysis) {
+		if (analysis.partialIdentifier) {
+			const match = expression.substring(0, cursorPosition).match(/([a-zA-Z_$][a-zA-Z0-9_$]*)$/);
+			if (match) return {
+				start: cursorPosition - match[1].length,
+				end: cursorPosition
+			};
+		}
+		return {
+			start: cursorPosition,
+			end: cursorPosition
+		};
+	}
+	_getTriggerCharacter(analysis) {
+		switch (analysis.contextType) {
+			case "dot": return ".";
+			case "pipe": return "|";
+			case "paren": return "(";
+			case "bracket": return "[";
+			default: return;
+		}
+	}
+	_isInsideString(text) {
+		let inString = false;
+		let escapeNext = false;
+		let quoteChar = "";
+		for (const char of text) {
+			if (escapeNext) {
+				escapeNext = false;
+				continue;
+			}
+			if (char === "\\") {
+				escapeNext = true;
+				continue;
+			}
+			if (!inString && (char === "\"" || char === "'")) {
+				inString = true;
+				quoteChar = char;
+				continue;
+			}
+			if (inString && char === quoteChar) {
+				inString = false;
+				quoteChar = "";
+			}
+		}
+		return inString;
+	}
+	_isInsideTemplate(text) {
+		let inTemplate = false;
+		let escapeNext = false;
+		for (const char of text) {
+			if (escapeNext) {
+				escapeNext = false;
+				continue;
+			}
+			if (char === "\\") {
+				escapeNext = true;
+				continue;
+			}
+			if (char === "`") inTemplate = !inTemplate;
+		}
+		return inTemplate;
+	}
+	_getPartialIdentifier(expression, cursorPosition) {
+		const match = expression.substring(0, cursorPosition).match(/([a-zA-Z_$][a-zA-Z0-9_$]*)$/);
+		return match ? match[1] : void 0;
+	}
+	_findLastIdentifier(tokens) {
+		for (let i = tokens.length - 1; i >= 0; i--) if (tokens[i].type === "identifier") return tokens[i].value;
+	}
+	_isNamespace(identifier) {
+		const prefix = `${identifier}.`;
+		for (const name of Object.keys(this._grammar.transforms)) if (name.startsWith(prefix)) return true;
+		for (const name of Object.keys(this._grammar.functions)) if (name.startsWith(prefix)) return true;
+		return false;
+	}
+	_getValueType(value) {
+		if (value === null) return "null";
+		if (value === void 0) return "undefined";
+		if (Array.isArray(value)) return "array";
+		if (value instanceof Date) return "date";
+		return typeof value;
+	}
+	_getFunctionSignature(func) {
+		const match = func.toString().match(/\([^)]*\)/);
+		return match ? match[0] : "()";
+	}
+};
+const poolNames = {
+	functions: "Jexl Function",
+	transforms: "Transform"
+};
+var Evaluator = class Evaluator {
+	constructor(grammar, context, relativeContext) {
+		this._grammar = grammar;
+		this._context = context || {};
+		this._relContext = relativeContext || this._context;
+	}
+	async eval(ast) {
+		switch (ast.type) {
+			case "ArrayLiteral": return this._handleArrayLiteral(ast);
+			case "BinaryExpression": return this._handleBinaryExpression(ast);
+			case "ConditionalExpression": return this._handleConditionalExpression(ast);
+			case "FilterExpression": return this._handleFilterExpression(ast);
+			case "Identifier": return this._handleIdentifier(ast);
+			case "Literal": return this._handleLiteral(ast);
+			case "TemplateLiteral": return this._handleTemplateLiteral(ast);
+			case "ObjectLiteral": return this._handleObjectLiteral(ast);
+			case "FunctionCall": return this._handleFunctionCall(ast);
+			case "UnaryExpression": return this._handleUnaryExpression(ast);
+			default: throw new Error(`Unknown AST node type: ${ast.type}`);
+		}
+	}
+	evalArray(arr) {
+		return Promise.all(arr.map((elem) => this.eval(elem)));
+	}
+	async evalMap(map) {
+		const keys = Object.keys(map);
+		const result = {};
+		const asts = keys.map((key) => {
+			const ast = map[key];
+			if (!ast) throw new Error(`No AST found for key: ${key}`);
+			return this.eval(ast);
+		});
+		(await Promise.all(asts)).forEach((val, idx) => {
+			const key = keys[idx];
+			if (key !== void 0) result[key] = val;
+		});
+		return result;
+	}
+	async _filterRelative(subject, expr) {
+		const promises = [];
+		let subjectArray;
+		if (!Array.isArray(subject)) subjectArray = subject === void 0 ? [] : [subject];
+		else subjectArray = subject;
+		subjectArray.forEach((elem) => {
+			const evalInst = new Evaluator(this._grammar, this._context, elem);
+			promises.push(evalInst.eval(expr));
+		});
+		const values = await Promise.all(promises);
+		if (values.every((v) => typeof v === "boolean")) {
+			const filtered = [];
+			values.forEach((value, idx) => {
+				if (value) filtered.push(subjectArray[idx]);
+			});
+			return filtered;
+		}
+		return values;
+	}
+	async _filterStatic(subject, expr) {
+		const res = await this.eval(expr);
+		if (typeof res === "boolean") return res ? subject : void 0;
+		if (subject === void 0) return;
+		if (subject === null) return null;
+		if (typeof subject === "object" || Array.isArray(subject)) return subject[res];
+	}
+	async _handleArrayLiteral(ast) {
+		if (Array.isArray(ast.entries) && ast.entries.length > 0) {
+			const result = [];
+			for (const entry of ast.entries) if (entry.type === "SpreadElement") {
+				const spreadVal = await this.eval(entry.expr);
+				if (spreadVal == null) continue;
+				if (typeof spreadVal[Symbol.iterator] !== "function") throw new TypeError("Spread value is not iterable");
+				for (const item of spreadVal) result.push(item);
+			} else result.push(await this.eval(entry));
+			return result;
+		}
+		return this.evalArray(ast.value);
+	}
+	async _handleBinaryExpression(ast) {
+		const grammarOp = this._grammar.elements[ast.operator];
+		if (!grammarOp) throw new Error(`Unknown binary operator: ${ast.operator}`);
+		if ("evalOnDemand" in grammarOp && grammarOp.evalOnDemand) {
+			const wrap = (subAst) => ({ eval: () => this.eval(subAst) });
+			return grammarOp.evalOnDemand(wrap(ast.left), wrap(ast.right));
+		}
+		if ("eval" in grammarOp && grammarOp.eval) {
+			const [leftVal, rightVal] = await Promise.all([this.eval(ast.left), this.eval(ast.right)]);
+			return grammarOp.eval(leftVal, rightVal);
+		}
+		throw new Error(`Binary operator ${ast.operator} has no eval function`);
+	}
+	async _handleConditionalExpression(ast) {
+		const res = await this.eval(ast.test);
+		if (res) {
+			if (ast.consequent) return this.eval(ast.consequent);
+			return res;
+		}
+		return this.eval(ast.alternate);
+	}
+	async _handleFilterExpression(ast) {
+		const subject = await this.eval(ast.subject);
+		if (ast.relative) return this._filterRelative(subject, ast.expr);
+		return this._filterStatic(subject, ast.expr);
+	}
+	async _handleIdentifier(ast) {
+		if (!ast.from) return ast.relative ? this._relContext[ast.value] : this._context[ast.value];
+		const context = await this.eval(ast.from);
+		if (context === void 0) return;
+		if (context === null) return null;
+		let targetContext = context;
+		if (Array.isArray(context)) targetContext = context[0];
+		return targetContext?.[ast.value];
+	}
+	_handleLiteral(ast) {
+		return ast.value;
+	}
+	async _handleTemplateLiteral(ast) {
+		const parts = ast.parts || [];
+		const out = [];
+		for (const part of parts) if (part.type === "Literal") out.push(String(part.value ?? ""));
+		else {
+			const val = await this.eval(part);
+			out.push(val === void 0 || val === null ? "" : String(val));
+		}
+		return out.join("");
+	}
+	async _handleObjectLiteral(ast) {
+		if (Array.isArray(ast.entries) && ast.entries.length > 0) {
+			const out = {};
+			for (const entry of ast.entries) if (entry.type === "SpreadElement") {
+				const spreadVal = await this.eval(entry.expr);
+				if (spreadVal != null) Object.assign(out, spreadVal);
+			} else if (entry.type === "ObjectProperty") out[entry.key] = await this.eval(entry.value);
+			return out;
+		}
+		return this.evalMap(ast.value);
+	}
+	async _handleFunctionCall(ast) {
+		const poolName = poolNames[ast.pool];
+		if (!poolName) throw new Error(`Corrupt AST: Pool '${ast.pool}' not found`);
+		const func = this._grammar[ast.pool][ast.name];
+		if (!func) throw new Error(`${poolName} ${ast.name} is not defined.`);
+		const args = await this.evalArray(ast.args || []);
+		return func.bind({ context: this._context })(...args);
+	}
+	async _handleUnaryExpression(ast) {
+		const right = await this.eval(ast.right);
+		const grammarOp = this._grammar.elements[ast.operator];
+		if (!grammarOp) throw new Error(`Unknown unary operator: ${ast.operator}`);
+		if ("eval" in grammarOp && grammarOp.eval) return grammarOp.eval(right);
+		throw new Error(`Unary operator ${ast.operator} has no eval function`);
+	}
+};
+var Expression = class {
+	constructor(grammar, exprStr) {
+		this._grammar = grammar;
+		this._exprStr = exprStr;
+		this._ast = null;
+	}
+	compile() {
+		const lexer = new Lexer(this._grammar);
+		const parser = new Parser(this._grammar);
+		parser.addTokens(lexer.tokenize(this._exprStr));
+		this._ast = parser.complete();
+		return this;
+	}
+	eval(context = {}) {
+		return this._eval(context);
+	}
+	async evalAsString(context = {}) {
+		const result = await this.eval(context);
+		if (result === null) return "null";
+		if (result === void 0) return "undefined";
+		return String(result);
+	}
+	async evalAsNumber(context = {}) {
+		const result = await this.eval(context);
+		if (result === null || result === void 0) return NaN;
+		return Number(result);
+	}
+	async evalAsBoolean(context = {}) {
+		return !!await this.eval(context);
+	}
+	async evalAsArray(context = {}) {
+		const result = await this.eval(context);
+		if (result === null || result === void 0) return [];
+		if (Array.isArray(result)) return result;
+		return [result];
+	}
+	async evalAsEnum(context = {}, allowedValues) {
+		const result = await this.eval(context);
+		if (allowedValues.includes(result)) return result;
+	}
+	async evalWithDefault(context = {}, defaultValue) {
+		const result = await this.eval(context);
+		if (result === null || result === void 0) return defaultValue;
+		return result;
+	}
+	async _eval(context) {
+		const ast = this._getAst();
+		if (!ast) throw new Error("No AST available for evaluation. Expression may not be compiled.");
+		return new Evaluator(this._grammar, context, context).eval(ast);
+	}
+	_getAst() {
+		if (!this._ast) this.compile();
+		return this._ast;
+	}
+};
+const getGrammar = () => ({
+	elements: {
+		".": { type: "dot" },
+		"[": { type: "openBracket" },
+		"]": { type: "closeBracket" },
+		"|": { type: "pipe" },
+		"{": { type: "openCurl" },
+		"}": { type: "closeCurl" },
+		":": { type: "colon" },
+		",": { type: "comma" },
+		"(": { type: "openParen" },
+		")": { type: "closeParen" },
+		"?": { type: "question" },
+		"...": { type: "unaryOp" },
+		"+": {
+			type: "binaryOp",
+			precedence: 30,
+			eval: function(left, right) {
+				if (arguments.length === 1) return +left;
+				return left + right;
+			}
+		},
+		"-": {
+			type: "binaryOp",
+			precedence: 30,
+			eval: function(left, right) {
+				if (arguments.length === 1) return -left;
+				return left - right;
+			}
+		},
+		"*": {
+			type: "binaryOp",
+			precedence: 40,
+			eval: (left, right) => left * right
+		},
+		"/": {
+			type: "binaryOp",
+			precedence: 40,
+			eval: (left, right) => left / right
+		},
+		"//": {
+			type: "binaryOp",
+			precedence: 40,
+			eval: (left, right) => Math.floor(left / right)
+		},
+		"%": {
+			type: "binaryOp",
+			precedence: 50,
+			eval: (left, right) => left % right
+		},
+		"^": {
+			type: "binaryOp",
+			precedence: 50,
+			eval: (left, right) => Math.pow(left, right)
+		},
+		"**": {
+			type: "binaryOp",
+			precedence: 70,
+			eval: (left, right) => left ** right
+		},
+		"==": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => left === right
+		},
+		"!=": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => left !== right
+		},
+		"~=": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => Math.abs(left - right) <= .01
+		},
+		"!~=": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => Math.abs(left - right) > .01
+		},
+		">": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => left > right
+		},
+		">=": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => left >= right
+		},
+		"<": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => left < right
+		},
+		"<=": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => left <= right
+		},
+		"&&": {
+			type: "binaryOp",
+			precedence: 10,
+			evalOnDemand: (left, right) => {
+				return left.eval().then((leftVal) => {
+					if (!leftVal) return leftVal;
+					return right.eval();
+				});
+			}
+		},
+		"||": {
+			type: "binaryOp",
+			precedence: 5,
+			evalOnDemand: (left, right) => {
+				return left.eval().then((leftVal) => {
+					if (leftVal) return leftVal;
+					return right.eval();
+				});
+			}
+		},
+		"and": {
+			type: "binaryOp",
+			precedence: 10,
+			eval: (left, right) => {
+				const isValidationError = (val) => {
+					if (typeof val === "string") return true;
+					if (typeof val === "object" && val !== null && !Array.isArray(val)) return Object.values(val).every((v) => typeof v === "string");
+					return false;
+				};
+				const isValidationErrorArray = (val) => {
+					return Array.isArray(val) && val.length > 0 && val.every((item) => isValidationError(item));
+				};
+				const leftIsArray = isValidationErrorArray(left);
+				const rightIsArray = isValidationErrorArray(right);
+				const leftIsError = isValidationError(left);
+				const rightIsError = isValidationError(right);
+				if (!left && !leftIsError && !leftIsArray) return false;
+				const errors = [];
+				if (leftIsArray) errors.push(...left);
+				else if (leftIsError) errors.push(left);
+				if (rightIsArray) errors.push(...right);
+				else if (rightIsError) errors.push(right);
+				if (errors.length > 0) {
+					if (!right && !rightIsError && !rightIsArray) return false;
+					return errors;
+				}
+				if (left && right) return true;
+				return false;
+			}
+		},
+		"or": {
+			type: "binaryOp",
+			precedence: 10,
+			eval: (left, right) => {
+				const isValidationError = (val) => {
+					if (typeof val === "string") return true;
+					if (typeof val === "object" && val !== null && !Array.isArray(val)) return Object.values(val).every((v) => typeof v === "string");
+					return false;
+				};
+				const isValidationErrorArray = (val) => {
+					return Array.isArray(val) && val.length > 0 && val.every((item) => isValidationError(item));
+				};
+				const leftIsArray = isValidationErrorArray(left);
+				const leftIsError = isValidationError(left);
+				const rightIsError = isValidationError(right);
+				if ((leftIsError || leftIsArray) && right && !rightIsError) return right;
+				if ((leftIsError || leftIsArray) && rightIsError) return [right];
+				if (left && !leftIsError && !leftIsArray) return left;
+				return right;
+			}
+		},
+		"xor": {
+			type: "binaryOp",
+			precedence: 10,
+			eval: (left, right) => {
+				const isValidationError = (val) => {
+					if (typeof val === "string") return true;
+					if (typeof val === "object" && val !== null && !Array.isArray(val)) return Object.values(val).every((v) => typeof v === "string");
+					return false;
+				};
+				const isValidationErrorArray = (val) => {
+					return Array.isArray(val) && val.length > 0 && val.every((item) => isValidationError(item));
+				};
+				const leftIsArray = isValidationErrorArray(left);
+				const rightIsArray = isValidationErrorArray(right);
+				const leftIsError = isValidationError(left);
+				const rightIsError = isValidationError(right);
+				const errors = [];
+				if (leftIsArray) errors.push(...left);
+				else if (leftIsError) errors.push(left);
+				if (rightIsArray) errors.push(...right);
+				else if (rightIsError) errors.push(right);
+				if (errors.length > 0) {
+					if (errors.length === 1 && (leftIsError || leftIsArray) !== (rightIsError || rightIsArray)) return errors;
+					return errors.length === 1 ? errors[0] : errors;
+				}
+				return Boolean(left) !== Boolean(right);
+			}
+		},
+		"in": {
+			type: "binaryOp",
+			precedence: 20,
+			eval: (left, right) => {
+				const isObjectLike = (v) => typeof v === "object" && v !== null;
+				const deepEqual = (a, b) => {
+					if (a === b) return true;
+					if (a instanceof Date && b instanceof Date) return a.getTime() === b.getTime();
+					if (Array.isArray(a) && Array.isArray(b)) {
+						if (a.length !== b.length) return false;
+						for (let i = 0; i < a.length; i++) if (!deepEqual(a[i], b[i])) return false;
+						return true;
+					}
+					if (isObjectLike(a) && isObjectLike(b)) {
+						const aKeys = Object.keys(a);
+						const bKeys = Object.keys(b);
+						if (aKeys.length !== bKeys.length) return false;
+						for (const key of aKeys) {
+							if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
+							if (!deepEqual(a[key], b[key])) return false;
+						}
+						return true;
+					}
+					return false;
+				};
+				if (typeof right === "string") return right.indexOf(left) !== -1;
+				if (Array.isArray(right)) {
+					if (isObjectLike(left) && "id" in left) {
+						const leftId = left.id;
+						return right.some((elem) => isObjectLike(elem) && "id" in elem ? elem.id === leftId : elem === leftId);
+					}
+					return right.some((elem) => deepEqual(elem, left));
+				}
+				return false;
+			}
+		},
+		"!": {
+			type: "unaryOp",
+			precedence: Infinity,
+			eval: (right) => !right
+		}
+	},
+	functions: {},
+	transforms: {}
+});
+var Jexl = class {
+	constructor() {
+		this.expr = this.expr.bind(this);
+		this.grammar = getGrammar();
+	}
+	addBinaryOp(operator, precedence, fn, manualEval) {
+		const element = {
+			type: "binaryOp",
+			precedence
+		};
+		if (manualEval) element.evalOnDemand = fn;
+		else element.eval = fn;
+		this._addGrammarElement(operator, element);
+	}
+	addFunction(name, fn) {
+		this.grammar.functions[name] = fn;
+	}
+	addFunctions(map) {
+		for (const key in map) if (Object.prototype.hasOwnProperty.call(map, key)) {
+			const fn = map[key];
+			if (fn) this.grammar.functions[key] = fn;
+		}
+	}
+	addUnaryOp(operator, fn) {
+		const element = {
+			type: "unaryOp",
+			weight: Infinity,
+			eval: fn
+		};
+		this._addGrammarElement(operator, element);
+	}
+	addTransform(name, fn) {
+		this.grammar.transforms[name] = fn;
+	}
+	addTransforms(map) {
+		for (const key in map) if (Object.prototype.hasOwnProperty.call(map, key)) {
+			const fn = map[key];
+			if (fn) this.grammar.transforms[key] = fn;
+		}
+	}
+	compile(expression) {
+		return this.createExpression(expression).compile();
+	}
+	createExpression(expression) {
+		return new Expression(this.grammar, expression);
+	}
+	getFunction(name) {
+		const fn = this.grammar.functions[name];
+		if (!fn) throw new Error(`Function '${name}' is not defined`);
+		return fn;
+	}
+	getTransform(name) {
+		const fn = this.grammar.transforms[name];
+		if (!fn) throw new Error(`Transform '${name}' is not defined`);
+		return fn;
+	}
+	eval(expression, context = {}) {
+		return this.createExpression(expression).eval(context);
+	}
+	evalAsString(expression, context = {}) {
+		return this.createExpression(expression).evalAsString(context);
+	}
+	evalAsNumber(expression, context = {}) {
+		return this.createExpression(expression).evalAsNumber(context);
+	}
+	evalAsBoolean(expression, context = {}) {
+		return this.createExpression(expression).evalAsBoolean(context);
+	}
+	evalAsArray(expression, context = {}) {
+		return this.createExpression(expression).evalAsArray(context);
+	}
+	evalAsEnum(expression, context = {}, allowedValues) {
+		return this.createExpression(expression).evalAsEnum(context, allowedValues);
+	}
+	evalWithDefault(expression, context = {}, defaultValue) {
+		return this.createExpression(expression).evalWithDefault(context, defaultValue);
+	}
+	expr(strings, ...args) {
+		const exprStr = strings.reduce((acc, str, idx) => {
+			const arg = idx < args.length ? args[idx] : "";
+			acc += str + arg;
+			return acc;
+		}, "");
+		return this.createExpression(exprStr);
+	}
+	removeOp(operator) {
+		if (Object.prototype.hasOwnProperty.call(this.grammar.elements, operator) && (this.grammar.elements[operator].type === "binaryOp" || this.grammar.elements[operator].type === "unaryOp")) delete this.grammar.elements[operator];
+	}
+	autocomplete(expression, cursorPosition, context = {}) {
+		return new Autocomplete(this.grammar).getSuggestions(expression, cursorPosition, context);
+	}
+	_addGrammarElement(str, obj) {
+		this.grammar.elements[str] = obj;
+	}
+};
+const jexl = new Jexl();
+async function evaluateListenerCondition(condition, eventData, props) {
+	try {
+		return !!await jexl.eval(condition, {
+			event: eventData,
+			props
+		});
+	} catch (error) {
+		console.error(`LiveComponent: could not evaluate LiveListener condition "${condition}".`, error);
+		return false;
+	}
+}
 var Idiomorph = (function() {
 	"use strict";
 	let EMPTY_SET = /* @__PURE__ */ new Set();
@@ -1350,6 +3318,21 @@ const parseDeepData = (data, propertyPath) => {
 		parts
 	};
 };
+function setDeepData(data, propertyPath, value) {
+	const { currentLevelData, finalData, finalKey, parts } = parseDeepData(data, propertyPath);
+	if (typeof currentLevelData !== "object") {
+		const lastPart = parts.pop();
+		if (typeof currentLevelData === "undefined") throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join(".")}" data does not exist. Did you forget to expose "${parts[0]}" as a LiveProp?`);
+		throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join(".")}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
+	}
+	if (currentLevelData[finalKey] === void 0) {
+		const lastPart = parts.pop();
+		if (parts.length > 0) throw new Error(`The model name ${propertyPath} was never initialized. Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
+		throw new Error(`The model name "${propertyPath}" was never initialized. Did you forget to expose "${lastPart}" as a LiveProp? Available models values are: ${Object.keys(data).length > 0 ? Object.keys(data).join(", ") : "(none)"}`);
+	}
+	currentLevelData[finalKey] = value;
+	return finalData;
+}
 var ValueStore_default = class {
 	constructor(props) {
 		this.props = {};
@@ -1376,6 +3359,15 @@ var ValueStore_default = class {
 	}
 	getOriginalProps() {
 		return { ...this.props };
+	}
+	getCurrentProps() {
+		let props = this.getOriginalProps();
+		[this.pendingProps, this.dirtyProps].forEach((changedProps) => {
+			Object.keys(changedProps).forEach((name) => {
+				props = setDeepData(props, name, changedProps[name]);
+			});
+		});
+		return props;
 	}
 	getDirtyProps() {
 		return { ...this.dirtyProps };
@@ -1424,7 +3416,10 @@ var Component = class {
 		this.listeners = /* @__PURE__ */ new Map();
 		listeners.forEach((listener) => {
 			if (!this.listeners.has(listener.event)) this.listeners.set(listener.event, []);
-			this.listeners.get(listener.event)?.push(listener.action);
+			this.listeners.get(listener.event)?.push({
+				action: listener.action,
+				condition: listener.condition || null
+			});
 		});
 		this.valueStore = new ValueStore_default(props);
 		this.unsyncedInputsTracker = new UnsyncedInputsTracker_default(this, elementDriver);
@@ -1506,8 +3501,14 @@ var Component = class {
 	}
 	doEmit(name, data) {
 		if (!this.listeners.has(name)) return;
-		(this.listeners.get(name) || []).forEach((action) => {
-			this.action(action, data, 1);
+		(this.listeners.get(name) || []).forEach(({ action, condition }) => {
+			if (!condition) {
+				this.action(action, data, 1);
+				return;
+			}
+			evaluateListenerCondition(condition, data, this.valueStore.getCurrentProps()).then((matches) => {
+				if (matches) this.action(action, data, 1);
+			});
 		});
 	}
 	isTurboEnabled() {

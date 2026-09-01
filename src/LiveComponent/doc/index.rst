@@ -3151,6 +3151,43 @@ with an entity name, just like you would in a controller::
         $this->lastProduct = $product;
     }
 
+Conditional Listeners
+~~~~~~~~~~~~~~~~~~~~~
+
+Sometimes, you only want a listener to react to *some* of the events with a
+given name - e.g. only when the emitted event is about the same product this
+component is showing. Add a condition in parentheses, right after the event
+name::
+
+    #[LiveProp]
+    public int $product;
+
+    #[LiveListener('product_updated(event.id == props.product)')]
+    public function refreshProduct()
+    {
+        // ...
+    }
+
+The condition is written using `Jexl`_ expression syntax and is evaluated
+**entirely on the client**, before any Ajax call is made: if it doesn't
+pass, the listener is skipped and no request is sent to the server at all.
+This makes conditional listeners ideal for filtering out events that would
+otherwise trigger an unnecessary re-render.
+
+Two variables are available in the expression:
+
+* ``event``: the data that was passed when the event was emitted (e.g. via
+  ``$this->emit('product_updated', ['id' => $product->getId()])`` or
+  ``data-live-<name>-param`` attributes);
+* ``props``: the current props of *this* component, i.e. the component
+  declaring the ``#[LiveListener]``.
+
+If the condition itself is invalid (e.g. a typo), it's treated as ``false``
+- the listener is skipped and an error is logged to the browser console -
+rather than accidentally calling the action on every event.
+
+.. _`Jexl`: https://github.com/TomFrost/Jexl
+
 Scoping Events
 ~~~~~~~~~~~~~~
 
