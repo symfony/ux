@@ -1,0 +1,70 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-08-05T03:15:28Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/smnandre/ux/tree/sa/ux-pagination/src/Pagination/assets/dist"><b>Pagination</b></a></td></tr><tr>
+                <td><a href="https://github.com/smnandre/ux/blob/sa/ux-pagination/src/Pagination/assets/dist/style.min.css"><code>style.min.css</code></a></td>
+            <td><em>Added</em></td><td>
+                    <code>1.86 kB</code>
+                    / <code>626 B</code>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-08-07T07:51:47Z
+
+In the three templates under `src/Pagination/templates/theme/*.html.twig`, some variables are written in camelCase (`linkClass`, `userClass`, `rootAttributes`, `userNavigationClass` and `navigationAttributes`) These should use snake_case instead (`link_class`, `user_class`, `root_attributes`, `user_navigation_class`, `navigation_attributes`), to stay consistent with the usual Twig naming convention : https://twig.symfony.com/doc/3.x/coding_standards.html.
+
+Example:
+
+```twig
+{% set linkClass = 'px-3 py-2 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-blue-500 transition-colors duration-150' %}
+{% set userClass = attributes.class|default('') %}
+{% set rootAttributes = {
+    'aria-label': 'Pagination'|trans({}, 'UXPaginationBundle'),
+}|merge(attributes)|merge({
+    class: ('ux-pagination-tailwind ' ~ userClass)|trim,
+}) %}
+{% set userNavigationClass = navigationAttributes.class|default('') %}
+{% set navigationAttributes = navigationAttributes|merge({
+    class: ('flex flex-wrap items-center justify-center gap-1 sm:gap-2 ' ~ userNavigationClass)|trim,
+}) %}
+```
+
+---------------------------------------------------------------------------
+
+by ker0x at 2026-08-08T20:14:24Z
+
+Doctrine 3.7 will be release with a new [CursorPaginator](https://github.com/doctrine/orm/blob/3.7.x/src/Tools/Pagination/CursorPaginator.php)
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2026-08-09T10:00:12Z
+
+> Doctrine 3.7 will be release with a new [CursorPaginator](https://github.com/doctrine/orm/blob/3.7.x/src/Tools/Pagination/CursorPaginator.php)
+
+Yes, but there's currently a [blocking issue](https://github.com/doctrine/orm/issues/12480) for the release of cursor-based pagination in Doctrine ORM 3.7.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-08-10T04:10:27Z
+
+> Doctrine 3.7 will be release with a new [CursorPaginator](https://github.com/doctrine/orm/blob/3.7.x/src/Tools/Pagination/CursorPaginator.php)
+
+Great, and as I see it some of this PR API inspired some changes on Doctrine PR.. and this is why I love Open Source ! 🤝
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-08-10T08:48:18Z
+
+Thank you very much for the review @Kocal !
