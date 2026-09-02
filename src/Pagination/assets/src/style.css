@@ -1,0 +1,109 @@
+/**
+ * UX Pagination styles.
+ *
+ * The component selectors are intentionally scoped: importing this file must
+ * not change unrelated aria-current elements in the app.
+ */
+
+.ux-pagination {
+    --ux-pagination-color: #1f2937;
+    --ux-pagination-muted-color: #6b7280;
+    --ux-pagination-border-color: #d1d5db;
+    --ux-pagination-background: #fff;
+    --ux-pagination-active-background: #111827;
+    --ux-pagination-active-color: #fff;
+    --ux-pagination-focus-color: #2563eb;
+
+    color: var(--ux-pagination-color);
+}
+
+.ux-pagination__info {
+    margin-block: 0 0.75rem;
+    color: var(--ux-pagination-muted-color);
+    font-size: 0.875rem;
+}
+
+.ux-pagination__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.375rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ux-pagination__item {
+    display: inline-flex;
+}
+
+.ux-pagination__link {
+    display: inline-flex;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--ux-pagination-border-color);
+    border-radius: 0.375rem;
+    background: var(--ux-pagination-background);
+    color: inherit;
+    line-height: 1;
+    text-decoration: none;
+}
+
+a.ux-pagination__link:hover {
+    border-color: currentColor;
+}
+
+.ux-pagination__link--current {
+    border-color: var(--ux-pagination-active-background);
+    background: var(--ux-pagination-active-background);
+    color: var(--ux-pagination-active-color);
+    font-weight: 600;
+}
+
+.ux-pagination__link--disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.ux-pagination__ellipsis {
+    display: inline-flex;
+    min-width: 2rem;
+    min-height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    color: var(--ux-pagination-muted-color);
+}
+
+.ux-pagination__link:focus-visible {
+    outline: 3px solid var(--ux-pagination-focus-color, #2563eb);
+    outline-offset: 2px;
+}
+
+.ux-pagination [aria-current='page'] {
+    font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+    .ux-pagination {
+        --ux-pagination-color: #f3f4f6;
+        --ux-pagination-muted-color: #9ca3af;
+        --ux-pagination-border-color: #4b5563;
+        --ux-pagination-background: #111827;
+        --ux-pagination-active-background: #f3f4f6;
+        --ux-pagination-active-color: #111827;
+        --ux-pagination-focus-color: #60a5fa;
+    }
+}
+
+@media (prefers-contrast: more) {
+    .ux-pagination__link {
+        border: 1px solid currentColor;
+    }
+
+    .ux-pagination :focus-visible {
+        outline-width: 4px;
+    }
+}

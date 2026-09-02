@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="en" datatype="plaintext" original="UXPaginationBundle">
+        <header>
+            <tool tool-id="symfony" tool-name="Symfony"/>
+        </header>
+        <body>
+            <trans-unit id="1">
+                <source>Showing %start%-%end% of %total%</source>
+                <target>Showing %start%-%end% of %total%</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Showing %start%-%end%</source>
+                <target>Showing %start%-%end%</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>No items</source>
+                <target>No items</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Showing %count% item|Showing %count% items</source>
+                <target>Showing %count% item|Showing %count% items</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>Showing %count% item (last page)|Showing %count% items (last page)</source>
+                <target>Showing %count% item (last page)|Showing %count% items (last page)</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>Previous</source>
+                <target>Previous</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>Next</source>
+                <target>Next</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>Previous page</source>
+                <target>Previous page</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>Next page</source>
+                <target>Next page</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>Go to page %page%</source>
+                <target>Go to page %page%</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>Pagination</source>
+                <target>Pagination</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -119,7 +119,7 @@ jobs:
                       if jq -e '.private == true' "$file" > /dev/null; then
                           continue
                       fi
-                      peerDependencies=$(jq -r '.peerDependencies | keys[]' "$file")
+                      peerDependencies=$(jq -r '.peerDependencies // {} | keys[]' "$file")
                       for peerDependency in $peerDependencies; do
                           peerDependencyVersion=$(jq -r --arg dep "$peerDependency" '.peerDependencies[$dep]' "$file")
                           importmapVersion=$(jq -r ".symfony.importmap.\"$peerDependency\" | if type == \"string\" then . else .version end" "$file")

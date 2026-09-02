@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="it" datatype="plaintext" original="UXPaginationBundle">
+        <header>
+            <tool tool-id="symfony" tool-name="Symfony"/>
+        </header>
+        <body>
+            <trans-unit id="1">
+                <source>Showing %start%-%end% of %total%</source>
+                <target>Visualizzazione %start%-%end% di %total%</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Showing %start%-%end%</source>
+                <target>Visualizzazione %start%-%end%</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>No items</source>
+                <target>Nessun elemento</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Showing %count% item|Showing %count% items</source>
+                <target>Visualizzazione di %count% elemento|Visualizzazione di %count% elementi</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>Showing %count% item (last page)|Showing %count% items (last page)</source>
+                <target>Visualizzazione di %count% elemento (ultima pagina)|Visualizzazione di %count% elementi (ultima pagina)</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>Previous</source>
+                <target>Precedente</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>Next</source>
+                <target>Successivo</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>Previous page</source>
+                <target>Pagina precedente</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>Next page</source>
+                <target>Pagina successiva</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>Go to page %page%</source>
+                <target>Vai alla pagina %page%</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>Pagination</source>
+                <target>Paginazione</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

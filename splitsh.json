@@ -15,6 +15,7 @@
         "ux-leaflet-map": "src/Map/src/Bridge/Leaflet",
         "ux-native": "src/Native",
         "ux-notify": "src/Notify",
+        "ux-pagination": "src/Pagination",
         "ux-react": "src/React",
         "ux-toolkit": "src/Toolkit",
         "ux-translator": "src/Translator",
