@@ -209,7 +209,7 @@ final class LiveCollectionTraitTest extends TestCase
 
     private function createComponent(array $postedFormData)
     {
-        $form = $this->createMock(FormInterface::class);
+        $form = $this->createStub(FormInterface::class);
         $component = new class($form) {
             use LiveCollectionTrait;
 
