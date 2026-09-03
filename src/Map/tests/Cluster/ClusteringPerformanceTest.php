@@ -12,12 +12,14 @@
 namespace Symfony\UX\Map\Tests\Cluster;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresOperatingSystem;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Map\Cluster\ClusteringAlgorithmInterface;
 use Symfony\UX\Map\Cluster\GridClusteringAlgorithm;
 use Symfony\UX\Map\Cluster\MortonClusteringAlgorithm;
 use Symfony\UX\Map\Point;
 
+#[RequiresOperatingSystem('^(?!WIN)')]
 class ClusteringPerformanceTest extends TestCase
 {
     /**
