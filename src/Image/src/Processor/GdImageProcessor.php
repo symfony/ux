@@ -399,12 +399,32 @@ final class GdImageProcessor implements ImageDriverInterface
             'webp' => imagewebp($image, $outputPath, $quality),
             'avif' => \function_exists('imageavif') ? imageavif($image, $outputPath, $quality) : throw ImageProcessingException::unsupportedFormat('avif'),
             'png' => imagepng($image, $outputPath, (int) (9 - ($quality * 9 / 100))),
-            'jpeg', 'jpg' => imagejpeg($image, $outputPath, $quality),
+            'jpeg', 'jpg' => $this->encodeJpeg($image, $outputPath, $quality),
             default => throw ImageProcessingException::unsupportedFormat($format),
         };
         if (!$encoded) {
             throw ImageProcessingException::processingFailed('encode', \sprintf('Could not write "%s".', $outputPath));
         }
+    }
+
+    private function encodeJpeg(\GdImage $image, string $outputPath, int $quality): bool
+    {
+        $flattened = imagecreatetruecolor(imagesx($image), imagesy($image));
+        if (!$flattened) {
+            throw ImageProcessingException::processingFailed('encode', 'Could not allocate the JPEG background.');
+        }
+        $white = imagecolorallocate($flattened, 255, 255, 255);
+        if (false === $white) {
+            unset($flattened);
+            throw ImageProcessingException::processingFailed('encode', 'Could not allocate the JPEG background color.');
+        }
+        imagefill($flattened, 0, 0, $white);
+        imagecopy($flattened, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
+
+        $encoded = imagejpeg($flattened, $outputPath, $quality);
+        unset($flattened);
+
+        return $encoded;
     }
 
     private function assertOutputAllocation(int $width, int $height): void

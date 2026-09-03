@@ -397,6 +397,35 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame($expectedPixels, $actualPixels);
     }
 
+    public function testJpegVariantsFlattenTransparencyWithoutChangingLosslessVariants()
+    {
+        $pngPath = $this->createTransparentPng(20, 20);
+        $this->storage->method('getFilePath')->willReturn($pngPath);
+        $processor = new GdImageProcessor($this->storage, [], $this->imageInspector);
+
+        $variants = $processor->generateVariants(
+            new ImageAsset('default_public', 'uploads/photo.png'),
+            [
+                'variants' => ['small' => ['width' => 10, 'height' => 10, 'quality' => 100]],
+                'formats' => ['jpeg', 'png'],
+            ],
+        );
+
+        $jpegPath = \dirname($pngPath).'/'.basename($variants['jpeg'][0]['path']);
+        $variantPngPath = \dirname($pngPath).'/'.basename($variants['png'][0]['path']);
+        $this->tempFiles[] = $jpegPath;
+        $this->tempFiles[] = $variantPngPath;
+        $jpeg = imagecreatefromjpeg($jpegPath);
+        $lossless = imagecreatefrompng($variantPngPath);
+        $jpegCorner = imagecolorsforindex($jpeg, imagecolorat($jpeg, 0, 0));
+        $pngCorner = imagecolorsforindex($lossless, imagecolorat($lossless, 0, 0));
+
+        self::assertGreaterThanOrEqual(250, $jpegCorner['red']);
+        self::assertGreaterThanOrEqual(250, $jpegCorner['green']);
+        self::assertGreaterThanOrEqual(250, $jpegCorner['blue']);
+        self::assertSame(127, $pngCorner['alpha']);
+    }
+
     public function testResizeFitMode()
     {
         $inputPath = $this->createTempJpeg(200, 100);
@@ -730,6 +759,27 @@ final class GdImageProcessorTest extends TestCase
             @unlink($base);
         }
 
+        $this->tempFiles[] = $path;
+
+        return $path;
+    }
+
+    private function createTransparentPng(int $width, int $height): string
+    {
+        $path = tempnam(sys_get_temp_dir(), 'gd_test_').'.png';
+        $image = imagecreatetruecolor($width, $height);
+        imagealphablending($image, false);
+        imagesavealpha($image, true);
+        $transparent = imagecolorallocatealpha($image, 0, 0, 0, 127);
+        imagefill($image, 0, 0, $transparent);
+        $opaque = imagecolorallocatealpha($image, 200, 50, 25, 0);
+        imagefilledrectangle($image, 5, 5, 14, 14, $opaque);
+        imagepng($image, $path);
+
+        $base = substr($path, 0, -4);
+        if (file_exists($base)) {
+            @unlink($base);
+        }
         $this->tempFiles[] = $path;
 
         return $path;
