@@ -210,4 +210,58 @@ final class CachedUrlGeneratorTest extends TestCase
 
         self::assertSame('https://example.com/variant-fallback.jpg', $url);
     }
+
+    public function testGenerateAssetUrlDoesNotRetryAfterCacheWriteFailure()
+    {
+        $decoratedGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $decoratedGenerator->expects(self::once())
+            ->method('generateAssetUrl')
+            ->willReturn('https://example.com/generated.jpg');
+
+        $cacheItem = $this->createStub(CacheItemInterface::class);
+        $cacheItem->method('isHit')->willReturn(false);
+        $cache = $this->createStub(CacheItemPoolInterface::class);
+        $cache->method('getItem')->willReturn($cacheItem);
+        $cache->method('save')->willThrowException(new \RuntimeException('Cache unavailable'));
+
+        $generator = new CachedUrlGenerator($decoratedGenerator, $cache);
+
+        self::assertSame('https://example.com/generated.jpg', $generator->generateAssetUrl(new ImageAsset('default', 'image.jpg')));
+    }
+
+    public function testGenerateVariantUrlDoesNotRetryAfterCacheWriteFailure()
+    {
+        $decoratedGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $decoratedGenerator->expects(self::once())
+            ->method('generateVariantUrl')
+            ->willReturn('https://example.com/generated.jpg');
+
+        $cacheItem = $this->createStub(CacheItemInterface::class);
+        $cacheItem->method('isHit')->willReturn(false);
+        $cache = $this->createStub(CacheItemPoolInterface::class);
+        $cache->method('getItem')->willReturn($cacheItem);
+        $cache->method('save')->willThrowException(new \RuntimeException('Cache unavailable'));
+
+        $generator = new CachedUrlGenerator($decoratedGenerator, $cache);
+
+        self::assertSame('https://example.com/generated.jpg', $generator->generateVariantUrl(new ImageAsset('default', 'image.jpg'), ['width' => 400]));
+    }
+
+    public function testGenerateAssetUrlDoesNotRetryDecoratedFailure()
+    {
+        $decoratedGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $decoratedGenerator->expects(self::once())
+            ->method('generateAssetUrl')
+            ->willThrowException(new \RuntimeException('Invalid CDN configuration'));
+
+        $cacheItem = $this->createStub(CacheItemInterface::class);
+        $cacheItem->method('isHit')->willReturn(false);
+        $cache = $this->createStub(CacheItemPoolInterface::class);
+        $cache->method('getItem')->willReturn($cacheItem);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Invalid CDN configuration');
+
+        new CachedUrlGenerator($decoratedGenerator, $cache)->generateAssetUrl(new ImageAsset('default', 'image.jpg'));
+    }
 }

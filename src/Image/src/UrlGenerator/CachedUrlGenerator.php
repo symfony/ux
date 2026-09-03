@@ -32,6 +32,7 @@ final class CachedUrlGenerator implements UrlGeneratorInterface
     public function generateAssetUrl(ImageAsset $asset): string
     {
         $cacheKey = $this->getCacheKey('asset', $asset->storageName, $asset->path);
+        $item = null;
 
         try {
             $item = $this->cache->getItem($cacheKey);
@@ -42,18 +43,23 @@ final class CachedUrlGenerator implements UrlGeneratorInterface
                     return $cached;
                 }
             }
+        } catch (\Throwable) {
+            $item = null;
+        }
 
-            $url = $this->decorated->generateAssetUrl($asset);
+        $url = $this->decorated->generateAssetUrl($asset);
 
+        try {
+            if (null === $item) {
+                return $url;
+            }
             $item->set($url);
             $item->expiresAfter($this->ttl);
             $this->cache->save($item);
-
-            return $url;
         } catch (\Throwable) {
-            // Graceful degradation: if cache fails, fall back to decorated generator
-            return $this->decorated->generateAssetUrl($asset);
         }
+
+        return $url;
     }
 
     public function generateVariantUrl(ImageAsset $asset, array $variant): string
@@ -65,6 +71,7 @@ final class CachedUrlGenerator implements UrlGeneratorInterface
             'variant' => $variant,
         ]));
         $cacheKey = \sprintf('ux_image.url.variant.%s', $variantKey);
+        $item = null;
 
         try {
             $item = $this->cache->getItem($cacheKey);
@@ -75,18 +82,23 @@ final class CachedUrlGenerator implements UrlGeneratorInterface
                     return $cached;
                 }
             }
+        } catch (\Throwable) {
+            $item = null;
+        }
 
-            $url = $this->decorated->generateVariantUrl($asset, $variant);
+        $url = $this->decorated->generateVariantUrl($asset, $variant);
 
+        try {
+            if (null === $item) {
+                return $url;
+            }
             $item->set($url);
             $item->expiresAfter($this->ttl);
             $this->cache->save($item);
-
-            return $url;
         } catch (\Throwable) {
-            // Graceful degradation: if cache fails, fall back to decorated generator
-            return $this->decorated->generateVariantUrl($asset, $variant);
         }
+
+        return $url;
     }
 
     private function getCacheKey(string $type, string $storageName, string $path): string
