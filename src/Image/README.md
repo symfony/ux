@@ -94,9 +94,9 @@ not provide a file picker, upload transport, entity ownership or an image
 editor; compose those concerns with Symfony Forms, UX Upload or application
 code.
 
-Start with the [documentation overview](doc/overview.md), then see
-[processing](doc/processing.md), [rendering](doc/rendering.md),
-[persistence](doc/image-asset.md) and [storage](doc/storage.md).
+Start with the [documentation overview](doc/overview.rst), then see
+[processing](doc/processing.rst), [rendering](doc/rendering.rst),
+[persistence](doc/image-asset.rst) and [storage](doc/storage.rst).
 
 ## Contributing
 
