@@ -72,6 +72,21 @@ final class FlysystemStorageTest extends TestCase
         }
     }
 
+    public function testStoreRejectsSvgBeforeWriting()
+    {
+        $filesystem = $this->createMock(FilesystemOperator::class);
+        $filesystem->expects(self::never())->method('writeStream');
+        $tmpFile = sys_get_temp_dir().'/fly_test_'.uniqid().'.svg';
+        file_put_contents($tmpFile, '<svg xmlns="http://www.w3.org/2000/svg"/>');
+
+        $this->expectException(\Symfony\UX\Image\Exception\ImageProcessingException::class);
+        try {
+            new FlysystemStorage($filesystem)->store(new UploadedFile($tmpFile, 'image.svg', 'image/svg+xml', null, true), 'media');
+        } finally {
+            @unlink($tmpFile);
+        }
+    }
+
     public function testDeleteExistingFile()
     {
         $filesystem = $this->createMock(FilesystemOperator::class);

@@ -293,6 +293,20 @@ final class LocalStorageTest extends TestCase
         }
     }
 
+    public function testStoreRejectsSvgBeforeWriting()
+    {
+        $storage = new LocalStorage([], $this->storageRoot);
+        $tmpFile = $this->storageRoot.'/image.svg';
+        file_put_contents($tmpFile, '<svg xmlns="http://www.w3.org/2000/svg"/>');
+
+        $this->expectException(\Symfony\UX\Image\Exception\ImageProcessingException::class);
+        try {
+            $storage->store(new UploadedFile($tmpFile, 'image.svg', 'image/svg+xml', null, true), 'default_public');
+        } finally {
+            self::assertDirectoryDoesNotExist($this->storageRoot.'/default_public');
+        }
+    }
+
     #[DataProvider('unsafePaths')]
     public function testRejectsUnsafeAssetPaths(string $path)
     {

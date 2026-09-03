@@ -192,7 +192,7 @@ final class ImageInspectorTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\RequiresPhpExtension('gd')]
-    public function testInspectGifFile()
+    public function testInspectGifDoesNotClaimProcessingSupport()
     {
         $tmpFile = sys_get_temp_dir().'/ux_image_test_'.uniqid().'.gif';
         $img = imagecreatetruecolor(30, 20);
@@ -204,8 +204,13 @@ final class ImageInspectorTest extends TestCase
         self::assertSame(30, $result['width']);
         self::assertSame(20, $result['height']);
         self::assertSame('image/gif', $result['mime']);
-        self::assertSame('gif', $result['format']);
+        self::assertNull($result['format']);
 
-        @unlink($tmpFile);
+        $this->expectException(\Symfony\UX\Image\Exception\ImageProcessingException::class);
+        try {
+            $this->inspector->inspectImage($tmpFile);
+        } finally {
+            @unlink($tmpFile);
+        }
     }
 }

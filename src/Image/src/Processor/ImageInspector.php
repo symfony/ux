@@ -74,7 +74,6 @@ final class ImageInspector implements ImageInspectorInterface
             'image/png' => 'png',
             'image/webp' => 'webp',
             'image/avif' => 'avif',
-            'image/gif' => 'gif',
             'image/svg+xml' => 'svg',
             default => null,
         };

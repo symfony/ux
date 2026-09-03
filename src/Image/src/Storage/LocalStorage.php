@@ -39,9 +39,6 @@ final class LocalStorage implements StreamStorageInterface
         $storageName = $this->validateStorageName($storageName);
         $source = $file->getRealPath() ?: $file->getPathname();
         $inspected = InspectedImage::fromPath($source, $this->limits);
-        if ('svg' === $inspected->format) {
-            throw new \Symfony\UX\Image\Exception\ImageProcessingException('SVG images are rejected by default.');
-        }
 
         $filename = bin2hex(random_bytes(16)).'.'.$inspected->format;
         $relativeDir = null === $directory || '' === $directory ? '' : new StoragePath($directory)->value;
