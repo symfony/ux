@@ -173,6 +173,60 @@ final class ImageExtensionTest extends TestCase
         self::assertInstanceOf(RenderedImage::class, $result);
     }
 
+    public function testComponentRuntimeRendererPassesPropsAndAttributes()
+    {
+        $asset = new ImageAsset('default', '/img/photo.jpg');
+        $renderer = $this->createMock(ImageRendererInterface::class);
+        $renderer->expects(self::once())
+            ->method('render')
+            ->with(
+                $asset,
+                self::callback(static fn (ImageRenderOptions $options): bool => false === $options->lazy
+                    && 'high' === $options->fetchPriority
+                    && 'sync' === $options->decoding
+                    && ['/small.jpg 400w'] === $options->srcset
+                    && [
+                        'id' => 'hero',
+                        'aria-expanded' => 'false',
+                        'data-options' => '{"zoom":true}',
+                        'hidden' => '',
+                    ] === $options->attributes),
+            )
+            ->willReturnCallback(static fn (ImageAsset $asset, ImageRenderOptions $options): RenderedImage => new RenderedImage(
+                $asset,
+                [],
+                '/img/photo.jpg',
+                null,
+                null,
+                null,
+                $options,
+            ));
+
+        $html = new ImageRuntime($renderer)->render([
+            'src' => $asset,
+            'lazy' => false,
+            'decoding' => 'sync',
+            'srcset' => ['/small.jpg 400w'],
+            'id' => 'hero',
+            'aria-expanded' => false,
+            'data-options' => ['zoom' => true],
+            'hidden' => true,
+        ]);
+
+        self::assertStringStartsWith('<picture>', $html);
+        self::assertStringContainsString('loading="eager"', $html);
+        self::assertStringContainsString('fetchpriority="high"', $html);
+        self::assertStringContainsString('data-options="{&quot;zoom&quot;:true}"', $html);
+    }
+
+    public function testComponentRuntimeRendererReturnsEmptyWithoutSource()
+    {
+        $renderer = $this->createMock(ImageRendererInterface::class);
+        $renderer->expects(self::never())->method('render');
+
+        self::assertSame('', new ImageRuntime($renderer)->render());
+    }
+
     public function testRuntimeRenderConfiguredHonorsFetchpriorityOption()
     {
         $asset = new ImageAsset('default', '/foo.jpg');

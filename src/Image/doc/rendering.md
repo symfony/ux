@@ -86,9 +86,9 @@ When `symfony/ux-twig-component` is installed **and**
 />
 ```
 
-The `<twig:ux:image>` component renders via `ux_picture()` internally. The template is at
-`templates/components/Image.html.twig` and can be overridden under
-`templates/bundles/UXImageBundle/components/Image.html.twig`.
+Like `<twig:ux:icon>` and `<twig:ux:map>`, the self-closing component uses a
+dedicated TwigComponent runtime renderer. It produces the same `<picture>`
+markup as `ux_picture()` without loading an intermediate component template.
 
 ## HTML output
 
@@ -290,17 +290,6 @@ return new Response($rendered->toHtml());
 
 In Twig, both functions return a string. Pipe through `|raw` is not needed as the functions
 already output safe HTML.
-
-## Overriding templates
-
-The TwigComponent template lives at:
-`vendor/symfony/ux-image/templates/components/Image.html.twig`
-
-Override it by creating:
-`templates/bundles/UXImageBundle/components/Image.html.twig`
-
-The override receives the same `rendered` variable (`RenderedImage` object) with `toHtml()` and
-`toImgHtml()` methods.
 
 ## Reference
 

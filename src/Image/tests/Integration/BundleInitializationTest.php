@@ -18,8 +18,10 @@ use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\UX\Image\ImageAsset;
 use Symfony\UX\Image\UXImageBundle;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
+use Twig\Environment;
 
 /**
  * @requires class Symfony\Bundle\FrameworkBundle\FrameworkBundle
@@ -54,6 +56,28 @@ final class BundleInitializationTest extends TestCase
         self::assertTrue($container->hasParameter('ux_image.preferred_formats'));
         self::assertTrue($container->hasParameter('ux_image.storages'));
         self::assertTrue($container->hasParameter('ux_image.profiles'));
+
+        $kernel->shutdown();
+    }
+
+    public function testTwigComponentUsesRuntimeRenderer()
+    {
+        $kernel = new UxImageTestKernel('test', true);
+        $kernel->boot();
+
+        $twig = $kernel->getContainer()->get('test.service_container')->get('twig');
+        self::assertInstanceOf(Environment::class, $twig);
+        $template = $twig->createTemplate('<twig:ux:image :src="asset" alt="Photo" :lazy="false" id="hero" />');
+        $html = $template->render([
+            'asset' => new ImageAsset('default', 'https://example.com/photo.jpg', width: 1200, height: 800),
+        ]);
+
+        self::assertStringStartsWith('<picture>', $html);
+        self::assertStringContainsString('src="https://example.com/photo.jpg"', $html);
+        self::assertStringContainsString('alt="Photo"', $html);
+        self::assertStringContainsString('loading="eager"', $html);
+        self::assertStringContainsString('fetchpriority="high"', $html);
+        self::assertStringContainsString('id="hero"', $html);
 
         $kernel->shutdown();
     }

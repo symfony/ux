@@ -134,8 +134,8 @@ The Twig functions are the lowest-friction rendering API:
 Use `<twig:ux:image>` when the application already composes TwigComponents.
 The component service is registered only when `TwigComponentBundle` is active
 in the kernel; merely having the package in `vendor/` does not enable it.
-Override its template at
-`templates/bundles/UXImageBundle/components/Image.html.twig`.
+The self-closing component renders directly through the UX Image runtime; pass
+classes and other safe HTML attributes on the component itself.
 
 Prefer styling an application-owned wrapper or class over replacing the
 semantic `<picture>` structure. Bootstrap, Tailwind and custom design systems

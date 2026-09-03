@@ -15,19 +15,47 @@ use Symfony\UX\Image\ImageAsset;
 use Symfony\UX\Image\Renderer\ImageRendererInterface;
 use Symfony\UX\Image\Renderer\ImageRenderOptions;
 use Symfony\UX\Image\Renderer\RenderedImage;
+use Twig\Extension\RuntimeExtensionInterface;
+use Twig\Extra\Html\HtmlExtension;
 
 /**
  * Runtime helpers used by the ux_image Twig component.
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final class ImageRuntime
+final class ImageRuntime implements RuntimeExtensionInterface
 {
     public function __construct(private ImageRendererInterface $renderer)
     {
     }
 
-    public function render(ImageAsset $asset, ?ImageRenderOptions $options = null): RenderedImage
+    /**
+     * @param array<string, mixed> $args
+     */
+    public function render(array $args = []): string
+    {
+        $asset = $args['src'] ?? null;
+        unset($args['src']);
+
+        if (null === $asset) {
+            return '';
+        }
+        if (!$asset instanceof ImageAsset) {
+            throw new \TypeError(\sprintf('The "src" argument must be an instance of "%s", "%s" given.', ImageAsset::class, get_debug_type($asset)));
+        }
+
+        $options = array_intersect_key($args, array_flip(['sizes', 'alt', 'lazy', 'fetchpriority', 'class', 'decoding', 'variant', 'srcset']));
+        $attributes = array_diff_key($args, $options);
+        foreach ($attributes as $name => $value) {
+            $attributes[$name] = HtmlExtension::htmlAttrValue($name, $value);
+        }
+        $options['attributes'] = $attributes;
+        $options['fetchpriority'] ??= false === ($options['lazy'] ?? true) ? 'high' : 'auto';
+
+        return $this->renderPicture($asset, $options);
+    }
+
+    private function renderAsset(ImageAsset $asset, ?ImageRenderOptions $options = null): RenderedImage
     {
         return $this->renderer->render($asset, $options);
     }
@@ -63,7 +91,7 @@ final class ImageRuntime
         $srcset = $options['srcset'] ?? null;
         $attributes = $options['attributes'] ?? [];
 
-        return $this->render($asset, new ImageRenderOptions(
+        return $this->renderAsset($asset, new ImageRenderOptions(
             sizes: \is_string($sizes) ? $sizes : null,
             alt: \is_string($alt) ? $alt : '',
             lazy: \is_bool($lazy) ? $lazy : true,
@@ -83,7 +111,7 @@ final class ImageRuntime
      */
     public function getSources(ImageAsset $asset): array
     {
-        return $this->render($asset)->sources;
+        return $this->renderAsset($asset)->sources;
     }
 
     /**
@@ -91,7 +119,7 @@ final class ImageRuntime
      */
     public function getFallbackSrc(ImageAsset $asset): string
     {
-        return $this->render($asset)->fallbackSrc;
+        return $this->renderAsset($asset)->fallbackSrc;
     }
 
     /**
@@ -99,16 +127,16 @@ final class ImageRuntime
      */
     public function getFallbackSrcset(ImageAsset $asset): ?string
     {
-        return $this->render($asset)->fallbackSrcset;
+        return $this->renderAsset($asset)->fallbackSrcset;
     }
 
     public function getWidth(ImageAsset $asset): ?int
     {
-        return $this->render($asset)->width;
+        return $this->renderAsset($asset)->width;
     }
 
     public function getHeight(ImageAsset $asset): ?int
     {
-        return $this->render($asset)->height;
+        return $this->renderAsset($asset)->height;
     }
 }
