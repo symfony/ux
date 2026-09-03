@@ -81,7 +81,7 @@ final class ImageWriteSession
         if ([] !== $failures) {
             [$path, $failure] = $failures[0];
 
-            throw new StorageException(\sprintf('Failed to roll back %d image path(s). First failure for "%s": %s', \count($failures), $path->value, $failure->getMessage()), 0, $failure);
+            throw new StorageException(\sprintf('Failed to roll back %d image path(s). First failure for "%s": "%s"', \count($failures), $path->value, $failure->getMessage()), 0, $failure);
         }
     }
 }
