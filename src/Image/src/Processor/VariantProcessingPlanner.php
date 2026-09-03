@@ -16,6 +16,7 @@ use Symfony\UX\Image\Exception\ImageProcessingException;
 use Symfony\UX\Image\InspectedImage;
 use Symfony\UX\Image\ProcessingLimits;
 use Symfony\UX\Image\Transformation\FocalPoint;
+use Symfony\UX\Image\Transformation\ResizeGeometry;
 use Symfony\UX\Image\Transformation\ResizeGeometryCalculator;
 use Symfony\UX\Image\Transformation\ResizeMode;
 
@@ -49,6 +50,7 @@ final class VariantProcessingPlanner
         }
 
         $variants = [];
+        $originalSizedVariants = [];
         $outputPixels = 0;
         foreach ($variantConfigs as $variantName => $config) {
             if (!\is_array($config)) {
@@ -73,6 +75,17 @@ final class VariantProcessingPlanner
             }
             $this->limits->assertOutputAllocation($geometry->canvasWidth, $geometry->canvasHeight);
 
+            $quality = \is_int($config['quality'] ?? null) ? $config['quality'] : 80;
+            $media = \is_string($config['media'] ?? null) ? $config['media'] : null;
+            $density = \is_string($config['density'] ?? null) ? $config['density'] : null;
+            if ($this->matchesOriginal($geometry, $input)) {
+                $key = serialize([$media, $density, $quality]);
+                if (isset($originalSizedVariants[$key])) {
+                    continue;
+                }
+                $originalSizedVariants[$key] = true;
+            }
+
             $artifactPixels = $geometry->canvasWidth * $geometry->canvasHeight;
             $remaining = $this->limits->maxOutputPixels - $outputPixels;
             if ([] !== $formats && $artifactPixels > intdiv($remaining, \count($formats))) {
@@ -89,9 +102,9 @@ final class VariantProcessingPlanner
                 height: $height,
                 mode: $mode,
                 position: $position,
-                quality: \is_int($config['quality'] ?? null) ? $config['quality'] : 80,
-                media: \is_string($config['media'] ?? null) ? $config['media'] : null,
-                density: \is_string($config['density'] ?? null) ? $config['density'] : null,
+                quality: $quality,
+                media: $media,
+                density: $density,
                 geometry: $geometry,
             );
         }
@@ -102,5 +115,19 @@ final class VariantProcessingPlanner
             artifactCount: \count($variants) * \count($formats),
             outputPixels: $outputPixels,
         );
+    }
+
+    private function matchesOriginal(ResizeGeometry $geometry, InspectedImage $input): bool
+    {
+        return 0 === $geometry->sourceX
+            && 0 === $geometry->sourceY
+            && $input->width === $geometry->sourceWidth
+            && $input->height === $geometry->sourceHeight
+            && 0 === $geometry->destinationX
+            && 0 === $geometry->destinationY
+            && $input->width === $geometry->destinationWidth
+            && $input->height === $geometry->destinationHeight
+            && $input->width === $geometry->canvasWidth
+            && $input->height === $geometry->canvasHeight;
     }
 }

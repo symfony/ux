@@ -85,6 +85,42 @@ final class VariantProcessingPlannerTest extends TestCase
         self::assertSame([], $plan->variants);
     }
 
+    public function testDeduplicatesVariantsThatCollapseToTheOriginal()
+    {
+        $plan = $this->planner()->plan(
+            new InspectedImage('jpeg', 'image/jpeg', 400, 200, 1_000),
+            [
+                'small' => ['width' => 640],
+                'medium' => ['width' => 1024],
+                'large' => ['width' => 1920],
+            ],
+            ['webp', 'jpeg'],
+        );
+
+        self::assertSame(['small'], array_map(static fn (PlannedVariant $variant): string => $variant->name, $plan->variants));
+        self::assertSame(2, $plan->artifactCount);
+        self::assertSame(160_000, $plan->outputPixels);
+    }
+
+    public function testPreservesDistinctOriginalSizedSources()
+    {
+        $plan = $this->planner()->plan(
+            new InspectedImage('jpeg', 'image/jpeg', 400, 200, 1_000),
+            [
+                'default' => ['width' => 640],
+                'mobile' => ['width' => 1024, 'media' => '(max-width: 40rem)'],
+                'retina' => ['width' => 1024, 'density' => '2x'],
+                'compressed' => ['width' => 1024, 'quality' => 60],
+            ],
+            ['webp'],
+        );
+
+        self::assertSame(
+            ['default', 'mobile', 'retina', 'compressed'],
+            array_map(static fn (PlannedVariant $variant): string => $variant->name, $plan->variants),
+        );
+    }
+
     public function testWrapsInvalidTransformationConfiguration()
     {
         $this->expectException(\RuntimeException::class);

@@ -313,7 +313,7 @@ final class InterventionImageProcessorTest extends TestCase
 
     public function testGenerateVariantsBuildsCorrectPaths()
     {
-        $jpegFile = $this->createTempJpegFile();
+        $jpegFile = $this->createTempJpegFile(1200, 900);
 
         $storageMock = $this->createStub(StorageInterface::class);
         $storageMock->method('getFilePath')->willReturn($jpegFile);
@@ -345,8 +345,8 @@ final class InterventionImageProcessorTest extends TestCase
         self::assertNotEmpty(array_filter($jpegPaths, static fn (string $path): bool => 1 === preg_match('#^/uploads/photo_[a-f0-9]{24}_large\\.jpeg$#', $path)));
 
         $smallWebp = $result['webp'][0];
-        self::assertSame(10, $smallWebp['width']);
-        self::assertSame(10, $smallWebp['height']);
+        self::assertSame(320, $smallWebp['width']);
+        self::assertSame(240, $smallWebp['height']);
     }
 
     public function testOneResizeAndOneEncodingDecodeAreSharedAcrossFormats()
