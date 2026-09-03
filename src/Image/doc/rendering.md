@@ -101,12 +101,47 @@ result with this fixture. Its test URL generator prefixes asset paths with
 `/media`.
 
 <!-- fixture: responsive-picture -->
+
 ```html
 <picture>
-    <source type="image/avif" srcset="/media/fixtures/image-300.avif 300w, /media/fixtures/image-600.avif 600w, /media/fixtures/image-1200.avif 1200w" sizes="100vw" />
-    <source type="image/webp" srcset="/media/fixtures/image-300.webp 300w, /media/fixtures/image-600.webp 600w, /media/fixtures/image-1200.webp 1200w" sizes="100vw" />
-    <source type="image/jpeg" srcset="/media/fixtures/image-300.jpeg 300w, /media/fixtures/image-600.jpeg 600w, /media/fixtures/image-1200.jpeg 1200w" sizes="100vw" />
-    <img src="/media/fixtures/image-300.jpeg" sizes="100vw" alt="Product photo" loading="lazy" fetchpriority="auto" decoding="async" srcset="/media/fixtures/image-300.jpeg 300w, /media/fixtures/image-600.jpeg 600w, /media/fixtures/image-1200.jpeg 1200w" width="1600" height="1000" />
+    <source
+        type="image/avif"
+        srcset="
+            /media/fixtures/image-300.avif   300w,
+            /media/fixtures/image-600.avif   600w,
+            /media/fixtures/image-1200.avif 1200w
+        "
+        sizes="100vw" />
+    <source
+        type="image/webp"
+        srcset="
+            /media/fixtures/image-300.webp   300w,
+            /media/fixtures/image-600.webp   600w,
+            /media/fixtures/image-1200.webp 1200w
+        "
+        sizes="100vw" />
+    <source
+        type="image/jpeg"
+        srcset="
+            /media/fixtures/image-300.jpeg   300w,
+            /media/fixtures/image-600.jpeg   600w,
+            /media/fixtures/image-1200.jpeg 1200w
+        "
+        sizes="100vw" />
+    <img
+        src="/media/fixtures/image-300.jpeg"
+        sizes="100vw"
+        alt="Product photo"
+        loading="lazy"
+        fetchpriority="auto"
+        decoding="async"
+        srcset="
+            /media/fixtures/image-300.jpeg   300w,
+            /media/fixtures/image-600.jpeg   600w,
+            /media/fixtures/image-1200.jpeg 1200w
+        "
+        width="1600"
+        height="1000" />
 </picture>
 ```
 
@@ -118,8 +153,22 @@ metadata, not from that fallback variant.
 ### `ux_image()` output
 
 <!-- fixture: responsive-img -->
+
 ```html
-<img src="/media/fixtures/image-300.jpeg" alt="Product photo" loading="lazy" fetchpriority="auto" decoding="async" srcset="/media/fixtures/image-300.jpeg 300w, /media/fixtures/image-600.jpeg 600w, /media/fixtures/image-1200.jpeg 1200w" sizes="100vw" width="1600" height="1000" />
+<img
+    src="/media/fixtures/image-300.jpeg"
+    alt="Product photo"
+    loading="lazy"
+    fetchpriority="auto"
+    decoding="async"
+    srcset="
+        /media/fixtures/image-300.jpeg   300w,
+        /media/fixtures/image-600.jpeg   600w,
+        /media/fixtures/image-1200.jpeg 1200w
+    "
+    sizes="100vw"
+    width="1600"
+    height="1000" />
 ```
 
 No `<picture>` wrapper, no format negotiation. Uses the default format only.
@@ -144,15 +193,15 @@ model. UX Image's optional `cache:` setting caches generated URLs, not the
 
 Both `ux_picture()` and `ux_image()` accept the same options:
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `alt` | `string` | `''` | `alt` attribute value |
-| `lazy` | `bool` | `true` | `loading="lazy"` when true, `loading="eager"` when false |
-| `fetchpriority` | `string` | `auto` | `fetchpriority` attribute (`high`, `low`, `auto`) |
-| `sizes` | `string` | `100vw` | `sizes` attribute for `<source>` and `<img>` |
-| `class` | `string` | `''` | CSS class on the `<img>` element |
-| `decoding` | `string` | `async` | `decoding` attribute (`async`, `sync`, `auto`) |
-| `variant` | `string\|null` | `null` | Filter to a single named variant |
+| Option          | Type           | Default | Description                                              |
+| --------------- | -------------- | ------- | -------------------------------------------------------- |
+| `alt`           | `string`       | `''`    | `alt` attribute value                                    |
+| `lazy`          | `bool`         | `true`  | `loading="lazy"` when true, `loading="eager"` when false |
+| `fetchpriority` | `string`       | `auto`  | `fetchpriority` attribute (`high`, `low`, `auto`)        |
+| `sizes`         | `string`       | `100vw` | `sizes` attribute for `<source>` and `<img>`             |
+| `class`         | `string`       | `''`    | CSS class on the `<img>` element                         |
+| `decoding`      | `string`       | `async` | `decoding` attribute (`async`, `sync`, `auto`)           |
+| `variant`       | `string\|null` | `null`  | Filter to a single named variant                         |
 
 ### `variant` option
 
@@ -185,7 +234,7 @@ For above-the-fold images, disable lazy loading and set a high fetch priority:
 This produces:
 
 ```html
-<img loading="eager" fetchpriority="high" decoding="sync" …>
+<img loading="eager" fetchpriority="high" decoding="sync" … />
 ```
 
 ## Art-directed variants
@@ -196,15 +245,17 @@ second top-level persistence shape:
 
 ```html
 <picture>
-  <source type="image/avif" media="(max-width: 640px)"
-          srcset="/uploads/product-mobile.avif">
-  <source type="image/avif" media="(min-width: 641px)"
-          srcset="/uploads/product-desktop.avif 1200w, /uploads/product-card.avif 600w">
-  <source type="image/webp" media="(max-width: 640px)"
-          srcset="/uploads/product-mobile.webp">
-  <source type="image/webp" media="(min-width: 641px)"
-          srcset="/uploads/product-desktop.webp 1200w, /uploads/product-card.webp 600w">
-  <img src="/uploads/product-card.jpeg" …>
+    <source type="image/avif" media="(max-width: 640px)" srcset="/uploads/product-mobile.avif" />
+    <source
+        type="image/avif"
+        media="(min-width: 641px)"
+        srcset="/uploads/product-desktop.avif 1200w, /uploads/product-card.avif 600w" />
+    <source type="image/webp" media="(max-width: 640px)" srcset="/uploads/product-mobile.webp" />
+    <source
+        type="image/webp"
+        media="(min-width: 641px)"
+        srcset="/uploads/product-desktop.webp 1200w, /uploads/product-card.webp 600w" />
+    <img src="/uploads/product-card.jpeg" … />
 </picture>
 ```
 
@@ -255,24 +306,24 @@ The override receives the same `rendered` variable (`RenderedImage` object) with
 
 ### Twig functions
 
-| Function | Output |
-|---|---|
+| Function                                      | Output                           |
+| --------------------------------------------- | -------------------------------- |
 | `ux_picture(ImageAsset, array $options = [])` | `<picture>` with `<source>` tags |
-| `ux_image(ImageAsset, array $options = [])` | `<img>` with `srcset` |
+| `ux_image(ImageAsset, array $options = [])`   | `<img>` with `srcset`            |
 
 ### `RenderedImage` methods
 
-| Method | Description |
-|---|---|
-| `toHtml(): string` | Full `<picture>` markup |
-| `toPictureHtml(): string` | Alias of `toHtml()` |
-| `toImgHtml(): string` | `<img>` only markup |
-| `getAsset(): ImageAsset` | Persisted asset used for rendering |
-| `getSources(): array` | Ordered `<source>` metadata |
-| `getFallbackSrc(): string` | Fallback URL |
-| `getFallbackSrcset(): ?string` | Fallback candidate list |
-| `getWidth(): ?int` / `getHeight(): ?int` | Intrinsic dimensions |
-| `getOptions(): ImageRenderOptions` | Effective render options |
+| Method                                   | Description                        |
+| ---------------------------------------- | ---------------------------------- |
+| `toHtml(): string`                       | Full `<picture>` markup            |
+| `toPictureHtml(): string`                | Alias of `toHtml()`                |
+| `toImgHtml(): string`                    | `<img>` only markup                |
+| `getAsset(): ImageAsset`                 | Persisted asset used for rendering |
+| `getSources(): array`                    | Ordered `<source>` metadata        |
+| `getFallbackSrc(): string`               | Fallback URL                       |
+| `getFallbackSrcset(): ?string`           | Fallback candidate list            |
+| `getWidth(): ?int` / `getHeight(): ?int` | Intrinsic dimensions               |
+| `getOptions(): ImageRenderOptions`       | Effective render options           |
 
 ### `ImageRenderOptions` constructor
 
@@ -296,14 +347,14 @@ additional `data-*` and `aria-*` attributes.
 
 ### TwigComponent props
 
-| Prop | Type | Default | Maps to |
-|---|---|---|---|
-| `src` | `ImageAsset` | *(required)* | `$asset` |
-| `alt` | `string` | `''` | `ImageRenderOptions` argument `alt` |
-| `class` | `string\|null` | `null` | `ImageRenderOptions` argument `class` |
-| `variant` | `string\|null` | `null` | `ImageRenderOptions` argument `variant` |
-| `lazy` | `bool` | `true` | `ImageRenderOptions` argument `lazy` |
-| `srcset` | `list<string>\|null` | `null` | `ImageRenderOptions` argument `srcset` |
-| `sizes` | `string\|null` | `null` | `ImageRenderOptions` argument `sizes` |
-| `fetchpriority` | `string\|null` | `null` | `ImageRenderOptions` argument `fetchPriority` |
-| `decoding` | `string` | `async` | `ImageRenderOptions` argument `decoding` |
+| Prop            | Type                 | Default      | Maps to                                       |
+| --------------- | -------------------- | ------------ | --------------------------------------------- |
+| `src`           | `ImageAsset`         | _(required)_ | `$asset`                                      |
+| `alt`           | `string`             | `''`         | `ImageRenderOptions` argument `alt`           |
+| `class`         | `string\|null`       | `null`       | `ImageRenderOptions` argument `class`         |
+| `variant`       | `string\|null`       | `null`       | `ImageRenderOptions` argument `variant`       |
+| `lazy`          | `bool`               | `true`       | `ImageRenderOptions` argument `lazy`          |
+| `srcset`        | `list<string>\|null` | `null`       | `ImageRenderOptions` argument `srcset`        |
+| `sizes`         | `string\|null`       | `null`       | `ImageRenderOptions` argument `sizes`         |
+| `fetchpriority` | `string\|null`       | `null`       | `ImageRenderOptions` argument `fetchPriority` |
+| `decoding`      | `string`             | `async`      | `ImageRenderOptions` argument `decoding`      |

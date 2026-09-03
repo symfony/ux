@@ -155,15 +155,15 @@ Messenger.
 
 ## Replacing extension points
 
-| Need | Contract |
-|---|---|
-| Complete processing pipeline | `ImageProcessorInterface` and `processor_service` |
-| Driver primitives or tagged backend | `ImageDriverInterface` |
-| Custom storage backend | `StorageInterface` / `StreamStorageInterface` |
-| Signed or private URLs | `UrlAdapterInterface` |
-| Different CDN syntax | `CdnUrlBuilderInterface` |
-| Different HTML | `ImageRendererInterface` |
-| Safe SVG rasterization | `SvgPolicyInterface` |
+| Need                                | Contract                                          |
+| ----------------------------------- | ------------------------------------------------- |
+| Complete processing pipeline        | `ImageProcessorInterface` and `processor_service` |
+| Driver primitives or tagged backend | `ImageDriverInterface`                            |
+| Custom storage backend              | `StorageInterface` / `StreamStorageInterface`     |
+| Signed or private URLs              | `UrlAdapterInterface`                             |
+| Different CDN syntax                | `CdnUrlBuilderInterface`                          |
+| Different HTML                      | `ImageRendererInterface`                          |
+| Safe SVG rasterization              | `SvgPolicyInterface`                              |
 
 Prefer one complete application service over partially overriding several
 internal services. Compile the container in a functional test so missing

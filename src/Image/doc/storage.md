@@ -131,7 +131,7 @@ ux_image:
     storages:
         products:
             flysystem_service: product.storage
-            public_url_prefix: '%env(S3_URL)%'  # fallback if no CDN builder matches
+            public_url_prefix: '%env(S3_URL)%' # fallback if no CDN builder matches
             cdn:
                 provider: cloudinary
                 base_url: https://res.cloudinary.com/mycloud/image/upload
@@ -155,14 +155,14 @@ https://res.cloudinary.com/mycloud/image/upload/w_600,h_400,c_crop,f_auto,q_auto
 
 Transformations derived from the variant config:
 
-| Variant config | Cloudinary param |
-|---|---|
-| `width` | `w_` |
-| `height` | `h_` |
-| `mode: crop` | `c_crop` |
-| `mode: fit` | `c_fit` |
-| `mode: fill` | `c_fill` |
-| (always) | `f_auto`, `q_auto` |
+| Variant config | Cloudinary param   |
+| -------------- | ------------------ |
+| `width`        | `w_`               |
+| `height`       | `h_`               |
+| `mode: crop`   | `c_crop`           |
+| `mode: fit`    | `c_fit`            |
+| `mode: fill`   | `c_fill`           |
+| (always)       | `f_auto`, `q_auto` |
 
 The CDN re-sizes and re-encodes on the first request and caches thereafter.
 
@@ -178,15 +178,15 @@ The CDN re-sizes and re-encodes on the first request and caches thereafter.
 https://myaccount.imgix.net/product.jpg?w=600&h=400&fit=crop&q=80&auto=format%2Ccompress
 ```
 
-| Variant config | Imgix param |
-|---|---|
-| `width` | `w` |
-| `height` | `h` |
-| `mode: crop` | `fit=crop` |
-| `mode: fit` | `fit=scale` |
-| `mode: fill` | `fit=fillmax` |
-| `quality` | `q` |
-| (always) | `auto=format,compress` |
+| Variant config | Imgix param            |
+| -------------- | ---------------------- |
+| `width`        | `w`                    |
+| `height`       | `h`                    |
+| `mode: crop`   | `fit=crop`             |
+| `mode: fit`    | `fit=scale`            |
+| `mode: fill`   | `fit=fillmax`          |
+| `quality`      | `q`                    |
+| (always)       | `auto=format,compress` |
 
 ### Custom CDN builder
 
@@ -277,35 +277,39 @@ URL generation (especially with CDN transformation strings) can be cached:
 ux_image:
     cache:
         enabled: true
-        pool: cache.app   # any PSR-6 cache pool
-        ttl: 3600         # seconds
+        pool: cache.app # any PSR-6 cache pool
+        ttl: 3600 # seconds
 ```
 
 When enabled, `CachedUrlGenerator` decorates `UrlGenerator` and stores results in the pool. When
 `cache.enabled` is `false`, the decorator is removed at compile time.
 
+Enable this cache for URL adapters that perform meaningful work, such as
+signing CDN transformation URLs. The built-in `generic` adapter only joins a
+prefix and a path, so caching it usually adds more overhead than it removes.
+
 ## What to choose
 
-| Scenario | Recommendation |
-|---|---|
-| Single-server app | Local storage |
-| Multi-server or containerized app | Flysystem (S3 or equivalent) |
-| High traffic, need edge delivery | Flysystem + Cloudinary or Imgix CDN |
-| Large originals, resize on-the-fly | Cloudinary or Imgix as CDN |
-| Custom cloud provider | Implement `CdnUrlBuilderInterface` |
+| Scenario                           | Recommendation                      |
+| ---------------------------------- | ----------------------------------- |
+| Single-server app                  | Local storage                       |
+| Multi-server or containerized app  | Flysystem (S3 or equivalent)        |
+| High traffic, need edge delivery   | Flysystem + Cloudinary or Imgix CDN |
+| Large originals, resize on-the-fly | Cloudinary or Imgix as CDN          |
+| Custom cloud provider              | Implement `CdnUrlBuilderInterface`  |
 
 ## Reference
 
 ### Storage config keys
 
-| Key | Required | Description |
-|---|---|---|
-| `flysystem_service` | no | Flysystem operator service ID (`league/flysystem-bundle`) |
-| `adapter_service` | no | Custom storage adapter service ID |
-| `url_adapter` | no | Tagged URL adapter name; defaults to `generic` |
-| `public_url_prefix` | no | Base URL prepended to paths when no CDN builder is set |
-| `cdn.provider` | no | Tagged CDN builder name (`cloudinary` and `imgix` are built in) |
-| `cdn.base_url` | with `cdn` | Base URL passed to the CDN builder (required when a provider is set) |
+| Key                 | Required   | Description                                                          |
+| ------------------- | ---------- | -------------------------------------------------------------------- |
+| `flysystem_service` | no         | Flysystem operator service ID (`league/flysystem-bundle`)            |
+| `adapter_service`   | no         | Custom storage adapter service ID                                    |
+| `url_adapter`       | no         | Tagged URL adapter name; defaults to `generic`                       |
+| `public_url_prefix` | no         | Base URL prepended to paths when no CDN builder is set               |
+| `cdn.provider`      | no         | Tagged CDN builder name (`cloudinary` and `imgix` are built in)      |
+| `cdn.base_url`      | with `cdn` | Base URL passed to the CDN builder (required when a provider is set) |
 
 A storage that sets neither `flysystem_service` nor `adapter_service` is served by the built-in
 local filesystem backend.

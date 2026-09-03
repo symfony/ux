@@ -55,18 +55,18 @@ A profile is a named set of processing rules.
 ux_image:
     profiles:
         product:
-            formats: [avif, webp, jpeg]  # formats to generate per variant
+            formats: [avif, webp, jpeg] # formats to generate per variant
             variants:
                 thumbnail:
                     width: 300
                     height: 300
-                    mode: crop          # crop to the target rectangle
+                    mode: crop # crop to the target rectangle
                 card:
-                    width: 600          # height auto-calculated
+                    width: 600 # height auto-calculated
                 hero:
                     width: 1200
-            processing: immediate       # immediate | deferred | async
-            sizes: '(min-width: 768px) 50vw, 100vw'  # sizes for <img> in this profile
+            processing: immediate # immediate | deferred | async
+            sizes: '(min-width: 768px) 50vw, 100vw' # sizes for <img> in this profile
 ```
 
 The storage a variant is written to is not a profile key. It is chosen at processing time via the
@@ -74,11 +74,11 @@ The storage a variant is written to is not a profile key. It is chosen at proces
 
 ### Variant modes
 
-| Mode | Keeps all pixels | Exact canvas | Uses focal point | Typical use |
-|---|---:|---:|---:|---|
-| `fit` | yes | no | no | fluid content image |
-| `crop` | no | yes when the source is large enough | yes | avatar, thumbnail, hero crop |
-| `fill` | yes | yes | no | fixed card canvas without cropping |
+| Mode   | Keeps all pixels |                        Exact canvas | Uses focal point | Typical use                        |
+| ------ | ---------------: | ----------------------------------: | ---------------: | ---------------------------------- |
+| `fit`  |              yes |                                  no |               no | fluid content image                |
+| `crop` |               no | yes when the source is large enough |              yes | avatar, thumbnail, hero crop       |
+| `fill` |              yes |                                 yes |               no | fixed card canvas without cropping |
 
 When only `width` is given (no `height`), the image is resized proportionally.
 No mode upscales a smaller source.
@@ -121,12 +121,12 @@ bottom-right corner. Named values are `top`, `bottom`, `left`, `right` and
 Every variant is encoded once per configured format. Choose the format list
 with both driver support and browser fallback in mind:
 
-| Format | Driver requirement | Rendering role |
-|---|---|---|
-| `jpeg` or `jpg` | always available with supported GD | universal photographic fallback |
-| `png` | always available with supported GD | lossless/alpha fallback |
-| `webp` | GD build with `imagewebp()`, or compatible Intervention driver | modern `<source>` |
-| `avif` | GD build with `imageavif()`, or compatible Intervention driver | most preferred modern `<source>` |
+| Format          | Driver requirement                                             | Rendering role                   |
+| --------------- | -------------------------------------------------------------- | -------------------------------- |
+| `jpeg` or `jpg` | always available with supported GD                             | universal photographic fallback  |
+| `png`           | always available with supported GD                             | lossless/alpha fallback          |
+| `webp`          | GD build with `imagewebp()`, or compatible Intervention driver | modern `<source>`                |
+| `avif`          | GD build with `imageavif()`, or compatible Intervention driver | most preferred modern `<source>` |
 
 The configured `preferred_formats` controls `<source>` order; it does not create
 missing files. Keep JPEG or PNG in the profile whenever the original cannot be
@@ -157,8 +157,8 @@ profiles:
         # Configure AVIF/WebP explicitly when the selected driver supports them.
         formats: [jpeg]
         variants:
-            mobile:  { width: 640,  mode: fit, quality: 80 }
-            tablet:  { width: 1024, mode: fit, quality: 85 }
+            mobile: { width: 640, mode: fit, quality: 80 }
+            tablet: { width: 1024, mode: fit, quality: 85 }
             desktop: { width: 1920, mode: fit, quality: 90 }
 ```
 
@@ -170,7 +170,7 @@ The `driver` config key selects the image processing backend.
 
 ```yaml
 ux_image:
-    driver: gd      # gd | imagick | vips
+    driver: gd # gd | imagick | vips
 ```
 
 ### GD
@@ -178,6 +178,7 @@ ux_image:
 The default. Uses PHP's built-in GD extension. Available in most PHP installations.
 
 `GdImageProcessor`:
+
 - Loads source images via `imagecreatefromjpeg` / `imagecreatefrompng` / `imagecreatefromwebp` etc.
 - Produces AVIF via `imageavif()` (PHP 8.1+), WebP via `imagewebp()`, JPEG via `imagejpeg()`
 - Rejects SVG before decoding; the built-in driver only processes raster images
@@ -327,7 +328,7 @@ three-variant x three-format profile, for a total of ten stored objects:
 > **Caution**
 > Each variant combined with each format produces a separate generated file.
 > Including the stored original, the storage cost is `N variants × M formats +
-> 1` objects per upload.
+1` objects per upload.
 
 ## Triggering processing
 
@@ -383,19 +384,19 @@ raw encoded pixel order.
 
 ### `ImageProcessorInterface`
 
-| Method | Description |
-|---|---|
+| Method                                                                                                 | Description                              |
+| ------------------------------------------------------------------------------------------------------ | ---------------------------------------- |
 | `process(UploadedFile $file, ?string $profile = null, string $storage = 'default_public'): ImageAsset` | Full upload -> variant -> store pipeline |
-| `generateVariants(ImageAsset $imageAsset, array $variantConfigs): array` | Generate variants for an existing asset |
+| `generateVariants(ImageAsset $imageAsset, array $variantConfigs): array`                               | Generate variants for an existing asset  |
 
 ### `ImageDriverInterface`
 
-| Method | Description |
-|---|---|
-| `supports(string $driver): bool` | Whether this driver handles the configured driver name |
-| `resize(string $inputPath, string $outputPath, int $width, int $height, string $mode = 'fit', string $position = 'center'): void` | Resize a single file; throws on failure |
-| `convert(string $inputPath, string $outputPath, string $format, int $quality = 80): void` | Encode a file to a format; throws on failure |
-| `extractMetadata(UploadedFile $file): array{width, height, mime, format}` | Best-effort compatibility metadata; fields may be `null` |
+| Method                                                                                                                            | Description                                              |
+| --------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| `supports(string $driver): bool`                                                                                                  | Whether this driver handles the configured driver name   |
+| `resize(string $inputPath, string $outputPath, int $width, int $height, string $mode = 'fit', string $position = 'center'): void` | Resize a single file; throws on failure                  |
+| `convert(string $inputPath, string $outputPath, string $format, int $quality = 80): void`                                         | Encode a file to a format; throws on failure             |
+| `extractMetadata(UploadedFile $file): array{width, height, mime, format}`                                                         | Best-effort compatibility metadata; fields may be `null` |
 
 `ImageInspectorInterface::inspect()` is the lower-level best-effort equivalent:
 it returns the same nullable array and does not enforce processing limits.
@@ -415,17 +416,17 @@ and nullable `density`. `ImageSource` is the single persisted source model. Its
 
 ### Profile config keys
 
-| Key | Default | Description |
-|---|---|---|
-| `processing` | `immediate` | `immediate`, `deferred` or `async` |
-| `sizes` | global `default_sizes` | HTML `sizes` attribute for this profile |
-| `preferred_formats` | *(inherits global)* | Optional per-profile format priority |
-| `formats` | `[webp, jpeg]` | Formats to generate per variant (non-empty) |
-| `variants` | `{}` | Map of variant name -> settings |
-| `variants.<name>.width` | *(required or height)* | Target width in pixels |
-| `variants.<name>.height` | *(optional)* | Target height in pixels |
-| `variants.<name>.mode` | `fit` | `crop` \| `fit` \| `fill` |
-| `variants.<name>.quality` | `80` | Encoding quality (1-100) |
-| `variants.<name>.density` | `null` | Density descriptor (`1x`, `2x`, `3x`) |
-| `variants.<name>.media` | `null` | Media query for art direction |
-| `variants.<name>.position` | `center` | Crop position |
+| Key                        | Default                | Description                                 |
+| -------------------------- | ---------------------- | ------------------------------------------- |
+| `processing`               | `immediate`            | `immediate`, `deferred` or `async`          |
+| `sizes`                    | global `default_sizes` | HTML `sizes` attribute for this profile     |
+| `preferred_formats`        | _(inherits global)_    | Optional per-profile format priority        |
+| `formats`                  | `[webp, jpeg]`         | Formats to generate per variant (non-empty) |
+| `variants`                 | `{}`                   | Map of variant name -> settings             |
+| `variants.<name>.width`    | _(required or height)_ | Target width in pixels                      |
+| `variants.<name>.height`   | _(optional)_           | Target height in pixels                     |
+| `variants.<name>.mode`     | `fit`                  | `crop` \| `fit` \| `fill`                   |
+| `variants.<name>.quality`  | `80`                   | Encoding quality (1-100)                    |
+| `variants.<name>.density`  | `null`                 | Density descriptor (`1x`, `2x`, `3x`)       |
+| `variants.<name>.media`    | `null`                 | Media query for art direction               |
+| `variants.<name>.position` | `center`               | Crop position                               |

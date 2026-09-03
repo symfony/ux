@@ -20,14 +20,14 @@ composer require symfony/ux-image
 
 ## Optional dependencies
 
-| Dependency | When needed |
-|---|---|
-| `symfony/ux-twig-component` | `<twig:ux:image>` TwigComponent |
-| `league/flysystem-bundle` | Flysystem-backed storage (S3, GCS, Azure …) |
-| `symfony/cache` | URL caching via `cache:` config key |
-| `intervention/image` | `imagick` or `vips` driver, or a custom `driver_service` |
-| `intervention/image-driver-vips` | `vips` driver (also needs libvips and `ext-ffi`) |
-| `doctrine/doctrine-bundle` | Persisting `ImageAsset` via the `image_asset` Doctrine type |
+| Dependency                       | When needed                                                 |
+| -------------------------------- | ----------------------------------------------------------- |
+| `symfony/ux-twig-component`      | `<twig:ux:image>` TwigComponent                             |
+| `league/flysystem-bundle`        | Flysystem-backed storage (S3, GCS, Azure …)                 |
+| `symfony/cache`                  | URL caching via `cache:` config key                         |
+| `intervention/image`             | `imagick` or `vips` driver, or a custom `driver_service`    |
+| `intervention/image-driver-vips` | `vips` driver (also needs libvips and `ext-ffi`)            |
+| `doctrine/doctrine-bundle`       | Persisting `ImageAsset` via the `image_asset` Doctrine type |
 
 None are required for the core processing, storage, and Twig-function rendering
 pipeline with the default GD driver.
@@ -224,4 +224,5 @@ a summary table of each. It exits non-zero when warnings are found.
 
 The command writes, reads and deletes a temporary object under
 `.ux-image-validation/` in every configured storage. Run it with credentials
-that may perform all three operations.
+that may perform all three operations. Some storage backends may retain the
+empty `.ux-image-validation/` directory after the object is deleted.

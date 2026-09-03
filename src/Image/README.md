@@ -36,9 +36,9 @@ ux_image:
             formats: [jpeg]
             sizes: '(min-width: 64rem) 50vw, 100vw'
             variants:
-                small:  { width: 480, mode: fit }
+                small: { width: 480, mode: fit }
                 medium: { width: 960, mode: fit }
-                large:  { width: 1440, mode: fit, quality: 88 }
+                large: { width: 1440, mode: fit, quality: 88 }
 ```
 
 Process the real `UploadedFile` when it enters the application. The returned

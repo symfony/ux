@@ -168,6 +168,11 @@ final class DocumentationTest extends TestCase
             throw new \RuntimeException('The HTML fixture cannot be normalized.');
         }
 
+        $html = preg_replace('/srcset="\s*(.*?)\s*"/', 'srcset="$1"', $html);
+        if (null === $html) {
+            throw new \RuntimeException('The HTML fixture srcset cannot be normalized.');
+        }
+
         return $html;
     }
 

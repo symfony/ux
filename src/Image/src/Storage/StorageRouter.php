@@ -95,7 +95,7 @@ final class StorageRouter implements StreamStorageInterface
     {
         $backend = $this->resolve($storageName);
         if (!$backend instanceof StreamStorageInterface) {
-            throw new RuntimeException(\sprintf('Image storage "%s" must implement %s to process variants.', $storageName, StreamStorageInterface::class));
+            throw new RuntimeException(\sprintf('Image storage "%s" must implement "%s" to process variants.', $storageName, StreamStorageInterface::class));
         }
 
         return $backend;

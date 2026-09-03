@@ -28,7 +28,7 @@ enum ProcessingMode: string
 
         $value = $profile['processing'] ?? self::Immediate->value;
         if (!\is_string($value)) {
-            throw new InvalidArgumentException(\sprintf('Image processing mode must be a string, %s given.', get_debug_type($value)));
+            throw new InvalidArgumentException(\sprintf('Image processing mode must be a string, "%s" given.', get_debug_type($value)));
         }
 
         $mode = self::tryFrom($value) ?? throw new InvalidArgumentException(\sprintf('Invalid image processing mode "%s".', $value));

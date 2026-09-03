@@ -42,25 +42,25 @@ ux_picture() / ux_image() / <twig:ux:image>
 
 Each boundary has one job:
 
-| Boundary | Input | Output | Owns |
-|---|---|---|---|
-| Inspect | `UploadedFile` | trusted dimensions and MIME | byte signature and processing limits |
-| Profile | inspected source | planned variants | geometry, quality, formats, focal point |
-| Publish | original + encoded variants | `ImageAsset` | storage paths and all-or-nothing writes |
-| Render | persisted `ImageAsset` | responsive HTML | URLs, source order, fallback and attributes |
+| Boundary | Input                       | Output                      | Owns                                        |
+| -------- | --------------------------- | --------------------------- | ------------------------------------------- |
+| Inspect  | `UploadedFile`              | trusted dimensions and MIME | byte signature and processing limits        |
+| Profile  | inspected source            | planned variants            | geometry, quality, formats, focal point     |
+| Publish  | original + encoded variants | `ImageAsset`                | storage paths and all-or-nothing writes     |
+| Render   | persisted `ImageAsset`      | responsive HTML             | URLs, source order, fallback and attributes |
 
 ## Choose the first contract
 
 Start from the layout decision, not from a codec:
 
-| Need | Profile choice | Why |
-|---|---|---|
-| Fluid content image | width variants with `fit` | preserves the complete source |
-| Stable avatar or thumbnail | fixed width/height with `crop` and `position` | keeps the subject inside an exact ratio |
-| Fixed canvas without cropping | fixed width/height with `fill` | letterboxes the complete source |
-| Different composition by viewport | variants with `media` | emits art-directed `<source>` elements |
-| Portable first deployment | `formats: [jpeg]` | works with every supported GD installation |
-| Modern delivery | AVIF/WebP plus JPEG | negotiates smaller formats with a universal fallback |
+| Need                              | Profile choice                                | Why                                                  |
+| --------------------------------- | --------------------------------------------- | ---------------------------------------------------- |
+| Fluid content image               | width variants with `fit`                     | preserves the complete source                        |
+| Stable avatar or thumbnail        | fixed width/height with `crop` and `position` | keeps the subject inside an exact ratio              |
+| Fixed canvas without cropping     | fixed width/height with `fill`                | letterboxes the complete source                      |
+| Different composition by viewport | variants with `media`                         | emits art-directed `<source>` elements               |
+| Portable first deployment         | `formats: [jpeg]`                             | works with every supported GD installation           |
+| Modern delivery                   | AVIF/WebP plus JPEG                           | negotiates smaller formats with a universal fallback |
 
 Run `php bin/console ux:image:validate` before enabling a codec in production.
 The command checks the selected driver's real capabilities; UX Image never

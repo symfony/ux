@@ -4,15 +4,15 @@ UX Image separates pure metadata, rendering, processing, storage and
 persistence. Test at the narrowest boundary that proves the application's
 behavior.
 
-| Concern | Recommended test |
-|---|---|
-| Template and responsive markup | deterministic `ImageAssetFactory` fixture |
-| Application upload action | mock `ImageProcessorInterface` |
-| Codec and geometry | real GD/Intervention processor with a tiny fixture |
-| Storage paths and cleanup | `LocalStorage` under a temporary directory |
-| Flysystem adapter | in-memory Flysystem adapter plus contract assertions |
-| Doctrine mapping | kernel test with the application's real database platform |
-| Complete user path | browser test with one small raster fixture |
+| Concern                        | Recommended test                                          |
+| ------------------------------ | --------------------------------------------------------- |
+| Template and responsive markup | deterministic `ImageAssetFactory` fixture                 |
+| Application upload action      | mock `ImageProcessorInterface`                            |
+| Codec and geometry             | real GD/Intervention processor with a tiny fixture        |
+| Storage paths and cleanup      | `LocalStorage` under a temporary directory                |
+| Flysystem adapter              | in-memory Flysystem adapter plus contract assertions      |
+| Doctrine mapping               | kernel test with the application's real database platform |
+| Complete user path             | browser test with one small raster fixture                |
 
 ## Deterministic `ImageAsset` fixtures
 

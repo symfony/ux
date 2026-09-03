@@ -36,12 +36,11 @@ register `ImageAssetType` themselves.
 ```yaml
 # config/packages/ux_image.yaml
 ux_image:
-
     # Image processing driver. Selects the built-in processing backend.
     # gd      uses the ext-gd PHP extension (default).
     # imagick uses intervention/image with the Imagick driver.
     # vips    uses intervention/image with the intervention/image-driver-vips driver.
-    driver: gd  # gd | imagick | vips | a custom processor driver name
+    driver: gd # gd | imagick | vips | a custom processor driver name
 
     # Root directory used by built-in local storages.
     storage_root: '%kernel.project_dir%/var/ux-image'
@@ -79,8 +78,8 @@ ux_image:
     # URL caching. When enabled, wraps UrlGenerator with CachedUrlGenerator.
     cache:
         enabled: false
-        pool: cache.app    # any PSR-6 cache pool service ID
-        ttl: 3600          # seconds
+        pool: cache.app # any PSR-6 cache pool service ID
+        ttl: 3600 # seconds
 
     # Named storages. A storage may reference a Flysystem filesystem
     # (flysystem_service) or a custom adapter_service. A storage that sets
@@ -99,8 +98,8 @@ ux_image:
             # Optional CDN integration. When set, URL generation delegates to a
             # CdnUrlBuilderInterface instead of prepending public_url_prefix.
             cdn:
-                provider: ~   # cloudinary | imgix | a custom tagged builder name
-                base_url: ~   # required when a CDN provider is set
+                provider: ~ # cloudinary | imgix | a custom tagged builder name
+                base_url: ~ # required when a CDN provider is set
 
     # Processing profiles.
     profiles:
@@ -154,32 +153,32 @@ ux_image:
 
 ## Defaults table
 
-| Key | Default | Notes |
-|---|---|---|
-| `driver` | `gd` | Built-in: `gd`, `imagick`, `vips`; custom processors may expose another name |
-| `driver_service` | `null` | Custom Intervention driver service ID; takes precedence over `driver` |
-| `processor_service` | `null` | Complete custom processor service; bypasses driver selection |
-| `default_sizes` | `100vw` | HTML `sizes` attribute fallback |
-| `storage_root` | `%kernel.project_dir%/var/ux-image` | Private root used by built-in local storages |
-| `preferred_formats` | `[avif, webp, jpeg, jpg, png]` | Controls `<source>` order |
-| `doctrine_type` | `false` | Registers the global `image_asset` DBAL type when enabled |
-| `cache.enabled` | `false` | |
-| `cache.pool` | `cache.app` | Any PSR-6 pool |
-| `cache.ttl` | `3600` | Seconds |
-| `limits.max_input_bytes` | `20000000` | Maximum encoded input size |
-| `limits.max_width` | `12000` | Maximum source width |
-| `limits.max_height` | `12000` | Maximum source height |
-| `limits.max_megapixels` | `40` | Maximum decoded source pixels |
-| `limits.max_variants` | `12` | Maximum named variants per profile |
-| `limits.max_output_megapixels` | `80` | Total encoded output pixel budget |
-| `profiles.<name>.processing` | `immediate` | `immediate`, `deferred` or experimental `async` |
-| `profiles.<name>.directory` | `null` | Safe storage-relative directory |
-| `profiles.<name>.sizes` | `null` | Overrides `default_sizes` during rendering |
-| `profiles.<name>.preferred_formats` | global order | Profile-specific `<source>` order |
-| `profiles.<name>.formats` | `[webp, jpeg]` | Must be non-empty |
-| `profiles.<name>.variants.<name>.mode` | `fit` | `crop` \| `fit` \| `fill` |
-| `profiles.<name>.variants.<name>.quality` | `80` | 1-100 |
-| `profiles.<name>.variants.<name>.position` | `center` | Crop position |
+| Key                                        | Default                             | Notes                                                                        |
+| ------------------------------------------ | ----------------------------------- | ---------------------------------------------------------------------------- |
+| `driver`                                   | `gd`                                | Built-in: `gd`, `imagick`, `vips`; custom processors may expose another name |
+| `driver_service`                           | `null`                              | Custom Intervention driver service ID; takes precedence over `driver`        |
+| `processor_service`                        | `null`                              | Complete custom processor service; bypasses driver selection                 |
+| `default_sizes`                            | `100vw`                             | HTML `sizes` attribute fallback                                              |
+| `storage_root`                             | `%kernel.project_dir%/var/ux-image` | Private root used by built-in local storages                                 |
+| `preferred_formats`                        | `[avif, webp, jpeg, jpg, png]`      | Controls `<source>` order                                                    |
+| `doctrine_type`                            | `false`                             | Registers the global `image_asset` DBAL type when enabled                    |
+| `cache.enabled`                            | `false`                             |                                                                              |
+| `cache.pool`                               | `cache.app`                         | Any PSR-6 pool                                                               |
+| `cache.ttl`                                | `3600`                              | Seconds                                                                      |
+| `limits.max_input_bytes`                   | `20000000`                          | Maximum encoded input size                                                   |
+| `limits.max_width`                         | `12000`                             | Maximum source width                                                         |
+| `limits.max_height`                        | `12000`                             | Maximum source height                                                        |
+| `limits.max_megapixels`                    | `40`                                | Maximum decoded source pixels                                                |
+| `limits.max_variants`                      | `12`                                | Maximum named variants per profile                                           |
+| `limits.max_output_megapixels`             | `80`                                | Total encoded output pixel budget                                            |
+| `profiles.<name>.processing`               | `immediate`                         | `immediate`, `deferred` or experimental `async`                              |
+| `profiles.<name>.directory`                | `null`                              | Safe storage-relative directory                                              |
+| `profiles.<name>.sizes`                    | `null`                              | Overrides `default_sizes` during rendering                                   |
+| `profiles.<name>.preferred_formats`        | global order                        | Profile-specific `<source>` order                                            |
+| `profiles.<name>.formats`                  | `[webp, jpeg]`                      | Must be non-empty                                                            |
+| `profiles.<name>.variants.<name>.mode`     | `fit`                               | `crop` \| `fit` \| `fill`                                                    |
+| `profiles.<name>.variants.<name>.quality`  | `80`                                | 1-100                                                                        |
+| `profiles.<name>.variants.<name>.position` | `center`                            | Crop position                                                                |
 
 The built-in `generic` URL adapter composes `public_url_prefix` and the stored
 path. Use `url_adapter: storage` when a custom storage implementation owns
@@ -217,8 +216,8 @@ profiles:
         # Safe on every supported GD installation; modern codecs are opt-in.
         formats: [jpeg]
         variants:
-            mobile:  { width: 640,  mode: fit, quality: 80 }
-            tablet:  { width: 1024, mode: fit, quality: 85 }
+            mobile: { width: 640, mode: fit, quality: 80 }
+            tablet: { width: 1024, mode: fit, quality: 85 }
             desktop: { width: 1920, mode: fit, quality: 90 }
 ```
 
@@ -234,21 +233,21 @@ asset was processed with this default profile.
 ux_image:
     storages:
         uploads:
-            public_url_prefix: /uploads   # local filesystem backend, no adapter needed
+            public_url_prefix: /uploads # local filesystem backend, no adapter needed
 
     profiles:
         avatar:
             formats: [webp, jpeg]
             variants:
-                small: { width: 64,  height: 64,  mode: crop }
+                small: { width: 64, height: 64, mode: crop }
                 large: { width: 256, height: 256, mode: crop }
 
         blog_cover:
             formats: [avif, webp, jpeg]
             variants:
-                thumb:  { width: 400 }
+                thumb: { width: 400 }
                 medium: { width: 800 }
-                full:   { width: 1600 }
+                full: { width: 1600 }
 ```
 
 The storage a variant is written to is chosen at processing time (the `$storage`
@@ -276,7 +275,7 @@ ux_image:
 ux_image:
     profiles:
         import:
-            processing: deferred  # generate variants later
+            processing: deferred # generate variants later
             formats: [avif, webp, jpeg]
             variants:
                 sm: { width: 400 }
@@ -297,7 +296,7 @@ processing profile defines its own non-empty `formats` list:
 ```yaml
 # config/packages/ux_image.yaml
 ux_image:
-    preferred_formats: [webp, jpeg]  # no AVIF, e.g. if your server can't encode it
+    preferred_formats: [webp, jpeg] # no AVIF, e.g. if your server can't encode it
 ```
 
 > **Tip**
@@ -305,13 +304,13 @@ ux_image:
 
 ## Per-use overrides
 
-| What | Global config | Render-time override |
-|---|---|---|
-| `sizes` attribute | `default_sizes` | `ux_picture($asset, { sizes: '…' })` |
-| Lazy loading | always lazy by default | `ux_picture($asset, { lazy: false })` |
-| Fetch priority | `auto` | `ux_picture($asset, { fetchpriority: 'high' })` |
-| Variant filter | all variants | `ux_picture($asset, { variant: 'hero' })` |
-| Format order | `preferred_formats` | not overridable at render time |
+| What              | Global config          | Render-time override                            |
+| ----------------- | ---------------------- | ----------------------------------------------- |
+| `sizes` attribute | `default_sizes`        | `ux_picture($asset, { sizes: '…' })`            |
+| Lazy loading      | always lazy by default | `ux_picture($asset, { lazy: false })`           |
+| Fetch priority    | `auto`                 | `ux_picture($asset, { fetchpriority: 'high' })` |
+| Variant filter    | all variants           | `ux_picture($asset, { variant: 'hero' })`       |
+| Format order      | `preferred_formats`    | not overridable at render time                  |
 
 ## CDN bridges
 

@@ -155,11 +155,11 @@ ux_image:
 
 ## Extension points
 
-| Extension point | How |
-|---|---|
-| Complete custom pipeline | Implement `ImageProcessorInterface`, set `processor_service` |
-| Tagged processing backend | Implement `ImageDriverInterface`, tag `ux_image.processor` |
-| Custom CDN | Implement `CdnUrlBuilderInterface`, tag `ux_image.cdn_url_builder` |
-| Custom storage | Implement `StorageInterface`, wire manually |
-| Custom renderer | Implement `ImageRendererInterface`, override the service alias |
-| Override a built-in theme | Copy template to `templates/bundles/UXImageBundle/` |
+| Extension point           | How                                                                |
+| ------------------------- | ------------------------------------------------------------------ |
+| Complete custom pipeline  | Implement `ImageProcessorInterface`, set `processor_service`       |
+| Tagged processing backend | Implement `ImageDriverInterface`, tag `ux_image.processor`         |
+| Custom CDN                | Implement `CdnUrlBuilderInterface`, tag `ux_image.cdn_url_builder` |
+| Custom storage            | Implement `StorageInterface`, wire manually                        |
+| Custom renderer           | Implement `ImageRendererInterface`, override the service alias     |
+| Override a built-in theme | Copy template to `templates/bundles/UXImageBundle/`                |
