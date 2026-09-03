@@ -1,5 +1,5 @@
 # CHANGELOG
 
-## 3.5.0
+## [Unreleased]
 
-- Add the UX Image package.
+- Initial release.
