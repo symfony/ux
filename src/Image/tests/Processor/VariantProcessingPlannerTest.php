@@ -49,7 +49,7 @@ final class VariantProcessingPlannerTest extends TestCase
     public function testRejectsCumulativeArtifactBudgetBeforeProcessing()
     {
         $this->expectException(ImageLimitExceededException::class);
-        $this->expectExceptionMessage('output limit');
+        $this->expectExceptionMessage('Generated image pixel count 10000 exceeds the configured output limit of 9999.');
 
         $this->planner(maxOutputPixels: 9_999)->plan(
             new InspectedImage('jpeg', 'image/jpeg', 400, 200, 1_000),

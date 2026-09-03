@@ -76,7 +76,11 @@ final class VariantProcessingPlanner
             $artifactPixels = $geometry->canvasWidth * $geometry->canvasHeight;
             $remaining = $this->limits->maxOutputPixels - $outputPixels;
             if ([] !== $formats && $artifactPixels > intdiv($remaining, \count($formats))) {
-                throw ImageLimitExceededException::outputPixels($this->limits->maxOutputPixels + 1, $this->limits->maxOutputPixels);
+                $allocatedPixels = $artifactPixels > intdiv(\PHP_INT_MAX - $outputPixels, \count($formats))
+                    ? \PHP_INT_MAX
+                    : $outputPixels + $artifactPixels * \count($formats);
+
+                throw ImageLimitExceededException::outputPixels($allocatedPixels, $this->limits->maxOutputPixels);
             }
             $outputPixels += $artifactPixels * \count($formats);
             $variants[] = new PlannedVariant(

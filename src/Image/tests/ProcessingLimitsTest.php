@@ -75,4 +75,13 @@ final class ProcessingLimitsTest extends TestCase
         new ProcessingLimits(maxWidth: \PHP_INT_MAX, maxHeight: \PHP_INT_MAX, maxOutputPixels: 100)
             ->assertOutputAllocation(\PHP_INT_MAX, 2);
     }
+
+    public function testReportsActualOutputPixels()
+    {
+        $this->expectException(ImageLimitExceededException::class);
+        $this->expectExceptionMessage('110');
+
+        new ProcessingLimits(maxWidth: 20, maxHeight: 20, maxOutputPixels: 100)
+            ->assertOutputAllocation(11, 10);
+    }
 }

@@ -49,7 +49,9 @@ final class ProcessingLimits
             throw ImageLimitExceededException::dimensions($width, $height, $this->maxWidth, $this->maxHeight);
         }
         if ($width > intdiv($this->maxOutputPixels, $height)) {
-            throw ImageLimitExceededException::outputPixels($this->maxOutputPixels + 1, $this->maxOutputPixels);
+            $actual = $width > intdiv(\PHP_INT_MAX, $height) ? \PHP_INT_MAX : $width * $height;
+
+            throw ImageLimitExceededException::outputPixels($actual, $this->maxOutputPixels);
         }
     }
 }
