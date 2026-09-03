@@ -38,6 +38,6 @@ jobs:
                   key: doctor-rst-${{ steps.extract_base_branch.outputs.branch }}
 
             - name: DOCtor-RST
-              uses: docker://oskarstark/doctor-rst
+              uses: docker://oskarstark/doctor-rst@sha256:bf0e72e974ee41e9a3c4aeee65a73fc0554a1d08860cf7cba80096d5ad8e8108 # 1.84.0
               with:
                   args: --short --error-format=github --cache-file=/github/workspace/.cache/doctor-rst.cache
