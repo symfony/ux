@@ -30,11 +30,6 @@ final class ImageAssetTypeTest extends TestCase
         $this->platform = $this->createStub(AbstractPlatform::class);
     }
 
-    public function testGetName()
-    {
-        $this->assertSame('image_asset', $this->type->getName());
-    }
-
     public function testConvertToPHPValueWithNull()
     {
         $result = $this->type->convertToPHPValue(null, $this->platform);
@@ -108,11 +103,6 @@ final class ImageAssetTypeTest extends TestCase
         $this->expectExceptionMessage('Expected ImageAsset instance, got string');
 
         $this->type->convertToDatabaseValue('invalid', $this->platform);
-    }
-
-    public function testRequiresSQLCommentHint()
-    {
-        self::assertTrue($this->type->requiresSQLCommentHint($this->platform));
     }
 
     public function testConvertToPHPValueWithNonArrayJsonFailsExplicitly()

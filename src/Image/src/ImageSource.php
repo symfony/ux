@@ -51,7 +51,7 @@ final class ImageSource
         if (null !== $position && '' === trim($position)) {
             throw new Exception\InvalidArgumentException('Image variant position must not be empty.');
         }
-        if (null !== $density && 1 !== preg_match('/^(?:[1-9]\d*(?:\.\d+)?x)$/', $density)) {
+        if (null !== $density && (1 !== preg_match('/^(\d+(?:\.\d+)?)x$/', $density, $matches) || (float) $matches[1] <= 0)) {
             throw new Exception\InvalidArgumentException(\sprintf('Invalid image variant density "%s".', $density));
         }
         if (null !== $media && '' === trim($media)) {

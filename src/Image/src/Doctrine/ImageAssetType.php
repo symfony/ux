@@ -70,14 +70,4 @@ final class ImageAssetType extends JsonType
         // The ImageAsset object is readonly, so we can safely convert to array
         return parent::convertToDatabaseValue($value->toArray(), $platform);
     }
-
-    public function getName(): string
-    {
-        return self::NAME;
-    }
-
-    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
-    {
-        return true;
-    }
 }

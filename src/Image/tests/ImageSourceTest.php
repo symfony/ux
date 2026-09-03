@@ -110,6 +110,13 @@ final class ImageSourceTest extends TestCase
         self::assertNull($variant->media);
     }
 
+    public function testAcceptsFractionalDensity()
+    {
+        $variant = new ImageSource('/img/photo.webp', density: '0.5x');
+
+        self::assertSame('0.5x', $variant->density);
+    }
+
     public function testFromArray()
     {
         $variant = ImageSource::fromArray([
@@ -183,6 +190,7 @@ final class ImageSourceTest extends TestCase
         yield 'invalid quality' => [['path' => '/image.jpg', 'quality' => 101]];
         yield 'empty position' => [['path' => '/image.jpg', 'position' => '  ']];
         yield 'invalid density' => [['path' => '/image.jpg', 'density' => 'retina']];
+        yield 'zero density' => [['path' => '/image.jpg', 'density' => '0x']];
         yield 'empty media' => [['path' => '/image.jpg', 'media' => '  ']];
     }
 
