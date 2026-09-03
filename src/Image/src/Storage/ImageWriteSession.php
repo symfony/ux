@@ -55,16 +55,33 @@ final class ImageWriteSession
                 $this->committed[] = $storagePath;
             }
         } catch (\Throwable $e) {
-            $this->rollback();
+            try {
+                $this->rollback();
+            } catch (\Throwable) {
+                // Keep the write failure as the primary exception.
+            }
             throw $e;
         }
     }
 
     public function rollback(): void
     {
-        foreach (array_reverse($this->committed) as $path) {
-            $this->storage->deletePath($this->storageName, $path);
-        }
+        $failures = [];
+        $committed = array_reverse($this->committed);
         $this->committed = [];
+
+        foreach ($committed as $path) {
+            try {
+                $this->storage->deletePath($this->storageName, $path);
+            } catch (\Throwable $e) {
+                $failures[] = [$path, $e];
+            }
+        }
+
+        if ([] !== $failures) {
+            [$path, $failure] = $failures[0];
+
+            throw new StorageException(\sprintf('Failed to roll back %d image path(s). First failure for "%s": %s', \count($failures), $path->value, $failure->getMessage()), 0, $failure);
+        }
     }
 }
