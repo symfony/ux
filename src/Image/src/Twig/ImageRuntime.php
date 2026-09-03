@@ -44,6 +44,8 @@ final class ImageRuntime
         $class = $options['class'] ?? '';
         $decoding = $options['decoding'] ?? 'async';
         $variant = $options['variant'] ?? null;
+        $srcset = $options['srcset'] ?? null;
+        $attributes = $options['attributes'] ?? [];
 
         return $this->render($asset, new ImageRenderOptions(
             sizes: \is_string($sizes) ? $sizes : null,
@@ -53,6 +55,8 @@ final class ImageRuntime
             class: \is_string($class) ? $class : '',
             decoding: \is_string($decoding) ? $decoding : 'async',
             variant: \is_string($variant) ? $variant : null,
+            srcset: \is_array($srcset) ? $srcset : null,
+            attributes: \is_array($attributes) ? $attributes : [],
         ));
     }
 

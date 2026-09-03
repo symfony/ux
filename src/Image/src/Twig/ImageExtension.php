@@ -48,6 +48,8 @@ final class ImageExtension extends AbstractExtension
      *                                      - decoding: decoding attribute (async|sync|auto)
      *                                      - class: css classes
      *                                      - variant: name of the variant to filter sources by (string)
+     *                                      - srcset: explicit fallback srcset entries (array)
+     *                                      - attributes: additional <img> attributes (array)
      */
     public function renderImage(ImageAsset $asset, array $options = []): string
     {

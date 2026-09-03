@@ -150,7 +150,9 @@ final class ImageExtensionTest extends TestCase
                         && false === $options->lazy
                         && 'high' === $options->fetchPriority
                         && 'hero' === $options->class
-                        && 'sync' === $options->decoding;
+                        && 'sync' === $options->decoding
+                        && ['/small.jpg 400w'] === $options->srcset
+                        && ['data-controller' => 'gallery'] === $options->attributes;
                 })
             )
             ->willReturn(new RenderedImage(
@@ -171,6 +173,8 @@ final class ImageExtensionTest extends TestCase
             'fetchpriority' => 'high',
             'class' => 'hero',
             'decoding' => 'sync',
+            'srcset' => ['/small.jpg 400w'],
+            'attributes' => ['data-controller' => 'gallery'],
         ]);
 
         self::assertInstanceOf(RenderedImage::class, $result);

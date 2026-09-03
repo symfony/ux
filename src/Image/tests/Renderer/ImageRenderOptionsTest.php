@@ -63,6 +63,9 @@ final class ImageRenderOptionsTest extends TestCase
         yield 'invalid attribute name' => [['attributes' => ['bad name' => 'value']], 'Unsafe image attribute name'];
         yield 'event attribute' => [['attributes' => ['ONCLICK' => 'value']], 'Unsafe image attribute name'];
         yield 'managed attribute' => [['attributes' => ['src' => '/other.jpg']], 'managed by ImageRenderOptions'];
+        yield 'managed sizes attribute' => [['attributes' => ['sizes' => '50vw']], 'managed by ImageRenderOptions'];
+        yield 'managed alt attribute' => [['attributes' => ['alt' => 'Photo']], 'managed by ImageRenderOptions'];
+        yield 'managed class attribute' => [['attributes' => ['class' => 'hero']], 'managed by ImageRenderOptions'];
         yield 'non-scalar attribute' => [['attributes' => ['data-value' => []]], 'must be scalar or null'];
     }
 }

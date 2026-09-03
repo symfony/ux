@@ -65,7 +65,7 @@ final class ImageRenderOptions
             if (1 !== preg_match('/^[a-zA-Z_:][a-zA-Z0-9:._-]*$/', $name) || str_starts_with(strtolower($name), 'on')) {
                 throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Unsafe image attribute name "%s".', $name));
             }
-            if (\in_array(strtolower($name), ['src', 'srcset', 'width', 'height', 'loading', 'fetchpriority', 'decoding'], true)) {
+            if (\in_array(strtolower($name), ['src', 'srcset', 'sizes', 'alt', 'width', 'height', 'loading', 'fetchpriority', 'decoding', 'class'], true)) {
                 throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Image attribute "%s" is managed by ImageRenderOptions.', $name));
             }
             if (!\is_scalar($value) && null !== $value) {

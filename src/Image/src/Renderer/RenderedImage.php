@@ -80,20 +80,20 @@ final class RenderedImage
     public function toHtml(): string
     {
         $sizes = null !== $this->options->sizes && '' !== $this->options->sizes
-            ? \sprintf(' sizes="%s"', htmlspecialchars($this->options->sizes, \ENT_QUOTES))
+            ? \sprintf(' sizes="%s"', htmlspecialchars($this->options->sizes, \ENT_QUOTES | \ENT_SUBSTITUTE))
             : '';
         $sourceTags = array_map(
             static fn (array $source): string => \sprintf(
                 '<source type="%s" srcset="%s"%s%s />',
-                htmlspecialchars($source['type'], \ENT_QUOTES),
-                htmlspecialchars($source['srcset'], \ENT_QUOTES),
+                htmlspecialchars($source['type'], \ENT_QUOTES | \ENT_SUBSTITUTE),
+                htmlspecialchars($source['srcset'], \ENT_QUOTES | \ENT_SUBSTITUTE),
                 $sizes,
-                isset($source['media']) ? \sprintf(' media="%s"', htmlspecialchars($source['media'], \ENT_QUOTES)) : ''
+                isset($source['media']) ? \sprintf(' media="%s"', htmlspecialchars($source['media'], \ENT_QUOTES | \ENT_SUBSTITUTE)) : ''
             ),
             $this->sources,
         );
 
-        $attributes = [\sprintf('src="%s"', htmlspecialchars($this->fallbackSrc, \ENT_QUOTES))];
+        $attributes = [\sprintf('src="%s"', htmlspecialchars($this->fallbackSrc, \ENT_QUOTES | \ENT_SUBSTITUTE))];
 
         if ('' !== $sizes) {
             $attributes[] = ltrim($sizes);
@@ -101,14 +101,14 @@ final class RenderedImage
 
         $attributes = [
             ...$attributes,
-            \sprintf('alt="%s"', htmlspecialchars($this->options->alt, \ENT_QUOTES)),
+            \sprintf('alt="%s"', htmlspecialchars($this->options->alt, \ENT_QUOTES | \ENT_SUBSTITUTE)),
             \sprintf('loading="%s"', $this->loadingAttribute()),
             \sprintf('fetchpriority="%s"', $this->fetchPriorityAttribute()),
-            \sprintf('decoding="%s"', htmlspecialchars($this->options->decoding, \ENT_QUOTES)),
+            \sprintf('decoding="%s"', htmlspecialchars($this->options->decoding, \ENT_QUOTES | \ENT_SUBSTITUTE)),
         ];
 
         if ($this->fallbackSrcset) {
-            $attributes[] = \sprintf('srcset="%s"', htmlspecialchars($this->fallbackSrcset, \ENT_QUOTES));
+            $attributes[] = \sprintf('srcset="%s"', htmlspecialchars($this->fallbackSrcset, \ENT_QUOTES | \ENT_SUBSTITUTE));
         }
 
         if ($this->width) {
@@ -120,7 +120,7 @@ final class RenderedImage
         }
 
         if ('' !== $this->options->class) {
-            $attributes[] = \sprintf('class="%s"', htmlspecialchars($this->options->class, \ENT_QUOTES));
+            $attributes[] = \sprintf('class="%s"', htmlspecialchars($this->options->class, \ENT_QUOTES | \ENT_SUBSTITUTE));
         }
         $attributes = [...$attributes, ...$this->customAttributes()];
 
@@ -143,19 +143,19 @@ final class RenderedImage
     public function toImgHtml(): string
     {
         $attributes = [
-            \sprintf('src="%s"', htmlspecialchars($this->fallbackSrc, \ENT_QUOTES)),
-            \sprintf('alt="%s"', htmlspecialchars($this->options->alt, \ENT_QUOTES)),
+            \sprintf('src="%s"', htmlspecialchars($this->fallbackSrc, \ENT_QUOTES | \ENT_SUBSTITUTE)),
+            \sprintf('alt="%s"', htmlspecialchars($this->options->alt, \ENT_QUOTES | \ENT_SUBSTITUTE)),
             \sprintf('loading="%s"', $this->loadingAttribute()),
             \sprintf('fetchpriority="%s"', $this->fetchPriorityAttribute()),
-            \sprintf('decoding="%s"', htmlspecialchars($this->options->decoding, \ENT_QUOTES)),
+            \sprintf('decoding="%s"', htmlspecialchars($this->options->decoding, \ENT_QUOTES | \ENT_SUBSTITUTE)),
         ];
 
         if ($this->fallbackSrcset) {
-            $attributes[] = \sprintf('srcset="%s"', htmlspecialchars($this->fallbackSrcset, \ENT_QUOTES));
+            $attributes[] = \sprintf('srcset="%s"', htmlspecialchars($this->fallbackSrcset, \ENT_QUOTES | \ENT_SUBSTITUTE));
         }
 
         if (null !== $this->options->sizes && '' !== $this->options->sizes) {
-            $attributes[] = \sprintf('sizes="%s"', htmlspecialchars($this->options->sizes, \ENT_QUOTES));
+            $attributes[] = \sprintf('sizes="%s"', htmlspecialchars($this->options->sizes, \ENT_QUOTES | \ENT_SUBSTITUTE));
         }
 
         if ($this->width) {
@@ -167,7 +167,7 @@ final class RenderedImage
         }
 
         if ('' !== $this->options->class) {
-            $attributes[] = \sprintf('class="%s"', htmlspecialchars($this->options->class, \ENT_QUOTES));
+            $attributes[] = \sprintf('class="%s"', htmlspecialchars($this->options->class, \ENT_QUOTES | \ENT_SUBSTITUTE));
         }
         $attributes = [...$attributes, ...$this->customAttributes()];
 
@@ -200,10 +200,10 @@ final class RenderedImage
                 continue;
             }
             if (true === $value) {
-                $attributes[] = htmlspecialchars($name, \ENT_QUOTES);
+                $attributes[] = htmlspecialchars($name, \ENT_QUOTES | \ENT_SUBSTITUTE);
                 continue;
             }
-            $attributes[] = \sprintf('%s="%s"', htmlspecialchars($name, \ENT_QUOTES), htmlspecialchars((string) $value, \ENT_QUOTES));
+            $attributes[] = \sprintf('%s="%s"', htmlspecialchars($name, \ENT_QUOTES | \ENT_SUBSTITUTE), htmlspecialchars((string) $value, \ENT_QUOTES | \ENT_SUBSTITUTE));
         }
 
         return $attributes;

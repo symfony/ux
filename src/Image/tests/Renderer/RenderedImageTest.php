@@ -326,6 +326,21 @@ final class RenderedImageTest extends TestCase
         self::assertStringContainsString('src="/image.jpg?w=800&amp;h=600"', $html);
     }
 
+    public function testInvalidUtf8IsSubstituted()
+    {
+        $rendered = new RenderedImage(
+            new ImageAsset('default', '/image.jpg'),
+            [],
+            '/image.jpg',
+            null,
+            null,
+            null,
+            new ImageRenderOptions(alt: "Invalid \xC3"),
+        );
+
+        self::assertStringContainsString('alt="Invalid �"', $rendered->toImgHtml());
+    }
+
     public function testSafeCustomAttributesAreForwardedAndEscaped()
     {
         $rendered = new RenderedImage(
