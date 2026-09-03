@@ -195,23 +195,14 @@ final class GdImageProcessor implements ImageDriverInterface
 
         try {
             foreach ($plan->variants as $plannedVariant) {
-                $resizedPath = $workspace->path(\sprintf('resized-%d.%s', ++$index, pathinfo($originalPath, \PATHINFO_EXTENSION) ?: 'jpeg'));
-                $this->resize(
+                ++$index;
+                [$encodingImage] = $this->createResizedImage(
                     $originalPath,
-                    $resizedPath,
                     $plannedVariant->width,
                     $plannedVariant->height,
                     $plannedVariant->mode,
                     $plannedVariant->position,
                 );
-                $resizedInfo = getimagesize($resizedPath);
-                if (false === $resizedInfo) {
-                    throw ImageProcessingException::processingFailed('encode', 'Could not inspect the shared resized image.');
-                }
-                $encodingImage = $this->createImageFromType($resizedPath, $resizedInfo[2]);
-                if (!$encodingImage) {
-                    throw ImageProcessingException::processingFailed('encode', 'Could not decode the shared resized image.');
-                }
 
                 try {
                     foreach ($plan->formats as $format) {
@@ -272,6 +263,17 @@ final class GdImageProcessor implements ImageDriverInterface
 
     public function resize(string $inputPath, string $outputPath, int $width, int $height, string $mode = 'fit', string $position = 'center'): void
     {
+        [$resizedImage, $type] = $this->createResizedImage($inputPath, $width, $height, $mode, $position);
+
+        new Filesystem()->mkdir(\dirname($outputPath));
+        $this->saveImage($resizedImage, $outputPath, $type);
+
+        unset($resizedImage);
+    }
+
+    /** @return array{\GdImage, int} */
+    private function createResizedImage(string $inputPath, int $width, int $height, string $mode, string $position): array
+    {
         $info = getimagesize($inputPath);
         if (!$info) {
             throw ImageProcessingException::processingFailed('resize', \sprintf('Could not read image info from "%s".', $inputPath));
@@ -331,10 +333,9 @@ final class GdImageProcessor implements ImageDriverInterface
             $geometry->sourceHeight,
         );
 
-        new Filesystem()->mkdir(\dirname($outputPath));
-        $this->saveImage($dst, $outputPath, $type);
+        unset($src);
 
-        unset($src, $dst);
+        return [$dst, $type];
     }
 
     public function convert(string $inputPath, string $outputPath, string $format, int $quality = 80): void

@@ -366,6 +366,37 @@ final class GdImageProcessorTest extends TestCase
         );
     }
 
+    public function testVariantGenerationDoesNotReencodeTheResizedImage()
+    {
+        $jpegPath = $this->createPatternedJpeg(64, 64);
+        $this->storage->method('getFilePath')->willReturn($jpegPath);
+        $processor = new GdImageProcessor($this->storage, [], $this->imageInspector);
+
+        $variants = $processor->generateVariants(
+            new ImageAsset('default_public', 'uploads/photo.jpg'),
+            [
+                'variants' => ['small' => ['width' => 32, 'height' => 32]],
+                'formats' => ['png'],
+            ],
+        );
+
+        $variantPath = \dirname($jpegPath).'/'.basename($variants['png'][0]['path']);
+        $this->tempFiles[] = $variantPath;
+        $actual = imagecreatefrompng($variantPath);
+        $source = imagecreatefromjpeg($jpegPath);
+        $expected = imagecreatetruecolor(32, 32);
+        imagecopyresampled($expected, $source, 0, 0, 0, 0, 32, 32, 64, 64);
+
+        $actualPixels = $expectedPixels = [];
+        for ($y = 0; $y < 32; ++$y) {
+            for ($x = 0; $x < 32; ++$x) {
+                $expectedPixels[] = imagecolorat($expected, $x, $y);
+                $actualPixels[] = imagecolorat($actual, $x, $y);
+            }
+        }
+        self::assertSame($expectedPixels, $actualPixels);
+    }
+
     public function testResizeFitMode()
     {
         $inputPath = $this->createTempJpeg(200, 100);
@@ -655,6 +686,31 @@ final class GdImageProcessorTest extends TestCase
             @unlink($base);
         }
 
+        $this->tempFiles[] = $path;
+
+        return $path;
+    }
+
+    private function createPatternedJpeg(int $width, int $height): string
+    {
+        $path = tempnam(sys_get_temp_dir(), 'gd_test_').'.jpg';
+        $image = imagecreatetruecolor($width, $height);
+        for ($y = 0; $y < $height; ++$y) {
+            for ($x = 0; $x < $width; ++$x) {
+                imagesetpixel($image, $x, $y, imagecolorallocate(
+                    $image,
+                    ($x * 37 + $y * 11) % 256,
+                    ($x * 13 + $y * 29) % 256,
+                    ($x * 23 + $y * 17) % 256,
+                ));
+            }
+        }
+        imagejpeg($image, $path, 90);
+
+        $base = substr($path, 0, -4);
+        if (file_exists($base)) {
+            @unlink($base);
+        }
         $this->tempFiles[] = $path;
 
         return $path;
