@@ -14,13 +14,9 @@
 composer require symfony/ux-image
 ```
 
-Symfony Flex registers the bundle and copies a default configuration file to
-`config/packages/ux_image.yaml`.
-
 > **Note**
-> Symfony Flex creates the default configuration file and registers
-> `TwigBundle` plus `UXImageBundle`. Without Flex, register both bundles before
-> using `ux_picture()` or `ux_image()`.
+> Register `TwigBundle` and `UXImageBundle` in `config/bundles.php`, then create
+> `config/packages/ux_image.yaml` before using `ux_picture()` or `ux_image()`.
 
 ## Optional dependencies
 
@@ -48,9 +44,9 @@ the UX Image configuration that uses it:
 
 ## Quick start
 
-The Flex recipe makes `default_public` usable immediately. Validate that an
-uploaded value is one file, process it with the built-in `responsive_default`
-profile, then pass the returned asset to Twig:
+Configure `default_public`, validate that an uploaded value is one file,
+process it with the built-in `responsive_default` profile, then pass the
+returned asset to Twig:
 
 ```php
 // src/Controller/PhotoController.php
@@ -120,11 +116,9 @@ custom markup around it.
 ### Local storage
 
 Local files are written under `ux_image.storage_root`, which defaults in the
-bundle to the private path `%kernel.project_dir%/var/ux-image`. The Flex recipe
-chooses `%kernel.project_dir%/public/media` and configures `default_public` so a
-fresh installation has a complete processing-to-rendering path. Set
-`public_url_prefix` to the URL from which
-those files are served:
+bundle to the private path `%kernel.project_dir%/var/ux-image`. Configure
+`default_public` and set `public_url_prefix` to the URL from which those files
+are served:
 
 ```yaml
 # config/packages/ux_image.yaml
@@ -227,3 +221,7 @@ php bin/console ux:image:validate
 
 This command reports configuration warnings for the configured storages and profiles, then prints
 a summary table of each. It exits non-zero when warnings are found.
+
+The command writes, reads and deletes a temporary object under
+`.ux-image-validation/` in every configured storage. Run it with credentials
+that may perform all three operations.

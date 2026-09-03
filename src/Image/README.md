@@ -19,10 +19,9 @@ processing profile, stored outputs and rendering contract.
 composer require symfony/ux-image
 ```
 
-Symfony Flex configures local public storage. The default driver requires
-`ext-gd`; PHP 8.4+ and Symfony 7.4 or 8.x are supported.
-Flex also registers `TwigBundle` and `UXImageBundle`. Without Flex, register
-both bundles before using the Twig functions.
+The default driver requires `ext-gd`; PHP 8.4+ and Symfony 7.4 or 8.x are
+supported. Register `TwigBundle` and `UXImageBundle`, then configure at least
+one storage before using the Twig functions.
 
 ## PHP: process once and persist
 
@@ -103,5 +102,3 @@ Start with the [documentation overview](doc/overview.md), then see
 
 This repository is a read-only subtree split. Report issues and send pull
 requests in the [Symfony UX repository](https://github.com/symfony/ux).
-
-Last reviewed: July 2026.

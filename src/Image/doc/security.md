@@ -60,10 +60,9 @@ Do not accept a storage path or `ImageAsset` JSON supplied directly by a client.
 
 ## Public and private originals
 
-The Flex recipe uses a public local root for an immediate working result. This
-means originals are directly addressable unless the web server denies them.
-Use a private local root, private object storage and an application-defined
-signed URL adapter when originals contain sensitive data.
+A public local root makes originals directly addressable unless the web server
+denies them. Use a private local root, private object storage and an
+application-defined signed URL adapter when originals contain sensitive data.
 
 Cloudinary and Imgix builders do not create private provider sources or sign
 delivery. A `base_url` is not an access-control boundary.

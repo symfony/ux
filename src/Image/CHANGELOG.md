@@ -2,4 +2,4 @@
 
 ## 3.5.0
 
-- Add the component.
+- Add the UX Image package.
