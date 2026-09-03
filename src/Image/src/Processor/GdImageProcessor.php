@@ -182,8 +182,11 @@ final class GdImageProcessor implements ImageDriverInterface
             return [];
         }
         $targetDir = null === $streamStorage ? \dirname($this->storageManager->getFilePath($imageAsset)) : '';
-        $relativeDir = trim(pathinfo($imageAsset->path, \PATHINFO_DIRNAME) ?: '', '/');
-        $baseName = pathinfo($imageAsset->path, \PATHINFO_FILENAME);
+        $assetPath = StoragePath::fromAssetPath($imageAsset->path)->value;
+        $separatorPosition = strrpos($assetPath, '/');
+        $relativeDir = false === $separatorPosition ? '' : substr($assetPath, 0, $separatorPosition);
+        $filename = false === $separatorPosition ? $assetPath : substr($assetPath, $separatorPosition + 1);
+        $baseName = pathinfo($filename, \PATHINFO_FILENAME);
         $generation = bin2hex(random_bytes(12));
         $writeSession = null !== $streamStorage ? new ImageWriteSession($streamStorage, $imageAsset->storageName) : null;
         $localPublications = [];

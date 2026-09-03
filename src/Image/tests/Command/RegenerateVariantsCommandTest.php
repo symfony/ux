@@ -100,7 +100,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         self::assertSame(Command::FAILURE, $status);
         self::assertCount(1, $persister->assets);
         self::assertStringContainsString('after cursor "cursor-1"', $tester->getDisplay());
-        self::assertStringContainsString("--after='cursor-1'", $tester->getDisplay());
+        self::assertStringContainsString('--after='.escapeshellarg('cursor-1'), $tester->getDisplay());
     }
 
     public function testConcurrentUpdateDiscardsOnlyNewGenerationAndKeepsCheckpoint()
@@ -131,7 +131,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         $status = $tester->execute(['--image-profile' => 'avatar', '--storage' => 'media']);
 
         self::assertSame(Command::FAILURE, $status);
-        self::assertStringContainsString("--after='next'", $tester->getDisplay());
+        self::assertStringContainsString('--after='.escapeshellarg('next'), $tester->getDisplay());
     }
 
     public function testProviderFailureReturnsFailureWithoutProcessing()

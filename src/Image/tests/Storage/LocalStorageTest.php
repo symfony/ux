@@ -14,6 +14,7 @@ namespace Symfony\UX\Image\Tests\Storage;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\UX\Image\Exception\StorageException;
 use Symfony\UX\Image\ImageAsset;
@@ -180,7 +181,7 @@ final class LocalStorageTest extends TestCase
             $this->expectExceptionMessage('escapes');
             $storage->getFilePath(new ImageAsset('default_public', '/linked/missing/photo.jpg'));
         } finally {
-            unlink($storageDirectory.'/linked');
+            new Filesystem()->remove($storageDirectory.'/linked');
             rmdir($outside);
         }
     }
@@ -200,7 +201,7 @@ final class LocalStorageTest extends TestCase
             $this->expectException(StorageException::class);
             $storage->store(new UploadedFile($source, 'photo.png', 'image/png', null, true), 'default_public', 'linked/missing');
         } finally {
-            unlink($storageDirectory.'/linked');
+            new Filesystem()->remove($storageDirectory.'/linked');
             rmdir($outside);
         }
     }
