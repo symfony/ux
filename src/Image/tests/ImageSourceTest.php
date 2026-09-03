@@ -20,7 +20,7 @@ use Symfony\UX\Image\Storage\StoragePath;
 #[CoversClass(ImageSource::class)]
 final class ImageSourceTest extends TestCase
 {
-    public function testCreatesGeneratedSourceFromStoragePath(): void
+    public function testCreatesGeneratedSourceFromStoragePath()
     {
         $variant = ImageSource::generated(
             name: 'card',
@@ -64,21 +64,21 @@ final class ImageSourceTest extends TestCase
         ], $variant->toGeneratedArray());
     }
 
-    public function testGeneratedSourceRequiresCompleteMetadata(): void
+    public function testGeneratedSourceRequiresCompleteMetadata()
     {
         $this->expectException(\InvalidArgumentException::class);
 
         ImageSource::generated('', new StoragePath('photo.webp'), 'webp', 'image/webp', 600, 400);
     }
 
-    public function testGenericSourceCannotSerializeAsGeneratedSource(): void
+    public function testGenericSourceCannotSerializeAsGeneratedSource()
     {
         $this->expectException(\InvalidArgumentException::class);
 
         new ImageSource('/photo.webp')->toGeneratedArray();
     }
 
-    public function testConstructor(): void
+    public function testConstructor()
     {
         $variant = new ImageSource('/img/photo.webp', 640, 480, '2x', '(max-width: 768px)', 'card', 'webp', 'image/webp', 'crop', 82, 'top');
 
@@ -100,7 +100,7 @@ final class ImageSourceTest extends TestCase
         self::assertSame('top', $variant->getPosition());
     }
 
-    public function testConstructorDefaults(): void
+    public function testConstructorDefaults()
     {
         $variant = new ImageSource('/img/photo.webp');
 
@@ -110,7 +110,7 @@ final class ImageSourceTest extends TestCase
         self::assertNull($variant->media);
     }
 
-    public function testFromArray(): void
+    public function testFromArray()
     {
         $variant = ImageSource::fromArray([
             'path' => '/img/photo.webp',
@@ -127,7 +127,7 @@ final class ImageSourceTest extends TestCase
         self::assertSame('(max-width: 768px)', $variant->media);
     }
 
-    public function testFromArrayMinimal(): void
+    public function testFromArrayMinimal()
     {
         $variant = ImageSource::fromArray(['path' => '/img/photo.webp']);
 
@@ -138,7 +138,7 @@ final class ImageSourceTest extends TestCase
         self::assertNull($variant->media);
     }
 
-    public function testToArray(): void
+    public function testToArray()
     {
         $variant = new ImageSource('/img/photo.webp', 640, 480, '2x', '(max-width: 768px)');
 
@@ -151,7 +151,7 @@ final class ImageSourceTest extends TestCase
         ], $variant->toArray());
     }
 
-    public function testRoundTrip(): void
+    public function testRoundTrip()
     {
         $data = [
             'path' => '/img/photo.webp',
@@ -167,7 +167,7 @@ final class ImageSourceTest extends TestCase
     }
 
     #[DataProvider('invalidConstructorValues')]
-    public function testRejectsInvalidConstructorValues(array $arguments): void
+    public function testRejectsInvalidConstructorValues(array $arguments)
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -187,7 +187,7 @@ final class ImageSourceTest extends TestCase
     }
 
     #[DataProvider('invalidSerializedValues')]
-    public function testRejectsInvalidSerializedValues(array $data): void
+    public function testRejectsInvalidSerializedValues(array $data)
     {
         $this->expectException(\InvalidArgumentException::class);
 

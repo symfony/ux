@@ -56,42 +56,42 @@ final class InterventionImageProcessorTest extends TestCase
         }
     }
 
-    public function testSupportsIntervention(): void
+    public function testSupportsIntervention()
     {
         $processor = $this->createProcessor();
 
         self::assertTrue($processor->supports('intervention'));
     }
 
-    public function testSupportsImagick(): void
+    public function testSupportsImagick()
     {
         $processor = $this->createProcessor();
 
         self::assertTrue($processor->supports('imagick'));
     }
 
-    public function testDoesNotSupportGd(): void
+    public function testDoesNotSupportGd()
     {
         $processor = $this->createProcessor();
 
         self::assertFalse($processor->supports('gd'));
     }
 
-    public function testSupportsVips(): void
+    public function testSupportsVips()
     {
         $processor = $this->createProcessor();
 
         self::assertTrue($processor->supports('vips'));
     }
 
-    public function testDoesNotSupportOtherDriver(): void
+    public function testDoesNotSupportOtherDriver()
     {
         $processor = $this->createProcessor();
 
         self::assertFalse($processor->supports('webp'));
     }
 
-    public function testProcessRejectsSvgByDefault(): void
+    public function testProcessRejectsSvgByDefault()
     {
         $svgFile = $this->createTempSvgFile();
         $uploadedFile = $this->createUploadedFileMock($svgFile, 'logo.svg', 'image/svg+xml');
@@ -105,7 +105,7 @@ final class InterventionImageProcessorTest extends TestCase
         $processor->process($uploadedFile);
     }
 
-    public function testProcessWithoutProfile(): void
+    public function testProcessWithoutProfile()
     {
         $jpegFile = $this->createTempJpegFile();
         $uploadedFile = $this->createUploadedFileMock($jpegFile, 'photo.jpg', 'image/jpeg');
@@ -128,7 +128,7 @@ final class InterventionImageProcessorTest extends TestCase
         self::assertEmpty($result->variants);
     }
 
-    public function testProcessWithProfile(): void
+    public function testProcessWithProfile()
     {
         $jpegFile = $this->createTempJpegFile();
         $uploadedFile = $this->createUploadedFileMock($jpegFile, 'photo.jpg', 'image/jpeg');
@@ -169,7 +169,7 @@ final class InterventionImageProcessorTest extends TestCase
         ], array_intersect_key($result->variants['webp'][0], array_flip(['name', 'format', 'mimeType', 'mode', 'quality', 'position'])));
     }
 
-    public function testProcessWithUnknownProfile(): void
+    public function testProcessWithUnknownProfile()
     {
         $jpegFile = $this->createTempJpegFile();
         $uploadedFile = $this->createUploadedFileMock($jpegFile, 'photo.jpg', 'image/jpeg');
@@ -183,7 +183,7 @@ final class InterventionImageProcessorTest extends TestCase
         $processor->process($uploadedFile, 'nonexistent');
     }
 
-    public function testDeferredProcessingSkipsVariants(): void
+    public function testDeferredProcessingSkipsVariants()
     {
         $jpegFile = $this->createTempJpegFile();
         $uploadedFile = $this->createUploadedFileMock($jpegFile, 'photo.jpg', 'image/jpeg');
@@ -214,7 +214,7 @@ final class InterventionImageProcessorTest extends TestCase
         self::assertNull($result->profileRevision);
     }
 
-    public function testProcessRejectsNonImageBeforeStorageWhenProcessingIsDeferred(): void
+    public function testProcessRejectsNonImageBeforeStorageWhenProcessingIsDeferred()
     {
         $path = tempnam(sys_get_temp_dir(), 'ux_img_test_').'.php';
         $this->tempFiles[] = $path;
@@ -232,7 +232,7 @@ final class InterventionImageProcessorTest extends TestCase
         $processor->process($uploadedFile, 'deferred');
     }
 
-    public function testImmediateProcessingGeneratesVariants(): void
+    public function testImmediateProcessingGeneratesVariants()
     {
         $jpegFile = $this->createTempJpegFile();
         $uploadedFile = $this->createUploadedFileMock($jpegFile, 'photo.jpg', 'image/jpeg');
@@ -265,7 +265,7 @@ final class InterventionImageProcessorTest extends TestCase
         }
     }
 
-    public function testProcessPassesDirectoryFromProfile(): void
+    public function testProcessPassesDirectoryFromProfile()
     {
         $jpegFile = $this->createTempJpegFile();
         $uploadedFile = $this->createUploadedFileMock($jpegFile, 'photo.jpg', 'image/jpeg');
@@ -291,7 +291,7 @@ final class InterventionImageProcessorTest extends TestCase
         $processor->process($uploadedFile, 'gallery');
     }
 
-    public function testGenerateVariantsReturnsEmptyWithoutVariantsKey(): void
+    public function testGenerateVariantsReturnsEmptyWithoutVariantsKey()
     {
         $processor = $this->createProcessor();
         $asset = new ImageAsset(storageName: 'default_public', path: 'uploads/photo.jpg');
@@ -301,7 +301,7 @@ final class InterventionImageProcessorTest extends TestCase
         self::assertSame([], $result);
     }
 
-    public function testGenerateVariantsReturnsEmptyWithoutFormatsKey(): void
+    public function testGenerateVariantsReturnsEmptyWithoutFormatsKey()
     {
         $processor = $this->createProcessor();
         $asset = new ImageAsset(storageName: 'default_public', path: 'uploads/photo.jpg');
@@ -311,7 +311,7 @@ final class InterventionImageProcessorTest extends TestCase
         self::assertSame([], $result);
     }
 
-    public function testGenerateVariantsBuildsCorrectPaths(): void
+    public function testGenerateVariantsBuildsCorrectPaths()
     {
         $jpegFile = $this->createTempJpegFile();
 
@@ -349,7 +349,7 @@ final class InterventionImageProcessorTest extends TestCase
         self::assertSame(10, $smallWebp['height']);
     }
 
-    public function testOneResizeAndOneEncodingDecodeAreSharedAcrossFormats(): void
+    public function testOneResizeAndOneEncodingDecodeAreSharedAcrossFormats()
     {
         $jpegFile = $this->createTempJpegFile(100, 50);
         $storage = $this->createStub(StorageInterface::class);
@@ -406,7 +406,7 @@ final class InterventionImageProcessorTest extends TestCase
         }
     }
 
-    public function testGenerateVariantsEnforcesActualOutputPixelLimit(): void
+    public function testGenerateVariantsEnforcesActualOutputPixelLimit()
     {
         $jpegFile = $this->createTempJpegFile();
         $storageMock = $this->createStub(StorageInterface::class);
@@ -429,7 +429,7 @@ final class InterventionImageProcessorTest extends TestCase
         );
     }
 
-    public function testResizeWithoutImageManagerCopiesFile(): void
+    public function testResizeWithoutImageManagerCopiesFile()
     {
         $inputFile = $this->createTempJpegFile();
         $outputDir = sys_get_temp_dir().'/ux_image_test_resize_'.uniqid();
@@ -442,7 +442,7 @@ final class InterventionImageProcessorTest extends TestCase
         self::assertFileEquals($inputFile, $outputFile);
     }
 
-    public function testResizeWithoutImageManagerCreatesMissingDir(): void
+    public function testResizeWithoutImageManagerCreatesMissingDir()
     {
         $inputFile = $this->createTempJpegFile();
         $outputDir = sys_get_temp_dir().'/ux_image_test_mkdir_'.uniqid().'/nested';
@@ -456,7 +456,7 @@ final class InterventionImageProcessorTest extends TestCase
         self::assertFileExists($outputFile);
     }
 
-    public function testResizeWithImageManager(): void
+    public function testResizeWithImageManager()
     {
         if (!interface_exists(ImageManagerInterface::class)) {
             self::markTestSkipped('Intervention Image is not installed.');
@@ -488,7 +488,7 @@ final class InterventionImageProcessorTest extends TestCase
         $processor->resize($inputFile, $outputFile, 200, 150);
     }
 
-    public function testConvertWithoutImageManagerFailsExplicitly(): void
+    public function testConvertWithoutImageManagerFailsExplicitly()
     {
         $processor = $this->createProcessor();
 
@@ -497,7 +497,7 @@ final class InterventionImageProcessorTest extends TestCase
         $processor->convert('/tmp/input.jpg', '/tmp/output.webp', 'webp', 80);
     }
 
-    public function testConvertWithImageManager(): void
+    public function testConvertWithImageManager()
     {
         if (!interface_exists(ImageManagerInterface::class)) {
             self::markTestSkipped('Intervention Image is not installed.');
@@ -520,7 +520,7 @@ final class InterventionImageProcessorTest extends TestCase
         $processor->convert($inputFile, '/tmp/output.webp', 'webp', 90);
     }
 
-    public function testExtractMetadataDelegatesToInspector(): void
+    public function testExtractMetadataDelegatesToInspector()
     {
         $jpegFile = $this->createTempJpegFile(50, 30);
         $uploadedFile = new UploadedFile($jpegFile, 'test.jpg', 'image/jpeg', null, true);
@@ -534,7 +534,7 @@ final class InterventionImageProcessorTest extends TestCase
         self::assertSame(30, $metadata['height']);
     }
 
-    public function testProcessReadsMetadataBeforeRealLocalStorageMovesFile(): void
+    public function testProcessReadsMetadataBeforeRealLocalStorageMovesFile()
     {
         // End-to-end with a real LocalStorage (no mock): store() moves the uploaded
         // file to its final location. Metadata must be inspected on the original
@@ -555,7 +555,7 @@ final class InterventionImageProcessorTest extends TestCase
         self::assertFileExists($storageRoot.'/'.$result->storageName.'/'.ltrim($result->path, '/'));
     }
 
-    public function testProcessSvgIsRejectedBeforeStorage(): void
+    public function testProcessSvgIsRejectedBeforeStorage()
     {
         $svgFile = $this->createTempSvgFile();
         $uploadedFile = $this->createUploadedFileMock($svgFile, 'icon.svg', 'image/svg+xml');

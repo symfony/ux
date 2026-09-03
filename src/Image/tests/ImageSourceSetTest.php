@@ -19,7 +19,7 @@ use Symfony\UX\Image\ImageSourceSet;
 #[CoversClass(ImageSourceSet::class)]
 final class ImageSourceSetTest extends TestCase
 {
-    public function testEmptySourceSet(): void
+    public function testEmptySourceSet()
     {
         foreach ([null, []] as $raw) {
             $sourceSet = ImageSourceSet::fromArray($raw);
@@ -31,7 +31,7 @@ final class ImageSourceSetTest extends TestCase
         }
     }
 
-    public function testUsesCanonicalFormatShape(): void
+    public function testUsesCanonicalFormatShape()
     {
         $sourceSet = ImageSourceSet::fromArray([
             'webp' => [
@@ -53,7 +53,7 @@ final class ImageSourceSetTest extends TestCase
         self::assertSame(['webp', 'jpeg'], array_keys($sourceSet->getSingleRatioFormats()));
     }
 
-    public function testArtDirectionIsDerivedFromVariantMedia(): void
+    public function testArtDirectionIsDerivedFromVariantMedia()
     {
         $sourceSet = ImageSourceSet::fromArray([
             'webp' => [
@@ -74,7 +74,7 @@ final class ImageSourceSetTest extends TestCase
         self::assertSame('(min-width: 40.001rem)', $groups[1]['media']);
     }
 
-    public function testFallbackGroupIsOrderedLast(): void
+    public function testFallbackGroupIsOrderedLast()
     {
         $fallback = self::variant('/img/fallback.webp', 'fallback', 'webp', 640);
         $directed = self::variant('/img/mobile.webp', 'mobile', 'webp', 640, '(max-width: 40rem)');
@@ -84,14 +84,14 @@ final class ImageSourceSetTest extends TestCase
         self::assertNull($groups[1]['media']);
     }
 
-    public function testRejectsEmptyFormatKey(): void
+    public function testRejectsEmptyFormatKey()
     {
         $this->expectException(\InvalidArgumentException::class);
 
         ImageSourceSet::fromArray(['' => [self::variant('/img/photo.webp', 'photo', 'webp', 640)]]);
     }
 
-    public function testDensityDescriptorTakesPrecedenceOverWidth(): void
+    public function testDensityDescriptorTakesPrecedenceOverWidth()
     {
         $variant = self::variant('/img/retina.webp', 'retina', 'webp', 1280);
         $variant['density'] = '2x';
@@ -100,7 +100,7 @@ final class ImageSourceSetTest extends TestCase
         self::assertSame('/img/retina.webp 2x', $sourceSet->buildSrcset('webp'));
     }
 
-    public function testDuplicateDescriptorsCollapseToLastCandidate(): void
+    public function testDuplicateDescriptorsCollapseToLastCandidate()
     {
         $sourceSet = ImageSourceSet::fromArray([
             'webp' => [
@@ -112,7 +112,7 @@ final class ImageSourceSetTest extends TestCase
         self::assertSame('/img/current.webp 640w', $sourceSet->buildSrcset('webp'));
     }
 
-    public function testRejectsDescriptorSetsThatCannotBeNormalized(): void
+    public function testRejectsDescriptorSetsThatCannotBeNormalized()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('must all expose width descriptors or all expose density descriptors');
@@ -125,7 +125,7 @@ final class ImageSourceSetTest extends TestCase
         ]);
     }
 
-    public function testVariantWithoutDescriptorUsesTheBarePath(): void
+    public function testVariantWithoutDescriptorUsesTheBarePath()
     {
         $sourceSet = ImageSourceSet::fromArray([
             'webp' => [['path' => '/img/original.webp']],
@@ -134,14 +134,14 @@ final class ImageSourceSetTest extends TestCase
         self::assertSame('/img/original.webp', $sourceSet->buildSrcset('webp'));
     }
 
-    public function testRoundTripKeepsCompleteVariantMetadata(): void
+    public function testRoundTripKeepsCompleteVariantMetadata()
     {
         $raw = ['webp' => [self::variant('/img/card.webp', 'card', 'webp', 600, null, 'crop', 86, '30% 60%')]];
 
         self::assertEquals($raw, ImageSourceSet::fromArray($raw)->toArray());
     }
 
-    public function testRejectsLegacyTopLevelArtDirectionShape(): void
+    public function testRejectsLegacyTopLevelArtDirectionShape()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('format => list<variant>');
@@ -151,7 +151,7 @@ final class ImageSourceSetTest extends TestCase
         ]);
     }
 
-    public function testRejectsLegacyVariantNameShape(): void
+    public function testRejectsLegacyVariantNameShape()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('non-empty list');
@@ -161,7 +161,7 @@ final class ImageSourceSetTest extends TestCase
         ]);
     }
 
-    public function testRejectsMalformedVariantsInsteadOfSkippingThem(): void
+    public function testRejectsMalformedVariantsInsteadOfSkippingThem()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('webp[1]');
@@ -174,7 +174,7 @@ final class ImageSourceSetTest extends TestCase
         ]);
     }
 
-    public function testRejectsMismatchedEmbeddedFormat(): void
+    public function testRejectsMismatchedEmbeddedFormat()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('declares format "jpeg"');

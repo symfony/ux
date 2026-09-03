@@ -30,12 +30,12 @@ final class ImageAssetTypeTest extends TestCase
         $this->platform = $this->createStub(AbstractPlatform::class);
     }
 
-    public function testGetName(): void
+    public function testGetName()
     {
         $this->assertSame('image_asset', $this->type->getName());
     }
 
-    public function testConvertToPHPValueWithNull(): void
+    public function testConvertToPHPValueWithNull()
     {
         $result = $this->type->convertToPHPValue(null, $this->platform);
         $this->assertNull($result);
@@ -44,7 +44,7 @@ final class ImageAssetTypeTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testConvertToPHPValueWithValidData(): void
+    public function testConvertToPHPValueWithValidData()
     {
         $data = [
             'schemaVersion' => ImageAsset::SCHEMA_VERSION,
@@ -80,13 +80,13 @@ final class ImageAssetTypeTest extends TestCase
         $this->assertSame('/uploads/images/test.jpg', $result->path);
     }
 
-    public function testConvertToDatabaseValueWithNull(): void
+    public function testConvertToDatabaseValueWithNull()
     {
         $result = $this->type->convertToDatabaseValue(null, $this->platform);
         $this->assertNull($result);
     }
 
-    public function testConvertToDatabaseValueWithImageAsset(): void
+    public function testConvertToDatabaseValueWithImageAsset()
     {
         $imageAsset = new ImageAsset(
             storageName: 'default_public',
@@ -102,7 +102,7 @@ final class ImageAssetTypeTest extends TestCase
         $this->assertSame(json_encode($imageAsset->toArray(), \JSON_THROW_ON_ERROR), $result);
     }
 
-    public function testConvertToDatabaseValueWithInvalidType(): void
+    public function testConvertToDatabaseValueWithInvalidType()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected ImageAsset instance, got string');
@@ -110,19 +110,19 @@ final class ImageAssetTypeTest extends TestCase
         $this->type->convertToDatabaseValue('invalid', $this->platform);
     }
 
-    public function testRequiresSQLCommentHint(): void
+    public function testRequiresSQLCommentHint()
     {
         self::assertTrue($this->type->requiresSQLCommentHint($this->platform));
     }
 
-    public function testConvertToPHPValueWithNonArrayJsonFailsExplicitly(): void
+    public function testConvertToPHPValueWithNonArrayJsonFailsExplicitly()
     {
         $this->expectException(ValueNotConvertible::class);
 
         $this->type->convertToPHPValue('"just a string"', $this->platform);
     }
 
-    public function testConvertToPHPValueWrapsInvalidImageAsset(): void
+    public function testConvertToPHPValueWrapsInvalidImageAsset()
     {
         $this->expectException(ValueNotConvertible::class);
 

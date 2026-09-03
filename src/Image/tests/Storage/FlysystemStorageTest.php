@@ -25,7 +25,7 @@ use Symfony\UX\Image\Storage\StoragePath;
 #[CoversClass(FlysystemStorage::class)]
 final class FlysystemStorageTest extends TestCase
 {
-    public function testStore(): void
+    public function testStore()
     {
         $filesystem = $this->createMock(FilesystemOperator::class);
         $filesystem->expects(self::once())->method('writeStream');
@@ -46,7 +46,7 @@ final class FlysystemStorageTest extends TestCase
         @unlink($tmpFile);
     }
 
-    public function testStoreClosesStreamWhenFlysystemFails(): void
+    public function testStoreClosesStreamWhenFlysystemFails()
     {
         $writtenStream = null;
         $filesystem = $this->createMock(FilesystemOperator::class);
@@ -72,7 +72,7 @@ final class FlysystemStorageTest extends TestCase
         }
     }
 
-    public function testDeleteExistingFile(): void
+    public function testDeleteExistingFile()
     {
         $filesystem = $this->createMock(FilesystemOperator::class);
         $filesystem->expects(self::once())->method('fileExists')->willReturn(true);
@@ -84,7 +84,7 @@ final class FlysystemStorageTest extends TestCase
         self::assertTrue($storage->delete($asset));
     }
 
-    public function testDeleteNonExistingFile(): void
+    public function testDeleteNonExistingFile()
     {
         $filesystem = $this->createMock(FilesystemOperator::class);
         $filesystem->expects(self::once())->method('fileExists')->willReturn(false);
@@ -96,7 +96,7 @@ final class FlysystemStorageTest extends TestCase
         self::assertFalse($storage->delete($asset));
     }
 
-    public function testExists(): void
+    public function testExists()
     {
         $filesystem = $this->createMock(FilesystemOperator::class);
         $filesystem->expects(self::exactly(2))->method('fileExists')
@@ -110,7 +110,7 @@ final class FlysystemStorageTest extends TestCase
         self::assertFalse($storage->exists($asset));
     }
 
-    public function testGetPublicUrlWithPrefix(): void
+    public function testGetPublicUrlWithPrefix()
     {
         $filesystem = $this->createStub(FilesystemOperator::class);
         $storage = new FlysystemStorage($filesystem, 'https://cdn.example.com');
@@ -120,7 +120,7 @@ final class FlysystemStorageTest extends TestCase
         self::assertSame('https://cdn.example.com/images/photo.jpg', $storage->getPublicUrl($asset));
     }
 
-    public function testGetPublicUrlWithoutPrefix(): void
+    public function testGetPublicUrlWithoutPrefix()
     {
         $filesystem = $this->createStub(FilesystemOperator::class);
         $storage = new FlysystemStorage($filesystem);
@@ -130,7 +130,7 @@ final class FlysystemStorageTest extends TestCase
         self::assertSame('/images/photo.jpg', $storage->getPublicUrl($asset));
     }
 
-    public function testGetPublicUrlWithVariant(): void
+    public function testGetPublicUrlWithVariant()
     {
         $filesystem = $this->createStub(FilesystemOperator::class);
         $storage = new FlysystemStorage($filesystem, '/uploads');
@@ -140,7 +140,7 @@ final class FlysystemStorageTest extends TestCase
         self::assertSame('/uploads/thumb.jpg', $storage->getPublicUrl($asset, '/thumb.jpg'));
     }
 
-    public function testGetFilePath(): void
+    public function testGetFilePath()
     {
         $filesystem = $this->createStub(FilesystemOperator::class);
         $storage = new FlysystemStorage($filesystem);
@@ -150,7 +150,7 @@ final class FlysystemStorageTest extends TestCase
         self::assertSame('images/photo.jpg', $storage->getFilePath($asset));
     }
 
-    public function testGetFilePathWithoutStoragePart(): void
+    public function testGetFilePathWithoutStoragePart()
     {
         $filesystem = $this->createStub(FilesystemOperator::class);
         $storage = new FlysystemStorage($filesystem);
@@ -160,7 +160,7 @@ final class FlysystemStorageTest extends TestCase
         self::assertSame('photo.jpg', $storage->getFilePath($asset));
     }
 
-    public function testStreamOperations(): void
+    public function testStreamOperations()
     {
         $read = fopen('php://temp', 'w+');
         $write = fopen('php://temp', 'w+');
@@ -179,7 +179,7 @@ final class FlysystemStorageTest extends TestCase
         fclose($write);
     }
 
-    public function testReadStreamRejectsInvalidResult(): void
+    public function testReadStreamRejectsInvalidResult()
     {
         $filesystem = $this->createStub(FilesystemOperator::class);
         $filesystem->method('readStream')->willReturn(false);
@@ -190,7 +190,7 @@ final class FlysystemStorageTest extends TestCase
         new FlysystemStorage($filesystem)->readStream('media', new StoragePath('source.jpg'));
     }
 
-    public function testWriteStreamRejectsInvalidResource(): void
+    public function testWriteStreamRejectsInvalidResource()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('requires a stream resource');
@@ -198,7 +198,7 @@ final class FlysystemStorageTest extends TestCase
         new FlysystemStorage($this->createStub(FilesystemOperator::class))->writeStream('media', new StoragePath('target.jpg'), false);
     }
 
-    public function testWriteStreamRejectsExistingImmutableObject(): void
+    public function testWriteStreamRejectsExistingImmutableObject()
     {
         $stream = fopen('php://temp', 'w+');
         $filesystem = $this->createStub(FilesystemOperator::class);
@@ -214,7 +214,7 @@ final class FlysystemStorageTest extends TestCase
         }
     }
 
-    public function testDeletePathIgnoresMissingObject(): void
+    public function testDeletePathIgnoresMissingObject()
     {
         $filesystem = $this->createMock(FilesystemOperator::class);
         $filesystem->expects(self::once())->method('fileExists')->willReturn(false);

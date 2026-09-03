@@ -20,7 +20,7 @@ use Symfony\UX\Image\Storage\StreamStorageInterface;
 #[CoversClass(ImageWriteSession::class)]
 final class ImageWriteSessionTest extends TestCase
 {
-    public function testRejectsMissingStagedFile(): void
+    public function testRejectsMissingStagedFile()
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -28,7 +28,7 @@ final class ImageWriteSessionTest extends TestCase
             ->stage(new StoragePath('missing.jpeg'), '/missing/image.jpeg');
     }
 
-    public function testRollsBackAlreadyPublishedObjectsWhenCommitFails(): void
+    public function testRollsBackAlreadyPublishedObjectsWhenCommitFails()
     {
         $first = tempnam(sys_get_temp_dir(), 'ux-image-write-');
         $second = tempnam(sys_get_temp_dir(), 'ux-image-write-');

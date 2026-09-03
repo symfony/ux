@@ -20,7 +20,7 @@ use Symfony\UX\Image\Renderer\RenderedImage;
 #[CoversClass(RenderedImage::class)]
 final class RenderedImageTest extends TestCase
 {
-    public function testExposesRenderedState(): void
+    public function testExposesRenderedState()
     {
         $asset = new ImageAsset('default', '/image.jpg');
         $sources = [['type' => 'image/webp', 'srcset' => '/image.webp 1x']];
@@ -36,7 +36,7 @@ final class RenderedImageTest extends TestCase
         self::assertSame($options, $rendered->getOptions());
     }
 
-    public function testToImgHtmlOutputsImgOnly(): void
+    public function testToImgHtmlOutputsImgOnly()
     {
         $rendered = new RenderedImage(
             new ImageAsset('default', '/image.jpg'),
@@ -64,7 +64,7 @@ final class RenderedImageTest extends TestCase
         self::assertStringContainsString('class="img-fluid"', $html);
     }
 
-    public function testToHtmlOutputsPictureElement(): void
+    public function testToHtmlOutputsPictureElement()
     {
         $rendered = new RenderedImage(
             new ImageAsset('default', '/image.jpg'),
@@ -103,7 +103,7 @@ final class RenderedImageTest extends TestCase
         self::assertStringContainsString('srcset="/image-2x.jpg 2x"', $html);
     }
 
-    public function testToStringReturnsSameAsToHtml(): void
+    public function testToStringReturnsSameAsToHtml()
     {
         $rendered = new RenderedImage(
             new ImageAsset('default', '/image.jpg'),
@@ -118,7 +118,7 @@ final class RenderedImageTest extends TestCase
         self::assertSame($rendered->toHtml(), (string) $rendered);
     }
 
-    public function testToPictureHtmlReturnsSameAsToHtml(): void
+    public function testToPictureHtmlReturnsSameAsToHtml()
     {
         $rendered = new RenderedImage(
             new ImageAsset('default', '/image.jpg'),
@@ -133,7 +133,7 @@ final class RenderedImageTest extends TestCase
         self::assertSame($rendered->toHtml(), $rendered->toPictureHtml());
     }
 
-    public function testToHtmlWithoutSources(): void
+    public function testToHtmlWithoutSources()
     {
         $rendered = new RenderedImage(
             new ImageAsset('default', '/image.jpg'),
@@ -156,7 +156,7 @@ final class RenderedImageTest extends TestCase
         self::assertStringNotContainsString('sizes=', $html);
     }
 
-    public function testToHtmlOmitsEmptySizesFromSourcesAndFallback(): void
+    public function testToHtmlOmitsEmptySizesFromSourcesAndFallback()
     {
         $rendered = new RenderedImage(
             new ImageAsset('default', '/image.jpg'),
@@ -171,7 +171,7 @@ final class RenderedImageTest extends TestCase
         self::assertStringNotContainsString('sizes=', $rendered->toHtml());
     }
 
-    public function testToHtmlWithMediaAttribute(): void
+    public function testToHtmlWithMediaAttribute()
     {
         $rendered = new RenderedImage(
             new ImageAsset('default', '/image.jpg'),
@@ -190,7 +190,7 @@ final class RenderedImageTest extends TestCase
         self::assertStringContainsString('media="(max-width: 768px)"', $html);
     }
 
-    public function testFetchPriorityHigh(): void
+    public function testFetchPriorityHigh()
     {
         $rendered = new RenderedImage(
             new ImageAsset('default', '/image.jpg'),
@@ -207,7 +207,7 @@ final class RenderedImageTest extends TestCase
         self::assertStringContainsString('fetchpriority="high"', $html);
     }
 
-    public function testFetchPriorityLow(): void
+    public function testFetchPriorityLow()
     {
         $rendered = new RenderedImage(
             new ImageAsset('default', '/image.jpg'),
@@ -224,7 +224,7 @@ final class RenderedImageTest extends TestCase
         self::assertStringContainsString('fetchpriority="low"', $html);
     }
 
-    public function testEagerLoading(): void
+    public function testEagerLoading()
     {
         $rendered = new RenderedImage(
             new ImageAsset('default', '/image.jpg'),
@@ -241,7 +241,7 @@ final class RenderedImageTest extends TestCase
         self::assertStringContainsString('loading="eager"', $html);
     }
 
-    public function testToImgHtmlWithoutSrcsetSizesAndClass(): void
+    public function testToImgHtmlWithoutSrcsetSizesAndClass()
     {
         $rendered = new RenderedImage(
             new ImageAsset('default', '/image.jpg'),
@@ -262,7 +262,7 @@ final class RenderedImageTest extends TestCase
         self::assertStringNotContainsString('height=', $html);
     }
 
-    public function testToImgHtmlWithWidthAndHeight(): void
+    public function testToImgHtmlWithWidthAndHeight()
     {
         $rendered = new RenderedImage(
             new ImageAsset('default', '/image.jpg'),
@@ -287,7 +287,7 @@ final class RenderedImageTest extends TestCase
         self::assertStringContainsString('sizes="50vw"', $html);
     }
 
-    public function testToImgHtmlWithLowFetchPriority(): void
+    public function testToImgHtmlWithLowFetchPriority()
     {
         $rendered = new RenderedImage(
             new ImageAsset('default', '/image.jpg'),
@@ -304,7 +304,7 @@ final class RenderedImageTest extends TestCase
         self::assertStringContainsString('fetchpriority="low"', $html);
     }
 
-    public function testHtmlEscaping(): void
+    public function testHtmlEscaping()
     {
         $rendered = new RenderedImage(
             new ImageAsset('default', '/image.jpg'),
@@ -326,7 +326,7 @@ final class RenderedImageTest extends TestCase
         self::assertStringContainsString('src="/image.jpg?w=800&amp;h=600"', $html);
     }
 
-    public function testSafeCustomAttributesAreForwardedAndEscaped(): void
+    public function testSafeCustomAttributesAreForwardedAndEscaped()
     {
         $rendered = new RenderedImage(
             new ImageAsset('default', '/image.jpg'),
@@ -346,7 +346,7 @@ final class RenderedImageTest extends TestCase
         self::assertStringContainsString('title="&quot;large&quot;"', $html);
     }
 
-    public function testNullAndFalseCustomAttributesAreOmitted(): void
+    public function testNullAndFalseCustomAttributesAreOmitted()
     {
         $rendered = new RenderedImage(
             new ImageAsset('default', '/image.jpg'),
@@ -362,7 +362,7 @@ final class RenderedImageTest extends TestCase
         self::assertStringNotContainsString('data-false', $rendered->toImgHtml());
     }
 
-    public function testUnsafeEventAttributeIsRejected(): void
+    public function testUnsafeEventAttributeIsRejected()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Unsafe image attribute');

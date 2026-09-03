@@ -18,14 +18,14 @@ use Symfony\UX\Image\UXImageBundle;
 #[CoversClass(UXImageBundle::class)]
 final class UXImageBundleTest extends TestCase
 {
-    public function testGetPath(): void
+    public function testGetPath()
     {
         $bundle = new UXImageBundle();
 
         self::assertSame(\dirname(__DIR__), $bundle->getPath());
     }
 
-    public function testGetContainerExtension(): void
+    public function testGetContainerExtension()
     {
         $bundle = new UXImageBundle();
 

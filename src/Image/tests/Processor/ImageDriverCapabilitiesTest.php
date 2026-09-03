@@ -19,14 +19,14 @@ use Symfony\UX\Image\Processor\ImageDriverCapabilities;
 #[CoversClass(ImageDriverCapabilities::class)]
 final class ImageDriverCapabilitiesTest extends TestCase
 {
-    public function testNormalizesJpgAndAcceptsAvailableFormats(): void
+    public function testNormalizesJpgAndAcceptsAvailableFormats()
     {
         new ImageDriverCapabilities(['jpeg', 'webp'])->assertEncodable(['jpg', 'webp'], 'avatar');
 
         self::addToAssertionCount(1);
     }
 
-    public function testUnavailableCodecFailsWithProfileAndAvailableCodecs(): void
+    public function testUnavailableCodecFailsWithProfileAndAvailableCodecs()
     {
         $this->expectException(ImageProcessingException::class);
         $this->expectExceptionMessage('Profile "avatar" requests unavailable codec "avif"');
@@ -34,7 +34,7 @@ final class ImageDriverCapabilitiesTest extends TestCase
         new ImageDriverCapabilities(['jpeg'])->assertEncodable(['avif'], 'avatar');
     }
 
-    public function testGdReportsAtLeastItsRequiredCodecs(): void
+    public function testGdReportsAtLeastItsRequiredCodecs()
     {
         $capabilities = ImageDriverCapabilities::gd();
 
@@ -42,7 +42,7 @@ final class ImageDriverCapabilitiesTest extends TestCase
         self::assertContains('png', $capabilities->encodableFormats);
     }
 
-    public function testRejectsEmptyCodec(): void
+    public function testRejectsEmptyCodec()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('must not be empty');
@@ -50,7 +50,7 @@ final class ImageDriverCapabilitiesTest extends TestCase
         new ImageDriverCapabilities(['  ']);
     }
 
-    public function testRejectsEmptyCapabilityList(): void
+    public function testRejectsEmptyCapabilityList()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('at least one');

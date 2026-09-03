@@ -27,7 +27,7 @@ use Symfony\UX\Image\Transformation\ResizeMode;
 #[CoversClass(UnknownImageProfileException::class)]
 final class ProfileRegistryTest extends TestCase
 {
-    public function testCompilesTypedProfileAndStableRevision(): void
+    public function testCompilesTypedProfileAndStableRevision()
     {
         $configuration = ['formats' => ['webp'], 'variants' => ['thumb' => ['width' => 100, 'mode' => 'crop', 'position' => '50% 30%']]];
         $profile = new ProfileRegistry(['avatar' => $configuration])->get('avatar');
@@ -40,7 +40,7 @@ final class ProfileRegistryTest extends TestCase
         self::assertSame(hash('sha256', json_encode($configuration, \JSON_THROW_ON_ERROR)), $profile->revision());
     }
 
-    public function testUnknownProfileFailsWithAvailableNames(): void
+    public function testUnknownProfileFailsWithAvailableNames()
     {
         $registry = new ProfileRegistry(['avatar' => ['formats' => ['jpeg'], 'variants' => []]]);
 
@@ -49,7 +49,7 @@ final class ProfileRegistryTest extends TestCase
         $registry->get('missing');
     }
 
-    public function testCompilesExplicitProcessingModes(): void
+    public function testCompilesExplicitProcessingModes()
     {
         $registry = new ProfileRegistry([
             'deferred' => ['processing' => 'deferred'],
@@ -60,21 +60,21 @@ final class ProfileRegistryTest extends TestCase
         self::assertSame(ProcessingMode::Async, $registry->get('async')->processing);
     }
 
-    public function testRejectsInvalidProcessingModeOutsideTheContainer(): void
+    public function testRejectsInvalidProcessingModeOutsideTheContainer()
     {
         $this->expectException(\InvalidArgumentException::class);
 
         new ProfileRegistry(['invalid' => ['processing' => 'later']]);
     }
 
-    public function testRejectsNonStringProcessingModeOutsideTheContainer(): void
+    public function testRejectsNonStringProcessingModeOutsideTheContainer()
     {
         $this->expectException(\InvalidArgumentException::class);
 
         new ProfileRegistry(['invalid' => ['processing' => true]]);
     }
 
-    public function testUnknownProfileExplainsWhenNoneAreConfigured(): void
+    public function testUnknownProfileExplainsWhenNoneAreConfigured()
     {
         $this->expectException(UnknownImageProfileException::class);
         $this->expectExceptionMessage('No profiles are configured');
@@ -82,7 +82,7 @@ final class ProfileRegistryTest extends TestCase
         new ProfileRegistry([])->get('missing');
     }
 
-    public function testHasProfile(): void
+    public function testHasProfile()
     {
         $registry = new ProfileRegistry(['avatar' => ['formats' => ['jpeg'], 'variants' => []]]);
 
@@ -90,28 +90,28 @@ final class ProfileRegistryTest extends TestCase
         self::assertFalse($registry->has('missing'));
     }
 
-    public function testRejectsNonArrayVariants(): void
+    public function testRejectsNonArrayVariants()
     {
         $this->expectException(\InvalidArgumentException::class);
 
         new ProfileRegistry(['avatar' => ['formats' => ['jpeg'], 'variants' => 'invalid']]);
     }
 
-    public function testIgnoresMalformedVariantEntry(): void
+    public function testIgnoresMalformedVariantEntry()
     {
         $profile = new ProfileRegistry(['avatar' => ['formats' => ['jpeg'], 'variants' => [0 => 'invalid']]])->get('avatar');
 
         self::assertSame([], $profile->variants);
     }
 
-    public function testRejectsNonArrayFormats(): void
+    public function testRejectsNonArrayFormats()
     {
         $this->expectException(\InvalidArgumentException::class);
 
         new ProfileRegistry(['avatar' => ['formats' => 'jpeg', 'variants' => []]]);
     }
 
-    public function testVariantRequiresDimension(): void
+    public function testVariantRequiresDimension()
     {
         $this->expectException(\InvalidArgumentException::class);
 

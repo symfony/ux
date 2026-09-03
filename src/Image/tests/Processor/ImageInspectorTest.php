@@ -27,7 +27,7 @@ final class ImageInspectorTest extends TestCase
         $this->inspector = new ImageInspector();
     }
 
-    public function testInspectNonExistentFile(): void
+    public function testInspectNonExistentFile()
     {
         $result = $this->inspector->inspect('/nonexistent/path/image.jpg');
 
@@ -37,7 +37,7 @@ final class ImageInspectorTest extends TestCase
         self::assertNull($result['format']);
     }
 
-    public function testStrictInspectionRejectsMissingFile(): void
+    public function testStrictInspectionRejectsMissingFile()
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('does not exist');
@@ -45,7 +45,7 @@ final class ImageInspectorTest extends TestCase
         $this->inspector->inspectImage('/missing/image.jpg');
     }
 
-    public function testInspectedImageRejectsInvalidDimensions(): void
+    public function testInspectedImageRejectsInvalidDimensions()
     {
         $this->expectException(\RuntimeException::class);
 
@@ -53,7 +53,7 @@ final class ImageInspectorTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\RequiresPhpExtension('gd')]
-    public function testInspectJpegFile(): void
+    public function testInspectJpegFile()
     {
         $tmpFile = sys_get_temp_dir().'/ux_image_test_'.uniqid().'.jpg';
         $img = imagecreatetruecolor(120, 80);
@@ -71,7 +71,7 @@ final class ImageInspectorTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\RequiresPhpExtension('gd')]
-    public function testStrictInspectionExposesTheTrustedMetadataContractThroughGetters(): void
+    public function testStrictInspectionExposesTheTrustedMetadataContractThroughGetters()
     {
         $tmpFile = sys_get_temp_dir().'/ux_image_strict_'.uniqid().'.jpg';
         $img = imagecreatetruecolor(12, 8);
@@ -91,7 +91,7 @@ final class ImageInspectorTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\RequiresPhpExtension('gd')]
-    public function testInspectPngFile(): void
+    public function testInspectPngFile()
     {
         $tmpFile = sys_get_temp_dir().'/ux_image_test_'.uniqid().'.png';
         $img = imagecreatetruecolor(200, 150);
@@ -108,7 +108,7 @@ final class ImageInspectorTest extends TestCase
         @unlink($tmpFile);
     }
 
-    public function testResolveFormatMapping(): void
+    public function testResolveFormatMapping()
     {
         // Create minimal valid images for each format to test the mime-to-format mapping.
         // We test the format mapping indirectly through inspect() since resolveFormat is private.
@@ -141,7 +141,7 @@ final class ImageInspectorTest extends TestCase
         }
     }
 
-    public function testInspectNonImageFile(): void
+    public function testInspectNonImageFile()
     {
         $tmpFile = sys_get_temp_dir().'/ux_image_test_'.uniqid().'.txt';
         file_put_contents($tmpFile, 'this is not an image');
@@ -156,7 +156,7 @@ final class ImageInspectorTest extends TestCase
         @unlink($tmpFile);
     }
 
-    public function testInspectWithFileObject(): void
+    public function testInspectWithFileObject()
     {
         $tmpFile = sys_get_temp_dir().'/ux_image_file_obj_'.uniqid().'.txt';
         file_put_contents($tmpFile, 'not an image');
@@ -170,7 +170,7 @@ final class ImageInspectorTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\RequiresPhpExtension('gd')]
-    public function testInspectWebpFile(): void
+    public function testInspectWebpFile()
     {
         if (!\function_exists('imagewebp')) {
             self::markTestSkipped('WebP support not available in GD.');
@@ -192,7 +192,7 @@ final class ImageInspectorTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\RequiresPhpExtension('gd')]
-    public function testInspectGifFile(): void
+    public function testInspectGifFile()
     {
         $tmpFile = sys_get_temp_dir().'/ux_image_test_'.uniqid().'.gif';
         $img = imagecreatetruecolor(30, 20);

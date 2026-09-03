@@ -20,7 +20,7 @@ use Symfony\UX\Image\ProcessingLimits;
 #[CoversClass(ImageLimitExceededException::class)]
 final class ProcessingLimitsTest extends TestCase
 {
-    public function testRejectsNonPositiveLimit(): void
+    public function testRejectsNonPositiveLimit()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('must be positive');
@@ -28,14 +28,14 @@ final class ProcessingLimitsTest extends TestCase
         new ProcessingLimits(maxVariants: 0);
     }
 
-    public function testAcceptsInputWithinBudget(): void
+    public function testAcceptsInputWithinBudget()
     {
         new ProcessingLimits(maxInputBytes: 100, maxWidth: 10, maxHeight: 10, maxPixels: 100)->assertInput(100, 10, 10);
 
         self::addToAssertionCount(1);
     }
 
-    public function testRejectsExcessiveBytes(): void
+    public function testRejectsExcessiveBytes()
     {
         $this->expectException(ImageLimitExceededException::class);
         $this->expectExceptionMessage('101 bytes');
@@ -43,7 +43,7 @@ final class ProcessingLimitsTest extends TestCase
         new ProcessingLimits(maxInputBytes: 100)->assertInput(101, 1, 1);
     }
 
-    public function testRejectsExcessiveDimensions(): void
+    public function testRejectsExcessiveDimensions()
     {
         $this->expectException(ImageLimitExceededException::class);
         $this->expectExceptionMessage('11x5');
@@ -51,7 +51,7 @@ final class ProcessingLimitsTest extends TestCase
         new ProcessingLimits(maxWidth: 10, maxHeight: 10)->assertInput(1, 11, 5);
     }
 
-    public function testRejectsExcessivePixels(): void
+    public function testRejectsExcessivePixels()
     {
         $this->expectException(ImageLimitExceededException::class);
         $this->expectExceptionMessage('121');
@@ -59,7 +59,7 @@ final class ProcessingLimitsTest extends TestCase
         new ProcessingLimits(maxWidth: 20, maxHeight: 20, maxPixels: 100)->assertInput(1, 11, 11);
     }
 
-    public function testRejectsOutputDimensionsBeforeAllocation(): void
+    public function testRejectsOutputDimensionsBeforeAllocation()
     {
         $this->expectException(ImageLimitExceededException::class);
         $this->expectExceptionMessage('11x5');
@@ -67,7 +67,7 @@ final class ProcessingLimitsTest extends TestCase
         new ProcessingLimits(maxWidth: 10, maxHeight: 10)->assertOutputAllocation(11, 5);
     }
 
-    public function testRejectsOutputPixelsBeforeAllocationWithoutOverflow(): void
+    public function testRejectsOutputPixelsBeforeAllocationWithoutOverflow()
     {
         $this->expectException(ImageLimitExceededException::class);
         $this->expectExceptionMessage('output limit');

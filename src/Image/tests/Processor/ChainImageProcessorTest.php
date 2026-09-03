@@ -22,7 +22,7 @@ use Symfony\UX\Image\Processor\ImageDriverInterface;
 #[CoversClass(ChainImageProcessor::class)]
 final class ChainImageProcessorTest extends TestCase
 {
-    public function testDelegatesToSupportingProcessor(): void
+    public function testDelegatesToSupportingProcessor()
     {
         $expectedAsset = new ImageAsset('default', '/default/image.jpg');
 
@@ -38,7 +38,7 @@ final class ChainImageProcessorTest extends TestCase
         self::assertSame($expectedAsset, $result);
     }
 
-    public function testThrowsWhenNoProcessorSupports(): void
+    public function testThrowsWhenNoProcessorSupports()
     {
         $chain = new ChainImageProcessor([], 'gd');
 
@@ -50,7 +50,7 @@ final class ChainImageProcessorTest extends TestCase
         $chain->process($file);
     }
 
-    public function testThrowsWhenNoProcessorSupportsDriver(): void
+    public function testThrowsWhenNoProcessorSupportsDriver()
     {
         $processor = $this->createStub(ImageDriverInterface::class);
         $processor->method('supports')->willReturn(false);
@@ -65,7 +65,7 @@ final class ChainImageProcessorTest extends TestCase
         $chain->process($file);
     }
 
-    public function testSupportsReturnsTrueWhenAnyProcessorSupports(): void
+    public function testSupportsReturnsTrueWhenAnyProcessorSupports()
     {
         $proc1 = $this->createStub(ImageDriverInterface::class);
         $proc1->method('supports')->willReturnCallback(static fn (string $d) => 'gd' === $d);
@@ -79,7 +79,7 @@ final class ChainImageProcessorTest extends TestCase
         self::assertTrue($chain->supports('imagick'));
     }
 
-    public function testSupportsReturnsFalseWhenNoneSupport(): void
+    public function testSupportsReturnsFalseWhenNoneSupport()
     {
         $processor = $this->createStub(ImageDriverInterface::class);
         $processor->method('supports')->willReturn(false);
@@ -89,7 +89,7 @@ final class ChainImageProcessorTest extends TestCase
         self::assertFalse($chain->supports('vips'));
     }
 
-    public function testDelegatesGenerateVariants(): void
+    public function testDelegatesGenerateVariants()
     {
         $asset = new ImageAsset('default', '/default/image.jpg');
         $returnedVariants = ['webp' => []];
@@ -107,7 +107,7 @@ final class ChainImageProcessorTest extends TestCase
         self::assertSame($returnedVariants, $result);
     }
 
-    public function testDelegatesResize(): void
+    public function testDelegatesResize()
     {
         $processor = $this->createMock(ImageDriverInterface::class);
         $processor->method('supports')->with('gd')->willReturn(true);
@@ -120,7 +120,7 @@ final class ChainImageProcessorTest extends TestCase
         $chain->resize('/in.jpg', '/out.jpg', 100, 100);
     }
 
-    public function testDelegatesConvert(): void
+    public function testDelegatesConvert()
     {
         $processor = $this->createMock(ImageDriverInterface::class);
         $processor->method('supports')->with('gd')->willReturn(true);
@@ -133,7 +133,7 @@ final class ChainImageProcessorTest extends TestCase
         $chain->convert('/in.jpg', '/out.webp', 'webp');
     }
 
-    public function testDelegatesExtractMetadata(): void
+    public function testDelegatesExtractMetadata()
     {
         $processor = $this->createMock(ImageDriverInterface::class);
         $processor->method('supports')->with('gd')->willReturn(true);
@@ -148,7 +148,7 @@ final class ChainImageProcessorTest extends TestCase
         self::assertSame(['width' => 800, 'height' => 600], $meta);
     }
 
-    public function testFirstSupportingProcessorIsUsed(): void
+    public function testFirstSupportingProcessorIsUsed()
     {
         $proc1 = $this->createMock(ImageDriverInterface::class);
         $proc1->method('supports')->willReturn(true);

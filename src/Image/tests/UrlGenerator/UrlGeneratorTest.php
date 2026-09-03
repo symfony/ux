@@ -25,7 +25,7 @@ use Symfony\UX\Image\UrlGenerator\UrlGenerator;
 #[CoversClass(StorageUrlAdapter::class)]
 final class UrlGeneratorTest extends TestCase
 {
-    public function testUsesCustomAdapterWhenProvided(): void
+    public function testUsesCustomAdapterWhenProvided()
     {
         $asset = new ImageAsset('custom', '/path/to/image.jpg');
 
@@ -54,7 +54,7 @@ final class UrlGeneratorTest extends TestCase
         self::assertSame('/adapted/path/to/image.jpg', $generator->generateAssetUrl($asset));
     }
 
-    public function testFallsBackToGenericAdapter(): void
+    public function testFallsBackToGenericAdapter()
     {
         $asset = new ImageAsset('generic', '/relative/path.png');
 
@@ -71,7 +71,7 @@ final class UrlGeneratorTest extends TestCase
         self::assertSame('/uploads/relative/path.png', $generator->generateAssetUrl($asset));
     }
 
-    public function testStorageAdapterUsesStoragePublicUrlContract(): void
+    public function testStorageAdapterUsesStoragePublicUrlContract()
     {
         $storage = $this->createMock(StorageInterface::class);
         $storage->expects(self::once())
@@ -87,7 +87,7 @@ final class UrlGeneratorTest extends TestCase
         self::assertSame('https://storage.example/photo.jpg', $generator->generateAssetUrl(new ImageAsset('custom', '/photo.jpg')));
     }
 
-    public function testStorageAdapterUsesVariantPathAndRequiresStorageName(): void
+    public function testStorageAdapterUsesVariantPathAndRequiresStorageName()
     {
         $storage = $this->createMock(StorageInterface::class);
         $storage->expects(self::once())
@@ -103,7 +103,7 @@ final class UrlGeneratorTest extends TestCase
         $adapter->resolve('/photo.jpg', [], [], '');
     }
 
-    public function testGenericAdapterNameAndEmptyPrefix(): void
+    public function testGenericAdapterNameAndEmptyPrefix()
     {
         $adapter = new GenericUrlAdapter();
 
@@ -111,7 +111,7 @@ final class UrlGeneratorTest extends TestCase
         self::assertSame('/photo.jpg', $adapter->resolve('/photo.jpg', ['public_url_prefix' => null]));
     }
 
-    public function testGenerateVariantUrl(): void
+    public function testGenerateVariantUrl()
     {
         $asset = new ImageAsset('generic', '/images/photo.jpg');
 
@@ -130,7 +130,7 @@ final class UrlGeneratorTest extends TestCase
         self::assertSame('/uploads/images/photo_thumb.jpg', $generator->generateVariantUrl($asset, $variant));
     }
 
-    public function testGenerateVariantUrlFallsBackToAssetPathWhenNoVariantPath(): void
+    public function testGenerateVariantUrlFallsBackToAssetPathWhenNoVariantPath()
     {
         $asset = new ImageAsset('generic', '/images/photo.jpg');
 
@@ -149,7 +149,7 @@ final class UrlGeneratorTest extends TestCase
         self::assertSame('/uploads/images/photo.jpg', $generator->generateVariantUrl($asset, $variant));
     }
 
-    public function testCdnUrlBuilderDelegation(): void
+    public function testCdnUrlBuilderDelegation()
     {
         $cdnBuilder = new class implements \Symfony\UX\Image\UrlGenerator\CdnUrlBuilderInterface {
             public function buildUrl(string $baseUrl, string $path, array $profileConfig, array $variantConfig): string
@@ -181,7 +181,7 @@ final class UrlGeneratorTest extends TestCase
         self::assertSame('https://cdn.example.com/cdn/images/photo.jpg', $generator->generateAssetUrl($asset));
     }
 
-    public function testCdnUrlBuilderDelegationForVariant(): void
+    public function testCdnUrlBuilderDelegationForVariant()
     {
         $cdnBuilder = new class implements \Symfony\UX\Image\UrlGenerator\CdnUrlBuilderInterface {
             public function buildUrl(string $baseUrl, string $path, array $profileConfig, array $variantConfig): string
@@ -215,7 +215,7 @@ final class UrlGeneratorTest extends TestCase
         self::assertSame('https://cdn.example.com/images/photo_thumb.jpg', $generator->generateVariantUrl($asset, $variant));
     }
 
-    public function testConfiguredUnknownCdnBuilderThrowsException(): void
+    public function testConfiguredUnknownCdnBuilderThrowsException()
     {
         $generator = new UrlGenerator(
             [],
@@ -236,7 +236,7 @@ final class UrlGeneratorTest extends TestCase
         $generator->generateAssetUrl(new ImageAsset('media', '/photo.jpg'));
     }
 
-    public function testAbsoluteUrlIsReturnedUnchanged(): void
+    public function testAbsoluteUrlIsReturnedUnchanged()
     {
         $asset = new ImageAsset('default', 'https://external.com/photo.jpg');
 
@@ -249,7 +249,7 @@ final class UrlGeneratorTest extends TestCase
         self::assertSame('https://external.com/photo.jpg', $generator->generateAssetUrl($asset));
     }
 
-    public function testHttpAbsoluteUrlIsReturnedUnchanged(): void
+    public function testHttpAbsoluteUrlIsReturnedUnchanged()
     {
         $asset = new ImageAsset('default', 'http://external.com/photo.jpg');
 
@@ -262,7 +262,7 @@ final class UrlGeneratorTest extends TestCase
         self::assertSame('http://external.com/photo.jpg', $generator->generateAssetUrl($asset));
     }
 
-    public function testUnknownAdapterThrowsException(): void
+    public function testUnknownAdapterThrowsException()
     {
         $asset = new ImageAsset('custom', '/path/to/image.jpg');
 
@@ -282,7 +282,7 @@ final class UrlGeneratorTest extends TestCase
         $generator->generateAssetUrl($asset);
     }
 
-    public function testStorageWithoutAdapterFallsBackToGenericAdapter(): void
+    public function testStorageWithoutAdapterFallsBackToGenericAdapter()
     {
         $asset = new ImageAsset('default', '/images/photo.jpg');
 
@@ -299,7 +299,7 @@ final class UrlGeneratorTest extends TestCase
         self::assertSame('/media/images/photo.jpg', $generator->generateAssetUrl($asset));
     }
 
-    public function testCdnBuilderRegisteredWithStringKey(): void
+    public function testCdnBuilderRegisteredWithStringKey()
     {
         $cdnBuilder = new class implements \Symfony\UX\Image\UrlGenerator\CdnUrlBuilderInterface {
             public function buildUrl(string $baseUrl, string $path, array $profileConfig, array $variantConfig): string
@@ -331,7 +331,7 @@ final class UrlGeneratorTest extends TestCase
         self::assertSame('https://keyed-cdn.test//photo.jpg', $generator->generateAssetUrl($asset));
     }
 
-    public function testUrlAdapterRegisteredWithStringKey(): void
+    public function testUrlAdapterRegisteredWithStringKey()
     {
         $adapter = new class implements UrlAdapterInterface {
             public function resolve(string $path, array $storageConfig, array $variantConfig = [], ?string $storageName = null): string
@@ -360,7 +360,7 @@ final class UrlGeneratorTest extends TestCase
         self::assertSame('/string-keyed//photo.jpg', $generator->generateAssetUrl($asset));
     }
 
-    public function testMissingStorageUsesEmptyConfig(): void
+    public function testMissingStorageUsesEmptyConfig()
     {
         $asset = new ImageAsset('unknown_storage', '/images/photo.jpg');
 

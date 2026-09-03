@@ -20,7 +20,7 @@ use Symfony\UX\Image\UrlGenerator\UrlGeneratorInterface;
 
 final class DocumentationTest extends TestCase
 {
-    public function testThePublishedDocDirectoryContainsTheCompleteCorpus(): void
+    public function testThePublishedDocDirectoryContainsTheCompleteCorpus()
     {
         $root = \dirname(__DIR__, 2);
         $docRoot = self::publishedDocRoot();
@@ -64,7 +64,7 @@ final class DocumentationTest extends TestCase
         self::assertSame([], $legacyFiles, 'Documentation files must live under the configured doc_dir.');
     }
 
-    public function testEveryLocalDocumentationLinkStaysInsideThePublishedDocDirectory(): void
+    public function testEveryLocalDocumentationLinkStaysInsideThePublishedDocDirectory()
     {
         $root = \dirname(__DIR__, 2);
         $docRoot = self::publishedDocRoot();
@@ -100,7 +100,7 @@ final class DocumentationTest extends TestCase
         }
     }
 
-    public function testDocumentedResponsiveHtmlMatchesTheRealRenderer(): void
+    public function testDocumentedResponsiveHtmlMatchesTheRealRenderer()
     {
         $asset = ImageAssetFactory::responsive(
             formats: ['avif', 'webp', 'jpeg'],

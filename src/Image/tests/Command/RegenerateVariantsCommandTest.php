@@ -37,7 +37,7 @@ use Symfony\UX\Image\Storage\StreamStorageInterface;
 #[CoversClass(RegenerationServiceResolver::class)]
 final class RegenerateVariantsCommandTest extends TestCase
 {
-    public function testProcessesTwoBoundedBatchesAndPersistsUpdatedAssets(): void
+    public function testProcessesTwoBoundedBatchesAndPersistsUpdatedAssets()
     {
         $provider = new RecordingProvider(static fn (ImageAssetBatchQuery $query): ImageAssetBatch => match ($query->after) {
             null => new ImageAssetBatch([
@@ -67,7 +67,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         self::assertStringContainsString('atomically persisted', $tester->getDisplay());
     }
 
-    public function testDryRunTraversesAllBatchesWithoutProcessingOrPersisting(): void
+    public function testDryRunTraversesAllBatchesWithoutProcessingOrPersisting()
     {
         $provider = new RecordingProvider(static fn (ImageAssetBatchQuery $query): ImageAssetBatch => null === $query->after
             ? new ImageAssetBatch([self::reference('one', 'one-cursor')], 'next')
@@ -86,7 +86,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         self::assertStringContainsString('or persisted', $tester->getDisplay());
     }
 
-    public function testPersistenceFailureStopsAtLastDurableCheckpoint(): void
+    public function testPersistenceFailureStopsAtLastDurableCheckpoint()
     {
         $provider = new RecordingProvider(static fn (): ImageAssetBatch => new ImageAssetBatch([
             self::reference('one', 'cursor-1'),
@@ -103,7 +103,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         self::assertStringContainsString("--after='cursor-1'", $tester->getDisplay());
     }
 
-    public function testConcurrentUpdateDiscardsOnlyNewGenerationAndKeepsCheckpoint(): void
+    public function testConcurrentUpdateDiscardsOnlyNewGenerationAndKeepsCheckpoint()
     {
         $provider = new RecordingProvider(static fn (): ImageAssetBatch => new ImageAssetBatch([
             self::reference('one', 'cursor-1'),
@@ -121,7 +121,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         self::assertStringContainsString('without --after', $tester->getDisplay());
     }
 
-    public function testProviderFailureAfterBatchPrintsDurableCheckpoint(): void
+    public function testProviderFailureAfterBatchPrintsDurableCheckpoint()
     {
         $provider = new RecordingProvider(static fn (ImageAssetBatchQuery $query): ImageAssetBatch => null === $query->after
             ? new ImageAssetBatch([self::reference('one', 'cursor-1')], 'next')
@@ -134,7 +134,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         self::assertStringContainsString("--after='next'", $tester->getDisplay());
     }
 
-    public function testProviderFailureReturnsFailureWithoutProcessing(): void
+    public function testProviderFailureReturnsFailureWithoutProcessing()
     {
         $provider = new RecordingProvider(static function (): never {
             throw new \RuntimeException('query failed');
@@ -149,7 +149,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         self::assertStringContainsString('Provider failed: query failed', $tester->getDisplay());
     }
 
-    public function testCurrentRevisionIsSkippedUnlessForced(): void
+    public function testCurrentRevisionIsSkippedUnlessForced()
     {
         $config = self::profiles()['avatar'];
         $revision = hash('sha256', json_encode($config, \JSON_THROW_ON_ERROR));
@@ -171,7 +171,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         self::assertCount(1, $processor->calls);
     }
 
-    public function testCurrentRevisionWithoutGeneratedVariantsIsRegenerated(): void
+    public function testCurrentRevisionWithoutGeneratedVariantsIsRegenerated()
     {
         $config = self::profiles()['avatar'];
         $revision = hash('sha256', json_encode($config, \JSON_THROW_ON_ERROR));
@@ -187,7 +187,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         self::assertCount(1, $processor->calls);
     }
 
-    public function testInvalidOptionsAndUnknownProfileReturnInvalid(): void
+    public function testInvalidOptionsAndUnknownProfileReturnInvalid()
     {
         $tester = $this->tester(new RecordingProvider(static fn (): ImageAssetBatch => new ImageAssetBatch([], null)), new RecordingPersister(), new RecordingProcessor());
 
@@ -199,7 +199,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         self::assertSame(Command::INVALID, $tester->execute(['--image-profile' => 'avatar', '--storage' => 'media', '--after' => '']));
     }
 
-    public function testRejectsOversizedProviderBatch(): void
+    public function testRejectsOversizedProviderBatch()
     {
         $items = [];
         for ($index = 0; $index < 101; ++$index) {
@@ -215,7 +215,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         self::assertStringContainsString('returned 101 assets', $tester->getDisplay());
     }
 
-    public function testRejectsAssetFromAnotherStorage(): void
+    public function testRejectsAssetFromAnotherStorage()
     {
         $reference = new ImageAssetReference('one', 'cursor', 'version', new ImageAsset('other', '/one.jpeg'));
         $tester = $this->tester(
@@ -228,7 +228,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         self::assertStringContainsString('expected "media"', $tester->getDisplay());
     }
 
-    public function testRejectsNonProgressingProviderCursor(): void
+    public function testRejectsNonProgressingProviderCursor()
     {
         $tester = $this->tester(
             new RecordingProvider(static fn (): ImageAssetBatch => new ImageAssetBatch([self::reference('one', 'cursor-one')], 'same')),
@@ -240,7 +240,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         self::assertStringContainsString('non-progressing cursor', $tester->getDisplay());
     }
 
-    public function testBatchRejectsEmptyOrDuplicateCursors(): void
+    public function testBatchRejectsEmptyOrDuplicateCursors()
     {
         try {
             new ImageAssetBatch([self::reference('one', 'cursor')], '');
@@ -257,7 +257,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         ], null);
     }
 
-    public function testRegenerationValueObjectsRejectInvalidInput(): void
+    public function testRegenerationValueObjectsRejectInvalidInput()
     {
         try {
             new ImageAssetBatch([], 'next');
@@ -277,7 +277,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         new ImageAssetReference('', 'cursor', 'version', new ImageAsset('media', '/one.jpeg'));
     }
 
-    public function testRegenerationValueObjectsExposeTheirProtocolThroughGetters(): void
+    public function testRegenerationValueObjectsExposeTheirProtocolThroughGetters()
     {
         $asset = new ImageAsset('media', '/one.jpeg');
         $reference = new ImageAssetReference('one', 'cursor-1', 'version-1', $asset);
@@ -296,7 +296,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         self::assertSame('cursor-1', $batch->getNextCursor());
     }
 
-    public function testZeroOrMultipleServicesReturnInvalidWithActionableError(): void
+    public function testZeroOrMultipleServicesReturnInvalidWithActionableError()
     {
         $processor = new RecordingProcessor();
         $storage = $this->createStub(StreamStorageInterface::class);
@@ -316,7 +316,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         self::assertStringContainsString('found 2', $multiple->getDisplay());
     }
 
-    public function testRegenerationServiceResolutionFailureImplementsPackageExceptionMarker(): void
+    public function testRegenerationServiceResolutionFailureImplementsPackageExceptionMarker()
     {
         $resolver = new RegenerationServiceResolver([], []);
 
@@ -329,7 +329,7 @@ final class RegenerateVariantsCommandTest extends TestCase
         }
     }
 
-    public function testMissingPersisterIsRejected(): void
+    public function testMissingPersisterIsRejected()
     {
         $this->expectException(RuntimeException::class);
 

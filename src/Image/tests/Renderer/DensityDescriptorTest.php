@@ -20,7 +20,7 @@ use Symfony\UX\Image\UrlGenerator\UrlGeneratorInterface;
 #[CoversClass(DefaultImageRenderer::class)]
 final class DensityDescriptorTest extends TestCase
 {
-    public function testRenderWithDensityDescriptors(): void
+    public function testRenderWithDensityDescriptors()
     {
         $urlGenerator = $this->createStub(UrlGeneratorInterface::class);
         $urlGenerator->method('generateAssetUrl')->willReturn('https://example.com/image.jpg');
@@ -56,7 +56,7 @@ final class DensityDescriptorTest extends TestCase
         $this->assertStringContainsString('image-2x.jpg 2x', $html);
     }
 
-    public function testRenderMixedWidthAndDensityDescriptors(): void
+    public function testRenderMixedWidthAndDensityDescriptors()
     {
         $urlGenerator = $this->createStub(UrlGeneratorInterface::class);
         $urlGenerator->method('generateAssetUrl')->willReturn('https://example.com/image.jpg');
@@ -94,7 +94,7 @@ final class DensityDescriptorTest extends TestCase
         $this->assertStringNotContainsString('image-2x.jpg 2x', $html);
     }
 
-    public function testRenderWithOnlyDensityDescriptors(): void
+    public function testRenderWithOnlyDensityDescriptors()
     {
         $urlGenerator = $this->createStub(UrlGeneratorInterface::class);
         $urlGenerator->method('generateAssetUrl')->willReturn('https://example.com/icon.png');

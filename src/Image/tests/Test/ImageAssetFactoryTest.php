@@ -16,7 +16,7 @@ use Symfony\UX\Image\Test\ImageAssetFactory;
 
 final class ImageAssetFactoryTest extends TestCase
 {
-    public function testItCreatesACompleteDeterministicResponsiveAsset(): void
+    public function testItCreatesACompleteDeterministicResponsiveAsset()
     {
         $first = ImageAssetFactory::responsive();
         $second = ImageAssetFactory::responsive();
@@ -28,7 +28,7 @@ final class ImageAssetFactoryTest extends TestCase
         self::assertSame('test_responsive', $first->profile);
     }
 
-    public function testItNormalizesJpgAndAcceptsCustomDimensions(): void
+    public function testItNormalizesJpgAndAcceptsCustomDimensions()
     {
         $asset = ImageAssetFactory::responsive(
             formats: ['jpg'],
@@ -42,7 +42,7 @@ final class ImageAssetFactoryTest extends TestCase
         self::assertSame('image/jpeg', $asset->getVariant('300w')['mimeType']);
     }
 
-    public function testItRejectsInvalidFixtureDefinitions(): void
+    public function testItRejectsInvalidFixtureDefinitions()
     {
         $this->expectException(\InvalidArgumentException::class);
 

@@ -61,28 +61,28 @@ final class GdImageProcessorTest extends TestCase
         $this->tempFiles = [];
     }
 
-    public function testSupportsGd(): void
+    public function testSupportsGd()
     {
         $processor = new GdImageProcessor($this->storage, [], $this->imageInspector);
 
         self::assertTrue($processor->supports('gd'));
     }
 
-    public function testDoesNotSupportImagick(): void
+    public function testDoesNotSupportImagick()
     {
         $processor = new GdImageProcessor($this->storage, [], $this->imageInspector);
 
         self::assertFalse($processor->supports('imagick'));
     }
 
-    public function testDoesNotSupportOtherDriver(): void
+    public function testDoesNotSupportOtherDriver()
     {
         $processor = new GdImageProcessor($this->storage, [], $this->imageInspector);
 
         self::assertFalse($processor->supports('vips'));
     }
 
-    public function testProcessRejectsSvgByDefault(): void
+    public function testProcessRejectsSvgByDefault()
     {
         $svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="red" width="100" height="100"/></svg>';
         $svgPath = $this->createTempFile($svgContent, 'svg');
@@ -101,7 +101,7 @@ final class GdImageProcessorTest extends TestCase
         $processor->process($file);
     }
 
-    public function testProcessWithoutProfile(): void
+    public function testProcessWithoutProfile()
     {
         $jpegPath = $this->createTempJpeg(200, 100);
 
@@ -121,7 +121,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame([], $result->variants);
     }
 
-    public function testProcessWithProfile(): void
+    public function testProcessWithProfile()
     {
         $jpegPath = $this->createTempJpeg(400, 300);
 
@@ -163,7 +163,7 @@ final class GdImageProcessorTest extends TestCase
         }
     }
 
-    public function testProcessWithUnknownProfile(): void
+    public function testProcessWithUnknownProfile()
     {
         $jpegPath = $this->createTempJpeg(200, 100);
 
@@ -180,7 +180,7 @@ final class GdImageProcessorTest extends TestCase
         $processor->process($file, 'nonexistent');
     }
 
-    public function testDeferredProcessingSkipsVariants(): void
+    public function testDeferredProcessingSkipsVariants()
     {
         $jpegPath = $this->createTempJpeg(400, 300);
 
@@ -211,7 +211,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame([], glob(\dirname($jpegPath).'/photo_*_small.webp'));
     }
 
-    public function testProcessRejectsNonImageBeforeStorageWhenProcessingIsDeferred(): void
+    public function testProcessRejectsNonImageBeforeStorageWhenProcessingIsDeferred()
     {
         $path = $this->createTempFile('<?php echo "not an image";', 'php');
         $file = new UploadedFile($path, 'payload.php', 'image/jpeg', null, true);
@@ -228,7 +228,7 @@ final class GdImageProcessorTest extends TestCase
         $processor->process($file, 'deferred');
     }
 
-    public function testAsyncProfileDispatchesWithoutGeneratingVariants(): void
+    public function testAsyncProfileDispatchesWithoutGeneratingVariants()
     {
         $jpegPath = $this->createTempJpeg(200, 100);
         $file = $this->createStub(UploadedFile::class);
@@ -255,7 +255,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertNull($asset->profileRevision);
     }
 
-    public function testImmediateProcessingGeneratesVariants(): void
+    public function testImmediateProcessingGeneratesVariants()
     {
         $jpegPath = $this->createTempJpeg(400, 300);
 
@@ -290,7 +290,7 @@ final class GdImageProcessorTest extends TestCase
         }
     }
 
-    public function testSynchronousStreamProcessingDoesNotDownloadStoredOriginal(): void
+    public function testSynchronousStreamProcessingDoesNotDownloadStoredOriginal()
     {
         $pngPath = $this->createTempPng(200, 100);
         $file = new UploadedFile($pngPath, 'photo.png', 'image/png', null, true);
@@ -319,7 +319,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertCount(1, $asset->variants['png']);
     }
 
-    public function testGenerateVariantsReturnsEmptyWithoutVariantsKey(): void
+    public function testGenerateVariantsReturnsEmptyWithoutVariantsKey()
     {
         $asset = new ImageAsset('default_public', 'uploads/photo.jpg');
 
@@ -331,7 +331,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame([], $result);
     }
 
-    public function testGenerateVariantsReturnsEmptyWithoutFormatsKey(): void
+    public function testGenerateVariantsReturnsEmptyWithoutFormatsKey()
     {
         $asset = new ImageAsset('default_public', 'uploads/photo.jpg');
 
@@ -343,7 +343,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame([], $result);
     }
 
-    public function testGenerateVariantsEnforcesActualOutputPixelLimit(): void
+    public function testGenerateVariantsEnforcesActualOutputPixelLimit()
     {
         $jpegPath = $this->createTempJpeg(200, 100);
         $this->storage->method('getFilePath')->willReturn($jpegPath);
@@ -366,7 +366,7 @@ final class GdImageProcessorTest extends TestCase
         );
     }
 
-    public function testResizeFitMode(): void
+    public function testResizeFitMode()
     {
         $inputPath = $this->createTempJpeg(200, 100);
         $outputPath = $this->createTempOutputPath('jpg');
@@ -380,7 +380,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame(50, $size[1]);
     }
 
-    public function testResizeWithHeightOnly(): void
+    public function testResizeWithHeightOnly()
     {
         $inputPath = $this->createTempJpeg(200, 100);
         $outputPath = $this->createTempOutputPath('jpg');
@@ -394,7 +394,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame(50, $size[1]);
     }
 
-    public function testResizeWithZeroDimensions(): void
+    public function testResizeWithZeroDimensions()
     {
         $inputPath = $this->createTempJpeg(200, 100);
         $outputPath = $this->createTempOutputPath('jpg');
@@ -408,7 +408,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame(100, $size[1]);
     }
 
-    public function testResizeCropMode(): void
+    public function testResizeCropMode()
     {
         $inputPath = $this->createTempJpeg(200, 100);
         $outputPath = $this->createTempOutputPath('jpg');
@@ -422,7 +422,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame(50, $size[1]);
     }
 
-    public function testResizeCropPositionTop(): void
+    public function testResizeCropPositionTop()
     {
         $inputPath = $this->createTempJpeg(200, 200);
         $outputPath = $this->createTempOutputPath('jpg');
@@ -436,7 +436,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame(50, $size[1]);
     }
 
-    public function testResizeCropPositionBottom(): void
+    public function testResizeCropPositionBottom()
     {
         $inputPath = $this->createTempJpeg(200, 200);
         $outputPath = $this->createTempOutputPath('jpg');
@@ -450,7 +450,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame(50, $size[1]);
     }
 
-    public function testResizeCropPositionLeft(): void
+    public function testResizeCropPositionLeft()
     {
         $inputPath = $this->createTempJpeg(200, 200);
         $outputPath = $this->createTempOutputPath('jpg');
@@ -464,7 +464,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame(100, $size[1]);
     }
 
-    public function testResizeCropPositionRight(): void
+    public function testResizeCropPositionRight()
     {
         $inputPath = $this->createTempJpeg(200, 200);
         $outputPath = $this->createTempOutputPath('jpg');
@@ -478,7 +478,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame(100, $size[1]);
     }
 
-    public function testResizeInvalidImageThrowsException(): void
+    public function testResizeInvalidImageThrowsException()
     {
         $invalidPath = $this->createTempFile('not an image', 'txt');
         $outputPath = $this->createTempOutputPath('jpg');
@@ -489,7 +489,7 @@ final class GdImageProcessorTest extends TestCase
         $processor->resize($invalidPath, $outputPath, 100, 100);
     }
 
-    public function testResizeWithNegativeDimensionsThrowsException(): void
+    public function testResizeWithNegativeDimensionsThrowsException()
     {
         $inputPath = $this->createTempJpeg(200, 100);
         $outputPath = $this->createTempOutputPath('jpg');
@@ -500,7 +500,7 @@ final class GdImageProcessorTest extends TestCase
         $processor->resize($inputPath, $outputPath, -1, 100);
     }
 
-    public function testConvertToWebp(): void
+    public function testConvertToWebp()
     {
         $inputPath = $this->createTempJpeg(100, 100);
         $outputPath = $this->createTempOutputPath('webp');
@@ -513,7 +513,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame(\IMAGETYPE_WEBP, $info[2]);
     }
 
-    public function testConvertToPng(): void
+    public function testConvertToPng()
     {
         $inputPath = $this->createTempJpeg(100, 100);
         $outputPath = $this->createTempOutputPath('png');
@@ -526,7 +526,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame(\IMAGETYPE_PNG, $info[2]);
     }
 
-    public function testConvertToJpeg(): void
+    public function testConvertToJpeg()
     {
         $inputPath = $this->createTempPng(100, 100);
         $outputPath = $this->createTempOutputPath('jpg');
@@ -540,7 +540,7 @@ final class GdImageProcessorTest extends TestCase
     }
 
     #[RequiresPhpExtension('exif')]
-    public function testResizeAppliesExifOrientationBeforeCalculatingGeometry(): void
+    public function testResizeAppliesExifOrientationBeforeCalculatingGeometry()
     {
         $inputPath = $this->withExifOrientation($this->createTempJpeg(40, 20), 6);
         $outputPath = $this->createTempOutputPath('jpg');
@@ -554,7 +554,7 @@ final class GdImageProcessorTest extends TestCase
     }
 
     #[RequiresPhpExtension('exif')]
-    public function testConvertBakesExifOrientationIntoOutputPixels(): void
+    public function testConvertBakesExifOrientationIntoOutputPixels()
     {
         $inputPath = $this->withExifOrientation($this->createTempJpeg(40, 20), 6);
         $outputPath = $this->createTempOutputPath('png');
@@ -567,7 +567,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame(40, $size[1]);
     }
 
-    public function testAppliesEveryExifOrientationTransformation(): void
+    public function testAppliesEveryExifOrientationTransformation()
     {
         foreach ([2, 3, 4, 5, 7, 8] as $orientation) {
             $path = $this->withExifOrientation($this->createTempJpeg(4, 2), $orientation);
@@ -579,7 +579,7 @@ final class GdImageProcessorTest extends TestCase
         }
     }
 
-    public function testConvertInvalidFileThrowsException(): void
+    public function testConvertInvalidFileThrowsException()
     {
         $invalidPath = $this->createTempFile('not an image', 'txt');
         $outputPath = $this->createTempOutputPath('webp');
@@ -590,7 +590,7 @@ final class GdImageProcessorTest extends TestCase
         $processor->convert($invalidPath, $outputPath, 'webp');
     }
 
-    public function testConvertRejectsUnsupportedOutputFormat(): void
+    public function testConvertRejectsUnsupportedOutputFormat()
     {
         $this->expectException(ImageProcessingException::class);
         $this->expectExceptionMessage('Unsupported image format');
@@ -599,7 +599,7 @@ final class GdImageProcessorTest extends TestCase
             ->convert($this->createTempJpeg(10, 10), $this->createTempOutputPath('gif'), 'gif');
     }
 
-    public function testExtractMetadataDelegatesToInspector(): void
+    public function testExtractMetadataDelegatesToInspector()
     {
         $jpegPath = $this->createTempJpeg(320, 240);
 
@@ -615,7 +615,7 @@ final class GdImageProcessorTest extends TestCase
         self::assertSame('jpeg', $metadata['format']);
     }
 
-    public function testProcessPassesDirectoryFromProfile(): void
+    public function testProcessPassesDirectoryFromProfile()
     {
         $jpegPath = $this->createTempJpeg(200, 100);
 

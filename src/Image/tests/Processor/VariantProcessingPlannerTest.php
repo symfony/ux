@@ -26,7 +26,7 @@ use Symfony\UX\Image\Transformation\ResizeGeometryCalculator;
 #[CoversClass(PlannedVariant::class)]
 final class VariantProcessingPlannerTest extends TestCase
 {
-    public function testPlansWidthAndHeightOnlyVariantsAndEveryArtifact(): void
+    public function testPlansWidthAndHeightOnlyVariantsAndEveryArtifact()
     {
         $plan = $this->planner()->plan(
             new InspectedImage('jpeg', 'image/jpeg', 400, 200, 1_000),
@@ -46,7 +46,7 @@ final class VariantProcessingPlannerTest extends TestCase
         self::assertSame(50, $plan->variants[1]->geometry->canvasHeight);
     }
 
-    public function testRejectsCumulativeArtifactBudgetBeforeProcessing(): void
+    public function testRejectsCumulativeArtifactBudgetBeforeProcessing()
     {
         $this->expectException(ImageLimitExceededException::class);
         $this->expectExceptionMessage('output limit');
@@ -58,7 +58,7 @@ final class VariantProcessingPlannerTest extends TestCase
         );
     }
 
-    public function testRejectsVariantCountBeforeProcessing(): void
+    public function testRejectsVariantCountBeforeProcessing()
     {
         $this->expectException(ImageLimitExceededException::class);
         $this->expectExceptionMessage('variant count');
@@ -73,7 +73,7 @@ final class VariantProcessingPlannerTest extends TestCase
         );
     }
 
-    public function testSkipsMalformedFormatsAndVariants(): void
+    public function testSkipsMalformedFormatsAndVariants()
     {
         $plan = $this->planner()->plan(
             new InspectedImage('jpeg', 'image/jpeg', 400, 200, 1_000),
@@ -85,7 +85,7 @@ final class VariantProcessingPlannerTest extends TestCase
         self::assertSame([], $plan->variants);
     }
 
-    public function testWrapsInvalidTransformationConfiguration(): void
+    public function testWrapsInvalidTransformationConfiguration()
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('plan variants');

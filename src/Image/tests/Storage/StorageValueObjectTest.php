@@ -21,7 +21,7 @@ use Symfony\UX\Image\Storage\StoragePath;
 #[CoversClass(StoragePath::class)]
 final class StorageValueObjectTest extends TestCase
 {
-    public function testCanonicalValuesAreStringable(): void
+    public function testCanonicalValuesAreStringable()
     {
         $name = new StorageName('product.images');
         $path = StoragePath::fromAssetPath('/products/photo.jpg');
@@ -32,7 +32,7 @@ final class StorageValueObjectTest extends TestCase
     }
 
     #[DataProvider('invalidPaths')]
-    public function testRejectsUnsafePaths(string $path): void
+    public function testRejectsUnsafePaths(string $path)
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -50,7 +50,7 @@ final class StorageValueObjectTest extends TestCase
         yield 'nul' => ["images\0photo.jpg"];
     }
 
-    public function testRejectsUnsafeStorageName(): void
+    public function testRejectsUnsafeStorageName()
     {
         $this->expectException(\InvalidArgumentException::class);
 

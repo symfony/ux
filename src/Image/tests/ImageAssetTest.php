@@ -18,7 +18,7 @@ use Symfony\UX\Image\ImageAsset;
 #[CoversClass(ImageAsset::class)]
 final class ImageAssetTest extends TestCase
 {
-    public function testCreateImageAsset(): void
+    public function testCreateImageAsset()
     {
         $asset = new ImageAsset(
             storageName: 'default_public',
@@ -50,7 +50,7 @@ final class ImageAssetTest extends TestCase
         self::assertSame('revision', $asset->getProfileRevision());
     }
 
-    public function testRoundTripsTheCanonicalDurableShape(): void
+    public function testRoundTripsTheCanonicalDurableShape()
     {
         $original = new ImageAsset(
             storageName: 'default_public',
@@ -74,7 +74,7 @@ final class ImageAssetTest extends TestCase
         self::assertSame(ImageAsset::SCHEMA_VERSION, $serialized['schemaVersion']);
     }
 
-    public function testVariantMethodsReadCanonicalShape(): void
+    public function testVariantMethodsReadCanonicalShape()
     {
         $asset = new ImageAsset('default_public', '/photo.jpg', variants: [
             'webp' => [
@@ -93,7 +93,7 @@ final class ImageAssetTest extends TestCase
         self::assertNull($asset->getVariant('missing'));
     }
 
-    public function testFormatsPrimaryVariantAndSrcset(): void
+    public function testFormatsPrimaryVariantAndSrcset()
     {
         $asset = new ImageAsset('default', '/photo.jpg', variants: [
             'png' => [self::variant('/photo.png', 'card', 'png', 600, 400)],
@@ -109,7 +109,7 @@ final class ImageAssetTest extends TestCase
         self::assertNull($asset->getPrimaryVariantForFormat('webp'));
     }
 
-    public function testArtDirectionUsesMediaOnEachCanonicalVariant(): void
+    public function testArtDirectionUsesMediaOnEachCanonicalVariant()
     {
         $mobile = self::variant('/mobile.webp', 'mobile', 'webp', 640, 640);
         $mobile['media'] = '(max-width: 40rem)';
@@ -121,7 +121,7 @@ final class ImageAssetTest extends TestCase
         self::assertCount(2, $asset->getImageSourceSet()->getMultiRatioGroups());
     }
 
-    public function testFilePathsAreUnique(): void
+    public function testFilePathsAreUnique()
     {
         $asset = new ImageAsset('default', '/original.jpeg', variants: [
             'webp' => [
@@ -136,7 +136,7 @@ final class ImageAssetTest extends TestCase
         self::assertSame(['/original.jpeg', '/small.webp', '/large.webp'], $asset->getFilePaths());
     }
 
-    public function testEmptyVariantsHaveNoDerivedMetadata(): void
+    public function testEmptyVariantsHaveNoDerivedMetadata()
     {
         $asset = new ImageAsset('default', '/photo.jpg');
 
@@ -146,7 +146,7 @@ final class ImageAssetTest extends TestCase
         self::assertTrue($asset->getImageSourceSet()->isEmpty());
     }
 
-    public function testRejectsStorageNameTraversal(): void
+    public function testRejectsStorageNameTraversal()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid image storage name');
@@ -154,7 +154,7 @@ final class ImageAssetTest extends TestCase
         new ImageAsset('../outside', '/image.jpeg');
     }
 
-    public function testRejectsUnknownSchemaVersion(): void
+    public function testRejectsUnknownSchemaVersion()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('schema version');
@@ -166,7 +166,7 @@ final class ImageAssetTest extends TestCase
         ]);
     }
 
-    public function testRequiresSchemaVersionWhenDeserializing(): void
+    public function testRequiresSchemaVersionWhenDeserializing()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('schemaVersion must be provided');
@@ -177,7 +177,7 @@ final class ImageAssetTest extends TestCase
         ]);
     }
 
-    public function testRejectsLegacyTopLevelArtDirectionShape(): void
+    public function testRejectsLegacyTopLevelArtDirectionShape()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('format => list<variant>');
@@ -187,7 +187,7 @@ final class ImageAssetTest extends TestCase
         ]);
     }
 
-    public function testRejectsLegacyVariantNameShape(): void
+    public function testRejectsLegacyVariantNameShape()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('non-empty list');
@@ -197,7 +197,7 @@ final class ImageAssetTest extends TestCase
         ]);
     }
 
-    public function testRejectsMalformedNestedVariantInsteadOfSkippingIt(): void
+    public function testRejectsMalformedNestedVariantInsteadOfSkippingIt()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('webp[1]');
@@ -207,7 +207,7 @@ final class ImageAssetTest extends TestCase
         ]);
     }
 
-    public function testRejectsInvalidScalarMetadataDuringDeserialization(): void
+    public function testRejectsInvalidScalarMetadataDuringDeserialization()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('dimensions');
@@ -220,7 +220,7 @@ final class ImageAssetTest extends TestCase
         ]);
     }
 
-    public function testAbsoluteUrlAndUnknownFormatRemainSupported(): void
+    public function testAbsoluteUrlAndUnknownFormatRemainSupported()
     {
         $asset = new ImageAsset('remote', 'https://example.com/photo.bmp', variants: [
             'bmp' => [self::variant('/photo.bmp', 'original', 'bmp', 100, 50)],
@@ -229,7 +229,7 @@ final class ImageAssetTest extends TestCase
         self::assertSame('bmp', $asset->getDefaultFormat());
     }
 
-    public function testRejectsNonPositiveDimensions(): void
+    public function testRejectsNonPositiveDimensions()
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -237,7 +237,7 @@ final class ImageAssetTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('invalidSerializedMetadata')]
-    public function testRejectsInvalidSerializedMetadata(array $data): void
+    public function testRejectsInvalidSerializedMetadata(array $data)
     {
         $this->expectException(\InvalidArgumentException::class);
 

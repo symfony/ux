@@ -25,12 +25,12 @@ final class CloudinaryUrlBuilderTest extends TestCase
         $this->builder = new CloudinaryUrlBuilder();
     }
 
-    public function testGetProviderName(): void
+    public function testGetProviderName()
     {
         $this->assertSame('cloudinary', CloudinaryUrlBuilder::getProviderName());
     }
 
-    public function testBuildUrlWithWidthAndHeight(): void
+    public function testBuildUrlWithWidthAndHeight()
     {
         $baseUrl = 'https://res.cloudinary.com/demo/image/upload/';
         $path = 'sample.jpg';
@@ -49,7 +49,7 @@ final class CloudinaryUrlBuilderTest extends TestCase
         );
     }
 
-    public function testBuildUrlWithDifferentModes(): void
+    public function testBuildUrlWithDifferentModes()
     {
         $baseUrl = 'https://res.cloudinary.com/demo/image/upload/';
         $path = 'sample.jpg';
@@ -66,18 +66,18 @@ final class CloudinaryUrlBuilderTest extends TestCase
         $this->assertStringContainsString('c_fill', $url);
     }
 
-    public function testRejectsUnknownMode(): void
+    public function testRejectsUnknownMode()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->builder->buildUrl('https://res.cloudinary.com/demo', 'sample.jpg', [], ['mode' => 'unknown']);
     }
 
-    public function testEncodesPathSegments(): void
+    public function testEncodesPathSegments()
     {
         self::assertStringEndsWith('/folder/my%20photo.jpg', $this->builder->buildUrl('https://res.cloudinary.com/demo', 'folder/my photo.jpg', [], []));
     }
 
-    public function testBuildUrlWithMinimalConfig(): void
+    public function testBuildUrlWithMinimalConfig()
     {
         $baseUrl = 'https://res.cloudinary.com/demo/image/upload/';
         $path = 'sample.jpg';
@@ -92,7 +92,7 @@ final class CloudinaryUrlBuilderTest extends TestCase
         );
     }
 
-    public function testBuildUrlPreservesAdvertisedVariantFormat(): void
+    public function testBuildUrlPreservesAdvertisedVariantFormat()
     {
         $url = $this->builder->buildUrl(
             'https://res.cloudinary.com/demo/image/upload/',
@@ -107,7 +107,7 @@ final class CloudinaryUrlBuilderTest extends TestCase
         );
     }
 
-    public function testRejectsUnsafeFormat(): void
+    public function testRejectsUnsafeFormat()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Unsupported Cloudinary image format');
@@ -115,7 +115,7 @@ final class CloudinaryUrlBuilderTest extends TestCase
         $this->builder->buildUrl('https://res.cloudinary.com/demo', 'sample.jpg', [], ['format' => 'webp,q_1']);
     }
 
-    public function testNormalizesPathSlashes(): void
+    public function testNormalizesPathSlashes()
     {
         self::assertStringEndsWith('/sample.jpg', $this->builder->buildUrl('https://res.cloudinary.com/demo', '/sample.jpg/', [], []));
     }

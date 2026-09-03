@@ -27,7 +27,7 @@ use Symfony\UX\Image\UrlGenerator\UrlGeneratorInterface;
 #[CoversClass(ImageRuntime::class)]
 final class ImageExtensionTest extends TestCase
 {
-    public function testRegistersUxImageAndUxPictureFunctions(): void
+    public function testRegistersUxImageAndUxPictureFunctions()
     {
         $renderer = $this->createStub(ImageRendererInterface::class);
         $runtime = new ImageRuntime($renderer);
@@ -40,7 +40,7 @@ final class ImageExtensionTest extends TestCase
         self::assertContains('ux_picture', $functionNames);
     }
 
-    public function testDoesNotImplementGlobalsInterface(): void
+    public function testDoesNotImplementGlobalsInterface()
     {
         $renderer = $this->createStub(ImageRendererInterface::class);
         $runtime = new ImageRuntime($renderer);
@@ -50,7 +50,7 @@ final class ImageExtensionTest extends TestCase
         self::assertNotInstanceOf(\Twig\Extension\GlobalsInterface::class, $extension);
     }
 
-    public function testUxImageReturnsImgMarkup(): void
+    public function testUxImageReturnsImgMarkup()
     {
         $asset = new ImageAsset('default', '/foo.jpg');
         $rendered = new RenderedImage(
@@ -75,7 +75,7 @@ final class ImageExtensionTest extends TestCase
         self::assertStringNotContainsString('<picture', $html);
     }
 
-    public function testUxPictureReturnsPictureMarkup(): void
+    public function testUxPictureReturnsPictureMarkup()
     {
         $asset = new ImageAsset('default', '/foo.jpg');
         $rendered = new RenderedImage(
@@ -103,7 +103,7 @@ final class ImageExtensionTest extends TestCase
         self::assertStringContainsString('<img', $html);
     }
 
-    public function testTwigFunctionUsesProfileSizesWhenOptionIsAbsent(): void
+    public function testTwigFunctionUsesProfileSizesWhenOptionIsAbsent()
     {
         $urlGenerator = new class implements UrlGeneratorInterface {
             public function generateAssetUrl(ImageAsset $asset): string
@@ -135,7 +135,7 @@ final class ImageExtensionTest extends TestCase
         self::assertStringNotContainsString('sizes=""', $html);
     }
 
-    public function testRuntimeRenderConfiguredPassesOptions(): void
+    public function testRuntimeRenderConfiguredPassesOptions()
     {
         $asset = new ImageAsset('default', '/img/photo.jpg');
 
@@ -176,7 +176,7 @@ final class ImageExtensionTest extends TestCase
         self::assertInstanceOf(RenderedImage::class, $result);
     }
 
-    public function testRuntimeRenderConfiguredHonorsFetchpriorityOption(): void
+    public function testRuntimeRenderConfiguredHonorsFetchpriorityOption()
     {
         $asset = new ImageAsset('default', '/foo.jpg');
         $rendered = new RenderedImage(
@@ -204,7 +204,7 @@ final class ImageExtensionTest extends TestCase
         self::assertStringContainsString('fetchpriority="high"', $html);
     }
 
-    public function testRuntimeRenderConfiguredIgnoresLegacyFetchPriorityKeys(): void
+    public function testRuntimeRenderConfiguredIgnoresLegacyFetchPriorityKeys()
     {
         $asset = new ImageAsset('default', '/img/photo.jpg');
 
@@ -229,7 +229,7 @@ final class ImageExtensionTest extends TestCase
         $runtime->renderConfigured($asset, ['fetchPriority' => 'high', 'priority' => 'high']);
     }
 
-    public function testRuntimeRenderConfiguredWithDefaults(): void
+    public function testRuntimeRenderConfiguredWithDefaults()
     {
         $asset = new ImageAsset('default', '/img/photo.jpg');
 
@@ -261,7 +261,7 @@ final class ImageExtensionTest extends TestCase
         $runtime->renderConfigured($asset);
     }
 
-    public function testRuntimeRenderConfiguredFiltersByVariant(): void
+    public function testRuntimeRenderConfiguredFiltersByVariant()
     {
         $urlGenerator = new class implements UrlGeneratorInterface {
             public function generateAssetUrl(ImageAsset $asset): string
@@ -294,7 +294,7 @@ final class ImageExtensionTest extends TestCase
         }
     }
 
-    public function testRuntimeGetSourcesReturnsSources(): void
+    public function testRuntimeGetSourcesReturnsSources()
     {
         $asset = new ImageAsset('default', '/img/photo.jpg');
         $expectedSources = [
@@ -319,7 +319,7 @@ final class ImageExtensionTest extends TestCase
         self::assertSame($expectedSources, $sources);
     }
 
-    public function testRuntimeGetFallbackSrc(): void
+    public function testRuntimeGetFallbackSrc()
     {
         $asset = new ImageAsset('default', '/img/photo.jpg');
 
@@ -340,7 +340,7 @@ final class ImageExtensionTest extends TestCase
         self::assertSame('/generated/img/photo.jpg', $runtime->getFallbackSrc($asset));
     }
 
-    public function testRuntimeGetFallbackSrcset(): void
+    public function testRuntimeGetFallbackSrcset()
     {
         $asset = new ImageAsset('default', '/img/photo.jpg');
 
@@ -361,7 +361,7 @@ final class ImageExtensionTest extends TestCase
         self::assertSame('/img/photo_sm.jpg 640w, /img/photo_lg.jpg 1920w', $runtime->getFallbackSrcset($asset));
     }
 
-    public function testRuntimeGetFallbackSrcsetReturnsNull(): void
+    public function testRuntimeGetFallbackSrcsetReturnsNull()
     {
         $asset = new ImageAsset('default', '/img/photo.jpg');
 
@@ -382,7 +382,7 @@ final class ImageExtensionTest extends TestCase
         self::assertNull($runtime->getFallbackSrcset($asset));
     }
 
-    public function testRuntimeGetWidth(): void
+    public function testRuntimeGetWidth()
     {
         $asset = new ImageAsset('default', '/img/photo.jpg');
 
@@ -403,7 +403,7 @@ final class ImageExtensionTest extends TestCase
         self::assertSame(1024, $runtime->getWidth($asset));
     }
 
-    public function testRuntimeGetHeight(): void
+    public function testRuntimeGetHeight()
     {
         $asset = new ImageAsset('default', '/img/photo.jpg');
 

@@ -23,7 +23,7 @@ use Symfony\UX\Image\Twig\ImageRuntime;
 #[CoversClass(Image::class)]
 final class ImageComponentTest extends TestCase
 {
-    public function testRenderedReturnsNullWhenSrcIsNull(): void
+    public function testRenderedReturnsNullWhenSrcIsNull()
     {
         $renderer = $this->createMock(ImageRendererInterface::class);
         $renderer->expects(self::never())->method('render');
@@ -33,7 +33,7 @@ final class ImageComponentTest extends TestCase
         self::assertNull($component->rendered());
     }
 
-    public function testRenderedUsesRuntimeAndCachesResult(): void
+    public function testRenderedUsesRuntimeAndCachesResult()
     {
         $asset = new ImageAsset('default', '/default/photo.jpg');
         $rendered = new RenderedImage(
@@ -57,7 +57,7 @@ final class ImageComponentTest extends TestCase
         self::assertSame($rendered, $component->rendered());
     }
 
-    public function testRenderedPassesAllRenderingOptions(): void
+    public function testRenderedPassesAllRenderingOptions()
     {
         $asset = new ImageAsset('default', '/default/photo.jpg');
         $rendered = new RenderedImage($asset, [], '/default/photo.jpg', null, null, null, new ImageRenderOptions());

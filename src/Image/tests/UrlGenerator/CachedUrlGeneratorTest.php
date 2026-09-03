@@ -22,7 +22,7 @@ use Symfony\UX\Image\UrlGenerator\UrlGeneratorInterface;
 #[CoversClass(CachedUrlGenerator::class)]
 final class CachedUrlGeneratorTest extends TestCase
 {
-    public function testGenerateAssetUrlCachesResult(): void
+    public function testGenerateAssetUrlCachesResult()
     {
         $decoratedGenerator = $this->createMock(UrlGeneratorInterface::class);
         $decoratedGenerator->expects($this->once())
@@ -48,7 +48,7 @@ final class CachedUrlGeneratorTest extends TestCase
         $this->assertSame('https://example.com/image.jpg', $url);
     }
 
-    public function testGenerateAssetUrlReturnsFromCache(): void
+    public function testGenerateAssetUrlReturnsFromCache()
     {
         $decoratedGenerator = $this->createMock(UrlGeneratorInterface::class);
         $decoratedGenerator->expects($this->never())->method('generateAssetUrl');
@@ -71,7 +71,7 @@ final class CachedUrlGeneratorTest extends TestCase
         $this->assertSame('https://example.com/cached-image.jpg', $url);
     }
 
-    public function testGenerateVariantUrlCachesResult(): void
+    public function testGenerateVariantUrlCachesResult()
     {
         $decoratedGenerator = $this->createMock(UrlGeneratorInterface::class);
         $decoratedGenerator->expects($this->once())
@@ -98,7 +98,7 @@ final class CachedUrlGeneratorTest extends TestCase
         $this->assertSame('https://example.com/variant.jpg', $url);
     }
 
-    public function testGenerateVariantUrlReturnsFromCache(): void
+    public function testGenerateVariantUrlReturnsFromCache()
     {
         $decoratedGenerator = $this->createMock(UrlGeneratorInterface::class);
         $decoratedGenerator->expects($this->never())->method('generateVariantUrl');
@@ -122,7 +122,7 @@ final class CachedUrlGeneratorTest extends TestCase
         $this->assertSame('https://example.com/cached-variant.jpg', $url);
     }
 
-    public function testVariantCacheKeyIncludesTheCompleteTransformation(): void
+    public function testVariantCacheKeyIncludesTheCompleteTransformation()
     {
         $decoratedGenerator = $this->createMock(UrlGeneratorInterface::class);
         $decoratedGenerator->expects($this->exactly(2))
@@ -149,7 +149,7 @@ final class CachedUrlGeneratorTest extends TestCase
         self::assertCount(2, array_unique($keys));
     }
 
-    public function testVariantCacheKeyIncludesFallbackAssetPath(): void
+    public function testVariantCacheKeyIncludesFallbackAssetPath()
     {
         $keys = [];
         $cache = $this->createStub(CacheItemPoolInterface::class);
@@ -172,7 +172,7 @@ final class CachedUrlGeneratorTest extends TestCase
         self::assertCount(2, array_unique($keys));
     }
 
-    public function testGenerateAssetUrlFallsBackOnCacheFailure(): void
+    public function testGenerateAssetUrlFallsBackOnCacheFailure()
     {
         $decoratedGenerator = $this->createMock(UrlGeneratorInterface::class);
         $decoratedGenerator->expects($this->once())
@@ -191,7 +191,7 @@ final class CachedUrlGeneratorTest extends TestCase
         self::assertSame('https://example.com/fallback.jpg', $url);
     }
 
-    public function testGenerateVariantUrlFallsBackOnCacheFailure(): void
+    public function testGenerateVariantUrlFallsBackOnCacheFailure()
     {
         $decoratedGenerator = $this->createMock(UrlGeneratorInterface::class);
         $decoratedGenerator->expects($this->once())

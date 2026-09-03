@@ -36,7 +36,7 @@ use Symfony\UX\Image\UXImageBundle;
 final class UXImageExtensionTest extends TestCase
 {
     #[Test]
-    public function testGetAlias(): void
+    public function testGetAlias()
     {
         $extension = $this->getExtension();
 
@@ -44,7 +44,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadWithDefaultConfig(): void
+    public function testLoadWithDefaultConfig()
     {
         $container = $this->createContainer();
         $extension = $this->getExtension();
@@ -57,7 +57,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadRejectsProfileThatExceedsConfiguredVariantLimit(): void
+    public function testLoadRejectsProfileThatExceedsConfiguredVariantLimit()
     {
         $container = $this->createContainer();
 
@@ -79,7 +79,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testRegenerationResolverUsesExplicitProviderAndPersisterTags(): void
+    public function testRegenerationResolverUsesExplicitProviderAndPersisterTags()
     {
         $container = $this->createContainer();
         $this->getExtension()->load([], $container);
@@ -92,7 +92,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadAddsResponsiveDefaultProfile(): void
+    public function testLoadAddsResponsiveDefaultProfile()
     {
         $container = $this->createContainer();
         $extension = $this->getExtension();
@@ -115,7 +115,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadDoesNotOverrideExistingResponsiveDefault(): void
+    public function testLoadDoesNotOverrideExistingResponsiveDefault()
     {
         $container = $this->createContainer();
         $extension = $this->getExtension();
@@ -148,7 +148,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadRejectsUnknownProcessingMode(): void
+    public function testLoadRejectsUnknownProcessingMode()
     {
         $this->expectException(InvalidConfigurationException::class);
 
@@ -163,7 +163,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadSetsAllParameters(): void
+    public function testLoadSetsAllParameters()
     {
         $container = $this->createContainer();
         $extension = $this->getExtension();
@@ -198,7 +198,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadWithCacheDisabledRemovesCachedUrlGenerator(): void
+    public function testLoadWithCacheDisabledRemovesCachedUrlGenerator()
     {
         $container = $this->createContainer();
         $extension = $this->getExtension();
@@ -210,7 +210,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadWithCacheEnabled(): void
+    public function testLoadWithCacheEnabled()
     {
         $container = $this->createContainer();
         $extension = $this->getExtension();
@@ -237,7 +237,7 @@ final class UXImageExtensionTest extends TestCase
     // only ever be skipped (league/flysystem is in this package's require-dev).
 
     #[Test]
-    public function testPrependWithoutFrameworkExtension(): void
+    public function testPrependWithoutFrameworkExtension()
     {
         $container = $this->createContainer();
 
@@ -251,7 +251,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testPrependRegistersDoctrineTypeWhenDoctrineExtensionPresent(): void
+    public function testPrependRegistersDoctrineTypeWhenDoctrineExtensionPresent()
     {
         $container = $this->createContainer();
         $container->registerExtension(new StubDoctrineExtension());
@@ -276,7 +276,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testPrependDoesNotRegisterDoctrineTypeWithoutOptIn(): void
+    public function testPrependDoesNotRegisterDoctrineTypeWithoutOptIn()
     {
         $container = $this->createContainer();
         $container->registerExtension(new StubDoctrineExtension());
@@ -287,7 +287,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testPrependDoesNotRegisterDoctrineTypeWhenDoctrineExtensionAbsent(): void
+    public function testPrependDoesNotRegisterDoctrineTypeWhenDoctrineExtensionAbsent()
     {
         $container = $this->createContainer();
 
@@ -298,7 +298,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testPrependRejectsDoctrineTypeWithoutDoctrineBundle(): void
+    public function testPrependRejectsDoctrineTypeWithoutDoctrineBundle()
     {
         $container = $this->createContainer();
         $container->prependExtensionConfig('ux_image', ['doctrine_type' => true]);
@@ -310,7 +310,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadWithCustomDriver(): void
+    public function testLoadWithCustomDriver()
     {
         $container = $this->createContainer();
         $extension = $this->getExtension();
@@ -325,7 +325,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadWithImagickDriverWiresImageManager(): void
+    public function testLoadWithImagickDriverWiresImageManager()
     {
         if (!interface_exists(ImageManagerInterface::class)) {
             self::markTestSkipped('intervention/image is not installed.');
@@ -340,7 +340,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadWithGdDriverBuildsGdImageManager(): void
+    public function testLoadWithGdDriverBuildsGdImageManager()
     {
         if (!interface_exists(ImageManagerInterface::class)) {
             self::markTestSkipped('intervention/image is not installed.');
@@ -355,7 +355,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadWithVipsDriverThrowsWhenPackageMissing(): void
+    public function testLoadWithVipsDriverThrowsWhenPackageMissing()
     {
         if (class_exists(VipsDriver::class)) {
             self::markTestSkipped('intervention/image-driver-vips is installed; cannot test the missing-package guard.');
@@ -371,7 +371,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testDriverServiceTakesPrecedenceOverDriver(): void
+    public function testDriverServiceTakesPrecedenceOverDriver()
     {
         if (!interface_exists(ImageManagerInterface::class)) {
             self::markTestSkipped('intervention/image is not installed.');
@@ -392,7 +392,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testProcessorServiceBypassesDriverSelection(): void
+    public function testProcessorServiceBypassesDriverSelection()
     {
         $container = $this->createContainer();
         $extension = $this->getExtension();
@@ -409,7 +409,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadWithCustomStorages(): void
+    public function testLoadWithCustomStorages()
     {
         $container = $this->createContainer();
         $extension = $this->getExtension();
@@ -433,7 +433,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadWithoutConfiguredStoragesKeepsLocalStorageAlias(): void
+    public function testLoadWithoutConfiguredStoragesKeepsLocalStorageAlias()
     {
         $container = $this->createContainer();
         $extension = $this->getExtension();
@@ -446,7 +446,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadWithLocalOnlyStorageKeepsLocalAliasAndPreservesConfig(): void
+    public function testLoadWithLocalOnlyStorageKeepsLocalAliasAndPreservesConfig()
     {
         $container = $this->createContainer();
         $extension = $this->getExtension();
@@ -482,7 +482,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadWithFlysystemStorageRegistersRoutedBackend(): void
+    public function testLoadWithFlysystemStorageRegistersRoutedBackend()
     {
         if (!interface_exists(FilesystemOperator::class)) {
             self::markTestSkipped('league/flysystem is not installed.');
@@ -517,7 +517,7 @@ final class UXImageExtensionTest extends TestCase
     }
 
     #[Test]
-    public function testLoadWithAdapterServiceRoutesThroughRouter(): void
+    public function testLoadWithAdapterServiceRoutesThroughRouter()
     {
         $container = $this->createContainer();
         $extension = $this->getExtension();

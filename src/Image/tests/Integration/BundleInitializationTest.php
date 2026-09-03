@@ -28,7 +28,7 @@ use Symfony\UX\TwigComponent\TwigComponentBundle;
 #[RunTestsInSeparateProcesses]
 final class BundleInitializationTest extends TestCase
 {
-    public function testBundleBoots(): void
+    public function testBundleBoots()
     {
         $kernel = new UxImageTestKernel('test', true);
         $kernel->boot();
@@ -41,7 +41,7 @@ final class BundleInitializationTest extends TestCase
         $kernel->shutdown();
     }
 
-    public function testBundleSetsParameters(): void
+    public function testBundleSetsParameters()
     {
         $kernel = new UxImageTestKernel('test', true);
         $kernel->boot();

@@ -23,7 +23,7 @@ use Symfony\UX\Image\Storage\StreamStorageInterface;
 #[CoversClass(ProcessingWorkspace::class)]
 final class ProcessingWorkspaceTest extends TestCase
 {
-    public function testMaterializesStreamOnceAndCleansWorkspace(): void
+    public function testMaterializesStreamOnceAndCleansWorkspace()
     {
         $stream = fopen('php://temp', 'w+');
         $imageData = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', true);
@@ -41,7 +41,7 @@ final class ProcessingWorkspaceTest extends TestCase
         self::assertDirectoryDoesNotExist($directory);
     }
 
-    public function testRejectsOversizedStreamBeforeImageDecoding(): void
+    public function testRejectsOversizedStreamBeforeImageDecoding()
     {
         $stream = fopen('php://temp', 'w+');
         fwrite($stream, str_repeat('x', 11));
@@ -60,7 +60,7 @@ final class ProcessingWorkspaceTest extends TestCase
         );
     }
 
-    public function testMaterializesLocalImageAndBuildsWorkspacePath(): void
+    public function testMaterializesLocalImageAndBuildsWorkspacePath()
     {
         $source = tempnam(sys_get_temp_dir(), 'ux_image_source_');
         file_put_contents($source, base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', true));
@@ -76,7 +76,7 @@ final class ProcessingWorkspaceTest extends TestCase
         }
     }
 
-    public function testMaterializeLocalRejectsMissingFile(): void
+    public function testMaterializeLocalRejectsMissingFile()
     {
         $workspace = new ProcessingWorkspace();
 

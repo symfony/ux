@@ -19,7 +19,7 @@ use Symfony\UX\Image\Renderer\ImageRenderOptions;
 #[CoversClass(ImageRenderOptions::class)]
 final class ImageRenderOptionsTest extends TestCase
 {
-    public function testExposesNormalizedOptions(): void
+    public function testExposesNormalizedOptions()
     {
         $options = new ImageRenderOptions(
             sizes: '50vw',
@@ -45,7 +45,7 @@ final class ImageRenderOptionsTest extends TestCase
     }
 
     #[DataProvider('invalidOptions')]
-    public function testRejectsInvalidOptions(array $arguments, string $message): void
+    public function testRejectsInvalidOptions(array $arguments, string $message)
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($message);

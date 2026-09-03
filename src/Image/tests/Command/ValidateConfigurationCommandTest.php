@@ -27,7 +27,7 @@ use Symfony\UX\Image\Storage\StreamStorageInterface;
 #[CoversClass(ConfigurationValidator::class)]
 final class ValidateConfigurationCommandTest extends TestCase
 {
-    public function testExecuteWithNoWarnings(): void
+    public function testExecuteWithNoWarnings()
     {
         $storages = ['default' => ['flysystem_service' => 'test', 'public_url_prefix' => '/test']];
         $profiles = ['avatar' => ['formats' => ['png'], 'variants' => ['thumb' => ['width' => 100]]]];
@@ -42,7 +42,7 @@ final class ValidateConfigurationCommandTest extends TestCase
         $this->assertStringContainsString('Configuration validation passed', $tester->getDisplay());
     }
 
-    public function testExecuteWithWarnings(): void
+    public function testExecuteWithWarnings()
     {
         $storages = ['default' => ['flysystem_service' => 'test']];
         $profiles = ['avatar' => ['formats' => ['png']]];
@@ -58,7 +58,7 @@ final class ValidateConfigurationCommandTest extends TestCase
         $this->assertStringContainsString('declares no variants', $tester->getDisplay());
     }
 
-    public function testCommandDisplaysStorageDetails(): void
+    public function testCommandDisplaysStorageDetails()
     {
         $storages = [
             'cdn_storage' => [
@@ -83,7 +83,7 @@ final class ValidateConfigurationCommandTest extends TestCase
         $this->assertStringContainsString('cloudinary', $display);
     }
 
-    public function testExecuteFailsWhenConfiguredCodecCannotBeEncoded(): void
+    public function testExecuteFailsWhenConfiguredCodecCannotBeEncoded()
     {
         $storages = [];
         $profiles = ['avatar' => ['formats' => ['webp'], 'variants' => ['thumb' => ['width' => 100]]]];
@@ -97,21 +97,21 @@ final class ValidateConfigurationCommandTest extends TestCase
         self::assertStringContainsString('cannot encode "webp"', $tester->getDisplay());
     }
 
-    public function testValidatorReportsUnsupportedDriver(): void
+    public function testValidatorReportsUnsupportedDriver()
     {
         $validator = new ConfigurationValidator(new ValidationProcessor(), new ValidationStorage(), 'missing', [], []);
 
         self::assertSame(['The configured processor does not support driver "missing".'], $validator->validateDriver());
     }
 
-    public function testValidatorSkipsBuiltInDriverProbeForCustomProcessor(): void
+    public function testValidatorSkipsBuiltInDriverProbeForCustomProcessor()
     {
         $validator = new ConfigurationValidator(new ValidationProcessor(), new ValidationStorage(), null, [], []);
 
         self::assertSame([], $validator->validateDriver());
     }
 
-    public function testValidatorRequiresStreamStorage(): void
+    public function testValidatorRequiresStreamStorage()
     {
         $validator = new ConfigurationValidator(
             new ValidationProcessor(),
@@ -124,14 +124,14 @@ final class ValidateConfigurationCommandTest extends TestCase
         self::assertStringContainsString('StreamStorageInterface', $validator->validateStorages()[0]);
     }
 
-    public function testValidatorDetectsCorruptedStorageRoundTrip(): void
+    public function testValidatorDetectsCorruptedStorageRoundTrip()
     {
         $validator = new ConfigurationValidator(new ValidationProcessor(), new ValidationStorage(corruptRead: true), 'test', [], []);
 
         self::assertStringContainsString('returned different bytes', $validator->validateStorages()[0]);
     }
 
-    public function testValidatorReportsProbeAndCleanupFailures(): void
+    public function testValidatorReportsProbeAndCleanupFailures()
     {
         $validator = new ConfigurationValidator(
             new ValidationProcessor(),

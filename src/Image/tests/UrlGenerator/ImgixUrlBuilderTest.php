@@ -25,12 +25,12 @@ final class ImgixUrlBuilderTest extends TestCase
         $this->builder = new ImgixUrlBuilder();
     }
 
-    public function testGetProviderName(): void
+    public function testGetProviderName()
     {
         $this->assertSame('imgix', ImgixUrlBuilder::getProviderName());
     }
 
-    public function testBuildUrlWithWidthAndHeight(): void
+    public function testBuildUrlWithWidthAndHeight()
     {
         $baseUrl = 'https://demo.imgix.net';
         $path = 'sample.jpg';
@@ -51,7 +51,7 @@ final class ImgixUrlBuilderTest extends TestCase
         $this->assertStringContainsString('auto=format%2Ccompress', $url);
     }
 
-    public function testBuildUrlWithDifferentModes(): void
+    public function testBuildUrlWithDifferentModes()
     {
         $baseUrl = 'https://demo.imgix.net';
         $path = 'sample.jpg';
@@ -68,19 +68,19 @@ final class ImgixUrlBuilderTest extends TestCase
         $this->assertStringContainsString('fit=fillmax', $url);
     }
 
-    public function testRejectsUnknownMode(): void
+    public function testRejectsUnknownMode()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->builder->buildUrl('https://demo.imgix.net', 'sample.jpg', [], ['mode' => 'unknown']);
     }
 
-    public function testRejectsCredentialedBaseUrl(): void
+    public function testRejectsCredentialedBaseUrl()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->builder->buildUrl('https://user:secret@demo.imgix.net', 'sample.jpg', [], []);
     }
 
-    public function testBuildUrlWithMinimalConfig(): void
+    public function testBuildUrlWithMinimalConfig()
     {
         $baseUrl = 'https://demo.imgix.net';
         $path = 'sample.jpg';
@@ -92,7 +92,7 @@ final class ImgixUrlBuilderTest extends TestCase
         $this->assertSame('https://demo.imgix.net/sample.jpg?auto=format%2Ccompress', $url);
     }
 
-    public function testBuildUrlWithExistingQueryParams(): void
+    public function testBuildUrlWithExistingQueryParams()
     {
         $baseUrl = 'https://demo.imgix.net/folder?existing=param';
         $path = 'sample.jpg';

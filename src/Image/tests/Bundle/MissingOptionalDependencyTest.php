@@ -55,7 +55,7 @@ final class MissingOptionalDependencyTest extends TestCase
         ];
     }
 
-    public function testFlysystemStorageThrowsWhenLibraryMissing(): void
+    public function testFlysystemStorageThrowsWhenLibraryMissing()
     {
         // Running counterpart to the previously skipped
         // UXImageExtensionTest::testLoadWithFlysystemStorageThrowsWhenPackageMissing.
@@ -72,7 +72,7 @@ final class MissingOptionalDependencyTest extends TestCase
         self::assertStringContainsString('Flysystem', $result['message'] ?? '');
     }
 
-    public function testBundleBootsWithoutFlysystemUsingLocalStorage(): void
+    public function testBundleBootsWithoutFlysystemUsingLocalStorage()
     {
         // No Flysystem storage configured: the bundle falls back to the local
         // filesystem storage and boots cleanly without league/flysystem.
@@ -85,7 +85,7 @@ final class MissingOptionalDependencyTest extends TestCase
         self::assertSame(['jpeg'], $result['process']['variant_formats'] ?? null);
     }
 
-    public function testImagickDriverThrowsWhenInterventionMissing(): void
+    public function testImagickDriverThrowsWhenInterventionMissing()
     {
         $result = $this->bootInIsolation([self::INTERVENTION], [
             'ux_image' => ['driver' => 'imagick'],
@@ -96,7 +96,7 @@ final class MissingOptionalDependencyTest extends TestCase
         self::assertStringContainsString('intervention/image', $result['message'] ?? '');
     }
 
-    public function testVipsDriverThrowsWhenInterventionMissing(): void
+    public function testVipsDriverThrowsWhenInterventionMissing()
     {
         $result = $this->bootInIsolation([self::INTERVENTION], [
             'ux_image' => ['driver' => 'vips'],
@@ -107,7 +107,7 @@ final class MissingOptionalDependencyTest extends TestCase
         self::assertStringContainsString('intervention/image', $result['message'] ?? '');
     }
 
-    public function testBundleBootsAndProcessesWithoutInterventionOnGdDriver(): void
+    public function testBundleBootsAndProcessesWithoutInterventionOnGdDriver()
     {
         // intervention/image absent: the native gd processor still handles the
         // default "gd" driver, so an image can be stored, resized and rendered.
@@ -121,7 +121,7 @@ final class MissingOptionalDependencyTest extends TestCase
         self::assertNotSame('', $result['process']['fallback_src'] ?? '');
     }
 
-    public function testBundleBootsWithoutDoctrineDbal(): void
+    public function testBundleBootsWithoutDoctrineDbal()
     {
         // doctrine/dbal absent: ImageAssetType is only registered when the
         // "doctrine" DI extension is present, so its registration is skipped
@@ -131,7 +131,7 @@ final class MissingOptionalDependencyTest extends TestCase
         self::assertSame('ok', $result['status'], $this->explain($result));
     }
 
-    public function testBundleBootsWithoutTwigComponent(): void
+    public function testBundleBootsWithoutTwigComponent()
     {
         // symfony/ux-twig-component absent: the companion bundle is not active,
         // so UXImageBundle does not import its component service.
@@ -140,7 +140,7 @@ final class MissingOptionalDependencyTest extends TestCase
         self::assertSame('ok', $result['status'], $this->explain($result));
     }
 
-    public function testTwigComponentRegisteredWhenPackagePresent(): void
+    public function testTwigComponentRegisteredWhenPackagePresent()
     {
         // Positive counterpart: with nothing hidden TwigComponent's factory knows
         // the ux:image component, proving the gated registration actually wires it.
@@ -150,7 +150,7 @@ final class MissingOptionalDependencyTest extends TestCase
         self::assertTrue($result['component_registered'] ?? false);
     }
 
-    public function testTwigComponentNotRegisteredWhenBundleIsInactive(): void
+    public function testTwigComponentNotRegisteredWhenBundleIsInactive()
     {
         $result = $this->bootInIsolation([], [
             'twig_component_enabled' => false,
@@ -162,7 +162,7 @@ final class MissingOptionalDependencyTest extends TestCase
         self::assertFalse($result['has']['ux_image.twig.component'] ?? false);
     }
 
-    public function testBundleBootsAndProcessesWithNoOptionalPackages(): void
+    public function testBundleBootsAndProcessesWithNoOptionalPackages()
     {
         $result = $this->bootInIsolation([
             self::FLYSYSTEM,

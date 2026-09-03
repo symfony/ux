@@ -36,7 +36,7 @@ final class LocalStorageTest extends TestCase
         $this->removeDirectory($this->storageRoot);
     }
 
-    public function testStore(): void
+    public function testStore()
     {
         $storage = new LocalStorage([], $this->storageRoot);
 
@@ -51,7 +51,7 @@ final class LocalStorageTest extends TestCase
         self::assertStringEndsWith('.png', $path);
     }
 
-    public function testStoreWithDirectory(): void
+    public function testStoreWithDirectory()
     {
         $storage = new LocalStorage(['media' => []], $this->storageRoot);
 
@@ -66,7 +66,7 @@ final class LocalStorageTest extends TestCase
         self::assertStringContainsString('avatars/', $path);
     }
 
-    public function testDelete(): void
+    public function testDelete()
     {
         $storage = new LocalStorage([], $this->storageRoot);
 
@@ -82,7 +82,7 @@ final class LocalStorageTest extends TestCase
         self::assertFalse($storage->exists($asset));
     }
 
-    public function testDeleteNonExistentFile(): void
+    public function testDeleteNonExistentFile()
     {
         $storage = new LocalStorage([], $this->storageRoot);
         $asset = new ImageAsset('default_public', '/nonexistent.jpg');
@@ -90,7 +90,7 @@ final class LocalStorageTest extends TestCase
         self::assertFalse($storage->delete($asset));
     }
 
-    public function testDeleteRemovesOriginalAndVariants(): void
+    public function testDeleteRemovesOriginalAndVariants()
     {
         $storage = new LocalStorage([], $this->storageRoot);
         mkdir($this->storageRoot.'/default_public', 0o777, true);
@@ -106,7 +106,7 @@ final class LocalStorageTest extends TestCase
         self::assertFalse($storage->delete($asset));
     }
 
-    public function testExists(): void
+    public function testExists()
     {
         $storage = new LocalStorage([], $this->storageRoot);
 
@@ -122,7 +122,7 @@ final class LocalStorageTest extends TestCase
         self::assertTrue($storage->exists($existingAsset));
     }
 
-    public function testGetPublicUrlWithPrefix(): void
+    public function testGetPublicUrlWithPrefix()
     {
         $storages = [
             'cdn_storage' => [
@@ -136,7 +136,7 @@ final class LocalStorageTest extends TestCase
         self::assertSame('/uploads/images/photo.jpg', $storage->getPublicUrl($asset));
     }
 
-    public function testGetPublicUrlWithoutPrefix(): void
+    public function testGetPublicUrlWithoutPrefix()
     {
         $storage = new LocalStorage([], $this->storageRoot);
         $asset = new ImageAsset('default_public', '/images/photo.jpg');
@@ -144,7 +144,7 @@ final class LocalStorageTest extends TestCase
         self::assertSame('/images/photo.jpg', $storage->getPublicUrl($asset));
     }
 
-    public function testGetPublicUrlWithVariant(): void
+    public function testGetPublicUrlWithVariant()
     {
         $storages = [
             'default_public' => [
@@ -158,7 +158,7 @@ final class LocalStorageTest extends TestCase
         self::assertSame('/uploads/thumb.jpg', $storage->getPublicUrl($asset, '/thumb.jpg'));
     }
 
-    public function testGetFilePath(): void
+    public function testGetFilePath()
     {
         $storage = new LocalStorage([], $this->storageRoot);
         $asset = new ImageAsset('default_public', '/images/photo.jpg');
@@ -166,7 +166,7 @@ final class LocalStorageTest extends TestCase
         self::assertSame($this->storageRoot.'/default_public/images/photo.jpg', $storage->getFilePath($asset));
     }
 
-    public function testRejectsSymlinkEscapeWhenFinalParentDoesNotExist(): void
+    public function testRejectsSymlinkEscapeWhenFinalParentDoesNotExist()
     {
         $storage = new LocalStorage([], $this->storageRoot);
         $storageDirectory = $this->storageRoot.'/default_public';
@@ -185,7 +185,7 @@ final class LocalStorageTest extends TestCase
         }
     }
 
-    public function testStoreRejectsSymlinkEscape(): void
+    public function testStoreRejectsSymlinkEscape()
     {
         $storage = new LocalStorage([], $this->storageRoot);
         $storageDirectory = $this->storageRoot.'/default_public';
@@ -205,7 +205,7 @@ final class LocalStorageTest extends TestCase
         }
     }
 
-    public function testClientFilenameCannotChooseStoredExtension(): void
+    public function testClientFilenameCannotChooseStoredExtension()
     {
         $storage = new LocalStorage([], $this->storageRoot);
         $tmpFile = $this->storageRoot.'/source';
@@ -218,7 +218,7 @@ final class LocalStorageTest extends TestCase
         self::assertStringNotContainsString('.php', $path);
     }
 
-    public function testStreamWriteNeverOverwritesImmutableObject(): void
+    public function testStreamWriteNeverOverwritesImmutableObject()
     {
         $storage = new LocalStorage([], $this->storageRoot);
         mkdir($this->storageRoot.'/default_public', 0o777, true);
@@ -236,7 +236,7 @@ final class LocalStorageTest extends TestCase
         }
     }
 
-    public function testStreamRoundTripAndDeletion(): void
+    public function testStreamRoundTripAndDeletion()
     {
         $storage = new LocalStorage([], $this->storageRoot);
         $input = fopen('php://temp', 'w+');
@@ -255,7 +255,7 @@ final class LocalStorageTest extends TestCase
         self::assertFileDoesNotExist($this->storageRoot.'/default_public/generated/image.bin');
     }
 
-    public function testReadStreamRejectsMissingObject(): void
+    public function testReadStreamRejectsMissingObject()
     {
         $this->expectException(StorageException::class);
         $this->expectExceptionMessage('Failed to read');
@@ -263,14 +263,14 @@ final class LocalStorageTest extends TestCase
         new LocalStorage([], $this->storageRoot)->readStream('default_public', new StoragePath('missing.jpg'));
     }
 
-    public function testWriteStreamRejectsInvalidResource(): void
+    public function testWriteStreamRejectsInvalidResource()
     {
         $this->expectException(\InvalidArgumentException::class);
 
         new LocalStorage([], $this->storageRoot)->writeStream('default_public', new StoragePath('image.jpg'), false);
     }
 
-    public function testRejectsUnknownStorage(): void
+    public function testRejectsUnknownStorage()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Unknown image storage');
@@ -278,7 +278,7 @@ final class LocalStorageTest extends TestCase
         new LocalStorage([], $this->storageRoot)->getFilePath(new ImageAsset('missing', '/image.jpg'));
     }
 
-    public function testRejectsNonImageBeforeWriting(): void
+    public function testRejectsNonImageBeforeWriting()
     {
         $storage = new LocalStorage([], $this->storageRoot);
         $tmpFile = $this->storageRoot.'/payload';
@@ -293,7 +293,7 @@ final class LocalStorageTest extends TestCase
     }
 
     #[DataProvider('unsafePaths')]
-    public function testRejectsUnsafeAssetPaths(string $path): void
+    public function testRejectsUnsafeAssetPaths(string $path)
     {
         $storage = new LocalStorage([], $this->storageRoot);
 

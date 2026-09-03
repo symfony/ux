@@ -40,7 +40,7 @@ final class DefaultImageRendererTest extends TestCase
         };
     }
 
-    public function testRenderWithImageAsset(): void
+    public function testRenderWithImageAsset()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -52,7 +52,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame('cdn', $result->asset->storageName);
     }
 
-    public function testRenderWithVariants(): void
+    public function testRenderWithVariants()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -84,7 +84,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertStringContainsString('photo_desktop.webp', $webpSource['srcset']);
     }
 
-    public function testSourceUsesPersistedMimeTypeAndCanonicalJpegFallback(): void
+    public function testSourceUsesPersistedMimeTypeAndCanonicalJpegFallback()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
         $explicit = $renderer->render(new ImageAsset('default', '/photo.jpg', variants: [
@@ -98,7 +98,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame('image/jpeg', $jpeg->sources[0]['type']);
     }
 
-    public function testRenderWithNoVariantsReturnsEmptySources(): void
+    public function testRenderWithNoVariantsReturnsEmptySources()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -108,7 +108,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame([], $result->sources);
     }
 
-    public function testDimensionsFromAsset(): void
+    public function testDimensionsFromAsset()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -119,7 +119,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame(768, $result->height);
     }
 
-    public function testDimensionsFromVariant(): void
+    public function testDimensionsFromVariant()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -135,7 +135,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame(1080, $result->height);
     }
 
-    public function testFallbackSrc(): void
+    public function testFallbackSrc()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -145,7 +145,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame('/generated/default/photo.jpg', $result->fallbackSrc);
     }
 
-    public function testFallbackSrcUsesDefaultFormatVariant(): void
+    public function testFallbackSrcUsesDefaultFormatVariant()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -160,7 +160,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame('/generated/default/photo_main.jpg', $result->fallbackSrc);
     }
 
-    public function testRenderOptionsArePassedThrough(): void
+    public function testRenderOptionsArePassedThrough()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -182,7 +182,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame('sync', $result->options->decoding);
     }
 
-    public function testDefaultSizesOption(): void
+    public function testDefaultSizesOption()
     {
         $renderer = new DefaultImageRenderer(
             $this->urlGenerator,
@@ -195,7 +195,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame('(max-width: 768px) 100vw, 50vw', $result->options->sizes);
     }
 
-    public function testSizesFromOptionsOverridesDefault(): void
+    public function testSizesFromOptionsOverridesDefault()
     {
         $renderer = new DefaultImageRenderer(
             $this->urlGenerator,
@@ -209,7 +209,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame('50vw', $result->options->sizes);
     }
 
-    public function testProfileRenderingDefaultsAreUsedAndOptionsStillWin(): void
+    public function testProfileRenderingDefaultsAreUsedAndOptionsStillWin()
     {
         $profiles = new ProfileRegistry([
             'hero' => [
@@ -233,7 +233,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame('50vw', $explicit->options->sizes);
     }
 
-    public function testMediaOnCanonicalFormatVariantsCreatesArtDirectionSources(): void
+    public function testMediaOnCanonicalFormatVariantsCreatesArtDirectionSources()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
         $asset = new ImageAsset('default', '/photo.jpg', variants: [
@@ -251,7 +251,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame('(min-width: 641px)', $rendered->sources[1]['media']);
     }
 
-    public function testVariantFiltering(): void
+    public function testVariantFiltering()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -271,7 +271,7 @@ final class DefaultImageRendererTest extends TestCase
         }
     }
 
-    public function testVariantFilteringUsesVariantDimensions(): void
+    public function testVariantFilteringUsesVariantDimensions()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
         $asset = new ImageAsset('default', '/photo.jpg', width: 1600, height: 900, variants: [
@@ -286,7 +286,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame(300, $result->height);
     }
 
-    public function testUnknownVariantFailsExplicitly(): void
+    public function testUnknownVariantFailsExplicitly()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
         $asset = new ImageAsset('default', '/photo.jpg', variants: [
@@ -299,7 +299,7 @@ final class DefaultImageRendererTest extends TestCase
         $renderer->render($asset, new ImageRenderOptions(variant: 'missing'));
     }
 
-    public function testVariantOnAssetWithoutVariantsFailsExplicitly(): void
+    public function testVariantOnAssetWithoutVariantsFailsExplicitly()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -309,7 +309,7 @@ final class DefaultImageRendererTest extends TestCase
         $renderer->render(new ImageAsset('default', '/photo.jpg'), new ImageRenderOptions(variant: 'thumbnail'));
     }
 
-    public function testExplicitSrcsetOverridesGeneratedFallback(): void
+    public function testExplicitSrcsetOverridesGeneratedFallback()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
         $asset = new ImageAsset('default', '/photo.jpg', variants: [
@@ -321,7 +321,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame('/small.jpg 400w, /large.jpg 800w', $result->fallbackSrcset);
     }
 
-    public function testRenderWithMultiRatioVariants(): void
+    public function testRenderWithMultiRatioVariants()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -355,7 +355,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertStringContainsString('photo_mobile.webp', $mobileWebp['srcset']);
     }
 
-    public function testArtDirectionGroupsOnlyContainActualVariants(): void
+    public function testArtDirectionGroupsOnlyContainActualVariants()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -372,7 +372,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertStringContainsString('photo_mobile.webp', $result->sources[0]['srcset']);
     }
 
-    public function testDensityDescriptorInSrcset(): void
+    public function testDensityDescriptorInSrcset()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -400,7 +400,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertStringNotContainsString('640w', $webpSource['srcset']);
     }
 
-    public function testSrcsetEntryWithNoWidthNoDensity(): void
+    public function testSrcsetEntryWithNoWidthNoDensity()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -425,7 +425,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame('/generated/default/photo.webp', $webpSource['srcset']);
     }
 
-    public function testFallbackSrcWithNoVariantsUsesAssetUrl(): void
+    public function testFallbackSrcWithNoVariantsUsesAssetUrl()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -435,7 +435,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame('/generated/default/photo.jpg', $result->fallbackSrc);
     }
 
-    public function testFallbackSrcsetWithVariants(): void
+    public function testFallbackSrcsetWithVariants()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -453,7 +453,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertStringContainsString('1920w', $result->fallbackSrcset);
     }
 
-    public function testFallbackSrcsetIsNullWhenNoVariants(): void
+    public function testFallbackSrcsetIsNullWhenNoVariants()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -463,7 +463,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertNull($result->fallbackSrcset);
     }
 
-    public function testFallbackSrcsetUsesCanonicalFormatKey(): void
+    public function testFallbackSrcsetUsesCanonicalFormatKey()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -476,7 +476,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame('/generated/default/photo.jpeg 800w', $result->fallbackSrcset);
     }
 
-    public function testFallbackSrcWithPrimaryVariantPath(): void
+    public function testFallbackSrcWithPrimaryVariantPath()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -493,7 +493,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame('/generated/default/photo.jpg', $result->fallbackSrc);
     }
 
-    public function testDimensionsResolvedFromVariantWhenAssetHasNone(): void
+    public function testDimensionsResolvedFromVariantWhenAssetHasNone()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -509,7 +509,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame(768, $result->height);
     }
 
-    public function testSourcesWithVariantsMissingPathFailExplicitly(): void
+    public function testSourcesWithVariantsMissingPathFailExplicitly()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('path');
@@ -522,7 +522,7 @@ final class DefaultImageRendererTest extends TestCase
         ]);
     }
 
-    public function testPreferredFormatsOrder(): void
+    public function testPreferredFormatsOrder()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -543,7 +543,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame('image/png', $result->sources[3]['type']);
     }
 
-    public function testMultiRatioWithDensityDescriptors(): void
+    public function testMultiRatioWithDensityDescriptors()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -564,7 +564,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertSame('(max-width: 768px)', $source['media']);
     }
 
-    public function testMultiRatioWithoutMediaAttribute(): void
+    public function testMultiRatioWithoutMediaAttribute()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
 
@@ -580,7 +580,7 @@ final class DefaultImageRendererTest extends TestCase
         self::assertArrayNotHasKey('media', $result->sources[0]);
     }
 
-    public function testArtDirectionSourcesPrecedeUnconditionalFallbackSource(): void
+    public function testArtDirectionSourcesPrecedeUnconditionalFallbackSource()
     {
         $renderer = new DefaultImageRenderer($this->urlGenerator);
         $asset = new ImageAsset('default', '/default/photo.jpg', variants: [

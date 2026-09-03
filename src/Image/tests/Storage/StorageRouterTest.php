@@ -57,7 +57,7 @@ final class StorageRouterTest extends TestCase
         new SymfonyFilesystem()->remove(\dirname($this->localRoot));
     }
 
-    public function testStoreRoutesConfiguredNameThroughFlysystemNotLocal(): void
+    public function testStoreRoutesConfiguredNameThroughFlysystemNotLocal()
     {
         $flysystem = $this->flysystemOperator();
         $router = new StorageRouter(
@@ -74,7 +74,7 @@ final class StorageRouterTest extends TestCase
         self::assertDirectoryDoesNotExist($this->localRoot.'/media');
     }
 
-    public function testRoutesConfiguredNameThroughCustomAdapterService(): void
+    public function testRoutesConfiguredNameThroughCustomAdapterService()
     {
         $adapter = new RecordingStorage();
         $router = new StorageRouter(
@@ -94,7 +94,7 @@ final class StorageRouterTest extends TestCase
         self::assertSame(['store', 'delete', 'exists', 'getPublicUrl', 'getFilePath'], $adapter->calls);
     }
 
-    public function testRejectsUnconfiguredStorageName(): void
+    public function testRejectsUnconfiguredStorageName()
     {
         $router = new StorageRouter(new ServiceLocator([]), $this->localStorage());
 
@@ -103,7 +103,7 @@ final class StorageRouterTest extends TestCase
         $router->store($this->uploadedFile(), 'default');
     }
 
-    public function testDeclaredLocalOnlyNameFallsBackToLocalStorageHonoringPublicUrlPrefix(): void
+    public function testDeclaredLocalOnlyNameFallsBackToLocalStorageHonoringPublicUrlPrefix()
     {
         // "assets" is a declared, local-only storage: it has no entry in the backend
         // locator, so the router falls back to LocalStorage, which applies the
@@ -122,7 +122,7 @@ final class StorageRouterTest extends TestCase
         self::assertSame('https://cdn.example.com/assets/photo.jpg', $url);
     }
 
-    public function testNonStreamBackendFailureImplementsPackageExceptionMarker(): void
+    public function testNonStreamBackendFailureImplementsPackageExceptionMarker()
     {
         $router = new StorageRouter(
             new ServiceLocator(['custom' => static fn (): StorageInterface => new RecordingStorage()]),
@@ -138,7 +138,7 @@ final class StorageRouterTest extends TestCase
         }
     }
 
-    public function testDelegatesEveryStreamOperation(): void
+    public function testDelegatesEveryStreamOperation()
     {
         $stream = fopen('php://temp', 'w+');
         $backend = $this->createMock(StreamStorageInterface::class);
@@ -158,7 +158,7 @@ final class StorageRouterTest extends TestCase
     }
 
     #[RequiresPhpExtension('gd')]
-    public function testGdProcessingUsesFlysystemStreamsEndToEnd(): void
+    public function testGdProcessingUsesFlysystemStreamsEndToEnd()
     {
         $flysystem = $this->flysystemOperator();
         $router = new StorageRouter(

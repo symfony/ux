@@ -21,7 +21,7 @@ use Symfony\UX\Image\UXImageBundle;
 #[CoversClass(UXImageBundle::class)]
 final class ConfigurationTest extends TestCase
 {
-    public function testDefaultConfiguration(): void
+    public function testDefaultConfiguration()
     {
         $config = $this->processConfiguration([]);
 
@@ -44,7 +44,7 @@ final class ConfigurationTest extends TestCase
         ], $config['limits']);
     }
 
-    public function testProcessingLimitsAreConfigurableAndPositive(): void
+    public function testProcessingLimitsAreConfigurableAndPositive()
     {
         $config = $this->processConfiguration(['limits' => ['max_input_bytes' => 1234, 'max_variants' => 3]]);
 
@@ -55,56 +55,56 @@ final class ConfigurationTest extends TestCase
         $this->processConfiguration(['limits' => ['max_width' => 0]]);
     }
 
-    public function testDriverAcceptsGd(): void
+    public function testDriverAcceptsGd()
     {
         $config = $this->processConfiguration(['driver' => 'gd']);
 
         self::assertSame('gd', $config['driver']);
     }
 
-    public function testDriverAcceptsImagick(): void
+    public function testDriverAcceptsImagick()
     {
         $config = $this->processConfiguration(['driver' => 'imagick']);
 
         self::assertSame('imagick', $config['driver']);
     }
 
-    public function testDriverAcceptsVips(): void
+    public function testDriverAcceptsVips()
     {
         $config = $this->processConfiguration(['driver' => 'vips']);
 
         self::assertSame('vips', $config['driver']);
     }
 
-    public function testDriverAcceptsCustomProcessorName(): void
+    public function testDriverAcceptsCustomProcessorName()
     {
         $config = $this->processConfiguration(['driver' => 'acme']);
 
         self::assertSame('acme', $config['driver']);
     }
 
-    public function testDriverServiceDefaultsToNull(): void
+    public function testDriverServiceDefaultsToNull()
     {
         $config = $this->processConfiguration([]);
 
         self::assertNull($config['driver_service']);
     }
 
-    public function testDriverServiceCanBeSet(): void
+    public function testDriverServiceCanBeSet()
     {
         $config = $this->processConfiguration(['driver_service' => 'app.custom_driver']);
 
         self::assertSame('app.custom_driver', $config['driver_service']);
     }
 
-    public function testProcessorServiceCanBeSet(): void
+    public function testProcessorServiceCanBeSet()
     {
         $config = $this->processConfiguration(['processor_service' => 'app.image_processor']);
 
         self::assertSame('app.image_processor', $config['processor_service']);
     }
 
-    public function testProfileConfiguration(): void
+    public function testProfileConfiguration()
     {
         $config = $this->processConfiguration([
             'profiles' => [
@@ -133,7 +133,7 @@ final class ConfigurationTest extends TestCase
         self::assertSame(90, $config['profiles']['avatar']['variants']['thumb']['quality']);
     }
 
-    public function testUnsafeProfileDirectoryIsRejected(): void
+    public function testUnsafeProfileDirectoryIsRejected()
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('safe, non-empty relative path');
@@ -147,7 +147,7 @@ final class ConfigurationTest extends TestCase
         ]);
     }
 
-    public function testProfileVariantDefaults(): void
+    public function testProfileVariantDefaults()
     {
         $config = $this->processConfiguration([
             'profiles' => [
@@ -170,7 +170,7 @@ final class ConfigurationTest extends TestCase
         self::assertNull($variant['media']);
     }
 
-    public function testProfileWithEmptyFormatsIsRejected(): void
+    public function testProfileWithEmptyFormatsIsRejected()
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('At least one output format is required');
@@ -185,7 +185,7 @@ final class ConfigurationTest extends TestCase
         ]);
     }
 
-    public function testProfileVariantRequiresAtLeastOnePositiveDimension(): void
+    public function testProfileVariantRequiresAtLeastOnePositiveDimension()
     {
         $rejections = 0;
         foreach ([[], ['width' => 0], ['height' => -1]] as $variant) {
@@ -206,7 +206,7 @@ final class ConfigurationTest extends TestCase
         self::assertSame(3, $rejections);
     }
 
-    public function testStorageCanBeDeclaredLocalOnly(): void
+    public function testStorageCanBeDeclaredLocalOnly()
     {
         // A storage declared with neither "flysystem_service" nor "adapter_service"
         // is valid: it is backed by local storage, and its "public_url_prefix"/"cdn"
@@ -232,7 +232,7 @@ final class ConfigurationTest extends TestCase
         self::assertSame('https://example.imgix.net', $config['storages']['assets']['cdn']['base_url']);
     }
 
-    public function testStorageWithFlysystemService(): void
+    public function testStorageWithFlysystemService()
     {
         $config = $this->processConfiguration([
             'storages' => [
@@ -247,7 +247,7 @@ final class ConfigurationTest extends TestCase
         self::assertSame('/uploads', $config['storages']['media']['public_url_prefix']);
     }
 
-    public function testStorageWithAdapterService(): void
+    public function testStorageWithAdapterService()
     {
         $config = $this->processConfiguration([
             'storages' => [
@@ -260,7 +260,7 @@ final class ConfigurationTest extends TestCase
         self::assertSame('app.custom_storage', $config['storages']['custom']['adapter_service']);
     }
 
-    public function testStorageRejectsTwoBackends(): void
+    public function testStorageRejectsTwoBackends()
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('cannot configure both');
@@ -275,7 +275,7 @@ final class ConfigurationTest extends TestCase
         ]);
     }
 
-    public function testStorageUrlAdapterIsIndependentFromStorageAdapter(): void
+    public function testStorageUrlAdapterIsIndependentFromStorageAdapter()
     {
         $config = $this->processConfiguration([
             'storages' => [
@@ -290,7 +290,7 @@ final class ConfigurationTest extends TestCase
         self::assertSame('signed', $config['storages']['custom']['url_adapter']);
     }
 
-    public function testStorageCdnRequiresBaseUrl(): void
+    public function testStorageCdnRequiresBaseUrl()
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('cdn.base_url');
@@ -308,7 +308,7 @@ final class ConfigurationTest extends TestCase
         ]);
     }
 
-    public function testStorageCdnWithValidConfig(): void
+    public function testStorageCdnWithValidConfig()
     {
         $config = $this->processConfiguration([
             'storages' => [
@@ -326,7 +326,7 @@ final class ConfigurationTest extends TestCase
         self::assertSame('https://example.imgix.net', $config['storages']['cdn']['cdn']['base_url']);
     }
 
-    public function testStorageCdnAcceptsCustomBuilderName(): void
+    public function testStorageCdnAcceptsCustomBuilderName()
     {
         $config = $this->processConfiguration([
             'storages' => [
@@ -342,7 +342,7 @@ final class ConfigurationTest extends TestCase
         self::assertSame('bunny', $config['storages']['cdn']['cdn']['provider']);
     }
 
-    public function testCacheConfiguration(): void
+    public function testCacheConfiguration()
     {
         $config = $this->processConfiguration([
             'cache' => [
@@ -357,7 +357,7 @@ final class ConfigurationTest extends TestCase
         self::assertSame(7200, $config['cache']['ttl']);
     }
 
-    public function testPreferredFormatsOverride(): void
+    public function testPreferredFormatsOverride()
     {
         $config = $this->processConfiguration([
             'preferred_formats' => ['webp', 'png'],

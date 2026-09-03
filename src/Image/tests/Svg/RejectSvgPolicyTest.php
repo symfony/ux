@@ -19,7 +19,7 @@ use Symfony\UX\Image\Svg\RejectSvgPolicy;
 #[CoversClass(RejectSvgPolicy::class)]
 final class RejectSvgPolicyTest extends TestCase
 {
-    public function testRejectsSvgByDefault(): void
+    public function testRejectsSvgByDefault()
     {
         $path = tempnam(sys_get_temp_dir(), 'ux-image-svg-');
         file_put_contents($path, '<svg xmlns="http://www.w3.org/2000/svg"/>');
