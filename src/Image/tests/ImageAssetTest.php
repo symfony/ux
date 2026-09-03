@@ -144,6 +144,7 @@ final class ImageAssetTest extends TestCase
         self::assertNull($asset->getDefaultFormat());
         self::assertNull($asset->getPrimaryVariantForFormat('webp'));
         self::assertTrue($asset->getImageSourceSet()->isEmpty());
+        self::assertSame($asset->getImageSourceSet(), $asset->getImageSourceSet());
     }
 
     public function testRejectsStorageNameTraversal()

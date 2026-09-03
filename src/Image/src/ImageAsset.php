@@ -20,6 +20,8 @@ final class ImageAsset
 {
     public const SCHEMA_VERSION = 1;
 
+    private readonly ImageSourceSet $sourceSet;
+
     /**
      * @param array<string, list<array<string, mixed>>> $variants
      */
@@ -47,7 +49,7 @@ final class ImageAsset
         if (null !== $width && $width < 1 || null !== $height && $height < 1) {
             throw new Exception\InvalidArgumentException('Image dimensions must be positive when provided.');
         }
-        ImageSourceSet::fromArray($variants);
+        $this->sourceSet = ImageSourceSet::fromArray($variants);
     }
 
     public function getStorageName(): string
@@ -105,7 +107,7 @@ final class ImageAsset
 
     public function getImageSourceSet(): ImageSourceSet
     {
-        return ImageSourceSet::fromArray($this->variants);
+        return $this->sourceSet;
     }
 
     /**
@@ -247,7 +249,6 @@ final class ImageAsset
         if (!\is_array($rawVariants)) {
             throw new Exception\InvalidArgumentException('Image asset variants must use the format => list<variant> shape.');
         }
-        ImageSourceSet::fromArray($rawVariants);
         /** @var array<string, list<array<string, mixed>>> $variants */
         $variants = $rawVariants;
         $schemaVersion = $data['schemaVersion'] ?? null;
