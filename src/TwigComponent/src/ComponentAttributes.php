@@ -12,9 +12,9 @@
 namespace Symfony\UX\TwigComponent;
 
 use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
-use Symfony\UX\TwigComponent\Exception\RuntimeException;
 use Twig\Extra\Html\HtmlAttr\AttributeValueInterface;
 use Twig\Extra\Html\HtmlAttr\MergeableInterface;
+use Twig\Extra\Html\HtmlExtension;
 use Twig\Runtime\EscaperRuntime;
 
 /**
@@ -32,7 +32,7 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
     private array $rendered = [];
 
     /**
-     * @param array<string, string|bool> $attributes
+     * @param array<string, string|bool|int|float|null|iterable|\Stringable|\BackedEnum|AttributeValueInterface> $attributes
      */
     public function __construct(
         private array $attributes,
@@ -43,17 +43,8 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
     public function __toString(): string
     {
         $attributes = '';
-
         foreach ($this->attributes as $key => $value) {
             if (isset($this->rendered[$key])) {
-                continue;
-            }
-
-            if (null === $value) {
-                throw new RuntimeException(\sprintf('Attribute "%s" value cannot be null. If you want to remove an attribute, use the "remove()" method.', $key));
-            }
-
-            if (false === $value) {
                 continue;
             }
 
@@ -66,41 +57,11 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
                 continue;
             }
 
-            if ($value instanceof AttributeValueInterface) {
-                $value = $value->getValue();
-                if (null === $value) {
-                    continue;
-                }
+            if (null === $value = HtmlExtension::htmlAttrValue($key, $value)) {
+                continue;
             }
 
-            if (!\is_scalar($value) && !($value instanceof \Stringable)) {
-                throw new \LogicException(\sprintf('A "%s" prop was passed when creating the component. No matching "%s" property or mount() argument was found, so we attempted to use this as an HTML attribute. But, the value is not a scalar (it\'s a "%s"). Did you mean to pass this to your component or is there a typo on its name?', $key, $key, get_debug_type($value)));
-            }
-
-            if (true === $value && str_starts_with($key, 'aria-')) {
-                $value = 'true';
-            }
-
-            // Allowed characters in attribute names:
-            // - common attribute names (HTML 5):
-            //      id, class, style, title, lang, dir, role,...
-            //      data-*, aria-*,
-            //      xml:*, xmlns:*,
-            // - special syntax names (Vue.js, Svelte, Alpine.js, ...)
-            //      v-*, x-*, @*, :*
-            if (!ctype_alnum(str_replace(['-', '_', ':', '@', '.'], '', $key))) {
-                $key = (string) $this->escaper->escape($key, 'html_attr');
-            }
-
-            if (true === $value) {
-                $attributes .= ' '.$key;
-            } else {
-                if (!ctype_alnum(str_replace(['-', '_'], '', $value))) {
-                    $value = $this->escaper->escape($value, 'html');
-                }
-
-                $attributes .= ' '.\sprintf('%s="%s"', $key, $value);
-            }
+            $attributes .= ' '.$this->escaper->escape($key, 'html_attr_relaxed').'="'.$this->escaper->escape($value).'"';
         }
 
         return $attributes;
@@ -113,24 +74,8 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
 
     public function render(string $attribute): ?string
     {
-        if (null === $value = $this->attributes[$attribute] ?? null) {
+        if (null === $value = HtmlExtension::htmlAttrValue($attribute, $this->attributes[$attribute] ?? null)) {
             return null;
-        }
-
-        if ($value instanceof AttributeValueInterface && null === $value = $value->getValue()) {
-            return null;
-        }
-
-        if ($value instanceof \Stringable) {
-            $value = (string) $value;
-        }
-
-        if (true === $value && str_starts_with($attribute, 'aria-')) {
-            $value = 'true';
-        }
-
-        if (!\is_string($value)) {
-            throw new \LogicException(\sprintf('Can only get string attributes (%s is a "%s").', $attribute, get_debug_type($value)));
         }
 
         $this->rendered[$attribute] = true;
@@ -139,7 +84,7 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
     }
 
     /**
-     * @return array<string, string|bool>
+     * @return array<string, string|bool|int|float|null|iterable|\Stringable|\BackedEnum|AttributeValueInterface>
      */
     public function all(): array
     {
@@ -155,6 +100,9 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
      *
      * Values implementing Twig HTML extra's MergeableInterface (e.g. from the
      * "tailwind_classes" filter) are merged through the merge protocol, for any key.
+     * Values of another type are merged as strings for these three keys, so an
+     * iterable or an enum must implement MergeableInterface (e.g. through the
+     * "html_attr_type" filter) to be merged.
      */
     public function defaults(iterable $attributes): self
     {
