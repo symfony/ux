@@ -35,6 +35,22 @@ final class ImageRuntime
     /**
      * @param array<string, mixed> $options
      */
+    public function renderImage(ImageAsset $asset, array $options = []): string
+    {
+        return $this->renderConfigured($asset, $options)->toImgHtml();
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     */
+    public function renderPicture(ImageAsset $asset, array $options = []): string
+    {
+        return $this->renderConfigured($asset, $options)->toHtml();
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     */
     public function renderConfigured(ImageAsset $asset, array $options = []): RenderedImage
     {
         $sizes = $options['sizes'] ?? null;

@@ -29,23 +29,20 @@ final class ImageExtensionTest extends TestCase
 {
     public function testRegistersUxImageAndUxPictureFunctions()
     {
-        $renderer = $this->createStub(ImageRendererInterface::class);
-        $runtime = new ImageRuntime($renderer);
+        $extension = new ImageExtension();
 
-        $extension = new ImageExtension($runtime);
-
-        $functionNames = array_map(static fn ($f) => $f->getName(), $extension->getFunctions());
+        $functions = $extension->getFunctions();
+        $functionNames = array_map(static fn ($f) => $f->getName(), $functions);
 
         self::assertContains('ux_image', $functionNames);
         self::assertContains('ux_picture', $functionNames);
+        self::assertSame([ImageRuntime::class, 'renderImage'], $functions[0]->getCallable());
+        self::assertSame([ImageRuntime::class, 'renderPicture'], $functions[1]->getCallable());
     }
 
     public function testDoesNotImplementGlobalsInterface()
     {
-        $renderer = $this->createStub(ImageRendererInterface::class);
-        $runtime = new ImageRuntime($renderer);
-
-        $extension = new ImageExtension($runtime);
+        $extension = new ImageExtension();
 
         self::assertNotInstanceOf(\Twig\Extension\GlobalsInterface::class, $extension);
     }
@@ -67,9 +64,7 @@ final class ImageExtensionTest extends TestCase
         $renderer = $this->createMock(ImageRendererInterface::class);
         $renderer->expects(self::once())->method('render')->willReturn($rendered);
         $runtime = new ImageRuntime($renderer);
-        $extension = new ImageExtension($runtime);
-
-        $html = $extension->renderImage($asset);
+        $html = $runtime->renderImage($asset);
 
         self::assertStringStartsWith('<img', $html);
         self::assertStringNotContainsString('<picture', $html);
@@ -94,9 +89,7 @@ final class ImageExtensionTest extends TestCase
         $renderer = $this->createMock(ImageRendererInterface::class);
         $renderer->expects(self::once())->method('render')->willReturn($rendered);
         $runtime = new ImageRuntime($renderer);
-        $extension = new ImageExtension($runtime);
-
-        $html = $extension->renderPicture($asset);
+        $html = $runtime->renderPicture($asset);
 
         self::assertStringStartsWith('<picture>', $html);
         self::assertStringContainsString('<source', $html);
@@ -126,10 +119,10 @@ final class ImageExtensionTest extends TestCase
                 ],
             ]),
         );
-        $extension = new ImageExtension(new ImageRuntime($renderer));
+        $runtime = new ImageRuntime($renderer);
         $asset = new ImageAsset('default', '/hero.jpg', profile: 'hero');
 
-        $html = $extension->renderPicture($asset);
+        $html = $runtime->renderPicture($asset);
 
         self::assertStringContainsString('sizes="(max-width: 800px) 100vw, 800px"', $html);
         self::assertStringNotContainsString('sizes=""', $html);
@@ -202,8 +195,8 @@ final class ImageExtensionTest extends TestCase
             )
             ->willReturn($rendered);
 
-        $extension = new ImageExtension(new ImageRuntime($renderer));
-        $html = $extension->renderImage($asset, ['fetchpriority' => 'high']);
+        $runtime = new ImageRuntime($renderer);
+        $html = $runtime->renderImage($asset, ['fetchpriority' => 'high']);
 
         self::assertStringContainsString('fetchpriority="high"', $html);
     }

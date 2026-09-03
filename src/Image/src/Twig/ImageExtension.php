@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\Image\Twig;
 
-use Symfony\UX\Image\ImageAsset;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -20,51 +19,16 @@ use Twig\TwigFunction;
  * responsive image elements from an ImageAsset object.
  *
  * @author Simon André <smn.andre@gmail.com>
+ *
+ * @internal
  */
 final class ImageExtension extends AbstractExtension
 {
-    public function __construct(
-        private readonly ImageRuntime $imageRuntime,
-    ) {
-    }
-
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('ux_image', [$this, 'renderImage'], ['is_safe' => ['html']]),
-            new TwigFunction('ux_picture', [$this, 'renderPicture'], ['is_safe' => ['html']]),
+            new TwigFunction('ux_image', [ImageRuntime::class, 'renderImage'], ['is_safe' => ['html']]),
+            new TwigFunction('ux_picture', [ImageRuntime::class, 'renderPicture'], ['is_safe' => ['html']]),
         ];
-    }
-
-    /**
-     * Renders the image component.
-     *
-     * @param ImageAsset           $asset   The image asset information
-     * @param array<string, mixed> $options Options include:
-     *                                      - sizes: sizes attribute value (string)
-     *                                      - alt: alt attribute (string)
-     *                                      - lazy: bool to enable loading="lazy"
-     *                                      - fetchpriority: fetchpriority attribute (auto|low|high)
-     *                                      - decoding: decoding attribute (async|sync|auto)
-     *                                      - class: css classes
-     *                                      - variant: name of the variant to filter sources by (string)
-     *                                      - srcset: explicit fallback srcset entries (array)
-     *                                      - attributes: additional <img> attributes (array)
-     */
-    public function renderImage(ImageAsset $asset, array $options = []): string
-    {
-        $rendered = $this->imageRuntime->renderConfigured($asset, $options);
-
-        return $rendered->toImgHtml();
-    }
-
-    /**
-     * Renders the <picture> component with responsive sources.
-     *
-     * @param array<string, mixed> $options
-     */
-    public function renderPicture(ImageAsset $asset, array $options = []): string
-    {
-        return $this->imageRuntime->renderConfigured($asset, $options)->toHtml();
     }
 }

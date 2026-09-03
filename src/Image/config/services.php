@@ -194,7 +194,6 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     $services->set('ux_image.twig.extension', ImageExtension::class)
-        ->arg('$imageRuntime', service('ux_image.twig.runtime'))
         ->tag('twig.extension')
     ;
 
