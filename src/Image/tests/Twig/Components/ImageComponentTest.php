@@ -19,6 +19,10 @@ use Symfony\UX\Image\Renderer\ImageRenderOptions;
 use Symfony\UX\Image\Renderer\RenderedImage;
 use Symfony\UX\Image\Twig\Components\Image;
 use Symfony\UX\Image\Twig\ImageRuntime;
+use Symfony\UX\TwigComponent\ComponentAttributes;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+use Twig\Runtime\EscaperRuntime;
 
 #[CoversClass(Image::class)]
 final class ImageComponentTest extends TestCase
@@ -65,7 +69,13 @@ final class ImageComponentTest extends TestCase
         $renderer->expects(self::once())
             ->method('render')
             ->with($asset, self::callback(static fn (ImageRenderOptions $options): bool => 'sync' === $options->decoding
-                && ['/small.jpg 400w', '/large.jpg 800w'] === $options->srcset))
+                && ['/small.jpg 400w', '/large.jpg 800w'] === $options->srcset
+                && [
+                    'aria-expanded' => 'false',
+                    'data-options' => '{"zoom":true}',
+                    'hidden' => '',
+                    'title' => null,
+                ] === $options->attributes))
             ->willReturn($rendered);
 
         $component = new Image(new ImageRuntime($renderer));
@@ -73,6 +83,45 @@ final class ImageComponentTest extends TestCase
         $component->decoding = 'sync';
         $component->srcset = ['/small.jpg 400w', '/large.jpg 800w'];
 
-        self::assertSame($rendered, $component->rendered());
+        self::assertSame($rendered, $component->rendered([
+            'aria-expanded' => false,
+            'data-options' => ['zoom' => true],
+            'hidden' => true,
+            'title' => null,
+        ]));
+    }
+
+    public function testTemplateForwardsExtraAttributes()
+    {
+        $asset = new ImageAsset('default', '/default/photo.jpg');
+        $renderer = $this->createStub(ImageRendererInterface::class);
+        $renderer->method('render')->willReturnCallback(static fn (ImageAsset $asset, ImageRenderOptions $options): RenderedImage => new RenderedImage(
+            $asset,
+            [],
+            '/default/photo.jpg',
+            null,
+            null,
+            null,
+            $options,
+        ));
+
+        $component = new Image(new ImageRuntime($renderer));
+        $component->src = $asset;
+
+        $twig = new Environment(new FilesystemLoader(__DIR__.'/../../../templates/components'));
+        $html = $twig->render('Image.html.twig', [
+            'this' => $component,
+            'attributes' => new ComponentAttributes([
+                'id' => 'hero',
+                'aria-expanded' => false,
+                'data-options' => ['zoom' => true],
+                'hidden' => true,
+            ], $twig->getRuntime(EscaperRuntime::class)),
+        ]);
+
+        self::assertStringContainsString('id="hero"', $html);
+        self::assertStringContainsString('aria-expanded="false"', $html);
+        self::assertStringContainsString('data-options="{&quot;zoom&quot;:true}"', $html);
+        self::assertStringContainsString('hidden=""', $html);
     }
 }

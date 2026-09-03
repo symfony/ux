@@ -17,6 +17,7 @@ use Symfony\UX\Image\Renderer\RenderedImage;
 use Symfony\UX\Image\Twig\ImageRuntime;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
+use Twig\Extra\Html\HtmlExtension;
 
 /**
  * Twig component for rendering images with responsive features.
@@ -44,10 +45,14 @@ final class Image
     }
 
     #[ExposeInTemplate]
-    public function rendered(): ?RenderedImage
+    public function rendered(array $attributes = []): ?RenderedImage
     {
         if (!$this->src) {
             return null;
+        }
+
+        foreach ($attributes as $name => $value) {
+            $attributes[$name] = HtmlExtension::htmlAttrValue($name, $value);
         }
 
         return $this->rendered ??= $this->runtime->render($this->src, new ImageRenderOptions(
@@ -59,6 +64,7 @@ final class Image
             decoding: $this->decoding ?? 'async',
             variant: $this->variant,
             srcset: $this->srcset,
+            attributes: $attributes,
         ));
     }
 }

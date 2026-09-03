@@ -1,3 +1,4 @@
+{% set rendered = this.rendered(attributes.all) %}
 {% if rendered is not null %}
     {{ rendered.toHtml()|raw }}
 {% endif %}
