@@ -14,9 +14,9 @@ namespace Symfony\UX\Image\Storage;
 /**
  * A safe storage identifier. Storage names are configuration keys, never paths.
  */
-final readonly class StorageName implements \Stringable
+final class StorageName implements \Stringable
 {
-    public string $value;
+    public readonly string $value;
 
     public function __construct(string $value)
     {

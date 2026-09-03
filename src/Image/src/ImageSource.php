@@ -18,20 +18,20 @@ use Symfony\UX\Image\Storage\StoragePath;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class ImageSource
+final class ImageSource
 {
     public function __construct(
-        public string $path,
-        public ?int $width = null,
-        public ?int $height = null,
-        public ?string $density = null,
-        public ?string $media = null,
-        public ?string $name = null,
-        public ?string $format = null,
-        public ?string $mimeType = null,
-        public ?string $mode = null,
-        public ?int $quality = null,
-        public ?string $position = null,
+        public readonly string $path,
+        public readonly ?int $width = null,
+        public readonly ?int $height = null,
+        public readonly ?string $density = null,
+        public readonly ?string $media = null,
+        public readonly ?string $name = null,
+        public readonly ?string $format = null,
+        public readonly ?string $mimeType = null,
+        public readonly ?string $mode = null,
+        public readonly ?int $quality = null,
+        public readonly ?string $position = null,
     ) {
         if ('' === trim($path)) {
             throw new Exception\InvalidArgumentException('An image variant requires a non-empty path.');

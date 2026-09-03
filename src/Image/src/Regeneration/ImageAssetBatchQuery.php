@@ -11,13 +11,13 @@
 
 namespace Symfony\UX\Image\Regeneration;
 
-final readonly class ImageAssetBatchQuery
+final class ImageAssetBatchQuery
 {
     public function __construct(
-        public string $profile,
-        public string $storage,
-        public int $limit,
-        public ?string $after = null,
+        public readonly string $profile,
+        public readonly string $storage,
+        public readonly int $limit,
+        public readonly ?string $after = null,
     ) {
         if ('' === trim($profile) || '' === trim($storage) || $limit < 1 || $limit > 1000) {
             throw new \Symfony\UX\Image\Exception\InvalidArgumentException('A regeneration query requires profile, storage and a limit between 1 and 1000.');

@@ -17,14 +17,14 @@ use Symfony\UX\Image\Processor\ExifOrientation;
 /**
  * Trusted metadata read from the image contents.
  */
-final readonly class InspectedImage
+final class InspectedImage
 {
     public function __construct(
-        public string $format,
-        public string $mimeType,
-        public int $width,
-        public int $height,
-        public int $bytes,
+        public readonly string $format,
+        public readonly string $mimeType,
+        public readonly int $width,
+        public readonly int $height,
+        public readonly int $bytes,
     ) {
         if ($width < 1 || $height < 1 || $bytes < 1) {
             throw ImageProcessingException::processingFailed('inspect', 'The image has invalid dimensions or size.');

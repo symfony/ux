@@ -19,14 +19,14 @@ use Symfony\UX\Image\UrlGenerator\UrlGeneratorInterface;
 /**
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class DefaultImageRenderer implements ImageRendererInterface
+final class DefaultImageRenderer implements ImageRendererInterface
 {
     /** @param list<string> $preferredFormats */
     public function __construct(
-        private UrlGeneratorInterface $urlGenerator,
-        private string $defaultSizes = '100vw',
-        private array $preferredFormats = ['avif', 'webp', 'jpeg', 'jpg', 'png'],
-        private ?ProfileRegistry $profiles = null,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly string $defaultSizes = '100vw',
+        private readonly array $preferredFormats = ['avif', 'webp', 'jpeg', 'jpg', 'png'],
+        private readonly ?ProfileRegistry $profiles = null,
     ) {
     }
 

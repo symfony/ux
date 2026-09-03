@@ -16,7 +16,7 @@ namespace Symfony\UX\Image;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class ImageAsset
+final class ImageAsset
 {
     public const SCHEMA_VERSION = 1;
 
@@ -24,16 +24,16 @@ final readonly class ImageAsset
      * @param array<string, list<array<string, mixed>>> $variants
      */
     public function __construct(
-        public string $storageName,
-        public string $path,
-        public ?string $originalFilename = null,
-        public ?string $mimeType = null,
-        public ?int $width = null,
-        public ?int $height = null,
-        public array $variants = [],
-        public int $schemaVersion = self::SCHEMA_VERSION,
-        public ?string $profile = null,
-        public ?string $profileRevision = null,
+        public readonly string $storageName,
+        public readonly string $path,
+        public readonly ?string $originalFilename = null,
+        public readonly ?string $mimeType = null,
+        public readonly ?int $width = null,
+        public readonly ?int $height = null,
+        public readonly array $variants = [],
+        public readonly int $schemaVersion = self::SCHEMA_VERSION,
+        public readonly ?string $profile = null,
+        public readonly ?string $profileRevision = null,
     ) {
         new Storage\StorageName($storageName);
         // Absolute URLs remain supported for URL-only assets. Storage

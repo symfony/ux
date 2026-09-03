@@ -19,11 +19,11 @@ use Symfony\UX\Image\Transformation\FocalPoint;
 use Symfony\UX\Image\Transformation\ResizeGeometryCalculator;
 use Symfony\UX\Image\Transformation\ResizeMode;
 
-final readonly class VariantProcessingPlanner
+final class VariantProcessingPlanner
 {
     public function __construct(
-        private ProcessingLimits $limits,
-        private ResizeGeometryCalculator $geometryCalculator,
+        private readonly ProcessingLimits $limits,
+        private readonly ResizeGeometryCalculator $geometryCalculator,
     ) {
     }
 

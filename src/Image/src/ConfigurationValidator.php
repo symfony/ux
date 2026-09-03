@@ -21,7 +21,7 @@ use Symfony\UX\Image\Storage\StreamStorageInterface;
  *
  * @internal
  */
-final readonly class ConfigurationValidator
+final class ConfigurationValidator
 {
     private const PROBE_PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAFklEQVQImWNUSFjAwMDAxMDAwMDAAAANKgEkOVXj2AAAAABJRU5ErkJggg==';
 
@@ -30,11 +30,11 @@ final readonly class ConfigurationValidator
      * @param array<string, array<string, mixed>> $profiles
      */
     public function __construct(
-        private ImageDriverInterface $imageDriver,
-        private StorageInterface $storage,
-        private ?string $driver,
-        private array $storages,
-        private array $profiles,
+        private readonly ImageDriverInterface $imageDriver,
+        private readonly StorageInterface $storage,
+        private readonly ?string $driver,
+        private readonly array $storages,
+        private readonly array $profiles,
     ) {
     }
 

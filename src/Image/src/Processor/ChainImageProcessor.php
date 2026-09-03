@@ -20,14 +20,14 @@ use Symfony\UX\Image\ImageAsset;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class ChainImageProcessor implements ImageDriverInterface
+final class ChainImageProcessor implements ImageDriverInterface
 {
     /**
      * @param iterable<ImageDriverInterface> $processors
      */
     public function __construct(
-        private iterable $processors,
-        private string $defaultDriver = 'gd',
+        private readonly iterable $processors,
+        private readonly string $defaultDriver = 'gd',
     ) {
     }
 

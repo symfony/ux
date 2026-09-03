@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\Image\Transformation;
 
-final readonly class FocalPoint
+final class FocalPoint
 {
     public function __construct(public float $x = 0.5, public float $y = 0.5)
     {

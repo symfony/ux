@@ -18,19 +18,19 @@ use Symfony\UX\Image\ImageAsset;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class RenderedImage
+final class RenderedImage
 {
     /**
      * @param array<int, array{type: string, srcset: string, media?: string}> $sources
      */
     public function __construct(
-        public ImageAsset $asset,
-        public array $sources,
-        public string $fallbackSrc,
-        public ?string $fallbackSrcset,
-        public ?int $width,
-        public ?int $height,
-        public ImageRenderOptions $options,
+        public readonly ImageAsset $asset,
+        public readonly array $sources,
+        public readonly string $fallbackSrc,
+        public readonly ?string $fallbackSrcset,
+        public readonly ?int $width,
+        public readonly ?int $height,
+        public readonly ImageRenderOptions $options,
     ) {
     }
 

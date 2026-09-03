@@ -21,7 +21,7 @@ use Symfony\UX\Image\Renderer\RenderedImage;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class ImageRuntime
+final class ImageRuntime
 {
     public function __construct(private ImageRendererInterface $renderer)
     {

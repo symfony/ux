@@ -13,13 +13,13 @@ namespace Symfony\UX\Image\Regeneration;
 
 use Symfony\UX\Image\ImageAsset;
 
-final readonly class ImageAssetReference
+final class ImageAssetReference
 {
     public function __construct(
-        public string $id,
-        public string $cursor,
-        public string $version,
-        public ImageAsset $asset,
+        public readonly string $id,
+        public readonly string $cursor,
+        public readonly string $version,
+        public readonly ImageAsset $asset,
     ) {
         if ('' === $id || '' === $cursor || '' === $version) {
             throw new \Symfony\UX\Image\Exception\InvalidArgumentException('An image asset reference requires a stable id, opaque cursor and version token.');

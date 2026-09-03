@@ -11,12 +11,12 @@
 
 namespace Symfony\UX\Image\Regeneration;
 
-final readonly class ImageAssetBatch
+final class ImageAssetBatch
 {
     /** @param list<ImageAssetReference> $items */
     public function __construct(
-        public array $items,
-        public ?string $nextCursor,
+        public readonly array $items,
+        public readonly ?string $nextCursor,
     ) {
         if ('' === $nextCursor) {
             throw new \Symfony\UX\Image\Exception\InvalidArgumentException('A batch cursor cannot be empty.');

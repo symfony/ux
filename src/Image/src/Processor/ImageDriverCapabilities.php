@@ -13,10 +13,10 @@ namespace Symfony\UX\Image\Processor;
 
 use Symfony\UX\Image\Exception\ImageProcessingException;
 
-final readonly class ImageDriverCapabilities
+final class ImageDriverCapabilities
 {
     /** @var list<string> */
-    public array $encodableFormats;
+    public readonly array $encodableFormats;
 
     /** @param list<string> $encodableFormats */
     public function __construct(array $encodableFormats)

@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\Image\Profile;
 
-final readonly class ImageProfile
+final class ImageProfile
 {
     /**
      * @param list<string>                     $formats
@@ -19,11 +19,11 @@ final readonly class ImageProfile
      * @param array<string, mixed>             $configuration
      */
     public function __construct(
-        public string $name,
-        public array $formats,
-        public array $variants,
-        public ProcessingMode $processing,
-        public array $configuration,
+        public readonly string $name,
+        public readonly array $formats,
+        public readonly array $variants,
+        public readonly ProcessingMode $processing,
+        public readonly array $configuration,
     ) {
     }
 

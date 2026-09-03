@@ -23,7 +23,7 @@
         </div>
     {% endset %}
 
-    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: profiler_url, status: collector.hasWarnings ? 'yellow' : '' }) }}
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', {link: profiler_url, status: collector.hasWarnings ? 'yellow' : ''}) }}
 {% endblock %}
 
 {% block menu %}

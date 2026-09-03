@@ -21,7 +21,7 @@ use Symfony\UX\Image\Exception\ImageProcessingException;
  *
  * @internal
  */
-final readonly class ExifOrientation
+final class ExifOrientation
 {
     private function __construct(public int $value)
     {

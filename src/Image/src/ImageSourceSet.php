@@ -18,10 +18,10 @@ namespace Symfony\UX\Image;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class ImageSourceSet
+final class ImageSourceSet
 {
     /** @var array<string, list<ImageSource>> */
-    private array $formats;
+    private readonly array $formats;
 
     /**
      * @param array<int|string, mixed>|null $raw

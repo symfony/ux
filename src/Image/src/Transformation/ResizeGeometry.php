@@ -11,19 +11,19 @@
 
 namespace Symfony\UX\Image\Transformation;
 
-final readonly class ResizeGeometry
+final class ResizeGeometry
 {
     public function __construct(
-        public int $canvasWidth,
-        public int $canvasHeight,
-        public int $destinationX,
-        public int $destinationY,
-        public int $destinationWidth,
-        public int $destinationHeight,
-        public int $sourceX,
-        public int $sourceY,
-        public int $sourceWidth,
-        public int $sourceHeight,
+        public readonly int $canvasWidth,
+        public readonly int $canvasHeight,
+        public readonly int $destinationX,
+        public readonly int $destinationY,
+        public readonly int $destinationWidth,
+        public readonly int $destinationHeight,
+        public readonly int $sourceX,
+        public readonly int $sourceY,
+        public readonly int $sourceWidth,
+        public readonly int $sourceHeight,
     ) {
     }
 }

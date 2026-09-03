@@ -16,25 +16,25 @@ namespace Symfony\UX\Image\Renderer;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class ImageRenderOptions
+final class ImageRenderOptions
 {
     /** @var list<string>|null */
-    public ?array $srcset;
+    public readonly ?array $srcset;
 
     /**
      * @param array<string, scalar|null>   $attributes arbitrary attributes for the rendered <img>
      * @param array<array-key, mixed>|null $srcset     explicit fallback srcset entries
      */
     public function __construct(
-        public ?string $sizes = null,
-        public string $alt = '',
-        public bool $lazy = true,
-        public string $fetchPriority = 'auto',
-        public string $class = '',
-        public string $decoding = 'async',
-        public ?string $variant = null,
+        public readonly ?string $sizes = null,
+        public readonly string $alt = '',
+        public readonly bool $lazy = true,
+        public readonly string $fetchPriority = 'auto',
+        public readonly string $class = '',
+        public readonly string $decoding = 'async',
+        public readonly ?string $variant = null,
         ?array $srcset = null,
-        public array $attributes = [],
+        public readonly array $attributes = [],
     ) {
         if (!\in_array($fetchPriority, ['auto', 'high', 'low'], true)) {
             throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Invalid image fetch priority "%s".', $fetchPriority));

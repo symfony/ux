@@ -11,17 +11,17 @@
 
 namespace Symfony\UX\Image\Processor;
 
-final readonly class VariantProcessingPlan
+final class VariantProcessingPlan
 {
     /**
      * @param list<PlannedVariant> $variants
      * @param list<string>         $formats
      */
     public function __construct(
-        public array $variants,
-        public array $formats,
-        public int $artifactCount,
-        public int $outputPixels,
+        public readonly array $variants,
+        public readonly array $formats,
+        public readonly int $artifactCount,
+        public readonly int $outputPixels,
     ) {
     }
 }

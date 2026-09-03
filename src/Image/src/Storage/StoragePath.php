@@ -14,9 +14,9 @@ namespace Symfony\UX\Image\Storage;
 /**
  * A canonical, storage-relative path.
  */
-final readonly class StoragePath implements \Stringable
+final class StoragePath implements \Stringable
 {
-    public string $value;
+    public readonly string $value;
 
     public function __construct(string $value)
     {

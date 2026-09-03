@@ -17,7 +17,7 @@ use Symfony\UX\Image\Storage\StorageInterface;
 /**
  * Delegates URL generation to the selected storage backend.
  */
-final readonly class StorageUrlAdapter implements UrlAdapterInterface
+final class StorageUrlAdapter implements UrlAdapterInterface
 {
     public function __construct(private StorageInterface $storage)
     {

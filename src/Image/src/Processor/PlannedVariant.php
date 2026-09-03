@@ -13,18 +13,18 @@ namespace Symfony\UX\Image\Processor;
 
 use Symfony\UX\Image\Transformation\ResizeGeometry;
 
-final readonly class PlannedVariant
+final class PlannedVariant
 {
     public function __construct(
-        public string $name,
-        public int $width,
-        public int $height,
-        public string $mode,
-        public string $position,
-        public int $quality,
-        public ?string $media,
-        public ?string $density,
-        public ResizeGeometry $geometry,
+        public readonly string $name,
+        public readonly int $width,
+        public readonly int $height,
+        public readonly string $mode,
+        public readonly string $position,
+        public readonly int $quality,
+        public readonly ?string $media,
+        public readonly ?string $density,
+        public readonly ResizeGeometry $geometry,
     ) {
     }
 }
