@@ -1,7 +1,9 @@
-{# @prop defaultValue string Define the open Tabs at initial rendering. #}
-{# @prop orientation 'horizontal'|'vertical' Define the visual orientation. #}
-{# @block content The default block. #}
-{%- props defaultValue = '', orientation = 'horizontal' -%}
+{%- props
+    ## string Define the open Tabs at initial rendering.
+    defaultValue = '',
+    ## 'horizontal'|'vertical' Define the visual orientation.
+    orientation = 'horizontal'
+-%}
 {%- do provide('tabs.defaultValue', defaultValue) -%}
 
 <div
@@ -13,5 +15,6 @@
         'data-controller': 'tabs',
     }) }}
 >
+    {## The default block. -#}
     {% block content %}{% endblock %}
 </div>

@@ -1,4 +1,3 @@
-{# @block content The drawer content, typically includes `Drawer:Header` and optionally `Drawer:Footer`. #}
 {%- set _drawer_id = inject('drawer.id') -%}
 {%- set _drawer_direction = inject('drawer.direction', 'bottom') -%}
 {%- set style = html_cva(
@@ -25,5 +24,6 @@
     {% if _drawer_direction == 'bottom' %}
         <div class="mx-auto mt-4 h-2 w-[100px] shrink-0 rounded-full bg-muted"></div>
     {% endif %}
+    {##- The drawer content, typically includes `Drawer:Header` and optionally `Drawer:Footer`. -#}
     {%- block content %}{% endblock -%}
 </dialog>

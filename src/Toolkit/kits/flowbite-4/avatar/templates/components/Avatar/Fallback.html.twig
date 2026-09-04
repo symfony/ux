@@ -1,10 +1,10 @@
-{# @block content The fallback content displayed when no image is available, typically initials or a placeholder icon. #}
 <span
     data-avatar-fallback
     {{ attributes.defaults({
         class: 'bg-neutral-tertiary text-body rounded-[inherit] flex size-full items-center justify-center font-medium text-sm group-data-[size=xs]/avatar:text-xs group-data-[size=sm]/avatar:text-xs group-data-[size=lg]/avatar:text-base group-data-[size=xl]/avatar:text-lg group-data-[size=2xl]/avatar:text-lg'|tailwind_classes,
     }) }}
 >
+    {##- The fallback content displayed when no image is available, typically initials or a placeholder icon. -#}
     {%- block content %}
         <twig:ux:icon name="flowbite:user-solid" />
     {% endblock -%}

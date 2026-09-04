@@ -1,20 +1,19 @@
-{# @prop id string The unique identifier targeted by offcanvas controls. #}
-{# @prop placement 'start'|'end'|'top'|'bottom' The viewport edge from which the panel appears. #}
-{# @prop responsive 'sm'|'md'|'lg'|'xl'|'xxl'|null The breakpoint at which the panel becomes regular content. #}
-{# @prop backdrop boolean|'static' Whether clicking the backdrop dismisses the panel. #}
-{# @prop scroll boolean Whether the page body remains scrollable while the panel is open. #}
-{# @prop keyboard boolean Whether pressing Escape dismisses the panel. #}
-{# @prop shown boolean Whether to display the panel statically. #}
-{# @prop theme 'light'|'dark'|null The component-specific Bootstrap color mode. #}
-{# @block content The offcanvas structure, typically `Offcanvas:Header` and `Offcanvas:Body`. #}
 {%- props
+    ## string The unique identifier targeted by offcanvas controls.
     id,
+    ## 'start'|'end'|'top'|'bottom' The viewport edge from which the panel appears.
     placement = 'start',
+    ## 'sm'|'md'|'lg'|'xl'|'xxl'|null The breakpoint at which the panel becomes regular content.
     responsive = null,
+    ## boolean|'static' Whether clicking the backdrop dismisses the panel.
     backdrop = true,
+    ## boolean Whether the page body remains scrollable while the panel is open.
     scroll = false,
+    ## boolean Whether pressing Escape dismisses the panel.
     keyboard = true,
+    ## boolean Whether to display the panel statically.
     shown = false,
+    ## 'light'|'dark'|null The component-specific Bootstrap color mode.
     theme = null
 -%}
 {%- set title_id = id ~ '-label' -%}
@@ -47,5 +46,6 @@
     {%- set default_attrs = default_attrs|merge({'data-bs-theme': theme}) -%}
 {%- endif -%}
 <div {{ attributes.defaults(default_attrs) }}>
+    {##- The offcanvas structure, typically `Offcanvas:Header` and `Offcanvas:Body`. -#}
     {%- block content %}{% endblock -%}
 </div>

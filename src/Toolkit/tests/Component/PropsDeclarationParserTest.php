@@ -87,4 +87,21 @@ class PropsDeclarationParserTest extends TestCase
 
         self::assertTrue($decl->get('label')->hasDefault);
     }
+
+    public function testInlineDocCommentsAreIgnoredWhenParsingNamesAndDefaults()
+    {
+        $decl = new PropsDeclarationParser()->parse(<<<'TWIG'
+            {%- props
+                ## string Unique identifier.
+                id,
+                ## 'default'|'line' The visual style variant.
+                variant = 'default'
+            -%}
+            TWIG);
+
+        self::assertNotNull($decl);
+        self::assertSame(['id', 'variant'], $decl->names());
+        self::assertFalse($decl->get('id')->hasDefault);
+        self::assertSame("'default'", $decl->get('variant')->default);
+    }
 }

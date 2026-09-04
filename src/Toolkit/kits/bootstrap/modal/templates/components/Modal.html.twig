@@ -1,20 +1,19 @@
-{# @prop id string The unique identifier targeted by modal controls. #}
-{# @prop size 'sm'|'lg'|'xl'|null The optional maximum width of the modal dialog. #}
-{# @prop centered boolean Whether to vertically center the modal dialog. #}
-{# @prop scrollable boolean Whether only the modal body scrolls when content overflows. #}
-{# @prop fullscreen boolean|'sm'|'md'|'lg'|'xl'|'xxl' Whether and below which breakpoint the modal fills the viewport. #}
-{# @prop backdrop boolean|'static' Whether clicking the backdrop dismisses the modal. #}
-{# @prop keyboard boolean Whether pressing Escape dismisses the modal. #}
-{# @prop fade boolean Whether to use Bootstrap's fade transition. #}
-{# @block content The modal structure, typically `Modal:Header`, `Modal:Body`, and `Modal:Footer`. #}
 {%- props
+    ## string The unique identifier targeted by modal controls.
     id,
+    ## 'sm'|'lg'|'xl'|null The optional maximum width of the modal dialog.
     size = null,
+    ## boolean Whether to vertically center the modal dialog.
     centered = false,
+    ## boolean Whether only the modal body scrolls when content overflows.
     scrollable = false,
+    ## boolean|'sm'|'md'|'lg'|'xl'|'xxl' Whether and below which breakpoint the modal fills the viewport.
     fullscreen = false,
+    ## boolean|'static' Whether clicking the backdrop dismisses the modal.
     backdrop = true,
+    ## boolean Whether pressing Escape dismisses the modal.
     keyboard = true,
+    ## boolean Whether to use Bootstrap's fade transition.
     fade = true
 -%}
 {%- set title_id = id ~ '-label' -%}
@@ -52,6 +51,7 @@
 <div {{ attributes.defaults(default_attrs) }}>
     <div class="{{ dialog_classes }}">
         <div class="modal-content">
+            {##- The modal structure, typically `Modal:Header`, `Modal:Body`, and `Modal:Footer`. -#}
             {%- block content %}{% endblock -%}
         </div>
     </div>

@@ -14,7 +14,7 @@ namespace Symfony\UX\Toolkit\Component;
 use Symfony\UX\Toolkit\Assert;
 
 /**
- * A block declared in a Twig component's docblock (`{# @block name description #}`).
+ * A block documented by a `{## <description> #}` comment placed directly above the block.
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  *

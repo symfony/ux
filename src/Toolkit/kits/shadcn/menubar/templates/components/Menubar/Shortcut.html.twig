@@ -1,9 +1,9 @@
-{# @block content The shortcut label, e.g. "⌘T". #}
 <span
     data-slot="menubar-shortcut"
     {{ attributes.defaults({
         class: 'ml-auto text-xs tracking-widest text-muted-foreground'|tailwind_classes,
     }) }}
 >
+    {##- The shortcut label, e.g. "⌘T". -#}
     {%- block content %}{% endblock -%}
 </span>

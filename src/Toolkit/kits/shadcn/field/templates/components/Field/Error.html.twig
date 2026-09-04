@@ -1,7 +1,11 @@
-{# @prop errors array A list of error messages (strings or objects with a `message` property). #}
-{# @block content Custom error content, overrides the `errors` prop if provided. #}
-{%- props errors = [] -%}
-{%- set slot_content -%}{%- block content %}{% endblock -%}{%- endset -%}
+{%- props
+    ## array A list of error messages (strings or objects with a `message` property).
+    errors = []
+-%}
+{%- set slot_content -%}
+    {##- Custom error content, overrides the `errors` prop if provided. -#}
+    {%- block content %}{% endblock -%}
+{%- endset -%}
 {%- set slot_content = slot_content|trim -%}
 
 {%- if slot_content == '' -%}

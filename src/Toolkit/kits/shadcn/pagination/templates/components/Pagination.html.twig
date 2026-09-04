@@ -1,9 +1,9 @@
-{# @block content The pagination structure, typically a `Pagination:Content`. #}
 <nav
     data-slot="pagination"
     aria-label="pagination"
     role="navigation"
     {{ attributes.defaults({class: 'mx-auto flex w-full justify-center'|tailwind_classes}) }}
 >
+    {##- The pagination structure, typically a `Pagination:Content`. -#}
     {%- block content %}{% endblock -%}
 </nav>

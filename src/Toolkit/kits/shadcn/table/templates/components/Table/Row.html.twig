@@ -1,9 +1,9 @@
-{# @block content The row cells, typically `Table:Cell` or `Table:Head` components. #}
 <tr
     data-slot="table-row"
     {{ attributes.defaults({
         class: 'border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted'|tailwind_classes,
     }) }}
 >
+    {##- The row cells, typically `Table:Cell` or `Table:Head` components. -#}
     {%- block content %}{% endblock -%}
 </tr>

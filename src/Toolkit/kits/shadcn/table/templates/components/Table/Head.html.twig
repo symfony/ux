@@ -1,9 +1,9 @@
-{# @block content The header cell content. #}
 <th
     data-slot="table-head"
     {{ attributes.defaults({
         class: 'h-10 px-2 text-left rtl:text-start align-middle font-medium whitespace-nowrap text-foreground ltr:[&:has([role=checkbox])]:pr-0 rtl:[&:has([role=checkbox])]:pe-0'|tailwind_classes,
     }) }}
 >
+    {##- The header cell content. -#}
     {%- block content %}{% endblock -%}
 </th>

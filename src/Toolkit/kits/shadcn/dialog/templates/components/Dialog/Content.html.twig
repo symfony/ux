@@ -1,6 +1,7 @@
-{# @prop showCloseButton boolean Whether to display the close button in the top-right corner. #}
-{# @block content The dialog content, typically includes `Dialog:Header` and optionally `Dialog:Footer`. #}
-{%- props showCloseButton = true -%}
+{%- props
+    ## boolean Whether to display the close button in the top-right corner.
+    showCloseButton = true
+-%}
 {%- set _dialog_id = inject('dialog.id') -%}
 
 <dialog
@@ -12,6 +13,7 @@
         'data-action': 'keydown.esc->dialog#close:prevent click->dialog#closeOnClickOutside',
     }) }}
 >
+    {##- The dialog content, typically includes `Dialog:Header` and optionally `Dialog:Footer`. -#}
     {%- block content %}{% endblock -%}
     {% if showCloseButton %}
         <twig:Button

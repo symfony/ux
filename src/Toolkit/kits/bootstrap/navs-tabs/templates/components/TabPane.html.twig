@@ -1,12 +1,11 @@
-{# @prop id string The unique identifier targeted by a tab control. #}
-{# @prop labelledBy string|null The identifier of the tab control labelling the panel. #}
-{# @prop active boolean Whether the panel is initially visible. #}
-{# @prop fade boolean Whether the panel uses Bootstrap's fade transition. #}
-{# @block content The tab panel content. #}
 {%- props
+    ## string The unique identifier targeted by a tab control.
     id,
+    ## string|null The identifier of the tab control labelling the panel.
     labelledBy = null,
+    ## boolean Whether the panel is initially visible.
     active = false,
+    ## boolean Whether the panel uses Bootstrap's fade transition.
     fade = false
 -%}
 
@@ -26,5 +25,6 @@
 {%- endif -%}
 
 <div {{ attributes.defaults(default_attrs) }}>
+    {##- The tab panel content. -#}
     {%- block content -%}{% endblock -%}
 </div>

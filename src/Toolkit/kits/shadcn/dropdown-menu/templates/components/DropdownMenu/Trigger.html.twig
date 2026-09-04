@@ -1,4 +1,3 @@
-{# @block content The trigger label (e.g., a `Button`) that opens the menu on click. #}
 {%- set _dropdownMenu_triggerId = inject('dropdownMenu.triggerId', null) -%}
 {%- set _dropdownMenu_contentId = inject('dropdownMenu.contentId', null) -%}
 {%- set dropdown_menu_trigger_attrs = {
@@ -11,4 +10,5 @@
     'data-state': 'closed',
     'data-action': 'click->dropdown-menu#toggle keydown->dropdown-menu#onTriggerKeydown'|html_attr_type('sst'),
 } -%}
+{##- The trigger label (e.g., a `Button`) that opens the menu on click. -#}
 {%- block content %}{% endblock -%}

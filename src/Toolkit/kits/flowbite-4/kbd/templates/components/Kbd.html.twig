@@ -1,8 +1,8 @@
-{# @block content The keyboard key text (e.g., "Ctrl", "⌘", "Enter"). #}
 <kbd
     {{ attributes.defaults({
         class: 'inline-flex items-center px-2 py-1.5 text-xs font-semibold text-heading bg-neutral-tertiary border border-default-medium rounded-base'|tailwind_classes,
     }) }}
 >
+    {##- The keyboard key text (e.g., "Ctrl", "⌘", "Enter"). -#}
     {%- block content %}{% endblock -%}
 </kbd>

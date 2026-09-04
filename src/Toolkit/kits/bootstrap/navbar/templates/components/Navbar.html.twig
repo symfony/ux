@@ -1,12 +1,11 @@
-{# @prop expand 'always'|'sm'|'md'|'lg'|'xl'|'xxl'|null The breakpoint at which the navbar expands. #}
-{# @prop background string|null The Bootstrap background utility suffix. #}
-{# @prop theme 'light'|'dark'|null The component-specific Bootstrap color mode. #}
-{# @prop label string|null The accessible name for the navigation landmark. #}
-{# @block content The navbar brand, navigation, forms, togglers, and collapsible content. #}
 {%- props
+    ## 'always'|'sm'|'md'|'lg'|'xl'|'xxl'|null The breakpoint at which the navbar expands.
     expand = null,
+    ## string|null The Bootstrap background utility suffix.
     background = 'body-tertiary',
+    ## 'light'|'dark'|null The component-specific Bootstrap color mode.
     theme = null,
+    ## string|null The accessible name for the navigation landmark.
     label = null
 -%}
 
@@ -25,5 +24,6 @@
 {%- endif -%}
 
 <nav {{ attributes.defaults(default_attrs) }}>
+    {##- The navbar brand, navigation, forms, togglers, and collapsible content. -#}
     {%- block content -%}{%- endblock -%}
 </nav>

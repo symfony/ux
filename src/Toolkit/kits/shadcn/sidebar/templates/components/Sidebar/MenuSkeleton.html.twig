@@ -1,5 +1,7 @@
-{# @prop showIcon boolean Whether to render a placeholder icon next to the label. #}
-{%- props showIcon = false -%}
+{%- props
+    ## boolean Whether to render a placeholder icon next to the label.
+    showIcon = false
+-%}
 {%- set _skeleton_width = 50 + random(40) -%}
 <div
     data-slot="sidebar-menu-skeleton"

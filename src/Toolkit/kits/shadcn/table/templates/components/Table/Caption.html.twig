@@ -1,9 +1,9 @@
-{# @block content The table caption text. #}
 <caption
     data-slot="table-caption"
     {{ attributes.defaults({
         class: 'text-muted-foreground mt-4 text-sm'|tailwind_classes,
     }) }}
 >
+    {##- The table caption text. -#}
     {%- block content %}{% endblock -%}
 </caption>

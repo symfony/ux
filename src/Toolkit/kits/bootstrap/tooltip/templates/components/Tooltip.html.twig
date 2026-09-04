@@ -1,12 +1,11 @@
-{# @prop title string The tooltip content stored by Bootstrap. #}
-{# @prop placement 'auto'|'top'|'right'|'bottom'|'left' The preferred tooltip placement. #}
-{# @prop html boolean Whether the tooltip title contains sanitized HTML. #}
-{# @prop customClass string|null The custom class applied to the generated tooltip. #}
-{# @block content The focusable trigger rendering `tooltip_trigger_attrs` with `html_attr()`. #}
 {%- props
+    ## string The tooltip content stored by Bootstrap.
     title,
+    ## 'auto'|'top'|'right'|'bottom'|'left' The preferred tooltip placement.
     placement = 'top',
+    ## boolean Whether the tooltip title contains sanitized HTML.
     html = false,
+    ## string|null The custom class applied to the generated tooltip.
     customClass = null
 -%}
 
@@ -23,4 +22,5 @@
     {%- set tooltip_trigger_attrs = tooltip_trigger_attrs|merge({'data-bs-custom-class': customClass}) -%}
 {%- endif -%}
 
+{##- The focusable trigger rendering `tooltip_trigger_attrs` with `html_attr()`. -#}
 {%- block content %}{% endblock -%}
