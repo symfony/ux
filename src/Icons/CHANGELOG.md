@@ -4,6 +4,8 @@
 
 - Migrate SVG parsing to the PHP 8.4 `Dom\XMLDocument` API, icons rendered from local files now correctly include the `xmlns` attribute.
   It **may break your pipeline** if you assert on `ux_icon()` or `<twig:ux:icon>` output in your tests. Re-generate those assertions and clear your icon cache after upgrading.
+- Resolve icon attribute values through twig/html-extra's `html_attr()` logic, so `ux_icon()` and `<twig:ux:icon>` render attributes like any other component: the typed values of `html_attr_type()` and `tailwind_classes` are now accepted, `null` omits an attribute, `aria-*` booleans render `"true"`/`"false"`, and a boolean `true` renders `name=""` (`data-*` renders `"true"`).
+- Fix an omitted `aria-label`, `aria-labelledby` or `title` attribute suppressing the automatic `aria-hidden="true"`, which left the icon without any textual alternative.
 
 ## 3.4.0
 

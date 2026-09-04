@@ -19,6 +19,7 @@ use Symfony\UX\Map\Tests\Kernel\TwigAppKernel;
 use Symfony\UX\Map\Twig\MapExtension;
 use Symfony\UX\Map\Twig\MapRuntime;
 use Twig\Environment;
+use Twig\Extra\Html\HtmlExtension;
 
 class MapExtensionTest extends KernelTestCase
 {
@@ -66,6 +67,44 @@ class MapExtensionTest extends KernelTestCase
         $this->assertSame(
             '<div data-controller="@symfony/ux-foobar-map"></div>',
             $template->render(['attributes' => $attributes]),
+        );
+    }
+
+    public function testMapFunctionResolvesAttributeValues()
+    {
+        $map = new Map()
+            ->center(new Point(latitude: 5, longitude: 10))
+            ->zoom(4);
+
+        $renderer = self::createMock(RendererInterface::class);
+        $renderer
+            ->expects(self::once())
+            ->method('renderMap')
+            ->with($map, self::identicalTo([
+                'data-action' => 'click->map#center',
+                'class' => 'a b',
+                'aria-expanded' => 'false',
+                'data-open' => 'true',
+                'hidden' => '',
+                'gone' => false,
+            ]))
+            ->willReturn('<div data-controller="@symfony/ux-foobar-map"></div>')
+        ;
+        self::getContainer()->set('test.ux_map.renderers', $renderer);
+
+        $twig = self::getContainer()->get('twig');
+        $template = $twig->createTemplate('{{ ux_map(center={lat: 5, lng: 10}, zoom=4, attributes=attributes) }}');
+
+        $this->assertSame(
+            '<div data-controller="@symfony/ux-foobar-map"></div>',
+            $template->render(['attributes' => [
+                'data-action' => HtmlExtension::htmlAttrType('click->map#center'),
+                'class' => ['a', 'b'],
+                'aria-expanded' => false,
+                'data-open' => true,
+                'hidden' => true,
+                'gone' => null,
+            ]]),
         );
     }
 }
