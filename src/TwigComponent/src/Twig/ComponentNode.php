@@ -18,6 +18,7 @@ use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Node;
 use Twig\Node\NodeOutputInterface;
 use Twig\Template;
@@ -49,7 +50,10 @@ final class ComponentNode extends Node implements NodeOutputInterface
     {
         $compiler->addDebugInfo($this);
 
-        $useYield = method_exists(Environment::class, 'useYield') && $compiler->getEnvironment()->useYield();
+        // Twig 4 removed useYield() and only supports yield; the probe below must force it on.
+        $isTwig4 = Environment::MAJOR_VERSION >= 4;
+        $canYield = $isTwig4 || method_exists(Environment::class, 'useYield');
+        $useYield = $isTwig4 || ($canYield && $compiler->getEnvironment()->useYield());
 
         $componentRuntime = $compiler->getVarName();
         $compiler
@@ -60,7 +64,8 @@ final class ComponentNode extends Node implements NodeOutputInterface
         $componentName = $compiler->getVarName();
         $componentExpression = $this->getNode('component');
 
-        if ($componentExpression instanceof NameExpression && !$componentExpression->hasExplicitParentheses()) {
+        // NameExpression on Twig 3, ContextVariable on Twig 4
+        if (($componentExpression instanceof NameExpression || $componentExpression instanceof ContextVariable) && !$componentExpression->hasExplicitParentheses()) {
             $compiler
                 ->write(\sprintf('$%s = %s;', $componentName, var_export($componentExpression->getAttribute('name'), true)))
                 ->raw("\n");
@@ -115,7 +120,8 @@ final class ComponentNode extends Node implements NodeOutputInterface
             ->write('if (null !== $preRendered) {')
             ->raw("\n")
             ->indent();
-        if (method_exists(Environment::class, 'useYield')) {
+        // #[YieldReady]: emit yield whenever Twig understands it (hence $canYield, not $useYield).
+        if ($canYield) {
             $compiler->write('yield $preRendered; ');
         } else {
             $compiler->write('echo $preRendered; ');
