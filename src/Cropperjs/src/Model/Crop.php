@@ -11,9 +11,8 @@
 
 namespace Symfony\UX\Cropperjs\Model;
 
-use Intervention\Image\Constraint;
-use Intervention\Image\Image;
-use Intervention\Image\ImageManager;
+use Intervention\Image\Interfaces\ImageInterface;
+use Intervention\Image\Interfaces\ImageManagerInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -23,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Crop
 {
-    private $imageManager;
+    private ImageManagerInterface $imageManager;
     private $filename;
 
     /**
@@ -49,7 +48,7 @@ class Crop
         'rotate' => 0,
     ];
 
-    public function __construct(ImageManager $imageManager, string $filename)
+    public function __construct(ImageManagerInterface $imageManager, string $filename)
     {
         $this->imageManager = $imageManager;
         $this->filename = $filename;
@@ -59,18 +58,13 @@ class Crop
     {
         $image = $this->createCroppedImage();
 
-        $image->resize($maxWidth, $maxHeight, static function ($constraint) {
-            $constraint->aspectRatio();
-            $constraint->upsize();
-        });
+        $image->scaleDown($maxWidth, $maxHeight);
 
         if (!empty($this->options['rotate'])) {
-            $image->rotate(-1 * $this->options['rotate']);
+            $image->rotate($this->options['rotate']);
         }
 
-        $image->encode($format, $quality);
-
-        return $image->getEncoded();
+        return (string) $image->encodeUsingFileExtension($format, quality: $quality);
     }
 
     public function getCroppedImage(string $format = 'jpg', int $quality = 80): string
@@ -79,24 +73,19 @@ class Crop
 
         // Max size
         if ($this->maxWidth && $this->maxHeight) {
-            $image->resize($this->maxWidth, $this->maxHeight, static function (Constraint $constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
+            $image->scaleDown($this->maxWidth, $this->maxHeight);
         }
 
         if (!empty($this->options['rotate'])) {
-            $image->rotate(-1 * $this->options['rotate']);
+            $image->rotate($this->options['rotate']);
         }
 
-        $image->encode($format, $quality);
-
-        return $image->getEncoded();
+        return (string) $image->encodeUsingFileExtension($format, quality: $quality);
     }
 
-    private function createCroppedImage(): Image
+    private function createCroppedImage(): ImageInterface
     {
-        $image = $this->imageManager->make(file_get_contents($this->filename));
+        $image = $this->imageManager->decodeBinary(file_get_contents($this->filename));
 
         // Crop
         if ($this->options['width'] && $this->options['height']) {

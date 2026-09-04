@@ -11,7 +11,10 @@
 
 namespace Symfony\UX\Cropperjs\Tests\Model;
 
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
 use Intervention\Image\ImageManager;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Cropperjs\Model\Crop;
 
@@ -37,61 +40,170 @@ class CropTest extends TestCase
         }
     }
 
-    private function createCrop(int $rotate = 0): Crop
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function provideDrivers(): iterable
     {
-        $imageManager = new ImageManager();
-        $crop = new Crop($imageManager, $this->testImagePath);
+        yield 'gd' => [GdDriver::class];
 
-        $crop->setOptions(json_encode([
+        if (\extension_loaded('imagick')) {
+            yield 'imagick' => [ImagickDriver::class];
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     */
+    private function createCrop(string $driver, array $options = [], ?string $imagePath = null): Crop
+    {
+        $crop = new Crop(ImageManager::usingDriver($driver), $imagePath ?? $this->testImagePath);
+
+        $crop->setOptions(json_encode($options + [
+            'x' => 0,
+            'y' => 0,
             'width' => null,
             'height' => null,
-            'rotate' => $rotate,
+            'rotate' => 0,
         ]));
 
         return $crop;
     }
 
-    public function testGetCroppedImageWithRotation()
+    #[DataProvider('provideDrivers')]
+    public function testGetCroppedImageWithRotation(string $driver)
     {
-        $crop = $this->createCrop(rotate: 90);
-
-        $result = $crop->getCroppedImage();
+        $result = $this->createCrop($driver, ['rotate' => 90])->getCroppedImage();
 
         $image = imagecreatefromstring($result);
         $this->assertSame(100, imagesx($image));
         $this->assertSame(200, imagesy($image));
     }
 
-    public function testGetCroppedImageWithoutRotation()
+    #[DataProvider('provideDrivers')]
+    public function testGetCroppedImageWithoutRotation(string $driver)
     {
-        $crop = $this->createCrop(rotate: 0);
-
-        $result = $crop->getCroppedImage();
+        $result = $this->createCrop($driver)->getCroppedImage();
 
         $image = imagecreatefromstring($result);
         $this->assertSame(200, imagesx($image));
         $this->assertSame(100, imagesy($image));
     }
 
-    public function testGetCroppedThumbnailWithRotation()
+    #[DataProvider('provideDrivers')]
+    public function testGetCroppedImageRotatesClockwise(string $driver)
     {
-        $crop = $this->createCrop(rotate: 90);
+        // Source: left half red, right half blue (split at x = 100).
+        // Cropper.js rotates clockwise for positive degrees, so a 90° rotation
+        // moves the left (red) edge to the top and the right (blue) edge to the bottom.
+        $source = $this->createTwoColorImage();
 
-        $result = $crop->getCroppedThumbnail(200, 200);
+        try {
+            $result = $this->createCrop($driver, ['rotate' => 90], $source)->getCroppedImage('png');
+        } finally {
+            unlink($source);
+        }
+
+        $image = imagecreatefromstring($result);
+        $this->assertSame(100, imagesx($image));
+        $this->assertSame(200, imagesy($image));
+
+        $top = imagecolorat($image, 50, 30);
+        $this->assertGreaterThan(200, ($top >> 16) & 0xFF, 'Top should be red (clockwise: left edge rotates to the top)');
+        $this->assertLessThan(80, $top & 0xFF, 'Top should not be blue');
+
+        $bottom = imagecolorat($image, 50, 170);
+        $this->assertGreaterThan(200, $bottom & 0xFF, 'Bottom should be blue (clockwise: right edge rotates to the bottom)');
+        $this->assertLessThan(80, ($bottom >> 16) & 0xFF, 'Bottom should not be red');
+    }
+
+    #[DataProvider('provideDrivers')]
+    public function testGetCroppedImageCropsTheRequestedRegion(string $driver)
+    {
+        // Source: left half red, right half blue (split at x = 100)
+        $source = $this->createTwoColorImage();
+
+        try {
+            // The 50x40 region at x=120 sits entirely in the blue (right) half
+            $result = $this->createCrop($driver, [
+                'x' => 120,
+                'y' => 10,
+                'width' => 50,
+                'height' => 40,
+            ], $source)->getCroppedImage('png');
+        } finally {
+            unlink($source);
+        }
+
+        $image = imagecreatefromstring($result);
+        $this->assertSame(50, imagesx($image), 'Cropped width should match the requested region width');
+        $this->assertSame(40, imagesy($image), 'Cropped height should match the requested region height');
+
+        // Locks the crop(width, height, x, y) argument order: a swapped x/y would land in the red half
+        $color = imagecolorat($image, 25, 20);
+        $this->assertLessThan(80, ($color >> 16) & 0xFF, 'Red channel should be low (region is in the blue half)');
+        $this->assertGreaterThan(200, $color & 0xFF, 'Blue channel should be high (region is in the blue half)');
+    }
+
+    #[DataProvider('provideDrivers')]
+    public function testGetCroppedImageRespectsMaxSize(string $driver)
+    {
+        $crop = $this->createCrop($driver);
+        $crop->setCroppedMaxSize(100, 100);
+
+        $image = imagecreatefromstring($crop->getCroppedImage());
+        $this->assertSame(100, imagesx($image));
+        $this->assertSame(50, imagesy($image));
+    }
+
+    #[DataProvider('provideDrivers')]
+    public function testGetCroppedImageEncodesTheRequestedFormat(string $driver)
+    {
+        $result = $this->createCrop($driver)->getCroppedImage('png');
+
+        $this->assertSame("\x89PNG", substr($result, 0, 4));
+        $this->assertNotFalse(imagecreatefromstring($result));
+    }
+
+    #[DataProvider('provideDrivers')]
+    public function testGetCroppedThumbnailWithRotation(string $driver)
+    {
+        $result = $this->createCrop($driver, ['rotate' => 90])->getCroppedThumbnail(200, 200);
 
         $image = imagecreatefromstring($result);
         $this->assertSame(100, imagesx($image));
         $this->assertSame(200, imagesy($image));
     }
 
-    public function testGetCroppedThumbnailWithoutRotation()
+    #[DataProvider('provideDrivers')]
+    public function testGetCroppedThumbnailWithoutRotation(string $driver)
     {
-        $crop = $this->createCrop(rotate: 0);
-
-        $result = $crop->getCroppedThumbnail(200, 200);
+        $result = $this->createCrop($driver)->getCroppedThumbnail(200, 200);
 
         $image = imagecreatefromstring($result);
         $this->assertSame(200, imagesx($image));
         $this->assertSame(100, imagesy($image));
+    }
+
+    #[DataProvider('provideDrivers')]
+    public function testGetCroppedThumbnailDownscales(string $driver)
+    {
+        $result = $this->createCrop($driver)->getCroppedThumbnail(50, 50);
+
+        $image = imagecreatefromstring($result);
+        $this->assertSame(50, imagesx($image));
+        $this->assertSame(25, imagesy($image));
+    }
+
+    private function createTwoColorImage(): string
+    {
+        $path = tempnam(sys_get_temp_dir(), 'crop_test_two_color_').'.png';
+
+        $image = imagecreatetruecolor(200, 100);
+        imagefilledrectangle($image, 0, 0, 99, 99, imagecolorallocate($image, 255, 0, 0));
+        imagefilledrectangle($image, 100, 0, 199, 99, imagecolorallocate($image, 0, 0, 255));
+        imagepng($image, $path);
+
+        return $path;
     }
 }
