@@ -1,0 +1,96 @@
+{
+    "name": "@symfony/ux-upload",
+    "version": "3.2.0",
+    "description": "Direct and resumable file uploads for Symfony applications",
+    "keywords": [
+        "chunked",
+        "file",
+        "stimulus",
+        "symfony-ux",
+        "upload"
+    ],
+    "homepage": "https://ux.symfony.com/upload",
+    "license": "MIT",
+    "repository": "https://github.com/symfony/ux",
+    "files": [
+        "dist"
+    ],
+    "type": "module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        },
+        "./controller": {
+            "types": "./dist/upload_controller.d.ts",
+            "import": "./dist/upload_controller.js"
+        },
+        "./live-upload": {
+            "types": "./dist/live_upload_controller.d.ts",
+            "import": "./dist/live_upload_controller.js"
+        },
+        "./uploader": {
+            "types": "./dist/uploader.d.ts",
+            "import": "./dist/uploader.js"
+        },
+        "./compact.css": "./dist/compact.min.css",
+        "./dropzone.css": "./dist/dropzone.min.css"
+    },
+    "scripts": {
+        "build": "node ../../../bin/build_package.ts .",
+        "watch": "node ../../../bin/build_package.ts . --watch",
+        "test": "pnpm run test:unit",
+        "test:unit": "../../../bin/unit_test_package.sh .",
+        "test:browser": "playwright test"
+    },
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.2.2",
+        "jsdom": "^26.1.0",
+        "typescript": "^5.8.3",
+        "vitest": "^4.1.0"
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "@symfony/ux-live-component": "^2.20 || ^3.0"
+    },
+    "peerDependenciesMeta": {
+        "@symfony/ux-live-component": {
+            "optional": true
+        }
+    },
+    "config": {
+        "css_source": [
+            "src/styles/compact.css",
+            "src/styles/dropzone.css"
+        ],
+        "entrypoints": [
+            "src/index.ts",
+            "src/uploader.ts"
+        ]
+    },
+    "symfony": {
+        "controllers": {
+            "upload": {
+                "main": "dist/upload_controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true,
+                "autoimport": {
+                    "@symfony/ux-upload/dist/compact.min.css": false,
+                    "@symfony/ux-upload/dist/dropzone.min.css": false
+                }
+            },
+            "live-upload": {
+                "main": "dist/live_upload_controller.js",
+                "webpackMode": "lazy",
+                "fetch": "lazy",
+                "enabled": true
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0"
+        }
+    }
+}

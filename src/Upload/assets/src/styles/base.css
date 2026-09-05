@@ -1,0 +1,252 @@
+@layer ux-upload {
+    .ux-upload {
+        --ux-upload-accent: light-dark(#2563eb, #60a5fa);
+        --ux-upload-accent-strong: light-dark(#1d4ed8, #93c5fd);
+        --ux-upload-bg: light-dark(#ffffff, #18181b);
+        --ux-upload-bg-muted: light-dark(#f4f4f5, #27272a);
+        --ux-upload-text: light-dark(#18181b, #f4f4f5);
+        --ux-upload-muted: light-dark(#71717a, #a1a1aa);
+        --ux-upload-border: light-dark(#d4d4d8, #52525b);
+        --ux-upload-danger: light-dark(#b91c1c, #fca5a5);
+        --ux-upload-success: light-dark(#047857, #6ee7b7);
+        --ux-upload-radius: 0.5rem;
+        --ux-upload-gap: 0.75rem;
+
+        display: grid;
+        gap: var(--ux-upload-gap);
+        color: var(--ux-upload-text);
+        font: inherit;
+    }
+
+    .ux-upload [hidden] {
+        display: none !important;
+    }
+
+    .ux-upload__dropzone {
+        position: relative;
+    }
+
+    .ux-upload__input:focus-visible,
+    .ux-upload button:focus-visible {
+        outline: 0.1875rem solid color-mix(in srgb, var(--ux-upload-accent) 55%, transparent);
+        outline-offset: 0.125rem;
+    }
+
+    .ux-upload__dropzone:has(.ux-upload__input:focus-visible) {
+        outline: 0.1875rem solid color-mix(in srgb, var(--ux-upload-accent) 55%, transparent);
+        outline-offset: 0.125rem;
+    }
+
+    .ux-upload__dropzone-icon svg,
+    .ux-upload__file-icon svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    .ux-upload__list {
+        display: grid;
+        gap: 0.625rem;
+    }
+
+    .ux-upload__item {
+        display: grid;
+        grid-template-columns: 3rem minmax(0, 1fr) auto;
+        grid-template-areas:
+            'visual metadata status'
+            'visual progress actions';
+        gap: 0.375rem 0.75rem;
+        align-items: center;
+        min-width: 0;
+        padding: 0.75rem;
+        border: 1px solid var(--ux-upload-border);
+        border-radius: var(--ux-upload-radius);
+        background: var(--ux-upload-bg);
+    }
+
+    .ux-upload__visual {
+        grid-area: visual;
+        position: relative;
+        width: 3rem;
+        aspect-ratio: 1;
+        overflow: hidden;
+        border-radius: calc(var(--ux-upload-radius) - 0.125rem);
+        background: var(--ux-upload-bg-muted);
+        color: var(--ux-upload-muted);
+    }
+
+    .ux-upload__preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .ux-upload__file-icon {
+        display: grid;
+        width: 100%;
+        height: 100%;
+        place-items: center;
+        padding: 0.75rem;
+    }
+
+    .ux-upload__percent {
+        position: absolute;
+        inset: auto 0 0;
+        padding: 0.125rem;
+        background: rgb(0 0 0 / 68%);
+        color: white;
+        font-size: 0.6875rem;
+        line-height: 1.2;
+        text-align: center;
+    }
+
+    .ux-upload__metadata {
+        grid-area: metadata;
+        display: grid;
+        min-width: 0;
+    }
+
+    .ux-upload__name {
+        overflow: hidden;
+        font-weight: 600;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .ux-upload__size,
+    .ux-upload__status,
+    .ux-upload__help,
+    .ux-upload__summary {
+        color: var(--ux-upload-muted);
+        font-size: 0.8125rem;
+    }
+
+    .ux-upload__status {
+        grid-area: status;
+    }
+
+    .ux-upload__item[data-status='completed'] .ux-upload__status {
+        color: var(--ux-upload-success);
+    }
+
+    .ux-upload__item[data-status='error'] .ux-upload__status {
+        color: var(--ux-upload-danger);
+    }
+
+    .ux-upload__progress {
+        grid-area: progress;
+        height: 0.25rem;
+        overflow: hidden;
+        border-radius: 999px;
+        background: var(--ux-upload-bg-muted);
+    }
+
+    .ux-upload__progress-bar,
+    .ux-upload__summary-progress-bar {
+        display: block;
+        width: 0;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--ux-upload-accent);
+        transition: width var(--ux-upload-progress-duration, 0.2s) ease-out;
+    }
+
+    .ux-upload__actions {
+        grid-area: actions;
+        display: flex;
+        justify-content: end;
+        gap: 0.375rem;
+    }
+
+    .ux-upload__actions button,
+    .ux-upload__start {
+        min-height: 2rem;
+        padding: 0.25rem 0.625rem;
+        border: 1px solid var(--ux-upload-border);
+        border-radius: 0.375rem;
+        background: var(--ux-upload-bg);
+        color: var(--ux-upload-text);
+        font: inherit;
+        font-size: 0.8125rem;
+        cursor: pointer;
+    }
+
+    .ux-upload__actions button:hover,
+    .ux-upload__start:hover {
+        border-color: var(--ux-upload-accent);
+    }
+
+    .ux-upload__summary {
+        display: grid;
+        gap: 0.375rem;
+    }
+
+    .ux-upload__summary-progress {
+        display: block;
+        width: 100%;
+        height: 0.25rem;
+        overflow: hidden;
+        border-radius: 999px;
+        background: var(--ux-upload-bg-muted);
+    }
+
+    .ux-upload__errors {
+        display: grid;
+        gap: 0.375rem;
+        color: var(--ux-upload-danger);
+        font-size: 0.875rem;
+    }
+
+    .ux-upload__start {
+        justify-self: start;
+        border-color: var(--ux-upload-accent);
+        background: var(--ux-upload-accent);
+        color: white;
+        font-weight: 600;
+    }
+
+    .ux-upload__start:hover {
+        background: var(--ux-upload-accent-strong);
+    }
+
+    .ux-upload__sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .ux-upload[data-ux-upload-disabled='true'] {
+        opacity: 0.58;
+    }
+
+    .ux-upload[data-ux-upload-disabled='true'] .ux-upload__dropzone {
+        cursor: not-allowed;
+    }
+
+    @media (max-width: 36rem) {
+        .ux-upload__item {
+            grid-template-columns: 3rem minmax(0, 1fr);
+            grid-template-areas:
+                'visual metadata'
+                'visual status'
+                'progress progress'
+                'actions actions';
+        }
+
+        .ux-upload__actions {
+            justify-content: start;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ux-upload__progress-bar,
+        .ux-upload__summary-progress-bar {
+            transition: none;
+        }
+    }
+}
