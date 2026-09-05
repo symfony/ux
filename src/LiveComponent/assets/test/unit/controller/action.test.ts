@@ -9,7 +9,7 @@
 
 import { getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createTest, initComponent, shutdownTests } from '../../tools';
 
 describe('LiveController Action Tests', () => {
@@ -300,5 +300,137 @@ describe('LiveController Action Tests', () => {
         }
 
         await waitFor(() => expect(test.element).toHaveTextContent('count: 61'));
+    });
+
+    describe('confirmAction', () => {
+        it('integrates with Turbo.config.forms.confirm and executes action when confirmed', async () => {
+            const test = await createTest(
+                { isSaved: false },
+                (data: any) => `
+                <div ${initComponent(data)}>
+                    ${data.isSaved ? 'Saved!' : ''}
+                    <button data-action="live#confirmAction" data-live-action-param="save" data-turbo-confirm="Turbo?">Save</button>
+                </div>
+            `
+            );
+
+            const confirmMock = vi.fn().mockResolvedValue(true);
+            (window as any).Turbo = { config: { forms: { confirm: confirmMock } } };
+
+            test.expectsAjaxCall()
+                .expectActionCalled('save')
+                .serverWillChangeProps((data: any) => {
+                    data.isSaved = true;
+                });
+
+            getByText(test.element, 'Save').click();
+
+            await waitFor(() => expect(confirmMock).toHaveBeenCalledWith('Turbo?', null, expect.any(HTMLElement)));
+            await waitFor(() => expect(test.element).toHaveTextContent('Saved!'));
+
+            delete (window as any).Turbo;
+        });
+
+        it('integrates with Turbo.config.forms.confirm and aborts when canceled', async () => {
+            const test = await createTest(
+                { isSaved: false },
+                (data: any) => `
+                <div ${initComponent(data)}>
+                    <button data-action="live#confirmAction" data-live-action-param="save" data-turbo-confirm="Turbo?">Save</button>
+                </div>
+            `
+            );
+
+            const confirmMock = vi.fn().mockResolvedValue(false);
+            (window as any).Turbo = { config: { forms: { confirm: confirmMock } } };
+
+            getByText(test.element, 'Save').click();
+
+            await waitFor(() => expect(confirmMock).toHaveBeenCalledWith('Turbo?', null, expect.any(HTMLElement)));
+            await new Promise((resolve) => setTimeout(resolve, 50));
+
+            delete (window as any).Turbo;
+        });
+
+        it('dispatches live:confirmAction event and executes action when promise resolves to true', async () => {
+            const test = await createTest(
+                { isSaved: false },
+                (data: any) => `
+                <div ${initComponent(data)}>
+                    ${data.isSaved ? 'Saved!' : ''}
+                    <button data-action="live#confirmAction" data-live-action-param="save" data-live-confirm-message-param="Live?">Save</button>
+                </div>
+            `
+            );
+
+            document.addEventListener(
+                'live:confirmAction',
+                (event: any) => {
+                    event.preventDefault();
+                    event.detail.promise = Promise.resolve(true);
+                },
+                { once: true }
+            );
+
+            test.expectsAjaxCall()
+                .expectActionCalled('save')
+                .serverWillChangeProps((data: any) => {
+                    data.isSaved = true;
+                });
+
+            getByText(test.element, 'Save').click();
+
+            await waitFor(() => expect(test.element).toHaveTextContent('Saved!'));
+        });
+
+        it('dispatches live:confirmAction event and aborts when promise resolves to false', async () => {
+            const test = await createTest(
+                { isSaved: false },
+                (data: any) => `
+                <div ${initComponent(data)}>
+                    <button data-action="live#confirmAction" data-live-action-param="save" data-live-confirm-message-param="Live?">Save</button>
+                </div>
+            `
+            );
+
+            document.addEventListener(
+                'live:confirmAction',
+                (event: any) => {
+                    event.preventDefault();
+                    event.detail.promise = Promise.resolve(false);
+                },
+                { once: true }
+            );
+
+            getByText(test.element, 'Save').click();
+            await new Promise((resolve) => setTimeout(resolve, 50));
+        });
+
+        it('falls back to window.confirm when no custom promise or Turbo is present', async () => {
+            const test = await createTest(
+                { isSaved: false },
+                (data: any) => `
+                <div ${initComponent(data)}>
+                    ${data.isSaved ? 'Saved!' : ''}
+                    <button data-action="live#confirmAction" data-live-action-param="save" data-live-confirm-message-param="Live Native?">Save</button>
+                </div>
+            `
+            );
+
+            const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
+
+            test.expectsAjaxCall()
+                .expectActionCalled('save')
+                .serverWillChangeProps((data: any) => {
+                    data.isSaved = true;
+                });
+
+            getByText(test.element, 'Save').click();
+
+            await waitFor(() => expect(confirmSpy).toHaveBeenCalledWith('Live Native?'));
+            await waitFor(() => expect(test.element).toHaveTextContent('Saved!'));
+
+            confirmSpy.mockRestore();
+        });
     });
 });
