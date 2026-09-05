@@ -1,0 +1,12 @@
+src:
+/images/hero.jpg?w=800&h=450&fit=crop&fm=auto&s=176a6f966546fb8b9db0f7ff4f6ea23c
+
+srcset:
+/images/hero.jpg?w=640&h=360&fit=crop&fm=auto&s=1d73e494cbd5deb6578e52317cb23ef1 640w
+/images/hero.jpg?w=750&h=422&fit=crop&fm=auto&s=12a4e9c3d4cec454a15802f5eaa16edb 750w
+/images/hero.jpg?w=800&h=450&fit=crop&fm=auto&s=176a6f966546fb8b9db0f7ff4f6ea23c 800w
+/images/hero.jpg?w=828&h=466&fit=crop&fm=auto&s=5ce519b188ee2d169f5db430392a8638 828w
+/images/hero.jpg?w=960&h=540&fit=crop&fm=auto&s=035133f54b6c01666668d00ba79b7fcc 960w
+/images/hero.jpg?w=1080&h=608&fit=crop&fm=auto&s=d5a5cb5de8a54ff50bd5946518371edd 1080w
+/images/hero.jpg?w=1280&h=720&fit=crop&fm=auto&s=1c418a53bd1e3cc39c51e784f3c2d7ea 1280w
+/images/hero.jpg?w=1600&h=900&fit=crop&fm=auto&s=5bafe683c489a78e745374bdc278e88d 1600w

@@ -1,0 +1,19 @@
+src:
+/images/hero.jpg?w=800&h=450&fit=crop&fm=auto
+
+srcset:
+/images/hero.jpg?w=640&h=360&fit=crop&fm=auto 640w
+/images/hero.jpg?w=750&h=422&fit=crop&fm=auto 750w
+/images/hero.jpg?w=828&h=466&fit=crop&fm=auto 828w
+/images/hero.jpg?w=960&h=540&fit=crop&fm=auto 960w
+/images/hero.jpg?w=1080&h=608&fit=crop&fm=auto 1080w
+/images/hero.jpg?w=1280&h=720&fit=crop&fm=auto 1280w
+/images/hero.jpg?w=1668&h=938&fit=crop&fm=auto 1668w
+/images/hero.jpg?w=1920&h=1080&fit=crop&fm=auto 1920w
+/images/hero.jpg?w=2048&h=1152&fit=crop&fm=auto 2048w
+/images/hero.jpg?w=2560&h=1440&fit=crop&fm=auto 2560w
+/images/hero.jpg?w=3200&h=1800&fit=crop&fm=auto 3200w
+/images/hero.jpg?w=3840&h=2160&fit=crop&fm=auto 3840w
+/images/hero.jpg?w=4480&h=2520&fit=crop&fm=auto 4480w
+/images/hero.jpg?w=5120&h=2880&fit=crop&fm=auto 5120w
+/images/hero.jpg?w=6016&h=3384&fit=crop&fm=auto 6016w
