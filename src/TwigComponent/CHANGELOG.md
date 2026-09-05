@@ -6,6 +6,7 @@
 - Add support for dynamic component names in the HTML syntax using `<twig:component is="myComponent" ...`
 - Capture `## <description>` documentation comments written above props inside `{% props %}` (Twig 3.29+), exposed per prop via `PropsNode::getPropDocumentation()`
 - Fix `{% props %}` treating a prop explicitly passed as `null` as missing: a required prop no longer throws, and a prop declaring a default value now keeps the `null` it was given
+- Fix HTML/`{% component %}` syntax failing when a prop uses the null-safe operator (`?.`)
 
 ## 3.4.0
 

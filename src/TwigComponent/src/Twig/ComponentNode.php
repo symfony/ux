@@ -95,6 +95,15 @@ final class ComponentNode extends Node implements NodeOutputInterface
                 ->write("}\n");
         }
 
+        // Compile props once: Twig 3.24+ null-safe chains are stateful when compiled.
+        $props = $compiler->getVarName();
+        $compiler
+            ->write(\sprintf('$%s = ', $props))
+            ->raw('Twig\Extension\CoreExtension::toArray')
+            ->raw('(');
+        $this->writeProps($compiler)
+            ->raw(");\n");
+
         /*
          * Block 1) PreCreateForRender handling
          *
@@ -103,12 +112,7 @@ final class ComponentNode extends Node implements NodeOutputInterface
          */
         $compiler
             ->write(\sprintf('$preRendered = $%s->preRender(', $componentRuntime))
-            ->raw(\sprintf('$%s', $componentName))
-            ->raw(', ')
-            ->raw('Twig\Extension\CoreExtension::toArray')
-            ->raw('(');
-        $this->writeProps($compiler)
-            ->raw(')')
+            ->raw(\sprintf('$%s, $%s', $componentName, $props))
             ->raw(");\n");
 
         $compiler
@@ -135,12 +139,7 @@ final class ComponentNode extends Node implements NodeOutputInterface
          */
         $compiler
             ->write(\sprintf('$preRenderEvent = $%s->startEmbedComponent(', $componentRuntime))
-            ->raw(\sprintf('$%s', $componentName))
-            ->raw(', ')
-            ->raw('Twig\Extension\CoreExtension::toArray')
-            ->raw('(');
-        $this->writeProps($compiler)
-            ->raw('), ')
+            ->raw(\sprintf('$%s, $%s, ', $componentName, $props))
             ->raw($this->getAttribute('only') ? '[]' : '$context')
             ->raw(', ')
             ->string($this->getAttribute('embedded_template'))

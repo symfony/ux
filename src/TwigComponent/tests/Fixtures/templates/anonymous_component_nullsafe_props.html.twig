@@ -1,0 +1,5 @@
+<twig:Button :label="affaire.commune?.organisation?.raisonSociale ~ ' - ' ~ affaire.libelle">
+    Nullsafe
+</twig:Button>
+<twig:Button :label="affaire.commune?.organisation?.raisonSociale ~ ' - ' ~ affaire.libelle" />
+{{ component('Button', {label: affaire.commune?.organisation?.raisonSociale ~ ' - ' ~ affaire.libelle}) }}
