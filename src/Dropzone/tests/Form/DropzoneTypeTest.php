@@ -57,4 +57,24 @@ class DropzoneTypeTest extends TestCase
             str_replace(' >', '>', $rendered)
         );
     }
+
+    public function testRenderFormMultiple()
+    {
+        $kernel = new TwigAppKernel('test', true);
+        $kernel->boot();
+        $container = $kernel->getContainer()->get('test.service_container');
+
+        $form = $container->get(FormFactoryInterface::class)->createBuilder()
+            ->add('photos', DropzoneType::class, ['multiple' => true])
+            ->getForm()
+        ;
+
+        $rendered = $container->get(Environment::class)->render('dropzone_form.html.twig', ['form' => $form->createView()]);
+
+        $this->assertStringContainsString('dropzone-container dropzone-container-multiple', $rendered);
+        $this->assertStringContainsString('data-symfony--ux-dropzone--dropzone-multiple-value="true"', $rendered);
+        $this->assertStringContainsString('name="form[photos][]"', $rendered);
+        $this->assertStringContainsString('multiple="multiple"', $rendered);
+        $this->assertStringContainsString('class="dropzone-preview-list" data-symfony--ux-dropzone--dropzone-target="previewList"', $rendered);
+    }
 }

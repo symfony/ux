@@ -1,0 +1,25 @@
+{% extends 'example.html.twig' %}
+
+{% block example %}
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            {% if uploadedFiles %}
+                <div class="alert alert-success mb-4" id="upload-success">
+                    <h5>Uploaded {{ uploadedFiles|length }} file(s):</h5>
+                    <ul>
+                        {% for name in uploadedFiles %}
+                            <li>{{ name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {{ form_start(form, {attr: {'data-turbo': 'false'}}) }}
+                {{ form_row(form.photos) }}
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary" id="upload-submit">Upload</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

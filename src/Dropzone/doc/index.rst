@@ -55,6 +55,38 @@ replacement of the native FileType class::
         // ...
     }
 
+Uploading multiple files
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Upload several files at once, pass the standard ``multiple``
+option (inherited from ``FileType``)::
+
+    // ...
+    use Symfony\UX\Dropzone\Form\DropzoneType;
+
+    class CommentFormType extends AbstractType
+    {
+        public function buildForm(FormBuilderInterface $builder, array $options): void
+        {
+            $builder
+                // ...
+                ->add('photos', DropzoneType::class, [
+                    'multiple' => true,
+                ])
+                // ...
+            ;
+        }
+
+        // ...
+    }
+
+In ``multiple`` mode, the Dropzone accumulates files across successive
+selections instead of replacing the previous one, displays a preview for each
+selected file and lets the user remove files individually before submitting.
+A ``dropzone:remove`` event (carrying the removed ``File`` in ``event.detail``)
+is dispatched in addition to the ``dropzone:connect``, ``dropzone:change`` and
+``dropzone:clear`` events.
+
 Customizing the design
 ~~~~~~~~~~~~~~~~~~~~~~
 

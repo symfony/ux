@@ -14,6 +14,21 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { clearDOM, mountDOM } from '../../../../../test/stimulus-helpers';
 import DropzoneController from '../../src/controller';
 
+// jsdom does not implement DataTransfer so we make a stub
+class DataTransferStub {
+    private _files: File[] = [];
+    readonly items = {
+        add: (file: File) => void this._files.push(file),
+        remove: (index: number) => void this._files.splice(index, 1),
+    };
+    get files(): File[] {
+        return this._files;
+    }
+}
+if (typeof globalThis.DataTransfer === 'undefined') {
+    (globalThis as any).DataTransfer = DataTransferStub;
+}
+
 // Controller used to check the actual controller was properly booted
 class CheckController extends Controller {
     connect() {
@@ -153,5 +168,91 @@ describe('DropzoneController', () => {
         await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'none' }));
         await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'none' }));
         await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'block' }));
+    });
+});
+
+describe('DropzoneController (multiple)', () => {
+    let container: HTMLElement;
+
+    beforeEach(() => {
+        container = mountDOM(`
+            <div class="dropzone-container dropzone-container-multiple"
+                 data-controller="dropzone"
+                 data-dropzone-multiple-value="true"
+                 data-testid="container">
+                <input type="file"
+                       multiple
+                       data-dropzone-target="input"
+                       data-testid="input" />
+
+                <div class="dropzone-placeholder" data-dropzone-target="placeholder">Placeholder</div>
+
+                <ul class="dropzone-preview-list" data-dropzone-target="previewList" data-testid="list"></ul>
+            </div>
+        `);
+    });
+
+    afterEach(() => {
+        clearDOM();
+    });
+
+    const start = () =>
+        new Promise<void>((resolve) => {
+            getByTestId(container, 'container').addEventListener('dropzone:connect', () => resolve(), { once: true });
+            const application = Application.start();
+            application.register('dropzone', DropzoneController);
+        });
+
+    // Simulate a native file pick. A real <input multiple> replaces its FileList
+    // on every pick; jsdom can't build a populated FileList, and user-event makes
+    // `files` read-only, so we install create a writable `files` (which the
+    // controller writes back to as well) and dispatch the change event ourselves.
+    const selectFiles = (input: HTMLInputElement, files: File[]) => {
+        Object.defineProperty(input, 'files', { configurable: true, writable: true, value: files });
+        input.dispatchEvent(new Event('change'));
+    };
+
+    const make = (name: string, lastModified = 1) => new File(['content'], name, { type: 'text/plain', lastModified });
+
+    it('accumulates files across selections', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+
+        selectFiles(input, [make('a.txt')]);
+        await waitFor(() => expect(getByTestId(container, 'list').children).toHaveLength(1));
+
+        selectFiles(input, [make('b.txt')]);
+        await waitFor(() => expect(getByTestId(container, 'list').children).toHaveLength(2));
+    });
+
+    it('dedupes identical files', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+
+        selectFiles(input, [make('a.txt')]);
+        selectFiles(input, [make('a.txt')]);
+
+        await waitFor(() => expect(getByTestId(container, 'list').children).toHaveLength(1));
+    });
+
+    it('removes a single file', async () => {
+        await start();
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+
+        selectFiles(input, [make('a.txt')]);
+        selectFiles(input, [make('b.txt')]);
+        await waitFor(() => expect(getByTestId(container, 'list').children).toHaveLength(2));
+
+        const firstRemove = getByTestId(container, 'list').querySelector(
+            '.dropzone-preview-list-remove'
+        ) as HTMLButtonElement;
+        firstRemove.click();
+
+        await waitFor(() => expect(getByTestId(container, 'list').children).toHaveLength(1));
+        await waitFor(() =>
+            expect(getByTestId(container, 'list').querySelector('.dropzone-preview-filename')?.textContent).toBe(
+                'b.txt'
+            )
+        );
     });
 });

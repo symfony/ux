@@ -2,7 +2,7 @@
     {%- set data_controller = (attr['data-controller']|default('') ~ ' symfony--ux-dropzone--dropzone')|trim -%}
     {%- set attr = attr|merge({'data-controller': '', class: (attr.class|default('') ~ ' dropzone-input')|trim}) -%}
 
-    <div class="dropzone-container" data-controller="{{ data_controller }}">
+    <div class="dropzone-container{% if multiple %} dropzone-container-multiple{% endif %}" data-controller="{{ data_controller }}"{% if multiple %} data-symfony--ux-dropzone--dropzone-multiple-value="true"{% endif %}>
         <input type="file" {{ block('widget_attributes') }} data-symfony--ux-dropzone--dropzone-target="input" />
 
         <div class="dropzone-placeholder" data-symfony--ux-dropzone--dropzone-target="placeholder">
@@ -20,5 +20,8 @@
 
             <div data-symfony--ux-dropzone--dropzone-target="previewFilename" class="dropzone-preview-filename"></div>
         </div>
+{% if multiple %}
+        <ul class="dropzone-preview-list" data-symfony--ux-dropzone--dropzone-target="previewList"></ul>
+{% endif %}
     </div>
 {%- endblock %}
