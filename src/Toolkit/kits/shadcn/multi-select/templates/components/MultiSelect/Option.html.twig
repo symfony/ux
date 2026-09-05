@@ -1,0 +1,22 @@
+{# @prop value string The value submitted with the form #}
+{# @prop label string The human-readable label displayed in the dropdown and as a badge #}
+{%- props value = '', label = '' -%}
+<div
+    role="option"
+    aria-selected="false"
+    data-value="{{ value }}"
+    data-label="{{ label }}"
+    data-multi-select-target="option"
+    data-action="click->multi-select#toggleOption"
+    class="{{ ('relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground ' ~ attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.without('class') }}
+>
+    <span
+        class="mr-2 flex h-4 w-4 items-center justify-center text-primary opacity-0 [[aria-selected=true]>&]:opacity-100"
+        data-unchecked
+        aria-hidden="true"
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+    </span>
+    {{ label }}
+</div>
