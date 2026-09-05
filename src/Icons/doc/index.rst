@@ -67,7 +67,10 @@ The icon ``name`` is the same as the file name without the file extension (e.g. 
 
 .. caution::
 
-    The name must match a standard ``slug`` format: ``[a-z0-9-]+(-[a-z0-9])+``.
+    The ``prefix`` and the ``name`` must be *slugs*: only lowercase letters, digits
+    and hyphens are allowed (e.g. ``user-profile``). Underscores and uppercase letters
+    are not allowed, not even in the names of the directories inside ``assets/icons/``.
+    Icons with an invalid name are reported as not found (see `Errors`_).
 
 Depending on your `configuration`_, the ``prefix`` can be the name of an icon set, a directory
 where the icon is located, or a combination of both.
@@ -234,8 +237,8 @@ Local SVG Icons
 
 If you already have the SVG icon files to use in your project, store them in the
 ``assets/icons/`` directory and commit them. The name of the file is used as the
-*name* of the icon (``icon_name.svg`` will be named ``icon_name``). If located in
-a subdirectory, the *name* will be ``subdirectory:icon_name``.
+*name* of the icon (``icon-name.svg`` will be named ``icon-name``). If located in
+a subdirectory, the *name* will be ``subdirectory:icon-name``.
 
 .. code-block:: text
 
@@ -252,6 +255,13 @@ a subdirectory, the *name* will be ``subdirectory:icon_name``.
     │     ├─ menu.svg
     │     └─ ...
     └─ ...
+
+.. caution::
+
+    Directory and file names must be *slugs* (lowercase letters, digits and hyphens).
+    An icon stored in ``assets/icons/user_menu/close.svg`` cannot be loaded because
+    of the underscore in the directory name; rename it to ``user-menu/`` and use
+    ``user-menu:close`` instead. See `Icon Names`_ for details.
 
 On-Demand Icons
 ~~~~~~~~~~~~~~~
@@ -367,7 +377,7 @@ Twig Function
     {# includes the contents of the 'assets/icons/user-profile.svg' file in the template #}
     {{ ux_icon('user-profile') }}
 
-    {# icons stored in subdirectories must use the 'subdirectory_name:file_name' syntax
+    {# icons stored in subdirectories must use the 'subdirectory-name:file-name' syntax
        (e.g. this includes 'assets/icons/admin/user-profile.svg') #}
     {{ ux_icon('admin:user-profile') }}
 
