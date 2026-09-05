@@ -34,8 +34,11 @@ class ComponentWithFormTest extends KernelTestCase
         $component = new FormComponentWithManyDifferentFieldsType($formFactory);
         $component->initialData = [
             'choice_multiple' => [2],
+            'choice_multiple_disabled' => [1, 2],
+            'choice_expanded_disabled' => 1,
             'select_multiple' => [2],
             'checkbox_checked' => true,
+            'checkbox_checked_disabled' => true,
         ];
         $component->initializeForm([]);
 
@@ -54,10 +57,15 @@ class ComponentWithFormTest extends KernelTestCase
                 'choice_required_with_empty_preferred_choices' => 'ok',
                 'choice_expanded' => '',
                 'choice_multiple' => ['2'],
+                // disabled choices are never submitted by browsers, so their
+                // values must not appear here even when initially selected
+                'choice_multiple_disabled' => ['2'],
+                'choice_expanded_disabled' => '',
                 'select_multiple' => ['2'],
                 'entity' => (string) $id,
                 'checkbox' => null,
                 'checkbox_checked' => '1',
+                'checkbox_checked_disabled' => null,
                 'file' => '',
                 'hidden' => '',
                 'complexType' => [
