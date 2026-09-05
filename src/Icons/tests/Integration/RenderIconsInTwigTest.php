@@ -12,7 +12,9 @@
 namespace Symfony\UX\Icons\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -52,5 +54,18 @@ final class RenderIconsInTwigTest extends KernelTestCase
         $expected = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L17.94 6M18 18L6.06 6"/></svg>';
         $this->assertSame($outputIcon, $expected);
         $this->assertSame($outputIcon, $outputAlias);
+    }
+
+    public function testIconInDirectoryWithUnderscoreIsNotFound()
+    {
+        $this->assertFileExists(__DIR__.'/../Fixtures/icons/sub_dir/check.svg');
+
+        try {
+            self::getContainer()->get(Environment::class)->createTemplate("{{ ux_icon('sub_dir:check') }}")->render();
+            $this->fail('An IconNotFoundException should have been thrown.');
+        } catch (RuntimeError $e) {
+            $this->assertInstanceOf(IconNotFoundException::class, $e->getPrevious());
+            $this->assertSame('The icon name "sub_dir:check" is not valid.', $e->getPrevious()->getMessage());
+        }
     }
 }

@@ -136,6 +136,7 @@ final class IconTest extends TestCase
             ['foo--bar'],
             ['foo--bar-baz'],
             ['foo-bar--baz'],
+            ['foo-bar--baz-qux'],
         ];
     }
 
@@ -146,6 +147,8 @@ final class IconTest extends TestCase
             ['foo:'],
             [':foo'],
             ['foo::bar'],
+            ['foo_bar--baz'],
+            ['foo--bar_baz'],
         ];
     }
 
@@ -155,6 +158,8 @@ final class IconTest extends TestCase
         yield from [
             ['foo:bar-baz'],
             ['foo:bar'],
+            ['foo:bar:baz'],
+            ['foo-bar:baz-qux'],
         ];
     }
 
@@ -169,6 +174,9 @@ final class IconTest extends TestCase
             ['foo::'],
             ['::foo'],
             ['foo--bar'],
+            ['foo_bar:baz'],
+            ['foo:bar_baz'],
+            ['foo_bar:baz_qux'],
         ];
     }
 
