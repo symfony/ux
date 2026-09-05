@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-01T13:17:34Z
+
+Oh, it looks like that some UX Toolkit snapshots are impacted.
+Well it's fine, it means that we actually found and fixed more issues.
+
+The following example:
+```twig
+<twig:Navbar :background="null" theme="light" style="background-color: #e3f2fd;">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <div class="navbar-nav flex-row gap-3">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link" href="#">Features</a>
+            <a class="nav-link" href="#">Pricing</a>
+        </div>
+    </div>
+</twig:Navbar>
+```
+
+with an explicit `:background="null"`, should have never been rendered like:
+```html
+<nav class="navbar bg-body-tertiary" data-bs-theme="light" style="background-color: #e3f2fd;">
+```
+
+but like that instead:
+```html
+<nav class="navbar" data-bs-theme="light" style="background-color: #e3f2fd;">
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-09-01T13:34:05Z
+
+```
+{%- props chevalCourse, texte = null -%}
+```
+
+does not work ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-01T13:37:33Z
+
+It does, but using `=` should only defines the default value when the prop is not passed.
+I mean, its only tell you if the prop is required or not.
