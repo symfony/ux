@@ -396,6 +396,51 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('<p>bar</p>', $output);
     }
 
+    public function testComponentPropWithoutDefaultAcceptsNullValue()
+    {
+        $output = self::getContainer()->get(Environment::class)->render('anonymous_component_with_null_props.html.twig');
+
+        $this->assertStringContainsString('<p>required: NULL</p>', $output);
+    }
+
+    public function testComponentPropWithoutDefaultAndWithoutValueThrows()
+    {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Prop "required" should be defined in "components/NullableProps.html.twig" at line 1.');
+
+        self::getContainer()->get(Environment::class)->render('anonymous_component_with_missing_required_prop.html.twig');
+    }
+
+    public function testComponentPropWithDefaultKeepsNullValueExplicitlyPassed()
+    {
+        $output = self::getContainer()->get(Environment::class)->render('anonymous_component_with_null_props.html.twig');
+
+        $this->assertStringContainsString('<p>withDefault: NULL</p>', $output);
+    }
+
+    public function testComponentPropWithDefaultIgnoresNullValueFromContext()
+    {
+        $output = self::getContainer()->get(Environment::class)->render('anonymous_component_with_null_variable_already_in_context.html.twig');
+
+        $this->assertStringContainsString('<p>withDefault: default</p>', $output);
+    }
+
+    public function testComponentClassPropertyWithDefaultKeepsNullValueExplicitlyPassed()
+    {
+        $output = self::getContainer()->get(Environment::class)->render('class_component_with_null_props.html.twig');
+
+        $this->assertStringContainsString('<p>property: NULL</p>', $output);
+        $this->assertStringContainsString('<p>mounted: NULL</p>', $output);
+    }
+
+    public function testComponentClassPropertyWithDefaultKeepsItWhenPropIsNotPassed()
+    {
+        $output = self::getContainer()->get(Environment::class)->render('class_component_with_omitted_props.html.twig');
+
+        $this->assertStringContainsString('<p>property: default</p>', $output);
+        $this->assertStringContainsString('<p>mounted: default</p>', $output);
+    }
+
     public function testComponentPropsWithTrailingComma()
     {
         $output = self::getContainer()->get(Environment::class)->render('anonymous_component_props_trailing_comma.html.twig');
@@ -594,6 +639,14 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->expectExceptionMessage('Cannot define prop "name" in template "components/Conflict.html.twig". Property already defined in component class "Symfony\UX\TwigComponent\Tests\Fixtures\Component\Conflict"');
 
         self::getContainer()->get(Environment::class)->render('component_with_conflict_between_props_from_template_and_class.html.twig');
+    }
+
+    public function testComponentWithConflictBetweenNullPropFromTemplateAndClass()
+    {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Cannot define prop "name" in template "components/NullableConflict.html.twig". Property already defined in component class "Symfony\\UX\\TwigComponent\\Tests\\Fixtures\\Component\\NullableConflict"');
+
+        self::getContainer()->get(Environment::class)->render('component_with_conflict_between_null_prop_from_template_and_class.html.twig');
     }
 
     public function testComponentWithEmptyProps()
