@@ -1,0 +1,51 @@
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-08-31T12:43:48Z
+
+You are right, and the imbalance was worse than the section you commented on: the introduction had the same one-sided framing. It ended with "an upgrade of the Toolkit never changes a component you already installed", which reads as reassurance while describing exactly the drawback you are pointing at.
+
+Both are rewritten. The section is now named "The Component Is Yours, For Better and For Worse" and says the two halves plainly:
+
+- files are yours to edit, without an override mechanism and without being limited to the options the author thought of;
+- there is no upgrade path. Fixes, new options and new features added to a kit never reach a component already installed. Reinstalling copies the current files, which may differ both from what you started with and from what you have since edited, so bringing an improvement in means comparing and merging by hand. The command asks before overwriting, so nothing is lost, but the merge is yours to do.
+- and the consequence across projects: installing a component today and in six months gives two different versions, and they do not drift back together.
+
+The introduction now points forward to that section instead of selling one half of the trade, since it is the thing to understand before adopting the Toolkit rather than a detail near the end.
+
+DOCtor-RST caught a title underline one character short while I was at it. Green now.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-31T21:21:32Z
+
+Please for the next time let's discuss a bit on the issue https://github.com/symfony/ux/issues/3824 before jumping on a PR
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-08-31T21:29:36Z
+
+Thank you for starting this work @Amoifr !
+
+This will help illustrate the various goals / messages we'd like to send and how we can help with these ux kits and features.
+
+Let's work here (or on the issue pointed at by @Kocal), I have the feeling this will end with a great documentation page!
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-09-01T07:52:52Z
+
+Reworked, thanks @Kocal @smnandre @javiereguiluz.
+
+Terminology first: the whole page said "component" where the code says "recipe". Fixed everywhere, headings included.
+
+Deleted, per @Kocal: the dependencies section, the options reference, the kit authoring section, and the external/branch `--kit` examples.
+
+@smnandre, three of your suggestions land on lines @Kocal asked to delete (the install command, the examples, the tip). I followed the deletions, but kept what you were after in the install section itself: it now says where the files land (`templates/`, `assets/`), that a recipe can bring another one along, and that an existing file is never replaced without asking.
+
+The kit list now has all four, Bootstrap and Common included, and the Tailwind claim went away with the section it was in.
+
+The last section is inverted as you suggested: how it works, then the drawback, then the good side, ending on it. The upgrade gap has your answer now rather than just a warning: commit after installing, re-run `ux:install`, read the diff. The Shadcn nod stayed.
+
+Noted for the issue-first process, @Kocal. Sorry for jumping.
+
+DOCtor-RST green.
