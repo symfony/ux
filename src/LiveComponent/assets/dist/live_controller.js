@@ -658,9 +658,12 @@ var Idiomorph = (function() {
 			} else if (ctx.head.shouldRemove(currentHeadElt) !== false) removed.push(currentHeadElt);
 		}
 		nodesToAppend.push(...srcToNewHeadNodes.values());
+		log("to append: ", nodesToAppend);
 		let promises = [];
 		for (const newNode of nodesToAppend) {
+			log("adding: ", newNode);
 			let newElt = document.createRange().createContextualFragment(newNode.outerHTML).firstChild;
+			log(newElt);
 			if (ctx.callbacks.beforeNodeAdded(newElt) !== false) {
 				if (newElt.href || newElt.src) {
 					let resolve = null;
@@ -688,6 +691,7 @@ var Idiomorph = (function() {
 		});
 		return promises;
 	}
+	function log() {}
 	function noOp() {}
 	function mergeDefaults(config) {
 		let finalConfig = {};
@@ -1830,8 +1834,7 @@ var ChildComponentPlugin_default = class {
 	constructor(component) {
 		this.parentModelBindings = [];
 		this.component = component;
-		const modelDirectives = getAllModelDirectiveFromElements(this.component.element);
-		this.parentModelBindings = modelDirectives.map(get_model_binding_default);
+		this.parentModelBindings = getAllModelDirectiveFromElements(this.component.element).map(get_model_binding_default);
 	}
 	attachToComponent(component) {
 		component.on("request:started", (requestData) => {
@@ -2132,11 +2135,11 @@ var SetValueOntoModelFieldsPlugin_default = class {
 		});
 	}
 	synchronizeValueOfModelFields(component) {
-		component.element.querySelectorAll("[data-model]").forEach((element) => {
+		component.element.querySelectorAll("[data-model], select[name]").forEach((element) => {
 			if (!(element instanceof HTMLElement)) throw new Error("Invalid element using data-model.");
 			if (element instanceof HTMLFormElement) return;
 			if (!elementBelongsToThisComponent(element, component)) return;
-			const modelDirective = getModelDirectiveFromElement(element);
+			const modelDirective = getModelDirectiveFromElement(element, false);
 			if (!modelDirective) return;
 			const modelName = modelDirective.action;
 			if (component.getUnsyncedModels().includes(modelName)) return;
