@@ -159,6 +159,26 @@ situation.
                 ]
             ]);
 
+
+4. Flash Messages and forward-fetching side effects
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Of course, if you have side effects, like added `Flash Messages <https://symfony.com/doc/current/session.html#flash-messages>`_ 
+to your form submissions, they will be flushed during the asynchronous call.
+To prevent such actions on form submissions to be executed ahead of time 
+(like emptying a FlashBag of session messages), the best way is 
+to simply disable Turbo Drive on submission inputs/buttons 
+(which are tried on hover by default).
+
+Simply add a ``data-turbo="false"`` attribute and value to your widgets:
+
+.. code-block:: html
+
+        <button data-turbo="false">Submit form</button>
+
+This way, only your real user manual action will trigger the form submission.  
+More information can be found in the Turbo documentation: https://turbo.hotwired.dev/reference/attributes.
+
 More Turbo Drive Info
 ^^^^^^^^^^^^^^^^^^^^^
 
