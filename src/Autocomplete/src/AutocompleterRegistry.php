@@ -23,7 +23,7 @@ final class AutocompleterRegistry
     ) {
     }
 
-    public function getAutocompleter(string $alias): ?EntityAutocompleterInterface
+    public function getAutocompleter(string $alias): AutocompleterInterface|EntityAutocompleterInterface|null
     {
         return $this->autocompletersLocator->has($alias) ? $this->autocompletersLocator->get($alias) : null;
     }

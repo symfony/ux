@@ -99,6 +99,16 @@ have MakerBundle installed, you can run:
 
     $ php bin/console make:autocomplete-field
 
+The command will ask you what type of autocomplete field you want:
+
+- **Entity (Doctrine)**: for autocompleting Doctrine entities (uses ``BaseEntityAutocompleteType``)
+- **Choice (any data source)**: for any other data source (uses ``AutocompleteChoiceType``)
+
+.. versionadded:: 3.0
+
+    The choice between Entity and Choice modes was added in Autocomplete 3.0.
+    If Doctrine ORM is not installed, the command defaults to Choice mode.
+
 Or, create the field by hand::
 
     // src/Form/FoodAutocompleteField.php
@@ -383,6 +393,81 @@ extra option in the default ``query_builder`` of the ``FoodAutocompleteField``::
         }
     }
 
+Usage in a Form (Ajax with any data source)
+-------------------------------------------
+
+.. versionadded:: 3.0
+
+    The ``AutocompleteChoiceType`` and ``#[AsAutocompleteField]`` were added
+    in Autocomplete 3.0 to support non-Doctrine data sources.
+
+If your data comes from something other than Doctrine ORM (e.g. an API, Elasticsearch,
+in-memory list, etc.), you can create an Ajax-powered autocomplete field using
+``AutocompleteChoiceType`` and ``#[AsAutocompleteField]``.
+
+If you have MakerBundle installed, you can generate this class:
+
+.. code-block:: terminal
+
+    $ php bin/console make:autocomplete-field
+
+Select **Choice (any data source)** when prompted. Or, create the field by hand::
+
+    // src/Form/CountryAutocompleteField.php
+    use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\OptionsResolver\OptionsResolver;
+    use Symfony\UX\Autocomplete\Form\AsAutocompleteField;
+    use Symfony\UX\Autocomplete\Form\AutocompleteChoiceType;
+
+    #[AsAutocompleteField]
+    class CountryAutocompleteField extends AbstractType
+    {
+        public function configureOptions(OptionsResolver $resolver): void
+        {
+            $resolver->setDefaults([
+                'choices' => [
+                    'France' => 'FR',
+                    'Germany' => 'DE',
+                    'United Kingdom' => 'GB',
+                    // ...
+                ],
+                'placeholder' => 'Choose a country',
+            ]);
+        }
+
+        public function getParent(): string
+        {
+            return AutocompleteChoiceType::class;
+        }
+    }
+
+There are 3 important things:
+
+#. The class needs the ``#[AsAutocompleteField]`` attribute — the generic
+   version of ``#[AsEntityAutocompleteField]`` (which is now deprecated).
+#. The ``getParent()`` method must return ``AutocompleteChoiceType``,
+   which extends ``ChoiceType`` (not ``EntityType``) — **no Doctrine needed**.
+#. Inside ``configureOptions()``, you can configure your field using whatever
+   normal ``ChoiceType`` options you need. Choices are filtered and paginated
+   automatically by the framework.
+
+Then use it in your form just like the entity version:
+
+.. code-block:: diff
+
+    // src/Form/AnyForm.php
+    // ...
+
+    class AnyForm extends AbstractType
+    {
+        public function buildForm(FormBuilderInterface $builder, array $options): void
+        {
+            $builder
+    +            ->add('country', CountryAutocompleteField::class)
+            ;
+        }
+    }
+
 Using with a TextType Field
 ---------------------------
 
@@ -441,7 +526,8 @@ Managing plugins
 Customizing the AJAX URL/Route
 ------------------------------
 
-The default route for the Ajax calls used by the Autocomplete component is ``/autocomplete/{alias}/``.
+The default route for the Ajax calls used by the Autocomplete component is
+``ux_autocomplete`` (path: ``/autocomplete/{alias}/``).
 Sometimes it may be useful to customize this URL - e.g. so that the URL lives
 under a specific firewall.
 
@@ -450,14 +536,30 @@ To use another route, first declare it:
 .. code-block:: yaml
 
     # config/routes/attributes.yaml
-    ux_entity_autocomplete_admin:
-        controller: ux.autocomplete.entity_autocomplete_controller
+    ux_autocomplete_admin:
+        controller: Symfony\UX\Autocomplete\Controller\AutocompleteController
         path: '/admin/autocomplete/{alias}'
 
 Then specify this new route on the attribute::
 
+    // src/Form/CountryAutocompleteField.php
+    #[AsAutocompleteField(route: 'ux_autocomplete_admin')]
+    class CountryAutocompleteField
+    {
+        // ...
+    }
+
+.. deprecated:: 3.0
+
+    The ``ux_entity_autocomplete`` route and the ``ux.autocomplete.entity_autocomplete_controller``
+    controller service are deprecated. Use the ``ux_autocomplete`` route and
+    ``Symfony\UX\Autocomplete\Controller\AutocompleteController`` instead.
+
+For Doctrine-based fields using ``#[AsEntityAutocompleteField]``, the same
+approach works::
+
     // src/Form/FoodAutocompleteField.php
-    #[AsEntityAutocompleteField(route: 'ux_entity_autocomplete_admin')]
+    #[AsEntityAutocompleteField(route: 'ux_autocomplete_admin')]
     class FoodAutocompleteField
     {
         // ...
@@ -552,11 +654,76 @@ Advanced: Creating an Autocompleter (with no Form)
 
 If you're not using the form system, you can create an Ajax autocomplete
 endpoint and then :ref:`initialize the Stimulus controller manually <manual-stimulus-controller>`.
-This only works for Doctrine entities: see `Manually using the Stimulus Controller`_
-if you're autocompleting something other than an entity.
 
-To expose the endpoint, create a class that implements ``Symfony\UX\Autocomplete\EntityAutocompleterInterface``
-and tag this service with ``ux.entity_autocompleter``, including an ``alias`` option::
+.. versionadded:: 3.0
+
+    The ``AutocompleterInterface`` and the ``ux_autocomplete`` route were added
+    in Autocomplete 3.0 to support any data source (API, Elasticsearch, in-memory, etc.).
+
+To expose the endpoint, create a class that implements
+``Symfony\UX\Autocomplete\AutocompleterInterface`` and tag this service with
+``ux.autocompleter``, including an ``alias`` option::
+
+    namespace App\Autocompleter;
+
+    use Symfony\Bundle\SecurityBundle\Security;
+    use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
+    use Symfony\UX\Autocomplete\AutocompleteResults;
+    use Symfony\UX\Autocomplete\AutocompleterInterface;
+
+    #[AutoconfigureTag('ux.autocompleter', ['alias' => 'food'])]
+    class FoodAutocompleter implements AutocompleterInterface
+    {
+        public function __construct(
+            private FoodRepository $foodRepository,
+        ) {
+        }
+
+        public function fetchResults(string $query, int $page): AutocompleteResults
+        {
+            $results = [];
+            $maxResults = 10;
+            $offset = ($page - 1) * $maxResults;
+
+            $foods = $this->foodRepository->findBySearchQuery($query, $maxResults + 1, $offset);
+
+            $hasNextPage = \count($foods) > $maxResults;
+            $foods = array_slice($foods, 0, $maxResults);
+
+            foreach ($foods as $food) {
+                $results[] = ['value' => $food->getId(), 'text' => $food->getName()];
+            }
+
+            return new AutocompleteResults($results, $hasNextPage);
+        }
+
+        public function isGranted(Security $security): bool
+        {
+            return true;
+        }
+    }
+
+Thanks to this, you can now autocomplete your data via the ``ux_autocomplete``
+route and ``alias`` route wildcard:
+
+.. code-block:: twig
+
+    {{ path('ux_autocomplete', { alias: 'food' }) }}
+
+Usually, you'll pass this URL to the Stimulus controller, which is
+discussed in the next section.
+
+Using Doctrine Entities (EntityAutocompleterInterface)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. deprecated:: 3.0
+
+    The ``EntityAutocompleterInterface`` is deprecated. Use ``AutocompleterInterface``
+    instead, which works with any data source including Doctrine.
+
+If you are autocompleting Doctrine entities, you can alternatively use
+``Symfony\UX\Autocomplete\EntityAutocompleterInterface`` and tag this service
+with ``ux.entity_autocompleter``::
 
     namespace App\Autocompleter;
 
@@ -578,14 +745,9 @@ and tag this service with ``ux.entity_autocompleter``, including an ``alias`` op
         public function createFilteredQueryBuilder(EntityRepository $repository, string $query): QueryBuilder
         {
             return $repository
-                // the alias "food" can be anything
                 ->createQueryBuilder('food')
                 ->andWhere('food.name LIKE :search OR food.description LIKE :search')
                 ->setParameter('search', '%'.$query.'%')
-
-                // maybe do some custom filtering in all cases
-                //->andWhere('food.isHealthy = :isHealthy')
-                //->setParameter('isHealthy', true)
             ;
         }
 
@@ -601,20 +763,15 @@ and tag this service with ``ux.entity_autocompleter``, including an ``alias`` op
 
         public function isGranted(Security $security): bool
         {
-            // see the "security" option for details
             return true;
         }
     }
 
-Thanks to this, your can now autocomplete your ``Food`` entity via
-the ``ux_entity_autocomplete`` route and ``alias`` route wildcard:
+This uses the ``ux_entity_autocomplete`` route:
 
 .. code-block:: twig
 
     {{ path('ux_entity_autocomplete', { alias: 'food' }) }}
-
-Usually, you'll pass this URL to the Stimulus controller, which is
-discussed in the next section.
 
 Passing Extra Options to the Autocompleter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -695,17 +852,24 @@ a :ref:`custom autocompleter <custom-autocompleter>`:
     <select
         name="food"
         {{ stimulus_controller('symfony/ux-autocomplete/autocomplete', {
-            url: path('ux_entity_autocomplete', { alias: 'food' })
+            url: path('ux_autocomplete', { alias: 'food' })
         }) }}
     >
 
-.. _custom-autocomplete-endpoint:
-
 .. note::
 
-    If you want to create an AJAX autocomplete endpoint that is
-    *not* for an entity, you will need to create this manually.
-    The only requirement is that the response returns JSON with this format:
+    The ``ux_entity_autocomplete`` route is deprecated. Use ``ux_autocomplete`` instead,
+    which works with both ``AutocompleterInterface`` and ``EntityAutocompleterInterface``.
+
+.. _custom-autocomplete-endpoint:
+
+.. tip::
+
+    You can create an AJAX autocomplete endpoint for **any data source** by
+    implementing ``AutocompleterInterface`` — see :ref:`custom-autocompleter`.
+    You don't need to create a custom controller manually.
+
+    The endpoint returns JSON with this format:
 
     .. code-block:: json
 
@@ -716,7 +880,7 @@ a :ref:`custom autocompleter <custom-autocompleter>`:
             ]
         }
 
-    for using `Tom Select Option Group`_ the format is as follows
+    For using `Tom Select Option Group`_ the format is as follows:
 
     .. code-block:: json
 
@@ -730,7 +894,7 @@ a :ref:`custom autocompleter <custom-autocompleter>`:
             }
         }
 
-    Once you have this, generate the URL to your controller and
+    If you prefer to create a fully custom controller, generate the URL to it and
     pass it to the ``url`` value of the ``stimulus_controller()`` Twig
     function, or to the ``autocomplete_url`` option of your form field.
     The search term entered by the user is passed as a query parameter called ``query``.

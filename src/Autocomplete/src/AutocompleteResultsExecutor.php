@@ -26,16 +26,29 @@ use Symfony\UX\Autocomplete\Doctrine\DoctrineRegistryWrapper;
 final class AutocompleteResultsExecutor
 {
     public function __construct(
-        private DoctrineRegistryWrapper $managerRegistry,
-        private PropertyAccessorInterface $propertyAccessor,
+        private ?DoctrineRegistryWrapper $managerRegistry,
+        private ?PropertyAccessorInterface $propertyAccessor = null,
         private ?Security $security = null,
     ) {
     }
 
-    public function fetchResults(EntityAutocompleterInterface $autocompleter, string $query, int $page): AutocompleteResults
+    public function fetchResults(AutocompleterInterface|EntityAutocompleterInterface $autocompleter, string $query, int $page): AutocompleteResults
     {
         if ($this->security && !$autocompleter->isGranted($this->security)) {
             throw new AccessDeniedException('Access denied from autocompleter class.');
+        }
+
+        if ($autocompleter instanceof AutocompleterInterface) {
+            return $autocompleter->fetchResults($query, $page);
+        }
+
+        return $this->fetchEntityResults($autocompleter, $query, $page);
+    }
+
+    private function fetchEntityResults(EntityAutocompleterInterface $autocompleter, string $query, int $page): AutocompleteResults
+    {
+        if (null === $this->managerRegistry) {
+            throw new \LogicException('Doctrine must be installed to use EntityAutocompleterInterface.');
         }
 
         $queryBuilder = $autocompleter->createFilteredQueryBuilder(

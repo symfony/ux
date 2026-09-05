@@ -13,7 +13,6 @@
     <php>
         <ini name="error_reporting" value="-1"/>
         <env name="SHELL_VERBOSITY" value="-1"/>
-
         <env name="KERNEL_CLASS" value="Symfony\UX\Autocomplete\Tests\Fixtures\Kernel"/>
         <env name="DATABASE_URL" value="sqlite:///%kernel.project_dir%/var/data.db"/>
     </php>

@@ -25,6 +25,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 final class BaseEntityAutocompleteType extends AbstractType
 {
+    use AutocompleteTypeTrait;
+
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
     ) {
@@ -32,7 +34,7 @@ final class BaseEntityAutocompleteType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->setAttribute('autocomplete_url', $this->getAutocompleteUrl($builder, $options));
+        $builder->setAttribute('autocomplete_url', $this->resolveAutocompleteUrl($builder, $options, AsEntityAutocompleteField::class));
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -92,24 +94,8 @@ final class BaseEntityAutocompleteType extends AbstractType
         return 'ux_entity_autocomplete';
     }
 
-    /**
-     * Uses the provided URL, or auto-generate from the provided alias.
-     */
-    private function getAutocompleteUrl(FormBuilderInterface $builder, array $options): string
+    private function getUrlGenerator(): UrlGeneratorInterface
     {
-        if ($options['autocomplete_url']) {
-            return $options['autocomplete_url'];
-        }
-
-        $formType = $builder->getType()->getInnerType();
-        $attribute = AsEntityAutocompleteField::getInstance($formType::class);
-
-        if (!$attribute) {
-            throw new \LogicException(\sprintf('You must either provide your own autocomplete_url, or add #[AsEntityAutocompleteField] attribute to "%s".', $formType::class));
-        }
-
-        return $this->urlGenerator->generate($attribute->getRoute(), [
-            'alias' => $attribute->getAlias() ?: AsEntityAutocompleteField::shortName($formType::class),
-        ]);
+        return $this->urlGenerator;
     }
 }

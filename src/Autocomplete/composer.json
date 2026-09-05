@@ -53,6 +53,9 @@
     "conflict": {
         "doctrine/orm": "2.9.0 || 2.9.1"
     },
+    "suggest": {
+        "doctrine/orm": "Required for EntityAutocompleterInterface and BaseEntityAutocompleteType"
+    },
     "config": {
         "sort-packages": true
     },

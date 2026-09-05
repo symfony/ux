@@ -27,7 +27,9 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\UX\Autocomplete\Form\AsAutocompleteField;
 use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
+use Symfony\UX\Autocomplete\Form\AutocompleteChoiceType;
 use Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType;
 
 /**
@@ -37,6 +39,7 @@ class MakeAutocompleteField extends AbstractMaker
 {
     private string $className;
     private string $entityClass;
+    private string $fieldType = 'entity';
 
     public function __construct(
         private ?DoctrineHelper $doctrineHelper = null,
@@ -74,79 +77,125 @@ class MakeAutocompleteField extends AbstractMaker
     public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
     {
         if (null === $this->doctrineHelper) {
-            throw new \LogicException('Somehow the DoctrineHelper service is missing from MakerBundle.');
+            $this->fieldType = 'choice';
+        } else {
+            $this->fieldType = $io->choice(
+                'What type of autocomplete field do you want?',
+                ['entity' => 'Entity (Doctrine)', 'choice' => 'Choice (any data source)'],
+                'entity'
+            );
         }
 
-        $entities = $this->doctrineHelper->getEntitiesForAutocomplete();
+        if ('entity' === $this->fieldType) {
+            if (null === $this->doctrineHelper) {
+                throw new \LogicException('Somehow the DoctrineHelper service is missing from MakerBundle.');
+            }
 
-        $question = new Question('The class name of the entity you want to autocomplete');
-        $question->setAutocompleterValues($entities);
-        $question->setValidator(static function ($choice) use ($entities) {
-            return Validator::entityExists($choice, $entities);
-        });
+            $entities = $this->doctrineHelper->getEntitiesForAutocomplete();
 
-        $this->entityClass = $io->askQuestion($question);
+            $question = new Question('The class name of the entity you want to autocomplete');
+            $question->setAutocompleterValues($entities);
+            $question->setValidator(static function ($choice) use ($entities) {
+                return Validator::entityExists($choice, $entities);
+            });
 
-        $defaultClass = Str::asClassName(\sprintf('%s AutocompleteField', $this->entityClass));
-        $this->className = $io->ask(
-            \sprintf('Choose a name for your entity field class (e.g. <fg=yellow>%s</>)', $defaultClass),
-            $defaultClass
-        );
+            $this->entityClass = $io->askQuestion($question);
+
+            $defaultClass = Str::asClassName(\sprintf('%s AutocompleteField', $this->entityClass));
+            $this->className = $io->ask(
+                \sprintf('Choose a name for your entity field class (e.g. <fg=yellow>%s</>)', $defaultClass),
+                $defaultClass
+            );
+        } else {
+            $defaultClass = 'CustomAutocompleteField';
+            $this->className = $io->ask(
+                \sprintf('Choose a name for your choice field class (e.g. <fg=yellow>%s</>)', $defaultClass),
+                $defaultClass
+            );
+        }
     }
 
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void
     {
-        if (null === $this->doctrineHelper) {
-            throw new \LogicException('Somehow the DoctrineHelper service is missing from MakerBundle.');
-        }
-
-        $entityClassDetails = $generator->createClassNameDetails(
-            $this->entityClass,
-            'Entity\\'
-        );
-        $entityDoctrineDetails = $this->doctrineHelper->createDoctrineDetails($entityClassDetails->getFullName());
-
         $classDetails = $generator->createClassNameDetails(
             $this->className,
             'Form\\',
         );
 
-        $repositoryClassDetails = $entityDoctrineDetails->getRepositoryClass() ? $generator->createClassNameDetails('\\'.$entityDoctrineDetails->getRepositoryClass(), '') : null;
+        if ('entity' === $this->fieldType) {
+            if (null === $this->doctrineHelper) {
+                throw new \LogicException('Somehow the DoctrineHelper service is missing from MakerBundle.');
+            }
 
-        // use App\Entity\Category;
-        // use App\Repository\CategoryRepository;
-        $useStatements = new UseStatementGenerator([
-            $entityClassDetails->getFullName(),
-            $repositoryClassDetails ? $repositoryClassDetails->getFullName() : EntityManagerInterface::class,
-            AbstractType::class,
-            OptionsResolver::class,
-            AsEntityAutocompleteField::class,
-            BaseEntityAutocompleteType::class,
-        ]);
+            $entityClassDetails = $generator->createClassNameDetails(
+                $this->entityClass,
+                'Entity\\'
+            );
+            $entityDoctrineDetails = $this->doctrineHelper->createDoctrineDetails($entityClassDetails->getFullName());
 
-        $variables = new MakerAutocompleteVariables(
-            useStatements: $useStatements,
-            entityClassDetails: $entityClassDetails,
-            repositoryClassDetails: $repositoryClassDetails,
-        );
-        $generator->generateClass(
-            $classDetails->getFullName(),
-            __DIR__.'/skeletons/AutocompleteField.tpl.php',
-            [
-                'variables' => $variables,
-            ]
-        );
+            $repositoryClassDetails = $entityDoctrineDetails->getRepositoryClass() ? $generator->createClassNameDetails('\\'.$entityDoctrineDetails->getRepositoryClass(), '') : null;
+
+            $useStatements = new UseStatementGenerator([
+                $entityClassDetails->getFullName(),
+                $repositoryClassDetails ? $repositoryClassDetails->getFullName() : EntityManagerInterface::class,
+                AbstractType::class,
+                OptionsResolver::class,
+                AsEntityAutocompleteField::class,
+                BaseEntityAutocompleteType::class,
+            ]);
+
+            $variables = new MakerAutocompleteVariables(
+                useStatements: $useStatements,
+                entityClassDetails: $entityClassDetails,
+                repositoryClassDetails: $repositoryClassDetails,
+            );
+            $generator->generateClass(
+                $classDetails->getFullName(),
+                __DIR__.'/skeletons/AutocompleteField.tpl.php',
+                [
+                    'variables' => $variables,
+                ]
+            );
+        } else {
+            $useStatements = new UseStatementGenerator([
+                AbstractType::class,
+                OptionsResolver::class,
+                AsAutocompleteField::class,
+                AutocompleteChoiceType::class,
+            ]);
+
+            $variables = new MakerAutocompleteVariables(
+                useStatements: $useStatements,
+            );
+            $generator->generateClass(
+                $classDetails->getFullName(),
+                __DIR__.'/skeletons/AutocompleteChoiceField.tpl.php',
+                [
+                    'variables' => $variables,
+                ]
+            );
+        }
 
         $generator->writeChanges();
 
         $this->writeSuccessMessage($io);
+
+        if ('entity' === $this->fieldType) {
+            $entityClassDetails = $generator->createClassNameDetails(
+                $this->entityClass,
+                'Entity\\'
+            );
+            $fieldName = Str::asLowerCamelCase($entityClassDetails->getShortName());
+        } else {
+            $fieldName = Str::asLowerCamelCase($classDetails->getShortName());
+        }
 
         $io->text([
             'Customize your new field class, then add it to a form:',
             '',
             '    <comment>$builder</comment>',
             '        <comment>// ...</comment>',
-            \sprintf('        <comment>->add(\'%s\', %s::class)</comment>', Str::asLowerCamelCase($entityClassDetails->getShortName()), $classDetails->getShortName()),
+            \sprintf('        <comment>->add(\'%s\', %s::class)</comment>', $fieldName, $classDetails->getShortName()),
             '    <comment>;</>',
         ]);
     }
