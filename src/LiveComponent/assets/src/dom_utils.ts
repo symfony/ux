@@ -152,6 +152,9 @@ export function getModelDirectiveFromElement(element: HTMLElement, throwOnMissin
     }
 
     if (element.getAttribute('name')) {
+        if (element.hasAttribute('data-live-ignore')) {
+            return null;
+        }
         const formElement = element.closest('form');
         // require a <form data-model="*"> around elements in order to
         // activate automatic "data binding" via the "name" attribute
