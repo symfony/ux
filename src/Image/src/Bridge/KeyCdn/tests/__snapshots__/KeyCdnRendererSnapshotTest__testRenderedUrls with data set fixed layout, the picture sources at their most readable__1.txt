@@ -1,0 +1,14 @@
+src:
+https://zone.kxcdn.com/hero.jpg?width=400&format=jpeg
+
+srcset:
+https://zone.kxcdn.com/hero.jpg?width=400&format=jpeg 400w
+https://zone.kxcdn.com/hero.jpg?width=800&format=jpeg 800w
+
+source (image/webp):
+https://zone.kxcdn.com/hero.jpg?width=400&format=webp 400w
+https://zone.kxcdn.com/hero.jpg?width=800&format=webp 800w
+
+source (image/jpeg):
+https://zone.kxcdn.com/hero.jpg?width=400&format=jpeg 400w
+https://zone.kxcdn.com/hero.jpg?width=800&format=jpeg 800w
