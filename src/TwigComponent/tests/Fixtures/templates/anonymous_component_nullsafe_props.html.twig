@@ -1,5 +1,5 @@
-<twig:Button :label="affaire.commune?.organisation?.raisonSociale ~ ' - ' ~ affaire.libelle">
-    Nullsafe
+<twig:Button :label="item.city?.organisation?.name ~ ' - ' ~ item.title">
+    unused
 </twig:Button>
-<twig:Button :label="affaire.commune?.organisation?.raisonSociale ~ ' - ' ~ affaire.libelle" />
-{{ component('Button', {label: affaire.commune?.organisation?.raisonSociale ~ ' - ' ~ affaire.libelle}) }}
+<twig:Button :label="item.city?.organisation?.name ~ ' - ' ~ item.title" />
+{{ component('Button', {label: item.city?.organisation?.name ~ ' - ' ~ item.title}) }}

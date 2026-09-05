@@ -388,18 +388,18 @@ final class ComponentExtensionTest extends KernelTestCase
             $this->markTestSkipped('The "?." operator requires Twig 3.23+.');
         }
 
-        $commune = new \stdClass();
-        $commune->organisation = null;
+        $city = new \stdClass();
+        $city->organisation = null;
 
-        $affaire = new \stdClass();
-        $affaire->commune = $commune;
-        $affaire->libelle = 'Libelle';
+        $item = new \stdClass();
+        $item->city = $city;
+        $item->title = 'Title';
 
         $output = self::getContainer()->get(Environment::class)->render('anonymous_component_nullsafe_props.html.twig', [
-            'affaire' => $affaire,
+            'item' => $item,
         ]);
 
-        $this->assertSame(3, substr_count($output, '- Libelle'));
+        $this->assertSame(3, substr_count($output, '- Title'));
     }
 
     public function testComponentPropsOverwriteContextValue()
