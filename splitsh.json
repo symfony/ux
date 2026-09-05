@@ -7,6 +7,10 @@
         "ux-chartjs": "src/Chartjs",
         "ux-cropperjs": "src/Cropperjs",
         "ux-icons": "src/Icons",
+        "ux-image": { "prefixes": [{ "from": "src/Image", "to": "", "excludes": ["src/Bridge"] }] },
+        "ux-cloudflare-image": "src/Image/src/Bridge/Cloudflare",
+        "ux-glide-image": "src/Image/src/Bridge/Glide",
+        "ux-keycdn-image": "src/Image/src/Bridge/KeyCdn",
         "ux-live-component": "src/LiveComponent",
         "ux-map": {
             "prefixes": [{ "from": "src/Map", "to": "", "excludes": ["src/Bridge"] }]
