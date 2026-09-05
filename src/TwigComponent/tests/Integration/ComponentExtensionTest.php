@@ -382,6 +382,26 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('class variable defined? no', $output);
     }
 
+    public function testRenderComponentTagWithNullsafeProps()
+    {
+        if (Environment::VERSION_ID < 32300) {
+            $this->markTestSkipped('The "?." operator requires Twig 3.23+.');
+        }
+
+        $city = new \stdClass();
+        $city->organisation = null;
+
+        $item = new \stdClass();
+        $item->city = $city;
+        $item->title = 'Title';
+
+        $output = self::getContainer()->get(Environment::class)->render('anonymous_component_nullsafe_props.html.twig', [
+            'item' => $item,
+        ]);
+
+        $this->assertSame(3, substr_count($output, '- Title'));
+    }
+
     public function testComponentPropsOverwriteContextValue()
     {
         $output = self::getContainer()->get(Environment::class)->render('anonymous_component_with_variable_already_in_context.html.twig');
