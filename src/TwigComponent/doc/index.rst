@@ -299,6 +299,9 @@ prefix the attribute with ``:`` or use the normal ``{{ }}`` syntax:
     // pass object, array, or anything you imagine
     <twig:Alert :foo="{col: ['foo', 'oof']}" />
 
+    // null-safe operator (Twig 3.23+)
+    <twig:Alert :title="user.profile?.displayName" />
+
 Boolean props are converted using PHP's type juggling rules. The
 string ``"false"`` is converted to the boolean ``true``.
 
