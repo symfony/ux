@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by alireza-aminzadeh at 2026-09-05T10:14:42Z
+
+php (8.4, 7.4.*) is Autocomplete's FieldAutocompleterTest::testItReturnsBasicResults (expected 2 results, got 1). Same flake is currently failing on 3.x (php 8.4 / 8.1.*, after #3827). TwigComponent is green on this PR.
