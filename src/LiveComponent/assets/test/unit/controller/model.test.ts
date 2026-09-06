@@ -346,6 +346,35 @@ describe('LiveController data-model Tests', () => {
         expect(test.component.valueStore.getOriginalProps()).toEqual({ form: { check1: null, check2: '1' } });
     });
 
+    it('syncs a checkbox the server disabled and cleared: unchecked and disabled', async () => {
+        const test = await createTest(
+            { check1: '1', isDisabled: false },
+            (data: any) => `
+            <div ${initComponent(data)}>
+                <label>
+                    Checkbox 1: <input type="checkbox" data-model="check1" value="1" ${data.check1 ? 'checked' : ''} ${data.isDisabled ? 'disabled' : ''} />
+                </label>
+            </div>
+        `
+        );
+
+        const check1Element = getByLabelText(test.element, 'Checkbox 1:') as HTMLInputElement;
+        expect(check1Element.checked).toBe(true);
+        expect(check1Element.disabled).toBe(false);
+
+        // the server disables the checkbox and clears its data
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.check1 = null;
+            data.isDisabled = true;
+        });
+
+        await test.component.render();
+
+        expect(check1Element.checked).toBe(false);
+        expect(check1Element.disabled).toBe(true);
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ check1: null, isDisabled: true });
+    });
+
     it('sends correct data for array valued checkbox fields', async () => {
         const test = await createTest(
             { form: { check: [] } },

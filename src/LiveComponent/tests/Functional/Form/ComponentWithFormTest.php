@@ -192,10 +192,13 @@ class ComponentWithFormTest extends KernelTestCase
             'choice_required_with_empty_preferred_choices' => 'ok',
             'choice_expanded' => '',
             'choice_multiple' => ['2'],
+            'choice_multiple_disabled' => [],
+            'choice_expanded_disabled' => '',
             'select_multiple' => ['2'],
             'entity' => (string) $id,
             'checkbox' => null,
             'checkbox_checked' => '1',
+            'checkbox_checked_disabled' => null,
             'file' => '',
             'hidden' => '',
             'complexType' => [
@@ -292,6 +295,48 @@ class ComponentWithFormTest extends KernelTestCase
             ->assertContains('<option value="2" selected="selected">')
             ->assertContains('<option value="1" selected="selected">')
         ;
+    }
+
+    public function testDisabledChoicesAreNeverSubmitted()
+    {
+        CategoryFixtureEntityFactory::createMany(5);
+
+        $mounted = $this->mountComponent(
+            'form_with_many_different_fields_type',
+            [
+                'initialData' => [
+                    // "foo" (value 1) is disabled through "choice_attr"
+                    'choice_multiple_disabled' => [1, 2],
+                ],
+            ]
+        );
+
+        $dehydratedProps = $this->dehydrateComponent($mounted)->getProps();
+
+        // like a browser, the checked but disabled choice is not part of the
+        // values that would be submitted
+        $this->assertSame(['2'], $dehydratedProps['form']['choice_multiple_disabled']);
+
+        // a model update must not resurrect the disabled value either
+        $crawler = $this->browser()
+            ->throwExceptions()
+            ->post('/_components/form_with_many_different_fields_type', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydratedProps,
+                        'updated' => ['form' => ['choice_multiple_disabled' => []]],
+                    ]),
+                ],
+            ])
+            ->assertSuccessful()
+            ->crawler()
+        ;
+
+        $dehydratedProps = json_decode(
+            $crawler->filter('div')->first()->attr('data-live-props-value'),
+            true
+        );
+        $this->assertSame([], $dehydratedProps['form']['choice_multiple_disabled']);
     }
 
     public function testLiveCollectionTypeAddButtonsByDefault()
