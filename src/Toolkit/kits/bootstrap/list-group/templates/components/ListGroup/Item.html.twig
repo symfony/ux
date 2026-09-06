@@ -1,20 +1,19 @@
-{# @prop tag 'li'|'a'|'button'|null The HTML element to render. #}
-{# @prop href string|null The destination used for anchor items. #}
-{# @prop type 'button'|'submit'|'reset' The type used for button items. #}
-{# @prop active boolean Whether the item represents the current selection. #}
-{# @prop current boolean|string|null Whether and how to expose an active item as current. #}
-{# @prop disabled boolean Whether the actionable item is disabled. #}
-{# @prop color 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark'|null The Bootstrap contextual color. #}
-{# @prop label string The fallback label when no content block is provided. #}
-{# @block content The item content. #}
 {%- props
+    ## 'li'|'a'|'button'|null The HTML element to render.
     tag = null,
+    ## string|null The destination used for anchor items.
     href = null,
+    ## 'button'|'submit'|'reset' The type used for button items.
     type = 'button',
+    ## boolean Whether the item represents the current selection.
     active = false,
+    ## boolean|string|null Whether and how to expose an active item as current.
     current = null,
+    ## boolean Whether the actionable item is disabled.
     disabled = false,
+    ## 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark'|null The Bootstrap contextual color.
     color = null,
+    ## string The fallback label when no content block is provided.
     label = ''
 -%}
 
@@ -47,6 +46,7 @@
 {%- endif -%}
 
 <{{ final_tag }} {{ attributes.defaults(default_attrs) }}>
+    {##- The item content. -#}
     {%- block content -%}
         {{- label -}}
     {%- endblock -%}

@@ -1,4 +1,3 @@
-{# @block content The trigger label that toggles the sub dropdown when clicked. #}
 
 {% set _subtrigger_icons = {
     right: 'flowbite:chevron-right-outline',
@@ -20,6 +19,7 @@
         class: 'inline-flex items-center w-full p-2 text-sm font-medium text-body hover:bg-neutral-tertiary-medium hover:text-heading rounded'|tailwind_classes,
     }) }}
 >
+    {##- The trigger label that toggles the sub dropdown when clicked. -#}
     {%- block content %}{% endblock -%}
     {% if _subtrigger_icon %}
         <twig:ux:icon :name="_subtrigger_icon" class="size-4 ms-auto" aria-hidden="true" />

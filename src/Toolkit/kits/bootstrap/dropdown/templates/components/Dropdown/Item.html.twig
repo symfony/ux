@@ -1,9 +1,13 @@
-{# @prop tag 'a'|'button' The interactive element to render. #}
-{# @prop href string The destination used by link items. #}
-{# @prop active boolean Whether the item represents the current selection. #}
-{# @prop disabled boolean Whether the item is unavailable. #}
-{# @block content The dropdown item label. #}
-{%- props tag = 'a', href = '#', active = false, disabled = false -%}
+{%- props
+    ## 'a'|'button' The interactive element to render.
+    tag = 'a',
+    ## string The destination used by link items.
+    href = '#',
+    ## boolean Whether the item represents the current selection.
+    active = false,
+    ## boolean Whether the item is unavailable.
+    disabled = false
+-%}
 {%- set final_tag = tag == 'button' ? 'button' : 'a' -%}
 {%- set default_attrs = {
     class: html_classes({'dropdown-item': true, active: active, disabled: disabled}),
@@ -20,4 +24,7 @@
         {%- set default_attrs = default_attrs|merge({'aria-current': 'true'}) -%}
     {%- endif -%}
 {%- endif -%}
-<li><{{ final_tag }} {{ attributes.defaults(default_attrs) }}>{%- block content %}{% endblock -%}</{{ final_tag }}></li>
+<li><{{ final_tag }} {{ attributes.defaults(default_attrs) }}>
+    {##- The dropdown item label. -#}
+    {%- block content %}{% endblock -%}
+</{{ final_tag }}></li>

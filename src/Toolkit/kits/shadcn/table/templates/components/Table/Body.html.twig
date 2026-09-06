@@ -1,9 +1,9 @@
-{# @block content The table body rows, typically `Table:Row` components. #}
 <tbody
     data-slot="table-body"
     {{ attributes.defaults({
         class: '[&_tr:last-child]:border-0'|tailwind_classes,
     }) }}
 >
+    {##- The table body rows, typically `Table:Row` components. -#}
     {%- block content %}{% endblock -%}
 </tbody>

@@ -1,6 +1,7 @@
-{# @prop showOnHover boolean Show only when the parent `Sidebar:MenuItem` is hovered or focused. #}
-{# @block content The action's icon or label. #}
-{%- props showOnHover = false -%}
+{%- props
+    ## boolean Show only when the parent `Sidebar:MenuItem` is hovered or focused.
+    showOnHover = false
+-%}
 <button
     data-slot="sidebar-menu-action"
     {{ attributes.defaults({
@@ -10,5 +11,6 @@
         )|tailwind_classes,
     }) }}
 >
+    {##- The action's icon or label. -#}
     {%- block content %}{% endblock -%}
 </button>

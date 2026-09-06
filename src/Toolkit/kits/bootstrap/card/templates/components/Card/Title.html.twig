@@ -1,7 +1,9 @@
-{# @prop tag 'h2'|'h3'|'h4'|'h5'|'h6'|'div' The HTML element to render. #}
-{# @block content The title text of the card. #}
-{%- props tag = 'h5' -%}
+{%- props
+    ## 'h2'|'h3'|'h4'|'h5'|'h6'|'div' The HTML element to render.
+    tag = 'h5'
+-%}
 {%- set final_tag = tag in ['h2', 'h3', 'h4', 'h5', 'h6'] ? tag : 'div' -%}
 <{{ final_tag }} {{ attributes.defaults({class: 'card-title'}) }}>
+    {##- The title text of the card. -#}
     {%- block content %}{% endblock -%}
 </{{ final_tag }}>

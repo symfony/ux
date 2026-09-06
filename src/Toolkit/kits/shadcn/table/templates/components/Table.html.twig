@@ -1,10 +1,10 @@
-{# @block content The table structure, typically includes `Table:Header`, `Table:Body`, and optionally `Table:Footer`. #}
 <div class="relative w-full overflow-x-auto" data-slot="table-container">
     <table
         {{ attributes.defaults({
             class: 'w-full caption-bottom text-sm'|tailwind_classes,
         }) }}
     >
+        {##- The table structure, typically includes `Table:Header`, `Table:Body`, and optionally `Table:Footer`. -#}
         {%- block content %}{% endblock -%}
     </table>
 </div>

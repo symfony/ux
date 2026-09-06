@@ -1,4 +1,3 @@
-{# @block content The clickable trigger label that toggles the accordion item. #}
 {%- set _accordionItem_triggerId = inject('accordionItem.triggerId') -%}
 {%- set _accordionItem_contentId = inject('accordionItem.contentId') -%}
 {%- set _accordionItem_disabled = inject('accordionItem.disabled', false) -%}
@@ -19,6 +18,7 @@
             'data-action': 'click->accordion#toggle keydown->accordion#handleKeydown',
         }) }}
     >
+        {##- The clickable trigger label that toggles the accordion item. -#}
         {%- block content %}{% endblock -%}
         <twig:ux:icon name="lucide:chevron-down" data-slot="accordion-trigger-icon" class="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden" />
         <twig:ux:icon name="lucide:chevron-up" data-slot="accordion-trigger-icon" class="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline" />

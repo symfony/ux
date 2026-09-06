@@ -1,8 +1,7 @@
-{# @prop tag 'span'|'a'|'div'|'p'|'h1'|'h2'|'h3'|'h4'|'h5'|'h6' The HTML element used for the animation wrapper. #}
-{# @prop animation 'glow'|'wave' The Bootstrap placeholder animation. #}
-{# @block content The placeholders animated by this wrapper. #}
 {%- props
+    ## 'span'|'a'|'div'|'p'|'h1'|'h2'|'h3'|'h4'|'h5'|'h6' The HTML element used for the animation wrapper.
     tag = 'div',
+    ## 'glow'|'wave' The Bootstrap placeholder animation.
     animation = 'glow'
 -%}
 
@@ -12,5 +11,6 @@
 }) -%}
 
 <{{ final_tag }} {{ attributes.defaults({class: classes, 'aria-hidden': 'true'}) }}>
+    {##- The placeholders animated by this wrapper. -#}
     {%- block content -%}{%- endblock -%}
 </{{ final_tag }}>

@@ -1,9 +1,9 @@
-{# @block content The empty state content, typically includes `Empty:Media`, `Empty:Header`, and/or `Empty:Content`. #}
 <div
     data-slot="empty"
     {{ attributes.defaults({
         class: 'flex w-full min-w-0 flex-1 flex-col items-center justify-center gap-4 rounded-xl border-dashed p-6 text-center text-balance'|tailwind_classes,
     }) }}
 >
+    {##- The empty state content, typically includes `Empty:Media`, `Empty:Header`, and/or `Empty:Content`. -#}
     {%- block content %}{% endblock -%}
 </div>

@@ -1,6 +1,7 @@
-{# @prop value string Unique suffix identifier for generating Tabs internal IDs. #}
-{# @block content The default block. #}
-{%- props value -%}
+{%- props
+    ## string Unique suffix identifier for generating Tabs internal IDs.
+    value
+-%}
 {%- set _tabs_defaultValue = inject('tabs.defaultValue', '') -%}
 
 {%- set _tab_id = 'tab-' ~ value -%}
@@ -20,5 +21,6 @@
         'data-action': 'click->tabs#open',
     }) }}
 >
+    {##- The default block. -#}
     {%- block content -%}{%- endblock -%}
 </button>

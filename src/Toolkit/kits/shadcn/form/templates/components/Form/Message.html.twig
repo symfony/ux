@@ -1,9 +1,9 @@
-{# @block content The validation error message. #}
 <p
     data-slot="form-message"
     {{ attributes.defaults({
         class: 'text-sm text-destructive'|tailwind_classes,
     }) }}
 >
+    {##- The validation error message. -#}
     {%- block content %}{% endblock -%}
 </p>

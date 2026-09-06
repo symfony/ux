@@ -1,9 +1,9 @@
-{# @block content A `Form:Label`, a form control, an optional `Form:Description` and an optional `Form:Message`. #}
 <div
     data-slot="form-item"
     {{ attributes.defaults({
         class: 'group/form-item grid gap-2'|tailwind_classes,
     }) }}
 >
+    {##- A `Form:Label`, a form control, an optional `Form:Description` and an optional `Form:Message`. -#}
     {%- block content %}{% endblock -%}
 </div>

@@ -16,11 +16,11 @@ use Twig\Environment;
 /**
  * Extracts the {@see ComponentDoc} (props and blocks) from a Twig component's source.
  *
- * Props and blocks come from the `{# @prop ... #}` and `{# @block ... #}` docblocks (name,
- * type and description), while each prop's default value is sourced from the `{%- props -%}`
- * declaration — the single source of truth for defaults — rather than duplicated in the
- * docblock. This is the canonical parser shared between the Toolkit linter and consumers such
- * as ux.symfony.com, so the documented API reference stays consistent everywhere.
+ * Prop names, defaults and their `## <type> <description>` documentation come from the `{% props %}`
+ * declaration ({@see PropsDeclarationParser}), while each block's `{## <description> #}` documentation
+ * comes from tokenizing the template ({@see ComponentDocScanner}). Both rely on Twig 3.29 attaching
+ * documentation comments to their following token. This assembles the API reference for consumers
+ * such as ux.symfony.com; the Toolkit linter validates the same documentation at a lower level.
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  *
@@ -28,51 +28,30 @@ use Twig\Environment;
  */
 final class ComponentDocParser
 {
-    /**
-     * @see https://regex101.com/r/3JXNX7/1
-     */
-    private const RE_PROP = '/{#\s+@prop\s+(?P<name>\w+)\s+(?P<type>[^\s]+)\s+(?P<description>.+?)\s+#}/s';
-
-    /**
-     * @see https://regex101.com/r/jYjXpq/1
-     */
-    private const RE_BLOCK = '/{#\s+@block\s+(?P<name>\w+)\s+(?P<description>.+?)\s+#}/s';
-
     private readonly PropsDeclarationParser $propsDeclarationParser;
+    private readonly ComponentDocScanner $scanner;
 
     public function __construct(?Environment $twig = null)
     {
         $this->propsDeclarationParser = new PropsDeclarationParser($twig);
+        $this->scanner = new ComponentDocScanner($twig);
     }
 
     public function parse(string $source): ComponentDoc
     {
-        $declaration = $this->propsDeclarationParser->parse($source);
-
         $props = [];
-        if (preg_match_all(self::RE_PROP, $source, $matches, \PREG_SET_ORDER)) {
-            foreach ($matches as $match) {
-                $props[] = new Prop(
-                    $match['name'],
-                    $match['type'],
-                    self::normalizeWhitespace($match['description']),
-                    $declaration?->get($match['name'])?->default,
-                );
+        if (null !== $declaration = $this->propsDeclarationParser->parse($source)) {
+            foreach ($declaration->props as $prop) {
+                [$type, $description] = ComponentDocScanner::splitTypeAndDescription($prop->documentation ?? '');
+                $props[] = new Prop($prop->name, $type, $description, $prop->default);
             }
         }
 
         $blocks = [];
-        if (preg_match_all(self::RE_BLOCK, $source, $matches, \PREG_SET_ORDER)) {
-            foreach ($matches as $match) {
-                $blocks[] = new Block($match['name'], self::normalizeWhitespace($match['description']));
-            }
+        foreach ($this->scanner->scanBlocks($source)['docs'] as $block) {
+            $blocks[] = new Block($block['name'], $block['description']);
         }
 
         return new ComponentDoc($props, $blocks);
-    }
-
-    private static function normalizeWhitespace(string $value): string
-    {
-        return trim(preg_replace('/\s+/', ' ', $value));
     }
 }

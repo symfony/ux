@@ -95,15 +95,6 @@ class ComponentDocCheckerTest extends TestCase
         self::assertStringContainsString('hidden', $issues[0]->message);
     }
 
-    public function testDocumentedPropNotDeclaredIsReported()
-    {
-        $issues = $this->issuesForFile($this->lintCases(), 'ExtraDoc.html.twig');
-
-        self::assertCount(1, $issues);
-        self::assertSame('component.prop.mismatch', $issues[0]->category);
-        self::assertStringContainsString('ghost', $issues[0]->message);
-    }
-
     public function testComponentWithPropsButNoDocblocksReportsEveryDeclaredProp()
     {
         $issues = $this->issuesForFile($this->lintCases(), 'NoDocblocks.html.twig');
@@ -127,15 +118,6 @@ class ComponentDocCheckerTest extends TestCase
 
         self::assertCount(1, $issues);
         self::assertSame('component.block.invalid', $issues[0]->category);
-    }
-
-    public function testDocumentedBlockNotUsedInTemplateIsReported()
-    {
-        $issues = $this->issuesForFile($this->lintCases(), 'BlockDocumentedNotUsed.html.twig');
-
-        self::assertCount(1, $issues);
-        self::assertSame('component.block.mismatch', $issues[0]->category);
-        self::assertStringContainsString('ghost', $issues[0]->message);
     }
 
     public function testBlockUsedInTemplatebutNotDocumentedIsReported()

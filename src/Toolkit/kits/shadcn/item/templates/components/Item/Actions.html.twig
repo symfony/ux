@@ -1,9 +1,9 @@
-{# @block content The action buttons or controls for the item. #}
 <div
     data-slot="item-actions"
     {{ attributes.defaults({
         class: 'flex items-center gap-2'|tailwind_classes,
     }) }}
 >
+    {##- The action buttons or controls for the item. -#}
     {%- block content %}{% endblock -%}
 </div>

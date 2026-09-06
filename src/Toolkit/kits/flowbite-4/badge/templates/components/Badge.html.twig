@@ -1,10 +1,15 @@
-{# @prop variant 'brand'|'alternative'|'gray'|'danger'|'success'|'warning' The visual style variant. #}
-{# @prop size 'default'|'lg' The badge size. #}
-{# @prop shape 'rounded'|'pill' The badge shape. #}
-{# @prop border 'none'|'bordered' The badge border. #}
-{# @prop as 'div' The HTML tag to render. #}
-{# @block content The badge label or content. #}
-{%- props variant = 'brand', size = 'default', shape = 'rounded', border = 'none', as = 'div' -%}
+{%- props
+    ## 'brand'|'alternative'|'gray'|'danger'|'success'|'warning' The visual style variant.
+    variant = 'brand',
+    ## 'default'|'lg' The badge size.
+    size = 'default',
+    ## 'rounded'|'pill' The badge shape.
+    shape = 'rounded',
+    ## 'none'|'bordered' The badge border.
+    border = 'none',
+    ## 'div' The HTML tag to render.
+    as = 'div'
+-%}
 {%- set style = html_cva(
     base: 'inline-flex items-center justify-center font-medium',
     variants: {
@@ -36,5 +41,6 @@
         class: style.apply({variant: variant, size: size, shape: shape, border: border})|tailwind_classes,
     }) }}
 >
+    {##- The badge label or content. -#}
     {%- block content %}{% endblock -%}
 </{{ as }}>

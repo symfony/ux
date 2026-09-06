@@ -1,8 +1,11 @@
-{# @prop value string Unique value for this accordion item. #}
-{# @prop open boolean Whether the item is open by default. #}
-{# @prop disabled boolean Whether the item is disabled. #}
-{# @block content The item content, typically an `Accordion:Trigger` and `Accordion:Content`. #}
-{%- props value, open = false, disabled = false -%}
+{%- props
+    ## string Unique value for this accordion item.
+    value,
+    ## boolean Whether the item is open by default.
+    open = false,
+    ## boolean Whether the item is disabled.
+    disabled = false
+-%}
 {%- set _accordion_id = inject('accordion.id') -%}
 {%- set _accordion_orientation = inject('accordion.orientation', 'vertical') -%}
 {%- set _accordion_defaultValue = inject('accordion.defaultValue') -%}
@@ -28,5 +31,6 @@
         class: 'not-last:border-b group'|tailwind_classes,
     }) }}
 >
+    {##- The item content, typically an `Accordion:Trigger` and `Accordion:Content`. -#}
     {%- block content %}{% endblock -%}
 </div>

@@ -1,7 +1,9 @@
-{# @prop showCloseButton boolean Whether to display the close button in the top-right corner. #}
-{# @prop backdrop 'dynamic'|'static' To prevent the modal from closing when clicking outside. #}
-{# @block content The modal content, typically includes `Modal:Header` and optionally `Modal:Footer`. #}
-{%- props showCloseButton = true, backdrop = 'dynamic' -%}
+{%- props
+    ## boolean Whether to display the close button in the top-right corner.
+    showCloseButton = true,
+    ## 'dynamic'|'static' To prevent the modal from closing when clicking outside.
+    backdrop = 'dynamic'
+-%}
 
 <dialog
     id="{{ _modal_id }}"
@@ -11,6 +13,7 @@
     data-modal-target="modal"
     data-action="keydown.esc->modal#close:prevent {{ backdrop is not same as('static') ? 'click->modal#closeOnClickOutside' }}"
 >
+    {##- The modal content, typically includes `Modal:Header` and optionally `Modal:Footer`. -#}
     {%- block content %}{% endblock -%}
     {% if showCloseButton %}
         <twig:Button type="button" variant="ghost" size="icon-xs" class="absolute top-4 right-4" data-action="click->modal#close">

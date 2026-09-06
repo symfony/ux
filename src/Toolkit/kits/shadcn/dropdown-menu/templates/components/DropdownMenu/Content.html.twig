@@ -1,4 +1,3 @@
-{# @block content The menu items, e.g. `DropdownMenu:Item`, `DropdownMenu:Separator`. #}
 {%- set _dropdownMenu_open = inject('dropdownMenu.open', false) -%}
 {%- set _dropdownMenu_side = inject('dropdownMenu.side', 'bottom') -%}
 {%- set _dropdownMenu_align = inject('dropdownMenu.align', 'start') -%}
@@ -38,5 +37,6 @@
         class: style.apply({side: _dropdownMenu_side, align: _dropdownMenu_align})|tailwind_classes,
     }) }}
 >
+    {##- The menu items, e.g. `DropdownMenu:Item`, `DropdownMenu:Separator`. -#}
     {%- block content %}{% endblock -%}
 </div>

@@ -1,2 +1,4 @@
-{# @block content The non-interactive dropdown text. #}
-<li><span {{ attributes.defaults({class: 'dropdown-item-text'}) }}>{%- block content %}{% endblock -%}</span></li>
+<li><span {{ attributes.defaults({class: 'dropdown-item-text'}) }}>
+    {##- The non-interactive dropdown text. -#}
+    {%- block content %}{% endblock -%}
+</span></li>

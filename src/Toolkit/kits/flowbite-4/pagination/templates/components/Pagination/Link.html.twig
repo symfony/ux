@@ -1,6 +1,7 @@
-{# @prop active boolean Whether this is the current page. #}
-{# @block content The page number or navigation icon. #}
-{%- props active = false -%}
+{%- props
+    ## boolean Whether this is the current page.
+    active = false
+-%}
 <twig:Button
     as="a"
     variant="secondary"
@@ -11,5 +12,6 @@
     class="{{ active ? 'text-fg-brand bg-neutral-tertiary-medium' : '' }}"
     {{ ...attributes.without('class') }}
 >
+    {##- The page number or navigation icon. -#}
     {{- block(outerBlocks.content) -}}
 </twig:Button>

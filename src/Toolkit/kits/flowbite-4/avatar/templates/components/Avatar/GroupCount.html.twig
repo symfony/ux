@@ -1,11 +1,13 @@
-{# @prop as string The avatar group tag. #}
-{# @block content The count indicator, e.g. "+99". #}
-{%- props as = 'div' -%}
+{%- props
+    ## string The avatar group tag.
+    as = 'div'
+-%}
 
 <{{ as }}
     {{ attributes.defaults({
         class: 'relative flex items-center justify-center size-10 text-xs font-medium text-white bg-dark-strong rounded-full hover:bg-dark group-has-data-[size=xs]/avatar-group:size-6 group-has-data-[size=sm]/avatar-group:size-8 group-has-data-[size=lg]/avatar-group:size-12 group-has-data-[size=xl]/avatar-group:size-14 group-has-data-[size=2xl]/avatar-group:size-16'|tailwind_classes,
     }) }}
 >
+    {##- The count indicator, e.g. "+99". -#}
     {%- block content %}{% endblock -%}
 </{{ as }}>

@@ -1,16 +1,15 @@
-{# @prop type 'border'|'grow' The spinner animation style. #}
-{# @prop color 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark'|null The Bootstrap contextual text color. #}
-{# @prop small boolean Whether to use Bootstrap's compact spinner size. #}
-{# @prop role string|null The ARIA role used for an announced loading status. #}
-{# @prop label string The visually hidden loading message. #}
-{# @prop decorative boolean Whether to hide the spinner from assistive technologies. #}
-{# @block content The accessible loading message or custom inner content. #}
 {%- props
+    ## 'border'|'grow' The spinner animation style.
     type = 'border',
+    ## 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark'|null The Bootstrap contextual text color.
     color = null,
+    ## boolean Whether to use Bootstrap's compact spinner size.
     small = false,
+    ## string|null The ARIA role used for an announced loading status.
     role = 'status',
+    ## string The visually hidden loading message.
     label = 'Loading...',
+    ## boolean Whether to hide the spinner from assistive technologies.
     decorative = false
 -%}
 
@@ -28,6 +27,7 @@
 {%- endif -%}
 
 <div {{ attributes.defaults(default_attrs) }}>
+    {##- The accessible loading message or custom inner content. -#}
     {%- block content -%}
         {%- if not decorative -%}
             <span class="visually-hidden">{{ label }}</span>

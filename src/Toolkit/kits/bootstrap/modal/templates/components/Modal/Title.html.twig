@@ -1,6 +1,7 @@
-{# @prop tag 'h1'|'h2'|'h3'|'h4'|'h5'|'h6' The heading element to render. #}
-{# @block content The modal title. #}
-{%- props tag = 'h1' -%}
+{%- props
+    ## 'h1'|'h2'|'h3'|'h4'|'h5'|'h6' The heading element to render.
+    tag = 'h1'
+-%}
 {%- set _modal_title_id = inject('modal.titleId', null) -%}
 {%- set final_tag = tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] ? tag : 'h1' -%}
 {%- set default_attrs = _modal_title_id is null
@@ -8,5 +9,6 @@
     : {id: _modal_title_id, class: 'modal-title fs-5'}
 -%}
 <{{ final_tag }} {{ attributes.defaults(default_attrs) }}>
+    {##- The modal title. -#}
     {%- block content %}{% endblock -%}
 </{{ final_tag }}>

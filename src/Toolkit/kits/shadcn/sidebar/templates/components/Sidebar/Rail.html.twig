@@ -1,6 +1,7 @@
-{# @prop label string Accessible label announced for the rail toggle. #}
-{# @block content Optional custom content for the rail; empty by default. #}
-{%- props label = 'Toggle Sidebar' -%}
+{%- props
+    ## string Accessible label announced for the rail toggle.
+    label = 'Toggle Sidebar'
+-%}
 <button
     data-slot="sidebar-rail"
     aria-label="{{ label }}"
@@ -12,5 +13,6 @@
         'data-action': 'click->sidebar#toggle',
     }) }}
 >
+    {##- Optional custom content for the rail; empty by default. -#}
     {%- block content %}{% endblock -%}
 </button>

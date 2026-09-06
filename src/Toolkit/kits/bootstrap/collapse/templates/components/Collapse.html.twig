@@ -1,8 +1,11 @@
-{# @prop id string The unique identifier targeted by collapse controls. #}
-{# @prop show boolean Whether the collapsible content is initially visible. #}
-{# @prop horizontal boolean Whether the width is collapsed instead of the height. #}
-{# @block content The content shown and hidden by the collapse control. #}
-{%- props id, show = false, horizontal = false -%}
+{%- props
+    ## string The unique identifier targeted by collapse controls.
+    id,
+    ## boolean Whether the collapsible content is initially visible.
+    show = false,
+    ## boolean Whether the width is collapsed instead of the height.
+    horizontal = false
+-%}
 <div {{ attributes.defaults({
     id: id,
     class: html_classes({
@@ -11,5 +14,6 @@
         show: show,
     }),
 }) }}>
+    {##- The content shown and hidden by the collapse control. -#}
     {%- block content %}{% endblock -%}
 </div>

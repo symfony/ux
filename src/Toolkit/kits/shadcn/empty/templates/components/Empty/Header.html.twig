@@ -1,9 +1,9 @@
-{# @block content The header area, typically contains `Empty:Title` and `Empty:Description`. #}
 <div
     data-slot="empty-header"
     {{ attributes.defaults({
         class: 'flex max-w-sm flex-col items-center gap-2'|tailwind_classes,
     }) }}
 >
+    {##- The header area, typically contains `Empty:Title` and `Empty:Description`. -#}
     {%- block content %}{% endblock -%}
 </div>

@@ -19,7 +19,7 @@ use PHPStan\PhpDocParser\Parser\TypeParser;
 use PHPStan\PhpDocParser\ParserConfig;
 
 /**
- * Validates that a `@prop` type is a syntactically valid PHPStan/PHPDoc type, using
+ * Validates that a prop type is a syntactically valid PHPStan/PHPDoc type, using
  * phpstan/phpdoc-parser. Only the syntax is checked (e.g. balanced generics, no stray
  * unions); identifiers such as `boolean` or `number` are accepted as-is.
  *

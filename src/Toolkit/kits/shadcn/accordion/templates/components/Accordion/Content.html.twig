@@ -1,4 +1,3 @@
-{# @block content The collapsible content of the accordion item. #}
 {%- set _accordionItem_contentId = inject('accordionItem.contentId') -%}
 {%- set _accordionItem_triggerId = inject('accordionItem.triggerId') -%}
 {%- set _accordionItem_isOpen = inject('accordionItem.isOpen', false) -%}
@@ -17,6 +16,7 @@
 >
     <div class="min-h-0 min-w-0 overflow-hidden">
         <div class="{{ ('pt-0 pb-2.5 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4 ' ~ attributes.render('class'))|tailwind_merge }}">
+            {##- The collapsible content of the accordion item. -#}
             {%- block content %}{% endblock -%}
         </div>
     </div>

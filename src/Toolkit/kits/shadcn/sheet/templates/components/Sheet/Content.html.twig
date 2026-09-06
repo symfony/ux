@@ -1,6 +1,7 @@
-{# @prop showCloseButton boolean Whether to display the close button in the top-right corner. #}
-{# @block content The sheet content, typically includes `Sheet:Header` and optionally `Sheet:Footer`. #}
-{%- props showCloseButton = true -%}
+{%- props
+    ## boolean Whether to display the close button in the top-right corner.
+    showCloseButton = true
+-%}
 {%- set _sheet_id = inject('sheet.id') -%}
 {%- set _sheet_side = inject('sheet.side', 'right') -%}
 {%- set style = html_cva(
@@ -24,6 +25,7 @@
         'data-action': 'keydown.esc->dialog#close:prevent click->dialog#closeOnClickOutside',
     }) }}
 >
+    {##- The sheet content, typically includes `Sheet:Header` and optionally `Sheet:Footer`. -#}
     {%- block content %}{% endblock -%}
     {% if showCloseButton %}
         <twig:Button

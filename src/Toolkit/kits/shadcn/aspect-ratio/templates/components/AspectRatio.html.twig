@@ -1,10 +1,12 @@
-{# @prop ratio string The aspect ratio (e.g., `16 / 9`, `4 / 3`, `1 / 1`). #}
-{# @block content The content to display within the aspect ratio container. #}
-{%- props ratio -%}
+{%- props
+    ## string The aspect ratio (e.g., `16 / 9`, `4 / 3`, `1 / 1`).
+    ratio
+-%}
 <div
     data-slot="aspect-ratio"
     style="aspect-ratio: {{ ratio }}"
     {{ attributes.defaults({class: 'relative'|tailwind_classes}) }}
 >
+    {##- The content to display within the aspect ratio container. -#}
     {%- block content %}{% endblock -%}
 </div>

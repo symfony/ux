@@ -1,9 +1,9 @@
-{# @block content The table footer rows, typically `Table:Row` components. #}
 <tfoot
     data-slot="table-footer"
     {{ attributes.defaults({
         class: 'border-t bg-muted/50 font-medium [&>tr]:last:border-b-0'|tailwind_classes,
     }) }}
 >
+    {##- The table footer rows, typically `Table:Row` components. -#}
     {%- block content %}{% endblock -%}
 </tfoot>

@@ -22,6 +22,7 @@
 - [Shadcn] Focus the first form field (or the `[autofocus]` element) when a `dialog` opens
 - [Shadcn] Remove `typography` recipe
 - Remove the now-obsolete `ClassMergeSpacingChecker` linter
+- Document component props and blocks with the Twig 3.29 comment syntax: a `## <type> <description>` comment above each prop inside `{% props %}`, and a `{##- <description> -#}` doc comment above each block, replacing the `{# @prop #}` and `{# @block #}` docblocks
 
 ## 3.4.0
 

@@ -1,9 +1,9 @@
-{# @block content The descriptive text explaining the sheet purpose. #}
 {%- set _sheet_descriptionId = inject('sheet.descriptionId') -%}
 <p
     id="{{ _sheet_descriptionId }}"
     data-slot="sheet-description"
     {{ attributes.without('id').defaults({class: 'text-muted-foreground text-sm'|tailwind_classes}) }}
 >
+    {##- The descriptive text explaining the sheet purpose. -#}
     {%- block content %}{% endblock -%}
 </p>

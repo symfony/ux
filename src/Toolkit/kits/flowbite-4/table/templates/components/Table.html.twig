@@ -1,11 +1,13 @@
-{# @block content The table structure, typically includes `Table:Header`, `Table:Body`, and optionally `Table:Footer`. #}
-{# @prop borderless boolean Whether to hide the table borders. #}
-{%- props borderless = false -%}
+{%- props
+    ## boolean Whether to hide the table borders.
+    borderless = false
+-%}
 <table
     data-border="{{ borderless ? 'borderless' : 'bordered' }}"
     {{ attributes.defaults({
         class: 'w-full text-sm text-left rtl:text-right text-body group/table'|tailwind_classes,
     }) }}
 >
+    {##- The table structure, typically includes `Table:Header`, `Table:Body`, and optionally `Table:Footer`. -#}
     {%- block content %}{% endblock -%}
 </table>

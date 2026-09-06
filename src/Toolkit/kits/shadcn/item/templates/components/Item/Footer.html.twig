@@ -1,9 +1,9 @@
-{# @block content The footer area, typically contains metadata or secondary actions. #}
 <div
     data-slot="item-footer"
     {{ attributes.defaults({
         class: 'flex basis-full items-center justify-between gap-2'|tailwind_classes,
     }) }}
 >
+    {##- The footer area, typically contains metadata or secondary actions. -#}
     {%- block content %}{% endblock -%}
 </div>

@@ -1,8 +1,11 @@
-{# @prop closable boolean Whether to render a dismiss button. #}
-{# @prop closeLabel string The accessible label of the dismiss button. #}
-{# @block content The modal heading, typically a `Modal:Title` component. #}
-{%- props closable = true, closeLabel = 'Close'|trans -%}
+{%- props
+    ## boolean Whether to render a dismiss button.
+    closable = true,
+    ## string The accessible label of the dismiss button.
+    closeLabel = 'Close'|trans
+-%}
 <div {{ attributes.defaults({class: 'modal-header'}) }}>
+    {##- The modal heading, typically a `Modal:Title` component. -#}
     {%- block content %}{% endblock -%}
     {%- if closable %}
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ closeLabel }}"></button>

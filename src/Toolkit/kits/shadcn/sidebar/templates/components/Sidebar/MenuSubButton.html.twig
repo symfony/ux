@@ -1,8 +1,11 @@
-{# @prop as 'a'|'button' The HTML tag to render. #}
-{# @prop active boolean Whether this sub menu button represents the active route. #}
-{# @prop size 'sm'|'md' The visual size. #}
-{# @block content The label and/or icon. #}
-{%- props as = 'a', active = false, size = 'md' -%}
+{%- props
+    ## 'a'|'button' The HTML tag to render.
+    as = 'a',
+    ## boolean Whether this sub menu button represents the active route.
+    active = false,
+    ## 'sm'|'md' The visual size.
+    size = 'md'
+-%}
 {%- set style = html_cva(
     base: 'flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground outline-none ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:hidden',
     variants: {
@@ -22,5 +25,6 @@
         class: style.apply({size: size})|tailwind_classes,
     }) }}
 >
+    {##- The label and/or icon. -#}
     {%- block content %}{% endblock -%}
 </{{ as }}>

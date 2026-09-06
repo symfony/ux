@@ -1,9 +1,9 @@
-{# @block content The action element, typically a button or link positioned at the top-right. #}
 <div
     data-slot="alert-action"
     {{ attributes.defaults({
         class: 'absolute top-2 ltr:right-2 rtl:end-2'|tailwind_classes,
     }) }}
 >
+    {##- The action element, typically a button or link positioned at the top-right. -#}
     {%- block content %}{% endblock -%}
 </div>

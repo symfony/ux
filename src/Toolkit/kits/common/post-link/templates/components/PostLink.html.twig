@@ -1,9 +1,13 @@
-{# @prop href string The URL the form submits to. #}
-{# @prop csrfTokenId string|null The CSRF token ID used to generate the hidden token field; when null, no token is added. #}
-{# @prop method string The HTTP method used to submit the form; when not `POST`, a hidden `_method` field is added for method spoofing. #}
-{# @prop confirm string|null A confirmation message shown before submitting; when null, no confirmation is required. #}
-{# @block content The button label. #}
-{% props href, csrfTokenId = null, method = 'POST', confirm = null %}
+{% props
+    ## string The URL the form submits to.
+    href,
+    ## string|null The CSRF token ID used to generate the hidden token field; when null, no token is added.
+    csrfTokenId = null,
+    ## string The HTTP method used to submit the form; when not `POST`, a hidden `_method` field is added for method spoofing.
+    method = 'POST',
+    ## string|null A confirmation message shown before submitting; when null, no confirmation is required.
+    confirm = null
+%}
 
 <form{{ attributes.nested('form').defaults({
     action: href,
@@ -23,6 +27,7 @@
         }) }}>
     {% endif %}
     <button{{ attributes.defaults({type: 'submit'}) }}>
+        {## The button label. -#}
         {% block content %}{% endblock %}
     </button>
 </form>

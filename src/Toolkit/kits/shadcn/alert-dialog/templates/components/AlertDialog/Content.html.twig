@@ -1,6 +1,7 @@
-{# @prop size 'default'|'sm' The size of the dialog. #}
-{# @block content The dialog content, typically includes `AlertDialog:Header` and `AlertDialog:Footer`. #}
-{%- props size = 'default' -%}
+{%- props
+    ## 'default'|'sm' The size of the dialog.
+    size = 'default'
+-%}
 {%- set _alertDialog_id = inject('alertDialog.id') -%}
 <dialog
     id="{{ _alertDialog_id }}"
@@ -12,5 +13,6 @@
         'data-action': 'keydown.esc->alert-dialog#close:prevent',
     }).without('id') }}
 >
+    {##- The dialog content, typically includes `AlertDialog:Header` and `AlertDialog:Footer`. -#}
     {%- block content %}{% endblock -%}
 </dialog>

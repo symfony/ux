@@ -1,5 +1,7 @@
-{# @prop orientation 'horizontal'|'vertical' The separator orientation. #}
-{%- props orientation = 'vertical' -%}
+{%- props
+    ## 'horizontal'|'vertical' The separator orientation.
+    orientation = 'vertical'
+-%}
 <twig:Separator
     orientation="{{ orientation }}"
     data-slot="button-group-separator"

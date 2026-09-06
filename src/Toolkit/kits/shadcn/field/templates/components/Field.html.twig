@@ -1,6 +1,7 @@
-{# @prop orientation 'vertical'|'horizontal'|'responsive' The layout direction of the field. #}
-{# @block content The field content, typically includes `Field:Label` and form input(s). #}
-{%- props orientation = 'vertical' -%}
+{%- props
+    ## 'vertical'|'horizontal'|'responsive' The layout direction of the field.
+    orientation = 'vertical'
+-%}
 {%- set style = html_cva(
     base: 'group/field flex w-full gap-2 data-[invalid=true]:text-destructive',
     variants: {
@@ -20,5 +21,6 @@
         class: style.apply({orientation: orientation})|tailwind_classes,
     }) }}
 >
+    {##- The field content, typically includes `Field:Label` and form input(s). -#}
     {%- block content %}{% endblock -%}
 </div>

@@ -1,6 +1,7 @@
-{# @prop size int|null Initial size as a flex-grow value (proportional). If omitted, panels share space equally. #}
-{# @block content The panel content. #}
-{%- props size = null -%}
+{%- props
+    ## int|null Initial size as a flex-grow value (proportional). If omitted, panels share space equally.
+    size = null
+-%}
 <div
     style="flex: {{ size ?? 1 }} 1 0%;"
     data-slot="resizable-panel"
@@ -9,5 +10,6 @@
         class: 'overflow-auto'|tailwind_classes,
     }) }}
 >
+    {##- The panel content. -#}
     {%- block content %}{% endblock -%}
 </div>

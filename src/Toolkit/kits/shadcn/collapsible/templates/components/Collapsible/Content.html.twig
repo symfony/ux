@@ -1,4 +1,3 @@
-{# @block content The content revealed when the collapsible is open. #}
 {%- set _collapsible_open = inject('collapsible.open', false) -%}
 <div
     data-slot="collapsible-content"
@@ -8,5 +7,6 @@
     {{ not _collapsible_open ? 'hidden' }}
     {{ attributes }}
 >
+    {##- The content revealed when the collapsible is open. -#}
     {%- block content %}{% endblock -%}
 </div>

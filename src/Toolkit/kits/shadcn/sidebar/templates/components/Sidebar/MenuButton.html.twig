@@ -1,10 +1,15 @@
-{# @prop as 'button'|'a' The HTML tag to render; use `a` when the menu item is a link. #}
-{# @prop active boolean Whether this button represents the active route. #}
-{# @prop size 'default'|'sm'|'lg' The visual size. #}
-{# @prop variant 'default'|'outline' The visual style variant. #}
-{# @prop tooltip string Optional title shown when the sidebar is collapsed to icons. #}
-{# @block content The label and/or icon. #}
-{%- props as = 'button', active = false, size = 'default', variant = 'default', tooltip = null -%}
+{%- props
+    ## 'button'|'a' The HTML tag to render; use `a` when the menu item is a link.
+    as = 'button',
+    ## boolean Whether this button represents the active route.
+    active = false,
+    ## 'default'|'sm'|'lg' The visual size.
+    size = 'default',
+    ## 'default'|'outline' The visual style variant.
+    variant = 'default',
+    ## string Optional title shown when the sidebar is collapsed to icons.
+    tooltip = null
+-%}
 {%- set style = html_cva(
     base: 'peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-slot=sidebar-menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:[&>:not(:first-child)]:hidden [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0',
     variants: {
@@ -30,5 +35,6 @@
         class: style.apply({variant: variant, size: size})|tailwind_classes,
     }) }}
 >
+    {##- The label and/or icon. -#}
     {%- block content %}{% endblock -%}
 </{{ as }}>

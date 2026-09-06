@@ -1,7 +1,9 @@
-{# @prop name string|null The checkbox form field name. #}
-{# @prop checked boolean Whether the checkbox is initially checked. #}
-{# @block content The label text. #}
-{%- props name = null, checked = false -%}
+{%- props
+    ## string|null The checkbox form field name.
+    name = null,
+    ## boolean Whether the checkbox is initially checked.
+    checked = false
+-%}
 <label
     data-slot="menubar-checkbox-item"
     {{ attributes.defaults({
@@ -12,5 +14,6 @@
     <span class="absolute start-2 flex size-4 items-center justify-center opacity-0 peer-checked:opacity-100">
         <twig:ux:icon name="lucide:check" class="size-4" aria-hidden="true" />
     </span>
+    {##- The label text. -#}
     {%- block content %}{% endblock -%}
 </label>

@@ -1,6 +1,7 @@
-{# @prop value string Unique suffix identifier for generating Tabs internal IDs. #}
-{# @block content The default block. #}
-{%- props value -%}
+{%- props
+    ## string Unique suffix identifier for generating Tabs internal IDs.
+    value
+-%}
 
 {%- set _tab_id = 'tab-' ~ value -%}
 {%- set _tab_content_id = _tab_id ~ '-description' -%}
@@ -16,5 +17,6 @@
         class: 'data-[state=inactive]:hidden'|tailwind_classes,
     }) }}
 >
+    {##- The default block. -#}
     {%- block content %}{% endblock -%}
 </div>

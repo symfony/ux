@@ -1,9 +1,9 @@
-{# @block content Optional content to override the entire form. #}
 <div
     {{ attributes.defaults({
         class: 'flex flex-col gap-6'|tailwind_classes,
     }) }}
 >
+    {##- Optional content to override the entire form. -#}
     {%- block content -%}
         <twig:Card>
             <twig:Card:Header>

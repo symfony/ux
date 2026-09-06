@@ -1,7 +1,9 @@
-{# @prop id string Unique identifier for the tooltip. #}
-{# @prop delayDuration number Delay in milliseconds before showing the tooltip. #}
-{# @block content The tooltip structure, typically includes `Tooltip:Trigger` and `Tooltip:Content`. #}
-{%- props id, delayDuration = 0 -%}
+{%- props
+    ## string Unique identifier for the tooltip.
+    id,
+    ## number Delay in milliseconds before showing the tooltip.
+    delayDuration = 0
+-%}
 {%- set _tooltip_id = id -%}
 {%- set _tooltip_trigger_id = id ~ '_trigger' -%}
 {%- set _tooltip_wrapper_id = id ~ '_wrapper' -%}
@@ -24,5 +26,6 @@
         'data-controller': 'tooltip',
     }) }}
 >
+    {##- The tooltip structure, typically includes `Tooltip:Trigger` and `Tooltip:Content`. -#}
     {%- block content %}{% endblock -%}
 </div>

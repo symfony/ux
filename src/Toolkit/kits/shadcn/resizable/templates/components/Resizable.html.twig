@@ -1,6 +1,7 @@
-{# @prop orientation 'horizontal'|'vertical' Layout direction. #}
-{# @block content One or more `Resizable:Panel` separated by `Resizable:Handle`. #}
-{%- props orientation = 'horizontal' -%}
+{%- props
+    ## 'horizontal'|'vertical' Layout direction.
+    orientation = 'horizontal'
+-%}
 <div
     data-slot="resizable-panel-group"
     data-resizable-orientation-value="{{ orientation }}"
@@ -11,5 +12,6 @@
         'data-controller': 'resizable',
     }) }}
 >
+    {##- One or more `Resizable:Panel` separated by `Resizable:Handle`. -#}
     {%- block content %}{% endblock -%}
 </div>

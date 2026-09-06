@@ -1,5 +1,7 @@
-{# @prop label string The accessible label announced to assistive technologies. #}
-{%- props label = 'Loading' -%}
+{%- props
+    ## string The accessible label announced to assistive technologies.
+    label = 'Loading'
+-%}
 <twig:ux:icon
     name="lucide:loader-2"
     data-slot="spinner"

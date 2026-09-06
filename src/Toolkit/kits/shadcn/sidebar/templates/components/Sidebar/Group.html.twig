@@ -1,9 +1,9 @@
-{# @block content The group content, typically a `Sidebar:GroupLabel` and a `Sidebar:GroupContent`. #}
 <div
     data-slot="sidebar-group"
     {{ attributes.defaults({
         class: 'relative flex w-full min-w-0 flex-col p-2'|tailwind_classes,
     }) }}
 >
+    {##- The group content, typically a `Sidebar:GroupLabel` and a `Sidebar:GroupContent`. -#}
     {%- block content %}{% endblock -%}
 </div>

@@ -20,8 +20,10 @@ class ComponentDocParserTest extends TestCase
     public function testParsesNameTypeAndDescription()
     {
         $doc = new ComponentDocParser()->parse(<<<'TWIG'
-            {# @prop id string Unique identifier. #}
-            {%- props id -%}
+            {%- props
+                ## string Unique identifier.
+                id
+            -%}
             TWIG);
 
         self::assertInstanceOf(ComponentDoc::class, $doc);
@@ -34,8 +36,10 @@ class ComponentDocParserTest extends TestCase
     public function testDefaultIsSourcedFromThePropsDeclaration()
     {
         $doc = new ComponentDocParser()->parse(<<<'TWIG'
-            {# @prop open boolean Whether it is open. #}
-            {%- props open = false -%}
+            {%- props
+                ## boolean Whether it is open.
+                open = false
+            -%}
             TWIG);
 
         self::assertSame('Whether it is open.', $doc->props[0]->description);
@@ -45,20 +49,40 @@ class ComponentDocParserTest extends TestCase
     public function testStringDefaultFromPropsIsQuoted()
     {
         $doc = new ComponentDocParser()->parse(<<<'TWIG'
-            {# @prop variant 'default'|'line' The visual style variant. #}
-            {%- props variant = 'default' -%}
+            {%- props
+                ## 'default'|'line' The visual style variant.
+                variant = 'default'
+            -%}
             TWIG);
 
         self::assertSame("'default'|'line'", $doc->props[0]->type);
         self::assertSame("'default'", $doc->props[0]->default);
     }
 
+    public function testMultiplePropsAreParsedInDeclarationOrder()
+    {
+        $doc = new ComponentDocParser()->parse(<<<'TWIG'
+            {%- props
+                ## string Unique identifier.
+                id,
+                ## 'default'|'line' The visual style variant.
+                variant = 'default',
+                ## boolean Whether it is open.
+                open = false
+            -%}
+            TWIG);
+
+        self::assertSame(['id', 'variant', 'open'], array_map(static fn ($p) => $p->name, $doc->props));
+        self::assertSame(['string', "'default'|'line'", 'boolean'], array_map(static fn ($p) => $p->type, $doc->props));
+    }
+
     public function testDescriptionKeepsInlineBackticksAndIsWhitespaceNormalized()
     {
         $doc = new ComponentDocParser()->parse(<<<'TWIG'
-            {# @prop choices array List of choices:
-               `[{value: 'x'}]` or grouped. #}
-            {%- props choices = [] -%}
+            {%- props
+                ## array List of choices: `[{value: 'x'}]`   or grouped.
+                choices = []
+            -%}
             TWIG);
 
         self::assertSame("List of choices: `[{value: 'x'}]` or grouped.", $doc->props[0]->description);
@@ -68,9 +92,14 @@ class ComponentDocParserTest extends TestCase
     public function testParsesBlocks()
     {
         $doc = new ComponentDocParser()->parse(<<<'TWIG'
-            {# @prop id string Unique identifier. #}
-            {# @block content The dialog structure. #}
-            {%- props id -%}
+            {%- props
+                ## string Unique identifier.
+                id
+            -%}
+            <div>
+                {## The dialog structure. #}
+                {%- block content %}{% endblock -%}
+            </div>
             TWIG);
 
         self::assertCount(1, $doc->blocks);

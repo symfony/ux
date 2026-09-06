@@ -1,11 +1,17 @@
-{# @prop variant 'default'|'outline' The visual style variant. #}
-{# @prop size 'default'|'sm'|'lg' The toggle group size. #}
-{# @prop type 'single'|'multiple' Whether only one or multiple items can be active. #}
-{# @prop spacing number Gap between toggle group items. #}
-{# @prop orientation 'horizontal'|'vertical' The layout direction. #}
-{# @prop disabled boolean Whether all items in the group are disabled. #}
-{# @block content The toggle items, typically multiple `ToggleGroup:Item` components. #}
-{%- props variant = 'default', size = 'default', type = 'multiple', spacing = 2, orientation = 'horizontal', disabled = false -%}
+{%- props
+    ## 'default'|'outline' The visual style variant.
+    variant = 'default',
+    ## 'default'|'sm'|'lg' The toggle group size.
+    size = 'default',
+    ## 'single'|'multiple' Whether only one or multiple items can be active.
+    type = 'multiple',
+    ## number Gap between toggle group items.
+    spacing = 2,
+    ## 'horizontal'|'vertical' The layout direction.
+    orientation = 'horizontal',
+    ## boolean Whether all items in the group are disabled.
+    disabled = false
+-%}
 {%- do provide('toggleGroup.variant', variant) -%}
 {%- do provide('toggleGroup.size', size) -%}
 {%- do provide('toggleGroup.spacing', spacing) -%}
@@ -27,5 +33,6 @@
         'data-controller': 'toggle-group',
     }) }}
 >
+    {##- The toggle items, typically multiple `ToggleGroup:Item` components. -#}
     {%- block content %}{% endblock -%}
 </div>
