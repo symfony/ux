@@ -54,7 +54,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         return UXPaginationTestKernel::class;
     }
 
-    public function testPaginatorServiceIsAutowirable()
+    public function testPaginatorServiceIsAutowirable(): void
     {
         self::bootKernel();
 
@@ -63,7 +63,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertInstanceOf(PaginatorInterface::class, $paginator);
     }
 
-    public function testNamedPaginatorSupportsSymfonyAutowiringConventions()
+    public function testNamedPaginatorSupportsSymfonyAutowiringConventions(): void
     {
         self::bootKernel();
 
@@ -78,7 +78,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertCount(8, $pagination->getPages());
     }
 
-    public function testPaginatorIsInjectedIntoAControllerAction()
+    public function testPaginatorIsInjectedIntoAControllerAction(): void
     {
         $kernel = self::bootKernel(['environment' => 'controller_injection']);
         $request = Request::create('/_ux-pagination/controller');
@@ -90,7 +90,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         $kernel->terminate($request, $response);
     }
 
-    public function testRendererServiceIsConfigured()
+    public function testRendererServiceIsConfigured(): void
     {
         self::bootKernel();
 
@@ -100,7 +100,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         );
     }
 
-    public function testTwigRegistersThePaginationFunctions()
+    public function testTwigRegistersThePaginationFunctions(): void
     {
         self::bootKernel();
 
@@ -111,7 +111,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertNull($twig->getFunction('pagination_head'));
     }
 
-    public function testArrayAdapterIsWired()
+    public function testArrayAdapterIsWired(): void
     {
         self::bootKernel();
 
@@ -126,7 +126,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertSame(5, $pagination->getTotalPages());
     }
 
-    public function testDoctrineOrmAdapterIsTagged()
+    public function testDoctrineOrmAdapterIsTagged(): void
     {
         if (!class_exists(\Doctrine\ORM\QueryBuilder::class)) {
             self::markTestSkipped('Doctrine ORM is not installed.');
@@ -139,7 +139,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertTrue($container->has('ux_pagination.adapter.doctrine_orm'));
     }
 
-    public function testDoctrineDbalAdapterIsTagged()
+    public function testDoctrineDbalAdapterIsTagged(): void
     {
         if (!class_exists(\Doctrine\DBAL\Query\QueryBuilder::class)) {
             self::markTestSkipped('Doctrine DBAL is not installed.');
@@ -150,7 +150,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertTrue(self::getContainer()->has('ux_pagination.adapter.doctrine_dbal'));
     }
 
-    public function testTwigFunctionRendersNavigationWithTranslations()
+    public function testTwigFunctionRendersNavigationWithTranslations(): void
     {
         self::bootKernel();
 
@@ -176,7 +176,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertStringContainsString('100', $html);
     }
 
-    public function testBootstrapThemeRenders()
+    public function testBootstrapThemeRenders(): void
     {
         self::bootKernel();
 
@@ -199,7 +199,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertStringContainsString('ux-pagination-bootstrap', $html);
     }
 
-    public function testConfiguredThemeIsUsedByDefault()
+    public function testConfiguredThemeIsUsedByDefault(): void
     {
         self::bootKernel(['environment' => 'bootstrap_theme']);
 
@@ -221,7 +221,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertStringNotContainsString('ux-pagination-tailwind', $html);
     }
 
-    public function testExplicitThemeOverridesConfiguredTheme()
+    public function testExplicitThemeOverridesConfiguredTheme(): void
     {
         self::bootKernel(['environment' => 'bootstrap_theme']);
 
@@ -246,7 +246,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertStringNotContainsString('ux-pagination-bootstrap', $html);
     }
 
-    public function testDocumentedTwigComponentRenders()
+    public function testDocumentedTwigComponentRenders(): void
     {
         self::bootKernel();
 
@@ -279,7 +279,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertStringNotContainsString('theme=', $html);
     }
 
-    public function testTwigComponentUsesTheConfiguredTheme()
+    public function testTwigComponentUsesTheConfiguredTheme(): void
     {
         self::bootKernel(['environment' => 'bootstrap_theme']);
 
@@ -301,7 +301,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertStringNotContainsString('ux-pagination-tailwind', $html);
     }
 
-    public function testTwigComponentThemeOverridesTheConfiguredTheme()
+    public function testTwigComponentThemeOverridesTheConfiguredTheme(): void
     {
         self::bootKernel(['environment' => 'bootstrap_theme']);
 
@@ -327,7 +327,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertStringNotContainsString('ux-pagination-bootstrap', $html);
     }
 
-    public function testInfoFallsBackToEnglishWithoutTranslator()
+    public function testInfoFallsBackToEnglishWithoutTranslator(): void
     {
         self::bootKernel(['environment' => 'no_translator']);
 
@@ -339,7 +339,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertSame('Showing 21-30 of 100', $pagination->getInfo());
     }
 
-    public function testPaginatesRealQueryBuilderThroughContainerService()
+    public function testPaginatesRealQueryBuilderThroughContainerService(): void
     {
         if (!class_exists(\Doctrine\ORM\EntityManager::class)) {
             self::markTestSkipped('Doctrine ORM is not installed.');
@@ -370,7 +370,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertSame([6, 7, 8, 9, 10], array_map(static fn (Author $a) => $a->getId(), $pagination->getItems()));
     }
 
-    public function testDefaultTemplateRendersCursorPagination()
+    public function testDefaultTemplateRendersCursorPagination(): void
     {
         self::bootKernel();
 
@@ -394,7 +394,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertStringContainsString('Next', $html);
     }
 
-    public function testComponentWithPaginationTraitHandlesARealLiveComponentAction()
+    public function testComponentWithPaginationTraitHandlesARealLiveComponentAction(): void
     {
         self::bootKernel();
 
@@ -416,7 +416,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertSame(2, $component->component()->page);
     }
 
-    public function testBundleTemplateOverrideAppliesToTheDefaultTheme()
+    public function testBundleTemplateOverrideAppliesToTheDefaultTheme(): void
     {
         self::bootKernel();
 
@@ -436,7 +436,7 @@ final class UXPaginationIntegrationTest extends KernelTestCase
         self::assertStringContainsString('Previous', $html);
     }
 
-    public function testCapturedRouteKeepsLinkUrlsStableAcrossLiveRerenders()
+    public function testCapturedRouteKeepsLinkUrlsStableAcrossLiveRerenders(): void
     {
         self::bootKernel();
 

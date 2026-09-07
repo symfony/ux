@@ -16,7 +16,7 @@ use Symfony\UX\Autocomplete\Checksum\ChecksumCalculator;
 
 final class ChecksumCalculatorTest extends TestCase
 {
-    public function testCalculateChecksumForArray()
+    public function testCalculateChecksumForArray(): void
     {
         $this->assertSame(
             'tZ34YQKgpttqybzPws0YJCOHV1QtMjQeuyy+rszdhXU=',
@@ -24,7 +24,7 @@ final class ChecksumCalculatorTest extends TestCase
         );
     }
 
-    public function testCalculateTheSameChecksumForTheSameArrayButInDifferentOrder()
+    public function testCalculateTheSameChecksumForTheSameArrayButInDifferentOrder(): void
     {
         $this->assertSame(
             $this->createTestSubject()->calculateForArray(['test' => 'test', 'test2' => 'test2']),

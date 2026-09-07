@@ -43,13 +43,13 @@ class PhpStanTypeValidatorTest extends TestCase
     }
 
     #[DataProvider('provideValidTypes')]
-    public function testValidTypesAreAccepted(string $type)
+    public function testValidTypesAreAccepted(string $type): void
     {
         self::assertTrue(new PhpStanTypeValidator()->isValid($type));
     }
 
     #[DataProvider('provideInvalidTypes')]
-    public function testInvalidTypesAreRejected(string $type)
+    public function testInvalidTypesAreRejected(string $type): void
     {
         self::assertFalse(new PhpStanTypeValidator()->isValid($type));
     }

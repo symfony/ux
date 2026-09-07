@@ -17,7 +17,7 @@ use Symfony\UX\StimulusBundle\Ux\UxPackageReader;
 
 class UxPackageReaderTest extends TestCase
 {
-    public function testReadPackageMetadata()
+    public function testReadPackageMetadata(): void
     {
         $reader = new UxPackageReader(__DIR__.'/../fixtures');
 
@@ -43,7 +43,7 @@ class UxPackageReaderTest extends TestCase
         $this->assertInstanceOf(UxPackageMetadata::class, $metadata2);
     }
 
-    public function testExceptionIsThrownIfPackageCannotBeFound()
+    public function testExceptionIsThrownIfPackageCannotBeFound(): void
     {
         $reader = new UxPackageReader(__DIR__.'/../fixtures');
 

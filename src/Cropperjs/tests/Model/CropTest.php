@@ -51,7 +51,7 @@ class CropTest extends TestCase
         return $crop;
     }
 
-    public function testGetCroppedImageWithRotation()
+    public function testGetCroppedImageWithRotation(): void
     {
         $crop = $this->createCrop(rotate: 90);
 
@@ -62,7 +62,7 @@ class CropTest extends TestCase
         $this->assertSame(200, imagesy($image));
     }
 
-    public function testGetCroppedImageWithoutRotation()
+    public function testGetCroppedImageWithoutRotation(): void
     {
         $crop = $this->createCrop(rotate: 0);
 
@@ -73,7 +73,7 @@ class CropTest extends TestCase
         $this->assertSame(100, imagesy($image));
     }
 
-    public function testGetCroppedThumbnailWithRotation()
+    public function testGetCroppedThumbnailWithRotation(): void
     {
         $crop = $this->createCrop(rotate: 90);
 
@@ -84,7 +84,7 @@ class CropTest extends TestCase
         $this->assertSame(200, imagesy($image));
     }
 
-    public function testGetCroppedThumbnailWithoutRotation()
+    public function testGetCroppedThumbnailWithoutRotation(): void
     {
         $crop = $this->createCrop(rotate: 0);
 

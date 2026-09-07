@@ -26,7 +26,7 @@ use Twig\Environment;
 
 final class LiveComponentHydratorTest extends TestCase
 {
-    public function testConstructWithEmptySecret()
+    public function testConstructWithEmptySecret(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('A non-empty secret is required.');
@@ -41,7 +41,7 @@ final class LiveComponentHydratorTest extends TestCase
         );
     }
 
-    public function testItCanHydrateWithNullValues()
+    public function testItCanHydrateWithNullValues(): void
     {
         // BC layer when "symfony/type-info" is not available
         if (!class_exists(Type::class)) {

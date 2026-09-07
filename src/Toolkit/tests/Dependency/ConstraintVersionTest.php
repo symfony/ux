@@ -16,14 +16,14 @@ use Symfony\UX\Toolkit\Dependency\ConstraintVersion;
 
 final class ConstraintVersionTest extends TestCase
 {
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $version = new ConstraintVersion('1.2.3');
 
         $this->assertSame('1.2.3', (string) $version);
     }
 
-    public function testCanBeCompared()
+    public function testCanBeCompared(): void
     {
         $this->assertTrue(new ConstraintVersion('1.2.3')->isHigherThan(new ConstraintVersion('1.2.2')));
         $this->assertFalse(new ConstraintVersion('1.2.3')->isHigherThan(new ConstraintVersion('1.2.4')));

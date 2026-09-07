@@ -22,7 +22,7 @@ use Twig\Loader\LoaderInterface;
  */
 final class ComponentTemplateFinderTest extends TestCase
 {
-    public function testFindTemplate()
+    public function testFindTemplate(): void
     {
         $templates = [
             'components/aa.html.twig',
@@ -46,7 +46,7 @@ final class ComponentTemplateFinderTest extends TestCase
         $this->assertNull($finder->findAnonymousComponentTemplate('c'));
     }
 
-    public function testFindTemplateWithinDirectory()
+    public function testFindTemplateWithinDirectory(): void
     {
         $templates = [
             'bar.html.twig',
@@ -67,7 +67,7 @@ final class ComponentTemplateFinderTest extends TestCase
         $this->assertEquals('foo/foo/baz/index.html.twig', $finder->findAnonymousComponentTemplate('foo:baz'));
     }
 
-    public function testFindTemplateFromExternalBundle()
+    public function testFindTemplateFromExternalBundle(): void
     {
         $templates = [
             '@Acme/components/Button.html.twig',
@@ -141,7 +141,7 @@ final class ComponentTemplateFinderTest extends TestCase
         $this->assertSame('@Acme/components/Index/index.html.twig', $finderWithoutIndexHtml->findAnonymousComponentTemplate('Acme:Index'));
     }
 
-    public function testFindTemplateFromExternalBundleWithPrecedence()
+    public function testFindTemplateFromExternalBundleWithPrecedence(): void
     {
         $templates = [
             '@Acme/components/Button.html.twig',

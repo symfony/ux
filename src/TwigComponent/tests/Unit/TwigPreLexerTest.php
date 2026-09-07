@@ -19,14 +19,14 @@ use Twig\Error\SyntaxError;
 final class TwigPreLexerTest extends TestCase
 {
     #[DataProvider('getLexTests')]
-    public function testPreLex(string $input, string $expectedOutput)
+    public function testPreLex(string $input, string $expectedOutput): void
     {
         $lexer = new TwigPreLexer();
         $this->assertSame($expectedOutput, $lexer->preLexComponents($input));
     }
 
     #[DataProvider('getInvalidSyntaxTests')]
-    public function testPreLexThrowsExceptionOnInvalidSyntax(string $input, string $expectedMessage)
+    public function testPreLexThrowsExceptionOnInvalidSyntax(string $input, string $expectedMessage): void
     {
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage($expectedMessage);

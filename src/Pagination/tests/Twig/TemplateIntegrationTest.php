@@ -55,7 +55,7 @@ final class TemplateIntegrationTest extends TestCase
         });
     }
 
-    public function testDefaultTemplateRendersNativeNavigationWithoutRuntimeAttributes()
+    public function testDefaultTemplateRendersNativeNavigationWithoutRuntimeAttributes(): void
     {
         $html = $this->renderTheme(
             '@UXPagination/theme/default.html.twig',
@@ -71,7 +71,7 @@ final class TemplateIntegrationTest extends TestCase
     }
 
     #[DataProvider('themes')]
-    public function testEveryThemeKeepsTheSharedServerRenderedContract(string $theme)
+    public function testEveryThemeKeepsTheSharedServerRenderedContract(string $theme): void
     {
         $html = $this->renderTheme($theme, range(1, 50), 2, 10);
 
@@ -228,7 +228,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringNotContainsString('Showing 11-20 of 50', $html);
     }
 
-    public function testStandardTemplateDoesNotEmitPaginationJavaScriptHooks()
+    public function testStandardTemplateDoesNotEmitPaginationJavaScriptHooks(): void
     {
         $pagination = new Pagination(
             source: range(1, 50),
@@ -245,7 +245,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringNotContainsString('data-announcement-template=', $html);
     }
 
-    public function testIntegrationDataAttributesRemainPlain()
+    public function testIntegrationDataAttributesRemainPlain(): void
     {
         $pagination = new Pagination(
             source: range(1, 50),
@@ -263,7 +263,7 @@ final class TemplateIntegrationTest extends TestCase
     }
 
     #[DataProvider('themes')]
-    public function testAttributesAreRenderedByEveryTheme(string $theme)
+    public function testAttributesAreRenderedByEveryTheme(string $theme): void
     {
         $pagination = new Pagination(
             source: range(1, 50),
@@ -283,7 +283,7 @@ final class TemplateIntegrationTest extends TestCase
     }
 
     #[DataProvider('themes')]
-    public function testCustomClassAlwaysDecoratesTheNavigationElement(string $theme)
+    public function testCustomClassAlwaysDecoratesTheNavigationElement(string $theme): void
     {
         $pagination = new Pagination(
             source: range(1, 50),
@@ -302,7 +302,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertMatchesRegularExpression('/<nav[^>]+class="[^"]*product-pages[^"]*"/', $html);
     }
 
-    public function testDefaultTemplateRendersPageLinksWithoutClientState()
+    public function testDefaultTemplateRendersPageLinksWithoutClientState(): void
     {
         $html = $this->renderTheme(
             '@UXPagination/theme/default.html.twig',
@@ -317,7 +317,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringContainsString('aria-current="page"', $html);
     }
 
-    public function testDefaultTemplateRendersRelPrevNext()
+    public function testDefaultTemplateRendersRelPrevNext(): void
     {
         $html = $this->renderTheme(
             '@UXPagination/theme/default.html.twig',
@@ -330,7 +330,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringContainsString('rel="next"', $html);
     }
 
-    public function testBootstrapTemplateRendersWithBootstrapClasses()
+    public function testBootstrapTemplateRendersWithBootstrapClasses(): void
     {
         $html = $this->renderTheme(
             '@UXPagination/theme/bootstrap.html.twig',
@@ -345,7 +345,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringNotContainsString('data-controller=', $html);
     }
 
-    public function testTailwindTemplateRendersFocusRingClasses()
+    public function testTailwindTemplateRendersFocusRingClasses(): void
     {
         $html = $this->renderTheme(
             '@UXPagination/theme/tailwind.html.twig',
@@ -358,7 +358,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringNotContainsString('data-controller=', $html);
     }
 
-    public function testExplicitBundleThemePathIsRendered()
+    public function testExplicitBundleThemePathIsRendered(): void
     {
         $loader = new FilesystemLoader();
         $loader->addPath(__DIR__.'/../Fixtures/templates', 'UXPagination');
@@ -380,7 +380,7 @@ final class TemplateIntegrationTest extends TestCase
         );
     }
 
-    public function testApplicationTemplateCanComposePartials()
+    public function testApplicationTemplateCanComposePartials(): void
     {
         $twig = new Environment(new ArrayLoader([
             'pagination/product.html.twig' => <<<'TWIG'
@@ -423,7 +423,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringContainsString('rel="next"', $html);
     }
 
-    public function testApplicationTemplateCanExtendTheDefaultBlocks()
+    public function testApplicationTemplateCanExtendTheDefaultBlocks(): void
     {
         $bundleLoader = new FilesystemLoader();
         $bundleLoader->addPath(\dirname(__DIR__, 2).'/templates', 'UXPagination');
@@ -464,7 +464,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringContainsString('aria-current="page"', $html);
     }
 
-    public function testExtendedThemeOverridesTheLabelBlocks()
+    public function testExtendedThemeOverridesTheLabelBlocks(): void
     {
         $twig = $this->createExtendingEnvironment(<<<'TWIG'
             {% extends '@!UXPagination/theme/default.html.twig' %}
@@ -501,7 +501,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringContainsString('&lsaquo; Previous', $html);
     }
 
-    public function testExtendedThemeOverridesThePageLabelWithLinkContext()
+    public function testExtendedThemeOverridesThePageLabelWithLinkContext(): void
     {
         $twig = $this->createExtendingEnvironment(<<<'TWIG'
             {% extends '@!UXPagination/theme/default.html.twig' %}
@@ -618,7 +618,7 @@ final class TemplateIntegrationTest extends TestCase
         }
     }
 
-    public function testExplicitCustomTemplatePathIsPreserved()
+    public function testExplicitCustomTemplatePathIsPreserved(): void
     {
         $loader = new FilesystemLoader();
         $loader->addPath(__DIR__.'/../Fixtures/templates', 'App');
@@ -634,7 +634,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertSame('explicit template', trim(new PaginationRenderer($twig)->renderPagination($pagination, theme: '@App/explicit.html.twig')));
     }
 
-    public function testSinglePageDoesNotRenderNav()
+    public function testSinglePageDoesNotRenderNav(): void
     {
         $html = $this->renderTheme(
             '@UXPagination/theme/default.html.twig',
@@ -646,7 +646,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringNotContainsString('<nav', $html);
     }
 
-    public function testCustomQueryParameterIsKeptInNativeLinks()
+    public function testCustomQueryParameterIsKeptInNativeLinks(): void
     {
         $pagination = new Pagination(
             source: range(1, 100),
@@ -666,7 +666,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringNotContainsString('data-query-param=', $html);
     }
 
-    public function testApplicationCanAttachItsOwnControllerAttribute()
+    public function testApplicationCanAttachItsOwnControllerAttribute(): void
     {
         $pagination = new Pagination(
             source: range(1, 50),
@@ -683,7 +683,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringContainsString('data-controller="app--catalog"', $html);
     }
 
-    public function testDocumentedAdjacentLinkMarkupUsesGuardedResultUrls()
+    public function testDocumentedAdjacentLinkMarkupUsesGuardedResultUrls(): void
     {
         $pagination = new Pagination(
             source: range(1, 30),
@@ -707,7 +707,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringContainsString('href="/items?page=3" rel="next"', $html);
     }
 
-    public function testDefaultTemplateAdaptsToLookaheadPagination()
+    public function testDefaultTemplateAdaptsToLookaheadPagination(): void
     {
         $pagination = new Pagination(
             source: range(1, 100),
@@ -727,7 +727,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringNotContainsString('data-page=', $html);
     }
 
-    public function testLookaheadPaginationKeepsTheCustomQueryParameter()
+    public function testLookaheadPaginationKeepsTheCustomQueryParameter(): void
     {
         $pagination = new Pagination(
             source: range(1, 100),
@@ -744,7 +744,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringNotContainsString('data-query-param=', $html);
     }
 
-    public function testDefaultTemplateAdaptsToCursorPagination()
+    public function testDefaultTemplateAdaptsToCursorPagination(): void
     {
         $pagination = new CursorPagination(
             source: range(1, 100),
@@ -766,7 +766,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringNotContainsString('data-query-param', $html);
     }
 
-    public function testLinkAttributesKeepHrefFallbackAndAddLiveActions()
+    public function testLinkAttributesKeepHrefFallbackAndAddLiveActions(): void
     {
         $pagination = new Pagination(
             source: range(1, 50),
@@ -793,7 +793,7 @@ final class TemplateIntegrationTest extends TestCase
         self::assertStringNotContainsString('symfony--ux-pagination--pagination', $html);
     }
 
-    public function testAttributeValuesAreEscapedAndClassesAreMerged()
+    public function testAttributeValuesAreEscapedAndClassesAreMerged(): void
     {
         $pagination = new Pagination(
             source: range(1, 50),
@@ -818,7 +818,7 @@ final class TemplateIntegrationTest extends TestCase
     }
 
     #[DataProvider('themes')]
-    public function testEveryThemeEscapesAttributeValues(string $theme)
+    public function testEveryThemeEscapesAttributeValues(string $theme): void
     {
         $pagination = new Pagination(
             source: range(1, 50),

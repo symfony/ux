@@ -24,7 +24,7 @@ class AutocompleteResultsExecutorTest extends KernelTestCase
     use Factories;
     use ResetDatabase;
 
-    public function testItReturnsExtraAttributes()
+    public function testItReturnsExtraAttributes(): void
     {
         $kernel = new Kernel('test', true);
         $kernel->disableForms();

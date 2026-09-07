@@ -16,7 +16,7 @@ use Symfony\UX\Toolkit\File;
 
 final class FileTest extends TestCase
 {
-    public function testShouldFailIfSourcePathIsNotRelative()
+    public function testShouldFailIfSourcePathIsNotRelative(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('The source path "%s" must be relative.', __FILE__.'/templates/components/Button.html.twig'));
@@ -24,7 +24,7 @@ final class FileTest extends TestCase
         new File(__FILE__.'/templates/components/Button.html.twig', __FILE__.'Button.html.twig');
     }
 
-    public function testShouldFailIfDestinationPathIsNotRelative()
+    public function testShouldFailIfDestinationPathIsNotRelative(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('The destination path "%s" must be relative.', __FILE__.'Button.html.twig'));
@@ -32,7 +32,7 @@ final class FileTest extends TestCase
         new File('templates/components/Button.html.twig', __FILE__.'Button.html.twig');
     }
 
-    public function testShouldFailIfSourcePathEscapesTargetDirectory()
+    public function testShouldFailIfSourcePathEscapesTargetDirectory(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The path "../../../../tmp/PWNED.html.twig" must not escape its target directory.');
@@ -40,7 +40,7 @@ final class FileTest extends TestCase
         new File('../../../../tmp/PWNED.html.twig', 'templates/components/Button.html.twig');
     }
 
-    public function testShouldFailIfDestinationPathEscapesTargetDirectory()
+    public function testShouldFailIfDestinationPathEscapesTargetDirectory(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The path "../../../../tmp/PWNED.html.twig" must not escape its target directory.');
@@ -48,7 +48,7 @@ final class FileTest extends TestCase
         new File('templates/components/Button.html.twig', '../../../../tmp/PWNED.html.twig');
     }
 
-    public function testCanInstantiateFile()
+    public function testCanInstantiateFile(): void
     {
         $file = new File('src-templates/components/Button.html.twig', 'dist-templates/components/Button.html.twig');
 
@@ -57,7 +57,7 @@ final class FileTest extends TestCase
         $this->assertSame('src-templates/components/Button.html.twig', (string) $file);
     }
 
-    public function testCanInstantiateFileWithSubComponent()
+    public function testCanInstantiateFileWithSubComponent(): void
     {
         $file = new File('src-templates/components/Table/Body.html.twig', 'dest-templates/components/Table/Body.html.twig');
 

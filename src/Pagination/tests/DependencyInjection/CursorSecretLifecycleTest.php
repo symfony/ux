@@ -22,7 +22,7 @@ use Symfony\UX\Pagination\UXPaginationBundle;
 #[CoversNothing]
 final class CursorSecretLifecycleTest extends TestCase
 {
-    public function testCursorCodecUsesAnInterfaceBasedLazyProxy()
+    public function testCursorCodecUsesAnInterfaceBasedLazyProxy(): void
     {
         $container = $this->loadContainer(kernelSecret: null);
         $definition = $container->getDefinition('ux_pagination.cursor_codec');
@@ -34,7 +34,7 @@ final class CursorSecretLifecycleTest extends TestCase
         );
     }
 
-    public function testOffsetPaginationWorksWithoutAnySigningSecret()
+    public function testOffsetPaginationWorksWithoutAnySigningSecret(): void
     {
         $container = $this->loadContainer(kernelSecret: null);
         $container->compile();
@@ -46,7 +46,7 @@ final class CursorSecretLifecycleTest extends TestCase
         self::assertSame([3, 4], $pagination->getItems());
     }
 
-    public function testMissingSecretFailsOnlyWhenCursorSigningIsNeeded()
+    public function testMissingSecretFailsOnlyWhenCursorSigningIsNeeded(): void
     {
         $container = $this->loadContainer(kernelSecret: null);
         $container->compile();
@@ -66,7 +66,7 @@ final class CursorSecretLifecycleTest extends TestCase
         $pagination->getItems();
     }
 
-    public function testMissingSecretIsNotReportedAsAnInvalidClientCursor()
+    public function testMissingSecretIsNotReportedAsAnInvalidClientCursor(): void
     {
         $container = $this->loadContainer(kernelSecret: null);
         $container->compile();
@@ -86,7 +86,7 @@ final class CursorSecretLifecycleTest extends TestCase
         $builder->paginate();
     }
 
-    public function testKernelSecretIsUsedAsTheDefaultCursorSecret()
+    public function testKernelSecretIsUsedAsTheDefaultCursorSecret(): void
     {
         $firstContainer = $this->loadContainer(kernelSecret: 'shared-kernel-secret');
         $firstContainer->compile();
@@ -119,7 +119,7 @@ final class CursorSecretLifecycleTest extends TestCase
         self::assertSame([3, 4], array_column($secondPage->getItems(), 'id'));
     }
 
-    public function testDedicatedCursorSecretOverridesKernelSecret()
+    public function testDedicatedCursorSecretOverridesKernelSecret(): void
     {
         $firstContainer = $this->loadContainer(
             kernelSecret: 'first-kernel-secret',

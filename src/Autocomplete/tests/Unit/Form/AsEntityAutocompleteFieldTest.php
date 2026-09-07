@@ -19,7 +19,7 @@ use Symfony\UX\Autocomplete\Tests\Fixtures\Form\ProductType;
 class AsEntityAutocompleteFieldTest extends TestCase
 {
     #[DataProvider('provideClassNames')]
-    public function testShortName(string $shortName, string $className)
+    public function testShortName(string $shortName, string $className): void
     {
         $this->assertEquals($shortName, AsEntityAutocompleteField::shortName($className));
     }

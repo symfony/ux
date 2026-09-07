@@ -21,7 +21,7 @@ use Twig\Loader\FilesystemLoader;
 
 class TabsExtensionTest extends TestCase
 {
-    public function testRendersTwoTabs()
+    public function testRendersTwoTabs(): void
     {
         $converter = $this->createConverter();
 

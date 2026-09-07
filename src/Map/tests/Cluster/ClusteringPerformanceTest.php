@@ -55,7 +55,7 @@ class ClusteringPerformanceTest extends TestCase
      * Scenario 1: Large number of points (50,000), concentrated area (Paris region).
      */
     #[DataProvider('algorithmProvider')]
-    public function testScenarioRegion50000(ClusteringAlgorithmInterface $algorithm, float $zoom)
+    public function testScenarioRegion50000(ClusteringAlgorithmInterface $algorithm, float $zoom): void
     {
         $points = $this->generatePoints(50000, 48.8, 49, 2.2, 2.5);
 
@@ -66,7 +66,7 @@ class ClusteringPerformanceTest extends TestCase
      * Scenario 2: Moderate number of points (5,000), broad area (France and surroundings).
      */
     #[DataProvider('algorithmProvider')]
-    public function testScenarioCountry5000(ClusteringAlgorithmInterface $algorithm, float $zoom)
+    public function testScenarioCountry5000(ClusteringAlgorithmInterface $algorithm, float $zoom): void
     {
         $points = $this->generatePoints(5000, 30, 60, -10, 35);
 
@@ -77,7 +77,7 @@ class ClusteringPerformanceTest extends TestCase
      * Scenario 3: Very large number of points (100,000), global distribution.
      */
     #[DataProvider('algorithmProvider')]
-    public function testScenarioWorld100000(ClusteringAlgorithmInterface $algorithm, float $zoom)
+    public function testScenarioWorld100000(ClusteringAlgorithmInterface $algorithm, float $zoom): void
     {
         $points = $this->generatePoints(100000, -90, 90, -180, 180);
 

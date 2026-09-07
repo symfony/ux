@@ -21,7 +21,7 @@ use Symfony\UX\Pagination\Navigation\PaginationUrlGenerator;
 #[CoversClass(PaginationUrlGenerator::class)]
 final class PaginationUrlGeneratorTest extends TestCase
 {
-    public function testParameterNamesCanBeConfiguredImmutably()
+    public function testParameterNamesCanBeConfiguredImmutably(): void
     {
         $generator = new PaginationUrlGenerator(basePath: '/items');
         $configured = $generator
@@ -36,7 +36,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/items?after=opaque', $configured->getCursorUrl('opaque'));
     }
 
-    public function testEmptyParameterAndRouteNamesAreRejected()
+    public function testEmptyParameterAndRouteNamesAreRejected(): void
     {
         $generator = new PaginationUrlGenerator();
 
@@ -54,7 +54,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         }
     }
 
-    public function testEmptyExcludedQueryParameterIsRejected()
+    public function testEmptyExcludedQueryParameterIsRejected(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('must not be empty');
@@ -62,7 +62,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         new PaginationUrlGenerator()->withoutQueryParameters('');
     }
 
-    public function testWithRouteReplacesPathConfiguration()
+    public function testWithRouteReplacesPathConfiguration(): void
     {
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $urlGenerator->expects(self::once())
@@ -77,7 +77,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/catalog/books?page=2', $url);
     }
 
-    public function testUrlWithBasePath()
+    public function testUrlWithBasePath(): void
     {
         $recipe = new PaginationUrlGenerator(basePath: '/items');
 
@@ -86,7 +86,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/items?page=10', $recipe->getUrl(10));
     }
 
-    public function testPageUrlsRejectNonPositivePages()
+    public function testPageUrlsRejectNonPositivePages(): void
     {
         $generator = new PaginationUrlGenerator(basePath: '/items');
 
@@ -103,7 +103,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         }
     }
 
-    public function testUrlOmitsPageParamForFirstPage()
+    public function testUrlOmitsPageParamForFirstPage(): void
     {
         $recipe = new PaginationUrlGenerator(basePath: '/items');
 
@@ -112,7 +112,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertStringNotContainsString('page=', $url);
     }
 
-    public function testWithQueryParameters()
+    public function testWithQueryParameters(): void
     {
         $recipe = new PaginationUrlGenerator(basePath: '/items');
         $withQueryParameters = $recipe->withQueryParameters(['sort' => 'name', 'filter' => 'active']);
@@ -124,7 +124,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertStringContainsString('page=2', $url);
     }
 
-    public function testWithQueryParametersImmutability()
+    public function testWithQueryParametersImmutability(): void
     {
         $recipe = new PaginationUrlGenerator(basePath: '/items');
         $withQueryParameters = $recipe->withQueryParameters(['sort' => 'name']);
@@ -133,7 +133,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertStringContainsString('sort=name', $withQueryParameters->getUrl(2));
     }
 
-    public function testWithFragment()
+    public function testWithFragment(): void
     {
         $recipe = new PaginationUrlGenerator(basePath: '/items');
         $withFragment = $recipe->withFragment('results');
@@ -143,7 +143,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertStringContainsString('#results', $url);
     }
 
-    public function testWithFragmentImmutability()
+    public function testWithFragmentImmutability(): void
     {
         $recipe = new PaginationUrlGenerator(basePath: '/items');
         $withFragment = $recipe->withFragment('results');
@@ -152,7 +152,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertStringContainsString('#results', $withFragment->getUrl(2));
     }
 
-    public function testWithPath()
+    public function testWithPath(): void
     {
         $recipe = new PaginationUrlGenerator(basePath: '/old-path');
         $withPath = $recipe->withPath('/new-path');
@@ -160,7 +160,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertStringContainsString('/new-path', $withPath->getUrl(2));
     }
 
-    public function testWithQueryString()
+    public function testWithQueryString(): void
     {
         $request = new Request(['existing' => 'param']);
         $requestStack = new RequestStack();
@@ -178,7 +178,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertStringContainsString('page=2', $url);
     }
 
-    public function testPreservesQueryStringByDefault()
+    public function testPreservesQueryStringByDefault(): void
     {
         $request = new Request([
             'q' => 'phone',
@@ -200,7 +200,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         ], $query);
     }
 
-    public function testOffsetUrlDropsAnExistingCursorParameter()
+    public function testOffsetUrlDropsAnExistingCursorParameter(): void
     {
         $requestStack = new RequestStack();
         $requestStack->push(new Request(['cursor' => 'old', 'q' => 'phone']));
@@ -210,7 +210,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/items?q=phone&page=2', $url);
     }
 
-    public function testWithoutQueryStringDiscardsRequestParameters()
+    public function testWithoutQueryStringDiscardsRequestParameters(): void
     {
         $requestStack = new RequestStack();
         $requestStack->push(new Request(['q' => 'phone']));
@@ -223,7 +223,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/items?sort=name&page=2', $url);
     }
 
-    public function testWithoutQueryParametersRemovesSelectedParametersBeforeExplicitParameters()
+    public function testWithoutQueryParametersRemovesSelectedParametersBeforeExplicitParameters(): void
     {
         $requestStack = new RequestStack();
         $requestStack->push(new Request(['debug' => '1', 'token' => 'secret', 'sort' => 'price']));
@@ -236,7 +236,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/items?sort=name&page=2', $url);
     }
 
-    public function testWithQueryStringExcludesPageParam()
+    public function testWithQueryStringExcludesPageParam(): void
     {
         $request = new Request(['page' => '5', 'sort' => 'name']);
         $requestStack = new RequestStack();
@@ -255,7 +255,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertStringNotContainsString('page=5', $url);
     }
 
-    public function testCursorUrl()
+    public function testCursorUrl(): void
     {
         $recipe = new PaginationUrlGenerator(basePath: '/items');
 
@@ -265,7 +265,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertStringNotContainsString('page=', $url);
     }
 
-    public function testCursorUrlRejectsAnEmptyCursor()
+    public function testCursorUrlRejectsAnEmptyCursor(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Cursor value must not be empty');
@@ -273,7 +273,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         new PaginationUrlGenerator(basePath: '/items')->getCursorUrl('');
     }
 
-    public function testCursorUrlWithFragment()
+    public function testCursorUrlWithFragment(): void
     {
         $recipe = new PaginationUrlGenerator(basePath: '/items');
         $withFragment = $recipe->withFragment('results');
@@ -284,7 +284,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertStringContainsString('#results', $url);
     }
 
-    public function testCustomQueryParam()
+    public function testCustomQueryParam(): void
     {
         $recipe = new PaginationUrlGenerator(
             queryParam: 'p',
@@ -295,7 +295,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertStringNotContainsString('page=', $recipe->getUrl(2));
     }
 
-    public function testUrlWithRouteAndGenerator()
+    public function testUrlWithRouteAndGenerator(): void
     {
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $urlGenerator->expects(self::once())
@@ -314,7 +314,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/items/books?page=2', $url);
     }
 
-    public function testUrlWithRouteOmitsPageOneFromParams()
+    public function testUrlWithRouteOmitsPageOneFromParams(): void
     {
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $urlGenerator->expects(self::once())
@@ -333,7 +333,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/items/books', $url);
     }
 
-    public function testChainedModifiers()
+    public function testChainedModifiers(): void
     {
         $recipe = new PaginationUrlGenerator(basePath: '/items');
 
@@ -348,7 +348,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertStringContainsString('#list', $url);
     }
 
-    public function testUrlWithNoRequestStackReturnsEmptyPath()
+    public function testUrlWithNoRequestStackReturnsEmptyPath(): void
     {
         $recipe = new PaginationUrlGenerator();
 
@@ -357,14 +357,14 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('?page=2', $url);
     }
 
-    public function testUrlGeneratorWithoutRequestFallsBackToQueryString()
+    public function testUrlGeneratorWithoutRequestFallsBackToQueryString(): void
     {
         $urlGenerator = $this->createStub(UrlGeneratorInterface::class);
 
         self::assertSame('?page=2', new PaginationUrlGenerator(urlGenerator: $urlGenerator)->getUrl(2));
     }
 
-    public function testRequestWithoutRouteNameFallsBackToPath()
+    public function testRequestWithoutRouteNameFallsBackToPath(): void
     {
         $requestStack = new RequestStack();
         $requestStack->push(Request::create('/items'));
@@ -376,7 +376,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         )->getUrl(2));
     }
 
-    public function testExposesTheConfiguredRouteName()
+    public function testExposesTheConfiguredRouteName(): void
     {
         $recipe = new PaginationUrlGenerator();
 
@@ -384,7 +384,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('items_list', $recipe->withRoute('items_list')->getRouteName());
     }
 
-    public function testAutoDetectedRouteReceivesMergedParams()
+    public function testAutoDetectedRouteReceivesMergedParams(): void
     {
         $request = new Request();
         $request->attributes->set('_route', 'app_items');
@@ -409,7 +409,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/items/books?page=2', $url);
     }
 
-    public function testPreservedQueryParametersCannotOverrideRouteParameters()
+    public function testPreservedQueryParametersCannotOverrideRouteParameters(): void
     {
         $request = Request::create('/articles/php?slug=spoofed&filter=recent');
         $request->attributes->set('_route', 'article_show');
@@ -432,7 +432,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/articles/php?filter=recent&page=2', $recipe->getUrl(2));
     }
 
-    public function testGetCurrentPathFallsBackToPathInfo()
+    public function testGetCurrentPathFallsBackToPathInfo(): void
     {
         $request = Request::create('/my-path');
         $requestStack = new RequestStack();
@@ -448,7 +448,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertStringContainsString('page=2', $url);
     }
 
-    public function testCursorUrlWithRoute()
+    public function testCursorUrlWithRoute(): void
     {
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $urlGenerator->expects(self::once())
@@ -466,7 +466,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/items?cursor=abc123', $url);
     }
 
-    public function testCursorUrlWithRouteAndFragment()
+    public function testCursorUrlWithRouteAndFragment(): void
     {
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $urlGenerator->expects(self::once())
@@ -485,7 +485,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/items?cursor=abc123#results', $url);
     }
 
-    public function testCursorUrlWithQueryString()
+    public function testCursorUrlWithQueryString(): void
     {
         $request = new Request(['sort' => 'name']);
         $requestStack = new RequestStack();
@@ -503,7 +503,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertStringContainsString('cursor=abc123', $url);
     }
 
-    public function testWithQueryStringNoRequest()
+    public function testWithQueryStringNoRequest(): void
     {
         $recipe = new PaginationUrlGenerator(basePath: '/items');
         $withQs = $recipe->withQueryString();
@@ -513,7 +513,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/items?page=2', $url);
     }
 
-    public function testCursorUrlWithNoPath()
+    public function testCursorUrlWithNoPath(): void
     {
         $recipe = new PaginationUrlGenerator();
 
@@ -522,7 +522,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('?cursor=abc123', $url);
     }
 
-    public function testUrlWithRouteAndFragment()
+    public function testUrlWithRouteAndFragment(): void
     {
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $urlGenerator->expects(self::once())
@@ -543,7 +543,7 @@ final class PaginationUrlGeneratorTest extends TestCase
 
     // ── Path-based page parameter tests ──────────────────────
 
-    public function testAutoDetectedRouteWithPageInPath()
+    public function testAutoDetectedRouteWithPageInPath(): void
     {
         $request = new Request();
         $request->attributes->set('_route', 'blog_list');
@@ -568,7 +568,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/blog/3', $url);
     }
 
-    public function testAutoDetectedRoutePageOneOmitsPageParam()
+    public function testAutoDetectedRoutePageOneOmitsPageParam(): void
     {
         $request = new Request();
         $request->attributes->set('_route', 'blog_list');
@@ -594,7 +594,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/blog', $url);
     }
 
-    public function testAutoDetectedRoutePreservesOtherRouteParams()
+    public function testAutoDetectedRoutePreservesOtherRouteParams(): void
     {
         $request = new Request();
         $request->attributes->set('_route', 'category_list');
@@ -619,7 +619,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/blog/php/5', $url);
     }
 
-    public function testCursorUrlWithAutoDetectedRoute()
+    public function testCursorUrlWithAutoDetectedRoute(): void
     {
         $request = new Request();
         $request->attributes->set('_route', 'item_list');
@@ -644,7 +644,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/items/books?cursor=abc123', $url);
     }
 
-    public function testAbsoluteUrlUsesRequestSchemeAndHost()
+    public function testAbsoluteUrlUsesRequestSchemeAndHost(): void
     {
         $request = Request::create('https://example.com/items?page=2');
         $requestStack = new RequestStack();
@@ -655,7 +655,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('https://example.com/items?page=3', $recipe->getAbsoluteUrl(3));
     }
 
-    public function testAbsoluteUrlRequiresRequestOrRouterRoute()
+    public function testAbsoluteUrlRequiresRequestOrRouterRoute(): void
     {
         $recipe = new PaginationUrlGenerator(basePath: '/items');
 
@@ -665,7 +665,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         $recipe->getAbsoluteUrl(3);
     }
 
-    public function testPageOneFallsBackToExplicitParamWhenRouteRequiresIt()
+    public function testPageOneFallsBackToExplicitParamWhenRouteRequiresIt(): void
     {
         $generator = $this->createMock(UrlGeneratorInterface::class);
         $generator->expects(self::exactly(2))
@@ -683,7 +683,7 @@ final class PaginationUrlGeneratorTest extends TestCase
         self::assertSame('/blog/1', $recipe->getUrl(1));
     }
 
-    public function testMissingParamOtherThanPageStillThrows()
+    public function testMissingParamOtherThanPageStillThrows(): void
     {
         $generator = $this->createStub(UrlGeneratorInterface::class);
         $generator->method('generate')

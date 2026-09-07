@@ -72,7 +72,7 @@ class KitLinterTest extends TestCase
         ));
     }
 
-    public function testMissingRecipeManifestCheckerDetectsOrphanDirectory()
+    public function testMissingRecipeManifestCheckerDetectsOrphanDirectory(): void
     {
         $kit = $this->loadBrokenKit();
         $linter = new KitLinter([new MissingRecipeManifestChecker()]);
@@ -84,7 +84,7 @@ class KitLinterTest extends TestCase
         $this->assertSame(LintSeverity::Error, $issues[0]->severity);
     }
 
-    public function testCopyFilesExistenceCheckerDetectsMissingDirectory()
+    public function testCopyFilesExistenceCheckerDetectsMissingDirectory(): void
     {
         $kit = $this->loadBrokenKit();
         $linter = new KitLinter([new CopyFilesExistenceChecker()]);
@@ -96,7 +96,7 @@ class KitLinterTest extends TestCase
         $this->assertSame(LintSeverity::Error, $issues[0]->severity);
     }
 
-    public function testRecipeReferenceCheckerDetectsUnknownRecipe()
+    public function testRecipeReferenceCheckerDetectsUnknownRecipe(): void
     {
         $kit = $this->loadBrokenKit();
         $linter = new KitLinter([new RecipeReferenceChecker()]);
@@ -123,7 +123,7 @@ class KitLinterTest extends TestCase
     }
 
     #[DataProvider('provideStimulusCases')]
-    public function testStimulusControllerChecker(string $controllerName, bool $expectWarning, ?string $expectedFile)
+    public function testStimulusControllerChecker(string $controllerName, bool $expectWarning, ?string $expectedFile): void
     {
         $kit = $this->loadFixtureKit('lint-stimulus');
 
@@ -147,7 +147,7 @@ class KitLinterTest extends TestCase
         $this->assertStringContainsString($expectedFile, $matching[0]->file);
     }
 
-    public function testStimulusControllerSatisfiedByRecipeDependency()
+    public function testStimulusControllerSatisfiedByRecipeDependency(): void
     {
         $kit = $this->loadFixtureKit('lint-stimulus');
 
@@ -196,7 +196,7 @@ class KitLinterTest extends TestCase
     }
 
     #[DataProvider('provideComposerCases')]
-    public function testComposerSymbolChecker(string $recipe, ?string $category, ?string $needle)
+    public function testComposerSymbolChecker(string $recipe, ?string $category, ?string $needle): void
     {
         $kit = $this->loadFixtureKit('lint-composer-symbol');
         $issues = $this->findRecipeIssues(new KitLinter([new ComposerSymbolChecker()])->lint($kit), $recipe);
@@ -239,7 +239,7 @@ class KitLinterTest extends TestCase
     }
 
     #[DataProvider('provideJsImportCases')]
-    public function testJsImportChecker(string $recipe, ?string $category, ?string $needle)
+    public function testJsImportChecker(string $recipe, ?string $category, ?string $needle): void
     {
         $kit = $this->loadFixtureKit('lint-js-import');
         $issues = $this->findRecipeIssues(new KitLinter([new JsImportChecker()])->lint($kit), $recipe);
@@ -272,7 +272,7 @@ class KitLinterTest extends TestCase
     }
 
     #[DataProvider('provideAttributesDefaultsCases')]
-    public function testAttributesDefaultsChecker(string $file, int $expectedCount)
+    public function testAttributesDefaultsChecker(string $file, int $expectedCount): void
     {
         $kit = $this->loadFixtureKit('lint-attributes-defaults');
 

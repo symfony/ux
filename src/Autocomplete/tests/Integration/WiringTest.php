@@ -35,7 +35,7 @@ class WiringTest extends KernelTestCase
         return $kernel;
     }
 
-    public function testWiringWithoutForm()
+    public function testWiringWithoutForm(): void
     {
         $kernel = new Kernel('test', true);
         $kernel->disableForms();
@@ -51,7 +51,7 @@ class WiringTest extends KernelTestCase
         $this->assertFalse($data->hasNextPage);
     }
 
-    public function testWiringWithManyResults()
+    public function testWiringWithManyResults(): void
     {
         $kernel = new Kernel('test', true);
         $kernel->disableForms();
@@ -76,7 +76,7 @@ class WiringTest extends KernelTestCase
         $this->assertFalse($data->hasNextPage);
     }
 
-    public function testWiringWithoutFormAndGroupByOption()
+    public function testWiringWithoutFormAndGroupByOption(): void
     {
         $kernel = new Kernel('test', true);
         $kernel->disableForms();

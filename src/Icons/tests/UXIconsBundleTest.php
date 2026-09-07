@@ -37,7 +37,7 @@ class UXIconsBundleTest extends TestCase
      * @dataProvider provideTestInvalidAliasConfiguration
      */
     #[DataProvider('provideTestInvalidAliasConfiguration')]
-    public function testInvalidAliasConfiguration(mixed $value, string $expectedMessage)
+    public function testInvalidAliasConfiguration(mixed $value, string $expectedMessage): void
     {
         self::expectException(InvalidConfigurationException::class);
         self::expectExceptionMessage($expectedMessage);
@@ -61,7 +61,7 @@ class UXIconsBundleTest extends TestCase
      * @dataProvider provideTestValidAliasConfiguration
      */
     #[DataProvider('provideTestValidAliasConfiguration')]
-    public function testValidAliasConfiguration(array $value)
+    public function testValidAliasConfiguration(array $value): void
     {
         $processor = new Processor();
         $configurableExtension = new UXIconsExtension();
@@ -85,7 +85,7 @@ class UXIconsBundleTest extends TestCase
      * @dataProvider provideTestInvalidIconAttributesConfiguration
      */
     #[DataProvider('provideTestInvalidIconAttributesConfiguration')]
-    public function testInvalidIconAttributeConfiguration(mixed $value, string $expectedMessage)
+    public function testInvalidIconAttributeConfiguration(mixed $value, string $expectedMessage): void
     {
         self::expectException(InvalidConfigurationException::class);
         self::expectExceptionMessage($expectedMessage);
@@ -110,14 +110,14 @@ class UXIconsBundleTest extends TestCase
         return $container;
     }
 
-    public function testAutoLockDefaultsToFalse()
+    public function testAutoLockDefaultsToFalse(): void
     {
         $config = new Processor()->processConfiguration(new UXIconsExtension(), [[]]);
 
         $this->assertFalse($config['iconify']['auto_lock']);
     }
 
-    public function testAutoLockRegistryIsWiredWhenEnabled()
+    public function testAutoLockRegistryIsWiredWhenEnabled(): void
     {
         $container = $this->buildContainer(['iconify' => ['auto_lock' => true]]);
 
@@ -128,7 +128,7 @@ class UXIconsBundleTest extends TestCase
         $this->assertFalse($container->getDefinition('.ux_icons.iconify_on_demand_registry')->hasTag('ux_icons.registry'));
     }
 
-    public function testAutoLockRegistryIsRemovedWhenDisabled()
+    public function testAutoLockRegistryIsRemovedWhenDisabled(): void
     {
         $container = $this->buildContainer(['iconify' => ['auto_lock' => false]]);
 
@@ -136,7 +136,7 @@ class UXIconsBundleTest extends TestCase
         $this->assertTrue($container->getDefinition('.ux_icons.iconify_on_demand_registry')->hasTag('ux_icons.registry'));
     }
 
-    public function testAutoLockRegistryIsRemovedWhenOnDemandDisabled()
+    public function testAutoLockRegistryIsRemovedWhenOnDemandDisabled(): void
     {
         $container = $this->buildContainer(['iconify' => ['on_demand' => false]]);
 
@@ -154,7 +154,7 @@ class UXIconsBundleTest extends TestCase
      * @dataProvider provideTestValidIconAttributesConfiguration
      */
     #[DataProvider('provideTestValidIconAttributesConfiguration')]
-    public function testValidIconAttributeConfiguration(array $value)
+    public function testValidIconAttributeConfiguration(array $value): void
     {
         $processor = new Processor();
         $configurableExtension = new UXIconsExtension();

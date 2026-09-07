@@ -25,7 +25,7 @@ use Symfony\UX\Icons\Registry\IconifyOnDemandRegistry;
  */
 final class IconifyOnDemandRegistryTest extends TestCase
 {
-    public function testWithIconSetAlias()
+    public function testWithIconSetAlias(): void
     {
         $client = new MockHttpClient([
             new JsonMockResponse(['lucide' => []]),

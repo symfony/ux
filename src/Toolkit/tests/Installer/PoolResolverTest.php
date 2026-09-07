@@ -27,7 +27,7 @@ final class PoolResolverTest extends TestCase
 {
     use TestHelperTrait;
 
-    public function testCanResolveDependencies()
+    public function testCanResolveDependencies(): void
     {
         $kitSynchronizer = new KitSynchronizer(new Filesystem(), new RecipeSynchronizer());
         $kit = self::createLocalKit('shadcn');
@@ -57,7 +57,7 @@ final class PoolResolverTest extends TestCase
         $this->assertCount(3, $pool->getPhpPackageDependencies());
     }
 
-    public function testCanHandleCircularRecipeDependencies()
+    public function testCanHandleCircularRecipeDependencies(): void
     {
         $kitSynchronizer = new KitSynchronizer(new Filesystem(), new RecipeSynchronizer());
         $kit = self::createFixtureKit('with-circular-components-dependencies');
@@ -82,7 +82,7 @@ final class PoolResolverTest extends TestCase
         $this->assertCount(0, $pool->getPhpPackageDependencies());
     }
 
-    public function testCanHandleAllPossibleDependencies()
+    public function testCanHandleAllPossibleDependencies(): void
     {
         $kitSynchronizer = new KitSynchronizer(new Filesystem(), new RecipeSynchronizer());
         $kit = self::createFixtureKit('with-many-dependencies');

@@ -23,7 +23,7 @@ use Symfony\UX\Chartjs\Tests\Kernel\TwigAppKernel;
  */
 class ChartExtensionTest extends TestCase
 {
-    public function testRenderChart()
+    public function testRenderChart(): void
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();

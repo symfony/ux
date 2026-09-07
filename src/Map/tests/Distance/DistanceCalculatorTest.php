@@ -22,7 +22,7 @@ use Symfony\UX\Map\Point;
 
 class DistanceCalculatorTest extends TestCase
 {
-    public function testCalculateDistanceUseCalculator()
+    public function testCalculateDistanceUseCalculator(): void
     {
         $calculator = new class implements DistanceCalculatorInterface {
             public function calculateDistance(Point $point1, Point $point2): float
@@ -41,7 +41,7 @@ class DistanceCalculatorTest extends TestCase
      * produce results close to the reference (Vincenty) within an acceptable margin.
      */
     #[DataProvider('distanceAccuracyProvider')]
-    public function testAccuracyAgainstVincenty(Point $point1, Point $point2, float $tolerance)
+    public function testAccuracyAgainstVincenty(Point $point1, Point $point2, float $tolerance): void
     {
         $vincenty = new VincentyDistanceCalculator();
         $referenceDistance = $vincenty->calculateDistance($point1, $point2);

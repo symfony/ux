@@ -35,7 +35,7 @@ class MapTest extends TestCase
         DummyOptions::unregisterFromNormalizer();
     }
 
-    public function testCenterValidation()
+    public function testCenterValidation(): void
     {
         self::expectException(InvalidArgumentException::class);
         self::expectExceptionMessage('The map "center" must be explicitly set when not enabling "fitBoundsToMarkers" feature.');
@@ -44,7 +44,7 @@ class MapTest extends TestCase
         $map->toArray();
     }
 
-    public function testZoomValidation()
+    public function testZoomValidation(): void
     {
         self::expectException(InvalidArgumentException::class);
         self::expectExceptionMessage('The map "zoom" must be explicitly set when not enabling "fitBoundsToMarkers" feature.');
@@ -55,7 +55,7 @@ class MapTest extends TestCase
         $map->toArray();
     }
 
-    public function testZoomAndCenterCanBeOmittedIfFitBoundsToMarkers()
+    public function testZoomAndCenterCanBeOmittedIfFitBoundsToMarkers(): void
     {
         $map = new Map(
             fitBoundsToMarkers: true
@@ -79,7 +79,7 @@ class MapTest extends TestCase
         ], $array);
     }
 
-    public function testWithMinimumConfiguration()
+    public function testWithMinimumConfiguration(): void
     {
         $map = new Map();
         $map
@@ -104,7 +104,7 @@ class MapTest extends TestCase
         ], $array);
     }
 
-    public function testWithMaximumConfiguration()
+    public function testWithMaximumConfiguration(): void
     {
         $map = new Map();
         $map
@@ -415,7 +415,7 @@ class MapTest extends TestCase
     #[TestWith([5.0, 2.0, null, 'The "zoom" must be greater than or equal to "minZoom".'])]
     #[TestWith([null, 5.0, 2.0, 'The "zoom" must be less than or equal to "maxZoom".'])]
     #[TestWith([2.1, null, 2.0, 'The "minZoom" must be less than or equal to "maxZoom".'])]
-    public function testZoomsValidation(?float $minZoom, ?float $zoom, ?float $maxZoom, string $expectedExceptionMessage)
+    public function testZoomsValidation(?float $minZoom, ?float $zoom, ?float $maxZoom, string $expectedExceptionMessage): void
     {
         self::expectException(InvalidArgumentException::class);
         self::expectExceptionMessage($expectedExceptionMessage);

@@ -19,7 +19,7 @@ use Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber;
 
 class LiveComponentSubscriberTest extends TestCase
 {
-    public function testDefaultConstructedSubscriberRejectsRequestWithoutAcceptHeader()
+    public function testDefaultConstructedSubscriberRejectsRequestWithoutAcceptHeader(): void
     {
         $subscriber = new LiveComponentSubscriber($this->createStub(ContainerInterface::class));
 
@@ -32,7 +32,7 @@ class LiveComponentSubscriberTest extends TestCase
         );
     }
 
-    public function testDefaultConstructedSubscriberAcceptsRequestWithProperAcceptHeader()
+    public function testDefaultConstructedSubscriberAcceptsRequestWithProperAcceptHeader(): void
     {
         $subscriber = new LiveComponentSubscriber($this->createStub(ContainerInterface::class));
 
@@ -44,7 +44,7 @@ class LiveComponentSubscriberTest extends TestCase
         $this->assertTrue($this->callIsLiveComponentRequest($subscriber, $request));
     }
 
-    public function testTestModeBypassesAcceptHeaderCheck()
+    public function testTestModeBypassesAcceptHeaderCheck(): void
     {
         $subscriber = new LiveComponentSubscriber($this->createStub(ContainerInterface::class), true);
 
@@ -65,7 +65,7 @@ class LiveComponentSubscriberTest extends TestCase
     }
 
     #[DataProvider('provideProductionGateScenarios')]
-    public function testProductionGateRequiresNonSafelistedHeader(array $headers, bool $expected)
+    public function testProductionGateRequiresNonSafelistedHeader(array $headers, bool $expected): void
     {
         $subscriber = new LiveComponentSubscriber($this->createStub(ContainerInterface::class), testMode: false);
 
@@ -75,7 +75,7 @@ class LiveComponentSubscriberTest extends TestCase
             $request->headers->set($name, $value);
         }
 
-        $isLiveRequest = (new \ReflectionMethod($subscriber, 'isLiveComponentRequest'))->invoke($subscriber, $request);
+        $isLiveRequest = new \ReflectionMethod($subscriber, 'isLiveComponentRequest')->invoke($subscriber, $request);
 
         $this->assertSame($expected, $isLiveRequest);
     }
@@ -109,7 +109,7 @@ class LiveComponentSubscriberTest extends TestCase
         ];
     }
 
-    public function testRequestWithoutLiveComponentAttributeIsRejected()
+    public function testRequestWithoutLiveComponentAttributeIsRejected(): void
     {
         $subscriber = new LiveComponentSubscriber($this->createStub(ContainerInterface::class), testMode: false);
 
@@ -117,7 +117,7 @@ class LiveComponentSubscriberTest extends TestCase
         $request->headers->set('Accept', 'application/vnd.live-component+html');
         $request->headers->set('X-Requested-With', 'XMLHttpRequest');
 
-        $isLiveRequest = (new \ReflectionMethod($subscriber, 'isLiveComponentRequest'))->invoke($subscriber, $request);
+        $isLiveRequest = new \ReflectionMethod($subscriber, 'isLiveComponentRequest')->invoke($subscriber, $request);
 
         $this->assertFalse($isLiveRequest);
     }

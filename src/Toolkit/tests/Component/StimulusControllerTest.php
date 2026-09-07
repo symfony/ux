@@ -16,7 +16,7 @@ use Symfony\UX\Toolkit\Component\StimulusController;
 
 class StimulusControllerTest extends TestCase
 {
-    public function testIsFilename()
+    public function testIsFilename(): void
     {
         self::assertTrue(StimulusController::isFilename('assets/controllers/alert_controller.js'));
         self::assertTrue(StimulusController::isFilename('closeable_controller.js'));
@@ -24,20 +24,20 @@ class StimulusControllerTest extends TestCase
         self::assertFalse(StimulusController::isFilename('alert.html.twig'));
     }
 
-    public function testIdentifierFromFilenameOrPath()
+    public function testIdentifierFromFilenameOrPath(): void
     {
         self::assertSame('closeable', StimulusController::identifier('closeable_controller.js'));
         self::assertSame('alert-dialog', StimulusController::identifier('alert_dialog_controller.js'));
         self::assertSame('hover-card', StimulusController::identifier('assets/controllers/hover_card_controller.js'));
     }
 
-    public function testFilenameFromIdentifier()
+    public function testFilenameFromIdentifier(): void
     {
         self::assertSame('closeable_controller.js', StimulusController::filename('closeable'));
         self::assertSame('alert_dialog_controller.js', StimulusController::filename('alert-dialog'));
     }
 
-    public function testValueAttributeDasherizesCamelCaseAndSnakeCase()
+    public function testValueAttributeDasherizesCamelCaseAndSnakeCase(): void
     {
         self::assertSame('data-widget-auto-close-value', StimulusController::valueAttribute('widget', 'autoClose'));
         self::assertSame('data-widget-open-value', StimulusController::valueAttribute('widget', 'open'));

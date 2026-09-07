@@ -19,7 +19,7 @@ use Symfony\UX\Toolkit\Markdown\PreviewTabsBuilder;
 
 class PreviewTabsBuilderTest extends TestCase
 {
-    public function testCodeTabCarriesTheCollapseClassOptionForHostStyling()
+    public function testCodeTabCarriesTheCollapseClassOptionForHostStyling(): void
     {
         // The code tab is styled by the host (ux.symfony.com collapses long class attributes), so that
         // option travels through the FencedCode info string; height is a Preview-tab concern and stays out.
@@ -28,7 +28,7 @@ class PreviewTabsBuilderTest extends TestCase
         $this->assertSame('twig {"collapseClass":true}', $this->findFencedCode($tabs)?->getInfo());
     }
 
-    public function testCodeTabHasBareLanguageWhenCollapseClassIsOff()
+    public function testCodeTabHasBareLanguageWhenCollapseClassIsOff(): void
     {
         $tabs = PreviewTabsBuilder::build('<twig:Button />', new CodeOptions(), 'twig');
 

@@ -21,7 +21,7 @@ use Symfony\UX\React\Tests\Kernel\TwigAppKernel;
  */
 class ReactBundleTest extends TestCase
 {
-    public function testBootKernel()
+    public function testBootKernel(): void
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();

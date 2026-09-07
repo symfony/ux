@@ -19,7 +19,7 @@ use Symfony\UX\LiveComponent\Util\LiveFormUtility;
 final class LiveFormUtilityTest extends TestCase
 {
     #[DataProvider('getPathsTests')]
-    public function testRemovePathsNotInData(array $inputPaths, array $inputData, array $expectedPaths)
+    public function testRemovePathsNotInData(array $inputPaths, array $inputData, array $expectedPaths): void
     {
         $this->assertEquals($expectedPaths, LiveFormUtility::removePathsNotInData($inputPaths, $inputData));
     }
@@ -63,7 +63,7 @@ final class LiveFormUtilityTest extends TestCase
     }
 
     #[DataProvider('provideFormContainsAnyErrorsTests')]
-    public function testDoesFormContainAnyErrors(FormView $formView, bool $expected)
+    public function testDoesFormContainAnyErrors(FormView $formView, bool $expected): void
     {
         $this->assertSame($expected, LiveFormUtility::doesFormContainAnyErrors($formView));
     }

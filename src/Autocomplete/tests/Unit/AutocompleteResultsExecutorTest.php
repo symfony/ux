@@ -21,7 +21,7 @@ use Symfony\UX\Autocomplete\EntityAutocompleterInterface;
 
 class AutocompleteResultsExecutorTest extends TestCase
 {
-    public function testItExecutesSecurity()
+    public function testItExecutesSecurity(): void
     {
         $doctrineRegistry = $this->createMock(DoctrineRegistryWrapper::class);
 

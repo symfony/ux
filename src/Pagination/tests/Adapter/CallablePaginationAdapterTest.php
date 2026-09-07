@@ -18,7 +18,7 @@ use Symfony\UX\Pagination\Adapter\CallablePaginationAdapter;
 #[CoversClass(CallablePaginationAdapter::class)]
 final class CallablePaginationAdapterTest extends TestCase
 {
-    public function testSupportsReturnsFalse()
+    public function testSupportsReturnsFalse(): void
     {
         $adapter = new CallablePaginationAdapter(
             static fn (int $offset, int $limit): array => [],
@@ -29,7 +29,7 @@ final class CallablePaginationAdapterTest extends TestCase
         self::assertFalse($adapter->supports('anything'));
     }
 
-    public function testSliceAndCount()
+    public function testSliceAndCount(): void
     {
         $data = range(1, 50);
 
@@ -43,7 +43,7 @@ final class CallablePaginationAdapterTest extends TestCase
         self::assertSame([11, 12, 13, 14, 15], $adapter->slice(null, 10, 5));
     }
 
-    public function testSliceWithLookahead()
+    public function testSliceWithLookahead(): void
     {
         $data = range(1, 25);
 
@@ -61,7 +61,7 @@ final class CallablePaginationAdapterTest extends TestCase
         self::assertFalse($hasMore);
     }
 
-    public function testSliceThrowsForNonArray()
+    public function testSliceThrowsForNonArray(): void
     {
         $adapter = new CallablePaginationAdapter(
             static fn (int $offset, int $limit): string => 'not an array', // @phpstan-ignore return.type
@@ -72,7 +72,7 @@ final class CallablePaginationAdapterTest extends TestCase
         $adapter->slice(null, 0, 10);
     }
 
-    public function testSliceWithLookaheadThrowsForNonArray()
+    public function testSliceWithLookaheadThrowsForNonArray(): void
     {
         $adapter = new CallablePaginationAdapter(
             static fn (int $offset, int $limit): string => 'not an array', // @phpstan-ignore return.type
@@ -84,7 +84,7 @@ final class CallablePaginationAdapterTest extends TestCase
         $adapter->sliceWithLookahead(null, 0, 10);
     }
 
-    public function testCountRejectsANonIntegerResult()
+    public function testCountRejectsANonIntegerResult(): void
     {
         $adapter = new CallablePaginationAdapter(
             static fn (int $offset, int $limit): array => [],
@@ -96,7 +96,7 @@ final class CallablePaginationAdapterTest extends TestCase
         $adapter->count(null);
     }
 
-    public function testCountRejectsANegativeResult()
+    public function testCountRejectsANegativeResult(): void
     {
         $adapter = new CallablePaginationAdapter(
             static fn (int $offset, int $limit): array => [],

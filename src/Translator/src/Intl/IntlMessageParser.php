@@ -974,7 +974,7 @@ final class IntlMessageParser
      *
      * @throws \Exception
      */
-    private function bumpTo(int $targetOffset)
+    private function bumpTo(int $targetOffset): void
     {
         if ($this->position->offset > $targetOffset) {
             throw new \Exception(\sprintf('targetOffset "%s" must be greater than or equal to the current offset %d', $targetOffset, $this->position->offset));
@@ -998,7 +998,7 @@ final class IntlMessageParser
     }
 
     /** advance the parser through all whitespace to the next non-whitespace code unit. */
-    private function bumpSpace()
+    private function bumpSpace(): void
     {
         while (!$this->isEOF() && Utils::isWhiteSpace($this->char())) {
             $this->bump();

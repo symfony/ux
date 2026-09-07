@@ -46,19 +46,19 @@ class ComponentDocCheckerTest extends TestCase
         ));
     }
 
-    public function testValidComponentProducesNoIssues()
+    public function testValidComponentProducesNoIssues(): void
     {
         self::assertSame([], $this->issuesForFile($this->lintCases(), 'Valid.html.twig'));
     }
 
-    public function testAllIssuesAreWarnings()
+    public function testAllIssuesAreWarnings(): void
     {
         foreach ($this->lintCases()->getIssues() as $issue) {
             self::assertSame(LintSeverity::Warning, $issue->severity);
         }
     }
 
-    public function testInvalidPropNameIsReported()
+    public function testInvalidPropNameIsReported(): void
     {
         $issues = $this->issuesForFile($this->lintCases(), 'InvalidName.html.twig');
 
@@ -67,7 +67,7 @@ class ComponentDocCheckerTest extends TestCase
         self::assertStringContainsString('Bad_Name', $issues[0]->message);
     }
 
-    public function testInvalidPhpDocTypeIsReported()
+    public function testInvalidPhpDocTypeIsReported(): void
     {
         $issues = $this->issuesForFile($this->lintCases(), 'InvalidType.html.twig');
 
@@ -76,7 +76,7 @@ class ComponentDocCheckerTest extends TestCase
         self::assertStringContainsString('string|array<string', $issues[0]->message);
     }
 
-    public function testDescriptionMustStartWithCapitalAndEndWithPeriod()
+    public function testDescriptionMustStartWithCapitalAndEndWithPeriod(): void
     {
         $issues = $this->issuesForFile($this->lintCases(), 'BadDescription.html.twig');
 
@@ -86,7 +86,7 @@ class ComponentDocCheckerTest extends TestCase
         }
     }
 
-    public function testDeclaredPropWithoutDocblockIsReported()
+    public function testDeclaredPropWithoutDocblockIsReported(): void
     {
         $issues = $this->issuesForFile($this->lintCases(), 'MissingDoc.html.twig');
 
@@ -95,7 +95,7 @@ class ComponentDocCheckerTest extends TestCase
         self::assertStringContainsString('hidden', $issues[0]->message);
     }
 
-    public function testDocumentedPropNotDeclaredIsReported()
+    public function testDocumentedPropNotDeclaredIsReported(): void
     {
         $issues = $this->issuesForFile($this->lintCases(), 'ExtraDoc.html.twig');
 
@@ -104,7 +104,7 @@ class ComponentDocCheckerTest extends TestCase
         self::assertStringContainsString('ghost', $issues[0]->message);
     }
 
-    public function testComponentWithPropsButNoDocblocksReportsEveryDeclaredProp()
+    public function testComponentWithPropsButNoDocblocksReportsEveryDeclaredProp(): void
     {
         $issues = $this->issuesForFile($this->lintCases(), 'NoDocblocks.html.twig');
 
@@ -116,12 +116,12 @@ class ComponentDocCheckerTest extends TestCase
         self::assertStringContainsString('bar', $issues[0]->message.$issues[1]->message);
     }
 
-    public function testValidBlockProducesNoIssues()
+    public function testValidBlockProducesNoIssues(): void
     {
         self::assertSame([], $this->issuesForFile($this->lintCases(), 'ValidBlock.html.twig'));
     }
 
-    public function testBlockDescriptionMustEndWithPeriod()
+    public function testBlockDescriptionMustEndWithPeriod(): void
     {
         $issues = $this->issuesForFile($this->lintCases(), 'BlockMissingPeriod.html.twig');
 
@@ -129,7 +129,7 @@ class ComponentDocCheckerTest extends TestCase
         self::assertSame('component.block.invalid', $issues[0]->category);
     }
 
-    public function testDocumentedBlockNotUsedInTemplateIsReported()
+    public function testDocumentedBlockNotUsedInTemplateIsReported(): void
     {
         $issues = $this->issuesForFile($this->lintCases(), 'BlockDocumentedNotUsed.html.twig');
 
@@ -138,7 +138,7 @@ class ComponentDocCheckerTest extends TestCase
         self::assertStringContainsString('ghost', $issues[0]->message);
     }
 
-    public function testBlockUsedInTemplatebutNotDocumentedIsReported()
+    public function testBlockUsedInTemplatebutNotDocumentedIsReported(): void
     {
         $issues = $this->issuesForFile($this->lintCases(), 'BlockUsedNotDocumented.html.twig');
 
@@ -147,7 +147,7 @@ class ComponentDocCheckerTest extends TestCase
         self::assertStringContainsString('content', $issues[0]->message);
     }
 
-    public function testBlockRenderedViaOuterBlocksIsRecognizedAsUsed()
+    public function testBlockRenderedViaOuterBlocksIsRecognizedAsUsed(): void
     {
         self::assertSame([], $this->issuesForFile($this->lintCases(), 'BlockViaOuterBlocks.html.twig'));
     }

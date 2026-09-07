@@ -32,7 +32,7 @@ final class IcsBuilderTest extends TestCase
         );
     }
 
-    public function testDtstampUsesTheInjectedClock()
+    public function testDtstampUsesTheInjectedClock(): void
     {
         $event = new CalendarEvent(
             title: 'Demo',
@@ -43,7 +43,7 @@ final class IcsBuilderTest extends TestCase
         $this->assertStringContainsString("DTSTAMP:20260514T083000Z\r\n", $this->builder->build($event));
     }
 
-    public function testUidIsStableForTheSameEvent()
+    public function testUidIsStableForTheSameEvent(): void
     {
         $event = new CalendarEvent(
             title: 'Demo',
@@ -57,7 +57,7 @@ final class IcsBuilderTest extends TestCase
         $this->assertSame($first[1], $second[1]);
     }
 
-    public function testDifferentEventsGetDifferentUids()
+    public function testDifferentEventsGetDifferentUids(): void
     {
         $start = new \DateTimeImmutable('2026-05-14 09:00', new \DateTimeZone('UTC'));
         $end = new \DateTimeImmutable('2026-05-14 10:00', new \DateTimeZone('UTC'));
@@ -68,7 +68,7 @@ final class IcsBuilderTest extends TestCase
         $this->assertNotSame($first[1], $second[1]);
     }
 
-    public function testUidIsDerivedThroughTheInjectedUuidFactory()
+    public function testUidIsDerivedThroughTheInjectedUuidFactory(): void
     {
         // MockUuidFactory::nameBased() throws unless the UID matches the v5 it recomputes,
         // which pins both the namespace and the identity string the UID is derived from.
@@ -84,7 +84,7 @@ final class IcsBuilderTest extends TestCase
         $this->assertStringContainsString("UID:66da134f-b0c7-54b1-924b-afa4fbe3f952\r\n", $builder->build($event));
     }
 
-    public function testExplicitUidTakesPrecedence()
+    public function testExplicitUidTakesPrecedence(): void
     {
         $event = new CalendarEvent(
             title: 'Demo',
@@ -96,7 +96,7 @@ final class IcsBuilderTest extends TestCase
         $this->assertStringContainsString("UID:5fc53010-1267-4f8e-bc28-1d7ae55a7c99\r\n", $this->builder->build($event));
     }
 
-    public function testMinimalTimedEventStructure()
+    public function testMinimalTimedEventStructure(): void
     {
         $event = new CalendarEvent(
             title: 'Demo',
@@ -116,7 +116,7 @@ final class IcsBuilderTest extends TestCase
         );
     }
 
-    public function testAllDayEventUsesValueDateAndIncrementsEnd()
+    public function testAllDayEventUsesValueDateAndIncrementsEnd(): void
     {
         $event = new CalendarEvent(
             title: 'Conf',
@@ -131,7 +131,7 @@ final class IcsBuilderTest extends TestCase
         $this->assertStringContainsString("DTEND;VALUE=DATE:20260516\r\n", $ics);
     }
 
-    public function testTimedEventInNamedZoneUsesTzidInsteadOfUtc()
+    public function testTimedEventInNamedZoneUsesTzidInsteadOfUtc(): void
     {
         $event = new CalendarEvent(
             title: 'Standup',
@@ -145,7 +145,7 @@ final class IcsBuilderTest extends TestCase
         $this->assertStringContainsString("DTEND;TZID=Europe/Paris:20260701T093000\r\n", $ics);
     }
 
-    public function testNamedZoneEmitsVtimezoneWithDstRules()
+    public function testNamedZoneEmitsVtimezoneWithDstRules(): void
     {
         $event = new CalendarEvent(
             title: 'Standup',
@@ -165,7 +165,7 @@ final class IcsBuilderTest extends TestCase
         $this->assertStringContainsString("RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU\r\n", $ics);
     }
 
-    public function testUtcEventDoesNotEmitVtimezone()
+    public function testUtcEventDoesNotEmitVtimezone(): void
     {
         $event = new CalendarEvent(
             title: 'Demo',
@@ -179,7 +179,7 @@ final class IcsBuilderTest extends TestCase
         $this->assertStringContainsString("DTSTART:20260514T090000Z\r\n", $ics);
     }
 
-    public function testTextEscaping()
+    public function testTextEscaping(): void
     {
         $event = new CalendarEvent(
             title: 'Symfony, UX; test',
@@ -196,7 +196,7 @@ final class IcsBuilderTest extends TestCase
         $this->assertStringContainsString('LOCATION:A\\\\B', $ics);
     }
 
-    public function testLineFoldingAtSeventyFiveOctets()
+    public function testLineFoldingAtSeventyFiveOctets(): void
     {
         $event = new CalendarEvent(
             title: 'Demo',
@@ -226,7 +226,7 @@ final class IcsBuilderTest extends TestCase
     }
 
     #[DataProvider('triggerFormatProvider')]
-    public function testTriggerFormat(CalendarReminder $reminder, string $expectedTrigger)
+    public function testTriggerFormat(CalendarReminder $reminder, string $expectedTrigger): void
     {
         $event = new CalendarEvent(
             title: 'Demo',
@@ -238,7 +238,7 @@ final class IcsBuilderTest extends TestCase
         $this->assertStringContainsString("TRIGGER:$expectedTrigger\r\n", $this->builder->build($event));
     }
 
-    public function testValarmBlockFromReminders()
+    public function testValarmBlockFromReminders(): void
     {
         $event = new CalendarEvent(
             title: 'Demo',
@@ -254,7 +254,7 @@ final class IcsBuilderTest extends TestCase
         $this->assertStringContainsString("END:VALARM\r\n", $ics);
     }
 
-    public function testRrulePassthrough()
+    public function testRrulePassthrough(): void
     {
         $event = new CalendarEvent(
             title: 'Weekly',

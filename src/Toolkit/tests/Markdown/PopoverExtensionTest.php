@@ -21,7 +21,7 @@ use Twig\Loader\FilesystemLoader;
 
 class PopoverExtensionTest extends TestCase
 {
-    public function testRendersPopover()
+    public function testRendersPopover(): void
     {
         $converter = $this->createConverter();
 

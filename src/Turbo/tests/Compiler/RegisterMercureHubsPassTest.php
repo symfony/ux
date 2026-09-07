@@ -17,7 +17,7 @@ use Symfony\UX\Turbo\DependencyInjection\Compiler\RegisterMercureHubsPass;
 
 final class RegisterMercureHubsPassTest extends TestCase
 {
-    public function testProcess()
+    public function testProcess(): void
     {
         $pass = new RegisterMercureHubsPass();
 
@@ -32,7 +32,7 @@ final class RegisterMercureHubsPassTest extends TestCase
         $this->assertTrue($container->has('turbo.mercure.hub.broadcaster'));
     }
 
-    public function testProcessWithDefault()
+    public function testProcessWithDefault(): void
     {
         $pass = new RegisterMercureHubsPass();
 

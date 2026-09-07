@@ -17,14 +17,14 @@ use Symfony\UX\Map\Distance\DistanceUnit;
 
 class DistanceUnitTest extends TestCase
 {
-    public function testConversionFactorIsPositive()
+    public function testConversionFactorIsPositive(): void
     {
         foreach (DistanceUnit::cases() as $unit) {
             $this->assertGreaterThan(0, $unit->getConversionFactor());
         }
     }
 
-    public function testConversionFactorToMeterIsSameAsConversionFactor()
+    public function testConversionFactorToMeterIsSameAsConversionFactor(): void
     {
         foreach (DistanceUnit::cases() as $unit) {
             $this->assertEquals($unit->getConversionFactor(), $unit->getConversionFactorTo(DistanceUnit::Meter));
@@ -32,7 +32,7 @@ class DistanceUnitTest extends TestCase
     }
 
     #[DataProvider('provideConvertedUnits')]
-    public function testConversionFactorFrom(DistanceUnit $unit, DistanceUnit $otherUnit, float $expected)
+    public function testConversionFactorFrom(DistanceUnit $unit, DistanceUnit $otherUnit, float $expected): void
     {
         $this->assertEqualsWithDelta($expected, $unit->getConversionFactorFrom($otherUnit), 0.001);
     }

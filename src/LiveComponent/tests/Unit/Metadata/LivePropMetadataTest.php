@@ -17,7 +17,7 @@ use Symfony\UX\LiveComponent\Metadata\LivePropMetadata;
 
 class LivePropMetadataTest extends TestCase
 {
-    public function testWithModifier()
+    public function testWithModifier(): void
     {
         $liveProp = new LiveProp(modifier: 'modifyProp');
         $livePropMetadata = new LivePropMetadata('propWithModifier', $liveProp, null, false, false, null);
@@ -34,7 +34,7 @@ class LivePropMetadataTest extends TestCase
         $this->assertEquals('customField', $livePropMetadata->calculateFieldName($component, 'propWithModifier'));
     }
 
-    public function testWithModifierThrowsErrorIfNoMethodExistsInComponent()
+    public function testWithModifierThrowsErrorIfNoMethodExistsInComponent(): void
     {
         $liveProp = new LiveProp(modifier: 'modifyProp');
         $livePropMetadata = new LivePropMetadata('propWithModifier', $liveProp, null, false, false, null);
@@ -45,7 +45,7 @@ class LivePropMetadataTest extends TestCase
         $livePropMetadata->withModifier(new \stdClass());
     }
 
-    public function testWithModifierThrowsAnErrorIfModifierMethodDoesNotReturnLiveProp()
+    public function testWithModifierThrowsAnErrorIfModifierMethodDoesNotReturnLiveProp(): void
     {
         $liveProp = new LiveProp(modifier: 'modifyProp');
         $livePropMetadata = new LivePropMetadata('propWithModifier', $liveProp, null, false, false, null);

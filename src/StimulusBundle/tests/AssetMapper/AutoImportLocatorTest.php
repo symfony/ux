@@ -22,7 +22,7 @@ use Symfony\UX\StimulusBundle\Ux\UxPackageMetadata;
 
 class AutoImportLocatorTest extends TestCase
 {
-    public function testLocateAutoImportCanHandleAssetMapperPath()
+    public function testLocateAutoImportCanHandleAssetMapperPath(): void
     {
         $assetMapper = $this->createMock(AssetMapperInterface::class);
         $assetMapper->expects($this->once())
@@ -40,7 +40,7 @@ class AutoImportLocatorTest extends TestCase
         $this->assertFalse($autoImport->isBareImport);
     }
 
-    public function testLocateAutoImportHandlesFileInPackage()
+    public function testLocateAutoImportHandlesFileInPackage(): void
     {
         $packageMetadata = new UxPackageMetadata(
             __DIR__.'/../fixtures/vendor/fake-vendor/ux-package1/assets',
@@ -64,7 +64,7 @@ class AutoImportLocatorTest extends TestCase
         $this->assertFalse($autoImport->isBareImport);
     }
 
-    public function testLocateAutoImportFromImportMap()
+    public function testLocateAutoImportFromImportMap(): void
     {
         $importMapConfigReader = $this->createMock(ImportMapConfigReader::class);
         $importMapConfigReader->expects($this->once())

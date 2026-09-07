@@ -21,7 +21,7 @@ use Symfony\UX\Chartjs\Tests\Kernel\TwigAppKernel;
  */
 class ChartjsBundleTest extends TestCase
 {
-    public function testBootKernel()
+    public function testBootKernel(): void
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();

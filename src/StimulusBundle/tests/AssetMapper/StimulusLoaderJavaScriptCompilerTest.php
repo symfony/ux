@@ -20,7 +20,7 @@ use Symfony\UX\StimulusBundle\AssetMapper\StimulusLoaderJavaScriptCompiler;
 
 class StimulusLoaderJavaScriptCompilerTest extends TestCase
 {
-    public function testCompileDynamicallyAddsContents()
+    public function testCompileDynamicallyAddsContents(): void
     {
         $controllerMapGenerator = $this->createMock(ControllersMapGenerator::class);
         $controllerMapGenerator->expects($this->once())
@@ -74,7 +74,7 @@ class StimulusLoaderJavaScriptCompilerTest extends TestCase
         $this->assertCount(4, $loaderAsset->getDependencies());
     }
 
-    public function testDebugModeIsSetCorrectly()
+    public function testDebugModeIsSetCorrectly(): void
     {
         $controllerMapGenerator = $this->createMock(ControllersMapGenerator::class);
         $controllerMapGenerator->expects($this->any())

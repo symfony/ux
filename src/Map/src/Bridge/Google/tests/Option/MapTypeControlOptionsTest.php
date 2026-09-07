@@ -18,7 +18,7 @@ use Symfony\UX\Map\Bridge\Google\Option\MapTypeControlStyle;
 
 class MapTypeControlOptionsTest extends TestCase
 {
-    public function testToArray()
+    public function testToArray(): void
     {
         $options = new MapTypeControlOptions(
             mapTypeIds: ['satellite', 'hybrid'],

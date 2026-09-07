@@ -19,21 +19,21 @@ use Symfony\UX\Pagination\Exception\RuntimeException;
 #[CoversClass(CursorCodec::class)]
 final class CursorCodecTest extends TestCase
 {
-    public function testConstructorMarksTheSecretAsSensitive()
+    public function testConstructorMarksTheSecretAsSensitive(): void
     {
         $parameter = new \ReflectionMethod(CursorCodec::class, '__construct')->getParameters()[0];
 
         self::assertNotEmpty($parameter->getAttributes(\SensitiveParameter::class));
     }
 
-    public function testEmptySecretIsRejected()
+    public function testEmptySecretIsRejected(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('non-empty "ux_pagination.cursor.secret" or "kernel.secret"');
         new CursorCodec('');
     }
 
-    public function testSignedVersionedRoundTrip()
+    public function testSignedVersionedRoundTrip(): void
     {
         $codec = new CursorCodec('application-secret');
         $token = $codec->encode([12, '2026-07-25'], true, 'order-a', 'products');
@@ -44,7 +44,7 @@ final class CursorCodecTest extends TestCase
         ], $codec->decode($token, 'order-a', 'products'));
     }
 
-    public function testTamperedTokenIsRejected()
+    public function testTamperedTokenIsRejected(): void
     {
         $codec = new CursorCodec('application-secret');
         $token = $codec->encode([12], true, 'order-a', 'products');
@@ -54,7 +54,7 @@ final class CursorCodecTest extends TestCase
         $codec->decode($token, 'order-a', 'products');
     }
 
-    public function testTokenCannotBeReusedForAnotherOrder()
+    public function testTokenCannotBeReusedForAnotherOrder(): void
     {
         $codec = new CursorCodec('application-secret');
         $token = $codec->encode([12], true, 'order-a', 'products');
@@ -64,7 +64,7 @@ final class CursorCodecTest extends TestCase
         $codec->decode($token, 'order-b', 'products');
     }
 
-    public function testTokenCannotBeVerifiedWithAnotherSecret()
+    public function testTokenCannotBeVerifiedWithAnotherSecret(): void
     {
         $token = new CursorCodec('first-secret')->encode([12], true, 'order-a', 'products');
 
@@ -73,7 +73,7 @@ final class CursorCodecTest extends TestCase
         new CursorCodec('second-secret')->decode($token, 'order-a', 'products');
     }
 
-    public function testTokenCannotBeReusedForAnotherContext()
+    public function testTokenCannotBeReusedForAnotherContext(): void
     {
         $codec = new CursorCodec('application-secret');
         $token = $codec->encode([12], true, 'order-a', 'products');
@@ -82,7 +82,7 @@ final class CursorCodecTest extends TestCase
         $codec->decode($token, 'order-a', 'orders');
     }
 
-    public function testUnsignedLegacyTokenIsRejected()
+    public function testUnsignedLegacyTokenIsRejected(): void
     {
         $token = base64_encode(json_encode(['v' => [12]], \JSON_THROW_ON_ERROR));
 
@@ -90,13 +90,13 @@ final class CursorCodecTest extends TestCase
         new CursorCodec('application-secret')->decode($token, 'order-a', 'products');
     }
 
-    public function testOversizedTokenIsRejectedBeforeDecoding()
+    public function testOversizedTokenIsRejectedBeforeDecoding(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         new CursorCodec('secret')->decode(str_repeat('a', 4097), 'order-a', 'products');
     }
 
-    public function testTooManyOrderedValuesAreRejectedBeforeEncoding()
+    public function testTooManyOrderedValuesAreRejectedBeforeEncoding(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('at most 16 ordered values');
@@ -104,14 +104,14 @@ final class CursorCodecTest extends TestCase
         new CursorCodec('secret')->encode(range(1, 17), true, 'order-a', 'products');
     }
 
-    public function testNonScalarOrderedValueIsRejectedBeforeEncoding()
+    public function testNonScalarOrderedValueIsRejectedBeforeEncoding(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid cursor value');
         new CursorCodec('secret')->encode([new \stdClass()], true, 'order-a', 'products');
     }
 
-    public function testNonFiniteFloatIsRejectedBeforeEncoding()
+    public function testNonFiniteFloatIsRejectedBeforeEncoding(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('must be finite');
@@ -119,14 +119,14 @@ final class CursorCodecTest extends TestCase
         new CursorCodec('secret')->encode([\NAN], true, 'order-a', 'products');
     }
 
-    public function testInvalidBase64IsRejectedBeforeDecoding()
+    public function testInvalidBase64IsRejectedBeforeDecoding(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid cursor value');
         new CursorCodec('secret')->decode('*', 'order-a', 'products');
     }
 
-    public function testOversizedPayloadIsRejectedBeforeEncoding()
+    public function testOversizedPayloadIsRejectedBeforeEncoding(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('too large to encode safely');

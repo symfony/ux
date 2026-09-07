@@ -20,7 +20,7 @@ use Symfony\UX\Toolkit\Recipe\RecipeType;
 
 final class KitTest extends TestCase
 {
-    public function testShouldFailIfKitNameIsInvalid()
+    public function testShouldFailIfKitNameIsInvalid(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid kit name "-foobar".');
@@ -28,7 +28,7 @@ final class KitTest extends TestCase
         new Kit(__DIR__, new KitManifest('-foobar', 'Description', 'MIT', 'https://example.com'));
     }
 
-    public function testShouldFailIfKitPathIsNotAbsolute()
+    public function testShouldFailIfKitPathIsNotAbsolute(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Kit path "./%s" is not absolute.', __DIR__));
@@ -36,7 +36,7 @@ final class KitTest extends TestCase
         new Kit(\sprintf('./%s', __DIR__), new KitManifest('foo', 'Description', 'MIT', 'https://example.com'));
     }
 
-    public function testCanAddRecipesToTheKit()
+    public function testCanAddRecipesToTheKit(): void
     {
         $kit = new Kit(__DIR__, new KitManifest('foo', 'Description', 'MIT', 'https://example.com'));
         $kit->addRecipe(new Recipe(
@@ -60,7 +60,7 @@ final class KitTest extends TestCase
         $this->assertCount(1, $kit->getRecipes(type: RecipeType::Block));
     }
 
-    public function testShouldFailIfComponentIsAlreadyRegisteredInTheKit()
+    public function testShouldFailIfComponentIsAlreadyRegisteredInTheKit(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Recipe "Alert" is already registered in the kit.');
@@ -78,7 +78,7 @@ final class KitTest extends TestCase
         ));
     }
 
-    public function testCanGetRecipeByName()
+    public function testCanGetRecipeByName(): void
     {
         $kit = new Kit(__DIR__, new KitManifest('foo', 'Description', 'MIT', 'https://example.com'));
         $kit->addRecipe(new Recipe(
@@ -96,7 +96,7 @@ final class KitTest extends TestCase
         $this->assertSame('Alert', $kit->getRecipe('alert')->manifest->name);
     }
 
-    public function testShouldReturnNullIfRecipeIsNotFound()
+    public function testShouldReturnNullIfRecipeIsNotFound(): void
     {
         $kit = new Kit(__DIR__, new KitManifest('foo', 'Description', 'MIT', 'https://example.com'));
 

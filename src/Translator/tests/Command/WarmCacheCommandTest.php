@@ -20,7 +20,7 @@ use Symfony\UX\Translator\Command\WarmCacheCommand;
 
 final class WarmCacheCommandTest extends TestCase
 {
-    public function testWarmCache()
+    public function testWarmCache(): void
     {
         $cacheDir = '/tmp/cache';
         $cacheWarmer = $this->createMock(TranslationsCacheWarmer::class);

@@ -25,7 +25,7 @@ use Symfony\UX\Pagination\Pagination;
 #[CoversClass(Pagination::class)]
 final class PaginationTest extends TestCase
 {
-    public function testConstructorRejectsInvalidArguments()
+    public function testConstructorRejectsInvalidArguments(): void
     {
         $arguments = [
             [0, 10, 100_000, 'currentPage'],
@@ -51,7 +51,7 @@ final class PaginationTest extends TestCase
         }
     }
 
-    public function testConstructorRejectsOffsetIntegerOverflow()
+    public function testConstructorRejectsOffsetIntegerOverflow(): void
     {
         $this->expectException(\Symfony\UX\Pagination\Exception\OffsetLimitExceededException::class);
         new Pagination(
@@ -64,7 +64,7 @@ final class PaginationTest extends TestCase
         );
     }
 
-    public function testConstructorRejectsOffsetAboveConfiguredLimit()
+    public function testConstructorRejectsOffsetAboveConfiguredLimit(): void
     {
         $this->expectException(\Symfony\UX\Pagination\Exception\OffsetLimitExceededException::class);
         new Pagination(
@@ -77,7 +77,7 @@ final class PaginationTest extends TestCase
         );
     }
 
-    public function testConstructorRequiresTheCapabilityMatchingTheSelectedMode()
+    public function testConstructorRequiresTheCapabilityMatchingTheSelectedMode(): void
     {
         $adapter = new class implements PaginationAdapterInterface {
             public function supports(mixed $source): bool
@@ -103,7 +103,7 @@ final class PaginationTest extends TestCase
         }
     }
 
-    public function testIterateReturnsItems()
+    public function testIterateReturnsItems(): void
     {
         $pagination = $this->paginate(range(1, 100), 1, 10);
 
@@ -115,14 +115,14 @@ final class PaginationTest extends TestCase
         self::assertSame([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], $items);
     }
 
-    public function testItemsReturnsArray()
+    public function testItemsReturnsArray(): void
     {
         $pagination = $this->paginate(range(1, 50), 2, 10);
 
         self::assertSame([11, 12, 13, 14, 15, 16, 17, 18, 19, 20], $pagination->getItems());
     }
 
-    public function testCountReturnsItemsOnThisPage()
+    public function testCountReturnsItemsOnThisPage(): void
     {
         $pagination = $this->paginate(range(1, 25), 3, 10);
 
@@ -130,7 +130,7 @@ final class PaginationTest extends TestCase
         self::assertCount(5, $pagination);
     }
 
-    public function testMapTransformsItemsToAnotherType()
+    public function testMapTransformsItemsToAnotherType(): void
     {
         $pagination = $this->paginate([1, 2, 3], 1, 10);
         $labels = $pagination->map(static fn (int $item): string => 'item-'.$item);
@@ -140,7 +140,7 @@ final class PaginationTest extends TestCase
         self::assertSame([1, 2, 3], $pagination->getItems());
     }
 
-    public function testMetadata()
+    public function testMetadata(): void
     {
         $pagination = $this->paginate(range(1, 100), 3, 10);
 
@@ -153,7 +153,7 @@ final class PaginationTest extends TestCase
         self::assertFalse($pagination->isEmpty());
     }
 
-    public function testEmptyResult()
+    public function testEmptyResult(): void
     {
         $pagination = $this->paginate([], 1, 10);
 
@@ -165,7 +165,7 @@ final class PaginationTest extends TestCase
         self::assertNull($pagination->getLastItemNumber());
     }
 
-    public function testItemNumbersUseTheActualLastPageSize()
+    public function testItemNumbersUseTheActualLastPageSize(): void
     {
         $pagination = $this->paginate(range(1, 25), 3, 10);
 
@@ -173,7 +173,7 @@ final class PaginationTest extends TestCase
         self::assertSame(25, $pagination->getLastItemNumber());
     }
 
-    public function testNavigationStateFirstPage()
+    public function testNavigationStateFirstPage(): void
     {
         $pagination = $this->paginate(range(1, 100), 1, 10);
 
@@ -183,7 +183,7 @@ final class PaginationTest extends TestCase
         self::assertFalse($pagination->isLast());
     }
 
-    public function testNavigationStateMiddlePage()
+    public function testNavigationStateMiddlePage(): void
     {
         $pagination = $this->paginate(range(1, 100), 5, 10);
 
@@ -193,7 +193,7 @@ final class PaginationTest extends TestCase
         self::assertFalse($pagination->isLast());
     }
 
-    public function testNavigationStateLastPage()
+    public function testNavigationStateLastPage(): void
     {
         $pagination = $this->paginate(range(1, 100), 10, 10);
 
@@ -203,7 +203,7 @@ final class PaginationTest extends TestCase
         self::assertTrue($pagination->isLast());
     }
 
-    public function testSinglePage()
+    public function testSinglePage(): void
     {
         $pagination = $this->paginate([1, 2, 3], 1, 10);
 
@@ -213,7 +213,7 @@ final class PaginationTest extends TestCase
         self::assertTrue($pagination->isLast());
     }
 
-    public function testUrls()
+    public function testUrls(): void
     {
         $pagination = $this->paginate(range(1, 100), 5, 10);
 
@@ -226,7 +226,7 @@ final class PaginationTest extends TestCase
         $pagination->getAbsoluteUrl(5);
     }
 
-    public function testUrlsOnFirstPage()
+    public function testUrlsOnFirstPage(): void
     {
         $pagination = $this->paginate(range(1, 100), 1, 10);
 
@@ -234,7 +234,7 @@ final class PaginationTest extends TestCase
         self::assertNotNull($pagination->getNextUrl());
     }
 
-    public function testUrlsOnLastPage()
+    public function testUrlsOnLastPage(): void
     {
         $pagination = $this->paginate(range(1, 100), 10, 10);
 
@@ -242,7 +242,7 @@ final class PaginationTest extends TestCase
         self::assertNotNull($pagination->getPreviousUrl());
     }
 
-    public function testPagesReturnNavigation()
+    public function testPagesReturnNavigation(): void
     {
         $pagination = $this->paginate(range(1, 100), 5, 10);
         $pages = $pagination->getPages();
@@ -257,7 +257,7 @@ final class PaginationTest extends TestCase
         }
     }
 
-    public function testSlidingNavigation()
+    public function testSlidingNavigation(): void
     {
         $pagination = $this->paginate(range(1, 200), 10, 10);
         $links = iterator_to_array($pagination->getPages());
@@ -280,7 +280,7 @@ final class PaginationTest extends TestCase
         self::assertSame(10, $currentLink->page);
     }
 
-    public function testLookaheadMode()
+    public function testLookaheadMode(): void
     {
         $source = range(1, 50);
         $adapter = new ArrayPaginationAdapter();
@@ -305,7 +305,7 @@ final class PaginationTest extends TestCase
         self::assertCount(10, $pagination->getItems());
     }
 
-    public function testLookaheadLastPage()
+    public function testLookaheadLastPage(): void
     {
         $source = range(1, 25);
         $adapter = new ArrayPaginationAdapter();
@@ -324,7 +324,7 @@ final class PaginationTest extends TestCase
         self::assertCount(5, $pagination->getItems());
     }
 
-    public function testItemsAreLazyLoaded()
+    public function testItemsAreLazyLoaded(): void
     {
         $sliceCallCount = 0;
         $innerAdapter = new ArrayPaginationAdapter();
@@ -383,7 +383,7 @@ final class PaginationTest extends TestCase
         self::assertSame(1, $sliceCallCount);
     }
 
-    public function testJsonSerialize()
+    public function testJsonSerialize(): void
     {
         $pagination = $this->paginate(range(1, 30), 2, 10);
         $json = $pagination->jsonSerialize();
@@ -397,28 +397,28 @@ final class PaginationTest extends TestCase
         self::assertSame(3, $json['total_pages']);
     }
 
-    public function testInfo()
+    public function testInfo(): void
     {
         $pagination = $this->paginate(range(1, 100), 2, 10);
 
         self::assertSame('Showing 11-20 of 100', $pagination->getInfo());
     }
 
-    public function testInfoLastPage()
+    public function testInfoLastPage(): void
     {
         $pagination = $this->paginate(range(1, 25), 3, 10);
 
         self::assertSame('Showing 21-25 of 25', $pagination->getInfo());
     }
 
-    public function testQueryParamReturnsDefault()
+    public function testQueryParamReturnsDefault(): void
     {
         $pagination = $this->paginate(range(1, 10), 1, 10);
 
         self::assertSame('page', $pagination->getPageParameterName());
     }
 
-    public function testQueryParamReturnsCustomValue()
+    public function testQueryParamReturnsCustomValue(): void
     {
         $paginationUrlGenerator = new PaginationUrlGenerator(queryParam: 'p', basePath: '/items');
         $pagination = new Pagination(
@@ -432,21 +432,21 @@ final class PaginationTest extends TestCase
         self::assertSame('p', $pagination->getPageParameterName());
     }
 
-    public function testIsOutOfRangeTrue()
+    public function testIsOutOfRangeTrue(): void
     {
         $pagination = $this->paginate(range(1, 30), 5, 10);
 
         self::assertTrue($pagination->isOutOfRange());
     }
 
-    public function testIsOutOfRangeFalse()
+    public function testIsOutOfRangeFalse(): void
     {
         $pagination = $this->paginate(range(1, 100), 5, 10);
 
         self::assertFalse($pagination->isOutOfRange());
     }
 
-    public function testIsOutOfRangeFalseInLookaheadMode()
+    public function testIsOutOfRangeFalseInLookaheadMode(): void
     {
         $pagination = new Pagination(
             source: range(1, 10),
@@ -460,7 +460,7 @@ final class PaginationTest extends TestCase
         self::assertFalse($pagination->isOutOfRange());
     }
 
-    public function testThrowOnOutOfRangeThrows()
+    public function testThrowOnOutOfRangeThrows(): void
     {
         $pagination = $this->paginate(range(1, 30), 5, 10);
 
@@ -470,7 +470,7 @@ final class PaginationTest extends TestCase
         $pagination->throwOnOutOfRange();
     }
 
-    public function testThrowOnOutOfRangeReturnsSelfWhenInRange()
+    public function testThrowOnOutOfRangeReturnsSelfWhenInRange(): void
     {
         $pagination = $this->paginate(range(1, 100), 5, 10);
 
@@ -479,7 +479,7 @@ final class PaginationTest extends TestCase
         self::assertSame($pagination, $result);
     }
 
-    public function testMeta()
+    public function testMeta(): void
     {
         $pagination = $this->paginate(range(1, 50), 2, 10);
         $meta = $pagination->getMetadata();
@@ -492,7 +492,7 @@ final class PaginationTest extends TestCase
         self::assertSame(5, $meta['total_pages']);
     }
 
-    public function testMetaInLookaheadMode()
+    public function testMetaInLookaheadMode(): void
     {
         $pagination = new Pagination(
             source: range(1, 50),
@@ -510,7 +510,7 @@ final class PaginationTest extends TestCase
         self::assertTrue($meta['has_next']);
     }
 
-    public function testLinks()
+    public function testLinks(): void
     {
         $pagination = $this->paginate(range(1, 50), 2, 10);
         $links = $pagination->getLinks();
@@ -526,7 +526,7 @@ final class PaginationTest extends TestCase
         self::assertNotNull($links['next']);
     }
 
-    public function testLinksFirstPage()
+    public function testLinksFirstPage(): void
     {
         $pagination = $this->paginate(range(1, 50), 1, 10);
         $links = $pagination->getLinks();
@@ -535,7 +535,7 @@ final class PaginationTest extends TestCase
         self::assertNotNull($links['next']);
     }
 
-    public function testLinksLastPage()
+    public function testLinksLastPage(): void
     {
         $pagination = $this->paginate(range(1, 50), 5, 10);
         $links = $pagination->getLinks();
@@ -544,7 +544,7 @@ final class PaginationTest extends TestCase
         self::assertNull($links['next']);
     }
 
-    public function testLastUrl()
+    public function testLastUrl(): void
     {
         $pagination = $this->paginate(range(1, 50), 1, 10);
 
@@ -554,7 +554,7 @@ final class PaginationTest extends TestCase
         self::assertStringContainsString('page=5', $lastUrl);
     }
 
-    public function testLastUrlIsUnknownWithLookahead()
+    public function testLastUrlIsUnknownWithLookahead(): void
     {
         $pagination = new Pagination(
             source: range(1, 20),
@@ -568,7 +568,7 @@ final class PaginationTest extends TestCase
         self::assertNull($pagination->getLastUrl());
     }
 
-    public function testFirstUrlOmitsPageParam()
+    public function testFirstUrlOmitsPageParam(): void
     {
         $pagination = $this->paginate(range(1, 100), 5, 10);
 
@@ -577,7 +577,7 @@ final class PaginationTest extends TestCase
         self::assertStringNotContainsString('page=', $firstUrl);
     }
 
-    public function testTotalInt()
+    public function testTotalInt(): void
     {
         $pagination = new Pagination(
             source: range(1, 100),
@@ -592,7 +592,7 @@ final class PaginationTest extends TestCase
         self::assertSame(5, $pagination->getTotalPages());
     }
 
-    public function testTotalPagesKeepsIntegerPrecisionForLargeCounts()
+    public function testTotalPagesKeepsIntegerPrecisionForLargeCounts(): void
     {
         $pagination = new Pagination(
             source: [],
@@ -606,7 +606,7 @@ final class PaginationTest extends TestCase
         self::assertSame(intdiv(\PHP_INT_MAX, 2) + 1, $pagination->getTotalPages());
     }
 
-    public function testNegativeCountIsRejected()
+    public function testNegativeCountIsRejected(): void
     {
         $adapter = $this->createStub(OffsetAdapterInterface::class);
         $adapter->method('count')->willReturn(-1);
@@ -624,7 +624,7 @@ final class PaginationTest extends TestCase
         $pagination->getTotalItems();
     }
 
-    public function testTotalCallable()
+    public function testTotalCallable(): void
     {
         $callCount = 0;
         $pagination = new Pagination(
@@ -645,7 +645,7 @@ final class PaginationTest extends TestCase
         self::assertSame(1, $callCount);
     }
 
-    public function testInfoEmptyWithTotal()
+    public function testInfoEmptyWithTotal(): void
     {
         // Page beyond the last page: count is 0, total is known
         $pagination = $this->paginate(range(1, 10), 5, 10);
@@ -653,7 +653,7 @@ final class PaginationTest extends TestCase
         self::assertSame('No items', $pagination->getInfo());
     }
 
-    public function testInfoEmptyWithoutTotal()
+    public function testInfoEmptyWithoutTotal(): void
     {
         $pagination = new Pagination(
             source: [],
@@ -667,7 +667,7 @@ final class PaginationTest extends TestCase
         self::assertSame('No items', $pagination->getInfo());
     }
 
-    public function testInfoWithFormatter()
+    public function testInfoWithFormatter(): void
     {
         $translator = $this->createStub(\Symfony\Contracts\Translation\TranslatorInterface::class);
         $translator->method('trans')->willReturn('Page 2 sur 5');
@@ -685,7 +685,7 @@ final class PaginationTest extends TestCase
         self::assertSame('Page 2 sur 5', $pagination->getInfo());
     }
 
-    public function testInfoWithoutTotal()
+    public function testInfoWithoutTotal(): void
     {
         $pagination = new Pagination(
             source: range(1, 100),
@@ -699,7 +699,7 @@ final class PaginationTest extends TestCase
         self::assertSame('Showing 11-20', $pagination->getInfo());
     }
 
-    public function testTotalCallableReturningNonIntThrows()
+    public function testTotalCallableReturningNonIntThrows(): void
     {
         $pagination = new Pagination(
             source: range(1, 100),
@@ -716,7 +716,7 @@ final class PaginationTest extends TestCase
         $pagination->getTotalItems();
     }
 
-    public function testPerPageOfOnePaginatesItemByItem()
+    public function testPerPageOfOnePaginatesItemByItem(): void
     {
         $middle = $this->paginate(range(1, 3), 2, 1);
 

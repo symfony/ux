@@ -19,7 +19,7 @@ use Symfony\UX\Map\Rectangle;
 
 class RectangleTest extends TestCase
 {
-    public function testToArray()
+    public function testToArray(): void
     {
         $infoWindow = new InfoWindow('Hello');
 
@@ -38,7 +38,7 @@ class RectangleTest extends TestCase
         ], $array);
     }
 
-    public function testFromArray()
+    public function testFromArray(): void
     {
         $data = [
             'southWest' => ['lat' => 1.0, 'lng' => 2.0],
@@ -67,7 +67,7 @@ class RectangleTest extends TestCase
         ], $array);
     }
 
-    public function testFromArrayThrowsExceptionIfSouthWestMissing()
+    public function testFromArrayThrowsExceptionIfSouthWestMissing(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -76,7 +76,7 @@ class RectangleTest extends TestCase
         ]);
     }
 
-    public function testFromArrayThrowsExceptionIfNorthEastMissing()
+    public function testFromArrayThrowsExceptionIfNorthEastMissing(): void
     {
         $this->expectException(InvalidArgumentException::class);
 

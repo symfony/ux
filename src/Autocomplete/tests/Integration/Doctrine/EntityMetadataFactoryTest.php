@@ -18,7 +18,7 @@ use Symfony\UX\Autocomplete\Tests\Fixtures\Entity\Product;
 
 class EntityMetadataFactoryTest extends KernelTestCase
 {
-    public function testItSuccessfullyCreatesMetadata()
+    public function testItSuccessfullyCreatesMetadata(): void
     {
         /** @var EntityMetadataFactory $factory */
         $factory = self::getContainer()->get('ux.autocomplete.entity_metadata_factory');

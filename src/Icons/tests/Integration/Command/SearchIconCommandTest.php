@@ -21,7 +21,7 @@ final class SearchIconCommandTest extends KernelTestCase
 {
     use InteractsWithConsole;
 
-    public function testSearchWithPrefix()
+    public function testSearchWithPrefix(): void
     {
         $this->consoleCommand('ux:icons:search iconoir')
             ->execute()
@@ -39,7 +39,7 @@ final class SearchIconCommandTest extends KernelTestCase
             ->assertStatusCode(0);
     }
 
-    public function testSearchWithPrefixMatchingMultipleSet()
+    public function testSearchWithPrefixMatchingMultipleSet(): void
     {
         $this->consoleCommand('ux:icons:search box')
             ->execute()
@@ -53,7 +53,7 @@ final class SearchIconCommandTest extends KernelTestCase
             ->assertStatusCode(0);
     }
 
-    public function testSearchWithPrefixName()
+    public function testSearchWithPrefixName(): void
     {
         $this->consoleCommand('ux:icons:search lucide arrow')
             ->execute()

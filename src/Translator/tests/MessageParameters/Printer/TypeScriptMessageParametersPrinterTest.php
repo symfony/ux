@@ -18,7 +18,7 @@ use Symfony\UX\Translator\MessageParameters\Printer\TypeScriptMessageParametersP
 class TypeScriptMessageParametersPrinterTest extends TestCase
 {
     #[DataProvider('providePrint')]
-    public function testPrint(array $parameters, string $expectedTypeScriptType)
+    public function testPrint(array $parameters, string $expectedTypeScriptType): void
     {
         $typeScriptMessageParametersPrinter = new TypeScriptMessageParametersPrinter();
 

@@ -23,7 +23,7 @@ final class LiveResponderTest extends KernelTestCase
     use HasBrowser;
     use LiveComponentTestHelper;
 
-    public function testComponentCanEmitEvents()
+    public function testComponentCanEmitEvents(): void
     {
         $component = $this->mountComponent('component_with_emit');
         $dehydrated = $this->dehydrateComponent($component);
@@ -38,7 +38,7 @@ final class LiveResponderTest extends KernelTestCase
             ->assertSee('Data: {"foo":"bar","bar":"foo"}');
     }
 
-    public function testComponentCanDispatchBrowserEvents()
+    public function testComponentCanDispatchBrowserEvents(): void
     {
         $component = $this->mountComponent('component_with_emit');
         $dehydrated = $this->dehydrateComponent($component);

@@ -18,7 +18,7 @@ use Symfony\UX\LiveComponent\DependencyInjection\LiveComponentExtension;
 
 class LiveComponentConfigurationTest extends TestCase
 {
-    public function testDefaultSecret()
+    public function testDefaultSecret(): void
     {
         $processor = new Processor();
         $config = $processor->processConfiguration(new LiveComponentExtension(), []);
@@ -26,7 +26,7 @@ class LiveComponentConfigurationTest extends TestCase
         $this->assertEquals('%kernel.secret%', $config['secret']);
     }
 
-    public function testEmptySecretThrows()
+    public function testEmptySecretThrows(): void
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('The path "live_component.secret" cannot contain an empty value, but got null.');
@@ -39,7 +39,7 @@ class LiveComponentConfigurationTest extends TestCase
         ]);
     }
 
-    public function testCustomSecret()
+    public function testCustomSecret(): void
     {
         $processor = new Processor();
         $config = $processor->processConfiguration(new LiveComponentExtension(), [

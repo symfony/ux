@@ -28,7 +28,7 @@ use Twig\Source;
 class ComponentPropsParserTest extends KernelTestCase
 {
     #[DataProvider('providePropsData')]
-    public function testPropsData(string $template, array $props, string $text)
+    public function testPropsData(string $template, array $props, string $text): void
     {
         $loader = new ArrayLoader(['template' => $template]);
 
@@ -63,7 +63,7 @@ class ComponentPropsParserTest extends KernelTestCase
         $this->assertSame($text, $body->getNode(1)->getAttribute('data'));
     }
 
-    public function testPropDocumentationIsCaptured()
+    public function testPropDocumentationIsCaptured(): void
     {
         if (!method_exists(\Twig\Token::class, 'getDocumentation')) {
             $this->markTestSkipped('Documentation comments require twig/twig >= 3.29.');

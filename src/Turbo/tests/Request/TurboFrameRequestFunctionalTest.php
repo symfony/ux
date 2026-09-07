@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TurboFrameRequestFunctionalTest extends WebTestCase
 {
-    public function testIsNotTurboFrameRequestWithoutHeader()
+    public function testIsNotTurboFrameRequestWithoutHeader(): void
     {
         $client = static::createClient();
         $client->request('GET', '/turboFrameRequest');
@@ -33,7 +33,7 @@ class TurboFrameRequestFunctionalTest extends WebTestCase
         );
     }
 
-    public function testIsTurboFrameRequestWithHeader()
+    public function testIsTurboFrameRequestWithHeader(): void
     {
         $client = static::createClient();
         $client->request('GET', '/turboFrameRequest', [], [], ['HTTP_Turbo-Frame' => 'my_frame']);

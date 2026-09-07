@@ -28,7 +28,7 @@ use Symfony\UX\Toolkit\Recipe\Recipe;
 
 final class RecipeDocRendererTest extends KernelTestCase
 {
-    public function testRenderAsMarkdownResolvesExamplesAndOmitsInteractiveDirectives()
+    public function testRenderAsMarkdownResolvesExamplesAndOmitsInteractiveDirectives(): void
     {
         [$kit, $recipe] = $this->loadPostLinkRecipe();
 
@@ -48,7 +48,7 @@ final class RecipeDocRendererTest extends KernelTestCase
         $this->assertStringContainsString('<twig:PostLink>', $markdown);
     }
 
-    public function testRenderAsHtmlProducesTabsAndALivePreview()
+    public function testRenderAsHtmlProducesTabsAndALivePreview(): void
     {
         [$kit, $recipe] = $this->loadPostLinkRecipe();
 
@@ -75,7 +75,7 @@ final class RecipeDocRendererTest extends KernelTestCase
         $this->assertContains('API Reference', array_column($rendered->tableOfContents, 'title'));
     }
 
-    public function testACustomDocMdControlsTheLayoutAndInjectsGeneratedContent()
+    public function testACustomDocMdControlsTheLayoutAndInjectsGeneratedContent(): void
     {
         [$kit, $recipe] = $this->loadPostLinkRecipe();
 
@@ -100,7 +100,7 @@ final class RecipeDocRendererTest extends KernelTestCase
         $this->assertStringNotContainsString('```twig', $markdown);
     }
 
-    public function testRenderAsMarkdownIncludesStimulusControllerApiReference()
+    public function testRenderAsMarkdownIncludesStimulusControllerApiReference(): void
     {
         [$kit, $recipe] = $this->loadWidgetRecipe();
 
@@ -122,7 +122,7 @@ final class RecipeDocRendererTest extends KernelTestCase
         $this->assertStringContainsString('| `toggle` | Toggles the widget open state. |', $markdown);
     }
 
-    public function testRenderAsHtmlIncludesStimulusControllerApiReference()
+    public function testRenderAsHtmlIncludesStimulusControllerApiReference(): void
     {
         [$kit, $recipe] = $this->loadWidgetRecipe();
 
@@ -146,7 +146,7 @@ final class RecipeDocRendererTest extends KernelTestCase
         $this->assertStringContainsString('Toggles the widget open state.', $html);
     }
 
-    public function testHtmlInstallationStepsCarryTheFileNameInTheInfoString()
+    public function testHtmlInstallationStepsCarryTheFileNameInTheInfoString(): void
     {
         [$kit, $recipe] = $this->loadPostLinkRecipe();
 

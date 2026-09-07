@@ -18,7 +18,7 @@ class DynamicTemplateTest extends KernelTestCase
 {
     use InteractsWithTwigComponents;
 
-    public function testTemplateResolvedAutomaticallyWhenNotProvided()
+    public function testTemplateResolvedAutomaticallyWhenNotProvided(): void
     {
         // When no template is explicitly configured, the default resolution mechanism should be applied.
         $rendered = (string) $this->renderTwigComponent('default_template_component');
@@ -26,7 +26,7 @@ class DynamicTemplateTest extends KernelTestCase
         $this->assertStringContainsString('Default Template Works!', $rendered);
     }
 
-    public function testTemplateResolvedFromString()
+    public function testTemplateResolvedFromString(): void
     {
         // Ensures that a template defined as a string is properly resolved.
         $rendered = (string) $this->renderTwigComponent('string_template_component');
@@ -34,7 +34,7 @@ class DynamicTemplateTest extends KernelTestCase
         $this->assertStringContainsString('String Template Works!', $rendered);
     }
 
-    public function testTemplateChangesBasedOnComponentProps()
+    public function testTemplateChangesBasedOnComponentProps(): void
     {
         // 1. Default Type props
         $html = $this->renderTwigComponent('method_template_component', ['type' => 'default']);
@@ -45,7 +45,7 @@ class DynamicTemplateTest extends KernelTestCase
         $this->assertStringContainsString('Custom', $html);
     }
 
-    public function testTemplateFromMethodThrowsExceptionWhenMethodIsMissing()
+    public function testTemplateFromMethodThrowsExceptionWhenMethodIsMissing(): void
     {
         // Using FromMethod with a non-existing or non-callable method must throw a LogicException.
         $this->expectException(\Twig\Error\RuntimeError::class);

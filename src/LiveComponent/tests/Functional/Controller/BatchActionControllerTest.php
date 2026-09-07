@@ -28,7 +28,7 @@ final class BatchActionControllerTest extends KernelTestCase
     use HasBrowser;
     use LiveComponentTestHelper;
 
-    public function testCanBatchActions()
+    public function testCanBatchActions(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
@@ -83,7 +83,7 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
-    public function testCanBatchActionsWithAlternateRoute()
+    public function testCanBatchActionsWithAlternateRoute(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('alternate_route'));
 
@@ -121,7 +121,7 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
-    public function testRedirect()
+    public function testRedirect(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
@@ -157,7 +157,7 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
-    public function testRedirectWithAcceptHeader()
+    public function testRedirectWithAcceptHeader(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
@@ -197,7 +197,7 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
-    public function testDownloadDoesNotShortCircuitBatch()
+    public function testDownloadDoesNotShortCircuitBatch(): void
     {
         // unlike a redirect, a download no longer ends the batch: it rides along with the
         // final render, so the actions queued after it still run
@@ -231,7 +231,7 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
-    public function testLastDownloadWinsWithinABatch()
+    public function testLastDownloadWinsWithinABatch(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('download_file'));
 
@@ -257,7 +257,7 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
-    public function testException()
+    public function testException(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
@@ -291,7 +291,7 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
-    public function testCannotBatchWithNonLiveAction()
+    public function testCannotBatchWithNonLiveAction(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
@@ -325,7 +325,7 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
-    public function testAcceptsBatchAtMaxActions()
+    public function testAcceptsBatchAtMaxActions(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
@@ -363,7 +363,7 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
-    public function testRejectsBatchAboveMaxActions()
+    public function testRejectsBatchAboveMaxActions(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 

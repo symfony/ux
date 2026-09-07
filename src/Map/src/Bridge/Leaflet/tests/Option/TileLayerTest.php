@@ -16,7 +16,7 @@ use Symfony\UX\Map\Bridge\Leaflet\Option\TileLayer;
 
 class TileLayerTest extends TestCase
 {
-    public function testToArray()
+    public function testToArray(): void
     {
         $tileLayer = new TileLayer(
             url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',

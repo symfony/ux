@@ -26,7 +26,7 @@ use Symfony\UX\Pagination\Test\PaginatorFactory;
 #[CoversClass(PaginatorFactory::class)]
 final class PaginatorFactoryTest extends TestCase
 {
-    public function testCursorSecretIsMarkedAsSensitive()
+    public function testCursorSecretIsMarkedAsSensitive(): void
     {
         $parameters = new \ReflectionMethod(PaginatorFactory::class, 'create')->getParameters();
         $cursorSecret = array_find($parameters, static fn (\ReflectionParameter $parameter): bool => 'cursorSecret' === $parameter->getName());
@@ -35,7 +35,7 @@ final class PaginatorFactoryTest extends TestCase
         self::assertNotEmpty($cursorSecret->getAttributes(\SensitiveParameter::class));
     }
 
-    public function testCreatesDeterministicOffsetPagination()
+    public function testCreatesDeterministicOffsetPagination(): void
     {
         $paginator = PaginatorFactory::create(defaultPerPage: 2);
 
@@ -49,7 +49,7 @@ final class PaginatorFactoryTest extends TestCase
         self::assertSame('/', $pagination->getPreviousUrl());
     }
 
-    public function testUsesARequestForPageResolutionAndRealisticUrls()
+    public function testUsesARequestForPageResolutionAndRealisticUrls(): void
     {
         $request = Request::create('https://example.test/products?category=books&page=2');
         $paginator = PaginatorFactory::create(request: $request, defaultPerPage: 2);
@@ -62,7 +62,7 @@ final class PaginatorFactoryTest extends TestCase
         self::assertSame('https://example.test/products?category=books&page=3', $pagination->getAbsoluteUrl(3));
     }
 
-    public function testUsesAProvidedRequestStackAndCustomParameterNames()
+    public function testUsesAProvidedRequestStackAndCustomParameterNames(): void
     {
         $requestStack = new RequestStack();
         $requestStack->push(Request::create('/catalog?filter=active&offset=2'));
@@ -80,7 +80,7 @@ final class PaginatorFactoryTest extends TestCase
         self::assertSame('/catalog?filter=active&offset=3', $pagination->getNextUrl());
     }
 
-    public function testExplicitRequestBecomesCurrentOnAProvidedStack()
+    public function testExplicitRequestBecomesCurrentOnAProvidedStack(): void
     {
         $requestStack = new RequestStack();
         $requestStack->push(Request::create('/old?page=3'));
@@ -98,7 +98,7 @@ final class PaginatorFactoryTest extends TestCase
         self::assertSame('/new?page=2', $requestStack->getCurrentRequest()?->getRequestUri());
     }
 
-    public function testUsesARealUrlGeneratorForRoutes()
+    public function testUsesARealUrlGeneratorForRoutes(): void
     {
         $routes = new RouteCollection();
         $routes->add('product_list', new Route('/catalog/{section}'));
@@ -119,7 +119,7 @@ final class PaginatorFactoryTest extends TestCase
         self::assertSame('/catalog/books?filter=active&page=2', $pagination->getNextUrl());
     }
 
-    public function testForwardsTheMaximumOffsetGuard()
+    public function testForwardsTheMaximumOffsetGuard(): void
     {
         $paginator = PaginatorFactory::create(
             defaultPerPage: 2,
@@ -131,7 +131,7 @@ final class PaginatorFactoryTest extends TestCase
         $paginator->paginate(range(1, 6), page: 2);
     }
 
-    public function testSignedCursorUrlsRoundTripForwardAndBackward()
+    public function testSignedCursorUrlsRoundTripForwardAndBackward(): void
     {
         $source = $this->cursorSource();
         $first = PaginatorFactory::create(request: Request::create('/events?type=release'))
@@ -177,7 +177,7 @@ final class PaginatorFactoryTest extends TestCase
         self::assertSame([1, 2], array_column($again->getItems(), 'id'));
     }
 
-    public function testUsesACustomCursorParameterInRequestsAndUrls()
+    public function testUsesACustomCursorParameterInRequestsAndUrls(): void
     {
         $source = $this->cursorSource();
         $first = PaginatorFactory::create(
@@ -208,7 +208,7 @@ final class PaginatorFactoryTest extends TestCase
         self::assertSame([3, 4], array_column($second->getItems(), 'id'));
     }
 
-    public function testCursorSecretCanBeOverridden()
+    public function testCursorSecretCanBeOverridden(): void
     {
         $source = $this->cursorSource();
         $first = PaginatorFactory::create(cursorSecret: 'first-test-secret')

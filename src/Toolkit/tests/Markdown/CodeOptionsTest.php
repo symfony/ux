@@ -16,7 +16,7 @@ use Symfony\UX\Toolkit\Markdown\CodeOptions;
 
 class CodeOptionsTest extends TestCase
 {
-    public function testFromInfoJsonReadsFilenameAndCollapseClass()
+    public function testFromInfoJsonReadsFilenameAndCollapseClass(): void
     {
         $options = CodeOptions::fromInfoJson('{"filename": "templates/components/Alert.html.twig", "collapseClass": true}');
 
@@ -24,7 +24,7 @@ class CodeOptionsTest extends TestCase
         $this->assertTrue($options->collapseClass);
     }
 
-    public function testFromInfoJsonDefaultsToEmptyOptions()
+    public function testFromInfoJsonDefaultsToEmptyOptions(): void
     {
         $options = CodeOptions::fromInfoJson('{}');
 
@@ -32,35 +32,35 @@ class CodeOptionsTest extends TestCase
         $this->assertFalse($options->collapseClass);
     }
 
-    public function testFromInfoJsonIgnoresANonStringFilename()
+    public function testFromInfoJsonIgnoresANonStringFilename(): void
     {
         $this->assertNull(CodeOptions::fromInfoJson('{"filename": 42}')?->filename);
     }
 
-    public function testFromInfoJsonReturnsNullOnMalformedJson()
+    public function testFromInfoJsonReturnsNullOnMalformedJson(): void
     {
         $this->assertNull(CodeOptions::fromInfoJson('not json'));
         $this->assertNull(CodeOptions::fromInfoJson('"a string"'));
     }
 
-    public function testToInfoJsonCarriesTheFilenameWithUnescapedSlashes()
+    public function testToInfoJsonCarriesTheFilenameWithUnescapedSlashes(): void
     {
         $json = new CodeOptions(filename: 'templates/components/Alert.html.twig')->toInfoJson();
 
         $this->assertSame('{"filename":"templates/components/Alert.html.twig"}', $json);
     }
 
-    public function testToInfoJsonCarriesCollapseClass()
+    public function testToInfoJsonCarriesCollapseClass(): void
     {
         $this->assertSame('{"collapseClass":true}', new CodeOptions(collapseClass: true)->toInfoJson());
     }
 
-    public function testToInfoJsonIsNullWhenThereIsNothingToCarry()
+    public function testToInfoJsonIsNullWhenThereIsNothingToCarry(): void
     {
         $this->assertNull(new CodeOptions()->toInfoJson());
     }
 
-    public function testInfoJsonRoundTrips()
+    public function testInfoJsonRoundTrips(): void
     {
         $options = new CodeOptions(filename: 'assets/controllers/alert_controller.js', collapseClass: true);
 

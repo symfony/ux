@@ -36,7 +36,7 @@ final class AutoLockIconRegistryTest extends TestCase
         new Filesystem()->remove($this->iconDir);
     }
 
-    public function testReturnsIconFromInnerAndPersistsItToDisk()
+    public function testReturnsIconFromInnerAndPersistsItToDisk(): void
     {
         $icon = new Icon('<path d="M0 0"/>', ['viewBox' => '0 0 24 24']);
         $inner = new InMemoryIconRegistry(['lucide:heart' => $icon]);
@@ -49,7 +49,7 @@ final class AutoLockIconRegistryTest extends TestCase
         $this->assertStringEqualsFile($this->iconDir.'/lucide/heart.svg', $icon->toHtml());
     }
 
-    public function testPropagatesIconNotFoundAndWritesNothing()
+    public function testPropagatesIconNotFoundAndWritesNothing(): void
     {
         $local = new LocalSvgIconRegistry(new IconFactory(), $this->iconDir);
         $registry = new AutoLockIconRegistry(new InMemoryIconRegistry(), $local);
@@ -62,7 +62,7 @@ final class AutoLockIconRegistryTest extends TestCase
         }
     }
 
-    public function testWriteFailureIsNonFatalAndLogged()
+    public function testWriteFailureIsNonFatalAndLogged(): void
     {
         $icon = new Icon('<path d="M0 0"/>');
         $inner = new InMemoryIconRegistry(['lucide:heart' => $icon]);

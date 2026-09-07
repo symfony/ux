@@ -25,7 +25,7 @@ use Twig\Loader\FilesystemLoader;
 
 class FencedCodePreviewExtensionTest extends TestCase
 {
-    public function testPreviewFlaggedFenceBecomesPreviewAndCodeTabs()
+    public function testPreviewFlaggedFenceBecomesPreviewAndCodeTabs(): void
     {
         $html = $this->convert(<<<'MARKDOWN'
             ```twig {"preview": true, "height": "300px"}
@@ -41,7 +41,7 @@ class FencedCodePreviewExtensionTest extends TestCase
         $this->assertStringContainsString('twig:Button', $html);
     }
 
-    public function testPlainFenceIsLeftUntouched()
+    public function testPlainFenceIsLeftUntouched(): void
     {
         $html = $this->convert(<<<'MARKDOWN'
             ```twig
@@ -53,7 +53,7 @@ class FencedCodePreviewExtensionTest extends TestCase
         $this->assertStringContainsString('language-twig', $html);
     }
 
-    public function testJsonFenceWithoutPreviewOptInIsLeftUntouched()
+    public function testJsonFenceWithoutPreviewOptInIsLeftUntouched(): void
     {
         // A `filename` (or any non-preview JSON) must not turn the block into preview tabs — the info
         // string is left in place for the host's fenced-code renderer.
@@ -67,7 +67,7 @@ class FencedCodePreviewExtensionTest extends TestCase
         $this->assertStringContainsString('language-twig', $html);
     }
 
-    public function testJsonOptionsAreThreadedToTheLivePreview()
+    public function testJsonOptionsAreThreadedToTheLivePreview(): void
     {
         $urlGenerator = new class implements PreviewUrlGenerator {
             public function generate(string $code, CodeOptions $options): ?string

@@ -24,7 +24,7 @@ use Twig\Environment;
  */
 class CropperTypeTest extends TestCase
 {
-    public function testRenderFull()
+    public function testRenderFull(): void
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();
@@ -54,7 +54,7 @@ class CropperTypeTest extends TestCase
         );
     }
 
-    public function testRenderNoOptions()
+    public function testRenderNoOptions(): void
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();

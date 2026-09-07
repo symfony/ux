@@ -17,7 +17,7 @@ use Symfony\UX\CalendarLink\Provider\GoogleCalendarLinkProvider;
 
 final class GoogleCalendarLinkProviderTest extends TestCase
 {
-    public function testTimedEvent()
+    public function testTimedEvent(): void
     {
         $provider = new GoogleCalendarLinkProvider();
         $event = new CalendarEvent(
@@ -40,7 +40,7 @@ final class GoogleCalendarLinkProviderTest extends TestCase
         $this->assertSame('Paris', $params['location']);
     }
 
-    public function testAllDayEventEndIsExclusive()
+    public function testAllDayEventEndIsExclusive(): void
     {
         $provider = new GoogleCalendarLinkProvider();
         $event = new CalendarEvent(

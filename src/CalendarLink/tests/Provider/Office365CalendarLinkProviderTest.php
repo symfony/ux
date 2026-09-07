@@ -17,7 +17,7 @@ use Symfony\UX\CalendarLink\Provider\Office365CalendarLinkProvider;
 
 final class Office365CalendarLinkProviderTest extends TestCase
 {
-    public function testOffice365TimedEvent()
+    public function testOffice365TimedEvent(): void
     {
         $provider = new Office365CalendarLinkProvider();
         $event = new CalendarEvent(
@@ -40,7 +40,7 @@ final class Office365CalendarLinkProviderTest extends TestCase
         $this->assertSame('Paris', $params['location']);
     }
 
-    public function testAllDayEvent()
+    public function testAllDayEvent(): void
     {
         $provider = new Office365CalendarLinkProvider();
         $event = new CalendarEvent(

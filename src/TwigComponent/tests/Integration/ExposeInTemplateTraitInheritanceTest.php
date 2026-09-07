@@ -31,7 +31,7 @@ final class ExposeInTemplateTraitInheritanceTest extends KernelTestCase
      * Sanity check: the parent component itself must expose the trait property.
      * This works in all versions because the parent directly uses the trait.
      */
-    public function testParentComponentExposesTraitProperty()
+    public function testParentComponentExposesTraitProperty(): void
     {
         self::bootKernel();
 
@@ -47,7 +47,7 @@ final class ExposeInTemplateTraitInheritanceTest extends KernelTestCase
      * Before the fix, this throws:
      *   Variable "exposed_from_trait" does not exist in ...WithExposedTraitChild.html.twig
      */
-    public function testChildComponentExposesInheritedTraitProperty()
+    public function testChildComponentExposesInheritedTraitProperty(): void
     {
         self::bootKernel();
 

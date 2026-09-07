@@ -28,7 +28,7 @@ use Symfony\UX\Pagination\PaginationBuilder;
 #[CoversClass(PaginationBuilder::class)]
 final class PaginationBuilderTest extends TestCase
 {
-    public function testBasicBuild()
+    public function testBasicBuild(): void
     {
         $builder = $this->builder(range(1, 100));
         $result = $builder->paginate(page: 1);
@@ -39,7 +39,7 @@ final class PaginationBuilderTest extends TestCase
     }
 
     #[DataProvider('invalidRequestPages')]
-    public function testInvalidRequestPageIsRejected(mixed $value)
+    public function testInvalidRequestPageIsRejected(mixed $value): void
     {
         $requestStack = new \Symfony\Component\HttpFoundation\RequestStack();
         $requestStack->push(new \Symfony\Component\HttpFoundation\Request(['page' => $value]));
@@ -65,7 +65,7 @@ final class PaginationBuilderTest extends TestCase
         yield 'integer overflow' => [str_repeat('9', 100)];
     }
 
-    public function testRoutePageHasPriorityOverQueryPage()
+    public function testRoutePageHasPriorityOverQueryPage(): void
     {
         $request = new \Symfony\Component\HttpFoundation\Request(['page' => '9']);
         $request->attributes->set('page', '3');
@@ -82,7 +82,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(3, $result->getCurrentPage());
     }
 
-    public function testPerPage()
+    public function testPerPage(): void
     {
         $result = $this->builder(range(1, 100))->perPage(5)->paginate(page: 2);
 
@@ -91,13 +91,13 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame([6, 7, 8, 9, 10], $result->getItems());
     }
 
-    public function testPerPageThrowsForInvalid()
+    public function testPerPageThrowsForInvalid(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->builder([])->perPage(0);
     }
 
-    public function testPerPageRejectsIntegerOverflow()
+    public function testPerPageRejectsIntegerOverflow(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('less than PHP_INT_MAX');
@@ -105,7 +105,7 @@ final class PaginationBuilderTest extends TestCase
         $this->builder([])->perPage(\PHP_INT_MAX);
     }
 
-    public function testDeveloperPerPageIsNotSilentlyCapped()
+    public function testDeveloperPerPageIsNotSilentlyCapped(): void
     {
         $result = $this->builder(range(1, 2000))->perPage(1500)->paginate();
 
@@ -113,21 +113,21 @@ final class PaginationBuilderTest extends TestCase
         self::assertCount(1500, $result);
     }
 
-    public function testSlidingRejectsEmptyWindow()
+    public function testSlidingRejectsEmptyWindow(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('size must be >= 1.');
         $this->builder([])->sliding(0);
     }
 
-    public function testFixedRejectsEmptyWindow()
+    public function testFixedRejectsEmptyWindow(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('size must be >= 1.');
         $this->builder([])->fixed(0);
     }
 
-    public function testSlidingMode()
+    public function testSlidingMode(): void
     {
         $result = $this->builder(range(1, 200))->sliding(7)->paginate(page: 10);
 
@@ -135,7 +135,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertNotEmpty($links);
     }
 
-    public function testFixedMode()
+    public function testFixedMode(): void
     {
         $result = $this->builder(range(1, 200))->fixed(5)->paginate(page: 3);
 
@@ -143,7 +143,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertNotEmpty($links);
     }
 
-    public function testFullMode()
+    public function testFullMode(): void
     {
         $result = $this->builder(range(1, 50))->perPage(10)->full()->paginate(page: 3);
 
@@ -153,14 +153,14 @@ final class PaginationBuilderTest extends TestCase
         self::assertCount(5, $nonGaps);
     }
 
-    public function testFullRejectsInvalidMaximum()
+    public function testFullRejectsInvalidMaximum(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('maxPages must be >= 1.');
         $this->builder([])->full(0);
     }
 
-    public function testLookahead()
+    public function testLookahead(): void
     {
         $result = $this->builder(range(1, 50))->lookahead()->paginate(page: 1);
 
@@ -170,7 +170,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertCount(20, $result);
     }
 
-    public function testLookaheadCannotBeCombinedWithAnExactTotal()
+    public function testLookaheadCannotBeCombinedWithAnExactTotal(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('lookahead() cannot be combined with total()');
@@ -181,7 +181,7 @@ final class PaginationBuilderTest extends TestCase
             ->paginate();
     }
 
-    public function testLookaheadCannotThrowOnAnUnknownLastPage()
+    public function testLookaheadCannotThrowOnAnUnknownLastPage(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('lookahead() cannot be combined with throwOnOutOfRange()');
@@ -192,7 +192,7 @@ final class PaginationBuilderTest extends TestCase
             ->paginate();
     }
 
-    public function testLookaheadRejectsAnAdapterWithoutLookaheadSupport()
+    public function testLookaheadRejectsAnAdapterWithoutLookaheadSupport(): void
     {
         $source = new \stdClass();
         $adapter = new class implements OffsetAdapterInterface {
@@ -218,7 +218,7 @@ final class PaginationBuilderTest extends TestCase
         new PaginationBuilder($source, [$adapter])->lookahead()->paginate();
     }
 
-    public function testExplicitAdapterMustSupportTheSelectedMode()
+    public function testExplicitAdapterMustSupportTheSelectedMode(): void
     {
         $adapter = new class implements OffsetAdapterInterface {
             public function supports(mixed $source): bool
@@ -243,7 +243,7 @@ final class PaginationBuilderTest extends TestCase
         new PaginationBuilder(new \stdClass(), [], adapter: $adapter)->lookahead()->paginate();
     }
 
-    public function testOffsetResolutionSkipsACursorOnlyAdapterForTheSameSource()
+    public function testOffsetResolutionSkipsACursorOnlyAdapterForTheSameSource(): void
     {
         $source = new \stdClass();
         $cursorAdapter = new class implements CursorAdapterInterface {
@@ -289,7 +289,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(['offset'], $pagination->getItems());
     }
 
-    public function testAppends()
+    public function testAppends(): void
     {
         $result = $this->builder(range(1, 100))
             ->queryParameters(['q' => 'test', 'sort' => 'name'])
@@ -300,7 +300,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertStringContainsString('sort=name', $url);
     }
 
-    public function testFragment()
+    public function testFragment(): void
     {
         $result = $this->builder(range(1, 100))
             ->fragment('results')
@@ -310,7 +310,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertStringContainsString('#results', $url);
     }
 
-    public function testWithPath()
+    public function testWithPath(): void
     {
         $result = $this->builder(range(1, 100))
             ->path('/admin/posts')
@@ -320,7 +320,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertStringStartsWith('/admin/posts', $url);
     }
 
-    public function testQueryParam()
+    public function testQueryParam(): void
     {
         $result = $this->builder(range(1, 100))
             ->pageParameter('p')
@@ -331,7 +331,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertStringNotContainsString('page=', $url);
     }
 
-    public function testQueryParameterNameCannotBeEmpty()
+    public function testQueryParameterNameCannotBeEmpty(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('must not be empty');
@@ -339,7 +339,7 @@ final class PaginationBuilderTest extends TestCase
         $this->builder([])->pageParameter('');
     }
 
-    public function testImmutability()
+    public function testImmutability(): void
     {
         $builder = $this->builder(range(1, 100));
         $modified = $builder->perPage(5);
@@ -354,13 +354,13 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(5, $result2->getItemsPerPage());
     }
 
-    public function testPaginateThrowsForInvalidPage()
+    public function testPaginateThrowsForInvalidPage(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->builder([])->paginate(page: 0);
     }
 
-    public function testDefaultMaximumOffsetAllowsItsBoundary()
+    public function testDefaultMaximumOffsetAllowsItsBoundary(): void
     {
         $pagination = $this->builder([])
             ->perPage(20)
@@ -369,7 +369,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(5001, $pagination->getCurrentPage());
     }
 
-    public function testDefaultMaximumOffsetRejectsLargerPagesWithCursorGuidance()
+    public function testDefaultMaximumOffsetRejectsLargerPagesWithCursorGuidance(): void
     {
         $this->expectException(OffsetLimitExceededException::class);
         $this->expectExceptionMessage('maximum offset of 100000');
@@ -380,7 +380,7 @@ final class PaginationBuilderTest extends TestCase
             ->paginate(page: 5002);
     }
 
-    public function testMaximumOffsetCanBeRaisedExplicitly()
+    public function testMaximumOffsetCanBeRaisedExplicitly(): void
     {
         $pagination = $this->builder([])
             ->perPage(20)
@@ -390,7 +390,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(5002, $pagination->getCurrentPage());
     }
 
-    public function testMaximumOffsetRejectsIntegerOverflow()
+    public function testMaximumOffsetRejectsIntegerOverflow(): void
     {
         $this->expectException(OffsetLimitExceededException::class);
 
@@ -400,7 +400,7 @@ final class PaginationBuilderTest extends TestCase
             ->paginate(page: \PHP_INT_MAX);
     }
 
-    public function testMaximumOffsetMustBePositiveOrZero()
+    public function testMaximumOffsetMustBePositiveOrZero(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('maxOffset must be >= 0.');
@@ -408,7 +408,7 @@ final class PaginationBuilderTest extends TestCase
         $this->builder([])->maxOffset(-1);
     }
 
-    public function testThrowsForUnsupportedSource()
+    public function testThrowsForUnsupportedSource(): void
     {
         $builder = new PaginationBuilder(
             source: new \stdClass(),
@@ -419,7 +419,7 @@ final class PaginationBuilderTest extends TestCase
         $builder->paginate();
     }
 
-    public function testWithTotalInt()
+    public function testWithTotalInt(): void
     {
         $result = $this->builder(range(1, 100))
             ->total(50)
@@ -430,7 +430,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertCount(20, $result); // Still returns 20 items on the page
     }
 
-    public function testWithTotalCallable()
+    public function testWithTotalCallable(): void
     {
         $result = $this->builder(range(1, 100))
             ->total(static fn () => 42)
@@ -440,7 +440,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(3, $result->getTotalPages()); // 42 items / 20 per page = ceil(2.1) = 3 pages
     }
 
-    public function testWithTotalCallableThrowsForInvalidReturn()
+    public function testWithTotalCallableThrowsForInvalidReturn(): void
     {
         $result = $this->builder(range(1, 100))
             ->total(static fn () => 'invalid')
@@ -451,7 +451,7 @@ final class PaginationBuilderTest extends TestCase
         $result->getTotalItems();
     }
 
-    public function testWithTotalRejectsNegativeInteger()
+    public function testWithTotalRejectsNegativeInteger(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('greater than or equal to 0');
@@ -459,7 +459,7 @@ final class PaginationBuilderTest extends TestCase
         $this->builder([])->total(-1);
     }
 
-    public function testWithTotalAcceptsInvokableService()
+    public function testWithTotalAcceptsInvokableService(): void
     {
         $counter = new class {
             public function __invoke(): int
@@ -473,7 +473,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(73, $result->getTotalItems());
     }
 
-    public function testWithTotalMaintainsImmutability()
+    public function testWithTotalMaintainsImmutability(): void
     {
         $builder = $this->builder(range(1, 100));
         $modified = $builder->total(50);
@@ -487,7 +487,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(50, $result2->getTotalItems());
     }
 
-    public function testWithTotalCaching()
+    public function testWithTotalCaching(): void
     {
         $callCount = 0;
         $callable = static function () use (&$callCount) {
@@ -509,7 +509,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(1, $callCount);
     }
 
-    public function testConstructorRejectsPerPageOverflow()
+    public function testConstructorRejectsPerPageOverflow(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('less than PHP_INT_MAX');
@@ -517,7 +517,7 @@ final class PaginationBuilderTest extends TestCase
         new PaginationBuilder(range(1, 3), [new ArrayPaginationAdapter()], defaultPerPage: \PHP_INT_MAX);
     }
 
-    public function testExposesTheConfiguredPageParameterName()
+    public function testExposesTheConfiguredPageParameterName(): void
     {
         $builder = new PaginationBuilder(range(1, 3), [new ArrayPaginationAdapter()]);
 
@@ -525,7 +525,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame('p', $builder->pageParameter('p')->getPageParameterName());
     }
 
-    public function testExposesWhetherAnExplicitRouteWasConfigured()
+    public function testExposesWhetherAnExplicitRouteWasConfigured(): void
     {
         $builder = new PaginationBuilder(range(1, 3), [new ArrayPaginationAdapter()]);
 
@@ -533,7 +533,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertTrue($builder->route('items_list')->hasRoute());
     }
 
-    public function testWithQueryStringPreservesRequestParams()
+    public function testWithQueryStringPreservesRequestParams(): void
     {
         $request = new \Symfony\Component\HttpFoundation\Request(query: ['q' => 'search', 'sort' => 'name']);
         $request->attributes->set('_route', 'item_list');
@@ -553,7 +553,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertStringContainsString('sort=name', $url);
     }
 
-    public function testWithoutQueryStringDiscardsRequestParams()
+    public function testWithoutQueryStringDiscardsRequestParams(): void
     {
         $requestStack = new \Symfony\Component\HttpFoundation\RequestStack();
         $requestStack->push(new \Symfony\Component\HttpFoundation\Request(query: ['q' => 'search']));
@@ -565,7 +565,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame('/?page=2', $result->getUrl(2));
     }
 
-    public function testWithoutQueryParametersExcludesAndDeduplicatesNames()
+    public function testWithoutQueryParametersExcludesAndDeduplicatesNames(): void
     {
         $requestStack = new \Symfony\Component\HttpFoundation\RequestStack();
         $requestStack->push(new \Symfony\Component\HttpFoundation\Request(query: [
@@ -583,14 +583,14 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame('/?sort=name&page=2', $result->getUrl(2));
     }
 
-    public function testWithoutQueryParametersRejectsEmptyName()
+    public function testWithoutQueryParametersRejectsEmptyName(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('must not be empty');
         $this->builder([])->excludeQueryParameters('');
     }
 
-    public function testRouteWithUrlGenerator()
+    public function testRouteWithUrlGenerator(): void
     {
         $urlGenerator = $this->createStub(\Symfony\Component\Routing\Generator\UrlGeneratorInterface::class);
         $urlGenerator->method('generate')
@@ -611,7 +611,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertStringContainsString('category=books', $url);
     }
 
-    public function testPaginateResolvesPageFromRequest()
+    public function testPaginateResolvesPageFromRequest(): void
     {
         $request = new \Symfony\Component\HttpFoundation\Request(query: ['page' => '3']);
         $requestStack = new \Symfony\Component\HttpFoundation\RequestStack();
@@ -628,7 +628,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(3, $result->getCurrentPage());
     }
 
-    public function testEmptyRequestDefaultsToFirstPage()
+    public function testEmptyRequestDefaultsToFirstPage(): void
     {
         $requestStack = new \Symfony\Component\HttpFoundation\RequestStack();
         $requestStack->push(new \Symfony\Component\HttpFoundation\Request());
@@ -638,7 +638,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(1, $result->getCurrentPage());
     }
 
-    public function testExplicitPageDoesNotReadTheRequestStack()
+    public function testExplicitPageDoesNotReadTheRequestStack(): void
     {
         $requestStack = $this->createMock(\Symfony\Component\HttpFoundation\RequestStack::class);
         $requestStack->expects(self::never())->method('getCurrentRequest');
@@ -649,7 +649,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(3, $result->getCurrentPage());
     }
 
-    public function testExplicitAdapterIsUsedWithoutDiscovery()
+    public function testExplicitAdapterIsUsedWithoutDiscovery(): void
     {
         $adapter = new ArrayPaginationAdapter();
         $result = new PaginationBuilder(
@@ -661,7 +661,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(range(1, 10), $result->getItems());
     }
 
-    public function testPaginateResolvesPageFromCustomParam()
+    public function testPaginateResolvesPageFromCustomParam(): void
     {
         $request = new \Symfony\Component\HttpFoundation\Request(query: ['p' => '5']);
         $requestStack = new \Symfony\Component\HttpFoundation\RequestStack();
@@ -678,7 +678,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(5, $result->getCurrentPage());
     }
 
-    public function testPaginateResolvesPageFromPathParameter()
+    public function testPaginateResolvesPageFromPathParameter(): void
     {
         $request = new \Symfony\Component\HttpFoundation\Request();
         $request->attributes->set('_route', 'blog_list');
@@ -699,7 +699,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(4, $result->getCurrentPage());
     }
 
-    public function testPaginatePathParameterPriorityOverQuery()
+    public function testPaginatePathParameterPriorityOverQuery(): void
     {
         $request = new \Symfony\Component\HttpFoundation\Request(query: ['page' => '2']);
         $request->attributes->set('_route', 'blog_list');
@@ -720,7 +720,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(8, $result->getCurrentPage());
     }
 
-    public function testPaginatePathParameterWithCustomQueryParam()
+    public function testPaginatePathParameterWithCustomQueryParam(): void
     {
         $request = new \Symfony\Component\HttpFoundation\Request();
         $request->attributes->set('_route', 'blog_list');
@@ -741,7 +741,7 @@ final class PaginationBuilderTest extends TestCase
         self::assertSame(6, $result->getCurrentPage());
     }
 
-    public function testThrowOnOutOfRangeThrowsFromBuilder()
+    public function testThrowOnOutOfRangeThrowsFromBuilder(): void
     {
         $this->expectException(OutOfRangePageException::class);
 
@@ -750,7 +750,7 @@ final class PaginationBuilderTest extends TestCase
             ->paginate(page: 5);
     }
 
-    public function testThrowOnOutOfRangeDoesNotThrowWhenInRange()
+    public function testThrowOnOutOfRangeDoesNotThrowWhenInRange(): void
     {
         $result = $this->builder(range(1, 100))
             ->throwOnOutOfRange()

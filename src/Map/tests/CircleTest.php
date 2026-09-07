@@ -19,7 +19,7 @@ use Symfony\UX\Map\Point;
 
 class CircleTest extends TestCase
 {
-    public function testToArray()
+    public function testToArray(): void
     {
         $center = new Point(1.1, 2.2);
         $infoWindow = new InfoWindow('info content');
@@ -49,7 +49,7 @@ class CircleTest extends TestCase
         ], $array);
     }
 
-    public function testFromArray()
+    public function testFromArray(): void
     {
         $data = [
             'center' => ['lat' => 1.1, 'lng' => 2.2],
@@ -80,19 +80,19 @@ class CircleTest extends TestCase
         ], $array);
     }
 
-    public function testFromArrayThrowsExceptionIfCenterMissing()
+    public function testFromArrayThrowsExceptionIfCenterMissing(): void
     {
         $this->expectException(InvalidArgumentException::class);
         Circle::fromArray(['radius' => 500, 'invalid' => 'No center']);
     }
 
-    public function testFromArrayThrowsExceptionIfRadiusMissing()
+    public function testFromArrayThrowsExceptionIfRadiusMissing(): void
     {
         $this->expectException(InvalidArgumentException::class);
         Circle::fromArray(['center' => ['lat' => 1.1, 'lng' => 2.2], 'invalid' => 'No radius']);
     }
 
-    public function testConstructorThrowsExceptionIfRadiusNotPositive()
+    public function testConstructorThrowsExceptionIfRadiusNotPositive(): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Circle(new Point(1.1, 2.2), 0);

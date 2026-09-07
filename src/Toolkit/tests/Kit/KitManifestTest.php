@@ -19,7 +19,7 @@ use Symfony\UX\Toolkit\Kit\KitManifest;
 
 final class KitManifestTest extends TestCase
 {
-    public function testFromJsonWithInvalidJson()
+    public function testFromJsonWithInvalidJson(): void
     {
         $this->expectException(\JsonException::class);
         $this->expectExceptionMessage('Syntax error');
@@ -27,7 +27,7 @@ final class KitManifestTest extends TestCase
         KitManifest::fromJson('test');
     }
 
-    public function testFromJsonWithEmpty()
+    public function testFromJsonWithEmpty(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Property "name" is required.');
@@ -35,7 +35,7 @@ final class KitManifestTest extends TestCase
         KitManifest::fromJson('{}');
     }
 
-    public function testFromJsonWithMissingDescription()
+    public function testFromJsonWithMissingDescription(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Property "description" is required.');
@@ -47,7 +47,7 @@ final class KitManifestTest extends TestCase
             JSON);
     }
 
-    public function testFromJsonWithMissingLicense()
+    public function testFromJsonWithMissingLicense(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Property "license" is required.');
@@ -60,7 +60,7 @@ final class KitManifestTest extends TestCase
             JSON);
     }
 
-    public function testFromJsonWithMissingHomepage()
+    public function testFromJsonWithMissingHomepage(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Property "homepage" is required.');
@@ -74,7 +74,7 @@ final class KitManifestTest extends TestCase
             JSON);
     }
 
-    public function testFromJsonWithInvalidHomepage()
+    public function testFromJsonWithInvalidHomepage(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid homepage URL "not-a-url".');
@@ -89,7 +89,7 @@ final class KitManifestTest extends TestCase
             JSON);
     }
 
-    public function testFromJsonWithValidData()
+    public function testFromJsonWithValidData(): void
     {
         $manifest = KitManifest::fromJson(<<<JSON
                 {
@@ -109,7 +109,7 @@ final class KitManifestTest extends TestCase
         $this->assertNull($manifest->icon);
     }
 
-    public function testFromJsonWithColorAndIcon()
+    public function testFromJsonWithColorAndIcon(): void
     {
         $manifest = KitManifest::fromJson(<<<JSON
                 {
@@ -126,7 +126,7 @@ final class KitManifestTest extends TestCase
         $this->assertSame('icon.svg', $manifest->icon);
     }
 
-    public function testFromJsonWithDependencies()
+    public function testFromJsonWithDependencies(): void
     {
         $manifest = KitManifest::fromJson(<<<JSON
                 {
@@ -148,7 +148,7 @@ final class KitManifestTest extends TestCase
         $this->assertInstanceOf(ImportmapPackageDependency::class, $manifest->dependencies[2]);
     }
 
-    public function testFromJsonRejectsRecipeDependency()
+    public function testFromJsonRejectsRecipeDependency(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The dependency types "recipe" are not supported.');

@@ -18,7 +18,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithUrlBoundProps
 
 class LiveComponentMetadataFactoryTest extends KernelTestCase
 {
-    public function testQueryStringMapping()
+    public function testQueryStringMapping(): void
     {
         /** @var LiveComponentMetadataFactory $metadataFactory */
         $metadataFactory = self::getContainer()->get('ux.live_component.metadata_factory');

@@ -24,7 +24,7 @@ use Twig\Environment;
  */
 class ComponentFactoryTest extends TestCase
 {
-    public function testMetadataForConfig()
+    public function testMetadataForConfig(): void
     {
         $factory = new ComponentFactory(
             $this->createMock(ComponentTemplateFinderInterface::class),
@@ -42,7 +42,7 @@ class ComponentFactoryTest extends TestCase
         $this->assertSame('bar.html.twig', $metadata->getTemplate());
     }
 
-    public function testMetadataForResolveAlias()
+    public function testMetadataForResolveAlias(): void
     {
         $factory = new ComponentFactory(
             $this->createMock(ComponentTemplateFinderInterface::class),
@@ -63,7 +63,7 @@ class ComponentFactoryTest extends TestCase
         $this->assertSame('bar.html.twig', $metadata->getTemplate());
     }
 
-    public function testMetadataForReuseAnonymousConfig()
+    public function testMetadataForReuseAnonymousConfig(): void
     {
         $templateFinder = $this->createMock(ComponentTemplateFinderInterface::class);
         $templateFinder->expects($this->atLeastOnce())

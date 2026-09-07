@@ -22,7 +22,7 @@ final class MapOptionsNormalizerTest extends TestCase
         DummyOptions::unregisterFromNormalizer();
     }
 
-    public function testDenormalizingWhenProviderKeyIsMissing()
+    public function testDenormalizingWhenProviderKeyIsMissing(): void
     {
         $this->expectException(UnableToDenormalizeOptionsException::class);
         $this->expectExceptionMessage(' the provider key "@provider" is missing in the normalized options.');
@@ -30,7 +30,7 @@ final class MapOptionsNormalizerTest extends TestCase
         MapOptionsNormalizer::denormalize([]);
     }
 
-    public function testDenormalizingWhenProviderIsNotSupported()
+    public function testDenormalizingWhenProviderIsNotSupported(): void
     {
         $this->expectException(UnableToDenormalizeOptionsException::class);
         $this->expectExceptionMessage(' the provider "foo" is not supported. Supported providers are "google", "leaflet".');
@@ -38,7 +38,7 @@ final class MapOptionsNormalizerTest extends TestCase
         MapOptionsNormalizer::denormalize(['@provider' => 'foo']);
     }
 
-    public function testDenormalizingAndNormalizing()
+    public function testDenormalizingAndNormalizing(): void
     {
         DummyOptions::registerToNormalizer();
 

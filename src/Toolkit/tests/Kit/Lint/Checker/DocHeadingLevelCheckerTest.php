@@ -22,7 +22,7 @@ use Symfony\UX\Toolkit\Recipe\RecipeType;
 
 final class DocHeadingLevelCheckerTest extends TestCase
 {
-    public function testRequiresASingleLeadingLevelOneHeading()
+    public function testRequiresASingleLeadingLevelOneHeading(): void
     {
         $kit = new Kit(__DIR__, new KitManifest('kit', 'A kit', 'MIT', 'https://example.com'));
         // Valid: opens with the title as the only level-1 heading; a `#` inside a fence is ignored.

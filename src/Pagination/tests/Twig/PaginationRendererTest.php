@@ -28,7 +28,7 @@ use Twig\Loader\ArrayLoader;
 #[CoversClass(PaginationRenderer::class)]
 final class PaginationRendererTest extends TestCase
 {
-    public function testRenderUsesDefaultTheme()
+    public function testRenderUsesDefaultTheme(): void
     {
         $pagination = $this->createPagination();
 
@@ -41,7 +41,7 @@ final class PaginationRendererTest extends TestCase
         self::assertSame('default-theme:'.$pagination->getInfo(), $result);
     }
 
-    public function testRenderWithBootstrapTheme()
+    public function testRenderWithBootstrapTheme(): void
     {
         $pagination = $this->createPagination();
 
@@ -58,7 +58,7 @@ final class PaginationRendererTest extends TestCase
         self::assertSame('bootstrap-theme:'.$pagination->getInfo(), $result);
     }
 
-    public function testRenderWithTailwindTheme()
+    public function testRenderWithTailwindTheme(): void
     {
         $pagination = $this->createPagination();
 
@@ -75,7 +75,7 @@ final class PaginationRendererTest extends TestCase
         self::assertSame('tailwind-theme:'.$pagination->getInfo(), $result);
     }
 
-    public function testRenderWithCustomTheme()
+    public function testRenderWithCustomTheme(): void
     {
         $pagination = $this->createPagination();
 
@@ -89,7 +89,7 @@ final class PaginationRendererTest extends TestCase
         self::assertSame('custom-theme:'.$pagination->getInfo(), $result);
     }
 
-    public function testRootLevelTwigPathIsPreserved()
+    public function testRootLevelTwigPathIsPreserved(): void
     {
         $pagination = $this->createPagination();
 
@@ -106,7 +106,7 @@ final class PaginationRendererTest extends TestCase
         self::assertSame('root-theme:'.$pagination->getInfo(), $result);
     }
 
-    public function testExplicitThemeMustNotBeEmpty()
+    public function testExplicitThemeMustNotBeEmpty(): void
     {
         $renderer = new PaginationRenderer($this->createTwig());
 
@@ -118,7 +118,7 @@ final class PaginationRendererTest extends TestCase
         $renderer->renderPagination($this->createPagination(), theme: '  ');
     }
 
-    public function testConfiguredDefaultThemeMustNotBeEmpty()
+    public function testConfiguredDefaultThemeMustNotBeEmpty(): void
     {
         $renderer = new PaginationRenderer(
             $this->createTwig(),
@@ -133,7 +133,7 @@ final class PaginationRendererTest extends TestCase
         $renderer->renderPagination($this->createPagination());
     }
 
-    public function testRenderPassesOptionsAsThemeVariables()
+    public function testRenderPassesOptionsAsThemeVariables(): void
     {
         $pagination = $this->createPagination();
 
@@ -146,7 +146,7 @@ final class PaginationRendererTest extends TestCase
         self::assertSame('info-off:my-nav:snake-case', $result);
     }
 
-    public function testEmptyLinkAttributesDoNotTraverseNumberedLinks()
+    public function testEmptyLinkAttributesDoNotTraverseNumberedLinks(): void
     {
         $pagination = $this->createMock(NumberedPaginationInterface::class);
         $pagination->expects(self::never())->method('getPages');
@@ -158,7 +158,7 @@ final class PaginationRendererTest extends TestCase
         self::assertSame('0:0:0', $renderer->renderPagination($pagination));
     }
 
-    public function testRenderWithConfiguredDefaultTheme()
+    public function testRenderWithConfiguredDefaultTheme(): void
     {
         $pagination = $this->createPagination();
 
@@ -175,7 +175,7 @@ final class PaginationRendererTest extends TestCase
         self::assertSame('bootstrap-theme', $result);
     }
 
-    public function testExplicitThemeOverridesConfiguredDefault()
+    public function testExplicitThemeOverridesConfiguredDefault(): void
     {
         $pagination = $this->createPagination();
 
@@ -195,7 +195,7 @@ final class PaginationRendererTest extends TestCase
         self::assertSame('tailwind-theme', $result);
     }
 
-    public function testRenderCursorPaginationUsesDefaultTheme()
+    public function testRenderCursorPaginationUsesDefaultTheme(): void
     {
         $pagination = $this->createCursorPagination();
 
@@ -208,7 +208,7 @@ final class PaginationRendererTest extends TestCase
         self::assertSame('default-theme:plain', $result);
     }
 
-    public function testBootstrapThemeSupportsCursorPagination()
+    public function testBootstrapThemeSupportsCursorPagination(): void
     {
         $pagination = $this->createCursorPagination();
 
@@ -226,7 +226,7 @@ final class PaginationRendererTest extends TestCase
         );
     }
 
-    public function testBuiltInThemeSupportsThirdPartyPaginationContract()
+    public function testBuiltInThemeSupportsThirdPartyPaginationContract(): void
     {
         $pagination = $this->createStub(PaginationInterface::class);
 
@@ -244,7 +244,7 @@ final class PaginationRendererTest extends TestCase
         );
     }
 
-    public function testCursorPaginationUsesConfiguredCustomTemplate()
+    public function testCursorPaginationUsesConfiguredCustomTemplate(): void
     {
         $pagination = $this->createCursorPagination();
 
@@ -259,7 +259,7 @@ final class PaginationRendererTest extends TestCase
         self::assertSame('custom-cursor-theme', $renderer->renderPagination($pagination));
     }
 
-    public function testThemeRendersLikeAnOrdinaryTwigTemplate()
+    public function testThemeRendersLikeAnOrdinaryTwigTemplate(): void
     {
         $renderer = new PaginationRenderer($this->createTwig([
             'block.html.twig' => '{% block pagination %}probe-block{% endblock %}{% block leak %}LEAK{% endblock %}',
@@ -271,7 +271,7 @@ final class PaginationRendererTest extends TestCase
         self::assertSame('standalone-body', $renderer->renderPagination($pagination, theme: 'standalone.html.twig'));
     }
 
-    public function testRenderResolvesLinkAttributeClosureWithNavigationContext()
+    public function testRenderResolvesLinkAttributeClosureWithNavigationContext(): void
     {
         $pagination = new Pagination(
             source: range(1, 50),
@@ -292,7 +292,7 @@ final class PaginationRendererTest extends TestCase
         self::assertSame('1:3:3', $html);
     }
 
-    public function testRenderRejectsInvalidAttributeName()
+    public function testRenderRejectsInvalidAttributeName(): void
     {
         $renderer = new PaginationRenderer($this->createTwig());
 
@@ -302,7 +302,7 @@ final class PaginationRendererTest extends TestCase
         $renderer->renderPagination($this->createPagination(), ['onload x' => 'alert(1)']);
     }
 
-    public function testRenderRejectsNonScalarAttributeValue()
+    public function testRenderRejectsNonScalarAttributeValue(): void
     {
         $renderer = new PaginationRenderer($this->createTwig());
 
@@ -312,7 +312,7 @@ final class PaginationRendererTest extends TestCase
         $renderer->renderPagination($this->createPagination(), ['data-context' => []]);
     }
 
-    public function testRenderRejectsNonStringClass()
+    public function testRenderRejectsNonStringClass(): void
     {
         $renderer = new PaginationRenderer($this->createTwig());
 
@@ -322,7 +322,7 @@ final class PaginationRendererTest extends TestCase
         $renderer->renderPagination($this->createPagination(), ['CLASS' => true]);
     }
 
-    public function testRenderRejectsHrefOverrideFromLinkAttributes()
+    public function testRenderRejectsHrefOverrideFromLinkAttributes(): void
     {
         $renderer = new PaginationRenderer($this->createTwig());
 
@@ -332,7 +332,7 @@ final class PaginationRendererTest extends TestCase
         $renderer->renderPagination($this->createPagination(), linkAttributes: ['href' => 'javascript:alert(1)']);
     }
 
-    public function testCursorLinkContextContainsTheOpaqueCursor()
+    public function testCursorLinkContextContainsTheOpaqueCursor(): void
     {
         $renderer = new PaginationRenderer($this->createTwig([
             '@UXPagination/theme/default.html.twig' => "{{ link_attributes.next['data-cursor'] is null ? 'missing-cursor' : 'opaque-cursor' }}",
@@ -345,7 +345,7 @@ final class PaginationRendererTest extends TestCase
         self::assertSame('opaque-cursor', $html);
     }
 
-    public function testLinkContextRejectsAnInconsistentPaginationResult()
+    public function testLinkContextRejectsAnInconsistentPaginationResult(): void
     {
         $pagination = $this->createStub(PaginationInterface::class);
         $pagination->method('hasNext')->willReturn(true);
@@ -358,7 +358,7 @@ final class PaginationRendererTest extends TestCase
         $renderer->renderPagination($pagination, linkAttributes: static fn (array $link): array => []);
     }
 
-    public function testRenderRejectsInvalidClosureReturnValue()
+    public function testRenderRejectsInvalidClosureReturnValue(): void
     {
         $renderer = new PaginationRenderer($this->createTwig());
 

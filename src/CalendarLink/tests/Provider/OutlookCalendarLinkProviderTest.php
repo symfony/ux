@@ -17,7 +17,7 @@ use Symfony\UX\CalendarLink\Provider\OutlookCalendarLinkProvider;
 
 final class OutlookCalendarLinkProviderTest extends TestCase
 {
-    public function testOutlookComTimedEvent()
+    public function testOutlookComTimedEvent(): void
     {
         $provider = new OutlookCalendarLinkProvider();
         $event = new CalendarEvent(
@@ -39,7 +39,7 @@ final class OutlookCalendarLinkProviderTest extends TestCase
         $this->assertSame('2026-05-14T18:00:00Z', $params['enddt']);
     }
 
-    public function testAllDayEvent()
+    public function testAllDayEvent(): void
     {
         $provider = new OutlookCalendarLinkProvider();
         $event = new CalendarEvent(

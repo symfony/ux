@@ -22,7 +22,7 @@ use Symfony\UX\Vue\Tests\Kernel\TwigAppKernel;
  */
 class VueBundleTest extends TestCase
 {
-    public function testBootKernel()
+    public function testBootKernel(): void
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();

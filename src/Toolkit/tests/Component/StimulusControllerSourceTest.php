@@ -16,7 +16,7 @@ use Symfony\UX\Toolkit\Component\StimulusControllerSource;
 
 class StimulusControllerSourceTest extends TestCase
 {
-    public function testTags()
+    public function testTags(): void
     {
         $source = new StimulusControllerSource(<<<'JS'
             /**
@@ -36,7 +36,7 @@ class StimulusControllerSourceTest extends TestCase
         self::assertSame(['toggle' => 'Toggles it.'], $source->tags()['action']);
     }
 
-    public function testValuesReadTypeAndDefaultFromCode()
+    public function testValuesReadTypeAndDefaultFromCode(): void
     {
         $source = new StimulusControllerSource(<<<'JS'
             export default class extends Controller {
@@ -50,7 +50,7 @@ class StimulusControllerSourceTest extends TestCase
         ], $source->values());
     }
 
-    public function testTargets()
+    public function testTargets(): void
     {
         $source = new StimulusControllerSource(<<<'JS'
             export default class extends Controller {
@@ -61,7 +61,7 @@ class StimulusControllerSourceTest extends TestCase
         self::assertSame(['trigger', 'content'], $source->targets());
     }
 
-    public function testClasses()
+    public function testClasses(): void
     {
         $source = new StimulusControllerSource(<<<'JS'
             export default class extends Controller {
@@ -72,7 +72,7 @@ class StimulusControllerSourceTest extends TestCase
         self::assertSame(['loading', 'success'], $source->classes());
     }
 
-    public function testOutlets()
+    public function testOutlets(): void
     {
         $source = new StimulusControllerSource(<<<'JS'
             export default class extends Controller {
@@ -83,7 +83,7 @@ class StimulusControllerSourceTest extends TestCase
         self::assertSame(['user-status', 'flash'], $source->outlets());
     }
 
-    public function testEmptySourceYieldsNothing()
+    public function testEmptySourceYieldsNothing(): void
     {
         $source = new StimulusControllerSource('export default class extends Controller {}');
 
@@ -94,7 +94,7 @@ class StimulusControllerSourceTest extends TestCase
         self::assertSame([], $source->outlets());
     }
 
-    public function testTagWithoutDescriptionIsRecognizedWithEmptyDescription()
+    public function testTagWithoutDescriptionIsRecognizedWithEmptyDescription(): void
     {
         $source = new StimulusControllerSource(<<<'JS'
             /**
@@ -106,7 +106,7 @@ class StimulusControllerSourceTest extends TestCase
         self::assertSame(['save' => ''], $source->tags()['action']);
     }
 
-    public function testDescriptionStopsAtTheNextAnnotationLine()
+    public function testDescriptionStopsAtTheNextAnnotationLine(): void
     {
         $source = new StimulusControllerSource(<<<'JS'
             /**
@@ -122,7 +122,7 @@ class StimulusControllerSourceTest extends TestCase
         self::assertSame(['close' => 'Closes the element.'], $source->tags()['action']);
     }
 
-    public function testDescriptionKeepsInlineAtMentions()
+    public function testDescriptionKeepsInlineAtMentions(): void
     {
         $source = new StimulusControllerSource(<<<'JS'
             /**
@@ -135,7 +135,7 @@ class StimulusControllerSourceTest extends TestCase
         self::assertSame(['theme' => 'Theme forwarded to @hotwired/stimulus consumers.'], $source->tags()['value']);
     }
 
-    public function testEachDocblockIsParsedIndependently()
+    public function testEachDocblockIsParsedIndependently(): void
     {
         $source = new StimulusControllerSource(<<<'JS'
             /**

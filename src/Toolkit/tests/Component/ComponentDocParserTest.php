@@ -17,7 +17,7 @@ use Symfony\UX\Toolkit\Component\ComponentDocParser;
 
 class ComponentDocParserTest extends TestCase
 {
-    public function testParsesNameTypeAndDescription()
+    public function testParsesNameTypeAndDescription(): void
     {
         $doc = new ComponentDocParser()->parse(<<<'TWIG'
             {# @prop id string Unique identifier. #}
@@ -31,7 +31,7 @@ class ComponentDocParserTest extends TestCase
         self::assertSame('Unique identifier.', $doc->props[0]->description);
     }
 
-    public function testDefaultIsSourcedFromThePropsDeclaration()
+    public function testDefaultIsSourcedFromThePropsDeclaration(): void
     {
         $doc = new ComponentDocParser()->parse(<<<'TWIG'
             {# @prop open boolean Whether it is open. #}
@@ -42,7 +42,7 @@ class ComponentDocParserTest extends TestCase
         self::assertSame('false', $doc->props[0]->default);
     }
 
-    public function testStringDefaultFromPropsIsQuoted()
+    public function testStringDefaultFromPropsIsQuoted(): void
     {
         $doc = new ComponentDocParser()->parse(<<<'TWIG'
             {# @prop variant 'default'|'line' The visual style variant. #}
@@ -53,7 +53,7 @@ class ComponentDocParserTest extends TestCase
         self::assertSame("'default'", $doc->props[0]->default);
     }
 
-    public function testDescriptionKeepsInlineBackticksAndIsWhitespaceNormalized()
+    public function testDescriptionKeepsInlineBackticksAndIsWhitespaceNormalized(): void
     {
         $doc = new ComponentDocParser()->parse(<<<'TWIG'
             {# @prop choices array List of choices:
@@ -65,7 +65,7 @@ class ComponentDocParserTest extends TestCase
         self::assertSame('[]', $doc->props[0]->default);
     }
 
-    public function testParsesBlocks()
+    public function testParsesBlocks(): void
     {
         $doc = new ComponentDocParser()->parse(<<<'TWIG'
             {# @prop id string Unique identifier. #}
@@ -78,7 +78,7 @@ class ComponentDocParserTest extends TestCase
         self::assertSame('The dialog structure.', $doc->blocks[0]->description);
     }
 
-    public function testReturnsEmptyDocWhenNoDocblocks()
+    public function testReturnsEmptyDocWhenNoDocblocks(): void
     {
         $doc = new ComponentDocParser()->parse('<div>Nothing here</div>');
 

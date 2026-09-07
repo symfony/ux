@@ -19,7 +19,7 @@ use Symfony\UX\Map\Bridge\Google\Option\MapTypeControlStyle;
 
 class GoogleOptionsTest extends TestCase
 {
-    public function testWithMinimalConfiguration()
+    public function testWithMinimalConfiguration(): void
     {
         $options = new GoogleOptions();
 
@@ -47,7 +47,7 @@ class GoogleOptionsTest extends TestCase
         self::assertEquals($options, GoogleOptions::fromArray($options->toArray()));
     }
 
-    public function testWithMinimalConfigurationAndWithoutControls()
+    public function testWithMinimalConfigurationAndWithoutControls(): void
     {
         $options = new GoogleOptions(
             mapId: 'abcdefgh12345678',

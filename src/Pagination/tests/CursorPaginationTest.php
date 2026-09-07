@@ -26,7 +26,7 @@ use Symfony\UX\Pagination\Navigation\PaginationUrlGenerator;
 #[CoversClass(CursorPagination::class)]
 final class CursorPaginationTest extends TestCase
 {
-    public function testItemsFirstPage()
+    public function testItemsFirstPage(): void
     {
         $source = $this->createSource(50);
         $pagination = $this->createCursorPagination($source, null, 10);
@@ -37,7 +37,7 @@ final class CursorPaginationTest extends TestCase
         self::assertSame(10, $items[9]['id']);
     }
 
-    public function testIterateReturnsItems()
+    public function testIterateReturnsItems(): void
     {
         $source = $this->createSource(5);
         $pagination = $this->createCursorPagination($source, null, 10);
@@ -50,7 +50,7 @@ final class CursorPaginationTest extends TestCase
         self::assertCount(5, $items);
     }
 
-    public function testCountReturnsItemsOnThisPage()
+    public function testCountReturnsItemsOnThisPage(): void
     {
         $source = $this->createSource(25);
         $pagination = $this->createCursorPagination($source, null, 10);
@@ -59,7 +59,7 @@ final class CursorPaginationTest extends TestCase
         self::assertCount(10, $pagination);
     }
 
-    public function testThroughTransformsItems()
+    public function testThroughTransformsItems(): void
     {
         $source = $this->createSource(3);
         $pagination = $this->createCursorPagination($source, null, 10);
@@ -69,7 +69,7 @@ final class CursorPaginationTest extends TestCase
         self::assertArrayNotHasKey('doubled', $pagination->getItems()[0]);
     }
 
-    public function testMapTransformsItemsToAnotherTypeAndFetchesOnlyTheClone()
+    public function testMapTransformsItemsToAnotherTypeAndFetchesOnlyTheClone(): void
     {
         $adapter = new class implements CursorAdapterInterface {
             public int $calls = 0;
@@ -111,7 +111,7 @@ final class CursorPaginationTest extends TestCase
         self::assertSame(1, $adapter->calls);
     }
 
-    public function testFailedFetchIsNotCachedAsAnEmptyPage()
+    public function testFailedFetchIsNotCachedAsAnEmptyPage(): void
     {
         $pagination = $this->createCursorPagination($this->createSource(5), 'invalid', 10);
         $failures = 0;
@@ -128,14 +128,14 @@ final class CursorPaginationTest extends TestCase
         self::assertSame(2, $failures);
     }
 
-    public function testPerPage()
+    public function testPerPage(): void
     {
         $pagination = $this->createCursorPagination($this->createSource(50), null, 25);
 
         self::assertSame(25, $pagination->getItemsPerPage());
     }
 
-    public function testPerPageMustBePositive()
+    public function testPerPageMustBePositive(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('perPage must be >= 1.');
@@ -143,7 +143,7 @@ final class CursorPaginationTest extends TestCase
         $this->createCursorPagination([], null, 0);
     }
 
-    public function testPerPageMustNotOverflowLookahead()
+    public function testPerPageMustNotOverflowLookahead(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('less than PHP_INT_MAX');
@@ -151,21 +151,21 @@ final class CursorPaginationTest extends TestCase
         $this->createCursorPagination([], null, \PHP_INT_MAX);
     }
 
-    public function testCursorIsNullForFirstPage()
+    public function testCursorIsNullForFirstPage(): void
     {
         $pagination = $this->createCursorPagination($this->createSource(50), null, 10);
 
         self::assertNull($pagination->getCursor());
     }
 
-    public function testIsEmpty()
+    public function testIsEmpty(): void
     {
         $pagination = $this->createCursorPagination([], null, 10);
 
         self::assertTrue($pagination->isEmpty());
     }
 
-    public function testHasNextWhenMoreItemsExist()
+    public function testHasNextWhenMoreItemsExist(): void
     {
         $source = $this->createSource(50);
         $pagination = $this->createCursorPagination($source, null, 10);
@@ -173,7 +173,7 @@ final class CursorPaginationTest extends TestCase
         self::assertTrue($pagination->hasNext());
     }
 
-    public function testHasNextIsFalseOnLastPage()
+    public function testHasNextIsFalseOnLastPage(): void
     {
         $source = $this->createSource(5);
         $pagination = $this->createCursorPagination($source, null, 10);
@@ -181,7 +181,7 @@ final class CursorPaginationTest extends TestCase
         self::assertFalse($pagination->hasNext());
     }
 
-    public function testHasPreviousOnFirstPage()
+    public function testHasPreviousOnFirstPage(): void
     {
         $pagination = $this->createCursorPagination($this->createSource(50), null, 10);
 
@@ -189,7 +189,7 @@ final class CursorPaginationTest extends TestCase
         self::assertNull($pagination->getPreviousUrl());
     }
 
-    public function testHasPreviousOnSecondPage()
+    public function testHasPreviousOnSecondPage(): void
     {
         $source = $this->createSource(50);
 
@@ -203,7 +203,7 @@ final class CursorPaginationTest extends TestCase
         self::assertTrue($page2->hasPrevious());
     }
 
-    public function testNextCursorProvided()
+    public function testNextCursorProvided(): void
     {
         $source = $this->createSource(50);
         $pagination = $this->createCursorPagination($source, null, 10);
@@ -211,7 +211,7 @@ final class CursorPaginationTest extends TestCase
         self::assertNotNull($pagination->getNextCursor());
     }
 
-    public function testNextCursorNullOnLastPage()
+    public function testNextCursorNullOnLastPage(): void
     {
         $source = $this->createSource(5);
         $pagination = $this->createCursorPagination($source, null, 10);
@@ -219,7 +219,7 @@ final class CursorPaginationTest extends TestCase
         self::assertNull($pagination->getNextCursor());
     }
 
-    public function testCursorPaginationFlow()
+    public function testCursorPaginationFlow(): void
     {
         $source = $this->createSource(25);
 
@@ -243,7 +243,7 @@ final class CursorPaginationTest extends TestCase
         self::assertNull($page3->getNextCursor());
     }
 
-    public function testNextUrlProvided()
+    public function testNextUrlProvided(): void
     {
         $source = $this->createSource(50);
         $pagination = $this->createCursorPagination($source, null, 10);
@@ -253,7 +253,7 @@ final class CursorPaginationTest extends TestCase
         self::assertStringContainsString('cursor=', $nextUrl);
     }
 
-    public function testNextUrlNullOnLastPage()
+    public function testNextUrlNullOnLastPage(): void
     {
         $source = $this->createSource(5);
         $pagination = $this->createCursorPagination($source, null, 10);
@@ -261,7 +261,7 @@ final class CursorPaginationTest extends TestCase
         self::assertNull($pagination->getNextUrl());
     }
 
-    public function testPreviousUrlOnSecondPage()
+    public function testPreviousUrlOnSecondPage(): void
     {
         $source = $this->createSource(50);
         $page1 = $this->createCursorPagination($source, null, 10);
@@ -271,7 +271,7 @@ final class CursorPaginationTest extends TestCase
         self::assertStringContainsString('cursor=', $page2->getPreviousUrl());
     }
 
-    public function testJsonSerialize()
+    public function testJsonSerialize(): void
     {
         $source = $this->createSource(50);
         $pagination = $this->createCursorPagination($source, null, 10);
@@ -290,7 +290,7 @@ final class CursorPaginationTest extends TestCase
         self::assertNotNull($json['links']['next']);
     }
 
-    public function testInfo()
+    public function testInfo(): void
     {
         $source = $this->createSource(50);
         $pagination = $this->createCursorPagination($source, null, 10);
@@ -298,7 +298,7 @@ final class CursorPaginationTest extends TestCase
         self::assertSame('Showing 10 items', $pagination->getInfo());
     }
 
-    public function testInfoLastPage()
+    public function testInfoLastPage(): void
     {
         $source = $this->createSource(5);
         $pagination = $this->createCursorPagination($source, null, 10);
@@ -306,14 +306,14 @@ final class CursorPaginationTest extends TestCase
         self::assertSame('Showing 5 items (last page)', $pagination->getInfo());
     }
 
-    public function testInfoEmpty()
+    public function testInfoEmpty(): void
     {
         $pagination = $this->createCursorPagination([], null, 10);
 
         self::assertSame('No items', $pagination->getInfo());
     }
 
-    public function testItemsAreLazyLoaded()
+    public function testItemsAreLazyLoaded(): void
     {
         $source = $this->createSource(50);
         $pagination = $this->createCursorPagination($source, null, 10);
@@ -323,7 +323,7 @@ final class CursorPaginationTest extends TestCase
         self::assertSame(10, $pagination->count());
     }
 
-    public function testCursorUrl()
+    public function testCursorUrl(): void
     {
         $source = $this->createSource(50);
         $pagination = $this->createCursorPagination($source, null, 10);

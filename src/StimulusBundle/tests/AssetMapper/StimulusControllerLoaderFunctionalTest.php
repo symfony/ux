@@ -21,7 +21,7 @@ class StimulusControllerLoaderFunctionalTest extends WebTestCase
 {
     use HasBrowser;
 
-    public function testFullApplicationLoad()
+    public function testFullApplicationLoad(): void
     {
         if (InstalledVersions::getVersion('symfony/framework-bundle') < '6.3') {
             $this->markTestSkipped('This test requires symfony/framework-bundle 6.3+');

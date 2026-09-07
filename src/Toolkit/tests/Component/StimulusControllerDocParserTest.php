@@ -20,7 +20,7 @@ use Symfony\UX\Toolkit\Component\StimulusControllerDocParser;
 // attribute, wiring descriptions) and honor the opt-in gate.
 class StimulusControllerDocParserTest extends TestCase
 {
-    public function testParsesValueNameTypeAndDerivedAttribute()
+    public function testParsesValueNameTypeAndDerivedAttribute(): void
     {
         $doc = new StimulusControllerDocParser()->parse(<<<'JS'
             /**
@@ -40,7 +40,7 @@ class StimulusControllerDocParserTest extends TestCase
         self::assertSame('Delay in milliseconds before the element removes itself.', $doc->values[0]->description);
     }
 
-    public function testParsesClassNameAndDerivedAttribute()
+    public function testParsesClassNameAndDerivedAttribute(): void
     {
         $doc = new StimulusControllerDocParser()->parse(<<<'JS'
             /**
@@ -57,7 +57,7 @@ class StimulusControllerDocParserTest extends TestCase
         self::assertSame('Applied to the element for a short window after a copy.', $doc->classes[0]->description);
     }
 
-    public function testParsesOutletNameAndDerivedAttribute()
+    public function testParsesOutletNameAndDerivedAttribute(): void
     {
         $doc = new StimulusControllerDocParser()->parse(<<<'JS'
             /**
@@ -74,7 +74,7 @@ class StimulusControllerDocParserTest extends TestCase
         self::assertSame('Status controller reflecting the copy result.', $doc->outlets[0]->description);
     }
 
-    public function testActionsAreOptInFromTags()
+    public function testActionsAreOptInFromTags(): void
     {
         $doc = new StimulusControllerDocParser()->parse(<<<'JS'
             /**
@@ -96,7 +96,7 @@ class StimulusControllerDocParserTest extends TestCase
         self::assertSame('cancel', $doc->actions[1]->name);
     }
 
-    public function testUndocumentedControllerYieldsEmptyDocEvenWithDeclaredValuesAndTargets()
+    public function testUndocumentedControllerYieldsEmptyDocEvenWithDeclaredValuesAndTargets(): void
     {
         $doc = new StimulusControllerDocParser()->parse(<<<'JS'
             export default class extends Controller {
@@ -110,7 +110,7 @@ class StimulusControllerDocParserTest extends TestCase
         self::assertTrue($doc->isEmpty());
     }
 
-    public function testReturnsEmptyDocWhenNothingDeclared()
+    public function testReturnsEmptyDocWhenNothingDeclared(): void
     {
         $doc = new StimulusControllerDocParser()->parse('export default class extends Controller {}', 'closeable');
 

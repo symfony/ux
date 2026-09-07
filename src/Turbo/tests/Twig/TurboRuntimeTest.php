@@ -23,7 +23,7 @@ use Twig\Environment;
 
 final class TurboRuntimeTest extends TestCase
 {
-    public function testRenderTurboStreamFrom()
+    public function testRenderTurboStreamFrom(): void
     {
         $twig = $this->createStub(Environment::class);
         $renderer = $this->createMock(StreamSourceRendererInterface::class);
@@ -48,7 +48,7 @@ final class TurboRuntimeTest extends TestCase
         );
     }
 
-    public function testRenderTurboStreamFromPrivate()
+    public function testRenderTurboStreamFromPrivate(): void
     {
         $twig = $this->createStub(Environment::class);
         $renderer = $this->createMock(StreamSourceRendererInterface::class);
@@ -73,7 +73,7 @@ final class TurboRuntimeTest extends TestCase
         );
     }
 
-    public function testRenderTurboStreamFromUsesCustomRenderer()
+    public function testRenderTurboStreamFromUsesCustomRenderer(): void
     {
         $twig = $this->createStub(Environment::class);
         $renderer = $this->createStub(StreamSourceRendererInterface::class);
@@ -94,7 +94,7 @@ final class TurboRuntimeTest extends TestCase
         );
     }
 
-    public function testRenderTurboStreamFromUnknownTransport()
+    public function testRenderTurboStreamFromUnknownTransport(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -110,7 +110,7 @@ final class TurboRuntimeTest extends TestCase
         $runtime->renderTurboStreamFrom($twig, 'a_topic');
     }
 
-    public function testRenderTurboStreamListen()
+    public function testRenderTurboStreamListen(): void
     {
         $twig = $this->createStub(Environment::class);
         $renderer = $this->createMock(TurboStreamListenRendererInterface::class);
@@ -129,7 +129,7 @@ final class TurboRuntimeTest extends TestCase
         $runtime->renderTurboStreamListen($twig, 'a_topic');
     }
 
-    public function testRenderTurboStreamListenWithMultipleHubs()
+    public function testRenderTurboStreamListenWithMultipleHubs(): void
     {
         $twig = $this->createStub(Environment::class);
         $renderer1 = $this->createStub(TurboStreamListenRendererInterface::class);
@@ -150,7 +150,7 @@ final class TurboRuntimeTest extends TestCase
         $runtime->renderTurboStreamListen($twig, 'a_topic', 'hub2');
     }
 
-    public function testRenderTurboStreamListenWithDifferentsHub()
+    public function testRenderTurboStreamListenWithDifferentsHub(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 

@@ -22,9 +22,9 @@ final class IconFactoryTest extends TestCase
      * @dataProvider provideSanitizedBodies
      */
     #[DataProvider('provideSanitizedBodies')]
-    public function testFromBodySanitizes(string $body, string $expected)
+    public function testFromBodySanitizes(string $body, string $expected): void
     {
-        $icon = (new IconFactory())->fromBody($body);
+        $icon = new IconFactory()->fromBody($body);
 
         $this->assertInstanceOf(Icon::class, $icon);
         $this->assertSame($expected, $icon->getInnerSvg());
@@ -34,34 +34,34 @@ final class IconFactoryTest extends TestCase
      * @dataProvider provideSafeBodies
      */
     #[DataProvider('provideSafeBodies')]
-    public function testFromBodyKeepsSafeContentVerbatim(string $body)
+    public function testFromBodyKeepsSafeContentVerbatim(string $body): void
     {
         // Safe content must be returned byte-for-byte (no lossy re-serialization).
-        $this->assertSame($body, (new IconFactory())->fromBody($body)->getInnerSvg());
+        $this->assertSame($body, new IconFactory()->fromBody($body)->getInnerSvg());
     }
 
     /**
      * @dataProvider provideInvalidBodies
      */
     #[DataProvider('provideInvalidBodies')]
-    public function testFromBodyThrowsOnInvalidSvg(string $body)
+    public function testFromBodyThrowsOnInvalidSvg(string $body): void
     {
         $this->expectException(\RuntimeException::class);
 
-        (new IconFactory())->fromBody($body);
+        new IconFactory()->fromBody($body);
     }
 
-    public function testFromBodyKeepsGivenAttributes()
+    public function testFromBodyKeepsGivenAttributes(): void
     {
-        $icon = (new IconFactory())->fromBody('<rect onload="alert(1)"/>', ['viewBox' => '0 0 16 16', 'xmlns' => 'http://www.w3.org/2000/svg']);
+        $icon = new IconFactory()->fromBody('<rect onload="alert(1)"/>', ['viewBox' => '0 0 16 16', 'xmlns' => 'http://www.w3.org/2000/svg']);
 
         $this->assertSame('<rect></rect>', $icon->getInnerSvg());
         $this->assertSame(['viewBox' => '0 0 16 16', 'xmlns' => 'http://www.w3.org/2000/svg'], $icon->getAttributes());
     }
 
-    public function testFromFileSanitizesMaliciousIcon()
+    public function testFromFileSanitizesMaliciousIcon(): void
     {
-        $icon = (new IconFactory())->fromFile(__DIR__.'/../Fixtures/svg/malicious.svg');
+        $icon = new IconFactory()->fromFile(__DIR__.'/../Fixtures/svg/malicious.svg');
 
         // <script>, <foreignObject>, <set attributeName="on*"> dropped; on* and javascript: attributes stripped.
         $this->assertSame(
@@ -77,9 +77,9 @@ final class IconFactoryTest extends TestCase
      * @dataProvider provideValidFiles
      */
     #[DataProvider('provideValidFiles')]
-    public function testFromFileReadsValidSvg(string $name, array $expectedAttributes, string $expectedContent)
+    public function testFromFileReadsValidSvg(string $name, array $expectedAttributes, string $expectedContent): void
     {
-        $icon = (new IconFactory())->fromFile(__DIR__.'/../Fixtures/svg/'.$name.'.svg');
+        $icon = new IconFactory()->fromFile(__DIR__.'/../Fixtures/svg/'.$name.'.svg');
 
         $this->assertSame($expectedContent, $icon->getInnerSvg());
         $this->assertSame($expectedAttributes, $icon->getAttributes());
@@ -89,11 +89,11 @@ final class IconFactoryTest extends TestCase
      * @dataProvider provideInvalidFiles
      */
     #[DataProvider('provideInvalidFiles')]
-    public function testFromFileThrowsOnInvalidSvg(string $name)
+    public function testFromFileThrowsOnInvalidSvg(string $name): void
     {
         $this->expectException(\RuntimeException::class);
 
-        (new IconFactory())->fromFile(__DIR__.'/../Fixtures/svg/'.$name.'.svg');
+        new IconFactory()->fromFile(__DIR__.'/../Fixtures/svg/'.$name.'.svg');
     }
 
     /**

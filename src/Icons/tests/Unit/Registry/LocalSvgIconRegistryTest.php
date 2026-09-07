@@ -23,7 +23,7 @@ use Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
 final class LocalSvgIconRegistryTest extends TestCase
 {
     #[DataProvider('validSvgProvider')]
-    public function testValidSvgs(string $name, array $expectedAttributes, string $expectedContent)
+    public function testValidSvgs(string $name, array $expectedAttributes, string $expectedContent): void
     {
         $icon = $this->registry()->get($name);
         $this->assertInstanceOf(Icon::class, $icon);
@@ -65,7 +65,7 @@ final class LocalSvgIconRegistryTest extends TestCase
     }
 
     #[DataProvider('invalidSvgProvider')]
-    public function testInvalidSvgs(string $name)
+    public function testInvalidSvgs(string $name): void
     {
         $this->expectException(\RuntimeException::class);
 
@@ -81,7 +81,7 @@ final class LocalSvgIconRegistryTest extends TestCase
     }
 
     #[DataProvider('provideIconSetPathsCases')]
-    public function testIconSetPaths(string $name, array $iconSetPaths, ?string $expectedContent)
+    public function testIconSetPaths(string $name, array $iconSetPaths, ?string $expectedContent): void
     {
         $registry = new LocalSvgIconRegistry(
             iconFactory: new IconFactory(),

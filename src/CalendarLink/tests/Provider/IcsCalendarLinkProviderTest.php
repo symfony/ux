@@ -18,7 +18,7 @@ use Symfony\UX\CalendarLink\Provider\IcsCalendarLinkProvider;
 
 final class IcsCalendarLinkProviderTest extends TestCase
 {
-    public function testReturnsDataUri()
+    public function testReturnsDataUri(): void
     {
         $provider = new IcsCalendarLinkProvider(new IcsBuilder());
         $event = new CalendarEvent(

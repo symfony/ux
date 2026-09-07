@@ -20,7 +20,7 @@ use Symfony\UX\TwigComponent\ComponentMetadata;
 
 class LiveComponentMetadataTest extends TestCase
 {
-    public function testGetOnlyPropsThatAcceptUpdatesFromParent()
+    public function testGetOnlyPropsThatAcceptUpdatesFromParent(): void
     {
         $propMetadatas = [
             new LivePropMetadata('noUpdateFromParent1', new LiveProp(updateFromParent: false), null, false, false, null),
@@ -39,7 +39,7 @@ class LiveComponentMetadataTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testGetAllUrlMappings()
+    public function testGetAllUrlMappings(): void
     {
         $aliasUrlMapping = new UrlMapping('alias');
         $propMetadas = [

@@ -19,7 +19,7 @@ use Symfony\UX\CalendarLink\Registry\CalendarLinkProviderRegistry;
 
 final class BundleIntegrationTest extends KernelTestCase
 {
-    public function testContainerCompilesAndRegistersAllProviders()
+    public function testContainerCompilesAndRegistersAllProviders(): void
     {
         $container = self::getContainer();
 
@@ -33,7 +33,7 @@ final class BundleIntegrationTest extends KernelTestCase
         }
     }
 
-    public function testDtstampUsesTheContainerClock()
+    public function testDtstampUsesTheContainerClock(): void
     {
         $container = self::getContainer();
         $container->set('clock', new MockClock(new \DateTimeImmutable('2026-05-14 08:30:00', new \DateTimeZone('UTC'))));
@@ -47,7 +47,7 @@ final class BundleIntegrationTest extends KernelTestCase
         $this->assertStringContainsString("DTSTAMP:20260514T083000Z\r\n", $ics);
     }
 
-    public function testTwigRendersCalendarLink()
+    public function testTwigRendersCalendarLink(): void
     {
         $event = new CalendarEvent(
             title: 'Demo',
@@ -63,7 +63,7 @@ final class BundleIntegrationTest extends KernelTestCase
         $this->assertStringContainsString('text=Demo', $rendered);
     }
 
-    public function testTwigRendersAllCalendarLinks()
+    public function testTwigRendersAllCalendarLinks(): void
     {
         $event = new CalendarEvent(
             title: 'Demo',

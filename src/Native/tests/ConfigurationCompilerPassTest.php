@@ -21,7 +21,7 @@ use Symfony\UX\Native\Tests\Fixtures\StaticMethodConfigurationProvider;
 
 final class ConfigurationCompilerPassTest extends TestCase
 {
-    public function testEarlyReturnWhenNoConfigurationBuilder()
+    public function testEarlyReturnWhenNoConfigurationBuilder(): void
     {
         $container = new ContainerBuilder();
         $pass = new ConfigurationCompilerPass();
@@ -32,7 +32,7 @@ final class ConfigurationCompilerPassTest extends TestCase
         self::assertFalse($container->hasDefinition('.ux_native.configuration_builder'));
     }
 
-    public function testThrowsExceptionWhenPathIsMissing()
+    public function testThrowsExceptionWhenPathIsMissing(): void
     {
         $container = new ContainerBuilder();
         $container->setDefinition('.ux_native.configuration_builder', new Definition(ConfigurationBuilder::class, ['/tmp']));
@@ -49,7 +49,7 @@ final class ConfigurationCompilerPassTest extends TestCase
         $pass->process($container);
     }
 
-    public function testThrowsExceptionForStaticMethod()
+    public function testThrowsExceptionForStaticMethod(): void
     {
         $container = new ContainerBuilder();
         $container->setDefinition('.ux_native.configuration_builder', new Definition(ConfigurationBuilder::class, ['/tmp']));
@@ -66,7 +66,7 @@ final class ConfigurationCompilerPassTest extends TestCase
         $pass->process($container);
     }
 
-    public function testThrowsExceptionForWrongReturnType()
+    public function testThrowsExceptionForWrongReturnType(): void
     {
         $container = new ContainerBuilder();
         $container->setDefinition('.ux_native.configuration_builder', new Definition(ConfigurationBuilder::class, ['/tmp']));
@@ -83,7 +83,7 @@ final class ConfigurationCompilerPassTest extends TestCase
         $pass->process($container);
     }
 
-    public function testRegistersAttributeConfigurations()
+    public function testRegistersAttributeConfigurations(): void
     {
         $container = new ContainerBuilder();
         $container->setDefinition('.ux_native.configuration_builder', new Definition(ConfigurationBuilder::class, ['/tmp']));
@@ -112,7 +112,7 @@ final class ConfigurationCompilerPassTest extends TestCase
         self::assertSame('add', $methodCalls[0][0]);
     }
 
-    public function testRegistersManualTaggedConfigurations()
+    public function testRegistersManualTaggedConfigurations(): void
     {
         $container = new ContainerBuilder();
         $container->setDefinition('.ux_native.configuration_builder', new Definition(ConfigurationBuilder::class, ['/tmp']));

@@ -23,7 +23,7 @@ use Symfony\UX\React\Twig\ReactComponentExtension;
  */
 class ReactComponentExtensionTest extends TestCase
 {
-    public function testRenderComponent()
+    public function testRenderComponent(): void
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();
@@ -43,7 +43,7 @@ class ReactComponentExtensionTest extends TestCase
     }
 
     #[DataProvider('provideOptions')]
-    public function testRenderComponentWithOptions(array $options, string|false $expected)
+    public function testRenderComponentWithOptions(array $options, string|false $expected): void
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();
@@ -73,7 +73,7 @@ class ReactComponentExtensionTest extends TestCase
         yield 'no permanent' => [[], false];
     }
 
-    public function testRenderComponentWithoutProps()
+    public function testRenderComponentWithoutProps(): void
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();
