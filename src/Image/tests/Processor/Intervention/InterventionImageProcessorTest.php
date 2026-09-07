@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Image\Tests\Processor;
+namespace Symfony\UX\Image\Tests\Processor\Intervention;
 
 use Intervention\Image\Interfaces\ImageInterface;
 use Intervention\Image\Interfaces\ImageManagerInterface;
@@ -22,7 +22,7 @@ use Symfony\UX\Image\ImageAsset;
 use Symfony\UX\Image\InspectedImage;
 use Symfony\UX\Image\ProcessingLimits;
 use Symfony\UX\Image\Processor\ImageInspector;
-use Symfony\UX\Image\Processor\InterventionImageProcessor;
+use Symfony\UX\Image\Processor\Intervention\InterventionImageProcessor;
 use Symfony\UX\Image\Processor\ProcessingWorkspace;
 use Symfony\UX\Image\Processor\VariantProcessingPlanner;
 use Symfony\UX\Image\Storage\ImageWriteSession;

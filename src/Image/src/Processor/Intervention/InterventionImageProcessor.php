@@ -9,8 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Image\Processor;
+namespace Symfony\UX\Image\Processor\Intervention;
 
+use Intervention\Image\Interfaces\ImageInterface;
+use Intervention\Image\Interfaces\ImageManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\UX\Image\Async\ImageProcessingDispatcherInterface;
@@ -21,6 +23,10 @@ use Symfony\UX\Image\ImageAsset;
 use Symfony\UX\Image\ImageSource;
 use Symfony\UX\Image\InspectedImage;
 use Symfony\UX\Image\ProcessingLimits;
+use Symfony\UX\Image\Processor\ImageDriverInterface;
+use Symfony\UX\Image\Processor\ImageInspectorInterface;
+use Symfony\UX\Image\Processor\ProcessingWorkspace;
+use Symfony\UX\Image\Processor\VariantProcessingPlanner;
 use Symfony\UX\Image\Profile\ImageProfile;
 use Symfony\UX\Image\Profile\ProcessingMode;
 use Symfony\UX\Image\Storage\ImageWriteSession;
@@ -34,24 +40,21 @@ use Symfony\UX\Image\Transformation\ResizeGeometryCalculator;
 use Symfony\UX\Image\Transformation\ResizeMode;
 
 /**
- * Basic image processor using the native GD extension.
- *
  * @author Simon André <smn.andre@gmail.com>
  */
-final class GdImageProcessor implements ImageDriverInterface
+final class InterventionImageProcessor implements ImageDriverInterface
 {
     private readonly SvgPolicyInterface $svgPolicy;
     private readonly ResizeGeometryCalculator $geometryCalculator;
     private readonly ProcessingLimits $limits;
     private readonly Filesystem $filesystem;
 
-    /**
-     * @param array<string, array<string, mixed>> $profiles
-     */
+    /** @param array<string, array<string, mixed>> $profiles */
     public function __construct(
         private readonly StorageInterface $storageManager,
         private readonly array $profiles,
         private readonly ImageInspectorInterface $imageInspector,
+        private readonly ?ImageManagerInterface $imageManager = null,
         ?SvgPolicyInterface $svgPolicy = null,
         ?ResizeGeometryCalculator $geometryCalculator = null,
         private readonly ?ImageProcessingDispatcherInterface $asyncDispatcher = null,
@@ -97,7 +100,6 @@ final class GdImageProcessor implements ImageDriverInterface
             // Read metadata before storing: store() may move the uploaded file, after
             // which the source path no longer resolves for inspection.
             $storedPath = $this->storageManager->store($file, $storage, \is_string($directory) ? $directory : null);
-
             $asset = new ImageAsset(
                 storageName: $storage,
                 path: $storedPath,
@@ -198,7 +200,7 @@ final class GdImageProcessor implements ImageDriverInterface
         $separatorPosition = strrpos($assetPath, '/');
         $relativeDir = false === $separatorPosition ? '' : substr($assetPath, 0, $separatorPosition);
         $filename = false === $separatorPosition ? $assetPath : substr($assetPath, $separatorPosition + 1);
-        $baseName = pathinfo($filename, \PATHINFO_FILENAME);
+        $baseName = pathinfo($filename, \PATHINFO_FILENAME) ?: 'variant';
         $generation = bin2hex(random_bytes(12));
         $writeSession = null !== $streamStorage ? new ImageWriteSession($streamStorage, $imageAsset->storageName) : null;
         $localPublications = [];
@@ -207,54 +209,65 @@ final class GdImageProcessor implements ImageDriverInterface
 
         try {
             foreach ($plan->variants as $plannedVariant) {
-                ++$index;
-                [$encodingImage] = $this->createResizedImage(
+                $resizedPath = $workspace->path(\sprintf('resized-%d.%s', ++$index, pathinfo($originalPath, \PATHINFO_EXTENSION) ?: 'jpeg'));
+                $this->resize(
                     $originalPath,
+                    $resizedPath,
                     $plannedVariant->width,
                     $plannedVariant->height,
                     $plannedVariant->mode,
                     $plannedVariant->position,
                 );
-
-                try {
-                    foreach ($plan->formats as $format) {
-                        $variantFilename = \sprintf('%s_%s_%s.%s', $baseName, $generation, $plannedVariant->name, $format);
-                        $storagePath = new StoragePath(('' !== $relativeDir ? $relativeDir.'/' : '').$variantFilename);
-                        $encodedPath = $workspace->path(\sprintf('encoded-%d-%s.%s', $index, $format, $format));
-
-                        $this->encodeImage($encodingImage, $encodedPath, $format, $plannedVariant->quality);
-                        $inspection = InspectedImage::fromPath($encodedPath, $limits);
-                        if ($inspection->format !== $format) {
-                            throw ImageProcessingException::processingFailed('encode', \sprintf('Expected %s, got %s.', $format, $inspection->format));
-                        }
-                        $outputPixels += $inspection->pixelCount();
-                        $outputPixelLimit = $limits->maxOutputPixels;
-                        if ($outputPixels > $outputPixelLimit) {
-                            throw ImageLimitExceededException::outputPixels($outputPixels, $outputPixelLimit);
-                        }
-                        if (null !== $writeSession) {
-                            $writeSession->stage($storagePath, $encodedPath);
-                        } else {
-                            $localPublications[] = [$encodedPath, $targetDir.'/'.$variantFilename];
-                        }
-
-                        $variants[$format][] = ImageSource::generated(
-                            name: $plannedVariant->name,
-                            path: $storagePath,
-                            format: $format,
-                            mimeType: $inspection->mimeType,
-                            width: $inspection->width,
-                            height: $inspection->height,
-                            media: $plannedVariant->media,
-                            density: $plannedVariant->density,
-                            mode: $plannedVariant->mode,
-                            quality: $plannedVariant->quality,
-                            position: $plannedVariant->position,
-                        )->toGeneratedArray();
-                    }
-                } finally {
-                    unset($encodingImage);
+                if (null === $this->imageManager) {
+                    throw ImageProcessingException::processingFailed('encode', 'Intervention ImageManager is required for format conversion.');
                 }
+                try {
+                    /** @var ImageInterface $encodingImage */
+                    $encodingImage = $this->imageManager->read($resizedPath);
+                } catch (\Throwable $e) {
+                    throw ImageProcessingException::processingFailed('encode', $e->getMessage());
+                }
+
+                foreach ($plan->formats as $format) {
+                    $variantFilename = \sprintf('%s_%s_%s.%s', $baseName, $generation, $plannedVariant->name, $format);
+                    $storagePath = new StoragePath(('' !== $relativeDir ? $relativeDir.'/' : '').$variantFilename);
+                    $encodedPath = $workspace->path(\sprintf('encoded-%d-%s.%s', $index, $format, $format));
+
+                    try {
+                        $encodingImage->save($encodedPath, $plannedVariant->quality, $format);
+                    } catch (\Throwable $e) {
+                        throw ImageProcessingException::processingFailed('encode', $e->getMessage());
+                    }
+                    $inspection = InspectedImage::fromPath($encodedPath, $limits);
+                    if ($inspection->format !== $format) {
+                        throw ImageProcessingException::processingFailed('encode', \sprintf('Expected %s, got %s.', $format, $inspection->format));
+                    }
+                    $outputPixels += $inspection->pixelCount();
+                    $outputPixelLimit = $limits->maxOutputPixels;
+                    if ($outputPixels > $outputPixelLimit) {
+                        throw ImageLimitExceededException::outputPixels($outputPixels, $outputPixelLimit);
+                    }
+                    if (null !== $writeSession) {
+                        $writeSession->stage($storagePath, $encodedPath);
+                    } else {
+                        $localPublications[] = [$encodedPath, $targetDir.'/'.$variantFilename];
+                    }
+
+                    $variants[$format][] = ImageSource::generated(
+                        name: $plannedVariant->name,
+                        path: $storagePath,
+                        format: $format,
+                        mimeType: $inspection->mimeType,
+                        width: $inspection->width,
+                        height: $inspection->height,
+                        media: $plannedVariant->media,
+                        density: $plannedVariant->density,
+                        mode: $plannedVariant->mode,
+                        quality: $plannedVariant->quality,
+                        position: $plannedVariant->position,
+                    )->toGeneratedArray();
+                }
+                unset($encodingImage);
             }
             if (null !== $writeSession) {
                 $writeSession->commit();
@@ -275,103 +288,61 @@ final class GdImageProcessor implements ImageDriverInterface
 
     public function resize(string $inputPath, string $outputPath, int $width, int $height, string $mode = 'fit', string $position = 'center'): void
     {
-        [$resizedImage, $type] = $this->createResizedImage($inputPath, $width, $height, $mode, $position);
+        if (null === $this->imageManager) {
+            $this->filesystem->mkdir(\dirname($outputPath));
 
-        $this->filesystem->mkdir(\dirname($outputPath));
-        $this->saveImage($resizedImage, $outputPath, $type);
+            if (!copy($inputPath, $outputPath)) {
+                throw ImageProcessingException::processingFailed('resize', \sprintf('Could not copy "%s" to "%s".', $inputPath, $outputPath));
+            }
 
-        unset($resizedImage);
-    }
-
-    /** @return array{\GdImage, int} */
-    private function createResizedImage(string $inputPath, int $width, int $height, string $mode, string $position): array
-    {
-        $info = getimagesize($inputPath);
-        if (!$info) {
-            throw ImageProcessingException::processingFailed('resize', \sprintf('Could not read image info from "%s".', $inputPath));
-        }
-
-        $type = $info[2];
-
-        $src = $this->createImageFromType($inputPath, $type);
-        if (!$src) {
-            throw ImageProcessingException::processingFailed('resize', \sprintf('Unsupported image type %d for "%s".', $type, $inputPath));
-        }
-        if (\IMAGETYPE_JPEG === $type) {
-            $src = ExifOrientation::fromJpeg($inputPath)->applyTo($src);
-        }
-
-        $origW = imagesx($src);
-        $origH = imagesy($src);
-
-        if ($width < 0 || $height < 0) {
-            throw ImageProcessingException::invalidDimensions($width, $height);
-        }
-        if (0 === $width && 0 === $height) {
-            $width = $origW;
-            $height = $origH;
+            return;
         }
 
         try {
-            $resizeMode = ResizeMode::from($mode);
-            $geometry = $this->geometryCalculator->calculate($origW, $origH, $width, $height, $resizeMode, FocalPoint::fromString($position));
-        } catch (\ValueError|\InvalidArgumentException $e) {
+            $input = InspectedImage::fromPath($inputPath, $this->limits);
+            $geometry = $this->geometryCalculator->calculate(
+                $input->width,
+                $input->height,
+                $width,
+                $height,
+                ResizeMode::from($mode),
+                FocalPoint::fromString($position),
+            );
+            $this->assertOutputAllocation($geometry->canvasWidth, $geometry->canvasHeight);
+            /** @var ImageInterface $image */
+            $image = $this->imageManager->read($inputPath);
+            if ('crop' === $mode) {
+                $image->crop($geometry->sourceWidth, $geometry->sourceHeight, $geometry->sourceX, $geometry->sourceY);
+            }
+            $image->scaleDown(width: $geometry->destinationWidth, height: $geometry->destinationHeight);
+            if ('fill' === $mode) {
+                $image->resizeCanvas($geometry->canvasWidth, $geometry->canvasHeight, 'transparent', 'center');
+            }
+
+            $this->filesystem->mkdir(\dirname($outputPath));
+            $image->save($outputPath);
+        } catch (\Throwable $e) {
             throw ImageProcessingException::processingFailed('resize', $e->getMessage());
         }
-        if ($geometry->canvasWidth < 1 || $geometry->canvasHeight < 1) {
-            throw ImageProcessingException::invalidDimensions($geometry->canvasWidth, $geometry->canvasHeight);
-        }
-        $this->assertOutputAllocation($geometry->canvasWidth, $geometry->canvasHeight);
-
-        $dst = imagecreatetruecolor($geometry->canvasWidth, $geometry->canvasHeight);
-        imagealphablending($dst, false);
-        imagesavealpha($dst, true);
-        $transparent = imagecolorallocatealpha($dst, 0, 0, 0, 127);
-        if (false === $transparent) {
-            unset($src, $dst);
-            throw ImageProcessingException::processingFailed('resize', 'Could not allocate the transparent background.');
-        }
-        imagefill($dst, 0, 0, $transparent);
-        imagecopyresampled(
-            $dst,
-            $src,
-            $geometry->destinationX,
-            $geometry->destinationY,
-            $geometry->sourceX,
-            $geometry->sourceY,
-            $geometry->destinationWidth,
-            $geometry->destinationHeight,
-            $geometry->sourceWidth,
-            $geometry->sourceHeight,
-        );
-
-        unset($src);
-
-        return [$dst, $type];
     }
 
     public function convert(string $inputPath, string $outputPath, string $format, int $quality = 80): void
     {
-        $info = getimagesize($inputPath);
-        if (!$info) {
-            throw ImageProcessingException::processingFailed('convert', \sprintf('Could not read image info from "%s".', $inputPath));
+        if (null === $this->imageManager) {
+            throw ImageProcessingException::processingFailed('convert', 'Intervention ImageManager is required for format conversion.');
         }
 
-        $src = $this->createImageFromType($inputPath, $info[2]);
-        if (!$src) {
-            throw ImageProcessingException::processingFailed('convert', \sprintf('Unsupported image type %d for "%s".', $info[2], $inputPath));
+        try {
+            /** @var ImageInterface $image */
+            $image = $this->imageManager->read($inputPath);
+            $image->save($outputPath, $quality, $format);
+        } catch (\Throwable $e) {
+            throw ImageProcessingException::processingFailed('convert', $e->getMessage());
         }
-        if (\IMAGETYPE_JPEG === $info[2]) {
-            $src = ExifOrientation::fromJpeg($inputPath)->applyTo($src);
-        }
-
-        $this->encodeImage($src, $outputPath, $format, $quality);
-
-        unset($src);
     }
 
     /**
-     * @return array{width: ?int, height: ?int, mime: ?string, format: ?string}
+     * @return array{width: int|null, height: int|null, mime: string|null, format: string|null}
      */
     public function extractMetadata(UploadedFile $file): array
     {
@@ -380,63 +351,7 @@ final class GdImageProcessor implements ImageDriverInterface
 
     public function supports(string $driver): bool
     {
-        return 'gd' === $driver && \extension_loaded('gd');
-    }
-
-    private function createImageFromType(string $path, int $type): ?\GdImage
-    {
-        $image = match ($type) {
-            \IMAGETYPE_JPEG => imagecreatefromjpeg($path),
-            \IMAGETYPE_PNG => imagecreatefrompng($path),
-            \IMAGETYPE_WEBP => imagecreatefromwebp($path),
-            default => null,
-        };
-
-        return $image instanceof \GdImage ? $image : null;
-    }
-
-    private function saveImage(\GdImage $image, string $path, int $type): void
-    {
-        match ($type) {
-            \IMAGETYPE_PNG => imagepng($image, $path),
-            \IMAGETYPE_WEBP => imagewebp($image, $path),
-            default => imagejpeg($image, $path, 90),
-        };
-    }
-
-    private function encodeImage(\GdImage $image, string $outputPath, string $format, int $quality): void
-    {
-        $this->filesystem->mkdir(\dirname($outputPath));
-        $encoded = match ($format) {
-            'webp' => imagewebp($image, $outputPath, $quality),
-            'avif' => \function_exists('imageavif') ? imageavif($image, $outputPath, $quality) : throw ImageProcessingException::unsupportedFormat('avif'),
-            'png' => imagepng($image, $outputPath, (int) (9 - ($quality * 9 / 100))),
-            'jpeg', 'jpg' => $this->encodeJpeg($image, $outputPath, $quality),
-            default => throw ImageProcessingException::unsupportedFormat($format),
-        };
-        if (!$encoded) {
-            throw ImageProcessingException::processingFailed('encode', \sprintf('Could not write "%s".', $outputPath));
-        }
-    }
-
-    private function encodeJpeg(\GdImage $image, string $outputPath, int $quality): bool
-    {
-        $flattened = imagecreatetruecolor(imagesx($image), imagesy($image));
-        if (!$flattened) {
-            throw ImageProcessingException::processingFailed('encode', 'Could not allocate the JPEG background.');
-        }
-        $white = imagecolorallocate($flattened, 255, 255, 255);
-        if (false === $white) {
-            unset($flattened);
-            throw ImageProcessingException::processingFailed('encode', 'Could not allocate the JPEG background color.');
-        }
-        imagefill($flattened, 0, 0, $white);
-        imagecopy($flattened, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
-
-        $encoded = imagejpeg($flattened, $outputPath, $quality);
-        unset($flattened);
-
-        return $encoded;
+        return 'intervention' === $driver || 'imagick' === $driver || 'vips' === $driver;
     }
 
     private function assertOutputAllocation(int $width, int $height): void

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Image\Tests\Processor;
+namespace Symfony\UX\Image\Tests\Processor\Gd;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
@@ -22,7 +22,8 @@ use Symfony\UX\Image\ImageAsset;
 use Symfony\UX\Image\InspectedImage;
 use Symfony\UX\Image\ProcessingLimits;
 use Symfony\UX\Image\Processor\ExifOrientation;
-use Symfony\UX\Image\Processor\GdImageProcessor;
+use Symfony\UX\Image\Processor\Gd\GdImageProcessor;
+use Symfony\UX\Image\Processor\Gd\GdOrientation;
 use Symfony\UX\Image\Processor\ImageInspector;
 use Symfony\UX\Image\Processor\ProcessingWorkspace;
 use Symfony\UX\Image\Processor\VariantProcessingPlanner;
@@ -32,6 +33,7 @@ use Symfony\UX\Image\Storage\StreamStorageInterface;
 
 #[CoversClass(GdImageProcessor::class)]
 #[CoversClass(ExifOrientation::class)]
+#[CoversClass(GdOrientation::class)]
 #[CoversClass(InspectedImage::class)]
 #[CoversClass(ProcessingWorkspace::class)]
 #[CoversClass(VariantProcessingPlanner::class)]
@@ -634,7 +636,7 @@ final class GdImageProcessorTest extends TestCase
             $image = imagecreatefromjpeg($path);
             self::assertInstanceOf(\GdImage::class, $image);
 
-            $oriented = ExifOrientation::fromJpeg($path)->applyTo($image);
+            $oriented = GdOrientation::apply(ExifOrientation::fromJpeg($path), $image);
             self::assertInstanceOf(\GdImage::class, $oriented);
         }
     }

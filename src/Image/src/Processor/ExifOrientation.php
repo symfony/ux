@@ -11,8 +11,6 @@
 
 namespace Symfony\UX\Image\Processor;
 
-use Symfony\UX\Image\Exception\ImageProcessingException;
-
 /**
  * EXIF orientation metadata for JPEG inputs.
  *
@@ -52,36 +50,5 @@ final class ExifOrientation
     public function displayDimensions(int $width, int $height): array
     {
         return \in_array($this->value, [5, 6, 7, 8], true) ? [$height, $width] : [$width, $height];
-    }
-
-    public function applyTo(\GdImage $image): \GdImage
-    {
-        return match ($this->value) {
-            2 => $this->flip($image),
-            3 => $this->rotate($image, 180),
-            4 => $this->flip($this->rotate($image, 180)),
-            5 => $this->flip($this->rotate($image, 270)),
-            6 => $this->rotate($image, 270),
-            7 => $this->flip($this->rotate($image, 90)),
-            8 => $this->rotate($image, 90),
-            default => $image,
-        };
-    }
-
-    private function rotate(\GdImage $image, int $degrees): \GdImage
-    {
-        $rotated = imagerotate($image, $degrees, 0);
-        if (!$rotated instanceof \GdImage) {
-            throw ImageProcessingException::processingFailed('EXIF orientation', 'GD could not rotate the JPEG.');
-        }
-
-        return $rotated;
-    }
-
-    private function flip(\GdImage $image): \GdImage
-    {
-        imageflip($image, \IMG_FLIP_HORIZONTAL);
-
-        return $image;
     }
 }

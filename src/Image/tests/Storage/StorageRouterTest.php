@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\UX\Image\Exception\ExceptionInterface;
 use Symfony\UX\Image\Exception\RuntimeException;
 use Symfony\UX\Image\ImageAsset;
-use Symfony\UX\Image\Processor\GdImageProcessor;
+use Symfony\UX\Image\Processor\Gd\GdImageProcessor;
 use Symfony\UX\Image\Processor\ImageInspector;
 use Symfony\UX\Image\Renderer\DefaultImageRenderer;
 use Symfony\UX\Image\Storage\FlysystemStorage;
