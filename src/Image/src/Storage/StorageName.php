@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Image\Storage;
 
+use Symfony\UX\Image\Exception\InvalidArgumentException;
+
 /**
  * A safe storage identifier. Storage names are configuration keys, never paths.
  */
@@ -20,11 +22,16 @@ final class StorageName implements \Stringable
 
     public function __construct(string $value)
     {
-        if (1 !== preg_match('/^[A-Za-z0-9][A-Za-z0-9._-]*$/D', $value)) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Invalid image storage name "%s".', $value));
-        }
+        self::assertValid($value);
 
         $this->value = $value;
+    }
+
+    public static function assertValid(string $value): void
+    {
+        if (1 !== preg_match('/^[A-Za-z0-9][A-Za-z0-9._-]*$/D', $value)) {
+            throw new InvalidArgumentException(\sprintf('Invalid image storage name "%s".', $value));
+        }
     }
 
     public function __toString(): string

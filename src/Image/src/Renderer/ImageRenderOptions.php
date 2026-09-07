@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Image\Renderer;
 
+use Symfony\UX\Image\Exception\InvalidArgumentException;
+
 /**
  * Immutable rendering options describing how an image should be output.
  *
@@ -37,13 +39,13 @@ final class ImageRenderOptions
         public readonly array $attributes = [],
     ) {
         if (!\in_array($fetchPriority, ['auto', 'high', 'low'], true)) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Invalid image fetch priority "%s".', $fetchPriority));
+            throw new InvalidArgumentException(\sprintf('Invalid image fetch priority "%s".', $fetchPriority));
         }
         if (!\in_array($decoding, ['sync', 'async', 'auto'], true)) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Invalid image decoding hint "%s".', $decoding));
+            throw new InvalidArgumentException(\sprintf('Invalid image decoding hint "%s".', $decoding));
         }
         if (null !== $variant && '' === trim($variant)) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException('Image variant must not be empty when provided.');
+            throw new InvalidArgumentException('Image variant must not be empty when provided.');
         }
 
         $normalizedSrcset = null;
@@ -51,10 +53,10 @@ final class ImageRenderOptions
             $normalizedSrcset = [];
             foreach ($srcset as $entry) {
                 if (!\is_string($entry)) {
-                    throw new \Symfony\UX\Image\Exception\InvalidArgumentException('Image srcset entries must be strings.');
+                    throw new InvalidArgumentException('Image srcset entries must be strings.');
                 }
                 if ('' === trim($entry)) {
-                    throw new \Symfony\UX\Image\Exception\InvalidArgumentException('Image srcset entries must not be empty.');
+                    throw new InvalidArgumentException('Image srcset entries must not be empty.');
                 }
                 $normalizedSrcset[] = $entry;
             }
@@ -63,13 +65,13 @@ final class ImageRenderOptions
 
         foreach ($attributes as $name => $value) {
             if (1 !== preg_match('/^[a-zA-Z_:][a-zA-Z0-9:._-]*$/', $name) || str_starts_with(strtolower($name), 'on')) {
-                throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Unsafe image attribute name "%s".', $name));
+                throw new InvalidArgumentException(\sprintf('Unsafe image attribute name "%s".', $name));
             }
             if (\in_array(strtolower($name), ['src', 'srcset', 'sizes', 'alt', 'width', 'height', 'loading', 'fetchpriority', 'decoding', 'class'], true)) {
-                throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Image attribute "%s" is managed by ImageRenderOptions.', $name));
+                throw new InvalidArgumentException(\sprintf('Image attribute "%s" is managed by ImageRenderOptions.', $name));
             }
             if (!\is_scalar($value) && null !== $value) {
-                throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Image attribute "%s" must be scalar or null.', $name));
+                throw new InvalidArgumentException(\sprintf('Image attribute "%s" must be scalar or null.', $name));
             }
         }
     }

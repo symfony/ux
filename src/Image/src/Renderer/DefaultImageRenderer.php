@@ -11,7 +11,9 @@
 
 namespace Symfony\UX\Image\Renderer;
 
+use Symfony\UX\Image\Exception\InvalidArgumentException;
 use Symfony\UX\Image\ImageAsset;
+use Symfony\UX\Image\ImageSource;
 use Symfony\UX\Image\ImageSourceSet;
 use Symfony\UX\Image\Profile\ProfileRegistry;
 use Symfony\UX\Image\UrlGenerator\UrlGeneratorInterface;
@@ -181,7 +183,7 @@ final class DefaultImageRenderer implements ImageRendererInterface
     }
 
     /**
-     * @param list<\Symfony\UX\Image\ImageSource> $variants
+     * @param list<ImageSource> $variants
      *
      * A srcset may use width or density descriptors, never both. When every
      * candidate has a density, density wins. Otherwise the canonical persisted
@@ -214,7 +216,7 @@ final class DefaultImageRenderer implements ImageRendererInterface
         return implode(', ', $entries);
     }
 
-    /** @param list<\Symfony\UX\Image\ImageSource> $variants */
+    /** @param list<ImageSource> $variants */
     private function sourceMimeType(string $format, array $variants): string
     {
         if (isset($variants[0]) && null !== $variants[0]->mimeType) {
@@ -273,7 +275,7 @@ final class DefaultImageRenderer implements ImageRendererInterface
         }
 
         if (!$asset->variants) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('The image variant "%s" does not exist.', $options->variant));
+            throw new InvalidArgumentException(\sprintf('The image variant "%s" does not exist.', $options->variant));
         }
 
         $filtered = [];
@@ -290,7 +292,7 @@ final class DefaultImageRenderer implements ImageRendererInterface
         }
 
         if ([] === $filtered) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('The image variant "%s" does not exist.', $options->variant));
+            throw new InvalidArgumentException(\sprintf('The image variant "%s" does not exist.', $options->variant));
         }
 
         return new ImageAsset(

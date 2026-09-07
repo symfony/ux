@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Image\Profile;
 
+use Symfony\UX\Image\Exception\InvalidArgumentException;
 use Symfony\UX\Image\Transformation\FocalPoint;
 use Symfony\UX\Image\Transformation\ResizeMode;
 
@@ -27,7 +28,7 @@ final class VariantDefinition
         public readonly ?string $density = null,
     ) {
         if ('' === $name || (null === $width && null === $height)) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException('A named image variant requires at least one dimension.');
+            throw new InvalidArgumentException('A named image variant requires at least one dimension.');
         }
     }
 }

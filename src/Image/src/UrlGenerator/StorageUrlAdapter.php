@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Image\UrlGenerator;
 
+use Symfony\UX\Image\Exception\InvalidArgumentException;
 use Symfony\UX\Image\ImageAsset;
 use Symfony\UX\Image\Storage\StorageInterface;
 
@@ -26,7 +27,7 @@ final class StorageUrlAdapter implements UrlAdapterInterface
     public function resolve(string $path, array $storageConfig, array $variantConfig = [], ?string $storageName = null): string
     {
         if (null === $storageName || '' === $storageName) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException('The storage URL adapter requires a storage name.');
+            throw new InvalidArgumentException('The storage URL adapter requires a storage name.');
         }
 
         $variantPath = isset($variantConfig['path']) && \is_string($variantConfig['path'])

@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Image\Profile;
 
+use Symfony\UX\Image\Exception\InvalidArgumentException;
 use Symfony\UX\Image\Exception\UnknownImageProfileException;
 use Symfony\UX\Image\Transformation\FocalPoint;
 use Symfony\UX\Image\Transformation\ResizeMode;
@@ -27,7 +28,7 @@ final class ProfileRegistry
             $variants = [];
             $configuredVariants = $configuration['variants'] ?? [];
             if (!\is_array($configuredVariants)) {
-                throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Variants for profile "%s" must be an array.', $name));
+                throw new InvalidArgumentException(\sprintf('Variants for profile "%s" must be an array.', $name));
             }
             foreach ($configuredVariants as $variantName => $variant) {
                 if (!\is_string($variantName) || !\is_array($variant)) {
@@ -46,7 +47,7 @@ final class ProfileRegistry
             }
             $configuredFormats = $configuration['formats'] ?? [];
             if (!\is_array($configuredFormats)) {
-                throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Formats for profile "%s" must be an array.', $name));
+                throw new InvalidArgumentException(\sprintf('Formats for profile "%s" must be an array.', $name));
             }
             $formats = [];
             foreach ($configuredFormats as $format) {

@@ -13,6 +13,7 @@ namespace Symfony\UX\Image\Storage;
 
 use League\Flysystem\FilesystemOperator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\UX\Image\Exception\InvalidArgumentException;
 use Symfony\UX\Image\Exception\StorageException;
 use Symfony\UX\Image\ImageAsset;
 use Symfony\UX\Image\InspectedImage;
@@ -32,7 +33,7 @@ final class FlysystemStorage implements StreamStorageInterface
 
     public function store(UploadedFile $file, string $storageName, ?string $directory = null): string
     {
-        new StorageName($storageName);
+        StorageName::assertValid($storageName);
         $source = $file->getRealPath() ?: $file->getPathname();
         $inspected = InspectedImage::fromPath($source, $this->limits);
 
@@ -86,7 +87,7 @@ final class FlysystemStorage implements StreamStorageInterface
 
     public function readStream(string $storageName, StoragePath $path)
     {
-        new StorageName($storageName);
+        StorageName::assertValid($storageName);
         $stream = $this->filesystem->readStream($path->value);
         if (!\is_resource($stream)) {
             throw StorageException::readFailed($path->value, \sprintf('Storage "%s" did not return a stream.', $storageName));
@@ -97,9 +98,9 @@ final class FlysystemStorage implements StreamStorageInterface
 
     public function writeStream(string $storageName, StoragePath $path, $stream): void
     {
-        new StorageName($storageName);
+        StorageName::assertValid($storageName);
         if (!\is_resource($stream)) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException('A storage write requires a stream resource.');
+            throw new InvalidArgumentException('A storage write requires a stream resource.');
         }
         if ($this->filesystem->fileExists($path->value)) {
             throw StorageException::writeFailed($path->value, 'The immutable object already exists.');
@@ -109,7 +110,7 @@ final class FlysystemStorage implements StreamStorageInterface
 
     public function deletePath(string $storageName, StoragePath $path): void
     {
-        new StorageName($storageName);
+        StorageName::assertValid($storageName);
         if ($this->filesystem->fileExists($path->value)) {
             $this->filesystem->delete($path->value);
         }

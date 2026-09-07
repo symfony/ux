@@ -21,6 +21,7 @@ use Symfony\UX\Image\Exception\ImageProcessingException;
 use Symfony\UX\Image\Exception\UnknownImageProfileException;
 use Symfony\UX\Image\ImageAsset;
 use Symfony\UX\Image\ImageSource;
+use Symfony\UX\Image\InspectedImage;
 use Symfony\UX\Image\ProcessingLimits;
 use Symfony\UX\Image\Profile\ProcessingMode;
 use Symfony\UX\Image\Storage\ImageWriteSession;
@@ -165,7 +166,7 @@ final class InterventionImageProcessor implements ImageDriverInterface
                 : (null !== $streamStorage
                     ? $workspace->materialize($streamStorage, $imageAsset, $limits)
                     : $this->storageManager->getFilePath($imageAsset));
-            $input = \Symfony\UX\Image\InspectedImage::fromPath($originalPath, $limits);
+            $input = InspectedImage::fromPath($originalPath, $limits);
             $plan = new VariantProcessingPlanner(
                 $limits,
                 $this->geometryCalculator ?? new ResizeGeometryCalculator(),
@@ -222,7 +223,7 @@ final class InterventionImageProcessor implements ImageDriverInterface
                     } catch (\Throwable $e) {
                         throw ImageProcessingException::processingFailed('encode', $e->getMessage());
                     }
-                    $inspection = \Symfony\UX\Image\InspectedImage::fromPath($encodedPath, $limits);
+                    $inspection = InspectedImage::fromPath($encodedPath, $limits);
                     if ($inspection->format !== $format) {
                         throw ImageProcessingException::processingFailed('encode', \sprintf('Expected %s, got %s.', $format, $inspection->format));
                     }
@@ -283,7 +284,7 @@ final class InterventionImageProcessor implements ImageDriverInterface
         }
 
         try {
-            $input = \Symfony\UX\Image\InspectedImage::fromPath($inputPath, $this->limits ?? new ProcessingLimits());
+            $input = InspectedImage::fromPath($inputPath, $this->limits ?? new ProcessingLimits());
             $geometry = ($this->geometryCalculator ?? new ResizeGeometryCalculator())->calculate(
                 $input->width,
                 $input->height,

@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Image\Test;
 
+use Symfony\UX\Image\Exception\InvalidArgumentException;
 use Symfony\UX\Image\ImageAsset;
 
 /**
@@ -33,18 +34,18 @@ final class ImageAssetFactory
         int $originalHeight = 1000,
     ): ImageAsset {
         if ([] === $formats || [] === $widths || $originalWidth < 1 || $originalHeight < 1) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException('A responsive image fixture requires formats, widths and positive source dimensions.');
+            throw new InvalidArgumentException('A responsive image fixture requires formats, widths and positive source dimensions.');
         }
 
         $variants = [];
         foreach ($formats as $format) {
             if (!\is_string($format) || '' === trim($format)) {
-                throw new \Symfony\UX\Image\Exception\InvalidArgumentException('Image fixture formats must be non-empty strings.');
+                throw new InvalidArgumentException('Image fixture formats must be non-empty strings.');
             }
             $normalizedFormat = 'jpg' === strtolower($format) ? 'jpeg' : strtolower($format);
             foreach ($widths as $width) {
                 if (!\is_int($width) || $width < 1) {
-                    throw new \Symfony\UX\Image\Exception\InvalidArgumentException('Image fixture widths must be positive integers.');
+                    throw new InvalidArgumentException('Image fixture widths must be positive integers.');
                 }
                 $height = max(1, (int) round($width * $originalHeight / $originalWidth));
                 $variants[$normalizedFormat][] = [

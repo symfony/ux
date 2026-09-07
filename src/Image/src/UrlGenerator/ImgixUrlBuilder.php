@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Image\UrlGenerator;
 
+use Symfony\UX\Image\Exception\InvalidArgumentException;
+
 /**
  * Imgix URL builder implementation.
  *
@@ -25,7 +27,7 @@ final class ImgixUrlBuilder implements CdnUrlBuilderInterface
     public function buildUrl(string $baseUrl, string $path, array $profileConfig, array $variantConfig): string
     {
         if (!\in_array(parse_url($baseUrl, \PHP_URL_SCHEME), ['http', 'https'], true) || null !== parse_url($baseUrl, \PHP_URL_USER)) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException('A CDN base URL must be an HTTP(S) URL without credentials.');
+            throw new InvalidArgumentException('A CDN base URL must be an HTTP(S) URL without credentials.');
         }
         $params = [];
 
@@ -44,7 +46,7 @@ final class ImgixUrlBuilder implements CdnUrlBuilderInterface
                 'crop' => 'crop',
                 'fit' => 'scale',
                 'fill' => 'fillmax',
-                default => throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Unsupported Imgix resize mode "%s".', $variantConfig['mode'])),
+                default => throw new InvalidArgumentException(\sprintf('Unsupported Imgix resize mode "%s".', $variantConfig['mode'])),
             };
         }
 

@@ -11,12 +11,14 @@
 
 namespace Symfony\UX\Image\Transformation;
 
+use Symfony\UX\Image\Exception\InvalidArgumentException;
+
 final class FocalPoint
 {
     public function __construct(public float $x = 0.5, public float $y = 0.5)
     {
         if ($x < 0 || $x > 1 || $y < 0 || $y > 1) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException('A focal point must be between 0 and 1 on both axes.');
+            throw new InvalidArgumentException('A focal point must be between 0 and 1 on both axes.');
         }
     }
 
@@ -35,7 +37,7 @@ final class FocalPoint
     private static function fromPercentages(string $position): self
     {
         if (1 !== preg_match('/^(\\d{1,3}(?:\\.\\d+)?)%\\s+(\\d{1,3}(?:\\.\\d+)?)%$/', trim($position), $matches)) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Invalid focal point "%s".', $position));
+            throw new InvalidArgumentException(\sprintf('Invalid focal point "%s".', $position));
         }
 
         return new self((float) $matches[1] / 100, (float) $matches[2] / 100);

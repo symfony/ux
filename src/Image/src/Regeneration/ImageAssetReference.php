@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Image\Regeneration;
 
+use Symfony\UX\Image\Exception\InvalidArgumentException;
 use Symfony\UX\Image\ImageAsset;
 
 final class ImageAssetReference
@@ -22,7 +23,7 @@ final class ImageAssetReference
         public readonly ImageAsset $asset,
     ) {
         if ('' === $id || '' === $cursor || '' === $version) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException('An image asset reference requires a stable id, opaque cursor and version token.');
+            throw new InvalidArgumentException('An image asset reference requires a stable id, opaque cursor and version token.');
         }
     }
 

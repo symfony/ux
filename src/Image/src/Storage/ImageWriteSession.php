@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Image\Storage;
 
+use Symfony\UX\Image\Exception\InvalidArgumentException;
 use Symfony\UX\Image\Exception\StorageException;
 
 /**
@@ -33,7 +34,7 @@ final class ImageWriteSession
     public function stage(StoragePath $path, string $localFile): void
     {
         if (!is_file($localFile)) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Staged image "%s" does not exist.', $localFile));
+            throw new InvalidArgumentException(\sprintf('Staged image "%s" does not exist.', $localFile));
         }
         $this->staged[$path->value] = $localFile;
     }

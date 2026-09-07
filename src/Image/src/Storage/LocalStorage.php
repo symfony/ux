@@ -13,6 +13,7 @@ namespace Symfony\UX\Image\Storage;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\UX\Image\Exception\InvalidArgumentException;
 use Symfony\UX\Image\Exception\StorageException;
 use Symfony\UX\Image\ImageAsset;
 use Symfony\UX\Image\InspectedImage;
@@ -129,7 +130,7 @@ final class LocalStorage implements StreamStorageInterface
     public function writeStream(string $storageName, StoragePath $path, $stream): void
     {
         if (!\is_resource($stream)) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException('A storage write requires a stream resource.');
+            throw new InvalidArgumentException('A storage write requires a stream resource.');
         }
         $target = $this->getFilePath(new ImageAsset($storageName, '/'.$path->value));
         $this->filesystem->mkdir(\dirname($target));
@@ -155,7 +156,7 @@ final class LocalStorage implements StreamStorageInterface
     {
         $storageName = new StorageName($storageName)->value;
         if ('default_public' !== $storageName && !\array_key_exists($storageName, $this->storages)) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Unknown image storage "%s". Configure it under "ux_image.storages".', $storageName));
+            throw new InvalidArgumentException(\sprintf('Unknown image storage "%s". Configure it under "ux_image.storages".', $storageName));
         }
 
         return $storageName;

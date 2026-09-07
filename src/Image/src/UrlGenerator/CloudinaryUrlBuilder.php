@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Image\UrlGenerator;
 
+use Symfony\UX\Image\Exception\InvalidArgumentException;
+
 /**
  * Cloudinary URL builder implementation.
  *
@@ -41,7 +43,7 @@ final class CloudinaryUrlBuilder implements CdnUrlBuilderInterface
                 'crop' => 'c_crop',
                 'fit' => 'c_fit',
                 'fill' => 'c_fill',
-                default => throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Unsupported Cloudinary resize mode "%s".', $variantConfig['mode'])),
+                default => throw new InvalidArgumentException(\sprintf('Unsupported Cloudinary resize mode "%s".', $variantConfig['mode'])),
             };
             $transformations[] = $mode;
         }
@@ -49,7 +51,7 @@ final class CloudinaryUrlBuilder implements CdnUrlBuilderInterface
         $format = $variantConfig['format'] ?? null;
         if (\is_string($format) && '' !== $format) {
             if (1 !== preg_match('/^[a-z0-9]+$/i', $format)) {
-                throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Unsupported Cloudinary image format "%s".', $format));
+                throw new InvalidArgumentException(\sprintf('Unsupported Cloudinary image format "%s".', $format));
             }
             // A <source type="..."> must not resolve to another format through content negotiation.
             $transformations[] = 'f_'.strtolower($format);
@@ -71,7 +73,7 @@ final class CloudinaryUrlBuilder implements CdnUrlBuilderInterface
     private function validateBaseUrl(string $baseUrl): void
     {
         if (!\in_array(parse_url($baseUrl, \PHP_URL_SCHEME), ['http', 'https'], true) || null !== parse_url($baseUrl, \PHP_URL_USER)) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException('A CDN base URL must be an HTTP(S) URL without credentials.');
+            throw new InvalidArgumentException('A CDN base URL must be an HTTP(S) URL without credentials.');
         }
     }
 

@@ -12,6 +12,7 @@
 namespace Symfony\UX\Image\Processor;
 
 use Symfony\UX\Image\Exception\ImageProcessingException;
+use Symfony\UX\Image\Exception\InvalidArgumentException;
 
 final class ImageDriverCapabilities
 {
@@ -25,12 +26,12 @@ final class ImageDriverCapabilities
         foreach ($encodableFormats as $format) {
             $format = 'jpg' === strtolower(trim($format)) ? 'jpeg' : strtolower(trim($format));
             if ('' === $format) {
-                throw new \Symfony\UX\Image\Exception\InvalidArgumentException('Driver codec names must not be empty.');
+                throw new InvalidArgumentException('Driver codec names must not be empty.');
             }
             $normalized[$format] = true;
         }
         if ([] === $normalized) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException('An image driver must expose at least one encodable format.');
+            throw new InvalidArgumentException('An image driver must expose at least one encodable format.');
         }
 
         $this->encodableFormats = array_keys($normalized);

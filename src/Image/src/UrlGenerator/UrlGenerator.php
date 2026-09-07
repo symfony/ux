@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Image\UrlGenerator;
 
+use Symfony\UX\Image\Exception\InvalidArgumentException;
 use Symfony\UX\Image\ImageAsset;
 
 /**
@@ -83,7 +84,7 @@ final class UrlGenerator implements UrlGeneratorInterface
 
         if (null !== $cdnProvider) {
             if (!isset($this->cdnBuilders[$cdnProvider])) {
-                throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Unknown CDN URL builder "%s". Make sure it is tagged as "ux_image.cdn_url_builder" with the matching provider.', $cdnProvider));
+                throw new InvalidArgumentException(\sprintf('Unknown CDN URL builder "%s". Make sure it is tagged as "ux_image.cdn_url_builder" with the matching provider.', $cdnProvider));
             }
             $baseUrl = isset($cdnConfig['base_url']) && \is_string($cdnConfig['base_url']) ? $cdnConfig['base_url'] : '';
 
@@ -92,7 +93,7 @@ final class UrlGenerator implements UrlGeneratorInterface
 
         $adapterName = isset($storage['url_adapter']) && \is_string($storage['url_adapter']) ? $storage['url_adapter'] : GenericUrlAdapter::getName();
         if (!isset($this->urlAdapters[$adapterName])) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException(\sprintf('Unknown URL adapter "%s". Make sure it is configured and tagged as "ux_image.storage_adapter".', $adapterName));
+            throw new InvalidArgumentException(\sprintf('Unknown URL adapter "%s". Make sure it is configured and tagged as "ux_image.storage_adapter".', $adapterName));
         }
         $adapter = $this->urlAdapters[$adapterName];
 

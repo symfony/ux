@@ -80,7 +80,7 @@ final class StorageRouter implements StreamStorageInterface
 
     private function resolve(string $storageName): StorageInterface
     {
-        new StorageName($storageName);
+        StorageName::assertValid($storageName);
         if (!$this->backends->has($storageName)) {
             return $this->fallback;
         }

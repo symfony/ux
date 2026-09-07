@@ -74,7 +74,7 @@ final class RegenerateVariantsCommand extends Command
             return Command::INVALID;
         }
         try {
-            new StorageName($storage);
+            StorageName::assertValid($storage);
         } catch (\InvalidArgumentException $e) {
             $io->error($e->getMessage());
 

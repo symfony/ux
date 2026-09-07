@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Image\Storage;
 
+use Symfony\UX\Image\Exception\InvalidArgumentException;
+
 /**
  * A canonical, storage-relative path.
  */
@@ -21,17 +23,17 @@ final class StoragePath implements \Stringable
     public function __construct(string $value)
     {
         if (str_contains($value, "\0") || str_contains($value, '\\') || str_contains($value, '://')) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException('A storage path must be a safe relative path.');
+            throw new InvalidArgumentException('A storage path must be a safe relative path.');
         }
 
         $value = trim($value, '/');
         if ('' === $value) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException('A storage path cannot be empty.');
+            throw new InvalidArgumentException('A storage path cannot be empty.');
         }
 
         foreach (explode('/', $value) as $segment) {
             if ('' === $segment || '.' === $segment || '..' === $segment) {
-                throw new \Symfony\UX\Image\Exception\InvalidArgumentException('A storage path cannot contain empty, "." or ".." segments.');
+                throw new InvalidArgumentException('A storage path cannot contain empty, "." or ".." segments.');
             }
         }
 

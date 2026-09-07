@@ -14,14 +14,16 @@ namespace Symfony\UX\Image\Doctrine;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Exception\ValueNotConvertible;
 use Doctrine\DBAL\Types\JsonType;
+use Symfony\UX\Image\Exception\InvalidArgumentException;
 use Symfony\UX\Image\ImageAsset;
+use Symfony\UX\Image\UXImageBundle;
 
 /**
  * Custom Doctrine DBAL type that stores an {@see ImageAsset} value object as a JSON column.
  *
  * DBAL types are not DI services; they are registered globally on the type registry. When
  * DoctrineBundle is installed and "ux_image.doctrine_type" is enabled,
- * {@see \Symfony\UX\Image\UXImageBundle::prependExtension()} registers this type under the
+ * {@see UXImageBundle::prependExtension()} registers this type under the
  * name {@see self::NAME} ("image_asset"). Without DoctrineBundle, this class is never
  * autoloaded and the bundle does not depend on doctrine/dbal. To register it by hand instead:
  *
@@ -64,7 +66,7 @@ final class ImageAssetType extends JsonType
         }
 
         if (!$value instanceof ImageAsset) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException('Expected ImageAsset instance, got '.get_debug_type($value));
+            throw new InvalidArgumentException('Expected ImageAsset instance, got '.get_debug_type($value));
         }
 
         // The ImageAsset object is readonly, so we can safely convert to array

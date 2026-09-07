@@ -11,12 +11,14 @@
 
 namespace Symfony\UX\Image\Transformation;
 
+use Symfony\UX\Image\Exception\InvalidArgumentException;
+
 final class ResizeGeometryCalculator
 {
     public function calculate(int $sourceWidth, int $sourceHeight, int $targetWidth, int $targetHeight, ResizeMode $mode, ?FocalPoint $focalPoint = null, bool $allowUpscale = false): ResizeGeometry
     {
         if ($sourceWidth < 1 || $sourceHeight < 1 || ($targetWidth < 1 && $targetHeight < 1)) {
-            throw new \Symfony\UX\Image\Exception\InvalidArgumentException('Source and at least one target dimension must be positive.');
+            throw new InvalidArgumentException('Source and at least one target dimension must be positive.');
         }
 
         if ($targetWidth < 1) {
