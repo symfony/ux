@@ -21,7 +21,7 @@ use Symfony\UX\Notify\Tests\Kernel\TwigAppKernel;
  */
 class NotifyBundleTest extends TestCase
 {
-    public function testBootKernel()
+    public function testBootKernel(): void
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();

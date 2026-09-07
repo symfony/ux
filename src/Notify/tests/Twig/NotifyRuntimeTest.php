@@ -24,7 +24,7 @@ use Symfony\UX\Notify\Twig\NotifyRuntime;
 class NotifyRuntimeTest extends TestCase
 {
     #[DataProvider('streamNotificationsDataProvider')]
-    public function testStreamNotifications(array $params, string $expected)
+    public function testStreamNotifications(array $params, string $expected): void
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();

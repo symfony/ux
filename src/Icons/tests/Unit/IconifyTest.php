@@ -26,7 +26,7 @@ use Symfony\UX\Icons\Iconify;
  */
 class IconifyTest extends TestCase
 {
-    public function testFetchIcon()
+    public function testFetchIcon(): void
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -53,7 +53,7 @@ class IconifyTest extends TestCase
         $this->assertEquals($icon->getAttributes(), ['viewBox' => '0 0 24 24', 'xmlns' => 'http://www.w3.org/2000/svg']);
     }
 
-    public function testFetchIconSanitizesBody()
+    public function testFetchIconSanitizesBody(): void
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -68,7 +68,7 @@ class IconifyTest extends TestCase
         $this->assertSame('<rect></rect>', $iconify->fetchIcon('bi', 'heart')->getInnerSvg());
     }
 
-    public function testFetchIconsSanitizesBody()
+    public function testFetchIconsSanitizesBody(): void
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -85,7 +85,7 @@ class IconifyTest extends TestCase
         $this->assertSame('<path d="M0 0"></path>', $icons['heart']->getInnerSvg());
     }
 
-    public function testFetchIconThrowsNotFoundWhenBodyIsInvalid()
+    public function testFetchIconThrowsNotFoundWhenBodyIsInvalid(): void
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -102,7 +102,7 @@ class IconifyTest extends TestCase
         $iconify->fetchIcon('bi', 'heart');
     }
 
-    public function testFetchIconsSkipsIconsWithInvalidBody()
+    public function testFetchIconsSkipsIconsWithInvalidBody(): void
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -123,7 +123,7 @@ class IconifyTest extends TestCase
         $this->assertArrayNotHasKey('bad', $icons);
     }
 
-    public function testFetchIconByAlias()
+    public function testFetchIconByAlias(): void
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -155,7 +155,7 @@ class IconifyTest extends TestCase
         $this->assertEquals($icon->getAttributes(), ['viewBox' => '0 0 24 24', 'xmlns' => 'http://www.w3.org/2000/svg']);
     }
 
-    public function testFetchIconThrowsWhenIconSetDoesNotExists()
+    public function testFetchIconThrowsWhenIconSetDoesNotExists(): void
     {
         $iconify = new Iconify(new NullAdapter(), new IconFactory(), 'https://example.com', new MockHttpClient(new JsonMockResponse([])));
 
@@ -165,7 +165,7 @@ class IconifyTest extends TestCase
         $iconify->fetchIcon('bi', 'heart');
     }
 
-    public function testFetchIconUsesIconsetViewBoxHeight()
+    public function testFetchIconUsesIconsetViewBoxHeight(): void
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -194,7 +194,7 @@ class IconifyTest extends TestCase
         $this->assertEquals('0 0 17 17', $icon->getAttributes()['viewBox']);
     }
 
-    public function testFetchIconSetsDefaultViewBoxTo16()
+    public function testFetchIconSetsDefaultViewBoxTo16(): void
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -221,7 +221,7 @@ class IconifyTest extends TestCase
         $this->assertEquals('0 0 16 16', $icon->getAttributes()['viewBox']);
     }
 
-    public function testFetchIconThrowsWhenStatusCodeNot200()
+    public function testFetchIconThrowsWhenStatusCodeNot200(): void
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -241,7 +241,7 @@ class IconifyTest extends TestCase
         $iconify->fetchIcon('bi', 'heart');
     }
 
-    public function testFetchIcons()
+    public function testFetchIcons(): void
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -273,7 +273,7 @@ class IconifyTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Icon::class, $icons);
     }
 
-    public function testFetchIconsByAliases()
+    public function testFetchIconsByAliases(): void
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -314,7 +314,7 @@ class IconifyTest extends TestCase
         $this->assertContainsOnlyInstancesOf(Icon::class, $icons);
     }
 
-    public function testFetchIconsThrowsWithInvalidIconNames()
+    public function testFetchIconsThrowsWithInvalidIconNames(): void
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -332,7 +332,7 @@ class IconifyTest extends TestCase
         $iconify->fetchIcons('bi', ['à', 'foo']);
     }
 
-    public function testFetchIconsThrowsWithTooManyIcons()
+    public function testFetchIconsThrowsWithTooManyIcons(): void
     {
         $iconify = new Iconify(
             cache: new NullAdapter(),
@@ -350,7 +350,7 @@ class IconifyTest extends TestCase
         $iconify->fetchIcons('bi', array_fill(0, 50, '1234567890'));
     }
 
-    public function testGetMetadata()
+    public function testGetMetadata(): void
     {
         $responseFile = __DIR__.'/../Fixtures/Iconify/collections.json';
         $client = $this->createHttpClient(json_decode(file_get_contents($responseFile)));
@@ -361,7 +361,7 @@ class IconifyTest extends TestCase
     }
 
     #[DataProvider('provideChunkCases')]
-    public function testChunk(int $maxQueryLength, string $prefix, array $names, array $chunks)
+    public function testChunk(int $maxQueryLength, string $prefix, array $names, array $chunks): void
     {
         $iconify = new Iconify(
             new NullAdapter(),
@@ -412,7 +412,7 @@ class IconifyTest extends TestCase
         ];
     }
 
-    public function testChunkThrowWithIconPrefixTooLong()
+    public function testChunkThrowWithIconPrefixTooLong(): void
     {
         $iconify = new Iconify(new NullAdapter(), new IconFactory(), 'https://example.com', new MockHttpClient([]));
 
@@ -425,7 +425,7 @@ class IconifyTest extends TestCase
         $result = iterator_to_array($iconify->chunk($prefix, [$name]));
     }
 
-    public function testChunkThrowWithIconNameTooLong()
+    public function testChunkThrowWithIconNameTooLong(): void
     {
         $iconify = new Iconify(new NullAdapter(), new IconFactory(), 'https://example.com', new MockHttpClient([]));
 

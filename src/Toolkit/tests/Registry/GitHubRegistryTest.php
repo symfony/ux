@@ -34,7 +34,7 @@ final class GitHubRegistryTest extends KernelTestCase
         $this->filesystem->mkdir($this->tmpDir);
     }
 
-    public function testCanGetKitFromGithub()
+    public function testCanGetKitFromGithub(): void
     {
         $isHttpClientCalled = false;
         $zipShadcnMain = $this->createZip('repo', 'shadcn', 'main');
@@ -70,7 +70,7 @@ final class GitHubRegistryTest extends KernelTestCase
         $this->assertFileExists(Path::join($kit->absolutePath, 'button/templates/components/Button.html.twig'));
     }
 
-    public function testShouldThrowExceptionIfKitNotFound()
+    public function testShouldThrowExceptionIfKitNotFound(): void
     {
         $githubRegistry = new GitHubRegistry(
             self::getContainer()->get('ux_toolkit.kit.kit_factory'),

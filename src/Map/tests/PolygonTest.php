@@ -19,7 +19,7 @@ use Symfony\UX\Map\Polygon;
 
 class PolygonTest extends TestCase
 {
-    public function testToArray()
+    public function testToArray(): void
     {
         $point1 = new Point(1.1, 2.2);
         $point2 = new Point(3.3, 4.4);
@@ -49,7 +49,7 @@ class PolygonTest extends TestCase
         ], $array);
     }
 
-    public function testToArrayMultidimensional()
+    public function testToArrayMultidimensional(): void
     {
         $point1 = new Point(1.1, 2.2);
         $point2 = new Point(3.3, 4.4);
@@ -71,7 +71,7 @@ class PolygonTest extends TestCase
         ], $array);
     }
 
-    public function testFromArray()
+    public function testFromArray(): void
     {
         $data = [
             'points' => [
@@ -102,7 +102,7 @@ class PolygonTest extends TestCase
         ], $array);
     }
 
-    public function testFromArrayMultidimensional()
+    public function testFromArrayMultidimensional(): void
     {
         $data = [
             'points' => [
@@ -137,7 +137,7 @@ class PolygonTest extends TestCase
         ], $array);
     }
 
-    public function testFromArrayThrowsExceptionIfPointsMissing()
+    public function testFromArrayThrowsExceptionIfPointsMissing(): void
     {
         $this->expectException(InvalidArgumentException::class);
         Polygon::fromArray(['invalid' => 'No points']);

@@ -34,7 +34,7 @@ class TranslationsDumperTest extends TestCase
         @rmdir(self::$translationsDumpDir);
     }
 
-    public function testDump()
+    public function testDump(): void
     {
         $translationsDumper = new TranslationsDumper(
             new MessageParametersExtractor(),
@@ -112,7 +112,7 @@ class TranslationsDumperTest extends TestCase
             TS);
     }
 
-    public function testShouldNotDumpTypeScriptTypes()
+    public function testShouldNotDumpTypeScriptTypes(): void
     {
         $translationsDumper = new TranslationsDumper(
             new MessageParametersExtractor(),
@@ -130,7 +130,7 @@ class TranslationsDumperTest extends TestCase
         $this->assertFileDoesNotExist(self::$translationsDumpDir.'/index.d.ts');
     }
 
-    public function testDumpWithExcludedDomains()
+    public function testDumpWithExcludedDomains(): void
     {
         $translationsDumper = new TranslationsDumper(
             new MessageParametersExtractor(),
@@ -149,7 +149,7 @@ class TranslationsDumperTest extends TestCase
         $this->assertStringNotContainsString('foobar', file_get_contents(self::$translationsDumpDir.'/index.js'));
     }
 
-    public function testDumpIncludedDomains()
+    public function testDumpIncludedDomains(): void
     {
         $translationsDumper = new TranslationsDumper(
             new MessageParametersExtractor(),
@@ -168,7 +168,7 @@ class TranslationsDumperTest extends TestCase
         $this->assertStringNotContainsString('foobar', file_get_contents(self::$translationsDumpDir.'/index.js'));
     }
 
-    public function testSetBothIncludedAndExcludedDomains()
+    public function testSetBothIncludedAndExcludedDomains(): void
     {
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('You cannot set both "excluded_domains" and "included_domains" at the same time.');
@@ -188,7 +188,7 @@ class TranslationsDumperTest extends TestCase
         );
     }
 
-    public function testSetBothExcludedAndIncludedDomains()
+    public function testSetBothExcludedAndIncludedDomains(): void
     {
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('You cannot set both "excluded_domains" and "included_domains" at the same time.');
@@ -331,7 +331,7 @@ class TranslationsDumperTest extends TestCase
      * @dataProvider keysPatternProvider
      */
     #[DataProvider('keysPatternProvider')]
-    public function testDumpWithKeysPatterns(array $keysPatterns, callable $assertions)
+    public function testDumpWithKeysPatterns(array $keysPatterns, callable $assertions): void
     {
         $translationsDumper = new TranslationsDumper(
             new MessageParametersExtractor(),

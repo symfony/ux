@@ -23,7 +23,7 @@ use Symfony\UX\Vue\Twig\VueComponentExtension;
  */
 class VueComponentExtensionTest extends TestCase
 {
-    public function testRenderComponent()
+    public function testRenderComponent(): void
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();
@@ -42,7 +42,7 @@ class VueComponentExtensionTest extends TestCase
         );
     }
 
-    public function testRenderComponentWithoutProps()
+    public function testRenderComponentWithoutProps(): void
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();

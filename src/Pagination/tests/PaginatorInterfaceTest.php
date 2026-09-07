@@ -25,7 +25,7 @@ use Symfony\UX\Pagination\PaginatorInterface;
 #[CoversNothing]
 final class PaginatorInterfaceTest extends TestCase
 {
-    public function testPublicMethodsExposeTheSimpleAndBuilderContracts()
+    public function testPublicMethodsExposeTheSimpleAndBuilderContracts(): void
     {
         self::assertSame(
             NumberedPaginationInterface::class,
@@ -45,7 +45,7 @@ final class PaginatorInterfaceTest extends TestCase
         self::assertNotContains('cursorPaginate', get_class_methods(PaginatorInterface::class));
     }
 
-    public function testCommonResultContractDoesNotExposeConfigurationOrTransformation()
+    public function testCommonResultContractDoesNotExposeConfigurationOrTransformation(): void
     {
         $methods = get_class_methods(PaginationInterface::class);
 
@@ -67,7 +67,7 @@ final class PaginatorInterfaceTest extends TestCase
         }
     }
 
-    public function testNumberedResultContractDoesNotExposeFlowPolicies()
+    public function testNumberedResultContractDoesNotExposeFlowPolicies(): void
     {
         $methods = get_class_methods(NumberedPaginationInterface::class);
 
@@ -77,7 +77,7 @@ final class PaginatorInterfaceTest extends TestCase
         self::assertNotContains('throwOnCanonicalPage', get_class_methods(Pagination::class));
     }
 
-    public function testSerializationShapesStayOutOfTheResultInterfaces()
+    public function testSerializationShapesStayOutOfTheResultInterfaces(): void
     {
         $numbered = get_class_methods(NumberedPaginationInterface::class);
         foreach (['getMetadata', 'getLinks', 'getAbsoluteUrl'] as $method) {

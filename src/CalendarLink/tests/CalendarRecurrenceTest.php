@@ -34,12 +34,12 @@ final class CalendarRecurrenceTest extends TestCase
     }
 
     #[DataProvider('factoryProvider')]
-    public function testFactoriesProduceExpectedRrule(CalendarRecurrence $recurrence, string $expected)
+    public function testFactoriesProduceExpectedRrule(CalendarRecurrence $recurrence, string $expected): void
     {
         $this->assertSame($expected, $recurrence->rrule);
     }
 
-    public function testUntilIsFormattedAsUtc()
+    public function testUntilIsFormattedAsUtc(): void
     {
         $until = new \DateTimeImmutable('2026-12-31 09:00:00', new \DateTimeZone('Europe/Paris'));
 
@@ -57,7 +57,7 @@ final class CalendarRecurrenceTest extends TestCase
     }
 
     #[DataProvider('invalidArgumentsProvider')]
-    public function testRejectsInvalidArguments(callable $build)
+    public function testRejectsInvalidArguments(callable $build): void
     {
         $this->expectException(InvalidArgumentException::class);
 

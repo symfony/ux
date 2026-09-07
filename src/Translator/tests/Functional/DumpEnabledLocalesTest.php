@@ -21,7 +21,7 @@ class DumpEnabledLocalesTest extends KernelTestCase
         return FrameworkAppKernel::class;
     }
 
-    public function testShouldDumpOnlyEnabledLocales()
+    public function testShouldDumpOnlyEnabledLocales(): void
     {
         self::assertFileExists(__DIR__.'/../Fixtures/translations/messages.en.yaml');
         self::assertFileExists(__DIR__.'/../Fixtures/translations/messages.fr.yaml');

@@ -22,7 +22,7 @@ use Symfony\UX\Toolkit\Recipe\RecipeType;
 
 final class DocCheckerTest extends TestCase
 {
-    public function testFlagsOnlyRecipesWithoutDoc()
+    public function testFlagsOnlyRecipesWithoutDoc(): void
     {
         $kit = new Kit(__DIR__, new KitManifest('kit', 'A kit', 'MIT', 'https://example.com'));
         $kit->addRecipe(new Recipe('with-doc', __DIR__, $this->recipeManifest('WithDoc'), doc: '# Docs'));

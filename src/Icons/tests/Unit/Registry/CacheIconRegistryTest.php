@@ -25,7 +25,7 @@ use Symfony\UX\Icons\Tests\Util\InMemoryIconRegistry;
 final class CacheIconRegistryTest extends TestCase
 {
     #[DataProvider('provideInvalidNames')]
-    public function testInvalidNameIsRejectedEvenIfInnerRegistryHasIt(string $name)
+    public function testInvalidNameIsRejectedEvenIfInnerRegistryHasIt(string $name): void
     {
         $inner = new InMemoryIconRegistry([$name => new Icon('<path d="M0 0h24v24H0z"/>')]);
         $registry = new CacheIconRegistry($inner, new ArrayAdapter());
@@ -36,7 +36,7 @@ final class CacheIconRegistryTest extends TestCase
         $registry->get($name);
     }
 
-    public function testValidNameIsResolvedAndCached()
+    public function testValidNameIsResolvedAndCached(): void
     {
         $icon = new Icon('<path d="M0 0h24v24H0z"/>');
         $cache = new ArrayAdapter();

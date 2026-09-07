@@ -18,7 +18,7 @@ use Symfony\UX\Translator\MessageParameters\Extractor\MessageParametersExtractor
 class MessageParametersExtractorTest extends TestCase
 {
     #[DataProvider('provideExtract')]
-    public function testExtract(string $message, array $expectedParameters)
+    public function testExtract(string $message, array $expectedParameters): void
     {
         $messageParametersExtractor = new MessageParametersExtractor();
 

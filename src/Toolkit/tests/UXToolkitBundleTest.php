@@ -18,7 +18,7 @@ use Twig\Environment;
 
 class UXToolkitBundleTest extends KernelTestCase
 {
-    public function testBundleBuildsSuccessfully()
+    public function testBundleBuildsSuccessfully(): void
     {
         self::bootKernel();
         $container = self::$kernel->getContainer();
@@ -26,7 +26,7 @@ class UXToolkitBundleTest extends KernelTestCase
         $this->assertInstanceOf(UXToolkitBundle::class, $container->get('kernel')->getBundles()['UXToolkitBundle']);
     }
 
-    public function testComponentDocParserIsRegisteredAsAPublicService()
+    public function testComponentDocParserIsRegisteredAsAPublicService(): void
     {
         self::bootKernel();
         $container = self::$kernel->getContainer();
@@ -34,7 +34,7 @@ class UXToolkitBundleTest extends KernelTestCase
         $this->assertInstanceOf(ComponentDocParser::class, $container->get('ux_toolkit.component.component_doc_parser'));
     }
 
-    public function testToolkitTemplateNamespaceResolves()
+    public function testToolkitTemplateNamespaceResolves(): void
     {
         self::bootKernel();
 

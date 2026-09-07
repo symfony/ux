@@ -17,7 +17,7 @@ use Symfony\UX\Map\Bridge\Leaflet\Option\ControlPosition;
 
 class AttributionControlOptionsTest extends TestCase
 {
-    public function testToArray()
+    public function testToArray(): void
     {
         $options = new AttributionControlOptions();
 
@@ -27,7 +27,7 @@ class AttributionControlOptionsTest extends TestCase
         ], $options->toArray());
     }
 
-    public function testToArrayWithDifferentConfiguration()
+    public function testToArrayWithDifferentConfiguration(): void
     {
         $options = new AttributionControlOptions(
             position: ControlPosition::BOTTOM_LEFT,

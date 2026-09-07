@@ -23,7 +23,7 @@ use Symfony\UX\Native\EventListener\DevServerEventListener;
 
 final class DevServerEventListenerTest extends TestCase
 {
-    public function testServesConfigurationForMatchingPath()
+    public function testServesConfigurationForMatchingPath(): void
     {
         $builder = new ConfigurationBuilder(sys_get_temp_dir());
         $builder->add('/config/ios_v1.json', new Configuration(
@@ -45,7 +45,7 @@ final class DevServerEventListenerTest extends TestCase
         self::assertTrue($event->isPropagationStopped());
     }
 
-    public function testDoesNothingForNonMatchingPath()
+    public function testDoesNothingForNonMatchingPath(): void
     {
         $builder = new ConfigurationBuilder(sys_get_temp_dir());
         $builder->add('/config/ios_v1.json', new Configuration(settings: ['use_local_db' => true]));
@@ -60,7 +60,7 @@ final class DevServerEventListenerTest extends TestCase
         self::assertFalse($event->isPropagationStopped());
     }
 
-    public function testIgnoresSubRequests()
+    public function testIgnoresSubRequests(): void
     {
         $builder = new ConfigurationBuilder(sys_get_temp_dir());
         $builder->add('/config/ios_v1.json', new Configuration(settings: ['use_local_db' => true]));

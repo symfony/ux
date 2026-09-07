@@ -19,7 +19,7 @@ use Symfony\UX\Native\EventListener\NativeListener;
 
 final class NativeListenerTest extends TestCase
 {
-    public function testSetsNativeAttributeToTrueWithHotwireNativeUserAgent()
+    public function testSetsNativeAttributeToTrueWithHotwireNativeUserAgent(): void
     {
         $listener = new NativeListener();
         $request = Request::create('/', server: ['HTTP_USER_AGENT' => 'Hotwire Native']);
@@ -30,7 +30,7 @@ final class NativeListenerTest extends TestCase
         self::assertTrue($request->attributes->get(NativeListener::NATIVE_ATTRIBUTE));
     }
 
-    public function testSetsNativeAttributeToTrueWithHotwireNativeInLongerUserAgent()
+    public function testSetsNativeAttributeToTrueWithHotwireNativeInLongerUserAgent(): void
     {
         $listener = new NativeListener();
         $request = Request::create('/', server: ['HTTP_USER_AGENT' => 'Turbo Native iOS; Hotwire Native Android']);
@@ -41,7 +41,7 @@ final class NativeListenerTest extends TestCase
         self::assertTrue($request->attributes->get(NativeListener::NATIVE_ATTRIBUTE));
     }
 
-    public function testSetsNativeAttributeToFalseWithStandardUserAgent()
+    public function testSetsNativeAttributeToFalseWithStandardUserAgent(): void
     {
         $listener = new NativeListener();
         $request = Request::create('/', server: ['HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)']);
@@ -52,7 +52,7 @@ final class NativeListenerTest extends TestCase
         self::assertFalse($request->attributes->get(NativeListener::NATIVE_ATTRIBUTE));
     }
 
-    public function testSetsNativeAttributeToFalseWithEmptyUserAgent()
+    public function testSetsNativeAttributeToFalseWithEmptyUserAgent(): void
     {
         $listener = new NativeListener();
         $request = Request::create('/');

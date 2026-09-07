@@ -16,7 +16,7 @@ use Symfony\UX\Native\Configuration\Rule;
 
 final class RuleTest extends TestCase
 {
-    public function testToArrayWithAllValues()
+    public function testToArrayWithAllValues(): void
     {
         $rule = new Rule(
             patterns: ['/articles/.*', '/pages/.*'],
@@ -29,7 +29,7 @@ final class RuleTest extends TestCase
         ], $rule->toArray());
     }
 
-    public function testToArrayWithPatternsOnly()
+    public function testToArrayWithPatternsOnly(): void
     {
         $rule = new Rule(
             patterns: ['.*'],
@@ -40,7 +40,7 @@ final class RuleTest extends TestCase
         ], $rule->toArray());
     }
 
-    public function testToArrayWithPropertiesOnly()
+    public function testToArrayWithPropertiesOnly(): void
     {
         $rule = new Rule(
             properties: ['context' => 'modal'],
@@ -51,7 +51,7 @@ final class RuleTest extends TestCase
         ], $rule->toArray());
     }
 
-    public function testToArrayWithNoValues()
+    public function testToArrayWithNoValues(): void
     {
         $rule = new Rule();
 

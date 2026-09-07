@@ -19,26 +19,26 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
  */
 final class LivePropTest extends TestCase
 {
-    public function testHydrateWithMethod()
+    public function testHydrateWithMethod(): void
     {
         $this->assertSame('someMethod', new LiveProp(false, 'someMethod')->hydrateMethod());
         $this->assertSame('someMethod', new LiveProp(false, 'someMethod()')->hydrateMethod());
     }
 
-    public function testDehydrateWithMethod()
+    public function testDehydrateWithMethod(): void
     {
         $this->assertSame('someMethod', new LiveProp(false, null, 'someMethod')->dehydrateMethod());
         $this->assertSame('someMethod', new LiveProp(false, null, 'someMethod()')->dehydrateMethod());
     }
 
-    public function testCanCallCalculateFieldNameAsString()
+    public function testCanCallCalculateFieldNameAsString(): void
     {
         $component = new class {};
 
         $this->assertSame('field', new LiveProp(false, null, null, false, [], 'field')->calculateFieldName($component, 'fallback'));
     }
 
-    public function testCanCallCalculateFieldNameAsMethod()
+    public function testCanCallCalculateFieldNameAsMethod(): void
     {
         $component = new class {
             public function fieldName(): string
@@ -50,14 +50,14 @@ final class LivePropTest extends TestCase
         $this->assertSame('foo', new LiveProp(false, null, null, false, [], 'fieldName()')->calculateFieldName($component, 'fallback'));
     }
 
-    public function testCanCallCalculateFieldNameWhenNotSet()
+    public function testCanCallCalculateFieldNameWhenNotSet(): void
     {
         $component = new class {};
 
         $this->assertSame('fallback', new LiveProp()->calculateFieldName($component, 'fallback'));
     }
 
-    public function testIsIdentityWritableAndWritablePaths()
+    public function testIsIdentityWritableAndWritablePaths(): void
     {
         $liveProp = new LiveProp(true);
         $this->assertTrue($liveProp->isIdentityWritable());
@@ -73,7 +73,7 @@ final class LivePropTest extends TestCase
     }
 
     // test updateFromParent property being set and accessed with acceptUpdatesFromParent()
-    public function testUpdateFromParent()
+    public function testUpdateFromParent(): void
     {
         $liveProp = new LiveProp();
         $this->assertFalse($liveProp->acceptUpdatesFromParent());

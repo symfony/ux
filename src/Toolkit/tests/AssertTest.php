@@ -18,7 +18,7 @@ use Symfony\UX\Toolkit\Assert;
 class AssertTest extends TestCase
 {
     #[DataProvider('provideValidKitNames')]
-    public function testValidKitName(string $name)
+    public function testValidKitName(string $name): void
     {
         $this->expectNotToPerformAssertions();
 
@@ -50,7 +50,7 @@ class AssertTest extends TestCase
     }
 
     #[DataProvider('provideInvalidKitNames')]
-    public function testInvalidKitName(string $name)
+    public function testInvalidKitName(string $name): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Invalid kit name "%s".', $name));
@@ -80,7 +80,7 @@ class AssertTest extends TestCase
     }
 
     #[DataProvider('provideValidComponentNames')]
-    public function testValidComponentName(string $name)
+    public function testValidComponentName(string $name): void
     {
         $this->expectNotToPerformAssertions();
 
@@ -102,7 +102,7 @@ class AssertTest extends TestCase
     }
 
     #[DataProvider('provideInvalidComponentNames')]
-    public function testInvalidComponentName(string $name)
+    public function testInvalidComponentName(string $name): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Invalid component name "%s".', $name));
@@ -137,7 +137,7 @@ class AssertTest extends TestCase
     }
 
     #[DataProvider('provideValidPhpPackageNames')]
-    public function testValidPhpPackageName(string $name)
+    public function testValidPhpPackageName(string $name): void
     {
         $this->expectNotToPerformAssertions();
 
@@ -151,7 +151,7 @@ class AssertTest extends TestCase
     }
 
     #[DataProvider('provideInvalidPhpPackageNames')]
-    public function testInvalidPhpPackageName(string $name)
+    public function testInvalidPhpPackageName(string $name): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Invalid PHP package name "%s".', $name));
@@ -168,7 +168,7 @@ class AssertTest extends TestCase
     }
 
     #[DataProvider('provideValidNpmPackageNames')]
-    public function testValidNpmPackageName(string $name)
+    public function testValidNpmPackageName(string $name): void
     {
         $this->expectNotToPerformAssertions();
 
@@ -190,7 +190,7 @@ class AssertTest extends TestCase
     }
 
     #[DataProvider('provideInvalidNpmPackageNames')]
-    public function testInvalidNpmPackageName(string $name)
+    public function testInvalidNpmPackageName(string $name): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Invalid NPM package name "%s".', $name));
@@ -211,7 +211,7 @@ class AssertTest extends TestCase
     }
 
     #[DataProvider('provideNonEscapingPaths')]
-    public function testPathDoesNotEscapeDirectoryWithValidPath(string $path)
+    public function testPathDoesNotEscapeDirectoryWithValidPath(string $path): void
     {
         $this->expectNotToPerformAssertions();
 
@@ -229,7 +229,7 @@ class AssertTest extends TestCase
     }
 
     #[DataProvider('provideEscapingPaths')]
-    public function testPathDoesNotEscapeDirectoryWithTraversingPath(string $path)
+    public function testPathDoesNotEscapeDirectoryWithTraversingPath(string $path): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('The path "%s" must not escape its target directory.', $path));
@@ -249,7 +249,7 @@ class AssertTest extends TestCase
     }
 
     #[DataProvider('provideValidPropNames')]
-    public function testValidPropName(string $name)
+    public function testValidPropName(string $name): void
     {
         $this->expectNotToPerformAssertions();
 
@@ -269,7 +269,7 @@ class AssertTest extends TestCase
     }
 
     #[DataProvider('provideInvalidPropNames')]
-    public function testInvalidPropName(string $name)
+    public function testInvalidPropName(string $name): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Invalid prop name "%s".', $name));
@@ -293,7 +293,7 @@ class AssertTest extends TestCase
     }
 
     #[DataProvider('provideValidBlockNames')]
-    public function testValidBlockName(string $name)
+    public function testValidBlockName(string $name): void
     {
         $this->expectNotToPerformAssertions();
 
@@ -311,7 +311,7 @@ class AssertTest extends TestCase
     }
 
     #[DataProvider('provideInvalidBlockNames')]
-    public function testInvalidBlockName(string $name)
+    public function testInvalidBlockName(string $name): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Invalid block name "%s".', $name));
@@ -332,7 +332,7 @@ class AssertTest extends TestCase
         yield ['has.dot'];
     }
 
-    public function testCommonMarkAvailableDoesNotThrowWhenInstalled()
+    public function testCommonMarkAvailableDoesNotThrowWhenInstalled(): void
     {
         $this->expectNotToPerformAssertions();
 

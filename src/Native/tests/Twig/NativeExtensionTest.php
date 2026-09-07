@@ -19,7 +19,7 @@ use Symfony\UX\Native\Twig\NativeExtension;
 
 final class NativeExtensionTest extends TestCase
 {
-    public function testIsNativeReturnsTrueWhenAttributeIsTrue()
+    public function testIsNativeReturnsTrueWhenAttributeIsTrue(): void
     {
         $request = Request::create('/');
         $request->attributes->set(NativeListener::NATIVE_ATTRIBUTE, true);
@@ -29,7 +29,7 @@ final class NativeExtensionTest extends TestCase
         self::assertTrue($extension->isNative());
     }
 
-    public function testIsNativeReturnsFalseWhenAttributeIsFalse()
+    public function testIsNativeReturnsFalseWhenAttributeIsFalse(): void
     {
         $request = Request::create('/');
         $request->attributes->set(NativeListener::NATIVE_ATTRIBUTE, false);
@@ -39,14 +39,14 @@ final class NativeExtensionTest extends TestCase
         self::assertFalse($extension->isNative());
     }
 
-    public function testIsNativeReturnsFalseWhenNoRequest()
+    public function testIsNativeReturnsFalseWhenNoRequest(): void
     {
         $extension = $this->createExtension(null);
 
         self::assertFalse($extension->isNative());
     }
 
-    public function testIsNativeReturnsFalseWhenAttributeNotSet()
+    public function testIsNativeReturnsFalseWhenAttributeNotSet(): void
     {
         $request = Request::create('/');
 
@@ -55,7 +55,7 @@ final class NativeExtensionTest extends TestCase
         self::assertFalse($extension->isNative());
     }
 
-    public function testGetFunctionsRegistersUxIsNative()
+    public function testGetFunctionsRegistersUxIsNative(): void
     {
         $extension = $this->createExtension(null);
 

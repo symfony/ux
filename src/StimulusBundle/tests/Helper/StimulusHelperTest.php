@@ -18,7 +18,7 @@ use Twig\Environment;
 
 final class StimulusHelperTest extends TestCase
 {
-    public function testCreateStimulusAttributes()
+    public function testCreateStimulusAttributes(): void
     {
         $helper = new StimulusHelper($this->createMock(Environment::class));
         $attributes = $helper->createStimulusAttributes();

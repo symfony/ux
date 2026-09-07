@@ -17,7 +17,7 @@ use Symfony\UX\CalendarLink\Exception\InvalidArgumentException;
 
 final class CalendarEventTest extends TestCase
 {
-    public function testRejectsEmptyTitle()
+    public function testRejectsEmptyTitle(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -28,7 +28,7 @@ final class CalendarEventTest extends TestCase
         );
     }
 
-    public function testRejectsEndBeforeStart()
+    public function testRejectsEndBeforeStart(): void
     {
         $this->expectException(InvalidArgumentException::class);
 

@@ -33,7 +33,7 @@ class LintKitCommandTest extends TestCase
         return new LintKitCommand($kitFactory, new KitLinter());
     }
 
-    public function testLintBrokenFixtureReportsErrors()
+    public function testLintBrokenFixtureReportsErrors(): void
     {
         $result = TestCommand::for($this->createCommand())
             ->addArgument(self::getFixtureKitPath('lint-broken'))
@@ -76,7 +76,7 @@ class LintKitCommandTest extends TestCase
         self::assertStringContainsString('[ERROR] 3 error(s), 3 warning(s).', $output);
     }
 
-    public function testWarningsOnlyExitsSuccessfullyByDefault()
+    public function testWarningsOnlyExitsSuccessfullyByDefault(): void
     {
         TestCommand::for($this->createCommand())
             ->addArgument(self::getFixtureKitPath('lint-stimulus'))
@@ -87,7 +87,7 @@ class LintKitCommandTest extends TestCase
         ;
     }
 
-    public function testFailOnWarningExitsAsFailure()
+    public function testFailOnWarningExitsAsFailure(): void
     {
         TestCommand::for($this->createCommand())
             ->addArgument(self::getFixtureKitPath('lint-stimulus'))

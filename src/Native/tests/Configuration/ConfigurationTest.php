@@ -17,7 +17,7 @@ use Symfony\UX\Native\Configuration\Rule;
 
 final class ConfigurationTest extends TestCase
 {
-    public function testToArrayWithAllValues()
+    public function testToArrayWithAllValues(): void
     {
         $configuration = new Configuration(
             settings: ['use_local_db' => true, 'cable' => ['script_url' => 'https://example.com/cable.js']],
@@ -37,7 +37,7 @@ final class ConfigurationTest extends TestCase
         ], $configuration->toArray());
     }
 
-    public function testToArrayWithSettingsOnly()
+    public function testToArrayWithSettingsOnly(): void
     {
         $configuration = new Configuration(
             settings: ['use_local_db' => false],
@@ -48,7 +48,7 @@ final class ConfigurationTest extends TestCase
         ], $configuration->toArray());
     }
 
-    public function testToArrayWithRulesOnly()
+    public function testToArrayWithRulesOnly(): void
     {
         $configuration = new Configuration(
             rules: [
@@ -66,14 +66,14 @@ final class ConfigurationTest extends TestCase
         ], $configuration->toArray());
     }
 
-    public function testToArrayWithNoValues()
+    public function testToArrayWithNoValues(): void
     {
         $configuration = new Configuration();
 
         self::assertSame([], $configuration->toArray());
     }
 
-    public function testToArrayWithMultipleRules()
+    public function testToArrayWithMultipleRules(): void
     {
         $configuration = new Configuration(
             rules: [

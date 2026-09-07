@@ -24,7 +24,7 @@ class RequestPropsExtractorTest extends KernelTestCase
     use LiveComponentTestHelper;
 
     #[DataProvider('getQueryStringTests')]
-    public function testExtractFromQueryString(string $queryString, array $expected, array $attributes = [])
+    public function testExtractFromQueryString(string $queryString, array $expected, array $attributes = []): void
     {
         $extractor = new RequestPropsExtractor($this->hydrator());
 

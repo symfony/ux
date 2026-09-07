@@ -26,7 +26,7 @@ use Twig\Runtime\EscaperRuntime;
  */
 class DeferLiveComponentSubscriberTest extends TestCase
 {
-    public function testLoadingAttributeIsExtracted()
+    public function testLoadingAttributeIsExtracted(): void
     {
         $subscriber = new DeferLiveComponentSubscriber();
         $event = $this->createPostMountEvent(['loading' => 'lazy']);
@@ -38,7 +38,7 @@ class DeferLiveComponentSubscriberTest extends TestCase
         $this->assertArrayNotHasKey('loading', $event->getData());
     }
 
-    public function testLoadingAttributeIsNotExtractedWhenComponentIsNotLive()
+    public function testLoadingAttributeIsNotExtractedWhenComponentIsNotLive(): void
     {
         $data = ['loading' => 'lazy'];
         $event = new PostMountEvent(new \stdClass(), $data, new ComponentMetadata([]));
@@ -51,7 +51,7 @@ class DeferLiveComponentSubscriberTest extends TestCase
         $this->assertArrayHasKey('loading', $event->getData());
     }
 
-    public function testLoadingAttributesAreRemoved()
+    public function testLoadingAttributesAreRemoved(): void
     {
         $subscriber = new DeferLiveComponentSubscriber();
         $event = $this->createPostMountEvent([
@@ -68,7 +68,7 @@ class DeferLiveComponentSubscriberTest extends TestCase
     }
 
     #[DataProvider('provideInvalidLoadingValues')]
-    public function testInvalidLoadingValuesThrows(mixed $value)
+    public function testInvalidLoadingValuesThrows(mixed $value): void
     {
         $subscriber = new DeferLiveComponentSubscriber();
         $event = $this->createPostMountEvent([
@@ -90,7 +90,7 @@ class DeferLiveComponentSubscriberTest extends TestCase
         ];
     }
 
-    public function testOnPreRenderUsesEventTemplateInsteadOfMetadataTemplate()
+    public function testOnPreRenderUsesEventTemplateInsteadOfMetadataTemplate(): void
     {
         $subscriber = new DeferLiveComponentSubscriber();
 
@@ -123,7 +123,7 @@ class DeferLiveComponentSubscriberTest extends TestCase
         $this->assertSame('value', $variables['existing_var']);
     }
 
-    public function testOnPreRenderDoesNothingWhenNoLoadingMetadata()
+    public function testOnPreRenderDoesNothingWhenNoLoadingMetadata(): void
     {
         $subscriber = new DeferLiveComponentSubscriber();
 

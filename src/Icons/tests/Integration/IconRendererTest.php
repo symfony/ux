@@ -20,18 +20,18 @@ use Symfony\UX\Icons\IconRendererInterface;
  */
 final class IconRendererTest extends KernelTestCase
 {
-    public function testIconRenderService()
+    public function testIconRenderService(): void
     {
         $this->assertTrue(self::getContainer()->has(IconRendererInterface::class));
     }
 
-    public function testIconRendererAlias()
+    public function testIconRendererAlias(): void
     {
         $renderer = self::getContainer()->get(IconRendererInterface::class);
         $this->assertInstanceOf(IconRenderer::class, $renderer);
     }
 
-    public function testIconRendererIsPrivate()
+    public function testIconRendererIsPrivate(): void
     {
         $this->assertFalse(self::getContainer()->has(IconRenderer::class));
     }

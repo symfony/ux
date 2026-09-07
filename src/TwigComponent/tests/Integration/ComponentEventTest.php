@@ -24,7 +24,7 @@ use Twig\Loader\ArrayLoader;
 final class ComponentEventTest extends KernelTestCase
 {
     #[DataProvider('provideFooBarSyntaxes')]
-    public function testTemplateIsUpdatedByEventListener(string $syntax)
+    public function testTemplateIsUpdatedByEventListener(string $syntax): void
     {
         /** @var Environment $environment */
         $environment = self::getContainer()->get(Environment::class);

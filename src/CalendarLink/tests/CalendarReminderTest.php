@@ -31,24 +31,24 @@ final class CalendarReminderTest extends TestCase
     }
 
     #[DataProvider('beforeProvider')]
-    public function testBeforeProducesExpectedMinutes(CalendarReminder $reminder, int $expected)
+    public function testBeforeProducesExpectedMinutes(CalendarReminder $reminder, int $expected): void
     {
         $this->assertSame($expected, $reminder->minutesBefore);
     }
 
-    public function testDescriptionIsKept()
+    public function testDescriptionIsKept(): void
     {
         $this->assertSame('Leave early', CalendarReminder::before(hours: 2, description: 'Leave early')->description);
     }
 
-    public function testRejectsZeroTotal()
+    public function testRejectsZeroTotal(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
         CalendarReminder::before();
     }
 
-    public function testRejectsNegativeArgument()
+    public function testRejectsNegativeArgument(): void
     {
         $this->expectException(InvalidArgumentException::class);
 

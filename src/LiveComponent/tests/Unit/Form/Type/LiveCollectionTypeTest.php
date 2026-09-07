@@ -20,7 +20,7 @@ use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
  */
 final class LiveCollectionTypeTest extends TypeTestCase
 {
-    public function testAddButtonPrototypeDefaultBlockPrefixes()
+    public function testAddButtonPrototypeDefaultBlockPrefixes(): void
     {
         $collectionView = $this->factory->createNamed('fields', LiveCollectionType::class, [], [
             'allow_add' => true,
@@ -38,7 +38,7 @@ final class LiveCollectionTypeTest extends TypeTestCase
         $this->assertSame($expectedBlockPrefixes, $collectionView->vars['button_add']->vars['block_prefixes']);
     }
 
-    public function testAddButtonPrototypeBlockPrefixesWithCustomBlockPrefix()
+    public function testAddButtonPrototypeBlockPrefixesWithCustomBlockPrefix(): void
     {
         $collectionView = $this->factory->createNamed('fields', LiveCollectionType::class, [], [
             'allow_add' => true,
@@ -58,7 +58,7 @@ final class LiveCollectionTypeTest extends TypeTestCase
         $this->assertSame($expectedBlockPrefixes, $collectionView->vars['button_add']->vars['block_prefixes']);
     }
 
-    public function testDeleteButtonPrototypeDefaultBlockPrefixes()
+    public function testDeleteButtonPrototypeDefaultBlockPrefixes(): void
     {
         $collectionView = $this->factory->createNamed('tags', LiveCollectionType::class, [
             'tags' => ['tag01'],
@@ -79,7 +79,7 @@ final class LiveCollectionTypeTest extends TypeTestCase
         $this->assertSame($expectedBlockPrefixes, $collectionView['tags']->vars['button_delete']->vars['block_prefixes']);
     }
 
-    public function testDeleteButtonPrototypeBlockPrefixesWithCustomBlockPrefix()
+    public function testDeleteButtonPrototypeBlockPrefixesWithCustomBlockPrefix(): void
     {
         $collectionView = $this->factory->createNamed('tags', LiveCollectionType::class, [
             'tags' => ['tag01'],

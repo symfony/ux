@@ -22,7 +22,7 @@ use Symfony\UX\Pagination\Cursor\CursorSlice;
 #[CoversClass(CursorSlice::class)]
 final class CursorValueObjectTest extends TestCase
 {
-    public function testBoundaryExposesItsValuesAndDirection()
+    public function testBoundaryExposesItsValuesAndDirection(): void
     {
         $boundary = new CursorBoundary([42, 'release'], false);
 
@@ -30,7 +30,7 @@ final class CursorValueObjectTest extends TestCase
         self::assertFalse($boundary->pointsForward());
     }
 
-    public function testSliceExposesItemsAndBoundaries()
+    public function testSliceExposesItemsAndBoundaries(): void
     {
         $next = new CursorBoundary([3]);
         $previous = new CursorBoundary([1], false);
@@ -42,7 +42,7 @@ final class CursorValueObjectTest extends TestCase
         self::assertTrue($slice->hasNext());
     }
 
-    public function testFieldOrderExposesNormalizedFieldsAndStableFingerprint()
+    public function testFieldOrderExposesNormalizedFieldsAndStableFingerprint(): void
     {
         $order = CursorOrder::byFields(['createdAt', 'id'], 'desc');
 
@@ -58,7 +58,7 @@ final class CursorValueObjectTest extends TestCase
         );
     }
 
-    public function testOpaqueOrderIdentityIsStableAndNotFieldBased()
+    public function testOpaqueOrderIdentityIsStableAndNotFieldBased(): void
     {
         $order = CursorOrder::byIdentity('github:pull-requests:created-desc');
 
@@ -74,19 +74,19 @@ final class CursorValueObjectTest extends TestCase
         );
     }
 
-    public function testOrderRejectsInvalidDefinitions()
+    public function testOrderRejectsInvalidDefinitions(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         CursorOrder::byFields([], 'ASC');
     }
 
-    public function testOrderRejectsInvalidDirection()
+    public function testOrderRejectsInvalidDirection(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         CursorOrder::byFields(['id'], 'sideways');
     }
 
-    public function testOpaqueOrderRejectsEmptyIdentity()
+    public function testOpaqueOrderRejectsEmptyIdentity(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         CursorOrder::byIdentity('');

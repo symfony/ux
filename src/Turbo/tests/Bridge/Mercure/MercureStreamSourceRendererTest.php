@@ -21,7 +21,7 @@ final class MercureStreamSourceRendererTest extends KernelTestCase
      * @param array<mixed> $context
      */
     #[DataProvider('provideTestCases')]
-    public function testRenderTurboStreamFrom(string $template, array $context, string $expectedResult)
+    public function testRenderTurboStreamFrom(string $template, array $context, string $expectedResult): void
     {
         $twig = self::getContainer()->get('twig');
         self::assertInstanceOf(\Twig\Environment::class, $twig);

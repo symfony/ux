@@ -22,7 +22,7 @@ use Symfony\UX\Translator\Intl\Type;
 class IntlMessageParserTest extends TestCase
 {
     #[DataProvider('provideParse')]
-    public function testIntlMessageParser(string $message, array $expectedAst)
+    public function testIntlMessageParser(string $message, array $expectedAst): void
     {
         $intlMessageParser = new IntlMessageParser($message);
 
@@ -375,7 +375,7 @@ class IntlMessageParserTest extends TestCase
         ];
     }
 
-    public function testParseWithUnclosedBracket()
+    public function testParseWithUnclosedBracket(): void
     {
         $intlMessageParser = new IntlMessageParser('Hello {name!');
 

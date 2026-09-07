@@ -42,7 +42,7 @@ final class LockIconsCommandTest extends KernelTestCase
         }
     }
 
-    public function testImportFoundIcons()
+    public function testImportFoundIcons(): void
     {
         foreach (self::ICONS as $icon) {
             $this->assertFileDoesNotExist($icon);
@@ -68,7 +68,7 @@ final class LockIconsCommandTest extends KernelTestCase
         ;
     }
 
-    public function testForceImportFoundIcons()
+    public function testForceImportFoundIcons(): void
     {
         $this->executeConsoleCommand('ux:icons:lock')
             ->assertSuccessful()

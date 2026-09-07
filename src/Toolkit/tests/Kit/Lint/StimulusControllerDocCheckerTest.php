@@ -46,25 +46,25 @@ class StimulusControllerDocCheckerTest extends TestCase
         ));
     }
 
-    public function testValidControllerProducesNoIssues()
+    public function testValidControllerProducesNoIssues(): void
     {
         self::assertSame([], $this->issuesForFile($this->lintCases(), 'valid_controller.js'));
     }
 
-    public function testUndocumentedControllerIsNotReported()
+    public function testUndocumentedControllerIsNotReported(): void
     {
         // Documentation is opt-in: a controller with no tags at all must be left alone.
         self::assertSame([], $this->issuesForFile($this->lintCases(), 'undocumented_controller.js'));
     }
 
-    public function testAllIssuesAreWarnings()
+    public function testAllIssuesAreWarnings(): void
     {
         foreach ($this->lintCases()->getIssues() as $issue) {
             self::assertSame(LintSeverity::Warning, $issue->severity);
         }
     }
 
-    public function testMismatchesAreReportedBothWays()
+    public function testMismatchesAreReportedBothWays(): void
     {
         $issues = $this->issuesForFile($this->lintCases(), 'mismatch_controller.js');
         $messages = array_map(static fn (LintIssue $i) => $i->message, $issues);
@@ -77,7 +77,7 @@ class StimulusControllerDocCheckerTest extends TestCase
         self::assertStringContainsString('"autoClose" is declared in the controller but has no `@value', implode("\n", $messages));
     }
 
-    public function testClassMismatchesAreReportedBothWays()
+    public function testClassMismatchesAreReportedBothWays(): void
     {
         $issues = $this->issuesForFile($this->lintCases(), 'class_conflict_controller.js');
         $messages = array_map(static fn (LintIssue $i) => $i->message, $issues);
@@ -90,7 +90,7 @@ class StimulusControllerDocCheckerTest extends TestCase
         self::assertStringContainsString('"loading" is declared in the controller but has no `@css-class', implode("\n", $messages));
     }
 
-    public function testOutletMismatchesAreReportedBothWays()
+    public function testOutletMismatchesAreReportedBothWays(): void
     {
         $issues = $this->issuesForFile($this->lintCases(), 'outlet_conflict_controller.js');
         $messages = array_map(static fn (LintIssue $i) => $i->message, $issues);
@@ -103,7 +103,7 @@ class StimulusControllerDocCheckerTest extends TestCase
         self::assertStringContainsString('"flash" is declared in the controller but has no `@outlet', implode("\n", $messages));
     }
 
-    public function testBadDescriptionIsReported()
+    public function testBadDescriptionIsReported(): void
     {
         $issues = $this->issuesForFile($this->lintCases(), 'bad_description_controller.js');
 
@@ -113,7 +113,7 @@ class StimulusControllerDocCheckerTest extends TestCase
         }
     }
 
-    public function testActionWithoutMatchingMethodIsReported()
+    public function testActionWithoutMatchingMethodIsReported(): void
     {
         $issues = $this->issuesForFile($this->lintCases(), 'orphan_action_controller.js');
 

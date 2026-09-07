@@ -16,7 +16,7 @@ use Symfony\UX\LiveComponent\Twig\LiveComponentRuntime;
 
 final class LiveComponentRuntimeTest extends KernelTestCase
 {
-    public function testGetLiveAction()
+    public function testGetLiveAction(): void
     {
         $runtime = self::getContainer()->get('ux.live_component.twig.component_runtime');
         \assert($runtime instanceof LiveComponentRuntime);

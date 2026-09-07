@@ -24,7 +24,7 @@ use Symfony\UX\Icons\Tests\Util\InMemoryIconRegistry;
  */
 class IconRendererTest extends TestCase
 {
-    public function testRenderIcon()
+    public function testRenderIcon(): void
     {
         $registry = $this->createRegistry([
             'user' => '<circle ',
@@ -37,7 +37,7 @@ class IconRendererTest extends TestCase
         $this->assertStringContainsString('<circle', $icon);
     }
 
-    public function testRenderIconThrowsExceptionWhenIconNotFound()
+    public function testRenderIconThrowsExceptionWhenIconNotFound(): void
     {
         $registry = $this->createRegistry([]);
         $iconRenderer = new IconRenderer($registry);
@@ -47,7 +47,7 @@ class IconRendererTest extends TestCase
         $iconRenderer->renderIcon('foo');
     }
 
-    public function testRenderIconThrowsExceptionWhenAttributesAreInvalid()
+    public function testRenderIconThrowsExceptionWhenAttributesAreInvalid(): void
     {
         $registry = $this->createRegistry(['foo' => '<path d="M0 0L12 12"/>']);
         $iconRenderer = new IconRenderer($registry);
@@ -57,7 +57,7 @@ class IconRendererTest extends TestCase
         $iconRenderer->renderIcon('foo', [1, 2, null]);
     }
 
-    public function testRenderIconWithAttributes()
+    public function testRenderIconWithAttributes(): void
     {
         $registry = $this->createRegistry([
             'foo' => '<path d="M0 0L12 12"/>',
@@ -70,7 +70,7 @@ class IconRendererTest extends TestCase
         $this->assertSame('<svg viewBox="0 0 24 24" class="icon" id="FooBar" aria-hidden="true"><path d="M0 0L12 12"/></svg>', $svg);
     }
 
-    public function testRenderIconWithDefaultAttributes()
+    public function testRenderIconWithDefaultAttributes(): void
     {
         $registry = $this->createRegistry([
             'foo' => '<path d="M0 0L12 12"/>',
@@ -279,7 +279,7 @@ class IconRendererTest extends TestCase
      * @param array<string, string|bool>                       $attributes
      */
     #[DataProvider('provideAriaHiddenCases')]
-    public function testRenderIconWithAutoAriaHidden(string|array $icon, array $attributes, string $expectedSvg)
+    public function testRenderIconWithAutoAriaHidden(string|array $icon, array $attributes, string $expectedSvg): void
     {
         $icon = (array) $icon;
         $registry = $this->createRegistry([
@@ -343,7 +343,7 @@ class IconRendererTest extends TestCase
         ];
     }
 
-    public function testRenderIconWithAliases()
+    public function testRenderIconWithAliases(): void
     {
         $registry = $this->createRegistry([
             'foo' => '<path d="M0 FOO"/>',
@@ -366,7 +366,7 @@ class IconRendererTest extends TestCase
      * @param array<string, string> $attributes
      */
     #[DataProvider('provideRenderIconWithIconSetAttributes')]
-    public function testRenderIconWithIconSetAttributes(string $name, array $attributes, string $expectedSvg)
+    public function testRenderIconWithIconSetAttributes(string $name, array $attributes, string $expectedSvg): void
     {
         $registry = $this->createRegistry([
             'a' => '<path d="a"/>',
@@ -408,7 +408,7 @@ class IconRendererTest extends TestCase
      * @dataProvider provideRenderIconWithSuffixCases
      */
     #[DataProvider('provideRenderIconWithSuffixCases')]
-    public function testRenderIconWithSuffixes(string $name, string $expectedSvg)
+    public function testRenderIconWithSuffixes(string $name, string $expectedSvg): void
     {
         $registry = $this->createRegistry([
             'heroicons:arrow-right' => '<path d="outline"/>',
@@ -445,7 +445,7 @@ class IconRendererTest extends TestCase
         ];
     }
 
-    public function testRenderIconWithSuffixAttributeCascade()
+    public function testRenderIconWithSuffixAttributeCascade(): void
     {
         $registry = $this->createRegistry([
             'heroicons:arrow-solid' => ['<path d="solid"/>', ['ico' => 'ICON']],
@@ -465,7 +465,7 @@ class IconRendererTest extends TestCase
         $this->assertSame('<svg ico="ICON" def="DEF" set="SET" suf="SUF" ren="REN">', substr($svg, 0, strpos($svg, '>') + 1));
     }
 
-    public function testRenderIconWithSuffixOverwritesCascade()
+    public function testRenderIconWithSuffixOverwritesCascade(): void
     {
         $registry = $this->createRegistry([
             'heroicons:arrow-solid' => '<path d="solid"/>',
@@ -485,7 +485,7 @@ class IconRendererTest extends TestCase
         $this->assertSame('<svg class="icon-solid"><path d="solid"/></svg>', $svg);
     }
 
-    public function testRenderIconWithSuffixAndRenderTimeOverwrite()
+    public function testRenderIconWithSuffixAndRenderTimeOverwrite(): void
     {
         $registry = $this->createRegistry([
             'heroicons:arrow-solid' => '<path d="solid"/>',
@@ -503,7 +503,7 @@ class IconRendererTest extends TestCase
         $this->assertSame('<svg class="custom"><path d="solid"/></svg>', $svg);
     }
 
-    public function testRenderIconWithoutSuffixesRemainsBackwardsCompatible()
+    public function testRenderIconWithoutSuffixesRemainsBackwardsCompatible(): void
     {
         $registry = $this->createRegistry([
             'heroicons:arrow' => '<path d="arrow"/>',
@@ -516,7 +516,7 @@ class IconRendererTest extends TestCase
         $this->assertSame('<svg class="icon" fill="none"><path d="arrow"/></svg>', $svg);
     }
 
-    public function testRenderIconWithSuffixAndAliases()
+    public function testRenderIconWithSuffixAndAliases(): void
     {
         $registry = $this->createRegistry([
             'heroicons:arrow-solid' => '<path d="solid"/>',
@@ -535,7 +535,7 @@ class IconRendererTest extends TestCase
         $this->assertSame('<svg class="icon-solid"><path d="solid"/></svg>', $svg);
     }
 
-    public function testRenderIconWithNoMatchingSuffix()
+    public function testRenderIconWithNoMatchingSuffix(): void
     {
         $registry = $this->createRegistry([
             'heroicons:arrow-unknown' => '<path d="unknown"/>',
@@ -553,7 +553,7 @@ class IconRendererTest extends TestCase
         $this->assertSame('<svg class="default"><path d="unknown"/></svg>', $svg);
     }
 
-    public function testRenderIconWithSuffixOnIconSetWithoutSuffixes()
+    public function testRenderIconWithSuffixOnIconSetWithoutSuffixes(): void
     {
         $registry = $this->createRegistry([
             'other:icon-solid' => '<path d="solid"/>',

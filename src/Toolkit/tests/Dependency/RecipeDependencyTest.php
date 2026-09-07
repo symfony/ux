@@ -16,7 +16,7 @@ use Symfony\UX\Toolkit\Dependency\RecipeDependency;
 
 final class RecipeDependencyTest extends TestCase
 {
-    public function testShouldBeInstantiable()
+    public function testShouldBeInstantiable(): void
     {
         $dependency = new RecipeDependency('Table');
         $this->assertSame('Table', $dependency->name);

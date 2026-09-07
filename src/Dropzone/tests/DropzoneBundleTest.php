@@ -33,13 +33,13 @@ class DropzoneBundleTest extends TestCase
     }
 
     #[DataProvider('provideKernels')]
-    public function testBootKernel(Kernel $kernel)
+    public function testBootKernel(Kernel $kernel): void
     {
         $kernel->boot();
         $this->assertArrayHasKey('DropzoneBundle', $kernel->getBundles());
     }
 
-    public function testFormThemeMerging()
+    public function testFormThemeMerging(): void
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();

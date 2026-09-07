@@ -60,7 +60,7 @@ final class DoctrineCursorInvariantTest extends TestCase
         }
     }
 
-    public function testForwardWalkPartitionsDataset()
+    public function testForwardWalkPartitionsDataset(): void
     {
         $this->createAuthors(23);
 
@@ -76,7 +76,7 @@ final class DoctrineCursorInvariantTest extends TestCase
         self::assertSame(range(1, 23), $ids);
     }
 
-    public function testBackwardWalkIsExactInverseOfForwardWalk()
+    public function testBackwardWalkIsExactInverseOfForwardWalk(): void
     {
         $this->createAuthors(23);
 
@@ -104,7 +104,7 @@ final class DoctrineCursorInvariantTest extends TestCase
         self::assertSame(\array_slice($forwardPages, 0, -1), array_reverse($backwardPages));
     }
 
-    public function testDeletionBetweenPagesNeverSkipsSurvivors()
+    public function testDeletionBetweenPagesNeverSkipsSurvivors(): void
     {
         $this->createAuthors(15);
 
@@ -125,7 +125,7 @@ final class DoctrineCursorInvariantTest extends TestCase
         self::assertSame([6, 8, 9, 10, 11], $this->idsOf($page2->items));
     }
 
-    public function testInsertionBetweenPagesNeverDuplicates()
+    public function testInsertionBetweenPagesNeverDuplicates(): void
     {
         $this->createAuthors(15);
 
@@ -150,7 +150,7 @@ final class DoctrineCursorInvariantTest extends TestCase
         self::assertSame(range(1, 16), $seen, 'Every row, including the inserted one, is seen exactly once');
     }
 
-    public function testDatetimeCursorBoundariesAreStableInNonUtcDefaultTimezone()
+    public function testDatetimeCursorBoundariesAreStableInNonUtcDefaultTimezone(): void
     {
         $previousTimezone = date_default_timezone_get();
         date_default_timezone_set('Europe/Paris');
@@ -188,7 +188,7 @@ final class DoctrineCursorInvariantTest extends TestCase
         }
     }
 
-    public function testExistingOrderIsRejectedEvenWhenCompatible()
+    public function testExistingOrderIsRejectedEvenWhenCompatible(): void
     {
         $this->createAuthors(8);
         $query = $this->queryBuilder()->orderBy('a.id', 'ASC');
@@ -198,7 +198,7 @@ final class DoctrineCursorInvariantTest extends TestCase
         $this->adapter->sliceWithCursor($query, null, 5, $this->ascendingIdOrder);
     }
 
-    public function testIncompatibleExistingOrderIsRejected()
+    public function testIncompatibleExistingOrderIsRejected(): void
     {
         $this->createAuthors(8);
         $query = $this->queryBuilder()->orderBy('a.name', 'ASC');
@@ -208,7 +208,7 @@ final class DoctrineCursorInvariantTest extends TestCase
         $this->adapter->sliceWithCursor($query, null, 5, $this->ascendingIdOrder);
     }
 
-    public function testAutomaticContextBindsDoctrineDqlAndParameters()
+    public function testAutomaticContextBindsDoctrineDqlAndParameters(): void
     {
         $this->createAuthors(12);
         $paginator = new Paginator([$this->adapter], cursorCodec: new CursorCodec('test-secret'));
@@ -234,7 +234,7 @@ final class DoctrineCursorInvariantTest extends TestCase
         $builder->paginate();
     }
 
-    public function testSignedOrderIncludesAutomaticallyAppendedIdentifierFields()
+    public function testSignedOrderIncludesAutomaticallyAppendedIdentifierFields(): void
     {
         $this->createAuthors(6);
         $codec = new CursorCodec('test-secret');

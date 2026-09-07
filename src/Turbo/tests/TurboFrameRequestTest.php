@@ -21,14 +21,14 @@ use Symfony\UX\Turbo\TurboFrame;
  */
 class TurboFrameRequestTest extends TestCase
 {
-    public function testIsRequestReturnsFalseWithoutHeader()
+    public function testIsRequestReturnsFalseWithoutHeader(): void
     {
         $turboFrame = $this->createTurboFrame(Request::create('/'));
 
         $this->assertFalse($turboFrame->isFrameRequest());
     }
 
-    public function testIsRequestReturnsTrueWithHeader()
+    public function testIsRequestReturnsTrueWithHeader(): void
     {
         $request = Request::create('/');
         $request->headers->set('Turbo-Frame', 'my_frame');
@@ -38,14 +38,14 @@ class TurboFrameRequestTest extends TestCase
         $this->assertTrue($turboFrame->isFrameRequest());
     }
 
-    public function testGetRequestIdReturnsNullWithoutHeader()
+    public function testGetRequestIdReturnsNullWithoutHeader(): void
     {
         $turboFrame = $this->createTurboFrame(Request::create('/'));
 
         $this->assertNull($turboFrame->getRequestId());
     }
 
-    public function testGetRequestIdReturnsFrameId()
+    public function testGetRequestIdReturnsFrameId(): void
     {
         $request = Request::create('/');
         $request->headers->set('Turbo-Frame', 'my_frame');
@@ -55,7 +55,7 @@ class TurboFrameRequestTest extends TestCase
         $this->assertSame('my_frame', $turboFrame->getRequestId());
     }
 
-    public function testGetRequestIdReturnsNullWithNoCurrentRequest()
+    public function testGetRequestIdReturnsNullWithNoCurrentRequest(): void
     {
         $requestStack = new RequestStack();
         $turboFrame = new TurboFrame($requestStack);

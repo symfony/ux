@@ -19,7 +19,7 @@ use Symfony\UX\Map\Renderer\Dsn;
 final class DsnTest extends TestCase
 {
     #[DataProvider('constructDsn')]
-    public function testConstruct(string $dsnString, string $scheme, string $host, ?string $user = null, array $options = [], ?string $path = null)
+    public function testConstruct(string $dsnString, string $scheme, string $host, ?string $user = null, array $options = [], ?string $path = null): void
     {
         $dsn = new Dsn($dsnString);
         self::assertSame($dsnString, $dsn->getOriginalDsn());
@@ -77,7 +77,7 @@ final class DsnTest extends TestCase
     }
 
     #[DataProvider('invalidDsn')]
-    public function testInvalidDsn(string $dsnString, string $exceptionMessage)
+    public function testInvalidDsn(string $dsnString, string $exceptionMessage): void
     {
         self::expectException(InvalidArgumentException::class);
         self::expectExceptionMessage($exceptionMessage);

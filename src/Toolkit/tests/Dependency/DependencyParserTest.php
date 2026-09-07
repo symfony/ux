@@ -21,13 +21,13 @@ use Symfony\UX\Toolkit\Dependency\RecipeDependency;
 
 final class DependencyParserTest extends TestCase
 {
-    public function testParseNullReturnsEmptyList()
+    public function testParseNullReturnsEmptyList(): void
     {
         $this->assertSame([], DependencyParser::parse(null, allowRecipe: true));
         $this->assertSame([], DependencyParser::parse(null, allowRecipe: false));
     }
 
-    public function testParseTypedDependencies()
+    public function testParseTypedDependencies(): void
     {
         $dependencies = DependencyParser::parse([
             'composer' => ['tales-from-a-dev/twig-tailwind-extra:^1.0.0'],
@@ -43,14 +43,14 @@ final class DependencyParserTest extends TestCase
         ], $dependencies);
     }
 
-    public function testParseRecipeWhenAllowed()
+    public function testParseRecipeWhenAllowed(): void
     {
         $dependencies = DependencyParser::parse(['recipe' => ['Button']], allowRecipe: true);
 
         $this->assertEquals([new RecipeDependency('Button')], $dependencies);
     }
 
-    public function testParseRecipeWhenNotAllowedThrows()
+    public function testParseRecipeWhenNotAllowedThrows(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The dependency types "recipe" are not supported.');
@@ -58,7 +58,7 @@ final class DependencyParserTest extends TestCase
         DependencyParser::parse(['recipe' => ['Button']], allowRecipe: false);
     }
 
-    public function testParseRejectsNonObject()
+    public function testParseRejectsNonObject(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The "dependencies" property must be an object.');
@@ -66,7 +66,7 @@ final class DependencyParserTest extends TestCase
         DependencyParser::parse(['foo'], allowRecipe: true);
     }
 
-    public function testParseRejectsUnsupportedType()
+    public function testParseRejectsUnsupportedType(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The dependency types "unknown" are not supported.');

@@ -41,7 +41,7 @@ class CreateKitCommandTest extends KernelTestCase
         $this->filesystem->remove($this->tmpDir);
     }
 
-    public function testShouldBeAbleToCreateAKit()
+    public function testShouldBeAbleToCreateAKit(): void
     {
         $this->bootKernel();
         $this->consoleCommand('ux:toolkit:create-kit')

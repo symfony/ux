@@ -31,7 +31,7 @@ class FrameLayoutTest extends TestCase
         $this->twig = new Environment($this->loader);
     }
 
-    public function testRendersMinimalHtmlStructure()
+    public function testRendersMinimalHtmlStructure(): void
     {
         $result = $this->twig->render('@Turbo/layouts/frame.html.twig');
 
@@ -41,7 +41,7 @@ class FrameLayoutTest extends TestCase
         $this->assertStringContainsString('<body>', $result);
     }
 
-    public function testHeadBlockIsOverridable()
+    public function testHeadBlockIsOverridable(): void
     {
         $this->loader->addLoader(new ArrayLoader([
             'child.html.twig' => '{% extends "@Turbo/layouts/frame.html.twig" %}{% block head %}<meta name="test" content="present">{% endblock %}',
@@ -53,7 +53,7 @@ class FrameLayoutTest extends TestCase
         $this->assertStringNotContainsString('<nav', $result);
     }
 
-    public function testBodyBlockIsOverridable()
+    public function testBodyBlockIsOverridable(): void
     {
         $this->loader->addLoader(new ArrayLoader([
             'child.html.twig' => '{% extends "@Turbo/layouts/frame.html.twig" %}{% block body %}<turbo-frame id="test">content</turbo-frame>{% endblock %}',
@@ -64,7 +64,7 @@ class FrameLayoutTest extends TestCase
         $this->assertStringContainsString('<turbo-frame id="test">content</turbo-frame>', $result);
     }
 
-    public function testHeadAndBodyBlocksAreIndependent()
+    public function testHeadAndBodyBlocksAreIndependent(): void
     {
         $this->loader->addLoader(new ArrayLoader([
             'child.html.twig' => '{% extends "@Turbo/layouts/frame.html.twig" %}{% block head %}<meta name="test" content="present">{% endblock %}{% block body %}<turbo-frame id="test">content</turbo-frame>{% endblock %}',

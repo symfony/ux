@@ -19,7 +19,7 @@ use Symfony\UX\Toolkit\Recipe\RecipeType;
 
 final class RecipeTest extends TestCase
 {
-    public function testShouldFailWhenPathIsNotAbsolute()
+    public function testShouldFailWhenPathIsNotAbsolute(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Kit path "relative/path" is not absolute.');
@@ -31,7 +31,7 @@ final class RecipeTest extends TestCase
         ));
     }
 
-    public function testShouldFailWhenInvalidCopyFiles()
+    public function testShouldFailWhenInvalidCopyFiles(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Copy file destination "/" must be a relative path.');
@@ -45,7 +45,7 @@ final class RecipeTest extends TestCase
         ));
     }
 
-    public function testGetCopyFiles()
+    public function testGetCopyFiles(): void
     {
         $recipe = new Recipe('test-recipe', __DIR__.'/../../kits/shadcn/table', new RecipeManifest(
             type: RecipeType::Component,
@@ -67,7 +67,7 @@ final class RecipeTest extends TestCase
         ], iterator_to_array($recipe->getFiles()));
     }
 
-    public function testGetCopyFilesWithDifferentDestDir()
+    public function testGetCopyFilesWithDifferentDestDir(): void
     {
         $recipe = new Recipe('test-recipe', __DIR__.'/../../kits/shadcn/table', new RecipeManifest(
             type: RecipeType::Component,
@@ -89,7 +89,7 @@ final class RecipeTest extends TestCase
         ], iterator_to_array($recipe->getFiles()));
     }
 
-    public function testGetDescriptionReadsTheReadmeFirstParagraph()
+    public function testGetDescriptionReadsTheReadmeFirstParagraph(): void
     {
         $manifest = new RecipeManifest(RecipeType::Component, 'Alert', []);
 
@@ -100,7 +100,7 @@ final class RecipeTest extends TestCase
         $this->assertNull(new Recipe('alert', __DIR__, $manifest, doc: "# Alert\n\n::: example Demo")->getDescription());
     }
 
-    public function testGetExamplesReturnsPreviewBlocksOnly()
+    public function testGetExamplesReturnsPreviewBlocksOnly(): void
     {
         $doc = <<<'MD'
             # Avatar
@@ -130,7 +130,7 @@ final class RecipeTest extends TestCase
         $this->assertFalse($examples[0]['options']->collapseClass);
     }
 
-    public function testGetExamplesIsEmptyWithoutDoc()
+    public function testGetExamplesIsEmptyWithoutDoc(): void
     {
         $recipe = new Recipe('x', __DIR__, new RecipeManifest(
             type: RecipeType::Component,

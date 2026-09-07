@@ -33,7 +33,7 @@ final class InstallerTest extends KernelTestCase
         $this->filesystem->mkdir($this->tmpDir);
     }
 
-    public function testCanInstallComponent()
+    public function testCanInstallComponent(): void
     {
         $installer = new Installer(self::getContainer()->get('filesystem'), static fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
         $kit = $this->createKit('shadcn');
@@ -49,7 +49,7 @@ final class InstallerTest extends KernelTestCase
         $this->assertSame(file_get_contents($this->tmpDir.'/templates/components/Button.html.twig'), file_get_contents(\sprintf('%s/templates/components/Button.html.twig', $recipe->absolutePath)));
     }
 
-    public function testShouldAskIfFileAlreadyExists()
+    public function testShouldAskIfFileAlreadyExists(): void
     {
         $askedCount = 0;
         $installer = new Installer(self::getContainer()->get('filesystem'), static function () use (&$askedCount) {
@@ -72,7 +72,7 @@ final class InstallerTest extends KernelTestCase
         $this->assertSame(1, $askedCount);
     }
 
-    public function testCanInstallComponentIfForced()
+    public function testCanInstallComponentIfForced(): void
     {
         $installer = new Installer(self::getContainer()->get('filesystem'), static fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
         $kit = $this->createKit('shadcn');
@@ -91,7 +91,7 @@ final class InstallerTest extends KernelTestCase
         $this->assertSame(file_get_contents($this->tmpDir.'/templates/components/Button.html.twig'), file_get_contents(\sprintf('%s/templates/components/Button.html.twig', $recipe->absolutePath)));
     }
 
-    public function testCanInstallComponentAndItsComponentDependencies()
+    public function testCanInstallComponentAndItsComponentDependencies(): void
     {
         $installer = new Installer(self::getContainer()->get('filesystem'), static fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
         $kit = $this->createKit('shadcn');

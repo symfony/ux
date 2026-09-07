@@ -34,7 +34,7 @@ class InstallCommandTest extends KernelTestCase
         $this->filesystem->mkdir($this->tmpDir);
     }
 
-    public function testShouldAbleToInstallComponentTableAndItsDependencies()
+    public function testShouldAbleToInstallComponentTableAndItsDependencies(): void
     {
         $expectedFiles = [
             'table/templates/components/Table.html.twig' => Path::normalize($this->tmpDir.'/templates/components/Table.html.twig'),
@@ -66,7 +66,7 @@ class InstallCommandTest extends KernelTestCase
         }
     }
 
-    public function testShouldSuggestFrontendInstallationCommands()
+    public function testShouldSuggestFrontendInstallationCommands(): void
     {
         $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
         mkdir($destination);
@@ -80,7 +80,7 @@ class InstallCommandTest extends KernelTestCase
         ;
     }
 
-    public function testShouldSuggestBootstrapDependencies()
+    public function testShouldSuggestBootstrapDependencies(): void
     {
         $this->consoleCommand(\sprintf('ux:install button --kit=bootstrap --destination="%s"', str_replace('\\', '\\\\', $this->tmpDir)))
             ->execute()
@@ -90,7 +90,7 @@ class InstallCommandTest extends KernelTestCase
         ;
     }
 
-    public function testShouldFailAndSuggestAlternativeRecipesWhenKitIsExplicit()
+    public function testShouldFailAndSuggestAlternativeRecipesWhenKitIsExplicit(): void
     {
         $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
         mkdir($destination);
@@ -104,7 +104,7 @@ class InstallCommandTest extends KernelTestCase
         ;
     }
 
-    public function testShouldResolveRecipeNameCaseInsensitively()
+    public function testShouldResolveRecipeNameCaseInsensitively(): void
     {
         $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
         mkdir($destination);
@@ -120,7 +120,7 @@ class InstallCommandTest extends KernelTestCase
         ;
     }
 
-    public function testShouldResolveRecipeNameCaseInsensitivelyWithExplicitKit()
+    public function testShouldResolveRecipeNameCaseInsensitivelyWithExplicitKit(): void
     {
         $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
         mkdir($destination);
@@ -135,7 +135,7 @@ class InstallCommandTest extends KernelTestCase
         ;
     }
 
-    public function testShouldFailWhenComponentDoesNotExist()
+    public function testShouldFailWhenComponentDoesNotExist(): void
     {
         $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
         mkdir($destination);
@@ -147,7 +147,7 @@ class InstallCommandTest extends KernelTestCase
             ->assertOutputContains('The recipe "unknown" does not exist');
     }
 
-    public function testShouldSuggestAlternativesFromAllKitsWhenRecipeDoesNotExist()
+    public function testShouldSuggestAlternativesFromAllKitsWhenRecipeDoesNotExist(): void
     {
         $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
         mkdir($destination);
@@ -162,7 +162,7 @@ class InstallCommandTest extends KernelTestCase
         ;
     }
 
-    public function testShouldWarnWhenComponentFileAlreadyExistsInNonInteractiveMode()
+    public function testShouldWarnWhenComponentFileAlreadyExistsInNonInteractiveMode(): void
     {
         $destination = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid();
         mkdir($destination);

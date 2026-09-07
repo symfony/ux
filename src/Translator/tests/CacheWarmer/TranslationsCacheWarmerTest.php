@@ -31,7 +31,7 @@ final class TranslationsCacheWarmerTest extends TestCase
         @rmdir(self::$cacheDir);
     }
 
-    public function test()
+    public function test(): void
     {
         $translatorBag = new TranslatorBag();
         $translatorBag->addCatalogue(

@@ -19,7 +19,7 @@ use Symfony\UX\Pagination\Exception\OutOfRangePageException;
 #[CoversClass(OutOfRangePageException::class)]
 final class OutOfRangePageExceptionTest extends TestCase
 {
-    public function testPagesAreExposed()
+    public function testPagesAreExposed(): void
     {
         $exception = new OutOfRangePageException(12, 5);
 
@@ -27,7 +27,7 @@ final class OutOfRangePageExceptionTest extends TestCase
         self::assertSame(5, $exception->lastPage);
     }
 
-    public function testMessageContainsPages()
+    public function testMessageContainsPages(): void
     {
         $exception = new OutOfRangePageException(12, 5);
 
@@ -35,7 +35,7 @@ final class OutOfRangePageExceptionTest extends TestCase
         self::assertStringContainsString('5', $exception->getMessage());
     }
 
-    public function testIsANotFoundHttpException()
+    public function testIsANotFoundHttpException(): void
     {
         $exception = new OutOfRangePageException(2, 1);
 

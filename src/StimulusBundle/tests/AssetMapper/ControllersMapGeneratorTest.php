@@ -21,7 +21,7 @@ use Symfony\UX\StimulusBundle\Ux\UxPackageReader;
 
 class ControllersMapGeneratorTest extends TestCase
 {
-    public function testGetControllersMap()
+    public function testGetControllersMap(): void
     {
         $mapper = $this->createStub(AssetMapperInterface::class);
         $mapper->method('getAssetFromSourcePath')
@@ -119,7 +119,7 @@ class ControllersMapGeneratorTest extends TestCase
         $this->assertTrue($preservedComment->isLazy);
     }
 
-    public function testGetControllersMapThrowsOnUnmappedController()
+    public function testGetControllersMapThrowsOnUnmappedController(): void
     {
         $mapper = $this->createStub(AssetMapperInterface::class);
         $mapper->method('getAssetFromSourcePath')
@@ -158,7 +158,7 @@ class ControllersMapGeneratorTest extends TestCase
         $generator->getControllersMap();
     }
 
-    public function testCustomControllersAreSortedByName()
+    public function testCustomControllersAreSortedByName(): void
     {
         $mapper = $this->createMock(AssetMapperInterface::class);
         $mapper->expects($this->any())

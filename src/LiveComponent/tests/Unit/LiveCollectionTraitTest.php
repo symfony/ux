@@ -23,7 +23,7 @@ use Symfony\UX\LiveComponent\LiveCollectionTrait;
 final class LiveCollectionTraitTest extends TestCase
 {
     #[DataProvider('provideAddedItems')]
-    public function testAddCollectionItem(array $postedFormData, string $collectionFieldName, array $expectedFormData)
+    public function testAddCollectionItem(array $postedFormData, string $collectionFieldName, array $expectedFormData): void
     {
         $component = $this->createComponent($postedFormData);
 
@@ -33,7 +33,7 @@ final class LiveCollectionTraitTest extends TestCase
     }
 
     #[DataProvider('provideRemovedItems')]
-    public function testRemoveCollectionItem(array $postedFormData, string $collectionFieldName, int $index, array $expectedFormData)
+    public function testRemoveCollectionItem(array $postedFormData, string $collectionFieldName, int $index, array $expectedFormData): void
     {
         $component = $this->createComponent($postedFormData);
 

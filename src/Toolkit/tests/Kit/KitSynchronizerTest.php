@@ -30,7 +30,7 @@ final class KitSynchronizerTest extends KernelTestCase
         $this->bootKernel();
     }
 
-    public function testCanResolveDependencies()
+    public function testCanResolveDependencies(): void
     {
         $kitSynchronizer = new KitSynchronizer(new Filesystem(), new RecipeSynchronizer());
         $kit = self::createLocalKit('shadcn');

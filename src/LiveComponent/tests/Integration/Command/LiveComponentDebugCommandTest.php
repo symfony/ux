@@ -17,7 +17,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class LiveComponentDebugCommandTest extends KernelTestCase
 {
-    public function testList()
+    public function testList(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute([]);
@@ -31,7 +31,7 @@ class LiveComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('component2', $display);
     }
 
-    public function testListListeningToEvent()
+    public function testListListeningToEvent(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute(['--listening' => 'the_event_name']);
@@ -45,7 +45,7 @@ class LiveComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('component5', $display);
     }
 
-    public function testEmptyListListeningToEvent()
+    public function testEmptyListListeningToEvent(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute(['--listening' => 'event_not_defined']);
@@ -59,7 +59,7 @@ class LiveComponentDebugCommandTest extends KernelTestCase
         $this->assertStringNotContainsString('component5', $display);
     }
 
-    public function testWithNoMatchComponent()
+    public function testWithNoMatchComponent(): void
     {
         $commandTester = $this->createCommandTester();
         $result = $commandTester->execute(['name' => 'NoMatchComponent']);
@@ -68,7 +68,7 @@ class LiveComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('Unknown component "NoMatchComponent".', $commandTester->getDisplay());
     }
 
-    public function testNotLiveComponentsIsNotListed()
+    public function testNotLiveComponentsIsNotListed(): void
     {
         $commandTester = $this->createCommandTester();
         $result = $commandTester->execute(['name' => 'SimpleTwigComponent']);
@@ -77,7 +77,7 @@ class LiveComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('Unknown component "SimpleTwigComponent".', $commandTester->getDisplay());
     }
 
-    public function testWithOnePartialMatchComponent()
+    public function testWithOnePartialMatchComponent(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->setInputs([]);
@@ -91,7 +91,7 @@ class LiveComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('Component\\TodoListWithKeysComponent', $commandTester->getDisplay());
     }
 
-    public function testWithMultiplePartialMatchComponent()
+    public function testWithMultiplePartialMatchComponent(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->setInputs(['todo_list']);
@@ -109,7 +109,7 @@ class LiveComponentDebugCommandTest extends KernelTestCase
         $this->assertStringNotContainsString('Component\\TodoListWithKeysComponent', $commandTester->getDisplay());
     }
 
-    public function testComponent()
+    public function testComponent(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute(['name' => 'component1']);
@@ -123,7 +123,7 @@ class LiveComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('Component\\Component1', $display);
     }
 
-    public function testLivePropsWithFieldName()
+    public function testLivePropsWithFieldName(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute(['name' => 'component3']);
@@ -139,7 +139,7 @@ class LiveComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('$prop2 (fieldName: "getProp2Name()"', $display);
     }
 
-    public function testLivePropsWithUrlMapping()
+    public function testLivePropsWithUrlMapping(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute(['name' => 'component_with_url_bound_props']);
@@ -154,7 +154,7 @@ class LiveComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('$pathPropWithAlias (writable: true, url: {"as":"pathAlias","mapPath":true})', $display);
     }
 
-    public function testWithLiveListeners()
+    public function testWithLiveListeners(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute(['name' => 'component2']);

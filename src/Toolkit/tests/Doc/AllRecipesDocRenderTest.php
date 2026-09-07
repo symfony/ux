@@ -48,7 +48,7 @@ final class AllRecipesDocRenderTest extends KernelTestCase
     }
 
     #[DataProvider('provideDocumentedRecipes')]
-    public function testDocMdRenders(string $kitName, string $recipeName)
+    public function testDocMdRenders(string $kitName, string $recipeName): void
     {
         $kitFactory = self::getContainer()->get('ux_toolkit.kit.kit_factory');
         \assert($kitFactory instanceof KitFactory);

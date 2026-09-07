@@ -19,7 +19,7 @@ use Symfony\UX\Toolkit\Recipe\RecipeSynchronizer;
 
 final class RecipeSynchronizerTest extends TestCase
 {
-    public function testSynchronize()
+    public function testSynchronize(): void
     {
         $kit = new Kit(__DIR__, new KitManifest('foo', 'Description', 'MIT', 'https://example.com'));
         $recipeSynchronizer = new RecipeSynchronizer();

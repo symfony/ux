@@ -18,7 +18,7 @@ use Symfony\UX\Vue\AssetMapper\VueControllerLoaderAssetCompiler;
 
 class VueControllerLoaderAssetCompilerTest extends TestCase
 {
-    public function testCompileDynamicallyAddsContents()
+    public function testCompileDynamicallyAddsContents(): void
     {
         $assetMapper = $this->createMock(AssetMapperInterface::class);
         $assetMapper->expects($this->exactly(2))

@@ -22,7 +22,7 @@ use Twig\Loader\FilesystemLoader;
 
 class CodePreviewExtensionTest extends TestCase
 {
-    public function testRendersLiveIframeWhenUrlGeneratorReturnsUrl()
+    public function testRendersLiveIframeWhenUrlGeneratorReturnsUrl(): void
     {
         $urlGenerator = new class implements PreviewUrlGenerator {
             public function generate(string $code, CodeOptions $options): ?string
@@ -37,7 +37,7 @@ class CodePreviewExtensionTest extends TestCase
         $this->assertStringContainsString('src="https://example.test/preview"', $html);
     }
 
-    public function testRendersStaticBlockWhenNoUrlGeneratorConfigured()
+    public function testRendersStaticBlockWhenNoUrlGeneratorConfigured(): void
     {
         $html = $this->render(new CodePreview('<twig:Button>Hi & bye</twig:Button>'), null);
 

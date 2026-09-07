@@ -33,7 +33,7 @@ final class BuildConfigurationsCommandTest extends TestCase
         new Filesystem()->remove($this->outputDir);
     }
 
-    public function testExecuteCallsBuildAndReturnsSuccess()
+    public function testExecuteCallsBuildAndReturnsSuccess(): void
     {
         $builder = new ConfigurationBuilder($this->outputDir);
         $builder->add('/config/test.json', new Configuration(
@@ -51,7 +51,7 @@ final class BuildConfigurationsCommandTest extends TestCase
         self::assertStringContainsString('built successfully', $commandTester->getDisplay());
     }
 
-    public function testExecuteWithNoConfigurations()
+    public function testExecuteWithNoConfigurations(): void
     {
         $builder = new ConfigurationBuilder($this->outputDir);
 

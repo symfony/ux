@@ -51,21 +51,11 @@ return (new PhpCsFixer\Config())
         {
             return [
                 'void_return' => static function (SplFileInfo $file) {
-                    // temporary hack due to bug: https://github.com/symfony/symfony/issues/62734
-                    if (!$file instanceof Symfony\Component\Finder\SplFileInfo) {
-                        return false;
-                    }
+                    // parallel workers pass a plain SplFileInfo, which has no getRelativePathname()
+                    $pathname = str_replace('\\', '/', $file->getPathname());
 
-                    $relativePathname = $file->getRelativePathname();
-
-                    if (
-                        str_contains($relativePathname, '/tests/') // don't touch test files, as massive change with little benefit - as outside of public contract anyway
-                        || str_contains($relativePathname, '/Test/') // public namespace not following the rule, do not mistake it with `/Tests/`
-                    ) {
-                        return false;
-                    }
-
-                    return true;
+                    // `src/*/src/Test/` ships test helpers meant to be extended by users, adding a native return type there would break their subclasses
+                    return !str_contains($pathname, '/src/Test/');
                 },
             ];
         }

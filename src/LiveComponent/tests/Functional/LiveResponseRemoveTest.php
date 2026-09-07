@@ -29,7 +29,7 @@ final class LiveResponseRemoveTest extends KernelTestCase
         RemoveComponent::$preReRenderCalls = 0;
     }
 
-    public function testRemoveAnswersWithRenderedHtmlAndTheRemoveHeader()
+    public function testRemoveAnswersWithRenderedHtmlAndTheRemoveHeader(): void
     {
         $response = $this->postAction('dismiss')->client()->getResponse();
 
@@ -39,14 +39,14 @@ final class LiveResponseRemoveTest extends KernelTestCase
         $this->assertStringContainsString('Count: 1', $response->getContent());
     }
 
-    public function testRemoveRendersAndRunsTheHooks()
+    public function testRemoveRendersAndRunsTheHooks(): void
     {
         $this->postAction('dismiss');
 
         $this->assertSame(1, RemoveComponent::$preReRenderCalls);
     }
 
-    public function testRemoveCarriesLiveAndBrowserEventsInTheRenderedHtml()
+    public function testRemoveCarriesLiveAndBrowserEventsInTheRenderedHtml(): void
     {
         $crawler = $this->postAction('dismissWithEvents')->crawler();
         $element = $crawler->filter('[data-controller~="live"]');
@@ -59,7 +59,7 @@ final class LiveResponseRemoveTest extends KernelTestCase
         ], json_decode($element->attr('data-live-events-to-dispatch-value'), true));
     }
 
-    public function testAnOrdinaryActionStillRendersAndRunsTheHooks()
+    public function testAnOrdinaryActionStillRendersAndRunsTheHooks(): void
     {
         $response = $this->postAction('keep')->client()->getResponse();
 

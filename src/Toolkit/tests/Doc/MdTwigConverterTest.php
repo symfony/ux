@@ -16,7 +16,7 @@ use Symfony\UX\Toolkit\Doc\MdTwigConverter;
 
 final class MdTwigConverterTest extends TestCase
 {
-    public function testProducesTheFullDocumentBodyWithDirectives()
+    public function testProducesTheFullDocumentBodyWithDirectives(): void
     {
         $doc = MdTwigConverter::convert(<<<'TWIG'
             {% extends 'toolkit/docs/_base_component.md.twig' %}
@@ -56,7 +56,7 @@ final class MdTwigConverterTest extends TestCase
         $this->assertStringContainsString('::: example RTL {"height": "450px", "collapseClass": true}', $doc);
     }
 
-    public function testConvertsUsageBlock()
+    public function testConvertsUsageBlock(): void
     {
         $doc = MdTwigConverter::convert(<<<'TWIG'
             {% block usage %}

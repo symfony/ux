@@ -17,7 +17,7 @@ use Symfony\UX\Map\Bridge\Leaflet\Option\TileLayer;
 
 class LeafletOptionsTest extends TestCase
 {
-    public function testWithMinimalConfiguration()
+    public function testWithMinimalConfiguration(): void
     {
         $leafletOptions = new LeafletOptions();
 
@@ -43,7 +43,7 @@ class LeafletOptionsTest extends TestCase
         self::assertEquals($leafletOptions, LeafletOptions::fromArray($leafletOptions->toArray()));
     }
 
-    public function testWithMaximumConfiguration()
+    public function testWithMaximumConfiguration(): void
     {
         $leafletOptions = new LeafletOptions(
             tileLayer: new TileLayer(
@@ -85,7 +85,7 @@ class LeafletOptionsTest extends TestCase
         self::assertEquals($leafletOptions, LeafletOptions::fromArray($leafletOptions->toArray()));
     }
 
-    public function testWithTileLayerFalse()
+    public function testWithTileLayerFalse(): void
     {
         $leafletOptions = new LeafletOptions(tileLayer: false);
 
@@ -107,7 +107,7 @@ class LeafletOptionsTest extends TestCase
         self::assertEquals($leafletOptions, LeafletOptions::fromArray($leafletOptions->toArray()));
     }
 
-    public function testWithoutControls()
+    public function testWithoutControls(): void
     {
         $leafletOptions = new LeafletOptions(
             attributionControl: false,

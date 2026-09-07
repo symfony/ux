@@ -29,12 +29,12 @@ use Symfony\UX\Pagination\Navigation\PaginationUrlGenerator;
 final class ExceptionInterfaceTest extends TestCase
 {
     #[DataProvider('providePublicExceptions')]
-    public function testPublicExceptionImplementsPackageMarker(string $exception)
+    public function testPublicExceptionImplementsPackageMarker(string $exception): void
     {
         self::assertTrue(is_subclass_of($exception, ExceptionInterface::class));
     }
 
-    public function testPackageErrorsCanBeCaughtByTheMarker()
+    public function testPackageErrorsCanBeCaughtByTheMarker(): void
     {
         try {
             new Navigation(1, 10, new PaginationUrlGenerator(), modeParameter: -1);

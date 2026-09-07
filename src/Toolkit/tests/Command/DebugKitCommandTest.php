@@ -20,7 +20,7 @@ class DebugKitCommandTest extends KernelTestCase
     use InteractsWithConsole;
     use TestHelperTrait;
 
-    public function testShouldBeAbleToDebugShadcnKit()
+    public function testShouldBeAbleToDebugShadcnKit(): void
     {
         $this->bootKernel();
         $this->consoleCommand(\sprintf('ux:toolkit:debug-kit %s', self::getLocalKitPath('shadcn')))
@@ -61,7 +61,7 @@ class DebugKitCommandTest extends KernelTestCase
             ]));
     }
 
-    public function testShouldBeAbleToDebugFixtureKitWithManyDependencies()
+    public function testShouldBeAbleToDebugFixtureKitWithManyDependencies(): void
     {
         $this->bootKernel();
         $this->consoleCommand(\sprintf('ux:toolkit:debug-kit %s', self::getFixtureKitPath('with-many-dependencies')))

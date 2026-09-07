@@ -14,7 +14,6 @@ namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\BrowserKit\AbstractBrowser;
-use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\Test\HasBrowser;
 
@@ -32,7 +31,7 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
         AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX.'1' => '8AooEz36WYQyxj54BCaDm/jKbcdDdPDLaNO4/49bcQk=',
     ];
 
-    public function testItAllowsFullChildRenderOnMissingFingerprints()
+    public function testItAllowsFullChildRenderOnMissingFingerprints(): void
     {
         $this->browser()
             ->visit($this->buildUrlForTodoListComponent([]))
@@ -44,7 +43,7 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testItRendersEmptyElementOnMatchingFingerprintBasic()
+    public function testItRendersEmptyElementOnMatchingFingerprintBasic(): void
     {
         $this->browser()
             ->visit($this->buildUrlForTodoListComponent(self::$actualTodoItemFingerprints))
@@ -56,7 +55,7 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testItRendersEmptyElementOnMatchingFingerprintWithCustomDataLiveId()
+    public function testItRendersEmptyElementOnMatchingFingerprintWithCustomDataLiveId(): void
     {
         $fingerPrintsWithCustomLiveId = [];
         foreach (array_values(self::$actualTodoItemFingerprints) as $key => $fingerprintValue) {
@@ -73,7 +72,7 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testItRendersNewPropWhenFingerprintDoesNotMatch()
+    public function testItRendersNewPropWhenFingerprintDoesNotMatch(): void
     {
         $fingerprints = self::$actualTodoItemFingerprints;
         $fingerprints[AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX_EMBEDDED.'0'] = 'wrong fingerprint';
@@ -106,7 +105,7 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
             });
     }
 
-    public function testItUsesKeysToRenderChildrenLiveIds()
+    public function testItUsesKeysToRenderChildrenLiveIds(): void
     {
         $fingerprintValues = array_values(self::$actualTodoItemFingerprints);
         $fingerprints = [];

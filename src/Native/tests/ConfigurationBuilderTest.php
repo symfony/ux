@@ -32,7 +32,7 @@ final class ConfigurationBuilderTest extends TestCase
         new Filesystem()->remove($this->outputDir);
     }
 
-    public function testAddAndHas()
+    public function testAddAndHas(): void
     {
         $builder = new ConfigurationBuilder($this->outputDir);
         $configuration = new Configuration(settings: ['use_local_db' => true]);
@@ -44,14 +44,14 @@ final class ConfigurationBuilderTest extends TestCase
         self::assertTrue($builder->has('/config/ios_v1.json'));
     }
 
-    public function testHasReturnsFalseForUnknownPath()
+    public function testHasReturnsFalseForUnknownPath(): void
     {
         $builder = new ConfigurationBuilder($this->outputDir);
 
         self::assertFalse($builder->has('/config/unknown.json'));
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $builder = new ConfigurationBuilder($this->outputDir);
         $configuration = new Configuration(settings: ['use_local_db' => true]);
@@ -62,7 +62,7 @@ final class ConfigurationBuilderTest extends TestCase
         self::assertSame($configuration, $result);
     }
 
-    public function testGetThrowsExceptionForUnknownPath()
+    public function testGetThrowsExceptionForUnknownPath(): void
     {
         $builder = new ConfigurationBuilder($this->outputDir);
 
@@ -72,7 +72,7 @@ final class ConfigurationBuilderTest extends TestCase
         $builder->get('/config/unknown.json');
     }
 
-    public function testBuild()
+    public function testBuild(): void
     {
         $builder = new ConfigurationBuilder($this->outputDir);
         $builder->add('/config/ios_v1.json', new Configuration(
@@ -89,7 +89,7 @@ final class ConfigurationBuilderTest extends TestCase
         self::assertFileExists($this->outputDir.'/config/android_v1.json');
     }
 
-    public function testBuildEncodesJsonCorrectly()
+    public function testBuildEncodesJsonCorrectly(): void
     {
         $builder = new ConfigurationBuilder($this->outputDir);
         $builder->add('/config/ios_v1.json', new Configuration(

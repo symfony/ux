@@ -25,7 +25,7 @@ class CustomAutocompleterTest extends KernelTestCase
     use HasBrowser;
     use ResetDatabase;
 
-    public function testItReturnsBasicResults()
+    public function testItReturnsBasicResults(): void
     {
         $product = ProductFactory::createOne(['name' => 'foo']);
         ProductFactory::createOne(['name' => 'bar']);
@@ -43,7 +43,7 @@ class CustomAutocompleterTest extends KernelTestCase
         ;
     }
 
-    public function testItUsesTheCustomQuery()
+    public function testItUsesTheCustomQuery(): void
     {
         ProductFactory::createOne(['name' => 'foo']);
         ProductFactory::new(['name' => 'foo and bar'])
@@ -59,7 +59,7 @@ class CustomAutocompleterTest extends KernelTestCase
         ;
     }
 
-    public function testItOnlySearchedOnSearchableFields()
+    public function testItOnlySearchedOnSearchableFields(): void
     {
         ProductFactory::createOne(['name' => 'foo', 'price' => 50]);
         ProductFactory::createOne(['name' => 'bar', 'description' => 'foo 50', 'price' => 55]);
@@ -77,7 +77,7 @@ class CustomAutocompleterTest extends KernelTestCase
         ;
     }
 
-    public function testItEnforcesSecurity()
+    public function testItEnforcesSecurity(): void
     {
         ProductFactory::createMany(3);
 
@@ -97,7 +97,7 @@ class CustomAutocompleterTest extends KernelTestCase
         ;
     }
 
-    public function testItReturns404OnBadAlias()
+    public function testItReturns404OnBadAlias(): void
     {
         $this->browser()
             ->get('/test/autocomplete/not_real')
@@ -105,7 +105,7 @@ class CustomAutocompleterTest extends KernelTestCase
         ;
     }
 
-    public function testItWorksWithCustomRoute()
+    public function testItWorksWithCustomRoute(): void
     {
         $product = ProductFactory::createOne(['name' => 'foo']);
         ProductFactory::createOne(['name' => 'bar']);

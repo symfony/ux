@@ -21,7 +21,7 @@ use Twig\Error\RuntimeError;
  */
 final class RenderIconsInTwigTest extends KernelTestCase
 {
-    public function testRenderIcons()
+    public function testRenderIcons(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('template1.html.twig');
 
@@ -43,7 +43,7 @@ final class RenderIconsInTwigTest extends KernelTestCase
         );
     }
 
-    public function testRenderAliasIcons()
+    public function testRenderAliasIcons(): void
     {
         $templateIcon = '<twig:ux:icon name="flowbite:close-outline" />';
         $outputIcon = self::getContainer()->get(Environment::class)->createTemplate($templateIcon)->render();
@@ -56,7 +56,7 @@ final class RenderIconsInTwigTest extends KernelTestCase
         $this->assertSame($outputIcon, $outputAlias);
     }
 
-    public function testIconInDirectoryWithUnderscoreIsNotFound()
+    public function testIconInDirectoryWithUnderscoreIsNotFound(): void
     {
         $this->assertFileExists(__DIR__.'/../Fixtures/icons/sub_dir/check.svg');
 

@@ -19,7 +19,7 @@ use Symfony\UX\TwigComponent\ComputedPropertiesProxy;
  */
 final class ComputedPropertiesProxyTest extends TestCase
 {
-    public function testProxyCachesGetMethodReturns()
+    public function testProxyCachesGetMethodReturns(): void
     {
         $proxy = new ComputedPropertiesProxy(new class {
             private int $count = 0;
@@ -35,7 +35,7 @@ final class ComputedPropertiesProxyTest extends TestCase
         $this->assertSame(1, $proxy->count());
     }
 
-    public function testProxyCachesIsMethodReturns()
+    public function testProxyCachesIsMethodReturns(): void
     {
         $proxy = new ComputedPropertiesProxy(new class {
             private int $count = 0;
@@ -51,7 +51,7 @@ final class ComputedPropertiesProxyTest extends TestCase
         $this->assertSame(1, $proxy->count());
     }
 
-    public function testProxyCachesHasMethodReturns()
+    public function testProxyCachesHasMethodReturns(): void
     {
         $proxy = new ComputedPropertiesProxy(new class {
             private int $count = 0;
@@ -67,7 +67,7 @@ final class ComputedPropertiesProxyTest extends TestCase
         $this->assertSame(1, $proxy->count());
     }
 
-    public function testCanProxyPublicProperties()
+    public function testCanProxyPublicProperties(): void
     {
         $proxy = new ComputedPropertiesProxy(new class {
             public $foo = 'bar';
@@ -76,7 +76,7 @@ final class ComputedPropertiesProxyTest extends TestCase
         $this->assertSame('bar', $proxy->foo());
     }
 
-    public function testCanProxyArrayAccess()
+    public function testCanProxyArrayAccess(): void
     {
         $proxy = new ComputedPropertiesProxy(new class implements \ArrayAccess {
             private $array = ['foo' => 'bar'];
@@ -103,7 +103,7 @@ final class ComputedPropertiesProxyTest extends TestCase
         $this->assertSame('bar', $proxy->foo());
     }
 
-    public function testCannotProxyMethodsThatDoNotExist()
+    public function testCannotProxyMethodsThatDoNotExist(): void
     {
         $proxy = new ComputedPropertiesProxy(new class {});
 
@@ -112,7 +112,7 @@ final class ComputedPropertiesProxyTest extends TestCase
         $proxy->getSomething();
     }
 
-    public function testCannotPassArgumentsToProxiedMethods()
+    public function testCannotPassArgumentsToProxiedMethods(): void
     {
         $proxy = new ComputedPropertiesProxy(new class {});
 
@@ -121,7 +121,7 @@ final class ComputedPropertiesProxyTest extends TestCase
         $proxy->getSomething('foo');
     }
 
-    public function testCannotProxyMethodsWithRequiredArguments()
+    public function testCannotProxyMethodsWithRequiredArguments(): void
     {
         $proxy = new ComputedPropertiesProxy(new class {
             public function getValue(int $value): int

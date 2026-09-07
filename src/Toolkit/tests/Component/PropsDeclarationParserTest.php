@@ -16,12 +16,12 @@ use Symfony\UX\Toolkit\Component\PropsDeclarationParser;
 
 class PropsDeclarationParserTest extends TestCase
 {
-    public function testReturnsNullWhenNoPropsTag()
+    public function testReturnsNullWhenNoPropsTag(): void
     {
         self::assertNull(new PropsDeclarationParser()->parse('<div>{{ foo }}</div>'));
     }
 
-    public function testParsesNamesInDeclarationOrder()
+    public function testParsesNamesInDeclarationOrder(): void
     {
         $decl = new PropsDeclarationParser()->parse('{%- props id, open = false -%}');
 
@@ -29,7 +29,7 @@ class PropsDeclarationParserTest extends TestCase
         self::assertSame(['id', 'open'], $decl->names());
     }
 
-    public function testRequiredPropIsFlaggedAsHavingNoDefault()
+    public function testRequiredPropIsFlaggedAsHavingNoDefault(): void
     {
         $decl = new PropsDeclarationParser()->parse('{%- props id, open = false -%}');
 
@@ -37,7 +37,7 @@ class PropsDeclarationParserTest extends TestCase
         self::assertTrue($decl->get('open')->hasDefault);
     }
 
-    public function testBooleanNumberAndNullDefaultsRenderBare()
+    public function testBooleanNumberAndNullDefaultsRenderBare(): void
     {
         $decl = new PropsDeclarationParser()->parse('{%- props open = false, spacing = 2, name = null -%}');
 
@@ -46,7 +46,7 @@ class PropsDeclarationParserTest extends TestCase
         self::assertSame('null', $decl->get('name')->default);
     }
 
-    public function testStringDefaultsRenderSingleQuoted()
+    public function testStringDefaultsRenderSingleQuoted(): void
     {
         $decl = new PropsDeclarationParser()->parse('{%- props variant = \'default\', label = "Loading", value = \'\' -%}');
 
@@ -55,14 +55,14 @@ class PropsDeclarationParserTest extends TestCase
         self::assertSame("''", $decl->get('value')->default);
     }
 
-    public function testArrayDefaultRendersAsIs()
+    public function testArrayDefaultRendersAsIs(): void
     {
         $decl = new PropsDeclarationParser()->parse('{%- props choices = [] -%}');
 
         self::assertSame('[]', $decl->get('choices')->default);
     }
 
-    public function testTopLevelCommaSplitIgnoresCommasInsideBracketsAndStrings()
+    public function testTopLevelCommaSplitIgnoresCommasInsideBracketsAndStrings(): void
     {
         $decl = new PropsDeclarationParser()->parse('{%- props items = [\'x\', \'y\'], label = \'a, b\', open = false -%}');
 
@@ -72,7 +72,7 @@ class PropsDeclarationParserTest extends TestCase
         self::assertSame('false', $decl->get('open')->default);
     }
 
-    public function testSupportsWhitespaceControlAndPlainTagForms()
+    public function testSupportsWhitespaceControlAndPlainTagForms(): void
     {
         $plain = new PropsDeclarationParser()->parse('{% props asIcon = false %}');
         $trimmed = new PropsDeclarationParser()->parse('{%- props asIcon = false -%}');
@@ -81,7 +81,7 @@ class PropsDeclarationParserTest extends TestCase
         self::assertSame('false', $trimmed->get('asIcon')->default);
     }
 
-    public function testNonLiteralDefaultExpressionIsStillFlaggedAsHavingADefault()
+    public function testNonLiteralDefaultExpressionIsStillFlaggedAsHavingADefault(): void
     {
         $decl = new PropsDeclarationParser()->parse('{%- props label = foo ~ bar -%}');
 

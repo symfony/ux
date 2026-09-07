@@ -27,7 +27,7 @@ class FieldAutocompleterTest extends KernelTestCase
     use HasBrowser;
     use ResetDatabase;
 
-    public function testItReturnsBasicResults()
+    public function testItReturnsBasicResults(): void
     {
         $category = CategoryFactory::createOne(['name' => 'foo and baz']);
         CategoryFactory::createOne(['name' => 'foo and bar']);
@@ -44,7 +44,7 @@ class FieldAutocompleterTest extends KernelTestCase
         ;
     }
 
-    public function testItUsesTheCustomQuery()
+    public function testItUsesTheCustomQuery(): void
     {
         CategoryFactory::createOne(['name' => 'foo and bar']);
         CategoryFactory::createOne(['name' => 'baz and bar']);
@@ -59,7 +59,7 @@ class FieldAutocompleterTest extends KernelTestCase
         ;
     }
 
-    public function testItEnforcesSecurity()
+    public function testItEnforcesSecurity(): void
     {
         CategoryFactory::createMany(3, [
             'name' => 'foo so that it matches custom query',
@@ -81,7 +81,7 @@ class FieldAutocompleterTest extends KernelTestCase
         ;
     }
 
-    public function testItCheckMaxResultsOption()
+    public function testItCheckMaxResultsOption(): void
     {
         CategoryFactory::createMany(30, ['name' => 'foo']);
 
@@ -93,7 +93,7 @@ class FieldAutocompleterTest extends KernelTestCase
         ;
     }
 
-    public function testItWorksWithoutAChoiceLabel()
+    public function testItWorksWithoutAChoiceLabel(): void
     {
         CategoryFactory::createMany(5, ['name' => 'foo']);
 
@@ -105,7 +105,7 @@ class FieldAutocompleterTest extends KernelTestCase
         ;
     }
 
-    public function testItUsesTheCustomStringValue()
+    public function testItUsesTheCustomStringValue(): void
     {
         $category = CategoryFactory::createOne(['code' => 'foo']);
 
@@ -118,7 +118,7 @@ class FieldAutocompleterTest extends KernelTestCase
         ;
     }
 
-    public function testItUsesTheCustomCallbackValue()
+    public function testItUsesTheCustomCallbackValue(): void
     {
         $category = CategoryFactory::createOne(['code' => 'foo']);
 
@@ -131,7 +131,7 @@ class FieldAutocompleterTest extends KernelTestCase
         ;
     }
 
-    public function testItSearchesByTags()
+    public function testItSearchesByTags(): void
     {
         $productTag = ProductTagFactory::createOne(['name' => 'technology']);
         $categoryTag = CategoryTagFactory::createOne(['name' => 'home appliances']);

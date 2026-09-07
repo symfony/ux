@@ -31,7 +31,7 @@ use Twig\Runtime\EscaperRuntime;
  */
 class TwigComponentDataCollectorTest extends TestCase
 {
-    public function testCollectDoesNothing()
+    public function testCollectDoesNothing(): void
     {
         $logger = new TwigComponentLoggerListener();
         $twig = $this->createMock(Environment::class);
@@ -43,7 +43,7 @@ class TwigComponentDataCollectorTest extends TestCase
         $this->assertSame([], $dataCollector->getData());
     }
 
-    public function testLateCollectWithNoCollectedData()
+    public function testLateCollectWithNoCollectedData(): void
     {
         $logger = new TwigComponentLoggerListener();
         $twig = $this->createMock(Environment::class);
@@ -64,7 +64,7 @@ class TwigComponentDataCollectorTest extends TestCase
 
     #[TestWith([true])]
     #[TestWith([false])]
-    public function testLateCollectWithCollectedData(bool $collectComponents)
+    public function testLateCollectWithCollectedData(bool $collectComponents): void
     {
         $logger = new TwigComponentLoggerListener();
         $twig = new Environment(new ArrayLoader());
@@ -98,7 +98,7 @@ class TwigComponentDataCollectorTest extends TestCase
         $this->assertGreaterThan(0.0, $dataCollector->getRenderTime());
     }
 
-    public function testReset()
+    public function testReset(): void
     {
         $logger = new TwigComponentLoggerListener();
         $twig = $this->createMock(Environment::class);
@@ -111,7 +111,7 @@ class TwigComponentDataCollectorTest extends TestCase
         $this->assertSame([], $dataCollector->getData());
     }
 
-    public function testGetName()
+    public function testGetName(): void
     {
         $logger = new TwigComponentLoggerListener();
         $twig = $this->createMock(Environment::class);

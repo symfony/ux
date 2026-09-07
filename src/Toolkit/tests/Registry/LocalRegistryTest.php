@@ -17,7 +17,7 @@ use Symfony\UX\Toolkit\Registry\LocalRegistry;
 
 final class LocalRegistryTest extends KernelTestCase
 {
-    public function testCanGetKit()
+    public function testCanGetKit(): void
     {
         $localRegistry = new LocalRegistry(
             self::getContainer()->get('ux_toolkit.kit.kit_factory'),
@@ -30,7 +30,7 @@ final class LocalRegistryTest extends KernelTestCase
         $this->assertSame('Shadcn UI', $kit->manifest->name);
     }
 
-    public function testExists()
+    public function testExists(): void
     {
         $this->assertTrue(LocalRegistry::exists('shadcn'));
         $this->assertFalse(LocalRegistry::exists('does-not-exist'));
@@ -38,7 +38,7 @@ final class LocalRegistryTest extends KernelTestCase
         $this->assertFalse(LocalRegistry::exists('../../etc'));
     }
 
-    public function testGetAvailableKits()
+    public function testGetAvailableKits(): void
     {
         $localRegistry = new LocalRegistry(
             self::getContainer()->get('ux_toolkit.kit.kit_factory'),

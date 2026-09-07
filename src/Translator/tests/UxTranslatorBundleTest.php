@@ -26,7 +26,7 @@ class UxTranslatorBundleTest extends TestCase
     }
 
     #[DataProvider('provideKernels')]
-    public function testBootKernel(Kernel $kernel)
+    public function testBootKernel(Kernel $kernel): void
     {
         $kernel->boot();
         $this->assertArrayHasKey('UxTranslatorBundle', $kernel->getBundles());

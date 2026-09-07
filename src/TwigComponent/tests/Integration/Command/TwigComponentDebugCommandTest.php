@@ -17,7 +17,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class TwigComponentDebugCommandTest extends KernelTestCase
 {
-    public function testWithNoComponent()
+    public function testWithNoComponent(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute([]);
@@ -32,7 +32,7 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('Type', $display);
     }
 
-    public function testWithNoMatchComponent()
+    public function testWithNoMatchComponent(): void
     {
         $commandTester = $this->createCommandTester();
         $result = $commandTester->execute(['name' => 'NoMatchComponent']);
@@ -41,7 +41,7 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('Unknown component "NoMatchComponent".', $commandTester->getDisplay());
     }
 
-    public function testNotComponentsIsNotListed()
+    public function testNotComponentsIsNotListed(): void
     {
         $commandTester = $this->createCommandTester();
         $result = $commandTester->execute(['name' => 'NotAComponent']);
@@ -50,7 +50,7 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('Unknown component "NotAComponent".', $commandTester->getDisplay());
     }
 
-    public function testWithOnePartialMatchComponent()
+    public function testWithOnePartialMatchComponent(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->setInputs([]);
@@ -64,7 +64,7 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('Component\\DivComponentNoPass', $commandTester->getDisplay());
     }
 
-    public function testWithMultiplePartialMatchComponent()
+    public function testWithMultiplePartialMatchComponent(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->setInputs(['DivComponent5']);
@@ -82,7 +82,7 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringNotContainsString('Component\\DivComponent6', $commandTester->getDisplay());
     }
 
-    public function testComponentWithClass()
+    public function testComponentWithClass(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute(['name' => 'BasicComponent']);
@@ -97,7 +97,7 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('components/BasicComponent.html.twig', $display);
     }
 
-    public function testComponentWithClassPropertiesAndCustomName()
+    public function testComponentWithClassPropertiesAndCustomName(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute(['name' => 'component_c']);
@@ -116,7 +116,7 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('Mount', $display);
     }
 
-    public function testComponentWithClassPropertiesCustomNameAndCustomTemplate()
+    public function testComponentWithClassPropertiesCustomNameAndCustomTemplate(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute(['name' => 'component_b']);
@@ -133,7 +133,7 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('string $postValue', $display);
     }
 
-    public function testWithAnonymousComponent()
+    public function testWithAnonymousComponent(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute(['name' => 'Button']);
@@ -150,7 +150,7 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('primary = true', $display);
     }
 
-    public function testWithBundleAnonymousComponent()
+    public function testWithBundleAnonymousComponent(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute(['name' => 'Acme:Button']);
@@ -165,7 +165,7 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('Anonymous', $display);
     }
 
-    public function testWithBundleAnonymousComponentSubDir()
+    public function testWithBundleAnonymousComponentSubDir(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute(['name' => 'Acme:Table:Header']);
@@ -180,7 +180,7 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('Anonymous', $display);
     }
 
-    public function testWithoutPublicProps()
+    public function testWithoutPublicProps(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute(['name' => 'no_public_props']);
@@ -194,7 +194,7 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringNotContainsString('prop1', $display);
     }
 
-    public function testWithExposedVariables()
+    public function testWithExposedVariables(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute(['name' => 'with_exposed_variables']);
@@ -212,7 +212,7 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringNotContainsString('prop3', $display);
     }
 
-    public function testWithUnionTypeProps()
+    public function testWithUnionTypeProps(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute(['name' => 'union_type_props']);

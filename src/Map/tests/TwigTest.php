@@ -25,7 +25,7 @@ final class TwigTest extends KernelTestCase
         return TwigAppKernel::class;
     }
 
-    public function testRenderMap()
+    public function testRenderMap(): void
     {
         $map = new Map();
         $attributes = ['data-foo' => 'bar'];

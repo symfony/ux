@@ -23,7 +23,7 @@ class ComponentStack implements \IteratorAggregate
      */
     private array $components = [];
 
-    public function push(MountedComponent $components)
+    public function push(MountedComponent $components): void
     {
         $this->components[] = $components;
     }

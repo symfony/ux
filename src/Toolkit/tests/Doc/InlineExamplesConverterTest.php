@@ -16,7 +16,7 @@ use Symfony\UX\Toolkit\Doc\InlineExamplesConverter;
 
 class InlineExamplesConverterTest extends TestCase
 {
-    public function testConvertInlinesRunnableExampleWithPreviewAndOptions()
+    public function testConvertInlinesRunnableExampleWithPreviewAndOptions(): void
     {
         $readme = "## Examples\n\n::: example Basic {\"height\": \"150px\"}\n";
         $out = InlineExamplesConverter::convert($readme, static fn (string $name): string => "<twig:Avatar name=\"$name\" />");
@@ -26,7 +26,7 @@ class InlineExamplesConverterTest extends TestCase
         $this->assertStringNotContainsString('::: example', $out);
     }
 
-    public function testConvertKeepsUsageStaticWithoutPreview()
+    public function testConvertKeepsUsageStaticWithoutPreview(): void
     {
         $readme = "## Usage\n\n::: example Usage\n";
         $out = InlineExamplesConverter::convert($readme, static fn (string $name): string => '<twig:Avatar />');

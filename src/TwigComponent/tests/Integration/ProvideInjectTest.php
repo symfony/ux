@@ -17,14 +17,14 @@ use Twig\Error\RuntimeError;
 
 final class ProvideInjectTest extends KernelTestCase
 {
-    public function testSlotInjectsMaxLengthFromInputOtpRoot()
+    public function testSlotInjectsMaxLengthFromInputOtpRoot(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('provide_inject_direct_parent.html.twig');
 
         $this->assertStringContainsString('name="otp[0]" maxlength="1" data-index="1" data-max-length="6"', $output);
     }
 
-    public function testSlotInjectsAcrossNonProvidingGroup()
+    public function testSlotInjectsAcrossNonProvidingGroup(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('provide_inject_across_group.html.twig');
 
@@ -33,7 +33,7 @@ final class ProvideInjectTest extends KernelTestCase
         $this->assertStringContainsString('name="code[2]" maxlength="1" data-index="3" data-max-length="6"', $output);
     }
 
-    public function testNearestAncestorWins()
+    public function testNearestAncestorWins(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('provide_inject_nearest_wins.html.twig');
 
@@ -41,14 +41,14 @@ final class ProvideInjectTest extends KernelTestCase
         $this->assertStringNotContainsString('aria-selected="false"', $output);
     }
 
-    public function testInjectReturnsDefaultWhenMissing()
+    public function testInjectReturnsDefaultWhenMissing(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('provide_inject_default.html.twig');
 
         $this->assertStringContainsString('name="otp[0]" maxlength="1" data-index="1" data-max-length="4"', $output);
     }
 
-    public function testProvideOutsideComponentThrows()
+    public function testProvideOutsideComponentThrows(): void
     {
         try {
             self::getContainer()->get(Environment::class)->render('provide_inject_outside_component.html.twig');
@@ -59,14 +59,14 @@ final class ProvideInjectTest extends KernelTestCase
         }
     }
 
-    public function testInjectOutsideComponentReturnsDefault()
+    public function testInjectOutsideComponentReturnsDefault(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('provide_inject_inject_outside_component.html.twig');
 
         $this->assertStringContainsString('fallback=fallback-value', $output);
     }
 
-    public function testProvideNullIsDistinctFromMissing()
+    public function testProvideNullIsDistinctFromMissing(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('provide_inject_null_distinct.html.twig');
 
@@ -74,7 +74,7 @@ final class ProvideInjectTest extends KernelTestCase
         $this->assertStringContainsString('name="[0]" maxlength="1" data-index="1" data-max-length="4"', $output);
     }
 
-    public function testProvideOverwritesPreviousValueInSameComponent()
+    public function testProvideOverwritesPreviousValueInSameComponent(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('provide_inject_overwrite.html.twig');
 
@@ -84,21 +84,21 @@ final class ProvideInjectTest extends KernelTestCase
         $this->assertSame(1, substr_count($output, 'data-value="first" aria-selected="false"'));
     }
 
-    public function testGrandchildInjectsThroughIntermediateComponent()
+    public function testGrandchildInjectsThroughIntermediateComponent(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('provide_inject_deep_nesting.html.twig');
 
         $this->assertStringContainsString('name="deep[0]" maxlength="1" data-index="1" data-max-length="9"', $output);
     }
 
-    public function testProvideAcceptsComplexValues()
+    public function testProvideAcceptsComplexValues(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('provide_inject_complex_values.html.twig');
 
         $this->assertStringContainsString('list:a+b+c;config:value/42', $output);
     }
 
-    public function testInjectInsidePassedContentSkipsWrappingComponent()
+    public function testInjectInsidePassedContentSkipsWrappingComponent(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('provide_inject_passed_content_skips_self.html.twig');
 
@@ -108,7 +108,7 @@ final class ProvideInjectTest extends KernelTestCase
         $this->assertStringNotContainsString('inline:A', $output);
     }
 
-    public function testSameComponentRenderedTwiceDoesNotLeakProvidedValues()
+    public function testSameComponentRenderedTwiceDoesNotLeakProvidedValues(): void
     {
         $first = self::getContainer()->get(Environment::class)->render('provide_inject_render_first.html.twig');
         $second = self::getContainer()->get(Environment::class)->render('provide_inject_render_second.html.twig');
@@ -119,7 +119,7 @@ final class ProvideInjectTest extends KernelTestCase
         $this->assertStringNotContainsString('data-max-length="6"', $second);
     }
 
-    public function testDeepDescendantCannotReachSiblingTreeContext()
+    public function testDeepDescendantCannotReachSiblingTreeContext(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('provide_inject_cross_tree.html.twig');
 
@@ -130,7 +130,7 @@ final class ProvideInjectTest extends KernelTestCase
         $this->assertStringContainsString('name="otp[0]" maxlength="1" data-index="1" data-max-length="4"', $output);
     }
 
-    public function testSiblingComponentsDoNotLeakContext()
+    public function testSiblingComponentsDoNotLeakContext(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('provide_inject_siblings.html.twig');
 

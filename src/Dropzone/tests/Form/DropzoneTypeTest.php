@@ -24,7 +24,7 @@ use Twig\Environment;
  */
 class DropzoneTypeTest extends TestCase
 {
-    public function testRenderForm()
+    public function testRenderForm(): void
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();

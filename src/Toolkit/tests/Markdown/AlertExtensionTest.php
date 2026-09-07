@@ -21,7 +21,7 @@ use Twig\Loader\FilesystemLoader;
 
 class AlertExtensionTest extends TestCase
 {
-    public function testRendersNoteAlert()
+    public function testRendersNoteAlert(): void
     {
         $converter = $this->createConverter();
 
@@ -36,7 +36,7 @@ class AlertExtensionTest extends TestCase
         );
     }
 
-    public function testRendersWarningAlert()
+    public function testRendersWarningAlert(): void
     {
         $converter = $this->createConverter();
 

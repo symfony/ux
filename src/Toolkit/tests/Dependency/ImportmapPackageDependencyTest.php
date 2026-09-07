@@ -16,7 +16,7 @@ use Symfony\UX\Toolkit\Dependency\ImportmapPackageDependency;
 
 class ImportmapPackageDependencyTest extends TestCase
 {
-    public function testShouldBeInstantiable()
+    public function testShouldBeInstantiable(): void
     {
         $dependency = new ImportmapPackageDependency('react');
         $this->assertSame('react', $dependency->package);

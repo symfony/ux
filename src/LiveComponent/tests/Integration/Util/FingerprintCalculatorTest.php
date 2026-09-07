@@ -25,7 +25,7 @@ final class FingerprintCalculatorTest extends KernelTestCase
     use Factories;
     use ResetDatabase;
 
-    public function testFingerprintEqual()
+    public function testFingerprintEqual(): void
     {
         $fingerprintCalculator = $this->getFingerprintCalculator();
         $entityOne = persist(Entity1::class);
@@ -57,7 +57,7 @@ final class FingerprintCalculatorTest extends KernelTestCase
         );
     }
 
-    public function testFingerprintNotEqual()
+    public function testFingerprintNotEqual(): void
     {
         $fingerprintCalculator = $this->getFingerprintCalculator();
 
@@ -85,7 +85,7 @@ final class FingerprintCalculatorTest extends KernelTestCase
         );
     }
 
-    public function testFingerprintOnlyUsesPropsThatAcceptUpdates()
+    public function testFingerprintOnlyUsesPropsThatAcceptUpdates(): void
     {
         $fingerprintCalculator = $this->getFingerprintCalculator();
 

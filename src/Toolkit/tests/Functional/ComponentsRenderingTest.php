@@ -57,7 +57,7 @@ class ComponentsRenderingTest extends WebTestCase
 
     #[DataProvider('provideTestComponentRendering')]
     #[Group('skip-on-lowest')]
-    public function testComponentRendering(string $kitName, string $recipeName, string $code)
+    public function testComponentRendering(string $kitName, string $recipeName, string $code): void
     {
         $twig = self::getContainer()->get('twig');
         /** @var KitContextRunner $kitContextRunner */

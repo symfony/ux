@@ -18,7 +18,7 @@ use Symfony\UX\React\AssetMapper\ReactControllerLoaderAssetCompiler;
 
 class ReactControllerLoaderAssetCompilerTest extends TestCase
 {
-    public function testCompileDynamicallyAddsContents()
+    public function testCompileDynamicallyAddsContents(): void
     {
         $assetMapper = $this->createMock(AssetMapperInterface::class);
         $assetMapper->expects($this->exactly(2))

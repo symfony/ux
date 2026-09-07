@@ -18,7 +18,7 @@ final class LiveResponseTest extends TestCase
 {
     private const FILE = __DIR__.'/../Fixtures/files/test.txt';
 
-    public function testDownloadFileWithContent()
+    public function testDownloadFileWithContent(): void
     {
         $response = LiveResponse::downloadFile('a,b,c', 'report.csv', 'text/csv');
 
@@ -29,12 +29,12 @@ final class LiveResponseTest extends TestCase
         $this->assertFalse($response->isDownloadUrl());
     }
 
-    public function testDownloadFileDefaultsToOctetStream()
+    public function testDownloadFileDefaultsToOctetStream(): void
     {
         $this->assertSame('application/octet-stream', LiveResponse::downloadFile('x', 'f.bin')->contentType);
     }
 
-    public function testDownloadFileWithSplFileInfoDeducesNameAndSize()
+    public function testDownloadFileWithSplFileInfoDeducesNameAndSize(): void
     {
         $response = LiveResponse::downloadFile(new \SplFileInfo(self::FILE));
 
@@ -42,7 +42,7 @@ final class LiveResponseTest extends TestCase
         $this->assertSame(filesize(self::FILE), $response->size);
     }
 
-    public function testDownloadFileWithSplFileObjectUsesThePathBasename()
+    public function testDownloadFileWithSplFileObjectUsesThePathBasename(): void
     {
         // SplFileObject::__toString() returns the current line, so the name must come from the path
         $response = LiveResponse::downloadFile(new \SplFileObject(self::FILE));
@@ -50,7 +50,7 @@ final class LiveResponseTest extends TestCase
         $this->assertSame('test.txt', $response->filename);
     }
 
-    public function testDownloadFileWithAStreamBackedSplFileObjectHasNoSize()
+    public function testDownloadFileWithAStreamBackedSplFileObjectHasNoSize(): void
     {
         // getSize() throws on php://temp, so nothing can be deduced
         $temp = new \SplTempFileObject();
@@ -59,7 +59,7 @@ final class LiveResponseTest extends TestCase
         $this->assertNull(LiveResponse::downloadFile($temp, 'temp.txt')->size);
     }
 
-    public function testDownloadFileWithAResource()
+    public function testDownloadFileWithAResource(): void
     {
         $resource = fopen('php://memory', 'r+');
 
@@ -70,12 +70,12 @@ final class LiveResponseTest extends TestCase
         fclose($resource);
     }
 
-    public function testDownloadFileWithAClosureHasNoSizeUnlessGiven()
+    public function testDownloadFileWithAClosureHasNoSizeUnlessGiven(): void
     {
         $this->assertNull(LiveResponse::downloadFile(static fn () => null, 'f.txt')->size);
     }
 
-    public function testDownloadFileKeepsBytesThatAreNotValidUtf8()
+    public function testDownloadFileKeepsBytesThatAreNotValidUtf8(): void
     {
         $response = LiveResponse::downloadFile("\x00\xFF\xFE", 'blob.bin');
 
@@ -83,7 +83,7 @@ final class LiveResponseTest extends TestCase
         $this->assertSame(3, $response->size);
     }
 
-    public function testDownloadFileRejectsAnUnsupportedContent()
+    public function testDownloadFileRejectsAnUnsupportedContent(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The content must be a string, an \SplFileInfo, a resource or a closure, "int" given.');
@@ -91,7 +91,7 @@ final class LiveResponseTest extends TestCase
         LiveResponse::downloadFile(42, 'f.txt');
     }
 
-    public function testDownloadFileRequiresAFilenameForAString()
+    public function testDownloadFileRequiresAFilenameForAString(): void
     {
         // only an SplFileInfo carries a name of its own
         $this->expectException(\InvalidArgumentException::class);
@@ -100,14 +100,14 @@ final class LiveResponseTest extends TestCase
         LiveResponse::downloadFile('content');
     }
 
-    public function testDownloadFileRejectsABlankFilename()
+    public function testDownloadFileRejectsABlankFilename(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         LiveResponse::downloadFile('content', '   ');
     }
 
-    public function testDownloadFileRejectsASizeThatContradictsTheContent()
+    public function testDownloadFileRejectsASizeThatContradictsTheContent(): void
     {
         // an inexact Content-Length truncates the response or leaves the client waiting
         $this->expectException(\InvalidArgumentException::class);
@@ -116,12 +116,12 @@ final class LiveResponseTest extends TestCase
         LiveResponse::downloadFile('a,b,c', 'report.csv', null, 99);
     }
 
-    public function testDownloadFileAcceptsASizeThatMatches()
+    public function testDownloadFileAcceptsASizeThatMatches(): void
     {
         $this->assertSame(5, LiveResponse::downloadFile('a,b,c', 'report.csv', null, 5)->size);
     }
 
-    public function testDownloadFileRejectsAContentTypeWithALineBreak()
+    public function testDownloadFileRejectsAContentTypeWithALineBreak(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('cannot contain a line break');
@@ -129,7 +129,7 @@ final class LiveResponseTest extends TestCase
         LiveResponse::downloadFile('x', 'f.txt', "text/csv\r\nX-Injected: 1");
     }
 
-    public function testDownloadUrl()
+    public function testDownloadUrl(): void
     {
         $response = LiveResponse::downloadUrl('/exports/report.csv');
 
@@ -138,14 +138,14 @@ final class LiveResponseTest extends TestCase
         $this->assertNull($response->content);
     }
 
-    public function testDownloadUrlRejectsAnEmptyUrl()
+    public function testDownloadUrlRejectsAnEmptyUrl(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         LiveResponse::downloadUrl('  ');
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $response = LiveResponse::remove();
 
@@ -154,13 +154,13 @@ final class LiveResponseTest extends TestCase
         $this->assertNull($response->url);
     }
 
-    public function testDownloadsAreNotRemovals()
+    public function testDownloadsAreNotRemovals(): void
     {
         $this->assertFalse(LiveResponse::downloadFile('x', 'f.bin')->isRemove());
         $this->assertFalse(LiveResponse::downloadUrl('/f.bin')->isRemove());
     }
 
-    public function testARemovalIsNotADownloadUrl()
+    public function testARemovalIsNotADownloadUrl(): void
     {
         $this->assertFalse(LiveResponse::remove()->isDownloadUrl());
     }

@@ -26,7 +26,7 @@ class EntitySearchUtilTest extends KernelTestCase
     use Factories;
     use ResetDatabase;
 
-    public function testItCreatesBasicStringSearchQuery()
+    public function testItCreatesBasicStringSearchQuery(): void
     {
         $prod1 = ProductFactory::createOne(['name' => 'bar prod1']);
         $prod2 = ProductFactory::createOne(['name' => 'foo prod2']);
@@ -37,7 +37,7 @@ class EntitySearchUtilTest extends KernelTestCase
         $this->assertSame([$prod1, $prod2, $prod4], $results);
     }
 
-    public function testItSearchesOnCorrectFields()
+    public function testItSearchesOnCorrectFields(): void
     {
         $prod1 = ProductFactory::createOne(['name' => 'bar prod1']);
         ProductFactory::createOne(['description' => 'foo prod2']);
@@ -46,7 +46,7 @@ class EntitySearchUtilTest extends KernelTestCase
         $this->assertSame([$prod1], $results);
     }
 
-    public function testItCanSearchOnRelationFields()
+    public function testItCanSearchOnRelationFields(): void
     {
         $category1 = CategoryFactory::createOne(['name' => 'foods']);
         $category2 = CategoryFactory::createOne(['name' => 'toys']);
@@ -58,7 +58,7 @@ class EntitySearchUtilTest extends KernelTestCase
         $this->assertSame([$prod1, $prod2], $results);
     }
 
-    public function testItEscapesLikeWildcardsInTheQuery()
+    public function testItEscapesLikeWildcardsInTheQuery(): void
     {
         $percent = ProductFactory::createOne(['name' => '100% legit']);
         $underscore = ProductFactory::createOne(['name' => 'foo_bar']);

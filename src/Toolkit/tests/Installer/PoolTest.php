@@ -24,7 +24,7 @@ use Symfony\UX\Toolkit\Recipe\RecipeType;
 
 final class PoolTest extends TestCase
 {
-    public function testCanAddFiles()
+    public function testCanAddFiles(): void
     {
         $pool = new Pool();
 
@@ -42,7 +42,7 @@ final class PoolTest extends TestCase
         $this->assertCount(2, $pool->getFiles()[$recipe->absolutePath]);
     }
 
-    public function testCantAddSameFileTwice()
+    public function testCantAddSameFileTwice(): void
     {
         $pool = new Pool();
 
@@ -57,7 +57,7 @@ final class PoolTest extends TestCase
         $this->assertCount(1, $pool->getFiles());
     }
 
-    public function testCanAddPhpPackageDependencies()
+    public function testCanAddPhpPackageDependencies(): void
     {
         $pool = new Pool();
 
@@ -66,7 +66,7 @@ final class PoolTest extends TestCase
         $this->assertCount(1, $pool->getPhpPackageDependencies());
     }
 
-    public function testCantAddSamePhpPackageDependencyTwice()
+    public function testCantAddSamePhpPackageDependencyTwice(): void
     {
         $pool = new Pool();
 
@@ -76,7 +76,7 @@ final class PoolTest extends TestCase
         $this->assertCount(1, $pool->getPhpPackageDependencies());
     }
 
-    public function testCanAddPhpPackageDependencyWithHigherVersion()
+    public function testCanAddPhpPackageDependencyWithHigherVersion(): void
     {
         $pool = new Pool();
 
@@ -96,7 +96,7 @@ final class PoolTest extends TestCase
         $this->assertEquals('twig/html-extra:^3.12.0', (string) $pool->getPhpPackageDependencies()['twig/html-extra']);
     }
 
-    public function testCanAddNpmPackageDependencies()
+    public function testCanAddNpmPackageDependencies(): void
     {
         $pool = new Pool();
 
@@ -105,7 +105,7 @@ final class PoolTest extends TestCase
         $this->assertCount(1, $pool->getNpmPackageDependencies());
     }
 
-    public function testCantAddSameNpmPackageDependencyTwice()
+    public function testCantAddSameNpmPackageDependencyTwice(): void
     {
         $pool = new Pool();
 
@@ -115,7 +115,7 @@ final class PoolTest extends TestCase
         $this->assertCount(1, $pool->getNpmPackageDependencies());
     }
 
-    public function testCanAddNpmPackageDependencyWithHigherVersion()
+    public function testCanAddNpmPackageDependencyWithHigherVersion(): void
     {
         $pool = new Pool();
 
@@ -135,7 +135,7 @@ final class PoolTest extends TestCase
         $this->assertEquals('tailwindcss@^4.0.0', (string) $pool->getNpmPackageDependencies()['tailwindcss']);
     }
 
-    public function testCanAddImportmapPackageDependencies()
+    public function testCanAddImportmapPackageDependencies(): void
     {
         $pool = new Pool();
 
@@ -144,7 +144,7 @@ final class PoolTest extends TestCase
         $this->assertCount(1, $pool->getImportmapPackageDependencies());
     }
 
-    public function testCantAddSameImportmapPackageDependencyTwice()
+    public function testCantAddSameImportmapPackageDependencyTwice(): void
     {
         $pool = new Pool();
 

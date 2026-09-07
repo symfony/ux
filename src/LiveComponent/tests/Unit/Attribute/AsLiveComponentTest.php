@@ -26,22 +26,22 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithRepeatedLiveL
  */
 final class AsLiveComponentTest extends TestCase
 {
-    public function testPreDehydrateMethodsAreOrderedByPriority()
+    public function testPreDehydrateMethodsAreOrderedByPriority(): void
     {
         $hooks = AsLiveComponent::preDehydrateMethods(
             new class {
                 #[PreDehydrate(priority: -10)]
-                public function hook1()
+                public function hook1(): void
                 {
                 }
 
                 #[PreDehydrate(priority: 10)]
-                public function hook2()
+                public function hook2(): void
                 {
                 }
 
                 #[PreDehydrate]
-                public function hook3()
+                public function hook3(): void
                 {
                 }
             }
@@ -53,22 +53,22 @@ final class AsLiveComponentTest extends TestCase
         $this->assertSame('hook1', $hooks[2]->name);
     }
 
-    public function testPostHydrateMethodsAreOrderedByPriority()
+    public function testPostHydrateMethodsAreOrderedByPriority(): void
     {
         $hooks = AsLiveComponent::postHydrateMethods(
             new class {
                 #[PostHydrate(priority: -10)]
-                public function hook1()
+                public function hook1(): void
                 {
                 }
 
                 #[PostHydrate(priority: 10)]
-                public function hook2()
+                public function hook2(): void
                 {
                 }
 
                 #[PostHydrate]
-                public function hook3()
+                public function hook3(): void
                 {
                 }
             }
@@ -80,22 +80,22 @@ final class AsLiveComponentTest extends TestCase
         $this->assertSame('hook1', $hooks[2]->name);
     }
 
-    public function testPreMountHooksAreOrderedByPriority()
+    public function testPreMountHooksAreOrderedByPriority(): void
     {
         $hooks = AsLiveComponent::preReRenderMethods(
             new class {
                 #[PreReRender(priority: -10)]
-                public function hook1()
+                public function hook1(): void
                 {
                 }
 
                 #[PreReRender(priority: 10)]
-                public function hook2()
+                public function hook2(): void
                 {
                 }
 
                 #[PreReRender]
-                public function hook3()
+                public function hook3(): void
                 {
                 }
             }
@@ -107,7 +107,7 @@ final class AsLiveComponentTest extends TestCase
         $this->assertSame('hook1', $hooks[2]->name);
     }
 
-    public function testCanGetPostHydrateMethodsFromClassString()
+    public function testCanGetPostHydrateMethodsFromClassString(): void
     {
         $methods = AsLiveComponent::postHydrateMethods(DummyLiveComponent::class);
 
@@ -116,7 +116,7 @@ final class AsLiveComponentTest extends TestCase
         $this->assertSame(DummyLiveComponent::class, $methods[0]->getDeclaringClass()?->getName());
     }
 
-    public function testCanGetLiveListeners()
+    public function testCanGetLiveListeners(): void
     {
         $liveListeners = AsLiveComponent::liveListeners(new Component5());
 
@@ -127,7 +127,7 @@ final class AsLiveComponentTest extends TestCase
         ], $liveListeners[0]);
     }
 
-    public function testCanGetLiveListenersFromClassString()
+    public function testCanGetLiveListenersFromClassString(): void
     {
         $liveListeners = AsLiveComponent::liveListeners(DummyLiveComponent::class);
 
@@ -138,7 +138,7 @@ final class AsLiveComponentTest extends TestCase
         ], $liveListeners[0]);
     }
 
-    public function testCanGetRepeatedLiveListeners()
+    public function testCanGetRepeatedLiveListeners(): void
     {
         $liveListeners = AsLiveComponent::liveListeners(new ComponentWithRepeatedLiveListener());
 
@@ -163,14 +163,14 @@ final class AsLiveComponentTest extends TestCase
         ], $liveListeners);
     }
 
-    public function testCanGetRepeatedLiveListenersFromClassString()
+    public function testCanGetRepeatedLiveListenersFromClassString(): void
     {
         $liveListeners = AsLiveComponent::liveListeners(ComponentWithRepeatedLiveListener::class);
 
         $this->assertCount(4, $liveListeners);
     }
 
-    public function testCanCheckIfMethodIsAllowed()
+    public function testCanCheckIfMethodIsAllowed(): void
     {
         $component = new Component5();
 

@@ -25,7 +25,7 @@ use Symfony\UX\TwigComponent\TwigComponentBundle;
  */
 class TwigComponentExtensionTest extends TestCase
 {
-    public function testDataCollectorWithDebugMode()
+    public function testDataCollectorWithDebugMode(): void
     {
         $container = $this->createContainer();
         $container->setParameter('kernel.debug', true);
@@ -40,7 +40,7 @@ class TwigComponentExtensionTest extends TestCase
         $this->assertTrue($container->getDefinition('ux.twig_component.data_collector')->getArgument(2));
     }
 
-    public function testDataCollectorWithCollectComponentsDisabled()
+    public function testDataCollectorWithCollectComponentsDisabled(): void
     {
         $container = $this->createContainer();
         $container->setParameter('kernel.debug', true);
@@ -58,7 +58,7 @@ class TwigComponentExtensionTest extends TestCase
         $this->assertFalse($container->getDefinition('ux.twig_component.data_collector')->getArgument(2));
     }
 
-    public function testDataCollectorNotLoadedInProductionByDefault()
+    public function testDataCollectorNotLoadedInProductionByDefault(): void
     {
         $container = $this->createContainer();
         $container->setParameter('kernel.debug', false);
@@ -72,7 +72,7 @@ class TwigComponentExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition('ux.twig_component.data_collector'));
     }
 
-    public function testDataCollectorWithDebugModeCanBeDisabled()
+    public function testDataCollectorWithDebugModeCanBeDisabled(): void
     {
         $container = $this->createContainer();
         $container->setParameter('kernel.debug', true);
@@ -87,7 +87,7 @@ class TwigComponentExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition('ux.twig_component.data_collector'));
     }
 
-    public function testSafeClassPassIntegration()
+    public function testSafeClassPassIntegration(): void
     {
         if (!class_exists(SafeClassPass::class)) {
             $this->markTestSkipped('Requires symfony/twig-bundle >= 8.1 with SafeClassPass support');
@@ -108,7 +108,7 @@ class TwigComponentExtensionTest extends TestCase
         $this->assertSame([['strategy' => 'html']], $def->getTag('twig.safe_class'));
     }
 
-    public function testFallbackToEnvironmentConfiguratorWithoutSafeClassPass()
+    public function testFallbackToEnvironmentConfiguratorWithoutSafeClassPass(): void
     {
         if (class_exists(SafeClassPass::class)) {
             $this->markTestSkipped('Only relevant with symfony/twig-bundle < 8.1 without SafeClassPass support');
@@ -143,7 +143,7 @@ class TwigComponentExtensionTest extends TestCase
         return $container;
     }
 
-    private function compileContainer(ContainerBuilder $container)
+    private function compileContainer(ContainerBuilder $container): void
     {
         $container->getCompilerPassConfig()->setOptimizationPasses([]);
         $container->getCompilerPassConfig()->setRemovingPasses([]);

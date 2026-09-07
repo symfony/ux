@@ -26,7 +26,7 @@ use Twig\TemplateWrapper;
 final class ComponentParserTest extends KernelTestCase
 {
     #[DataProvider('provideValidComponentNames')]
-    public function testAcceptTwigComponentTagWithValidComponentName(string $name)
+    public function testAcceptTwigComponentTagWithValidComponentName(string $name): void
     {
         $environment = $this->createEnvironment();
         $source = str_replace('XXX', $name, "{% component 'XXX' %}{% endcomponent %}");
@@ -37,7 +37,7 @@ final class ComponentParserTest extends KernelTestCase
     }
 
     #[DataProvider('provideValidBareComponentNames')]
-    public function testAcceptTwigComponentTagWithValidBareComponentName(string $name)
+    public function testAcceptTwigComponentTagWithValidBareComponentName(string $name): void
     {
         $environment = $this->createEnvironment();
         $source = str_replace('XXX', $name, '{% component XXX %}{% endcomponent %}');
@@ -48,7 +48,7 @@ final class ComponentParserTest extends KernelTestCase
     }
 
     #[DataProvider('provideValidComponentNames')]
-    public function testAcceptHtmlComponentTagWithValidComponentName(string $name)
+    public function testAcceptHtmlComponentTagWithValidComponentName(string $name): void
     {
         $environment = $this->createEnvironment();
         $source = \sprintf('<twig:%s></twig:%s>', $name, $name);
@@ -59,7 +59,7 @@ final class ComponentParserTest extends KernelTestCase
     }
 
     #[DataProvider('provideValidComponentNames')]
-    public function testAcceptHtmlSelfClosingComponentTagWithValidComponentName(string $name)
+    public function testAcceptHtmlSelfClosingComponentTagWithValidComponentName(string $name): void
     {
         $environment = $this->createEnvironment();
         $source = \sprintf('<twig:%s />', $name);
@@ -69,7 +69,7 @@ final class ComponentParserTest extends KernelTestCase
         $this->assertInstanceOf(TemplateWrapper::class, $template);
     }
 
-    public function testItThrowsWhenComponentNameCannotBeParsed()
+    public function testItThrowsWhenComponentNameCannotBeParsed(): void
     {
         $environment = $this->createEnvironment();
         $source = '{% component [] %}{% endcomponent %}';
@@ -82,7 +82,7 @@ final class ComponentParserTest extends KernelTestCase
     }
 
     #[DataProvider('provideValidDynamicComponentExpressions')]
-    public function testItAcceptsParenthesizedDynamicComponentExpression(string $expression)
+    public function testItAcceptsParenthesizedDynamicComponentExpression(string $expression): void
     {
         $environment = $this->createEnvironment();
         $source = \sprintf('{%% component %s %%}{%% endcomponent %%}', $expression);
@@ -93,7 +93,7 @@ final class ComponentParserTest extends KernelTestCase
     }
 
     #[DataProvider('provideInvalidUnparenthesizedDynamicComponentExpressions')]
-    public function testItRejectsUnparenthesizedDynamicComponentExpression(string $expression)
+    public function testItRejectsUnparenthesizedDynamicComponentExpression(string $expression): void
     {
         $environment = $this->createEnvironment();
         $source = \sprintf('{%% component %s %%}{%% endcomponent %%}', $expression);
