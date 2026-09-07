@@ -21,6 +21,7 @@ use Symfony\UX\Image\Exception\ExceptionInterface;
 use Symfony\UX\Image\Exception\RuntimeException;
 use Symfony\UX\Image\ImageAsset;
 use Symfony\UX\Image\Processor\ImageProcessorInterface;
+use Symfony\UX\Image\Profile\ImageProfile;
 use Symfony\UX\Image\Regeneration\ImageAssetBatchQuery;
 use Symfony\UX\Image\Regeneration\RegenerationServiceResolver;
 use Symfony\UX\Image\Storage\StorageInterface;
@@ -108,7 +109,7 @@ final class RegenerateVariantsCommand extends Command
 
         $dryRun = (bool) $input->getOption('dry-run');
         $force = (bool) $input->getOption('force');
-        $revision = hash('sha256', json_encode($config, \JSON_THROW_ON_ERROR));
+        $revision = ImageProfile::revisionOf($config);
         $cursor = $after;
         $seenCursorWindow = [];
         $processed = 0;

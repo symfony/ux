@@ -425,7 +425,7 @@ final class UXImageBundle extends AbstractBundle
             ->set('ux_image.cache.enabled', $cache['enabled'])
             ->set('ux_image.cache.pool', $cache['pool'])
             ->set('ux_image.cache.ttl', $cache['ttl'])
-            ->set('ux_image.cache.namespace', hash('sha256', serialize($storages)))
+            ->set('ux_image.cache.namespace', hash('xxh128', serialize($storages)))
         ;
 
         if (!$cache['enabled']) {

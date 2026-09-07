@@ -37,7 +37,7 @@ final class ProfileRegistryTest extends TestCase
         self::assertSame(ProcessingMode::Immediate, $profile->processing);
         self::assertSame(ResizeMode::Crop, $profile->variants['thumb']->mode);
         self::assertSame(0.3, $profile->variants['thumb']->focalPoint->y);
-        self::assertSame(hash('sha256', json_encode($configuration, \JSON_THROW_ON_ERROR)), $profile->revision());
+        self::assertSame(ImageProfile::revisionOf($configuration), $profile->revision());
     }
 
     public function testUnknownProfileFailsWithAvailableNames()

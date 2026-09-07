@@ -21,6 +21,7 @@ use Symfony\UX\Image\Exception\ExceptionInterface;
 use Symfony\UX\Image\Exception\RuntimeException;
 use Symfony\UX\Image\ImageAsset;
 use Symfony\UX\Image\Processor\ImageProcessorInterface;
+use Symfony\UX\Image\Profile\ImageProfile;
 use Symfony\UX\Image\Regeneration\ImageAssetBatch;
 use Symfony\UX\Image\Regeneration\ImageAssetBatchQuery;
 use Symfony\UX\Image\Regeneration\ImageAssetPersisterInterface;
@@ -152,7 +153,7 @@ final class RegenerateVariantsCommandTest extends TestCase
     public function testCurrentRevisionIsSkippedUnlessForced()
     {
         $config = self::profiles()['avatar'];
-        $revision = hash('sha256', json_encode($config, \JSON_THROW_ON_ERROR));
+        $revision = ImageProfile::revisionOf($config);
         $asset = new ImageAsset('media', '/media/current.jpeg', variants: [
             'webp' => [['name' => 'thumb', 'path' => '/media/current_thumb.webp', 'width' => 100]],
         ], profile: 'avatar', profileRevision: $revision);
@@ -174,7 +175,7 @@ final class RegenerateVariantsCommandTest extends TestCase
     public function testCurrentRevisionWithoutGeneratedVariantsIsRegenerated()
     {
         $config = self::profiles()['avatar'];
-        $revision = hash('sha256', json_encode($config, \JSON_THROW_ON_ERROR));
+        $revision = ImageProfile::revisionOf($config);
         $asset = new ImageAsset('media', '/media/deferred.jpeg', profile: 'avatar', profileRevision: $revision);
         $provider = new RecordingProvider(static fn (): ImageAssetBatch => new ImageAssetBatch([
             new ImageAssetReference('deferred', 'cursor', 'version-current', $asset),

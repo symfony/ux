@@ -29,6 +29,14 @@ final class ImageProfile
 
     public function revision(): string
     {
-        return hash('sha256', json_encode($this->configuration, \JSON_THROW_ON_ERROR));
+        return self::revisionOf($this->configuration);
+    }
+
+    /**
+     * @param array<string, mixed> $configuration
+     */
+    public static function revisionOf(array $configuration): string
+    {
+        return hash('xxh128', json_encode($configuration, \JSON_THROW_ON_ERROR));
     }
 }

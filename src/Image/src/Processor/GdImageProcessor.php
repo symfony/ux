@@ -21,6 +21,7 @@ use Symfony\UX\Image\ImageAsset;
 use Symfony\UX\Image\ImageSource;
 use Symfony\UX\Image\InspectedImage;
 use Symfony\UX\Image\ProcessingLimits;
+use Symfony\UX\Image\Profile\ImageProfile;
 use Symfony\UX\Image\Profile\ProcessingMode;
 use Symfony\UX\Image\Storage\ImageWriteSession;
 use Symfony\UX\Image\Storage\StorageInterface;
@@ -108,7 +109,7 @@ final class GdImageProcessor implements ImageDriverInterface
                 } else {
                     $variants = ProcessingMode::Immediate === $processing ? $this->generateVariantsFromSource($asset, $profileConfig ?? [], $sourcePath) : [];
                     $profileRevision = ProcessingMode::Immediate === $processing && null !== $profileConfig
-                        ? hash('sha256', json_encode($profileConfig, \JSON_THROW_ON_ERROR))
+                        ? ImageProfile::revisionOf($profileConfig)
                         : null;
                 }
             } catch (\Throwable $e) {

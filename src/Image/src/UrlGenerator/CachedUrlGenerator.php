@@ -64,7 +64,7 @@ final class CachedUrlGenerator implements UrlGeneratorInterface
 
     public function generateVariantUrl(ImageAsset $asset, array $variant): string
     {
-        $variantKey = hash('sha256', serialize([
+        $variantKey = hash('xxh128', serialize([
             'namespace' => $this->namespace,
             'storage' => $asset->storageName,
             'assetPath' => $asset->path,
@@ -103,6 +103,6 @@ final class CachedUrlGenerator implements UrlGeneratorInterface
 
     private function getCacheKey(string $type, string $storageName, string $path): string
     {
-        return \sprintf('ux_image.url.%s.%s', $type, hash('sha256', $this->namespace."\0".$storageName."\0".$path));
+        return \sprintf('ux_image.url.%s.%s', $type, hash('xxh128', $this->namespace."\0".$storageName."\0".$path));
     }
 }
