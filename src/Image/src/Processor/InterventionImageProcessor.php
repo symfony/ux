@@ -40,30 +40,40 @@ use Symfony\UX\Image\Transformation\ResizeMode;
  */
 final class InterventionImageProcessor implements ImageDriverInterface
 {
+    private readonly SvgPolicyInterface $svgPolicy;
+    private readonly ResizeGeometryCalculator $geometryCalculator;
+    private readonly ProcessingLimits $limits;
+    private readonly Filesystem $filesystem;
+
     /** @param array<string, array<string, mixed>> $profiles */
     public function __construct(
         private readonly StorageInterface $storageManager,
         private readonly array $profiles,
         private readonly ImageInspectorInterface $imageInspector,
         private readonly ?ImageManagerInterface $imageManager = null,
-        private readonly ?SvgPolicyInterface $svgPolicy = null,
-        private readonly ?ResizeGeometryCalculator $geometryCalculator = null,
+        ?SvgPolicyInterface $svgPolicy = null,
+        ?ResizeGeometryCalculator $geometryCalculator = null,
         private readonly ?ImageProcessingDispatcherInterface $asyncDispatcher = null,
-        private readonly ?ProcessingLimits $limits = null,
+        ?ProcessingLimits $limits = null,
+        ?Filesystem $filesystem = null,
     ) {
+        $this->svgPolicy = $svgPolicy ?? new RejectSvgPolicy();
+        $this->geometryCalculator = $geometryCalculator ?? new ResizeGeometryCalculator();
+        $this->limits = $limits ?? new ProcessingLimits();
+        $this->filesystem = $filesystem ?? new Filesystem();
     }
 
     public function process(UploadedFile $file, ?string $profile = null, string $storage = 'default_public'): ImageAsset
     {
         $metadata = $this->extractMetadata($file);
         if ('image/svg+xml' === ($metadata['mime'] ?? null)) {
-            $file = ($this->svgPolicy ?? new RejectSvgPolicy())->process($file);
+            $file = $this->svgPolicy->process($file);
             $metadata = $this->extractMetadata($file);
             if ('image/svg+xml' === ($metadata['mime'] ?? null)) {
                 throw ImageProcessingException::processingFailed('svg policy', 'The policy must return a safe raster image.');
             }
         }
-        $inspection = $this->imageInspector->inspectImage($file, $this->limits ?? new ProcessingLimits());
+        $inspection = $this->imageInspector->inspectImage($file, $this->limits);
 
         if (null !== $profile && !isset($this->profiles[$profile])) {
             throw UnknownImageProfileException::create($profile, array_keys($this->profiles));
@@ -75,10 +85,10 @@ final class InterventionImageProcessor implements ImageDriverInterface
         $sourceWorkspace = null;
         $sourcePath = null;
         if (ProcessingMode::Immediate === $processing && $this->storageManager instanceof StreamStorageInterface) {
-            $sourceWorkspace = new ProcessingWorkspace();
+            $sourceWorkspace = new ProcessingWorkspace($this->filesystem);
             $sourcePath = $sourceWorkspace->materializeLocal(
                 $file->getRealPath() ?: $file->getPathname(),
-                $this->limits ?? new ProcessingLimits(),
+                $this->limits,
             );
         }
 
@@ -154,9 +164,9 @@ final class InterventionImageProcessor implements ImageDriverInterface
         }
 
         $variants = [];
-        $workspace = new ProcessingWorkspace();
+        $workspace = new ProcessingWorkspace($this->filesystem);
         $streamStorage = $this->storageManager instanceof StreamStorageInterface ? $this->storageManager : null;
-        $limits = $this->limits ?? new ProcessingLimits();
+        $limits = $this->limits;
         /** @var array<string, mixed> $configuredVariants */
         $configuredVariants = $variantConfigs['variants'];
         /** @var array<array-key, mixed> $configuredFormats */
@@ -170,7 +180,7 @@ final class InterventionImageProcessor implements ImageDriverInterface
             $input = InspectedImage::fromPath($originalPath, $limits);
             $plan = new VariantProcessingPlanner(
                 $limits,
-                $this->geometryCalculator ?? new ResizeGeometryCalculator(),
+                $this->geometryCalculator,
             )->plan($input, $configuredVariants, $configuredFormats);
         } catch (\Throwable $e) {
             $workspace->cleanup();
@@ -259,7 +269,7 @@ final class InterventionImageProcessor implements ImageDriverInterface
                 $writeSession->commit();
             } else {
                 foreach ($localPublications as [$stagedPath, $absolutePath]) {
-                    $this->filesystem()->rename($stagedPath, $absolutePath, false);
+                    $this->filesystem->rename($stagedPath, $absolutePath, false);
                 }
             }
         } catch (\Throwable $e) {
@@ -275,7 +285,7 @@ final class InterventionImageProcessor implements ImageDriverInterface
     public function resize(string $inputPath, string $outputPath, int $width, int $height, string $mode = 'fit', string $position = 'center'): void
     {
         if (null === $this->imageManager) {
-            $this->filesystem()->mkdir(\dirname($outputPath));
+            $this->filesystem->mkdir(\dirname($outputPath));
 
             if (!copy($inputPath, $outputPath)) {
                 throw ImageProcessingException::processingFailed('resize', \sprintf('Could not copy "%s" to "%s".', $inputPath, $outputPath));
@@ -285,8 +295,8 @@ final class InterventionImageProcessor implements ImageDriverInterface
         }
 
         try {
-            $input = InspectedImage::fromPath($inputPath, $this->limits ?? new ProcessingLimits());
-            $geometry = ($this->geometryCalculator ?? new ResizeGeometryCalculator())->calculate(
+            $input = InspectedImage::fromPath($inputPath, $this->limits);
+            $geometry = $this->geometryCalculator->calculate(
                 $input->width,
                 $input->height,
                 $width,
@@ -305,7 +315,7 @@ final class InterventionImageProcessor implements ImageDriverInterface
                 $image->resizeCanvas($geometry->canvasWidth, $geometry->canvasHeight, 'transparent', 'center');
             }
 
-            $this->filesystem()->mkdir(\dirname($outputPath));
+            $this->filesystem->mkdir(\dirname($outputPath));
             $image->save($outputPath);
         } catch (\Throwable $e) {
             throw ImageProcessingException::processingFailed('resize', $e->getMessage());
@@ -340,13 +350,8 @@ final class InterventionImageProcessor implements ImageDriverInterface
         return 'intervention' === $driver || 'imagick' === $driver || 'vips' === $driver;
     }
 
-    private function filesystem(): Filesystem
-    {
-        return new Filesystem();
-    }
-
     private function assertOutputAllocation(int $width, int $height): void
     {
-        ($this->limits ?? new ProcessingLimits())->assertOutputAllocation($width, $height);
+        $this->limits->assertOutputAllocation($width, $height);
     }
 }

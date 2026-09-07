@@ -24,15 +24,16 @@ use Symfony\UX\Image\ProcessingLimits;
  */
 final class LocalStorage implements StreamStorageInterface
 {
-    private Filesystem $filesystem;
+    private readonly Filesystem $filesystem;
 
     /** @param array<string, array<string, mixed>> $storages */
     public function __construct(
         private readonly array $storages,
         private readonly string $storageRoot,
         private readonly ?ProcessingLimits $limits = null,
+        ?Filesystem $filesystem = null,
     ) {
-        $this->filesystem = new Filesystem();
+        $this->filesystem = $filesystem ?? new Filesystem();
     }
 
     public function store(UploadedFile $file, string $storageName, ?string $directory = null): string

@@ -24,8 +24,9 @@ final class ProcessingWorkspace
 {
     private readonly string $directory;
 
-    public function __construct()
-    {
+    public function __construct(
+        private readonly Filesystem $filesystem = new Filesystem(),
+    ) {
         $this->directory = sys_get_temp_dir().'/ux-image-'.bin2hex(random_bytes(12));
         if (!mkdir($this->directory, 0o700, true) && !is_dir($this->directory)) {
             throw ImageProcessingException::processingFailed('workspace', 'Could not create the image processing workspace.');
@@ -90,7 +91,7 @@ final class ProcessingWorkspace
 
     public function cleanup(): void
     {
-        new Filesystem()->remove($this->directory);
+        $this->filesystem->remove($this->directory);
     }
 
     public function __destruct()

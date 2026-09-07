@@ -60,6 +60,7 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$storages', param('ux_image.storages'))
         ->arg('$storageRoot', param('ux_image.storage_root'))
         ->arg('$limits', service(ProcessingLimits::class))
+        ->arg('$filesystem', service('filesystem'))
     ;
 
     $services->alias(StorageInterface::class, 'ux_image.storage.local');
@@ -86,6 +87,7 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$geometryCalculator', service(ResizeGeometryCalculator::class))
         ->arg('$asyncDispatcher', service(ImageProcessingDispatcherInterface::class)->nullOnInvalid())
         ->arg('$limits', service(ProcessingLimits::class))
+        ->arg('$filesystem', service('filesystem'))
         ->tag('ux_image.processor')
     ;
 
@@ -105,6 +107,7 @@ return static function (ContainerConfigurator $container): void {
             ->arg('$geometryCalculator', service(ResizeGeometryCalculator::class))
             ->arg('$asyncDispatcher', service(ImageProcessingDispatcherInterface::class)->nullOnInvalid())
             ->arg('$limits', service(ProcessingLimits::class))
+            ->arg('$filesystem', service('filesystem'))
             ->tag('ux_image.processor')
         ;
     }
