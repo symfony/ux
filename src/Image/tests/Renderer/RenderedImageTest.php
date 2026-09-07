@@ -95,8 +95,8 @@ final class RenderedImageTest extends TestCase
         self::assertStringContainsString('src="/image.jpg"', $html);
         self::assertStringContainsString('alt="Test image"', $html);
         self::assertStringContainsString('loading="lazy"', $html);
-        self::assertStringContainsString('fetchpriority="auto"', $html);
-        self::assertStringContainsString('decoding="async"', $html);
+        self::assertStringNotContainsString('fetchpriority=', $html);
+        self::assertStringNotContainsString('decoding=', $html);
         self::assertStringContainsString('width="800"', $html);
         self::assertStringContainsString('height="600"', $html);
         self::assertStringContainsString('class="hero"', $html);

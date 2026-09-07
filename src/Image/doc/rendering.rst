@@ -127,8 +127,6 @@ The package documentation test creates a deterministic asset with ``ImageAssetFa
             sizes="100vw"
             alt="Product photo"
             loading="lazy"
-            fetchpriority="auto"
-            decoding="async"
             srcset="
                 /media/fixtures/image-300.jpeg   300w,
                 /media/fixtures/image-600.jpeg   600w,
@@ -151,8 +149,6 @@ The package documentation test creates a deterministic asset with ``ImageAssetFa
         src="/media/fixtures/image-300.jpeg"
         alt="Product photo"
         loading="lazy"
-        fetchpriority="auto"
-        decoding="async"
         srcset="
             /media/fixtures/image-300.jpeg   300w,
             /media/fixtures/image-600.jpeg   600w,
@@ -191,10 +187,10 @@ Option             Type              Default    Description
 =================  ================  =========  ============================================================
 ``alt``            ``string``        ``''``     ``alt`` attribute value
 ``lazy``           ``bool``          ``true``   ``loading="lazy"`` when true, ``loading="eager"`` when false
-``fetchpriority``  ``string``        ``auto``   ``fetchpriority`` attribute (``high``, ``low``, ``auto``)
+``fetchpriority``  ``string``        ``auto``   ``fetchpriority`` attribute (``high``, ``low``); ``auto`` emits nothing
 ``sizes``          ``string``        ``100vw``  ``sizes`` attribute for ``<source>`` and ``<img>``
 ``class``          ``string``        ``''``     CSS class on the ``<img>`` element
-``decoding``       ``string``        ``async``  ``decoding`` attribute (``async``, ``sync``, ``auto``)
+``decoding``       ``string``        ``async``  ``decoding`` attribute (``sync``, ``auto``); ``async`` emits nothing
 ``variant``        ``string\|null``  ``null``   Filter to a single named variant
 =================  ================  =========  ============================================================
 

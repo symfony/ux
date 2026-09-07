@@ -103,8 +103,7 @@ final class RenderedImage
             ...$attributes,
             \sprintf('alt="%s"', htmlspecialchars($this->options->alt, \ENT_QUOTES | \ENT_SUBSTITUTE)),
             \sprintf('loading="%s"', $this->loadingAttribute()),
-            \sprintf('fetchpriority="%s"', $this->fetchPriorityAttribute()),
-            \sprintf('decoding="%s"', htmlspecialchars($this->options->decoding, \ENT_QUOTES | \ENT_SUBSTITUTE)),
+            ...$this->hintAttributes(),
         ];
 
         if ($this->fallbackSrcset) {
@@ -146,8 +145,7 @@ final class RenderedImage
             \sprintf('src="%s"', htmlspecialchars($this->fallbackSrc, \ENT_QUOTES | \ENT_SUBSTITUTE)),
             \sprintf('alt="%s"', htmlspecialchars($this->options->alt, \ENT_QUOTES | \ENT_SUBSTITUTE)),
             \sprintf('loading="%s"', $this->loadingAttribute()),
-            \sprintf('fetchpriority="%s"', $this->fetchPriorityAttribute()),
-            \sprintf('decoding="%s"', htmlspecialchars($this->options->decoding, \ENT_QUOTES | \ENT_SUBSTITUTE)),
+            ...$this->hintAttributes(),
         ];
 
         if ($this->fallbackSrcset) {
@@ -182,13 +180,22 @@ final class RenderedImage
         };
     }
 
-    private function fetchPriorityAttribute(): string
+    /**
+     * Browser defaults ("auto" priority, "async" decoding) are omitted.
+     *
+     * @return list<string>
+     */
+    private function hintAttributes(): array
     {
-        return match ($this->options->fetchPriority) {
-            'low' => 'low',
-            'high' => 'high',
-            default => 'auto',
-        };
+        $attributes = [];
+        if (\in_array($this->options->fetchPriority, ['high', 'low'], true)) {
+            $attributes[] = \sprintf('fetchpriority="%s"', $this->options->fetchPriority);
+        }
+        if ('async' !== $this->options->decoding) {
+            $attributes[] = \sprintf('decoding="%s"', htmlspecialchars($this->options->decoding, \ENT_QUOTES | \ENT_SUBSTITUTE));
+        }
+
+        return $attributes;
     }
 
     /** @return list<string> */
