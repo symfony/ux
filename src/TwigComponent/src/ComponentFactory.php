@@ -77,7 +77,7 @@ final class ComponentFactory implements ResetInterface
 
         if ($mappedName = $this->classMap[$name] ?? null) {
             if ($config = $this->config[$mappedName] ?? null) {
-                return $this->metadata[$name] = new ComponentMetadata($config);
+                return $this->metadata[$name] = $this->metadata[$mappedName] ??= new ComponentMetadata($config);
             }
 
             throw new \InvalidArgumentException(\sprintf('Unknown component "%s".', $name));
@@ -106,7 +106,7 @@ final class ComponentFactory implements ResetInterface
     public function mountFromObject(object $component, array $data, ComponentMetadata $componentMetadata): MountedComponent
     {
         $originalData = $data;
-        $data = $this->preMount($component, $data, $componentMetadata);
+        $this->preMount($component, $data, $componentMetadata);
 
         $this->mount($component, $data, $componentMetadata);
 
@@ -120,7 +120,7 @@ final class ComponentFactory implements ResetInterface
             }
         }
 
-        [$data, $extraMetadata] = $this->postMount($component, $data, $componentMetadata);
+        $extraMetadata = $this->postMount($component, $data, $componentMetadata);
 
         // create attributes from "attributes" key if exists
         $attributesVar = $componentMetadata->getAttributesVar();
@@ -188,10 +188,7 @@ final class ComponentFactory implements ResetInterface
         $mount->invoke($component, ...$parameters);
     }
 
-    /**
-     * @return array The (possibly modified) mount data
-     */
-    private function preMount(object $component, array $data, ComponentMetadata $componentMetadata): array
+    private function preMount(object $component, array &$data, ComponentMetadata $componentMetadata): void
     {
         if (null === $this->introspectableDispatcher || $this->introspectableDispatcher->hasListeners(PreMountEvent::class)) {
             $event = new PreMountEvent($component, $data, $componentMetadata);
@@ -204,14 +201,12 @@ final class ComponentFactory implements ResetInterface
                 $data = $newData;
             }
         }
-
-        return $data;
     }
 
     /**
-     * @return array{0: array, 1: array} The (possibly modified) mount data and the extra metadata
+     * @return array The extra metadata collected by the listeners
      */
-    private function postMount(object $component, array $data, ComponentMetadata $componentMetadata): array
+    private function postMount(object $component, array &$data, ComponentMetadata $componentMetadata): array
     {
         $extraMetadata = [];
         if (null === $this->introspectableDispatcher || $this->introspectableDispatcher->hasListeners(PostMountEvent::class)) {
@@ -227,7 +222,7 @@ final class ComponentFactory implements ResetInterface
             }
         }
 
-        return [$data, $extraMetadata];
+        return $extraMetadata;
     }
 
     /**
