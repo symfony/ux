@@ -13,8 +13,12 @@ namespace Symfony\UX\LiveComponent;
 
 use Symfony\Component\Form\ChoiceList\View\ChoiceGroupView;
 use Symfony\Component\Form\ClearableErrorsInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\Util\FormUtil;
+use Symfony\Component\Form\Util\ServerParams;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Contracts\Translation\TranslatableInterface;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -147,7 +151,7 @@ trait ComponentWithFormTrait
         }
     }
 
-    private function submitForm(bool $validateAll = true): void
+    private function submitForm(bool $validateAll = true, ?Request $request = null): void
     {
         if (null !== $this->formView) {
             // Two scenarios can cause this:
@@ -160,7 +164,50 @@ trait ComponentWithFormTrait
         }
 
         $form = $this->getForm();
-        $form->submit($this->formValues);
+        $method = $form->getConfig()->getMethod();
+
+        // For request methods that must not have a request body we fetch data
+        // from the query string. Otherwise we look for data in the request body.
+        if ('POST' === $method && $request instanceof Request) {
+            // Mark the form with an error if the uploaded size was too large
+            // This is done here and not in FormValidator because $_POST is
+            // empty when that error occurs. Hence the form is never submitted.
+            $serverParams = new ServerParams();
+            if ($serverParams->hasPostMaxSizeBeenExceeded()) {
+                // Submit the form, but don't clear the default values
+                $form->submit(null, false);
+
+                $form->addError(new FormError(
+                    $form->getConfig()->getOption('upload_max_size_message')(),
+                    null,
+                    ['{{ max }}' => $serverParams->getNormalizedIniPostMaxSize()]
+                ));
+
+                return;
+            }
+
+            $name = $form->getName();
+
+            if ('' === $name) {
+                $params = $request->request->all();
+                $files = $request->files->all();
+            } elseif ($request->request->has($name) || $request->files->has($name)) {
+                $default = $form->getConfig()->getCompound() ? [] : null;
+                $params = $request->request->all()[$name] ?? $default;
+                $files = $request->files->get($name, $default);
+            } else {
+                // Don't submit the form if it is not present in the request
+                return;
+            }
+
+            if (\is_array($params) && \is_array($files)) {
+                $data = FormUtil::mergeParamsAndFiles($params, $files);
+            } else {
+                $data = $params ?: $files;
+            }
+        }
+
+        $form->submit($data ?? $this->formValues);
         $this->shouldAutoSubmitForm = false;
 
         if ($validateAll) {
