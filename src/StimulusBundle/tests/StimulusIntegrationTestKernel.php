@@ -18,6 +18,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\UX\StimulusBundle\StimulusBundle;
+use Symfony\UX\StimulusBundle\Tests\fixtures\AutowiredStimulusHelperConsumer;
 
 final class StimulusIntegrationTestKernel extends Kernel
 {
@@ -49,6 +50,10 @@ final class StimulusIntegrationTestKernel extends Kernel
         $container->loadFromExtension('framework', $frameworkConfig);
 
         $container->loadFromExtension('twig');
+
+        $container->register(AutowiredStimulusHelperConsumer::class)
+            ->setAutowired(true)
+            ->setPublic(true);
     }
 
     public function getCacheDir(): string

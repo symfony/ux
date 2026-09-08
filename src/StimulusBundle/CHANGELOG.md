@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.5.0
+
+- Alias the `StimulusHelper` service to its class name so it can be autowired
+
 ## 3.3.0
 
 - Detect the `stimulusFetch: 'lazy'` directive inside preserved comments (`/*! ... */`)
