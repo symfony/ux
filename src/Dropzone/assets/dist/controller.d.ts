@@ -6,15 +6,34 @@ declare class export_default extends Controller {
   readonly previewClearButtonTarget: HTMLButtonElement;
   readonly previewFilenameTarget: HTMLDivElement;
   readonly previewImageTarget: HTMLDivElement;
+  readonly previewListTarget: HTMLUListElement;
+  readonly hasPreviewListTarget: boolean;
+  readonly multipleValue: boolean;
+  readonly removeLabelValue: string;
   static targets: string[];
+  static values: {
+    multiple: BooleanConstructor;
+    removeLabel: {
+      type: StringConstructor;
+      default: string;
+    };
+  };
+  private dataTransfer;
   initialize(): void;
   connect(): void;
   disconnect(): void;
   clear(): void;
   onInputChange(event: any): void;
-  _populateImagePreview(file: Blob): void;
+  _populateImagePreview(target: HTMLElement, file: Blob): void;
   onDragEnter(): void;
   onDragLeave(event: any): void;
+  private connectMultiple;
+  onMultipleChange(): void;
+  private syncMultiple;
+  private removeFileAt;
+  private containsFile;
+  private renderList;
+  private buildListItem;
   private dispatchEvent;
 }
 export { export_default as default };
