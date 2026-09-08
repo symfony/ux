@@ -1,5 +1,6 @@
 /assets/node_modules/
 /config/reference.php
+/config/schema.json
 /vendor/
 /composer.lock
 /phpunit.xml

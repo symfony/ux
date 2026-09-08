@@ -1,7 +1,8 @@
 /.git* export-ignore
 /.symfony.bundle.yaml export-ignore
+/assets/src export-ignore
+/assets/tsconfig.json export-ignore
+/doc export-ignore
 /phpstan.dist.neon export-ignore
 /phpunit.dist.xml export-ignore
-/assets/src export-ignore
-/doc export-ignore
 /tests export-ignore
