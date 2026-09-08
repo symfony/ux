@@ -1,0 +1,12 @@
+---------------------------------------------------------------------------
+
+by deluxetom at 2026-06-16T01:36:29Z
+
+@Kocal @MrYamous let me know if you see anything that needs to be updated
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-08T09:09:21Z
+
+Dropping support Intervention Image v2  like that is a big BC break and can't be done on 3.x.
+Instead, I reverted Intervention Image v2 support and added support for v3 and v4, so upgrading steps will be smooth.
