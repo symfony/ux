@@ -19,6 +19,10 @@ use Symfony\Bundle\SecurityBundle\Security;
  * Interface for classes that will have an "autocomplete" endpoint exposed.
  *
  * @template T of object
+ *
+ * TODO Remove next lines for Symfony UX 4
+ *
+ * @method string|false|null getTranslationDomain() Return the translation domain used for the "group_by" labels.
  */
 interface EntityAutocompleterInterface
 {
@@ -72,4 +76,13 @@ interface EntityAutocompleterInterface
      * @return string|null
      */
     public function getGroupBy(): mixed;
+
+    /*
+     * Return the translation domain used for the "group_by" labels.
+     *
+     * Returning null uses the default domain, false disables the translation.
+     *
+     * TODO Uncomment for Symfony UX 4
+     */
+    /* public function getTranslationDomain(): string|false|null; */
 }

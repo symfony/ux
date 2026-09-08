@@ -157,6 +157,14 @@ final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocomp
         throw new \InvalidArgumentException('The "additional_attributes" option must be either an array or a callable.');
     }
 
+    public function getTranslationDomain(): string|false|null
+    {
+        // the "choice_translation_domain" option is normalized to the form
+        // "translation_domain" when it is true, and to false when translation
+        // is disabled
+        return $this->getFormOption('choice_translation_domain');
+    }
+
     private function getFormOption(string $name): mixed
     {
         $form = $this->getForm();
