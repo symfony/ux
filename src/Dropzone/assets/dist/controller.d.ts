@@ -27,6 +27,7 @@ declare class export_default extends Controller {
   _populateImagePreview(target: HTMLElement, file: Blob): void;
   onDragEnter(): void;
   onDragLeave(event: any): void;
+  onDrop(): void;
   private connectMultiple;
   onMultipleChange(): void;
   private syncMultiple;

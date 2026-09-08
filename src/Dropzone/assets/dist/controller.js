@@ -5,6 +5,7 @@ var _Class = class extends Controller {
 		this.onInputChange = this.onInputChange.bind(this);
 		this.onDragEnter = this.onDragEnter.bind(this);
 		this.onDragLeave = this.onDragLeave.bind(this);
+		this.onDrop = this.onDrop.bind(this);
 		this.onMultipleChange = this.onMultipleChange.bind(this);
 	}
 	connect() {
@@ -18,6 +19,7 @@ var _Class = class extends Controller {
 		this.inputTarget.addEventListener("change", this.onInputChange);
 		this.element.addEventListener("dragenter", this.onDragEnter);
 		this.element.addEventListener("dragleave", this.onDragLeave);
+		this.element.addEventListener("drop", this.onDrop);
 		this.dispatchEvent("connect");
 	}
 	disconnect() {
@@ -29,6 +31,7 @@ var _Class = class extends Controller {
 		this.inputTarget.removeEventListener("change", this.onInputChange);
 		this.element.removeEventListener("dragenter", this.onDragEnter);
 		this.element.removeEventListener("dragleave", this.onDragLeave);
+		this.element.removeEventListener("drop", this.onDrop);
 	}
 	clear() {
 		this.inputTarget.value = "";
@@ -72,6 +75,14 @@ var _Class = class extends Controller {
 			this.placeholderTarget.style.display = "none";
 			this.previewTarget.style.display = "block";
 		}
+	}
+	onDrop() {
+		setTimeout(() => {
+			if (!this.inputTarget.files?.length) return;
+			this.inputTarget.style.display = "none";
+			this.placeholderTarget.style.display = "none";
+			this.previewTarget.style.display = "flex";
+		});
 	}
 	connectMultiple() {
 		this.dataTransfer = new DataTransfer();

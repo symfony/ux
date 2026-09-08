@@ -1,0 +1,20 @@
+{% extends 'example.html.twig' %}
+
+{% block example %}
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            {% if uploadedFile %}
+                <div class="alert alert-success mb-4" id="upload-success">
+                    Uploaded: {{ uploadedFile }}
+                </div>
+            {% endif %}
+
+            {{ form_start(form, {attr: {'data-turbo': 'false'}}) }}
+                {{ form_row(form.photo) }}
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary" id="upload-submit">Upload</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
