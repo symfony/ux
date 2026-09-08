@@ -6,10 +6,10 @@
 {%- set _modal_id = 'modal-' ~ id -%}
 {%- set _modal_title_id = _modal_id ~ '-title' -%}
 <div
-    data-modal-open-value="{{ open ? 'true' : 'false' }}"
+    data-flowbite-modal-open-value="{{ open ? 'true' : 'false' }}"
     aria-labelledby="{{ _modal_title_id }}"
     {{ attributes.defaults({
-        'data-controller': 'modal',
+        'data-controller': 'flowbite-modal',
     }) }}
 >
     {% block content %}{% endblock %}

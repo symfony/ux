@@ -2,6 +2,7 @@
 
 ## 3.5.0
 
+- [Flowbite v4] Rename the `modal` Stimulus controller to `flowbite-modal`, so its `data-modal-target` attributes no longer collide with the attribute of the same name in Flowbite's own JavaScript
 - Add support for blocks: ready-to-use page sections built from a kit's components, installed and previewed as a unit
 - [Shadcn] Add the `login-01` and `login-02` login blocks
 - [Shadcn] Add `input-otp` recipe
