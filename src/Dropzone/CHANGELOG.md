@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.5.0
+
+- Add support for multiple file uploads: accumulate files across selections, preview each file, and remove them individually
+- Add a `remove_label` option to label the per-file remove button in `multiple` mode
+
 ## 3.0.0
 
 - Minimum required Symfony version is now 7.4

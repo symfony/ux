@@ -70,3 +70,49 @@
     text-align: center;
     color: #999;
 }
+
+.dropzone-container-multiple {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.dropzone-preview-list {
+    position: relative;
+    z-index: 2;
+    list-style: none;
+    width: 100%;
+    margin: 10px 0 0;
+    padding: 0;
+}
+
+.dropzone-preview-list-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 0;
+}
+
+.dropzone-preview-list-item .dropzone-preview-image {
+    margin-right: 0;
+}
+
+.dropzone-preview-list .dropzone-preview-filename {
+    flex-grow: 1;
+}
+
+.dropzone-preview-list-remove {
+    border: none;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: normal;
+    cursor: pointer;
+    -webkit-appearance: none;
+}
+
+.dropzone-preview-list-remove::before {
+    content: '×';
+    padding: 3px 7px;
+}
