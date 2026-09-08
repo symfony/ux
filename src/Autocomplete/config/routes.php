@@ -11,8 +11,12 @@
 
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-return function (RoutingConfigurator $routes) {
-    $routes->add('ux_entity_autocomplete', '/{alias}')
-        ->controller('ux.autocomplete.entity_autocomplete_controller')
+return static function (RoutingConfigurator $routes) {
+    $routes->add('ux_autocomplete', '/{alias}')
+        ->controller('ux.autocomplete.autocomplete_controller')
+    ;
+
+    $routes->alias('ux_entity_autocomplete', 'ux_autocomplete')
+        ->deprecate('symfony/ux-autocomplete', '3.5', 'The "%alias_id%" route alias is deprecated, use "ux_autocomplete" instead.')
     ;
 };
