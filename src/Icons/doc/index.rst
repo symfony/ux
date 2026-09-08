@@ -448,6 +448,58 @@ Now, all icons will have the ``fill`` attribute set to ``currentColor`` by defau
     # renders "user-profile.svg" with fill="red"
     {{ ux_icon('user-profile', {fill: 'red'}) }}
 
+Accessibility
+~~~~~~~~~~~~~
+
+Icons add visual elements to your website and they can be a challenge for accessibility.
+According to the `W3C guide about SVG icon accessibility`_, there are
+three methods to improve icons accessibility, depending on the context.
+
+**Informative icons**
+    They convey information or a function. They should define a text alternative
+    that presents the same content or function via the ``aria-label`` attribute
+    used by screen readers and other assistive technologies:
+
+    .. code-block:: twig
+
+        Today's weather:
+        {{ ux_icon('cloud-rain', {'aria-label': 'Rainy weather'}) }}
+
+**Functional icons**
+    They are interactive and perform a function. They should define a text alternative
+    that presents the same content or function via the ``aria-label`` attribute
+    used by screen readers and other assistive technologies:
+
+    .. code-block:: twig
+
+        {{ ux_icon('user-profile', {class: 'w-4 h-4', 'aria-label': 'User Profile'}) }}
+
+**Decorative icons**
+    They are purely decorative and do not convey any meaning or function. They
+    should be hidden from screen readers using the ``aria-hidden`` attribute.
+
+    .. code-block:: html
+
+        <a href="/profile">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4" aria-hidden="true">
+                <!-- ... -->
+            </svg>
+            Back to profile
+        </a>
+
+That is why the ``ux_icon()`` function and the ``<twig:ux:icon>`` component add
+``aria-hidden="true"`` attribute **automatically** to icons not having at least one
+of the following attributes: ``aria-label``, ``aria-labelledby`` or ``title``.
+
+.. note::
+
+    If you don't want to set ``aria-hidden="true"`` for a specific icon, you can
+    explicitly set the ``aria-hidden`` attribute to ``false``:
+
+    .. code-block:: html+twig
+
+        <twig:ux:icon name="user-profile" aria-hidden="false" />
+
 Icon Aliases
 ~~~~~~~~~~~~
 
@@ -537,58 +589,6 @@ by setting the ``ignore_not_found`` configuration option to ``true``:
     # config/packages/ux_icons.yaml
     ux_icons:
         ignore_not_found: true
-
-Accessibility
--------------
-
-Icons add visual elements to your website and they can be a challenge for accessibility.
-According to the `W3C guide about SVG icon accessibility`_, there are
-three methods to improve icons accessibility, depending on the context.
-
-**Informative icons**
-    They convey information or a function. They should define a text alternative
-    that presents the same content or function via the ``aria-label`` attribute
-    used by screen readers and other assistive technologies:
-
-    .. code-block:: twig
-
-        Today's weather:
-        {{ ux_icon('cloud-rain', {'aria-label': 'Rainy weather'}) }}
-
-**Functional icons**
-    They are interactive and perform a function. They should define a text alternative
-    that presents the same content or function via the ``aria-label`` attribute
-    used by screen readers and other assistive technologies:
-
-    .. code-block:: twig
-
-        {{ ux_icon('user-profile', {class: 'w-4 h-4', 'aria-label': 'User Profile'}) }}
-
-**Decorative icons**
-    They are purely decorative and do not convey any meaning or function. They
-    should be hidden from screen readers using the ``aria-hidden`` attribute.
-
-    .. code-block:: html
-
-        <a href="/profile">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4" aria-hidden="true">
-                <!-- ... -->
-            </svg>
-            Back to profile
-        </a>
-
-That is why the ``ux_icon()`` function and the ``<twig:ux:icon>`` component add
-``aria-hidden="true"`` attribute **automatically** to icons not having at least one
-of the following attributes: ``aria-label``, ``aria-labelledby`` or ``title``.
-
-.. note::
-
-    If you don't want to set ``aria-hidden="true"`` for a specific icon, you can
-    explicitly set the ``aria-hidden`` attribute to ``false``:
-
-    .. code-block:: html+twig
-
-        <twig:ux:icon name="user-profile" aria-hidden="false" />
 
 Performance
 -----------
