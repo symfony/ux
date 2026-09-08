@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.5.0
+
+- Fix broadcasting an entity whose identifier is made of associations
+
 ## 3.2.0
 
 - Prevent installation alongside `symfony/mercure` 0.7.0 and 0.7.1, which are incompatible
