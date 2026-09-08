@@ -21,7 +21,7 @@ class MakerAutocompleteVariables
 {
     public function __construct(
         public UseStatementGenerator $useStatements,
-        public ClassNameDetails $entityClassDetails,
+        public ?ClassNameDetails $entityClassDetails = null,
         public ?ClassNameDetails $repositoryClassDetails = null,
     ) {
     }

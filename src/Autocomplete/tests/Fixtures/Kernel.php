@@ -13,7 +13,6 @@ namespace Symfony\UX\Autocomplete\Tests\Fixtures;
 
 use Composer\InstalledVersions;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\ORM\Mapping\AssociationMapping;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -37,6 +36,7 @@ use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomAttributesProduct
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomGroupByProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomGroupByTranslatedProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomProductAutocompleter;
+use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\InMemoryColorAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Form\CategoryWithCallbackAsCustomValue;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Form\CategoryWithPropertyNameAsCustomValue;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Form\ProductType;
@@ -78,7 +78,7 @@ final class Kernel extends BaseKernel
     protected function build(ContainerBuilder $container): void
     {
         // workaround https://github.com/symfony/symfony/issues/50322
-        $container->addCompilerPass(new class() implements CompilerPassInterface {
+        $container->addCompilerPass(new class implements CompilerPassInterface {
             public function process(ContainerBuilder $container): void
             {
                 $container->removeDefinition('doctrine.orm.listeners.pdo_session_handler_schema_listener');
@@ -228,6 +228,11 @@ final class Kernel extends BaseKernel
             ->tag('ux.entity_autocomplete_field')
             ->public()
         ;
+
+        $services->set(InMemoryColorAutocompleter::class)
+            ->tag(AutocompleteFormTypePass::AUTOCOMPLETER_TAG, [
+                'alias' => 'in_memory_colors',
+            ]);
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void
