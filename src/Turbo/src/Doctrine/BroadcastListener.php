@@ -19,6 +19,7 @@ use Doctrine\ORM\Event\PostFlushEventArgs;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
+use Symfony\UX\Turbo\Broadcaster\IdAccessor;
 
 /**
  * Detects changes made from Doctrine entities and broadcasts updates to the broadcasters.
@@ -92,7 +93,7 @@ final class BroadcastListener implements ResetInterface
         try {
             foreach ($this->createdEntities as $entity) {
                 $options = $this->createdEntities[$entity];
-                $id = $em->getClassMetadata($entity::class)->getIdentifierValues($entity);
+                $id = IdAccessor::getIdentifierValues($em, $entity);
                 foreach ($options as $option) {
                     $option['id'] = $id;
                     $this->broadcaster->broadcast($entity, Broadcast::ACTION_CREATE, $option);
@@ -148,7 +149,7 @@ final class BroadcastListener implements ResetInterface
 
         if ($options = $this->broadcastedClasses[$class]) {
             if ($this->createdEntities !== $objectStorage) {
-                $id = $em->getClassMetadata($class)->getIdentifierValues($entity);
+                $id = IdAccessor::getIdentifierValues($em, $entity);
                 foreach ($options as $k => $option) {
                     $options[$k]['id'] = $id;
                 }
