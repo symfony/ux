@@ -14,7 +14,9 @@ namespace Symfony\UX\Translator\Tests;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\Translator;
 use Symfony\UX\Translator\MessageParameters\Extractor\IntlMessageParametersExtractor;
 use Symfony\UX\Translator\MessageParameters\Extractor\MessageParametersExtractor;
 use Symfony\UX\Translator\MessageParameters\Printer\TypeScriptMessageParametersPrinter;
@@ -349,6 +351,31 @@ class TranslationsDumperTest extends TestCase
         $content = file_get_contents(self::$translationsDumpDir.'/index.js');
 
         $assertions($this, $content);
+    }
+
+    public function testDumpParentLocaleFallback(): void
+    {
+        $translator = new Translator('de_AT');
+        $translator->addLoader('array', new ArrayLoader());
+        $translator->addResource('array', ['symfony.great' => 'Symfony ist großartig!'], 'de');
+        $translator->addResource('array', ['symfony.great' => 'Symfony ist leiwand!'], 'de_AT');
+
+        $translationsDumper = new TranslationsDumper(
+            new MessageParametersExtractor(),
+            new IntlMessageParametersExtractor(),
+            new TypeScriptMessageParametersPrinter(),
+            new Filesystem(),
+        );
+
+        $translationsDumper->dump(
+            catalogues: [$translator->getCatalogue('de_AT'), $translator->getCatalogue('de')],
+            dumpDir: self::$translationsDumpDir,
+        );
+
+        $this->assertStringContainsString(
+            'export const localeFallbacks = {"de_AT":"de","de":null};',
+            file_get_contents(self::$translationsDumpDir.'/index.js'),
+        );
     }
 
     /**
