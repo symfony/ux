@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface as IntrospectableEventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\TwigComponent\Event\PostRenderEvent;
@@ -27,6 +28,12 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
 {
     private array $templateClasses = [];
 
+    /**
+     * Set when the dispatcher can be asked whether an event has listeners,
+     * allowing to skip creating and dispatching events nobody listens to.
+     */
+    private readonly ?IntrospectableEventDispatcherInterface $introspectableDispatcher;
+
     public function __construct(
         private Environment $twig,
         private EventDispatcherInterface $dispatcher,
@@ -34,6 +41,7 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
         private ComponentProperties $componentProperties,
         private ComponentStack $componentStack,
     ) {
+        $this->introspectableDispatcher = $dispatcher instanceof IntrospectableEventDispatcherInterface ? $dispatcher : null;
     }
 
     /**
@@ -41,6 +49,10 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
      */
     public function preCreateForRender(string $name, array $props = []): ?string
     {
+        if ($this->introspectableDispatcher && !$this->introspectableDispatcher->hasListeners(PreCreateForRenderEvent::class)) {
+            return null;
+        }
+
         $event = new PreCreateForRenderEvent($name, $props);
         $this->dispatcher->dispatch($event);
 
@@ -78,8 +90,9 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
         } finally {
             $mounted = $this->componentStack->pop();
 
-            $event = new PostRenderEvent($mounted);
-            $this->dispatcher->dispatch($event);
+            if (null === $this->introspectableDispatcher || $this->introspectableDispatcher->hasListeners(PostRenderEvent::class)) {
+                $this->dispatcher->dispatch(new PostRenderEvent($mounted));
+            }
         }
     }
 
@@ -100,8 +113,9 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
     {
         $mounted = $this->componentStack->pop();
 
-        $event = new PostRenderEvent($mounted);
-        $this->dispatcher->dispatch($event);
+        if (null === $this->introspectableDispatcher || $this->introspectableDispatcher->hasListeners(PostRenderEvent::class)) {
+            $this->dispatcher->dispatch(new PostRenderEvent($mounted));
+        }
     }
 
     private function preRender(MountedComponent $mounted, array $context = []): PreRenderEvent
@@ -115,28 +129,32 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
         }
 
         // expose public properties and properties marked with ExposeInTemplate attribute
-        $props = [...$mounted->getInputProps(), ...$classProps];
-        $event = new PreRenderEvent($mounted, $metadata, [
+        $inputProps = $mounted->getInputProps();
+        $variables = [
             ...$context,
-            ...$props,
+            ...$inputProps,
+            ...$classProps,
             $metadata->getAttributesVar() => $mounted->getAttributes(),
-        ]);
+        ];
+        $event = new PreRenderEvent($mounted, $metadata, $variables);
 
-        $this->dispatcher->dispatch($event);
+        if (null === $this->introspectableDispatcher || $this->introspectableDispatcher->hasListeners(PreRenderEvent::class)) {
+            $this->dispatcher->dispatch($event);
+            $variables = $event->getVariables();
+        }
 
-        $event->setVariables([
-            ...$event->getVariables(),
-            // add the component as "this"
-            'this' => $component,
-            'computed' => new ComputedPropertiesProxy($component),
-            'outerScope' => $context,
-            // keep this line for BC break reasons
-            '__props' => $classProps,
-            // add the context in a separate variable to keep track
-            // of what is coming from outside the component, excluding props
-            // as they override initial context values
-            '__context' => array_diff_key($context, $props),
-        ]);
+        // add the component as "this"
+        $variables['this'] = $component;
+        $variables['computed'] = new ComputedPropertiesProxy($component);
+        $variables['outerScope'] = $context;
+        // keep this line for BC break reasons
+        $variables['__props'] = $classProps;
+        // add the context in a separate variable to keep track
+        // of what is coming from outside the component, excluding props
+        // as they override initial context values
+        $variables['__context'] = [] === $context ? [] : array_diff_key($context, $inputProps, $classProps);
+
+        $event->setVariables($variables);
 
         return $event;
     }
