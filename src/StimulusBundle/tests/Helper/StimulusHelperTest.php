@@ -14,6 +14,8 @@ namespace Symfony\UX\StimulusBundle\Tests\Helper;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
+use Symfony\UX\StimulusBundle\Tests\fixtures\AutowiredStimulusHelperConsumer;
+use Symfony\UX\StimulusBundle\Tests\StimulusIntegrationTestKernel;
 use Twig\Environment;
 
 final class StimulusHelperTest extends TestCase
@@ -24,5 +26,25 @@ final class StimulusHelperTest extends TestCase
         $attributes = $helper->createStimulusAttributes();
 
         $this->assertInstanceOf(StimulusAttributes::class, $attributes);
+    }
+
+    public function testIsAutowirable(): void
+    {
+        $kernel = new StimulusIntegrationTestKernel();
+        $kernel->boot();
+
+        $consumer = $kernel->getContainer()->get(AutowiredStimulusHelperConsumer::class);
+        $attributes = $consumer->stimulusHelper->createStimulusAttributes();
+        $attributes->addController('country-picker', ['locale' => 'fr']);
+        $attributes->addTarget('country-picker', 'select');
+        $attributes->addAction('country-picker', 'refresh', 'change');
+
+        // the exact attributes the documented form type example claims to produce
+        $this->assertSame([
+            'data-controller' => 'country-picker',
+            'data-action' => 'change->country-picker#refresh',
+            'data-country-picker-target' => 'select',
+            'data-country-picker-locale-value' => 'fr',
+        ], $attributes->toArray());
     }
 }

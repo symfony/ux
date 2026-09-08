@@ -370,6 +370,56 @@ once, whichever function the chain started with:
         Hello
     </div>
 
+Stimulus Attributes from PHP
+----------------------------
+
+The same attributes are available from PHP through the ``StimulusHelper``
+service, which you can autowire. Reach for it when the element you want to
+decorate is not written in a template, a form field for instance::
+
+    // src/Form/EventType.php
+    namespace App\Form;
+
+    use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\Form\Extension\Core\Type\CountryType;
+    use Symfony\Component\Form\FormBuilderInterface;
+    use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
+
+    class EventType extends AbstractType
+    {
+        public function __construct(private StimulusHelper $stimulusHelper)
+        {
+        }
+
+        public function buildForm(FormBuilderInterface $builder, array $options): void
+        {
+            $attributes = $this->stimulusHelper->createStimulusAttributes();
+            $attributes->addController('country-picker', ['locale' => 'fr']);
+            $attributes->addTarget('country-picker', 'select');
+            $attributes->addAction('country-picker', 'refresh', 'change');
+
+            $builder->add('country', CountryType::class, [
+                'attr' => $attributes->toArray(),
+            ]);
+        }
+    }
+
+The field then renders with the attributes the Twig helpers would have
+produced:
+
+.. code-block:: html
+
+    <select
+        data-controller="country-picker"
+        data-action="change->country-picker#refresh"
+        data-country-picker-target="select"
+        data-country-picker-locale-value="fr"
+    >
+
+Cast the object to a string when you need the rendered attributes rather than
+an array, and use ``addAttribute()`` to carry along an attribute that is not a
+Stimulus one.
+
 .. _configuration:
 
 Configuration

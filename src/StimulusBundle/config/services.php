@@ -29,6 +29,8 @@ return static function (ContainerConfigurator $container): void {
                 service(Environment::class)->nullOnInvalid(),
             ])
 
+        ->alias(StimulusHelper::class, 'stimulus.helper')
+
         ->set('stimulus.twig_extension', StimulusTwigExtension::class)
             ->args([
                 service('stimulus.helper'),
