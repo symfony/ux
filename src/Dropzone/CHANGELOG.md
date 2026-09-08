@@ -4,6 +4,7 @@
 
 - Add support for multiple file uploads: accumulate files across selections, preview each file, and remove them individually
 - Add a `remove_label` option to label the per-file remove button in `multiple` mode
+- Fix the drop zone appearing empty after dropping the very same file again, which Chrome reports without firing a `change` event
 
 ## 3.0.0
 

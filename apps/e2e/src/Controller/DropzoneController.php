@@ -28,6 +28,27 @@ final class DropzoneController extends AbstractController
         ]);
     }
 
+    #[Route('/single', name: 'single')]
+    public function single(Request $request): Response
+    {
+        $form = $this->createFormBuilder()
+            ->add('photo', DropzoneType::class, ['required' => false])
+            ->getForm()
+        ;
+
+        $form->handleRequest($request);
+
+        $uploadedFile = null;
+        if ($form->isSubmitted() && $form->isValid()) {
+            $uploadedFile = $form->get('photo')->getData()?->getClientOriginalName();
+        }
+
+        return $this->render('ux_dropzone/single.html.twig', [
+            'form' => $form,
+            'uploadedFile' => $uploadedFile,
+        ]);
+    }
+
     #[Route('/multiple', name: 'multiple')]
     public function multiple(Request $request): Response
     {

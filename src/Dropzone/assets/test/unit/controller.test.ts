@@ -169,6 +169,25 @@ describe('DropzoneController', () => {
         await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'none' }));
         await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'block' }));
     });
+
+    it('restores the preview when the same file is dropped again', async () => {
+        startStimulus();
+
+        const input = getByTestId(container, 'input') as HTMLInputElement;
+        const file = new File(['content'], 'a.txt', { type: 'text/plain' });
+        Object.defineProperty(input, 'files', { configurable: true, writable: true, value: [file] });
+
+        // Dragging over reveals the input and hides the preview
+        getByTestId(container, 'container').dispatchEvent(new Event('dragenter'));
+        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'none' }));
+
+        // Chrome does not fire "change" when the very same file is picked again
+        getByTestId(container, 'container').dispatchEvent(new Event('drop', { bubbles: true }));
+
+        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'none' }));
+        await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'none' }));
+        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'flex' }));
+    });
 });
 
 describe('DropzoneController (multiple)', () => {
