@@ -1,0 +1,45 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-06-19T17:25:00Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Dooij/symfony-ux/tree/multiple-file-uploads/src/Dropzone/assets/dist"><b>Dropzone</b></a></td></tr><tr>
+                <td><a href="https://github.com/Dooij/symfony-ux/blob/multiple-file-uploads/src/Dropzone/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>688 B</code>
+                    / <code>332 B</code>
+                </td><td>
+                    <code>1.18 kB</code><sup>+75% 📈</sup>
+                    / <code>491 B</code><sup>+48% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Dooij/symfony-ux/blob/multiple-file-uploads/src/Dropzone/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>2.72 kB</code>
+                    / <code>797 B</code>
+                </td><td>
+                    <code>5.01 kB</code><sup>+84% 📈</sup>
+                    / <code>1.35 kB</code><sup>+73% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Dooij/symfony-ux/blob/multiple-file-uploads/src/Dropzone/assets/dist/style.min.css"><code>style.min.css</code></a></td>
+            <td>
+                    <code>945 B</code>
+                    / <code>471 B</code>
+                </td><td>
+                    <code>1.52 kB</code><sup>+65% 📈</sup>
+                    / <code>590 B</code><sup>+25% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-08-10T05:37:40Z
+
+I'm opening tomorrow a PR for a brand new UX Upload component, I'm hoping it will match your needs !
