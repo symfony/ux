@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-20T07:17:10Z
+
+Hi, please target the branch 3.x, branch 2.x is only maintained for security fixes
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-08T07:05:48Z
+
+I switched the base branch to 3.x since 2.x only receives security fixes now. Could you rebase your branch on 3.x so the diff and CI stay clean? That should also get rid of the PHP 8.0 CI failures, since 3.x requires PHP 8.4.
