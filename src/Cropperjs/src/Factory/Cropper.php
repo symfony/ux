@@ -21,7 +21,7 @@ use Symfony\UX\Cropperjs\Model\Crop;
  */
 class Cropper implements CropperInterface
 {
-    private $imageManager;
+    private ImageManager $imageManager;
 
     public function __construct(ImageManager $imageManager)
     {

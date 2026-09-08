@@ -11,10 +11,9 @@
 
 namespace Symfony\UX\Cropperjs\Model;
 
-use Intervention\Image\Constraint;
-use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\UX\Cropperjs\Intervention\InterventionImage;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
@@ -23,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Crop
 {
-    private $imageManager;
+    private ImageManager $imageManager;
     private $filename;
 
     /**
@@ -59,18 +58,10 @@ class Crop
     {
         $image = $this->createCroppedImage();
 
-        $image->resize($maxWidth, $maxHeight, static function ($constraint) {
-            $constraint->aspectRatio();
-            $constraint->upsize();
-        });
+        $this->scaleDown($image, $maxWidth, $maxHeight);
+        $this->rotate($image);
 
-        if (!empty($this->options['rotate'])) {
-            $image->rotate(-1 * $this->options['rotate']);
-        }
-
-        $image->encode($format, $quality);
-
-        return $image->getEncoded();
+        return $this->encode($image, $format, $quality);
     }
 
     public function getCroppedImage(string $format = 'jpg', int $quality = 80): string
@@ -79,24 +70,26 @@ class Crop
 
         // Max size
         if ($this->maxWidth && $this->maxHeight) {
-            $image->resize($this->maxWidth, $this->maxHeight, static function (Constraint $constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
+            $this->scaleDown($image, $this->maxWidth, $this->maxHeight);
         }
 
-        if (!empty($this->options['rotate'])) {
-            $image->rotate(-1 * $this->options['rotate']);
-        }
+        $this->rotate($image);
 
-        $image->encode($format, $quality);
-
-        return $image->getEncoded();
+        return $this->encode($image, $format, $quality);
     }
 
-    private function createCroppedImage(): Image
+    /**
+     * @return \Intervention\Image\Image|\Intervention\Image\Interfaces\ImageInterface
+     */
+    private function createCroppedImage(): object
     {
-        $image = $this->imageManager->make(file_get_contents($this->filename));
+        $binary = file_get_contents($this->filename);
+
+        $image = match (InterventionImage::major()) {
+            InterventionImage::V4 => $this->imageManager->decodeBinary($binary),
+            InterventionImage::V3 => $this->imageManager->read($binary),
+            default => $this->imageManager->make($binary),
+        };
 
         // Crop
         if ($this->options['width'] && $this->options['height']) {
@@ -109,6 +102,44 @@ class Crop
         }
 
         return $image;
+    }
+
+    private function scaleDown(object $image, int $maxWidth, int $maxHeight): void
+    {
+        if (InterventionImage::V2 === InterventionImage::major()) {
+            $image->resize($maxWidth, $maxHeight, static function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+
+            return;
+        }
+
+        $image->scaleDown($maxWidth, $maxHeight);
+    }
+
+    private function rotate(object $image): void
+    {
+        if (empty($this->options['rotate'])) {
+            return;
+        }
+
+        // v2 and v3 hand the angle straight to imagerotate(), which turns counter-clockwise, while v4
+        // negates it internally and so already turns clockwise like cropper.js does
+        $image->rotate(
+            InterventionImage::V4 === InterventionImage::major()
+                ? $this->options['rotate']
+                : -1 * $this->options['rotate']
+        );
+    }
+
+    private function encode(object $image, string $format, int $quality): string
+    {
+        return match (InterventionImage::major()) {
+            InterventionImage::V4 => (string) $image->encodeUsingFileExtension($format, quality: $quality),
+            InterventionImage::V3 => (string) $image->encodeByExtension($format, quality: $quality),
+            default => (string) $image->encode($format, $quality)->getEncoded(),
+        };
     }
 
     public function getOptions(): string

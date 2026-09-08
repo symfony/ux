@@ -11,6 +11,9 @@
 
 namespace Symfony\UX\Cropperjs\DependencyInjection;
 
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
+use Intervention\Image\Drivers\Vips\Driver as VipsDriver;
 use Intervention\Image\ImageManager;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -21,6 +24,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\Cropperjs\Factory\Cropper;
 use Symfony\UX\Cropperjs\Factory\CropperInterface;
 use Symfony\UX\Cropperjs\Form\CropperType;
+use Symfony\UX\Cropperjs\Intervention\InterventionImage;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
@@ -31,6 +35,8 @@ class CropperjsExtension extends Extension implements PrependExtensionInterface
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
+        $config = $this->processConfiguration(new Configuration(), $configs);
+
         $container
             ->setDefinition('form.cropper', new Definition(CropperType::class))
             ->addTag('form.type')
@@ -38,7 +44,7 @@ class CropperjsExtension extends Extension implements PrependExtensionInterface
         ;
 
         $container
-            ->setDefinition('cropper.image_manager', new Definition(ImageManager::class))
+            ->setDefinition('cropper.image_manager', $this->createImageManagerDefinition($config))
             ->setPublic(false)
         ;
 
@@ -49,6 +55,51 @@ class CropperjsExtension extends Extension implements PrependExtensionInterface
         ;
 
         $container->setAlias(CropperInterface::class, 'cropper')->setPublic(false);
+    }
+
+    /**
+     * @param array{driver: string, driver_service: string|null} $config
+     */
+    private function createImageManagerDefinition(array $config): Definition
+    {
+        $definition = new Definition(ImageManager::class);
+
+        if (InterventionImage::V2 === InterventionImage::major()) {
+            if (null !== $config['driver_service']) {
+                throw new \LogicException('The "cropperjs.driver_service" option requires "intervention/image" 3.0 or higher. Try running "composer require intervention/image:^4.0".');
+            }
+
+            if ('vips' === $config['driver']) {
+                throw new \LogicException('The "vips" cropperjs driver requires "intervention/image" 3.0 or higher. Try running "composer require intervention/image:^4.0".');
+            }
+
+            return $definition->setArguments([['driver' => $config['driver']]]);
+        }
+
+        return $definition
+            ->setFactory([ImageManager::class, InterventionImage::V4 === InterventionImage::major() ? 'usingDriver' : 'withDriver'])
+            ->setArguments([$this->resolveDriver($config)])
+        ;
+    }
+
+    /**
+     * @param array{driver: string, driver_service: string|null} $config
+     */
+    private function resolveDriver(array $config): Reference|string
+    {
+        if (null !== $config['driver_service']) {
+            return new Reference($config['driver_service']);
+        }
+
+        if ('vips' === $config['driver'] && !class_exists(VipsDriver::class)) {
+            throw new \LogicException('The "vips" cropperjs driver requires the "intervention/image-driver-vips" package. Try running "composer require intervention/image-driver-vips".');
+        }
+
+        return match ($config['driver']) {
+            'gd' => GdDriver::class,
+            'imagick' => ImagickDriver::class,
+            'vips' => VipsDriver::class,
+        };
     }
 
     public function prepend(ContainerBuilder $container): void

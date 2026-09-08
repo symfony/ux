@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.5.0
+
+- Add support for `intervention/image` 3 and 4, which fixes the deprecations triggered by version 2. Version 2 keeps working and stays the lowest supported version
+- Add a configurable image driver through the new `cropperjs.driver` option, accepting `gd` (default), `imagick` or `vips`. A custom driver service can be given through `cropperjs.driver_service`. Both require `intervention/image` 3 or higher
+
 ## 3.0.0
 
 - Minimum required Symfony version is now 7.4
