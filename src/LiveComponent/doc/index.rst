@@ -4274,6 +4274,5 @@ promise. However, any internal implementation in the JavaScript files
 .. _`setting the locale in the request`: https://symfony.com/doc/current/translation.html#translation-locale
 .. _`Stimulus action parameter`: https://stimulus.hotwired.dev/reference/actions#action-parameters
 .. _`@symfony/ux-live-component npm package`: https://www.npmjs.com/package/@symfony/ux-live-component
-.. _`Symfony PropertyInfo`: https://symfony.com/doc/current/components/property_info.html
 .. _`credentials option of the fetch() API`: https://developer.mozilla.org/en-US/docs/Web/API/fetch#credentials
 .. _`Symfony MakerBundle`: https://github.com/symfony/maker-bundle
