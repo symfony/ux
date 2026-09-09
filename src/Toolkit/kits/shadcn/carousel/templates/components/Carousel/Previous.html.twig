@@ -1,0 +1,20 @@
+{# @prop variant 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The button style variant. #}
+{# @prop size 'default'|'xs'|'sm'|'lg'|'icon'|'icon-xs'|'icon-sm'|'icon-lg' The button size. #}
+{# @prop text string The accessible label of the button. #}
+{%- props variant = 'outline', size = 'icon-sm', text = 'Previous slide' -%}
+{%- set _carousel_orientation = inject('carousel.orientation', 'horizontal') -%}
+{%- set _carousel_loop = inject('carousel.loop', false) -%}
+<twig:Button
+    variant="{{ variant }}"
+    size="{{ size }}"
+    data-slot="carousel-previous"
+    data-carousel-target="previous"
+    {{ ...attributes.defaults({
+        class: ('absolute touch-manipulation ' ~ (_carousel_orientation == 'vertical' ? '-top-12 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 rotate-90' : 'inset-y-0 -start-12 my-auto'))|tailwind_classes,
+        'data-action': 'click->carousel#scrollPrev',
+        disabled: not _carousel_loop,
+    }) }}
+>
+    <twig:ux:icon name="lucide:chevron-left" class="rtl:rotate-180" />
+    <span class="sr-only">{{ text }}</span>
+</twig:Button>

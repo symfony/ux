@@ -1,0 +1,17 @@
+{# @block content The carousel slides, typically multiple `Carousel:Item` components. #}
+{%- set _carousel_orientation = inject('carousel.orientation', 'horizontal') -%}
+<div
+    data-slot="carousel-content"
+    data-carousel-target="viewport"
+    data-action="pointerdown->carousel#dragStart"
+    class="overflow-hidden {{ _carousel_orientation == 'vertical' ? 'touch-pan-x' : 'touch-pan-y' }}"
+>
+    <div
+        data-carousel-target="track"
+        {{ attributes.defaults({
+            class: ('flex transition-transform duration-500 ease-out ' ~ (_carousel_orientation == 'vertical' ? '-mt-4 flex-col' : '-ms-4'))|tailwind_classes,
+        }) }}
+    >
+        {%- block content %}{% endblock -%}
+    </div>
+</div>

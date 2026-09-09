@@ -1,0 +1,82 @@
+<!--
+- Kit: Shadcn UI
+- Component: Carousel
+- Code:
+```twig
+<twig:Carousel class="mx-auto w-full max-w-[12rem] sm:max-w-xs">
+    <twig:Carousel:Content>
+        {% for i in 1..5 %}
+            <twig:Carousel:Item>
+                <div class="p-1">
+                    <twig:Card>
+                        <twig:Card:Content class="flex aspect-square items-center justify-center p-6">
+                            <span class="text-4xl font-semibold">{{ i }}</span>
+                        </twig:Card:Content>
+                    </twig:Card>
+                </div>
+            </twig:Carousel:Item>
+        {% endfor %}
+    </twig:Carousel:Content>
+    <twig:Carousel:Previous />
+    <twig:Carousel:Next />
+</twig:Carousel>
+```
+- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div role="region" aria-roledescription="carousel" aria-label="Carousel" data-slot="carousel" data-orientation="horizontal" data-carousel-orientation-value="horizontal" data-carousel-align-value="center" data-carousel-loop-value="false" data-carousel-autoplay-value="0" class="relative mx-auto w-full max-w-[12rem] sm:max-w-xs" data-controller="carousel" data-action="keydown-&gt;carousel#handleKeydown">
+<div data-slot="carousel-content" data-carousel-target="viewport" data-action="pointerdown-&gt;carousel#dragStart" class="overflow-hidden touch-pan-y">
+    <div data-carousel-target="track" class="flex transition-transform duration-500 ease-out -ms-4">            <div role="group" aria-roledescription="slide" data-slot="carousel-item" data-carousel-target="item" class="min-w-0 shrink-0 grow-0 basis-full ps-4">
+<div class="p-1">
+                    <div data-slot="card" data-size="default" class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl">
+<div data-slot="card-content" class="group-data-[size=sm]/card:px-3 flex aspect-square items-center justify-center p-6">
+<span class="text-4xl font-semibold">1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    <div role="group" aria-roledescription="slide" data-slot="carousel-item" data-carousel-target="item" class="min-w-0 shrink-0 grow-0 basis-full ps-4">
+<div class="p-1">
+                    <div data-slot="card" data-size="default" class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl">
+<div data-slot="card-content" class="group-data-[size=sm]/card:px-3 flex aspect-square items-center justify-center p-6">
+<span class="text-4xl font-semibold">2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    <div role="group" aria-roledescription="slide" data-slot="carousel-item" data-carousel-target="item" class="min-w-0 shrink-0 grow-0 basis-full ps-4">
+<div class="p-1">
+                    <div data-slot="card" data-size="default" class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl">
+<div data-slot="card-content" class="group-data-[size=sm]/card:px-3 flex aspect-square items-center justify-center p-6">
+<span class="text-4xl font-semibold">3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    <div role="group" aria-roledescription="slide" data-slot="carousel-item" data-carousel-target="item" class="min-w-0 shrink-0 grow-0 basis-full ps-4">
+<div class="p-1">
+                    <div data-slot="card" data-size="default" class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl">
+<div data-slot="card-content" class="group-data-[size=sm]/card:px-3 flex aspect-square items-center justify-center p-6">
+<span class="text-4xl font-semibold">4</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    <div role="group" aria-roledescription="slide" data-slot="carousel-item" data-carousel-target="item" class="min-w-0 shrink-0 grow-0 basis-full ps-4">
+<div class="p-1">
+                    <div data-slot="card" data-size="default" class="group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[&gt;img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl">
+<div data-slot="card-content" class="group-data-[size=sm]/card:px-3 flex aspect-square items-center justify-center p-6">
+<span class="text-4xl font-semibold">5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+</div>
+    <button data-slot="button" data-size="icon-sm" data-variant="outline" class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg absolute touch-manipulation inset-y-0 -start-12 my-auto" type="button" data-carousel-target="previous" data-action="click-&gt;carousel#scrollPrev" disabled><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="rtl:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 18l-6-6l6-6"></path></svg>
+    <span class="sr-only">Previous slide</span>
+</button>
+
+    <button data-slot="button" data-size="icon-sm" data-variant="outline" class="group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg absolute touch-manipulation inset-y-0 -end-12 my-auto" type="button" data-carousel-target="next" data-action="click-&gt;carousel#scrollNext"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor" class="rtl:rotate-180" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18l6-6l-6-6"></path></svg>
+    <span class="sr-only">Next slide</span>
+</button>
+
+</div>

@@ -1,0 +1,13 @@
+{# @block content The slide content. #}
+{%- set _carousel_orientation = inject('carousel.orientation', 'horizontal') -%}
+<div
+    role="group"
+    aria-roledescription="slide"
+    data-slot="carousel-item"
+    data-carousel-target="item"
+    {{ attributes.defaults({
+        class: ('min-w-0 shrink-0 grow-0 basis-full ' ~ (_carousel_orientation == 'vertical' ? 'pt-4' : 'ps-4'))|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>
