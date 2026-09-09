@@ -115,6 +115,16 @@ class ComponentsRenderingTest extends WebTestCase
                 $shield = ['&amp;' => "\1", '&lt;' => "\2", '&gt;' => "\3", '&quot;' => "\4"];
                 $serialized = strtr(html_entity_decode(strtr($serialized, $shield), \ENT_QUOTES | \ENT_HTML5, 'UTF-8'), array_flip($shield));
 
+                // Normalize attribute quoting, which is the other libxml 2.14 boundary: when a value
+                // contains a double quote, libxml < 2.14 switches the whole attribute to single
+                // quotes while >= 2.14 keeps double quotes and escapes the inner ones as &quot;.
+                // Settle on the latter, so a JSON-valued attribute snapshots the same way everywhere.
+                $serialized = preg_replace_callback(
+                    '/(\s[a-zA-Z_:][-a-zA-Z0-9_:.]*=)\'([^\']*"[^\']*)\'/',
+                    static fn (array $m) => $m[1].'"'.str_replace('"', '&quot;', $m[2]).'"',
+                    $serialized,
+                );
+
                 $serialized = str_replace(['<html><body>', '</body></html>'], '', $serialized);
                 $serialized = trim($serialized);
 

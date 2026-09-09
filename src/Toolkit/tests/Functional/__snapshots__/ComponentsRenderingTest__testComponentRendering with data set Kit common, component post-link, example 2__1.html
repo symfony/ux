@@ -8,7 +8,7 @@
 </twig:PostLink>
 ```
 - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
-<form action="/link/posts/42/delete" method="post" class="inline" onsubmit='return confirm("Are you sure you want to delete this post?")'>
+<form action="/link/posts/42/delete" method="post" class="inline" onsubmit="return confirm(&quot;Are you sure you want to delete this post?&quot;)">
             <button type="submit" class="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-500">
         Delete post
     </button>
