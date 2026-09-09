@@ -1,6 +1,7 @@
 {
     "$schema": "../../../schema-kit-recipe-v1.json",
     "type": "block",
+    "version-added": "3.5",
     "name": "LoginForm",
     "description": "A simple login form centered in a card.",
     "copy-files": {

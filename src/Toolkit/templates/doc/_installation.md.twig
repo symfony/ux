@@ -1,4 +1,9 @@
 {% if format == 'markdown' %}
+{% if recipe.manifest.versionAdded is not null %}
+> [!NOTE]
+> Available since UX Toolkit {{ recipe.manifest.versionAdded }}.
+
+{% endif %}
 ```shell
 php bin/console ux:install {{ recipe.name }} --kit {{ kit_id }}
 ```
@@ -7,6 +12,11 @@ php bin/console ux:install {{ recipe.name }} --kit {{ kit_id }}
 
 :: tab Automatic
 
+{% if recipe.manifest.versionAdded is not null %}
+> [!NOTE]
+> Available since UX Toolkit {{ recipe.manifest.versionAdded }}.
+
+{% endif %}
 ```shell
 php bin/console ux:install {{ recipe.name }} --kit {{ kit_id }}
 ```

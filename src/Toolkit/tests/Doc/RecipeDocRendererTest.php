@@ -48,16 +48,28 @@ final class RecipeDocRendererTest extends KernelTestCase
         $this->assertStringContainsString('<twig:PostLink>', $markdown);
     }
 
+    public function testTheInstallStepsAnnounceTheVersionTheRecipeWasAddedIn(): void
+    {
+        [$kit, $recipe] = $this->loadPostLinkRecipe();
+        $markdown = $this->renderer()->renderAsMarkdown($kit, $recipe);
+        $this->assertStringContainsString('Available since UX Toolkit 3.4.', $markdown);
+
+        $urlGenerator = $this->previewUrlGenerator();
+
+        $rendered = $this->renderer()->renderAsHtml($kit, $recipe, $urlGenerator);
+        $this->assertStringContainsString('Available since UX Toolkit 3.4.', $rendered->html);
+
+        // A recipe that declares no version says nothing.
+        [$kit, $recipe] = $this->loadWidgetRecipe();
+        $this->assertNull($recipe->manifest->versionAdded);
+        $this->assertStringNotContainsString('Available since UX Toolkit', $this->renderer()->renderAsMarkdown($kit, $recipe));
+    }
+
     public function testRenderAsHtmlProducesTabsAndALivePreview(): void
     {
         [$kit, $recipe] = $this->loadPostLinkRecipe();
 
-        $urlGenerator = new class implements PreviewUrlGenerator {
-            public function generate(string $code, CodeOptions $options): ?string
-            {
-                return 'https://preview.test/render';
-            }
-        };
+        $urlGenerator = $this->previewUrlGenerator();
 
         $rendered = $this->renderer()->renderAsHtml($kit, $recipe, $urlGenerator);
 
@@ -126,12 +138,7 @@ final class RecipeDocRendererTest extends KernelTestCase
     {
         [$kit, $recipe] = $this->loadWidgetRecipe();
 
-        $urlGenerator = new class implements PreviewUrlGenerator {
-            public function generate(string $code, CodeOptions $options): ?string
-            {
-                return 'https://preview.test/render';
-            }
-        };
+        $urlGenerator = $this->previewUrlGenerator();
 
         $html = $this->renderer()->renderAsHtml($kit, $recipe, $urlGenerator)->html;
 
@@ -153,12 +160,7 @@ final class RecipeDocRendererTest extends KernelTestCase
         // A doc with only the install directive: no previews/alerts, so a small environment is enough.
         $recipe = new Recipe($recipe->name, $recipe->absolutePath, $recipe->manifest, doc: "## Installation\n\n::: installation");
 
-        $urlGenerator = new class implements PreviewUrlGenerator {
-            public function generate(string $code, CodeOptions $options): ?string
-            {
-                return null;
-            }
-        };
+        $urlGenerator = $this->previewUrlGenerator(null);
 
         // Mirror the host: a fenced-code renderer that surfaces the info string so we can assert the
         // filename travels with the block (as ux.symfony.com's renderer reads it back).
@@ -177,6 +179,20 @@ final class RecipeDocRendererTest extends KernelTestCase
         $html = $this->renderer()->renderAsHtml($kit, $recipe, $urlGenerator, $environment)->html;
 
         $this->assertStringContainsString('&quot;filename&quot;:&quot;templates/components/PostLink.html.twig&quot;', $html);
+    }
+
+    private function previewUrlGenerator(?string $url = 'https://preview.test/render'): PreviewUrlGenerator
+    {
+        return new class($url) implements PreviewUrlGenerator {
+            public function __construct(private ?string $url)
+            {
+            }
+
+            public function generate(string $code, CodeOptions $options): ?string
+            {
+                return $this->url;
+            }
+        };
     }
 
     private function renderer(): RecipeDocRenderer
