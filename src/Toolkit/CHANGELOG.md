@@ -27,6 +27,7 @@
 - [Shadcn] Rewrite `combobox` to match the upstream Shadcn UI component, as `Combobox:*` sub-components with multiple selection
 - [Shadcn] Focus the input of `input-group` when one of its addons is clicked, through a new `input-group` Stimulus controller
 - [Shadcn] Fix `InputGroup:Button` stacking the `Button` size classes on top of its own
+- Add a `component_dir` configuration option to choose the directory where the Twig components of a recipe are installed, along with a `--component-dir` option on `ux:install`
 
 ## 3.5.0
 

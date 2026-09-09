@@ -36,6 +36,27 @@ class UXToolkitBundleTest extends KernelTestCase
         $this->assertInstanceOf(ComponentDocParser::class, $container->get('ux_toolkit.component.component_doc_parser'));
     }
 
+    public function testComponentDirDefaultsToTheKitConvention(): void
+    {
+        $this->assertSame('templates/components', $this->loadExtension([]));
+    }
+
+    public function testComponentDirCanBeConfigured(): void
+    {
+        $this->assertSame('templates/components/ui', $this->loadExtension([['component_dir' => 'templates/components/ui']]));
+    }
+
+    /**
+     * @param list<array<string,mixed>> $configs
+     */
+    private function loadExtension(array $configs): string
+    {
+        $extension = new UXToolkitBundle()->getContainerExtension();
+        $extension->load($configs, $container = new ContainerBuilder());
+
+        return $container->getParameter('ux_toolkit.component_dir');
+    }
+
     public function testToolkitTemplateNamespaceResolves(): void
     {
         self::bootKernel();

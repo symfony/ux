@@ -49,8 +49,9 @@ Run the ``ux:install`` command with the name of the recipe you want:
 The command asks which kit to take the recipe from, copies its files into
 your application and lists the dependencies the recipe needs.
 
-The files land where they are meant to be used: Twig templates under
-``templates/``, Stimulus controllers under ``assets/``, and if a file already
+The files land where they are meant to be used: Twig components under
+``templates/components/`` (see `Choosing Where Components Are Installed`_),
+Stimulus controllers under ``assets/controllers/``, and if a file already
 exists, it is not replaced without asking you first, so a recipe you have
 already customized cannot be overwritten by accident.
 
@@ -69,6 +70,65 @@ differently:
     guides you: it asks for the kit, then for the recipe. Recipe names are
     matched case-insensitively, and when a name does not exist, the command
     suggests the closest ones it knows.
+
+Choosing Where Components Are Installed
+---------------------------------------
+
+Twig components are installed in ``templates/components/``, next to the
+components you write yourself. The ``component_dir`` option puts them somewhere
+else:
+
+.. code-block:: yaml
+
+    # config/packages/ux_toolkit.yaml
+    ux_toolkit:
+        component_dir: 'templates/components/ui'
+
+Keeping the directory **under** ``templates/components/`` is the easiest option:
+Twig already looks there, so there is nothing else to configure. The directory
+becomes part of the component name, and ``ux:install`` rewrites the references
+inside the files it copies so the recipes keep working:
+
+.. code-block:: html+twig
+
+    {# templates/components/ui/Dialog/Content.html.twig, installed for you #}
+    <twig:ui:Button variant="ghost">…</twig:ui:Button>
+
+    {# and in your own templates #}
+    <twig:ui:Dialog>…</twig:ui:Dialog>
+
+A directory **outside** ``templates/components/`` leaves the component names
+untouched, but Twig has to be told about it:
+
+.. code-block:: yaml
+
+    # config/packages/ux_toolkit.yaml
+    ux_toolkit:
+        component_dir: 'templates/ui'
+
+    # config/packages/twig_component.yaml
+    twig_component:
+        anonymous_template_directory: 'ui'
+
+The command prints that snippet after installing, so you do not have to
+remember it.
+
+Both the base directory and the component directory can be overridden for a
+single run:
+
+.. code-block:: terminal
+
+    $ php bin/console ux:install button --component-dir=templates/components/ui
+    $ php bin/console ux:install button --destination=/path/to/another/app
+
+.. caution::
+
+    Pick the directory before installing recipes. Changing it later moves the
+    new files only: recipes installed earlier keep referencing the names they
+    were installed with, and the two sets stop seeing each other.
+
+Stimulus controllers are not affected by this option; they are always installed
+under ``assets/controllers/``.
 
 Choosing a Kit
 --------------
