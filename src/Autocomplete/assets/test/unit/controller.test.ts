@@ -1308,6 +1308,82 @@ describe('AutocompleteController', () => {
         );
     });
 
+    it('lets maxOptionsValue truncate a local select', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                data-testid="main-element"
+                data-controller="autocomplete"
+                data-autocomplete-max-options-value="3"
+            >
+                ${Array.from({ length: 10 }, (_, i) => `<option value="${i}">item ${i}</option>`).join('')}
+            </select>
+        `);
+
+        userEvent.click(tomSelect.control_input);
+
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]').length).toBeGreaterThan(0);
+        });
+
+        expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(3);
+    });
+
+    it('caps the dropdown at 50 remote results by default', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                data-testid="main-element"
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+            ></select>
+        `);
+
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: Array.from({ length: 60 }, (_, i) => ({ value: i, text: `item ${i}` })),
+            })
+        );
+
+        userEvent.click(tomSelect.control_input);
+
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]').length).toBeGreaterThan(0);
+        });
+        await shortDelay(10);
+
+        expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(50);
+    });
+
+    it('lets maxOptionsValue raise the cap on remote results', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                data-testid="main-element"
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+                data-autocomplete-max-options-value="60"
+            ></select>
+        `);
+
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: Array.from({ length: 60 }, (_, i) => ({ value: i, text: `item ${i}` })),
+            })
+        );
+
+        userEvent.click(tomSelect.control_input);
+
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]').length).toBeGreaterThan(50);
+        });
+
+        expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(60);
+    });
+
     it('renders HTML in AJAX response data when optionsAsHtmlValue is true', async () => {
         const { container, tomSelect } = await startAutocompleteTest(`
             <label for="the-select">Items</label>

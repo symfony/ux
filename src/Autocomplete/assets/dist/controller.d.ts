@@ -17,6 +17,7 @@ declare class export_default extends Controller {
     noMoreResultsText: StringConstructor;
     createOptionText: StringConstructor;
     minCharacters: NumberConstructor;
+    maxOptions: NumberConstructor;
     tomSelectOptions: ObjectConstructor;
     preload: StringConstructor;
     resetOnFocus: BooleanConstructor;
@@ -28,6 +29,8 @@ declare class export_default extends Controller {
   readonly noResultsFoundTextValue: string;
   readonly createOptionTextValue: string;
   readonly minCharactersValue: number;
+  readonly maxOptionsValue: number;
+  readonly hasMaxOptionsValue: boolean;
   readonly hasMinCharactersValue: boolean;
   readonly tomSelectOptionsValue: object;
   readonly hasPreloadValue: boolean;
