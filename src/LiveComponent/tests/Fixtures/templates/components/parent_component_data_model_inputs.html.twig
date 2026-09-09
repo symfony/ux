@@ -1,0 +1,8 @@
+{% for option in ['a', 'b', 'c'] %}
+    {{ component('input_component', {'data-model': 'choice', type: 'radio', value: option}) }}
+{% endfor %}
+{% for city in ['paris', 'lyon'] %}
+    {{ component('input_component', {'data-model': 'selected[]', type: 'checkbox', value: city}) }}
+{% endfor %}
+{{ component('checkbox_component', {'data-model': 'active'}) }}
+{{ component('input_component', {'data-model': 'name', type: 'text'}) }}

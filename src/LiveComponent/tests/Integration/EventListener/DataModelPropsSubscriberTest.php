@@ -54,4 +54,33 @@ final class DataModelPropsSubscriberTest extends KernelTestCase
         $this->assertStringContainsString('<textarea data-model="content">default content on mount</textarea>', $html);
         $this->assertStringContainsString('<input data-model="content" value="default content on mount" />', $html);
     }
+
+    public function testDataModelOnRadioAndCheckboxInputs()
+    {
+        /** @var ComponentRenderer $renderer */
+        $renderer = self::getContainer()->get('ux.twig_component.component_renderer');
+
+        $html = $renderer->createAndRender('parent_component_data_model_inputs', [
+            'attributes' => ['id' => 'dummy-live-id'],
+        ]);
+
+        // radio: each input keeps its own "value" (not overwritten with the prop value),
+        // and only the one matching the "choice" prop ("b") is checked
+        $this->assertStringContainsString('<input data-model="choice" type="radio" value="a" />', $html);
+        $this->assertStringContainsString('<input data-model="choice" type="radio" value="b" checked />', $html);
+        $this->assertStringContainsString('<input data-model="choice" type="radio" value="c" />', $html);
+
+        // checkbox group bound to an array prop: per-input "value" is kept and only the
+        // values contained in the array ("paris") are checked. The "selected[]" notation
+        // (a JS-only convention) must not crash the PropertyAccessor.
+        $this->assertStringContainsString('<input data-model="selected[]" type="checkbox" value="paris" checked />', $html);
+        $this->assertStringContainsString('<input data-model="selected[]" type="checkbox" value="lyon" />', $html);
+
+        // boolean checkbox whose "type" is hardcoded in the child template (so it never
+        // appears in the props): the bool prop drives "checked" without overwriting "value"
+        $this->assertStringContainsString('<input type="checkbox" data-model="active" checked />', $html);
+
+        // a regular text input is unaffected: its value is still set from the prop
+        $this->assertStringContainsString('<input data-model="name" type="text" value="John" />', $html);
+    }
 }
