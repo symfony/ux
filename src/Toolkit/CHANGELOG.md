@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.7.0
+
+- Add a `component_dir` configuration option to choose the directory where the Twig components of a recipe are installed, along with a `--component-dir` option on `ux:install`
+
 ## 3.6.0
 
 - [Shadcn] Declare the `shadcn` and `tw-animate-css` packages as dependencies of the kit, so `ux:install` suggests installing them

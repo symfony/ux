@@ -47,6 +47,7 @@ return static function (ContainerConfigurator $container): void {
             ->args([
                 service('.ux_toolkit.registry.registry_factory'),
                 service('filesystem'),
+                param('ux_toolkit.component_dir'),
             ])
             ->tag('console.command')
 

@@ -67,7 +67,6 @@ class InstallCommandTest extends KernelTestCase
             ->assertOutputContains('[OK] The recipe has been installed.')
         ;
 
-        // Files should be created
         foreach ($expectedFiles as $fileName => $expectedFile) {
             $testCommand->assertOutputContains($expectedFile);
             $this->assertFileExists($expectedFile);
@@ -92,6 +91,44 @@ class InstallCommandTest extends KernelTestCase
         $display = $tester->getDisplay();
         $this->assertStringContainsString(Path::normalize($this->tmpDir.'/templates/components/Notice.html.twig'), $display);
         $this->assertStringNotContainsString(Path::normalize($this->tmpDir.'/ui/Notice.html.twig'), $display);
+    }
+
+    public function testShouldInstallComponentsInTheGivenComponentDirectory(): void
+    {
+        $testCommand = $this->consoleCommand(\sprintf('ux:install dialog --kit=shadcn --component-dir=templates/components/ui --destination="%s"', str_replace('\\', '\\\\', $this->tmpDir)))
+            ->execute()
+            ->assertSuccessful()
+            ->assertOutputContains('[OK] The recipe has been installed.')
+        ;
+
+        // The reported paths must be the destinations, not the paths inside the kit.
+        $testCommand->assertOutputContains(Path::normalize($this->tmpDir.'/templates/components/ui/Dialog.html.twig'));
+        $testCommand->assertOutputNotContains(Path::normalize($this->tmpDir.'/templates/components/Dialog.html.twig'));
+
+        $this->assertFileExists($this->tmpDir.'/templates/components/ui/Dialog.html.twig');
+        $this->assertFileExists($this->tmpDir.'/templates/components/ui/Button.html.twig');
+        $this->assertFileExists($this->tmpDir.'/assets/controllers/dialog_controller.js');
+        $this->assertStringContainsString('<twig:ui:Button', file_get_contents($this->tmpDir.'/templates/components/ui/Dialog/Content.html.twig'));
+    }
+
+    public function testShouldTellHowToRegisterAComponentDirectoryTwigDoesNotKnowAbout(): void
+    {
+        $this->consoleCommand(\sprintf('ux:install button --kit=shadcn --component-dir=templates/ui --destination="%s"', str_replace('\\', '\\\\', $this->tmpDir)))
+            ->execute()
+            ->assertSuccessful()
+            ->assertOutputContains('anonymous_template_directory')
+        ;
+
+        $this->assertFileExists($this->tmpDir.'/templates/ui/Button.html.twig');
+    }
+
+    public function testShouldFailOnAComponentDirectoryEscapingTheDestination(): void
+    {
+        $this->consoleCommand(\sprintf('ux:install button --kit=shadcn --component-dir=../PWNED --destination="%s"', str_replace('\\', '\\\\', $this->tmpDir)))
+            ->execute()
+            ->assertFaulty()
+            ->assertOutputContains('must not escape its target directory')
+        ;
     }
 
     public function testShouldSuggestFrontendInstallationCommands(): void
