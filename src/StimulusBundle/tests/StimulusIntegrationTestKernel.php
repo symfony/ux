@@ -58,11 +58,11 @@ final class StimulusIntegrationTestKernel extends Kernel
 
     public function getCacheDir(): string
     {
-        return sys_get_temp_dir().'/cache'.spl_object_hash($this);
+        return sys_get_temp_dir().'/sf_ux_stimulus_tests/cache';
     }
 
     public function getLogDir(): string
     {
-        return sys_get_temp_dir().'/logs'.spl_object_hash($this);
+        return sys_get_temp_dir().'/sf_ux_stimulus_tests/logs';
     }
 }
