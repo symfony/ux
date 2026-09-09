@@ -27,6 +27,7 @@ use Symfony\UX\Toolkit\Component\ComponentDocParser;
 use Symfony\UX\Toolkit\Component\StimulusController;
 use Symfony\UX\Toolkit\Component\StimulusControllerDoc;
 use Symfony\UX\Toolkit\Component\StimulusControllerDocParser;
+use Symfony\UX\Toolkit\Installer\ComponentDirectory;
 use Symfony\UX\Toolkit\Installer\PoolResolver;
 use Symfony\UX\Toolkit\Kit\Kit;
 use Symfony\UX\Toolkit\Markdown\CodeOptions;
@@ -188,7 +189,7 @@ final class RecipeDocRenderer
 
         foreach ($recipe->getFiles() as $file) {
             $source = $file->sourceRelativePathName;
-            if (!str_ends_with($source, '.html.twig') || !str_starts_with($source, 'templates/components/')) {
+            if (null === $componentName = ComponentDirectory::componentName($source)) {
                 continue;
             }
 
@@ -202,7 +203,6 @@ final class RecipeDocRenderer
                 continue;
             }
 
-            $componentName = str_replace('/', ':', substr($source, \strlen('templates/components/'), -\strlen('.html.twig')));
             $apiReference[$componentName] = $componentDoc;
         }
 

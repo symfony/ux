@@ -43,6 +43,7 @@
 - Show a diff before `ux:install` asks to overwrite an existing file, and skip the question when the file already matches the recipe
 - [Shadcn] Add `toast` recipe
 - [Shadcn] Rename the `sonner` recipe's `Toast` component to `Sonner:Toast`, freeing the `Toast` component name for the new `toast` recipe
+- Add a `component_dir` configuration option to choose the directory where the Twig components of a recipe are installed, along with a `--component-dir` option on `ux:install`
 
 ## 3.5.0
 
