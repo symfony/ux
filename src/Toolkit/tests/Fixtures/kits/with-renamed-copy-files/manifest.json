@@ -1,0 +1,7 @@
+{
+    "$schema": "../../../../schema-kit-v1.json",
+    "name": "With renamed copy files",
+    "description": "Kit used as a test fixture, copying files to a directory that is not named after the source one.",
+    "license": "MIT",
+    "homepage": "https://ux.symfony.com/"
+}

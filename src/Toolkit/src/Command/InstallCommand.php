@@ -197,7 +197,7 @@ class InstallCommand extends Command
         $this->io->success('The recipe has been installed.');
 
         $this->io->section('Installed files');
-        $this->io->listing(array_map(static fn (File $file) => Path::join($destinationPath, $file->sourceRelativePathName), $installationReport->newFiles));
+        $this->io->listing(array_map(static fn (File $file) => Path::join($destinationPath, $file->destinationRelativePathName), $installationReport->newFiles));
 
         if ([] !== $installationReport->suggestedPhpPackages || [] !== $installationReport->suggestedNpmPackages || [] !== $installationReport->suggestedImportmapPackages) {
             $this->io->section('Next steps');
