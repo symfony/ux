@@ -559,13 +559,6 @@ library. Make sure it is installed in you application:
 
     $ composer require phpdocumentor/reflection-docblock
 
-To get rid of deprecations about ``PropertyInfoExtractor::getTypes()`` from the `Symfony PropertyInfo`_ component,
-ensure to upgrade ``symfony/property-info`` to at least 7.1, which requires **PHP 8.2**::
-
-.. code-block:: terminal
-
-    $ composer require symfony/property-info:^7.1
-
 Writable Object Properties or Array Keys
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
