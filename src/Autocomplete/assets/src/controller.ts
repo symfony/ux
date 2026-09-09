@@ -31,6 +31,7 @@ export default class extends Controller {
         noMoreResultsText: String,
         createOptionText: String,
         minCharacters: Number,
+        maxOptions: Number,
         tomSelectOptions: Object,
         preload: String,
         resetOnFocus: Boolean,
@@ -43,6 +44,8 @@ export default class extends Controller {
     declare readonly noResultsFoundTextValue: string;
     declare readonly createOptionTextValue: string;
     declare readonly minCharactersValue: number;
+    declare readonly maxOptionsValue: number;
+    declare readonly hasMaxOptionsValue: boolean;
     declare readonly hasMinCharactersValue: boolean;
     declare readonly tomSelectOptionsValue: object;
     declare readonly hasPreloadValue: boolean;
@@ -305,6 +308,8 @@ export default class extends Controller {
                 return query.length >= 3;
             },
             optgroupField: 'group_by',
+            // omitted when unset, so TomSelect's own default applies and `tom_select_options` still wins
+            ...(this.hasMaxOptionsValue ? { maxOptions: this.maxOptionsValue } : {}),
             // avoid extra filtering after results are returned
             score: (_search: string) => (_item: any) => 1,
             render: {
@@ -346,6 +351,10 @@ export default class extends Controller {
     }
 
     private getMaxOptions(): number {
+        if (this.hasMaxOptionsValue) {
+            return this.maxOptionsValue;
+        }
+
         return this.selectElement ? this.selectElement.options.length : 50;
     }
 

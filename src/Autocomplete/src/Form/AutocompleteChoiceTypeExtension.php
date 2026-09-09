@@ -80,6 +80,10 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             $values['max-results'] = $options['max_results'];
         }
 
+        if (null !== $options['max_options']) {
+            $values['max-options'] = $options['max_options'];
+        }
+
         if ($options['min_characters']) {
             $values['min-characters'] = $options['min_characters'];
         }
@@ -155,10 +159,13 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             'create_option_text' => 'Add %placeholder%...',
             'min_characters' => null,
             'max_results' => 10,
+            'max_options' => null,
             'preload' => 'focus',
             'reset_on_focus' => false,
             'extra_options' => [],
         ]);
+
+        $resolver->setAllowedTypes('max_options', ['int', 'null']);
 
         $resolver->setNormalizer('preload', static function (Options $options, $value) {
             if (\is_bool($value)) {

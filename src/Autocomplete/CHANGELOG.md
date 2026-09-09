@@ -6,6 +6,7 @@
 - Add `EntityAutocompleterInterface::getTranslationDomain()` to choose the translation domain used for the `optgroup` labels
 - Decouple the package from Doctrine ORM: add `AutocompleterInterface`, `OptionsAwareAutocompleterInterface`, `AutocompleteChoiceType` and `#[AsAutocompleteField]` so any data source can back an autocomplete field. The Doctrine ORM API stays fully supported
 - Add the `ux_autocomplete` route, served by `AutocompleteController`. The `ux_entity_autocomplete` route alias is deprecated
+- Add a `max_options` option to control how many options the dropdown displays at once
 
 ## 3.2
 
