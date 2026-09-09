@@ -236,12 +236,17 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element. Pair i
 so the month, weekday and day labels are formatted for that language, and with `weekStartsOn`
 so the week starts on the expected day.
 
+The `-u-nu-` Unicode extension pins the numbering system the digits are drawn from. Worth setting
+explicitly for languages that have more than one in use: a bare `ar` resolves to Arabic-Indic
+digits or Latin ones depending on the ICU version, and the server and the browser do not
+necessarily ship the same one.
+
 ```twig {"preview":true,"height":"760px"}
 <div class="flex flex-col items-center gap-12">
     {# Arabic #}
     <twig:Calendar
         dir="rtl"
-        locale="ar"
+        locale="ar-u-nu-latn"
         weekStartsOn="6"
         mode="single"
         today="2026-03-15"
@@ -253,7 +258,7 @@ so the week starts on the expected day.
     {# Hebrew #}
     <twig:Calendar
         dir="rtl"
-        locale="he"
+        locale="he-u-nu-latn"
         weekStartsOn="0"
         mode="single"
         today="2026-03-15"
