@@ -31,22 +31,22 @@ trait ComponentToolsTrait
         $this->liveResponder = $liveResponder;
     }
 
-    public function emit(string $eventName, array $data = [], ?string $componentName = null): void
+    public function emit(string|\BackedEnum $eventName, array $data = [], ?string $componentName = null): void
     {
         $this->liveResponder->emit($eventName, $data, $componentName);
     }
 
-    public function emitUp(string $eventName, array $data = [], ?string $componentName = null): void
+    public function emitUp(string|\BackedEnum $eventName, array $data = [], ?string $componentName = null): void
     {
         $this->liveResponder->emitUp($eventName, $data, $componentName);
     }
 
-    public function emitSelf(string $eventName, array $data = []): void
+    public function emitSelf(string|\BackedEnum $eventName, array $data = []): void
     {
         $this->liveResponder->emitSelf($eventName, $data);
     }
 
-    public function dispatchBrowserEvent(string $eventName, array $payload = []): void
+    public function dispatchBrowserEvent(string|\BackedEnum $eventName, array $payload = []): void
     {
         $this->liveResponder->dispatchBrowserEvent($eventName, $payload);
     }
