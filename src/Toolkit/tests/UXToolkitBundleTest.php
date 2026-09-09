@@ -12,6 +12,7 @@
 namespace Symfony\UX\Toolkit\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\UX\Toolkit\Component\ComponentDocParser;
 use Symfony\UX\Toolkit\UXToolkitBundle;
 use Twig\Environment;
@@ -32,6 +33,27 @@ class UXToolkitBundleTest extends KernelTestCase
         $container = self::$kernel->getContainer();
 
         $this->assertInstanceOf(ComponentDocParser::class, $container->get('ux_toolkit.component.component_doc_parser'));
+    }
+
+    public function testComponentDirDefaultsToTheKitConvention(): void
+    {
+        $this->assertSame('templates/components', $this->loadExtension([]));
+    }
+
+    public function testComponentDirCanBeConfigured(): void
+    {
+        $this->assertSame('templates/components/ui', $this->loadExtension([['component_dir' => 'templates/components/ui']]));
+    }
+
+    /**
+     * @param list<array<string,mixed>> $configs
+     */
+    private function loadExtension(array $configs): string
+    {
+        $extension = new UXToolkitBundle()->getContainerExtension();
+        $extension->load($configs, $container = new ContainerBuilder());
+
+        return $container->getParameter('ux_toolkit.component_dir');
     }
 
     public function testToolkitTemplateNamespaceResolves(): void

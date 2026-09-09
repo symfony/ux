@@ -14,6 +14,8 @@ namespace Symfony\UX\Toolkit\Tests\Installer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\UX\Toolkit\File;
+use Symfony\UX\Toolkit\Installer\ComponentDirectory;
 use Symfony\UX\Toolkit\Installer\Installer;
 use Symfony\UX\Toolkit\Kit\Kit;
 
@@ -120,6 +122,70 @@ final class InstallerTest extends KernelTestCase
         foreach ($expectedFiles as $expectedFile) {
             $this->assertFileExists($expectedFile);
         }
+    }
+
+    public function testCanInstallComponentInANestedComponentDirectory(): void
+    {
+        $installer = new Installer(self::getContainer()->get('filesystem'), static fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
+        $kit = $this->createKit('shadcn');
+
+        $installer->installRecipe($kit, $kit->getRecipe('dialog'), $this->tmpDir, false, new ComponentDirectory('templates/components/ui'));
+
+        $this->assertFileExists($this->tmpDir.'/templates/components/ui/Dialog.html.twig');
+        $this->assertFileExists($this->tmpDir.'/templates/components/ui/Dialog/Content.html.twig');
+        // The "button" recipe is a dependency of "dialog", so it is installed alongside it.
+        $this->assertFileExists($this->tmpDir.'/templates/components/ui/Button.html.twig');
+        $this->assertFileDoesNotExist($this->tmpDir.'/templates/components/Dialog.html.twig');
+
+        $content = file_get_contents($this->tmpDir.'/templates/components/ui/Dialog/Content.html.twig');
+        $this->assertStringContainsString('<twig:ui:Button', $content);
+        $this->assertStringNotContainsString('<twig:Button', $content);
+        // Components coming from other packages must be left alone.
+        $this->assertStringContainsString('<twig:ux:icon', $content);
+    }
+
+    public function testShouldNotMoveStimulusControllersWithTheComponents(): void
+    {
+        $installer = new Installer(self::getContainer()->get('filesystem'), static fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
+        $kit = $this->createKit('shadcn');
+
+        $recipe = $kit->getRecipe('dialog');
+        $installer->installRecipe($kit, $recipe, $this->tmpDir, false, new ComponentDirectory('templates/components/ui'));
+
+        $this->assertFileExists($this->tmpDir.'/assets/controllers/dialog_controller.js');
+        $this->assertSame(
+            file_get_contents(\sprintf('%s/assets/controllers/dialog_controller.js', $recipe->absolutePath)),
+            file_get_contents($this->tmpDir.'/assets/controllers/dialog_controller.js'),
+        );
+    }
+
+    public function testShouldNotRewriteReferencesWhenTheComponentNamesDoNotChange(): void
+    {
+        $installer = new Installer(self::getContainer()->get('filesystem'), static fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
+        $kit = $this->createKit('shadcn');
+
+        $recipe = $kit->getRecipe('dialog');
+        $installer->installRecipe($kit, $recipe, $this->tmpDir, false, new ComponentDirectory('templates/ui'));
+
+        $this->assertFileExists($this->tmpDir.'/templates/ui/Dialog/Content.html.twig');
+        // "templates/ui" is registered as a component directory by the user, so names are unchanged.
+        $this->assertSame(
+            file_get_contents(\sprintf('%s/templates/components/Dialog/Content.html.twig', $recipe->absolutePath)),
+            file_get_contents($this->tmpDir.'/templates/ui/Dialog/Content.html.twig'),
+        );
+    }
+
+    public function testShouldReportTheDestinationOfTheInstalledFiles(): void
+    {
+        $installer = new Installer(self::getContainer()->get('filesystem'), static fn () => throw new \BadFunctionCallException('The installer should not ask for confirmation since the file does not exist.'));
+        $kit = $this->createKit('shadcn');
+
+        $report = $installer->installRecipe($kit, $kit->getRecipe('button'), $this->tmpDir, false, new ComponentDirectory('templates/ui'));
+
+        $this->assertSame(
+            ['templates/ui/Button.html.twig'],
+            array_map(static fn (File $file) => $file->destinationRelativePathName, $report->newFiles),
+        );
     }
 
     private function createKit(string $kitName): Kit
