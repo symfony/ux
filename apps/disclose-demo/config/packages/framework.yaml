@@ -1,0 +1,9 @@
+framework:
+    secret: '%env(APP_SECRET)%'
+    http_method_override: false
+    session:
+        handler_id: null
+    translator:
+        fallbacks: ['en']
+    router:
+        utf8: true

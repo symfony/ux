@@ -1,0 +1,14 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Symfony UX Disclose demo{% endblock %}
+
+{% block content %}
+    <p class="text-muted">
+        Browse the Clients section: the email and phone columns are masked and
+        disclosed on demand, through a rate-limited and audited endpoint.
+    </p>
+    <ul>
+        <li>Admin area: <code>/admin</code> (HTTP Basic: <code>admin</code>/<code>admin</code>)</li>
+        <li>Disclose endpoint: <code>/disclose/ux/disclose</code></li>
+    </ul>
+{% endblock %}

@@ -151,6 +151,36 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0(@types/node@25.3.0)(jsdom@26.1.0(supports-color@7.2.0))(msw@2.10.4(@types/node@22.19.11)(typescript@5.8.3))(vite@7.3.6(@types/node@22.19.11)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.20.3))
 
+  src/Disclose/assets:
+    devDependencies:
+      '@hotwired/stimulus':
+        specifier: ^3.0.0
+        version: 3.2.2
+      '@testing-library/dom':
+        specifier: ^10.4.0
+        version: 10.4.1
+      '@testing-library/jest-dom':
+        specifier: ^6.6.3
+        version: 6.9.1
+      '@testing-library/user-event':
+        specifier: ^14.6.1
+        version: 14.6.1(@testing-library/dom@10.4.1)
+      jsdom:
+        specifier: ^26.1.0
+        version: 26.1.0(supports-color@7.2.0)
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+      vitest:
+        specifier: ^4.1.0
+        version: 4.1.0(@types/node@22.19.11)(jsdom@26.1.0(supports-color@7.2.0))(msw@2.10.4(@types/node@22.19.11)(typescript@5.8.3))(vite@7.3.6(@types/node@22.19.11)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.20.3))
+      vitest-fetch-mock:
+        specifier: ^0.2.2
+        version: 0.2.2(vitest@4.1.0(@types/node@22.19.11)(jsdom@26.1.0(supports-color@7.2.0))(msw@2.10.4(@types/node@22.19.11)(typescript@5.8.3))(vite@7.3.6(@types/node@22.19.11)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.20.3)))
+
   src/Dropzone/assets:
     devDependencies:
       '@hotwired/stimulus':
@@ -4089,6 +4119,10 @@ snapshots:
     dependencies:
       '@testing-library/dom': 10.4.0
 
+  '@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1)':
+    dependencies:
+      '@testing-library/dom': 10.4.1
+
   '@tsdown/css@0.22.0(postcss@8.5.26)(tsdown@0.22.0)(tsx@4.20.3)':
     dependencies:
       lightningcss: 1.32.0
@@ -5435,6 +5469,13 @@ snapshots:
     dependencies:
       jest-canvas-mock: 2.5.2
       vitest: 4.1.0(@types/node@25.3.0)(jsdom@26.1.0(supports-color@7.2.0))(msw@2.10.4(@types/node@22.19.11)(typescript@5.8.3))(vite@7.3.6(@types/node@22.19.11)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.20.3))
+
+  vitest-fetch-mock@0.2.2(vitest@4.1.0(@types/node@22.19.11)(jsdom@26.1.0(supports-color@7.2.0))(msw@2.10.4(@types/node@22.19.11)(typescript@5.8.3))(vite@7.3.6(@types/node@22.19.11)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.20.3))):
+    dependencies:
+      cross-fetch: 3.2.0
+      vitest: 4.1.0(@types/node@22.19.11)(jsdom@26.1.0(supports-color@7.2.0))(msw@2.10.4(@types/node@22.19.11)(typescript@5.8.3))(vite@7.3.6(@types/node@22.19.11)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.20.3))
+    transitivePeerDependencies:
+      - encoding
 
   vitest-fetch-mock@0.2.2(vitest@4.1.0(@types/node@25.3.0)(jsdom@26.1.0(supports-color@7.2.0))(msw@2.10.4(@types/node@22.19.11)(typescript@5.8.3))(vite@7.3.6(@types/node@22.19.11)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.20.3))):
     dependencies:

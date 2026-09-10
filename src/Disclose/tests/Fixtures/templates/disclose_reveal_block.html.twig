@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <twig:ux:disclose :context="context" :vars="{ greeting: 'Hello' }">
+        {% block reveal %}<p>{{ greeting }} {{ subject.secret }}</p>{% endblock %}
+    </twig:ux:disclose>
+{% endblock %}

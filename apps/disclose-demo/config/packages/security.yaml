@@ -1,0 +1,18 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: plaintext
+
+    providers:
+        users_in_memory:
+            memory:
+                users:
+                    admin:
+                        password: 'admin'
+                        roles: ['ROLE_ADMIN']
+
+    firewalls:
+        main:
+            pattern: .*
+            http_basic: true
+            provider: users_in_memory
+            logout: true

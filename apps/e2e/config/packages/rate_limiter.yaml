@@ -1,0 +1,12 @@
+framework:
+    # Overrides the default restriction proposed by ux-disclose: keep the
+    # budget low so the browser demo hits the rate-limited state quickly.
+    rate_limiter:
+        ux_disclose:
+            policy: fixed_window
+            limit: 3
+            interval: '1 minute'
+
+# Key the disclosure rate limit on a per-visitor reference instead of the IP.
+disclose:
+    rate_limiter_subject_factory: App\Disclose\DemoSubjectFactory

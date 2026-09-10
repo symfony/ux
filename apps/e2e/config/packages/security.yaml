@@ -1,0 +1,19 @@
+security:
+    # The disclose endpoint uses HTTP Basic with a single in-memory admin
+    # user so the demo runs without a dedicated user table.
+    password_hashers:
+        Symfony\Component\Security\Core\User\InMemoryUser: plaintext
+
+    providers:
+        users_in_memory:
+            memory:
+                users:
+                    admin:
+                        password: 'admin'
+                        roles: ['ROLE_ADMIN']
+
+    firewalls:
+        main:
+            pattern: ^/(admin|disclose)
+            http_basic: true
+            provider: users_in_memory

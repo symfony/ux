@@ -1,0 +1,3 @@
+ux_disclose:
+    resource: '@DiscloseBundle/config/routes.php'
+    prefix: /disclose

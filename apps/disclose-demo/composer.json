@@ -1,0 +1,57 @@
+{
+    "type": "project",
+    "license": "proprietary",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.4",
+        "doctrine/doctrine-bundle": "^2.13",
+        "doctrine/orm": "^2.19",
+        "easycorp/easyadmin-bundle": "^4.14",
+        "symfony/asset": "^7.4",
+        "symfony/asset-mapper": "^7.4",
+        "symfony/console": "^7.4",
+        "symfony/dotenv": "^7.4",
+        "symfony/flex": "^2",
+        "symfony/framework-bundle": "^7.4",
+        "symfony/lock": "^7.4",
+        "symfony/runtime": "^7.4",
+        "symfony/security-bundle": "^7.4",
+        "symfony/stimulus-bundle": "^2.9.1",
+        "symfony/twig-bundle": "^7.4",
+        "symfony/ux-disclose": "@dev",
+        "symfony/ux-twig-component": "^2.33.0",
+        "symfony/yaml": "^7.4",
+        "symfony/ux-turbo": "^2.13|^3",
+        "symfony/ux-icons": "^2.14|^3"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/flex": true,
+            "symfony/runtime": true
+        }
+    },
+    "extra": {
+        "symfony": {
+            "require": "7.4.*"
+        }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../src/Disclose"
+        }
+    ],
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "importmap:install": "symfony-cmd"
+        }
+    }
+}

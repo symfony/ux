@@ -1,0 +1,134 @@
+.disclose-trigger,
+.disclose-hide {
+    font: inherit;
+    line-height: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        opacity 0.15s ease;
+    /* Theme-agnostic: the colors follow the surrounding text color, so the
+       component adapts to light and dark themes (EasyAdmin included). */
+    color: currentColor;
+}
+
+.disclose-trigger {
+    position: relative;
+    border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+    background: color-mix(in srgb, currentColor 6%, transparent);
+}
+
+.disclose-trigger:hover,
+.disclose-trigger:focus-visible {
+    border-color: currentColor;
+    background: color-mix(in srgb, currentColor 14%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 18%, transparent);
+    outline: none;
+}
+
+.disclose-trigger:disabled {
+    cursor: progress;
+    opacity: 0.7;
+}
+
+.disclose-mask {
+    letter-spacing: 0.08em;
+    user-select: none;
+    opacity: 0.85;
+}
+
+.disclose-hide {
+    border: 1px solid transparent;
+    background: transparent;
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
+.disclose-hide:hover,
+.disclose-hide:focus-visible {
+    opacity: 1;
+    background: color-mix(in srgb, currentColor 10%, transparent);
+    outline: none;
+}
+
+.disclose-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.disclose-content[hidden] {
+    display: none;
+}
+
+.disclose-value {
+    color: inherit;
+}
+
+.disclose-error {
+    margin-top: 0.5rem;
+    color: color-mix(in srgb, currentColor 65%, #b91c1c);
+}
+
+/*
+ * Toggle mode: a single trigger that stays in place. Both glyphs share the
+ * same 1em box, so swapping them never resizes the button. The accessible
+ * state is carried by aria-label / aria-busy, the icons are decorative.
+ */
+.disclose-trigger .disclose-icon {
+    width: 1em;
+    height: 1em;
+    display: none;
+}
+
+.disclose-trigger .disclose-icon--eye-slash {
+    display: inline-block;
+}
+
+.disclose-trigger[data-disclose-revealed] .disclose-icon--eye-slash {
+    display: none;
+}
+
+.disclose-trigger[data-disclose-revealed] .disclose-icon--eye {
+    display: inline-block;
+}
+
+/* In toggle mode the mask sits next to the icon; dim it once revealed. */
+.disclose-trigger[data-disclose-revealed] .disclose-mask {
+    opacity: 0.4;
+}
+
+/* Loading spinner: overlaid so the button keeps its exact size. */
+.disclose-trigger .disclose-spinner {
+    display: none;
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    border: 2px solid color-mix(in srgb, currentColor 25%, transparent);
+    border-top-color: currentColor;
+    animation: disclose-spin 0.7s linear infinite;
+}
+
+.disclose-trigger[aria-busy='true'] .disclose-spinner {
+    display: block;
+}
+
+.disclose-trigger[aria-busy='true'] .disclose-icon,
+.disclose-trigger[aria-busy='true'] .disclose-mask {
+    opacity: 0.35;
+}
+
+@keyframes disclose-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
