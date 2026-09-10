@@ -31,10 +31,10 @@ class CategoryAutocompleteType extends AbstractType
     {
         $resolver->setDefaults([
             'class' => Category::class,
-            'choice_label' => function (Category $category) {
+            'choice_label' => static function (Category $category) {
                 return '<strong>'.$category->getName().'</strong>';
             },
-            'query_builder' => function (EntityRepository $repository) {
+            'query_builder' => static function (EntityRepository $repository) {
                 return $repository->createQueryBuilder('category')
                     ->andWhere('category.name LIKE :search')
                     ->setParameter('search', '%foo%');
@@ -51,6 +51,7 @@ class CategoryAutocompleteType extends AbstractType
                 'data-controller' => 'custom-autocomplete',
             ],
             'max_results' => 25,
+            'max_options' => 60,
             'min_characters' => 2,
         ]);
     }

@@ -73,6 +73,7 @@ var _Class = class extends Controller {
 		this.resetTomSelect();
 	}
 	getMaxOptions() {
+		if (this.hasMaxOptionsValue) return this.maxOptionsValue;
 		return this.selectElement ? this.selectElement.options.length : 50;
 	}
 	get selectElement() {
@@ -273,6 +274,7 @@ function _createAutocompleteWithRemoteData(autocompleteEndpointUrl, minCharacter
 			return query.length >= 3;
 		},
 		optgroupField: "group_by",
+		...this.hasMaxOptionsValue ? { maxOptions: this.maxOptionsValue } : {},
 		score: (_search) => (_item) => 1,
 		render: {
 			option: (item, escape) => `<div>${this.optionsAsHtmlValue ? item[labelField] : escape(item[labelField])}</div>`,
@@ -342,6 +344,7 @@ _Class.values = {
 	noMoreResultsText: String,
 	createOptionText: String,
 	minCharacters: Number,
+	maxOptions: Number,
 	tomSelectOptions: Object,
 	preload: String,
 	resetOnFocus: Boolean
