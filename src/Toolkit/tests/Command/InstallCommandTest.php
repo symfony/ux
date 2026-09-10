@@ -12,13 +12,22 @@
 namespace Symfony\UX\Toolkit\Tests\Command;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\UX\Toolkit\Command\InstallCommand;
+use Symfony\UX\Toolkit\Kit\Kit;
+use Symfony\UX\Toolkit\Registry\RegistryFactory;
+use Symfony\UX\Toolkit\Registry\RegistryInterface;
+use Symfony\UX\Toolkit\Registry\Type;
+use Symfony\UX\Toolkit\Tests\TestHelperTrait;
 use Zenstruck\Console\Test\InteractsWithConsole;
 
 class InstallCommandTest extends KernelTestCase
 {
     use InteractsWithConsole;
+    use TestHelperTrait;
 
     private Filesystem $filesystem;
     private string $tmpDir;
@@ -64,6 +73,25 @@ class InstallCommandTest extends KernelTestCase
             $this->assertFileExists($expectedFile);
             $this->assertEquals(file_get_contents(__DIR__.'/../../kits/shadcn/'.$fileName), file_get_contents($expectedFile));
         }
+    }
+
+    /**
+     * A recipe is free to copy its files to a directory that is not named after the source one,
+     * so the report must name where each file landed, not where it came from.
+     */
+    public function testShouldReportWhereTheInstalledFilesLanded(): void
+    {
+        $kit = self::getContainer()->get('ux_toolkit.kit.kit_factory')->createKitFromAbsolutePath(self::getFixtureKitPath('with-renamed-copy-files'));
+
+        $tester = new CommandTester($this->createInstallCommand($kit));
+        $tester->execute(['recipe' => 'notice', '--kit' => 'with-renamed-copy-files', '--destination' => $this->tmpDir], ['interactive' => false]);
+
+        $tester->assertCommandIsSuccessful();
+        $this->assertFileExists($this->tmpDir.'/templates/components/Notice.html.twig');
+
+        $display = $tester->getDisplay();
+        $this->assertStringContainsString(Path::normalize($this->tmpDir.'/templates/components/Notice.html.twig'), $display);
+        $this->assertStringNotContainsString(Path::normalize($this->tmpDir.'/ui/Notice.html.twig'), $display);
     }
 
     public function testShouldSuggestFrontendInstallationCommands(): void
@@ -177,5 +205,32 @@ class InstallCommandTest extends KernelTestCase
             ->assertFaulty()
             ->assertOutputContains('[WARNING] The recipe has not been installed.')
         ;
+    }
+
+    private function createInstallCommand(Kit $kit): InstallCommand
+    {
+        $registry = new class($kit) implements RegistryInterface {
+            public function __construct(private readonly Kit $kit)
+            {
+            }
+
+            public static function supports(string $kitName): bool
+            {
+                return true;
+            }
+
+            public function getKit(string $kitName): Kit
+            {
+                return $this->kit;
+            }
+        };
+
+        $command = new InstallCommand(
+            new RegistryFactory(new ServiceLocator([Type::Local->value => static fn () => $registry])),
+            self::getContainer()->get('filesystem'),
+        );
+        $command->setName('ux:install');
+
+        return $command;
     }
 }

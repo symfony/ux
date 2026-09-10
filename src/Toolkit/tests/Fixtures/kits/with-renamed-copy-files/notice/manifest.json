@@ -1,0 +1,9 @@
+{
+    "$schema": "../../../../../schema-kit-recipe-v1.json",
+    "type": "component",
+    "name": "Notice",
+    "description": "Component Notice",
+    "copy-files": {
+        "ui/": "templates/components/"
+    }
+}
