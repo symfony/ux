@@ -36,21 +36,28 @@
     {%- set _modifiers = _modifiers|merge({(_name): _dates|map(date => date|date('Y-m-d'))}) -%}
 {%- endfor -%}
 {%- set _focusDate = _selected is not empty ? _selected|first : (_today >= _month and _today <= _lastMonth|date_modify('last day of this month')|date('Y-m-d') ? _today : _month) -%}
-{%- set _dayClass = 'group/day relative aspect-square h-full w-full rounded-(--cell-radius) p-0 text-center select-none [&:last-child[data-selected=true]_button]:rounded-e-(--cell-radius) '
-    ~ (showWeekNumber ? '[&:nth-child(2)[data-selected=true]_button]:rounded-s-(--cell-radius) ' : '[&:first-child[data-selected=true]_button]:rounded-s-(--cell-radius) ')
-    ~ 'data-[today=true]:rounded-(--cell-radius) data-[today=true]:bg-muted data-[today=true]:text-foreground data-[today=true]:data-[selected=true]:rounded-none '
-    ~ 'data-[outside=true]:text-muted-foreground data-[outside=true]:data-[selected=true]:text-muted-foreground '
-    ~ 'data-[disabled=true]:text-muted-foreground data-[disabled=true]:opacity-50 data-[hidden=true]:invisible '
-    ~ 'data-[range-start=true]:isolate data-[range-start=true]:z-0 data-[range-start=true]:rounded-s-(--cell-radius) data-[range-start=true]:bg-muted data-[range-start=true]:after:absolute data-[range-start=true]:after:inset-y-0 data-[range-start=true]:after:end-0 data-[range-start=true]:after:w-4 data-[range-start=true]:after:bg-muted '
-    ~ 'data-[range-middle=true]:rounded-none '
-    ~ 'data-[range-end=true]:isolate data-[range-end=true]:z-0 data-[range-end=true]:rounded-e-(--cell-radius) data-[range-end=true]:bg-muted data-[range-end=true]:after:absolute data-[range-end=true]:after:inset-y-0 data-[range-end=true]:after:start-0 data-[range-end=true]:after:w-4 data-[range-end=true]:after:bg-muted' -%}
-{%- set _dayButtonClass = 'relative isolate z-10 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 border-0 leading-none font-normal '
-    ~ 'group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 '
-    ~ 'data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-e-(--cell-radius) data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground '
-    ~ 'data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-muted data-[range-middle=true]:text-foreground '
-    ~ 'data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-s-(--cell-radius) data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground '
-    ~ 'data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground '
-    ~ 'dark:hover:text-foreground [&>span]:text-xs [&>span]:opacity-70' -%}
+{%- set _dayClass = html_classes(
+    'group/day relative aspect-square h-full w-full rounded-(--cell-radius) p-0 text-center select-none [&:last-child[data-selected=true]_button]:rounded-e-(--cell-radius)',
+    {
+        '[&:nth-child(2)[data-selected=true]_button]:rounded-s-(--cell-radius)': showWeekNumber,
+        '[&:first-child[data-selected=true]_button]:rounded-s-(--cell-radius)': not showWeekNumber,
+    },
+    'data-[today=true]:rounded-(--cell-radius) data-[today=true]:bg-muted data-[today=true]:text-foreground data-[today=true]:data-[selected=true]:rounded-none',
+    'data-[outside=true]:text-muted-foreground data-[outside=true]:data-[selected=true]:text-muted-foreground',
+    'data-[disabled=true]:text-muted-foreground data-[disabled=true]:opacity-50 data-[hidden=true]:invisible',
+    'data-[range-start=true]:isolate data-[range-start=true]:z-0 data-[range-start=true]:rounded-s-(--cell-radius) data-[range-start=true]:bg-muted data-[range-start=true]:after:absolute data-[range-start=true]:after:inset-y-0 data-[range-start=true]:after:end-0 data-[range-start=true]:after:w-4 data-[range-start=true]:after:bg-muted',
+    'data-[range-middle=true]:rounded-none',
+    'data-[range-end=true]:isolate data-[range-end=true]:z-0 data-[range-end=true]:rounded-e-(--cell-radius) data-[range-end=true]:bg-muted data-[range-end=true]:after:absolute data-[range-end=true]:after:inset-y-0 data-[range-end=true]:after:start-0 data-[range-end=true]:after:w-4 data-[range-end=true]:after:bg-muted',
+) -%}
+{%- set _dayButtonClass = html_classes(
+    'relative isolate z-10 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 border-0 leading-none font-normal',
+    'group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50',
+    'data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-e-(--cell-radius) data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground',
+    'data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-muted data-[range-middle=true]:text-foreground',
+    'data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-s-(--cell-radius) data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground',
+    'data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground',
+    'dark:hover:text-foreground [&>span]:text-xs [&>span]:opacity-70',
+) -%}
 {# A known Sunday, so the weekday headers can be derived from `weekStartsOn` alone. #}
 {%- set _weekdayReference = '2024-01-07' -%}
 <div
