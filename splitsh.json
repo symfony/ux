@@ -6,6 +6,7 @@
         "ux-dropzone": "src/Dropzone",
         "ux-chartjs": "src/Chartjs",
         "ux-cropperjs": "src/Cropperjs",
+        "ux-disclose": "src/Disclose",
         "ux-icons": "src/Icons",
         "ux-live-component": "src/LiveComponent",
         "ux-map": {
