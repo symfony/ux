@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="drop_files" resname="ux_upload.drop_files">
+                <source>ux_upload.drop_files</source>
+                <target>Drop files here or click to browse</target>
+            </trans-unit>
+            <trans-unit id="upload" resname="ux_upload.upload">
+                <source>ux_upload.upload</source>
+                <target>Upload</target>
+            </trans-unit>
+            <trans-unit id="cancel" resname="ux_upload.cancel">
+                <source>ux_upload.cancel</source>
+                <target>Cancel</target>
+            </trans-unit>
+            <trans-unit id="remove" resname="ux_upload.remove">
+                <source>ux_upload.remove</source>
+                <target>Remove</target>
+            </trans-unit>
+            <trans-unit id="retry" resname="ux_upload.retry">
+                <source>ux_upload.retry</source>
+                <target>Retry</target>
+            </trans-unit>
+            <trans-unit id="pending" resname="ux_upload.pending">
+                <source>ux_upload.pending</source>
+                <target>Pending</target>
+            </trans-unit>
+            <trans-unit id="complete" resname="ux_upload.complete">
+                <source>ux_upload.complete</source>
+                <target>Complete</target>
+            </trans-unit>
+            <trans-unit id="cancelled" resname="ux_upload.cancelled">
+                <source>ux_upload.cancelled</source>
+                <target>Cancelled</target>
+            </trans-unit>
+            <trans-unit id="upload_failed" resname="ux_upload.upload_failed">
+                <source>ux_upload.upload_failed</source>
+                <target>Upload failed</target>
+            </trans-unit>
+            <trans-unit id="max_files_reached" resname="ux_upload.max_files_reached">
+                <source>ux_upload.max_files_reached</source>
+                <target>Maximum number of files reached</target>
+            </trans-unit>
+            <trans-unit id="file_too_large" resname="ux_upload.file_too_large">
+                <source>ux_upload.file_too_large</source>
+                <target>File too large (max %max_size%)</target>
+            </trans-unit>
+            <trans-unit id="file_type_not_allowed" resname="ux_upload.file_type_not_allowed">
+                <source>ux_upload.file_type_not_allowed</source>
+                <target>File type not allowed</target>
+            </trans-unit>
+            <trans-unit id="summary_all_complete" resname="ux_upload.summary_all_complete">
+                <source>ux_upload.summary_all_complete</source>
+                <target>%count% files uploaded</target>
+            </trans-unit>
+            <trans-unit id="summary_uploading" resname="ux_upload.summary_uploading">
+                <source>ux_upload.summary_uploading</source>
+                <target>Uploading... %completed% of %total% complete</target>
+            </trans-unit>
+            <trans-unit id="summary_partial" resname="ux_upload.summary_partial">
+                <source>ux_upload.summary_partial</source>
+                <target>%completed% of %total% uploaded, %failed% failed</target>
+            </trans-unit>
+            <trans-unit id="summary_uploading_with_errors" resname="ux_upload.summary_uploading_with_errors">
+                <source>ux_upload.summary_uploading_with_errors</source>
+                <target>Uploading... %completed% of %total% complete, %failed% failed</target>
+            </trans-unit>
+            <trans-unit id="summary_default" resname="ux_upload.summary_default">
+                <source>ux_upload.summary_default</source>
+                <target>%completed% of %total% files uploaded</target>
+            </trans-unit>
+            <trans-unit id="dropzone_label" resname="ux_upload.dropzone_label">
+                <source>ux_upload.dropzone_label</source>
+                <target>File upload area. Drop files or press to browse.</target>
+            </trans-unit>
+            <trans-unit id="announce_started" resname="ux_upload.announce_started">
+                <source>ux_upload.announce_started</source>
+                <target>%filename%: upload started</target>
+            </trans-unit>
+            <trans-unit id="announce_complete" resname="ux_upload.announce_complete">
+                <source>ux_upload.announce_complete</source>
+                <target>%filename%: upload complete</target>
+            </trans-unit>
+            <trans-unit id="announce_failed" resname="ux_upload.announce_failed">
+                <source>ux_upload.announce_failed</source>
+                <target>%filename%: upload failed</target>
+            </trans-unit>
+            <trans-unit id="announce_cancelled" resname="ux_upload.announce_cancelled">
+                <source>ux_upload.announce_cancelled</source>
+                <target>%filename%: upload cancelled</target>
+            </trans-unit>
+            <trans-unit id="pause" resname="ux_upload.pause">
+                <source>ux_upload.pause</source>
+                <target>Pause</target>
+            </trans-unit>
+            <trans-unit id="resume" resname="ux_upload.resume">
+                <source>ux_upload.resume</source>
+                <target>Resume</target>
+            </trans-unit>
+            <trans-unit id="paused" resname="ux_upload.paused">
+                <source>ux_upload.paused</source>
+                <target>Paused</target>
+            </trans-unit>
+            <trans-unit id="announce_paused" resname="ux_upload.announce_paused">
+                <source>ux_upload.announce_paused</source>
+                <target>%filename%: upload paused</target>
+            </trans-unit>
+            <trans-unit id="announce_resumed" resname="ux_upload.announce_resumed">
+                <source>ux_upload.announce_resumed</source>
+                <target>%filename%: upload resumed</target>
+            </trans-unit>
+            <trans-unit id="help.max_size" resname="ux_upload.help.max_size">
+                <source>ux_upload.help.max_size</source>
+                <target>Up to %size%</target>
+            </trans-unit>
+            <trans-unit id="help.max_files" resname="ux_upload.help.max_files">
+                <source>ux_upload.help.max_files</source>
+                <target>Up to %count% files</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

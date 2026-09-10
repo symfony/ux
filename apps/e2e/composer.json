@@ -58,6 +58,7 @@
         "symfony/ux-react": "3.x-dev",
         "symfony/ux-translator": "3.x-dev",
         "symfony/ux-turbo": "3.x-dev",
+        "symfony/ux-upload": "3.x-dev",
         "symfony/ux-twig-component": "3.x-dev",
         "symfony/ux-vue": "3.x-dev",
         "symfony/yaml": "7.4.*|8.1.*",

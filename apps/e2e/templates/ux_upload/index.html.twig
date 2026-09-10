@@ -1,0 +1,15 @@
+{% extends 'example.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {# The package styles use light-dark(): the application declares which schemes it supports. #}
+    <style>:root { color-scheme: light dark; }</style>
+{% endblock %}
+
+{% block example %}
+    {% if form_theme %}{% form_theme form.attachments form_theme %}{% endif %}
+    {{ form_start(form) }}
+        {{ form_row(form.attachments) }}
+        <button type="submit">Save</button>
+    {{ form_end(form) }}
+{% endblock %}

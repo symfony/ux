@@ -1,0 +1,4 @@
+ux_upload:
+    resource: '@UXUploadBundle/config/routes.php'
+    prefix: /_ux/upload
+    trailing_slash_on_root: false

@@ -1,0 +1,72 @@
+{
+    "name": "symfony/ux-upload",
+    "type": "symfony-bundle",
+    "description": "Direct and resumable file uploads for Symfony applications",
+    "keywords": [
+        "symfony-ux",
+        "upload",
+        "file",
+        "chunked"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Simon André",
+            "email": "smn.andre@gmail.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=8.4",
+        "symfony/config": "^7.4|^8.0",
+        "symfony/dependency-injection": "^7.4|^8.0",
+        "symfony/event-dispatcher": "^7.4|^8.0",
+        "symfony/form": "^7.4|^8.0",
+        "symfony/http-foundation": "^7.4|^8.0",
+        "symfony/http-kernel": "^7.4|^8.0",
+        "symfony/lock": "^7.4|^8.0",
+        "symfony/mime": "^7.4|^8.0",
+        "symfony/options-resolver": "^7.4|^8.0",
+        "symfony/routing": "^7.4|^8.0",
+        "symfony/filesystem": "^7.4|^8.0",
+        "symfony/translation-contracts": "^3.0",
+        "symfony/stimulus-bundle": "^3.0"
+    },
+    "require-dev": {
+        "league/flysystem": "^3.0",
+        "phpunit/phpunit": "^12.0",
+        "symfony/console": "^7.4|^8.0",
+        "symfony/framework-bundle": "^7.4|^8.0",
+        "symfony/rate-limiter": "^7.4|^8.0",
+        "symfony/security-bundle": "^7.4|^8.0",
+        "symfony/security-csrf": "^7.4|^8.0",
+        "symfony/twig-bundle": "^7.4|^8.0",
+        "symfony/ux-live-component": "^2.20|^3.0",
+        "symfony/dom-crawler": "^7.4|^8.0",
+        "symfony/css-selector": "^7.4|^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Upload\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Upload\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "symfony": {
+            "require": "^7.4|^8.0"
+        },
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    }
+}

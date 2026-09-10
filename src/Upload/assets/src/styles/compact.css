@@ -1,0 +1,54 @@
+@import './base.css';
+
+@layer ux-upload {
+    .ux-upload--compact .ux-upload__dropzone {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            'input'
+            'help';
+        align-items: center;
+        overflow: hidden;
+        border: 1px solid var(--ux-upload-border);
+        border-radius: var(--ux-upload-radius);
+        background: var(--ux-upload-bg);
+    }
+
+    .ux-upload--compact .ux-upload__dropzone-icon,
+    .ux-upload--compact .ux-upload__instruction {
+        display: none;
+    }
+
+    .ux-upload--compact .ux-upload__help {
+        grid-area: help;
+        padding: 0.5rem 0.75rem;
+        border-block-start: 1px solid var(--ux-upload-border);
+    }
+
+    .ux-upload--compact .ux-upload__input {
+        grid-area: input;
+        min-width: 0;
+        width: 100%;
+        padding: 0.625rem 0.75rem;
+        border: 0;
+        background: transparent;
+        color: var(--ux-upload-muted);
+        font: inherit;
+    }
+
+    .ux-upload--compact .ux-upload__input::file-selector-button {
+        margin-inline-end: 0.75rem;
+        padding: 0.375rem 0.625rem;
+        border: 0;
+        border-radius: 0.375rem;
+        background: var(--ux-upload-accent);
+        color: white;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .ux-upload--compact .ux-upload__input::file-selector-button:hover {
+        background: var(--ux-upload-accent-strong);
+    }
+}
