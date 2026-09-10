@@ -3116,13 +3116,13 @@ You can also pass extra (scalar) data to the listeners::
 
 From a Twig template:
 
-  .. code-block:: html+twig
+.. code-block:: html+twig
 
-       <button
-           data-action="live#emit"
-           data-live-event-param="productAdded"
-           data-live-product-param="123"
-       >
+    <button
+        data-action="live#emit"
+        data-live-event-param="productAdded"
+        data-live-product-param="123"
+    >
 
 In your listeners, you can access this by adding a matching argument
 name with ``#[LiveArg]`` in front::
@@ -4225,7 +4225,7 @@ So, if the following are the forms used::
         }
     }
 
-Use the addCollectionItem method from the LiveCollectionTrait to dynamically add entries to the children field of the form before submitting it::
+Use the ``addCollectionItem`` method from the ``LiveCollectionTrait`` to dynamically add entries to the children field of the form before submitting it::
 
     // Call the addCollectionItem method as many times as needed, specifying the name of the collection field.
     $component->call('addCollectionItem', ['name' => 'children']);
