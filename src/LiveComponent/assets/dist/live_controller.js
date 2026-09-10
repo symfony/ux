@@ -2132,11 +2132,11 @@ var SetValueOntoModelFieldsPlugin_default = class {
 		});
 	}
 	synchronizeValueOfModelFields(component) {
-		component.element.querySelectorAll("[data-model]").forEach((element) => {
+		component.element.querySelectorAll("[data-model], select[name]").forEach((element) => {
 			if (!(element instanceof HTMLElement)) throw new Error("Invalid element using data-model.");
 			if (element instanceof HTMLFormElement) return;
 			if (!elementBelongsToThisComponent(element, component)) return;
-			const modelDirective = getModelDirectiveFromElement(element);
+			const modelDirective = getModelDirectiveFromElement(element, false);
 			if (!modelDirective) return;
 			const modelName = modelDirective.action;
 			if (component.getUnsyncedModels().includes(modelName)) return;
