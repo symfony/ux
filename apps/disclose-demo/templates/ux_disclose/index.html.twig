@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <main class="shell">
+        <header class="page-head">
+            <h1>Clients</h1>
+            <p>
+                Contact details are masked. Click the eye on a card to reveal it on demand,
+                through the rate-limited, audited <code>/disclose/ux/disclose</code> endpoint.
+            </p>
+        </header>
+
+        <turbo-frame id="clients_frame">
+            <div class="client-list">
+                {{ include('ux_disclose/_clients.html.twig') }}
+            </div>
+            {{ include('ux_disclose/_pagination.html.twig') }}
+        </turbo-frame>
+
+        <p class="page-foot">
+            <a href="{{ path('admin') }}">Open the EasyAdmin CRUD (HTTP Basic: admin/admin)</a>
+        </p>
+    </main>
+{% endblock %}

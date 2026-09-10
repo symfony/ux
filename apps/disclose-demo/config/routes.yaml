@@ -1,0 +1,9 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+ux_disclose:
+    resource: '@DiscloseBundle/config/routes.php'
+    prefix: /disclose

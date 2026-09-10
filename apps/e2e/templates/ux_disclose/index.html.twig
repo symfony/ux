@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container my-5">
+        <h1>Clients</h1>
+        <p class="text-muted">
+            Emails and phone numbers are masked. Click a cell to disclose its value,
+            one click at a time, through a rate-limited and audited endpoint.
+        </p>
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr><th>Name</th><th>Email</th><th>Phone</th></tr>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                    <tr>
+                        <td>{{ client.name }}</td>
+                        <td>
+                            <twig:ux:disclose :context="client" field="email" />
+                        </td>
+                        <td>
+                            <twig:ux:disclose :context="client" field="phone" />
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

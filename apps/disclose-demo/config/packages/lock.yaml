@@ -1,0 +1,10 @@
+services:
+    # Race-safe disclosures: the rate limiter acquires a DBAL-backed lock
+    # per consume(), so parallel requests cannot splice past the quota.
+    app.lock.store:
+        class: Symfony\Component\Lock\Store\DoctrineDbalStore
+        arguments: ['@doctrine.dbal.default_connection']
+
+    app.lock.factory:
+        class: Symfony\Component\Lock\LockFactory
+        arguments: ['@app.lock.store']

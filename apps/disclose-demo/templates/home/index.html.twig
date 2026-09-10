@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <style>
+        .disclose-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            border: 1px dashed #adb5bd;
+            border-radius: .25rem;
+            background: #f8f9fa;
+            padding: .25rem .6rem;
+            cursor: pointer;
+        }
+        .disclose-trigger:hover,
+        .disclose-trigger:focus-visible {
+            border-style: solid;
+            background: #e9ecef;
+        }
+        .disclose-trigger:disabled { cursor: progress; opacity: .7; }
+        .disclose-mask { letter-spacing: .05em; user-select: none; }
+    </style>
+    <div class="container my-5">
+        <h1>Clients</h1>
+        <p class="text-muted">
+            Emails and phone numbers are masked. Click a cell to disclose its value
+            through the rate-limited, audited <code>/disclose/ux/disclose</code> endpoint.
+        </p>
+        <table class="table table-striped align-middle">
+            <thead><tr><th>Name</th><th>Email</th><th>Phone</th></tr></thead>
+            <tbody>
+                {% for client in clients %}
+                    <tr>
+                        <td>{{ client.name }}</td>
+                        <td><twig:ux:disclose :context="client" field="email" /></td>
+                        <td><twig:ux:disclose :context="client" field="phone" /></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p><a href="{{ path('admin') }}">Open the EasyAdmin CRUD (HTTP Basic: admin/admin)</a></p>
+    </div>
+{% endblock %}

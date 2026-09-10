@@ -1,0 +1,267 @@
+/*
+ * Bespoke stylesheet for the Symfony UX Disclose demo.
+ *
+ * The Disclose component itself is theme-agnostic (it follows currentColor),
+ * so this file only sets the page shell, the client cards and the pagination.
+ * No CSS framework: the look is intentionally restrained and dependency-free.
+ */
+
+:root {
+    color-scheme: light dark;
+}
+
+body {
+    margin: 0;
+    color: #1f2937;
+    background: #f6f7f9;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        color: #e5e7eb;
+        background: #111214;
+    }
+}
+
+.shell {
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+}
+
+.page-head h1 {
+    margin: 0 0 0.35rem;
+    font-size: 1.5rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+}
+
+.page-head p {
+    margin: 0 0 1.75rem;
+    max-width: 38ch;
+    color: color-mix(in srgb, currentColor 62%, transparent);
+}
+
+.page-head code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    padding: 0.1em 0.35em;
+    border-radius: 0.3rem;
+    background: color-mix(in srgb, currentColor 9%, transparent);
+}
+
+/* Client cards ----------------------------------------------------------- */
+
+.client-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.client-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas: 'name toggle' 'contact contact';
+    align-items: center;
+    column-gap: 1rem;
+    row-gap: 0.2rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+    border-radius: 0.625rem;
+    background: color-mix(in srgb, currentColor 2%, transparent);
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.client-card:hover {
+    background: color-mix(in srgb, currentColor 5%, transparent);
+    border-color: color-mix(in srgb, currentColor 20%, transparent);
+}
+
+.client-card__name {
+    grid-area: name;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.client-card__contact {
+    grid-area: contact;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.95rem;
+    color: color-mix(in srgb, currentColor 78%, transparent);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.client-card__detail {
+    color: inherit;
+}
+
+.client-card__sep {
+    margin: 0 0.4rem;
+    color: color-mix(in srgb, currentColor 40%, transparent);
+}
+
+/* The toggle trigger: a single fixed-size icon button that never moves.
+   Both glyphs and the spinner share the same 1em box, so swapping state
+   (loading / revealed / masked) never resizes or repositions the button. */
+.client-card__toggle {
+    position: relative;
+    grid-area: toggle;
+    width: 2.25rem;
+    height: 2.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    line-height: 0;
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.client-card__toggle:hover,
+.client-card__toggle:focus-visible {
+    border-color: color-mix(in srgb, currentColor 55%, transparent);
+    background: color-mix(in srgb, currentColor 10%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 14%, transparent);
+    outline: none;
+}
+
+.client-card__toggle[disabled] {
+    cursor: progress;
+}
+
+.client-card__toggle .disclose-icon {
+    width: 1.15rem;
+    height: 1.15rem;
+    display: none;
+}
+
+.client-card__toggle .disclose-icon--eye-slash {
+    display: inline-block;
+}
+
+.client-card__toggle[data-disclose-revealed] .disclose-icon--eye-slash {
+    display: none;
+}
+
+.client-card__toggle[data-disclose-revealed] .disclose-icon--eye {
+    display: inline-block;
+}
+
+.client-card__toggle .disclose-spinner {
+    display: none;
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 50%;
+    border: 2px solid color-mix(in srgb, currentColor 22%, transparent);
+    border-top-color: currentColor;
+    animation: disclose-spin 0.7s linear infinite;
+}
+
+.client-card__toggle[aria-busy='true'] .disclose-spinner {
+    display: block;
+}
+
+.client-card__toggle[aria-busy='true'] .disclose-icon {
+    opacity: 0.3;
+}
+
+.client-card__error {
+    grid-column: 1 / -1;
+    margin: 0.4rem 0 0;
+    font-size: 0.85rem;
+    color: color-mix(in srgb, currentColor 60%, #b91c1c);
+}
+
+.client-card__error[hidden] {
+    display: none;
+}
+
+/* Pagination ------------------------------------------------------------- */
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
+
+.pagination__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.85rem;
+    border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+    border-radius: 0.5rem;
+    background: transparent;
+    color: inherit;
+    text-decoration: none;
+    font: inherit;
+    cursor: pointer;
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.pagination__link:hover:not([aria-disabled='true']),
+.pagination__link:focus-visible:not([aria-disabled='true']) {
+    border-color: color-mix(in srgb, currentColor 45%, transparent);
+    background: color-mix(in srgb, currentColor 8%, transparent);
+    outline: none;
+}
+
+.pagination__link[aria-disabled='true'] {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.pagination__indicator {
+    color: color-mix(in srgb, currentColor 62%, transparent);
+    font-variant-numeric: tabular-nums;
+}
+
+.page-foot {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+}
+
+.page-foot a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+}
+
+.empty-state {
+    color: color-mix(in srgb, currentColor 62%, transparent);
+}
+
+.empty-state code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    padding: 0.1em 0.35em;
+    border-radius: 0.3rem;
+    background: color-mix(in srgb, currentColor 9%, transparent);
+}
+
+@keyframes disclose-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

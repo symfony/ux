@@ -1,0 +1,3 @@
+{% if entity.instance is not null and field is defined %}
+    <twig:ux:disclose :context="entity.instance" field="{{ field.property }}" />
+{% endif %}
