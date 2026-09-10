@@ -1,0 +1,32 @@
+src:
+https://zone.kxcdn.com/hero.jpg?width=800&height=450&fit=cover&format=jpeg
+
+srcset:
+https://zone.kxcdn.com/hero.jpg?width=640&height=360&fit=cover&format=jpeg 640w
+https://zone.kxcdn.com/hero.jpg?width=750&height=422&fit=cover&format=jpeg 750w
+https://zone.kxcdn.com/hero.jpg?width=800&height=450&fit=cover&format=jpeg 800w
+https://zone.kxcdn.com/hero.jpg?width=828&height=466&fit=cover&format=jpeg 828w
+https://zone.kxcdn.com/hero.jpg?width=960&height=540&fit=cover&format=jpeg 960w
+https://zone.kxcdn.com/hero.jpg?width=1080&height=608&fit=cover&format=jpeg 1080w
+https://zone.kxcdn.com/hero.jpg?width=1280&height=720&fit=cover&format=jpeg 1280w
+https://zone.kxcdn.com/hero.jpg?width=1600&height=900&fit=cover&format=jpeg 1600w
+
+source (image/webp):
+https://zone.kxcdn.com/hero.jpg?width=640&height=360&fit=cover&format=webp 640w
+https://zone.kxcdn.com/hero.jpg?width=750&height=422&fit=cover&format=webp 750w
+https://zone.kxcdn.com/hero.jpg?width=800&height=450&fit=cover&format=webp 800w
+https://zone.kxcdn.com/hero.jpg?width=828&height=466&fit=cover&format=webp 828w
+https://zone.kxcdn.com/hero.jpg?width=960&height=540&fit=cover&format=webp 960w
+https://zone.kxcdn.com/hero.jpg?width=1080&height=608&fit=cover&format=webp 1080w
+https://zone.kxcdn.com/hero.jpg?width=1280&height=720&fit=cover&format=webp 1280w
+https://zone.kxcdn.com/hero.jpg?width=1600&height=900&fit=cover&format=webp 1600w
+
+source (image/jpeg):
+https://zone.kxcdn.com/hero.jpg?width=640&height=360&fit=cover&format=jpeg 640w
+https://zone.kxcdn.com/hero.jpg?width=750&height=422&fit=cover&format=jpeg 750w
+https://zone.kxcdn.com/hero.jpg?width=800&height=450&fit=cover&format=jpeg 800w
+https://zone.kxcdn.com/hero.jpg?width=828&height=466&fit=cover&format=jpeg 828w
+https://zone.kxcdn.com/hero.jpg?width=960&height=540&fit=cover&format=jpeg 960w
+https://zone.kxcdn.com/hero.jpg?width=1080&height=608&fit=cover&format=jpeg 1080w
+https://zone.kxcdn.com/hero.jpg?width=1280&height=720&fit=cover&format=jpeg 1280w
+https://zone.kxcdn.com/hero.jpg?width=1600&height=900&fit=cover&format=jpeg 1600w

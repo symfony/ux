@@ -1,0 +1,7 @@
+/composer.lock
+/phpunit.xml
+/vendor/
+/.phpunit.cache/
+/var/
+/config/reference.php
+/config/schema.json
