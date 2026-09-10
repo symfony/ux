@@ -1,0 +1,18 @@
+{# @prop variant 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The button style variant. #}
+{# @prop size 'default'|'xs'|'sm'|'lg'|'icon'|'icon-xs'|'icon-sm'|'icon-lg' The button size. #}
+{# @prop text string The accessible label of the button. #}
+{%- props variant = 'outline', size = 'icon-sm', text = 'Next slide' -%}
+{%- set _carousel_orientation = inject('carousel.orientation', 'horizontal') -%}
+<twig:Button
+    variant="{{ variant }}"
+    size="{{ size }}"
+    data-slot="carousel-next"
+    data-carousel-target="next"
+    {{ ...attributes.defaults({
+        class: ('absolute touch-manipulation ' ~ (_carousel_orientation == 'vertical' ? '-bottom-12 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 rotate-90' : 'inset-y-0 -end-12 my-auto'))|tailwind_classes,
+        'data-action': 'click->carousel#scrollNext',
+    }) }}
+>
+    <twig:ux:icon name="lucide:chevron-right" class="rtl:rotate-180" />
+    <span class="sr-only">{{ text }}</span>
+</twig:Button>

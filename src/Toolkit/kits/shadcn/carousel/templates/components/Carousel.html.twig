@@ -1,0 +1,27 @@
+{# @prop orientation 'horizontal'|'vertical' The axis the slides scroll along. #}
+{# @prop align 'start'|'center'|'end' The alignment of the selected slide inside the viewport. #}
+{# @prop loop boolean Whether the carousel wraps around after the last slide. #}
+{# @prop autoplay int The delay, in milliseconds, between two automatic slide changes. Zero disables autoplay. #}
+{# @prop label string The accessible name of the carousel region. #}
+{# @block content The carousel structure, typically includes `Carousel:Content`, `Carousel:Previous` and `Carousel:Next`. #}
+{%- props orientation = 'horizontal', align = 'center', loop = false, autoplay = 0, label = 'Carousel' -%}
+{%- do provide('carousel.orientation', orientation) -%}
+{%- do provide('carousel.loop', loop) -%}
+<div
+    role="region"
+    aria-roledescription="carousel"
+    aria-label="{{ label }}"
+    data-slot="carousel"
+    data-orientation="{{ orientation }}"
+    data-carousel-orientation-value="{{ orientation }}"
+    data-carousel-align-value="{{ align }}"
+    data-carousel-loop-value="{{ loop ? 'true' : 'false' }}"
+    data-carousel-autoplay-value="{{ autoplay }}"
+    {{ attributes.defaults({
+        class: 'relative'|tailwind_classes,
+        'data-controller': 'carousel',
+        'data-action': 'keydown->carousel#handleKeydown',
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>
