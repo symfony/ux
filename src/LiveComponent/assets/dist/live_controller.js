@@ -2227,6 +2227,54 @@ var LiveControllerDefault = class LiveControllerDefault extends Controller {
 			if (getModelDirectiveFromElement(event.currentTarget, false)) this.pendingActionTriggerModelElement = event.currentTarget;
 		});
 	}
+	async confirmAction(event) {
+		event.preventDefault();
+		const target = event.currentTarget;
+		const params = { ...event.params };
+		const confirmMessage = params.confirmMessage || target.dataset.confirmMessageParam || target.getAttribute("data-turbo-confirm");
+		if (!confirmMessage) {
+			console.warn("LiveComponent: live#confirmAction requires a confirm message.");
+			return;
+		}
+		const actionName = params.action || target.dataset.confirmActionParam;
+		if (!actionName) throw new Error("LiveComponent: No action provided. Please use data-live-action-param.");
+		let isConfirmed = false;
+		const liveConfirmEvent = new CustomEvent("live:confirmAction", {
+			bubbles: true,
+			cancelable: true,
+			detail: {
+				message: confirmMessage,
+				promise: null
+			}
+		});
+		target.dispatchEvent(liveConfirmEvent);
+		if (liveConfirmEvent.defaultPrevented) {
+			if (liveConfirmEvent.detail.promise) try {
+				isConfirmed = await liveConfirmEvent.detail.promise;
+			} catch {
+				isConfirmed = false;
+			}
+		} else {
+			const turbo = window.Turbo;
+			const turboConfirm = turbo?.config?.forms?.confirm || turbo?.navigator?.confirmMethod;
+			if (typeof turboConfirm === "function") isConfirmed = await turboConfirm(confirmMessage, target.closest("form"), target);
+			else isConfirmed = window.confirm(confirmMessage);
+		}
+		if (!isConfirmed) return;
+		params.action = actionName;
+		delete params.confirmMessage;
+		delete params.confirmAction;
+		const fakeEvent = {
+			type: event.type,
+			preventDefault: () => {},
+			stopPropagation: () => {},
+			currentTarget: target,
+			target: event.target,
+			params,
+			defaultPrevented: false
+		};
+		this.action(fakeEvent);
+	}
 	$render() {
 		return this.component.render();
 	}
