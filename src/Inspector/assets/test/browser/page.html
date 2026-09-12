@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="turbo-refresh-method" content="morph" />
+        <title>Inspector browser fixture</title>
+        <script type="module" src="/app.js"></script>
+        <script type="module" src="/_ux/inspector.js"></script>
+    </head>
+    <body>
+        <main>
+            <h1>Inspector browser fixture</h1>
+            <a href="/a">Page A</a>
+            <a href="/b">Page B</a>
+            <a href="/cancel">Canceled</a>
+            <div id="scroller" style="height: 160px; overflow: auto">
+                <section
+                    id="probe"
+                    style="width: 200px; height: 80px"
+                    data-controller="probe"
+                    data-probe-count-value="1">
+                    <button data-action="probe#increment">Increment</button>
+                </section>
+                <div style="height: 700px"></div>
+            </div>
+            <turbo-frame id="frame"><a href="/frame">Load frame</a></turbo-frame>
+        </main>
+        <ux-inspector id="ux-inspector" data-turbo-permanent></ux-inspector>
+    </body>
+</html>

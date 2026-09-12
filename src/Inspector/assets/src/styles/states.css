@@ -1,0 +1,64 @@
+@media (max-width: 32.5rem) {
+    .inspector {
+        width: 100vw;
+    }
+    .panel-resize {
+        display: none;
+    }
+}
+
+@container inspector (max-width: 18rem) {
+    .inspector > header {
+        grid-template-columns: 1fr auto;
+        padding-inline: var(--space-1);
+    }
+
+    .inspector > header > strong {
+        display: none;
+    }
+    .header-end {
+        grid-column: 2;
+    }
+}
+
+@container inspector (max-width: 11.5rem) {
+    .group > .content {
+        grid-template-columns: var(--space-4) minmax(0, 1fr) var(--space-4);
+    }
+
+    .key-value {
+        min-height: calc(var(--target) + var(--space-2));
+        grid-template-columns: minmax(0, 1fr);
+        align-content: center;
+        padding-block: var(--space-1);
+    }
+
+    .key-value > .key {
+        padding-inline-end: var(--target);
+        color: var(--faint);
+        font-size: var(--key-value-size);
+    }
+
+    .key-value > .value {
+        grid-column: 1;
+    }
+    .group > .content .key-value > :is(.key, .value) {
+        grid-column: 2;
+    }
+    .group > .content .key-value[data-vertical] > .value {
+        grid-column: 1 / -1;
+    }
+    .key-value[data-element] > .value {
+        flex-wrap: wrap;
+        gap: 0 var(--space-2);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :host *,
+    :host *::before,
+    :host *::after {
+        transition: none !important;
+        animation: none !important;
+    }
+}

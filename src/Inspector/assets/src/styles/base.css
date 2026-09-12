@@ -1,0 +1,132 @@
+:host {
+    --panel: light-dark(oklch(95.5% 0.004 270), oklch(19% 0.006 270));
+    --surface: light-dark(#fff, oklch(14.5% 0.004 270));
+    --surface-hover: color-mix(in srgb, var(--text) 5%, var(--surface));
+    --surface-zebra: color-mix(in srgb, var(--text) 2.5%, var(--surface));
+    --control-hover: color-mix(in srgb, var(--text) 5%, transparent);
+    --control-active: light-dark(rgb(255 255 255 / 0.92), rgb(0 0 0 / 0.36));
+    --line-soft: light-dark(rgb(20 25 35 / 0.07), rgb(255 255 255 / 0.085));
+    --detail-edge: light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.5));
+    --text: light-dark(oklch(19% 0.014 270), oklch(97% 0.004 270));
+    --muted: light-dark(oklch(42% 0.012 270), oklch(79% 0.01 270));
+    --faint: light-dark(oklch(54% 0.01 270), oklch(70% 0.01 270));
+    --focus: light-dark(rgb(0 0 0 / 0.88), rgb(255 255 255 / 0.9));
+    --scroll-thumb: light-dark(rgb(0 0 0 / 0.18), rgb(255 255 255 / 0.2));
+    --scroll-thumb-hover: light-dark(rgb(0 0 0 / 0.38), rgb(255 255 255 / 0.4));
+    --accent-ui: light-dark(oklch(54% 0.2 255), oklch(70% 0.16 252));
+    --stimulus: light-dark(#12825c, #43d69b);
+    --livecomponent: light-dark(#a45c00, #ffb84d);
+    --turbo: light-dark(#6f35b5, #b985ff);
+    --panel-width: 21.25rem;
+    --font-ui: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --text-xs: 0.6875rem;
+    --text-sm: 0.75rem;
+    --text-md: 0.8125rem;
+    --group-title-size: 0.5625rem;
+    --key-value-size: 0.6875rem;
+    --weight: 400;
+    --weight-strong: 500;
+    --target: 2.5rem;
+    --radius-sm: 0.25rem;
+    --radius-md: 0.375rem;
+
+    position: fixed;
+    inset: 0;
+    z-index: 2147483644;
+    font: var(--weight) var(--text-md)/1.5 var(--font-ui);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    pointer-events: none;
+}
+
+:host(:not([open])) {
+    inset: auto 0 0 auto;
+    width: 0;
+    height: 100%;
+}
+
+:host *,
+:host *::before,
+:host *::after {
+    box-sizing: border-box;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+button,
+input {
+    border: 0;
+    font: inherit;
+}
+
+button {
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: -2px;
+}
+
+svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.75;
+}
+
+[data-framework='stimulus'] {
+    --framework: var(--stimulus);
+}
+
+[data-framework='livecomponent'] {
+    --framework: var(--livecomponent);
+}
+
+[data-framework='turbo'] {
+    --framework: var(--turbo);
+}
+
+[data-framework='default'] {
+    --framework: var(--muted);
+}
+
+.pane {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+}
+
+:where(
+    .stack-title,
+    .stack-badge,
+    .selector,
+    .detail-head h2,
+    .detail-selector,
+    .expandable-text,
+    .key-value > .value,
+    .tree .key,
+    .relation > .key,
+    .relation > .value,
+    .disclosure .name,
+    .event-target,
+    .raw-list strong
+) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
