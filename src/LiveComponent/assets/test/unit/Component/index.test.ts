@@ -579,6 +579,8 @@ describe('Component class', () => {
             const component = new Component(
                 document.createElement('div'),
                 'test-component',
+                // A model named "then" is intentional: it must not make the proxy a thenable.
+                // oxlint-disable-next-line unicorn/no-thenable
                 { toJSON: 'model value', then: 'other value' },
                 [],
                 null,

@@ -8,9 +8,9 @@
  */
 
 import { getByTestId } from '@testing-library/dom';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { htmlToElement } from '../../../src/dom_utils';
-import { createTest, initComponent, shutdownTests } from '../../tools';
+import { createTest, getComponent, initComponent, shutdownTests } from '../../tools';
 
 describe('LiveController rendering with external changes tests', () => {
     afterEach(() => {
@@ -58,7 +58,6 @@ describe('LiveController rendering with external changes tests', () => {
             data.isDisabled = true;
             data.bonusClass = 'class-added-by-server';
             data.margin = '20px';
-            data.id = 'will-be-ignored';
         });
 
         await test.component.render();
@@ -194,5 +193,191 @@ describe('LiveController rendering with external changes tests', () => {
         // bonus element change from server is gone
         // this verifies that server changes are not being tracked as "external"
         expect(test.element.innerHTML).not.toContain('Bonus element');
+    });
+
+    it.each([
+        [null, 'client-id'],
+        ['server-id', 'client-id'],
+        ['server-id', null],
+        ['server-id', ''],
+    ])('preserves a client ID change from %s to %s across renders', async (serverId, clientId) => {
+        const test = await createTest(
+            { count: 0 },
+            (data) => `
+            <div ${initComponent(data)}>
+                <input ${serverId === null ? '' : `id="${serverId}"`} data-testid="field" value="${data.count}">
+            </div>
+        `
+        );
+        const field = getByTestId(test.element, 'field');
+        if (clientId === null) {
+            field.removeAttribute('id');
+        } else {
+            field.id = clientId;
+        }
+        field.classList.add('client-class');
+
+        for (const count of [1, 2]) {
+            test.expectsAjaxCall().serverWillChangeProps((data) => {
+                data.count = count;
+            });
+            await test.component.render();
+            expect(getByTestId(test.element, 'field')).toBe(field);
+            expect(field.getAttribute('id')).toBe(clientId);
+            expect(field).toHaveClass('client-class');
+            expect(field).toHaveValue(String(count));
+        }
+    });
+
+    it('replaces an externally modified element when its server ID changes', async () => {
+        const test = await createTest(
+            { id: 'original', label: 'Original' },
+            (data) => `
+            <div ${initComponent(data)}><button id="${data.id}" data-testid="button">${data.label}</button></div>
+        `
+        );
+        const original = getByTestId(test.element, 'button');
+        original.id = 'client-id';
+        original.classList.add('client-class');
+        test.expectsAjaxCall().serverWillChangeProps((data) => {
+            data.id = 'replacement';
+            data.label = 'Replacement';
+        });
+        await test.component.render();
+        const replacement = getByTestId(test.element, 'button');
+        expect(replacement).not.toBe(original);
+        expect(original.isConnected).toBe(false);
+        expect(original.id).toBe('client-id');
+        expect(replacement.id).toBe('replacement');
+        expect(replacement).not.toHaveClass('client-class');
+        expect(replacement).toHaveTextContent('Replacement');
+    });
+
+    it('uses server IDs to reorder elements whose IDs changed externally', async () => {
+        const test = await createTest(
+            { ids: ['a', 'b', 'c'] },
+            (data) => `
+            <div ${initComponent(data)}>${data.ids.map((id: string) => `<input id="${id}" data-testid="${id}" value="${id}">`).join('')}</div>
+        `
+        );
+        const fields = ['a', 'b', 'c'].map((id) => getByTestId(test.element, id));
+        fields.forEach((field, index) => {
+            field.id = `client-${index}`;
+        });
+        for (const ids of [
+            ['c', 'b', 'a'],
+            ['b', 'a', 'c'],
+        ]) {
+            test.expectsAjaxCall().serverWillChangeProps((data) => {
+                data.ids = ids;
+            });
+            await test.component.render();
+            expect([...test.element.children]).toEqual(ids.map((id) => fields[['a', 'b', 'c'].indexOf(id)]));
+            fields.forEach((field, index) => {
+                expect(field.id).toBe(`client-${index}`);
+            });
+        }
+    });
+
+    it('renders all incoming siblings while preserving consecutive external elements', async () => {
+        const test = await createTest(
+            { ids: [] as number[] },
+            (data) => `
+            <div ${initComponent(data)}>${data.ids.map((id: number) => `<div id="item-${id}">${id}</div>`).join('')}</div>
+        `
+        );
+        const widgets = [htmlToElement('<div>First widget</div>'), htmlToElement('<div>Second widget</div>')];
+        const onClick = vi.fn();
+        widgets[0].addEventListener('click', onClick);
+        test.element.append(...widgets);
+        for (const ids of [
+            [1, 2, 3],
+            [3, 4],
+        ]) {
+            test.expectsAjaxCall().serverWillChangeProps((data) => {
+                data.ids = ids;
+            });
+            await test.component.render();
+            expect([...test.element.children].slice(0, 2)).toEqual(widgets);
+            expect([...test.element.children].slice(2).map((element) => element.id)).toEqual(
+                ids.map((id) => `item-${id}`)
+            );
+            expect([...test.element.childNodes].some((node) => node.nodeType === Node.COMMENT_NODE)).toBe(false);
+        }
+        widgets[0].click();
+        expect(onClick).toHaveBeenCalledTimes(1);
+    });
+
+    it('moves a keyed field with a client ID past an external element without cloning it', async () => {
+        const fieldHtml = '<input id="field" value="hello">';
+        const test = await createTest(
+            { moved: false },
+            (data) => `
+            <div ${initComponent(data)}>
+                <div id="destination">${data.moved ? `<div class="server-wrapper">${fieldHtml}</div>` : ''}</div>
+                <section id="source">${data.moved ? '' : fieldHtml}</section>
+            </div>
+        `
+        );
+        const destination = test.element.querySelector('#destination') as HTMLElement;
+        const widget = htmlToElement('<div>External widget</div>');
+        destination.append(widget);
+        const field = test.element.querySelector('#field') as HTMLInputElement;
+        field.id = 'client-field';
+        field.focus();
+        field.setSelectionRange(2, 2);
+        test.expectsAjaxCall().serverWillChangeProps((data) => {
+            data.moved = true;
+        });
+        await test.component.render();
+        expect(destination.firstElementChild).toBe(widget);
+        expect(destination.querySelector('.server-wrapper > input')).toBe(field);
+        expect(field.id).toBe('client-field');
+        expect(document.activeElement).toBe(field);
+        expect(field.selectionStart).toBe(2);
+    });
+
+    it('moves a preserved child into a new wrapper after an external element', async () => {
+        const test = await createTest(
+            { moved: false },
+            (data) => `
+            <div ${initComponent(data)}>
+                <div id="destination">${data.moved ? '<div class="server-wrapper"><div id="child" data-live-preserve></div></div>' : ''}</div>
+                <section id="source">${data.moved ? '' : `<div ${initComponent({}, { id: 'child' })}>Child content</div>`}</section>
+            </div>
+        `
+        );
+        const destination = test.element.querySelector('#destination') as HTMLElement;
+        const widget = htmlToElement('<div>External widget</div>');
+        destination.append(widget);
+        const child = test.element.querySelector('#child') as HTMLElement;
+        const childComponent = getComponent(child);
+        test.expectsAjaxCall().serverWillChangeProps((data) => {
+            data.moved = true;
+        });
+        await test.component.render();
+        expect(destination.firstElementChild).toBe(widget);
+        expect(destination.querySelector('.server-wrapper > #child')).toBe(child);
+        expect(getComponent(child)).toBe(childComponent);
+        expect(child).toHaveTextContent('Child content');
+    });
+
+    it.each(['div', 'form'])('preserves an external %s when the server starts rendering the same ID', async (tag) => {
+        const test = await createTest(
+            { show: false },
+            (data) => `
+            <div ${initComponent(data)}>${data.show ? `<${tag} id="shared"><input name="id" value="server">Server representation</${tag}><span>After</span>` : ''}</div>
+        `
+        );
+        const widget = htmlToElement(`<${tag} id="shared"><input name="id" value="client">External widget</${tag}>`);
+        test.element.append(widget);
+        test.expectsAjaxCall().serverWillChangeProps((data) => {
+            data.show = true;
+        });
+        await test.component.render();
+        expect(test.element.querySelectorAll('#shared')).toHaveLength(1);
+        expect(test.element.querySelector('#shared')).toBe(widget);
+        expect(widget).toHaveTextContent('External widget');
+        expect(test.element.lastElementChild).toHaveTextContent('After');
     });
 });
