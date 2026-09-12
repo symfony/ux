@@ -111,7 +111,7 @@ processWorkspace() {
         processConfiguredVersions
     else
         # Fallback: process peer dependencies with multiple versions (||) independently
-        deps_with_multiple_versions=$(jq -r '.peerDependencies | to_entries[] | select(.value | contains("||")) | .key' "$package_json_path")
+        deps_with_multiple_versions=$(jq -r '(.peerDependencies // {}) | to_entries[] | select(.value | contains("||")) | .key' "$package_json_path")
 
         if [ -n "$deps_with_multiple_versions" ]; then
             echo " -> Multiple versions found for peerDependencies: $deps_with_multiple_versions"

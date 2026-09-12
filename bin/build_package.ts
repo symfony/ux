@@ -38,11 +38,14 @@ async function main() {
     const isStimulusBundle = '@symfony/stimulus-bundle' === packageData.name;
     const isReactOrVue = ['@symfony/ux-react', '@symfony/ux-vue'].some((name) => packageData.name.startsWith(name));
     const isTurbo = '@symfony/ux-turbo' === packageData.name;
+    const isInspector = '@symfony/ux-inspector' === packageData.name;
 
     const inputCssFile = packageData?.config?.css_source;
+    const browserTargets = packageData?.config?.browser_targets;
     const inputFiles = [
         ...globSync('src/*controller.ts'),
         ...(isTurbo ? ['src/mercure_stream_source_element.ts'] : []),
+        ...(isInspector ? ['src/inspector.ts'] : []),
         ...(isStimulusBundle ? ['src/loader.ts', 'src/controllers.ts'] : []),
         ...(isReactOrVue ? ['src/loader.ts', 'src/components.ts'] : []),
         ...(inputCssFile ? [inputCssFile] : []),
@@ -67,7 +70,7 @@ async function main() {
         watch: isWatch,
         format: 'esm',
         platform: 'browser',
-        target: tsConfigPackage.compilerOptions.target,
+        target: browserTargets ?? tsConfigPackage.compilerOptions.target,
         tsconfig: path.join(packageRoot, 'tsconfig.json'),
         dts: {
             entry: inputFiles.filter((inputFile) => !inputFile.endsWith('.css')),
@@ -87,7 +90,7 @@ async function main() {
         unbundle: isStimulusBundle || isReactOrVue,
         deps: {
             neverBundle: Array.from(external),
-            onlyBundle: ['idiomorph'],
+            onlyBundle: isInspector ? [] : ['idiomorph'],
         },
         plugins: [
             {
