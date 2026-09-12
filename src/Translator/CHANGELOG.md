@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.5.0
+
+- Add support for Symfony 8.2's standalone `AssetMapperBundle`
+
 ## 3.4.0
 
 - The component is not experimental anymore

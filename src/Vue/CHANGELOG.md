@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.5.0
+
+- Add support for Symfony 8.2's standalone `AssetMapperBundle`
+
 ## 3.4
 
 - Add support for `import.meta.glob()` (Symfony Reprise) in `registerVueControllerComponents()`

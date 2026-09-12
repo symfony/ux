@@ -2,6 +2,7 @@
 
 ## 3.5.0
 
+- Add support for Symfony 8.2's standalone `AssetMapperBundle`
 - Fix broadcasting an entity whose identifier is made of associations
 
 ## 3.2.0

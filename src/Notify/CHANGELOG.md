@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.5.0
+
+- Add support for Symfony 8.2's standalone `AssetMapperBundle`
+
 ## 3.0.0
 
 - Minimum required Symfony version is now 7.4

@@ -88,12 +88,13 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
             return false;
         }
 
-        // check that FrameworkBundle 6.3 or higher is installed
+        // Before Symfony 8.2, FrameworkBundle provided the AssetMapper configuration.
         $bundlesMetadata = $container->getParameter('kernel.bundles_metadata');
         if (!isset($bundlesMetadata['FrameworkBundle'])) {
             return false;
         }
 
-        return is_file($bundlesMetadata['FrameworkBundle']['path'].'/Resources/config/asset_mapper.php');
+        return isset($bundlesMetadata['AssetMapperBundle'])
+            || is_file($bundlesMetadata['FrameworkBundle']['path'].'/Resources/config/asset_mapper.php');
     }
 }

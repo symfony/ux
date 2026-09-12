@@ -39,6 +39,7 @@
         "fakerphp/faker": "^1.22",
         "mtdowling/jmespath.php": "^2.6",
         "phpunit/phpunit": "^11.1|^12.0",
+        "symfony/asset-mapper": "^7.4|^8.0",
         "symfony/form": "^7.2|^8.0",
         "symfony/options-resolver": "^7.4|^8.0",
         "symfony/framework-bundle": "^7.4|^8.0",
