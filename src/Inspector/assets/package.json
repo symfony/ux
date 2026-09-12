@@ -1,0 +1,37 @@
+{
+    "name": "@symfony/ux-inspector",
+    "description": "Browser inspector for Symfony UX components: Stimulus, LiveComponent and Turbo",
+    "license": "MIT",
+    "version": "3.5.0",
+    "keywords": [
+        "symfony-ux",
+        "devtools",
+        "stimulus",
+        "turbo",
+        "live-components"
+    ],
+    "homepage": "https://ux.symfony.com/inspector",
+    "repository": "https://github.com/symfony/ux",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "dist/inspector.js",
+    "types": "dist/inspector.d.ts",
+    "exports": {
+        ".": "./dist/inspector.js"
+    },
+    "config": {
+        "browser_targets": [
+            "chrome145",
+            "firefox146"
+        ]
+    },
+    "scripts": {
+        "build": "node ../../../bin/build_package.ts .",
+        "watch": "node ../../../bin/build_package.ts . --watch",
+        "test": "pnpm run test:unit",
+        "test:unit": "../../../bin/unit_test_package.sh .",
+        "test:browser": "playwright test"
+    }
+}
