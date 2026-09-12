@@ -25,6 +25,7 @@ final class ConfigurationTest extends TestCase
         $container = new ContainerBuilder();
         $container->setParameter('kernel.environment', 'dev');
         $container->setParameter('kernel.debug', $debug);
+        $container->setParameter('kernel.build_dir', sys_get_temp_dir().'/build');
         $container->setParameter('kernel.project_dir', \dirname(__DIR__, 2));
         $bundle = new UXInspectorBundle();
         $container->registerExtension($bundle->getContainerExtension());
