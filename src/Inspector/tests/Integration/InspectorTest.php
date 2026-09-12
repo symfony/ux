@@ -23,9 +23,11 @@ final class InspectorTest extends TestCase
 {
     private InspectorKernel $kernel;
     private string $directory;
+    private mixed $exceptionHandler;
 
     protected function setUp(): void
     {
+        $this->exceptionHandler = get_exception_handler();
         $this->directory = sys_get_temp_dir().'/ux-inspector-'.bin2hex(random_bytes(6));
     }
 
@@ -33,6 +35,9 @@ final class InspectorTest extends TestCase
     {
         if (isset($this->kernel)) {
             $this->kernel->shutdown();
+        }
+        if ($this->exceptionHandler !== get_exception_handler()) {
+            restore_exception_handler();
         }
         new Filesystem()->remove($this->directory);
     }
