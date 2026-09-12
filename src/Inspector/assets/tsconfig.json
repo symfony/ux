@@ -1,0 +1,14 @@
+{
+    "extends": "../../../tsconfig.package.json",
+    "compilerOptions": {
+        "target": "esnext",
+        "lib": ["esnext", "dom", "dom.iterable"],
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "rootDir": "src",
+        "types": [],
+        "noEmit": true
+    },
+    "include": ["src"],
+    "exclude": ["dist", "test"]
+}
