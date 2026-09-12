@@ -178,6 +178,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0(@types/node@25.3.0)(jsdom@26.1.0(supports-color@7.2.0))(msw@2.10.4(@types/node@22.19.11)(typescript@5.8.3))(vite@7.3.6(@types/node@22.19.11)(lightningcss@1.32.0)(terser@5.43.1)(tsx@4.20.3))
 
+  src/Inspector/assets: {}
+
   src/LiveComponent/assets:
     devDependencies:
       '@hotwired/stimulus':
