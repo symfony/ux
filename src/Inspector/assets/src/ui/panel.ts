@@ -343,7 +343,7 @@ export class Panel {
         const active = this.#view === 'log';
         const count = this.#activityCount;
         const label = active ? 'Show components' : 'Show activity';
-        const accessibleLabel = count ? `${label}, ${count} activit${count === 1 ? 'y' : 'ies'}` : label;
+        const accessibleLabel = count ? `${label}, ${count} ${count === 1 ? 'activity' : 'activities'}` : label;
         const button = this.#actionButtons.activity;
         button.classList.toggle('active', active);
         button.setAttribute('aria-pressed', String(active));
@@ -490,7 +490,7 @@ export class Panel {
             const activityButton = this.#activityFilterButtons[name];
             const activityBadge = activityButton.querySelector('b');
             if (activityBadge) activityBadge.textContent = String(activityByPlugin[name]);
-            activityButton.title = `${activityByPlugin[name]} ${label} activit${activityByPlugin[name] === 1 ? 'y' : 'ies'}`;
+            activityButton.title = `${activityByPlugin[name]} ${label} ${activityByPlugin[name] === 1 ? 'activity' : 'activities'}`;
             activityButton.setAttribute('aria-label', activityButton.title);
         }
         this.#activityCount = Object.values(activityByPlugin).reduce((sum, count) => sum + count, 0);

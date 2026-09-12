@@ -218,8 +218,8 @@ jobs:
                   echo COMPOSER_UP='composer update ${{ matrix.dependency-version == 'lowest' && '--prefer-lowest' || '' }} --no-progress --no-interaction --ansi' >> $GITHUB_ENV
                   echo PHPSTAN='vendor/bin/phpstan' >> $GITHUB_ENV
 
-                  # Packages with a PHPStan configuration.
-                  PACKAGES="Turbo Inspector"
+                  # TODO: Only Turbo has PHPStan configuration, let's improve this later :)
+                  PACKAGES=Turbo
                   #PACKAGES=$(find src/ -mindepth 2 -type f -name composer.json -printf '%h\n' | sed 's/^src\///' | sort |  tr '\n' ' ')
                   echo "Packages: $PACKAGES"
                   echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
