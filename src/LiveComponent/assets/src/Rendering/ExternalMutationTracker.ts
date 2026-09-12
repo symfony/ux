@@ -16,6 +16,7 @@ export default class {
     private addedElements: Array<Element> = [];
     private removedElements: Array<Element> = [];
     private isStarted = false;
+    private originalIds: Map<Element, string | null> = new Map();
 
     constructor(element: Element, shouldTrackChangeCallback: (element: Element) => boolean) {
         this.element = element;
@@ -47,6 +48,17 @@ export default class {
 
     getChangedElement(element: Element): ElementChanges | null {
         return this.changedElements.has(element) ? (this.changedElements.get(element) as ElementChanges) : null;
+    }
+
+    /** IDs before external changes, used to match elements against the server HTML. */
+    getOriginalIds(): ReadonlyMap<Element, string | null> {
+        for (const element of this.originalIds.keys()) {
+            if (!this.element.contains(element)) {
+                this.originalIds.delete(element);
+            }
+        }
+
+        return this.originalIds;
     }
 
     getAddedElements(): Element[] {
@@ -234,6 +246,15 @@ export default class {
     private handleGenericAttributeMutation(mutation: MutationRecord, elementChanges: ElementChanges) {
         const attributeName = mutation.attributeName as string;
         const element = mutation.target as Element;
+
+        if (attributeName === 'id') {
+            if (!this.originalIds.has(element)) {
+                this.originalIds.set(element, mutation.oldValue);
+            }
+            if (element.getAttribute('id') === this.originalIds.get(element)) {
+                this.originalIds.delete(element);
+            }
+        }
 
         let oldValue = mutation.oldValue;
         let newValue = element.getAttribute(attributeName) as string;

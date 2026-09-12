@@ -2,7 +2,7 @@ import type { BackendAction, BackendInterface } from '../Backend/Backend';
 import type BackendRequest from '../Backend/BackendRequest';
 import BackendResponse from '../Backend/BackendResponse';
 import type { Download } from '../Backend/BackendResponse';
-import { findComponents, registerComponent, unregisterComponent } from '../ComponentRegistry';
+import { findChildren, findComponents, registerComponent, unregisterComponent } from '../ComponentRegistry';
 import { elementBelongsToThisComponent, getValueFromElement, htmlToElement } from '../dom_utils';
 import HookManager from '../HookManager';
 import { executeMorphdom } from '../morphdom';
@@ -120,6 +120,14 @@ export default class Component {
         // start early to catch any mutations that happen before the component is connected
         // for example, the LoadingPlugin, which sets initial non-loading state
         this.externalMutationTracker.start();
+    }
+
+    /** The server ID before any pending external mutation of the root element. */
+    getOriginalId(): string | null {
+        this.externalMutationTracker.handlePendingChanges();
+        const originalIds = this.externalMutationTracker.getOriginalIds();
+
+        return originalIds.has(this.element) ? originalIds.get(this.element)! : this.element.getAttribute('id');
     }
 
     addPlugin(plugin: PluginInterface) {
@@ -482,7 +490,8 @@ export default class Component {
             newElement,
             this.unsyncedInputsTracker.getUnsyncedInputs(),
             (element: HTMLElement) => getValueFromElement(element, this.valueStore),
-            this.externalMutationTracker
+            this.externalMutationTracker,
+            findChildren(this)
         );
         this.externalMutationTracker.start();
 
