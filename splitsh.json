@@ -16,9 +16,7 @@
                 {
                     "from": "src/Map",
                     "to": "",
-                    "excludes": [
-                        "src/Bridge"
-                    ]
+                    "excludes": ["src/Bridge"]
                 }
             ]
         },
