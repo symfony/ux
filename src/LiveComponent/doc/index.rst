@@ -3857,6 +3857,14 @@ It's used during the morphing process when a component re-renders: it helps the
 `morphing library`_ "connect" elements or components in the existing HTML with the new
 HTML.
 
+Keep the server-rendered ``id`` stable to preserve an element's state. Changing
+an existing ID on the server replaces the element, including its JavaScript
+controllers and any client-side changes. For a child component, changing its
+``key`` therefore creates a new component instance.
+
+An ``id`` added, changed or removed by JavaScript is preserved as long as the
+server-rendered ID stays the same.
+
 Skipping Updating Certain Elements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

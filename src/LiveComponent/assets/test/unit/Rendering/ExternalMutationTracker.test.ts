@@ -247,4 +247,43 @@ describe('ExternalMutationTracker', () => {
 
         expect(tracker.changedElementsCount).toBe(0);
     });
+
+    it('retains the server ID through successive client changes and forgets a reverted change', () => {
+        const { element, tracker } = createTracker('<div id="server"></div>');
+        element.id = 'intermediate';
+        tracker.handlePendingChanges();
+        element.id = 'client';
+        tracker.handlePendingChanges();
+        expect(tracker.getOriginalIds().get(element)).toBe('server');
+        element.removeAttribute('id');
+        tracker.handlePendingChanges();
+        expect(tracker.getOriginalIds().get(element)).toBe('server');
+        element.id = 'server';
+        tracker.handlePendingChanges();
+        expect(tracker.getOriginalIds().size).toBe(0);
+        tracker.stop();
+    });
+
+    it('tracks an added ID and forgets it when removed', () => {
+        const { element, tracker } = createTracker('<div></div>');
+        element.id = 'client';
+        tracker.handlePendingChanges();
+        expect(tracker.getOriginalIds().has(element)).toBe(true);
+        expect(tracker.getOriginalIds().get(element)).toBeNull();
+        element.removeAttribute('id');
+        tracker.handlePendingChanges();
+        expect(tracker.getOriginalIds().size).toBe(0);
+        tracker.stop();
+    });
+
+    it('does not retain detached elements with changed IDs', () => {
+        const { element, tracker } = createTracker('<div><input id="server"></div>');
+        const field = element.firstElementChild as HTMLElement;
+        field.id = 'client';
+        tracker.handlePendingChanges();
+        expect(tracker.getOriginalIds().get(field)).toBe('server');
+        field.remove();
+        expect(tracker.getOriginalIds().size).toBe(0);
+        tracker.stop();
+    });
 });
