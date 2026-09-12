@@ -13,7 +13,9 @@
  */
 
 import { defineConfig, devices } from '@playwright/test';
-import { browsers } from './bin/get_browsers.mjs';
+import { getBrowsers } from './bin/get_browsers.mjs';
+
+const browsers = await getBrowsers();
 
 export default defineConfig({
     testMatch: ['**/test/browser/**/*.{test,spec}.ts', '**/test/**/*.browser.{test,spec}.ts'],
