@@ -9,8 +9,8 @@ export default defineConfig({
     outputDir: 'playwright-output',
     reporter: 'list',
     workers: process.env.CI ? 2 : undefined,
-    use: { baseURL: 'http://127.0.0.1:9877', viewport: { width: 1280, height: 900 }, trace: 'retain-on-failure' },
-    webServer: { command: 'node test/browser/server.mjs', url: 'http://127.0.0.1:9877/a', reuseExistingServer: false },
+    use: { baseURL: 'http://127.0.0.1:9878', viewport: { width: 1280, height: 900 }, trace: 'retain-on-failure' },
+    webServer: { command: 'node test/browser/server.mjs', url: 'http://127.0.0.1:9878/a', reuseExistingServer: false },
     projects: [
         ...['lowest', 'latest'].map((version) => ({
             name: `chrome-${version}`,
