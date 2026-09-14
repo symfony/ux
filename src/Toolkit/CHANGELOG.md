@@ -11,6 +11,7 @@
 - [Shadcn] Add `dropdown-menu` recipe
 - [Shadcn] Add `form` recipe
 - [Shadcn] Add `input-otp` recipe
+- [Shadcn] Add `marker` recipe
 - [Shadcn] Add `menubar` recipe
 - [Shadcn] Add `navigation-menu` recipe
 - [Shadcn] Add `popover` recipe

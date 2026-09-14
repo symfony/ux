@@ -1,0 +1,9 @@
+{# @block content The marker text content. #}
+<span
+    data-slot="marker-content"
+    {{ attributes.defaults({
+        class: 'min-w-0 wrap-break-word group-data-[variant=separator]/marker:flex-none group-data-[variant=separator]/marker:text-center *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground'|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</span>

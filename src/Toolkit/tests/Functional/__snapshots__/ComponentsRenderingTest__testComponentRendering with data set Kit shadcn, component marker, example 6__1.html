@@ -1,0 +1,41 @@
+<!--
+- Kit: Shadcn UI
+- Component: Marker
+- Code:
+```twig
+<div class="flex w-full max-w-sm flex-col gap-12 py-12">
+    <twig:Marker>
+        <twig:Marker:Icon>
+            <twig:ux:icon name="lucide:git-branch" />
+        </twig:Marker:Icon>
+        <twig:Marker:Content>Switched to a new branch</twig:Marker:Content>
+    </twig:Marker>
+    <twig:Marker variant="separator">
+        <twig:Marker:Icon>
+            <twig:ux:icon name="lucide:search" />
+        </twig:Marker:Icon>
+        <twig:Marker:Content>Explored 4 files</twig:Marker:Content>
+    </twig:Marker>
+    <twig:Marker class="flex-col">
+        <twig:Marker:Icon>
+            <twig:ux:icon name="lucide:book-open-check" />
+        </twig:Marker:Icon>
+        <twig:Marker:Content>Syncing completed</twig:Marker:Content>
+    </twig:Marker>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full max-w-sm flex-col gap-12 py-12">
+    <div data-slot="marker" data-variant="default" class="group/marker relative flex min-h-4 w-full items-center gap-2 text-start text-sm text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground"><span data-slot="marker-icon" aria-hidden="true" class="size-4 shrink-0 [&amp;_svg:not([class*='size-'])]:size-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 6a9 9 0 0 0-9 9V3"></path><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle></g></svg>
+        </span>
+        <span data-slot="marker-content" class="min-w-0 wrap-break-word group-data-[variant=separator]/marker:flex-none group-data-[variant=separator]/marker:text-center *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">Switched to a new branch</span>
+    </div>
+    <div data-slot="marker" data-variant="separator" class="group/marker relative flex min-h-4 w-full items-center gap-2 text-start text-sm text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground before:me-1 before:h-px before:min-w-0 before:flex-1 before:bg-border after:ms-1 after:h-px after:min-w-0 after:flex-1 after:bg-border"><span data-slot="marker-icon" aria-hidden="true" class="size-4 shrink-0 [&amp;_svg:not([class*='size-'])]:size-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m21 21l-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></g></svg>
+        </span>
+        <span data-slot="marker-content" class="min-w-0 wrap-break-word group-data-[variant=separator]/marker:flex-none group-data-[variant=separator]/marker:text-center *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">Explored 4 files</span>
+    </div>
+    <div data-slot="marker" data-variant="default" class="group/marker relative flex min-h-4 w-full items-center gap-2 text-start text-sm text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground flex-col"><span data-slot="marker-icon" aria-hidden="true" class="size-4 shrink-0 [&amp;_svg:not([class*='size-'])]:size-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 5v16m4-9l2 2l4-4"></path><path d="M22 6V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2a5 5 0 0 1 4-2h4.001A2 2 0 0 0 22 17v-1.344"></path></g></svg>
+        </span>
+        <span data-slot="marker-content" class="min-w-0 wrap-break-word group-data-[variant=separator]/marker:flex-none group-data-[variant=separator]/marker:text-center *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">Syncing completed</span>
+    </div>
+</div>

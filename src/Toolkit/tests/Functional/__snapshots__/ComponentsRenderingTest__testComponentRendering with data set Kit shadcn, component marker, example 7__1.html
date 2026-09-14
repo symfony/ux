@@ -1,0 +1,31 @@
+<!--
+- Kit: Shadcn UI
+- Component: Marker
+- Code:
+```twig
+<div class="flex w-full max-w-sm flex-col gap-8 py-12">
+    <twig:Marker as="a" href="#links-and-buttons">
+        <twig:Marker:Icon>
+            <twig:ux:icon name="lucide:git-branch" />
+        </twig:Marker:Icon>
+        <twig:Marker:Content>View the pull request</twig:Marker:Content>
+    </twig:Marker>
+    <twig:Marker as="button" class="transition-colors hover:text-foreground">
+        <twig:Marker:Icon>
+            <twig:ux:icon name="lucide:rotate-ccw" />
+        </twig:Marker:Icon>
+        <twig:Marker:Content>Revert this change</twig:Marker:Content>
+    </twig:Marker>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full max-w-sm flex-col gap-8 py-12">
+    <a data-slot="marker" data-variant="default" class="group/marker relative flex min-h-4 w-full items-center gap-2 text-start text-sm text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground" href="#links-and-buttons"><span data-slot="marker-icon" aria-hidden="true" class="size-4 shrink-0 [&amp;_svg:not([class*='size-'])]:size-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 6a9 9 0 0 0-9 9V3"></path><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle></g></svg>
+        </span>
+        <span data-slot="marker-content" class="min-w-0 wrap-break-word group-data-[variant=separator]/marker:flex-none group-data-[variant=separator]/marker:text-center *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">View the pull request</span>
+    </a>
+    <button data-slot="marker" data-variant="default" class="group/marker relative flex min-h-4 w-full items-center gap-2 text-start text-sm text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground transition-colors hover:text-foreground" type="button"><span data-slot="marker-icon" aria-hidden="true" class="size-4 shrink-0 [&amp;_svg:not([class*='size-'])]:size-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9a9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></g></svg>
+        </span>
+        <span data-slot="marker-content" class="min-w-0 wrap-break-word group-data-[variant=separator]/marker:flex-none group-data-[variant=separator]/marker:text-center *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">Revert this change</span>
+    </button>
+</div>

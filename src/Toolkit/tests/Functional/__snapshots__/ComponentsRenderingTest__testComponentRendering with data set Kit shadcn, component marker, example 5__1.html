@@ -1,0 +1,36 @@
+<!--
+- Kit: Shadcn UI
+- Component: Marker
+- Code:
+```twig
+{% set rows = [
+    { icon: 'lucide:git-branch', label: 'Switched to release-candidate' },
+    { icon: 'lucide:search', label: 'Reviewed 8 related files' },
+    { icon: 'lucide:file-text', label: 'Opened implementation notes' },
+] %}
+<div class="flex w-full max-w-sm flex-col gap-3 py-12">
+    {% for row in rows %}
+        <twig:Marker variant="border">
+            <twig:Marker:Icon>
+                <twig:ux:icon name="{{ row.icon }}" />
+            </twig:Marker:Icon>
+            <twig:Marker:Content>{{ row.label }}</twig:Marker:Content>
+        </twig:Marker>
+    {% endfor %}
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full max-w-sm flex-col gap-3 py-12">
+            <div data-slot="marker" data-variant="border" class="group/marker relative flex min-h-4 w-full items-center gap-2 text-start text-sm text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground border-b border-border pb-2"><span data-slot="marker-icon" aria-hidden="true" class="size-4 shrink-0 [&amp;_svg:not([class*='size-'])]:size-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 6a9 9 0 0 0-9 9V3"></path><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle></g></svg>
+            </span>
+            <span data-slot="marker-content" class="min-w-0 wrap-break-word group-data-[variant=separator]/marker:flex-none group-data-[variant=separator]/marker:text-center *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">Switched to release-candidate</span>
+        </div>
+            <div data-slot="marker" data-variant="border" class="group/marker relative flex min-h-4 w-full items-center gap-2 text-start text-sm text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground border-b border-border pb-2"><span data-slot="marker-icon" aria-hidden="true" class="size-4 shrink-0 [&amp;_svg:not([class*='size-'])]:size-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m21 21l-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></g></svg>
+            </span>
+            <span data-slot="marker-content" class="min-w-0 wrap-break-word group-data-[variant=separator]/marker:flex-none group-data-[variant=separator]/marker:text-center *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">Reviewed 8 related files</span>
+        </div>
+            <div data-slot="marker" data-variant="border" class="group/marker relative flex min-h-4 w-full items-center gap-2 text-start text-sm text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground border-b border-border pb-2"><span data-slot="marker-icon" aria-hidden="true" class="size-4 shrink-0 [&amp;_svg:not([class*='size-'])]:size-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5M10 9H8m8 4H8m8 4H8"></path></g></svg>
+            </span>
+            <span data-slot="marker-content" class="min-w-0 wrap-break-word group-data-[variant=separator]/marker:flex-none group-data-[variant=separator]/marker:text-center *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">Opened implementation notes</span>
+        </div>
+    </div>

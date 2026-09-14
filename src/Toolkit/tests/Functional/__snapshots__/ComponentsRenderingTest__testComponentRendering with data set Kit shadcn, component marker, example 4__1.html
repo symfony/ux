@@ -1,0 +1,22 @@
+<!--
+- Kit: Shadcn UI
+- Component: Marker
+- Code:
+```twig
+<div class="flex w-full max-w-sm flex-col gap-8 py-12">
+    {% for label in ['Today', 'Worked for 42s', 'Conversation compacted'] %}
+        <twig:Marker variant="separator">
+            <twig:Marker:Content>{{ label }}</twig:Marker:Content>
+        </twig:Marker>
+    {% endfor %}
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full max-w-sm flex-col gap-8 py-12">
+            <div data-slot="marker" data-variant="separator" class="group/marker relative flex min-h-4 w-full items-center gap-2 text-start text-sm text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground before:me-1 before:h-px before:min-w-0 before:flex-1 before:bg-border after:ms-1 after:h-px after:min-w-0 after:flex-1 after:bg-border"><span data-slot="marker-content" class="min-w-0 wrap-break-word group-data-[variant=separator]/marker:flex-none group-data-[variant=separator]/marker:text-center *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">Today</span>
+        </div>
+            <div data-slot="marker" data-variant="separator" class="group/marker relative flex min-h-4 w-full items-center gap-2 text-start text-sm text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground before:me-1 before:h-px before:min-w-0 before:flex-1 before:bg-border after:ms-1 after:h-px after:min-w-0 after:flex-1 after:bg-border"><span data-slot="marker-content" class="min-w-0 wrap-break-word group-data-[variant=separator]/marker:flex-none group-data-[variant=separator]/marker:text-center *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">Worked for 42s</span>
+        </div>
+            <div data-slot="marker" data-variant="separator" class="group/marker relative flex min-h-4 w-full items-center gap-2 text-start text-sm text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground before:me-1 before:h-px before:min-w-0 before:flex-1 before:bg-border after:ms-1 after:h-px after:min-w-0 after:flex-1 after:bg-border"><span data-slot="marker-content" class="min-w-0 wrap-break-word group-data-[variant=separator]/marker:flex-none group-data-[variant=separator]/marker:text-center *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">Conversation compacted</span>
+        </div>
+    </div>
