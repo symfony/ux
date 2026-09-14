@@ -5,6 +5,7 @@
 - Add support for blocks: ready-to-use page sections built from a kit's components, installed and previewed as a unit
 - [Shadcn] Add the `login-01` and `login-02` login blocks
 - [Shadcn] Add `attachment` recipe
+- [Shadcn] Add `bubble` recipe
 - [Shadcn] Add `carousel` recipe
 - [Shadcn] Add `drawer` recipe
 - [Shadcn] Add `dropdown-menu` recipe

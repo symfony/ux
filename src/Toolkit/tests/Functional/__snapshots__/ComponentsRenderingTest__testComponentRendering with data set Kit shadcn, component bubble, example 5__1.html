@@ -1,0 +1,65 @@
+<!--
+- Kit: Shadcn UI
+- Component: Bubble
+- Code:
+```twig
+<div class="flex w-full max-w-sm flex-col gap-12 py-12">
+    <twig:Bubble variant="muted" align="end">
+        <twig:Bubble:Content>I don't need tests, I know my code works.</twig:Bubble:Content>
+        <twig:Bubble:Reactions align="start" role="img" aria-label="Reactions: thumbs up, surprised">
+            <span>👍</span>
+            <span>😮</span>
+        </twig:Bubble:Reactions>
+    </twig:Bubble>
+    <twig:Bubble variant="muted">
+        <twig:Bubble:Content>
+            Bold. Fine I'll add some tests. I'll let you know when they're done.
+        </twig:Bubble:Content>
+        <twig:Bubble:Reactions role="img" aria-label="Reactions: eyes, rocket, and 2 more">
+            <span>👀</span>
+            <span>🚀</span>
+            <span>+2</span>
+        </twig:Bubble:Reactions>
+    </twig:Bubble>
+    <twig:Bubble variant="default" align="end">
+        <twig:Bubble:Content>
+            Tests passed on the first try. All 142 of them. Looking good!
+        </twig:Bubble:Content>
+        <twig:Bubble:Reactions side="top" align="start" role="img" aria-label="Reactions: party popper, clapping hands">
+            <span>🎉</span>
+            <span>👏</span>
+        </twig:Bubble:Reactions>
+    </twig:Bubble>
+    <twig:Bubble variant="destructive">
+        <twig:Bubble:Content>Are you sure I can run this command?</twig:Bubble:Content>
+        <twig:Bubble:Reactions>
+            <twig:Button variant="ghost" size="xs">Yes, run it</twig:Button>
+        </twig:Bubble:Reactions>
+    </twig:Bubble>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full max-w-sm flex-col gap-12 py-12">
+    <div data-slot="bubble" data-variant="muted" data-align="end" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)] self-end"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">I don't need tests, I know my code works.</div>
+        <div data-slot="bubble-reactions" data-side="bottom" data-align="start" class="absolute z-10 flex w-fit shrink-0 items-center justify-center gap-1 rounded-full bg-muted px-1.5 py-0.5 text-sm ring-3 ring-card has-[button]:p-0 bottom-0 translate-y-3/4 start-3" role="img" aria-label="Reactions: thumbs up, surprised"><span>👍</span>
+            <span>😮</span>
+        </div>
+    </div>
+    <div data-slot="bubble" data-variant="muted" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Bold. Fine I'll add some tests. I'll let you know when they're done.
+        </div>
+        <div data-slot="bubble-reactions" data-side="bottom" data-align="end" class="absolute z-10 flex w-fit shrink-0 items-center justify-center gap-1 rounded-full bg-muted px-1.5 py-0.5 text-sm ring-3 ring-card has-[button]:p-0 bottom-0 translate-y-3/4 end-3" role="img" aria-label="Reactions: eyes, rocket, and 2 more"><span>👀</span>
+            <span>🚀</span>
+            <span>+2</span>
+        </div>
+    </div>
+    <div data-slot="bubble" data-variant="default" data-align="end" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-primary *:data-[slot=bubble-content]:text-primary-foreground [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-primary/80 self-end"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Tests passed on the first try. All 142 of them. Looking good!
+        </div>
+        <div data-slot="bubble-reactions" data-side="top" data-align="start" class="absolute z-10 flex w-fit shrink-0 items-center justify-center gap-1 rounded-full bg-muted px-1.5 py-0.5 text-sm ring-3 ring-card has-[button]:p-0 top-0 -translate-y-3/4 start-3" role="img" aria-label="Reactions: party popper, clapping hands"><span>🎉</span>
+            <span>👏</span>
+        </div>
+    </div>
+    <div data-slot="bubble" data-variant="destructive" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-destructive/10 *:data-[slot=bubble-content]:text-destructive dark:*:data-[slot=bubble-content]:bg-destructive/20 [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-destructive/20 dark:[&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-destructive/30"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Are you sure I can run this command?</div>
+        <div data-slot="bubble-reactions" data-side="bottom" data-align="end" class="absolute z-10 flex w-fit shrink-0 items-center justify-center gap-1 rounded-full bg-muted px-1.5 py-0.5 text-sm ring-3 ring-card has-[button]:p-0 bottom-0 translate-y-3/4 end-3"><button data-slot="button" data-size="xs" data-variant="ghost" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pe-1.5 has-data-[icon=inline-start]:ps-1.5 [&amp;_svg:not([class*='size-'])]:size-3" type="button">Yes, run it</button>
+        </div>
+    </div>
+</div>
