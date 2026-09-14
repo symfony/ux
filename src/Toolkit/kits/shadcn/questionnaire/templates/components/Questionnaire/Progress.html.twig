@@ -1,0 +1,26 @@
+{%- props
+    ## int|null The 1-based position of the active question.
+    current = null,
+    ## int|null The number of navigable questions.
+    total = null
+-%}
+{%- set _questionnaire_interactive = inject('questionnaire.interactive', true) -%}
+{%- set _current = current ?? 1 -%}
+{%- set _total = total ?? 1 -%}
+<div
+    data-slot="questionnaire-progress"
+    {% if _questionnaire_interactive %}data-questionnaire-target="progress"{% endif %}
+    role="progressbar"
+    aria-label="Questionnaire progress"
+    aria-valuemin="1"
+    aria-valuenow="{{ _current }}"
+    aria-valuemax="{{ _total }}"
+    {{ attributes.defaults({
+        class: 'min-h-[1lh] w-fit min-w-[14ch] text-xs font-medium text-muted-foreground tabular-nums'|tailwind_classes,
+    }) }}
+>
+    {##- The progress label, replacing the default "Question X of Y" wording. -#}
+    {%- block content -%}
+        Question <span {% if _questionnaire_interactive %}data-questionnaire-target="progressCurrent"{% endif %}>{{ _current }}</span> of <span {% if _questionnaire_interactive %}data-questionnaire-target="progressTotal"{% endif %}>{{ _total }}</span>
+    {%- endblock -%}
+</div>

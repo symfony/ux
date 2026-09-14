@@ -1,0 +1,35 @@
+{%- props
+    ## string Unique identifier used to generate internal Questionnaire IDs.
+    id = 'questionnaire',
+    ## 'form'|'div' The HTML tag to render, `div` to nest the questionnaire inside an existing form.
+    as = 'form',
+    ## string Name of the `Questionnaire:Item` shown on initial render.
+    defaultItem = '',
+    ## 'letters'|'numbers'|null Keyboard shortcut style assigned to each answer.
+    shortcuts = null,
+    ## boolean Whether the Stimulus controller drives navigation, validation and shortcuts.
+    interactive = true
+-%}
+{%- do provide('questionnaire.id', id) -%}
+{%- do provide('questionnaire.defaultItem', defaultItem) -%}
+{%- do provide('questionnaire.interactive', interactive) -%}
+{# A `div` never receives the `submit` event of the form it is nested in, so that action is dropped. #}
+{%- set _questionnaire_actions = as == 'form'
+    ? 'keydown->questionnaire#onKeyDown submit->questionnaire#onSubmit change->questionnaire#onAnswerChange input->questionnaire#onAnswerInput'
+    : 'keydown->questionnaire#onKeyDown change->questionnaire#onAnswerChange input->questionnaire#onAnswerInput' -%}
+<{{ as }}
+    id="{{ id }}"
+    data-slot="questionnaire"
+    {% if interactive %}
+        data-questionnaire-active-item-value="{{ defaultItem }}"
+        data-questionnaire-shortcuts-value="{{ shortcuts }}"
+    {% endif %}
+    {{ attributes.defaults({
+        class: 'flex w-full min-w-0 flex-col gap-4'|tailwind_classes,
+        'data-controller': interactive ? 'questionnaire' : false,
+        'data-action': interactive ? _questionnaire_actions : false,
+    }) }}
+>
+    {##- The questionnaire structure, typically includes `Questionnaire:Progress`, `Questionnaire:Item` and `Questionnaire:Actions`. -#}
+    {%- block content %}{% endblock -%}
+</{{ as }}>

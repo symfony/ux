@@ -1,0 +1,22 @@
+{%- props
+    ## 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The button style variant.
+    variant = 'outline',
+    ## 'default'|'xs'|'sm'|'lg'|'icon'|'icon-xs'|'icon-sm'|'icon-lg' The button size.
+    size = 'default'
+-%}
+{%- set _questionnaire_interactive = inject('questionnaire.interactive', true) -%}
+{# Without the controller a `type="button"` is inert, so the button submits the step to the server instead. #}
+{%- set _questionnaire_skip_attrs = _questionnaire_interactive ? {
+    'data-questionnaire-target': 'skip',
+    'data-action': 'click->questionnaire#skip',
+} : {type: 'submit'} -%}
+<twig:Button
+    variant="{{ variant }}"
+    size="{{ size }}"
+    data-slot="questionnaire-skip"
+    {{ ..._questionnaire_skip_attrs }}
+    {{ ...attributes.defaults({class: 'col-start-2 row-start-1 min-h-11 justify-self-end sm:min-h-0 [&[hidden]]:hidden'|tailwind_classes}) }}
+>
+    {##- The button label. -#}
+    {{- block(outerBlocks.content)|default('Skip') -}}
+</twig:Button>

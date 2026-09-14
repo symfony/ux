@@ -1,0 +1,22 @@
+{%- props
+    ## 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The button style variant.
+    variant = 'outline',
+    ## 'default'|'xs'|'sm'|'lg'|'icon'|'icon-xs'|'icon-sm'|'icon-lg' The button size.
+    size = 'default'
+-%}
+{%- set _questionnaire_interactive = inject('questionnaire.interactive', true) -%}
+{# Without the controller a `type="button"` is inert, so the button submits the step to the server instead. #}
+{%- set _questionnaire_previous_attrs = _questionnaire_interactive ? {
+    'data-questionnaire-target': 'previous',
+    'data-action': 'click->questionnaire#previous',
+} : {type: 'submit'} -%}
+<twig:Button
+    variant="{{ variant }}"
+    size="{{ size }}"
+    data-slot="questionnaire-previous"
+    {{ ..._questionnaire_previous_attrs }}
+    {{ ...attributes.defaults({class: 'col-start-1 row-start-1 min-h-11 justify-self-start sm:min-h-0 [&[hidden]]:hidden'|tailwind_classes}) }}
+>
+    {##- The button label. -#}
+    {{- block(outerBlocks.content)|default('Previous') -}}
+</twig:Button>

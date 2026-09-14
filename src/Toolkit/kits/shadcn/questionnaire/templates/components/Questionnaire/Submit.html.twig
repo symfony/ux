@@ -1,0 +1,21 @@
+{%- props
+    ## 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The button style variant.
+    variant = 'default',
+    ## 'default'|'xs'|'sm'|'lg'|'icon'|'icon-xs'|'icon-sm'|'icon-lg' The button size.
+    size = 'default'
+-%}
+{%- set _questionnaire_interactive = inject('questionnaire.interactive', true) -%}
+{%- set _questionnaire_submit_attrs = _questionnaire_interactive ? {
+    'data-questionnaire-target': 'submit',
+} : {} -%}
+<twig:Button
+    variant="{{ variant }}"
+    size="{{ size }}"
+    type="submit"
+    data-slot="questionnaire-submit"
+    {{ ..._questionnaire_submit_attrs }}
+    {{ ...attributes.defaults({class: 'col-start-3 row-start-1 min-h-11 justify-self-end sm:min-h-0 [&[hidden]]:hidden'|tailwind_classes}) }}
+>
+    {##- The button label. -#}
+    {{- block(outerBlocks.content)|default('Submit') -}}
+</twig:Button>

@@ -1,0 +1,56 @@
+{%- props
+    ## string The value submitted when this choice is selected.
+    value,
+    ## boolean Whether the choice is selected on initial render.
+    checked = false,
+    ## boolean Whether the choice can be selected.
+    disabled = false
+-%}
+{%- set _questionnaire_id = inject('questionnaire.id', 'questionnaire') -%}
+{%- set _questionnaire_itemName = inject('questionnaire.itemName', '') -%}
+{%- set _questionnaire_itemInputName = inject('questionnaire.itemInputName', '') -%}
+{%- set _questionnaire_itemMultiple = inject('questionnaire.itemMultiple', false) -%}
+{%- set _id = _questionnaire_id ~ '-' ~ _questionnaire_itemName ~ '-' ~ value -%}
+{# `outerBlocks` only reaches one component deep, so the content is captured before the nested calls. #}
+{%- set _label -%}
+    {##- The choice label, optionally followed by a `Questionnaire:ChoiceDescription`. -#}
+    {%- block content %}{% endblock -%}
+{%- endset -%}
+<twig:Field:Label
+    for="{{ _id }}"
+    data-questionnaire-target="choiceLabel"
+    data-type="{{ _questionnaire_itemMultiple ? 'checkbox' : 'radio' }}"
+    data-disabled="{{ disabled ? 'true' : 'false' }}"
+    data-invalid="false"
+    {{ ...attributes.defaults({
+        class: 'group/questionnaire-choice min-h-11 cursor-pointer transition-colors hover:bg-muted/50 data-[invalid=true]:border-destructive data-[disabled=true]:pointer-events-none data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50'|tailwind_classes,
+    }) }}
+>
+    <twig:Field orientation="horizontal">
+        <twig:Field:Content>{{ _label }}</twig:Field:Content>
+        {%- if _questionnaire_itemMultiple -%}
+            <twig:Checkbox
+                id="{{ _id }}"
+                name="{{ _questionnaire_itemInputName }}"
+                value="{{ value }}"
+                data-questionnaire-target="answer choice"
+                :checked="checked"
+                :disabled="disabled"
+            />
+        {%- else -%}
+            <twig:RadioGroup:Item
+                id="{{ _id }}"
+                name="{{ _questionnaire_itemInputName }}"
+                value="{{ value }}"
+                data-questionnaire-target="answer choice"
+                :checked="checked"
+                :disabled="disabled"
+            />
+        {%- endif -%}
+        <twig:Kbd
+            data-questionnaire-target="shortcutBadge"
+            aria-hidden="true"
+            class="ms-auto hidden group-data-[shortcut]/questionnaire-choice:inline-flex"
+        />
+    </twig:Field>
+</twig:Field:Label>
