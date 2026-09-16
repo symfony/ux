@@ -194,6 +194,19 @@ describe('Panel', () => {
         });
     });
 
+    it('refreshes once after clearing selection when returning to the component list', () => {
+        state.set(target, 'stimulus', { data: {} });
+        panel.drillInto(target);
+        const cleared = vi.fn();
+        panel.setVisualCallbacks({ onClearSelection: cleared });
+        const refresh = vi.spyOn(panel, 'refresh');
+        panel.drillBack();
+        expect(cleared).toHaveBeenCalledOnce();
+        expect(refresh).toHaveBeenCalledOnce();
+        expect(cleared.mock.invocationCallOrder[0]).toBeLessThan(refresh.mock.invocationCallOrder[0]);
+        expect(panel.element.querySelector('.component-row').hasAttribute('aria-current')).toBe(false);
+    });
+
     it('restores parent Activity and its manual height without reopening drawers during a push or in the journal', () => {
         state.set(target, 'stimulus', { data: {} });
         panel.drillInto(target);

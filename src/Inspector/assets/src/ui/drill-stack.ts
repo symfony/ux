@@ -53,7 +53,7 @@ export class DrillStack extends EventTarget {
         const header = el(
             'button',
             {
-                class: 'stack-link current',
+                class: 'stack-link',
                 type: 'button',
                 'aria-current': 'page',
                 'aria-label': index ? `Back from ${title}` : title,
@@ -112,9 +112,9 @@ export class DrillStack extends EventTarget {
         const previousIndex = currentIndex - 1;
         for (const [index, level] of this.#levels.entries()) {
             const current = index === currentIndex;
-            level.header.classList.toggle('current', current);
             level.header.classList.toggle('previous', index === previousIndex);
-            level.header.toggleAttribute('aria-current', current);
+            if (current) level.header.setAttribute('aria-current', 'page');
+            else level.header.removeAttribute('aria-current');
             level.header.setAttribute('aria-label', current ? level.title : `Back to ${level.title}`);
         }
         this.#element.classList.toggle('is-drilled', this.depth > 1);

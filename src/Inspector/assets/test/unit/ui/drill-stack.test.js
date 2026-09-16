@@ -46,6 +46,23 @@ describe('DrillStack', () => {
         expect(headers[2].getAttribute('aria-current')).toBe('page');
     });
 
+    it('keeps exactly one current page after returning through nested details', () => {
+        const stack = new DrillStack(document.createElement('div'));
+        stack.push({ id: 'parent', title: 'parent' });
+        stack.push({ id: 'child', title: 'child' });
+        const assertCurrent = (title) => {
+            const current = stack.element.querySelectorAll('[aria-current]');
+            expect(current).toHaveLength(1);
+            expect(current[0].getAttribute('aria-current')).toBe('page');
+            expect(current[0].textContent).toContain(title);
+        };
+        assertCurrent('child');
+        stack.pop();
+        assertCurrent('parent');
+        stack.pop();
+        assertCurrent('Components');
+    });
+
     it('opens details at the top and restores the parent scroll position', () => {
         const stack = new DrillStack(document.createElement('div'));
         const scroller = stack.element.querySelector('.stack-body');

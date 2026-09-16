@@ -19,6 +19,7 @@ test('restores the component Activity drawer after the journal and nested naviga
     const detail = await inspector.locator('.detail').elementHandle();
     const drawer = inspector.locator('.drawer');
     await expect(drawer).toHaveAttribute('aria-label', 'Activity for probe');
+    await expect(inspector.locator('.stack-link[aria-current="page"]')).toHaveAttribute('aria-label', 'probe');
     await expect(drawer.locator('.event:not([hidden])')).toHaveCount(1);
 
     const handle = drawer.getByRole('separator', { name: 'Resize Activity' });
@@ -37,6 +38,7 @@ test('restores the component Activity drawer after the journal and nested naviga
     await expect(drawer).toHaveAttribute('aria-label', 'Activity for Frame: frame');
     await inspector.getByRole('button', { name: 'Back to probe', exact: true }).click();
     await expect(drawer).toHaveAttribute('aria-label', 'Activity for probe');
+    await expect(inspector.locator('.stack-link[aria-current="page"]')).toHaveAttribute('aria-label', 'probe');
     await expect(drawer.locator('.event:not([hidden])')).toHaveCount(1);
     expect(await detail.evaluate((node) => node.isConnected && !node.closest('[hidden]'))).toBe(true);
 
