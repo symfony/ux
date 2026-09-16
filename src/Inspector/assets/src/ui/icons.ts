@@ -19,8 +19,6 @@ const ICONS: Record<string, IconShape[]> = {
         ['path', { d: 'm12 3 9 5-9 5-9-5 9-5Z' }],
         ['path', { d: 'm3 13 9 5 9-5' }],
     ],
-    pause: [['path', { d: 'M9 5v14M15 5v14' }]],
-    clear: [['path', { d: 'M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5' }]],
     'panel-right': [
         ['rect', { x: '3', y: '3', width: '18', height: '18', rx: '2' }],
         ['path', { d: 'M15 3v18M8 9l3 3-3 3' }],

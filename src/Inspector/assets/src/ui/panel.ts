@@ -21,8 +21,6 @@ const FRAMEWORKS: Array<[string, string]> = [
 export interface ActionCallbacks {
     target?: () => void;
     overlay?: () => void;
-    pause?: () => void;
-    clearLog?: () => void;
 }
 
 export interface PanelHost extends HTMLElement {
@@ -217,7 +215,6 @@ export class Panel {
         button.setAttribute('aria-label', label);
         button.title = active ? 'Click to inspect. Shift-click to continue.' : label;
         this.#monitorLabel.textContent = active ? 'Inspecting' : 'Watching';
-        this.#monitorLabel.parentElement?.classList.toggle('inspecting', Boolean(active));
     }
     setOverlayActive(active: boolean): void {
         const button = this.#actionButtons.overlay;
@@ -226,10 +223,6 @@ export class Panel {
         button.setAttribute('aria-pressed', String(Boolean(active)));
         button.setAttribute('aria-label', label);
         this.#monitorLabel.textContent = active ? 'Overlay enabled' : 'Watching';
-    }
-    setLogPaused(paused: boolean): void {
-        this.#monitorLabel.textContent = paused ? 'Activity paused' : 'Watching';
-        this.#monitorLabel.parentElement?.classList.toggle('paused', Boolean(paused));
     }
     clearActivities(): void {
         this.#pendingActivity.clear();
@@ -374,11 +367,11 @@ export class Panel {
         });
         this.#logTools = el(
             'div',
-            { class: 'activity-tools toolbar--activity', hidden: true },
+            { class: 'activity-tools', hidden: true },
             el(
                 'div',
                 {
-                    class: 'filter-list activity-filter-list',
+                    class: 'filter-list',
                     role: 'group',
                     'aria-label': 'Filter activity by framework',
                 },
