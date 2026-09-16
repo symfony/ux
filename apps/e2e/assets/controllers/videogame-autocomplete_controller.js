@@ -2,16 +2,19 @@ import { Controller } from '@hotwired/stimulus';
 import { getComponent } from '@symfony/ux-live-component';
 
 export default class extends Controller {
-    async connect() {
-        this.component = await getComponent(this.element.closest('[data-controller*="live"]'));
+    initialize() {
+        this._onPreConnect = this._onPreConnect.bind(this);
+        this._onConnect = this._onConnect.bind(this);
+    }
 
-        this.element.addEventListener('autocomplete:pre-connect', this._onPreConnect.bind(this));
-        this.element.addEventListener('autocomplete:connect', this._onConnect.bind(this));
+    connect() {
+        this.element.addEventListener('autocomplete:pre-connect', this._onPreConnect);
+        this.element.addEventListener('autocomplete:connect', this._onConnect);
     }
 
     disconnect() {
-        this.element.removeEventListener('autocomplete:pre-connect', this._onPreConnect.bind(this));
-        this.element.removeEventListener('autocomplete:connect', this._onConnect.bind(this));
+        this.element.removeEventListener('autocomplete:pre-connect', this._onPreConnect);
+        this.element.removeEventListener('autocomplete:connect', this._onConnect);
     }
 
     _onPreConnect(event) {
@@ -27,9 +30,13 @@ export default class extends Controller {
     _onConnect(event) {
         const tomSelect = event.detail.tomSelect;
 
-        tomSelect.on('item_add', (value, item) => {
+        tomSelect.on('item_add', async (value, item) => {
+            const component = await getComponent(this.element.closest('[data-controller~="live"]'));
+            if (!this.element.isConnected) {
+                return;
+            }
             const title = item.getAttribute('data-title') || item.textContent;
-            this.component.emit('videogame-selected', { title });
+            component.emit('videogame-selected', { title });
         });
     }
 }
