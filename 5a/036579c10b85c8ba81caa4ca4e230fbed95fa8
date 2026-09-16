@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2026-09-13T19:55:41Z
+
+Dépends on how you look at it. As we test unreleased Symfony versions, the CI fails for something we do not support yet.
+
+By supporting this change; this fix the CI fails.
+
+No bug happen to anyone now, but will when/if people migrate to AssetMapper new bundle in 8.2
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-13T20:19:48Z
+
+I would go for a feature, also can you please modify all the other packages relying on this logic?
+
+<img width="1209" height="912" alt="Capture d’écran 2026-09-13 à 22 19 08" src="https://github.com/user-attachments/assets/1d5903ad-10c7-4279-875a-d571e75b0e95" />
+
+Thanks
