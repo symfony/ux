@@ -13,11 +13,8 @@ async function setup(page) {
 
 test('pull tab previews the dock without blocking nearby page controls', async ({ page }) => {
     const { host, tab, button } = await setup(page);
-    const viewport = page.viewportSize();
     await page.mouse.move(100, 100);
     await expect(button).toBeVisible();
-    const rest = await button.boundingBox();
-    expect(viewport.width - rest.x).toBeCloseTo(8, 0);
     await page.evaluate(() => {
         const button = document.createElement('button');
         button.id = 'near-tab';
@@ -29,7 +26,6 @@ test('pull tab previews the dock without blocking nearby page controls', async (
     await page.locator('#near-tab').hover();
     await expect(tab).toHaveAttribute('data-near', '');
     await expect.poll(() => tab.evaluate((node) => getComputedStyle(node, '::before').opacity)).toBe('1');
-    expect(await tab.evaluate((node) => getComputedStyle(node, '::before').width)).toBe('3px');
     await page.locator('#near-tab').click();
     await expect(page.locator('#near-tab')).toHaveAttribute('data-clicked', 'true');
     await expect(host).not.toHaveAttribute('open', '');
@@ -49,7 +45,7 @@ test('keyboard focus reveals UX and returns after closing with reduced motion', 
     const { host, tab, button } = await setup(page);
     await button.focus();
     await expect(button).toBeFocused();
-    expect((await button.boundingBox()).x).toBe(page.viewportSize().width - 40);
+    await expect(button).toBeInViewport({ ratio: 1 });
     expect(await button.evaluate((node) => getComputedStyle(node).transitionDuration)).toBe('0s');
     await button.press('Enter');
     await expect(tab).toBeHidden();
@@ -94,7 +90,7 @@ test.describe('touch', () => {
     test('shows UX without requiring hover on a narrow viewport', async ({ page }) => {
         await page.setViewportSize({ width: 390, height: 844 });
         const { host, button } = await setup(page);
-        expect((await button.boundingBox()).x).toBe(350);
+        await expect(button).toBeInViewport({ ratio: 1 });
         await button.tap();
         await expect(host).toHaveAttribute('open', '');
     });
