@@ -1,7 +1,7 @@
 import { ancestors, scopedChildren } from '../core/dom-query';
 import { LiveObserver, type RuntimeInfo } from './observer';
 import { parseActionDescriptor, parseActionParameters } from '../stimulus/attributes';
-import { safeUrl, safeValue } from '../core/snapshot';
+import { safeUrl, safeValue, SENSITIVE_KEY } from '../core/snapshot';
 import type {
     ActivityDraft,
     ComponentData,
@@ -249,7 +249,7 @@ export class LiveComponentPlugin implements InspectorPlugin<LiveData> {
 
     #readModelValue(element: Element, name: string): unknown {
         const input = element as HTMLInputElement;
-        if (/password|secret|token|csrf/i.test(name) || input.type === 'password') return '[redacted]';
+        if (SENSITIVE_KEY.test(name) || input.type === 'password') return '[redacted]';
         if (element instanceof HTMLInputElement && ['checkbox', 'radio'].includes(element.type)) return element.checked;
         if ('value' in element) return safeValue(input.value, name);
         return null;
