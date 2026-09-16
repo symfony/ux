@@ -6,10 +6,8 @@
         "ux-chartjs": "src/Chartjs",
         "ux-cropperjs": "src/Cropperjs",
         "ux-dropzone": "src/Dropzone",
-        "ux-google-map": "src/Map/src/Bridge/Google",
         "ux-icons": "src/Icons",
         "ux-inspector": "src/Inspector",
-        "ux-leaflet-map": "src/Map/src/Bridge/Leaflet",
         "ux-live-component": "src/LiveComponent",
         "ux-map": {
             "prefixes": [
@@ -20,6 +18,8 @@
                 }
             ]
         },
+        "ux-google-map": "src/Map/src/Bridge/Google",
+        "ux-leaflet-map": "src/Map/src/Bridge/Leaflet",
         "ux-native": "src/Native",
         "ux-notify": "src/Notify",
         "ux-pagination": "src/Pagination",
