@@ -87,6 +87,7 @@ export class Panel {
             onPreview: (target) => this.#onPreview?.(target),
             onClearPreview: () => this.#onClearPreview?.(),
             onSelect: (target) => this.#onSelect?.(target),
+            onClearSelection: () => this.#onClearSelection?.(),
         });
 
         this.#element = el('aside', { class: 'inspector pane', 'aria-label': 'Symfony UX Inspector' });
@@ -273,12 +274,17 @@ export class Panel {
         this.#navigation.drillInto(element, dataMap);
     }
     drillBack(): boolean {
-        return this.#navigation.drillBack();
+        return this.#list.clearPageRuleSelection() || this.#navigation.drillBack();
+    }
+    clearPageRuleSelection(): void {
+        this.#list.clearPageRuleSelection();
     }
     clearFocus(): boolean {
+        this.clearPageRuleSelection();
         return this.#navigation.clearFocus();
     }
     suspendForNavigation(): void {
+        this.clearPageRuleSelection();
         this.#navigation.suspendForNavigation();
     }
     resumeAfterNavigation(): void {

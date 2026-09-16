@@ -211,3 +211,36 @@ test('delegated pointer and keyboard preview reuse the overlay and preserve fiel
     await expect(inspector.locator('[data-changed]')).toHaveCount(0, { timeout: 4000 });
     expect(await field.evaluate((node) => node.isConnected)).toBe(true);
 });
+
+test('page-rule selection toggles, follows the selected rule, and clears on Escape and close', async ({ page }) => {
+    await page.goto('/a');
+    await expect(page.locator('ux-inspector')).toHaveAttribute('ready', '');
+    await page.evaluate(() => {
+        document.querySelector('#probe').setAttribute('data-turbo', 'false');
+        document.querySelector('#scroller').setAttribute('data-turbo-permanent', '');
+    });
+    await page.keyboard.type('ux');
+    const disabled = page.getByRole('button', { name: /Turbo disabled/ });
+    const permanent = page.getByRole('button', { name: /Permanent element/ });
+    const selected = page.locator('ux-inspector .box[data-mode="selected"]');
+    await disabled.click();
+    await expect(disabled).toHaveAttribute('aria-pressed', 'true');
+    await expect(selected).toHaveCount(1);
+    const selectedStyle = await disabled.evaluate((element) => getComputedStyle(element).boxShadow);
+    expect(selectedStyle).not.toBe('none');
+    await permanent.click();
+    await expect(disabled).toHaveAttribute('aria-pressed', 'false');
+    await expect(permanent).toHaveAttribute('aria-pressed', 'true');
+    await permanent.click();
+    await expect(permanent).toHaveAttribute('aria-pressed', 'false');
+    await expect(selected).toHaveCount(0);
+    await disabled.click();
+    await page.keyboard.press('Escape');
+    await expect(disabled).toHaveAttribute('aria-pressed', 'false');
+    await expect(selected).toHaveCount(0);
+    await disabled.click();
+    await page.getByRole('button', { name: 'Hide inspector', exact: true }).click();
+    await page.keyboard.type('ux');
+    await expect(disabled).toHaveAttribute('aria-pressed', 'false');
+    await expect(selected).toHaveCount(0);
+});

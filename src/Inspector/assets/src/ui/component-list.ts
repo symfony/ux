@@ -22,6 +22,8 @@ export class ComponentList {
     #rows = new Map<Element, ComponentRow>();
     #targets = new WeakMap<Element, VisualTarget>();
     #lifetime = new AbortController();
+    #selectedPageRule: PageRule | null = null;
+    #pageRuleRows = new Map<HTMLButtonElement, PageRule>();
 
     constructor(
         state: StateManager,
@@ -41,9 +43,12 @@ export class ComponentList {
     }
 
     refresh(filters: Set<string>, query: string, selected: Element | null): void {
+        this.#pageRuleRows.clear();
         const nodes: HTMLElement[] = [];
         const pageRules = this.#pageRules(filters, query);
         if (pageRules) nodes.push(pageRules);
+        if (this.#selectedPageRule && ![...this.#pageRuleRows.values()].some((rule) => this.#isSelectedRule(rule)))
+            this.clearPageRuleSelection();
         const nextRows = new Map<Element, ComponentRow>();
         for (const element of this.#state.elements) {
             const dataMap = this.#state.get(element);
@@ -96,11 +101,12 @@ export class ComponentList {
         const target = { element: rule.element, framework: rule.framework, label: rule.label };
         const row = el(
             'button',
-            { class: 'key-value page-rule', type: 'button', 'aria-pressed': 'false' },
+            { class: 'key-value page-rule', type: 'button', 'aria-pressed': String(this.#isSelectedRule(rule)) },
             el('strong', { class: 'key', text: rule.label }),
             rule.detail ? el('span', { class: 'value', text: rule.detail }) : null
         );
         this.#targets.set(row, target);
+        this.#pageRuleRows.set(row, rule);
         return row;
     }
 
@@ -108,6 +114,8 @@ export class ComponentList {
         this.#lifetime.abort();
         this.#cardRenderer.destroy();
         this.#rows.clear();
+        this.#pageRuleRows.clear();
+        this.#selectedPageRule = null;
         this.#targets = new WeakMap();
         this.element.replaceChildren();
     }
@@ -122,8 +130,14 @@ export class ComponentList {
             if (row!.matches('.component'))
                 this.element.dispatchEvent(new CustomEvent('drill-into', { detail: target }));
             else {
+                const rule = this.#pageRuleRows.get(row as HTMLButtonElement)!;
+                if (this.#isSelectedRule(rule)) {
+                    this.clearPageRuleSelection();
+                    return;
+                }
+                this.#selectedPageRule = rule;
+                this.#syncPageRuleSelection();
                 target.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
-                row!.setAttribute('aria-pressed', 'true');
                 this.#visual.onSelect?.(target);
             }
         } else if (event.type === 'pointerover' || event.type === 'focusin') this.#visual.onPreview?.(target);
@@ -139,6 +153,7 @@ export class ComponentList {
     }
 
     select(element: Element | null): void {
+        if (element) this.clearPageRuleSelection();
         for (const [candidate, { element: card }] of this.#rows) {
             const selected = candidate === element;
             card.classList.toggle('selected', selected);
@@ -146,6 +161,24 @@ export class ComponentList {
             if (selected) action?.setAttribute('aria-current', 'page');
             else action?.removeAttribute('aria-current');
         }
+    }
+
+    clearPageRuleSelection(): boolean {
+        if (!this.#selectedPageRule) return false;
+        this.#selectedPageRule = null;
+        this.#syncPageRuleSelection();
+        this.#visual.onClearPreview?.();
+        this.#visual.onClearSelection?.();
+        return true;
+    }
+
+    #isSelectedRule(rule: PageRule): boolean {
+        return this.#selectedPageRule?.element === rule.element && this.#selectedPageRule.kind === rule.kind;
+    }
+
+    #syncPageRuleSelection(): void {
+        for (const [row, rule] of this.#pageRuleRows)
+            row.setAttribute('aria-pressed', String(this.#isSelectedRule(rule)));
     }
 
     #onComponentKeydown(event: KeyboardEvent): void {

@@ -180,6 +180,7 @@ export class InspectorRuntime {
     }
 
     close(): void {
+        this.#panel.clearPageRuleSelection();
         this.#targetSelector.disable();
         this.#visual.clearHover();
         this.#visual.deselect();
