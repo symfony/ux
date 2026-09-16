@@ -327,15 +327,52 @@ the report to overwrite existing icons by using the ``--force`` option:
 
 .. caution::
 
-    The process to find icons to lock in your Twig templates is imperfect. It
-    looks for any string that matches the pattern ``something:something`` so
-    it's probable there will be false positives. This command should not be used
-    to audit the icons in your templates in an automated way. Add ``-v`` to see
-    *potential* invalid icons:
+    The default finder looks for any string in your Twig templates that matches
+    the pattern ``something:something``, so it's probable there will be false
+    positives, and icons whose names are built dynamically won't be found. This
+    command should not be used to audit the icons in your templates in an
+    automated way. Add ``-v`` to see *potential* invalid icons:
 
     .. code-block:: terminal
 
         $ php bin/console ux:icons:lock -v
+
+Custom Icon Finders
+^^^^^^^^^^^^^^^^^^^
+
+.. versionadded:: 3.5
+
+    Custom icon finders were added in UX Icons 3.5.
+
+Implement ``IconFinderInterface`` to provide icon names from any source,
+such as a database, an API, or a PHP enum. Thanks to Symfony's
+autoconfiguration, the finder is registered automatically (tag the service
+``ux_icons.finder`` yourself if you disabled autoconfiguration)::
+
+    // src/Icons/AppIconFinder.php
+    namespace App\Icons;
+
+    use App\Enum\Status;
+    use Symfony\UX\Icons\IconFinderInterface;
+
+    final class AppIconFinder implements IconFinderInterface
+    {
+        public function icons(): array
+        {
+            $icons = ['tabler:mail'];
+
+            foreach (Status::cases() as $status) {
+                $icons[] = $status->icon();
+            }
+
+            return $icons;
+        }
+    }
+
+Its icons are merged with the ones found in your templates, and are used
+both by ``ux:icons:lock`` and when warming the icon cache. See
+`Automatically Locking On-Demand Icons`_ for another way to avoid missing
+icons.
 
 Automatically Locking On-Demand Icons
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

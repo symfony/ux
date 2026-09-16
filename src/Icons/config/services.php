@@ -15,6 +15,8 @@ use Symfony\UX\Icons\Command\ImportIconCommand;
 use Symfony\UX\Icons\Command\LockIconsCommand;
 use Symfony\UX\Icons\Command\SearchIconCommand;
 use Symfony\UX\Icons\Command\WarmCacheCommand;
+use Symfony\UX\Icons\Finder\ChainIconFinder;
+use Symfony\UX\Icons\Finder\TemplateIconFinder;
 use Symfony\UX\Icons\IconCacheWarmer;
 use Symfony\UX\Icons\IconFactory;
 use Symfony\UX\Icons\Iconify;
@@ -25,7 +27,6 @@ use Symfony\UX\Icons\Registry\CacheIconRegistry;
 use Symfony\UX\Icons\Registry\ChainIconRegistry;
 use Symfony\UX\Icons\Registry\IconifyOnDemandRegistry;
 use Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
-use Symfony\UX\Icons\Twig\IconFinder;
 use Symfony\UX\Icons\Twig\UXIconExtension;
 use Symfony\UX\Icons\Twig\UXIconRuntime;
 
@@ -81,10 +82,16 @@ return static function (ContainerConfigurator $container): void {
 
         ->alias(IconRendererInterface::class, '.ux_icons.icon_renderer')
 
-        ->set('.ux_icons.icon_finder', IconFinder::class)
+        ->set('.ux_icons.template_icon_finder', TemplateIconFinder::class)
             ->args([
                 service('twig'),
                 abstract_arg('icon_dir'),
+            ])
+            ->tag('ux_icons.finder')
+
+        ->set('.ux_icons.icon_finder', ChainIconFinder::class)
+            ->args([
+                tagged_iterator('ux_icons.finder'),
             ])
 
         ->set('.ux_icons.cache_warmer', IconCacheWarmer::class)

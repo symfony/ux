@@ -2,6 +2,7 @@
 
 ## 3.5.0
 
+- Add `IconFinderInterface` to register custom icon finders, providing icon names to lock and warm up in addition to the ones found in Twig templates
 - Migrate SVG parsing to the PHP 8.4 `Dom\XMLDocument` API, icons rendered from local files now correctly include the `xmlns` attribute.
   It **may break your pipeline** if you assert on `ux_icon()` or `<twig:ux:icon>` output in your tests. Re-generate those assertions and clear your icon cache after upgrading.
 
