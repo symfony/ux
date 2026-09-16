@@ -260,7 +260,7 @@ describe('TurboPlugin', () => {
         });
     });
 
-    describe('renderCard()', () => {
+    describe('renderTurbo()', () => {
         it('renders the expected data fields as a DocumentFragment', () => {
             const data = {
                 id: 'test-frame',
@@ -272,7 +272,8 @@ describe('TurboPlugin', () => {
                 formsInFrame: [],
             };
             const frag = renderTurbo(data);
-            expect(frag).toBeTruthy();
+            expect(frag).toBeInstanceOf(DocumentFragment);
+            expect(frag.querySelector('[data-field-key="src"] .value').textContent).toBe('/src');
         });
 
         it('groups frame metadata and captured Stream actions', () => {

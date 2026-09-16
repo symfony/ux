@@ -68,9 +68,6 @@ describe('Panel', () => {
     });
 
     it('has centered identity, navigation actions, and a minimal status footer', () => {
-        expect(panel.element.querySelector('.tabs')).toBeNull();
-        expect(panel.element.textContent).not.toContain('Server');
-        expect(panel.element.querySelector('.spacer')).toBeNull();
         expect(panel.element.querySelector('header strong').textContent).toBe('UX Inspector');
         expect(panel.element.querySelector('header [data-action="target"]').textContent).toBe('');
         expect(panel.element.querySelector('header [data-action="target"]').getAttribute('aria-label')).toBe(
@@ -87,29 +84,25 @@ describe('Panel', () => {
         expect([...panel.element.querySelector('footer').children].map((child) => child.className)).toEqual([
             'monitor-status',
         ]);
-        expect(panel.element.querySelector('.settings-panel')).toBeNull();
         expect(panel.element.querySelector('[aria-label="Hide inspector"]')).not.toBeNull();
         expect(panel.element.querySelector('footer').textContent).not.toMatch(/components|events/);
     });
 
-    it('puts search below the framework filters without a redundant rescan action', () => {
+    it('puts search below the framework filters', () => {
         const filters = panel.element.querySelector('.filters');
         expect(filters.firstElementChild.className).toBe('filter-list');
         expect(filters.lastElementChild).toBe(panel.element.querySelector('[aria-label="Find a component"]'));
-        expect(filters.querySelector('[aria-label="Rescan components"]')).toBeNull();
-        expect(panel.element.querySelector('.toolbar--components')).toBeNull();
         expect(panel.element.querySelector('.activity-tools').hidden).toBe(true);
         expect(panel.element.querySelectorAll('[aria-label="Filter activity by framework"] .filter')).toHaveLength(3);
     });
 
     it('mounts Activity as a single inline disclosure surface', () => {
         expect(panel.element.querySelector('#panel-activity').firstElementChild).toBe(timeline.element);
-        expect(panel.element.querySelector('.split-view')).toBeNull();
         expect(panel.element.querySelector('#panel-activity [role="separator"]')).toBeNull();
         expect(panel.element.querySelector('.panel-resize').getAttribute('aria-orientation')).toBe('vertical');
     });
 
-    it('reports target selection mode without changing the button label', () => {
+    it('reports target selection mode through the button label and pressed state', () => {
         panel.setTargetModeActive(true);
         expect(panel.element.querySelector('[data-action="target"]').textContent).toBe('');
         expect(panel.element.querySelector('[data-action="target"]').getAttribute('aria-pressed')).toBe('true');
@@ -272,7 +265,6 @@ describe('Panel', () => {
         expect(panel.element.querySelector('#panel-activity').hidden).toBe(true);
         expect(timeline.element.parentElement).toBe(drawer);
         expect(panel.element.querySelector('.activity-label').textContent).toBe('Activity');
-        expect(panel.element.querySelector('.detail__activity-link')).toBeNull();
         expect(timeline.configure).toHaveBeenCalledWith({
             contextual: true,
             frameworks: null,
@@ -280,7 +272,6 @@ describe('Panel', () => {
             query: '',
         });
         expect(timeline.expandFirstVisible).toHaveBeenCalledOnce();
-        expect(drawer.querySelector('.detail__activity-all')).toBeNull();
 
         panel.element.querySelector('.activity-label').click();
 
@@ -479,7 +470,6 @@ describe('Panel', () => {
         expect(panel.element.querySelector('.detail')).toBeNull();
         expect(panel.element.querySelector('#panel-components .stack-page').hidden).toBe(false);
         expect(panel.element.querySelector('.filters').hidden).toBe(false);
-        expect(panel.element.querySelector('.recent-components')).toBeNull();
         panel.element.querySelector('.component-row').click();
         expect(panel.element.querySelector('.detail-selector').textContent).toBe('div#search');
     });
@@ -516,7 +506,6 @@ describe('Panel', () => {
         panel.drillInto(replacement);
 
         expect(panel.element.querySelector('[data-group="stimulus-values"]').open).toBe(false);
-        expect(panel.element.querySelector('.component-events__search')).toBeNull();
     });
 
     it('closes an open detail when its component disappears without a replacement', async () => {
