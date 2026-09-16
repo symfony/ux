@@ -581,6 +581,11 @@
     text-align: start;
 }
 
+.page-rule[aria-pressed='true'] {
+    background: var(--surface-hover);
+    box-shadow: inset 3px 0 currentColor;
+}
+
 .page-rule:hover {
     background: var(--surface-hover);
 }

@@ -17,7 +17,7 @@ function setup(count = 1) {
         state.set(target, 'stimulus', { data: {} });
         return target;
     });
-    const visual = { onPreview: vi.fn(), onClearPreview: vi.fn(), onSelect: vi.fn() };
+    const visual = { onPreview: vi.fn(), onClearPreview: vi.fn(), onSelect: vi.fn(), onClearSelection: vi.fn() };
     const registry = { get: () => ({ getDisplayName: (target) => target.id }), collectPageRules: () => [] };
     const list = new ComponentList(state, registry, null, visual);
     lists.push(list);
@@ -109,6 +109,41 @@ describe('ComponentList event delegation', () => {
         expect(target.scrollIntoView).toHaveBeenCalledOnce();
         expect(rule.getAttribute('aria-pressed')).toBe('true');
         expect(visual.onSelect).toHaveBeenCalledOnce();
+    });
+
+    it('keeps a single page rule selected, toggles it off, and clears missing rules', () => {
+        const { list, registry, targets, visual, refresh } = setup(2);
+        for (const target of targets) target.scrollIntoView = vi.fn();
+        registry.collectPageRules = () => targets.map((element) => ({ element, kind: 'disabled', label: element.id }));
+        refresh();
+        const rows = () => [...list.element.querySelectorAll('.page-rule')];
+        rows()[0].click();
+        rows()[1].click();
+        expect(rows().map((row) => row.getAttribute('aria-pressed'))).toEqual(['false', 'true']);
+        refresh();
+        expect(rows()[1].getAttribute('aria-pressed')).toBe('true');
+        rows()[1].click();
+        expect(rows().every((row) => row.getAttribute('aria-pressed') === 'false')).toBe(true);
+        expect(visual.onClearSelection).toHaveBeenCalledOnce();
+        rows()[0].click();
+        registry.collectPageRules = () => [];
+        refresh();
+        expect(visual.onClearSelection).toHaveBeenCalledTimes(2);
+    });
+
+    it('clears page-rule selection when filtering or selecting a component', () => {
+        const { list, registry, targets, visual, refresh } = setup();
+        targets[0].scrollIntoView = vi.fn();
+        registry.collectPageRules = () => [{ element: targets[0], kind: 'disabled', label: 'Disabled' }];
+        refresh();
+        list.element.querySelector('.page-rule').click();
+        list.refresh(new Set(['stimulus']), '', null);
+        expect(visual.onClearSelection).toHaveBeenCalledOnce();
+        refresh();
+        list.element.querySelector('.page-rule').click();
+        list.select(targets[0]);
+        expect(list.element.querySelector('.page-rule').getAttribute('aria-pressed')).toBe('false');
+        expect(visual.onClearSelection).toHaveBeenCalledTimes(2);
     });
 
     it('removes listeners and releases rendered rows on destruction', () => {
