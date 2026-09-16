@@ -1,14 +1,13 @@
 Symfony UX Inspector
 ====================
 
+**EXPERIMENTAL** This component is currently experimental and is likely
+to change, or even change drastically.
+
 Installation
 ------------
 
-Requires PHP 8.4+, Symfony 7.4 or 8.x, and Chrome 145+ or Firefox 146+.
-
-.. caution::
-
-    This bundle is experimental. Register it only in ``dev``.
+Register the bundle only in ``dev``.
 
 .. code-block:: terminal
 
@@ -69,7 +68,7 @@ It expands to show **UX** when the pointer approaches or the tab receives focus.
 On touch devices, **UX** is visible without hovering. The tab hides while the
 panel is open and returns when you close it.
 
-You can also type ``ux`` outside an editable field to open the panel.
+You can also type the keys ``u`` and ``x`` outside an editable field to open the panel.
 
 * **Components**: list detected components.
 * **Find a component**: search by name, element tag, or ID.
@@ -90,22 +89,20 @@ Use the breadcrumbs or ``Escape`` to go back.
 Stimulus
 ~~~~~~~~
 
-.. list-table::
-    :header-rows: 1
-
-    * - Data
-      - Details
-    * - Values and classes
-      - HTML attribute values and, when connected, default values and missing
-        CSS class attributes.
-    * - Targets and actions
-      - Elements and event bindings; checks for missing targets and action
-        methods when connected.
-    * - Relationships
-      - Outlets, parent and child controllers.
-    * - Activity
-      - Controller-prefixed custom events from ``data-action`` and a predefined
-        list of dispatch names, such as ``change`` in ``search:change``.
++---------------------+--------------------------------------------------------------------------+
+| Data                | Details                                                                  |
++=====================+==========================================================================+
+| Values and classes  | HTML attribute values and, when connected, default values and missing    |
+|                     | CSS class attributes.                                                    |
++---------------------+--------------------------------------------------------------------------+
+| Targets and actions | Elements and event bindings; checks for missing targets and action       |
+|                     | methods when connected.                                                  |
++---------------------+--------------------------------------------------------------------------+
+| Relationships       | Outlets, parent and child controllers.                                   |
++---------------------+--------------------------------------------------------------------------+
+| Activity            | Controller-prefixed custom events from ``data-action`` and a predefined  |
+|                     | list of dispatch names, such as ``change`` in ``search:change``.         |
++---------------------+--------------------------------------------------------------------------+
 
 Stimulus ``connect()`` and ``disconnect()`` callbacks are not DOM events.
 Other custom events may not be captured.
@@ -113,37 +110,33 @@ Other custom events may not be captured.
 LiveComponent
 ~~~~~~~~~~~~~
 
-.. list-table::
-    :header-rows: 1
-
-    * - Data
-      - Details
-    * - Props and models
-      - LiveProps, props from parents, model bindings and modifiers.
-    * - Actions and listeners
-      - Action methods, arguments, event listeners, and related elements.
-    * - Configuration and relationships
-      - Loading directives, polling interval, parent and child components.
-    * - Activity
-      - Request actions, changed model names, render lifecycle, and errors.
++---------------------------------+--------------------------------------------------------------------------+
+| Data                            | Details                                                                  |
++=================================+==========================================================================+
+| Props and models                | LiveProps, props from parents, model bindings and modifiers.             |
++---------------------------------+--------------------------------------------------------------------------+
+| Actions and listeners           | Action methods, arguments, event listeners, and related elements.        |
++---------------------------------+--------------------------------------------------------------------------+
+| Configuration and relationships | Loading directives, polling interval, parent and child components.       |
++---------------------------------+--------------------------------------------------------------------------+
+| Activity                        | Request actions, changed model names, render lifecycle, and errors.      |
++---------------------------------+--------------------------------------------------------------------------+
 
 LiveComponent activity works without connecting Stimulus.
 
 Turbo
 ~~~~~
 
-.. list-table::
-    :header-rows: 1
-
-    * - Data
-      - Details
-    * - Frames
-      - ID, source URL, loading strategy, target, state, and nested frames.
-    * - Page rules
-      - Permanent elements, disabled scopes, frame targets, and Stream sources.
-    * - Activity
-      - Fetch method, URL, status and duration; frame renders, missing frames,
-        morphs, and Stream actions with their targets.
++------------+--------------------------------------------------------------------------+
+| Data       | Details                                                                  |
++============+==========================================================================+
+| Frames     | ID, source URL, loading strategy, target, state, and nested frames.      |
++------------+--------------------------------------------------------------------------+
+| Page rules | Permanent elements, disabled scopes, frame targets, and Stream sources.  |
++------------+--------------------------------------------------------------------------+
+| Activity   | Fetch method, URL, status and duration; frame renders, missing frames,   |
+|            | morphs, and Stream actions with their targets.                           |
++------------+--------------------------------------------------------------------------+
 
 Trace Activity
 --------------
