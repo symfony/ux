@@ -28,7 +28,7 @@ describe('Timeline', () => {
 
     function addEntry(entry) {
         mockMonitor.entries.push(entry);
-        timeline.addEntry(entry);
+        for (const listener of mockMonitor.listeners) listener(entry);
     }
 
     function render(entry) {
@@ -38,16 +38,27 @@ describe('Timeline', () => {
     }
 
     beforeEach(() => {
-        mockMonitor = { entries: [] };
+        mockMonitor = {
+            entries: [],
+            listeners: new Set(),
+            addListener(listener) {
+                this.listeners.add(listener);
+            },
+            removeListener(listener) {
+                this.listeners.delete(listener);
+            },
+        };
         mockMonitor.project = (_, compact) => projectActivity(mockMonitor.entries, compact);
         mockMonitor.clear = vi.fn(() => {
             mockMonitor.entries = [];
         });
+        timeline?.destroy();
         timeline = new Timeline(mockMonitor);
         document.body.innerHTML = '';
     });
 
     afterEach(() => {
+        timeline.destroy();
         document.body.innerHTML = '';
         vi.restoreAllMocks();
     });
@@ -255,6 +266,7 @@ describe('Timeline', () => {
             const target = connectedTarget('turbo-frame', 'messages');
             const onSelect = vi.fn();
             const onHighlight = vi.fn();
+            timeline?.destroy();
             timeline = new Timeline(mockMonitor, { onSelect, onHighlight });
             const item = render(makeEntry({ target }));
             const go = item.querySelector('.event-go');
@@ -271,6 +283,7 @@ describe('Timeline', () => {
         it('hides Go for disconnected targets and rechecks before navigation', () => {
             const target = connectedTarget();
             const onSelect = vi.fn();
+            timeline?.destroy();
             timeline = new Timeline(mockMonitor, { onSelect });
             const item = render(makeEntry({ target }));
             const row = item.querySelector('.event-row');
@@ -287,6 +300,7 @@ describe('Timeline', () => {
         it('highlights connected targets on row hover and clears on leave', () => {
             const target = connectedTarget();
             const onHighlight = vi.fn();
+            timeline?.destroy();
             timeline = new Timeline(mockMonitor, { onHighlight });
             const row = render(makeEntry({ target })).querySelector('.event-row');
             onHighlight.mockClear();
@@ -638,6 +652,7 @@ describe('Timeline', () => {
 
     it('updates navigation when an unchanged activity target disconnects and reconnects', () => {
         const onSelect = vi.fn();
+        timeline?.destroy();
         timeline = new Timeline(mockMonitor, { onSelect });
         const target = connectedTarget();
         target.remove();
@@ -654,10 +669,30 @@ describe('Timeline', () => {
         expect(go().hidden).toBe(true);
     });
 
+    it('owns one monitor subscription, batches events, and releases it on destruction', () => {
+        timeline.destroy();
+        const monitor = new EventMonitor();
+        const add = vi.spyOn(monitor, 'addListener');
+        const remove = vi.spyOn(monitor, 'removeListener');
+        timeline = new Timeline(monitor);
+        const schedule = vi.spyOn(globalThis, 'requestAnimationFrame');
+        for (let i = 0; i < 3; i++) monitor.record({ event: `event:${i}` });
+        expect(add).toHaveBeenCalledOnce();
+        expect(schedule).toHaveBeenCalledOnce();
+        timeline.flush();
+        expect(timeline.element.querySelectorAll('.event')).toHaveLength(3);
+        timeline.destroy();
+        expect(remove).toHaveBeenCalledWith(add.mock.calls[0][0]);
+        schedule.mockClear();
+        monitor.record({ event: 'after-destroy' });
+        expect(schedule).not.toHaveBeenCalled();
+        monitor.destroy();
+    });
+
     it('uses the bounded monitor history, including after pause and eviction', () => {
         const monitor = new EventMonitor(3);
+        timeline?.destroy();
         timeline = new Timeline(monitor);
-        monitor.addListener((entry) => timeline.addEntry(entry));
         for (let i = 0; i < 6; i++) monitor.record({ event: `event:${i}`, detail: { i } });
         timeline.flush();
         expect(timeline.element.querySelectorAll('.event')).toHaveLength(3);
@@ -675,13 +710,14 @@ describe('Timeline', () => {
 
     it('renders and filters once when moving activity between a drawer and the global panel', () => {
         const monitor = new EventMonitor();
+        timeline?.destroy();
         timeline = new Timeline(monitor);
         const home = document.createElement('div');
         const content = document.createElement('div');
         document.body.append(home, content);
         const target = connectedTarget('div', 'component');
         monitor.record({ type: 'turbo', event: 'other' });
-        timeline.addEntry(monitor.record({ type: 'stimulus', event: 'local', target }));
+        monitor.record({ type: 'stimulus', event: 'local', target });
         const restore = () =>
             timeline.configure({ contextual: false, element: null, frameworks: ['turbo'], query: 'other' });
         const drawer = new ActivityDrawer(timeline, home, restore);
@@ -711,6 +747,7 @@ describe('Timeline', () => {
 
     it('switches drawers without restoring the global context or advancing paused history', () => {
         const monitor = new EventMonitor(2);
+        timeline?.destroy();
         timeline = new Timeline(monitor);
         const first = connectedTarget('div', 'first');
         const second = connectedTarget('div', 'second');
