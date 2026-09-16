@@ -8,6 +8,15 @@ describe('UXInspector', () => {
     let session;
 
     beforeEach(() => {
+        // jsdom does not implement ResizeObserver; its behavior is covered by Highlighter tests.
+        vi.stubGlobal(
+            'ResizeObserver',
+            class {
+                observe() {}
+                unobserve() {}
+                disconnect() {}
+            }
+        );
         connectStimulus(null);
         const storage = () => ({ getItem: vi.fn(), setItem: vi.fn(), removeItem: vi.fn() });
         local = storage();

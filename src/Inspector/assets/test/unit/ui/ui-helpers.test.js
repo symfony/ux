@@ -13,18 +13,18 @@ import {
 describe('ui helpers', () => {
     it('reorders retained children, inserts new ones, and removes obsolete ones', () => {
         const parent = el('div');
+        parent.moveBefore = vi.fn((node, child) => parent.insertBefore(node, child));
         const first = el('button', { text: 'first' });
         const second = el('button', { text: 'second' });
         const obsolete = el('button', { text: 'obsolete' });
         const added = el('button', { text: 'added' });
         parent.append(first, second, obsolete);
         document.body.append(parent);
-        second.focus();
 
         reconcileChildren(parent, [second, added, first]);
 
         expect([...parent.children]).toEqual([second, added, first]);
-        expect(document.activeElement).toBe(second);
+        expect(parent.moveBefore).toHaveBeenCalledExactlyOnceWith(second, first);
         expect(obsolete.isConnected).toBe(false);
         parent.remove();
     });
@@ -32,22 +32,17 @@ describe('ui helpers', () => {
     it('reorders retained children on engines without moveBefore', () => {
         // Safari and older engines have no Element.moveBefore: the reorder must
         // still happen through insertBefore rather than throwing.
-        const native = Element.prototype.moveBefore;
-        delete Element.prototype.moveBefore;
-        try {
-            const parent = document.createElement('div');
-            const first = document.createElement('span');
-            const second = document.createElement('span');
-            parent.append(first, second);
-            document.body.append(parent);
+        const parent = document.createElement('div');
+        parent.moveBefore = undefined;
+        const first = document.createElement('span');
+        const second = document.createElement('span');
+        parent.append(first, second);
+        document.body.append(parent);
 
-            reconcileChildren(parent, [second, first]);
+        reconcileChildren(parent, [second, first]);
 
-            expect([...parent.children]).toEqual([second, first]);
-            parent.remove();
-        } finally {
-            Element.prototype.moveBefore = native;
-        }
+        expect([...parent.children]).toEqual([second, first]);
+        parent.remove();
     });
 
     it('builds elements with text and listeners', () => {
