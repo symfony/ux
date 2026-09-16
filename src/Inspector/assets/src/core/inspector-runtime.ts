@@ -157,11 +157,6 @@ export class InspectorRuntime {
         });
     }
 
-    setStimulusApplication(application: StimulusApplicationLike | null): void {
-        (this.#registry.get('stimulus') as StimulusPlugin | undefined)?.setApplication(application);
-        this.scan();
-    }
-
     getStatus(): Record<string, unknown> {
         const components = this.#state.countByPlugin();
         return {
@@ -199,7 +194,7 @@ export class InspectorRuntime {
     scan(): void {
         if (this.#phase !== 'observing') return;
         const application = this.#application();
-        if (application) (this.#registry.get('stimulus') as StimulusPlugin | undefined)?.setApplication(application);
+        (this.#registry.get('stimulus') as StimulusPlugin | undefined)?.setApplication(application);
         this.#detector.scan();
         this.#registerPluginDynamicEvents();
     }

@@ -7,7 +7,6 @@ declare class UXInspector extends HTMLElement {
   disconnectedCallback(): void;
   get isOpen(): boolean;
   getStatus(): Record<string, unknown>;
-  setStimulusApplication(application: StimulusApplicationLike | null): void;
   open(): void;
   close(): void;
   toggle(): void;

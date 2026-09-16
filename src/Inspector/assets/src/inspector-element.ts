@@ -91,9 +91,6 @@ export class UXInspector extends HTMLElement {
     getStatus(): Record<string, unknown> {
         return this.#runtime?.getStatus() ?? {};
     }
-    setStimulusApplication(application: StimulusApplicationLike | null): void {
-        this.#runtime?.setStimulusApplication(application);
-    }
     open(): void {
         this.scan();
         this.setAttribute('open', '');
@@ -151,8 +148,8 @@ export function registerUXInspector(styles: StylesheetSource): void {
 }
 
 export function connectStimulus(application: StimulusApplicationLike | null): boolean {
-    const valid = Boolean(application?.getControllerForElementAndIdentifier);
+    const valid = typeof application?.getControllerForElementAndIdentifier === 'function';
     stimulusApplication = valid ? application : null;
-    (document.querySelector('ux-inspector') as UXInspector | null)?.setStimulusApplication(stimulusApplication);
+    (document.querySelector('ux-inspector') as UXInspector | null)?.scan();
     return valid;
 }
