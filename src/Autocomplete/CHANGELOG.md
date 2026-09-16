@@ -2,6 +2,7 @@
 
 ## 3.5
 
+- Add support for Symfony 8.2's standalone `AssetMapperBundle`
 - Translate the `optgroup` labels returned by the AJAX endpoint, so `group_by` can use translation keys
 - Add `EntityAutocompleterInterface::getTranslationDomain()` to choose the translation domain used for the `optgroup` labels
 - Decouple the package from Doctrine ORM: add `AutocompleterInterface`, `OptionsAwareAutocompleterInterface`, `AutocompleteChoiceType` and `#[AsAutocompleteField]` so any data source can back an autocomplete field. The Doctrine ORM API stays fully supported
