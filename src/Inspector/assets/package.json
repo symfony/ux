@@ -21,12 +21,6 @@
     "exports": {
         ".": "./dist/inspector.js"
     },
-    "config": {
-        "browser_targets": [
-            "chrome145",
-            "firefox146"
-        ]
-    },
     "scripts": {
         "build": "node ../../../bin/build_package.ts .",
         "watch": "node ../../../bin/build_package.ts . --watch",

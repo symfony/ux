@@ -41,7 +41,6 @@ async function main() {
     const isInspector = '@symfony/ux-inspector' === packageData.name;
 
     const inputCssFile = packageData?.config?.css_source;
-    const browserTargets = packageData?.config?.browser_targets;
     const inputFiles = [
         ...globSync('src/*controller.ts'),
         ...(isTurbo ? ['src/mercure_stream_source_element.ts'] : []),
@@ -70,7 +69,7 @@ async function main() {
         watch: isWatch,
         format: 'esm',
         platform: 'browser',
-        target: browserTargets ?? tsConfigPackage.compilerOptions.target,
+        target: tsConfigPackage.compilerOptions.target,
         tsconfig: path.join(packageRoot, 'tsconfig.json'),
         dts: {
             entry: inputFiles.filter((inputFile) => !inputFile.endsWith('.css')),
