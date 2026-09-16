@@ -401,11 +401,12 @@ describe('StimulusPlugin', () => {
         });
     });
 
-    describe('renderCard()', () => {
+    describe('renderStimulus()', () => {
         it('renders the expected data fields as a DocumentFragment', () => {
             const data = {
                 controllers: ['test'],
                 values: { test: { a: 1 } },
+                valueStates: { test: [{ name: 'a', value: 1, status: 'configured' }] },
                 classes: {},
                 targets: {},
                 actions: {},
@@ -414,7 +415,8 @@ describe('StimulusPlugin', () => {
                 parents: [],
             };
             const frag = renderStimulus(data);
-            expect(frag).toBeTruthy();
+            expect(frag).toBeInstanceOf(DocumentFragment);
+            expect(frag.querySelector('[data-field-key="a"] .num').textContent).toBe('1');
         });
 
         it('renders actions as readable event to method text without null', () => {

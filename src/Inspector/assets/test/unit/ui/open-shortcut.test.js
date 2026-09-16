@@ -27,9 +27,17 @@ describe('open shortcut', () => {
         const lifetime = new AbortController();
         const open = vi.fn();
         bindOpenShortcut(open, lifetime.signal);
-        for (const options of [{ ctrlKey: true }, { isComposing: true }, { repeat: true }]) {
+        for (const options of [
+            { altKey: true },
+            { ctrlKey: true },
+            { metaKey: true },
+            { isComposing: true },
+            { repeat: true },
+        ]) {
             document.dispatchEvent(new KeyboardEvent('keydown', { key: 'u' }));
-            document.dispatchEvent(new KeyboardEvent('keydown', { key: 'x', ...options }));
+            const modified = new KeyboardEvent('keydown', { key: 'x', cancelable: true, ...options });
+            document.dispatchEvent(modified);
+            expect(modified.defaultPrevented).toBe(false);
             document.dispatchEvent(new KeyboardEvent('keydown', { key: 'x' }));
         }
         expect(open).not.toHaveBeenCalled();

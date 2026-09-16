@@ -409,7 +409,7 @@ describe('LiveComponentPlugin', () => {
         });
     });
 
-    describe('renderCard()', () => {
+    describe('renderLive()', () => {
         it('renders the expected data fields as a DocumentFragment', () => {
             const data = {
                 name: 'test',
@@ -426,7 +426,8 @@ describe('LiveComponentPlugin', () => {
                 otherControllers: [],
             };
             const frag = renderLive(data);
-            expect(frag).toBeTruthy();
+            expect(frag).toBeInstanceOf(DocumentFragment);
+            expect(frag.querySelector('[data-field-key="p"] .num').textContent).toBe('1');
         });
 
         it('organizes LiveComponent contracts into visible non-empty groups', () => {

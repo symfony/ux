@@ -33,11 +33,6 @@ describe('UXInspector', () => {
         expect(customElements.get('ux-inspector')).toBe(UXInspector);
         expect(inspector.shadowRoot.querySelector('.inspector')).not.toBeNull();
         expect(inspector.shadowRoot.querySelector('[data-ux-inspector-overlay]')).not.toBeNull();
-        expect(inspector.shadowRoot.textContent).not.toContain('Server');
-        expect(inspector.shadowRoot.textContent).not.toContain('Badges');
-        expect(inspector.shadowRoot.textContent).not.toContain('Toasts');
-        expect(inspector.shadowRoot.querySelector('.slide-handle')).toBeNull();
-        expect(inspector.shadowRoot.querySelector('[aria-label="Open settings"]')).toBeNull();
     });
 
     it('renders one pull tab by default and opens the panel on click', () => {
@@ -118,12 +113,6 @@ describe('UXInspector', () => {
         document.body.appendChild(input);
         input.dispatchEvent(new KeyboardEvent('keydown', { key: 'u', bubbles: true }));
         input.dispatchEvent(new KeyboardEvent('keydown', { key: 'x', bubbles: true }));
-        expect(inspector.isOpen).toBe(false);
-    });
-
-    it('does not register Alt+I as an inspector shortcut', () => {
-        inspector.close();
-        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'i', altKey: true, bubbles: true }));
         expect(inspector.isOpen).toBe(false);
     });
 
@@ -382,10 +371,15 @@ describe('UXInspector', () => {
     it('accepts the public Stimulus application bridge and exposes runtime declarations', async () => {
         class SearchController {
             static targets = ['results'];
+            static values = { limit: { type: Number, default: 12 } };
         }
         const instance = new SearchController();
         const target = document.createElement('div');
         target.id = 'search-runtime';
+        const results = document.createElement('section');
+        results.id = 'results';
+        results.dataset.searchTarget = 'results';
+        target.append(results);
         target.dataset.controller = 'search';
         document.body.appendChild(target);
 
@@ -398,8 +392,11 @@ describe('UXInspector', () => {
         await vi.waitFor(() => expect(inspector.shadowRoot.querySelector('.component-row')).not.toBeNull());
         inspector.shadowRoot.querySelector('.component-row').click();
 
-        expect(inspector.shadowRoot.querySelector('[data-group="stimulus-context"]')).toBeNull();
-        expect(inspector.shadowRoot.querySelector('[data-field-key="results target"]')).toBeNull();
+        const limit = inspector.shadowRoot.querySelector('[data-field-key="limit"]');
+        expect(limit.querySelector('.num').textContent).toBe('12');
+        expect(limit.querySelector('[data-status="default"]')).not.toBeNull();
+        const targetField = inspector.shadowRoot.querySelector('[data-field-key="element:results"]');
+        expect(targetField.querySelector('.target-pill').textContent).toContain('section#results');
     });
 
     it('leaves the open detail when the inspector is cleared', async () => {
