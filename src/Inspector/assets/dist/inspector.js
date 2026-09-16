@@ -1335,7 +1335,7 @@ var LiveComponentPlugin = class {
 	}
 	#readModelValue(element, name) {
 		const input = element;
-		if (/password|secret|token|csrf/i.test(name) || input.type === "password") return "[redacted]";
+		if (SENSITIVE_KEY.test(name) || input.type === "password") return "[redacted]";
 		if (element instanceof HTMLInputElement && ["checkbox", "radio"].includes(element.type)) return element.checked;
 		if ("value" in element) return safeValue(input.value, name);
 		return null;

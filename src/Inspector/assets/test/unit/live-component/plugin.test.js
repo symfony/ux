@@ -327,6 +327,23 @@ describe('LiveComponentPlugin', () => {
             expect(models[1]).toMatchObject({ name: 'password', value: '[redacted]' });
         });
 
+        it.each(['password', 'secret', 'token', 'csrf', 'authorization', 'cookie'])(
+            'uses the shared sensitive-key policy for %s model bindings',
+            (name) => {
+                const root = document.createElement('div');
+                root.dataset.controller = 'live';
+                root.innerHTML = `<input type="checkbox" data-model="${name}" checked>`;
+                expect(plugin.parse(root).data.models[0].value).toBe('[redacted]');
+            }
+        );
+
+        it('redacts password inputs even when the model name is not sensitive', () => {
+            const root = document.createElement('div');
+            root.dataset.controller = 'live';
+            root.innerHTML = '<input type="password" data-model="credential" value="private">';
+            expect(plugin.parse(root).data.models[0].value).toBe('[redacted]');
+        });
+
         it('extracts bounded and redacted Live action arguments', () => {
             const el = document.createElement('div');
             el.dataset.controller = 'live';
