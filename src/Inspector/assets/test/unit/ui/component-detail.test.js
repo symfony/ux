@@ -49,7 +49,7 @@ describe('ComponentDetail', () => {
                 state,
                 eventMonitor: monitor,
                 relationshipEngine: relationships,
-                render: (_, data, context) => registry.get().renderCard(data, context),
+                render: (data, context) => registry.get().renderCard(data, context),
             },
             drill
         );
@@ -223,7 +223,7 @@ describe('ComponentDetail', () => {
                 state,
                 eventMonitor: monitor,
                 relationshipEngine: relationships,
-                render: (_, data, context) => registry.get().renderCard(data, context),
+                render: (data, context) => registry.get().renderCard(data, context),
             },
             drill
         );
@@ -257,7 +257,7 @@ describe('ComponentDetail', () => {
                 state,
                 eventMonitor: monitor,
                 relationshipEngine: relationships,
-                render: (_, data, context) => registry.get().renderCard(data, context),
+                render: (data, context) => registry.get().renderCard(data, context),
             },
             drill
         );
@@ -332,7 +332,7 @@ describe('ComponentDetail', () => {
                 state,
                 eventMonitor: monitor,
                 relationshipEngine: relationships,
-                render: (_, data, context) => renderer(data, context),
+                render: (data, context) => renderer(data, context),
             },
             drill
         );

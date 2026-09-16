@@ -6,14 +6,14 @@ import { renderStimulus } from '../stimulus/render';
 import { renderLive } from '../live-component/render';
 import { renderTurbo } from '../turbo/render';
 
-export function renderComponent(name: string, data: ComponentData, context: RenderContext): Node | null {
-    switch (name) {
+export function renderComponent(data: ComponentData, context: RenderContext): Node | null {
+    switch (data.type) {
         case 'stimulus':
-            return renderStimulus(data as ComponentData<StimulusData>, context);
+            return renderStimulus(data.data as StimulusData, context);
         case 'livecomponent':
-            return renderLive(data as ComponentData<LiveData>, context);
+            return renderLive(data.data as LiveData, context);
         case 'turbo':
-            return renderTurbo(data as ComponentData<TurboData>, context);
+            return renderTurbo(data.data as TurboData, context);
         default:
             return null;
     }

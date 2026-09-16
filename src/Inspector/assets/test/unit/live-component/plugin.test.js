@@ -412,20 +412,18 @@ describe('LiveComponentPlugin', () => {
     describe('renderCard()', () => {
         it('renders the expected data fields as a DocumentFragment', () => {
             const data = {
-                data: {
-                    name: 'test',
-                    runtime: { status: 'detected' },
-                    url: '/url',
-                    props: { p: 1 },
-                    propsFromParent: {},
-                    models: [],
-                    actions: [],
-                    listeners: [],
-                    loading: [],
-                    children: [],
-                    parents: [],
-                    otherControllers: [],
-                },
+                name: 'test',
+                runtime: { status: 'detected' },
+                url: '/url',
+                props: { p: 1 },
+                propsFromParent: {},
+                models: [],
+                actions: [],
+                listeners: [],
+                loading: [],
+                children: [],
+                parents: [],
+                otherControllers: [],
             };
             const frag = renderLive(data);
             expect(frag).toBeTruthy();
@@ -436,22 +434,20 @@ describe('LiveComponentPlugin', () => {
             const button = document.createElement('button');
             const loading = document.createElement('span');
             const data = {
-                data: {
-                    name: 'Search',
-                    url: '/_components/Search',
-                    fingerprint: '1234567890abcdefghijkl',
-                    props: { query: 'ux' },
-                    propsFromParent: { page: 2 },
-                    models: [{ name: 'query', modifiers: ['debounce(300)'], value: 'ux', element: field }],
-                    actions: [{ event: 'click', method: 'save', args: { id: 4 }, element: button }],
-                    listeners: [{ event: 'saved', action: 'refresh' }],
-                    loading: [{ action: 'show', element: loading }],
-                    polling: { duration: '5000ms' },
-                    runtime: { status: 'idle', duration: 42, httpStatus: 200, error: null },
-                    children: [],
-                    parents: [],
-                    otherControllers: [],
-                },
+                name: 'Search',
+                url: '/_components/Search',
+                fingerprint: '1234567890abcdefghijkl',
+                props: { query: 'ux' },
+                propsFromParent: { page: 2 },
+                models: [{ name: 'query', modifiers: ['debounce(300)'], value: 'ux', element: field }],
+                actions: [{ event: 'click', method: 'save', args: { id: 4 }, element: button }],
+                listeners: [{ event: 'saved', action: 'refresh' }],
+                loading: [{ action: 'show', element: loading }],
+                polling: { duration: '5000ms' },
+                runtime: { status: 'idle', duration: 42, httpStatus: 200, error: null },
+                children: [],
+                parents: [],
+                otherControllers: [],
             };
 
             const container = document.createElement('div');
@@ -483,22 +479,20 @@ describe('LiveComponentPlugin', () => {
 
         it('shows only actionable runtime states', () => {
             const data = {
-                data: {
-                    name: 'Search',
-                    url: '',
-                    fingerprint: '',
-                    props: {},
-                    propsFromParent: {},
-                    models: [],
-                    actions: [],
-                    listeners: [],
-                    loading: [],
-                    polling: null,
-                    runtime: { status: 'updating', duration: null, httpStatus: null, error: null },
-                    children: [],
-                    parents: [],
-                    otherControllers: [],
-                },
+                name: 'Search',
+                url: '',
+                fingerprint: '',
+                props: {},
+                propsFromParent: {},
+                models: [],
+                actions: [],
+                listeners: [],
+                loading: [],
+                polling: null,
+                runtime: { status: 'updating', duration: null, httpStatus: null, error: null },
+                children: [],
+                parents: [],
+                otherControllers: [],
             };
 
             const container = document.createElement('div');
@@ -509,22 +503,20 @@ describe('LiveComponentPlugin', () => {
 
         it('does not render a group for the transport URL alone', () => {
             const data = {
-                data: {
-                    name: 'Search',
-                    url: '/_components/Search?token=secret',
-                    fingerprint: '',
-                    props: {},
-                    propsFromParent: {},
-                    models: [],
-                    actions: [],
-                    listeners: [],
-                    loading: [],
-                    polling: null,
-                    runtime: { status: 'idle', duration: null, httpStatus: null, error: null },
-                    children: [],
-                    parents: [],
-                    otherControllers: [],
-                },
+                name: 'Search',
+                url: '/_components/Search?token=secret',
+                fingerprint: '',
+                props: {},
+                propsFromParent: {},
+                models: [],
+                actions: [],
+                listeners: [],
+                loading: [],
+                polling: null,
+                runtime: { status: 'idle', duration: null, httpStatus: null, error: null },
+                children: [],
+                parents: [],
+                otherControllers: [],
             };
 
             const container = document.createElement('div');
@@ -538,25 +530,23 @@ describe('LiveComponentPlugin', () => {
             const container = document.createElement('div');
             container.append(
                 renderLive({
-                    data: {
-                        props: {
-                            query: 'ux',
-                            '@checksum': 'very-long-internal-checksum',
-                            '@attributes': { id: 'generated' },
-                        },
-                        propsFromParent: {},
-                        models: [],
-                        actions: [],
-                        listeners: [],
-                        loading: [],
-                        polling: null,
-                        runtime: { status: 'idle', duration: null, httpStatus: null, error: null },
-                        url: '',
-                        fingerprint: '',
-                        children: [],
-                        parents: [],
-                        otherControllers: [],
+                    props: {
+                        query: 'ux',
+                        '@checksum': 'very-long-internal-checksum',
+                        '@attributes': { id: 'generated' },
                     },
+                    propsFromParent: {},
+                    models: [],
+                    actions: [],
+                    listeners: [],
+                    loading: [],
+                    polling: null,
+                    runtime: { status: 'idle', duration: null, httpStatus: null, error: null },
+                    url: '',
+                    fingerprint: '',
+                    children: [],
+                    parents: [],
+                    otherControllers: [],
                 })
             );
 

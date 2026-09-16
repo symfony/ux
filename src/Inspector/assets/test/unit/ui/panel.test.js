@@ -19,7 +19,7 @@ describe('Panel', () => {
                 renderCard: () => document.createElement('p'),
             })),
         };
-        renderComponent.mockImplementation((name, data, context) => registry.get(name).renderCard(data, context));
+        renderComponent.mockImplementation((data, context) => registry.get(data.type).renderCard(data, context));
         monitor = {
             entries: [],
             listeners: [],

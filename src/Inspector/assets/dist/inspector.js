@@ -2698,9 +2698,8 @@ function describeElementPill(element) {
 }
 const CONNECTED = "connected";
 const DOM_ONLY = "dom-only";
-function renderStimulus(data, context = {}) {
+function renderStimulus(d, context = {}) {
 	const frag = document.createDocumentFragment();
-	const d = data.data;
 	const changes = context.changes;
 	const controllerStates = [];
 	const values = [];
@@ -2784,9 +2783,8 @@ function renderStimulus(data, context = {}) {
 	}
 	return frag;
 }
-function renderLive(data, context = {}) {
+function renderLive(d, context = {}) {
 	const frag = document.createDocumentFragment();
-	const d = data.data;
 	const runtime = d.runtime;
 	const changes = context.changes;
 	const props = [];
@@ -2866,9 +2864,8 @@ function renderLive(data, context = {}) {
 	}
 	return frag;
 }
-function renderTurbo(data, context = {}) {
+function renderTurbo(d, context = {}) {
 	const frag = document.createDocumentFragment();
-	const d = data.data;
 	const state = [makeField("loading", d.loading)];
 	const actions = [];
 	if (d.src) state.push(makeField("src", d.src));
@@ -2922,11 +2919,11 @@ function renderTurbo(data, context = {}) {
 	}
 	return frag;
 }
-function renderComponent(name, data, context) {
-	switch (name) {
-		case "stimulus": return renderStimulus(data, context);
-		case "livecomponent": return renderLive(data, context);
-		case "turbo": return renderTurbo(data, context);
+function renderComponent(data, context) {
+	switch (data.type) {
+		case "stimulus": return renderStimulus(data.data, context);
+		case "livecomponent": return renderLive(data.data, context);
+		case "turbo": return renderTurbo(data.data, context);
 		default: return null;
 	}
 }
@@ -3035,7 +3032,7 @@ var ComponentDetail = class {
 		for (const [name, data] of dataMap) {
 			const changes = this.#changes(previousData?.get(name), data);
 			const plugin = this.#registry.get(name);
-			let rendered = this.#render(name, data, {
+			let rendered = this.#render(data, {
 				changes,
 				framework: name,
 				events
