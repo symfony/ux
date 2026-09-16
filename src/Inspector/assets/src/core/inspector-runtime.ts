@@ -97,8 +97,6 @@ export class InspectorRuntime {
         this.#panel.setActionCallbacks({
             target: () => this.toggleTargetMode(),
             overlay: () => this.toggleOverlay(),
-            pause: () => this.toggleLogPaused(),
-            clearLog: () => this.clearLog(),
         });
         this.#panel.setVisualCallbacks({
             onPreview: ({ element, framework, label }) => this.#visual.hover(element, framework, label),

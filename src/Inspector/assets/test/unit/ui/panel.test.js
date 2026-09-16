@@ -98,8 +98,8 @@ describe('Panel', () => {
         expect(filters.lastElementChild).toBe(panel.element.querySelector('[aria-label="Find a component"]'));
         expect(filters.querySelector('[aria-label="Rescan components"]')).toBeNull();
         expect(panel.element.querySelector('.toolbar--components')).toBeNull();
-        expect(panel.element.querySelector('.toolbar--activity').hidden).toBe(true);
-        expect(panel.element.querySelectorAll('.activity-filter-list .filter')).toHaveLength(3);
+        expect(panel.element.querySelector('.activity-tools').hidden).toBe(true);
+        expect(panel.element.querySelectorAll('[aria-label="Filter activity by framework"] .filter')).toHaveLength(3);
     });
 
     it('mounts Activity as a single inline disclosure surface', () => {
@@ -127,7 +127,6 @@ describe('Panel', () => {
         const status = panel.element.querySelector('.monitor-status');
         panel.setTargetModeActive(true);
         expect(status.textContent).toBe('Inspecting');
-        expect(status.classList.contains('inspecting')).toBe(true);
 
         panel.setOverlayActive(true);
         expect(status.textContent).toContain('Overlay enabled');
@@ -135,7 +134,6 @@ describe('Panel', () => {
         panel.setTargetModeActive(false);
         panel.setOverlayActive(false);
         expect(status.textContent).toContain('Watching');
-        expect(status.classList.contains('inspecting')).toBe(false);
     });
 
     it('routes page inspection actions', () => {
@@ -153,7 +151,7 @@ describe('Panel', () => {
         expect(activity.getAttribute('aria-pressed')).toBe('true');
         expect(activity.getAttribute('aria-label')).toBe('Show components');
         expect(panel.element.querySelector('#panel-components').hidden).toBe(true);
-        expect(panel.element.querySelector('.toolbar--activity').hidden).toBe(false);
+        expect(panel.element.querySelector('.activity-tools').hidden).toBe(false);
         expect(panel.element.querySelector('.filters').hidden).toBe(true);
         expect(timeline.refresh).toHaveBeenCalledOnce();
 
@@ -336,15 +334,6 @@ describe('Panel', () => {
         expect(host.open).toHaveBeenCalledTimes(3);
     });
 
-    it('keeps pause and clear out of the visible Activity toolbar', () => {
-        panel.setLogPaused(true);
-        expect(panel.element.querySelector('[data-action="pause"]')).toBeNull();
-        expect(panel.element.querySelector('[data-action="clear"]')).toBeNull();
-        expect(panel.element.querySelector('.monitor-status').textContent).toContain('Activity paused');
-        panel.setLogPaused(false);
-        expect(panel.element.querySelector('.monitor-status').textContent).toContain('Watching');
-    });
-
     it('filters the global activity from the Activity toolbar', () => {
         panel.element.querySelector('[data-action="activity"]').click();
         const search = panel.element.querySelector('[aria-label="Filter activity"]');
@@ -363,8 +352,12 @@ describe('Panel', () => {
         monitor.listeners.forEach((listener) => listener(monitor.entries.at(-1)));
         panel.refresh();
 
-        const stimulus = panel.element.querySelector('.activity-filter-list [data-framework="stimulus"]');
-        const turbo = panel.element.querySelector('.activity-filter-list [data-framework="turbo"]');
+        const stimulus = panel.element.querySelector(
+            '[aria-label="Filter activity by framework"] [data-framework="stimulus"]'
+        );
+        const turbo = panel.element.querySelector(
+            '[aria-label="Filter activity by framework"] [data-framework="turbo"]'
+        );
         expect(stimulus.querySelector('b').textContent).toBe('1');
         expect(turbo.querySelector('b').textContent).toBe('2');
 
@@ -376,7 +369,9 @@ describe('Panel', () => {
 
     it('keeps component and activity framework filters independent', () => {
         const component = panel.element.querySelector('.filters [data-framework="stimulus"]');
-        const activity = panel.element.querySelector('.activity-filter-list [data-framework="stimulus"]');
+        const activity = panel.element.querySelector(
+            '[aria-label="Filter activity by framework"] [data-framework="stimulus"]'
+        );
         component.click();
         expect(component.getAttribute('aria-pressed')).toBe('false');
         expect(activity.getAttribute('aria-pressed')).toBe('true');
@@ -410,7 +405,9 @@ describe('Panel', () => {
         panel.refresh();
 
         const activity = panel.element.querySelector('[data-action="activity"]');
-        const turbo = panel.element.querySelector('.activity-filter-list [data-framework="turbo"]');
+        const turbo = panel.element.querySelector(
+            '[aria-label="Filter activity by framework"] [data-framework="turbo"]'
+        );
         expect(activity.querySelector('b').textContent).toBe('1');
         expect(activity.getAttribute('aria-label')).toBe('Show activity, 1 activity');
         expect(turbo.querySelector('b').textContent).toBe('1');

@@ -625,7 +625,3 @@
     border-radius: 50%;
     background: var(--stimulus);
 }
-
-.monitor-status.paused .live-dot {
-    background: var(--faint);
-}
