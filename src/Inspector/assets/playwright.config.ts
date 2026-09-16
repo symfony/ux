@@ -1,31 +1,9 @@
 import { defineConfig } from '@playwright/test';
-import { getBrowsers } from '../../../bin/get_browsers.mjs';
+import baseConfig from '../../../playwright.config.base';
 
-const browsers = await getBrowsers({ chromeLowest: '145' });
-
-export default defineConfig({
+export default defineConfig(baseConfig, {
     testDir: './test/browser',
     testMatch: '**/*.test.js',
-    outputDir: 'playwright-output',
-    reporter: 'list',
-    workers: process.env.CI ? 2 : undefined,
-    use: { baseURL: 'http://127.0.0.1:9878', viewport: { width: 1280, height: 900 }, trace: 'retain-on-failure' },
-    webServer: { command: 'node test/browser/server.mjs', url: 'http://127.0.0.1:9878/a', reuseExistingServer: false },
-    projects: [
-        ...['lowest', 'latest'].map((version) => ({
-            name: `chrome-${version}`,
-            use: {
-                browserName: 'chromium' as const,
-                channel: 'chrome',
-                launchOptions: { executablePath: browsers[`chrome@${version}`].executablePath },
-            },
-        })),
-        {
-            name: 'firefox-latest',
-            use: {
-                browserName: 'firefox',
-                launchOptions: { executablePath: process.env.INSPECTOR_FIREFOX_EXECUTABLE },
-            },
-        },
-    ],
+    use: { baseURL: 'http://127.0.0.1:9878', viewport: { width: 1280, height: 900 } },
+    webServer: { command: 'node test/browser/server.mjs', url: 'http://127.0.0.1:9878', reuseExistingServer: false },
 });
