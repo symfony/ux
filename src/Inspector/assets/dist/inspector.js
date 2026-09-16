@@ -1506,7 +1506,7 @@ var StimulusPlugin = class {
 		this.setApplication(application);
 	}
 	setApplication(application) {
-		this.#application = application?.getControllerForElementAndIdentifier ? application : null;
+		this.#application = typeof application?.getControllerForElementAndIdentifier === "function" ? application : null;
 	}
 	canHandle(element) {
 		return this.#parseControllers(element).length > 0;
@@ -4812,10 +4812,6 @@ var InspectorRuntime = class {
 			host.setAttribute("ready", "");
 		});
 	}
-	setStimulusApplication(application) {
-		this.#registry.get("stimulus")?.setApplication(application);
-		this.scan();
-	}
 	getStatus() {
 		const components = this.#state.countByPlugin();
 		return {
@@ -4845,7 +4841,7 @@ var InspectorRuntime = class {
 	scan() {
 		if (this.#phase !== "observing") return;
 		const application = this.#application();
-		if (application) this.#registry.get("stimulus")?.setApplication(application);
+		this.#registry.get("stimulus")?.setApplication(application);
 		this.#detector.scan();
 		this.#registerPluginDynamicEvents();
 	}
@@ -5062,9 +5058,6 @@ var UXInspector = class extends HTMLElement {
 	getStatus() {
 		return this.#runtime?.getStatus() ?? {};
 	}
-	setStimulusApplication(application) {
-		this.#runtime?.setStimulusApplication(application);
-	}
 	open() {
 		this.scan();
 		this.setAttribute("open", "");
@@ -5120,9 +5113,9 @@ function registerUXInspector(styles) {
 	if (!customElements.get("ux-inspector")) customElements.define("ux-inspector", UXInspector);
 }
 function connectStimulus(application) {
-	const valid = Boolean(application?.getControllerForElementAndIdentifier);
+	const valid = typeof application?.getControllerForElementAndIdentifier === "function";
 	stimulusApplication = valid ? application : null;
-	document.querySelector("ux-inspector")?.setStimulusApplication(stimulusApplication);
+	document.querySelector("ux-inspector")?.scan();
 	return valid;
 }
 registerUXInspector({ text: inspector_default });

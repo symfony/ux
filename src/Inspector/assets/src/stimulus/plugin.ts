@@ -90,7 +90,8 @@ export class StimulusPlugin implements InspectorPlugin<StimulusData> {
     }
 
     setApplication(application: StimulusApplicationLike | null): void {
-        this.#application = application?.getControllerForElementAndIdentifier ? application : null;
+        this.#application =
+            typeof application?.getControllerForElementAndIdentifier === 'function' ? application : null;
     }
 
     canHandle(element: Element): boolean {

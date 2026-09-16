@@ -334,6 +334,51 @@ describe('UXInspector', () => {
         expect(() => inspector.open()).not.toThrow();
     });
 
+    it('replaces and clears the bridged application without retaining stale declarations', () => {
+        const target = document.createElement('div');
+        target.dataset.controller = 'counter';
+        document.body.append(target);
+        const application = (count) => {
+            class CounterController {
+                static values = { count: { type: Number, default: count } };
+            }
+            return { getControllerForElementAndIdentifier: () => new CounterController() };
+        };
+        const count = () => inspector.shadowRoot.querySelector('[data-field-key="count"] .value .num')?.textContent;
+        expect(connectStimulus(application(5))).toBe(true);
+        inspector.inspectElement(target);
+        expect(count()).toBe('5');
+        expect(connectStimulus(application(8))).toBe(true);
+        expect(count()).toBe('8');
+        expect(connectStimulus(null)).toBe(false);
+        expect(count()).toBeUndefined();
+        expect(inspector.shadowRoot.querySelector('[data-field-key="status"] .value').textContent).toContain(
+            'runtime unavailable'
+        );
+    });
+
+    it('falls back to window.Stimulus and clears it when discovery stops finding it', () => {
+        const target = document.createElement('div');
+        target.dataset.controller = 'counter';
+        document.body.append(target);
+        const lookup = vi.fn(() => ({}));
+        vi.stubGlobal('Stimulus', { getControllerForElementAndIdentifier: lookup });
+        connectStimulus({ getControllerForElementAndIdentifier: () => ({}) });
+        connectStimulus(null);
+        expect(lookup).toHaveBeenCalledWith(target, 'counter');
+        vi.stubGlobal('Stimulus', undefined);
+        inspector.scan();
+        inspector.inspectElement(target);
+        expect(inspector.shadowRoot.querySelector('[data-field-key="status"] .value').textContent).toContain(
+            'runtime unavailable'
+        );
+    });
+
+    it.each([true, 'lookup', {}])('rejects a non-callable bridge lookup: %s', (lookup) => {
+        expect(connectStimulus({ getControllerForElementAndIdentifier: lookup })).toBe(false);
+        expect(() => inspector.scan()).not.toThrow();
+    });
+
     it('accepts the public Stimulus application bridge and exposes runtime declarations', async () => {
         class SearchController {
             static targets = ['results'];
