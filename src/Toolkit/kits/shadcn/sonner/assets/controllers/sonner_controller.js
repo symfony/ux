@@ -2,7 +2,11 @@ import { Controller } from '@hotwired/stimulus';
 
 // Literal class strings are required here so Tailwind JIT includes them in the CSS build.
 const SONNER_BASE =
-    'group flex w-full items-start gap-3 rounded-lg border bg-background p-4 text-foreground shadow-lg transition-[transform,opacity] duration-300 pointer-events-auto absolute left-0 right-0';
+    'group flex w-full items-start gap-3 rounded-lg border p-4 shadow-lg transition-[transform,opacity] duration-300 pointer-events-auto absolute left-0 right-0';
+
+// Never emitted alongside a SONNER_RICH_COLORS entry: two utilities for the same property leave
+// the winner to the stylesheet order, where `bg-background` outranks `bg-amber-50`.
+const SONNER_DEFAULT_COLORS = ['bg-background', 'text-foreground'];
 
 const SONNER_RICH_COLORS = {
     success:
@@ -147,9 +151,7 @@ export default class extends Controller {
         li.setAttribute('aria-atomic', 'true');
 
         li.className = SONNER_BASE;
-        if (this.richColorsValue && SONNER_RICH_COLORS[type]) {
-            li.className += ' ' + SONNER_RICH_COLORS[type];
-        }
+        this.#applyColors(li, type);
 
         if (TYPE_ICONS[type]) {
             const icon = document.createElement('div');
@@ -205,10 +207,7 @@ export default class extends Controller {
         const type = li.dataset.type ?? 'default';
         const ms = li.dataset.duration ? Number(li.dataset.duration) : this.durationValue;
 
-        if (this.richColorsValue && SONNER_RICH_COLORS[type] && !li.dataset.richApplied) {
-            li.className += ' ' + SONNER_RICH_COLORS[type];
-            li.dataset.richApplied = '1';
-        }
+        this.#applyColors(li, type);
 
         const closeBtn = li.querySelector('[data-slot="toast-close"]');
         if (closeBtn) {
@@ -218,6 +217,19 @@ export default class extends Controller {
         }
 
         this.#activateToast(li, type, ms, true);
+    }
+
+    #applyColors(li, type) {
+        const richColors = this.richColorsValue ? SONNER_RICH_COLORS[type] : null;
+
+        if (!richColors) {
+            li.classList.add(...SONNER_DEFAULT_COLORS);
+
+            return;
+        }
+
+        li.classList.remove(...SONNER_DEFAULT_COLORS);
+        li.classList.add(...richColors.split(' '));
     }
 
     #activateToast(li, type, ms, layoutOnOpen = false) {
