@@ -1,9 +1,8 @@
 import { makeField, makeElementField, makeGroup, makeKeyValueList } from '../ui/fields';
-import type { ComponentData, RenderContext } from '../types';
+import type { RenderContext } from '../types';
 import type { LiveData } from './plugin';
-export function renderLive(data: ComponentData<LiveData>, context: RenderContext = {}): DocumentFragment {
+export function renderLive(d: LiveData, context: RenderContext = {}): DocumentFragment {
     const frag = document.createDocumentFragment();
-    const d = data.data;
     const runtime = d.runtime;
     const changes = context.changes as Map<string, { previous?: unknown }> | undefined;
     const props: HTMLElement[] = [];

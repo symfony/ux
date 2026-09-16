@@ -263,15 +263,13 @@ describe('TurboPlugin', () => {
     describe('renderCard()', () => {
         it('renders the expected data fields as a DocumentFragment', () => {
             const data = {
-                data: {
-                    id: 'test-frame',
-                    src: '/src',
-                    loading: 'eager',
-                    childFrames: [],
-                    parentFrame: null,
-                    linksToFrame: [],
-                    formsInFrame: [],
-                },
+                id: 'test-frame',
+                src: '/src',
+                loading: 'eager',
+                childFrames: [],
+                parentFrame: null,
+                linksToFrame: [],
+                formsInFrame: [],
             };
             const frag = renderTurbo(data);
             expect(frag).toBeTruthy();
@@ -279,20 +277,18 @@ describe('TurboPlugin', () => {
 
         it('groups frame metadata and captured Stream actions', () => {
             const data = {
-                data: {
-                    id: 'messages',
-                    src: '/messages',
-                    loading: 'lazy',
-                    target: '',
-                    disabled: false,
-                    autoscroll: false,
-                    busy: false,
-                    complete: true,
-                    childFrames: [],
-                    parentFrame: null,
-                    linksToFrame: [],
-                    formsInFrame: [],
-                },
+                id: 'messages',
+                src: '/messages',
+                loading: 'lazy',
+                target: '',
+                disabled: false,
+                autoscroll: false,
+                busy: false,
+                complete: true,
+                childFrames: [],
+                parentFrame: null,
+                linksToFrame: [],
+                formsInFrame: [],
             };
             const container = document.createElement('div');
             container.append(
@@ -323,20 +319,18 @@ describe('TurboPlugin', () => {
             const container = document.createElement('div');
             container.append(
                 renderTurbo({
-                    data: {
-                        id: 'parent',
-                        src: '',
-                        loading: 'eager',
-                        target: '',
-                        disabled: false,
-                        autoscroll: false,
-                        busy: false,
-                        complete: true,
-                        childFrames: [],
-                        parentFrame: null,
-                        linksToFrame: [{ href: '/messages', element: link }],
-                        formsInFrame: [{ action: '/messages', method: 'post', element: form }],
-                    },
+                    id: 'parent',
+                    src: '',
+                    loading: 'eager',
+                    target: '',
+                    disabled: false,
+                    autoscroll: false,
+                    busy: false,
+                    complete: true,
+                    childFrames: [],
+                    parentFrame: null,
+                    linksToFrame: [{ href: '/messages', element: link }],
+                    formsInFrame: [{ action: '/messages', method: 'post', element: form }],
                 })
             );
 

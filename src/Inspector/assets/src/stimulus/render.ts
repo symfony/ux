@@ -1,11 +1,10 @@
 import { makeField, makeElementField, makeGroup, makeKeyValueList } from '../ui/fields';
-import type { ComponentData, RenderContext } from '../types';
+import type { RenderContext } from '../types';
 import type { StimulusData } from './plugin';
 const CONNECTED = 'connected';
 const DOM_ONLY = 'dom-only';
-export function renderStimulus(data: ComponentData<StimulusData>, context: RenderContext = {}): DocumentFragment {
+export function renderStimulus(d: StimulusData, context: RenderContext = {}): DocumentFragment {
     const frag = document.createDocumentFragment();
-    const d = data.data;
     const changes = context.changes as Map<string, { previous?: unknown }> | undefined;
     const controllerStates: HTMLElement[] = [];
     const values: HTMLElement[] = [];

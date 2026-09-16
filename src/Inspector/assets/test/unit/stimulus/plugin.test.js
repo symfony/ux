@@ -404,16 +404,14 @@ describe('StimulusPlugin', () => {
     describe('renderCard()', () => {
         it('renders the expected data fields as a DocumentFragment', () => {
             const data = {
-                data: {
-                    controllers: ['test'],
-                    values: { test: { a: 1 } },
-                    classes: {},
-                    targets: {},
-                    actions: {},
-                    outlets: {},
-                    children: [],
-                    parents: [],
-                },
+                controllers: ['test'],
+                values: { test: { a: 1 } },
+                classes: {},
+                targets: {},
+                actions: {},
+                outlets: {},
+                children: [],
+                parents: [],
             };
             const frag = renderStimulus(data);
             expect(frag).toBeTruthy();
@@ -422,16 +420,14 @@ describe('StimulusPlugin', () => {
         it('renders actions as readable event to method text without null', () => {
             const button = document.createElement('button');
             const data = {
-                data: {
-                    controllers: ['search'],
-                    values: {},
-                    classes: {},
-                    targets: {},
-                    outlets: {},
-                    actions: { search: [{ event: 'click', method: 'perform', element: button }] },
-                    children: [],
-                    parents: [],
-                },
+                controllers: ['search'],
+                values: {},
+                classes: {},
+                targets: {},
+                outlets: {},
+                actions: { search: [{ event: 'click', method: 'perform', element: button }] },
+                children: [],
+                parents: [],
             };
 
             const container = document.createElement('div');
@@ -447,31 +443,29 @@ describe('StimulusPlugin', () => {
             const action = document.createElement('button');
             const outlet = document.createElement('div');
             const data = {
-                data: {
-                    controllers: ['counter'],
-                    values: { counter: { step: 1 } },
-                    runtimeAvailable: false,
-                    connectedControllers: [],
-                    valueStates: { counter: [{ name: 'step', value: 1, status: 'configured' }] },
-                    targets: { counter: { elements: [{ name: 'count', element: target }] } },
-                    classStates: { counter: [{ name: 'active', value: 'is-active', status: 'configured' }] },
-                    actions: {
-                        counter: [
-                            {
-                                event: 'click',
-                                method: 'increment',
-                                element: action,
-                                params: { amount: 2, options: { source: 'catalog' } },
-                            },
-                        ],
-                    },
-                    classes: { counter: { active: 'is-active' } },
-                    outlets: { counter: [{ name: 'display', selector: '#display', elements: [outlet] }] },
-                    children: [],
-                    parents: [],
+                controllers: ['counter'],
+                values: { counter: { step: 1 } },
+                runtimeAvailable: false,
+                connectedControllers: [],
+                valueStates: { counter: [{ name: 'step', value: 1, status: 'configured' }] },
+                targets: { counter: { elements: [{ name: 'count', element: target }] } },
+                classStates: { counter: [{ name: 'active', value: 'is-active', status: 'configured' }] },
+                actions: {
+                    counter: [
+                        {
+                            event: 'click',
+                            method: 'increment',
+                            element: action,
+                            params: { amount: 2, options: { source: 'catalog' } },
+                        },
+                    ],
                 },
+                classes: { counter: { active: 'is-active' } },
+                outlets: { counter: [{ name: 'display', selector: '#display', elements: [outlet] }] },
+                children: [],
+                parents: [],
             };
-            data.data.targets.counter.items = [{ name: 'count', elements: [target], status: 'dom-only' }];
+            data.targets.counter.items = [{ name: 'count', elements: [target], status: 'dom-only' }];
 
             const container = document.createElement('div');
             container.append(renderStimulus(data));
@@ -513,18 +507,16 @@ describe('StimulusPlugin', () => {
 
         it('keeps unresolved outlets in their own group without duplicating connected outlets', () => {
             const data = {
-                data: {
-                    controllers: ['counter'],
-                    runtimeAvailable: true,
-                    connectedControllers: ['counter'],
-                    valueStates: {},
-                    targets: {},
-                    actions: {},
-                    classStates: {},
-                    outlets: { counter: [{ name: 'display', selector: '#missing', elements: [], status: 'missing' }] },
-                    children: [],
-                    parents: [],
-                },
+                controllers: ['counter'],
+                runtimeAvailable: true,
+                connectedControllers: ['counter'],
+                valueStates: {},
+                targets: {},
+                actions: {},
+                classStates: {},
+                outlets: { counter: [{ name: 'display', selector: '#missing', elements: [], status: 'missing' }] },
+                children: [],
+                parents: [],
             };
 
             const container = document.createElement('div');
@@ -541,16 +533,14 @@ describe('StimulusPlugin', () => {
             const container = document.createElement('div');
             container.append(
                 renderStimulus({
-                    data: {
-                        controllers: ['counter'],
-                        runtimeAvailable: true,
-                        connectedControllers: ['counter'],
-                        valueStates: { counter: [{ name: 'step', value: 1, status: 'connected' }] },
-                        targets: {},
-                        actions: {},
-                        classStates: {},
-                        outlets: {},
-                    },
+                    controllers: ['counter'],
+                    runtimeAvailable: true,
+                    connectedControllers: ['counter'],
+                    valueStates: { counter: [{ name: 'step', value: 1, status: 'connected' }] },
+                    targets: {},
+                    actions: {},
+                    classStates: {},
+                    outlets: {},
                 })
             );
 
@@ -563,16 +553,14 @@ describe('StimulusPlugin', () => {
             const container = document.createElement('div');
             container.append(
                 renderStimulus({
-                    data: {
-                        controllers: ['counter'],
-                        runtimeAvailable: true,
-                        connectedControllers: ['counter'],
-                        valueStates: {},
-                        targets: { counter: { items: [{ name: 'optional', elements: [], status: 'missing' }] } },
-                        actions: {},
-                        classStates: {},
-                        outlets: {},
-                    },
+                    controllers: ['counter'],
+                    runtimeAvailable: true,
+                    connectedControllers: ['counter'],
+                    valueStates: {},
+                    targets: { counter: { items: [{ name: 'optional', elements: [], status: 'missing' }] } },
+                    actions: {},
+                    classStates: {},
+                    outlets: {},
                 })
             );
 

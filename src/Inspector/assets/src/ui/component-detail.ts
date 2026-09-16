@@ -151,7 +151,7 @@ export class ComponentDetail {
         for (const [name, data] of dataMap) {
             const changes = this.#changes(previousData?.get(name), data);
             const plugin = this.#registry.get(name);
-            let rendered = this.#render(name, data, { changes, framework: name, events }) as
+            let rendered = this.#render(data, { changes, framework: name, events }) as
                 | Element
                 | DocumentFragment
                 | null

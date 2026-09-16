@@ -1,9 +1,8 @@
 import { makeField, makeElementField, makeGroup, makeKeyValueList } from '../ui/fields';
-import type { ComponentData, RenderContext } from '../types';
+import type { RenderContext } from '../types';
 import type { TurboData } from './plugin';
-export function renderTurbo(data: ComponentData<TurboData>, context: RenderContext = {}): DocumentFragment {
+export function renderTurbo(d: TurboData, context: RenderContext = {}): DocumentFragment {
     const frag = document.createDocumentFragment();
-    const d = data.data;
     const state = [makeField('loading', d.loading)];
     const actions: HTMLElement[] = [];
     if (d.src) state.push(makeField('src', d.src));
