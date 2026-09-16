@@ -34,6 +34,10 @@ export function el<K extends keyof HTMLElementTagNameMap>(
     return node;
 }
 
+export function expandableTextIfLong<T extends HTMLElement>(node: T, maxLength = 24): T {
+    return (node.textContent?.length ?? 0) > maxLength ? expandableText(node) : node;
+}
+
 export function expandableText<T extends HTMLElement>(node: T): T {
     node.classList.add('expandable-text');
     node.setAttribute('aria-expanded', 'false');

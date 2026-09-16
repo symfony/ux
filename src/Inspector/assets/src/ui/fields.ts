@@ -1,4 +1,4 @@
-import { el, expandableText } from './ui-helpers';
+import { el, expandableText, expandableTextIfLong } from './ui-helpers';
 import { TreeViewer } from './tree-viewer';
 import type { ElChild } from './ui-helpers';
 import { createIcon } from './icons';
@@ -36,9 +36,10 @@ export function makeField(key: string, value: unknown, options: FieldOptions = {
     const structured = value !== null && typeof value === 'object';
     const row = el('dd', { class: 'value' });
     renderValue(row, value, options);
-    if (!options.multiline && !options.vertical && typeof value === 'string' && value.length > 32) expandableText(row);
-    if (!options.multiline && !options.vertical && typeof value === 'string' && value.length > 32)
+    if (!options.multiline && !options.vertical && typeof value === 'string' && value.length > 32) {
+        expandableText(row);
         row.dataset.long = '';
+    }
     if (options.status) {
         row.prepend(
             el('span', {
@@ -60,9 +61,7 @@ export function makeField(key: string, value: unknown, options: FieldOptions = {
             },
             title: options.changed ? `Changed from ${formatInline(safeValue(options.previous, key))}` : null,
         },
-        String(key).length > 24
-            ? expandableText(el('dt', { class: 'key', text: key }))
-            : el('dt', { class: 'key', text: key }),
+        expandableTextIfLong(el('dt', { class: 'key', text: key })),
         structured ? el('dd', { class: 'value-meta', text: structureSummary(value as object) }) : null,
         row
     );
@@ -75,9 +74,7 @@ export function makeEmptyField(key: string): HTMLElement {
             class: 'key-value',
             dataset: { fieldKey: key, empty: '' },
         },
-        String(key).length > 24
-            ? expandableText(el('dt', { class: 'key', text: key }))
-            : el('dt', { class: 'key', text: key }),
+        expandableTextIfLong(el('dt', { class: 'key', text: key })),
         el('dd', { class: 'value', 'aria-hidden': 'true' })
     );
 }
@@ -150,9 +147,7 @@ export function makeElementField(labelStr: string, element: Element, options: El
     const field = el(
         'div',
         { class: 'key-value', dataset: { fieldKey: `element:${labelStr}`, element: '' } },
-        labelStr.length > 24
-            ? expandableText(el('dt', { class: 'key', text: labelStr }))
-            : el('dt', { class: 'key', text: labelStr }),
+        expandableTextIfLong(el('dt', { class: 'key', text: labelStr })),
         el(
             'dd',
             { class: 'value' },

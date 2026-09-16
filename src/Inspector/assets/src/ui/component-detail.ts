@@ -1,6 +1,13 @@
 import { renderComponent } from './render-component';
 import { sameSnapshot } from '../core/snapshot';
-import { componentIdentity, componentLabel, el, expandableText, frameworkName } from './ui-helpers';
+import {
+    componentIdentity,
+    componentLabel,
+    el,
+    expandableText,
+    expandableTextIfLong,
+    frameworkName,
+} from './ui-helpers';
 import { createIcon } from './icons';
 import { makeGroup } from './fields';
 import type { PluginRegistry } from '../core/plugin-registry';
@@ -125,9 +132,9 @@ export class ComponentDetail {
         return el(
             'section',
             { class: 'detail-head' },
-            identity.length > 24 ? expandableText(title) : title,
+            expandableTextIfLong(title),
             el('span', { class: 'framework', dataset: { framework }, text: frameworkName(framework) }),
-            subtitle && selector.length > 32 ? expandableText(subtitle) : subtitle
+            subtitle ? expandableTextIfLong(subtitle, 32) : null
         );
     }
 
