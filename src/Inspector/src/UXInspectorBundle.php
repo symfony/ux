@@ -19,6 +19,9 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\UX\Inspector\Controller\InspectorController;
 use Symfony\UX\Inspector\EventListener\InjectInspectorListener;
 use Symfony\UX\Inspector\Routing\InspectorRouteLoader;
+use Symfony\UX\LiveComponent\LiveComponentBundle;
+use Symfony\UX\StimulusBundle\StimulusBundle;
+use Symfony\UX\Turbo\TurboBundle;
 
 /**
  * Registers the inspector, which only ever runs while kernel.debug is true.
@@ -76,9 +79,9 @@ final class UXInspectorBundle extends AbstractBundle
             'pull_tab' => $config['pull_tab'],
             'ignore_selectors' => $config['ignore_selectors'],
             'packages' => [
-                'stimulus' => class_exists('Symfony\\UX\\StimulusBundle\\StimulusBundle'),
-                'livecomponent' => class_exists('Symfony\\UX\\LiveComponent\\LiveComponentBundle'),
-                'turbo' => class_exists('Symfony\\UX\\Turbo\\TurboBundle'),
+                'stimulus' => class_exists(StimulusBundle::class),
+                'livecomponent' => class_exists(LiveComponentBundle::class),
+                'turbo' => class_exists(TurboBundle::class),
             ],
         ];
 
