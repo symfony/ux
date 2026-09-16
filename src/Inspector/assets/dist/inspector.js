@@ -2098,6 +2098,9 @@ function el(tag, props = {}, ...children) {
 	node.append(...children.filter((child) => child != null));
 	return node;
 }
+function expandableTextIfLong(node, maxLength = 24) {
+	return (node.textContent?.length ?? 0) > maxLength ? expandableText(node) : node;
+}
 function expandableText(node) {
 	node.classList.add("expandable-text");
 	node.setAttribute("aria-expanded", "false");
@@ -2521,8 +2524,10 @@ function makeField(key, value, options = {}) {
 	const structured = value !== null && typeof value === "object";
 	const row = el("dd", { class: "value" });
 	renderValue(row, value, options);
-	if (!options.multiline && !options.vertical && typeof value === "string" && value.length > 32) expandableText(row);
-	if (!options.multiline && !options.vertical && typeof value === "string" && value.length > 32) row.dataset.long = "";
+	if (!options.multiline && !options.vertical && typeof value === "string" && value.length > 32) {
+		expandableText(row);
+		row.dataset.long = "";
+	}
 	if (options.status) row.prepend(el("span", {
 		class: "value-status",
 		dataset: { status: options.status },
@@ -2537,13 +2542,10 @@ function makeField(key, value, options = {}) {
 			...options.changed ? { changed: "" } : {}
 		},
 		title: options.changed ? `Changed from ${formatInline(safeValue(options.previous, key))}` : null
-	}, String(key).length > 24 ? expandableText(el("dt", {
+	}, expandableTextIfLong(el("dt", {
 		class: "key",
 		text: key
-	})) : el("dt", {
-		class: "key",
-		text: key
-	}), structured ? el("dd", {
+	})), structured ? el("dd", {
 		class: "value-meta",
 		text: structureSummary(value)
 	}) : null, row);
@@ -2617,13 +2619,10 @@ function makeElementField(labelStr, element, options = {}) {
 			fieldKey: `element:${labelStr}`,
 			element: ""
 		}
-	}, labelStr.length > 24 ? expandableText(el("dt", {
+	}, expandableTextIfLong(el("dt", {
 		class: "key",
 		text: labelStr
-	})) : el("dt", {
-		class: "key",
-		text: labelStr
-	}), el("dd", { class: "value" }, options.detail && options.detail !== "connected" ? expandableText(el("span", {
+	})), el("dd", { class: "value" }, options.detail && options.detail !== "connected" ? expandableText(el("span", {
 		class: "value-note",
 		text: options.detail
 	})) : null, pill));
@@ -3017,11 +3016,11 @@ var ComponentDetail = class {
 			class: "detail-selector",
 			text: selector
 		}) : null;
-		return el("section", { class: "detail-head" }, identity.length > 24 ? expandableText(title) : title, el("span", {
+		return el("section", { class: "detail-head" }, expandableTextIfLong(title), el("span", {
 			class: "framework",
 			dataset: { framework },
 			text: frameworkName(framework)
-		}), subtitle && selector.length > 32 ? expandableText(subtitle) : subtitle);
+		}), subtitle ? expandableTextIfLong(subtitle, 32) : null);
 	}
 	#data(dataMap, previousData) {
 		const body = el("div", {

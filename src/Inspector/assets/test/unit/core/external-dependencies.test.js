@@ -91,7 +91,6 @@ describe('External DOM dependencies', () => {
         for (let i = 0; i < 50; i++) target.setAttribute('aria-label', String(i));
         await vi.waitFor(() => expect(query.mock.calls.filter(([selector]) => selector === '.item')).toHaveLength(1));
         expect(updated).not.toHaveBeenCalled();
-        expect(query.mock.calls.filter(([selector]) => selector === '.item')).toHaveLength(1);
         expect(parse).not.toHaveBeenCalled();
     });
 });
