@@ -99,9 +99,10 @@ class LiveUrlSubscriber implements EventSubscriberInterface, ServiceSubscriberIn
 
     private function generateNewLiveUrl(string $previousUrl, array $pathProps, array $queryProps): string
     {
-        $previousUrlParsed = parse_url($previousUrl);
-        $newUrl = $previousUrlParsed['path'];
-        $newQueryString = $previousUrlParsed['query'] ?? '';
+        [$previousPath, $previousQueryString] = array_pad(explode('?', $previousUrl, 2), 2, null);
+
+        $newUrl = $previousPath;
+        $newQueryString = $previousQueryString;
 
         if ([] !== $pathProps) {
             $router = $this->getRouter();
@@ -112,7 +113,7 @@ class LiveUrlSubscriber implements EventSubscriberInterface, ServiceSubscriberIn
                 $tmpContext->setMethod('GET');
                 $router->setContext($tmpContext);
 
-                $routeMatched = $router->match($previousUrlParsed['path']);
+                $routeMatched = $router->match($previousPath);
                 $routeParams = [];
                 foreach ($routeMatched as $k => $v) {
                     if ('_route' === $k || '_controller' === $k) {
@@ -130,13 +131,13 @@ class LiveUrlSubscriber implements EventSubscriberInterface, ServiceSubscriberIn
         }
 
         if ([] !== $queryProps) {
-            $previousQueryString = [];
+            $previousQueryProps = [];
 
-            if (isset($previousUrlParsed['query'])) {
-                parse_str($previousUrlParsed['query'], $previousQueryString);
+            if (isset($previousQueryString)) {
+                parse_str($previousQueryString, $previousQueryProps);
             }
 
-            $newQueryString = http_build_query([...$previousQueryString, ...$queryProps]);
+            $newQueryString = http_build_query([...$previousQueryProps, ...$queryProps]);
         }
 
         return $newUrl.($newQueryString ? '?'.$newQueryString : '');
