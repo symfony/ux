@@ -90,7 +90,7 @@ async function main() {
         unbundle: isStimulusBundle || isReactOrVue,
         deps: {
             neverBundle: Array.from(external),
-            onlyBundle: isInspector ? [] : ['idiomorph'],
+            onlyBundle: ['idiomorph'],
         },
         plugins: [
             {
