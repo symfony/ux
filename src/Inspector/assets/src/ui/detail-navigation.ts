@@ -224,14 +224,13 @@ export class DetailNavigation {
     #onDrillPop({ removed, current }: { removed: { id: string }; current: { element?: Element } }): void {
         this.#destroyDrillDetail(removed.id);
         this.restoreActivity();
-        this.#callbacks.change();
         if (current.element) {
             const dataMap = this.#state.get(current.element);
             this.#callbacks.select({ element: current.element, framework: dataMap?.keys().next().value || 'default' });
         } else {
             this.#callbacks.clearSelection();
-            this.#callbacks.change();
         }
+        this.#callbacks.change();
     }
 
     #destroyDrillDetail(id: string): void {

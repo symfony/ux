@@ -3241,7 +3241,7 @@ var DrillStack = class extends EventTarget {
 		}
 		const index = this.#levels.length;
 		const header = el("button", {
-			class: "stack-link current",
+			class: "stack-link",
 			type: "button",
 			"aria-current": "page",
 			"aria-label": index ? `Back from ${title}` : title,
@@ -3305,9 +3305,9 @@ var DrillStack = class extends EventTarget {
 		const previousIndex = currentIndex - 1;
 		for (const [index, level] of this.#levels.entries()) {
 			const current = index === currentIndex;
-			level.header.classList.toggle("current", current);
 			level.header.classList.toggle("previous", index === previousIndex);
-			level.header.toggleAttribute("aria-current", current);
+			if (current) level.header.setAttribute("aria-current", "page");
+			else level.header.removeAttribute("aria-current");
 			level.header.setAttribute("aria-label", current ? level.title : `Back to ${level.title}`);
 		}
 		this.#element.classList.toggle("is-drilled", this.depth > 1);
@@ -3483,17 +3483,14 @@ var DetailNavigation = class {
 	#onDrillPop({ removed, current }) {
 		this.#destroyDrillDetail(removed.id);
 		this.restoreActivity();
-		this.#callbacks.change();
 		if (current.element) {
 			const dataMap = this.#state.get(current.element);
 			this.#callbacks.select({
 				element: current.element,
 				framework: dataMap?.keys().next().value || "default"
 			});
-		} else {
-			this.#callbacks.clearSelection();
-			this.#callbacks.change();
-		}
+		} else this.#callbacks.clearSelection();
+		this.#callbacks.change();
 	}
 	#destroyDrillDetail(id) {
 		const record = this.#drillDetails.get(id);
