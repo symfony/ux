@@ -29,8 +29,8 @@ class FieldAutocompleterTest extends KernelTestCase
 
     public function testItReturnsBasicResults(): void
     {
-        $category = CategoryFactory::createOne(['name' => 'foo and baz']);
-        CategoryFactory::createOne(['name' => 'foo and bar']);
+        $category = CategoryFactory::createOne(['name' => 'foo and baz', 'code' => 'first']);
+        $matchingCategory = CategoryFactory::createOne(['name' => 'foo and bar', 'code' => 'second']);
 
         $this->browser()
             ->throwExceptions()
@@ -41,6 +41,10 @@ class FieldAutocompleterTest extends KernelTestCase
             ->assertJsonMatches('results[0].text', '<strong>foo and baz</strong>')
             ->get('/test/autocomplete/category_autocomplete_type?query=bar')
             ->assertJsonMatches('length(results)', 1)
+            ->assertJsonMatches('results[0].value', (string) $matchingCategory->getId())
+            ->get('/test/autocomplete/category_autocomplete_type?query=first')
+            ->assertJsonMatches('length(results)', 1)
+            ->assertJsonMatches('results[0].value', (string) $category->getId())
         ;
     }
 
