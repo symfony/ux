@@ -46,6 +46,7 @@ export class Timeline {
         this.#filterEmpty = createEmptyState('No matches.');
         this.#filterEmpty.hidden = true;
         this.#element = el('div', { class: 'timeline' }, this.#list, this.#filterEmpty);
+        monitor.addListener(this.#onEntry);
     }
 
     get element(): HTMLElement {
@@ -98,10 +99,10 @@ export class Timeline {
         }
     }
 
-    addEntry(_entry: ActivityEntry): void {
+    #onEntry = (): void => {
         if (this.#paused || this.#rafId !== null) return;
         this.#rafId = requestAnimationFrame(() => this.#flushEntries());
-    }
+    };
 
     #flushEntries(): void {
         this.#rafId = null;
@@ -115,6 +116,7 @@ export class Timeline {
     }
 
     destroy(): void {
+        this.#monitor.removeListener(this.#onEntry);
         if (this.#rafId !== null) cancelAnimationFrame(this.#rafId);
         this.#rafId = null;
         this.#paused = true;

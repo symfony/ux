@@ -4060,6 +4060,7 @@ var Timeline = class {
 		this.#filterEmpty = createEmptyState("No matches.");
 		this.#filterEmpty.hidden = true;
 		this.#element = el("div", { class: "timeline" }, this.#list, this.#filterEmpty);
+		monitor.addListener(this.#onEntry);
 	}
 	get element() {
 		return this.#element;
@@ -4097,10 +4098,10 @@ var Timeline = class {
 			return false;
 		}
 	}
-	addEntry(_entry) {
+	#onEntry = () => {
 		if (this.#paused || this.#rafId !== null) return;
 		this.#rafId = requestAnimationFrame(() => this.#flushEntries());
-	}
+	};
 	#flushEntries() {
 		this.#rafId = null;
 		if (!this.#paused) this.#renderSnapshot();
@@ -4111,6 +4112,7 @@ var Timeline = class {
 		this.#flushEntries();
 	}
 	destroy() {
+		this.#monitor.removeListener(this.#onEntry);
 		if (this.#rafId !== null) cancelAnimationFrame(this.#rafId);
 		this.#rafId = null;
 		this.#paused = true;
@@ -4764,8 +4766,7 @@ var InspectorRuntime = class {
 		});
 		shadow.append(this.#panel.element);
 		this.#registerPluginStaticEvents();
-		const timeline = this.#timeline;
-		this.#eventMonitor.start((entry) => timeline.addEntry(entry));
+		this.#eventMonitor.start();
 		const { signal } = this.#lifetime;
 		if (config.pull_tab !== false) {
 			this.#pullTab = createPullTab(host, () => {

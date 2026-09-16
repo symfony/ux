@@ -108,8 +108,7 @@ export class InspectorRuntime {
         });
         shadow.append(this.#panel.element);
         this.#registerPluginStaticEvents();
-        const timeline = this.#timeline;
-        this.#eventMonitor.start((entry) => timeline.addEntry(entry));
+        this.#eventMonitor.start();
 
         const { signal } = this.#lifetime;
         if (config.pull_tab !== false) {
