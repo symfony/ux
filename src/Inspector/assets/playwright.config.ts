@@ -1,7 +1,7 @@
 import { defineConfig } from '@playwright/test';
 import { getBrowsers } from '../../../bin/get_browsers.mjs';
 
-const browsers = await getBrowsers('145');
+const browsers = await getBrowsers({ chromeLowest: '145' });
 
 export default defineConfig({
     testDir: './test/browser',

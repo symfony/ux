@@ -11,7 +11,7 @@ const installBrowserCommonOpts = {
 // Lowest versions are computed from "defaults and fully supports es6-module" query,
 // see https://browsersl.ist/#q=defaults+and+fully+supports+es6-module
 
-export async function getBrowsers(chromeLowest = '130.0.6669.0') {
+export async function getBrowsers({ chromeLowest = '130.0.6669.0' } = {}) {
     return {
         'chrome@lowest': await install({
             ...installBrowserCommonOpts,
