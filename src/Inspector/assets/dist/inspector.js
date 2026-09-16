@@ -25,6 +25,25 @@ function ancestors(element, selector) {
 function scopedChildren(element, selector) {
 	return [...element.querySelectorAll(selector)].filter((child) => child.parentElement?.closest(selector) === element);
 }
+function _checkPrivateRedeclaration(e, t) {
+	if (t.has(e)) throw new TypeError("Cannot initialize the same private elements twice on an object");
+}
+function _classPrivateMethodInitSpec(e, a) {
+	_checkPrivateRedeclaration(e, a), a.add(e);
+}
+function _classPrivateFieldInitSpec(e, t, a) {
+	_checkPrivateRedeclaration(e, t), t.set(e, a);
+}
+function _assertClassBrand(e, t, n) {
+	if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n;
+	throw new TypeError("Private element is not present on this object");
+}
+function _classPrivateFieldSet2(s, a, r) {
+	return s.set(_assertClassBrand(s, a), r), r;
+}
+function _classPrivateFieldGet2(s, a) {
+	return s.get(_assertClassBrand(s, a));
+}
 const BASE_ATTRIBUTES = new Set([
 	"data-controller",
 	"data-action",
@@ -43,21 +62,32 @@ const BASE_ATTRIBUTES = new Set([
 	"busy",
 	"complete"
 ]);
+var _registry$8 = /* @__PURE__ */ new WeakMap();
+var _state$7 = /* @__PURE__ */ new WeakMap();
+var _observer$1 = /* @__PURE__ */ new WeakMap();
+var _inspectorElement = /* @__PURE__ */ new WeakMap();
+var _ignoreSelectors = /* @__PURE__ */ new WeakMap();
+var _pending = /* @__PURE__ */ new WeakMap();
+var _flushQueued = /* @__PURE__ */ new WeakMap();
+var _mutations = /* @__PURE__ */ new WeakMap();
+var _reportedPlugins = /* @__PURE__ */ new WeakMap();
+var _ComponentDetector_brand = /* @__PURE__ */ new WeakSet();
 var ComponentDetector = class {
-	#registry;
-	#state;
-	#observer = null;
-	#inspectorElement;
-	#ignoreSelectors;
-	#pending = /* @__PURE__ */ new Set();
-	#flushQueued = false;
-	#mutations = /* @__PURE__ */ new Map();
-	#reportedPlugins = /* @__PURE__ */ new Set();
 	constructor(registry, state, inspectorElement, ignoreSelectors = []) {
-		this.#registry = registry;
-		this.#state = state;
-		this.#inspectorElement = inspectorElement;
-		this.#ignoreSelectors = ignoreSelectors.filter((selector) => {
+		_classPrivateMethodInitSpec(this, _ComponentDetector_brand);
+		_classPrivateFieldInitSpec(this, _registry$8, void 0);
+		_classPrivateFieldInitSpec(this, _state$7, void 0);
+		_classPrivateFieldInitSpec(this, _observer$1, null);
+		_classPrivateFieldInitSpec(this, _inspectorElement, void 0);
+		_classPrivateFieldInitSpec(this, _ignoreSelectors, void 0);
+		_classPrivateFieldInitSpec(this, _pending, /* @__PURE__ */ new Set());
+		_classPrivateFieldInitSpec(this, _flushQueued, false);
+		_classPrivateFieldInitSpec(this, _mutations, /* @__PURE__ */ new Map());
+		_classPrivateFieldInitSpec(this, _reportedPlugins, /* @__PURE__ */ new Set());
+		_classPrivateFieldSet2(_registry$8, this, registry);
+		_classPrivateFieldSet2(_state$7, this, state);
+		_classPrivateFieldSet2(_inspectorElement, this, inspectorElement);
+		_classPrivateFieldSet2(_ignoreSelectors, this, ignoreSelectors.filter((selector) => {
 			try {
 				document.createDocumentFragment().querySelector(selector);
 				return true;
@@ -65,29 +95,29 @@ var ComponentDetector = class {
 				console.warn(`[ux-inspector] Ignoring invalid "ignore_selectors" entry "${selector}":`, e);
 				return false;
 			}
-		});
+		}));
 	}
 	scan() {
-		const selector = this.#registry.combinedSelector;
+		const selector = _classPrivateFieldGet2(_registry$8, this).combinedSelector;
 		if (!selector) return;
-		const seen = new Set(this.#components(document, selector));
+		const seen = new Set(_assertClassBrand(_ComponentDetector_brand, this, _components$2).call(this, document, selector));
 		const query = createQueryCache();
-		for (const element of seen) this.#reconcile(element, query);
-		for (const existing of this.#state.elements) if (!seen.has(existing) || !existing.isConnected) this.#remove(existing);
+		for (const element of seen) _assertClassBrand(_ComponentDetector_brand, this, _reconcile).call(this, element, query);
+		for (const existing of _classPrivateFieldGet2(_state$7, this).elements) if (!seen.has(existing) || !existing.isConnected) _assertClassBrand(_ComponentDetector_brand, this, _remove).call(this, existing);
 	}
 	inspect(element) {
-		this.#reconcile(element, createQueryCache());
-		return this.#state.get(element);
+		_assertClassBrand(_ComponentDetector_brand, this, _reconcile).call(this, element, createQueryCache());
+		return _classPrivateFieldGet2(_state$7, this).get(element);
 	}
 	observe() {
-		if (this.#observer) return;
-		this.#observer = new MutationObserver((mutations) => {
+		if (_classPrivateFieldGet2(_observer$1, this)) return;
+		_classPrivateFieldSet2(_observer$1, this, new MutationObserver((mutations) => {
 			for (const mutation of mutations) {
 				const target = mutation.target instanceof Element ? mutation.target : mutation.target.parentElement;
-				if (target && this.#isToolingElement(target)) continue;
+				if (target && _assertClassBrand(_ComponentDetector_brand, this, _isToolingElement).call(this, target)) continue;
 				const attributeName = mutation.attributeName;
-				let changes = this.#mutations.get(mutation.target);
-				if (!changes) this.#mutations.set(mutation.target, changes = /* @__PURE__ */ new Map());
+				let changes = _classPrivateFieldGet2(_mutations, this).get(mutation.target);
+				if (!changes) _classPrivateFieldGet2(_mutations, this).set(mutation.target, changes = /* @__PURE__ */ new Map());
 				const key = mutation.type === "attributes" ? `attribute:${attributeName}` : mutation.type;
 				let change = changes.get(key);
 				if (!change) {
@@ -103,9 +133,9 @@ var ComponentDetector = class {
 				change.addedNodes.push(...mutation.addedNodes);
 				change.removedNodes.push(...mutation.removedNodes);
 			}
-			if (this.#mutations.size) this.#scheduleFlush();
-		});
-		this.#observer.observe(document.body || document.documentElement, {
+			if (_classPrivateFieldGet2(_mutations, this).size) _assertClassBrand(_ComponentDetector_brand, this, _scheduleFlush).call(this);
+		}));
+		_classPrivateFieldGet2(_observer$1, this).observe(document.body || document.documentElement, {
 			childList: true,
 			subtree: true,
 			attributes: true,
@@ -113,101 +143,101 @@ var ComponentDetector = class {
 		});
 	}
 	disconnect() {
-		for (const element of this.#state.elements) this.#registry.notifyElementRemoved(element, this.#state.get(element)?.keys() ?? []);
-		this.#observer?.disconnect();
-		this.#observer = null;
-		this.#pending.clear();
-		this.#mutations.clear();
-		this.#flushQueued = false;
+		for (const element of _classPrivateFieldGet2(_state$7, this).elements) _classPrivateFieldGet2(_registry$8, this).notifyElementRemoved(element, _classPrivateFieldGet2(_state$7, this).get(element)?.keys() ?? []);
+		_classPrivateFieldGet2(_observer$1, this)?.disconnect();
+		_classPrivateFieldSet2(_observer$1, this, null);
+		_classPrivateFieldGet2(_pending, this).clear();
+		_classPrivateFieldGet2(_mutations, this).clear();
+		_classPrivateFieldSet2(_flushQueued, this, false);
 	}
 	refresh(element) {
-		this.#queueOwners(element);
+		_assertClassBrand(_ComponentDetector_brand, this, _queueOwners).call(this, element);
 	}
 	destroy() {
 		this.disconnect();
 	}
-	#reconcile(element, query) {
-		if (this.#isExcluded(element)) {
-			if (this.#state.get(element)) this.#remove(element);
-			return;
-		}
-		const previous = this.#state.get(element);
-		const parsed = /* @__PURE__ */ new Map();
-		for (const plugin of this.#registry.getForElement(element)) try {
-			plugin.observe?.(element);
-			parsed.set(plugin.name, plugin.parse(element, query));
-		} catch (e) {
-			this.#registry.notifyElementRemoved(element, [plugin.name]);
-			if (!this.#reportedPlugins.has(plugin.name)) {
-				this.#reportedPlugins.add(plugin.name);
-				console.warn(`[ux-inspector] Plugin "${plugin.name}" parse() failed:`, e);
-			}
-		}
-		for (const name of previous?.keys() ?? []) if (!parsed.has(name)) this.#registry.notifyElementRemoved(element, [name]);
-		this.#state.replace(element, parsed);
-	}
-	#queue(element) {
-		if (!(element instanceof Element)) return;
-		this.#pending.add(element);
-		this.#scheduleFlush();
-	}
-	#scheduleFlush() {
-		if (this.#flushQueued) return;
-		this.#flushQueued = true;
-		queueMicrotask(() => this.#flush());
-	}
-	#flush() {
-		const mutations = [...this.#mutations.values()].flatMap((changes) => [...changes.values()]);
-		this.#mutations.clear();
-		let pageChanged = false;
-		for (const mutation of mutations) {
-			if (mutation.type === "attributes" && !BASE_ATTRIBUTES.has(mutation.attributeName ?? "") && !this.#registry.isWatchedAttribute(mutation.attributeName ?? "")) continue;
-			pageChanged = true;
-			if (mutation.type === "childList") {
-				for (const node of new Set(mutation.removedNodes)) if (node instanceof Element && !node.isConnected) this.#removeSubtree(node);
-				for (const node of new Set(mutation.addedNodes)) if (node instanceof Element) for (const element of this.#components(node)) this.#queue(element);
-			} else if (mutation.target instanceof Element) {
-				const selector = this.#registry.combinedSelector;
-				if (this.#state.get(mutation.target) || selector && mutation.target.matches(selector)) this.#queue(mutation.target);
-			}
-			this.#queueOwners(mutation.target);
-		}
-		const query = createQueryCache();
-		if (mutations.length) for (const owner of this.#registry.collectExternalChanges(this.#state, query, this.#pending)) this.#pending.add(owner);
-		const pending = [...this.#pending];
-		this.#pending.clear();
-		this.#flushQueued = false;
-		for (const target of pending) this.#reconcile(target, query);
-		if (pageChanged) this.#state.notifyPageUpdated();
-	}
-	#queueOwners(element) {
-		let current = element instanceof Element ? element : element?.parentElement ?? null;
-		while (current) {
-			if (this.#state.get(current)) this.#queue(current);
-			current = current.parentElement;
-		}
-	}
-	*#components(root, selector = this.#registry.combinedSelector) {
-		if (!selector || root instanceof Element && this.#isExcluded(root)) return;
-		if (root instanceof Element && root.matches(selector)) yield root;
-		yield* root.querySelectorAll(selector);
-	}
-	#removeSubtree(root) {
-		for (const element of this.#state.elements) if (element === root || root.contains(element)) this.#remove(element);
-	}
-	#remove(element) {
-		this.#pending.delete(element);
-		const names = [...this.#state.get(element)?.keys() ?? []];
-		this.#registry.notifyElementRemoved(element, names);
-		this.#state.remove(element);
-	}
-	#isToolingElement(element) {
-		return this.#inspectorElement.contains(element) || !!element.closest("ux-inspector, .sf-toolbar");
-	}
-	#isExcluded(element) {
-		return !element.isConnected || this.#isToolingElement(element) || this.#ignoreSelectors.some((selector) => element.closest(selector));
-	}
 };
+function _reconcile(element, query) {
+	if (_assertClassBrand(_ComponentDetector_brand, this, _isExcluded).call(this, element)) {
+		if (_classPrivateFieldGet2(_state$7, this).get(element)) _assertClassBrand(_ComponentDetector_brand, this, _remove).call(this, element);
+		return;
+	}
+	const previous = _classPrivateFieldGet2(_state$7, this).get(element);
+	const parsed = /* @__PURE__ */ new Map();
+	for (const plugin of _classPrivateFieldGet2(_registry$8, this).getForElement(element)) try {
+		plugin.observe?.(element);
+		parsed.set(plugin.name, plugin.parse(element, query));
+	} catch (e) {
+		_classPrivateFieldGet2(_registry$8, this).notifyElementRemoved(element, [plugin.name]);
+		if (!_classPrivateFieldGet2(_reportedPlugins, this).has(plugin.name)) {
+			_classPrivateFieldGet2(_reportedPlugins, this).add(plugin.name);
+			console.warn(`[ux-inspector] Plugin "${plugin.name}" parse() failed:`, e);
+		}
+	}
+	for (const name of previous?.keys() ?? []) if (!parsed.has(name)) _classPrivateFieldGet2(_registry$8, this).notifyElementRemoved(element, [name]);
+	_classPrivateFieldGet2(_state$7, this).replace(element, parsed);
+}
+function _queue(element) {
+	if (!(element instanceof Element)) return;
+	_classPrivateFieldGet2(_pending, this).add(element);
+	_assertClassBrand(_ComponentDetector_brand, this, _scheduleFlush).call(this);
+}
+function _scheduleFlush() {
+	if (_classPrivateFieldGet2(_flushQueued, this)) return;
+	_classPrivateFieldSet2(_flushQueued, this, true);
+	queueMicrotask(() => _assertClassBrand(_ComponentDetector_brand, this, _flush$1).call(this));
+}
+function _flush$1() {
+	const mutations = [..._classPrivateFieldGet2(_mutations, this).values()].flatMap((changes) => [...changes.values()]);
+	_classPrivateFieldGet2(_mutations, this).clear();
+	let pageChanged = false;
+	for (const mutation of mutations) {
+		if (mutation.type === "attributes" && !BASE_ATTRIBUTES.has(mutation.attributeName ?? "") && !_classPrivateFieldGet2(_registry$8, this).isWatchedAttribute(mutation.attributeName ?? "")) continue;
+		pageChanged = true;
+		if (mutation.type === "childList") {
+			for (const node of new Set(mutation.removedNodes)) if (node instanceof Element && !node.isConnected) _assertClassBrand(_ComponentDetector_brand, this, _removeSubtree).call(this, node);
+			for (const node of new Set(mutation.addedNodes)) if (node instanceof Element) for (const element of _assertClassBrand(_ComponentDetector_brand, this, _components$2).call(this, node)) _assertClassBrand(_ComponentDetector_brand, this, _queue).call(this, element);
+		} else if (mutation.target instanceof Element) {
+			const selector = _classPrivateFieldGet2(_registry$8, this).combinedSelector;
+			if (_classPrivateFieldGet2(_state$7, this).get(mutation.target) || selector && mutation.target.matches(selector)) _assertClassBrand(_ComponentDetector_brand, this, _queue).call(this, mutation.target);
+		}
+		_assertClassBrand(_ComponentDetector_brand, this, _queueOwners).call(this, mutation.target);
+	}
+	const query = createQueryCache();
+	if (mutations.length) for (const owner of _classPrivateFieldGet2(_registry$8, this).collectExternalChanges(_classPrivateFieldGet2(_state$7, this), query, _classPrivateFieldGet2(_pending, this))) _classPrivateFieldGet2(_pending, this).add(owner);
+	const pending = [..._classPrivateFieldGet2(_pending, this)];
+	_classPrivateFieldGet2(_pending, this).clear();
+	_classPrivateFieldSet2(_flushQueued, this, false);
+	for (const target of pending) _assertClassBrand(_ComponentDetector_brand, this, _reconcile).call(this, target, query);
+	if (pageChanged) _classPrivateFieldGet2(_state$7, this).notifyPageUpdated();
+}
+function _queueOwners(element) {
+	let current = element instanceof Element ? element : element?.parentElement ?? null;
+	while (current) {
+		if (_classPrivateFieldGet2(_state$7, this).get(current)) _assertClassBrand(_ComponentDetector_brand, this, _queue).call(this, current);
+		current = current.parentElement;
+	}
+}
+function* _components$2(root, selector = _classPrivateFieldGet2(_registry$8, this).combinedSelector) {
+	if (!selector || root instanceof Element && _assertClassBrand(_ComponentDetector_brand, this, _isExcluded).call(this, root)) return;
+	if (root instanceof Element && root.matches(selector)) yield root;
+	yield* root.querySelectorAll(selector);
+}
+function _removeSubtree(root) {
+	for (const element of _classPrivateFieldGet2(_state$7, this).elements) if (element === root || root.contains(element)) _assertClassBrand(_ComponentDetector_brand, this, _remove).call(this, element);
+}
+function _remove(element) {
+	_classPrivateFieldGet2(_pending, this).delete(element);
+	const names = [..._classPrivateFieldGet2(_state$7, this).get(element)?.keys() ?? []];
+	_classPrivateFieldGet2(_registry$8, this).notifyElementRemoved(element, names);
+	_classPrivateFieldGet2(_state$7, this).remove(element);
+}
+function _isToolingElement(element) {
+	return _classPrivateFieldGet2(_inspectorElement, this).contains(element) || !!element.closest("ux-inspector, .sf-toolbar");
+}
+function _isExcluded(element) {
+	return !element.isConnected || _assertClassBrand(_ComponentDetector_brand, this, _isToolingElement).call(this, element) || _classPrivateFieldGet2(_ignoreSelectors, this).some((selector) => element.closest(selector));
+}
 const REQUEST = "turbo:before-fetch-request";
 const RESPONSE = "turbo:before-fetch-response";
 function projectActivity(entries, compact = true) {
@@ -588,65 +618,66 @@ function activityElements(entry) {
 		...entry.relatedElements ?? []
 	].filter((element) => element instanceof Element));
 }
+var _entries$1 = /* @__PURE__ */ new WeakMap();
+var _sequence = /* @__PURE__ */ new WeakMap();
+var _byElement = /* @__PURE__ */ new WeakMap();
+var _revision = /* @__PURE__ */ new WeakMap();
+var _projections = /* @__PURE__ */ new WeakMap();
+var _globalProjections = /* @__PURE__ */ new WeakMap();
+var _frozen = /* @__PURE__ */ new WeakMap();
+var _normalize = /* @__PURE__ */ new WeakMap();
+var _EventMonitor_brand = /* @__PURE__ */ new WeakSet();
+var _maxEntries = /* @__PURE__ */ new WeakMap();
+var _active = /* @__PURE__ */ new WeakMap();
+var _listeners = /* @__PURE__ */ new WeakMap();
+var _categoryMap = /* @__PURE__ */ new WeakMap();
+var _staticEvents = /* @__PURE__ */ new WeakMap();
+var _boundHandler = /* @__PURE__ */ new WeakMap();
 var EventMonitor = class {
-	#entries = [];
-	#sequence = 0;
-	#byElement = /* @__PURE__ */ new WeakMap();
-	#revision = 0;
-	#projections = /* @__PURE__ */ new WeakMap();
-	#globalProjections = /* @__PURE__ */ new Map();
-	#frozen = /* @__PURE__ */ new WeakSet();
-	#normalize;
 	get revision() {
-		return this.#revision;
+		return _classPrivateFieldGet2(_revision, this);
 	}
 	project(element = null, compact = true) {
-		let scoped = element ? this.#projections.get(element) : this.#globalProjections;
-		if (!scoped) this.#projections.set(element, scoped = /* @__PURE__ */ new Map());
+		let scoped = element ? _classPrivateFieldGet2(_projections, this).get(element) : _classPrivateFieldGet2(_globalProjections, this);
+		if (!scoped) _classPrivateFieldGet2(_projections, this).set(element, scoped = /* @__PURE__ */ new Map());
 		let rows = scoped.get(compact);
 		if (!rows) {
-			rows = projectActivity(element ? this.#byElement.get(element) ?? [] : this.#entries, compact);
-			freezeSnapshot(rows, this.#frozen);
+			rows = projectActivity(element ? _classPrivateFieldGet2(_byElement, this).get(element) ?? [] : _classPrivateFieldGet2(_entries$1, this), compact);
+			freezeSnapshot(rows, _classPrivateFieldGet2(_frozen, this));
 			scoped.set(compact, rows);
 		}
 		return rows;
 	}
-	#changed() {
-		this.#revision++;
-		this.#globalProjections.clear();
-	}
-	#index(entry, remove = false) {
-		for (const element of activityElements(entry)) {
-			const entries = this.#byElement.get(element) ?? [];
-			if (remove) {
-				const index = entries.indexOf(entry);
-				if (index !== -1) entries.splice(index, 1);
-			} else entries.push(entry);
-			if (entries.length) this.#byElement.set(element, entries);
-			else this.#byElement.delete(element);
-			this.#projections.delete(element);
-		}
-	}
-	#maxEntries;
-	#active = false;
-	#listeners = [];
-	#categoryMap = /* @__PURE__ */ new Map();
-	#staticEvents = /* @__PURE__ */ new Set();
 	constructor(maxEntries = 500, normalize = () => {}) {
-		this.#normalize = normalize;
-		this.#maxEntries = maxEntries;
-		this.#boundHandler = this.#handleEvent.bind(this);
+		_classPrivateMethodInitSpec(this, _EventMonitor_brand);
+		_classPrivateFieldInitSpec(this, _entries$1, []);
+		_classPrivateFieldInitSpec(this, _sequence, 0);
+		_classPrivateFieldInitSpec(this, _byElement, /* @__PURE__ */ new WeakMap());
+		_classPrivateFieldInitSpec(this, _revision, 0);
+		_classPrivateFieldInitSpec(this, _projections, /* @__PURE__ */ new WeakMap());
+		_classPrivateFieldInitSpec(this, _globalProjections, /* @__PURE__ */ new Map());
+		_classPrivateFieldInitSpec(this, _frozen, /* @__PURE__ */ new WeakSet());
+		_classPrivateFieldInitSpec(this, _normalize, void 0);
+		_classPrivateFieldInitSpec(this, _maxEntries, void 0);
+		_classPrivateFieldInitSpec(this, _active, false);
+		_classPrivateFieldInitSpec(this, _listeners, []);
+		_classPrivateFieldInitSpec(this, _categoryMap, /* @__PURE__ */ new Map());
+		_classPrivateFieldInitSpec(this, _staticEvents, /* @__PURE__ */ new Set());
+		_classPrivateFieldInitSpec(this, _boundHandler, void 0);
+		_classPrivateFieldSet2(_normalize, this, normalize);
+		_classPrivateFieldSet2(_maxEntries, this, maxEntries);
+		_classPrivateFieldSet2(_boundHandler, this, _assertClassBrand(_EventMonitor_brand, this, _handleEvent).bind(this));
 	}
-	#boundHandler;
 	get entries() {
-		return [...this.#entries];
+		return [..._classPrivateFieldGet2(_entries$1, this)];
 	}
 	get active() {
-		return this.#active;
+		return _classPrivateFieldGet2(_active, this);
 	}
 	record({ type = "unknown", event, target = null, owner = null, detail = null, label = null, relatedElements = [] }) {
+		var _this$sequence;
 		const draft = {
-			id: ++this.#sequence,
+			id: _classPrivateFieldSet2(_sequence, this, (_this$sequence = _classPrivateFieldGet2(_sequence, this), ++_this$sequence)),
 			time: performance.now(),
 			type,
 			event,
@@ -656,19 +687,19 @@ var EventMonitor = class {
 			relatedElements: relatedElements.filter((element) => element instanceof Element).slice(0, 50)
 		};
 		if (label) draft.label = label;
-		this.#normalize(draft);
+		_classPrivateFieldGet2(_normalize, this).call(this, draft);
 		const entry = Object.freeze({
 			...draft,
-			detail: freezeSnapshot(snapshotEvent(draft.detail), this.#frozen),
+			detail: freezeSnapshot(snapshotEvent(draft.detail), _classPrivateFieldGet2(_frozen, this)),
 			relatedElements: Object.freeze([...draft.relatedElements])
 		});
-		this.#frozen.add(entry);
-		this.#entries.push(entry);
-		this.#index(entry);
-		const removed = Object.freeze(this.#entries.splice(0, Math.max(0, this.#entries.length - this.#maxEntries)));
-		for (const expired of removed) this.#index(expired, true);
-		this.#changed();
-		for (const listener of this.#listeners) try {
+		_classPrivateFieldGet2(_frozen, this).add(entry);
+		_classPrivateFieldGet2(_entries$1, this).push(entry);
+		_assertClassBrand(_EventMonitor_brand, this, _index).call(this, entry);
+		const removed = Object.freeze(_classPrivateFieldGet2(_entries$1, this).splice(0, Math.max(0, _classPrivateFieldGet2(_entries$1, this).length - _classPrivateFieldGet2(_maxEntries, this))));
+		for (const expired of removed) _assertClassBrand(_EventMonitor_brand, this, _index).call(this, expired, true);
+		_assertClassBrand(_EventMonitor_brand, this, _changed).call(this);
+		for (const listener of _classPrivateFieldGet2(_listeners, this)) try {
 			listener(entry, removed);
 		} catch (error) {
 			console.warn("[ux-inspector] Activity listener failed:", error);
@@ -677,59 +708,52 @@ var EventMonitor = class {
 	}
 	start(onEntry = null) {
 		if (onEntry) this.addListener(onEntry);
-		if (this.#active) return;
-		this.#active = true;
-		for (const eventName of this.#categoryMap.keys()) document.addEventListener(eventName, this.#boundHandler, true);
+		if (_classPrivateFieldGet2(_active, this)) return;
+		_classPrivateFieldSet2(_active, this, true);
+		for (const eventName of _classPrivateFieldGet2(_categoryMap, this).keys()) document.addEventListener(eventName, _classPrivateFieldGet2(_boundHandler, this), true);
 	}
 	stop() {
-		if (!this.#active) return;
-		this.#active = false;
-		for (const eventName of this.#categoryMap.keys()) document.removeEventListener(eventName, this.#boundHandler, true);
+		if (!_classPrivateFieldGet2(_active, this)) return;
+		_classPrivateFieldSet2(_active, this, false);
+		for (const eventName of _classPrivateFieldGet2(_categoryMap, this).keys()) document.removeEventListener(eventName, _classPrivateFieldGet2(_boundHandler, this), true);
 	}
 	addListener(fn) {
-		this.#listeners = [...this.#listeners, fn];
+		_classPrivateFieldSet2(_listeners, this, [..._classPrivateFieldGet2(_listeners, this), fn]);
 	}
 	removeListener(fn) {
-		const idx = this.#listeners.indexOf(fn);
-		if (idx !== -1) this.#listeners = this.#listeners.toSpliced(idx, 1);
+		const idx = _classPrivateFieldGet2(_listeners, this).indexOf(fn);
+		if (idx !== -1) _classPrivateFieldSet2(_listeners, this, _classPrivateFieldGet2(_listeners, this).toSpliced(idx, 1));
 	}
 	monitorEvents(eventNames, category = "unknown") {
-		for (const name of eventNames) this.#staticEvents.add(name);
-		this.#registerEvents(eventNames, category);
+		for (const name of eventNames) _classPrivateFieldGet2(_staticEvents, this).add(name);
+		_assertClassBrand(_EventMonitor_brand, this, _registerEvents).call(this, eventNames, category);
 	}
 	setDynamicEvents(eventNames, category) {
 		const newSet = new Set(eventNames);
-		for (const [name, cat] of this.#categoryMap) {
-			if (cat !== category || newSet.has(name) || this.#staticEvents.has(name)) continue;
-			this.#categoryMap.delete(name);
-			if (this.#active) document.removeEventListener(name, this.#boundHandler, true);
+		for (const [name, cat] of _classPrivateFieldGet2(_categoryMap, this)) {
+			if (cat !== category || newSet.has(name) || _classPrivateFieldGet2(_staticEvents, this).has(name)) continue;
+			_classPrivateFieldGet2(_categoryMap, this).delete(name);
+			if (_classPrivateFieldGet2(_active, this)) document.removeEventListener(name, _classPrivateFieldGet2(_boundHandler, this), true);
 		}
-		this.#registerEvents(eventNames, category);
-	}
-	#registerEvents(eventNames, category) {
-		for (const name of eventNames) {
-			if (this.#categoryMap.has(name)) continue;
-			this.#categoryMap.set(name, category);
-			if (this.#active) document.addEventListener(name, this.#boundHandler, true);
-		}
+		_assertClassBrand(_EventMonitor_brand, this, _registerEvents).call(this, eventNames, category);
 	}
 	clear() {
-		this.#entries = [];
-		this.#byElement = /* @__PURE__ */ new WeakMap();
-		this.#projections = /* @__PURE__ */ new WeakMap();
-		this.#frozen = /* @__PURE__ */ new WeakSet();
-		this.#changed();
+		_classPrivateFieldSet2(_entries$1, this, []);
+		_classPrivateFieldSet2(_byElement, this, /* @__PURE__ */ new WeakMap());
+		_classPrivateFieldSet2(_projections, this, /* @__PURE__ */ new WeakMap());
+		_classPrivateFieldSet2(_frozen, this, /* @__PURE__ */ new WeakSet());
+		_assertClassBrand(_EventMonitor_brand, this, _changed).call(this);
 	}
 	destroy() {
 		this.stop();
 		this.clear();
-		this.#listeners = [];
-		this.#categoryMap.clear();
-		this.#staticEvents.clear();
+		_classPrivateFieldSet2(_listeners, this, []);
+		_classPrivateFieldGet2(_categoryMap, this).clear();
+		_classPrivateFieldGet2(_staticEvents, this).clear();
 	}
 	getEntriesForElement(element, { includeDescendants = false } = {}) {
-		if (!includeDescendants) return [...this.#byElement.get(element) ?? []];
-		return this.#entries.filter((entry) => {
+		if (!includeDescendants) return [..._classPrivateFieldGet2(_byElement, this).get(element) ?? []];
+		return _classPrivateFieldGet2(_entries$1, this).filter((entry) => {
 			if (entry.owner === element || entry.target === element) return true;
 			if (entry.relatedElements?.includes(element)) return true;
 			if (entry.owner && element.contains(entry.owner)) return true;
@@ -737,48 +761,79 @@ var EventMonitor = class {
 			return entry.relatedElements?.some((related) => element.contains(related)) ?? false;
 		});
 	}
-	#handleEvent(event) {
-		this.record({
-			type: this.#categoryMap.get(event.type) || "unknown",
-			event: event.type,
-			target: event.target instanceof Element ? event.target : null,
-			detail: event.detail
-		});
-	}
 };
+function _changed() {
+	var _this$revision;
+	_classPrivateFieldSet2(_revision, this, (_this$revision = _classPrivateFieldGet2(_revision, this), _this$revision++, _this$revision));
+	_classPrivateFieldGet2(_globalProjections, this).clear();
+}
+function _index(entry, remove = false) {
+	for (const element of activityElements(entry)) {
+		const entries = _classPrivateFieldGet2(_byElement, this).get(element) ?? [];
+		if (remove) {
+			const index = entries.indexOf(entry);
+			if (index !== -1) entries.splice(index, 1);
+		} else entries.push(entry);
+		if (entries.length) _classPrivateFieldGet2(_byElement, this).set(element, entries);
+		else _classPrivateFieldGet2(_byElement, this).delete(element);
+		_classPrivateFieldGet2(_projections, this).delete(element);
+	}
+}
+function _registerEvents(eventNames, category) {
+	for (const name of eventNames) {
+		if (_classPrivateFieldGet2(_categoryMap, this).has(name)) continue;
+		_classPrivateFieldGet2(_categoryMap, this).set(name, category);
+		if (_classPrivateFieldGet2(_active, this)) document.addEventListener(name, _classPrivateFieldGet2(_boundHandler, this), true);
+	}
+}
+function _handleEvent(event) {
+	this.record({
+		type: _classPrivateFieldGet2(_categoryMap, this).get(event.type) || "unknown",
+		event: event.type,
+		target: event.target instanceof Element ? event.target : null,
+		detail: event.detail
+	});
+}
+var _registry$7 = /* @__PURE__ */ new WeakMap();
+var _state$6 = /* @__PURE__ */ new WeakMap();
+var _edges = /* @__PURE__ */ new WeakMap();
+var _dirty = /* @__PURE__ */ new WeakMap();
+var _lifetime$8 = /* @__PURE__ */ new WeakMap();
+var _RelationshipEngine_brand = /* @__PURE__ */ new WeakSet();
 var RelationshipEngine = class {
-	#registry;
-	#state;
-	#edges = [];
-	#dirty = true;
-	#lifetime = new AbortController();
 	constructor(registry, state) {
-		this.#registry = registry;
-		this.#state = state;
+		_classPrivateMethodInitSpec(this, _RelationshipEngine_brand);
+		_classPrivateFieldInitSpec(this, _registry$7, void 0);
+		_classPrivateFieldInitSpec(this, _state$6, void 0);
+		_classPrivateFieldInitSpec(this, _edges, []);
+		_classPrivateFieldInitSpec(this, _dirty, true);
+		_classPrivateFieldInitSpec(this, _lifetime$8, new AbortController());
+		_classPrivateFieldSet2(_registry$7, this, registry);
+		_classPrivateFieldSet2(_state$6, this, state);
 		const invalidate = () => {
-			this.#dirty = true;
+			_classPrivateFieldSet2(_dirty, this, true);
 		};
 		for (const event of [
 			"component-added",
 			"component-updated",
 			"component-removed",
 			"components-cleared"
-		]) state.addEventListener(event, invalidate, { signal: this.#lifetime.signal });
+		]) state.addEventListener(event, invalidate, { signal: _classPrivateFieldGet2(_lifetime$8, this).signal });
 	}
 	invalidate() {
-		this.#dirty = true;
+		_classPrivateFieldSet2(_dirty, this, true);
 	}
 	getEdges() {
-		if (this.#dirty) this.#rebuild();
-		return [...this.#edges];
+		if (_classPrivateFieldGet2(_dirty, this)) _assertClassBrand(_RelationshipEngine_brand, this, _rebuild).call(this);
+		return [..._classPrivateFieldGet2(_edges, this)];
 	}
 	getRelatedTo(element) {
-		if (this.#dirty) this.#rebuild();
-		return this.#edges.filter((e) => e.source === element || e.target === element);
+		if (_classPrivateFieldGet2(_dirty, this)) _assertClassBrand(_RelationshipEngine_brand, this, _rebuild).call(this);
+		return _classPrivateFieldGet2(_edges, this).filter((e) => e.source === element || e.target === element);
 	}
 	getEdgesBetween(a, b) {
-		if (this.#dirty) this.#rebuild();
-		return this.#edges.filter((e) => e.source === a && e.target === b || e.source === b && e.target === a);
+		if (_classPrivateFieldGet2(_dirty, this)) _assertClassBrand(_RelationshipEngine_brand, this, _rebuild).call(this);
+		return _classPrivateFieldGet2(_edges, this).filter((e) => e.source === a && e.target === b || e.source === b && e.target === a);
 	}
 	getConnectedElements(element) {
 		const related = this.getRelatedTo(element);
@@ -790,73 +845,77 @@ var RelationshipEngine = class {
 		return [...connected];
 	}
 	getEdgeTypes() {
-		if (this.#dirty) this.#rebuild();
-		return [...new Set(this.#edges.map((e) => e.type))];
+		if (_classPrivateFieldGet2(_dirty, this)) _assertClassBrand(_RelationshipEngine_brand, this, _rebuild).call(this);
+		return [...new Set(_classPrivateFieldGet2(_edges, this).map((e) => e.type))];
 	}
 	destroy() {
-		this.#lifetime.abort();
-		this.#edges = [];
-	}
-	#rebuild() {
-		this.#edges = [];
-		const elements = new Set(this.#state.elements.filter((el) => el.isConnected));
-		for (const element of elements) {
-			const dataMap = this.#state.get(element);
-			if (!dataMap) continue;
-			for (const [pluginName, data] of dataMap) {
-				const pluginEdges = this.#registry.collectRelationships(element, data, pluginName);
-				for (const edge of pluginEdges) if (edge.source?.isConnected && edge.target?.isConnected) this.#edges.push({
-					...edge,
-					evidence: edge.evidence || "declared",
-					declared: true
-				});
-			}
-			this.#addStructuralEdges(element, elements);
-		}
-		this.#deduplicateEdges();
-		this.#dirty = false;
-	}
-	#addStructuralEdges(element, allElements) {
-		let parent = element.parentElement;
-		while (parent) {
-			if (allElements.has(parent)) {
-				this.#edges.push({
-					source: parent,
-					target: element,
-					type: "dom-parent",
-					label: "contains",
-					evidence: "structural",
-					declared: false
-				});
-				break;
-			}
-			parent = parent.parentElement;
-		}
-	}
-	#deduplicateEdges() {
-		const seen = /* @__PURE__ */ new Set();
-		const ids = /* @__PURE__ */ new WeakMap();
-		let nextId = 0;
-		const elementId = (element) => {
-			if (!ids.has(element)) ids.set(element, ++nextId);
-			return ids.get(element);
-		};
-		this.#edges = this.#edges.filter((edge) => {
-			const key = `${edge.type}:${elementId(edge.source)}:${elementId(edge.target)}`;
-			if (seen.has(key)) return false;
-			seen.add(key);
-			return true;
-		});
+		_classPrivateFieldGet2(_lifetime$8, this).abort();
+		_classPrivateFieldSet2(_edges, this, []);
 	}
 };
+function _rebuild() {
+	_classPrivateFieldSet2(_edges, this, []);
+	const elements = new Set(_classPrivateFieldGet2(_state$6, this).elements.filter((el) => el.isConnected));
+	for (const element of elements) {
+		const dataMap = _classPrivateFieldGet2(_state$6, this).get(element);
+		if (!dataMap) continue;
+		for (const [pluginName, data] of dataMap) {
+			const pluginEdges = _classPrivateFieldGet2(_registry$7, this).collectRelationships(element, data, pluginName);
+			for (const edge of pluginEdges) if (edge.source?.isConnected && edge.target?.isConnected) _classPrivateFieldGet2(_edges, this).push({
+				...edge,
+				evidence: edge.evidence || "declared",
+				declared: true
+			});
+		}
+		_assertClassBrand(_RelationshipEngine_brand, this, _addStructuralEdges).call(this, element, elements);
+	}
+	_assertClassBrand(_RelationshipEngine_brand, this, _deduplicateEdges).call(this);
+	_classPrivateFieldSet2(_dirty, this, false);
+}
+function _addStructuralEdges(element, allElements) {
+	let parent = element.parentElement;
+	while (parent) {
+		if (allElements.has(parent)) {
+			_classPrivateFieldGet2(_edges, this).push({
+				source: parent,
+				target: element,
+				type: "dom-parent",
+				label: "contains",
+				evidence: "structural",
+				declared: false
+			});
+			break;
+		}
+		parent = parent.parentElement;
+	}
+}
+function _deduplicateEdges() {
+	const seen = /* @__PURE__ */ new Set();
+	const ids = /* @__PURE__ */ new WeakMap();
+	let nextId = 0;
+	const elementId = (element) => {
+		if (!ids.has(element)) ids.set(element, ++nextId);
+		return ids.get(element);
+	};
+	_classPrivateFieldSet2(_edges, this, _classPrivateFieldGet2(_edges, this).filter((edge) => {
+		const key = `${edge.type}:${elementId(edge.source)}:${elementId(edge.target)}`;
+		if (seen.has(key)) return false;
+		seen.add(key);
+		return true;
+	}));
+}
+var _components$1 = /* @__PURE__ */ new WeakMap();
 var StateManager = class extends EventTarget {
-	#components = /* @__PURE__ */ new Map();
+	constructor(..._args) {
+		super(..._args);
+		_classPrivateFieldInitSpec(this, _components$1, /* @__PURE__ */ new Map());
+	}
 	set(element, pluginName, data) {
-		let byPlugin = this.#components.get(element);
+		let byPlugin = _classPrivateFieldGet2(_components$1, this).get(element);
 		const isNew = !byPlugin;
 		if (!byPlugin) {
 			byPlugin = /* @__PURE__ */ new Map();
-			this.#components.set(element, byPlugin);
+			_classPrivateFieldGet2(_components$1, this).set(element, byPlugin);
 		}
 		byPlugin.set(pluginName, data);
 		this.dispatchEvent(new CustomEvent(isNew ? "component-added" : "component-updated", { detail: {
@@ -872,12 +931,12 @@ var StateManager = class extends EventTarget {
 			this.remove(element);
 			return;
 		}
-		const previous = this.#components.get(element);
+		const previous = _classPrivateFieldGet2(_components$1, this).get(element);
 		if (previous?.size === byPlugin.size && [...byPlugin].every(([name, value]) => {
 			const old = previous.get(name);
 			return old?.type === value.type && sameSnapshot(old, value);
 		})) return;
-		this.#components.set(element, byPlugin);
+		_classPrivateFieldGet2(_components$1, this).set(element, byPlugin);
 		const [pluginName, data] = byPlugin.entries().next().value;
 		this.dispatchEvent(new CustomEvent(previous ? "component-updated" : "component-added", { detail: byPlugin.size === 1 ? {
 			element,
@@ -892,75 +951,83 @@ var StateManager = class extends EventTarget {
 		} }));
 	}
 	remove(element) {
-		if (this.#components.delete(element)) this.dispatchEvent(new CustomEvent("component-removed", { detail: { element } }));
+		if (_classPrivateFieldGet2(_components$1, this).delete(element)) this.dispatchEvent(new CustomEvent("component-removed", { detail: { element } }));
 	}
 	get(element) {
-		return this.#components.get(element);
+		return _classPrivateFieldGet2(_components$1, this).get(element);
 	}
 	get elements() {
-		return [...this.#components.keys()];
+		return [..._classPrivateFieldGet2(_components$1, this).keys()];
 	}
 	get size() {
-		return this.#components.size;
+		return _classPrivateFieldGet2(_components$1, this).size;
 	}
 	countByPlugin() {
 		const counts = {};
-		for (const byPlugin of this.#components.values()) for (const name of byPlugin.keys()) counts[name] = (counts[name] || 0) + 1;
+		for (const byPlugin of _classPrivateFieldGet2(_components$1, this).values()) for (const name of byPlugin.keys()) counts[name] = (counts[name] || 0) + 1;
 		return counts;
 	}
 	clear() {
-		this.#components.clear();
+		_classPrivateFieldGet2(_components$1, this).clear();
 		this.dispatchEvent(new CustomEvent("components-cleared"));
 	}
 	notifyPageUpdated() {
 		this.dispatchEvent(new CustomEvent("page-updated"));
 	}
 };
+var _highlighter = /* @__PURE__ */ new WeakMap();
+var _registry$6 = /* @__PURE__ */ new WeakMap();
+var _onSelect$2 = /* @__PURE__ */ new WeakMap();
+var _onStateChange = /* @__PURE__ */ new WeakMap();
+var _activation = /* @__PURE__ */ new WeakMap();
+var _enableTimeout = /* @__PURE__ */ new WeakMap();
+var _TargetSelector_brand = /* @__PURE__ */ new WeakSet();
 var TargetSelector = class {
-	#highlighter;
-	#registry;
-	#onSelect = null;
-	#onStateChange = null;
-	#activation = null;
-	#enableTimeout = null;
 	constructor(highlighter, registry, onStateChange = null) {
-		this.#highlighter = highlighter;
-		this.#registry = registry;
-		this.#onStateChange = onStateChange;
+		_classPrivateMethodInitSpec(this, _TargetSelector_brand);
+		_classPrivateFieldInitSpec(this, _highlighter, void 0);
+		_classPrivateFieldInitSpec(this, _registry$6, void 0);
+		_classPrivateFieldInitSpec(this, _onSelect$2, null);
+		_classPrivateFieldInitSpec(this, _onStateChange, null);
+		_classPrivateFieldInitSpec(this, _activation, null);
+		_classPrivateFieldInitSpec(this, _enableTimeout, null);
+		_classPrivateFieldSet2(_highlighter, this, highlighter);
+		_classPrivateFieldSet2(_registry$6, this, registry);
+		_classPrivateFieldSet2(_onStateChange, this, onStateChange);
 	}
 	get active() {
-		return this.#activation !== null;
+		return _classPrivateFieldGet2(_activation, this) !== null;
 	}
 	enable(onSelect) {
 		if (this.active) return;
-		const activation = this.#activation = new AbortController();
-		this.#onSelect = onSelect;
-		this.#onStateChange?.(true);
+		const activation = _classPrivateFieldSet2(_activation, this, new AbortController());
+		_classPrivateFieldSet2(_onSelect$2, this, onSelect);
+		_classPrivateFieldGet2(_onStateChange, this)?.call(this, true);
 		const options = {
 			capture: true,
 			signal: activation.signal
 		};
-		const target = (event) => this.#onTarget(event);
+		const target = (event) => _assertClassBrand(_TargetSelector_brand, this, _onTarget).call(this, event);
 		document.addEventListener("mouseover", target, options);
-		document.addEventListener("mouseout", () => this.#highlighter.clearHover(), options);
-		document.addEventListener("keydown", (event) => this.#onKeyDown(event), options);
-		this.#enableTimeout = setTimeout(() => {
-			this.#enableTimeout = null;
+		document.addEventListener("mouseout", () => _classPrivateFieldGet2(_highlighter, this).clearHover(), options);
+		document.addEventListener("keydown", (event) => _assertClassBrand(_TargetSelector_brand, this, _onKeyDown).call(this, event), options);
+		_classPrivateFieldSet2(_enableTimeout, this, setTimeout(() => {
+			_classPrivateFieldSet2(_enableTimeout, this, null);
 			if (this.active) document.addEventListener("click", target, options);
-		}, 0);
+		}, 0));
 	}
 	disable(clearSelection = true) {
-		if (!this.#activation) return;
-		this.#activation.abort();
-		this.#activation = null;
-		this.#onSelect = null;
-		this.#onStateChange?.(false);
-		if (this.#enableTimeout) {
-			clearTimeout(this.#enableTimeout);
-			this.#enableTimeout = null;
+		if (!_classPrivateFieldGet2(_activation, this)) return;
+		_classPrivateFieldGet2(_activation, this).abort();
+		_classPrivateFieldSet2(_activation, this, null);
+		_classPrivateFieldSet2(_onSelect$2, this, null);
+		_classPrivateFieldGet2(_onStateChange, this)?.call(this, false);
+		if (_classPrivateFieldGet2(_enableTimeout, this)) {
+			clearTimeout(_classPrivateFieldGet2(_enableTimeout, this));
+			_classPrivateFieldSet2(_enableTimeout, this, null);
 		}
-		this.#highlighter.clearHover();
-		if (clearSelection) this.#highlighter.deselect();
+		_classPrivateFieldGet2(_highlighter, this).clearHover();
+		if (clearSelection) _classPrivateFieldGet2(_highlighter, this).deselect();
 	}
 	toggle(onSelect) {
 		if (this.active) this.disable();
@@ -970,168 +1037,175 @@ var TargetSelector = class {
 	destroy() {
 		this.disable();
 	}
-	#onTarget(e) {
-		if (!(e.target instanceof Element) || e.target.closest("ux-inspector, .sf-toolbar")) return;
-		const selector = this.#registry.combinedSelector;
-		const target = selector ? e.target.closest(selector) : null;
-		const plugins = target ? this.#registry.getForElement(target) : [];
-		if (e.type === "mouseover") {
-			if (target) this.#highlighter.hover(target, plugins[0]?.name || "default");
-			return;
-		}
-		e.preventDefault();
-		e.stopPropagation();
-		e.stopImmediatePropagation();
-		if (target) {
-			const keepInspecting = e.shiftKey;
-			this.#onSelect?.(target, plugins, keepInspecting);
-			if (!keepInspecting) this.disable(false);
-		}
-	}
-	#onKeyDown(e) {
-		if (e.key !== "Escape") return;
-		e.preventDefault();
-		e.stopPropagation();
-		this.disable();
-	}
 };
+function _onTarget(e) {
+	if (!(e.target instanceof Element) || e.target.closest("ux-inspector, .sf-toolbar")) return;
+	const selector = _classPrivateFieldGet2(_registry$6, this).combinedSelector;
+	const target = selector ? e.target.closest(selector) : null;
+	const plugins = target ? _classPrivateFieldGet2(_registry$6, this).getForElement(target) : [];
+	if (e.type === "mouseover") {
+		if (target) _classPrivateFieldGet2(_highlighter, this).hover(target, plugins[0]?.name || "default");
+		return;
+	}
+	e.preventDefault();
+	e.stopPropagation();
+	e.stopImmediatePropagation();
+	if (target) {
+		const keepInspecting = e.shiftKey;
+		_classPrivateFieldGet2(_onSelect$2, this)?.call(this, target, plugins, keepInspecting);
+		if (!keepInspecting) this.disable(false);
+	}
+}
+function _onKeyDown(e) {
+	if (e.key !== "Escape") return;
+	e.preventDefault();
+	e.stopPropagation();
+	this.disable();
+}
 const IDLE_RUNTIME = {
 	status: "detected",
 	duration: null,
 	httpStatus: null,
 	error: null
 };
+var _record = /* @__PURE__ */ new WeakMap();
+var _subscriptions = /* @__PURE__ */ new WeakMap();
+var _runtime$1 = /* @__PURE__ */ new WeakMap();
+var _LiveObserver_brand = /* @__PURE__ */ new WeakSet();
 var LiveObserver = class {
-	#record = null;
-	#subscriptions = /* @__PURE__ */ new Map();
-	#runtime = /* @__PURE__ */ new WeakMap();
+	constructor() {
+		_classPrivateMethodInitSpec(this, _LiveObserver_brand);
+		_classPrivateFieldInitSpec(this, _record, null);
+		_classPrivateFieldInitSpec(this, _subscriptions, /* @__PURE__ */ new Map());
+		_classPrivateFieldInitSpec(this, _runtime$1, /* @__PURE__ */ new WeakMap());
+	}
 	setEventRecorder(record) {
-		this.#record = record;
+		_classPrivateFieldSet2(_record, this, record);
 	}
 	read(element) {
-		return this.#runtime.get(element) ?? { ...IDLE_RUNTIME };
+		return _classPrivateFieldGet2(_runtime$1, this).get(element) ?? { ...IDLE_RUNTIME };
 	}
 	connected(element) {
 		this.observe(element);
-		this.#runtime.set(element, {
+		_classPrivateFieldGet2(_runtime$1, this).set(element, {
 			...IDLE_RUNTIME,
 			status: "connected"
 		});
 	}
 	disconnected(element) {
 		this.remove(element);
-		this.#runtime.set(element, {
+		_classPrivateFieldGet2(_runtime$1, this).set(element, {
 			...IDLE_RUNTIME,
 			status: "disconnected"
 		});
 	}
 	remove(element) {
-		const subscription = this.#subscriptions.get(element);
+		const subscription = _classPrivateFieldGet2(_subscriptions, this).get(element);
 		if (!subscription) return;
-		this.#subscriptions.delete(element);
+		_classPrivateFieldGet2(_subscriptions, this).delete(element);
 		for (const cleanup of subscription.cleanups) try {
 			cleanup();
 		} catch (error) {
-			this.#warn(error);
+			_assertClassBrand(_LiveObserver_brand, this, _warn).call(this, error);
 		}
 	}
 	destroy() {
-		for (const element of this.#subscriptions.keys()) this.remove(element);
-		this.#record = null;
+		for (const element of _classPrivateFieldGet2(_subscriptions, this).keys()) this.remove(element);
+		_classPrivateFieldSet2(_record, this, null);
 	}
 	observe(element) {
 		const component = element.__component;
-		if (this.#subscriptions.get(element)?.component === component) return;
+		if (_classPrivateFieldGet2(_subscriptions, this).get(element)?.component === component) return;
 		this.remove(element);
 		if (typeof component?.on !== "function") return;
-		this.#runtime.set(element, {
+		_classPrivateFieldGet2(_runtime$1, this).set(element, {
 			...IDLE_RUNTIME,
 			status: "connected"
 		});
-		if (!this.#record) return;
+		if (!_classPrivateFieldGet2(_record, this)) return;
 		const subscription = {
 			component,
 			cleanups: []
 		};
-		this.#subscriptions.set(element, subscription);
+		_classPrivateFieldGet2(_subscriptions, this).set(element, subscription);
 		const on = (event, callback) => {
 			const handler = (...args) => {
-				if (this.#subscriptions.get(element) !== subscription || element.__component !== component) return;
+				if (_classPrivateFieldGet2(_subscriptions, this).get(element) !== subscription || element.__component !== component) return;
 				try {
 					callback(...args);
 				} catch (error) {
-					this.#warn(error);
+					_assertClassBrand(_LiveObserver_brand, this, _warn).call(this, error);
 				}
 			};
 			subscription.cleanups.push(() => component.off?.(event, handler));
 			component.on(event, handler);
 		};
 		try {
-			on("request:started", (request) => this.#requestStarted(element, request));
+			on("request:started", (request) => _assertClassBrand(_LiveObserver_brand, this, _requestStarted).call(this, element, request));
 			on("model:set", (model, value) => {
 				const name = String(model).slice(0, 200);
-				this.#emit(element, "model:set", {
+				_assertClassBrand(_LiveObserver_brand, this, _emit).call(this, element, "model:set", {
 					model: name,
 					value: safeValue(value, name)
 				}, `model: ${name}`);
 			});
-			on("render:started", () => this.#emit(element, "render:started"));
-			on("render:finished", () => this.#renderFinished(element));
-			on("response:error", (response) => this.#responseError(element, response));
+			on("render:started", () => _assertClassBrand(_LiveObserver_brand, this, _emit).call(this, element, "render:started"));
+			on("render:finished", () => _assertClassBrand(_LiveObserver_brand, this, _renderFinished).call(this, element));
+			on("response:error", (response) => _assertClassBrand(_LiveObserver_brand, this, _responseError).call(this, element, response));
 		} catch (error) {
 			this.remove(element);
-			this.#warn(error);
+			_assertClassBrand(_LiveObserver_brand, this, _warn).call(this, error);
 		}
 	}
-	#requestStarted(element, request) {
-		this.#runtime.set(element, {
-			...IDLE_RUNTIME,
-			status: "updating",
-			startedAt: performance.now()
-		});
-		const actions = (request?.actions ?? []).flatMap((action) => action?.name ? [String(action.name).slice(0, 100)] : []);
-		const models = Object.keys(request?.updated ?? {});
-		const files = Object.keys(request?.files ?? {});
-		const parameters = {};
-		if (actions.length) parameters.actions = actions;
-		if (models.length) parameters.models = models;
-		if (files.length) parameters.files = files;
-		this.#emit(element, "request", Object.keys(parameters).length ? parameters : null, actions.length ? `request: ${actions.join(", ")}` : "request: render");
-	}
-	#renderFinished(element) {
-		const runtime = this.read(element);
-		this.#runtime.set(element, {
-			...runtime,
-			status: "idle",
-			duration: runtime.startedAt === void 0 ? null : performance.now() - runtime.startedAt,
-			error: null
-		});
-		this.#emit(element, "render:finished");
-	}
-	#responseError(element, response) {
-		const status = response?.response?.status ?? null;
-		this.#runtime.set(element, {
-			...this.read(element),
-			status: "error",
-			httpStatus: status,
-			error: status ? `Request failed (${status})` : "Request failed"
-		});
-		this.#emit(element, "response:error", { status });
-	}
-	#emit(element, event, detail = null, label = event) {
-		const name = (element.getAttribute("data-live-name-value") || "").slice(0, 200) || "LiveComponent";
-		this.#record?.({
-			type: "livecomponent",
-			event: `live:${event}`,
-			target: element,
-			detail,
-			label: `${name}: ${label}`
-		});
-	}
-	#warn(error) {
-		console.warn("[ux-inspector] LiveComponent observation failed:", error);
-	}
 };
+function _requestStarted(element, request) {
+	_classPrivateFieldGet2(_runtime$1, this).set(element, {
+		...IDLE_RUNTIME,
+		status: "updating",
+		startedAt: performance.now()
+	});
+	const actions = (request?.actions ?? []).flatMap((action) => action?.name ? [String(action.name).slice(0, 100)] : []);
+	const models = Object.keys(request?.updated ?? {});
+	const files = Object.keys(request?.files ?? {});
+	const parameters = {};
+	if (actions.length) parameters.actions = actions;
+	if (models.length) parameters.models = models;
+	if (files.length) parameters.files = files;
+	_assertClassBrand(_LiveObserver_brand, this, _emit).call(this, element, "request", Object.keys(parameters).length ? parameters : null, actions.length ? `request: ${actions.join(", ")}` : "request: render");
+}
+function _renderFinished(element) {
+	const runtime = this.read(element);
+	_classPrivateFieldGet2(_runtime$1, this).set(element, {
+		...runtime,
+		status: "idle",
+		duration: runtime.startedAt === void 0 ? null : performance.now() - runtime.startedAt,
+		error: null
+	});
+	_assertClassBrand(_LiveObserver_brand, this, _emit).call(this, element, "render:finished");
+}
+function _responseError(element, response) {
+	const status = response?.response?.status ?? null;
+	_classPrivateFieldGet2(_runtime$1, this).set(element, {
+		...this.read(element),
+		status: "error",
+		httpStatus: status,
+		error: status ? `Request failed (${status})` : "Request failed"
+	});
+	_assertClassBrand(_LiveObserver_brand, this, _emit).call(this, element, "response:error", { status });
+}
+function _emit(element, event, detail = null, label = event) {
+	const name = (element.getAttribute("data-live-name-value") || "").slice(0, 200) || "LiveComponent";
+	_classPrivateFieldGet2(_record, this)?.call(this, {
+		type: "livecomponent",
+		event: `live:${event}`,
+		target: element,
+		detail,
+		label: `${name}: ${label}`
+	});
+}
+function _warn(error) {
+	console.warn("[ux-inspector] LiveComponent observation failed:", error);
+}
 function parseAttributeValue(raw, key = "") {
 	let value;
 	try {
@@ -1183,15 +1257,50 @@ function parseActionDescriptor(descriptor) {
 	}
 	return null;
 }
+function _typeof(o) {
+	"@babel/helpers - typeof";
+	return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+		return typeof o;
+	} : function(o) {
+		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+	}, _typeof(o);
+}
+function toPrimitive(t, r) {
+	if ("object" != _typeof(t) || !t) return t;
+	var e = t[Symbol.toPrimitive];
+	if (void 0 !== e) {
+		var i = e.call(t, r || "default");
+		if ("object" != _typeof(i)) return i;
+		throw new TypeError("@@toPrimitive must return a primitive value.");
+	}
+	return ("string" === r ? String : Number)(t);
+}
+function toPropertyKey(t) {
+	var i = toPrimitive(t, "string");
+	return "symbol" == _typeof(i) ? i : i + "";
+}
+function _defineProperty(e, r, t) {
+	return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+		value: t,
+		enumerable: !0,
+		configurable: !0,
+		writable: !0
+	}) : e[r] = t, e;
+}
+var _observer = /* @__PURE__ */ new WeakMap();
+var _LiveComponentPlugin_brand = /* @__PURE__ */ new WeakSet();
 var LiveComponentPlugin = class {
-	name = "livecomponent";
-	selectors = ["[data-controller~=\"live\"]"];
-	#observer = new LiveObserver();
+	constructor() {
+		_classPrivateMethodInitSpec(this, _LiveComponentPlugin_brand);
+		_defineProperty(this, "name", "livecomponent");
+		_defineProperty(this, "selectors", ["[data-controller~=\"live\"]"]);
+		_classPrivateFieldInitSpec(this, _observer, new LiveObserver());
+	}
 	setEventRecorder(record) {
-		this.#observer.setEventRecorder(record);
+		_classPrivateFieldGet2(_observer, this).setEventRecorder(record);
 	}
 	observe(element) {
-		this.#observer.observe(element);
+		_classPrivateFieldGet2(_observer, this).observe(element);
 	}
 	canHandle(element) {
 		return element.getAttribute("data-controller")?.split(/\s+/).includes("live") ?? false;
@@ -1205,25 +1314,25 @@ var LiveComponentPlugin = class {
 			type: "livecomponent",
 			element,
 			data: {
-				name: this.#parseName(element),
+				name: _assertClassBrand(_LiveComponentPlugin_brand, this, _parseName).call(this, element),
 				url: safeUrl(element.getAttribute("data-live-url-value")),
 				fingerprint: element.getAttribute("data-live-fingerprint-value") || "",
-				props: this.#parseProps(element),
-				propsFromParent: this.#parsePropsFromParent(element),
-				listeners: this.#parseListeners(element),
-				polling: this.#parsePolling(element),
-				models: this.#resolveModels(element),
-				actions: this.#resolveActions(element),
-				loading: this.#resolveLoading(element),
+				props: _assertClassBrand(_LiveComponentPlugin_brand, this, _parseProps).call(this, element),
+				propsFromParent: _assertClassBrand(_LiveComponentPlugin_brand, this, _parsePropsFromParent).call(this, element),
+				listeners: _assertClassBrand(_LiveComponentPlugin_brand, this, _parseListeners).call(this, element),
+				polling: _assertClassBrand(_LiveComponentPlugin_brand, this, _parsePolling).call(this, element),
+				models: _assertClassBrand(_LiveComponentPlugin_brand, this, _resolveModels).call(this, element),
+				actions: _assertClassBrand(_LiveComponentPlugin_brand, this, _resolveActions$1).call(this, element),
+				loading: _assertClassBrand(_LiveComponentPlugin_brand, this, _resolveLoading).call(this, element),
 				children: scopedChildren(element, "[data-controller~=\"live\"]").map(reference),
 				parents: ancestors(element, "[data-controller~=\"live\"]").map(reference),
-				otherControllers: this.#otherControllers(element),
-				runtime: this.#observer.read(element)
+				otherControllers: _assertClassBrand(_LiveComponentPlugin_brand, this, _otherControllers).call(this, element),
+				runtime: _classPrivateFieldGet2(_observer, this).read(element)
 			}
 		};
 	}
 	getDisplayName(element) {
-		return this.#parseName(element) || "LiveComponent";
+		return _assertClassBrand(_LiveComponentPlugin_brand, this, _parseName).call(this, element) || "LiveComponent";
 	}
 	getRelationships(element, data) {
 		const edges = [];
@@ -1249,122 +1358,122 @@ var LiveComponentPlugin = class {
 	}
 	onEvent(entry, element) {
 		if ("live:disconnect" === entry.event) {
-			this.#observer.disconnected(element);
-			entry.label = `${this.#parseName(element) || "LiveComponent"}: disconnect`;
+			_classPrivateFieldGet2(_observer, this).disconnected(element);
+			entry.label = `${_assertClassBrand(_LiveComponentPlugin_brand, this, _parseName).call(this, element) || "LiveComponent"}: disconnect`;
 			entry.detail = null;
 			return;
 		}
 		if ("live:connect" === entry.event) {
-			this.#observer.connected(element);
-			entry.label = `${this.#parseName(element) || "LiveComponent"}: connect`;
+			_classPrivateFieldGet2(_observer, this).connected(element);
+			entry.label = `${_assertClassBrand(_LiveComponentPlugin_brand, this, _parseName).call(this, element) || "LiveComponent"}: connect`;
 			entry.detail = null;
 		}
 	}
 	destroy() {
-		this.#observer.destroy();
+		_classPrivateFieldGet2(_observer, this).destroy();
 	}
 	onElementRemoved(element) {
-		this.#observer.remove(element);
-	}
-	#parseName(element) {
-		return (element.getAttribute("data-live-name-value") || "").slice(0, 200);
-	}
-	#parseProps(element) {
-		const raw = element.getAttribute("data-live-props-value");
-		if (!raw) return {};
-		try {
-			return safeValue(JSON.parse(raw));
-		} catch {
-			return { _raw: safeValue(raw) };
-		}
-	}
-	#parsePropsFromParent(element) {
-		const raw = element.getAttribute("data-live-props-from-parent-value");
-		if (!raw) return {};
-		try {
-			return safeValue(JSON.parse(raw));
-		} catch {
-			return {};
-		}
-	}
-	#parseListeners(element) {
-		const raw = element.getAttribute("data-live-listeners-value");
-		if (!raw) return [];
-		try {
-			const parsed = safeValue(JSON.parse(raw));
-			return Array.isArray(parsed) ? parsed : [];
-		} catch {
-			return [];
-		}
-	}
-	#parsePolling(element) {
-		const polling = element.getAttribute("data-poll");
-		if (!polling && !element.hasAttribute("data-poll")) return null;
-		const match = polling?.match(/delay\((\d+)\)/);
-		return { duration: match ? `${match[1]}ms` : "2000ms" };
-	}
-	#resolveModels(element) {
-		return Array.from(element.querySelectorAll("[data-model]")).filter((c) => this.#isInLiveScope(c, element) && c.getAttribute("data-model")).map((c) => {
-			const model = this.#parseModelValue(c.getAttribute("data-model") ?? "");
-			return {
-				...model,
-				value: this.#readModelValue(c, model.name),
-				element: c
-			};
-		});
-	}
-	#resolveActions(element) {
-		const actions = [];
-		const allElements = [element, ...element.querySelectorAll("[data-action]")];
-		for (const candidate of allElements) {
-			const raw = candidate.getAttribute("data-action");
-			if (!raw) continue;
-			if (!this.#isInLiveScope(candidate, element)) continue;
-			const descriptors = raw.split(/\s+/).filter(Boolean);
-			for (const descriptor of descriptors) {
-				const parsed = parseActionDescriptor(descriptor);
-				if (parsed && parsed.controller === "live") actions.push({
-					event: parsed.event || "click",
-					method: parsed.method === "action" ? candidate.getAttribute("data-live-action-param") || parsed.method : parsed.method,
-					args: parseActionParameters(candidate, "live", ["", "action"]),
-					element: candidate
-				});
-			}
-		}
-		return actions;
-	}
-	#readModelValue(element, name) {
-		const input = element;
-		if (SENSITIVE_KEY.test(name) || input.type === "password") return "[redacted]";
-		if (element instanceof HTMLInputElement && ["checkbox", "radio"].includes(element.type)) return element.checked;
-		if ("value" in element) return safeValue(input.value, name);
-		return null;
-	}
-	#resolveLoading(element) {
-		return Array.from(element.querySelectorAll("[data-loading]")).filter((c) => this.#isInLiveScope(c, element)).map((c) => ({
-			action: c.getAttribute("data-loading") || "show",
-			element: c
-		}));
-	}
-	#isInLiveScope(candidate, root) {
-		if (candidate === root) return true;
-		return candidate.closest?.("[data-controller~=\"live\"]") === root;
-	}
-	#parseModelValue(raw) {
-		const parts = raw.split("|");
-		if (parts.length === 1) return {
-			name: parts[0].trim(),
-			modifiers: []
-		};
-		return {
-			name: parts.pop().trim(),
-			modifiers: parts.map((p) => p.trim()).filter(Boolean)
-		};
-	}
-	#otherControllers(element) {
-		return (element.getAttribute("data-controller") || "").split(/\s+/).filter((c) => c && c !== "live");
+		_classPrivateFieldGet2(_observer, this).remove(element);
 	}
 };
+function _parseName(element) {
+	return (element.getAttribute("data-live-name-value") || "").slice(0, 200);
+}
+function _parseProps(element) {
+	const raw = element.getAttribute("data-live-props-value");
+	if (!raw) return {};
+	try {
+		return safeValue(JSON.parse(raw));
+	} catch {
+		return { _raw: safeValue(raw) };
+	}
+}
+function _parsePropsFromParent(element) {
+	const raw = element.getAttribute("data-live-props-from-parent-value");
+	if (!raw) return {};
+	try {
+		return safeValue(JSON.parse(raw));
+	} catch {
+		return {};
+	}
+}
+function _parseListeners(element) {
+	const raw = element.getAttribute("data-live-listeners-value");
+	if (!raw) return [];
+	try {
+		const parsed = safeValue(JSON.parse(raw));
+		return Array.isArray(parsed) ? parsed : [];
+	} catch {
+		return [];
+	}
+}
+function _parsePolling(element) {
+	const polling = element.getAttribute("data-poll");
+	if (!polling && !element.hasAttribute("data-poll")) return null;
+	const match = polling?.match(/delay\((\d+)\)/);
+	return { duration: match ? `${match[1]}ms` : "2000ms" };
+}
+function _resolveModels(element) {
+	return Array.from(element.querySelectorAll("[data-model]")).filter((c) => _assertClassBrand(_LiveComponentPlugin_brand, this, _isInLiveScope).call(this, c, element) && c.getAttribute("data-model")).map((c) => {
+		const model = _assertClassBrand(_LiveComponentPlugin_brand, this, _parseModelValue).call(this, c.getAttribute("data-model") ?? "");
+		return {
+			...model,
+			value: _assertClassBrand(_LiveComponentPlugin_brand, this, _readModelValue).call(this, c, model.name),
+			element: c
+		};
+	});
+}
+function _resolveActions$1(element) {
+	const actions = [];
+	const allElements = [element, ...element.querySelectorAll("[data-action]")];
+	for (const candidate of allElements) {
+		const raw = candidate.getAttribute("data-action");
+		if (!raw) continue;
+		if (!_assertClassBrand(_LiveComponentPlugin_brand, this, _isInLiveScope).call(this, candidate, element)) continue;
+		const descriptors = raw.split(/\s+/).filter(Boolean);
+		for (const descriptor of descriptors) {
+			const parsed = parseActionDescriptor(descriptor);
+			if (parsed && parsed.controller === "live") actions.push({
+				event: parsed.event || "click",
+				method: parsed.method === "action" ? candidate.getAttribute("data-live-action-param") || parsed.method : parsed.method,
+				args: parseActionParameters(candidate, "live", ["", "action"]),
+				element: candidate
+			});
+		}
+	}
+	return actions;
+}
+function _readModelValue(element, name) {
+	const input = element;
+	if (SENSITIVE_KEY.test(name) || input.type === "password") return "[redacted]";
+	if (element instanceof HTMLInputElement && ["checkbox", "radio"].includes(element.type)) return element.checked;
+	if ("value" in element) return safeValue(input.value, name);
+	return null;
+}
+function _resolveLoading(element) {
+	return Array.from(element.querySelectorAll("[data-loading]")).filter((c) => _assertClassBrand(_LiveComponentPlugin_brand, this, _isInLiveScope).call(this, c, element)).map((c) => ({
+		action: c.getAttribute("data-loading") || "show",
+		element: c
+	}));
+}
+function _isInLiveScope(candidate, root) {
+	if (candidate === root) return true;
+	return candidate.closest?.("[data-controller~=\"live\"]") === root;
+}
+function _parseModelValue(raw) {
+	const parts = raw.split("|");
+	if (parts.length === 1) return {
+		name: parts[0].trim(),
+		modifiers: []
+	};
+	return {
+		name: parts.pop().trim(),
+		modifiers: parts.map((p) => p.trim()).filter(Boolean)
+	};
+}
+function _otherControllers(element) {
+	return (element.getAttribute("data-controller") || "").split(/\s+/).filter((c) => c && c !== "live");
+}
 function safeCallHook(plugin, hookName, ...args) {
 	const hook = plugin[hookName];
 	if (typeof hook !== "function") return void 0;
@@ -1375,26 +1484,29 @@ function safeCallHook(plugin, hookName, ...args) {
 		return;
 	}
 }
+var _plugins = /* @__PURE__ */ new WeakMap();
+var _order = /* @__PURE__ */ new WeakMap();
+var _watchedAttributes = /* @__PURE__ */ new WeakMap();
 var PluginRegistry = class {
-	#plugins = /* @__PURE__ */ new Map();
-	#order = [
-		"livecomponent",
-		"turbo",
-		"stimulus"
-	];
-	#watchedAttributes = null;
 	constructor(plugins = []) {
-		this.#plugins = new Map(plugins.map((plugin) => [plugin.name, plugin]));
+		_classPrivateFieldInitSpec(this, _plugins, /* @__PURE__ */ new Map());
+		_classPrivateFieldInitSpec(this, _order, [
+			"livecomponent",
+			"turbo",
+			"stimulus"
+		]);
+		_classPrivateFieldInitSpec(this, _watchedAttributes, null);
+		_classPrivateFieldSet2(_plugins, this, new Map(plugins.map((plugin) => [plugin.name, plugin])));
 	}
 	get(name) {
-		return this.#plugins.get(name);
+		return _classPrivateFieldGet2(_plugins, this).get(name);
 	}
 	getAll() {
 		const rank = (p) => {
-			const i = this.#order.indexOf(p.name);
+			const i = _classPrivateFieldGet2(_order, this).indexOf(p.name);
 			return i === -1 ? 99 : i;
 		};
-		return [...this.#plugins.values()].sort((a, b) => rank(a) - rank(b));
+		return [..._classPrivateFieldGet2(_plugins, this).values()].sort((a, b) => rank(a) - rank(b));
 	}
 	getForElement(element) {
 		return this.getAll().filter((plugin) => safeCallHook(plugin, "canHandle", element));
@@ -1405,7 +1517,7 @@ var PluginRegistry = class {
 	}
 	notifyEvent(entry, element) {
 		const plugins = new Set(this.getForElement(element));
-		const categoryPlugin = this.#plugins.get(entry.type);
+		const categoryPlugin = _classPrivateFieldGet2(_plugins, this).get(entry.type);
 		if (categoryPlugin) plugins.add(categoryPlugin);
 		for (const plugin of plugins) safeCallHook(plugin, "onEvent", entry, element);
 	}
@@ -1414,7 +1526,7 @@ var PluginRegistry = class {
 	}
 	notifyElementRemoved(element, pluginNames) {
 		for (const name of pluginNames) {
-			const plugin = this.#plugins.get(name);
+			const plugin = _classPrivateFieldGet2(_plugins, this).get(name);
 			if (plugin) safeCallHook(plugin, "onElementRemoved", element);
 		}
 	}
@@ -1423,7 +1535,7 @@ var PluginRegistry = class {
 	}
 	collectRelationships(element, data, pluginName = null) {
 		const edges = [];
-		const plugins = pluginName ? [this.#plugins.get(pluginName)].filter((p) => Boolean(p)) : this.getForElement(element);
+		const plugins = pluginName ? [_classPrivateFieldGet2(_plugins, this).get(pluginName)].filter((p) => Boolean(p)) : this.getForElement(element);
 		for (const plugin of plugins) {
 			const pluginEdges = safeCallHook(plugin, "getRelationships", element, data);
 			if (Array.isArray(pluginEdges)) edges.push(...pluginEdges);
@@ -1431,19 +1543,19 @@ var PluginRegistry = class {
 		return edges;
 	}
 	collectWatchedAttributes() {
-		if (this.#watchedAttributes) return [...this.#watchedAttributes];
+		if (_classPrivateFieldGet2(_watchedAttributes, this)) return [..._classPrivateFieldGet2(_watchedAttributes, this)];
 		const attrs = /* @__PURE__ */ new Set();
-		for (const plugin of this.#plugins.values()) {
+		for (const plugin of _classPrivateFieldGet2(_plugins, this).values()) {
 			const extra = safeCallHook(plugin, "getWatchedAttributes");
 			if (Array.isArray(extra)) extra.forEach((a) => attrs.add(a));
 		}
-		this.#watchedAttributes = attrs;
+		_classPrivateFieldSet2(_watchedAttributes, this, attrs);
 		return [...attrs];
 	}
 	isWatchedAttribute(name) {
-		if (!this.#watchedAttributes) this.collectWatchedAttributes();
-		if (this.#watchedAttributes?.has(name)) return true;
-		for (const plugin of this.#plugins.values()) if (safeCallHook(plugin, "matchesAttribute", name) === true) return true;
+		if (!_classPrivateFieldGet2(_watchedAttributes, this)) this.collectWatchedAttributes();
+		if (_classPrivateFieldGet2(_watchedAttributes, this)?.has(name)) return true;
+		for (const plugin of _classPrivateFieldGet2(_plugins, this).values()) if (safeCallHook(plugin, "matchesAttribute", name) === true) return true;
 		return false;
 	}
 	collectPageRules(doc = document) {
@@ -1462,7 +1574,7 @@ var PluginRegistry = class {
 		for (const element of state.elements) {
 			if (pending.has(element)) continue;
 			for (const [name, data] of state.get(element) ?? []) {
-				const plugin = this.#plugins.get(name);
+				const plugin = _classPrivateFieldGet2(_plugins, this).get(name);
 				if (plugin && safeCallHook(plugin, "hasExternalChanges", element, data, query)) {
 					owners.push(element);
 					break;
@@ -1498,49 +1610,52 @@ const CONNECTED$1 = "connected";
 const MISSING = "missing";
 const CONFIGURED = "configured";
 const DOM_ONLY$1 = "dom-only";
+var _application$1 = /* @__PURE__ */ new WeakMap();
+var _StimulusPlugin_brand = /* @__PURE__ */ new WeakSet();
 var StimulusPlugin = class {
-	name = "stimulus";
-	selectors = ["[data-controller]"];
-	#application = null;
 	constructor(application = null) {
+		_classPrivateMethodInitSpec(this, _StimulusPlugin_brand);
+		_defineProperty(this, "name", "stimulus");
+		_defineProperty(this, "selectors", ["[data-controller]"]);
+		_classPrivateFieldInitSpec(this, _application$1, null);
 		this.setApplication(application);
 	}
 	setApplication(application) {
-		this.#application = typeof application?.getControllerForElementAndIdentifier === "function" ? application : null;
+		_classPrivateFieldSet2(_application$1, this, typeof application?.getControllerForElementAndIdentifier === "function" ? application : null);
 	}
 	canHandle(element) {
-		return this.#parseControllers(element).length > 0;
+		return _assertClassBrand(_StimulusPlugin_brand, this, _parseControllers).call(this, element).length > 0;
 	}
 	parse(element, query = queryElements) {
 		const reference = (element) => ({
 			element,
-			controllers: this.#parseControllers(element)
+			controllers: _assertClassBrand(_StimulusPlugin_brand, this, _parseControllers).call(this, element)
 		});
-		const controllers = this.#parseControllers(element);
-		const instances = Object.fromEntries(controllers.map((identifier) => [identifier, this.#getController(element, identifier)]));
-		const values = this.#parseControllerAttrs(element, "value", parseAttributeValue);
-		const classes = this.#parseClasses(element);
+		const controllers = _assertClassBrand(_StimulusPlugin_brand, this, _parseControllers).call(this, element);
+		const instances = Object.fromEntries(controllers.map((identifier) => [identifier, _assertClassBrand(_StimulusPlugin_brand, this, _getController).call(this, element, identifier)]));
+		const values = _assertClassBrand(_StimulusPlugin_brand, this, _parseControllerAttrs).call(this, element, "value", parseAttributeValue);
+		const classes = _assertClassBrand(_StimulusPlugin_brand, this, _parseClasses).call(this, element);
 		return {
 			type: "stimulus",
 			element,
 			data: {
 				controllers,
-				runtimeAvailable: Boolean(this.#application),
+				runtimeAvailable: Boolean(_classPrivateFieldGet2(_application$1, this)),
 				connectedControllers: controllers.filter((identifier) => instances[identifier]),
 				values,
-				valueStates: this.#resolveValueStates(element, controllers, instances, values),
-				targets: this.#resolveTargets(element, controllers, instances),
-				actions: this.#resolveActions(element, controllers, instances),
+				valueStates: _assertClassBrand(_StimulusPlugin_brand, this, _resolveValueStates).call(this, element, controllers, instances, values),
+				targets: _assertClassBrand(_StimulusPlugin_brand, this, _resolveTargets).call(this, element, controllers, instances),
+				actions: _assertClassBrand(_StimulusPlugin_brand, this, _resolveActions).call(this, element, controllers, instances),
 				classes,
-				classStates: this.#resolveClassStates(controllers, instances, classes),
-				outlets: this.#resolveOutlets(element, controllers, instances, query),
+				classStates: _assertClassBrand(_StimulusPlugin_brand, this, _resolveClassStates).call(this, controllers, instances, classes),
+				outlets: _assertClassBrand(_StimulusPlugin_brand, this, _resolveOutlets).call(this, element, controllers, instances, query),
 				children: scopedChildren(element, "[data-controller]").map(reference),
 				parents: ancestors(element, "[data-controller]").map(reference)
 			}
 		};
 	}
 	getDisplayName(element) {
-		const controllers = this.#parseControllers(element);
+		const controllers = _assertClassBrand(_StimulusPlugin_brand, this, _parseControllers).call(this, element);
 		if (controllers.length > 1) return `${controllers[0]} (+${controllers.length - 1})`;
 		return controllers[0] || "Stimulus";
 	}
@@ -1636,231 +1751,235 @@ var StimulusPlugin = class {
 		}
 		return false;
 	}
-	#parseControllers(element) {
-		return (element.getAttribute("data-controller") || "").split(/\s+/).filter((controller) => controller && controller !== "live");
-	}
-	#getController(element, identifier) {
-		if (!this.#application) return null;
-		try {
-			return this.#application.getControllerForElementAndIdentifier(element, identifier) || null;
-		} catch {
-			return null;
-		}
-	}
-	#staticDefinition(instance, property, fallback) {
-		const prototype = instance && Object.getPrototypeOf(instance);
-		const ownConstructor = prototype && Object.getOwnPropertyDescriptor(prototype, "constructor");
-		let constructor = ownConstructor && "value" in ownConstructor ? ownConstructor.value : null;
-		while (constructor && constructor !== Function.prototype) {
-			const descriptor = Object.getOwnPropertyDescriptor(constructor, property);
-			if (descriptor) return "value" in descriptor ? descriptor.value : fallback;
-			constructor = Object.getPrototypeOf(constructor);
-		}
-		return fallback;
-	}
-	#hasMethod(instance, method) {
-		let current = instance;
-		while (current) {
-			const descriptor = Object.getOwnPropertyDescriptor(current, method);
-			if (descriptor) return "value" in descriptor && typeof descriptor.value === "function";
-			current = Object.getPrototypeOf(current);
-		}
-		return false;
-	}
-	#resolveValueStates(element, controllers, instances, configured) {
-		const result = {};
-		for (const controller of controllers) {
-			const current = configured[controller] || {};
-			const definitions = this.#staticDefinition(instances[controller], "values", {}) ?? {};
-			result[controller] = [...new Set([...Object.keys(definitions), ...Object.keys(current)])].map((name) => {
-				const attribute = `data-${controller}-${name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}-value`;
-				const present = element.hasAttribute(attribute);
-				let value = current[name];
-				const definition = Object.getOwnPropertyDescriptor(definitions, name);
-				if (!present) value = safeValue(this.#valueDefault(definition && "value" in definition ? definition.value : void 0), name);
-				return {
-					name,
-					value,
-					status: instances[controller] ? present ? CONNECTED$1 : "default" : CONFIGURED
-				};
-			});
-		}
-		return result;
-	}
-	#valueDefault(definition) {
-		let type = definition;
-		if (definition && typeof definition === "object") {
-			const value = Object.getOwnPropertyDescriptor(definition, "default");
-			if (value && "value" in value) return value.value;
-			const declaredType = Object.getOwnPropertyDescriptor(definition, "type");
-			type = declaredType && "value" in declaredType ? declaredType.value : null;
-		}
-		if (type === Array) return [];
-		if (type === Boolean) return false;
-		if (type === Number) return 0;
-		if (type === Object) return {};
-		if (type === String) return "";
-	}
-	#resolveClassStates(controllers, instances, configured) {
-		const result = {};
-		for (const controller of controllers) {
-			const current = configured[controller] || {};
-			const declared = this.#staticDefinition(instances[controller], "classes", []);
-			result[controller] = [...new Set([...Array.isArray(declared) ? declared : [], ...Object.keys(current)])].map((name) => ({
-				name,
-				value: current[name] || "not configured",
-				status: current[name] ? instances[controller] ? CONNECTED$1 : CONFIGURED : MISSING
-			}));
-		}
-		return result;
-	}
-	#parseControllerAttrs(element, suffix, transform) {
-		const result = {};
-		for (const controller of this.#parseControllers(element)) {
-			const prefix = `data-${controller}-`;
-			for (const attr of element.attributes) {
-				if (!attr.name.startsWith(prefix) || !attr.name.endsWith(`-${suffix}`)) continue;
-				const name = attr.name.slice(prefix.length, -suffix.length - 1);
-				if (!name) continue;
-				const key = name.replace(/(?:[_-])([a-z0-9])/g, (_, letter) => letter.toUpperCase());
-				(result[controller] ??= {})[key] = transform(attr.value, key);
-			}
-		}
-		return result;
-	}
-	#resolveTargets(element, controllers, instances = {}) {
-		const result = {};
-		for (const controller of controllers) {
-			const scope = element;
-			const elements = [];
-			const attr = `data-${controller}-target`;
-			const candidates = scope.querySelectorAll(`[${attr}]`);
-			for (const candidate of candidates) if (this.#isInScope(candidate, element, controller)) {
-				const names = (candidate.getAttribute(attr) ?? "").split(/\s+/).filter(Boolean);
-				for (const name of names) elements.push({
-					name,
-					element: candidate
-				});
-			}
-			if (element.hasAttribute(attr)) {
-				const names = (element.getAttribute(attr) ?? "").split(/\s+/).filter(Boolean);
-				for (const name of names) elements.push({
-					name,
-					element
-				});
-			}
-			const declared = this.#staticDefinition(instances[controller], "targets", []);
-			const names = new Set([...Array.isArray(declared) ? declared : [], ...elements.map((item) => item.name)]);
-			if (!names.size) continue;
-			result[controller] = {
-				elements,
-				items: [...names].map((name) => {
-					const matches = elements.filter((item) => item.name === name).map((item) => item.element);
-					return {
-						name,
-						elements: matches,
-						declared: Array.isArray(declared) && declared.includes(name),
-						status: instances[controller] ? matches.length ? CONNECTED$1 : MISSING : matches.length ? DOM_ONLY$1 : MISSING
-					};
-				})
-			};
-		}
-		return result;
-	}
-	#resolveActions(element, controllers, instances = {}) {
-		const result = Object.fromEntries(controllers.map((c) => [c, []]));
-		const allElements = [element, ...element.querySelectorAll("[data-action]")];
-		for (const candidate of allElements) {
-			const raw = candidate.getAttribute("data-action");
-			if (!raw) continue;
-			const descriptors = raw.split(/\s+/).filter(Boolean);
-			for (const descriptor of descriptors) {
-				const parsed = parseActionDescriptor(descriptor);
-				if (parsed && controllers.includes(parsed.controller)) {
-					if (this.#isInScope(candidate, element, parsed.controller)) {
-						const action = {
-							event: parsed.event || this.#defaultActionEvent(candidate),
-							method: parsed.method,
-							element: candidate,
-							status: instances[parsed.controller] ? this.#hasMethod(instances[parsed.controller], parsed.method) ? CONNECTED$1 : "missing-method" : DOM_ONLY$1
-						};
-						const params = parseActionParameters(candidate, parsed.controller);
-						if (parsed.scope) action.scope = parsed.scope;
-						if (parsed.filters.length) action.filters = parsed.filters;
-						if (parsed.options.length) action.options = parsed.options;
-						if (Object.keys(params).length) action.params = params;
-						result[parsed.controller].push(action);
-					}
-				}
-			}
-		}
-		return result;
-	}
-	#defaultActionEvent(element) {
-		return {
-			BUTTON: "click",
-			FORM: "submit",
-			INPUT: "input",
-			TEXTAREA: "input",
-			SELECT: "change",
-			DETAILS: "toggle"
-		}[element.tagName] || "default";
-	}
-	#resolveOutlets(element, controllers, instances, query) {
-		const result = {};
-		for (const controller of controllers) {
-			const configured = /* @__PURE__ */ new Map();
-			for (const attr of element.attributes) {
-				const match = attr.name.match(new RegExp(`^data-${controller}-(.+)-outlet$`));
-				if (match) {
-					const name = match[1];
-					const selector = attr.value;
-					const elements = [...query(selector)];
-					configured.set(name, {
-						name,
-						selector,
-						elements
-					});
-				}
-			}
-			const declared = this.#staticDefinition(instances[controller], "outlets", []);
-			const names = new Set([...Array.isArray(declared) ? declared : [], ...configured.keys()]);
-			if (!names.size) continue;
-			result[controller] = [...names].map((name) => {
-				const item = configured.get(name) || {
-					name,
-					selector: "",
-					elements: []
-				};
-				const elements = instances[controller] ? item.elements.filter((candidate) => (candidate.getAttribute("data-controller") || "").split(/\s+/).includes(name)) : item.elements;
-				return {
-					...item,
-					elements,
-					declared: Array.isArray(declared) && declared.includes(name),
-					status: instances[controller] ? !item.selector || !elements.length ? MISSING : CONNECTED$1 : item.selector ? CONFIGURED : MISSING
-				};
-			});
-		}
-		return result;
-	}
-	#parseClasses(element) {
-		return this.#parseControllerAttrs(element, "class", (v) => v);
-	}
-	#isInScope(candidate, root, controller) {
-		if (candidate === root) return true;
-		let parent = candidate.parentElement;
-		while (parent && parent !== root) {
-			if (parent.hasAttribute("data-controller")) {
-				if (this.#parseControllers(parent).includes(controller)) return false;
-			}
-			parent = parent.parentElement;
-		}
-		return parent === root;
-	}
 };
+function _parseControllers(element) {
+	return (element.getAttribute("data-controller") || "").split(/\s+/).filter((controller) => controller && controller !== "live");
+}
+function _getController(element, identifier) {
+	if (!_classPrivateFieldGet2(_application$1, this)) return null;
+	try {
+		return _classPrivateFieldGet2(_application$1, this).getControllerForElementAndIdentifier(element, identifier) || null;
+	} catch {
+		return null;
+	}
+}
+function _staticDefinition(instance, property, fallback) {
+	const prototype = instance && Object.getPrototypeOf(instance);
+	const ownConstructor = prototype && Object.getOwnPropertyDescriptor(prototype, "constructor");
+	let constructor = ownConstructor && "value" in ownConstructor ? ownConstructor.value : null;
+	while (constructor && constructor !== Function.prototype) {
+		const descriptor = Object.getOwnPropertyDescriptor(constructor, property);
+		if (descriptor) return "value" in descriptor ? descriptor.value : fallback;
+		constructor = Object.getPrototypeOf(constructor);
+	}
+	return fallback;
+}
+function _hasMethod(instance, method) {
+	let current = instance;
+	while (current) {
+		const descriptor = Object.getOwnPropertyDescriptor(current, method);
+		if (descriptor) return "value" in descriptor && typeof descriptor.value === "function";
+		current = Object.getPrototypeOf(current);
+	}
+	return false;
+}
+function _resolveValueStates(element, controllers, instances, configured) {
+	const result = {};
+	for (const controller of controllers) {
+		const current = configured[controller] || {};
+		const definitions = _assertClassBrand(_StimulusPlugin_brand, this, _staticDefinition).call(this, instances[controller], "values", {}) ?? {};
+		result[controller] = [...new Set([...Object.keys(definitions), ...Object.keys(current)])].map((name) => {
+			const attribute = `data-${controller}-${name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}-value`;
+			const present = element.hasAttribute(attribute);
+			let value = current[name];
+			const definition = Object.getOwnPropertyDescriptor(definitions, name);
+			if (!present) value = safeValue(_assertClassBrand(_StimulusPlugin_brand, this, _valueDefault).call(this, definition && "value" in definition ? definition.value : void 0), name);
+			return {
+				name,
+				value,
+				status: instances[controller] ? present ? CONNECTED$1 : "default" : CONFIGURED
+			};
+		});
+	}
+	return result;
+}
+function _valueDefault(definition) {
+	let type = definition;
+	if (definition && typeof definition === "object") {
+		const value = Object.getOwnPropertyDescriptor(definition, "default");
+		if (value && "value" in value) return value.value;
+		const declaredType = Object.getOwnPropertyDescriptor(definition, "type");
+		type = declaredType && "value" in declaredType ? declaredType.value : null;
+	}
+	if (type === Array) return [];
+	if (type === Boolean) return false;
+	if (type === Number) return 0;
+	if (type === Object) return {};
+	if (type === String) return "";
+}
+function _resolveClassStates(controllers, instances, configured) {
+	const result = {};
+	for (const controller of controllers) {
+		const current = configured[controller] || {};
+		const declared = _assertClassBrand(_StimulusPlugin_brand, this, _staticDefinition).call(this, instances[controller], "classes", []);
+		result[controller] = [...new Set([...Array.isArray(declared) ? declared : [], ...Object.keys(current)])].map((name) => ({
+			name,
+			value: current[name] || "not configured",
+			status: current[name] ? instances[controller] ? CONNECTED$1 : CONFIGURED : MISSING
+		}));
+	}
+	return result;
+}
+function _parseControllerAttrs(element, suffix, transform) {
+	const result = {};
+	for (const controller of _assertClassBrand(_StimulusPlugin_brand, this, _parseControllers).call(this, element)) {
+		const prefix = `data-${controller}-`;
+		for (const attr of element.attributes) {
+			if (!attr.name.startsWith(prefix) || !attr.name.endsWith(`-${suffix}`)) continue;
+			const name = attr.name.slice(prefix.length, -suffix.length - 1);
+			if (!name) continue;
+			const key = name.replace(/(?:[_-])([a-z0-9])/g, (_, letter) => letter.toUpperCase());
+			(result[controller] ??= {})[key] = transform(attr.value, key);
+		}
+	}
+	return result;
+}
+function _resolveTargets(element, controllers, instances = {}) {
+	const result = {};
+	for (const controller of controllers) {
+		const scope = element;
+		const elements = [];
+		const attr = `data-${controller}-target`;
+		const candidates = scope.querySelectorAll(`[${attr}]`);
+		for (const candidate of candidates) if (_assertClassBrand(_StimulusPlugin_brand, this, _isInScope).call(this, candidate, element, controller)) {
+			const names = (candidate.getAttribute(attr) ?? "").split(/\s+/).filter(Boolean);
+			for (const name of names) elements.push({
+				name,
+				element: candidate
+			});
+		}
+		if (element.hasAttribute(attr)) {
+			const names = (element.getAttribute(attr) ?? "").split(/\s+/).filter(Boolean);
+			for (const name of names) elements.push({
+				name,
+				element
+			});
+		}
+		const declared = _assertClassBrand(_StimulusPlugin_brand, this, _staticDefinition).call(this, instances[controller], "targets", []);
+		const names = new Set([...Array.isArray(declared) ? declared : [], ...elements.map((item) => item.name)]);
+		if (!names.size) continue;
+		result[controller] = {
+			elements,
+			items: [...names].map((name) => {
+				const matches = elements.filter((item) => item.name === name).map((item) => item.element);
+				return {
+					name,
+					elements: matches,
+					declared: Array.isArray(declared) && declared.includes(name),
+					status: instances[controller] ? matches.length ? CONNECTED$1 : MISSING : matches.length ? DOM_ONLY$1 : MISSING
+				};
+			})
+		};
+	}
+	return result;
+}
+function _resolveActions(element, controllers, instances = {}) {
+	const result = Object.fromEntries(controllers.map((c) => [c, []]));
+	const allElements = [element, ...element.querySelectorAll("[data-action]")];
+	for (const candidate of allElements) {
+		const raw = candidate.getAttribute("data-action");
+		if (!raw) continue;
+		const descriptors = raw.split(/\s+/).filter(Boolean);
+		for (const descriptor of descriptors) {
+			const parsed = parseActionDescriptor(descriptor);
+			if (parsed && controllers.includes(parsed.controller)) {
+				if (_assertClassBrand(_StimulusPlugin_brand, this, _isInScope).call(this, candidate, element, parsed.controller)) {
+					const action = {
+						event: parsed.event || _assertClassBrand(_StimulusPlugin_brand, this, _defaultActionEvent).call(this, candidate),
+						method: parsed.method,
+						element: candidate,
+						status: instances[parsed.controller] ? _assertClassBrand(_StimulusPlugin_brand, this, _hasMethod).call(this, instances[parsed.controller], parsed.method) ? CONNECTED$1 : "missing-method" : DOM_ONLY$1
+					};
+					const params = parseActionParameters(candidate, parsed.controller);
+					if (parsed.scope) action.scope = parsed.scope;
+					if (parsed.filters.length) action.filters = parsed.filters;
+					if (parsed.options.length) action.options = parsed.options;
+					if (Object.keys(params).length) action.params = params;
+					result[parsed.controller].push(action);
+				}
+			}
+		}
+	}
+	return result;
+}
+function _defaultActionEvent(element) {
+	return {
+		BUTTON: "click",
+		FORM: "submit",
+		INPUT: "input",
+		TEXTAREA: "input",
+		SELECT: "change",
+		DETAILS: "toggle"
+	}[element.tagName] || "default";
+}
+function _resolveOutlets(element, controllers, instances, query) {
+	const result = {};
+	for (const controller of controllers) {
+		const configured = /* @__PURE__ */ new Map();
+		for (const attr of element.attributes) {
+			const match = attr.name.match(new RegExp(`^data-${controller}-(.+)-outlet$`));
+			if (match) {
+				const name = match[1];
+				const selector = attr.value;
+				const elements = [...query(selector)];
+				configured.set(name, {
+					name,
+					selector,
+					elements
+				});
+			}
+		}
+		const declared = _assertClassBrand(_StimulusPlugin_brand, this, _staticDefinition).call(this, instances[controller], "outlets", []);
+		const names = new Set([...Array.isArray(declared) ? declared : [], ...configured.keys()]);
+		if (!names.size) continue;
+		result[controller] = [...names].map((name) => {
+			const item = configured.get(name) || {
+				name,
+				selector: "",
+				elements: []
+			};
+			const elements = instances[controller] ? item.elements.filter((candidate) => (candidate.getAttribute("data-controller") || "").split(/\s+/).includes(name)) : item.elements;
+			return {
+				...item,
+				elements,
+				declared: Array.isArray(declared) && declared.includes(name),
+				status: instances[controller] ? !item.selector || !elements.length ? MISSING : CONNECTED$1 : item.selector ? CONFIGURED : MISSING
+			};
+		});
+	}
+	return result;
+}
+function _parseClasses(element) {
+	return _assertClassBrand(_StimulusPlugin_brand, this, _parseControllerAttrs).call(this, element, "class", (v) => v);
+}
+function _isInScope(candidate, root, controller) {
+	if (candidate === root) return true;
+	let parent = candidate.parentElement;
+	while (parent && parent !== root) {
+		if (parent.hasAttribute("data-controller")) {
+			if (_assertClassBrand(_StimulusPlugin_brand, this, _parseControllers).call(this, parent).includes(controller)) return false;
+		}
+		parent = parent.parentElement;
+	}
+	return parent === root;
+}
+var _TurboPlugin_brand = /* @__PURE__ */ new WeakSet();
 var TurboPlugin = class {
-	name = "turbo";
-	selectors = ["turbo-frame"];
+	constructor() {
+		_classPrivateMethodInitSpec(this, _TurboPlugin_brand);
+		_defineProperty(this, "name", "turbo");
+		_defineProperty(this, "selectors", ["turbo-frame"]);
+	}
 	canHandle(element) {
 		return element.tagName === "TURBO-FRAME";
 	}
@@ -1877,10 +1996,10 @@ var TurboPlugin = class {
 				autoscroll: element.hasAttribute("autoscroll"),
 				busy: element.hasAttribute("busy"),
 				complete: element.hasAttribute("complete"),
-				childFrames: this.#findChildFrames(element),
-				parentFrame: this.#findParentFrame(element),
-				linksToFrame: this.#findLinksToFrame(element, query),
-				formsInFrame: this.#findFormsInFrame(element, query)
+				childFrames: _assertClassBrand(_TurboPlugin_brand, this, _findChildFrames).call(this, element),
+				parentFrame: _assertClassBrand(_TurboPlugin_brand, this, _findParentFrame).call(this, element),
+				linksToFrame: _assertClassBrand(_TurboPlugin_brand, this, _findLinksToFrame).call(this, element, query),
+				formsInFrame: _assertClassBrand(_TurboPlugin_brand, this, _findFormsInFrame).call(this, element, query)
 			}
 		};
 	}
@@ -1999,36 +2118,36 @@ var TurboPlugin = class {
 		return rules;
 	}
 	hasExternalChanges(element, { data }, query) {
-		return !sameSnapshot(data.linksToFrame, this.#findLinksToFrame(element, query)) || !sameSnapshot(data.formsInFrame, this.#findFormsInFrame(element, query));
-	}
-	#findChildFrames(element) {
-		return Array.from(element.querySelectorAll(":scope > turbo-frame")).map((f) => ({
-			id: f.id || "(anonymous)",
-			element: f
-		}));
-	}
-	#findParentFrame(element) {
-		const parent = element.parentElement?.closest("turbo-frame");
-		if (!parent) return null;
-		return {
-			id: parent.id || "(anonymous)",
-			element: parent
-		};
-	}
-	#findLinksToFrame(element, query) {
-		return query("a[href]").filter((link) => link.closest("turbo-frame") === element || link.getAttribute("data-turbo-frame") === element.id).map((link) => ({
-			href: safeUrl(link.getAttribute("href")),
-			element: link
-		}));
-	}
-	#findFormsInFrame(element, query) {
-		return query("form").filter((form) => form.closest("turbo-frame") === element || form.getAttribute("data-turbo-frame") === element.id).map((form) => ({
-			action: safeUrl(form.getAttribute("action")),
-			method: form.getAttribute("method") || "get",
-			element: form
-		}));
+		return !sameSnapshot(data.linksToFrame, _assertClassBrand(_TurboPlugin_brand, this, _findLinksToFrame).call(this, element, query)) || !sameSnapshot(data.formsInFrame, _assertClassBrand(_TurboPlugin_brand, this, _findFormsInFrame).call(this, element, query));
 	}
 };
+function _findChildFrames(element) {
+	return Array.from(element.querySelectorAll(":scope > turbo-frame")).map((f) => ({
+		id: f.id || "(anonymous)",
+		element: f
+	}));
+}
+function _findParentFrame(element) {
+	const parent = element.parentElement?.closest("turbo-frame");
+	if (!parent) return null;
+	return {
+		id: parent.id || "(anonymous)",
+		element: parent
+	};
+}
+function _findLinksToFrame(element, query) {
+	return query("a[href]").filter((link) => link.closest("turbo-frame") === element || link.getAttribute("data-turbo-frame") === element.id).map((link) => ({
+		href: safeUrl(link.getAttribute("href")),
+		element: link
+	}));
+}
+function _findFormsInFrame(element, query) {
+	return query("form").filter((form) => form.closest("turbo-frame") === element || form.getAttribute("data-turbo-frame") === element.id).map((form) => ({
+		action: safeUrl(form.getAttribute("action")),
+		method: form.getAttribute("method") || "get",
+		element: form
+	}));
+}
 const NS = "http://www.w3.org/2000/svg";
 const ICONS = {
 	back: [["polyline", { points: "15 6 9 12 15 18" }]],
@@ -2166,21 +2285,24 @@ function reconcileChildren(parent, desired) {
 		current = next;
 	}
 }
+var _pulses = /* @__PURE__ */ new WeakMap();
+var _registry$5 = /* @__PURE__ */ new WeakMap();
+var _eventMonitor$5 = /* @__PURE__ */ new WeakMap();
 var ComponentCard = class {
-	#pulses = /* @__PURE__ */ new Map();
-	#registry;
-	#eventMonitor;
 	constructor(registry, eventMonitor) {
-		this.#registry = registry;
-		this.#eventMonitor = eventMonitor;
+		_classPrivateFieldInitSpec(this, _pulses, /* @__PURE__ */ new Map());
+		_classPrivateFieldInitSpec(this, _registry$5, void 0);
+		_classPrivateFieldInitSpec(this, _eventMonitor$5, void 0);
+		_classPrivateFieldSet2(_registry$5, this, registry);
+		_classPrivateFieldSet2(_eventMonitor$5, this, eventMonitor);
 	}
-	render(element, dataMap, identity = componentIdentity(element, dataMap, this.#registry)) {
+	render(element, dataMap, identity = componentIdentity(element, dataMap, _classPrivateFieldGet2(_registry$5, this))) {
 		const framework = dataMap.keys().next().value || "default";
 		const tag = element.tagName.toLowerCase();
 		const name = identity.name ?? tag;
 		const generatedLiveId = framework === "livecomponent" && /^live-\d+(?:-\d+)?$/.test(element.id);
 		const selector = identity.name === void 0 || generatedLiveId ? tag : identity.selector;
-		const entries = this.#eventMonitor?.project(element) ?? [];
+		const entries = _classPrivateFieldGet2(_eventMonitor$5, this)?.project(element) ?? [];
 		const latest = entries.at(-1);
 		const card = el("article", {
 			class: "component",
@@ -2203,8 +2325,8 @@ var ComponentCard = class {
 		if (!action) return false;
 		let activity = action.querySelector(".activity");
 		if (!count) {
-			cancelAnimationFrame(this.#pulses.get(action) ?? 0);
-			this.#pulses.delete(action);
+			cancelAnimationFrame(_classPrivateFieldGet2(_pulses, this).get(action) ?? 0);
+			_classPrivateFieldGet2(_pulses, this).delete(action);
 			action.classList.remove("activity-pulse");
 			activity?.remove();
 			action.setAttribute("aria-label", action.dataset.componentLabel ?? "");
@@ -2224,159 +2346,114 @@ var ComponentCard = class {
 		action.setAttribute("aria-label", `${action.dataset.componentLabel}, ${label}`);
 		if (increased && action.isConnected) {
 			action.classList.remove("activity-pulse");
-			cancelAnimationFrame(this.#pulses.get(action) ?? 0);
-			this.#pulses.set(action, requestAnimationFrame(() => {
-				this.#pulses.delete(action);
+			cancelAnimationFrame(_classPrivateFieldGet2(_pulses, this).get(action) ?? 0);
+			_classPrivateFieldGet2(_pulses, this).set(action, requestAnimationFrame(() => {
+				_classPrivateFieldGet2(_pulses, this).delete(action);
 				if (action.isConnected) action.classList.add("activity-pulse");
 			}));
 		}
 		return true;
 	}
 	destroy() {
-		for (const frame of this.#pulses.values()) cancelAnimationFrame(frame);
-		this.#pulses.clear();
+		for (const frame of _classPrivateFieldGet2(_pulses, this).values()) cancelAnimationFrame(frame);
+		_classPrivateFieldGet2(_pulses, this).clear();
 	}
 };
+var _state$5 = /* @__PURE__ */ new WeakMap();
+var _registry$4 = /* @__PURE__ */ new WeakMap();
+var _eventMonitor$4 = /* @__PURE__ */ new WeakMap();
+var _visual$1 = /* @__PURE__ */ new WeakMap();
+var _cardRenderer = /* @__PURE__ */ new WeakMap();
+var _rows$1 = /* @__PURE__ */ new WeakMap();
+var _targets = /* @__PURE__ */ new WeakMap();
+var _lifetime$7 = /* @__PURE__ */ new WeakMap();
+var _selectedPageRule = /* @__PURE__ */ new WeakMap();
+var _pageRuleRows = /* @__PURE__ */ new WeakMap();
+var _ComponentList_brand = /* @__PURE__ */ new WeakSet();
 var ComponentList = class {
-	element = el("div", {
-		class: "components",
-		"aria-live": "polite"
-	});
-	#state;
-	#registry;
-	#eventMonitor;
-	#visual;
-	#cardRenderer;
-	#rows = /* @__PURE__ */ new Map();
-	#targets = /* @__PURE__ */ new WeakMap();
-	#lifetime = new AbortController();
-	#selectedPageRule = null;
-	#pageRuleRows = /* @__PURE__ */ new Map();
 	constructor(state, registry, eventMonitor, visual) {
-		this.#state = state;
-		this.#registry = registry;
-		this.#eventMonitor = eventMonitor;
-		this.#visual = visual;
-		this.#cardRenderer = new ComponentCard(registry, eventMonitor);
-		const { signal } = this.#lifetime;
-		this.element.addEventListener("keydown", (event) => this.#onComponentKeydown(event), { signal });
+		_classPrivateMethodInitSpec(this, _ComponentList_brand);
+		_defineProperty(this, "element", el("div", {
+			class: "components",
+			"aria-live": "polite"
+		}));
+		_classPrivateFieldInitSpec(this, _state$5, void 0);
+		_classPrivateFieldInitSpec(this, _registry$4, void 0);
+		_classPrivateFieldInitSpec(this, _eventMonitor$4, void 0);
+		_classPrivateFieldInitSpec(this, _visual$1, void 0);
+		_classPrivateFieldInitSpec(this, _cardRenderer, void 0);
+		_classPrivateFieldInitSpec(this, _rows$1, /* @__PURE__ */ new Map());
+		_classPrivateFieldInitSpec(this, _targets, /* @__PURE__ */ new WeakMap());
+		_classPrivateFieldInitSpec(this, _lifetime$7, new AbortController());
+		_classPrivateFieldInitSpec(this, _selectedPageRule, null);
+		_classPrivateFieldInitSpec(this, _pageRuleRows, /* @__PURE__ */ new Map());
+		_classPrivateFieldSet2(_state$5, this, state);
+		_classPrivateFieldSet2(_registry$4, this, registry);
+		_classPrivateFieldSet2(_eventMonitor$4, this, eventMonitor);
+		_classPrivateFieldSet2(_visual$1, this, visual);
+		_classPrivateFieldSet2(_cardRenderer, this, new ComponentCard(registry, eventMonitor));
+		const { signal } = _classPrivateFieldGet2(_lifetime$7, this);
+		this.element.addEventListener("keydown", (event) => _assertClassBrand(_ComponentList_brand, this, _onComponentKeydown).call(this, event), { signal });
 		for (const type of [
 			"click",
 			"pointerover",
 			"pointerout",
 			"focusin",
 			"focusout"
-		]) this.element.addEventListener(type, (event) => this.#interact(event), { signal });
+		]) this.element.addEventListener(type, (event) => _assertClassBrand(_ComponentList_brand, this, _interact).call(this, event), { signal });
 	}
 	refresh(filters, query, selected) {
-		this.#pageRuleRows.clear();
+		_classPrivateFieldGet2(_pageRuleRows, this).clear();
 		const nodes = [];
-		const pageRules = this.#pageRules(filters, query);
+		const pageRules = _assertClassBrand(_ComponentList_brand, this, _pageRules).call(this, filters, query);
 		if (pageRules) nodes.push(pageRules);
-		if (this.#selectedPageRule && ![...this.#pageRuleRows.values()].some((rule) => this.#isSelectedRule(rule))) this.clearPageRuleSelection();
+		if (_classPrivateFieldGet2(_selectedPageRule, this) && ![..._classPrivateFieldGet2(_pageRuleRows, this).values()].some((rule) => _assertClassBrand(_ComponentList_brand, this, _isSelectedRule).call(this, rule))) this.clearPageRuleSelection();
 		const nextRows = /* @__PURE__ */ new Map();
-		for (const element of this.#state.elements) {
-			const dataMap = this.#state.get(element);
+		for (const element of _classPrivateFieldGet2(_state$5, this).elements) {
+			const dataMap = _classPrivateFieldGet2(_state$5, this).get(element);
 			if (!dataMap || ![...dataMap.keys()].some((name) => filters.has(name))) continue;
-			const identity = componentIdentity(element, dataMap, this.#registry);
+			const identity = componentIdentity(element, dataMap, _classPrivateFieldGet2(_registry$4, this));
 			const signature = identity.search;
 			if (query && !signature.toLowerCase().includes(query)) continue;
-			const previous = this.#rows.get(element);
+			const previous = _classPrivateFieldGet2(_rows$1, this).get(element);
 			const row = previous?.signature === signature ? previous : {
-				element: this.#cardRenderer.render(element, dataMap, identity),
+				element: _classPrivateFieldGet2(_cardRenderer, this).render(element, dataMap, identity),
 				signature
 			};
-			this.#targets.set(row.element, {
+			_classPrivateFieldGet2(_targets, this).set(row.element, {
 				element,
 				framework: dataMap.keys().next().value
 			});
 			nextRows.set(element, row);
 			nodes.push(row.element);
 		}
-		this.#rows = nextRows;
+		_classPrivateFieldSet2(_rows$1, this, nextRows);
 		this.select(selected);
-		if (!nodes.length) nodes.push(createEmptyState(this.#state.size ? "No matching components" : "No UX components detected", this.#state.size ? "Change the search or framework filters." : "Pick a component from the page or interact with it to begin."));
+		if (!nodes.length) nodes.push(createEmptyState(_classPrivateFieldGet2(_state$5, this).size ? "No matching components" : "No UX components detected", _classPrivateFieldGet2(_state$5, this).size ? "Change the search or framework filters." : "Pick a component from the page or interact with it to begin."));
 		reconcileChildren(this.element, nodes);
 	}
 	clearActivities() {
-		for (const row of this.#rows.values()) this.#cardRenderer.updateActivity(row.element, 0);
-	}
-	#pageRules(filters, query) {
-		if (!filters.has("turbo")) return null;
-		const rules = (this.#registry.collectPageRules?.() ?? []).filter((rule) => `${rule.kind} ${rule.label} ${rule.detail ?? ""}`.toLowerCase().includes(query));
-		if (!rules.length) return null;
-		return el("section", {
-			class: "group",
-			dataset: { pageRules: "" }
-		}, el("h2", {
-			class: "title",
-			text: "Turbo page rules"
-		}), el("div", { class: "content" }, ...rules.map((rule) => this.#pageRule(rule))));
-	}
-	#pageRule(rule) {
-		const target = {
-			element: rule.element,
-			framework: rule.framework,
-			label: rule.label
-		};
-		const row = el("button", {
-			class: "key-value page-rule",
-			type: "button",
-			"aria-pressed": String(this.#isSelectedRule(rule))
-		}, el("strong", {
-			class: "key",
-			text: rule.label
-		}), rule.detail ? el("span", {
-			class: "value",
-			text: rule.detail
-		}) : null);
-		this.#targets.set(row, target);
-		this.#pageRuleRows.set(row, rule);
-		return row;
+		for (const row of _classPrivateFieldGet2(_rows$1, this).values()) _classPrivateFieldGet2(_cardRenderer, this).updateActivity(row.element, 0);
 	}
 	destroy() {
-		this.#lifetime.abort();
-		this.#cardRenderer.destroy();
-		this.#rows.clear();
-		this.#pageRuleRows.clear();
-		this.#selectedPageRule = null;
-		this.#targets = /* @__PURE__ */ new WeakMap();
+		_classPrivateFieldGet2(_lifetime$7, this).abort();
+		_classPrivateFieldGet2(_cardRenderer, this).destroy();
+		_classPrivateFieldGet2(_rows$1, this).clear();
+		_classPrivateFieldGet2(_pageRuleRows, this).clear();
+		_classPrivateFieldSet2(_selectedPageRule, this, null);
+		_classPrivateFieldSet2(_targets, this, /* @__PURE__ */ new WeakMap());
 		this.element.replaceChildren();
 	}
-	#interact(event) {
-		const row = event.target.closest(".component, .page-rule");
-		const target = row && this.#targets.get(row);
-		if (!target) return;
-		const related = event.relatedTarget;
-		if (related instanceof Node && row.contains(related)) return;
-		if (event.type === "click") if (row.matches(".component")) this.element.dispatchEvent(new CustomEvent("drill-into", { detail: target }));
-		else {
-			const rule = this.#pageRuleRows.get(row);
-			if (this.#isSelectedRule(rule)) {
-				this.clearPageRuleSelection();
-				return;
-			}
-			this.#selectedPageRule = rule;
-			this.#syncPageRuleSelection();
-			target.element.scrollIntoView({
-				block: "center",
-				behavior: "smooth"
-			});
-			this.#visual.onSelect?.(target);
-		}
-		else if (event.type === "pointerover" || event.type === "focusin") this.#visual.onPreview?.(target);
-		else this.#visual.onClearPreview?.();
-	}
 	updateActivity(component) {
-		const row = this.#rows.get(component)?.element;
+		const row = _classPrivateFieldGet2(_rows$1, this).get(component)?.element;
 		if (!row) return;
-		const entries = this.#eventMonitor?.project(component) ?? [];
+		const entries = _classPrivateFieldGet2(_eventMonitor$4, this)?.project(component) ?? [];
 		const latest = entries.at(-1);
-		this.#cardRenderer.updateActivity(row, entries.length, latest?.label || latest?.event || "");
+		_classPrivateFieldGet2(_cardRenderer, this).updateActivity(row, entries.length, latest?.label || latest?.event || "");
 	}
 	select(element) {
 		if (element) this.clearPageRuleSelection();
-		for (const [candidate, { element: card }] of this.#rows) {
+		for (const [candidate, { element: card }] of _classPrivateFieldGet2(_rows$1, this)) {
 			const selected = candidate === element;
 			card.classList.toggle("selected", selected);
 			const action = card.querySelector(".component-row");
@@ -2385,139 +2462,198 @@ var ComponentList = class {
 		}
 	}
 	clearPageRuleSelection() {
-		if (!this.#selectedPageRule) return false;
-		this.#selectedPageRule = null;
-		this.#syncPageRuleSelection();
-		this.#visual.onClearPreview?.();
-		this.#visual.onClearSelection?.();
+		if (!_classPrivateFieldGet2(_selectedPageRule, this)) return false;
+		_classPrivateFieldSet2(_selectedPageRule, this, null);
+		_assertClassBrand(_ComponentList_brand, this, _syncPageRuleSelection).call(this);
+		_classPrivateFieldGet2(_visual$1, this).onClearPreview?.();
+		_classPrivateFieldGet2(_visual$1, this).onClearSelection?.();
 		return true;
 	}
-	#isSelectedRule(rule) {
-		return this.#selectedPageRule?.element === rule.element && this.#selectedPageRule.kind === rule.kind;
-	}
-	#syncPageRuleSelection() {
-		for (const [row, rule] of this.#pageRuleRows) row.setAttribute("aria-pressed", String(this.#isSelectedRule(rule)));
-	}
-	#onComponentKeydown(event) {
-		if (![
-			"ArrowUp",
-			"ArrowDown",
-			"Home",
-			"End"
-		].includes(event.key)) return;
-		const rows = [...this.element.querySelectorAll(".component-row")];
-		if (!rows.length) return;
-		const current = rows.indexOf(event.target?.closest?.(".component-row"));
-		if (current < 0) return;
-		const next = event.key === "Home" ? 0 : event.key === "End" ? rows.length - 1 : Math.min(rows.length - 1, Math.max(0, current + (event.key === "ArrowDown" ? 1 : -1)));
-		event.preventDefault();
-		rows[next].focus();
-	}
 };
+function _pageRules(filters, query) {
+	if (!filters.has("turbo")) return null;
+	const rules = (_classPrivateFieldGet2(_registry$4, this).collectPageRules?.() ?? []).filter((rule) => `${rule.kind} ${rule.label} ${rule.detail ?? ""}`.toLowerCase().includes(query));
+	if (!rules.length) return null;
+	return el("section", {
+		class: "group",
+		dataset: { pageRules: "" }
+	}, el("h2", {
+		class: "title",
+		text: "Turbo page rules"
+	}), el("div", { class: "content" }, ...rules.map((rule) => _assertClassBrand(_ComponentList_brand, this, _pageRule).call(this, rule))));
+}
+function _pageRule(rule) {
+	const target = {
+		element: rule.element,
+		framework: rule.framework,
+		label: rule.label
+	};
+	const row = el("button", {
+		class: "key-value page-rule",
+		type: "button",
+		"aria-pressed": String(_assertClassBrand(_ComponentList_brand, this, _isSelectedRule).call(this, rule))
+	}, el("strong", {
+		class: "key",
+		text: rule.label
+	}), rule.detail ? el("span", {
+		class: "value",
+		text: rule.detail
+	}) : null);
+	_classPrivateFieldGet2(_targets, this).set(row, target);
+	_classPrivateFieldGet2(_pageRuleRows, this).set(row, rule);
+	return row;
+}
+function _interact(event) {
+	const row = event.target.closest(".component, .page-rule");
+	const target = row && _classPrivateFieldGet2(_targets, this).get(row);
+	if (!target) return;
+	const related = event.relatedTarget;
+	if (related instanceof Node && row.contains(related)) return;
+	if (event.type === "click") if (row.matches(".component")) this.element.dispatchEvent(new CustomEvent("drill-into", { detail: target }));
+	else {
+		const rule = _classPrivateFieldGet2(_pageRuleRows, this).get(row);
+		if (_assertClassBrand(_ComponentList_brand, this, _isSelectedRule).call(this, rule)) {
+			this.clearPageRuleSelection();
+			return;
+		}
+		_classPrivateFieldSet2(_selectedPageRule, this, rule);
+		_assertClassBrand(_ComponentList_brand, this, _syncPageRuleSelection).call(this);
+		target.element.scrollIntoView({
+			block: "center",
+			behavior: "smooth"
+		});
+		_classPrivateFieldGet2(_visual$1, this).onSelect?.(target);
+	}
+	else if (event.type === "pointerover" || event.type === "focusin") _classPrivateFieldGet2(_visual$1, this).onPreview?.(target);
+	else _classPrivateFieldGet2(_visual$1, this).onClearPreview?.();
+}
+function _isSelectedRule(rule) {
+	return _classPrivateFieldGet2(_selectedPageRule, this)?.element === rule.element && _classPrivateFieldGet2(_selectedPageRule, this).kind === rule.kind;
+}
+function _syncPageRuleSelection() {
+	for (const [row, rule] of _classPrivateFieldGet2(_pageRuleRows, this)) row.setAttribute("aria-pressed", String(_assertClassBrand(_ComponentList_brand, this, _isSelectedRule).call(this, rule)));
+}
+function _onComponentKeydown(event) {
+	if (![
+		"ArrowUp",
+		"ArrowDown",
+		"Home",
+		"End"
+	].includes(event.key)) return;
+	const rows = [...this.element.querySelectorAll(".component-row")];
+	if (!rows.length) return;
+	const current = rows.indexOf(event.target?.closest?.(".component-row"));
+	if (current < 0) return;
+	const next = event.key === "Home" ? 0 : event.key === "End" ? rows.length - 1 : Math.min(rows.length - 1, Math.max(0, current + (event.key === "ArrowDown" ? 1 : -1)));
+	event.preventDefault();
+	rows[next].focus();
+}
+var _TreeViewer;
 var TreeViewer = class TreeViewer {
 	static render(data, maxDepth = 4) {
 		const container = el("div", { class: "tree" });
-		TreeViewer.#buildNodes(container, data, 0, maxDepth, /* @__PURE__ */ new WeakSet());
+		_buildNodes.call(TreeViewer, container, data, 0, maxDepth, /* @__PURE__ */ new WeakSet());
 		return container;
 	}
-	static #buildNodes(parent, data, depth, maxDepth, seen) {
-		if (data === null || data === void 0) {
-			parent.append(el("div", { class: "row" }, el("span", {
-				class: "v-nul",
-				text: "null"
-			})));
-			return;
-		}
-		if (typeof data !== "object") {
-			parent.append(el("div", { class: "row" }, el("span", {
-				class: TreeViewer.#valueClass(data),
-				text: TreeViewer.#formatValue(data)
-			})));
-			return;
-		}
-		if (seen.has(data)) {
-			parent.append(el("div", { class: "row" }, el("span", {
-				class: "type",
-				text: "[circular]"
-			})));
-			return;
-		}
-		seen.add(data);
-		if (Array.isArray(data)) {
-			parent.classList.add("array");
-			for (const rawValue of data) {
-				const isObject = rawValue !== null && typeof rawValue === "object";
-				if (isObject && depth < maxDepth) {
-					const nest = el("div", { class: "nest" });
-					TreeViewer.#buildNodes(nest, rawValue, depth + 1, maxDepth, seen);
-					parent.append(el("details", {
-						class: "array-item",
-						open: false
-					}, el("summary", {}, el("span", {
-						class: "type",
-						text: Array.isArray(rawValue) ? `Array(${rawValue.length})` : "{...}"
-					})), nest));
-				} else {
-					const value = isObject ? el("span", {
-						class: "type",
-						text: "[max depth]"
-					}) : el("span", {
-						class: TreeViewer.#valueClass(rawValue),
-						text: TreeViewer.#formatValue(rawValue)
-					});
-					parent.append(el("div", { class: "row array-item" }, value));
-				}
-			}
-			return;
-		}
-		const entries = Object.entries(data);
-		for (const [key, rawValue] of entries) {
-			const value = SENSITIVE_KEY.test(key) ? "[redacted]" : rawValue;
-			const isObject = value !== null && typeof value === "object";
+};
+_TreeViewer = TreeViewer;
+function _buildNodes(parent, data, depth, maxDepth, seen) {
+	if (data === null || data === void 0) {
+		parent.append(el("div", { class: "row" }, el("span", {
+			class: "v-nul",
+			text: "null"
+		})));
+		return;
+	}
+	if (typeof data !== "object") {
+		parent.append(el("div", { class: "row" }, el("span", {
+			class: _valueClass.call(_TreeViewer, data),
+			text: _formatValue.call(_TreeViewer, data)
+		})));
+		return;
+	}
+	if (seen.has(data)) {
+		parent.append(el("div", { class: "row" }, el("span", {
+			class: "type",
+			text: "[circular]"
+		})));
+		return;
+	}
+	seen.add(data);
+	if (Array.isArray(data)) {
+		parent.classList.add("array");
+		for (const rawValue of data) {
+			const isObject = rawValue !== null && typeof rawValue === "object";
 			if (isObject && depth < maxDepth) {
 				const nest = el("div", { class: "nest" });
-				TreeViewer.#buildNodes(nest, value, depth + 1, maxDepth, seen);
-				parent.append(el("details", { open: false }, el("summary", {}, el("span", {
-					class: "key",
-					text: key
-				}), el("span", {
-					class: "colon",
-					text: ":"
-				}), el("span", {
+				_buildNodes.call(_TreeViewer, nest, rawValue, depth + 1, maxDepth, seen);
+				parent.append(el("details", {
+					class: "array-item",
+					open: false
+				}, el("summary", {}, el("span", {
 					class: "type",
-					text: Array.isArray(value) ? "Array(" + value.length + ")" : "{...}"
+					text: Array.isArray(rawValue) ? `Array(${rawValue.length})` : "{...}"
 				})), nest));
 			} else {
-				const val = isObject ? el("span", {
+				const value = isObject ? el("span", {
 					class: "type",
 					text: "[max depth]"
 				}) : el("span", {
-					class: TreeViewer.#valueClass(value),
-					text: TreeViewer.#formatValue(value)
+					class: _valueClass.call(_TreeViewer, rawValue),
+					text: _formatValue.call(_TreeViewer, rawValue)
 				});
-				parent.append(el("div", { class: "row" }, el("span", {
-					class: "key",
-					text: key
-				}), el("span", {
-					class: "colon",
-					text: ":"
-				}), val));
+				parent.append(el("div", { class: "row array-item" }, value));
 			}
 		}
+		return;
 	}
-	static #valueClass(value) {
-		if (value === null || value === void 0) return "v-nul";
-		if (typeof value === "string") return "v-str";
-		if (typeof value === "number") return "v-num";
-		if (typeof value === "boolean") return "v-bool";
-		return "type";
+	const entries = Object.entries(data);
+	for (const [key, rawValue] of entries) {
+		const value = SENSITIVE_KEY.test(key) ? "[redacted]" : rawValue;
+		const isObject = value !== null && typeof value === "object";
+		if (isObject && depth < maxDepth) {
+			const nest = el("div", { class: "nest" });
+			_buildNodes.call(_TreeViewer, nest, value, depth + 1, maxDepth, seen);
+			parent.append(el("details", { open: false }, el("summary", {}, el("span", {
+				class: "key",
+				text: key
+			}), el("span", {
+				class: "colon",
+				text: ":"
+			}), el("span", {
+				class: "type",
+				text: Array.isArray(value) ? "Array(" + value.length + ")" : "{...}"
+			})), nest));
+		} else {
+			const val = isObject ? el("span", {
+				class: "type",
+				text: "[max depth]"
+			}) : el("span", {
+				class: _valueClass.call(_TreeViewer, value),
+				text: _formatValue.call(_TreeViewer, value)
+			});
+			parent.append(el("div", { class: "row" }, el("span", {
+				class: "key",
+				text: key
+			}), el("span", {
+				class: "colon",
+				text: ":"
+			}), val));
+		}
 	}
-	static #formatValue(value) {
-		if (value === null || value === void 0) return "null";
-		if (typeof value === "string") return "\"" + value + "\"";
-		return String(value);
-	}
-};
+}
+function _valueClass(value) {
+	if (value === null || value === void 0) return "v-nul";
+	if (typeof value === "string") return "v-str";
+	if (typeof value === "number") return "v-num";
+	if (typeof value === "boolean") return "v-bool";
+	return "type";
+}
+function _formatValue(value) {
+	if (value === null || value === void 0) return "null";
+	if (typeof value === "string") return "\"" + value + "\"";
+	return String(value);
+}
 const MAX_DISPLAYED_CLASSES = 2;
 function makeField(key, value, options = {}) {
 	value = SENSITIVE_KEY.test(key) ? "[redacted]" : value;
@@ -2927,291 +3063,314 @@ function renderComponent(data, context) {
 		default: return null;
 	}
 }
+var _registry$3 = /* @__PURE__ */ new WeakMap();
+var _render = /* @__PURE__ */ new WeakMap();
+var _eventMonitor$3 = /* @__PURE__ */ new WeakMap();
+var _relationshipEngine$2 = /* @__PURE__ */ new WeakMap();
+var _state$4 = /* @__PURE__ */ new WeakMap();
+var _onDrillInto = /* @__PURE__ */ new WeakMap();
+var _element$3 = /* @__PURE__ */ new WeakMap();
+var _target = /* @__PURE__ */ new WeakMap();
+var _identityKey = /* @__PURE__ */ new WeakMap();
+var _eventListener$1 = /* @__PURE__ */ new WeakMap();
+var _lifetime$6 = /* @__PURE__ */ new WeakMap();
+var _previousData = /* @__PURE__ */ new WeakMap();
+var _recentChanges = /* @__PURE__ */ new WeakMap();
+var _changeTimer = /* @__PURE__ */ new WeakMap();
+var _savedGroups = /* @__PURE__ */ new WeakMap();
+var _ComponentDetail_brand = /* @__PURE__ */ new WeakSet();
 var ComponentDetail = class {
-	#registry;
-	#render;
-	#eventMonitor;
-	#relationshipEngine;
-	#state;
-	#onDrillInto;
-	#element = null;
-	#target = null;
-	#identityKey = "";
-	#eventListener = null;
-	#lifetime = new AbortController();
-	#previousData = null;
-	#recentChanges = /* @__PURE__ */ new Map();
-	#changeTimer;
-	#savedGroups = /* @__PURE__ */ new Map();
 	constructor({ registry, eventMonitor, relationshipEngine, state, render = renderComponent }, onDrillInto, uiState = {}) {
-		this.#registry = registry;
-		this.#render = render;
-		this.#eventMonitor = eventMonitor;
-		this.#relationshipEngine = relationshipEngine;
-		this.#state = state;
-		this.#onDrillInto = onDrillInto;
-		this.#savedGroups = new Map(Object.entries(uiState.groups || {}));
+		_classPrivateMethodInitSpec(this, _ComponentDetail_brand);
+		_classPrivateFieldInitSpec(this, _registry$3, void 0);
+		_classPrivateFieldInitSpec(this, _render, void 0);
+		_classPrivateFieldInitSpec(this, _eventMonitor$3, void 0);
+		_classPrivateFieldInitSpec(this, _relationshipEngine$2, void 0);
+		_classPrivateFieldInitSpec(this, _state$4, void 0);
+		_classPrivateFieldInitSpec(this, _onDrillInto, void 0);
+		_classPrivateFieldInitSpec(this, _element$3, null);
+		_classPrivateFieldInitSpec(this, _target, null);
+		_classPrivateFieldInitSpec(this, _identityKey, "");
+		_classPrivateFieldInitSpec(this, _eventListener$1, null);
+		_classPrivateFieldInitSpec(this, _lifetime$6, new AbortController());
+		_classPrivateFieldInitSpec(this, _previousData, null);
+		_classPrivateFieldInitSpec(this, _recentChanges, /* @__PURE__ */ new Map());
+		_classPrivateFieldInitSpec(this, _changeTimer, void 0);
+		_classPrivateFieldInitSpec(this, _savedGroups, /* @__PURE__ */ new Map());
+		_classPrivateFieldSet2(_registry$3, this, registry);
+		_classPrivateFieldSet2(_render, this, render);
+		_classPrivateFieldSet2(_eventMonitor$3, this, eventMonitor);
+		_classPrivateFieldSet2(_relationshipEngine$2, this, relationshipEngine);
+		_classPrivateFieldSet2(_state$4, this, state);
+		_classPrivateFieldSet2(_onDrillInto, this, onDrillInto);
+		_classPrivateFieldSet2(_savedGroups, this, new Map(Object.entries(uiState.groups || {})));
 	}
 	render(target, dataMap) {
 		this.destroy();
-		this.#lifetime = new AbortController();
-		this.#target = target;
-		this.#previousData = dataMap;
-		this.#element = el("div", { class: "detail pane" });
-		this.#replaceContent(dataMap, null);
-		if (this.#eventMonitor) {
-			this.#eventListener = (entry) => {
+		_classPrivateFieldSet2(_lifetime$6, this, new AbortController());
+		_classPrivateFieldSet2(_target, this, target);
+		_classPrivateFieldSet2(_previousData, this, dataMap);
+		_classPrivateFieldSet2(_element$3, this, el("div", { class: "detail pane" }));
+		_assertClassBrand(_ComponentDetail_brand, this, _replaceContent).call(this, dataMap, null);
+		if (_classPrivateFieldGet2(_eventMonitor$3, this)) {
+			_classPrivateFieldSet2(_eventListener$1, this, (entry) => {
 				if (entry.target !== target && !(entry.target && target.contains(entry.target))) return;
-				const footer = this.#element?.querySelector(".activity-label");
+				const footer = _classPrivateFieldGet2(_element$3, this)?.querySelector(".activity-label");
 				if (footer) footer.dataset.framework = entry.type || "default";
-			};
-			this.#eventMonitor.addListener(this.#eventListener);
+			});
+			_classPrivateFieldGet2(_eventMonitor$3, this).addListener(_classPrivateFieldGet2(_eventListener$1, this));
 		}
 		const onUpdate = (event) => {
 			const detail = event.detail;
 			if (detail?.element !== target) return;
-			const current = this.#state.get(target);
+			const current = _classPrivateFieldGet2(_state$4, this).get(target);
 			if (!current) return;
-			const previous = detail.previous || this.#previousData;
-			this.#previousData = current;
-			this.#replaceContent(current, previous ?? null);
+			const previous = detail.previous || _classPrivateFieldGet2(_previousData, this);
+			_classPrivateFieldSet2(_previousData, this, current);
+			_assertClassBrand(_ComponentDetail_brand, this, _replaceContent).call(this, current, previous ?? null);
 		};
-		this.#state.addEventListener?.("component-updated", onUpdate, { signal: this.#lifetime.signal });
-		return this.#element;
+		_classPrivateFieldGet2(_state$4, this).addEventListener?.("component-updated", onUpdate, { signal: _classPrivateFieldGet2(_lifetime$6, this).signal });
+		return _classPrivateFieldGet2(_element$3, this);
 	}
 	destroy() {
-		this.#rememberGroups();
-		if (this.#eventListener) this.#eventMonitor?.removeListener(this.#eventListener);
-		this.#eventListener = null;
-		this.#lifetime.abort();
-		clearTimeout(this.#changeTimer);
-		this.#recentChanges.clear();
-		this.#element = this.#target = this.#previousData = null;
-		this.#identityKey = "";
+		_assertClassBrand(_ComponentDetail_brand, this, _rememberGroups).call(this);
+		if (_classPrivateFieldGet2(_eventListener$1, this)) _classPrivateFieldGet2(_eventMonitor$3, this)?.removeListener(_classPrivateFieldGet2(_eventListener$1, this));
+		_classPrivateFieldSet2(_eventListener$1, this, null);
+		_classPrivateFieldGet2(_lifetime$6, this).abort();
+		clearTimeout(_classPrivateFieldGet2(_changeTimer, this));
+		_classPrivateFieldGet2(_recentChanges, this).clear();
+		_classPrivateFieldSet2(_element$3, this, _classPrivateFieldSet2(_target, this, _classPrivateFieldSet2(_previousData, this, null)));
+		_classPrivateFieldSet2(_identityKey, this, "");
 	}
 	getUiState() {
-		this.#rememberGroups();
-		return { groups: Object.fromEntries(this.#savedGroups) };
+		_assertClassBrand(_ComponentDetail_brand, this, _rememberGroups).call(this);
+		return { groups: Object.fromEntries(_classPrivateFieldGet2(_savedGroups, this)) };
 	}
 	get activityCount() {
-		const target = this.#target;
-		return (target ? this.#eventMonitor?.project(target) ?? [] : []).length;
-	}
-	#identity(target, dataMap) {
-		const { name, framework, selector } = componentIdentity(target, dataMap, this.#registry);
-		const identity = name ?? selector;
-		const key = JSON.stringify([
-			identity,
-			framework,
-			selector
-		]);
-		if (key === this.#identityKey) return this.#element?.firstElementChild;
-		this.#identityKey = key;
-		const meaningfulSelector = framework !== "livecomponent" && selector !== target.localName;
-		const title = el("h2", { text: identity });
-		const subtitle = meaningfulSelector ? el("p", {
-			class: "detail-selector",
-			text: selector
-		}) : null;
-		return el("section", { class: "detail-head" }, expandableTextIfLong(title), el("span", {
-			class: "framework",
-			dataset: { framework },
-			text: frameworkName(framework)
-		}), subtitle ? expandableTextIfLong(subtitle, 32) : null);
-	}
-	#data(dataMap, previousData) {
-		const body = el("div", {
-			class: "detail-body",
-			id: "component-detail-controller",
-			role: "region",
-			"aria-label": "Component details"
-		});
-		const target = this.#target;
-		const events = this.#eventMonitor?.getEntriesForElement(target) ?? [];
-		let primary = true;
-		for (const [name, data] of dataMap) {
-			const changes = this.#changes(previousData?.get(name), data);
-			const plugin = this.#registry.get(name);
-			let rendered = this.#render(data, {
-				changes,
-				framework: name,
-				events
-			});
-			let groups = rendered?.matches?.(".groups") ? rendered : rendered?.querySelector?.(".groups");
-			if (!groups && rendered && (rendered.childNodes.length || rendered.textContent?.trim())) {
-				groups = el("div", { class: "groups" }, makeGroup("Details", [rendered], {
-					key: `${name}-details`,
-					icon: "components"
-				}));
-				rendered = groups;
-			}
-			if (!groups) groups = el("div", { class: "groups" });
-			if (primary) this.#mergeGroups(groups, this.#relationships(target, name));
-			if (!groups.children.length) {
-				primary = false;
-				continue;
-			}
-			const detail = el("div", {
-				class: "framework-detail",
-				dataset: { framework: name }
-			}, expandableText(el("h3", { text: `${frameworkName(name)}: ${plugin?.getDisplayName(target) || componentLabel(target)}` })), groups);
-			body.appendChild(detail);
-			primary = false;
-		}
-		body.dataset.frameworks = String(body.children.length);
-		return body;
-	}
-	#mergeGroups(groups, additions) {
-		for (const addition of additions) {
-			const existing = groups.querySelector(`:scope > [data-group="${addition.dataset.group}"]`);
-			if (!existing) {
-				groups.appendChild(addition);
-				continue;
-			}
-			const source = addition.querySelector(":scope > .content");
-			const destination = existing.querySelector(":scope > .content");
-			if (source && destination) destination.append(...source.childNodes);
-		}
-	}
-	#relationships(target, framework) {
-		const edges = this.#relationshipEngine?.getRelatedTo(target) ?? [];
-		const groups = {
-			parents: [],
-			children: [],
-			outlets: [],
-			related: []
-		};
-		const seen = Object.fromEntries(Object.keys(groups).map((key) => [key, /* @__PURE__ */ new Set()]));
-		for (const edge of edges) {
-			const related = edge.source === target ? edge.target : edge.source;
-			const name = componentIdentity(related, this.#state.get(related), this.#registry).name ?? componentLabel(related);
-			const [kind, detail] = this.#describeRelationship(edge, target);
-			if (seen[kind].has(related)) continue;
-			seen[kind].add(related);
-			const selector = related.id ? `#${related.id}` : componentLabel(related);
-			const secondary = edge.type === "outlet" ? selector : selector === related.localName ? detail : `${detail} · ${selector}`;
-			groups[kind].push(el("button", {
-				class: "key-value relation",
-				type: "button",
-				"aria-label": `${detail} ${name} ${selector}`,
-				on: { click: () => this.#onDrillInto?.(related) }
-			}, el("strong", {
-				class: "key",
-				text: name
-			}), el("small", {
-				class: "value",
-				text: secondary
-			}), createIcon("forward")));
-		}
-		return [
-			["parents", "Parent"],
-			["children", "Children"],
-			["outlets", "Outlets"],
-			["related", "Related"]
-		].filter(([key]) => key !== "outlets" || framework !== "turbo").map(([key, title]) => groups[key].length ? makeGroup(title, [el("div", { class: "relations" }, ...groups[key])], {
-			key: `${framework}-${key === "parents" ? "parent" : key}`,
-			icon: key === "outlets" ? "overlay" : "components"
-		}) : null).filter((group) => Boolean(group));
-	}
-	#describeRelationship(edge, target) {
-		const outgoing = edge.source === target;
-		if (edge.type === "outlet") {
-			const outlet = edge.label?.split(" -> ").at(-1) || "component";
-			return ["outlets", outgoing ? `${outlet} outlet` : `used by ${outlet} outlet`];
-		}
-		if ([
-			"controller-parent",
-			"dom-parent",
-			"live-parent",
-			"frame-nesting"
-		].includes(edge.type)) return [outgoing ? "children" : "parents", `${outgoing ? "child" : "parent"} ${edge.type === "frame-nesting" ? "frame" : "component"}`];
-		return ["related", edge.label || edge.type.replaceAll("-", " ")];
-	}
-	#activityFooter() {
-		const target = this.#target;
-		return el("div", {
-			class: "activity-label group",
-			dataset: { framework: (target ? this.#eventMonitor?.getEntriesForElement(target)?.at(-1) : void 0)?.type || "default" }
-		}, el("span", { class: "title" }, el("span", { class: "icon" }, createIcon("activity")), el("span", {
-			class: "name",
-			text: "Activity"
-		})));
-	}
-	#replaceContent(dataMap, previousData) {
-		const active = (this.#element?.getRootNode())?.activeElement ?? null;
-		const activeKey = active && this.#element?.contains(active) ? active.closest(".key-value")?.dataset.fieldKey : null;
-		this.#rememberGroups();
-		const content = this.#data(dataMap, previousData);
-		if (!this.#savedGroups.size) content.querySelectorAll("details.group").forEach((group) => {
-			group.open = !group.hasAttribute("data-empty");
-		});
-		const identity = this.#identity(this.#target, dataMap);
-		const current = this.#element?.querySelector(".detail-body");
-		if (current) {
-			if (identity !== this.#element?.firstElementChild) this.#element?.firstElementChild?.replaceWith(identity);
-			current.replaceChildren(...content.childNodes);
-			current.dataset.frameworks = content.dataset.frameworks;
-		} else this.#element?.append(identity, content, this.#activityFooter());
-		for (const group of this.#element?.querySelectorAll("details.group[data-group]") ?? []) {
-			const details = group;
-			const key = details.dataset.group ?? "";
-			if (details.hasAttribute("data-empty")) details.open = false;
-			else if (this.#savedGroups.has(key)) details.open = this.#savedGroups.get(key);
-		}
-		if (activeKey) ([...this.#element?.querySelectorAll(".key-value") ?? []].find((candidate) => candidate.dataset.fieldKey === activeKey)?.querySelector("button, [tabindex]"))?.focus({ preventScroll: true });
-	}
-	#rememberGroups() {
-		for (const group of this.#element?.querySelectorAll("details.group[data-group]") ?? []) {
-			const details = group;
-			this.#savedGroups.set(details.dataset.group ?? "", details.open);
-		}
-	}
-	#changes(previous, current) {
-		if (!previous) return this.#recentChanges;
-		let changed = false;
-		const compare = (before, after, path, nested = false) => {
-			const a = before || {};
-			const b = after || {};
-			for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
-				const field = `${path}.${key}`;
-				if (nested) compare(a[key], b[key], field);
-				else if (!sameSnapshot(a[key], b[key])) {
-					this.#recentChanges.set(field, {
-						previous: a[key],
-						current: b[key]
-					});
-					changed = true;
-				}
-			}
-		};
-		for (const group of [
-			"props",
-			"propsFromParent",
-			"values"
-		]) compare(previous.data?.[group], current.data?.[group], group, group === "values");
-		if (changed) {
-			clearTimeout(this.#changeTimer);
-			this.#changeTimer = setTimeout(() => {
-				this.#recentChanges.clear();
-				for (const field of this.#element?.querySelectorAll("[data-changed]") ?? []) {
-					field.removeAttribute("data-changed");
-					field.removeAttribute("title");
-				}
-			}, 1800);
-		}
-		return this.#recentChanges;
+		const target = _classPrivateFieldGet2(_target, this);
+		return (target ? _classPrivateFieldGet2(_eventMonitor$3, this)?.project(target) ?? [] : []).length;
 	}
 };
+function _identity(target, dataMap) {
+	const { name, framework, selector } = componentIdentity(target, dataMap, _classPrivateFieldGet2(_registry$3, this));
+	const identity = name ?? selector;
+	const key = JSON.stringify([
+		identity,
+		framework,
+		selector
+	]);
+	if (key === _classPrivateFieldGet2(_identityKey, this)) return _classPrivateFieldGet2(_element$3, this)?.firstElementChild;
+	_classPrivateFieldSet2(_identityKey, this, key);
+	const meaningfulSelector = framework !== "livecomponent" && selector !== target.localName;
+	const title = el("h2", { text: identity });
+	const subtitle = meaningfulSelector ? el("p", {
+		class: "detail-selector",
+		text: selector
+	}) : null;
+	return el("section", { class: "detail-head" }, expandableTextIfLong(title), el("span", {
+		class: "framework",
+		dataset: { framework },
+		text: frameworkName(framework)
+	}), subtitle ? expandableTextIfLong(subtitle, 32) : null);
+}
+function _data(dataMap, previousData) {
+	const body = el("div", {
+		class: "detail-body",
+		id: "component-detail-controller",
+		role: "region",
+		"aria-label": "Component details"
+	});
+	const target = _classPrivateFieldGet2(_target, this);
+	const events = _classPrivateFieldGet2(_eventMonitor$3, this)?.getEntriesForElement(target) ?? [];
+	let primary = true;
+	for (const [name, data] of dataMap) {
+		const changes = _assertClassBrand(_ComponentDetail_brand, this, _changes).call(this, previousData?.get(name), data);
+		const plugin = _classPrivateFieldGet2(_registry$3, this).get(name);
+		let rendered = _classPrivateFieldGet2(_render, this).call(this, data, {
+			changes,
+			framework: name,
+			events
+		});
+		let groups = rendered?.matches?.(".groups") ? rendered : rendered?.querySelector?.(".groups");
+		if (!groups && rendered && (rendered.childNodes.length || rendered.textContent?.trim())) {
+			groups = el("div", { class: "groups" }, makeGroup("Details", [rendered], {
+				key: `${name}-details`,
+				icon: "components"
+			}));
+			rendered = groups;
+		}
+		if (!groups) groups = el("div", { class: "groups" });
+		if (primary) _assertClassBrand(_ComponentDetail_brand, this, _mergeGroups).call(this, groups, _assertClassBrand(_ComponentDetail_brand, this, _relationships).call(this, target, name));
+		if (!groups.children.length) {
+			primary = false;
+			continue;
+		}
+		const detail = el("div", {
+			class: "framework-detail",
+			dataset: { framework: name }
+		}, expandableText(el("h3", { text: `${frameworkName(name)}: ${plugin?.getDisplayName(target) || componentLabel(target)}` })), groups);
+		body.appendChild(detail);
+		primary = false;
+	}
+	body.dataset.frameworks = String(body.children.length);
+	return body;
+}
+function _mergeGroups(groups, additions) {
+	for (const addition of additions) {
+		const existing = groups.querySelector(`:scope > [data-group="${addition.dataset.group}"]`);
+		if (!existing) {
+			groups.appendChild(addition);
+			continue;
+		}
+		const source = addition.querySelector(":scope > .content");
+		const destination = existing.querySelector(":scope > .content");
+		if (source && destination) destination.append(...source.childNodes);
+	}
+}
+function _relationships(target, framework) {
+	const edges = _classPrivateFieldGet2(_relationshipEngine$2, this)?.getRelatedTo(target) ?? [];
+	const groups = {
+		parents: [],
+		children: [],
+		outlets: [],
+		related: []
+	};
+	const seen = Object.fromEntries(Object.keys(groups).map((key) => [key, /* @__PURE__ */ new Set()]));
+	for (const edge of edges) {
+		const related = edge.source === target ? edge.target : edge.source;
+		const name = componentIdentity(related, _classPrivateFieldGet2(_state$4, this).get(related), _classPrivateFieldGet2(_registry$3, this)).name ?? componentLabel(related);
+		const [kind, detail] = _assertClassBrand(_ComponentDetail_brand, this, _describeRelationship).call(this, edge, target);
+		if (seen[kind].has(related)) continue;
+		seen[kind].add(related);
+		const selector = related.id ? `#${related.id}` : componentLabel(related);
+		const secondary = edge.type === "outlet" ? selector : selector === related.localName ? detail : `${detail} · ${selector}`;
+		groups[kind].push(el("button", {
+			class: "key-value relation",
+			type: "button",
+			"aria-label": `${detail} ${name} ${selector}`,
+			on: { click: () => _classPrivateFieldGet2(_onDrillInto, this)?.call(this, related) }
+		}, el("strong", {
+			class: "key",
+			text: name
+		}), el("small", {
+			class: "value",
+			text: secondary
+		}), createIcon("forward")));
+	}
+	return [
+		["parents", "Parent"],
+		["children", "Children"],
+		["outlets", "Outlets"],
+		["related", "Related"]
+	].filter(([key]) => key !== "outlets" || framework !== "turbo").map(([key, title]) => groups[key].length ? makeGroup(title, [el("div", { class: "relations" }, ...groups[key])], {
+		key: `${framework}-${key === "parents" ? "parent" : key}`,
+		icon: key === "outlets" ? "overlay" : "components"
+	}) : null).filter((group) => Boolean(group));
+}
+function _describeRelationship(edge, target) {
+	const outgoing = edge.source === target;
+	if (edge.type === "outlet") {
+		const outlet = edge.label?.split(" -> ").at(-1) || "component";
+		return ["outlets", outgoing ? `${outlet} outlet` : `used by ${outlet} outlet`];
+	}
+	if ([
+		"controller-parent",
+		"dom-parent",
+		"live-parent",
+		"frame-nesting"
+	].includes(edge.type)) return [outgoing ? "children" : "parents", `${outgoing ? "child" : "parent"} ${edge.type === "frame-nesting" ? "frame" : "component"}`];
+	return ["related", edge.label || edge.type.replaceAll("-", " ")];
+}
+function _activityFooter() {
+	const target = _classPrivateFieldGet2(_target, this);
+	return el("div", {
+		class: "activity-label group",
+		dataset: { framework: (target ? _classPrivateFieldGet2(_eventMonitor$3, this)?.getEntriesForElement(target)?.at(-1) : void 0)?.type || "default" }
+	}, el("span", { class: "title" }, el("span", { class: "icon" }, createIcon("activity")), el("span", {
+		class: "name",
+		text: "Activity"
+	})));
+}
+function _replaceContent(dataMap, previousData) {
+	const active = (_classPrivateFieldGet2(_element$3, this)?.getRootNode())?.activeElement ?? null;
+	const activeKey = active && _classPrivateFieldGet2(_element$3, this)?.contains(active) ? active.closest(".key-value")?.dataset.fieldKey : null;
+	_assertClassBrand(_ComponentDetail_brand, this, _rememberGroups).call(this);
+	const content = _assertClassBrand(_ComponentDetail_brand, this, _data).call(this, dataMap, previousData);
+	if (!_classPrivateFieldGet2(_savedGroups, this).size) content.querySelectorAll("details.group").forEach((group) => {
+		group.open = !group.hasAttribute("data-empty");
+	});
+	const identity = _assertClassBrand(_ComponentDetail_brand, this, _identity).call(this, _classPrivateFieldGet2(_target, this), dataMap);
+	const current = _classPrivateFieldGet2(_element$3, this)?.querySelector(".detail-body");
+	if (current) {
+		if (identity !== _classPrivateFieldGet2(_element$3, this)?.firstElementChild) _classPrivateFieldGet2(_element$3, this)?.firstElementChild?.replaceWith(identity);
+		current.replaceChildren(...content.childNodes);
+		current.dataset.frameworks = content.dataset.frameworks;
+	} else _classPrivateFieldGet2(_element$3, this)?.append(identity, content, _assertClassBrand(_ComponentDetail_brand, this, _activityFooter).call(this));
+	for (const group of _classPrivateFieldGet2(_element$3, this)?.querySelectorAll("details.group[data-group]") ?? []) {
+		const details = group;
+		const key = details.dataset.group ?? "";
+		if (details.hasAttribute("data-empty")) details.open = false;
+		else if (_classPrivateFieldGet2(_savedGroups, this).has(key)) details.open = _classPrivateFieldGet2(_savedGroups, this).get(key);
+	}
+	if (activeKey) ([..._classPrivateFieldGet2(_element$3, this)?.querySelectorAll(".key-value") ?? []].find((candidate) => candidate.dataset.fieldKey === activeKey)?.querySelector("button, [tabindex]"))?.focus({ preventScroll: true });
+}
+function _rememberGroups() {
+	for (const group of _classPrivateFieldGet2(_element$3, this)?.querySelectorAll("details.group[data-group]") ?? []) {
+		const details = group;
+		_classPrivateFieldGet2(_savedGroups, this).set(details.dataset.group ?? "", details.open);
+	}
+}
+function _changes(previous, current) {
+	if (!previous) return _classPrivateFieldGet2(_recentChanges, this);
+	let changed = false;
+	const compare = (before, after, path, nested = false) => {
+		const a = before || {};
+		const b = after || {};
+		for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
+			const field = `${path}.${key}`;
+			if (nested) compare(a[key], b[key], field);
+			else if (!sameSnapshot(a[key], b[key])) {
+				_classPrivateFieldGet2(_recentChanges, this).set(field, {
+					previous: a[key],
+					current: b[key]
+				});
+				changed = true;
+			}
+		}
+	};
+	for (const group of [
+		"props",
+		"propsFromParent",
+		"values"
+	]) compare(previous.data?.[group], current.data?.[group], group, group === "values");
+	if (changed) {
+		clearTimeout(_classPrivateFieldGet2(_changeTimer, this));
+		_classPrivateFieldSet2(_changeTimer, this, setTimeout(() => {
+			_classPrivateFieldGet2(_recentChanges, this).clear();
+			for (const field of _classPrivateFieldGet2(_element$3, this)?.querySelectorAll("[data-changed]") ?? []) {
+				field.removeAttribute("data-changed");
+				field.removeAttribute("title");
+			}
+		}, 1800));
+	}
+	return _classPrivateFieldGet2(_recentChanges, this);
+}
+var _levels = /* @__PURE__ */ new WeakMap();
+var _headers = /* @__PURE__ */ new WeakMap();
+var _content = /* @__PURE__ */ new WeakMap();
+var _element$2 = /* @__PURE__ */ new WeakMap();
+var _DrillStack_brand = /* @__PURE__ */ new WeakSet();
 var DrillStack = class extends EventTarget {
-	#levels = [];
-	#headers;
-	#content;
-	#element;
 	constructor(root, { id = "root", title = "Components" } = {}) {
 		super();
-		this.#headers = el("div", { class: "stack-nav" });
-		this.#content = el("div", { class: "stack-body" });
-		this.#element = el("section", { class: "stack pane" }, this.#headers, this.#content);
+		_classPrivateMethodInitSpec(this, _DrillStack_brand);
+		_classPrivateFieldInitSpec(this, _levels, []);
+		_classPrivateFieldInitSpec(this, _headers, void 0);
+		_classPrivateFieldInitSpec(this, _content, void 0);
+		_classPrivateFieldInitSpec(this, _element$2, void 0);
+		_classPrivateFieldSet2(_headers, this, el("div", { class: "stack-nav" }));
+		_classPrivateFieldSet2(_content, this, el("div", { class: "stack-body" }));
+		_classPrivateFieldSet2(_element$2, this, el("section", { class: "stack pane" }, _classPrivateFieldGet2(_headers, this), _classPrivateFieldGet2(_content, this)));
 		this.push({
 			id,
 			title,
@@ -3219,28 +3378,28 @@ var DrillStack = class extends EventTarget {
 		}, false);
 	}
 	get element() {
-		return this.#element;
+		return _classPrivateFieldGet2(_element$2, this);
 	}
 	get depth() {
-		return this.#levels.length;
+		return _classPrivateFieldGet2(_levels, this).length;
 	}
 	get current() {
-		return this.#levels.at(-1) ?? null;
+		return _classPrivateFieldGet2(_levels, this).at(-1) ?? null;
 	}
 	push({ id, title, typePill, content, element, framework }, notify = true) {
 		const previous = this.current;
 		if (previous) {
-			previous.scrollTop = this.#content.scrollTop;
+			previous.scrollTop = _classPrivateFieldGet2(_content, this).scrollTop;
 			previous.content.hidden = true;
 		}
-		const index = this.#levels.length;
+		const index = _classPrivateFieldGet2(_levels, this).length;
 		const header = el("button", {
 			class: "stack-link",
 			type: "button",
 			"aria-current": "page",
 			"aria-label": index ? `Back from ${title}` : title,
 			on: { click: () => {
-				if (index === this.#levels.length - 1) this.pop();
+				if (index === _classPrivateFieldGet2(_levels, this).length - 1) this.pop();
 				else this.popTo(index);
 			} }
 		}, createIcon("back"), el("span", {
@@ -3260,23 +3419,23 @@ var DrillStack = class extends EventTarget {
 			element,
 			scrollTop: 0
 		};
-		this.#levels.push(level);
-		this.#headers.appendChild(header);
-		this.#content.appendChild(layer);
-		this.#content.scrollTop = 0;
-		this.#syncNavigation();
+		_classPrivateFieldGet2(_levels, this).push(level);
+		_classPrivateFieldGet2(_headers, this).appendChild(header);
+		_classPrivateFieldGet2(_content, this).appendChild(layer);
+		_classPrivateFieldGet2(_content, this).scrollTop = 0;
+		_assertClassBrand(_DrillStack_brand, this, _syncNavigation).call(this);
 		if (notify) this.dispatchEvent(new CustomEvent("drill-push", { detail: { level } }));
 		return level;
 	}
 	pop() {
 		if (this.depth <= 1) return null;
-		const removed = this.#levels.pop();
+		const removed = _classPrivateFieldGet2(_levels, this).pop();
 		removed.header.remove();
 		removed.content.remove();
 		const current = this.current;
 		current.content.hidden = false;
-		this.#content.scrollTop = current.scrollTop;
-		this.#syncNavigation();
+		_classPrivateFieldGet2(_content, this).scrollTop = current.scrollTop;
+		_assertClassBrand(_DrillStack_brand, this, _syncNavigation).call(this);
 		this.dispatchEvent(new CustomEvent("drill-pop", { detail: {
 			removed,
 			current
@@ -3288,98 +3447,121 @@ var DrillStack = class extends EventTarget {
 		while (this.depth > index + 1) this.pop();
 	}
 	setRootTitle(title) {
-		const root = this.#levels[0];
+		const root = _classPrivateFieldGet2(_levels, this)[0];
 		if (!root) return;
 		root.title = title;
 		const label = root.header.querySelector(".stack-title");
 		if (label) label.textContent = title;
 	}
-	#syncNavigation() {
-		const currentIndex = this.#levels.length - 1;
-		const previousIndex = currentIndex - 1;
-		for (const [index, level] of this.#levels.entries()) {
-			const current = index === currentIndex;
-			level.header.classList.toggle("previous", index === previousIndex);
-			if (current) level.header.setAttribute("aria-current", "page");
-			else level.header.removeAttribute("aria-current");
-			level.header.setAttribute("aria-label", current ? level.title : `Back to ${level.title}`);
-		}
-		this.#element.classList.toggle("is-drilled", this.depth > 1);
-	}
 };
+function _syncNavigation() {
+	const currentIndex = _classPrivateFieldGet2(_levels, this).length - 1;
+	const previousIndex = currentIndex - 1;
+	for (const [index, level] of _classPrivateFieldGet2(_levels, this).entries()) {
+		const current = index === currentIndex;
+		level.header.classList.toggle("previous", index === previousIndex);
+		if (current) level.header.setAttribute("aria-current", "page");
+		else level.header.removeAttribute("aria-current");
+		level.header.setAttribute("aria-label", current ? level.title : `Back to ${level.title}`);
+	}
+	_classPrivateFieldGet2(_element$2, this).classList.toggle("is-drilled", this.depth > 1);
+}
+var _drillStack = /* @__PURE__ */ new WeakMap();
+var _drillDetails = /* @__PURE__ */ new WeakMap();
+var _nextDrillId = /* @__PURE__ */ new WeakMap();
+var _detailStates = /* @__PURE__ */ new WeakMap();
+var _pendingDetail = /* @__PURE__ */ new WeakMap();
+var _restoreQueued = /* @__PURE__ */ new WeakMap();
+var _destroyed = /* @__PURE__ */ new WeakMap();
+var _lifetime$5 = /* @__PURE__ */ new WeakMap();
+var _state$3 = /* @__PURE__ */ new WeakMap();
+var _registry$2 = /* @__PURE__ */ new WeakMap();
+var _eventMonitor$2 = /* @__PURE__ */ new WeakMap();
+var _relationshipEngine$1 = /* @__PURE__ */ new WeakMap();
+var _activity$1 = /* @__PURE__ */ new WeakMap();
+var _callbacks = /* @__PURE__ */ new WeakMap();
+var _DetailNavigation_brand = /* @__PURE__ */ new WeakSet();
+var _onDetailPreview = /* @__PURE__ */ new WeakMap();
+var _onDetailClear = /* @__PURE__ */ new WeakMap();
+var _onDetailSelect = /* @__PURE__ */ new WeakMap();
 var DetailNavigation = class {
-	#drillStack;
-	#drillDetails = /* @__PURE__ */ new Map();
-	#nextDrillId = 0;
-	#detailStates = /* @__PURE__ */ new Map();
-	#pendingDetail = null;
-	#restoreQueued = false;
-	#destroyed = false;
-	#lifetime = new AbortController();
-	#state;
-	#registry;
-	#eventMonitor;
-	#relationshipEngine;
-	#activity;
-	#callbacks;
 	constructor(state, registry, eventMonitor, relationshipEngine, root, activity, callbacks) {
-		this.#state = state;
-		this.#registry = registry;
-		this.#eventMonitor = eventMonitor;
-		this.#relationshipEngine = relationshipEngine;
-		this.#activity = activity;
-		this.#callbacks = callbacks;
-		this.#drillStack = new DrillStack(root);
-		this.#drillStack.addEventListener("drill-push", () => callbacks.change());
-		this.#drillStack.addEventListener("drill-pop", (event) => this.#onDrillPop(event.detail));
-		state.addEventListener("component-removed", (event) => this.#onComponentRemoved(event.detail?.element), { signal: this.#lifetime.signal });
-		state.addEventListener("components-cleared", () => this.#onComponentRemoved(this.focusedComponent), { signal: this.#lifetime.signal });
+		_classPrivateMethodInitSpec(this, _DetailNavigation_brand);
+		_classPrivateFieldInitSpec(this, _drillStack, void 0);
+		_classPrivateFieldInitSpec(this, _drillDetails, /* @__PURE__ */ new Map());
+		_classPrivateFieldInitSpec(this, _nextDrillId, 0);
+		_classPrivateFieldInitSpec(this, _detailStates, /* @__PURE__ */ new Map());
+		_classPrivateFieldInitSpec(this, _pendingDetail, null);
+		_classPrivateFieldInitSpec(this, _restoreQueued, false);
+		_classPrivateFieldInitSpec(this, _destroyed, false);
+		_classPrivateFieldInitSpec(this, _lifetime$5, new AbortController());
+		_classPrivateFieldInitSpec(this, _state$3, void 0);
+		_classPrivateFieldInitSpec(this, _registry$2, void 0);
+		_classPrivateFieldInitSpec(this, _eventMonitor$2, void 0);
+		_classPrivateFieldInitSpec(this, _relationshipEngine$1, void 0);
+		_classPrivateFieldInitSpec(this, _activity$1, void 0);
+		_classPrivateFieldInitSpec(this, _callbacks, void 0);
+		_classPrivateFieldInitSpec(this, _onDetailPreview, (event) => _classPrivateFieldGet2(_callbacks, this).preview(event.detail));
+		_classPrivateFieldInitSpec(this, _onDetailClear, () => _classPrivateFieldGet2(_callbacks, this).clearPreview());
+		_classPrivateFieldInitSpec(this, _onDetailSelect, (event) => _classPrivateFieldGet2(_callbacks, this).select(event.detail));
+		_classPrivateFieldSet2(_state$3, this, state);
+		_classPrivateFieldSet2(_registry$2, this, registry);
+		_classPrivateFieldSet2(_eventMonitor$2, this, eventMonitor);
+		_classPrivateFieldSet2(_relationshipEngine$1, this, relationshipEngine);
+		_classPrivateFieldSet2(_activity$1, this, activity);
+		_classPrivateFieldSet2(_callbacks, this, callbacks);
+		_classPrivateFieldSet2(_drillStack, this, new DrillStack(root));
+		_classPrivateFieldGet2(_drillStack, this).addEventListener("drill-push", () => callbacks.change());
+		_classPrivateFieldGet2(_drillStack, this).addEventListener("drill-pop", (event) => _assertClassBrand(_DetailNavigation_brand, this, _onDrillPop).call(this, event.detail));
+		state.addEventListener("component-removed", (event) => _assertClassBrand(_DetailNavigation_brand, this, _onComponentRemoved).call(this, event.detail?.element), { signal: _classPrivateFieldGet2(_lifetime$5, this).signal });
+		state.addEventListener("components-cleared", () => _assertClassBrand(_DetailNavigation_brand, this, _onComponentRemoved).call(this, this.focusedComponent), { signal: _classPrivateFieldGet2(_lifetime$5, this).signal });
 	}
 	get element() {
-		return this.#drillStack.element;
+		return _classPrivateFieldGet2(_drillStack, this).element;
 	}
 	get focusedComponent() {
-		return this.#drillStack.current?.element ?? null;
+		return _classPrivateFieldGet2(_drillStack, this).current?.element ?? null;
 	}
 	get depth() {
-		return this.#drillStack.depth;
+		return _classPrivateFieldGet2(_drillStack, this).depth;
 	}
 	setRootTitle(title) {
-		this.#drillStack.setRootTitle(title);
+		_classPrivateFieldGet2(_drillStack, this).setRootTitle(title);
 	}
-	drillInto(element, dataMap = this.#state.get(element)) {
+	drillInto(element, dataMap = _classPrivateFieldGet2(_state$3, this).get(element)) {
+		var _this$nextDrillId;
 		if (!dataMap) return;
-		this.#callbacks.showComponents();
-		if (this.#drillStack.current?.element === element) {
+		_classPrivateFieldGet2(_callbacks, this).showComponents();
+		if (_classPrivateFieldGet2(_drillStack, this).current?.element === element) {
 			this.restoreActivity();
-			this.#callbacks.open();
+			_classPrivateFieldGet2(_callbacks, this).open();
 			return;
 		}
-		this.#activity.close(false);
-		const locator = this.#componentLocator(element, dataMap);
+		_classPrivateFieldGet2(_activity$1, this).close(false);
+		const locator = _assertClassBrand(_DetailNavigation_brand, this, _componentLocator).call(this, element, dataMap);
 		const stateKey = `${locator[1]}:${locator[2]}`;
 		const detail = new ComponentDetail({
-			registry: this.#registry,
-			eventMonitor: this.#eventMonitor,
-			relationshipEngine: this.#relationshipEngine,
-			state: this.#state
-		}, (related) => this.drillInto(related), this.#detailStates.get(stateKey));
+			registry: _classPrivateFieldGet2(_registry$2, this),
+			eventMonitor: _classPrivateFieldGet2(_eventMonitor$2, this),
+			relationshipEngine: _classPrivateFieldGet2(_relationshipEngine$1, this),
+			state: _classPrivateFieldGet2(_state$3, this)
+		}, (related) => this.drillInto(related), _classPrivateFieldGet2(_detailStates, this).get(stateKey));
 		const content = el("div", { class: "drill-detail pane" }, detail.render(element, dataMap));
-		content.addEventListener("preview-element", this.#onDetailPreview);
-		content.addEventListener("clear-element-preview", this.#onDetailClear);
-		content.addEventListener("select-element", this.#onDetailSelect);
+		content.addEventListener("preview-element", _classPrivateFieldGet2(_onDetailPreview, this));
+		content.addEventListener("clear-element-preview", _classPrivateFieldGet2(_onDetailClear, this));
+		content.addEventListener("select-element", _classPrivateFieldGet2(_onDetailSelect, this));
 		let title = element.tagName.toLowerCase();
 		const framework = dataMap.keys().next().value || "default";
-		const plugin = this.#registry.get(framework);
+		const plugin = _classPrivateFieldGet2(_registry$2, this).get(framework);
 		if (plugin) title = plugin.getDisplayName(element);
-		const id = `component-${++this.#nextDrillId}`;
-		this.#drillDetails.set(id, {
+		const id = `component-${_classPrivateFieldSet2(_nextDrillId, this, (_this$nextDrillId = _classPrivateFieldGet2(_nextDrillId, this), ++_this$nextDrillId))}`;
+		_classPrivateFieldGet2(_drillDetails, this).set(id, {
 			detail,
 			stateKey,
 			content,
 			locator
 		});
-		this.#drillStack.push({
+		_classPrivateFieldGet2(_drillStack, this).push({
 			id,
 			title,
 			typePill: framework === "livecomponent" ? void 0 : element.tagName.toLowerCase() + (element.id ? `#${element.id}` : ""),
@@ -3387,21 +3569,21 @@ var DetailNavigation = class {
 			element,
 			framework
 		});
-		this.#callbacks.open();
-		this.#callbacks.select({
+		_classPrivateFieldGet2(_callbacks, this).open();
+		_classPrivateFieldGet2(_callbacks, this).select({
 			element,
 			framework
 		});
-		this.#activity.open(id, content, element, title);
+		_classPrivateFieldGet2(_activity$1, this).open(id, content, element, title);
 	}
 	drillBack() {
-		return Boolean(this.#drillStack.pop());
+		return Boolean(_classPrivateFieldGet2(_drillStack, this).pop());
 	}
 	restoreActivity() {
-		const current = this.#drillStack.current;
-		const record = current && this.#drillDetails.get(current.id);
-		if (this.element.hidden || !current?.element || !record || this.#activity.id === current.id) return;
-		this.#activity.open(current.id, record.content, current.element, current.title);
+		const current = _classPrivateFieldGet2(_drillStack, this).current;
+		const record = current && _classPrivateFieldGet2(_drillDetails, this).get(current.id);
+		if (this.element.hidden || !current?.element || !record || _classPrivateFieldGet2(_activity$1, this).id === current.id) return;
+		_classPrivateFieldGet2(_activity$1, this).open(current.id, record.content, current.element, current.title);
 	}
 	clearFocus() {
 		let cleared = false;
@@ -3409,105 +3591,107 @@ var DetailNavigation = class {
 		return cleared;
 	}
 	suspendForNavigation() {
-		const current = this.#drillStack.current;
-		const dataMap = current?.element ? this.#state.get(current.element) : null;
-		if (dataMap && current?.element) this.#pendingDetail = this.#componentLocator(current.element, dataMap);
+		const current = _classPrivateFieldGet2(_drillStack, this).current;
+		const dataMap = current?.element ? _classPrivateFieldGet2(_state$3, this).get(current.element) : null;
+		if (dataMap && current?.element) _classPrivateFieldSet2(_pendingDetail, this, _assertClassBrand(_DetailNavigation_brand, this, _componentLocator).call(this, current.element, dataMap));
 		while (this.drillBack());
 	}
 	resumeAfterNavigation() {
-		this.#restorePendingDetail();
+		_assertClassBrand(_DetailNavigation_brand, this, _restorePendingDetail).call(this);
 	}
 	destroy() {
-		this.#destroyed = true;
-		this.#lifetime.abort();
-		for (const id of this.#drillDetails.keys()) this.#destroyDrillDetail(id);
+		_classPrivateFieldSet2(_destroyed, this, true);
+		_classPrivateFieldGet2(_lifetime$5, this).abort();
+		for (const id of _classPrivateFieldGet2(_drillDetails, this).keys()) _assertClassBrand(_DetailNavigation_brand, this, _destroyDrillDetail).call(this, id);
 	}
-	#componentLocator(element, dataMap) {
-		const signature = this.#componentSignature(element, dataMap);
-		const candidates = this.#state.elements.filter((candidate) => {
-			const current = this.#state.get(candidate);
-			return current && this.#componentSignature(candidate, current) === signature;
-		});
-		return [
-			element.id,
-			signature,
-			Math.max(0, candidates.indexOf(element)),
-			candidates.length
-		];
-	}
-	#componentSignature(element, dataMap) {
-		return `${element.tagName.toLowerCase()}|${[...dataMap.keys()].map((name) => {
-			return `${name}:${this.#registry.get(name)?.getDisplayName(element) || element.tagName.toLowerCase()}`;
-		}).join("|")}`;
-	}
-	#onComponentRemoved(element) {
-		const current = this.#drillStack.current;
-		if (!element || !current || current.element !== element) return;
-		const record = this.#drillDetails.get(current.id);
-		if (record) this.#pendingDetail = record.locator;
-		while (this.drillBack());
-		if (this.#restoreQueued) return;
-		this.#restoreQueued = true;
-		queueMicrotask(() => {
-			this.#restoreQueued = false;
-			this.#restorePendingDetail();
-		});
-	}
-	#restorePendingDetail() {
-		if (this.#destroyed) return false;
-		if (!this.#pendingDetail) return false;
-		const [id, signature, ordinal, count] = this.#pendingDetail;
-		this.#pendingDetail = null;
-		let match = null;
-		if (id) {
-			const candidate = document.getElementById(id);
-			const dataMap = candidate ? this.#state.get(candidate) : null;
-			if (candidate && dataMap && this.#componentSignature(candidate, dataMap) === signature) match = candidate;
-		}
-		if (!match) {
-			const candidates = this.#state.elements.filter((element) => {
-				const dataMap = this.#state.get(element);
-				return dataMap && this.#componentSignature(element, dataMap) === signature;
-			});
-			if (candidates.length === count) match = candidates[ordinal] || null;
-		}
-		if (match) this.drillInto(match);
-		return Boolean(match);
-	}
-	#onDrillPop({ removed, current }) {
-		this.#destroyDrillDetail(removed.id);
-		this.restoreActivity();
-		if (current.element) {
-			const dataMap = this.#state.get(current.element);
-			this.#callbacks.select({
-				element: current.element,
-				framework: dataMap?.keys().next().value || "default"
-			});
-		} else this.#callbacks.clearSelection();
-		this.#callbacks.change();
-	}
-	#destroyDrillDetail(id) {
-		const record = this.#drillDetails.get(id);
-		if (!record) return;
-		this.#detailStates.set(record.stateKey, record.detail.getUiState());
-		record.content.removeEventListener("preview-element", this.#onDetailPreview);
-		record.content.removeEventListener("clear-element-preview", this.#onDetailClear);
-		record.content.removeEventListener("select-element", this.#onDetailSelect);
-		if (this.#activity.id === id) this.#activity.close();
-		record.detail.destroy();
-		this.#drillDetails.delete(id);
-	}
-	#onDetailPreview = (event) => this.#callbacks.preview(event.detail);
-	#onDetailClear = () => this.#callbacks.clearPreview();
-	#onDetailSelect = (event) => this.#callbacks.select(event.detail);
 };
+function _componentLocator(element, dataMap) {
+	const signature = _assertClassBrand(_DetailNavigation_brand, this, _componentSignature).call(this, element, dataMap);
+	const candidates = _classPrivateFieldGet2(_state$3, this).elements.filter((candidate) => {
+		const current = _classPrivateFieldGet2(_state$3, this).get(candidate);
+		return current && _assertClassBrand(_DetailNavigation_brand, this, _componentSignature).call(this, candidate, current) === signature;
+	});
+	return [
+		element.id,
+		signature,
+		Math.max(0, candidates.indexOf(element)),
+		candidates.length
+	];
+}
+function _componentSignature(element, dataMap) {
+	return `${element.tagName.toLowerCase()}|${[...dataMap.keys()].map((name) => {
+		return `${name}:${_classPrivateFieldGet2(_registry$2, this).get(name)?.getDisplayName(element) || element.tagName.toLowerCase()}`;
+	}).join("|")}`;
+}
+function _onComponentRemoved(element) {
+	const current = _classPrivateFieldGet2(_drillStack, this).current;
+	if (!element || !current || current.element !== element) return;
+	const record = _classPrivateFieldGet2(_drillDetails, this).get(current.id);
+	if (record) _classPrivateFieldSet2(_pendingDetail, this, record.locator);
+	while (this.drillBack());
+	if (_classPrivateFieldGet2(_restoreQueued, this)) return;
+	_classPrivateFieldSet2(_restoreQueued, this, true);
+	queueMicrotask(() => {
+		_classPrivateFieldSet2(_restoreQueued, this, false);
+		_assertClassBrand(_DetailNavigation_brand, this, _restorePendingDetail).call(this);
+	});
+}
+function _restorePendingDetail() {
+	if (_classPrivateFieldGet2(_destroyed, this)) return false;
+	if (!_classPrivateFieldGet2(_pendingDetail, this)) return false;
+	const [id, signature, ordinal, count] = _classPrivateFieldGet2(_pendingDetail, this);
+	_classPrivateFieldSet2(_pendingDetail, this, null);
+	let match = null;
+	if (id) {
+		const candidate = document.getElementById(id);
+		const dataMap = candidate ? _classPrivateFieldGet2(_state$3, this).get(candidate) : null;
+		if (candidate && dataMap && _assertClassBrand(_DetailNavigation_brand, this, _componentSignature).call(this, candidate, dataMap) === signature) match = candidate;
+	}
+	if (!match) {
+		const candidates = _classPrivateFieldGet2(_state$3, this).elements.filter((element) => {
+			const dataMap = _classPrivateFieldGet2(_state$3, this).get(element);
+			return dataMap && _assertClassBrand(_DetailNavigation_brand, this, _componentSignature).call(this, element, dataMap) === signature;
+		});
+		if (candidates.length === count) match = candidates[ordinal] || null;
+	}
+	if (match) this.drillInto(match);
+	return Boolean(match);
+}
+function _onDrillPop({ removed, current }) {
+	_assertClassBrand(_DetailNavigation_brand, this, _destroyDrillDetail).call(this, removed.id);
+	this.restoreActivity();
+	if (current.element) {
+		const dataMap = _classPrivateFieldGet2(_state$3, this).get(current.element);
+		_classPrivateFieldGet2(_callbacks, this).select({
+			element: current.element,
+			framework: dataMap?.keys().next().value || "default"
+		});
+	} else _classPrivateFieldGet2(_callbacks, this).clearSelection();
+	_classPrivateFieldGet2(_callbacks, this).change();
+}
+function _destroyDrillDetail(id) {
+	const record = _classPrivateFieldGet2(_drillDetails, this).get(id);
+	if (!record) return;
+	_classPrivateFieldGet2(_detailStates, this).set(record.stateKey, record.detail.getUiState());
+	record.content.removeEventListener("preview-element", _classPrivateFieldGet2(_onDetailPreview, this));
+	record.content.removeEventListener("clear-element-preview", _classPrivateFieldGet2(_onDetailClear, this));
+	record.content.removeEventListener("select-element", _classPrivateFieldGet2(_onDetailSelect, this));
+	if (_classPrivateFieldGet2(_activity$1, this).id === id) _classPrivateFieldGet2(_activity$1, this).close();
+	record.detail.destroy();
+	_classPrivateFieldGet2(_drillDetails, this).delete(id);
+}
+var _lifetime$4 = /* @__PURE__ */ new WeakMap();
+var _drag = /* @__PURE__ */ new WeakMap();
+var _options = /* @__PURE__ */ new WeakMap();
+var _ResizeHandle_brand = /* @__PURE__ */ new WeakSet();
 var ResizeHandle = class {
-	element;
-	#lifetime = new AbortController();
-	#drag = null;
-	#options;
 	constructor(options) {
-		this.#options = options;
+		_classPrivateMethodInitSpec(this, _ResizeHandle_brand);
+		_defineProperty(this, "element", void 0);
+		_classPrivateFieldInitSpec(this, _lifetime$4, new AbortController());
+		_classPrivateFieldInitSpec(this, _drag, null);
+		_classPrivateFieldInitSpec(this, _options, void 0);
+		_classPrivateFieldSet2(_options, this, options);
 		this.element = el("div", {
 			class: options.className,
 			role: "separator",
@@ -3515,64 +3699,71 @@ var ResizeHandle = class {
 			"aria-label": options.label,
 			"aria-orientation": options.axis === "width" ? "vertical" : "horizontal"
 		});
-		const { signal } = this.#lifetime;
-		this.element.addEventListener("pointerdown", (event) => this.#start(event), { signal });
+		const { signal } = _classPrivateFieldGet2(_lifetime$4, this);
+		this.element.addEventListener("pointerdown", (event) => _assertClassBrand(_ResizeHandle_brand, this, _start).call(this, event), { signal });
 		this.element.addEventListener("keydown", (event) => {
 			const direction = (options.axis === "width" ? ["ArrowLeft", "ArrowRight"] : ["ArrowUp", "ArrowDown"]).indexOf(event.key);
 			if (direction < 0) return;
 			event.preventDefault();
-			this.#resize(options.read() + (direction === 0 ? 16 : -16));
+			_assertClassBrand(_ResizeHandle_brand, this, _resize).call(this, options.read() + (direction === 0 ? 16 : -16));
 		}, { signal });
 	}
 	destroy() {
-		this.#stop();
-		this.#lifetime.abort();
-	}
-	#resize(size) {
-		const value = this.#options.write(size);
-		this.element.setAttribute("aria-valuenow", String(Math.round(value)));
-	}
-	#start(event) {
-		if (event.button !== 0) return;
-		event.preventDefault();
-		this.#stop();
-		this.#drag = new AbortController();
-		const { signal } = this.#drag;
-		const coordinate = this.#options.axis === "width" ? "clientX" : "clientY";
-		const start = event[coordinate];
-		const size = this.#options.read();
-		this.#options.target.toggleAttribute("data-resizing", true);
-		this.element.setPointerCapture?.(event.pointerId);
-		this.element.addEventListener("pointermove", (move) => {
-			if (move.pointerId === event.pointerId) this.#resize(size + start - move[coordinate]);
-		}, { signal });
-		for (const type of [
-			"pointerup",
-			"pointercancel",
-			"lostpointercapture"
-		]) this.element.addEventListener(type, () => this.#stop(), { signal });
-	}
-	#stop() {
-		this.#drag?.abort();
-		this.#drag = null;
-		this.#options.target.removeAttribute("data-resizing");
+		_assertClassBrand(_ResizeHandle_brand, this, _stop).call(this);
+		_classPrivateFieldGet2(_lifetime$4, this).abort();
 	}
 };
+function _resize(size) {
+	const value = _classPrivateFieldGet2(_options, this).write(size);
+	this.element.setAttribute("aria-valuenow", String(Math.round(value)));
+}
+function _start(event) {
+	if (event.button !== 0) return;
+	event.preventDefault();
+	_assertClassBrand(_ResizeHandle_brand, this, _stop).call(this);
+	_classPrivateFieldSet2(_drag, this, new AbortController());
+	const { signal } = _classPrivateFieldGet2(_drag, this);
+	const coordinate = _classPrivateFieldGet2(_options, this).axis === "width" ? "clientX" : "clientY";
+	const start = event[coordinate];
+	const size = _classPrivateFieldGet2(_options, this).read();
+	_classPrivateFieldGet2(_options, this).target.toggleAttribute("data-resizing", true);
+	this.element.setPointerCapture?.(event.pointerId);
+	this.element.addEventListener("pointermove", (move) => {
+		if (move.pointerId === event.pointerId) _assertClassBrand(_ResizeHandle_brand, this, _resize).call(this, size + start - move[coordinate]);
+	}, { signal });
+	for (const type of [
+		"pointerup",
+		"pointercancel",
+		"lostpointercapture"
+	]) this.element.addEventListener(type, () => _assertClassBrand(_ResizeHandle_brand, this, _stop).call(this), { signal });
+}
+function _stop() {
+	_classPrivateFieldGet2(_drag, this)?.abort();
+	_classPrivateFieldSet2(_drag, this, null);
+	_classPrivateFieldGet2(_options, this).target.removeAttribute("data-resizing");
+}
+var _timeline$2 = /* @__PURE__ */ new WeakMap();
+var _home = /* @__PURE__ */ new WeakMap();
+var _restore = /* @__PURE__ */ new WeakMap();
+var _id = /* @__PURE__ */ new WeakMap();
+var _drawer = /* @__PURE__ */ new WeakMap();
+var _resizeHandle$1 = /* @__PURE__ */ new WeakMap();
+var _sizes = /* @__PURE__ */ new WeakMap();
 var ActivityDrawer = class {
-	#timeline;
-	#home;
-	#restore;
-	#id = null;
-	#drawer = null;
-	#resizeHandle = null;
-	#sizes = /* @__PURE__ */ new WeakMap();
 	constructor(timeline, home, restore) {
-		this.#timeline = timeline;
-		this.#home = home;
-		this.#restore = restore;
+		_classPrivateFieldInitSpec(this, _timeline$2, void 0);
+		_classPrivateFieldInitSpec(this, _home, void 0);
+		_classPrivateFieldInitSpec(this, _restore, void 0);
+		_classPrivateFieldInitSpec(this, _id, null);
+		_classPrivateFieldInitSpec(this, _drawer, null);
+		_classPrivateFieldInitSpec(this, _resizeHandle$1, null);
+		_classPrivateFieldInitSpec(this, _sizes, /* @__PURE__ */ new WeakMap());
+		_classPrivateFieldSet2(_timeline$2, this, timeline);
+		_classPrivateFieldSet2(_home, this, home);
+		_classPrivateFieldSet2(_restore, this, restore);
 	}
 	get id() {
-		return this.#id;
+		return _classPrivateFieldGet2(_id, this);
 	}
 	open(id, content, element, query) {
 		this.close(false);
@@ -3580,14 +3771,14 @@ var ActivityDrawer = class {
 			class: "pane drawer",
 			id: `component-activity-${id}`,
 			"aria-label": `Activity for ${query || "component"}`
-		}, this.#timeline.element);
+		}, _classPrivateFieldGet2(_timeline$2, this).element);
 		content.appendChild(drawer);
-		const savedHeight = this.#sizes.get(content);
+		const savedHeight = _classPrivateFieldGet2(_sizes, this).get(content);
 		if (savedHeight !== void 0) {
 			drawer.style.height = `${savedHeight}px`;
 			drawer.toggleAttribute("data-sized", true);
 		}
-		this.#resizeHandle = new ResizeHandle({
+		_classPrivateFieldSet2(_resizeHandle$1, this, new ResizeHandle({
 			target: drawer,
 			axis: "height",
 			label: "Resize Activity",
@@ -3600,29 +3791,29 @@ var ActivityDrawer = class {
 				const value = Math.min(Math.max(minimum, available - detailMinimum), Math.max(minimum, height));
 				drawer.toggleAttribute("data-sized", true);
 				drawer.style.height = `${value}px`;
-				this.#sizes.set(content, value);
+				_classPrivateFieldGet2(_sizes, this).set(content, value);
 				return value;
 			}
-		});
-		drawer.prepend(this.#resizeHandle.element);
-		this.#drawer = drawer;
-		this.#id = id;
-		this.#timeline.configure({
+		}));
+		drawer.prepend(_classPrivateFieldGet2(_resizeHandle$1, this).element);
+		_classPrivateFieldSet2(_drawer, this, drawer);
+		_classPrivateFieldSet2(_id, this, id);
+		_classPrivateFieldGet2(_timeline$2, this).configure({
 			contextual: true,
 			frameworks: null,
 			element,
 			query: element ? "" : query
 		});
-		this.#timeline.expandFirstVisible();
+		_classPrivateFieldGet2(_timeline$2, this).expandFirstVisible();
 	}
 	close(restore = true) {
-		if (!this.#id) return false;
-		this.#home.appendChild(this.#timeline.element);
-		this.#resizeHandle?.destroy();
-		this.#drawer?.remove();
-		this.#drawer = null;
-		this.#id = null;
-		if (restore) this.#restore();
+		if (!_classPrivateFieldGet2(_id, this)) return false;
+		_classPrivateFieldGet2(_home, this).appendChild(_classPrivateFieldGet2(_timeline$2, this).element);
+		_classPrivateFieldGet2(_resizeHandle$1, this)?.destroy();
+		_classPrivateFieldGet2(_drawer, this)?.remove();
+		_classPrivateFieldSet2(_drawer, this, null);
+		_classPrivateFieldSet2(_id, this, null);
+		if (restore) _classPrivateFieldGet2(_restore, this).call(this);
 		return true;
 	}
 };
@@ -3631,118 +3822,156 @@ const FRAMEWORKS = [
 	["livecomponent", "Live"],
 	["turbo", "Turbo"]
 ];
+var _state$2 = /* @__PURE__ */ new WeakMap();
+var _eventMonitor$1 = /* @__PURE__ */ new WeakMap();
+var _timeline$1 = /* @__PURE__ */ new WeakMap();
+var _host$2 = /* @__PURE__ */ new WeakMap();
+var _list$1 = /* @__PURE__ */ new WeakMap();
+var _navigation = /* @__PURE__ */ new WeakMap();
+var _activity = /* @__PURE__ */ new WeakMap();
+var _element$1 = /* @__PURE__ */ new WeakMap();
+var _components = /* @__PURE__ */ new WeakMap();
+var _componentPanel = /* @__PURE__ */ new WeakMap();
+var _activityPanel = /* @__PURE__ */ new WeakMap();
+var _search = /* @__PURE__ */ new WeakMap();
+var _filters = /* @__PURE__ */ new WeakMap();
+var _query$1 = /* @__PURE__ */ new WeakMap();
+var _monitorLabel = /* @__PURE__ */ new WeakMap();
+var _actions = /* @__PURE__ */ new WeakMap();
+var _actionButtons = /* @__PURE__ */ new WeakMap();
+var _logTools = /* @__PURE__ */ new WeakMap();
+var _activitySearch = /* @__PURE__ */ new WeakMap();
+var _activityFilters = /* @__PURE__ */ new WeakMap();
+var _activityFilterButtons = /* @__PURE__ */ new WeakMap();
+var _lifetime$3 = /* @__PURE__ */ new WeakMap();
+var _eventListener = /* @__PURE__ */ new WeakMap();
+var _packages = /* @__PURE__ */ new WeakMap();
+var _filterButtons = /* @__PURE__ */ new WeakMap();
+var _refreshFrame$1 = /* @__PURE__ */ new WeakMap();
+var _resizeHandle = /* @__PURE__ */ new WeakMap();
+var _view = /* @__PURE__ */ new WeakMap();
+var _activityCount = /* @__PURE__ */ new WeakMap();
+var _pendingActivity = /* @__PURE__ */ new WeakMap();
+var _listDirty = /* @__PURE__ */ new WeakMap();
+var _onPreview = /* @__PURE__ */ new WeakMap();
+var _onClearPreview = /* @__PURE__ */ new WeakMap();
+var _onSelect$1 = /* @__PURE__ */ new WeakMap();
+var _onClearSelection = /* @__PURE__ */ new WeakMap();
+var _selectedComponent = /* @__PURE__ */ new WeakMap();
+var _Panel_brand = /* @__PURE__ */ new WeakSet();
 var Panel = class {
-	#state;
-	#eventMonitor;
-	#timeline;
-	#host;
-	#list;
-	#navigation;
-	#activity;
-	#element;
-	#components;
-	#componentPanel;
-	#activityPanel;
-	#search;
-	#filters = new Set(FRAMEWORKS.map(([name]) => name));
-	#query = "";
-	#monitorLabel;
-	#actions = {};
-	#actionButtons = {};
-	#logTools;
-	#activitySearch;
-	#activityFilters = new Set(FRAMEWORKS.map(([name]) => name));
-	#activityFilterButtons = {};
-	#lifetime = new AbortController();
-	#eventListener = null;
-	#packages;
-	#filterButtons = {};
-	#refreshFrame = null;
-	#resizeHandle;
-	#view = "components";
-	#activityCount = 0;
-	#pendingActivity = /* @__PURE__ */ new Set();
-	#listDirty = true;
-	#onPreview = null;
-	#onClearPreview = null;
-	#onSelect = null;
-	#onClearSelection = null;
-	#selectedComponent = null;
 	constructor(state, registry, eventMonitor, timeline, host, relationshipEngine, packages = {}) {
-		this.#state = state;
-		this.#eventMonitor = eventMonitor;
-		this.#timeline = timeline;
-		this.#host = host;
-		this.#packages = packages;
-		this.#list = new ComponentList(state, registry, eventMonitor, {
-			onPreview: (target) => this.#onPreview?.(target),
-			onClearPreview: () => this.#onClearPreview?.(),
-			onSelect: (target) => this.#onSelect?.(target),
-			onClearSelection: () => this.#onClearSelection?.()
-		});
-		this.#element = el("aside", {
+		_classPrivateMethodInitSpec(this, _Panel_brand);
+		_classPrivateFieldInitSpec(this, _state$2, void 0);
+		_classPrivateFieldInitSpec(this, _eventMonitor$1, void 0);
+		_classPrivateFieldInitSpec(this, _timeline$1, void 0);
+		_classPrivateFieldInitSpec(this, _host$2, void 0);
+		_classPrivateFieldInitSpec(this, _list$1, void 0);
+		_classPrivateFieldInitSpec(this, _navigation, void 0);
+		_classPrivateFieldInitSpec(this, _activity, void 0);
+		_classPrivateFieldInitSpec(this, _element$1, void 0);
+		_classPrivateFieldInitSpec(this, _components, void 0);
+		_classPrivateFieldInitSpec(this, _componentPanel, void 0);
+		_classPrivateFieldInitSpec(this, _activityPanel, void 0);
+		_classPrivateFieldInitSpec(this, _search, void 0);
+		_classPrivateFieldInitSpec(this, _filters, new Set(FRAMEWORKS.map(([name]) => name)));
+		_classPrivateFieldInitSpec(this, _query$1, "");
+		_classPrivateFieldInitSpec(this, _monitorLabel, void 0);
+		_classPrivateFieldInitSpec(this, _actions, {});
+		_classPrivateFieldInitSpec(this, _actionButtons, {});
+		_classPrivateFieldInitSpec(this, _logTools, void 0);
+		_classPrivateFieldInitSpec(this, _activitySearch, void 0);
+		_classPrivateFieldInitSpec(this, _activityFilters, new Set(FRAMEWORKS.map(([name]) => name)));
+		_classPrivateFieldInitSpec(this, _activityFilterButtons, {});
+		_classPrivateFieldInitSpec(this, _lifetime$3, new AbortController());
+		_classPrivateFieldInitSpec(this, _eventListener, null);
+		_classPrivateFieldInitSpec(this, _packages, void 0);
+		_classPrivateFieldInitSpec(this, _filterButtons, {});
+		_classPrivateFieldInitSpec(this, _refreshFrame$1, null);
+		_classPrivateFieldInitSpec(this, _resizeHandle, void 0);
+		_classPrivateFieldInitSpec(this, _view, "components");
+		_classPrivateFieldInitSpec(this, _activityCount, 0);
+		_classPrivateFieldInitSpec(this, _pendingActivity, /* @__PURE__ */ new Set());
+		_classPrivateFieldInitSpec(this, _listDirty, true);
+		_classPrivateFieldInitSpec(this, _onPreview, null);
+		_classPrivateFieldInitSpec(this, _onClearPreview, null);
+		_classPrivateFieldInitSpec(this, _onSelect$1, null);
+		_classPrivateFieldInitSpec(this, _onClearSelection, null);
+		_classPrivateFieldInitSpec(this, _selectedComponent, null);
+		_classPrivateFieldSet2(_state$2, this, state);
+		_classPrivateFieldSet2(_eventMonitor$1, this, eventMonitor);
+		_classPrivateFieldSet2(_timeline$1, this, timeline);
+		_classPrivateFieldSet2(_host$2, this, host);
+		_classPrivateFieldSet2(_packages, this, packages);
+		_classPrivateFieldSet2(_list$1, this, new ComponentList(state, registry, eventMonitor, {
+			onPreview: (target) => _classPrivateFieldGet2(_onPreview, this)?.call(this, target),
+			onClearPreview: () => _classPrivateFieldGet2(_onClearPreview, this)?.call(this),
+			onSelect: (target) => _classPrivateFieldGet2(_onSelect$1, this)?.call(this, target),
+			onClearSelection: () => _classPrivateFieldGet2(_onClearSelection, this)?.call(this)
+		}));
+		_classPrivateFieldSet2(_element$1, this, el("aside", {
 			class: "inspector pane",
 			"aria-label": "Symfony UX Inspector"
-		});
-		const tools = this.#tools();
-		this.#resizeHandle = new ResizeHandle({
-			target: this.#element,
+		}));
+		const tools = _assertClassBrand(_Panel_brand, this, _tools).call(this);
+		_classPrivateFieldSet2(_resizeHandle, this, new ResizeHandle({
+			target: _classPrivateFieldGet2(_element$1, this),
 			axis: "width",
 			label: "Resize inspector",
 			className: "panel-resize",
-			read: () => this.#element.getBoundingClientRect().width,
-			write: (width) => this.#host.setPanelWidth(width)
-		});
-		this.#element.append(this.#resizeHandle.element, this.#header(), tools, this.#filterBar());
-		this.#components = this.#list.element;
-		this.#activityPanel = el("section", {
+			read: () => _classPrivateFieldGet2(_element$1, this).getBoundingClientRect().width,
+			write: (width) => _classPrivateFieldGet2(_host$2, this).setPanelWidth(width)
+		}));
+		_classPrivateFieldGet2(_element$1, this).append(_classPrivateFieldGet2(_resizeHandle, this).element, _assertClassBrand(_Panel_brand, this, _header).call(this), tools, _assertClassBrand(_Panel_brand, this, _filterBar).call(this));
+		_classPrivateFieldSet2(_components, this, _classPrivateFieldGet2(_list$1, this).element);
+		_classPrivateFieldSet2(_activityPanel, this, el("section", {
 			id: "panel-activity",
 			hidden: true,
 			role: "region",
 			tabindex: "0",
 			"aria-label": "Activity"
-		}, this.#timeline.element);
-		this.#activity = new ActivityDrawer(timeline, this.#activityPanel, () => {
+		}, _classPrivateFieldGet2(_timeline$1, this).element));
+		_classPrivateFieldSet2(_activity, this, new ActivityDrawer(timeline, _classPrivateFieldGet2(_activityPanel, this), () => {
 			timeline.configure({
 				contextual: false,
 				element: null,
-				frameworks: this.#activityFilters,
-				query: this.#activitySearch.value
+				frameworks: _classPrivateFieldGet2(_activityFilters, this),
+				query: _classPrivateFieldGet2(_activitySearch, this).value
 			});
-		});
-		this.#navigation = new DetailNavigation(state, registry, eventMonitor, relationshipEngine, this.#components, this.#activity, {
-			showComponents: () => this.#switchTab("components", false),
+		}));
+		_classPrivateFieldSet2(_navigation, this, new DetailNavigation(state, registry, eventMonitor, relationshipEngine, _classPrivateFieldGet2(_components, this), _classPrivateFieldGet2(_activity, this), {
+			showComponents: () => _assertClassBrand(_Panel_brand, this, _switchTab).call(this, "components", false),
 			open: () => this.open(),
 			change: () => {
-				this.#updateDrillUi();
+				_assertClassBrand(_Panel_brand, this, _updateDrillUi).call(this);
 				this.refresh();
 			},
 			select: (target) => {
-				this.#selectedComponent = target.element;
-				this.#list.select(target.element);
-				this.#onSelect?.(target);
+				_classPrivateFieldSet2(_selectedComponent, this, target.element);
+				_classPrivateFieldGet2(_list$1, this).select(target.element);
+				_classPrivateFieldGet2(_onSelect$1, this)?.call(this, target);
 			},
 			clearSelection: () => {
-				this.#selectedComponent = null;
-				this.#list.select(null);
-				this.#onClearSelection?.();
+				_classPrivateFieldSet2(_selectedComponent, this, null);
+				_classPrivateFieldGet2(_list$1, this).select(null);
+				_classPrivateFieldGet2(_onClearSelection, this)?.call(this);
 			},
-			preview: (target) => this.#onPreview?.(target),
-			clearPreview: () => this.#onClearPreview?.()
-		});
-		this.#componentPanel = this.#navigation.element;
-		this.#componentPanel.id = "panel-components";
-		this.#componentPanel.setAttribute("role", "region");
-		this.#componentPanel.setAttribute("tabindex", "0");
-		this.#componentPanel.setAttribute("aria-label", "Components");
-		this.#element.append(el("main", {}, this.#componentPanel, this.#activityPanel), this.#footer());
-		this.#components.addEventListener("drill-into", (event) => this.drillInto(event.detail.element));
+			preview: (target) => _classPrivateFieldGet2(_onPreview, this)?.call(this, target),
+			clearPreview: () => _classPrivateFieldGet2(_onClearPreview, this)?.call(this)
+		}));
+		_classPrivateFieldSet2(_componentPanel, this, _classPrivateFieldGet2(_navigation, this).element);
+		_classPrivateFieldGet2(_componentPanel, this).id = "panel-components";
+		_classPrivateFieldGet2(_componentPanel, this).setAttribute("role", "region");
+		_classPrivateFieldGet2(_componentPanel, this).setAttribute("tabindex", "0");
+		_classPrivateFieldGet2(_componentPanel, this).setAttribute("aria-label", "Components");
+		_classPrivateFieldGet2(_element$1, this).append(el("main", {}, _classPrivateFieldGet2(_componentPanel, this), _classPrivateFieldGet2(_activityPanel, this)), _assertClassBrand(_Panel_brand, this, _footer).call(this));
+		_classPrivateFieldGet2(_components, this).addEventListener("drill-into", (event) => this.drillInto(event.detail.element));
 		const refresh = () => {
-			if (this.#refreshFrame !== null) return;
-			this.#refreshFrame = requestAnimationFrame(() => {
-				this.#refreshFrame = null;
-				this.#flush();
-			});
+			if (_classPrivateFieldGet2(_refreshFrame$1, this) !== null) return;
+			_classPrivateFieldSet2(_refreshFrame$1, this, requestAnimationFrame(() => {
+				_classPrivateFieldSet2(_refreshFrame$1, this, null);
+				_assertClassBrand(_Panel_brand, this, _flush).call(this);
+			}));
 		};
 		for (const name of [
 			"component-added",
@@ -3752,334 +3981,357 @@ var Panel = class {
 			"page-updated"
 		]) {
 			const listener = () => {
-				this.#listDirty = true;
+				_classPrivateFieldSet2(_listDirty, this, true);
 				refresh();
 			};
-			state.addEventListener(name, listener, { signal: this.#lifetime.signal });
+			state.addEventListener(name, listener, { signal: _classPrivateFieldGet2(_lifetime$3, this).signal });
 		}
-		this.#eventListener = (entry, removed = []) => {
-			for (const changed of [entry, ...removed]) for (const element of activityElements(changed)) this.#pendingActivity.add(element);
+		_classPrivateFieldSet2(_eventListener, this, (entry, removed = []) => {
+			for (const changed of [entry, ...removed]) for (const element of activityElements(changed)) _classPrivateFieldGet2(_pendingActivity, this).add(element);
 			refresh();
-		};
-		eventMonitor?.addListener(this.#eventListener);
+		});
+		eventMonitor?.addListener(_classPrivateFieldGet2(_eventListener, this));
 		this.refresh();
 	}
 	get element() {
-		return this.#element;
+		return _classPrivateFieldGet2(_element$1, this);
 	}
 	get isComponentListVisible() {
-		return this.#view === "components";
+		return _classPrivateFieldGet2(_view, this) === "components";
 	}
 	get focusedComponent() {
-		return this.#navigation.focusedComponent;
+		return _classPrivateFieldGet2(_navigation, this).focusedComponent;
 	}
 	setActionCallbacks(callbacks) {
-		this.#actions = { ...callbacks };
+		_classPrivateFieldSet2(_actions, this, { ...callbacks });
 	}
 	setVisualCallbacks({ onPreview, onClearPreview, onSelect, onClearSelection }) {
-		this.#onPreview = onPreview ?? null;
-		this.#onClearPreview = onClearPreview ?? null;
-		this.#onSelect = onSelect ?? null;
-		this.#onClearSelection = onClearSelection ?? null;
+		_classPrivateFieldSet2(_onPreview, this, onPreview ?? null);
+		_classPrivateFieldSet2(_onClearPreview, this, onClearPreview ?? null);
+		_classPrivateFieldSet2(_onSelect$1, this, onSelect ?? null);
+		_classPrivateFieldSet2(_onClearSelection, this, onClearSelection ?? null);
 	}
 	setTargetModeActive(active) {
-		const button = this.#actionButtons.target;
+		const button = _classPrivateFieldGet2(_actionButtons, this).target;
 		const label = active ? "Stop inspecting" : "Inspect page components";
 		button.classList.toggle("active", Boolean(active));
 		button.setAttribute("aria-pressed", String(Boolean(active)));
 		button.setAttribute("aria-label", label);
 		button.title = active ? "Click to inspect. Shift-click to continue." : label;
-		this.#monitorLabel.textContent = active ? "Inspecting" : "Watching";
+		_classPrivateFieldGet2(_monitorLabel, this).textContent = active ? "Inspecting" : "Watching";
 	}
 	setOverlayActive(active) {
-		const button = this.#actionButtons.overlay;
+		const button = _classPrivateFieldGet2(_actionButtons, this).overlay;
 		const label = active ? "Hide all components" : "Show all components";
 		button.classList.toggle("active", Boolean(active));
 		button.setAttribute("aria-pressed", String(Boolean(active)));
 		button.setAttribute("aria-label", label);
-		this.#monitorLabel.textContent = active ? "Overlay enabled" : "Watching";
+		_classPrivateFieldGet2(_monitorLabel, this).textContent = active ? "Overlay enabled" : "Watching";
 	}
 	clearActivities() {
-		this.#pendingActivity.clear();
-		this.#list.clearActivities();
-		this.#updateCounts();
+		_classPrivateFieldGet2(_pendingActivity, this).clear();
+		_classPrivateFieldGet2(_list$1, this).clearActivities();
+		_assertClassBrand(_Panel_brand, this, _updateCounts).call(this);
 	}
 	open() {
-		this.#host?.open();
+		_classPrivateFieldGet2(_host$2, this)?.open();
 	}
 	close() {
-		this.#host?.close();
+		_classPrivateFieldGet2(_host$2, this)?.close();
 	}
 	navigate(view) {
-		this.#switchTab(view === "log" ? "log" : "components");
+		_assertClassBrand(_Panel_brand, this, _switchTab).call(this, view === "log" ? "log" : "components");
 		this.open();
 		if (view === "search") {
 			while (this.drillBack());
-			this.#search.focus();
+			_classPrivateFieldGet2(_search, this).focus();
 		}
 	}
 	refresh() {
-		this.#listDirty = true;
-		this.#flush();
+		_classPrivateFieldSet2(_listDirty, this, true);
+		_assertClassBrand(_Panel_brand, this, _flush).call(this);
 	}
-	#flush() {
-		if (this.#refreshFrame !== null) cancelAnimationFrame(this.#refreshFrame);
-		this.#refreshFrame = null;
-		this.#updateCounts();
-		if (this.#listDirty && this.isComponentListVisible) {
-			this.#list.refresh(this.#filters, this.#query, this.#selectedComponent);
-			this.#navigation.setRootTitle(`Components (${this.#state.size})`);
-			this.#listDirty = false;
-		}
-		for (const element of this.#pendingActivity) this.#list.updateActivity(element);
-		this.#pendingActivity.clear();
-	}
-	drillInto(element, dataMap = this.#state.get(element)) {
-		this.#navigation.drillInto(element, dataMap);
+	drillInto(element, dataMap = _classPrivateFieldGet2(_state$2, this).get(element)) {
+		_classPrivateFieldGet2(_navigation, this).drillInto(element, dataMap);
 	}
 	drillBack() {
-		return this.#list.clearPageRuleSelection() || this.#navigation.drillBack();
+		return _classPrivateFieldGet2(_list$1, this).clearPageRuleSelection() || _classPrivateFieldGet2(_navigation, this).drillBack();
 	}
 	clearPageRuleSelection() {
-		this.#list.clearPageRuleSelection();
+		_classPrivateFieldGet2(_list$1, this).clearPageRuleSelection();
 	}
 	clearFocus() {
 		this.clearPageRuleSelection();
-		return this.#navigation.clearFocus();
+		return _classPrivateFieldGet2(_navigation, this).clearFocus();
 	}
 	suspendForNavigation() {
 		this.clearPageRuleSelection();
-		this.#navigation.suspendForNavigation();
+		_classPrivateFieldGet2(_navigation, this).suspendForNavigation();
 	}
 	resumeAfterNavigation() {
-		this.#navigation.resumeAfterNavigation();
+		_classPrivateFieldGet2(_navigation, this).resumeAfterNavigation();
 	}
 	destroy() {
-		this.#resizeHandle.destroy();
-		if (this.#refreshFrame !== null) cancelAnimationFrame(this.#refreshFrame);
-		this.#navigation.destroy();
-		this.#list.destroy();
-		this.#pendingActivity.clear();
-		this.#lifetime.abort();
-		if (this.#eventListener) this.#eventMonitor?.removeListener(this.#eventListener);
-	}
-	#header() {
-		this.#actionButtons.target = this.#toggleButton("target", "target", "Inspect page components", () => this.#actions.target?.());
-		this.#actionButtons.overlay = this.#toggleButton("overlay", "overlay", "Show all components", () => this.#actions.overlay?.());
-		this.#actionButtons.activity = this.#toggleButton("activity", "activity", "Show activity", () => this.#toggleActivity());
-		this.#actionButtons.activity.appendChild(el("b", { text: "0" }));
-		const close = createIconButton("panel-right", "Hide inspector", () => this.close());
-		close.className = "icon-button";
-		return el("header", {}, el("div", { class: "header-actions" }, this.#actionButtons.target, this.#actionButtons.overlay), el("strong", {
-			id: "ux-inspector-title",
-			text: "UX Inspector"
-		}), el("div", { class: "header-actions header-end" }, this.#actionButtons.activity, close));
-	}
-	#switchTab(name, restoreActivity = true) {
-		this.#view = name === "log" ? "log" : "components";
-		const activityVisible = this.#view === "log";
-		const restored = activityVisible && this.#activity.close();
-		this.#componentPanel.hidden = activityVisible;
-		this.#activityPanel.hidden = !activityVisible;
-		this.#updateDrillUi();
-		this.#logTools.hidden = !activityVisible;
-		if (activityVisible && !restored) this.#timeline.refresh();
-		else if (!activityVisible) {
-			if (restoreActivity) this.#navigation.restoreActivity();
-			if (this.#listDirty) this.#flush();
-		}
-	}
-	#toggleActivity() {
-		if (this.#view === "log") {
-			this.#switchTab("components");
-			return;
-		}
-		this.#openGlobalActivity();
-	}
-	#syncActivityControl() {
-		const active = this.#view === "log";
-		const count = this.#activityCount;
-		const label = active ? "Show components" : "Show activity";
-		const accessibleLabel = count ? `${label}, ${count} ${count === 1 ? "activity" : "activities"}` : label;
-		const button = this.#actionButtons.activity;
-		button.classList.toggle("active", active);
-		button.setAttribute("aria-pressed", String(active));
-		button.setAttribute("aria-label", accessibleLabel);
-		button.title = label;
-		const badge = button.querySelector("b");
-		if (badge) {
-			badge.textContent = String(count);
-			badge.hidden = !count;
-		}
-	}
-	#tools() {
-		const buttons = this.#frameworkButtons(this.#activityFilters, this.#activityFilterButtons, () => this.#timeline.configure({ frameworks: this.#activityFilters }));
-		this.#activitySearch = el("input", {
-			type: "search",
-			placeholder: "Filter activity…",
-			"aria-label": "Filter activity",
-			on: { input: () => this.#timeline.configure({ query: this.#activitySearch.value }) }
-		});
-		this.#logTools = el("div", {
-			class: "activity-tools",
-			hidden: true
-		}, el("div", {
-			class: "filter-list",
-			role: "group",
-			"aria-label": "Filter activity by framework"
-		}, ...buttons), this.#activitySearch);
-		return this.#logTools;
-	}
-	#toggleButton(name, icon, label, callback) {
-		const button = createIconButton(icon, label, callback);
-		button.className = "icon-button";
-		button.dataset.action = name;
-		button.setAttribute("aria-pressed", "false");
-		return button;
-	}
-	#filterBar() {
-		this.#search = el("input", {
-			type: "search",
-			placeholder: "Find a component…",
-			"aria-label": "Find a component",
-			on: { input: () => {
-				this.#query = this.#search.value.trim().toLowerCase();
-				this.refresh();
-			} }
-		});
-		return el("div", { class: "filters" }, el("div", { class: "filter-list" }, ...this.#frameworkButtons(this.#filters, this.#filterButtons, () => this.refresh())), this.#search);
-	}
-	#frameworkButtons(filters, buttons, update) {
-		return FRAMEWORKS.map(([name, label]) => {
-			const button = el("button", {
-				class: "filter active",
-				type: "button",
-				"aria-pressed": "true",
-				dataset: { framework: name },
-				on: { click: (event) => {
-					const target = event.currentTarget;
-					const active = target.classList.toggle("active");
-					target.setAttribute("aria-pressed", String(active));
-					if (active) filters.add(name);
-					else filters.delete(name);
-					update();
-				} }
-			}, el("span", { text: label }), el("b", { text: "0" }));
-			buttons[name] = button;
-			return button;
-		});
-	}
-	#footer() {
-		this.#monitorLabel = el("span", { text: "Watching" });
-		return el("footer", {}, el("span", {
-			class: "monitor-status",
-			role: "status"
-		}, el("span", {
-			class: "live-dot",
-			"aria-hidden": "true"
-		}), this.#monitorLabel));
-	}
-	#updateCounts() {
-		const byPlugin = this.#state.countByPlugin();
-		const activityByPlugin = {
-			...Object.fromEntries(FRAMEWORKS.map(([name]) => [name, 0])),
-			...Object.fromEntries(Object.entries(Object.groupBy(this.#eventMonitor?.project() ?? [], (entry) => entry.type)).map(([type, entries]) => [type, entries.length]))
-		};
-		for (const [name, label] of FRAMEWORKS) {
-			const button = this.#filterButtons[name];
-			const count = byPlugin[name] || 0;
-			const installed = this.#packages[name];
-			const status = count ? "detected" : installed === false ? "not-installed" : installed === true ? "idle" : "unknown";
-			const badge = button.querySelector("b");
-			if (badge) badge.textContent = installed === false ? "-" : String(count);
-			button.classList.toggle("unavailable", installed === false);
-			button.dataset.status = status;
-			button.title = count ? `${count} detected on this page` : installed === false ? `${label} package not installed` : installed === true ? `${label} installed; none detected on this page` : "None detected on this page";
-			button.setAttribute("aria-label", `${label}: ${button.title}`);
-			const activityButton = this.#activityFilterButtons[name];
-			const activityBadge = activityButton.querySelector("b");
-			if (activityBadge) activityBadge.textContent = String(activityByPlugin[name]);
-			activityButton.title = `${activityByPlugin[name]} ${label} ${activityByPlugin[name] === 1 ? "activity" : "activities"}`;
-			activityButton.setAttribute("aria-label", activityButton.title);
-		}
-		this.#activityCount = Object.values(activityByPlugin).reduce((sum, count) => sum + count, 0);
-		this.#syncActivityControl();
-	}
-	#updateDrillUi() {
-		const componentsVisible = this.#view === "components";
-		const filters = this.#element.querySelector(".filters");
-		if (filters) filters.hidden = !componentsVisible || this.#navigation.depth > 1;
-		this.#syncActivityControl();
-	}
-	#openGlobalActivity() {
-		this.#activitySearch.value = "";
-		this.#timeline.configure({ query: "" });
-		this.#switchTab("log");
+		_classPrivateFieldGet2(_resizeHandle, this).destroy();
+		if (_classPrivateFieldGet2(_refreshFrame$1, this) !== null) cancelAnimationFrame(_classPrivateFieldGet2(_refreshFrame$1, this));
+		_classPrivateFieldGet2(_navigation, this).destroy();
+		_classPrivateFieldGet2(_list$1, this).destroy();
+		_classPrivateFieldGet2(_pendingActivity, this).clear();
+		_classPrivateFieldGet2(_lifetime$3, this).abort();
+		if (_classPrivateFieldGet2(_eventListener, this)) _classPrivateFieldGet2(_eventMonitor$1, this)?.removeListener(_classPrivateFieldGet2(_eventListener, this));
 	}
 };
+function _flush() {
+	if (_classPrivateFieldGet2(_refreshFrame$1, this) !== null) cancelAnimationFrame(_classPrivateFieldGet2(_refreshFrame$1, this));
+	_classPrivateFieldSet2(_refreshFrame$1, this, null);
+	_assertClassBrand(_Panel_brand, this, _updateCounts).call(this);
+	if (_classPrivateFieldGet2(_listDirty, this) && this.isComponentListVisible) {
+		_classPrivateFieldGet2(_list$1, this).refresh(_classPrivateFieldGet2(_filters, this), _classPrivateFieldGet2(_query$1, this), _classPrivateFieldGet2(_selectedComponent, this));
+		_classPrivateFieldGet2(_navigation, this).setRootTitle(`Components (${_classPrivateFieldGet2(_state$2, this).size})`);
+		_classPrivateFieldSet2(_listDirty, this, false);
+	}
+	for (const element of _classPrivateFieldGet2(_pendingActivity, this)) _classPrivateFieldGet2(_list$1, this).updateActivity(element);
+	_classPrivateFieldGet2(_pendingActivity, this).clear();
+}
+function _header() {
+	_classPrivateFieldGet2(_actionButtons, this).target = _assertClassBrand(_Panel_brand, this, _toggleButton).call(this, "target", "target", "Inspect page components", () => _classPrivateFieldGet2(_actions, this).target?.());
+	_classPrivateFieldGet2(_actionButtons, this).overlay = _assertClassBrand(_Panel_brand, this, _toggleButton).call(this, "overlay", "overlay", "Show all components", () => _classPrivateFieldGet2(_actions, this).overlay?.());
+	_classPrivateFieldGet2(_actionButtons, this).activity = _assertClassBrand(_Panel_brand, this, _toggleButton).call(this, "activity", "activity", "Show activity", () => _assertClassBrand(_Panel_brand, this, _toggleActivity).call(this));
+	_classPrivateFieldGet2(_actionButtons, this).activity.appendChild(el("b", { text: "0" }));
+	const close = createIconButton("panel-right", "Hide inspector", () => this.close());
+	close.className = "icon-button";
+	return el("header", {}, el("div", { class: "header-actions" }, _classPrivateFieldGet2(_actionButtons, this).target, _classPrivateFieldGet2(_actionButtons, this).overlay), el("strong", {
+		id: "ux-inspector-title",
+		text: "UX Inspector"
+	}), el("div", { class: "header-actions header-end" }, _classPrivateFieldGet2(_actionButtons, this).activity, close));
+}
+function _switchTab(name, restoreActivity = true) {
+	_classPrivateFieldSet2(_view, this, name === "log" ? "log" : "components");
+	const activityVisible = _classPrivateFieldGet2(_view, this) === "log";
+	const restored = activityVisible && _classPrivateFieldGet2(_activity, this).close();
+	_classPrivateFieldGet2(_componentPanel, this).hidden = activityVisible;
+	_classPrivateFieldGet2(_activityPanel, this).hidden = !activityVisible;
+	_assertClassBrand(_Panel_brand, this, _updateDrillUi).call(this);
+	_classPrivateFieldGet2(_logTools, this).hidden = !activityVisible;
+	if (activityVisible && !restored) _classPrivateFieldGet2(_timeline$1, this).refresh();
+	else if (!activityVisible) {
+		if (restoreActivity) _classPrivateFieldGet2(_navigation, this).restoreActivity();
+		if (_classPrivateFieldGet2(_listDirty, this)) _assertClassBrand(_Panel_brand, this, _flush).call(this);
+	}
+}
+function _toggleActivity() {
+	if (_classPrivateFieldGet2(_view, this) === "log") {
+		_assertClassBrand(_Panel_brand, this, _switchTab).call(this, "components");
+		return;
+	}
+	_assertClassBrand(_Panel_brand, this, _openGlobalActivity).call(this);
+}
+function _syncActivityControl() {
+	const active = _classPrivateFieldGet2(_view, this) === "log";
+	const count = _classPrivateFieldGet2(_activityCount, this);
+	const label = active ? "Show components" : "Show activity";
+	const accessibleLabel = count ? `${label}, ${count} ${count === 1 ? "activity" : "activities"}` : label;
+	const button = _classPrivateFieldGet2(_actionButtons, this).activity;
+	button.classList.toggle("active", active);
+	button.setAttribute("aria-pressed", String(active));
+	button.setAttribute("aria-label", accessibleLabel);
+	button.title = label;
+	const badge = button.querySelector("b");
+	if (badge) {
+		badge.textContent = String(count);
+		badge.hidden = !count;
+	}
+}
+function _tools() {
+	const buttons = _assertClassBrand(_Panel_brand, this, _frameworkButtons).call(this, _classPrivateFieldGet2(_activityFilters, this), _classPrivateFieldGet2(_activityFilterButtons, this), () => _classPrivateFieldGet2(_timeline$1, this).configure({ frameworks: _classPrivateFieldGet2(_activityFilters, this) }));
+	_classPrivateFieldSet2(_activitySearch, this, el("input", {
+		type: "search",
+		placeholder: "Filter activity…",
+		"aria-label": "Filter activity",
+		on: { input: () => _classPrivateFieldGet2(_timeline$1, this).configure({ query: _classPrivateFieldGet2(_activitySearch, this).value }) }
+	}));
+	_classPrivateFieldSet2(_logTools, this, el("div", {
+		class: "activity-tools",
+		hidden: true
+	}, el("div", {
+		class: "filter-list",
+		role: "group",
+		"aria-label": "Filter activity by framework"
+	}, ...buttons), _classPrivateFieldGet2(_activitySearch, this)));
+	return _classPrivateFieldGet2(_logTools, this);
+}
+function _toggleButton(name, icon, label, callback) {
+	const button = createIconButton(icon, label, callback);
+	button.className = "icon-button";
+	button.dataset.action = name;
+	button.setAttribute("aria-pressed", "false");
+	return button;
+}
+function _filterBar() {
+	_classPrivateFieldSet2(_search, this, el("input", {
+		type: "search",
+		placeholder: "Find a component…",
+		"aria-label": "Find a component",
+		on: { input: () => {
+			_classPrivateFieldSet2(_query$1, this, _classPrivateFieldGet2(_search, this).value.trim().toLowerCase());
+			this.refresh();
+		} }
+	}));
+	return el("div", { class: "filters" }, el("div", { class: "filter-list" }, ..._assertClassBrand(_Panel_brand, this, _frameworkButtons).call(this, _classPrivateFieldGet2(_filters, this), _classPrivateFieldGet2(_filterButtons, this), () => this.refresh())), _classPrivateFieldGet2(_search, this));
+}
+function _frameworkButtons(filters, buttons, update) {
+	return FRAMEWORKS.map(([name, label]) => {
+		const button = el("button", {
+			class: "filter active",
+			type: "button",
+			"aria-pressed": "true",
+			dataset: { framework: name },
+			on: { click: (event) => {
+				const target = event.currentTarget;
+				const active = target.classList.toggle("active");
+				target.setAttribute("aria-pressed", String(active));
+				if (active) filters.add(name);
+				else filters.delete(name);
+				update();
+			} }
+		}, el("span", { text: label }), el("b", { text: "0" }));
+		buttons[name] = button;
+		return button;
+	});
+}
+function _footer() {
+	_classPrivateFieldSet2(_monitorLabel, this, el("span", { text: "Watching" }));
+	return el("footer", {}, el("span", {
+		class: "monitor-status",
+		role: "status"
+	}, el("span", {
+		class: "live-dot",
+		"aria-hidden": "true"
+	}), _classPrivateFieldGet2(_monitorLabel, this)));
+}
+function _updateCounts() {
+	const byPlugin = _classPrivateFieldGet2(_state$2, this).countByPlugin();
+	const activityByPlugin = {
+		...Object.fromEntries(FRAMEWORKS.map(([name]) => [name, 0])),
+		...Object.fromEntries(Object.entries(Object.groupBy(_classPrivateFieldGet2(_eventMonitor$1, this)?.project() ?? [], (entry) => entry.type)).map(([type, entries]) => [type, entries.length]))
+	};
+	for (const [name, label] of FRAMEWORKS) {
+		const button = _classPrivateFieldGet2(_filterButtons, this)[name];
+		const count = byPlugin[name] || 0;
+		const installed = _classPrivateFieldGet2(_packages, this)[name];
+		const status = count ? "detected" : installed === false ? "not-installed" : installed === true ? "idle" : "unknown";
+		const badge = button.querySelector("b");
+		if (badge) badge.textContent = installed === false ? "-" : String(count);
+		button.classList.toggle("unavailable", installed === false);
+		button.dataset.status = status;
+		button.title = count ? `${count} detected on this page` : installed === false ? `${label} package not installed` : installed === true ? `${label} installed; none detected on this page` : "None detected on this page";
+		button.setAttribute("aria-label", `${label}: ${button.title}`);
+		const activityButton = _classPrivateFieldGet2(_activityFilterButtons, this)[name];
+		const activityBadge = activityButton.querySelector("b");
+		if (activityBadge) activityBadge.textContent = String(activityByPlugin[name]);
+		activityButton.title = `${activityByPlugin[name]} ${label} ${activityByPlugin[name] === 1 ? "activity" : "activities"}`;
+		activityButton.setAttribute("aria-label", activityButton.title);
+	}
+	_classPrivateFieldSet2(_activityCount, this, Object.values(activityByPlugin).reduce((sum, count) => sum + count, 0));
+	_assertClassBrand(_Panel_brand, this, _syncActivityControl).call(this);
+}
+function _updateDrillUi() {
+	const componentsVisible = _classPrivateFieldGet2(_view, this) === "components";
+	const filters = _classPrivateFieldGet2(_element$1, this).querySelector(".filters");
+	if (filters) filters.hidden = !componentsVisible || _classPrivateFieldGet2(_navigation, this).depth > 1;
+	_assertClassBrand(_Panel_brand, this, _syncActivityControl).call(this);
+}
+function _openGlobalActivity() {
+	_classPrivateFieldGet2(_activitySearch, this).value = "";
+	_classPrivateFieldGet2(_timeline$1, this).configure({ query: "" });
+	_assertClassBrand(_Panel_brand, this, _switchTab).call(this, "log");
+}
 const MAX_ENTRIES = 100;
+var _monitor = /* @__PURE__ */ new WeakMap();
+var _element = /* @__PURE__ */ new WeakMap();
+var _list = /* @__PURE__ */ new WeakMap();
+var _filterEmpty = /* @__PURE__ */ new WeakMap();
+var _onHighlight = /* @__PURE__ */ new WeakMap();
+var _onSelect = /* @__PURE__ */ new WeakMap();
+var _rafId = /* @__PURE__ */ new WeakMap();
+var _paused = /* @__PURE__ */ new WeakMap();
+var _query = /* @__PURE__ */ new WeakMap();
+var _elementFilter = /* @__PURE__ */ new WeakMap();
+var _frameworks = /* @__PURE__ */ new WeakMap();
+var _entries = /* @__PURE__ */ new WeakMap();
+var _rows = /* @__PURE__ */ new WeakMap();
+var _nextDetailId = /* @__PURE__ */ new WeakMap();
+var _selectedEntry = /* @__PURE__ */ new WeakMap();
+var _contextual = /* @__PURE__ */ new WeakMap();
+var _onEntry = /* @__PURE__ */ new WeakMap();
+var _Timeline_brand = /* @__PURE__ */ new WeakSet();
 var Timeline = class {
-	#monitor;
-	#element;
-	#list;
-	#filterEmpty;
-	#onHighlight = null;
-	#onSelect = null;
-	#rafId = null;
-	#paused = false;
-	#query = "";
-	#elementFilter = null;
-	#frameworks = null;
-	#entries = [];
-	#rows = /* @__PURE__ */ new Map();
-	#nextDetailId = 0;
-	#selectedEntry = null;
-	#contextual = false;
 	constructor(monitor, callbacks = {}) {
-		this.#monitor = monitor;
-		this.#onHighlight = callbacks.onHighlight || null;
-		this.#onSelect = callbacks.onSelect || null;
-		this.#entries = monitor.entries || [];
-		this.#list = el("ol", {
+		_classPrivateMethodInitSpec(this, _Timeline_brand);
+		_classPrivateFieldInitSpec(this, _monitor, void 0);
+		_classPrivateFieldInitSpec(this, _element, void 0);
+		_classPrivateFieldInitSpec(this, _list, void 0);
+		_classPrivateFieldInitSpec(this, _filterEmpty, void 0);
+		_classPrivateFieldInitSpec(this, _onHighlight, null);
+		_classPrivateFieldInitSpec(this, _onSelect, null);
+		_classPrivateFieldInitSpec(this, _rafId, null);
+		_classPrivateFieldInitSpec(this, _paused, false);
+		_classPrivateFieldInitSpec(this, _query, "");
+		_classPrivateFieldInitSpec(this, _elementFilter, null);
+		_classPrivateFieldInitSpec(this, _frameworks, null);
+		_classPrivateFieldInitSpec(this, _entries, []);
+		_classPrivateFieldInitSpec(this, _rows, /* @__PURE__ */ new Map());
+		_classPrivateFieldInitSpec(this, _nextDetailId, 0);
+		_classPrivateFieldInitSpec(this, _selectedEntry, null);
+		_classPrivateFieldInitSpec(this, _contextual, false);
+		_classPrivateFieldInitSpec(this, _onEntry, () => {
+			if (_classPrivateFieldGet2(_paused, this) || _classPrivateFieldGet2(_rafId, this) !== null) return;
+			_classPrivateFieldSet2(_rafId, this, requestAnimationFrame(() => _assertClassBrand(_Timeline_brand, this, _flushEntries).call(this)));
+		});
+		_classPrivateFieldSet2(_monitor, this, monitor);
+		_classPrivateFieldSet2(_onHighlight, this, callbacks.onHighlight || null);
+		_classPrivateFieldSet2(_onSelect, this, callbacks.onSelect || null);
+		_classPrivateFieldSet2(_entries, this, monitor.entries || []);
+		_classPrivateFieldSet2(_list, this, el("ol", {
 			class: "events",
 			"aria-label": "Captured UX events",
 			"aria-live": "polite",
-			on: { keydown: (event) => this.#onKeydown(event) }
-		});
-		this.#filterEmpty = createEmptyState("No matches.");
-		this.#filterEmpty.hidden = true;
-		this.#element = el("div", { class: "timeline" }, this.#list, this.#filterEmpty);
-		monitor.addListener(this.#onEntry);
+			on: { keydown: (event) => _assertClassBrand(_Timeline_brand, this, _onKeydown).call(this, event) }
+		}));
+		_classPrivateFieldSet2(_filterEmpty, this, createEmptyState("No matches."));
+		_classPrivateFieldGet2(_filterEmpty, this).hidden = true;
+		_classPrivateFieldSet2(_element, this, el("div", { class: "timeline" }, _classPrivateFieldGet2(_list, this), _classPrivateFieldGet2(_filterEmpty, this)));
+		monitor.addListener(_classPrivateFieldGet2(_onEntry, this));
 	}
 	get element() {
-		return this.#element;
+		return _classPrivateFieldGet2(_element, this);
 	}
 	get paused() {
-		return this.#paused;
+		return _classPrivateFieldGet2(_paused, this);
 	}
 	get projectedEntries() {
-		return this.#monitor.project();
+		return _classPrivateFieldGet2(_monitor, this).project();
 	}
-	configure({ query = this.#query, element = this.#elementFilter, frameworks = this.#frameworks, contextual = this.#contextual }) {
-		const contextChanged = contextual !== this.#contextual;
-		const render = contextChanged || element !== this.#elementFilter;
-		this.#query = query.trim().toLowerCase();
-		this.#elementFilter = element;
-		this.#frameworks = frameworks ? new Set(frameworks) : null;
-		this.#contextual = contextual;
+	configure({ query = _classPrivateFieldGet2(_query, this), element = _classPrivateFieldGet2(_elementFilter, this), frameworks = _classPrivateFieldGet2(_frameworks, this), contextual = _classPrivateFieldGet2(_contextual, this) }) {
+		const contextChanged = contextual !== _classPrivateFieldGet2(_contextual, this);
+		const render = contextChanged || element !== _classPrivateFieldGet2(_elementFilter, this);
+		_classPrivateFieldSet2(_query, this, query.trim().toLowerCase());
+		_classPrivateFieldSet2(_elementFilter, this, element);
+		_classPrivateFieldSet2(_frameworks, this, frameworks ? new Set(frameworks) : null);
+		_classPrivateFieldSet2(_contextual, this, contextual);
 		if (contextChanged) {
-			this.#selectedEntry = null;
-			this.#rows.clear();
+			_classPrivateFieldSet2(_selectedEntry, this, null);
+			_classPrivateFieldGet2(_rows, this).clear();
 		}
-		if (render) if (this.#paused) this.#renderEntries();
-		else this.#renderSnapshot();
-		else this.#applyFilter();
+		if (render) if (_classPrivateFieldGet2(_paused, this)) _assertClassBrand(_Timeline_brand, this, _renderEntries).call(this);
+		else _assertClassBrand(_Timeline_brand, this, _renderSnapshot).call(this);
+		else _assertClassBrand(_Timeline_brand, this, _applyFilter).call(this);
 	}
 	async copySelected() {
 		const clipboard = navigator.clipboard;
-		const entry = this.#selectedEntry;
+		const entry = _classPrivateFieldGet2(_selectedEntry, this);
 		if (!entry || !clipboard?.writeText) return false;
-		const diagnostic = this.#diagnostic(entry);
+		const diagnostic = _assertClassBrand(_Timeline_brand, this, _diagnostic).call(this, entry);
 		try {
 			await clipboard.writeText(JSON.stringify(diagnostic));
 			return true;
@@ -4087,195 +4339,53 @@ var Timeline = class {
 			return false;
 		}
 	}
-	#onEntry = () => {
-		if (this.#paused || this.#rafId !== null) return;
-		this.#rafId = requestAnimationFrame(() => this.#flushEntries());
-	};
-	#flushEntries() {
-		this.#rafId = null;
-		if (!this.#paused) this.#renderSnapshot();
-	}
 	flush() {
-		if (!this.#rafId) return;
-		cancelAnimationFrame(this.#rafId);
-		this.#flushEntries();
+		if (!_classPrivateFieldGet2(_rafId, this)) return;
+		cancelAnimationFrame(_classPrivateFieldGet2(_rafId, this));
+		_assertClassBrand(_Timeline_brand, this, _flushEntries).call(this);
 	}
 	destroy() {
-		this.#monitor.removeListener(this.#onEntry);
-		if (this.#rafId !== null) cancelAnimationFrame(this.#rafId);
-		this.#rafId = null;
-		this.#paused = true;
-		this.#rows.clear();
-		this.#entries = [];
-		this.#selectedEntry = null;
-		this.#onHighlight = null;
-		this.#onSelect = null;
-		this.#element.remove();
+		_classPrivateFieldGet2(_monitor, this).removeListener(_classPrivateFieldGet2(_onEntry, this));
+		if (_classPrivateFieldGet2(_rafId, this) !== null) cancelAnimationFrame(_classPrivateFieldGet2(_rafId, this));
+		_classPrivateFieldSet2(_rafId, this, null);
+		_classPrivateFieldSet2(_paused, this, true);
+		_classPrivateFieldGet2(_rows, this).clear();
+		_classPrivateFieldSet2(_entries, this, []);
+		_classPrivateFieldSet2(_selectedEntry, this, null);
+		_classPrivateFieldSet2(_onHighlight, this, null);
+		_classPrivateFieldSet2(_onSelect, this, null);
+		_classPrivateFieldGet2(_element, this).remove();
 	}
 	pause() {
-		if (this.#paused) return false;
-		this.#paused = true;
-		if (this.#rafId) cancelAnimationFrame(this.#rafId);
-		this.#rafId = null;
-		this.#onHighlight?.(null);
+		if (_classPrivateFieldGet2(_paused, this)) return false;
+		_classPrivateFieldSet2(_paused, this, true);
+		if (_classPrivateFieldGet2(_rafId, this)) cancelAnimationFrame(_classPrivateFieldGet2(_rafId, this));
+		_classPrivateFieldSet2(_rafId, this, null);
+		_classPrivateFieldGet2(_onHighlight, this)?.call(this, null);
 		return true;
 	}
 	resume() {
-		if (!this.#paused) return false;
-		this.#paused = false;
-		this.#renderSnapshot();
+		if (!_classPrivateFieldGet2(_paused, this)) return false;
+		_classPrivateFieldSet2(_paused, this, false);
+		_assertClassBrand(_Timeline_brand, this, _renderSnapshot).call(this);
 		return true;
 	}
 	clear() {
-		if (this.#rafId) cancelAnimationFrame(this.#rafId);
-		this.#rafId = null;
-		this.#selectedEntry = null;
-		this.#monitor.clear();
-		this.#entries = [];
-		this.#renderEntries();
-		this.#element.dispatchEvent(new CustomEvent("activity-selected", { detail: { entry: null } }));
+		if (_classPrivateFieldGet2(_rafId, this)) cancelAnimationFrame(_classPrivateFieldGet2(_rafId, this));
+		_classPrivateFieldSet2(_rafId, this, null);
+		_classPrivateFieldSet2(_selectedEntry, this, null);
+		_classPrivateFieldGet2(_monitor, this).clear();
+		_classPrivateFieldSet2(_entries, this, []);
+		_assertClassBrand(_Timeline_brand, this, _renderEntries).call(this);
+		_classPrivateFieldGet2(_element, this).dispatchEvent(new CustomEvent("activity-selected", { detail: { entry: null } }));
 	}
 	refresh() {
-		if (this.#paused) return;
-		this.#renderSnapshot();
+		if (_classPrivateFieldGet2(_paused, this)) return;
+		_assertClassBrand(_Timeline_brand, this, _renderSnapshot).call(this);
 	}
 	expandFirstVisible() {
-		const disclosure = [...this.#list.querySelectorAll(".event:not([hidden])")].find((candidate) => this.#hasDetail(candidate._inspectorEntry))?.querySelector(".disclosure");
+		const disclosure = [..._classPrivateFieldGet2(_list, this).querySelectorAll(".event:not([hidden])")].find((candidate) => _assertClassBrand(_Timeline_brand, this, _hasDetail).call(this, candidate._inspectorEntry))?.querySelector(".disclosure");
 		if (disclosure?.getAttribute("aria-expanded") !== "true") disclosure?.click();
-	}
-	#renderSnapshot() {
-		if (this.#rafId !== null) cancelAnimationFrame(this.#rafId);
-		this.#rafId = null;
-		this.#entries = this.#monitor.entries || [];
-		this.#renderEntries();
-	}
-	#renderEntries() {
-		const selectedAnchor = this.#selectedEntry && this.#anchor(this.#selectedEntry);
-		const root = this.#element.getRootNode();
-		const focused = root.activeElement;
-		const focusedItem = focused?.closest(".event");
-		const focusedAnchor = focusedItem?._inspectorEntry && this.#anchor(focusedItem._inspectorEntry);
-		const focusedControl = focused?.dataset.control;
-		this.#onHighlight?.(null);
-		const entries = (this.#paused ? projectActivity(this.#entries, !this.#contextual) : this.#monitor.project(null, !this.#contextual)).slice(-MAX_ENTRIES).map((entry) => {
-			const previous = this.#rows.get(this.#anchor(entry))?._inspectorEntry;
-			return previous && this.#sameEntries(previous, entry) ? previous : entry;
-		});
-		this.#selectedEntry = selectedAnchor ? entries.find((entry) => this.#anchor(entry) === selectedAnchor) || null : null;
-		this.#rows = new Map(entries.map((entry) => {
-			const anchor = this.#anchor(entry);
-			const previous = this.#rows.get(anchor);
-			const owner = this.#owner(entry);
-			return [anchor, previous?._inspectorEntry === entry && previous._navigationTarget === this.#navigationTarget(owner) ? previous : this.#renderEntry(entry, owner)];
-		}));
-		reconcileChildren(this.#list, this.#rows.size ? [...this.#rows.values()].reverse() : [createEmptyState("No events captured yet.")]);
-		this.#applyFilter();
-		if (focusedAnchor && root.activeElement !== focused) {
-			const row = this.#rows.get(focusedAnchor);
-			const control = focusedControl ? row?.querySelector(`[data-control="${focusedControl}"]:not([hidden])`) : null;
-			const fallback = this.#list.querySelector(".event:not([hidden]) button");
-			(control && !row?.hidden ? control : fallback)?.focus({ preventScroll: true });
-		}
-	}
-	#owner(entry) {
-		return entry.owner || entry.target?.closest?.("[data-controller], turbo-frame") || null;
-	}
-	#navigationTarget(owner) {
-		return owner?.isConnected ? owner : null;
-	}
-	#anchor(entry) {
-		return entry.id ?? entry.rawEntries?.[0] ?? entry;
-	}
-	#sameEntries(previous, current) {
-		if (previous === current) return true;
-		return !!previous.rawEntries && !!current.rawEntries && previous.rawEntries.length === current.rawEntries.length && previous.rawEntries.every((entry, index) => entry === current.rawEntries?.[index]);
-	}
-	#renderEntry(entry, owner) {
-		const type = entry.type || "unknown";
-		const eventName = this.#eventIdentity(entry);
-		const targetIdentity = this.#targetIdentity(entry.target ?? null);
-		const visibleTarget = this.#visibleContext(entry, targetIdentity, owner);
-		const navigationTarget = this.#navigationTarget(owner);
-		const hasDetail = this.#hasDetail(entry);
-		const selected = hasDetail && this.#selectedEntry === entry;
-		const detailId = `uxli-activity-detail-${++this.#nextDetailId}`;
-		const disclosure = el(hasDetail ? "button" : "div", {
-			class: "disclosure",
-			...hasDetail ? {
-				type: "button",
-				"aria-expanded": String(selected),
-				"aria-controls": detailId,
-				dataset: { control: "disclosure" }
-			} : {},
-			"aria-label": [
-				`${frameworkName(type)} activity`,
-				eventName,
-				targetIdentity,
-				`${(entry.time / 1e3).toFixed(3)} seconds`
-			].filter(Boolean).join(", ")
-		}, el("span", {
-			class: "event-dot",
-			"aria-hidden": "true"
-		}), el("strong", {
-			class: "name",
-			text: eventName
-		}), visibleTarget ? el("span", {
-			class: "event-target",
-			text: visibleTarget
-		}) : null);
-		const navigationIdentity = this.#targetIdentity(navigationTarget);
-		const goLabel = navigationIdentity ? `Go to component ${navigationIdentity}` : `Go to component for ${entry.event}`;
-		const goBtn = el("button", {
-			class: "icon-button event-go",
-			type: "button",
-			title: goLabel,
-			"aria-label": goLabel,
-			hidden: !navigationTarget,
-			dataset: { control: "go" }
-		}, createIcon("target"));
-		const row = el("div", {
-			class: `event-row ${type}${selected ? " selected" : ""}${hasDetail ? "" : " compact"}`,
-			dataset: { framework: type }
-		}, disclosure, (entry.occurrences ?? 0) > 1 ? el("span", {
-			class: "event-count",
-			text: String(entry.occurrences),
-			title: `${entry.occurrences} identical operations`
-		}) : null, goBtn);
-		const detail = hasDetail ? el("div", {
-			class: "event-detail",
-			id: detailId,
-			hidden: !selected
-		}) : null;
-		if (selected && detail) detail.appendChild(this.renderDetail(entry));
-		const item = el("li", {
-			class: "event",
-			dataset: { search: this.#searchText(entry, eventName, targetIdentity, owner) }
-		}, row, detail);
-		item._inspectorEntry = entry;
-		item._navigationTarget = navigationTarget;
-		if (hasDetail && detail) disclosure.addEventListener("click", () => this.#select(entry, row, detail));
-		if (navigationTarget) {
-			row.addEventListener("mouseenter", () => {
-				goBtn.hidden = !navigationTarget.isConnected;
-				if (navigationTarget.isConnected) this.#onHighlight?.(navigationTarget, type);
-			});
-			row.addEventListener("mouseleave", () => this.#onHighlight?.(null));
-		}
-		goBtn.addEventListener("click", () => {
-			goBtn.hidden = !navigationTarget?.isConnected;
-			if (goBtn.hidden) return;
-			this.#onHighlight?.(null);
-			if (navigationTarget) this.#onSelect?.(navigationTarget);
-		});
-		return item;
-	}
-	#hasDetail(entry) {
-		if (!entry) return false;
-		if (entry.activityKind === "turbo-fetch" || entry.activityKind === "live-rerender") return true;
-		if (entry.detail == null) return false;
-		if (Array.isArray(entry.detail)) return entry.detail.length > 0;
-		if (typeof entry.detail === "object") return Object.keys(entry.detail).length > 0;
-		return true;
 	}
 	renderDetail(entry) {
 		if (!entry) return createEmptyState("Select an activity to inspect.");
@@ -4301,7 +4411,7 @@ var Timeline = class {
 		const fields = [];
 		if (entry.activityKind === "turbo-fetch") {
 			const fetch = entry.fetch;
-			fields.push(makeField("Intent", fetch.intent === "prefetch" ? "Prefetch" : "Fetch"), makeField("Request", [fetch.method, fetch.url].filter(Boolean).join(" ")), makeField("Status", fetch.pending ? "Pending" : fetch.status ?? "Completed"), makeField("Duration", fetch.pending ? "Pending" : this.#formatDuration(fetch.duration)));
+			fields.push(makeField("Intent", fetch.intent === "prefetch" ? "Prefetch" : "Fetch"), makeField("Request", [fetch.method, fetch.url].filter(Boolean).join(" ")), makeField("Status", fetch.pending ? "Pending" : fetch.status ?? "Completed"), makeField("Duration", fetch.pending ? "Pending" : _assertClassBrand(_Timeline_brand, this, _formatDuration).call(this, fetch.duration)));
 			if (fetch.priority) fields.push(makeField("Priority", fetch.priority));
 			if ((entry.occurrences ?? 0) > 1) fields.push(makeField("Operations", entry.occurrences));
 			fields.push(makeField("Raw hooks", entry.rawEntries.length));
@@ -4313,7 +4423,7 @@ var Timeline = class {
 			if (Object.keys(changes).length) fields.push(makeField("Changes", changes));
 			fields.push(makeField("Hooks", live.hooks));
 			fields.push(makeField("Status", live.status));
-			if (live.duration != null) fields.push(makeField("Duration", this.#formatDuration(live.duration)));
+			if (live.duration != null) fields.push(makeField("Duration", _assertClassBrand(_Timeline_brand, this, _formatDuration).call(this, live.duration)));
 		} else if (entry.detail != null) {
 			const values = typeof entry.detail === "object" && !Array.isArray(entry.detail) ? Object.entries(entry.detail) : [["value", entry.detail]];
 			for (const [name, value] of values) fields.push(makeField(name, value));
@@ -4321,137 +4431,276 @@ var Timeline = class {
 		return el("section", {
 			class: "activity-detail",
 			dataset: { framework: entry.type || "default" }
-		}, el("div", { class: "event-actions" }, copy), makeKeyValueList(fields), entry.activityKind === "turbo-fetch" ? this.#renderRawEvents(entry.rawEntries) : null);
-	}
-	#renderRawEvents(entries) {
-		return el("details", {
-			class: "raw-events",
-			open: false
-		}, el("summary", {}, el("span", { text: "Raw events" }), el("span", {
-			class: "raw-count",
-			text: String(entries.length)
-		})), el("ol", { class: "raw-list" }, ...entries.map((entry) => el("li", {}, el("strong", { text: entry.event }), el("span", { text: `${(entry.time / 1e3).toFixed(3)}s` })))));
-	}
-	#select(entry, row, detail) {
-		const open = this.#selectedEntry !== entry || !row.classList.contains("selected");
-		this.#selectedEntry = open ? entry : null;
-		for (const item of this.#list.querySelectorAll(".event")) {
-			const candidate = item.querySelector(".event-row");
-			const candidateDetail = item.querySelector(".event-detail");
-			const selected = open && candidate === row;
-			candidate?.classList.toggle("selected", selected);
-			candidate?.querySelector(".disclosure")?.setAttribute("aria-expanded", String(selected));
-			if (candidateDetail) {
-				candidateDetail.hidden = !selected;
-				if (!selected) candidateDetail.replaceChildren();
-			}
-		}
-		if (open && !detail.firstChild) detail.appendChild(this.renderDetail(entry));
-		this.#element.dispatchEvent(new CustomEvent("activity-selected", { detail: { entry: this.#selectedEntry } }));
-	}
-	#applyFilter() {
-		const items = Array.from(this.#list.querySelectorAll(".event"));
-		let visible = 0;
-		for (const item of items) {
-			const matchesFramework = !this.#frameworks || this.#frameworks.has(item._inspectorEntry?.type ?? "");
-			const matchesElement = !this.#elementFilter || this.#matchesElement(item._inspectorEntry, this.#elementFilter);
-			const matches = matchesFramework && matchesElement && (!this.#query || (item.dataset.search ?? "").includes(this.#query));
-			item.hidden = !matches;
-			if (matches) visible++;
-		}
-		this.#filterEmpty.hidden = items.length === 0 || visible > 0;
-		const selected = this.#list.querySelector(".event-row.selected")?.closest(".event");
-		if (this.#selectedEntry && (!selected || selected.hidden)) {
-			selected?.querySelector(".event-row")?.classList.remove("selected");
-			selected?.querySelector(".disclosure")?.setAttribute("aria-expanded", "false");
-			const detail = selected?.querySelector(".event-detail");
-			if (detail) {
-				detail.hidden = true;
-				detail.replaceChildren();
-			}
-			this.#selectedEntry = null;
-			this.#element.dispatchEvent(new CustomEvent("activity-selected", { detail: { entry: null } }));
-		}
-	}
-	#matchesElement(entry, element) {
-		return entry?.owner === element || entry?.target === element || (entry?.relatedElements?.includes(element) ?? false) || (entry?.rawEntries?.some((raw) => raw.owner === element || raw.target === element || raw.relatedElements?.includes(element)) ?? false);
-	}
-	#onKeydown(event) {
-		if (![
-			"ArrowUp",
-			"ArrowDown",
-			"Home",
-			"End"
-		].includes(event.key)) return;
-		const buttons = Array.from(this.#list.querySelectorAll("button.disclosure"));
-		if (!buttons.length) return;
-		const current = buttons.indexOf(event.target?.closest?.(".disclosure"));
-		const next = event.key === "Home" ? 0 : event.key === "End" ? buttons.length - 1 : Math.min(buttons.length - 1, Math.max(0, current + (event.key === "ArrowDown" ? 1 : -1)));
-		event.preventDefault();
-		buttons[next].focus();
-	}
-	#targetIdentity(target) {
-		if (!target?.tagName) return "";
-		return target.tagName.toLowerCase() + (target.id ? `#${target.id}` : "");
-	}
-	#eventIdentity(entry) {
-		if (entry.activityKind && entry.activityKind !== "repeated") return entry.label || entry.event;
-		if (this.#contextual) return entry.event;
-		const label = entry.label || entry.event;
-		if (entry.type !== "livecomponent") return label;
-		const component = entry.target?.dataset?.liveNameValue;
-		return component && label.startsWith(`${component}: `) ? label.slice(component.length + 2) : entry.event?.replace(/^live:/, "") || label;
-	}
-	#visibleContext(entry, targetIdentity, owner) {
-		if (entry.type === "livecomponent") return entry.target?.dataset?.liveNameValue || "";
-		if (!owner || ["html", "body"].includes(targetIdentity)) return "";
-		return targetIdentity;
-	}
-	#detailedTargetIdentity(target) {
-		const identity = this.#targetIdentity(target);
-		if (!identity) return "";
-		return identity + (target.className && typeof target.className === "string" ? "." + target.className.trim().split(/\s+/).filter(Boolean).slice(0, 3).join(".") : "");
-	}
-	#searchText(entry, eventName, targetIdentity, owner) {
-		const rawEvents = (entry.rawEntries || []).map((raw) => raw.event).join(" ");
-		const fetch = entry.fetch ? `${entry.fetch.intent} ${entry.fetch.method} ${entry.fetch.url} ${entry.fetch.status ?? ""} ${entry.fetch.priority}` : "";
-		const dataset = owner?.dataset;
-		return `${eventName} ${entry.type || "unknown"} ${targetIdentity} ${owner?.id || ""} ${dataset?.controller || ""} ${dataset?.liveNameValue || ""} ${rawEvents} ${fetch}`.toLowerCase();
-	}
-	#formatDuration(milliseconds) {
-		if (typeof milliseconds !== "number" || !Number.isFinite(milliseconds)) return "Unknown";
-		if (milliseconds < 1) return "<1 ms";
-		if (milliseconds < 1e3) return `${Math.round(milliseconds)} ms`;
-		return `${(milliseconds / 1e3).toFixed(2)} s`;
-	}
-	#diagnostic(entry) {
-		const base = {
-			event: entry.event,
-			framework: entry.type,
-			time: Number((entry.time / 1e3).toFixed(3)),
-			label: entry.label,
-			target: entry.target instanceof Element ? this.#detailedTargetIdentity(entry.target) : void 0
-		};
-		if (entry.activityKind !== "turbo-fetch") return {
-			...base,
-			detail: entry.detail
-		};
-		return {
-			...base,
-			operation: {
-				...entry.fetch,
-				occurrences: entry.occurrences,
-				rawHooks: entry.rawEntries.length
-			},
-			rawEvents: entry.rawEntries.map((raw) => ({
-				event: raw.event,
-				time: Number((raw.time / 1e3).toFixed(3)),
-				target: raw.target instanceof Element ? this.#detailedTargetIdentity(raw.target) : void 0,
-				detail: raw.detail
-			}))
-		};
+		}, el("div", { class: "event-actions" }, copy), makeKeyValueList(fields), entry.activityKind === "turbo-fetch" ? _assertClassBrand(_Timeline_brand, this, _renderRawEvents).call(this, entry.rawEntries) : null);
 	}
 };
+function _flushEntries() {
+	_classPrivateFieldSet2(_rafId, this, null);
+	if (!_classPrivateFieldGet2(_paused, this)) _assertClassBrand(_Timeline_brand, this, _renderSnapshot).call(this);
+}
+function _renderSnapshot() {
+	if (_classPrivateFieldGet2(_rafId, this) !== null) cancelAnimationFrame(_classPrivateFieldGet2(_rafId, this));
+	_classPrivateFieldSet2(_rafId, this, null);
+	_classPrivateFieldSet2(_entries, this, _classPrivateFieldGet2(_monitor, this).entries || []);
+	_assertClassBrand(_Timeline_brand, this, _renderEntries).call(this);
+}
+function _renderEntries() {
+	const selectedAnchor = _classPrivateFieldGet2(_selectedEntry, this) && _assertClassBrand(_Timeline_brand, this, _anchor).call(this, _classPrivateFieldGet2(_selectedEntry, this));
+	const root = _classPrivateFieldGet2(_element, this).getRootNode();
+	const focused = root.activeElement;
+	const focusedItem = focused?.closest(".event");
+	const focusedAnchor = focusedItem?._inspectorEntry && _assertClassBrand(_Timeline_brand, this, _anchor).call(this, focusedItem._inspectorEntry);
+	const focusedControl = focused?.dataset.control;
+	_classPrivateFieldGet2(_onHighlight, this)?.call(this, null);
+	const entries = (_classPrivateFieldGet2(_paused, this) ? projectActivity(_classPrivateFieldGet2(_entries, this), !_classPrivateFieldGet2(_contextual, this)) : _classPrivateFieldGet2(_monitor, this).project(null, !_classPrivateFieldGet2(_contextual, this))).slice(-MAX_ENTRIES).map((entry) => {
+		const previous = _classPrivateFieldGet2(_rows, this).get(_assertClassBrand(_Timeline_brand, this, _anchor).call(this, entry))?._inspectorEntry;
+		return previous && _assertClassBrand(_Timeline_brand, this, _sameEntries).call(this, previous, entry) ? previous : entry;
+	});
+	_classPrivateFieldSet2(_selectedEntry, this, selectedAnchor ? entries.find((entry) => _assertClassBrand(_Timeline_brand, this, _anchor).call(this, entry) === selectedAnchor) || null : null);
+	_classPrivateFieldSet2(_rows, this, new Map(entries.map((entry) => {
+		const anchor = _assertClassBrand(_Timeline_brand, this, _anchor).call(this, entry);
+		const previous = _classPrivateFieldGet2(_rows, this).get(anchor);
+		const owner = _assertClassBrand(_Timeline_brand, this, _owner).call(this, entry);
+		return [anchor, previous?._inspectorEntry === entry && previous._navigationTarget === _assertClassBrand(_Timeline_brand, this, _navigationTarget).call(this, owner) ? previous : _assertClassBrand(_Timeline_brand, this, _renderEntry).call(this, entry, owner)];
+	})));
+	reconcileChildren(_classPrivateFieldGet2(_list, this), _classPrivateFieldGet2(_rows, this).size ? [..._classPrivateFieldGet2(_rows, this).values()].reverse() : [createEmptyState("No events captured yet.")]);
+	_assertClassBrand(_Timeline_brand, this, _applyFilter).call(this);
+	if (focusedAnchor && root.activeElement !== focused) {
+		const row = _classPrivateFieldGet2(_rows, this).get(focusedAnchor);
+		const control = focusedControl ? row?.querySelector(`[data-control="${focusedControl}"]:not([hidden])`) : null;
+		const fallback = _classPrivateFieldGet2(_list, this).querySelector(".event:not([hidden]) button");
+		(control && !row?.hidden ? control : fallback)?.focus({ preventScroll: true });
+	}
+}
+function _owner(entry) {
+	return entry.owner || entry.target?.closest?.("[data-controller], turbo-frame") || null;
+}
+function _navigationTarget(owner) {
+	return owner?.isConnected ? owner : null;
+}
+function _anchor(entry) {
+	return entry.id ?? entry.rawEntries?.[0] ?? entry;
+}
+function _sameEntries(previous, current) {
+	if (previous === current) return true;
+	return !!previous.rawEntries && !!current.rawEntries && previous.rawEntries.length === current.rawEntries.length && previous.rawEntries.every((entry, index) => entry === current.rawEntries?.[index]);
+}
+function _renderEntry(entry, owner) {
+	var _this$nextDetailId;
+	const type = entry.type || "unknown";
+	const eventName = _assertClassBrand(_Timeline_brand, this, _eventIdentity).call(this, entry);
+	const targetIdentity = _assertClassBrand(_Timeline_brand, this, _targetIdentity).call(this, entry.target ?? null);
+	const visibleTarget = _assertClassBrand(_Timeline_brand, this, _visibleContext).call(this, entry, targetIdentity, owner);
+	const navigationTarget = _assertClassBrand(_Timeline_brand, this, _navigationTarget).call(this, owner);
+	const hasDetail = _assertClassBrand(_Timeline_brand, this, _hasDetail).call(this, entry);
+	const selected = hasDetail && _classPrivateFieldGet2(_selectedEntry, this) === entry;
+	const detailId = `uxli-activity-detail-${_classPrivateFieldSet2(_nextDetailId, this, (_this$nextDetailId = _classPrivateFieldGet2(_nextDetailId, this), ++_this$nextDetailId))}`;
+	const disclosure = el(hasDetail ? "button" : "div", {
+		class: "disclosure",
+		...hasDetail ? {
+			type: "button",
+			"aria-expanded": String(selected),
+			"aria-controls": detailId,
+			dataset: { control: "disclosure" }
+		} : {},
+		"aria-label": [
+			`${frameworkName(type)} activity`,
+			eventName,
+			targetIdentity,
+			`${(entry.time / 1e3).toFixed(3)} seconds`
+		].filter(Boolean).join(", ")
+	}, el("span", {
+		class: "event-dot",
+		"aria-hidden": "true"
+	}), el("strong", {
+		class: "name",
+		text: eventName
+	}), visibleTarget ? el("span", {
+		class: "event-target",
+		text: visibleTarget
+	}) : null);
+	const navigationIdentity = _assertClassBrand(_Timeline_brand, this, _targetIdentity).call(this, navigationTarget);
+	const goLabel = navigationIdentity ? `Go to component ${navigationIdentity}` : `Go to component for ${entry.event}`;
+	const goBtn = el("button", {
+		class: "icon-button event-go",
+		type: "button",
+		title: goLabel,
+		"aria-label": goLabel,
+		hidden: !navigationTarget,
+		dataset: { control: "go" }
+	}, createIcon("target"));
+	const row = el("div", {
+		class: `event-row ${type}${selected ? " selected" : ""}${hasDetail ? "" : " compact"}`,
+		dataset: { framework: type }
+	}, disclosure, (entry.occurrences ?? 0) > 1 ? el("span", {
+		class: "event-count",
+		text: String(entry.occurrences),
+		title: `${entry.occurrences} identical operations`
+	}) : null, goBtn);
+	const detail = hasDetail ? el("div", {
+		class: "event-detail",
+		id: detailId,
+		hidden: !selected
+	}) : null;
+	if (selected && detail) detail.appendChild(this.renderDetail(entry));
+	const item = el("li", {
+		class: "event",
+		dataset: { search: _assertClassBrand(_Timeline_brand, this, _searchText).call(this, entry, eventName, targetIdentity, owner) }
+	}, row, detail);
+	item._inspectorEntry = entry;
+	item._navigationTarget = navigationTarget;
+	if (hasDetail && detail) disclosure.addEventListener("click", () => _assertClassBrand(_Timeline_brand, this, _select).call(this, entry, row, detail));
+	if (navigationTarget) {
+		row.addEventListener("mouseenter", () => {
+			goBtn.hidden = !navigationTarget.isConnected;
+			if (navigationTarget.isConnected) _classPrivateFieldGet2(_onHighlight, this)?.call(this, navigationTarget, type);
+		});
+		row.addEventListener("mouseleave", () => _classPrivateFieldGet2(_onHighlight, this)?.call(this, null));
+	}
+	goBtn.addEventListener("click", () => {
+		goBtn.hidden = !navigationTarget?.isConnected;
+		if (goBtn.hidden) return;
+		_classPrivateFieldGet2(_onHighlight, this)?.call(this, null);
+		if (navigationTarget) _classPrivateFieldGet2(_onSelect, this)?.call(this, navigationTarget);
+	});
+	return item;
+}
+function _hasDetail(entry) {
+	if (!entry) return false;
+	if (entry.activityKind === "turbo-fetch" || entry.activityKind === "live-rerender") return true;
+	if (entry.detail == null) return false;
+	if (Array.isArray(entry.detail)) return entry.detail.length > 0;
+	if (typeof entry.detail === "object") return Object.keys(entry.detail).length > 0;
+	return true;
+}
+function _renderRawEvents(entries) {
+	return el("details", {
+		class: "raw-events",
+		open: false
+	}, el("summary", {}, el("span", { text: "Raw events" }), el("span", {
+		class: "raw-count",
+		text: String(entries.length)
+	})), el("ol", { class: "raw-list" }, ...entries.map((entry) => el("li", {}, el("strong", { text: entry.event }), el("span", { text: `${(entry.time / 1e3).toFixed(3)}s` })))));
+}
+function _select(entry, row, detail) {
+	const open = _classPrivateFieldGet2(_selectedEntry, this) !== entry || !row.classList.contains("selected");
+	_classPrivateFieldSet2(_selectedEntry, this, open ? entry : null);
+	for (const item of _classPrivateFieldGet2(_list, this).querySelectorAll(".event")) {
+		const candidate = item.querySelector(".event-row");
+		const candidateDetail = item.querySelector(".event-detail");
+		const selected = open && candidate === row;
+		candidate?.classList.toggle("selected", selected);
+		candidate?.querySelector(".disclosure")?.setAttribute("aria-expanded", String(selected));
+		if (candidateDetail) {
+			candidateDetail.hidden = !selected;
+			if (!selected) candidateDetail.replaceChildren();
+		}
+	}
+	if (open && !detail.firstChild) detail.appendChild(this.renderDetail(entry));
+	_classPrivateFieldGet2(_element, this).dispatchEvent(new CustomEvent("activity-selected", { detail: { entry: _classPrivateFieldGet2(_selectedEntry, this) } }));
+}
+function _applyFilter() {
+	const items = Array.from(_classPrivateFieldGet2(_list, this).querySelectorAll(".event"));
+	let visible = 0;
+	for (const item of items) {
+		const matchesFramework = !_classPrivateFieldGet2(_frameworks, this) || _classPrivateFieldGet2(_frameworks, this).has(item._inspectorEntry?.type ?? "");
+		const matchesElement = !_classPrivateFieldGet2(_elementFilter, this) || _assertClassBrand(_Timeline_brand, this, _matchesElement).call(this, item._inspectorEntry, _classPrivateFieldGet2(_elementFilter, this));
+		const matches = matchesFramework && matchesElement && (!_classPrivateFieldGet2(_query, this) || (item.dataset.search ?? "").includes(_classPrivateFieldGet2(_query, this)));
+		item.hidden = !matches;
+		if (matches) visible++;
+	}
+	_classPrivateFieldGet2(_filterEmpty, this).hidden = items.length === 0 || visible > 0;
+	const selected = _classPrivateFieldGet2(_list, this).querySelector(".event-row.selected")?.closest(".event");
+	if (_classPrivateFieldGet2(_selectedEntry, this) && (!selected || selected.hidden)) {
+		selected?.querySelector(".event-row")?.classList.remove("selected");
+		selected?.querySelector(".disclosure")?.setAttribute("aria-expanded", "false");
+		const detail = selected?.querySelector(".event-detail");
+		if (detail) {
+			detail.hidden = true;
+			detail.replaceChildren();
+		}
+		_classPrivateFieldSet2(_selectedEntry, this, null);
+		_classPrivateFieldGet2(_element, this).dispatchEvent(new CustomEvent("activity-selected", { detail: { entry: null } }));
+	}
+}
+function _matchesElement(entry, element) {
+	return entry?.owner === element || entry?.target === element || (entry?.relatedElements?.includes(element) ?? false) || (entry?.rawEntries?.some((raw) => raw.owner === element || raw.target === element || raw.relatedElements?.includes(element)) ?? false);
+}
+function _onKeydown(event) {
+	if (![
+		"ArrowUp",
+		"ArrowDown",
+		"Home",
+		"End"
+	].includes(event.key)) return;
+	const buttons = Array.from(_classPrivateFieldGet2(_list, this).querySelectorAll("button.disclosure"));
+	if (!buttons.length) return;
+	const current = buttons.indexOf(event.target?.closest?.(".disclosure"));
+	const next = event.key === "Home" ? 0 : event.key === "End" ? buttons.length - 1 : Math.min(buttons.length - 1, Math.max(0, current + (event.key === "ArrowDown" ? 1 : -1)));
+	event.preventDefault();
+	buttons[next].focus();
+}
+function _targetIdentity(target) {
+	if (!target?.tagName) return "";
+	return target.tagName.toLowerCase() + (target.id ? `#${target.id}` : "");
+}
+function _eventIdentity(entry) {
+	if (entry.activityKind && entry.activityKind !== "repeated") return entry.label || entry.event;
+	if (_classPrivateFieldGet2(_contextual, this)) return entry.event;
+	const label = entry.label || entry.event;
+	if (entry.type !== "livecomponent") return label;
+	const component = entry.target?.dataset?.liveNameValue;
+	return component && label.startsWith(`${component}: `) ? label.slice(component.length + 2) : entry.event?.replace(/^live:/, "") || label;
+}
+function _visibleContext(entry, targetIdentity, owner) {
+	if (entry.type === "livecomponent") return entry.target?.dataset?.liveNameValue || "";
+	if (!owner || ["html", "body"].includes(targetIdentity)) return "";
+	return targetIdentity;
+}
+function _detailedTargetIdentity(target) {
+	const identity = _assertClassBrand(_Timeline_brand, this, _targetIdentity).call(this, target);
+	if (!identity) return "";
+	return identity + (target.className && typeof target.className === "string" ? "." + target.className.trim().split(/\s+/).filter(Boolean).slice(0, 3).join(".") : "");
+}
+function _searchText(entry, eventName, targetIdentity, owner) {
+	const rawEvents = (entry.rawEntries || []).map((raw) => raw.event).join(" ");
+	const fetch = entry.fetch ? `${entry.fetch.intent} ${entry.fetch.method} ${entry.fetch.url} ${entry.fetch.status ?? ""} ${entry.fetch.priority}` : "";
+	const dataset = owner?.dataset;
+	return `${eventName} ${entry.type || "unknown"} ${targetIdentity} ${owner?.id || ""} ${dataset?.controller || ""} ${dataset?.liveNameValue || ""} ${rawEvents} ${fetch}`.toLowerCase();
+}
+function _formatDuration(milliseconds) {
+	if (typeof milliseconds !== "number" || !Number.isFinite(milliseconds)) return "Unknown";
+	if (milliseconds < 1) return "<1 ms";
+	if (milliseconds < 1e3) return `${Math.round(milliseconds)} ms`;
+	return `${(milliseconds / 1e3).toFixed(2)} s`;
+}
+function _diagnostic(entry) {
+	const base = {
+		event: entry.event,
+		framework: entry.type,
+		time: Number((entry.time / 1e3).toFixed(3)),
+		label: entry.label,
+		target: entry.target instanceof Element ? _assertClassBrand(_Timeline_brand, this, _detailedTargetIdentity).call(this, entry.target) : void 0
+	};
+	if (entry.activityKind !== "turbo-fetch") return {
+		...base,
+		detail: entry.detail
+	};
+	return {
+		...base,
+		operation: {
+			...entry.fetch,
+			occurrences: entry.occurrences,
+			rawHooks: entry.rawEntries.length
+		},
+		rawEvents: entry.rawEntries.map((raw) => ({
+			event: raw.event,
+			time: Number((raw.time / 1e3).toFixed(3)),
+			target: raw.target instanceof Element ? _assertClassBrand(_Timeline_brand, this, _detailedTargetIdentity).call(this, raw.target) : void 0,
+			detail: raw.detail
+		}))
+	};
+}
 function bindOpenShortcut(open, signal) {
 	let prefix = false;
 	document.addEventListener("keydown", (event) => {
@@ -4495,84 +4744,95 @@ function createPullTab(host, open, signal) {
 	}, { signal });
 	return tab;
 }
-var Highlighter = class Highlighter {
-	static #EVENT_LIFETIME = 1200;
-	static #BOX_GUTTER = 2;
-	#container;
-	#hover = null;
-	#selected = null;
-	#all = /* @__PURE__ */ new Map();
-	#events = /* @__PURE__ */ new Map();
-	#allVisible = false;
-	#state;
-	#registry;
-	#lifetime = new AbortController();
-	#resizeObserver;
-	#observed = /* @__PURE__ */ new Map();
+var _container = /* @__PURE__ */ new WeakMap();
+var _hover = /* @__PURE__ */ new WeakMap();
+var _selected = /* @__PURE__ */ new WeakMap();
+var _all = /* @__PURE__ */ new WeakMap();
+var _events = /* @__PURE__ */ new WeakMap();
+var _allVisible = /* @__PURE__ */ new WeakMap();
+var _state$1 = /* @__PURE__ */ new WeakMap();
+var _registry$1 = /* @__PURE__ */ new WeakMap();
+var _lifetime$2 = /* @__PURE__ */ new WeakMap();
+var _resizeObserver = /* @__PURE__ */ new WeakMap();
+var _observed = /* @__PURE__ */ new WeakMap();
+var _Highlighter_brand = /* @__PURE__ */ new WeakSet();
+var Highlighter = class {
 	constructor(root = document.documentElement, state = null, registry = null) {
-		this.#state = state;
-		this.#registry = registry;
-		this.#container = document.createElement("div");
-		this.#container.className = "overlay";
-		this.#container.setAttribute("data-ux-inspector-overlay", "");
-		root.appendChild(this.#container);
-		this.#resizeObserver = new ResizeObserver((entries) => {
-			for (const entry of entries) this.#refreshTarget(entry.target);
-		});
+		_classPrivateMethodInitSpec(this, _Highlighter_brand);
+		_classPrivateFieldInitSpec(this, _container, void 0);
+		_classPrivateFieldInitSpec(this, _hover, null);
+		_classPrivateFieldInitSpec(this, _selected, null);
+		_classPrivateFieldInitSpec(this, _all, /* @__PURE__ */ new Map());
+		_classPrivateFieldInitSpec(this, _events, /* @__PURE__ */ new Map());
+		_classPrivateFieldInitSpec(this, _allVisible, false);
+		_classPrivateFieldInitSpec(this, _state$1, void 0);
+		_classPrivateFieldInitSpec(this, _registry$1, void 0);
+		_classPrivateFieldInitSpec(this, _lifetime$2, new AbortController());
+		_classPrivateFieldInitSpec(this, _resizeObserver, void 0);
+		_classPrivateFieldInitSpec(this, _observed, /* @__PURE__ */ new Map());
+		_classPrivateFieldSet2(_state$1, this, state);
+		_classPrivateFieldSet2(_registry$1, this, registry);
+		_classPrivateFieldSet2(_container, this, document.createElement("div"));
+		_classPrivateFieldGet2(_container, this).className = "overlay";
+		_classPrivateFieldGet2(_container, this).setAttribute("data-ux-inspector-overlay", "");
+		root.appendChild(_classPrivateFieldGet2(_container, this));
+		_classPrivateFieldSet2(_resizeObserver, this, new ResizeObserver((entries) => {
+			for (const entry of entries) _assertClassBrand(_Highlighter_brand, this, _refreshTarget).call(this, entry.target);
+		}));
 		const update = (event) => {
-			if (this.#allVisible) this.#renderAll(event.detail?.element);
+			if (_classPrivateFieldGet2(_allVisible, this)) _assertClassBrand(_Highlighter_brand, this, _renderAll).call(this, event.detail?.element);
 		};
 		for (const event of [
 			"component-added",
 			"component-updated",
 			"component-removed",
 			"components-cleared"
-		]) state?.addEventListener(event, update, { signal: this.#lifetime.signal });
+		]) state?.addEventListener(event, update, { signal: _classPrivateFieldGet2(_lifetime$2, this).signal });
 	}
 	get visible() {
-		return this.#allVisible;
+		return _classPrivateFieldGet2(_allVisible, this);
 	}
 	hover(element, framework = "default", label = "") {
-		this.#hover = this.#box(element, framework, "hover", label, this.#hover);
+		_classPrivateFieldSet2(_hover, this, _assertClassBrand(_Highlighter_brand, this, _box).call(this, element, framework, "hover", label, _classPrivateFieldGet2(_hover, this)));
 	}
 	clearHover() {
-		this.#removeBox(this.#hover);
-		this.#hover = null;
+		_assertClassBrand(_Highlighter_brand, this, _removeBox).call(this, _classPrivateFieldGet2(_hover, this));
+		_classPrivateFieldSet2(_hover, this, null);
 	}
 	select(element, framework = "default", label = "") {
-		this.#selected = this.#box(element, framework, "selected", label, this.#selected);
+		_classPrivateFieldSet2(_selected, this, _assertClassBrand(_Highlighter_brand, this, _box).call(this, element, framework, "selected", label, _classPrivateFieldGet2(_selected, this)));
 	}
 	deselect() {
-		this.#removeBox(this.#selected);
-		this.#selected = null;
+		_assertClassBrand(_Highlighter_brand, this, _removeBox).call(this, _classPrivateFieldGet2(_selected, this));
+		_classPrivateFieldSet2(_selected, this, null);
 	}
 	showAll() {
-		if (this.#allVisible) return;
-		this.#allVisible = true;
-		this.#renderAll();
+		if (_classPrivateFieldGet2(_allVisible, this)) return;
+		_classPrivateFieldSet2(_allVisible, this, true);
+		_assertClassBrand(_Highlighter_brand, this, _renderAll).call(this);
 	}
 	hideAll() {
-		this.#allVisible = false;
-		for (const box of this.#all.values()) this.#removeBox(box);
-		this.#all.clear();
+		_classPrivateFieldSet2(_allVisible, this, false);
+		for (const box of _classPrivateFieldGet2(_all, this).values()) _assertClassBrand(_Highlighter_brand, this, _removeBox).call(this, box);
+		_classPrivateFieldGet2(_all, this).clear();
 	}
 	toggleAll() {
-		if (this.#allVisible) this.hideAll();
+		if (_classPrivateFieldGet2(_allVisible, this)) this.hideAll();
 		else this.showAll();
-		return this.#allVisible;
+		return _classPrivateFieldGet2(_allVisible, this);
 	}
 	pulse(element, framework = "default", label = "") {
 		if (!element?.isConnected) return;
-		let entry = this.#events.get(element);
+		let entry = _classPrivateFieldGet2(_events, this).get(element);
 		if (entry) {
 			if (entry.timer) clearTimeout(entry.timer);
 			if (entry.raf !== null) cancelAnimationFrame(entry.raf);
 			entry.count = entry.label === label ? entry.count + 1 : 1;
 			entry.label = label;
 			entry.box.dataset.framework = framework;
-			this.#position(entry.box, element.getBoundingClientRect());
+			_assertClassBrand(_Highlighter_brand, this, _position).call(this, entry.box, element.getBoundingClientRect());
 		} else {
-			const box = this.#box(element, framework, "event");
+			const box = _assertClassBrand(_Highlighter_brand, this, _box).call(this, element, framework, "event");
 			const caption = document.createElement("span");
 			box.appendChild(caption);
 			entry = {
@@ -4583,7 +4843,7 @@ var Highlighter = class Highlighter {
 				timer: null,
 				raf: null
 			};
-			this.#events.set(element, entry);
+			_classPrivateFieldGet2(_events, this).set(element, entry);
 		}
 		const current = entry;
 		current.caption.textContent = current.count > 1 ? `${label} ×${current.count}` : label;
@@ -4592,175 +4852,197 @@ var Highlighter = class Highlighter {
 			current.raf = null;
 			current.box.classList.add("pulse");
 		});
-		current.timer = setTimeout(() => this.#removeEvent(element, current), Highlighter.#EVENT_LIFETIME);
+		current.timer = setTimeout(() => _assertClassBrand(_Highlighter_brand, this, _removeEvent).call(this, element, current), _EVENT_LIFETIME._);
 	}
 	refresh() {
-		for (const element of this.#observed.keys()) this.#refreshTarget(element);
+		for (const element of _classPrivateFieldGet2(_observed, this).keys()) _assertClassBrand(_Highlighter_brand, this, _refreshTarget).call(this, element);
 	}
 	clearAll() {
 		this.clearHover();
 		this.deselect();
 		this.hideAll();
-		for (const [element, entry] of this.#events) this.#removeEvent(element, entry);
+		for (const [element, entry] of _classPrivateFieldGet2(_events, this)) _assertClassBrand(_Highlighter_brand, this, _removeEvent).call(this, element, entry);
 	}
 	destroy() {
 		this.clearAll();
-		this.#lifetime.abort();
-		this.#resizeObserver.disconnect();
-		this.#container.remove();
-	}
-	#renderAll(changed) {
-		const elements = new Set(this.#state?.elements);
-		for (const [element, box] of this.#all) {
-			if (elements.has(element) && element.isConnected) continue;
-			this.#removeBox(box);
-			this.#all.delete(element);
-		}
-		for (const element of elements) {
-			if (!element.isConnected || this.#all.has(element) && element !== changed) continue;
-			const framework = this.#registry?.getForElement(element)[0]?.name ?? "default";
-			const label = this.#registry?.get(framework)?.getDisplayName(element) ?? "";
-			this.#all.set(element, this.#box(element, framework, "all", label, this.#all.get(element)));
-		}
-	}
-	#box(element, framework, mode, label = "", previous) {
-		const box = previous ?? document.createElement("div");
-		if (box.dataset.framework !== framework) box.dataset.framework = framework;
-		if (box._target !== element) {
-			this.#removeBox(box, false);
-			box._target = element;
-			const count = this.#observed.get(element) ?? 0;
-			if (!count) this.#resizeObserver.observe(element, { box: "border-box" });
-			this.#observed.set(element, count + 1);
-		}
-		if (label) {
-			const caption = box.firstElementChild ?? box.appendChild(document.createElement("span"));
-			if (caption.textContent !== label) caption.textContent = label;
-		} else box.firstElementChild?.remove();
-		this.#position(box, element.getBoundingClientRect());
-		if (!previous) {
-			box.className = "box";
-			box.dataset.mode = mode;
-			this.#container.appendChild(box);
-		}
-		return box;
-	}
-	#refreshTarget(element) {
-		if (!this.#observed.has(element)) return;
-		const rect = element.isConnected ? element.getBoundingClientRect() : null;
-		const event = this.#events.get(element);
-		if (!rect && event) this.#removeEvent(element, event);
-		for (const box of [
-			this.#all.get(element),
-			event?.box,
-			this.#hover,
-			this.#selected
-		]) {
-			if (box?._target !== element) continue;
-			if (rect) this.#position(box, rect);
-			else this.#removeBox(box);
-		}
-		if (!rect) this.#all.delete(element);
-		if (!this.#hover?._target) this.#hover = null;
-		if (!this.#selected?._target) this.#selected = null;
-	}
-	#removeBox(box, remove = true) {
-		if (!box) return;
-		const target = box._target;
-		if (target) {
-			const count = (this.#observed.get(target) ?? 1) - 1;
-			if (count) this.#observed.set(target, count);
-			else {
-				this.#observed.delete(target);
-				this.#resizeObserver.unobserve(target);
-			}
-			delete box._target;
-		}
-		if (remove) box.remove();
-	}
-	#removeEvent(element, entry) {
-		if (this.#events.get(element) !== entry) return;
-		if (entry.timer) clearTimeout(entry.timer);
-		if (entry.raf !== null) cancelAnimationFrame(entry.raf);
-		this.#removeBox(entry.box);
-		this.#events.delete(element);
-	}
-	#position(box, rect) {
-		const gutter = Highlighter.#BOX_GUTTER;
-		for (const [property, value] of Object.entries({
-			translate: `${rect.left - gutter}px ${rect.top - gutter}px`,
-			width: `${rect.width + gutter * 2}px`,
-			height: `${rect.height + gutter * 2}px`
-		})) if (box.style.getPropertyValue(property) !== value) box.style.setProperty(property, value);
+		_classPrivateFieldGet2(_lifetime$2, this).abort();
+		_classPrivateFieldGet2(_resizeObserver, this).disconnect();
+		_classPrivateFieldGet2(_container, this).remove();
 	}
 };
+function _renderAll(changed) {
+	const elements = new Set(_classPrivateFieldGet2(_state$1, this)?.elements);
+	for (const [element, box] of _classPrivateFieldGet2(_all, this)) {
+		if (elements.has(element) && element.isConnected) continue;
+		_assertClassBrand(_Highlighter_brand, this, _removeBox).call(this, box);
+		_classPrivateFieldGet2(_all, this).delete(element);
+	}
+	for (const element of elements) {
+		if (!element.isConnected || _classPrivateFieldGet2(_all, this).has(element) && element !== changed) continue;
+		const framework = _classPrivateFieldGet2(_registry$1, this)?.getForElement(element)[0]?.name ?? "default";
+		const label = _classPrivateFieldGet2(_registry$1, this)?.get(framework)?.getDisplayName(element) ?? "";
+		_classPrivateFieldGet2(_all, this).set(element, _assertClassBrand(_Highlighter_brand, this, _box).call(this, element, framework, "all", label, _classPrivateFieldGet2(_all, this).get(element)));
+	}
+}
+function _box(element, framework, mode, label = "", previous) {
+	const box = previous ?? document.createElement("div");
+	if (box.dataset.framework !== framework) box.dataset.framework = framework;
+	if (box._target !== element) {
+		_assertClassBrand(_Highlighter_brand, this, _removeBox).call(this, box, false);
+		box._target = element;
+		const count = _classPrivateFieldGet2(_observed, this).get(element) ?? 0;
+		if (!count) _classPrivateFieldGet2(_resizeObserver, this).observe(element, { box: "border-box" });
+		_classPrivateFieldGet2(_observed, this).set(element, count + 1);
+	}
+	if (label) {
+		const caption = box.firstElementChild ?? box.appendChild(document.createElement("span"));
+		if (caption.textContent !== label) caption.textContent = label;
+	} else box.firstElementChild?.remove();
+	_assertClassBrand(_Highlighter_brand, this, _position).call(this, box, element.getBoundingClientRect());
+	if (!previous) {
+		box.className = "box";
+		box.dataset.mode = mode;
+		_classPrivateFieldGet2(_container, this).appendChild(box);
+	}
+	return box;
+}
+function _refreshTarget(element) {
+	if (!_classPrivateFieldGet2(_observed, this).has(element)) return;
+	const rect = element.isConnected ? element.getBoundingClientRect() : null;
+	const event = _classPrivateFieldGet2(_events, this).get(element);
+	if (!rect && event) _assertClassBrand(_Highlighter_brand, this, _removeEvent).call(this, element, event);
+	for (const box of [
+		_classPrivateFieldGet2(_all, this).get(element),
+		event?.box,
+		_classPrivateFieldGet2(_hover, this),
+		_classPrivateFieldGet2(_selected, this)
+	]) {
+		if (box?._target !== element) continue;
+		if (rect) _assertClassBrand(_Highlighter_brand, this, _position).call(this, box, rect);
+		else _assertClassBrand(_Highlighter_brand, this, _removeBox).call(this, box);
+	}
+	if (!rect) _classPrivateFieldGet2(_all, this).delete(element);
+	if (!_classPrivateFieldGet2(_hover, this)?._target) _classPrivateFieldSet2(_hover, this, null);
+	if (!_classPrivateFieldGet2(_selected, this)?._target) _classPrivateFieldSet2(_selected, this, null);
+}
+function _removeBox(box, remove = true) {
+	if (!box) return;
+	const target = box._target;
+	if (target) {
+		const count = (_classPrivateFieldGet2(_observed, this).get(target) ?? 1) - 1;
+		if (count) _classPrivateFieldGet2(_observed, this).set(target, count);
+		else {
+			_classPrivateFieldGet2(_observed, this).delete(target);
+			_classPrivateFieldGet2(_resizeObserver, this).unobserve(target);
+		}
+		delete box._target;
+	}
+	if (remove) box.remove();
+}
+function _removeEvent(element, entry) {
+	if (_classPrivateFieldGet2(_events, this).get(element) !== entry) return;
+	if (entry.timer) clearTimeout(entry.timer);
+	if (entry.raf !== null) cancelAnimationFrame(entry.raf);
+	_assertClassBrand(_Highlighter_brand, this, _removeBox).call(this, entry.box);
+	_classPrivateFieldGet2(_events, this).delete(element);
+}
+function _position(box, rect) {
+	const gutter = _BOX_GUTTER._;
+	for (const [property, value] of Object.entries({
+		translate: `${rect.left - gutter}px ${rect.top - gutter}px`,
+		width: `${rect.width + gutter * 2}px`,
+		height: `${rect.height + gutter * 2}px`
+	})) if (box.style.getPropertyValue(property) !== value) box.style.setProperty(property, value);
+}
+var _EVENT_LIFETIME = { _: 1200 };
+var _BOX_GUTTER = { _: 2 };
+var _registry = /* @__PURE__ */ new WeakMap();
+var _state = /* @__PURE__ */ new WeakMap();
+var _detector = /* @__PURE__ */ new WeakMap();
+var _targetSelector = /* @__PURE__ */ new WeakMap();
+var _visual = /* @__PURE__ */ new WeakMap();
+var _panel = /* @__PURE__ */ new WeakMap();
+var _pullTab = /* @__PURE__ */ new WeakMap();
+var _eventMonitor = /* @__PURE__ */ new WeakMap();
+var _timeline = /* @__PURE__ */ new WeakMap();
+var _relationshipEngine = /* @__PURE__ */ new WeakMap();
+var _lifetime$1 = /* @__PURE__ */ new WeakMap();
+var _refreshFrame = /* @__PURE__ */ new WeakMap();
+var _readyFrame = /* @__PURE__ */ new WeakMap();
+var _dynamicEventsQueued = /* @__PURE__ */ new WeakMap();
+var _phase = /* @__PURE__ */ new WeakMap();
+var _host$1 = /* @__PURE__ */ new WeakMap();
+var _config$1 = /* @__PURE__ */ new WeakMap();
+var _application = /* @__PURE__ */ new WeakMap();
+var _InspectorRuntime_brand = /* @__PURE__ */ new WeakSet();
 var InspectorRuntime = class {
-	#registry;
-	#state = new StateManager();
-	#detector;
-	#targetSelector;
-	#visual;
-	#panel;
-	#pullTab = null;
-	#eventMonitor;
-	#timeline;
-	#relationshipEngine;
-	#lifetime = new AbortController();
-	#refreshFrame = null;
-	#readyFrame = null;
-	#dynamicEventsQueued = false;
-	#phase = "observing";
-	#host;
-	#config;
-	#application;
 	constructor(host, shadow, config, application) {
-		this.#host = host;
-		this.#config = config;
-		this.#application = application;
-		this.#registry = new PluginRegistry([
+		_classPrivateMethodInitSpec(this, _InspectorRuntime_brand);
+		_classPrivateFieldInitSpec(this, _registry, void 0);
+		_classPrivateFieldInitSpec(this, _state, new StateManager());
+		_classPrivateFieldInitSpec(this, _detector, void 0);
+		_classPrivateFieldInitSpec(this, _targetSelector, void 0);
+		_classPrivateFieldInitSpec(this, _visual, void 0);
+		_classPrivateFieldInitSpec(this, _panel, void 0);
+		_classPrivateFieldInitSpec(this, _pullTab, null);
+		_classPrivateFieldInitSpec(this, _eventMonitor, void 0);
+		_classPrivateFieldInitSpec(this, _timeline, void 0);
+		_classPrivateFieldInitSpec(this, _relationshipEngine, void 0);
+		_classPrivateFieldInitSpec(this, _lifetime$1, new AbortController());
+		_classPrivateFieldInitSpec(this, _refreshFrame, null);
+		_classPrivateFieldInitSpec(this, _readyFrame, null);
+		_classPrivateFieldInitSpec(this, _dynamicEventsQueued, false);
+		_classPrivateFieldInitSpec(this, _phase, "observing");
+		_classPrivateFieldInitSpec(this, _host$1, void 0);
+		_classPrivateFieldInitSpec(this, _config$1, void 0);
+		_classPrivateFieldInitSpec(this, _application, void 0);
+		_classPrivateFieldSet2(_host$1, this, host);
+		_classPrivateFieldSet2(_config$1, this, config);
+		_classPrivateFieldSet2(_application, this, application);
+		_classPrivateFieldSet2(_registry, this, new PluginRegistry([
 			new LiveComponentPlugin(),
 			new TurboPlugin(),
 			new StimulusPlugin(application())
-		]);
-		this.#eventMonitor = new EventMonitor(500, (draft) => {
-			if (draft.target && this.#phase === "observing") this.#registry.notifyEvent(draft, draft.target);
-			draft.owner = this.#findNearestComponent(draft.target);
-		});
-		const monitor = this.#eventMonitor;
-		this.#registry.setEventRecorder((entry) => monitor.record(entry));
-		this.#detector = new ComponentDetector(this.#registry, this.#state, host, this.#config.ignore_selectors || []);
-		this.#visual = new Highlighter(shadow, this.#state, this.#registry);
-		this.#targetSelector = new TargetSelector(this.#visual, this.#registry, (active) => this.#panel.setTargetModeActive(active));
-		this.#relationshipEngine = new RelationshipEngine(this.#registry, this.#state);
-		this.#timeline = new Timeline(this.#eventMonitor, {
-			onHighlight: (element, framework) => element ? this.#visual.hover(element, framework) : this.#visual.clearHover(),
+		]));
+		_classPrivateFieldSet2(_eventMonitor, this, new EventMonitor(500, (draft) => {
+			if (draft.target && _classPrivateFieldGet2(_phase, this) === "observing") _classPrivateFieldGet2(_registry, this).notifyEvent(draft, draft.target);
+			draft.owner = _assertClassBrand(_InspectorRuntime_brand, this, _findNearestComponent).call(this, draft.target);
+		}));
+		const monitor = _classPrivateFieldGet2(_eventMonitor, this);
+		_classPrivateFieldGet2(_registry, this).setEventRecorder((entry) => monitor.record(entry));
+		_classPrivateFieldSet2(_detector, this, new ComponentDetector(_classPrivateFieldGet2(_registry, this), _classPrivateFieldGet2(_state, this), host, _classPrivateFieldGet2(_config$1, this).ignore_selectors || []));
+		_classPrivateFieldSet2(_visual, this, new Highlighter(shadow, _classPrivateFieldGet2(_state, this), _classPrivateFieldGet2(_registry, this)));
+		_classPrivateFieldSet2(_targetSelector, this, new TargetSelector(_classPrivateFieldGet2(_visual, this), _classPrivateFieldGet2(_registry, this), (active) => _classPrivateFieldGet2(_panel, this).setTargetModeActive(active)));
+		_classPrivateFieldSet2(_relationshipEngine, this, new RelationshipEngine(_classPrivateFieldGet2(_registry, this), _classPrivateFieldGet2(_state, this)));
+		_classPrivateFieldSet2(_timeline, this, new Timeline(_classPrivateFieldGet2(_eventMonitor, this), {
+			onHighlight: (element, framework) => element ? _classPrivateFieldGet2(_visual, this).hover(element, framework) : _classPrivateFieldGet2(_visual, this).clearHover(),
 			onSelect: (element) => {
-				const component = this.#findNearestComponent(element);
-				if (component) this.#panel.drillInto(component);
+				const component = _assertClassBrand(_InspectorRuntime_brand, this, _findNearestComponent).call(this, element);
+				if (component) _classPrivateFieldGet2(_panel, this).drillInto(component);
 			}
-		});
-		this.#eventMonitor.addListener((entry) => this.#onEvent(entry));
-		this.#panel = new Panel(this.#state, this.#registry, this.#eventMonitor, this.#timeline, host, this.#relationshipEngine, this.#config.packages || {});
-		this.#panel.setActionCallbacks({
+		}));
+		_classPrivateFieldGet2(_eventMonitor, this).addListener((entry) => _assertClassBrand(_InspectorRuntime_brand, this, _onEvent).call(this, entry));
+		_classPrivateFieldSet2(_panel, this, new Panel(_classPrivateFieldGet2(_state, this), _classPrivateFieldGet2(_registry, this), _classPrivateFieldGet2(_eventMonitor, this), _classPrivateFieldGet2(_timeline, this), host, _classPrivateFieldGet2(_relationshipEngine, this), _classPrivateFieldGet2(_config$1, this).packages || {}));
+		_classPrivateFieldGet2(_panel, this).setActionCallbacks({
 			target: () => this.toggleTargetMode(),
 			overlay: () => this.toggleOverlay()
 		});
-		this.#panel.setVisualCallbacks({
-			onPreview: ({ element, framework, label }) => this.#visual.hover(element, framework, label),
-			onClearPreview: () => this.#visual.clearHover(),
-			onSelect: ({ element, framework, label }) => this.#visual.select(element, framework, label),
-			onClearSelection: () => this.#visual.deselect()
+		_classPrivateFieldGet2(_panel, this).setVisualCallbacks({
+			onPreview: ({ element, framework, label }) => _classPrivateFieldGet2(_visual, this).hover(element, framework, label),
+			onClearPreview: () => _classPrivateFieldGet2(_visual, this).clearHover(),
+			onSelect: ({ element, framework, label }) => _classPrivateFieldGet2(_visual, this).select(element, framework, label),
+			onClearSelection: () => _classPrivateFieldGet2(_visual, this).deselect()
 		});
-		shadow.append(this.#panel.element);
-		this.#registerPluginStaticEvents();
-		this.#eventMonitor.start();
-		const { signal } = this.#lifetime;
+		shadow.append(_classPrivateFieldGet2(_panel, this).element);
+		_assertClassBrand(_InspectorRuntime_brand, this, _registerPluginStaticEvents).call(this);
+		_classPrivateFieldGet2(_eventMonitor, this).start();
+		const { signal } = _classPrivateFieldGet2(_lifetime$1, this);
 		if (config.pull_tab !== false) {
-			this.#pullTab = createPullTab(host, () => {
+			_classPrivateFieldSet2(_pullTab, this, createPullTab(host, () => {
 				host.open();
-				this.#panel.element.querySelector("[aria-label=\"Hide inspector\"]")?.focus({ preventScroll: true });
-			}, signal);
-			shadow.append(this.#pullTab);
+				_classPrivateFieldGet2(_panel, this).element.querySelector("[aria-label=\"Hide inspector\"]")?.focus({ preventScroll: true });
+			}, signal));
+			shadow.append(_classPrivateFieldGet2(_pullTab, this));
 		}
 		if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => this.scan(), {
 			once: true,
@@ -4768,7 +5050,7 @@ var InspectorRuntime = class {
 		});
 		bindOpenShortcut(() => host.open(), signal);
 		document.addEventListener("keydown", (event) => {
-			if (event.key === "Escape" && this.#panel.drillBack()) event.preventDefault();
+			if (event.key === "Escape" && _classPrivateFieldGet2(_panel, this).drillBack()) event.preventDefault();
 		}, { signal });
 		window.addEventListener("scroll", () => this.refreshVisual(), {
 			capture: true,
@@ -4776,11 +5058,11 @@ var InspectorRuntime = class {
 			signal
 		});
 		const updateDynamicEvents = () => {
-			if (this.#dynamicEventsQueued) return;
-			this.#dynamicEventsQueued = true;
+			if (_classPrivateFieldGet2(_dynamicEventsQueued, this)) return;
+			_classPrivateFieldSet2(_dynamicEventsQueued, this, true);
 			queueMicrotask(() => {
-				this.#dynamicEventsQueued = false;
-				if (host.isConnected && this.#phase !== "destroyed") this.#registerPluginDynamicEvents();
+				_classPrivateFieldSet2(_dynamicEventsQueued, this, false);
+				if (host.isConnected && _classPrivateFieldGet2(_phase, this) !== "destroyed") _assertClassBrand(_InspectorRuntime_brand, this, _registerPluginDynamicEvents).call(this);
 			});
 		};
 		for (const type of [
@@ -4788,19 +5070,19 @@ var InspectorRuntime = class {
 			"component-updated",
 			"component-removed",
 			"components-cleared"
-		]) this.#state.addEventListener(type, updateDynamicEvents, { signal });
+		]) _classPrivateFieldGet2(_state, this).addEventListener(type, updateDynamicEvents, { signal });
 		this.scan();
-		this.#detector.observe();
-		this.#readyFrame = requestAnimationFrame(() => {
-			this.#readyFrame = null;
+		_classPrivateFieldGet2(_detector, this).observe();
+		_classPrivateFieldSet2(_readyFrame, this, requestAnimationFrame(() => {
+			_classPrivateFieldSet2(_readyFrame, this, null);
 			this.scan();
 			host.setAttribute("ready", "");
-		});
+		}));
 	}
 	getStatus() {
-		const components = this.#state.countByPlugin();
+		const components = _classPrivateFieldGet2(_state, this).countByPlugin();
 		return {
-			installed: { ...this.#config.packages },
+			installed: { ..._classPrivateFieldGet2(_config$1, this).packages },
 			used: {
 				stimulus: Boolean(document.querySelector("[data-controller]")),
 				livecomponent: Boolean(document.querySelector("[data-controller~=\"live\"]")),
@@ -4810,167 +5092,170 @@ var InspectorRuntime = class {
 		};
 	}
 	close() {
-		this.#panel.clearPageRuleSelection();
-		this.#targetSelector.disable();
-		this.#visual.clearHover();
-		this.#visual.deselect();
-		if (this.#panel.element.contains(this.#host.shadowRoot?.activeElement ?? null)) this.#pullTab?.querySelector("button")?.focus({ preventScroll: true });
+		_classPrivateFieldGet2(_panel, this).clearPageRuleSelection();
+		_classPrivateFieldGet2(_targetSelector, this).disable();
+		_classPrivateFieldGet2(_visual, this).clearHover();
+		_classPrivateFieldGet2(_visual, this).deselect();
+		if (_classPrivateFieldGet2(_panel, this).element.contains(_classPrivateFieldGet2(_host$1, this).shadowRoot?.activeElement ?? null)) _classPrivateFieldGet2(_pullTab, this)?.querySelector("button")?.focus({ preventScroll: true });
 	}
 	refreshVisual() {
-		if (this.#refreshFrame !== null || this.#phase !== "observing") return;
-		this.#refreshFrame = requestAnimationFrame(() => {
-			this.#refreshFrame = null;
-			this.#visual.refresh();
-		});
+		if (_classPrivateFieldGet2(_refreshFrame, this) !== null || _classPrivateFieldGet2(_phase, this) !== "observing") return;
+		_classPrivateFieldSet2(_refreshFrame, this, requestAnimationFrame(() => {
+			_classPrivateFieldSet2(_refreshFrame, this, null);
+			_classPrivateFieldGet2(_visual, this).refresh();
+		}));
 	}
 	scan() {
-		if (this.#phase !== "observing") return;
-		const application = this.#application();
-		this.#registry.get("stimulus")?.setApplication(application);
-		this.#detector.scan();
-		this.#registerPluginDynamicEvents();
+		if (_classPrivateFieldGet2(_phase, this) !== "observing") return;
+		const application = _classPrivateFieldGet2(_application, this).call(this);
+		_classPrivateFieldGet2(_registry, this).get("stimulus")?.setApplication(application);
+		_classPrivateFieldGet2(_detector, this).scan();
+		_assertClassBrand(_InspectorRuntime_brand, this, _registerPluginDynamicEvents).call(this);
 	}
 	clear() {
 		this.clearLog();
-		this.#visual.clearAll();
-		this.#panel.clearFocus();
-		this.#panel.setOverlayActive(false);
-		this.#panel.refresh();
+		_classPrivateFieldGet2(_visual, this).clearAll();
+		_classPrivateFieldGet2(_panel, this).clearFocus();
+		_classPrivateFieldGet2(_panel, this).setOverlayActive(false);
+		_classPrivateFieldGet2(_panel, this).refresh();
 	}
 	clearLog() {
-		this.#timeline.clear();
-		this.#panel.clearActivities();
+		_classPrivateFieldGet2(_timeline, this).clear();
+		_classPrivateFieldGet2(_panel, this).clearActivities();
 	}
 	toggleLogPaused() {
-		if (this.#timeline.paused) this.#timeline.resume();
-		else this.#timeline.pause();
-		return Boolean(this.#timeline.paused);
+		if (_classPrivateFieldGet2(_timeline, this).paused) _classPrivateFieldGet2(_timeline, this).resume();
+		else _classPrivateFieldGet2(_timeline, this).pause();
+		return Boolean(_classPrivateFieldGet2(_timeline, this).paused);
 	}
 	inspectElement(element) {
-		if (!element || this.#phase !== "observing") return;
-		const data = this.#detector.inspect(element);
+		if (!element || _classPrivateFieldGet2(_phase, this) !== "observing") return;
+		const data = _classPrivateFieldGet2(_detector, this).inspect(element);
 		if (!data) return;
-		this.#visual.select(element, data.keys().next().value);
-		this.#panel.drillInto(element, data);
+		_classPrivateFieldGet2(_visual, this).select(element, data.keys().next().value);
+		_classPrivateFieldGet2(_panel, this).drillInto(element, data);
 	}
 	toggleTargetMode() {
-		return this.#targetSelector.toggle((element) => this.inspectElement(element));
+		return _classPrivateFieldGet2(_targetSelector, this).toggle((element) => this.inspectElement(element));
 	}
 	toggleOverlay() {
-		const visible = Boolean(this.#visual.toggleAll());
-		this.#panel.setOverlayActive(visible);
+		const visible = Boolean(_classPrivateFieldGet2(_visual, this).toggleAll());
+		_classPrivateFieldGet2(_panel, this).setOverlayActive(visible);
 		return visible;
 	}
-	#onEvent(entry) {
-		if (this.#phase !== "observing") return;
-		if (entry.type === "livecomponent" && entry.target) this.#detector.refresh(entry.target);
-		if (this.#host.isOpen && this.#panel.isComponentListVisible && entry.relatedElements?.length) for (const element of entry.relatedElements) this.#visual.pulse(element, entry.type, entry.label || entry.event);
-		const component = this.#findNearestComponent(entry.target);
-		if (!component) return;
-		if (!this.#host.isOpen || !this.#panel.isComponentListVisible) return;
-		const framework = this.#state.get(component)?.keys().next().value ?? entry.type;
-		this.#visual.pulse(component, framework, entry.label || entry.event);
-	}
-	#findNearestComponent(element) {
-		let current = element ?? null;
-		while (current) {
-			if (this.#state.get(current)) return current;
-			current = current.parentElement;
-		}
-		return null;
-	}
-	#registerPluginStaticEvents() {
-		const { staticEvents } = this.#registry.collectMonitoredEvents();
-		for (const [pluginName, events] of staticEvents) this.#eventMonitor.monitorEvents(events, pluginName);
-	}
-	#registerPluginDynamicEvents() {
-		const byPlugin = /* @__PURE__ */ new Map();
-		for (const element of this.#state.elements) for (const pluginName of this.#state.get(element)?.keys() ?? []) {
-			if (!byPlugin.has(pluginName)) byPlugin.set(pluginName, []);
-			byPlugin.get(pluginName).push(element);
-		}
-		const { dynamicEvents } = this.#registry.collectMonitoredEvents(byPlugin);
-		for (const [pluginName, events] of dynamicEvents) this.#eventMonitor.setDynamicEvents(events, pluginName);
-	}
 	suspend() {
-		if (this.#phase !== "observing") return;
-		this.#phase = "suspended";
-		this.#pullTab?.removeAttribute("data-near");
-		if (this.#refreshFrame !== null) cancelAnimationFrame(this.#refreshFrame);
-		if (this.#readyFrame !== null) cancelAnimationFrame(this.#readyFrame);
-		this.#refreshFrame = this.#readyFrame = null;
-		this.#panel.suspendForNavigation();
-		this.#targetSelector.disable();
-		this.#visual.clearAll();
-		this.#detector.disconnect();
+		if (_classPrivateFieldGet2(_phase, this) !== "observing") return;
+		_classPrivateFieldSet2(_phase, this, "suspended");
+		_classPrivateFieldGet2(_pullTab, this)?.removeAttribute("data-near");
+		if (_classPrivateFieldGet2(_refreshFrame, this) !== null) cancelAnimationFrame(_classPrivateFieldGet2(_refreshFrame, this));
+		if (_classPrivateFieldGet2(_readyFrame, this) !== null) cancelAnimationFrame(_classPrivateFieldGet2(_readyFrame, this));
+		_classPrivateFieldSet2(_refreshFrame, this, _classPrivateFieldSet2(_readyFrame, this, null));
+		_classPrivateFieldGet2(_panel, this).suspendForNavigation();
+		_classPrivateFieldGet2(_targetSelector, this).disable();
+		_classPrivateFieldGet2(_visual, this).clearAll();
+		_classPrivateFieldGet2(_detector, this).disconnect();
 	}
 	resume() {
-		if (this.#phase === "destroyed") return;
-		if (this.#phase === "observing") {
+		if (_classPrivateFieldGet2(_phase, this) === "destroyed") return;
+		if (_classPrivateFieldGet2(_phase, this) === "observing") {
 			this.scan();
 			return;
 		}
-		this.#phase = "observing";
-		this.#state.clear();
-		this.#relationshipEngine.invalidate();
-		this.#detector.observe();
+		_classPrivateFieldSet2(_phase, this, "observing");
+		_classPrivateFieldGet2(_state, this).clear();
+		_classPrivateFieldGet2(_relationshipEngine, this).invalidate();
+		_classPrivateFieldGet2(_detector, this).observe();
 		this.scan();
-		this.#panel.resumeAfterNavigation();
-		this.#host.setAttribute("ready", "");
+		_classPrivateFieldGet2(_panel, this).resumeAfterNavigation();
+		_classPrivateFieldGet2(_host$1, this).setAttribute("ready", "");
 	}
 	destroy() {
-		if (this.#phase === "destroyed") return;
-		this.#phase = "destroyed";
-		this.#lifetime.abort();
-		if (this.#refreshFrame !== null) cancelAnimationFrame(this.#refreshFrame);
-		if (this.#readyFrame !== null) cancelAnimationFrame(this.#readyFrame);
-		this.#panel.destroy();
-		this.#timeline.destroy();
-		this.#targetSelector.destroy();
-		this.#visual.destroy();
-		this.#eventMonitor.destroy();
-		this.#relationshipEngine.destroy();
-		this.#detector.destroy();
-		this.#registry.destroy();
+		if (_classPrivateFieldGet2(_phase, this) === "destroyed") return;
+		_classPrivateFieldSet2(_phase, this, "destroyed");
+		_classPrivateFieldGet2(_lifetime$1, this).abort();
+		if (_classPrivateFieldGet2(_refreshFrame, this) !== null) cancelAnimationFrame(_classPrivateFieldGet2(_refreshFrame, this));
+		if (_classPrivateFieldGet2(_readyFrame, this) !== null) cancelAnimationFrame(_classPrivateFieldGet2(_readyFrame, this));
+		_classPrivateFieldGet2(_panel, this).destroy();
+		_classPrivateFieldGet2(_timeline, this).destroy();
+		_classPrivateFieldGet2(_targetSelector, this).destroy();
+		_classPrivateFieldGet2(_visual, this).destroy();
+		_classPrivateFieldGet2(_eventMonitor, this).destroy();
+		_classPrivateFieldGet2(_relationshipEngine, this).destroy();
+		_classPrivateFieldGet2(_detector, this).destroy();
+		_classPrivateFieldGet2(_registry, this).destroy();
 	}
 };
+function _onEvent(entry) {
+	if (_classPrivateFieldGet2(_phase, this) !== "observing") return;
+	if (entry.type === "livecomponent" && entry.target) _classPrivateFieldGet2(_detector, this).refresh(entry.target);
+	if (_classPrivateFieldGet2(_host$1, this).isOpen && _classPrivateFieldGet2(_panel, this).isComponentListVisible && entry.relatedElements?.length) for (const element of entry.relatedElements) _classPrivateFieldGet2(_visual, this).pulse(element, entry.type, entry.label || entry.event);
+	const component = _assertClassBrand(_InspectorRuntime_brand, this, _findNearestComponent).call(this, entry.target);
+	if (!component) return;
+	if (!_classPrivateFieldGet2(_host$1, this).isOpen || !_classPrivateFieldGet2(_panel, this).isComponentListVisible) return;
+	const framework = _classPrivateFieldGet2(_state, this).get(component)?.keys().next().value ?? entry.type;
+	_classPrivateFieldGet2(_visual, this).pulse(component, framework, entry.label || entry.event);
+}
+function _findNearestComponent(element) {
+	let current = element ?? null;
+	while (current) {
+		if (_classPrivateFieldGet2(_state, this).get(current)) return current;
+		current = current.parentElement;
+	}
+	return null;
+}
+function _registerPluginStaticEvents() {
+	const { staticEvents } = _classPrivateFieldGet2(_registry, this).collectMonitoredEvents();
+	for (const [pluginName, events] of staticEvents) _classPrivateFieldGet2(_eventMonitor, this).monitorEvents(events, pluginName);
+}
+function _registerPluginDynamicEvents() {
+	const byPlugin = /* @__PURE__ */ new Map();
+	for (const element of _classPrivateFieldGet2(_state, this).elements) for (const pluginName of _classPrivateFieldGet2(_state, this).get(element)?.keys() ?? []) {
+		if (!byPlugin.has(pluginName)) byPlugin.set(pluginName, []);
+		byPlugin.get(pluginName).push(element);
+	}
+	const { dynamicEvents } = _classPrivateFieldGet2(_registry, this).collectMonitoredEvents(byPlugin);
+	for (const [pluginName, events] of dynamicEvents) _classPrivateFieldGet2(_eventMonitor, this).setDynamicEvents(events, pluginName);
+}
 const OPEN_ATTRIBUTE = "data-ux-inspector-open";
 const WIDTH_PROPERTY = "--ux-inspector-width";
+var _host = /* @__PURE__ */ new WeakMap();
+var _style = /* @__PURE__ */ new WeakMap();
+var _width = /* @__PURE__ */ new WeakMap();
 var DockLayout = class {
-	#host;
-	#style = null;
-	#width = null;
 	constructor(host) {
-		this.#host = host;
+		_classPrivateFieldInitSpec(this, _host, void 0);
+		_classPrivateFieldInitSpec(this, _style, null);
+		_classPrivateFieldInitSpec(this, _width, null);
+		_classPrivateFieldSet2(_host, this, host);
 	}
 	resize(width) {
-		this.#width = Math.round(Math.min(Math.max(208, width), Math.max(208, window.innerWidth * .8)));
-		this.#host.style.setProperty("--panel-width", `${this.#width}px`);
+		_classPrivateFieldSet2(_width, this, Math.round(Math.min(Math.max(208, width), Math.max(208, window.innerWidth * .8))));
+		_classPrivateFieldGet2(_host, this).style.setProperty("--panel-width", `${_classPrivateFieldGet2(_width, this)}px`);
 		this.sync();
-		return this.#width;
+		return _classPrivateFieldGet2(_width, this);
 	}
 	sync() {
-		if (!this.#host.isConnected || !this.#host.hasAttribute("open")) {
+		if (!_classPrivateFieldGet2(_host, this).isConnected || !_classPrivateFieldGet2(_host, this).hasAttribute("open")) {
 			this.detach();
 			return;
 		}
-		if (!this.#style) {
-			this.#style = document.createElement("style");
-			this.#style.dataset.uxInspectorLayout = "";
-			this.#style.textContent = `@media (min-width:42.5rem){html[${OPEN_ATTRIBUTE}]{box-sizing:border-box!important;padding-right:var(${WIDTH_PROPERTY},21.25rem)!important}}`;
+		if (!_classPrivateFieldGet2(_style, this)) {
+			_classPrivateFieldSet2(_style, this, document.createElement("style"));
+			_classPrivateFieldGet2(_style, this).dataset.uxInspectorLayout = "";
+			_classPrivateFieldGet2(_style, this).textContent = `@media (min-width:42.5rem){html[${OPEN_ATTRIBUTE}]{box-sizing:border-box!important;padding-right:var(${WIDTH_PROPERTY},21.25rem)!important}}`;
 		}
-		if (!this.#style.isConnected) document.head.append(this.#style);
-		if (this.#width !== null) {
-			this.#width = Math.min(this.#width, Math.max(208, window.innerWidth * .8));
-			this.#host.style.setProperty("--panel-width", `${this.#width}px`);
-			document.documentElement.style.setProperty(WIDTH_PROPERTY, `${this.#width}px`);
+		if (!_classPrivateFieldGet2(_style, this).isConnected) document.head.append(_classPrivateFieldGet2(_style, this));
+		if (_classPrivateFieldGet2(_width, this) !== null) {
+			_classPrivateFieldSet2(_width, this, Math.min(_classPrivateFieldGet2(_width, this), Math.max(208, window.innerWidth * .8)));
+			_classPrivateFieldGet2(_host, this).style.setProperty("--panel-width", `${_classPrivateFieldGet2(_width, this)}px`);
+			document.documentElement.style.setProperty(WIDTH_PROPERTY, `${_classPrivateFieldGet2(_width, this)}px`);
 		}
 		document.documentElement.setAttribute(OPEN_ATTRIBUTE, "");
 	}
 	detach() {
 		document.documentElement.removeAttribute(OPEN_ATTRIBUTE);
 		document.documentElement.style.removeProperty(WIDTH_PROPERTY);
-		this.#style?.remove();
+		_classPrivateFieldGet2(_style, this)?.remove();
 	}
 };
 let stylesheet;
@@ -4979,21 +5264,31 @@ function availableStimulusApplication() {
 	const application = stimulusApplication ?? globalThis.Stimulus;
 	return typeof application?.getControllerForElementAndIdentifier === "function" ? application : null;
 }
+var _runtime = /* @__PURE__ */ new WeakMap();
+var _config = /* @__PURE__ */ new WeakMap();
+var _layout = /* @__PURE__ */ new WeakMap();
+var _lifetime = /* @__PURE__ */ new WeakMap();
+var _teardown = /* @__PURE__ */ new WeakMap();
+var _UXInspector_brand = /* @__PURE__ */ new WeakSet();
 var UXInspector = class extends HTMLElement {
-	#runtime = null;
-	#config = {};
-	#layout = new DockLayout(this);
-	#lifetime = new AbortController();
-	#teardown = null;
+	constructor(..._args) {
+		super(..._args);
+		_classPrivateMethodInitSpec(this, _UXInspector_brand);
+		_classPrivateFieldInitSpec(this, _runtime, null);
+		_classPrivateFieldInitSpec(this, _config, {});
+		_classPrivateFieldInitSpec(this, _layout, new DockLayout(this));
+		_classPrivateFieldInitSpec(this, _lifetime, new AbortController());
+		_classPrivateFieldInitSpec(this, _teardown, null);
+	}
 	connectedCallback() {
-		if (this.#teardown !== null) clearTimeout(this.#teardown);
-		this.#teardown = null;
-		if (this.#runtime) {
-			this.#runtime.resume();
-			this.#layout.sync();
+		if (_classPrivateFieldGet2(_teardown, this) !== null) clearTimeout(_classPrivateFieldGet2(_teardown, this));
+		_classPrivateFieldSet2(_teardown, this, null);
+		if (_classPrivateFieldGet2(_runtime, this)) {
+			_classPrivateFieldGet2(_runtime, this).resume();
+			_classPrivateFieldGet2(_layout, this).sync();
 			return;
 		}
-		this.#readConfig();
+		_assertClassBrand(_UXInspector_brand, this, _readConfig).call(this);
 		const shadow = this.shadowRoot ?? this.attachShadow({ mode: "open" });
 		shadow.replaceChildren();
 		if (stylesheet?.text) {
@@ -5006,93 +5301,93 @@ var UXInspector = class extends HTMLElement {
 			link.href = this.getAttribute("data-css-url") || stylesheet?.url || "";
 			shadow.append(link);
 		}
-		this.#lifetime = new AbortController();
-		const { signal } = this.#lifetime;
-		this.#runtime = new InspectorRuntime(this, shadow, this.#config, availableStimulusApplication);
+		_classPrivateFieldSet2(_lifetime, this, new AbortController());
+		const { signal } = _classPrivateFieldGet2(_lifetime, this);
+		_classPrivateFieldSet2(_runtime, this, new InspectorRuntime(this, shadow, _classPrivateFieldGet2(_config, this), availableStimulusApplication));
 		document.addEventListener("turbo:before-cache", () => {
-			this.#runtime?.suspend();
-			this.#layout.detach();
+			_classPrivateFieldGet2(_runtime, this)?.suspend();
+			_classPrivateFieldGet2(_layout, this).detach();
 		}, { signal });
 		document.addEventListener("turbo:render", () => {
 			if (!this.isConnected) return;
-			this.#runtime?.resume();
-			this.#layout.sync();
+			_classPrivateFieldGet2(_runtime, this)?.resume();
+			_classPrivateFieldGet2(_layout, this).sync();
 		}, { signal });
 		window.addEventListener("resize", () => {
-			this.#layout.sync();
-			this.#runtime?.refreshVisual();
+			_classPrivateFieldGet2(_layout, this).sync();
+			_classPrivateFieldGet2(_runtime, this)?.refreshVisual();
 		}, {
 			signal,
 			passive: true
 		});
-		this.#layout.sync();
+		_classPrivateFieldGet2(_layout, this).sync();
 	}
 	disconnectedCallback() {
-		this.#layout.detach();
-		this.#runtime?.suspend();
-		this.#teardown = setTimeout(() => {
-			this.#runtime?.destroy();
-			this.#runtime = null;
-			this.#lifetime.abort();
-			this.#teardown = null;
-		}, 1e3);
+		_classPrivateFieldGet2(_layout, this).detach();
+		_classPrivateFieldGet2(_runtime, this)?.suspend();
+		_classPrivateFieldSet2(_teardown, this, setTimeout(() => {
+			_classPrivateFieldGet2(_runtime, this)?.destroy();
+			_classPrivateFieldSet2(_runtime, this, null);
+			_classPrivateFieldGet2(_lifetime, this).abort();
+			_classPrivateFieldSet2(_teardown, this, null);
+		}, 1e3));
 	}
 	get isOpen() {
 		return this.hasAttribute("open");
 	}
 	getStatus() {
-		return this.#runtime?.getStatus() ?? {};
+		return _classPrivateFieldGet2(_runtime, this)?.getStatus() ?? {};
 	}
 	open() {
 		this.scan();
 		this.setAttribute("open", "");
-		this.#layout.sync();
+		_classPrivateFieldGet2(_layout, this).sync();
 	}
 	close() {
 		this.removeAttribute("open");
-		this.#layout.sync();
-		this.#runtime?.close();
+		_classPrivateFieldGet2(_layout, this).sync();
+		_classPrivateFieldGet2(_runtime, this)?.close();
 	}
 	toggle() {
 		if (this.isOpen) this.close();
 		else this.open();
 	}
 	setPanelWidth(width) {
-		const value = this.#layout.resize(width);
-		this.#runtime?.refreshVisual();
+		const value = _classPrivateFieldGet2(_layout, this).resize(width);
+		_classPrivateFieldGet2(_runtime, this)?.refreshVisual();
 		return value;
 	}
 	scan() {
-		this.#runtime?.scan();
+		_classPrivateFieldGet2(_runtime, this)?.scan();
 	}
 	clear() {
-		this.#runtime?.clear();
+		_classPrivateFieldGet2(_runtime, this)?.clear();
 	}
 	clearLog() {
-		this.#runtime?.clearLog();
+		_classPrivateFieldGet2(_runtime, this)?.clearLog();
 	}
 	toggleLogPaused() {
-		return this.#runtime?.toggleLogPaused() ?? false;
+		return _classPrivateFieldGet2(_runtime, this)?.toggleLogPaused() ?? false;
 	}
 	inspectElement(element) {
-		this.#runtime?.inspectElement(element);
+		_classPrivateFieldGet2(_runtime, this)?.inspectElement(element);
 	}
 	toggleTargetMode() {
-		return this.#runtime?.toggleTargetMode() ?? false;
+		return _classPrivateFieldGet2(_runtime, this)?.toggleTargetMode() ?? false;
 	}
 	toggleOverlay() {
-		return this.#runtime?.toggleOverlay() ?? false;
-	}
-	#readConfig() {
-		const raw = this.getAttribute("data-config");
-		if (!raw) return;
-		try {
-			this.#config = JSON.parse(raw);
-		} catch (error) {
-			console.warn("[ux-inspector] Invalid config JSON:", error.message);
-		}
+		return _classPrivateFieldGet2(_runtime, this)?.toggleOverlay() ?? false;
 	}
 };
+function _readConfig() {
+	const raw = this.getAttribute("data-config");
+	if (!raw) return;
+	try {
+		_classPrivateFieldSet2(_config, this, JSON.parse(raw));
+	} catch (error) {
+		console.warn("[ux-inspector] Invalid config JSON:", error.message);
+	}
+}
 function registerUXInspector(styles) {
 	stylesheet = styles;
 	if (!customElements.get("ux-inspector")) customElements.define("ux-inspector", UXInspector);
