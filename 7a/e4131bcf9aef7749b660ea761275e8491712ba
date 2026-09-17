@@ -1,0 +1,94 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-09-12T20:52:57Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/smnandre/ux/tree/sa/live-idiomorph-upgrade/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/smnandre/ux/blob/sa/live-idiomorph-upgrade/src/LiveComponent/assets/dist/live_controller.d.ts"><code>live_controller.d.ts</code></a></td>
+            <td>
+                    <code>7.79 kB</code>
+                    / <code>2.02 kB</code>
+                </td><td>
+                    <code>7.82 kB</code><sup>0%</sup>
+                    / <code>2.03 kB</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/smnandre/ux/blob/sa/live-idiomorph-upgrade/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>85.74 kB</code>
+                    / <code>19.34 kB</code>
+                </td><td>
+                    <code>90.54 kB</code><sup>+6% 📈</sup>
+                    / <code>20.53 kB</code><sup>+6% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-09-13T19:53:01Z
+
+Not sure i will soon to be honest, most are for calendar links here...  and I got bad exp with CI lately :)
+
+(By soon I mean in the next days)
+
+Will do later this week, but other/people with issues about these problèms with LiveComponent can start looking/testing
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-13T20:16:49Z
+
+> Not sure i will soon to be honest, most are for calendar links here... and I got bad exp with CI lately :)
+
+You got tricked as well, but nope, it's a _bug_ from pnpm when running `pnpm run test:browser` (`pnpm run -r --workspace-concurrency=1 test:browser`), it execute `pnpm run test:browser` for the next package, when tests from the previous package fail.
+
+Here, it stopped at CalendarLink, but the actual fails are coming from Autocomplete:
+```
+    1) [chrome-latest] › test/browser/dynamic-form.test.ts:24:5 › Autocomplete with Dynamic Forms › should not throw "Tom Select already initialized" error when switching between dynamic autocomplete fields
+
+      Error: expect(locator).toHaveCount(expected) failed
+
+      Locator:  locator('[data-test-id="autocomplete-option"]')
+      Expected: 1
+      Received: 0
+      Timeout:  5000ms
+
+      Call log:
+        - Expect "toHaveCount" with timeout 5000ms
+        - waiting for locator('[data-test-id="autocomplete-option"]')
+          9 × locator resolved to 0 elements
+            - unexpected value "0"
+
+        65 |         expect(tomSelectError).toBeUndefined();
+        66 |
+      > 67 |         await expect(page.locator('[data-test-id="autocomplete-option"]')).toHaveCount(1);
+           |                                                                            ^
+        68 |     });
+        69 |
+        70 |     test('should properly disconnect and reconnect Tom Select on rapid type changes', async ({ page }) => {
+          at /home/runner/work/ux/ux/src/Autocomplete/assets/test/browser/dynamic-form.test.ts:67:76
+```
+
+I'm not sure why it happens tho
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-09-14T12:15:19Z
+
+I think there could be (on the autocomplete case) some timing issue (we had that problem for years now.. whatever CI / testing framework we use).
+
+I'll look at the other things this we :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-09-16T14:56:55Z
+
+> The CI is not happy, would you mind fixing these issues before I review? Thanks!
+
+@Kocal CI is now happy :)
