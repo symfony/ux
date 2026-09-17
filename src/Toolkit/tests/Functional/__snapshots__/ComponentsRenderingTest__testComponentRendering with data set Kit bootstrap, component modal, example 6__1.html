@@ -37,7 +37,7 @@
     </twig:Modal>
 </div>
 ```
-- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
 <div style="min-height: 304px">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-with-overlays">
         Launch demo modal
@@ -45,13 +45,9 @@
 
     <div id="modal-with-overlays" class="modal fade" tabindex="-1" aria-labelledby="modal-with-overlays-label" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-<div class="modal-header">
-<h1 id="modal-with-overlays-label" class="modal-title fs-5">Modal title</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-        <div class="modal-body">
-<h2 class="fs-5">Popover in a modal</h2>
+        <div class="modal-content"><div class="modal-header"><h1 id="modal-with-overlays-label" class="modal-title fs-5">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+        <div class="modal-body"><h2 class="fs-5">Popover in a modal</h2>
             <p>
                 This
                 <button class="btn btn-secondary" type="button" data-bs-toggle="popover" data-bs-content="Popover body content is set in this attribute." data-bs-title="Popover title">button</button>
@@ -64,8 +60,7 @@
                 <a href="#" data-bs-toggle="tooltip" data-bs-title="Tooltip" data-bs-placement="top">that link</a>                have tooltips on hover.
             </p>
         </div>
-        <div class="modal-footer">
-<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary">Save changes</button>
         </div>
     </div>
