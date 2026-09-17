@@ -1,0 +1,29 @@
+{# @prop orientation 'horizontal'|'vertical' The axis the slides scroll along. #}
+{# @prop align 'start'|'center'|'end' The alignment of the selected slide inside the viewport. #}
+{# @prop loop boolean Whether the carousel wraps around after the last slide. #}
+{# @prop options array Extra [Embla Carousel options](https://www.embla-carousel.com/api/options/), merged over `align` and `loop`. #}
+{# @prop autoplay int The delay in milliseconds between two automatic slide changes. Zero disables autoplay. #}
+{# @prop label string The accessible name of the carousel region. #}
+{# @block content The carousel structure, typically includes `Carousel:Content`, `Carousel:Previous` and `Carousel:Next`. #}
+{%- props orientation = 'horizontal', align = 'center', loop = false, options = {}, autoplay = 0, label = 'Carousel' -%}
+{%- set _carousel_options = {align: align, loop: loop}|merge(options) -%}
+{%- do provide('carousel.orientation', orientation) -%}
+{%- do provide('carousel.loop', _carousel_options.loop) -%}
+<div
+    role="region"
+    aria-roledescription="carousel"
+    aria-label="{{ label }}"
+    tabindex="0"
+    data-slot="carousel"
+    data-orientation="{{ orientation }}"
+    data-carousel-orientation-value="{{ orientation }}"
+    data-carousel-options-value="{{ _carousel_options|json_encode }}"
+    data-carousel-autoplay-value="{{ autoplay }}"
+    {{ attributes.defaults({
+        class: 'relative outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50'|tailwind_classes,
+        'data-controller': 'carousel',
+        'data-action': 'keydown->carousel#handleKeydown'|html_attr_type('sst'),
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</div>
