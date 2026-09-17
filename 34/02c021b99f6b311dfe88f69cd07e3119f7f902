@@ -1,0 +1,163 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2026-09-17T06:39:55Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/ts-target-es2022/src/Autocomplete/assets/dist"><b>Autocomplete</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/ts-target-es2022/src/Autocomplete/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>13.42 kB</code>
+                    / <code>3.57 kB</code>
+                </td><td>
+                    <code>11.99 kB</code><sup>-11% 📉</sup>
+                    / <code>3.25 kB</code><sup>-9% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/ts-target-es2022/src/Chartjs/assets/dist"><b>Chartjs</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/ts-target-es2022/src/Chartjs/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>1.96 kB</code>
+                    / <code>770 B</code>
+                </td><td>
+                    <code>1.93 kB</code><sup>-1% 📉</sup>
+                    / <code>758 B</code><sup>-2% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/ts-target-es2022/src/Cropperjs/assets/dist"><b>Cropperjs</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/ts-target-es2022/src/Cropperjs/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>946 B</code>
+                    / <code>472 B</code>
+                </td><td>
+                    <code>939 B</code><sup>-1% 📉</sup>
+                    / <code>478 B</code><sup>+1% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/ts-target-es2022/src/Dropzone/assets/dist"><b>Dropzone</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/ts-target-es2022/src/Dropzone/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>5.38 kB</code>
+                    / <code>1.4 kB</code>
+                </td><td>
+                    <code>5.43 kB</code><sup>+1% 📈</sup>
+                    / <code>1.42 kB</code><sup>+1% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/ts-target-es2022/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/ts-target-es2022/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>85.57 kB</code>
+                    / <code>19.17 kB</code>
+                </td><td>
+                    <code>85.74 kB</code><sup>0%</sup>
+                    / <code>19.34 kB</code><sup>+1% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/ts-target-es2022/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/ts-target-es2022/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>4.65 kB</code>
+                    / <code>1.26 kB</code>
+                </td><td>
+                    <code>4.72 kB</code><sup>+1% 📈</sup>
+                    / <code>1.27 kB</code><sup>+1% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/ts-target-es2022/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/ts-target-es2022/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>11.25 kB</code>
+                    / <code>2.84 kB</code>
+                </td><td>
+                    <code>11.32 kB</code><sup>+1% 📈</sup>
+                    / <code>2.85 kB</code><sup>0%</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/ts-target-es2022/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/ts-target-es2022/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>11.38 kB</code>
+                    / <code>3.17 kB</code>
+                </td><td>
+                    <code>11.44 kB</code><sup>+1% 📈</sup>
+                    / <code>3.19 kB</code><sup>+1% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/ts-target-es2022/src/Notify/assets/dist"><b>Notify</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/ts-target-es2022/src/Notify/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>1.91 kB</code>
+                    / <code>808 B</code>
+                </td><td>
+                    <code>1.88 kB</code><sup>-2% 📉</sup>
+                    / <code>793 B</code><sup>-2% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/ts-target-es2022/src/React/assets/dist"><b>React</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/ts-target-es2022/src/React/assets/dist/render_controller.js"><code>render_controller.js</code></a></td>
+            <td>
+                    <code>1.23 kB</code>
+                    / <code>524 B</code>
+                </td><td>
+                    <code>1.28 kB</code><sup>+4% 📈</sup>
+                    / <code>539 B</code><sup>+3% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/ts-target-es2022/src/StimulusBundle/assets/dist"><b>StimulusBundle</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/ts-target-es2022/src/StimulusBundle/assets/dist/loader.js"><code>loader.js</code></a></td>
+            <td>
+                    <code>2.97 kB</code>
+                    / <code>972 B</code>
+                </td><td>
+                    <code>3.01 kB</code><sup>+1% 📈</sup>
+                    / <code>981 B</code><sup>+1% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/ts-target-es2022/src/Turbo/assets/dist"><b>Turbo</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/ts-target-es2022/src/Turbo/assets/dist/mercure_stream_source_element.js"><code>mercure_stream_source_element.js</code></a></td>
+            <td>
+                    <code>1.06 kB</code>
+                    / <code>484 B</code>
+                </td><td>
+                    <code>1.05 kB</code><sup>-2% 📉</sup>
+                    / <code>488 B</code><sup>+1% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/ts-target-es2022/src/Turbo/assets/dist/turbo_stream_controller.js"><code>turbo_stream_controller.js</code></a></td>
+            <td>
+                    <code>1.47 kB</code>
+                    / <code>721 B</code>
+                </td><td>
+                    <code>1.54 kB</code><sup>+4% 📈</sup>
+                    / <code>738 B</code><sup>+2% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/ts-target-es2022/src/Vue/assets/dist"><b>Vue</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/ts-target-es2022/src/Vue/assets/dist/render_controller.js"><code>render_controller.js</code></a></td>
+            <td>
+                    <code>1.06 kB</code>
+                    / <code>432 B</code>
+                </td><td>
+                    <code>1.12 kB</code><sup>+5% 📈</sup>
+                    / <code>449 B</code><sup>+4% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by smnandre at 2026-09-17T11:27:12Z
+
+First of all: 👍
+
+---
+
+Then, I do think we should document this in our "own" BC policy, stating clearly: we are working with browsers. Difference with back-end php code hosted on servers developers controls, browsers are in userland and have them constraints and reality. They now all self-update, OS force updates on a year basis (worst case).
+
+I think we want to promote all the security, privacy, performance related features that has been introduced these last years, and will be introduced (quicker and quicker) the next ones ...
+
+ESXXX is a developer-oriented data. Baseline is the "feature-oriented" one now, and it does cover most of what we check/discriminate againts in JS/TS (as we don't offer node apps but transpiled/minified scripts).
+
+So I do think we should act on a Baseline version, and I'd suggest we use "Widely available" as base, and allow ourselves "Newly available" for new components and dev tools.
+
+https://web.dev/baseline
+
+> **Newly available**: The feature is supported by all of the core browsers, and is therefore interoperable.
+>
+> **Widely available**: 30 months have passed since the newly interoperable date. The feature can be used by most sites without worrying about support.
+
+I do thing there are equivalence tables for what it means in term of ES versions, browser prefixes, etc etc.
+
+Do you want me to open an RFC on this ? (to discuss it)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-17T12:10:50Z
+
+> Do you want me to open an RFC on this ? (to discuss it)
+
+You can, and I totally agree with what you're saying above.
+
+Note that tsdown, the tool we use to build our assets, supports the [special target `baseline-widely-available`](https://tsdown.dev/options/target#supported-targets) :D
