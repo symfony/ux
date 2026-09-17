@@ -12,6 +12,8 @@ const startStimulusApp = () => {
 	return application;
 };
 var StimulusLazyControllerHandler = class {
+	application;
+	lazyControllers;
 	constructor(application, lazyControllers) {
 		this.application = application;
 		this.lazyControllers = lazyControllers;

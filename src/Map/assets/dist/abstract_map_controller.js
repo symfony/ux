@@ -4,17 +4,35 @@ const IconTypes = {
 	Svg: "svg",
 	UxIcon: "ux-icon"
 };
-var _Class = class extends Controller {
-	constructor(..._args) {
-		super(..._args);
-		this.markers = /* @__PURE__ */ new Map();
-		this.polygons = /* @__PURE__ */ new Map();
-		this.polylines = /* @__PURE__ */ new Map();
-		this.circles = /* @__PURE__ */ new Map();
-		this.rectangles = /* @__PURE__ */ new Map();
-		this.infoWindows = [];
-		this.isConnected = false;
-	}
+var abstract_map_controller_default = class extends Controller {
+	static values = {
+		providerOptions: Object,
+		center: Object,
+		zoom: Number,
+		minZoom: Number,
+		maxZoom: Number,
+		fitBoundsToMarkers: Boolean,
+		markers: Array,
+		polygons: Array,
+		polylines: Array,
+		circles: Array,
+		rectangles: Array,
+		options: Object,
+		extra: Object
+	};
+	map;
+	markers = /* @__PURE__ */ new Map();
+	polygons = /* @__PURE__ */ new Map();
+	polylines = /* @__PURE__ */ new Map();
+	circles = /* @__PURE__ */ new Map();
+	rectangles = /* @__PURE__ */ new Map();
+	infoWindows = [];
+	isConnected = false;
+	createMarker;
+	createPolygon;
+	createPolyline;
+	createCircle;
+	createRectangle;
 	connect() {
 		const extra = this.hasExtraValue ? this.extraValue : {};
 		const mapDefinition = {
@@ -126,19 +144,4 @@ var _Class = class extends Controller {
 		});
 	}
 };
-_Class.values = {
-	providerOptions: Object,
-	center: Object,
-	zoom: Number,
-	minZoom: Number,
-	maxZoom: Number,
-	fitBoundsToMarkers: Boolean,
-	markers: Array,
-	polygons: Array,
-	polylines: Array,
-	circles: Array,
-	rectangles: Array,
-	options: Object,
-	extra: Object
-};
-export { IconTypes, _Class as default };
+export { IconTypes, abstract_map_controller_default as default };

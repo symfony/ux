@@ -1,10 +1,11 @@
 import { Controller } from "@hotwired/stimulus";
-var _Class = class extends Controller {
-	constructor(..._args) {
-		super(..._args);
-		this.eventSources = [];
-		this.listeners = /* @__PURE__ */ new WeakMap();
-	}
+var controller_default = class extends Controller {
+	static values = {
+		hub: String,
+		topics: Array
+	};
+	eventSources = [];
+	listeners = /* @__PURE__ */ new WeakMap();
 	initialize() {
 		const errorMessages = [];
 		if (!this.hasHubValue) errorMessages.push("A \"hub\" value pointing to the Mercure hub must be provided.");
@@ -56,8 +57,4 @@ var _Class = class extends Controller {
 		});
 	}
 };
-_Class.values = {
-	hub: String,
-	topics: Array
-};
-export { _Class as default };
+export { controller_default as default };

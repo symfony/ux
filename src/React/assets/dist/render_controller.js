@@ -1,7 +1,15 @@
 import { Controller } from "@hotwired/stimulus";
 import React from "react";
 import { createRoot } from "react-dom/client";
-var _Class = class extends Controller {
+var render_controller_default = class extends Controller {
+	static values = {
+		component: String,
+		props: Object,
+		permanent: {
+			type: Boolean,
+			default: false
+		}
+	};
 	connect() {
 		const props = this.propsValue ? this.propsValue : null;
 		this.dispatchEvent("connect", {
@@ -37,12 +45,4 @@ var _Class = class extends Controller {
 		});
 	}
 };
-_Class.values = {
-	component: String,
-	props: Object,
-	permanent: {
-		type: Boolean,
-		default: false
-	}
-};
-export { _Class as default };
+export { render_controller_default as default };

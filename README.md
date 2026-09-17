@@ -6,6 +6,13 @@
     Symfony UX: a JavaScript ecosystem for Symfony
 </h3>
 
+<p align="center">
+    <a href="https://github.com/symfony/ux/releases"><img src="https://img.shields.io/github/v/tag/symfony/ux?sort=semver&label=release" alt="Latest release"></a>
+    <a href="https://www.php.net/releases/8.4/"><img src="https://img.shields.io/badge/PHP-%E2%89%A5%208.4-777bb4?logo=php&logoColor=white" alt="PHP >= 8.4"></a>
+    <a href="tsconfig.package.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fsymfony%2Fux%2FHEAD%2Ftsconfig.package.json&query=%24.compilerOptions.target&label=ECMAScript&color=f7df1e&logo=javascript&logoColor=black" alt="ECMAScript target"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/github/license/symfony/ux" alt="MIT License"></a>
+</p>
+
 Symfony UX is an initiative and set of libraries to seamlessly
 integrate JavaScript tools into your application. For example,
 want to render a chart with [Chart.js](https://www.chartjs.org/)? Use
