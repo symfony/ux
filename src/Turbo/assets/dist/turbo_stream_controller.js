@@ -4,7 +4,15 @@ import { connectStreamSource, disconnectStreamSource } from "@hotwired/turbo";
 * @author Kévin Dunglas <kevin@dunglas.fr>
 * @deprecated Use turbo_stream_from() or the <twig:Turbo:Stream:From> Twig component instead.
 */
-var _Class = class extends Controller {
+var turbo_stream_controller_default = class extends Controller {
+	static values = {
+		topic: String,
+		topics: Array,
+		hub: String,
+		withCredentials: Boolean
+	};
+	es;
+	url;
 	initialize() {
 		console.warn("[Symfony UX] The \"mercure-turbo-stream\" Stimulus controller is deprecated since Symfony UX 3.1 and will be removed in 4.0. Use turbo_stream_from() or the <twig:Turbo:Stream:From> Twig component instead.");
 		const errorMessages = [];
@@ -31,10 +39,4 @@ var _Class = class extends Controller {
 		}
 	}
 };
-_Class.values = {
-	topic: String,
-	topics: Array,
-	hub: String,
-	withCredentials: Boolean
-};
-export { _Class as default };
+export { turbo_stream_controller_default as default };

@@ -1,7 +1,10 @@
 import { Controller } from "@hotwired/stimulus";
 var BackendRequest_default = class {
+	promise;
+	actions;
+	updatedModels;
+	isResolved = false;
 	constructor(promise, actions, updateModels) {
-		this.isResolved = false;
 		this.promise = promise;
 		this.promise.then((response) => {
 			this.isResolved = true;
@@ -18,6 +21,9 @@ var BackendRequest_default = class {
 	}
 };
 var RequestBuilder_default = class {
+	url;
+	method;
+	credentials;
 	constructor(url, method = "post", credentials = "same-origin") {
 		this.url = url;
 		this.method = method;
@@ -77,6 +83,7 @@ var RequestBuilder_default = class {
 	}
 };
 var Backend_default = class {
+	requestBuilder;
 	constructor(url, method = "post", credentials = "same-origin") {
 		this.requestBuilder = new RequestBuilder_default(url, method, credentials);
 	}
@@ -86,9 +93,12 @@ var Backend_default = class {
 	}
 };
 var BackendResponse_default = class {
+	response;
+	body;
+	liveUrl;
+	download = null;
+	parsePromise = null;
 	constructor(response) {
-		this.download = null;
-		this.parsePromise = null;
 		this.response = response;
 	}
 	async getBody() {
@@ -421,9 +431,7 @@ function isNumericalInputElement(element) {
 	return element instanceof HTMLInputElement && ["number", "range"].includes(element.type);
 }
 var HookManager_default = class {
-	constructor() {
-		this.hooks = /* @__PURE__ */ new Map();
-	}
+	hooks = /* @__PURE__ */ new Map();
 	register(hookName, callback) {
 		const hooks = this.hooks.get(hookName) || [];
 		hooks.push(callback);
@@ -983,10 +991,8 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
 	});
 }
 var ChangingItemsTracker_default = class {
-	constructor() {
-		this.changedItems = /* @__PURE__ */ new Map();
-		this.removedItems = /* @__PURE__ */ new Map();
-	}
+	changedItems = /* @__PURE__ */ new Map();
+	removedItems = /* @__PURE__ */ new Map();
 	setItem(itemName, newValue, previousValue) {
 		if (this.removedItems.has(itemName)) {
 			const removedRecord = this.removedItems.get(itemName);
@@ -1033,12 +1039,10 @@ var ChangingItemsTracker_default = class {
 	}
 };
 var ElementChanges = class {
-	constructor() {
-		this.addedClasses = /* @__PURE__ */ new Set();
-		this.removedClasses = /* @__PURE__ */ new Set();
-		this.styleChanges = new ChangingItemsTracker_default();
-		this.attributeChanges = new ChangingItemsTracker_default();
-	}
+	addedClasses = /* @__PURE__ */ new Set();
+	removedClasses = /* @__PURE__ */ new Set();
+	styleChanges = new ChangingItemsTracker_default();
+	attributeChanges = new ChangingItemsTracker_default();
 	addClass(className) {
 		if (!this.removedClasses.delete(className)) this.addedClasses.add(className);
 	}
@@ -1097,12 +1101,15 @@ var ElementChanges = class {
 	}
 };
 var ExternalMutationTracker_default = class {
+	element;
+	shouldTrackChangeCallback;
+	mutationObserver;
+	changedElements = /* @__PURE__ */ new WeakMap();
+	changedElementsCount = 0;
+	addedElements = [];
+	removedElements = [];
+	isStarted = false;
 	constructor(element, shouldTrackChangeCallback) {
-		this.changedElements = /* @__PURE__ */ new WeakMap();
-		this.changedElementsCount = 0;
-		this.addedElements = [];
-		this.removedElements = [];
-		this.isStarted = false;
 		this.element = element;
 		this.shouldTrackChangeCallback = shouldTrackChangeCallback;
 		this.mutationObserver = new MutationObserver(this.onMutations.bind(this));
@@ -1259,11 +1266,14 @@ var ExternalMutationTracker_default = class {
 	}
 };
 var UnsyncedInputsTracker_default = class {
+	component;
+	modelElementResolver;
+	unsyncedInputs;
+	elementEventListeners = [{
+		event: "input",
+		callback: (event) => this.handleInputEvent(event)
+	}];
 	constructor(component, modelElementResolver) {
-		this.elementEventListeners = [{
-			event: "input",
-			callback: (event) => this.handleInputEvent(event)
-		}];
 		this.component = component;
 		this.modelElementResolver = modelElementResolver;
 		this.unsyncedInputs = new UnsyncedInputContainer();
@@ -1303,9 +1313,10 @@ var UnsyncedInputsTracker_default = class {
 	}
 };
 var UnsyncedInputContainer = class {
+	unsyncedModelFields;
+	unsyncedNonModelFields = [];
+	unsyncedModelNames = [];
 	constructor() {
-		this.unsyncedNonModelFields = [];
-		this.unsyncedModelNames = [];
 		this.unsyncedModelFields = /* @__PURE__ */ new Map();
 	}
 	add(element, modelName = null) {
@@ -1351,11 +1362,11 @@ const parseDeepData = (data, propertyPath) => {
 	};
 };
 var ValueStore_default = class {
+	props = {};
+	dirtyProps = {};
+	pendingProps = {};
+	updatedPropsFromParent = {};
 	constructor(props) {
-		this.props = {};
-		this.dirtyProps = {};
-		this.pendingProps = {};
-		this.updatedPropsFromParent = {};
 		this.props = props;
 	}
 	get(name) {
@@ -1407,15 +1418,27 @@ var ValueStore_default = class {
 	}
 };
 var Component = class {
+	element;
+	name;
+	listeners;
+	backend;
+	elementDriver;
+	id;
+	fingerprint = "";
+	valueStore;
+	unsyncedInputsTracker;
+	hooks;
+	defaultDebounce = 150;
+	backendRequest = null;
+	pendingActions = [];
+	pendingFiles = {};
+	isRequestPending = false;
+	isRemoved = false;
+	requestDebounceTimeout = null;
+	nextRequestPromise;
+	nextRequestPromiseResolve;
+	externalMutationTracker;
 	constructor(element, name, props, listeners, id, backend, elementDriver) {
-		this.fingerprint = "";
-		this.defaultDebounce = 150;
-		this.backendRequest = null;
-		this.pendingActions = [];
-		this.pendingFiles = {};
-		this.isRequestPending = false;
-		this.isRemoved = false;
-		this.requestDebounceTimeout = null;
 		this.element = element;
 		this.name = name;
 		this.backend = backend;
@@ -1759,6 +1782,7 @@ function triggerDownload(download) {
 	}, 75);
 }
 var StimulusElementDriver = class {
+	controller;
 	constructor(controller) {
 		this.controller = controller;
 	}
@@ -1827,8 +1851,9 @@ function get_model_binding_default(modelDirective) {
 	};
 }
 var ChildComponentPlugin_default = class {
+	component;
+	parentModelBindings = [];
 	constructor(component) {
-		this.parentModelBindings = [];
 		this.component = component;
 		const modelDirectives = getAllModelDirectiveFromElements(this.component.element);
 		this.parentModelBindings = modelDirectives.map(get_model_binding_default);
@@ -1865,9 +1890,7 @@ var ChildComponentPlugin_default = class {
 	}
 };
 var LazyPlugin_default = class {
-	constructor() {
-		this.intersectionObserver = null;
-	}
+	intersectionObserver = null;
 	attachToComponent(component) {
 		if ("lazy" !== component.element.attributes.getNamedItem("loading")?.value) return;
 		component.on("connect", () => {
@@ -2025,9 +2048,7 @@ const parseLoadingAction = (action, isLoading) => {
 	throw new Error(`Unknown data-loading action "${action}"`);
 };
 var PageUnloadingPlugin_default = class {
-	constructor() {
-		this.isConnected = false;
-	}
+	isConnected = false;
 	attachToComponent(component) {
 		component.on("render:started", (html, response, controls) => {
 			if (!this.isConnected) controls.shouldRender = false;
@@ -2041,9 +2062,11 @@ var PageUnloadingPlugin_default = class {
 	}
 };
 var PollingDirector_default = class {
+	component;
+	isPollingActive = true;
+	polls;
+	pollingIntervals = [];
 	constructor(component) {
-		this.isPollingActive = true;
-		this.pollingIntervals = [];
 		this.component = component;
 	}
 	addPoll(actionName, duration) {
@@ -2086,6 +2109,8 @@ var PollingDirector_default = class {
 	}
 };
 var PollingPlugin_default = class {
+	element;
+	pollingDirector;
 	attachToComponent(component) {
 		this.element = component.element;
 		this.pollingDirector = new PollingDirector_default(component);
@@ -2160,18 +2185,59 @@ var ValidatedFieldsPlugin_default = class {
 	}
 };
 var LiveControllerDefault = class LiveControllerDefault extends Controller {
-	constructor(..._args) {
-		super(..._args);
-		this.pendingActionTriggerModelElement = null;
-		this.elementEventListeners = [{
-			event: "input",
-			callback: (event) => this.handleInputEvent(event)
-		}, {
-			event: "change",
-			callback: (event) => this.handleChangeEvent(event)
-		}];
-		this.pendingFiles = {};
-	}
+	static values = {
+		name: String,
+		url: String,
+		props: {
+			type: Object,
+			default: {}
+		},
+		propsUpdatedFromParent: {
+			type: Object,
+			default: {}
+		},
+		listeners: {
+			type: Array,
+			default: []
+		},
+		eventsToEmit: {
+			type: Array,
+			default: []
+		},
+		eventsToDispatch: {
+			type: Array,
+			default: []
+		},
+		debounce: {
+			type: Number,
+			default: 150
+		},
+		fingerprint: {
+			type: String,
+			default: ""
+		},
+		requestMethod: {
+			type: String,
+			default: "post"
+		},
+		fetchCredentials: {
+			type: String,
+			default: "same-origin"
+		}
+	};
+	proxiedComponent;
+	mutationObserver;
+	component;
+	pendingActionTriggerModelElement = null;
+	elementEventListeners = [{
+		event: "input",
+		callback: (event) => this.handleInputEvent(event)
+	}, {
+		event: "change",
+		callback: (event) => this.handleChangeEvent(event)
+	}];
+	pendingFiles = {};
+	static backendFactory = (controller) => new Backend_default(controller.urlValue, controller.requestMethodValue, controller.fetchCredentialsValue);
 	initialize() {
 		this.mutationObserver = new MutationObserver(this.onMutations.bind(this));
 		this.createComponent();
@@ -2378,45 +2444,4 @@ var LiveControllerDefault = class LiveControllerDefault extends Controller {
 		});
 	}
 };
-LiveControllerDefault.values = {
-	name: String,
-	url: String,
-	props: {
-		type: Object,
-		default: {}
-	},
-	propsUpdatedFromParent: {
-		type: Object,
-		default: {}
-	},
-	listeners: {
-		type: Array,
-		default: []
-	},
-	eventsToEmit: {
-		type: Array,
-		default: []
-	},
-	eventsToDispatch: {
-		type: Array,
-		default: []
-	},
-	debounce: {
-		type: Number,
-		default: 150
-	},
-	fingerprint: {
-		type: String,
-		default: ""
-	},
-	requestMethod: {
-		type: String,
-		default: "post"
-	},
-	fetchCredentials: {
-		type: String,
-		default: "same-origin"
-	}
-};
-LiveControllerDefault.backendFactory = (controller) => new Backend_default(controller.urlValue, controller.requestMethodValue, controller.fetchCredentialsValue);
 export { Component, LiveControllerDefault as default, getComponent };

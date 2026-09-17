@@ -1,6 +1,10 @@
 import { Controller } from "@hotwired/stimulus";
 import Cropper from "cropperjs";
 var CropperController = class extends Controller {
+	static values = {
+		publicUrl: String,
+		options: Object
+	};
 	connect() {
 		const img = document.createElement("img");
 		img.classList.add("cropperjs-image");
@@ -29,9 +33,5 @@ var CropperController = class extends Controller {
 			prefix: "cropperjs"
 		});
 	}
-};
-CropperController.values = {
-	publicUrl: String,
-	options: Object
 };
 export { CropperController as default };

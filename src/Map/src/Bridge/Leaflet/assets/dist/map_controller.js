@@ -6,17 +6,35 @@ const IconTypes = {
 	Svg: "svg",
 	UxIcon: "ux-icon"
 };
-var _Class = class extends Controller {
-	constructor(..._args) {
-		super(..._args);
-		this.markers = /* @__PURE__ */ new Map();
-		this.polygons = /* @__PURE__ */ new Map();
-		this.polylines = /* @__PURE__ */ new Map();
-		this.circles = /* @__PURE__ */ new Map();
-		this.rectangles = /* @__PURE__ */ new Map();
-		this.infoWindows = [];
-		this.isConnected = false;
-	}
+var abstract_map_controller_default = class extends Controller {
+	static values = {
+		providerOptions: Object,
+		center: Object,
+		zoom: Number,
+		minZoom: Number,
+		maxZoom: Number,
+		fitBoundsToMarkers: Boolean,
+		markers: Array,
+		polygons: Array,
+		polylines: Array,
+		circles: Array,
+		rectangles: Array,
+		options: Object,
+		extra: Object
+	};
+	map;
+	markers = /* @__PURE__ */ new Map();
+	polygons = /* @__PURE__ */ new Map();
+	polylines = /* @__PURE__ */ new Map();
+	circles = /* @__PURE__ */ new Map();
+	rectangles = /* @__PURE__ */ new Map();
+	infoWindows = [];
+	isConnected = false;
+	createMarker;
+	createPolygon;
+	createPolyline;
+	createCircle;
+	createRectangle;
 	connect() {
 		const extra = this.hasExtraValue ? this.extraValue : {};
 		const mapDefinition = {
@@ -128,22 +146,7 @@ var _Class = class extends Controller {
 		});
 	}
 };
-_Class.values = {
-	providerOptions: Object,
-	center: Object,
-	zoom: Number,
-	minZoom: Number,
-	maxZoom: Number,
-	fitBoundsToMarkers: Boolean,
-	markers: Array,
-	polygons: Array,
-	polylines: Array,
-	circles: Array,
-	rectangles: Array,
-	options: Object,
-	extra: Object
-};
-var map_controller_default = class extends _Class {
+var map_controller_default = class extends abstract_map_controller_default {
 	connect() {
 		L.Marker.prototype.options.icon = L.divIcon({
 			html: "<svg xmlns=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\" fill-rule=\"evenodd\" stroke-linecap=\"round\" clip-rule=\"evenodd\" viewBox=\"0 0 500 820\"><defs><linearGradient id=\"__sf_ux_map_gradient_marker_fill\" x1=\"0\" x2=\"1\" y1=\"0\" y2=\"0\" gradientTransform=\"matrix(0 -37.57 37.57 0 416.45 541)\" gradientUnits=\"userSpaceOnUse\"><stop offset=\"0\" stop-color=\"#126FC6\"/><stop offset=\"1\" stop-color=\"#4C9CD1\"/></linearGradient><linearGradient id=\"__sf_ux_map_gradient_marker_border\" x1=\"0\" x2=\"1\" y1=\"0\" y2=\"0\" gradientTransform=\"matrix(0 -19.05 19.05 0 414.48 522.49)\" gradientUnits=\"userSpaceOnUse\"><stop offset=\"0\" stop-color=\"#2E6C97\"/><stop offset=\"1\" stop-color=\"#3883B7\"/></linearGradient></defs><circle cx=\"252.31\" cy=\"266.24\" r=\"83.99\" fill=\"#fff\"/><path fill=\"url(#__sf_ux_map_gradient_marker_fill)\" stroke=\"url(#__sf_ux_map_gradient_marker_border)\" stroke-width=\"1.1\" d=\"M416.54 503.61c-6.57 0-12.04 5.7-12.04 11.87 0 2.78 1.56 6.3 2.7 8.74l9.3 17.88 9.26-17.88c1.13-2.43 2.74-5.79 2.74-8.74 0-6.18-5.38-11.87-11.96-11.87Zm0 7.16a4.69 4.69 0 1 1-.02 9.4 4.69 4.69 0 0 1 .02-9.4Z\" transform=\"translate(-7889.1 -9807.44) scale(19.54)\"/></svg>",

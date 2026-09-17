@@ -2,11 +2,9 @@ import { Controller } from "@hotwired/stimulus";
 import { Chart, registerables } from "chart.js";
 if (registerables) Chart.register(...registerables);
 let isChartInitialized = false;
-var _Class = class extends Controller {
-	constructor(..._args) {
-		super(..._args);
-		this.chart = null;
-	}
+var controller_default = class extends Controller {
+	static values = { view: Object };
+	chart = null;
 	connect() {
 		if (!isChartInitialized) {
 			isChartInitialized = true;
@@ -59,5 +57,4 @@ var _Class = class extends Controller {
 		});
 	}
 };
-_Class.values = { view: Object };
-export { _Class as default };
+export { controller_default as default };

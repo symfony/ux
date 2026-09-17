@@ -1,5 +1,22 @@
 import { Controller } from "@hotwired/stimulus";
-var _Class = class extends Controller {
+var controller_default = class extends Controller {
+	static targets = [
+		"input",
+		"placeholder",
+		"preview",
+		"previewClearButton",
+		"previewFilename",
+		"previewImage",
+		"previewList"
+	];
+	static values = {
+		multiple: Boolean,
+		removeLabel: {
+			type: String,
+			default: "Remove"
+		}
+	};
+	dataTransfer;
 	initialize() {
 		this.clear = this.clear.bind(this);
 		this.onInputChange = this.onInputChange.bind(this);
@@ -137,20 +154,4 @@ var _Class = class extends Controller {
 		});
 	}
 };
-_Class.targets = [
-	"input",
-	"placeholder",
-	"preview",
-	"previewClearButton",
-	"previewFilename",
-	"previewImage",
-	"previewList"
-];
-_Class.values = {
-	multiple: Boolean,
-	removeLabel: {
-		type: String,
-		default: "Remove"
-	}
-};
-export { _Class as default };
+export { controller_default as default };

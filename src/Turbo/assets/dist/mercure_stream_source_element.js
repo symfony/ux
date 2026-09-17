@@ -1,5 +1,7 @@
 import { connectStreamSource, disconnectStreamSource } from "@hotwired/turbo";
 var TurboMercureStreamSourceElement = class extends HTMLElement {
+	static observedAttributes = ["src", "private"];
+	es;
 	connectedCallback() {
 		const src = this.getAttribute("src");
 		if (null === src) throw new Error("The \"src\" attribute is required on <turbo-mercure-stream-source>.");
@@ -23,5 +25,4 @@ var TurboMercureStreamSourceElement = class extends HTMLElement {
 		}
 	}
 };
-TurboMercureStreamSourceElement.observedAttributes = ["src", "private"];
 if (!customElements.get("turbo-mercure-stream-source")) customElements.define("turbo-mercure-stream-source", TurboMercureStreamSourceElement);
