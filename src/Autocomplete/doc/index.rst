@@ -237,6 +237,11 @@ e.g. ``FoodAutocompleteField`` from above):
     Rendered at the bottom of the list after showing matching results. This message
     is automatically translated using the ``AutocompleteBundle`` domain.
 
+``max_options`` (default: ``null``)
+    Allow you to control the max number of options the dropdown displays at once, in the
+    browser, unlike ``max_results`` which caps what the endpoint returns. Left unset, an
+    Ajax-backed field displays at most 50.
+
 For the Ajax-powered autocomplete field classes (i.e. those whose
 ``getParent()`` returns ``BaseEntityAutocompleteType``), in addition
 to the options above, you can also pass:
@@ -277,7 +282,8 @@ to the options above, you can also pass:
         ];
 
 ``max_results`` (default: 10)
-    Allow you to control the max number of results returned by the automatic autocomplete endpoint.
+    Allow you to control the max number of results returned by the automatic autocomplete
+    endpoint. See ``max_options`` to cap what the dropdown displays instead.
 
 ``min_characters`` (default: 3)
     Allow you to control the min number of characters to load results.

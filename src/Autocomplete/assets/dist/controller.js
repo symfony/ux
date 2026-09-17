@@ -9,6 +9,7 @@ var controller_default = class extends Controller {
 		noMoreResultsText: String,
 		createOptionText: String,
 		minCharacters: Number,
+		maxOptions: Number,
 		tomSelectOptions: Object,
 		preload: String,
 		resetOnFocus: Boolean
@@ -152,6 +153,7 @@ var controller_default = class extends Controller {
 				return query.length >= 3;
 			},
 			optgroupField: "group_by",
+			...this.hasMaxOptionsValue ? { maxOptions: this.maxOptionsValue } : {},
 			score: (_search) => (_item) => 1,
 			render: {
 				option: (item, escape) => `<div>${this.optionsAsHtmlValue ? item[labelField] : escape(item[labelField])}</div>`,
@@ -184,6 +186,7 @@ var controller_default = class extends Controller {
 		return this.#createTomSelect(config);
 	}
 	getMaxOptions() {
+		if (this.hasMaxOptionsValue) return this.maxOptionsValue;
 		return this.selectElement ? this.selectElement.options.length : 50;
 	}
 	#stripTags(string) {
