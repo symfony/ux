@@ -96,9 +96,10 @@ async function main() {
                     // Remove #region/#endregion comments from all files
                     let result = code.replace(/^\s*\/\/#(?:end)?region[^\n]*\n?/gm, '');
 
-                    // Remove JSDoc comments only from .js files (preserve them in .d.ts)
+                    // Remove standalone JSDoc comments only from .js files (preserve them in .d.ts).
+                    // Stop at the first closing delimiter, including for inline type casts.
                     if (chunk.fileName.endsWith('.js')) {
-                        result = result.replace(/^\s*\/\*\*[\s\S]*?\*\/\s*\n/gm, (match) =>
+                        result = result.replace(/^\s*\/\*\*(?:[^*]|\*(?!\/))*\*\/[ \t]*(?:\r?\n|$)/gm, (match) =>
                             match.includes('@deprecated') ? match : ''
                         );
                     }

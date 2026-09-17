@@ -597,3 +597,63 @@ test('LiveProp should be aliased', async ({ page }) => {
         '/ux-live-component/with-aliased-live-props?q=Symfony+is+great%21&cat=Web+development'
     );
 });
+
+test('Preserves client IDs, classes and focus through model renders', async ({ page }) => {
+    await page.goto('/ux-live-component/item-list?items[0]=hello');
+    const component = page.locator('[data-live-name-value="LiveItemList"]');
+    const field = component.locator('input[data-model="debounce(250)|items.0"]');
+    await expect(field).toHaveValue('hello');
+    const original = await field.elementHandle();
+    await field.evaluate((element) => {
+        element.id = 'client-field';
+        element.classList.add('client-class');
+    });
+
+    for (const value of ['updated', 'again']) {
+        const response = page.waitForResponse('/_components/LiveItemList');
+        await field.fill(value);
+        await field.evaluate((element: HTMLInputElement) => {
+            element.setSelectionRange(2, 2);
+        });
+        await response;
+        await expect(component).toHaveAttribute('data-live-props-value', new RegExp(value));
+        await expect(component).not.toHaveAttribute('aria-busy');
+        await expect(field).toHaveAttribute('id', 'client-field');
+        await expect(field).toHaveClass(/client-class/);
+        await expect(field).toBeFocused();
+        expect(await field.evaluate((element: HTMLInputElement) => element.selectionStart)).toBe(2);
+        expect(await original!.evaluate((element) => element === document.getElementById('client-field'))).toBe(true);
+    }
+});
+
+test('Preserves an external widget while rendering new server siblings', async ({ page }) => {
+    await page.goto('/ux-live-component/item-list?items[0]=hello');
+    const component = page.locator('[data-live-name-value="LiveItemList"]');
+    await expect(component.getByRole('textbox', { name: 'Item #0' })).toHaveValue('hello');
+    const widget = await component.evaluateHandle((element) => {
+        const widget = document.createElement('div');
+        widget.dataset.testid = 'external-widget';
+        const field = document.createElement('input');
+        field.value = 'Client-only draft';
+        widget.append(field);
+        element.append(widget);
+        return widget;
+    });
+
+    for (let render = 0; render < 2; render++) {
+        const response = page.waitForResponse('/_components/LiveItemList/deleteItems');
+        await component.getByRole('button', { name: 'Delete all' }).click();
+        await response;
+        await expect(component.getByText('No items.')).toBeVisible();
+        await expect(component.getByTestId('external-widget').locator('input')).toHaveValue('Client-only draft');
+        expect(
+            await widget.evaluate((element) => element === document.querySelector('[data-testid="external-widget"]'))
+        ).toBe(true);
+        if (render === 0) {
+            const addResponse = page.waitForResponse('/_components/LiveItemList/addItem');
+            await component.getByRole('button', { name: 'Add item' }).click();
+            await addResponse;
+            await expect(component.getByRole('textbox', { name: 'Item #0' })).toBeVisible();
+        }
+    }
+});

@@ -119,6 +119,7 @@ declare class Component {
     event: string;
     action: string;
   }>, id: string | null, backend: BackendInterface, elementDriver: ElementDriver);
+  getOriginalId(): string | null;
   addPlugin(plugin: PluginInterface): void;
   connect(): void;
   disconnect(): void;

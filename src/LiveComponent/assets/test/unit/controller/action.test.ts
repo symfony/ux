@@ -267,8 +267,7 @@ describe('LiveController Action Tests', () => {
         );
 
         // First request: a single debounced action, delayed so we can queue more while it's pending.
-        const firstBatch = test
-            .expectsAjaxCall()
+        test.expectsAjaxCall()
             .expectActionCalled('save', { i: 0 })
             .delayResponse(30)
             .serverWillChangeProps((data: any) => {
