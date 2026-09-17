@@ -90,7 +90,7 @@ class ComponentsRenderingTest extends WebTestCase
                 ```twig
                 %s
                 ```
-                - Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+                - Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
                 HTML,
             $kit->manifest->name,
             $recipe->manifest->name,
@@ -104,21 +104,14 @@ class ComponentsRenderingTest extends WebTestCase
 
             public function serialize($data): string
             {
-                // Encode non-ASCII as numeric entities so libxml parses the input the same way
-                // on every version: libxml < 2.14 assumes Latin-1 when no charset is declared and
-                // corrupts non-ASCII text (e.g. RTL Arabic/Hebrew) into broken per-byte entities.
-                $serialized = parent::serialize(mb_encode_numericentity($data, [0x80, 0x10FFFF, 0, 0x1FFFFF], 'UTF-8'));
+                // Parsed and serialized by lexbor instead of libxml, whose output varies with the
+                // version the contributor happens to have installed: attribute quoting differs
+                // (libxml >= 2.15 writes &quot; inside double quotes where older releases switch to
+                // single quotes), and libxml < 2.14 assumes Latin-1 when no charset is declared,
+                // corrupting non-ASCII text such as the RTL examples.
+                $document = \Dom\HTMLDocument::createFromString($data, \LIBXML_NOERROR | \LIBXML_HTML_NOIMPLIED);
 
-                // Decode entities back to raw UTF-8 so snapshots are readable and identical across
-                // libxml versions (libxml < 2.14 re-emits non-ASCII as entities, >= 2.14 emits raw
-                // characters). Structural entities must stay escaped, so shield them while decoding.
-                $shield = ['&amp;' => "\1", '&lt;' => "\2", '&gt;' => "\3", '&quot;' => "\4"];
-                $serialized = strtr(html_entity_decode(strtr($serialized, $shield), \ENT_QUOTES | \ENT_HTML5, 'UTF-8'), array_flip($shield));
-
-                $serialized = str_replace(['<html><body>', '</body></html>'], '', $serialized);
-                $serialized = trim($serialized);
-
-                return $this->info."\n".$serialized;
+                return $this->info."\n".trim($document->saveHtml());
             }
         });
     }

@@ -15,7 +15,7 @@
     </twig:Modal>
 </div>
 ```
-- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
 <div style="min-height: 204px">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#no-animation-modal">
         Open without animation
@@ -23,11 +23,8 @@
 
     <div id="no-animation-modal" class="modal" tabindex="-1" aria-labelledby="no-animation-modal-label" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-<div class="modal-header">
-<h1 id="no-animation-modal-label" class="modal-title fs-5">Modal without animation</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
+        <div class="modal-content"><div class="modal-header"><h1 id="no-animation-modal-label" class="modal-title fs-5">Modal without animation</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
         <div class="modal-body">This modal appears immediately because the <code>.fade</code> class is omitted.</div>
         <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
     </div>

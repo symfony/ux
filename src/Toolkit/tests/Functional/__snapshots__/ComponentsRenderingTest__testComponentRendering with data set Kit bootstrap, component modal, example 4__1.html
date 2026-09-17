@@ -30,7 +30,7 @@
     </twig:Modal>
 </div>
 ```
-- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
 <div style="min-height: 204px">
     <div class="d-flex flex-wrap gap-2">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#long-content-modal">Launch long modal</button>
@@ -39,13 +39,9 @@
 
     <div id="long-content-modal" class="modal fade" tabindex="-1" aria-labelledby="long-content-modal-label" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-<div class="modal-header">
-<h1 id="long-content-modal-label" class="modal-title fs-5">Long modal</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-        <div class="modal-body">
-<p>This modal grows with its content, allowing the viewport to scroll.</p>
+        <div class="modal-content"><div class="modal-header"><h1 id="long-content-modal-label" class="modal-title fs-5">Long modal</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+        <div class="modal-body"><p>This modal grows with its content, allowing the viewport to scroll.</p>
             <div style="min-height: 900px;"></div>
             <p class="mb-0">This content appears at the bottom.</p>
         </div>
@@ -56,13 +52,9 @@
 
     <div id="scrollable-modal" class="modal fade" tabindex="-1" aria-labelledby="scrollable-modal-label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-<div class="modal-header">
-<h1 id="scrollable-modal-label" class="modal-title fs-5">Scrollable modal</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-        <div class="modal-body">
-<p>Only this modal body scrolls when its content exceeds the available height.</p>
+        <div class="modal-content"><div class="modal-header"><h1 id="scrollable-modal-label" class="modal-title fs-5">Scrollable modal</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+        <div class="modal-body"><p>Only this modal body scrolls when its content exceeds the available height.</p>
             <div style="min-height: 900px;"></div>
             <p class="mb-0">This content appears at the bottom.</p>
         </div>

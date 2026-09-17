@@ -49,7 +49,7 @@
     </script>
 </div>
 ```
-- Rendered code (prettified for testing purposes, run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
 <div style="min-height: 354px">
     <div class="d-flex flex-wrap gap-2">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#varying-content-modal" data-bs-recipient="@mdo">Open modal for @mdo</button>
@@ -59,13 +59,9 @@
 
     <div id="varying-content-modal" class="modal fade" tabindex="-1" aria-labelledby="varying-content-modal-label" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-<div class="modal-header">
-<h1 id="varying-content-modal-label" class="modal-title fs-5">New message</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-        <div class="modal-body">
-<form>
+        <div class="modal-content"><div class="modal-header"><h1 id="varying-content-modal-label" class="modal-title fs-5">New message</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+        <div class="modal-body"><form>
                 <div class="mb-3">
                     <label for="recipient-name" class="col-form-label">Recipient:</label>
                     <input type="text" class="form-control" id="recipient-name">
@@ -76,8 +72,7 @@
                 </div>
             </form>
         </div>
-        <div class="modal-footer">
-<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary">Send message</button>
         </div>
     </div>
