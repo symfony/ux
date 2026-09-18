@@ -460,14 +460,9 @@ export class Panel {
 
     #updateCounts(): void {
         const byPlugin = this.#state.countByPlugin();
-        const activityByPlugin: Record<string, number> = {
-            ...Object.fromEntries(FRAMEWORKS.map(([name]) => [name, 0])),
-            ...Object.fromEntries(
-                Object.entries(Object.groupBy(this.#eventMonitor?.project() ?? [], (entry) => entry.type)).map(
-                    ([type, entries]) => [type, entries!.length]
-                )
-            ),
-        };
+        const activityByPlugin = Object.fromEntries(FRAMEWORKS.map(([name]) => [name, 0]));
+        for (const entry of this.#eventMonitor?.project() ?? [])
+            activityByPlugin[entry.type] = (activityByPlugin[entry.type] || 0) + 1;
         for (const [name, label] of FRAMEWORKS) {
             const button = this.#filterButtons[name];
             const count = byPlugin[name] || 0;

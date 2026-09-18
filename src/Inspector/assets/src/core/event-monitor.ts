@@ -155,7 +155,10 @@ export class EventMonitor {
 
     removeListener(fn: ActivityListener): void {
         const idx = this.#listeners.indexOf(fn);
-        if (idx !== -1) this.#listeners = this.#listeners.toSpliced(idx, 1);
+        if (idx === -1) return;
+        const listeners = [...this.#listeners];
+        listeners.splice(idx, 1);
+        this.#listeners = listeners;
     }
 
     /**
