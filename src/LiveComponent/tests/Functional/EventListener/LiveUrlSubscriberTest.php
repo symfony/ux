@@ -38,6 +38,13 @@ class LiveUrlSubscriberTest extends KernelTestCase
             'args' => [],
         ];
 
+        yield 'Invalid previous location beginning with double slashes' => [
+            'previousLocation' => '//route_with_prop/foo?notAProp=search',
+            'expectedLocation' => '//route_with_prop/foo?notAProp=search',
+            'initialComponentData' => [],
+            'args' => [],
+        ];
+
         yield 'No props change' => [
             'previousLocation' => '/route_with_prop/foo',
             'expectedLocation' => '/route_with_prop/foo',
