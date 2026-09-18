@@ -1,0 +1,47 @@
+<!--
+- Kit: Shadcn UI
+- Component: Marker
+- Code:
+```twig
+<div class="flex w-full max-w-sm flex-col gap-8 py-12">
+    <twig:Marker>
+        <twig:Marker:Icon>
+            <twig:ux:icon name="lucide:git-branch" />
+        </twig:Marker:Icon>
+        <twig:Marker:Content>Switched to a new branch</twig:Marker:Content>
+    </twig:Marker>
+    <twig:Marker role="status">
+        <twig:Marker:Icon>
+            <twig:Spinner />
+        </twig:Marker:Icon>
+        <twig:Marker:Content class="animate-pulse">Thinking...</twig:Marker:Content>
+    </twig:Marker>
+    <twig:Marker variant="separator">
+        <twig:Marker:Content>Conversation compacted</twig:Marker:Content>
+    </twig:Marker>
+    <twig:Marker>
+        <twig:Marker:Icon>
+            <twig:ux:icon name="lucide:search" />
+        </twig:Marker:Icon>
+        <twig:Marker:Content>Explored 4 files</twig:Marker:Content>
+    </twig:Marker>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full max-w-sm flex-col gap-8 py-12">
+    <div data-slot="marker" data-variant="default" class="group/marker relative flex min-h-4 w-full items-center gap-2 text-start text-sm text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground"><span data-slot="marker-icon" aria-hidden="true" class="size-4 shrink-0 [&amp;_svg:not([class*='size-'])]:size-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M15 6a9 9 0 0 0-9 9V3"></path><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle></g></svg>
+        </span>
+        <span data-slot="marker-content" class="min-w-0 wrap-break-word group-data-[variant=separator]/marker:flex-none group-data-[variant=separator]/marker:text-center *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">Switched to a new branch</span>
+    </div>
+    <div data-slot="marker" data-variant="default" class="group/marker relative flex min-h-4 w-full items-center gap-2 text-start text-sm text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground" role="status"><span data-slot="marker-icon" aria-hidden="true" class="size-4 shrink-0 [&amp;_svg:not([class*='size-'])]:size-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" data-slot="spinner" role="status" aria-label="Loading" class="size-4 animate-spin"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
+
+        </span>
+        <span data-slot="marker-content" class="min-w-0 wrap-break-word group-data-[variant=separator]/marker:flex-none group-data-[variant=separator]/marker:text-center *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground animate-pulse">Thinking...</span>
+    </div>
+    <div data-slot="marker" data-variant="separator" class="group/marker relative flex min-h-4 w-full items-center gap-2 text-start text-sm text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground before:me-1 before:h-px before:min-w-0 before:flex-1 before:bg-border after:ms-1 after:h-px after:min-w-0 after:flex-1 after:bg-border"><span data-slot="marker-content" class="min-w-0 wrap-break-word group-data-[variant=separator]/marker:flex-none group-data-[variant=separator]/marker:text-center *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">Conversation compacted</span>
+    </div>
+    <div data-slot="marker" data-variant="default" class="group/marker relative flex min-h-4 w-full items-center gap-2 text-start text-sm text-muted-foreground [&amp;_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground"><span data-slot="marker-icon" aria-hidden="true" class="size-4 shrink-0 [&amp;_svg:not([class*='size-'])]:size-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m21 21l-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></g></svg>
+        </span>
+        <span data-slot="marker-content" class="min-w-0 wrap-break-word group-data-[variant=separator]/marker:flex-none group-data-[variant=separator]/marker:text-center *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground">Explored 4 files</span>
+    </div>
+</div>

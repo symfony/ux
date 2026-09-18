@@ -1,0 +1,10 @@
+{# @block content The decorative icon rendered inside the marker. #}
+<span
+    data-slot="marker-icon"
+    aria-hidden="true"
+    {{ attributes.defaults({
+        class: "size-4 shrink-0 [&_svg:not([class*='size-'])]:size-4"|tailwind_classes,
+    }) }}
+>
+    {%- block content %}{% endblock -%}
+</span>
