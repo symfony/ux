@@ -20,7 +20,7 @@ test('component activity grows with visible events, caps, and preserves manual r
     const height = () => drawer.evaluate((element) => element.getBoundingClientRect().height);
     const rows = drawer.locator('.event:not([hidden])');
     await expect(rows).toHaveCount(0);
-    await expect(drawer.getByText('No matches.', { exact: true })).toBeVisible();
+    await expect(drawer.getByText('No events captured yet.', { exact: true })).toBeVisible();
     const emptyHeight = await height();
     expect(emptyHeight).toBeLessThanOrEqual(48);
 

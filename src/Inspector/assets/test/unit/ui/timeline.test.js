@@ -48,7 +48,18 @@ describe('Timeline', () => {
                 this.listeners.delete(listener);
             },
         };
-        mockMonitor.project = (_, compact) => projectActivity(mockMonitor.entries, compact);
+        mockMonitor.project = (element, compact) =>
+            projectActivity(
+                element
+                    ? mockMonitor.entries.filter(
+                          (entry) =>
+                              entry.owner === element ||
+                              entry.target === element ||
+                              entry.relatedElements?.includes(element)
+                      )
+                    : mockMonitor.entries,
+                compact
+            );
         mockMonitor.clear = vi.fn(() => {
             mockMonitor.entries = [];
         });
@@ -725,10 +736,10 @@ describe('Timeline', () => {
         const queries = vi.spyOn(timeline.element.querySelector('.events'), 'querySelectorAll');
         const visible = () => [...timeline.element.querySelectorAll('.event:not([hidden])')];
 
-        drawer.open('component', content, target, 'component');
+        drawer.open('component', content, target, 'component', ['stimulus']);
         timeline.flush();
 
-        expect(project).toHaveBeenCalledExactlyOnceWith(null, false);
+        expect(project).toHaveBeenCalledExactlyOnceWith(target, false);
         expect(queries.mock.calls.filter(([selector]) => selector === '.event')).toHaveLength(1);
         expect(visible().map((item) => item._inspectorEntry.event)).toEqual(['local']);
         expect(timeline.element.parentElement).toBe(content.querySelector('.drawer'));
@@ -745,6 +756,37 @@ describe('Timeline', () => {
         monitor.destroy();
     });
 
+    it('keeps contextual activity scoped before the display limit and ignores unrelated updates', () => {
+        const monitor = new EventMonitor();
+        timeline?.destroy();
+        timeline = new Timeline(monitor);
+        const target = connectedTarget('div', 'component');
+        const other = connectedTarget('div', 'other');
+        const content = document.createElement('div');
+        document.body.append(content);
+        monitor.record({ type: 'stimulus', event: 'local', target });
+        const drawer = new ActivityDrawer(timeline, document.createElement('div'), vi.fn());
+        drawer.open('component', content, target, 'component', ['stimulus']);
+        timeline.flush();
+        const schedule = vi.spyOn(globalThis, 'requestAnimationFrame');
+
+        for (let i = 0; i < 120; i++) {
+            monitor.record({ type: 'turbo', event: `wrong-framework:${i}`, target });
+            monitor.record({ type: 'stimulus', event: `wrong-component:${i}`, target: other });
+        }
+
+        expect(schedule).not.toHaveBeenCalled();
+        timeline.refresh();
+        expect(timeline.element.querySelectorAll('.event')).toHaveLength(1);
+        expect(timeline.element.textContent).toContain('local');
+
+        monitor.record({ type: 'stimulus', event: 'local-update', target });
+        expect(schedule).toHaveBeenCalledOnce();
+        timeline.flush();
+        expect(timeline.element.querySelectorAll('.event')).toHaveLength(2);
+        monitor.destroy();
+    });
+
     it('switches drawers without restoring the global context or advancing paused history', () => {
         const monitor = new EventMonitor(2);
         timeline?.destroy();
@@ -757,13 +799,13 @@ describe('Timeline', () => {
         const drawer = new ActivityDrawer(timeline, document.createElement('div'), restore);
         const content = document.createElement('div');
         document.body.append(content);
-        drawer.open('first', content, first, 'first');
+        drawer.open('first', content, first, 'first', ['unknown']);
         timeline.pause();
         monitor.record({ event: 'later', target: second });
         monitor.record({ event: 'latest', target: second });
         const project = vi.spyOn(monitor, 'project');
 
-        drawer.open('second', content, second, 'second');
+        drawer.open('second', content, second, 'second', ['unknown']);
 
         expect(restore).not.toHaveBeenCalled();
         expect(project).not.toHaveBeenCalled();

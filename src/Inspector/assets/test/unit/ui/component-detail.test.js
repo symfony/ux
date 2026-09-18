@@ -25,7 +25,7 @@ describe('ComponentDetail', () => {
         state.maps = maps;
         monitor = {
             listeners: [],
-            getEntriesForElement: vi.fn(() => [{ time: 1200, event: 'stimulus:connect', target }]),
+            getEntriesForElement: vi.fn(() => [{ time: 1200, type: 'stimulus', event: 'stimulus:connect', target }]),
             addListener(listener) {
                 this.listeners.push(listener);
             },
@@ -293,7 +293,7 @@ describe('ComponentDetail', () => {
         expect(view.querySelector('.detail-body')).toBe(body);
         expect(body.scrollTop).toBe(40);
         expect(view.querySelector('.activity-label')).toBe(footer);
-        expect(footer.dataset.framework).toBe('turbo');
+        expect(footer.dataset.framework).toBe('stimulus');
         expect(title.getAttribute('aria-expanded')).toBe('true');
         expect(document.activeElement).toBe(title);
         detail.destroy();

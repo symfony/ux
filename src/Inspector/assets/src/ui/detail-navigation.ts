@@ -17,6 +17,8 @@ interface DrillRecord {
     stateKey: string;
     content: HTMLElement;
     locator: ComponentLocator;
+    element: Element;
+    frameworks: string[];
 }
 
 interface NavigationCallbacks {
@@ -69,6 +71,11 @@ export class DetailNavigation {
             (event) => this.#onComponentRemoved((event as CustomEvent).detail?.element),
             { signal: this.#lifetime.signal }
         );
+        state.addEventListener(
+            'component-updated',
+            (event) => this.#onComponentUpdated((event as CustomEvent).detail),
+            { signal: this.#lifetime.signal }
+        );
         state.addEventListener('components-cleared', () => this.#onComponentRemoved(this.focusedComponent), {
             signal: this.#lifetime.signal,
         });
@@ -96,6 +103,7 @@ export class DetailNavigation {
         this.#activity.close(false);
         const locator = this.#componentLocator(element, dataMap);
         const stateKey = `${locator[1]}:${locator[2]}`;
+        const frameworks = [...dataMap.keys()];
         const detail = new ComponentDetail(
             {
                 registry: this.#registry,
@@ -116,7 +124,7 @@ export class DetailNavigation {
         const plugin = this.#registry.get(framework);
         if (plugin) title = plugin.getDisplayName(element);
         const id = `component-${++this.#nextDrillId}`;
-        this.#drillDetails.set(id, { detail, stateKey, content, locator });
+        this.#drillDetails.set(id, { detail, stateKey, content, locator, element, frameworks });
         this.#drillStack.push({
             id,
             title,
@@ -132,7 +140,7 @@ export class DetailNavigation {
         this.#callbacks.open();
         this.#syncTargetSelection();
         this.#callbacks.select({ element, framework });
-        this.#activity.open(id, content, element, title);
+        this.#activity.open(id, content, element, title, frameworks);
     }
 
     drillBack(): boolean {
@@ -143,7 +151,7 @@ export class DetailNavigation {
         const current = this.#drillStack.current;
         const record = current && this.#drillDetails.get(current.id);
         if (this.element.hidden || !current?.element || !record || this.#activity.id === current.id) return;
-        this.#activity.open(current.id, record.content, current.element, current.title);
+        this.#activity.open(current.id, record.content, current.element, current.title, record.frameworks);
     }
 
     clearFocus(): boolean {
@@ -203,6 +211,17 @@ export class DetailNavigation {
             this.#restoreQueued = false;
             this.#restorePendingDetail();
         });
+    }
+
+    #onComponentUpdated({ element, current }: { element?: Element; current?: ComponentDataMap } = {}): void {
+        if (!element) return;
+        const dataMap = current || this.#state.get(element);
+        if (!dataMap) return;
+        for (const [id, record] of this.#drillDetails) {
+            if (record.element !== element) continue;
+            record.frameworks = [...dataMap.keys()];
+            if (this.#activity.id === id) this.#activity.updateFrameworks(record.frameworks);
+        }
     }
 
     #restorePendingDetail(): boolean {

@@ -51,6 +51,7 @@ export class ComponentDetail {
     #recentChanges: Map<string, FieldChange> = new Map();
     #changeTimer: ReturnType<typeof setTimeout> | undefined;
     #savedGroups: Map<string, boolean> = new Map();
+    #frameworks = new Set<string>();
 
     constructor(
         { registry, eventMonitor, relationshipEngine, state, render = renderComponent }: ComponentDetailServices,
@@ -71,11 +72,13 @@ export class ComponentDetail {
         this.#lifetime = new AbortController();
         this.#target = target;
         this.#previousData = dataMap;
+        this.#frameworks = new Set(dataMap.keys());
         this.#element = el('div', { class: 'detail pane' });
         this.#replaceContent(dataMap, null);
 
         if (this.#eventMonitor) {
             this.#eventListener = (entry: ActivityEntry) => {
+                if (!this.#frameworks.has(entry.type)) return;
                 if (entry.target !== target && !(entry.target && target.contains(entry.target))) return;
                 const footer = this.#element?.querySelector('.activity-label') as HTMLElement | null;
                 if (footer) footer.dataset.framework = entry.type || 'default';
@@ -91,6 +94,7 @@ export class ComponentDetail {
             if (!current) return;
             const previous = detail.previous || this.#previousData;
             this.#previousData = current;
+            this.#frameworks = new Set(current.keys());
             this.#replaceContent(current, previous ?? null);
         };
         this.#state.addEventListener?.('component-updated', onUpdate, { signal: this.#lifetime.signal });
@@ -106,6 +110,7 @@ export class ComponentDetail {
         this.#recentChanges.clear();
         this.#element = this.#target = this.#previousData = null;
         this.#identityKey = '';
+        this.#frameworks.clear();
     }
 
     getUiState(): DetailUiState {
@@ -117,7 +122,9 @@ export class ComponentDetail {
 
     get activityCount(): number {
         const target = this.#target;
-        return (target ? (this.#eventMonitor?.project(target) ?? []) : []).length;
+        return (target ? (this.#eventMonitor?.project(target) ?? []) : []).filter((entry) =>
+            this.#frameworks.has(entry.type)
+        ).length;
     }
 
     #identity(target: Element, dataMap: ComponentDataMap): HTMLElement {
@@ -278,7 +285,12 @@ export class ComponentDetail {
 
     #activityFooter(): HTMLElement {
         const target = this.#target;
-        const latest = target ? this.#eventMonitor?.getEntriesForElement(target)?.at(-1) : undefined;
+        const latest = target
+            ? this.#eventMonitor
+                  ?.getEntriesForElement(target)
+                  ?.filter((entry) => this.#frameworks.has(entry.type))
+                  .at(-1)
+            : undefined;
         return el(
             'div',
             {
