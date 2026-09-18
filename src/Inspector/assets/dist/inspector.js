@@ -691,7 +691,10 @@ var EventMonitor = class {
 	}
 	removeListener(fn) {
 		const idx = this.#listeners.indexOf(fn);
-		if (idx !== -1) this.#listeners = this.#listeners.toSpliced(idx, 1);
+		if (idx === -1) return;
+		const listeners = [...this.#listeners];
+		listeners.splice(idx, 1);
+		this.#listeners = listeners;
 	}
 	monitorEvents(eventNames, category = "unknown") {
 		for (const name of eventNames) this.#staticEvents.add(name);
@@ -4030,10 +4033,8 @@ var Panel = class {
 	}
 	#updateCounts() {
 		const byPlugin = this.#state.countByPlugin();
-		const activityByPlugin = {
-			...Object.fromEntries(FRAMEWORKS.map(([name]) => [name, 0])),
-			...Object.fromEntries(Object.entries(Object.groupBy(this.#eventMonitor?.project() ?? [], (entry) => entry.type)).map(([type, entries]) => [type, entries.length]))
-		};
+		const activityByPlugin = Object.fromEntries(FRAMEWORKS.map(([name]) => [name, 0]));
+		for (const entry of this.#eventMonitor?.project() ?? []) activityByPlugin[entry.type] = (activityByPlugin[entry.type] || 0) + 1;
 		for (const [name, label] of FRAMEWORKS) {
 			const button = this.#filterButtons[name];
 			const count = byPlugin[name] || 0;
