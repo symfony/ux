@@ -1,0 +1,61 @@
+<!--
+- Kit: Shadcn UI
+- Component: Bubble
+- Code:
+```twig
+<div class="flex w-full max-w-sm flex-col gap-8 py-12">
+    <twig:Bubble align="end">
+        <twig:Bubble:Content>Hey there! what's up?</twig:Bubble:Content>
+    </twig:Bubble>
+    <twig:Bubble:Group>
+        <twig:Bubble variant="muted">
+            <twig:Bubble:Content>Hey! Want to see chat bubbles?</twig:Bubble:Content>
+        </twig:Bubble>
+        <twig:Bubble variant="muted">
+            <twig:Bubble:Content>
+                I can group messages, switch sides, and keep the whole thread easy to scan.
+            </twig:Bubble:Content>
+            <twig:Bubble:Reactions role="img" aria-label="Reaction: thumbs up">
+                <span>👍</span>
+            </twig:Bubble:Reactions>
+        </twig:Bubble>
+    </twig:Bubble:Group>
+    <twig:Bubble align="end">
+        <twig:Bubble:Content>Sure. Hit me with your best demo.</twig:Bubble:Content>
+    </twig:Bubble>
+    <twig:Bubble variant="muted">
+        <twig:Bubble:Content>
+            Yes. You are reading a demo that is demoing itself. Very meta. Very on-brand.
+        </twig:Bubble:Content>
+        <twig:Bubble:Reactions role="img" aria-label="Reactions: thumbs up, fire, eyes, and 2 more">
+            <span>👍</span>
+            <span>🔥</span>
+            <span>👀</span>
+            <span>+2</span>
+        </twig:Bubble:Reactions>
+    </twig:Bubble>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full max-w-sm flex-col gap-8 py-12">
+    <div data-slot="bubble" data-variant="default" data-align="end" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-primary *:data-[slot=bubble-content]:text-primary-foreground [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-primary/80 self-end"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Hey there! what's up?</div>
+    </div>
+    <div data-slot="bubble-group" class="flex min-w-0 flex-col gap-2"><div data-slot="bubble" data-variant="muted" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Hey! Want to see chat bubbles?</div>
+        </div>
+        <div data-slot="bubble" data-variant="muted" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">I can group messages, switch sides, and keep the whole thread easy to scan.
+            </div>
+            <div data-slot="bubble-reactions" data-side="bottom" data-align="end" class="absolute z-10 flex w-fit shrink-0 items-center justify-center gap-1 rounded-full bg-muted px-1.5 py-0.5 text-sm ring-3 ring-card has-[button]:p-0 bottom-0 translate-y-3/4 end-3" role="img" aria-label="Reaction: thumbs up"><span>👍</span>
+            </div>
+        </div>
+    </div>
+    <div data-slot="bubble" data-variant="default" data-align="end" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-primary *:data-[slot=bubble-content]:text-primary-foreground [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-primary/80 self-end"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Sure. Hit me with your best demo.</div>
+    </div>
+    <div data-slot="bubble" data-variant="muted" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Yes. You are reading a demo that is demoing itself. Very meta. Very on-brand.
+        </div>
+        <div data-slot="bubble-reactions" data-side="bottom" data-align="end" class="absolute z-10 flex w-fit shrink-0 items-center justify-center gap-1 rounded-full bg-muted px-1.5 py-0.5 text-sm ring-3 ring-card has-[button]:p-0 bottom-0 translate-y-3/4 end-3" role="img" aria-label="Reactions: thumbs up, fire, eyes, and 2 more"><span>👍</span>
+            <span>🔥</span>
+            <span>👀</span>
+            <span>+2</span>
+        </div>
+    </div>
+</div>

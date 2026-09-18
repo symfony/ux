@@ -1,0 +1,45 @@
+<!--
+- Kit: Shadcn UI
+- Component: Bubble
+- Code:
+```twig
+<div class="flex w-full max-w-sm flex-col gap-4 py-12">
+    <twig:Bubble align="end">
+        <twig:Bubble:Content>Run the build script.</twig:Bubble:Content>
+    </twig:Bubble>
+    <twig:Bubble variant="destructive">
+        <twig:Bubble:Content>Failed to run the command.</twig:Bubble:Content>
+        <twig:Bubble:Reactions>
+            <twig:Popover>
+                <twig:Popover:Trigger>
+                    <twig:Button variant="ghost" size="icon-xs" aria-label="Show error details" class="aria-expanded:text-destructive" {{ ...popover_trigger_attrs }}>
+                        <twig:ux:icon name="lucide:info" />
+                    </twig:Button>
+                </twig:Popover:Trigger>
+                <twig:Popover:Content align="end">
+                    <div class="flex flex-col gap-1.5">
+                        <p class="text-sm font-medium">Command failed with exit code 1</p>
+                        <p class="text-sm text-muted-foreground">ENOENT: no such file or directory, open pnpm-lock.yaml</p>
+                    </div>
+                </twig:Popover:Content>
+            </twig:Popover>
+        </twig:Bubble:Reactions>
+    </twig:Bubble>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full max-w-sm flex-col gap-4 py-12">
+    <div data-slot="bubble" data-variant="default" data-align="end" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-primary *:data-[slot=bubble-content]:text-primary-foreground [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-primary/80 self-end"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Run the build script.</div>
+    </div>
+    <div data-slot="bubble" data-variant="destructive" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-destructive/10 *:data-[slot=bubble-content]:text-destructive dark:*:data-[slot=bubble-content]:bg-destructive/20 [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-destructive/20 dark:[&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-destructive/30"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Failed to run the command.</div>
+        <div data-slot="bubble-reactions" data-side="bottom" data-align="end" class="absolute z-10 flex w-fit shrink-0 items-center justify-center gap-1 rounded-full bg-muted px-1.5 py-0.5 text-sm ring-3 ring-card has-[button]:p-0 bottom-0 translate-y-3/4 end-3"><div data-slot="popover" data-state="closed" data-popover-open-value="false" data-popover-name-value="" class="group/popover relative inline-block" data-controller="popover" data-action="popover:open@window->popover#handleGroupOpen click@window->popover#handleOutsideClick keydown.esc@window->popover#handleEscape"><button data-slot="button" data-size="icon-xs" data-variant="ghost" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted dark:hover:bg-muted/50 size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&amp;_svg:not([class*='size-'])]:size-3 aria-expanded:text-destructive" type="button" aria-label="Show error details" data-popover-target="trigger" data-action="click->popover#toggle" aria-haspopup="dialog" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4m0-4h.01"></path></g></svg>
+                    </button>
+                                <div role="dialog" data-slot="popover-content" data-popover-target="content" data-side="bottom" data-align="end" data-state="closed" aria-hidden="true" class="invisible scale-95 opacity-0 transition-[opacity,scale,visibility] duration-150 ease-out group-data-[state=open]/popover:visible group-data-[state=open]/popover:scale-100 group-data-[state=open]/popover:opacity-100 absolute z-50 w-72 rounded-md border bg-popover p-4 text-sm text-popover-foreground shadow-md outline-none top-full mt-2 end-0 ltr:origin-top-right rtl:origin-top-left"><div class="flex flex-col gap-1.5">
+                        <p class="text-sm font-medium">Command failed with exit code 1</p>
+                        <p class="text-sm text-muted-foreground">ENOENT: no such file or directory, open pnpm-lock.yaml</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

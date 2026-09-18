@@ -1,0 +1,38 @@
+<!--
+- Kit: Shadcn UI
+- Component: Bubble
+- Code:
+```twig
+<div class="flex w-full max-w-sm flex-col gap-4 py-12">
+    <twig:Bubble variant="secondary">
+        <twig:Bubble:Content>Did you remove the stale route?</twig:Bubble:Content>
+    </twig:Bubble>
+    <twig:Bubble align="end">
+        <twig:Bubble:Content>Yes, removed it from the registry.</twig:Bubble:Content>
+        <twig:Bubble:Reactions>
+            <twig:Tooltip id="bubble-read-receipt">
+                <twig:Tooltip:Trigger>
+                    <twig:Button variant="ghost" size="icon-xs" aria-label="Read receipt" {{ ...tooltip_trigger_attrs }}>
+                        <twig:ux:icon name="lucide:check" />
+                    </twig:Button>
+                </twig:Tooltip:Trigger>
+                <twig:Tooltip:Content>Read on Jan 5, 2026 at 4:32 PM</twig:Tooltip:Content>
+            </twig:Tooltip>
+        </twig:Bubble:Reactions>
+    </twig:Bubble>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full max-w-sm flex-col gap-4 py-12">
+    <div data-slot="bubble" data-variant="secondary" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-secondary *:data-[slot=bubble-content]:text-secondary-foreground [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)]"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Did you remove the stale route?</div>
+    </div>
+    <div data-slot="bubble" data-variant="default" data-align="end" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-primary *:data-[slot=bubble-content]:text-primary-foreground [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-primary/80 self-end"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">Yes, removed it from the registry.</div>
+        <div data-slot="bubble-reactions" data-side="bottom" data-align="end" class="absolute z-10 flex w-fit shrink-0 items-center justify-center gap-1 rounded-full bg-muted px-1.5 py-0.5 text-sm ring-3 ring-card has-[button]:p-0 bottom-0 translate-y-3/4 end-3"><div id="bubble-read-receipt" data-slot="tooltip" data-tooltip-delay-duration-value="0" data-tooltip-wrapper-selector-value="#bubble-read-receipt_wrapper" data-tooltip-content-selector-value="#bubble-read-receipt_content" data-tooltip-arrow-selector-value="#bubble-read-receipt_arrow" class="relative inline-block" data-controller="tooltip"><button data-slot="button" data-size="icon-xs" data-variant="ghost" class="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&amp;_svg:not([class*='size-'])]:size-3" type="button" aria-label="Read receipt" id="bubble-read-receipt_trigger" aria-describedby="bubble-read-receipt_content" data-tooltip-target="trigger" data-action="mouseenter->tooltip#show mouseleave->tooltip#hide focus->tooltip#show blur->tooltip#hide"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"></path></svg>
+                    </button>
+                                <div id="bubble-read-receipt_wrapper" data-slot="tooltip-wrapper" data-side="top" data-side-offset="0" data-tooltip-target="wrapper" role="presentation" class="isolate z-50 pointer-events-none open:pointer-events-auto" style="position: fixed; left: 0; top: 0; will-change: transform;">
+    <div id="bubble-read-receipt_content" role="tooltip" data-slot="tooltip-content" data-side="top" data-tooltip-target="content" class="z-50 inline-flex w-fit max-w-xs items-center gap-1.5 rounded-md bg-foreground px-3 py-1.5 text-xs text-background has-data-[slot=kbd]:pe-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm invisible opacity-0 scale-95 transition-all duration-200 open:visible open:opacity-100 open:scale-100">Read on Jan 5, 2026 at 4:32 PM<div id="bubble-read-receipt_arrow" data-side="top" data-tooltip-target="arrow" aria-hidden="true" class="bg-foreground fill-foreground z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px] data-[side=bottom]:top-1 data-[side=left]:top-1/2! data-[side=left]:-right-1 data-[side=left]:-translate-y-1/2 data-[side=right]:top-1/2! data-[side=right]:-left-1 data-[side=right]:-translate-y-1/2 data-[side=top]:-bottom-2.5" style="position: absolute;"></div></div>
+</div>
+            </div>
+        </div>
+    </div>
+</div>

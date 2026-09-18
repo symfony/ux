@@ -1,0 +1,27 @@
+<!--
+- Kit: Shadcn UI
+- Component: Bubble
+- Code:
+```twig
+<div class="flex w-full max-w-sm flex-col gap-8 py-12">
+    <twig:Bubble variant="muted">
+        <twig:Bubble:Content>
+            This bubble is aligned to the start. This is the default alignment.
+        </twig:Bubble:Content>
+    </twig:Bubble>
+    <twig:Bubble align="end">
+        <twig:Bubble:Content>
+            This bubble is aligned to the end. Use this for user messages.
+        </twig:Bubble:Content>
+    </twig:Bubble>
+</div>
+```
+- Rendered code (run "php vendor/bin/phpunit -d --update-snapshots" to update snapshots): -->
+<div class="flex w-full max-w-sm flex-col gap-8 py-12">
+    <div data-slot="bubble" data-variant="muted" data-align="start" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-muted [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">This bubble is aligned to the start. This is the default alignment.
+        </div>
+    </div>
+    <div data-slot="bubble" data-variant="default" data-align="end" class="group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 *:data-[slot=bubble-content]:bg-primary *:data-[slot=bubble-content]:text-primary-foreground [&amp;>[data-slot=bubble-content]:is(button,a):hover]:bg-primary/80 self-end"><div data-slot="bubble-content" class="w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-start [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/50">This bubble is aligned to the end. Use this for user messages.
+        </div>
+    </div>
+</div>
