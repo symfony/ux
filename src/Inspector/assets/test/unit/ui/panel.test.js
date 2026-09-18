@@ -4,6 +4,7 @@ import { projectActivity } from '../../../src/core/activity-projector';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Panel } from '../../../src/ui/panel';
 import { StateManager } from '../../../src/core/state-manager';
+import { makeElementField } from '../../../src/ui/fields';
 
 describe('Panel', () => {
     let state, registry, monitor, timeline, host, panel, target;
@@ -472,6 +473,60 @@ describe('Panel', () => {
         expect(panel.element.querySelector('.filters').hidden).toBe(false);
         panel.element.querySelector('.component-row').click();
         expect(panel.element.querySelector('.detail-selector').textContent).toBe('div#search');
+    });
+
+    it('keeps a single detail target selected and toggles it off', () => {
+        const first = document.createElement('button');
+        const second = document.createElement('button');
+        first.scrollIntoView = vi.fn();
+        second.scrollIntoView = vi.fn();
+        renderComponent.mockImplementation(() => {
+            const fragment = document.createDocumentFragment();
+            fragment.append(makeElementField('first', first), makeElementField('second', second));
+            return fragment;
+        });
+        const selected = vi.fn();
+        const cleared = vi.fn();
+        panel.setVisualCallbacks({ onSelect: selected, onClearSelection: cleared });
+        state.set(target, 'stimulus', { data: {} });
+        panel.drillInto(target);
+        const pills = [...panel.element.querySelectorAll('.target-pill')];
+
+        pills[0].click();
+        pills[1].click();
+        expect(pills.map((pill) => pill.getAttribute('aria-pressed'))).toEqual(['false', 'true']);
+        expect(selected).toHaveBeenLastCalledWith(expect.objectContaining({ element: second }));
+
+        pills[1].click();
+        expect(pills.every((pill) => pill.getAttribute('aria-pressed') === 'false')).toBe(true);
+        expect(cleared).toHaveBeenCalledOnce();
+    });
+
+    it('resets a detail target selection when returning from nested navigation', () => {
+        const first = document.createElement('button');
+        const child = document.createElement('div');
+        first.scrollIntoView = vi.fn();
+        document.body.appendChild(child);
+        renderComponent.mockImplementation(() => makeElementField('first', first));
+        const selected = vi.fn();
+        const cleared = vi.fn();
+        panel.setVisualCallbacks({ onSelect: selected, onClearSelection: cleared });
+        state.set(target, 'stimulus', { data: {} });
+        state.set(child, 'stimulus', { data: {} });
+        panel.drillInto(target);
+        const pill = panel.element.querySelector('.target-pill');
+        pill.click();
+        expect(pill.getAttribute('aria-pressed')).toBe('true');
+
+        panel.drillInto(child);
+        panel.drillBack();
+
+        expect(pill.getAttribute('aria-pressed')).toBe('false');
+        selected.mockClear();
+        cleared.mockClear();
+        pill.click();
+        expect(selected).toHaveBeenCalledWith(expect.objectContaining({ element: first }));
+        expect(cleared).not.toHaveBeenCalled();
     });
 
     it('closes stale details for navigation and restores their UI state for the same component', () => {

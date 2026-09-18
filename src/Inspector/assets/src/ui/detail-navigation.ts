@@ -110,6 +110,7 @@ export class DetailNavigation {
         content.addEventListener('preview-element', this.#onDetailPreview);
         content.addEventListener('clear-element-preview', this.#onDetailClear);
         content.addEventListener('select-element', this.#onDetailSelect);
+        content.addEventListener('clear-element-selection', this.#onDetailClearSelection);
         let title = element.tagName.toLowerCase();
         const framework = dataMap.keys().next().value || 'default';
         const plugin = this.#registry.get(framework);
@@ -129,6 +130,7 @@ export class DetailNavigation {
         });
 
         this.#callbacks.open();
+        this.#syncTargetSelection();
         this.#callbacks.select({ element, framework });
         this.#activity.open(id, content, element, title);
     }
@@ -148,6 +150,10 @@ export class DetailNavigation {
         let cleared = false;
         while (this.drillBack()) cleared = true;
         return cleared;
+    }
+
+    clearTargetSelection(): void {
+        this.#syncTargetSelection();
     }
 
     suspendForNavigation(): void {
@@ -226,6 +232,7 @@ export class DetailNavigation {
         this.restoreActivity();
         if (current.element) {
             const dataMap = this.#state.get(current.element);
+            this.#syncTargetSelection();
             this.#callbacks.select({ element: current.element, framework: dataMap?.keys().next().value || 'default' });
         } else {
             this.#callbacks.clearSelection();
@@ -240,6 +247,7 @@ export class DetailNavigation {
         record.content.removeEventListener('preview-element', this.#onDetailPreview);
         record.content.removeEventListener('clear-element-preview', this.#onDetailClear);
         record.content.removeEventListener('select-element', this.#onDetailSelect);
+        record.content.removeEventListener('clear-element-selection', this.#onDetailClearSelection);
         if (this.#activity.id === id) this.#activity.close();
         record.detail.destroy();
         this.#drillDetails.delete(id);
@@ -247,5 +255,16 @@ export class DetailNavigation {
 
     #onDetailPreview = (event: Event) => this.#callbacks.preview((event as CustomEvent).detail);
     #onDetailClear = () => this.#callbacks.clearPreview();
-    #onDetailSelect = (event: Event) => this.#callbacks.select((event as CustomEvent).detail);
+    #onDetailSelect = (event: Event) => {
+        this.#syncTargetSelection(event.target);
+        this.#callbacks.select((event as CustomEvent).detail);
+    };
+    #onDetailClearSelection = () => {
+        this.#syncTargetSelection();
+        this.#callbacks.clearSelection();
+    };
+    #syncTargetSelection(selected: EventTarget | null = null): void {
+        for (const pill of this.element.querySelectorAll('.target-pill'))
+            pill.setAttribute('aria-pressed', String(pill === selected));
+    }
 }
