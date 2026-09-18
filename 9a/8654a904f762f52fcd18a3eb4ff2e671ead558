@@ -1,0 +1,35 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-26T06:30:59Z
+
+Added you @nicolas-grekas as reviewer, since it seems you had similar opinions on this subject https://github.com/symfony/ux/pull/3799#issuecomment-5377993644
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-26T15:16:54Z
+
+> On the behaviour changes: there's some BC breaks there, no? But maybe to minor to be realistic?
+
+Indeed we have few changes yes, listed in the PR description, but I don't consider them as a BC:
+- We have 3 cases (null, array, BackedEnum) which are now correctly handled instead of throwing an exception ➡️ that's better, also throwing on `null` was a mistake
+- And we have these 3 other cases were the rendering changed, but it can't be considered as a BC:
+
+| Attribute value | Before | After |
+| --- | --- | --- |
+| `true` | `name` | `name=""` |
+| `false` on `aria-*` | attribute omitted | `aria-x="false"` |
+| `true` on `data-*` | `data-x` | `data-x="true"` |
+
+To resume, the behavior is now identical to what Twig does, and we have less code to maintain 🎉
+
+---
+
+Also, Fabien just merged https://github.com/twigphp/Twig/pull/4895, but GitHub Actions have some issues right now, so... our CI stays yellow for the moment 😓
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-08-27T20:41:23Z
+
+Waiting for Twig 3.29 to be released, otherwise the CI jobs will keep failing.
+
+**EDIT:** https://github.com/twigphp/Twig/releases/tag/v3.29.0 \o/
