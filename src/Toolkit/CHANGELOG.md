@@ -2,7 +2,6 @@
 
 ## 3.5.0
 
-- [Flowbite v4] Rename the `modal` Stimulus controller to `flowbite-modal`, so its `data-modal-target` attributes no longer collide with the attribute of the same name in Flowbite's own JavaScript
 - Add support for blocks: ready-to-use page sections built from a kit's components, installed and previewed as a unit
 - [Shadcn] Add the `login-01` and `login-02` login blocks
 - [Shadcn] Add `attachment` recipe
@@ -13,17 +12,22 @@
 - [Shadcn] Add `input-otp` recipe
 - [Shadcn] Add `marker` recipe
 - [Shadcn] Add `menubar` recipe
+- [Shadcn] Add `native-select` recipe
 - [Shadcn] Add `navigation-menu` recipe
 - [Shadcn] Add `popover` recipe
-- [Shadcn] Add `native-select` recipe
 - [Shadcn] Add `scroll-area` recipe
 - [Shadcn] Add `sheet` recipe
 - [Shadcn] Add `sidebar` recipe
 - [Shadcn] Add `slider` recipe
+- [Shadcn] Document the accessibility surface of every recipe in an `## Accessibility` section of its `README.md`
+- [Flowbite v4] Rename the `modal` Stimulus controller to `flowbite-modal`, so its `data-modal-target` attributes no longer collide with the attribute of the same name in Flowbite's own JavaScript
 - [Shadcn][Flowbite] Merge component classes with `attributes.defaults({ class: '...'|tailwind_classes })` instead of `tailwind_merge` (consumer classes now override component variants)
-- [Shadcn] Fix Field/Label, InputGroup and Pagination silently dropping their own base classes when forwarding to a child component (their checked/disabled/nested/dark styles now apply)
-- [Shadcn] Fix `dialog` opening on initial render when `open` is `false`
 - [Shadcn] Focus the first form field (or the `[autofocus]` element) when a `dialog` opens
+- [Shadcn] Fix `alert-dialog`, `dialog`, `drawer` and `sheet` rendering `aria-labelledby`/`aria-describedby` on a roleless wrapper instead of the `<dialog>` element, leaving the modal without an accessible name
+- [Shadcn] Fix right-to-left layouts by replacing physical spacing, alignment and border utilities with their logical counterparts, and drop the redundant `ltr:`/`rtl:` pairs that resolved to the same rule
+- [Shadcn] Fix `button` rendering `type="button"` when `as` is not `button`
+- [Shadcn] Fix `dialog` opening on initial render when `open` is `false`
+- [Shadcn] Fix Field/Label, InputGroup and Pagination silently dropping their own base classes when forwarding to a child component (their checked/disabled/nested/dark styles now apply)
 - [Shadcn] Remove `typography` recipe
 - Remove the now-obsolete `ClassMergeSpacingChecker` linter
 

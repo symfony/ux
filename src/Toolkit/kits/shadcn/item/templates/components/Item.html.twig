@@ -1,6 +1,6 @@
 {# @prop variant 'default'|'outline'|'muted' The visual style variant. #}
 {# @prop size 'default'|'sm'|'xs' The item size. #}
-{# @prop as 'div' The HTML tag to render. #}
+{# @prop as 'div'|'a' The HTML tag to render; use `a` when the whole item is a link. #}
 {# @block content The item content, typically includes `Item:Media`, `Item:Content`, and/or `Item:Actions`. #}
 {%- props variant = 'default', size = 'default', as = 'div' -%}
 {%- set style = html_cva(

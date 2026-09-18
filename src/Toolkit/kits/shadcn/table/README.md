@@ -196,6 +196,15 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- The components render real `<table>`, `<thead>`, `<tbody>`, `<tr>`, `<th>` and `<td>` elements, so screen readers can navigate by row and column and announce the headers with each cell.
+- `Table:Head` renders a `<th>`. Add `scope="col"`, or `scope="row"` on a row header, so the association with the cells is explicit rather than guessed.
+- `Table:Caption` renders a real `<caption>`, which names the table. Keep it, and prefer it over a heading above the table.
+- Do not use a table for layout. Everything here assumes the content really is tabular data.
+- When a row holds a selection checkbox, give that checkbox an `aria-label` naming the row, since a column of identically labelled checkboxes is unusable.
+- A table that scrolls horizontally needs to be reachable from the keyboard. Wrap it in a container with `tabindex="0"`, `role="region"` and an `aria-label`.
+
 ## API Reference
 
 ::: api-reference

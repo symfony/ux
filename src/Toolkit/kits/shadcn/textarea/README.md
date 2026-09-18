@@ -99,6 +99,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Textarea` renders a native `<textarea>`, so it keeps the browser's own keyboard handling and validation.
+- Give it a visible `Label` bound with `for` and `id`. A placeholder is not a label: it disappears as soon as the user types and is not reliably announced.
+- Set `aria-invalid="true"` for the invalid styling, and point `aria-describedby` at the message explaining what is wrong.
+- When you show a character counter, put it in a live region with `aria-live="polite"` and reference it from the textarea with `aria-describedby`, so the limit is known before it is hit.
+- The textarea grows with its content through `field-sizing`, so the text never scrolls out of sight at large font sizes.
+
 ## API Reference
 
 ::: api-reference

@@ -316,6 +316,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `InputGroup` renders `role="group"`, so the control and its addons are announced as one unit. Give it an `aria-label` when the group needs a name of its own.
+- An addon is not a label. Keep a real `Label` bound to the control with `for` and `id`, even when the addon already shows a unit or a prefix.
+- An icon-only `InputGroup:Button` needs an `aria-label`, since `<twig:ux:icon>` renders `aria-hidden="true"`.
+- Purely decorative text in an `InputGroup:Addon`, such as a currency symbol already stated in the label, is still announced. Move it out or hide it with `aria-hidden="true"` when it only repeats what the label says.
+- Set `aria-invalid="true"` on the control rather than on the group, so the invalid state lands on the element the user is editing.
+
 ## API Reference
 
 ::: api-reference

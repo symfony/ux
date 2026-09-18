@@ -126,6 +126,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Switch` renders a native `<input type="checkbox">` with `role="switch"`, so it is focusable, toggles with `Space` and is announced as on or off rather than checked or unchecked.
+- Give every switch a label: either wrap it in a `Label`, or pair `id` on the switch with `for` on the `Label`. The thumb is decorative and announces nothing.
+- Label the switch with what it controls, not with its current state. "Email notifications" works in both positions; "Notifications on" does not.
+- A switch applies its change immediately. Use `Checkbox` when the value is only committed on submit.
+- The `disabled` attribute belongs on the switch itself, so the browser exposes the state.
+
 ## API Reference
 
 ::: api-reference

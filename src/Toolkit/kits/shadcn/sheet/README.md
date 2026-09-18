@@ -129,6 +129,15 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Sheet:Content` renders a native `<dialog>` opened with `showModal()`, so the browser traps focus, makes the rest of the page inert and exposes the modal semantics.
+- The `<dialog>` is labelled by `Sheet:Title` and described by `Sheet:Description` through `aria-labelledby` and `aria-describedby` built from the `id` prop. Render both, since the references point at those IDs whether or not the elements exist.
+- `Escape` closes the sheet, and so does a click on the backdrop.
+- `Sheet:Trigger` exposes `aria-haspopup="dialog"` and an `aria-expanded` that the controller keeps in sync.
+- The built-in close button is icon-only and carries a visually hidden "Close" label. Translate it rather than removing it.
+- The `side` prop only changes where the sheet slides in from. It does not change the reading order, which stays the order of the markup.
+
 ## API Reference
 
 ::: api-reference

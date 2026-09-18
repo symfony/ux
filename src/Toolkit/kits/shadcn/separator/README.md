@@ -113,6 +113,13 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Separator` renders `role="none"` by default, so a purely visual divider is not announced. Pass `decorative="false"` when the divider marks a real boundary, which renders `role="separator"` with an `aria-orientation`.
+- A separator takes its name from `aria-label`, not from its contents, so do not put text inside a semantic one. Use `Marker` with the `separator` variant for a labelled divider.
+- `aria-orientation` is only emitted on a semantic separator, since it means nothing on a decorative one.
+- Prefer a heading or a landmark over a separator when the boundary is structural. A separator marks a break, it does not name the sections around it.
+
 ## API Reference
 
 ::: api-reference

@@ -125,6 +125,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `ToggleGroup` renders `role="group"`. Give it an `aria-label` so the set of toggles is announced with a name of its own.
+- Each `ToggleGroup:Item` is a real `<button>` with `aria-pressed`, so every item is a tab stop and activates with `Enter` or `Space`.
+- With `type="single"` the group behaves like a set of mutually exclusive choices. When the choice drives what is displayed rather than a formatting state, prefer `RadioGroup` or `Tabs`, which carry that meaning in their roles.
+- An icon-only item needs an `aria-label`, since `<twig:ux:icon>` renders `aria-hidden="true"`.
+- Setting `disabled` on the group disables every item, which takes them all out of the tab order.
+
 ## API Reference
 
 ::: api-reference

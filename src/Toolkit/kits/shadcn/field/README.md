@@ -465,6 +465,15 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Field` renders `role="group"`, so a control and its label, description and error are announced together.
+- `Field:Set` and `Field:Legend` render a real `<fieldset>` and `<legend>`, which is what groups related controls such as a set of radios or checkboxes under a single name.
+- `Field:Label` renders a `<label>`. Pair its `for` with the `id` of the control, or wrap the control, so clicking the label moves focus to it.
+- `Field:Error` renders `role="alert"`, so a validation message inserted after a failed submit is announced. Point the control at it with `aria-describedby` and set `aria-invalid="true"` on the control.
+- `Field:Description` carries no ARIA on its own. Reference it from the control with `aria-describedby` when the help text needs to be announced.
+- Use `Field:Separator` sparingly, so screen reader users meet clear section boundaries rather than a stream of dividers.
+
 ## API Reference
 
 ::: api-reference

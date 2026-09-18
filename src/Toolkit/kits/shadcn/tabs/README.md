@@ -278,6 +278,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Tabs:List` renders `role="tablist"`, each `Tabs:Trigger` `role="tab"` with `aria-selected` and `aria-controls`, and each `Tabs:Content` `role="tabpanel"` labelled by its trigger.
+- The triggers are real `<button>` elements, so each one is a tab stop and activates with `Enter` or `Space`. Arrow key navigation between tabs is not implemented, so keep the number of tabs small enough that tabbing through them stays reasonable.
+- Set `value` on `Tabs` and on each trigger and panel so the generated IDs are unique. Two tab sets sharing a value will cross-wire their `aria-controls`.
+- Set `orientation` to match the visual layout, since it is what tells assistive tech whether the tabs run across or down.
+- Use tabs for alternative views of the same subject. Content a user needs to compare, or to find with the browser's search, does not belong behind a tab.
+
 ## API Reference
 
 ::: api-reference

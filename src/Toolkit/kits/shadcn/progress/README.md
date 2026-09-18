@@ -57,6 +57,13 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Progress` renders `role="progressbar"` with `aria-valuemin="0"`, `aria-valuemax="100"` and an `aria-valuenow` reflecting the `value` prop, so assistive tech announces how far along the task is.
+- The component has no name of its own. Give it an `aria-label`, or an `aria-labelledby` pointing at the text that describes the task.
+- The progress bar is not focusable and does not update on its own. Re-render it, or update `aria-valuenow` from your own code, as the task advances.
+- `aria-valuenow` is always rendered, so `Progress` is never announced as indeterminate. Use `Spinner` for a task whose progress cannot be measured.
+
 ## API Reference
 
 ::: api-reference

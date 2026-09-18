@@ -381,6 +381,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Attachment:Action` is usually icon-only, so give each one an `aria-label` naming the action and its target, such as `aria-label="Remove sales-dashboard.pdf"`.
+- `Attachment:Trigger` covers the whole card and carries no text of its own. Give it an `aria-label` describing what activating it does. It sits behind the actions in the stacking order, so an action and the trigger never trap each other.
+- `Attachment:Group` scrolls horizontally. Keyboard users reach off-screen attachments by tabbing to their trigger or actions. For a row of purely presentational attachments, make the group itself reachable with `tabindex="0"`, `role="group"` and an `aria-label`.
+- The `error` state is shown with a destructive colour. Keep the reason for the failure in `Attachment:Description` so the state is not conveyed by colour alone.
+- An icon inside `Attachment:Media` is decorative and `<twig:ux:icon>` hides it from assistive tech, so the name of the file belongs in `Attachment:Title`.
+
 ## API Reference
 
 ::: api-reference

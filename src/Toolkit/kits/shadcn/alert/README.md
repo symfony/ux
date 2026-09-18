@@ -147,6 +147,13 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Alert` renders `role="alert"`, so assistive tech announces its content as soon as it enters the page. An alert already present on page load is not announced, so render it dynamically when the announcement matters.
+- Do not let the `destructive` variant carry the meaning on its own. State the problem in `Alert:Title` or `Alert:Description` so it survives without colour.
+- Icons inside an alert are decorative: `<twig:ux:icon>` renders `aria-hidden="true"` unless you pass it an `aria-label`, `aria-labelledby` or `title`.
+- Give an icon-only control inside `Alert:Action` an `aria-label` describing what it does.
+
 ## API Reference
 
 ::: api-reference

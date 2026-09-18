@@ -247,6 +247,15 @@ Autocomplete input and command palette with a list of suggestions.
 </div>
 ```
 
+## Accessibility
+
+- The trigger renders `role="combobox"` with `aria-haspopup="listbox"`, `aria-expanded` and an `aria-controls` pointing at the listbox, so assistive tech announces the widget and its state.
+- The list renders `role="listbox"`, each entry `role="option"` with `aria-selected`, and a grouped list wraps its entries in `role="group"` labelled by the group heading.
+- The filter input renders `role="searchbox"` with `aria-autocomplete="list"`, so typing is announced as filtering rather than free text entry.
+- `ArrowDown` and `ArrowUp` move through the options, `Home` and `End` jump to the first and last, `Enter` selects the highlighted option and `Escape` closes the list and returns focus to the trigger.
+- Set `id` so the internal ARIA references are unique, and give the combobox a visible `Label` bound with `for`, since the trigger's own text is only the current selection.
+- The clear button carries `aria-label="Clear selection"`. Translate it when your interface is not in English.
+
 ## API Reference
 
 ::: api-reference

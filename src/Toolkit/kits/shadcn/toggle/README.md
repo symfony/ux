@@ -100,6 +100,13 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Toggle` renders a real `<button>` with `aria-pressed` reflecting its state, so it is announced as a pressed or unpressed button and works with `Enter` and `Space`.
+- An icon-only toggle has no text to announce. Give it an `aria-label`, or add a `<span class="sr-only">` label, since `<twig:ux:icon>` renders `aria-hidden="true"`.
+- Label the toggle with what it does, not with its current state. `aria-pressed` already carries the state, so "Bold" is right and "Bold on" is not.
+- Use `Toggle` for a formatting-style control that stays pressed. Use `Switch` for a setting that applies immediately, and `Checkbox` for a value submitted with a form.
+
 ## API Reference
 
 ::: api-reference

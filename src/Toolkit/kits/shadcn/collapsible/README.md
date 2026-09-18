@@ -330,6 +330,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Collapsible:Trigger` exposes an `aria-expanded` reflecting the open state, which the controller keeps in sync as the panel opens and closes.
+- `Collapsible:Content` carries `aria-hidden` matching that state, and the panel collapses with `grid-template-rows` rather than `display: none`, so the transition animates without the content jumping.
+- The trigger is whatever element you spread `collapsible_trigger_attrs` onto. Use a `<button>`, so `Enter` and `Space` work and the control is in the tab order.
+- Point the trigger at its panel with `aria-controls` when the two are not adjacent in the DOM.
+- The trigger label should say what will be revealed. Avoid a bare "Show more" when several collapsibles sit on the same page.
+
 ## API Reference
 
 ::: api-reference

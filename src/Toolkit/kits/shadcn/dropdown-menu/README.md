@@ -307,6 +307,15 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `DropdownMenu:Content` renders `role="menu"` and its entries `role="menuitem"`, `role="menuitemcheckbox"` or `role="menuitemradio"`, with `aria-checked` kept in sync by the controller.
+- `DropdownMenu:Trigger` exposes `aria-haspopup="menu"`, an `aria-expanded` reflecting the open state and an `aria-controls` pointing at the menu.
+- `ArrowDown` and `ArrowUp` move between items and wrap around, `Home` and `End` jump to the first and last, and `Escape` closes the menu and returns focus to the trigger. Disabled items are skipped.
+- `DropdownMenu:Separator` renders `role="separator"`, and `DropdownMenu:Group` renders `role="group"`. Label a group with `aria-labelledby` pointing at its `DropdownMenu:Label`.
+- A disabled item renders `aria-disabled="true"` rather than being removed, so its presence stays discoverable.
+- `DropdownMenu:Shortcut` shows the key combination visually. It is announced as part of the item text, so keep it short.
+
 ## API Reference
 
 ::: api-reference

@@ -164,6 +164,13 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Spinner` renders `role="status"` with an `aria-label` taken from its `label` prop, so assistive tech announces that something is in progress. Replace the default label with what is actually loading, such as `label="Loading results"`.
+- Set `label` to an empty string when the spinner sits inside a control that already says what is happening, for instance a button reading "Saving...", so the state is not announced twice.
+- A spinner conveys no progress. Use `Progress` when the duration is measurable.
+- The spinner keeps turning under `prefers-reduced-motion` unless your theme says otherwise. Check that before putting one on a long-running screen.
+
 ## API Reference
 
 ::: api-reference

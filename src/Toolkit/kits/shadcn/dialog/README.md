@@ -247,6 +247,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Dialog:Content` renders a native `<dialog>` opened with `showModal()`, so the browser traps focus, makes the rest of the page inert and exposes the modal semantics.
+- The `<dialog>` is labelled by `Dialog:Title` and described by `Dialog:Description` through `aria-labelledby` and `aria-describedby` built from the `id` prop. Render both, since the references point at those IDs whether or not the elements exist.
+- `Escape` closes the dialog, and so does a click on the backdrop. Opening it moves focus to the element carrying `autofocus`, or to the first form field when nothing opts in.
+- `Dialog:Trigger` exposes `aria-haspopup="dialog"` and an `aria-expanded` that the controller keeps in sync.
+- The built-in close button is icon-only and carries a visually hidden "Close" label. Translate it rather than removing it.
+
 ## API Reference
 
 ::: api-reference

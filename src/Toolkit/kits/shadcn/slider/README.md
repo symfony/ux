@@ -65,6 +65,15 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 <twig:Slider dir="rtl" name="rtl-slider" min="0" max="100" step="1" value="75" class="mx-auto w-full max-w-xs" />
 ```
 
+## Accessibility
+
+- Each thumb renders `role="slider"` with `aria-valuemin`, `aria-valuemax`, `aria-valuenow` and `aria-orientation`, and is focusable, so assistive tech announces the current value as it changes.
+- Arrow keys move by one `step`, `PageUp` and `PageDown` move by a larger increment, and `Home` and `End` jump to the minimum and maximum.
+- Give each thumb a name with `labels`. A single-thumb slider falls back to the `Slider` label, but a range needs one label per thumb, such as `labels="Minimum,Maximum"`.
+- A disabled slider renders `aria-disabled="true"` and takes its thumbs out of the tab order.
+- The value is submitted through a hidden `<input>` per thumb, so the slider works in a form without JavaScript reading the DOM.
+- Show the current value as text next to the slider. Announcing it is not the same as being able to read it.
+
 ## API Reference
 
 ::: api-reference

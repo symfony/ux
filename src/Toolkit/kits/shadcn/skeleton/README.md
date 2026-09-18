@@ -116,6 +116,13 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Skeleton` is a decorative `<div>` with no text and no role, so it is announced as nothing while the real content loads.
+- A screen reader user is not told that something is loading. Put the skeletons inside a container with `aria-busy="true"`, and announce the result in a live region once the content arrives.
+- Do not animate a skeleton faster than the user can tolerate. The pulse respects `prefers-reduced-motion` only if your own theme configures it, so check that before shipping a long-running skeleton.
+- Match the skeleton to the shape of the content it stands in for, so the layout does not jump when the real content replaces it.
+
 ## API Reference
 
 ::: api-reference

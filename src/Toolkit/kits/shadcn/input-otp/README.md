@@ -249,6 +249,14 @@ Use the `name` prop on `InputOtp` to change the base name of the inputs; here wi
 </div>
 ```
 
+## Accessibility
+
+- Each `InputOtp:Slot` renders its own `<input>` carrying an `aria-label` such as "Input 3 of 6", built from the `input` and `inputs` props. Set both on the parent so the count is right, or override a single slot with its `label` prop.
+- `ArrowLeft` and `ArrowRight` move between slots, typing advances to the next slot and deleting steps back, so the group behaves like one field.
+- `InputOtp:Separator` renders `role="separator"` with `aria-hidden="true"`, so the dash between groups is not read out as content.
+- Set `aria-invalid="true"` on the slots and point `aria-describedby` at the error, so a wrong code is announced rather than only outlined in red.
+- Set `autocomplete="one-time-code"` on the first slot so the browser can offer the code it received.
+
 ## API Reference
 
 ::: api-reference

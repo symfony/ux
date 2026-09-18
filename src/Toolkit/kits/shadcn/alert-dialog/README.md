@@ -284,6 +284,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `AlertDialog:Content` renders a native `<dialog>` opened with `showModal()`, so the browser traps focus, makes the rest of the page inert and exposes the modal semantics.
+- The `<dialog>` is labelled by `AlertDialog:Title` and described by `AlertDialog:Description` through `aria-labelledby` and `aria-describedby` built from the `id` prop. Render both, since the references point at those IDs whether or not the elements exist.
+- `Escape` closes the dialog. Unlike `Dialog`, clicking the backdrop does not close it, because an alert dialog asks for a deliberate answer.
+- `AlertDialog:Trigger` exposes `aria-haspopup="dialog"` and an `aria-expanded` that the controller keeps in sync.
+- Put the consequence in the title and description rather than in the button colour alone, so a destructive action reads as destructive without it.
+
 ## API Reference
 
 ::: api-reference

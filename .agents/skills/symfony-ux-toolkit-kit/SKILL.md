@@ -108,12 +108,12 @@ Always emit `data-slot="<recipe-name>"` on root + `data-slot="<recipe-name>-<sub
 
 ### Upstream sources
 
-Read all source files per recipe: component source carries canonical classes + `data-*` surface; examples show usage patterns; MDX drives docs and manifest.
+Read all source files per recipe: component source carries the structure + `data-*` surface, the stylesheet carries the classes, examples show usage patterns, MDX drives docs and manifest.
 
 | File | Purpose |
 | --- | --- |
-| `apps/v4/styles/radix-nova/ui/<recipe>.tsx` | **Component source** — canonical Tailwind classes, sub-component structure, `data-slot`/`data-state` surface |
-| `apps/v4/styles/radix-nova/ui-rtl/<recipe>.tsx` | **RTL variant** — classes that differ per text direction (see [RTL class variants](#rtl-class-variants)) |
+| `apps/v4/registry/bases/radix/ui/<recipe>.tsx` | **Component source** — sub-component structure, `data-slot`/`data-state` surface, variant axes. Carries `cn-*` class names, *not* Tailwind utilities |
+| `apps/v4/registry/styles/style-nova.css` | **Canonical classes** — the `.cn-<recipe>*` rules those names resolve to, written as `@apply` Tailwind utilities. This is what a recipe's class strings are ported from |
 | `apps/v4/examples/radix/<recipe>-*.tsx` | **Usage examples** — one file per variant, drives examples list |
 | `apps/v4/content/docs/components/radix/*.mdx` | **Docs + manifest metadata** — single source of truth for titles, descriptions, section order; `description` copied verbatim to `ux/src/Toolkit/kits/shadcn/**/manifest.json` |
 
@@ -131,19 +131,20 @@ https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/examples/
 
 ### RTL class variants
 
-The canonical source provides two implementations per component:
+**Upstream ships no RTL implementation.** The `ui-rtl/` tree this section used to diff against no longer exists, and the `.cn-*` rules in `style-nova.css` use physical properties (`text-left`, `mr-1`, `ml-1`). RTL support is therefore authored here, not ported — the upstream classes are the LTR reading, and adapting them is the recipe's job.
 
-* `ui/apps/v4/styles/radix-nova/ui/{component}.tsx` — LTR (default)
-* `ui/apps/v4/styles/radix-nova/ui-rtl/{component}.tsx` — RTL
+**Reach for a logical utility first.** `ms-*`, `me-*`, `ps-*`, `pe-*`, `start-*`, `end-*`, `text-start`, `text-end` already flip with the text direction, so they need no variant prefix at all. Porting `mr-1` gives `me-1`, and `text-left` gives `text-start` — one token, correct in both directions.
 
-Always diff both files. For each class that differs between LTR and RTL, apply the `rtl:` Tailwind variant **in addition** to the LTR class — do not create separate templates.
+**Never pair a physical class with its own logical equivalent.** `ltr:text-left rtl:text-start` renders exactly like a bare `text-start`, and `ltr:before:mr-1 rtl:before:me-1` exactly like `before:me-1`. The pair costs two tokens for one rule, has to be kept in sync on every edit, and makes a `rtl:` grep return noise instead of the handful of places that genuinely differ.
 
-Use `ltr:` to scope the LTR class when RTL replaces it with a different one. Keep `rtl:` classes from the RTL file verbatim when they are already prefixed (e.g. `rtl:translate-x-1/2`).
+**Use `rtl:` only where no logical property exists** — a mirrored glyph or transform, typically. Keep those verbatim:
 
-Example: if `ui/table.tsx` has `[&:has([role=checkbox])]:pr-0` and `ui-rtl/table.tsx` has `[&:has([role=checkbox])]:pe-0`, write:
 ```
-ltr:[&:has([role=checkbox])]:pr-0 rtl:[&:has([role=checkbox])]:pe-0
+rtl:rotate-180        # a chevron that must point the other way
+rtl:translate-x-1/2   # no logical equivalent for translate
 ```
+
+Scope them tightly: an icon inside a vertically-oriented component is not direction-dependent, so `rtl:rotate-180` there points the arrow the wrong way.
 
 ---
 

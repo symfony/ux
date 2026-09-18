@@ -2,8 +2,12 @@
 {# @block content The dialog content, typically includes `AlertDialog:Header` and `AlertDialog:Footer`. #}
 {%- props size = 'default' -%}
 {%- set _alertDialog_id = inject('alertDialog.id') -%}
+{%- set _alertDialog_titleId = inject('alertDialog.titleId') -%}
+{%- set _alertDialog_descriptionId = inject('alertDialog.descriptionId') -%}
 <dialog
     id="{{ _alertDialog_id }}"
+    aria-labelledby="{{ _alertDialog_titleId }}"
+    aria-describedby="{{ _alertDialog_descriptionId }}"
     data-size="{{ size }}"
     data-alert-dialog-target="dialog"
     data-slot="alert-dialog-content"

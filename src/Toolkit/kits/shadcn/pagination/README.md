@@ -170,6 +170,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Pagination` renders `role="navigation"` with `aria-label="pagination"`, so it is announced as a named landmark. Give it a more specific label when the page holds several paginated lists.
+- `Pagination:Link` marked `active` renders `aria-current="page"`, which is how a screen reader user knows which page they are on.
+- `Pagination:Previous` and `Pagination:Next` carry `aria-label="Go to previous page"` and `aria-label="Go to next page"`. Translate them when your interface is not in English.
+- `Pagination:Ellipsis` is hidden with `aria-hidden="true"` and carries a visually hidden "More pages" label, so the gap is explained without the glyph being read out.
+- Render page links as real `<a>` elements with an `href`, so they work without JavaScript and can be opened in a new tab.
+
 ## API Reference
 
 ::: api-reference
