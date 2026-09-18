@@ -16,6 +16,7 @@
 - Fix `{% props %}` treating a prop explicitly passed as `null` as missing: a required prop no longer throws, and a prop declaring a default value now keeps the `null` it was given
 - Fix the pre-lexer treating a `{#` inside a `{{ ... }}` expression as the start of a Twig comment, which silently stopped every component after it from being rendered
 - Fix HTML/`{% component %}` syntax failing when a prop uses the null-safe operator (`?.`)
+- Add support for Twig 4
 
 ## 3.4.0
 

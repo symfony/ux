@@ -8,6 +8,7 @@
 - Resolve icon attribute values through twig/html-extra's `html_attr()` logic, so `ux_icon()` and `<twig:ux:icon>` render attributes like any other component: the typed values of `html_attr_type()` and `tailwind_classes` are now accepted, `null` omits an attribute, `aria-*` booleans render `"true"`/`"false"`, and a boolean `true` renders `name=""` (`data-*` renders `"true"`).
   It **may change your markup** if you assert on the `<svg>` tag's attributes: `null`, boolean and `aria-*` values no longer render the way they used to. Update those assertions after upgrading.
 - Fix an omitted `aria-label`, `aria-labelledby` or `title` attribute suppressing the automatic `aria-hidden="true"`, which left the icon without any textual alternative.
+- Add support for Twig 4
 
 ## 3.4.0
 

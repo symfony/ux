@@ -857,6 +857,15 @@ Turbo Stream messages to the page.
     {# subscribe to multiple topics #}
     <twig:Turbo:Stream:From topics="{{ ['topic_a', 'topic_b'] }}" />
 
+.. caution::
+
+    Double the backslashes when passing a Fully Qualified Class Name. Twig
+    reads ``\E`` inside a string literal as an escape sequence: Twig 3 drops
+    the backslash, so ``'App\Entity\Book'`` turns into the topic
+    ``AppEntityBook``, which no broadcast publishes to. The stream then stays
+    silent rather than reporting an error. Twig 4 keeps the backslash and the
+    class name reaches Turbo intact.
+
 You can also use the ``turbo_stream_from()`` Twig function directly:
 
 .. code-block:: twig

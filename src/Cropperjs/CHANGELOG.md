@@ -5,6 +5,7 @@
 - Add support for Symfony 8.2's standalone `AssetMapperBundle`
 - Add support for `intervention/image` 3 and 4, which fixes the deprecations triggered by version 2. Version 2 keeps working and stays the lowest supported version
 - Add a configurable image driver through the new `cropperjs.driver` option, accepting `gd` (default), `imagick` or `vips`. A custom driver service can be given through `cropperjs.driver_service`. Both require `intervention/image` 3 or higher
+- Add support for Twig 4
 
 ## 3.0.0
 

@@ -31,6 +31,7 @@
 - [Shadcn] Fix Field/Label, InputGroup and Pagination silently dropping their own base classes when forwarding to a child component (their checked/disabled/nested/dark styles now apply)
 - [Shadcn] Remove `typography` recipe
 - Remove the now-obsolete `ClassMergeSpacingChecker` linter
+- Add support for Twig 4
 
 ## 3.4.0
 

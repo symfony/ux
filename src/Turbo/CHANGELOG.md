@@ -4,6 +4,8 @@
 
 - Add support for Symfony 8.2's standalone `AssetMapperBundle`
 - Fix broadcasting an entity whose identifier is made of associations
+- Add support for Twig 4.
+  On Twig 4, a Fully Qualified Class Name written with single backslashes in `turbo_stream_from()` or `<twig:Turbo:Stream:From>` resolves to the class it names, where Twig 3 dropped the backslashes and turned `'App\Entity\Book'` into the unusable topic `AppEntityBook`. Templates already using the documented `'App\\Entity\\Book'` form are unaffected.
 
 ## 3.2.0
 

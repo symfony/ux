@@ -62,8 +62,8 @@
         "symfony/ux-vue": "3.x-dev",
         "symfony/yaml": "7.4.*|8.1.*",
         "symfonycasts/dynamic-forms": "^0.2",
-        "twig/extra-bundle": "^3.21",
-        "twig/twig": "^3.21.1",
+        "twig/extra-bundle": "^3.21|^4.0",
+        "twig/twig": "^3.21.1|^4.0",
         "zenstruck/foundry": "^2.8"
     },
     "require-dev": {

@@ -8,6 +8,7 @@
 - Decouple the package from Doctrine ORM: add `AutocompleterInterface`, `OptionsAwareAutocompleterInterface`, `AutocompleteChoiceType` and `#[AsAutocompleteField]` so any data source can back an autocomplete field. The Doctrine ORM API stays fully supported
 - Add the `ux_autocomplete` route, served by `AutocompleteController`. The `ux_entity_autocomplete` route alias is deprecated
 - Add a `max_options` option to control how many options the dropdown displays at once
+- Add support for Twig 4
 
 ## 3.2
 
