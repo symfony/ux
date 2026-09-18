@@ -228,6 +228,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Checkbox` renders a native `<input type="checkbox">`, so it is focusable, toggles with `Space`, and reports its checked state without any ARIA.
+- Give every checkbox a label: either wrap it in a `Label`, or pair `id` on the checkbox with `for` on the `Label`. The tick icon is decorative and announces nothing.
+- The `disabled` and `required` attributes belong on the checkbox itself, so the browser exposes the state and enforces the constraint.
+- Set `aria-invalid="true"` for the invalid styling, and point `aria-describedby` at the message that explains what is wrong.
+- For a group of related checkboxes, wrap them in a `Field:Set` with a `Field:Legend` so the group has its own name.
+
 ## API Reference
 
 ::: api-reference

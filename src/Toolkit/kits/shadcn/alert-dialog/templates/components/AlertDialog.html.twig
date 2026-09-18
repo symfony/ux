@@ -11,8 +11,6 @@
 {%- do provide('alertDialog.descriptionId', _alertDialog_descriptionId) -%}
 <div
     data-alert-dialog-open-value="{{ open }}"
-    aria-labelledby="{{ _alertDialog_titleId }}"
-    aria-describedby="{{ _alertDialog_descriptionId }}"
     {{ attributes.defaults({
         'data-controller': 'alert-dialog',
     }) }}

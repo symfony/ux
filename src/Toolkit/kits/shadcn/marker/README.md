@@ -231,6 +231,15 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Marker` is presentational by default. It forwards `role`, so pick the semantics from what the marker is for rather than relying on a single default.
+- For a streaming or progress marker such as "Thinking..." or a running tool, set `role="status"` so assistive tech announces the update as it appears.
+- A `separator` marker that carries text, such as a date or a section label, needs no role: the divider lines are decorative pseudo-elements and the text is announced as ordinary content. Do not add `role="separator"` to it, since a separator takes its name from `aria-label` and treats its contents as presentational, so the visible label would be lost.
+- A `border` marker keeps the same semantics as the default one. The bottom border is decorative.
+- `Marker:Icon` is hidden from assistive tech with `aria-hidden`, so `Marker:Content` carries the meaning. Give an icon-only marker an `aria-label` so it is not announced as empty.
+- Render an interactive marker with `as="button"` or `as="a"`, so it is focusable and operable from the keyboard.
+
 ## API Reference
 
 ::: api-reference

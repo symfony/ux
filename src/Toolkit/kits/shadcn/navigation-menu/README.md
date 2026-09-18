@@ -194,6 +194,15 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `NavigationMenu` renders a `<nav>` landmark named by its `ariaLabel` prop. Set it when the page holds more than one navigation, so the landmarks can be told apart.
+- `NavigationMenu:Trigger` exposes `aria-haspopup="menu"` and an `aria-expanded` that the controller keeps in sync as its panel opens and closes.
+- Panels open on hover and on focus, and close once focus leaves the menu, so a keyboard user reaches a panel by tabbing to its trigger and into the links.
+- Keep `openDelay` and `closeDelay` generous enough that a panel does not close while the pointer crosses the gap between the trigger and the content.
+- Mark the link for the current page with `aria-current="page"`, since the active styling alone is not announced.
+- The chevron on a trigger is decorative and `<twig:ux:icon>` hides it from assistive tech.
+
 ## API Reference
 
 ::: api-reference

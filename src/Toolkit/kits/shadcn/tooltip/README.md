@@ -121,6 +121,15 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Tooltip:Content` renders `role="tooltip"`, and `tooltip_trigger_attrs` points the trigger at it with `aria-describedby`, so the tooltip text is announced when the trigger takes focus.
+- The tooltip opens on hover and on focus, so keyboard users get it too. Spread `tooltip_trigger_attrs` onto a natively focusable element such as a `Button`, otherwise the trigger is never focused and the tooltip never opens for them.
+- A tooltip describes, it does not name. Keep the trigger's own accessible name meaningful, and use the tooltip for the extra detail rather than as the only label.
+- Do not put interactive elements inside a tooltip. `role="tooltip"` does not support them and they cannot be reached before the tooltip closes.
+- Set `id` so the generated trigger and content IDs are unique when several tooltips share a page.
+- Keep `delayDuration` short enough that a keyboard user is not left waiting after focusing the trigger.
+
 ## API Reference
 
 ::: api-reference

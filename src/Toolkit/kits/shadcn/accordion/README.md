@@ -284,6 +284,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Accordion:Trigger` renders a `<button>` inside an `<h3>`, wired to its panel with `aria-expanded` and `aria-controls`.
+- `Accordion:Content` carries `role="region"` and an `aria-labelledby` pointing back at its trigger, so the panel is announced with the heading that opens it.
+- `Enter` and `Space` toggle the focused item. Arrow keys move between triggers, up and down when `orientation` is `vertical`, left and right when it is `horizontal`. `Home` and `End` jump to the first and last trigger.
+- Set `orientation` to match the visual layout, otherwise the arrow keys will not follow what the user sees.
+- A disabled `Accordion:Item` renders `aria-disabled="true"` and marks its trigger `disabled`, and arrow navigation skips it.
+
 ## API Reference
 
 ::: api-reference

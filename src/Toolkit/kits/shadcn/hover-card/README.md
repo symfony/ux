@@ -111,6 +111,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- A hover card opens on hover and on focus, and its trigger is focusable, so keyboard users reach the content the same way pointer users do.
+- `HoverCard:Content` renders `role="tooltip"`. Point the trigger at it with `aria-describedby` so the content is announced when the trigger takes focus.
+- Treat the content as supplementary. A hover card is dismissed as soon as focus or the pointer leaves, so anything essential belongs in the page rather than inside it.
+- Avoid putting interactive elements inside the card. `role="tooltip"` does not support them, and they are hard to reach before the card closes.
+- Keep `openDelay` and `closeDelay` generous enough that the card does not flicker when the pointer crosses the trigger.
+
 ## API Reference
 
 ::: api-reference

@@ -135,6 +135,13 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Badge` renders a `<span>` and adds no role, so it is announced as ordinary text alongside the content it labels.
+- Do not rely on the variant colour alone to convey meaning: the word in the badge should say what the state is.
+- Render the badge with `as="a"` when it navigates, so it stays focusable and keyboard-operable. A badge is not a button and is not focusable by default.
+- An icon-only badge is announced as empty. Give it an `aria-label`, since `<twig:ux:icon>` renders `aria-hidden="true"` by default.
+
 ## API Reference
 
 ::: api-reference

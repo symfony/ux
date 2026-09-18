@@ -2,9 +2,13 @@
 {# @block content The dialog content, typically includes `Dialog:Header` and optionally `Dialog:Footer`. #}
 {%- props showCloseButton = true -%}
 {%- set _dialog_id = inject('dialog.id') -%}
+{%- set _dialog_titleId = inject('dialog.titleId') -%}
+{%- set _dialog_descriptionId = inject('dialog.descriptionId') -%}
 
 <dialog
     id="{{ _dialog_id }}"
+    aria-labelledby="{{ _dialog_titleId }}"
+    aria-describedby="{{ _dialog_descriptionId }}"
     data-slot="dialog-content"
     data-dialog-target="dialog"
     {{ attributes.defaults({
@@ -18,7 +22,7 @@
             type="button"
             variant="ghost"
             size="icon-sm"
-            class="absolute top-2 ltr:right-2 rtl:end-2"
+            class="absolute top-2 end-2"
             data-slot="dialog-close"
             data-action="click->dialog#close"
         >

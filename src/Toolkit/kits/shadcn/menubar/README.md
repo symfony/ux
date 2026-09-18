@@ -503,6 +503,15 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Menubar` renders `role="menubar"`, each `Menubar:Content` renders `role="menu"` and each entry `role="menuitem"`, so the whole widget is announced as an application menu.
+- `Menubar:Trigger` exposes `aria-haspopup="menu"` and an `aria-expanded` reflecting whether its menu is open.
+- `Escape` closes every open menu. Menus also open on hover and on focus, so a keyboard user reaches a sub-menu by tabbing to its trigger.
+- `Menubar:CheckboxItem` and `Menubar:RadioItem` are backed by a real `<input>` kept visually hidden, so their checked state is exposed by the browser and they submit with the form. Give a `Menubar:RadioGroup` a `name` so its items are mutually exclusive.
+- `Menubar:Separator` renders `role="separator"` and `Menubar:RadioGroup` renders `role="group"`. Give the radio group an `aria-label` so the choice it represents is announced.
+- The check and bullet icons are decorative and carry `aria-hidden="true"`, so keep the item text meaningful on its own.
+
 ## API Reference
 
 ::: api-reference

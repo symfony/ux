@@ -32,3 +32,11 @@ A two-column login page with a cover image.
 ## Installation
 
 ::: installation
+
+## Accessibility
+
+- The block renders a real `<form>` with each `<label>` bound to its input through `for` and `id`, so clicking a label focuses its field and every field has an accessible name.
+- Use `type="email"` and `type="password"` as shown, since they drive the on-screen keyboard and let password managers and browser autofill do their job.
+- Add `autocomplete="email"` and `autocomplete="current-password"` so the browser can fill the form.
+- Render validation errors next to their field, point the field at the message with `aria-describedby` and set `aria-invalid="true"`. After a failed submit, move focus to the first invalid field.
+- The decorative panel next to the form carries no text. Give any image inside it an empty `alt=""`, so it is not announced.

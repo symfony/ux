@@ -93,6 +93,12 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `AspectRatio` is a presentational `<div>` that only constrains its own proportions. It adds no role and no ARIA, so the content inside keeps its own semantics.
+- The accessible name comes from what you place inside: give an `<img>` a meaningful `alt`, or an empty `alt=""` when the image is decorative.
+- An `<iframe>` placed inside needs its own `title` describing the embedded content.
+
 ## API Reference
 
 ::: api-reference

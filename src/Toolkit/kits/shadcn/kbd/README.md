@@ -144,6 +144,13 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Kbd` renders a native `<kbd>`, which is the element for keyboard input and needs no ARIA of its own.
+- Spell the keys out. A lone glyph such as `⌘` or `⇧` is announced inconsistently across screen readers, so pair it with the key name or add an `aria-label` like `aria-label="Command"`.
+- `KbdGroup` is a plain container. Give it an `aria-label` such as `aria-label="Control plus K"` when the individual keys would otherwise be read one glyph at a time.
+- A `Kbd` shown inside a button or a menu item is announced as part of that item's name, so keep it short.
+
 ## API Reference
 
 ::: api-reference

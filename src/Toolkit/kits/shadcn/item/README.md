@@ -461,6 +461,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Item` renders a `<div>` and adds no role, so it is announced as ordinary content. Render it with `as="a"` and an `href` when the whole row navigates, which makes it focusable and keyboard-operable.
+- `Item:Group` renders `role="list"`, which removes the implicit list semantics of its children. Add `role="listitem"` on each `Item` inside a group so the list is announced with its size.
+- The media slot is decorative and `<twig:ux:icon>` hides it from assistive tech, so keep the meaning in `Item:Title` and `Item:Description`.
+- When the row is a link and also holds its own buttons, keep those buttons outside the link rather than nested inside it, since a control inside a link cannot be reached.
+- `Item:Separator` is decorative by default. Pass `decorative="false"` only when the divider marks a real boundary between sections.
+
 ## API Reference
 
 ::: api-reference

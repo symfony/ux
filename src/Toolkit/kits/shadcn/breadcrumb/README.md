@@ -193,6 +193,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Breadcrumb` renders a `<nav>` landmark with `aria-label="breadcrumb"`, and `Breadcrumb:List` a real `<ol>`, so the trail is announced as an ordered navigation.
+- `Breadcrumb:Page` marks the current page with `aria-current="page"`, and carries `role="link"` with `aria-disabled="true"` so it reads as the link you are already on rather than as plain text.
+- `Breadcrumb:Separator` is hidden with `aria-hidden="true"` and `role="presentation"`, so the chevron between items is never read out.
+- `Breadcrumb:Ellipsis` is hidden the same way but carries a visually hidden "More" label, so the collapsed part of the trail is still explained.
+- Keep the trail in document order from the root to the current page. The reading order is the markup order, whatever the styling does.
+
 ## API Reference
 
 ::: api-reference

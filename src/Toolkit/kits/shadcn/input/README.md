@@ -276,6 +276,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Input` renders a native `<input>`, so it keeps the browser's own keyboard handling, autofill and validation.
+- Give every input a visible `Label` bound with `for` and `id`. A placeholder is not a label: it disappears as soon as the user types and is not reliably announced.
+- Use the right `type`, since it drives the on-screen keyboard on touch devices and the format the browser validates.
+- Set `aria-invalid="true"` for the invalid styling, and point `aria-describedby` at the message explaining what is wrong.
+- Prefer the native `required`, `min`, `max` and `pattern` attributes over checking on the client only, so the constraint is exposed rather than merely enforced.
+
 ## API Reference
 
 ::: api-reference

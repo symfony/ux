@@ -1,6 +1,6 @@
 {# @prop variant 'default'|'secondary'|'destructive'|'outline'|'ghost'|'link' The visual style variant. #}
 {# @prop size 'default'|'xs'|'sm'|'lg'|'icon'|'icon-xs'|'icon-sm'|'icon-lg' The button size. #}
-{# @prop as 'button' The HTML tag to render. #}
+{# @prop as 'button'|'a' The HTML tag to render; use `a` when the button navigates. #}
 {# @block content The button label and/or icon. #}
 {%- props variant = 'default', size = 'default', as = 'button' -%}
 {%- set style = html_cva(
@@ -15,10 +15,10 @@
             link: 'text-primary underline-offset-4 hover:underline',
         },
         size: {
-            default: 'h-8 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2',
-            xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg ltr:has-data-[icon=inline-end]:pr-1.5 rtl:has-data-[icon=inline-end]:pe-1.5 ltr:has-data-[icon=inline-start]:pl-1.5 rtl:has-data-[icon=inline-start]:ps-1.5 [&_svg:not([class*='size-'])]:size-3",
-            sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg ltr:has-data-[icon=inline-end]:pr-1.5 rtl:has-data-[icon=inline-end]:pe-1.5 ltr:has-data-[icon=inline-start]:pl-1.5 rtl:has-data-[icon=inline-start]:ps-1.5 [&_svg:not([class*='size-'])]:size-3.5",
-            lg: 'h-9 gap-1.5 px-2.5 ltr:has-data-[icon=inline-end]:pr-2 rtl:has-data-[icon=inline-end]:pe-2 ltr:has-data-[icon=inline-start]:pl-2 rtl:has-data-[icon=inline-start]:ps-2',
+            default: 'h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2',
+            xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pe-1.5 has-data-[icon=inline-start]:ps-1.5 [&_svg:not([class*='size-'])]:size-3",
+            sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pe-1.5 has-data-[icon=inline-start]:ps-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+            lg: 'h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2',
             icon: 'size-8',
             'icon-xs': "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
             'icon-sm': 'size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg',
@@ -32,7 +32,7 @@
     data-variant="{{ variant }}"
     {{ attributes.defaults({
         class: style.apply({variant: variant, size: size})|tailwind_classes,
-        type: 'button',
+        type: as == 'button' ? 'button' : false,
     }) }}
 >
     {%- block content %}{% endblock -%}

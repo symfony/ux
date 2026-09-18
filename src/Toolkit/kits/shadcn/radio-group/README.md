@@ -232,6 +232,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `RadioGroup` renders `role="radiogroup"`. Give it an `aria-label`, or wrap it in a `Field:Set` with a `Field:Legend`, so the choice the group represents is announced.
+- `RadioGroup:Item` is backed by a real `<input type="radio">` kept visually hidden, so the browser handles the roving focus: arrow keys move between items and select as they go, and the group takes a single tab stop.
+- Give every item in a group the same `name`, which is what makes them mutually exclusive and what the form submits.
+- Pair each item's `id` with the `for` of its `Label`, so the label text becomes the option's accessible name and clicking it selects the option.
+- Set `aria-invalid="true"` on the items and point `aria-describedby` at the message explaining what is wrong.
+
 ## API Reference
 
 ::: api-reference

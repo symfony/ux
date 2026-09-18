@@ -94,6 +94,13 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `ScrollArea` is a plain `<div>` with `overflow: auto` and styled scrollbars. It adds no role, so the content inside keeps its own semantics.
+- A scrollable region must be reachable from the keyboard. Add `tabindex="0"` with `role="region"` and an `aria-label` when the content holds no focusable element of its own, otherwise keyboard users cannot scroll it.
+- The custom scrollbar styling only replaces the appearance, so the native scrollbar behaviour, the wheel, the arrow keys and touch panning, is untouched.
+- Do not set a fixed height that clips text when the user increases the font size. Prefer `max-height` so the area grows until it needs to scroll.
+
 ## API Reference
 
 ::: api-reference

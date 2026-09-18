@@ -235,6 +235,13 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Empty` and its parts are plain containers with no role, so an empty state reads as ordinary content in the reading order.
+- `Empty:Title` renders a `<div>`, not a heading. When the empty state replaces a section of the page, give it heading semantics with `role="heading"` and `aria-level` so the outline does not lose that section.
+- The icon in `Empty:Media` is decorative and `<twig:ux:icon>` hides it from assistive tech. Keep the explanation in `Empty:Title` and `Empty:Description`.
+- When the empty state appears after an action, such as a search returning nothing, render it into a live region or alongside one, since inserting it silently tells a screen reader user nothing.
+
 ## API Reference
 
 ::: api-reference

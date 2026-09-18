@@ -1,5 +1,7 @@
 {# @block content The drawer content, typically includes `Drawer:Header` and optionally `Drawer:Footer`. #}
 {%- set _drawer_id = inject('drawer.id') -%}
+{%- set _drawer_titleId = inject('drawer.titleId') -%}
+{%- set _drawer_descriptionId = inject('drawer.descriptionId') -%}
 {%- set _drawer_direction = inject('drawer.direction', 'bottom') -%}
 {%- set style = html_cva(
     base: 'group/drawer-content fixed z-50 m-0 flex h-auto max-h-none w-auto max-w-none flex-col bg-background p-0 outline-none transition duration-300 ease-in-out transition-discrete backdrop:bg-black/50 backdrop:opacity-0 backdrop:transition-[opacity,display,overlay] backdrop:duration-300 backdrop:ease-in-out backdrop:transition-discrete open:backdrop:opacity-100 starting:open:backdrop:opacity-0',
@@ -14,6 +16,8 @@
 ) -%}
 <dialog
     id="{{ _drawer_id }}"
+    aria-labelledby="{{ _drawer_titleId }}"
+    aria-describedby="{{ _drawer_descriptionId }}"
     data-slot="drawer-content"
     data-dialog-target="dialog"
     data-direction="{{ _drawer_direction }}"

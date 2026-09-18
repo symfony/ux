@@ -53,6 +53,13 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Label` renders a native `<label>`. Bind it to its control with `for` pointing at the control's `id`, or wrap the control, so clicking the label focuses it and the control gets an accessible name.
+- A label is the accessible name of the control. Do not replace it with a placeholder or with adjacent text that is not bound.
+- Keep help text out of the label and in a separate element referenced with `aria-describedby`, so the name stays short.
+- The disabled styling follows the control through `peer-disabled` and the `Field` disabled state, so a label does not need to repeat `disabled` itself.
+
 ## API Reference
 
 ::: api-reference

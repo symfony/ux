@@ -216,6 +216,15 @@ A Sonner-style stacked toast notification system with auto-dismiss, swipe-to-dis
 </twig:Sonner>
 ```
 
+## Accessibility
+
+- `Sonner` renders a `<section>` with `aria-live="polite"` and `aria-label="Notifications"` wrapping the toast list, so new toasts are announced without stealing focus.
+- A `Toast` renders `role="status"` with `aria-live="polite"`, or `role="alert"` with `aria-live="assertive"` when `type` is `error`, so a failure interrupts while ordinary confirmations wait their turn.
+- Each toast is `aria-atomic="true"`, so the title and description are announced together rather than piecemeal.
+- The close button carries `aria-label="Close notification"`. Translate it when your interface is not in English.
+- Give `duration` enough time to read the toast, and do not put the only copy of important information in one. A toast disappears and cannot be recalled.
+- An action inside a toast is reachable by tabbing to it, but only while the toast is on screen. Keep the same action available elsewhere in the page.
+
 ## API Reference
 
 ::: api-reference

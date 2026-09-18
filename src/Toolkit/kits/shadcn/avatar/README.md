@@ -240,6 +240,13 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Avatar:Image` renders a plain `<img>`, so it takes the `alt` you give it. Use the person's name when the avatar identifies someone, and `alt=""` when that name already appears in the adjacent text.
+- `Avatar:Fallback` shows initials when the image is missing. Initials rarely read well when spoken, so keep the full name in the surrounding markup or on the image.
+- `Avatar:Badge` is a decorative status dot with no text. When the status it conveys matters, expose it in text or with an `aria-label` on the badge.
+- `Avatar:Group` is a plain container. Announce the group size yourself when the visual overflow count is meaningful.
+
 ## API Reference
 
 ::: api-reference

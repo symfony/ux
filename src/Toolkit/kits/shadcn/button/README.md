@@ -186,6 +186,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Button` renders a real `<button>` with `type="button"`, so it is focusable and responds to `Enter` and `Space` without extra wiring. Pass `type="submit"` when it submits a form.
+- Use `as="a"` with an `href` for navigation. A link is announced as a link and activates on `Enter` only, which is what a user expects from something that changes the page.
+- An icon-only button, `size="icon"` and its variants, has no text to announce. Give it an `aria-label`, or add a `<span class="sr-only">` label, since `<twig:ux:icon>` renders `aria-hidden="true"`.
+- Prefer `disabled` over removing the button. A disabled `<button>` is skipped by the tab order; use `aria-disabled="true"` instead when the control must stay focusable so its state can be discovered.
+- Set `aria-invalid="true"` to pick up the invalid styling, and pair it with a message the user can read.
+
 ## API Reference
 
 ::: api-reference

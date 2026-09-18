@@ -360,6 +360,15 @@ Use `collapsible="offcanvas"` to fully hide the sidebar when collapsed. The `Sid
 </twig:Sidebar:Provider>
 ```
 
+## Accessibility
+
+- `Sidebar` renders an `<aside>` and `Sidebar:Inset` a `<main>`, so the page keeps two distinct landmarks. On mobile the sidebar is rendered inside a `Sheet`, which is modal and traps focus.
+- `Sidebar:Trigger` carries an `aria-label`, an `aria-expanded` reflecting the state and an `aria-controls` pointing at the sidebar it toggles.
+- The sidebar toggles with `Ctrl`/`Cmd` plus the key set by `keyboardShortcut`, which defaults to `b`. Mention the shortcut in the interface, since a keyboard shortcut nobody is told about helps nobody.
+- Mark the active entry with `active` on `Sidebar:MenuButton` or `Sidebar:MenuSubButton`, which renders `aria-current="page"`. The active styling alone is not announced.
+- `Sidebar:Rail` is a drag affordance excluded from the tab order with `tabindex="-1"`, so it never sits between the user and the content. `Sidebar:Trigger` is the keyboard-accessible way to collapse the sidebar.
+- When `collapsible` is `icon`, the labels are hidden but the buttons stay focusable. Set `tooltip` on `Sidebar:MenuButton` so the entry keeps a name in that state.
+
 ## API Reference
 
 ::: api-reference

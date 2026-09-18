@@ -38,19 +38,6 @@ A container that groups related buttons together with consistent styling.
 </twig:ButtonGroup>
 ```
 
-## Accessibility
-
-- The `ButtonGroup` component has the `role` attribute set to `group`.
-- Use `Tab` to navigate between the buttons in the group.
-- Use `aria-label` or `aria-labelledby` to label the button group.
-
-```twig {"preview":true}
-<twig:ButtonGroup aria-label="Button group">
-    <twig:Button>Button 1</twig:Button>
-    <twig:Button>Button 2</twig:Button>
-</twig:ButtonGroup>
-```
-
 ## Examples
 
 ### Orientation
@@ -231,6 +218,19 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
         </twig:ButtonGroup>
     </div>
 </div>
+```
+
+## Accessibility
+
+- The `ButtonGroup` component has the `role` attribute set to `group`.
+- Use `Tab` to navigate between the buttons in the group.
+- Use `aria-label` or `aria-labelledby` to label the button group.
+
+```twig {"preview":true}
+<twig:ButtonGroup aria-label="Button group">
+    <twig:Button>Button 1</twig:Button>
+    <twig:Button>Button 2</twig:Button>
+</twig:ButtonGroup>
 ```
 
 ## API Reference

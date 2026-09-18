@@ -208,6 +208,13 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Card` and its parts are plain containers with no role, so the content inside keeps its own semantics. A card is not a landmark and is not announced as a grouping.
+- `Card:Title` renders a `<div>`, not a heading. When the card is a section of the page, give it heading semantics with `role="heading"` and `aria-level`, so the title lands in the document outline.
+- Do not make the whole card clickable by wrapping it in a link. Put the interactive element inside, in `Card:Action` or `Card:Footer`, so its accessible name is the action rather than the entire card text.
+- When several cards repeat the same action label, extend each one with the item it applies to, for instance `aria-label="Renew Pro plan"`.
+
 ## API Reference
 
 ::: api-reference

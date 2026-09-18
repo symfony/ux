@@ -269,6 +269,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Carousel` renders `role="region"` with `aria-roledescription="carousel"` and is focusable, so a screen reader user can reach it and be told what kind of widget it is. Set `label` to name it, since the default is just `Carousel`.
+- Each `Carousel:Item` carries `role="group"` and `aria-roledescription="slide"`.
+- With the carousel focused, arrow keys move between slides: left and right when `orientation` is `horizontal`, up and down when it is `vertical`.
+- `Carousel:Previous` and `Carousel:Next` are icon-only buttons that carry a visually hidden label, controlled by their `text` prop. Translate it rather than dropping it.
+- Autoplay moves content without the user asking. Keep the `autoplay` delay long enough to read a slide, and prefer leaving it at `0` when the slides carry essential content.
+
 ## API Reference
 
 ::: api-reference

@@ -140,6 +140,14 @@ To enable RTL support, set the `dir="rtl"` attribute on the root element.
 </div>
 ```
 
+## Accessibility
+
+- `Resizable:Handle` renders `role="separator"` with `aria-orientation` and `tabindex="0"`, so it is reachable from the keyboard and announced as an adjustable divider.
+- Arrow keys move the handle: left and right on a horizontal layout, up and down on a vertical one. In a right-to-left context the horizontal keys are mirrored, so the handle follows the arrow the user pressed.
+- Give each handle an `aria-label` naming the panels it sits between, since a separator with no name is announced as an unnamed splitter.
+- The grip shown by `withHandle` is decorative: the whole separator is the target, not just the grip.
+- Do not hide content behind a collapsed panel with no other way in. Keep the content reachable when a panel is resized down to nothing.
+
 ## API Reference
 
 ::: api-reference

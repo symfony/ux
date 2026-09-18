@@ -29,7 +29,7 @@
         <a
             href="{{ action.url ?? '#' }}"
             data-slot="toast-action"
-            class="ml-auto shrink-0 rounded-md border bg-transparent px-3 py-1 text-sm font-medium transition-colors hover:bg-secondary focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2"
+            class="ms-auto shrink-0 rounded-md border bg-transparent px-3 py-1 text-sm font-medium transition-colors hover:bg-secondary focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2"
         >{{ action.label }}</a>
     {%- endif %}
     {%- if closeButton %}
@@ -37,7 +37,7 @@
             type="button"
             data-slot="toast-close"
             aria-label="Close notification"
-            class="absolute top-2 right-2 rounded-md p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-muted"
+            class="absolute top-2 end-2 rounded-md p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-muted"
         ><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     {%- endif %}
 </li>
