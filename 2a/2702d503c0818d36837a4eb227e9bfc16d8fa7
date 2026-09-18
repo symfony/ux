@@ -1,0 +1,10 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-09-18T08:39:00Z
+
+Thanks for this, nice feature. I amended your commit before merging, two changes affect the API you designed:
+
+- Moved the finder classes out of `Twig\`: the interface is now `Symfony\UX\Icons\IconFinderInterface`, and the implementations are `Symfony\UX\Icons\Finder\ChainIconFinder` and `Symfony\UX\Icons\Finder\TemplateIconFinder`. A custom finder has nothing to do with Twig (your own doc example reads a PHP enum), `Twig\IconFinder\` only existed because the old internal class happened to be named `IconFinder`. `Finder\` follows the existing `Registry\ChainIconRegistry` convention.
+- `icons()` now returns `iterable<string>` instead of `array`. A finder backed by a database or an API should be able to yield names instead of building the whole array upfront, and going from `array` to `iterable` after 3.5 ships would be a BC break, so better to settle it now. Both internal consumers only iterate over the result, so nothing else changed, and an implementation can still just `return ['tabler:mail'];`.
+
+Also did a few smaller cleanups (removed a redundant service alias, shared a test double, trimmed the doc section).
